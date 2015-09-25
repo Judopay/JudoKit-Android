@@ -103,6 +103,6 @@
     <orderEntry type="library" exported="" name="retrofit-2.0.0-beta1" level="project" />
     <orderEntry type="library" exported="" name="support-v4-23.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.0.1" level="project" />
-    <orderEntry type="module" module-name="judo-android-sdk" exported="" />
+    <orderEntry type="module" module-name="judo-sdk" exported="" />
   </component>
 </module>

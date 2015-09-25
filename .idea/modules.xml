@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/judo-android.iml" filepath="$PROJECT_DIR$/judo-android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/judo-android-rest/judo-android-rest.iml" filepath="$PROJECT_DIR$/judo-android-rest/judo-android-rest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/judo-android-sdk/judo-android-sdk.iml" filepath="$PROJECT_DIR$/judo-android-sdk/judo-android-sdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/judo-rest/judo-rest.iml" filepath="$PROJECT_DIR$/judo-rest/judo-rest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/judo-sdk/judo-sdk.iml" filepath="$PROJECT_DIR$/judo-sdk/judo-sdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/samples.iml" filepath="$PROJECT_DIR$/samples/samples.iml" />
     </modules>
   </component>
