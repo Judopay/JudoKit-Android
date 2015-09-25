@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/judo-android.iml" filepath="$PROJECT_DIR$/judo-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/judo-android-rest/judo-android-rest.iml" filepath="$PROJECT_DIR$/judo-android-rest/judo-android-rest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/judo-android-sdk/judo-android-sdk.iml" filepath="$PROJECT_DIR$/judo-android-sdk/judo-android-sdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/samples.iml" filepath="$PROJECT_DIR$/samples/samples.iml" />
+    </modules>
+  </component>
+</project>

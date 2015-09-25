@@ -1,0 +1,1 @@
+include ':judo-android-rest', ':judo-android-sdk', ':samples'
