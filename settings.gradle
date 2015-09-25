@@ -1,1 +1,1 @@
-include ':judo-android-rest', ':judo-android-sdk', ':samples'
+include ':judo-rest', ':judo-sdk', ':samples'
