@@ -22,6 +22,12 @@ public class AuthenticationInterceptor implements Interceptor {
     private static final String CACHE_CONTROL = "no-cache";
     private static final String APP_VERSION_HEADER = "App-Version";
 
+    private AuthorizationEncoder authorizationEncoder;
+
+    public AuthenticationInterceptor(AuthorizationEncoder authorizationEncoder) {
+        this.authorizationEncoder = authorizationEncoder;
+    }
+
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request.Builder builder = chain.request()
@@ -34,7 +40,7 @@ public class AuthenticationInterceptor implements Interceptor {
     private Headers getHeaders() {
         HashMap<String, String> headers = new HashMap<>();
 
-        headers.put(AUTHORIZATION_HEADER, null);
+        headers.put(AUTHORIZATION_HEADER, authorizationEncoder.getAuthorization());
         headers.put(CONTENT_TYPE_HEADER, JSON_MIME_TYPE);
         headers.put(ACCEPTS_HEADER, JSON_MIME_TYPE);
         headers.put(API_VERSION_HEADER, API_VERSION);
