@@ -126,6 +126,10 @@ public class Transaction {
         }
 
         public Transaction build() {
+            if(transaction.currency == null || transaction.currency.length() == 0) {
+                throw new IllegalArgumentException("Currency must be set for Transaction");
+            }
+
             return transaction;
         }
 
