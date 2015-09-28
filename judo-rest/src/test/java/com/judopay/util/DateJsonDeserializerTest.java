@@ -1,4 +1,4 @@
-package com.judopay.payment;
+package com.judopay.util;
 
 import com.google.gson.JsonElement;
 
