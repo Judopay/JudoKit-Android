@@ -30,4 +30,14 @@ public class Card {
     public long getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "type=" + type +
+                ", token='" + token + '\'' +
+                ", lastFour='" + lastFour + '\'' +
+                ", endDate='" + endDate + '\'' +
+                '}';
+    }
 }
