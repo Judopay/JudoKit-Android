@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.judopay.JudoPay;
 import com.judopay.auth.AuthenticationInterceptor;
 import com.judopay.auth.AuthorizationEncoder;
+import com.judopay.util.DateJsonDeserializer;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.Date;
