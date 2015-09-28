@@ -7,4 +7,11 @@ public class Risks {
     public String getPostCodeCheck() {
         return postCodeCheck;
     }
+
+    @Override
+    public String toString() {
+        return "Risks{" +
+                "postCodeCheck='" + postCodeCheck + '\'' +
+                '}';
+    }
 }
