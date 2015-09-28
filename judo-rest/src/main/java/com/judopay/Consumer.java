@@ -12,4 +12,12 @@ public class Consumer {
     public String getYourConsumerReference() {
         return yourConsumerReference;
     }
+
+    @Override
+    public String toString() {
+        return "Consumer{" +
+                "consumerToken='" + consumerToken + '\'' +
+                ", yourConsumerReference='" + yourConsumerReference + '\'' +
+                '}';
+    }
 }
