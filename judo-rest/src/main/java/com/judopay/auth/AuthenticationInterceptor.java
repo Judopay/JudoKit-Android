@@ -20,7 +20,7 @@ public class AuthenticationInterceptor implements Interceptor {
     private static final String JSON_MIME_TYPE = "application/json";
     private static final String API_VERSION = "4.1.0";
     private static final String CACHE_CONTROL = "no-cache";
-    private static final String APP_VERSION_HEADER = "App-Version";
+    private static final String SDK_VERSION_HEADER = "Sdk-Version";
 
     private AuthorizationEncoder authorizationEncoder;
 
@@ -45,7 +45,7 @@ public class AuthenticationInterceptor implements Interceptor {
         headers.put(ACCEPTS_HEADER, JSON_MIME_TYPE);
         headers.put(API_VERSION_HEADER, API_VERSION);
         headers.put(CACHE_CONTROL_HEADER, CACHE_CONTROL);
-        headers.put(APP_VERSION_HEADER, BuildConfig.VERSION_NAME);
+        headers.put(SDK_VERSION_HEADER, BuildConfig.VERSION_NAME);
 
         return Headers.of(headers);
     }
