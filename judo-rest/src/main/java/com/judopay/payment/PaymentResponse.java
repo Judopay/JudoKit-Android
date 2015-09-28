@@ -95,4 +95,26 @@ public class PaymentResponse {
     public Risks getRisks() {
         return risks;
     }
+
+    @Override
+    public String toString() {
+        return "PaymentResponse{" +
+                "risks=" + risks +
+                ", consumer=" + consumer +
+                ", cardDetails=" + cardDetails +
+                ", currency='" + currency + '\'' +
+                ", amount='" + amount + '\'' +
+                ", netAmount='" + netAmount + '\'' +
+                ", originalAmount='" + originalAmount + '\'' +
+                ", appearsOnStatementAs='" + appearsOnStatementAs + '\'' +
+                ", merchantName='" + merchantName + '\'' +
+                ", judoId=" + judoId +
+                ", message='" + message + '\'' +
+                ", result='" + result + '\'' +
+                ", createdAt=" + createdAt +
+                ", type='" + type + '\'' +
+                ", yourPaymentReference='" + yourPaymentReference + '\'' +
+                ", receiptId='" + receiptId + '\'' +
+                '}';
+    }
 }
