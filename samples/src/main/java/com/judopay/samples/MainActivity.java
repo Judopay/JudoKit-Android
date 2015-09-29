@@ -3,6 +3,7 @@ package com.judopay.samples;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.judopay.Consumer;
 import com.judopay.JudoPay;
@@ -12,6 +13,8 @@ import com.judopay.payment.PaymentActivity;
 import static com.judopay.payment.PaymentActivity.JUDO_PAYMENT;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int REQUEST_CODE = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +27,29 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(JUDO_PAYMENT, new Payment.Builder()
                 .setJudoId(100407196)
                 .setCurrency("GBP")
+                .setAmount(9.99f)
                 .setConsumer(new Consumer())
                 .setPaymentRef("paymentRef")
                 .build());
 
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (REQUEST_CODE == requestCode) {
+            switch (resultCode) {
+                case JudoPay.SUCCESS:
+                    Toast.makeText(MainActivity.this, "Payment response success", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case JudoPay.ERROR:
+                    Toast.makeText(MainActivity.this, "Payment response error", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
     }
 
 }
