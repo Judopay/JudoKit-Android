@@ -79,12 +79,16 @@ public class CardPaymentFragment extends Fragment {
         paymentService.payment(builder.build(), new Callback<PaymentResponse>() {
             @Override
             public void onResponse(Response<PaymentResponse> response) {
-//                        Toast.makeText(MainActivity.this, "Payment response success", Toast.LENGTH_SHORT).show();
+                if (listener != null) {
+                    listener.onPaymentSuccess(response);
+                }
             }
 
             @Override
             public void onFailure(Throwable t) {
-//                Toast.makeText(MainActivity.this, "Payment response error", Toast.LENGTH_SHORT).show();
+                if (listener != null) {
+                    listener.onFailure(t);
+                }
             }
         });
     }
