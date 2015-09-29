@@ -1,8 +1,14 @@
 package com.judopay.payment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+
+import com.judopay.JudoPay;
+
+import retrofit.Response;
 
 public class PaymentActivity extends AppCompatActivity implements PaymentListener {
 
@@ -14,12 +20,13 @@ public class PaymentActivity extends AppCompatActivity implements PaymentListene
 
         validateParcelableExtra(JUDO_PAYMENT);
 
-        Parcelable payment = getIntent().getParcelableExtra(JUDO_PAYMENT);
-
         if (savedInstanceState == null) {
+            Parcelable payment = getIntent().getParcelableExtra(JUDO_PAYMENT);
+            Fragment fragment = CardPaymentFragment.newInstance(payment, this);
+
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(android.R.id.content, CardPaymentFragment.newInstance(payment, this))
+                    .add(android.R.id.content, fragment)
                     .commit();
         }
     }
@@ -30,6 +37,17 @@ public class PaymentActivity extends AppCompatActivity implements PaymentListene
             throw new IllegalArgumentException(String.format("%s extra must be supplied to %s", extraName,
                     this.getClass().getSimpleName()));
         }
+    }
+
+    @Override
+    public void onPaymentSuccess(Response<PaymentResponse> response) {
+        setResult(JudoPay.SUCCESS, new Intent());
+        finish();
+    }
+
+    @Override
+    public void onFailure(Throwable t) {
+        setResult(JudoPay.ERROR, new Intent());
     }
 
 }
