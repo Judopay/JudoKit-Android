@@ -1,7 +1,5 @@
 package com.judopay.payment;
 
-import android.util.Log;
-
 import com.google.gson.GsonBuilder;
 import com.judopay.JudoPay;
 import com.judopay.auth.AuthenticationInterceptor;
@@ -14,7 +12,6 @@ import java.util.Date;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
-import retrofit.Response;
 import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
 
@@ -47,19 +44,9 @@ public class PaymentService {
                 .create(PaymentsApiService.class);
     }
 
-    public void payment(Transaction transaction) {
+    public void payment(Transaction transaction, Callback<PaymentResponse> callback) {
         Call<PaymentResponse> call = paymentsApiService.payment(transaction);
-        call.enqueue(new Callback<PaymentResponse>() {
-            @Override
-            public void onResponse(Response<PaymentResponse> response) {
-                Log.d("PaymentService", response.toString());
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Log.e("Payment", t.getMessage());
-            }
-        });
+        call.enqueue(callback);
     }
 
 }
