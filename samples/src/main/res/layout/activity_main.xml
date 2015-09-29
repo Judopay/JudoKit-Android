@@ -9,12 +9,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.judopay.samples.MainActivity">
 
-    <EditText
-        android:id="@+id/amount_edit_text"
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Amount"
-        android:inputType="numberDecimal" />
+        android:text="Amount: £9.99" />
 
     <EditText
         android:id="@+id/card_number_edit_text"
@@ -36,7 +34,6 @@
             android:layout_height="wrap_content"
             android:digits="01234/56789"
             android:hint="MM/YY"
-            android:inputType="number"
             android:maxLength="5"
             tools:ignore="TextFields" />
 
@@ -48,6 +45,12 @@
             android:hint="CV2"
             android:inputType="number"
             android:maxLength="3" />
+
+        <EditText
+            android:id="@+id/post_code_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Postcode" />
 
     </LinearLayout>
 
