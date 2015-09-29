@@ -1,9 +1,13 @@
 package com.judopay;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 public class JudoPay {
+
+    public static final int SUCCESS = Activity.RESULT_OK;
+    public static final int ERROR = Activity.RESULT_CANCELED;
 
     private static Context context;
 
