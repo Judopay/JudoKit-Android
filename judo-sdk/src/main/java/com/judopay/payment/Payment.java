@@ -102,23 +102,23 @@ public class Payment implements Parcelable {
 
         public Payment build() {
             if(payment.amount == 0) {
-                throw new IllegalArgumentException("");
+                throw new IllegalArgumentException("Payment.amount must be supplied");
             }
 
             if(payment.judoId == 0) {
-                throw new IllegalArgumentException("");
+                throw new IllegalArgumentException("Payment.judoId must be supplied");
             }
 
             if(payment.currency == null || payment.currency.length() == 0) {
-                throw new IllegalArgumentException("");
+                throw new IllegalArgumentException("Payment.currency must be supplied");
             }
 
             if(payment.paymentRef == null || payment.paymentRef.length() == 0) {
-                throw new IllegalArgumentException("");
+                throw new IllegalArgumentException("Payment.paymentRef must be supplied");
             }
 
             if(payment.consumer == null) {
-                throw new IllegalArgumentException("");
+                throw new IllegalArgumentException("Payment.consumer must be supplied");
             }
 
             return payment;
