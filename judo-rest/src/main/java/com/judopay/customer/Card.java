@@ -1,43 +1,61 @@
 package com.judopay.customer;
 
-import com.google.gson.annotations.SerializedName;
-
 public class Card {
 
-    private String endDate;
+    private String cardNumber;
+    private CardAddress cardAddress;
+    private CardDate expiryDate;
+    private CardDate startDate;
+    private String issueNumber;
 
-    @SerializedName("cardLastfour")
-    private String lastFour;
-
-    @SerializedName("cardToken")
-    private String token;
-
-    @SerializedName("cardType")
-    private long type;
-
-    public String getLastFour() {
-        return lastFour;
+    public Card(String cardNumber, CardDate startDate, CardDate expiryDate) {
+        this.cardNumber = cardNumber;
+        this.startDate = startDate;
+        this.expiryDate = expiryDate;
     }
 
-    public String getEndDate() {
-        return endDate;
+    public String getCardNumber() {
+        return cardNumber;
     }
 
-    public String getToken() {
-        return token;
+    public CardAddress getCardAddress() {
+        return cardAddress;
     }
 
-    public long getType() {
-        return type;
+    public CardDate getStartDate() {
+        return startDate;
     }
 
-    @Override
-    public String toString() {
-        return "Card{" +
-                "type=" + type +
-                ", token='" + token + '\'' +
-                ", lastFour='" + lastFour + '\'' +
-                ", endDate='" + endDate + '\'' +
-                '}';
+    public CardDate getExpiryDate() {
+        return expiryDate;
+    }
+
+    public String getIssueNumber() {
+        return issueNumber;
+    }
+
+    public boolean isLuhnValid() {
+        int sum = 0;
+        boolean alternate = false;
+        for (int i = cardNumber.length() - 1; i >= 0; i--) {
+            int n = Integer.parseInt(cardNumber.substring(i, i + 1));
+            if (alternate) {
+                n *= 2;
+                if (n > 9) {
+                    n = (n % 10) + 1;
+                }
+            }
+            sum += n;
+            alternate = !alternate;
+        }
+        return sum % 10 == 0;
+    }
+
+    public boolean isStartDateValid() {
+        return startDate.isPastDate();
+    }
+
+    public boolean isExpiryDateValid() {
+        return !expiryDate.isPastDate();
     }
 }
