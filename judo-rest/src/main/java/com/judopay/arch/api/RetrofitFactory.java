@@ -3,7 +3,7 @@ package com.judopay.arch.api;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.judopay.JudoPay;
-import com.judopay.auth.AuthenticationInterceptor;
+import com.judopay.auth.ApiHeadersInterceptor;
 import com.judopay.auth.AuthorizationEncoder;
 import com.squareup.okhttp.CertificatePinner;
 import com.squareup.okhttp.OkHttpClient;
@@ -20,7 +20,7 @@ public class RetrofitFactory {
 
     public static Retrofit get() {
         AuthorizationEncoder authorizationEncoder = new AuthorizationEncoder(JudoPay.getContext());
-        AuthenticationInterceptor interceptor = new AuthenticationInterceptor(authorizationEncoder);
+        ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(authorizationEncoder);
 
         OkHttpClient client = new OkHttpClient();
 

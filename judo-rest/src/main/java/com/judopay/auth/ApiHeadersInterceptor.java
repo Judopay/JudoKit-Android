@@ -1,5 +1,8 @@
 package com.judopay.auth;
 
+import android.os.Build;
+
+import com.judopay.arch.api.UserAgent;
 import com.judopay.rest.BuildConfig;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Interceptor;
@@ -8,8 +11,9 @@ import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 
-public class AuthenticationInterceptor implements Interceptor {
+public class ApiHeadersInterceptor implements Interceptor {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String CONTENT_TYPE_HEADER = "Content-Type";
@@ -21,11 +25,15 @@ public class AuthenticationInterceptor implements Interceptor {
     private static final String API_VERSION = "4.1.0";
     private static final String CACHE_CONTROL = "no-cache";
     private static final String SDK_VERSION_HEADER = "Sdk-Version";
+    public static final String USER_AGENT_HEADER = "User-Agent";
 
-    private AuthorizationEncoder authorizationEncoder;
+    private final UserAgent userAgent;
+    private final AuthorizationEncoder authorizationEncoder;
 
-    public AuthenticationInterceptor(AuthorizationEncoder authorizationEncoder) {
+    public ApiHeadersInterceptor(AuthorizationEncoder authorizationEncoder) {
         this.authorizationEncoder = authorizationEncoder;
+        this.userAgent = new UserAgent(BuildConfig.VERSION_NAME, Build.VERSION.RELEASE,
+                Build.MANUFACTURER, Build.MODEL, Locale.getDefault().getDisplayName());
     }
 
     @Override
@@ -46,6 +54,7 @@ public class AuthenticationInterceptor implements Interceptor {
         headers.put(API_VERSION_HEADER, API_VERSION);
         headers.put(CACHE_CONTROL_HEADER, CACHE_CONTROL);
         headers.put(SDK_VERSION_HEADER, BuildConfig.VERSION_NAME);
+        headers.put(USER_AGENT_HEADER, userAgent.toString());
 
         return Headers.of(headers);
     }
