@@ -2,6 +2,7 @@ package com.judopay.customer;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class CardDate {
 
@@ -27,6 +28,11 @@ public class CardDate {
         GregorianCalendar startDate = new GregorianCalendar(fullYear, month, 1);
 
         return startDate.before(Calendar.getInstance());
+    }
+
+    @Override
+    public String toString() {
+        return String.format(Locale.ENGLISH, "%02d/%02d", month, year);
     }
 
 }
