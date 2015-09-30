@@ -40,4 +40,5 @@ public class CardSummary {
                 ", type=" + type +
                 '}';
     }
+
 }
