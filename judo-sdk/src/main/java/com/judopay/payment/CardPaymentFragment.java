@@ -12,6 +12,8 @@ import android.widget.EditText;
 import com.judopay.Client;
 import com.judopay.R;
 import com.judopay.customer.Address;
+import com.judopay.customer.Card;
+import com.judopay.customer.CardDate;
 import com.judopay.customer.Location;
 
 import retrofit.Callback;
@@ -24,7 +26,7 @@ public class CardPaymentFragment extends Fragment {
     private PaymentListener listener;
 
     private Button paymentButton;
-    private EditText cv2EditText;
+    private EditText cvvEditText;
     private EditText postcodeEditText;
     private EditText cardNumberEditText;
     private EditText expiryDateEditText;
@@ -36,7 +38,7 @@ public class CardPaymentFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_card_payment, container, false);
 
         paymentButton = (Button) view.findViewById(R.id.payment_button);
-        cv2EditText = (EditText) view.findViewById(R.id.cv2_edit_text);
+        cvvEditText = (EditText) view.findViewById(R.id.cvv_edit_text);
         postcodeEditText = (EditText) view.findViewById(R.id.post_code_edit_text);
         cardNumberEditText = (EditText) view.findViewById(R.id.card_number_edit_text);
         expiryDateEditText = (EditText) view.findViewById(R.id.expiry_date_edit_text);
@@ -53,12 +55,48 @@ public class CardPaymentFragment extends Fragment {
         paymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                performPayment();
+                attemptPayment();
             }
         });
     }
 
-    private void performPayment() {
+    private void attemptPayment() {
+        Card card = new Card(getCardNumber(), null, new CardDate(getExpiryDate()), getCvv());
+
+        boolean errors = false;
+        if(!card.isLuhnValid()) {
+            errors = true;
+            cardNumberEditText.setError("Invalid card no.");
+        }
+
+        if(!card.isExpiryDateValid()) {
+            errors = true;
+            expiryDateEditText.setError("Invalid expiry date");
+        }
+
+        if(!card.isCvvValid()) {
+            errors = true;
+            cvvEditText.setError("Invalid CV2");
+        }
+
+        if(!errors) {
+            performPayment(card);
+        }
+    }
+
+    private String getCvv() {
+        return cvvEditText.getText().toString().trim();
+    }
+
+    private String getExpiryDate() {
+        return expiryDateEditText.getText().toString().trim();
+    }
+
+    private String getCardNumber() {
+        return cardNumberEditText.getText().toString().trim();
+    }
+
+    private void performPayment(Card card) {
         Payment payment = getArguments().getParcelable(JUDO_PAYMENT);
 
         Transaction.Builder builder = new Transaction.Builder()
@@ -68,13 +106,13 @@ public class CardPaymentFragment extends Fragment {
                         .build())
                 .setClientDetails(new Client())
                 .setConsumerLocation(new Location())
-                .setCardNumber(cardNumberEditText.getText().toString())
+                .setCardNumber(card.getCardNumber())
                 .setCurrency(payment.getCurrency())
-                .setCv2(cv2EditText.getText().toString())
+                .setCv2(card.getCv2())
                 .setJudoId(payment.getJudoId())
                 .setYourConsumerReference("consumerRef")
                 .setYourPaymentReference(payment.getPaymentRef())
-                .setExpiryDate(expiryDateEditText.getText().toString());
+                .setExpiryDate(card.getExpiryDate());
 
         paymentService.payment(builder.build(), new Callback<PaymentResponse>() {
             @Override
