@@ -28,10 +28,14 @@ public class RetrofitFactory {
         client.setReadTimeout(30, SECONDS);
         client.setWriteTimeout(30, SECONDS);
 
-        client.setCertificatePinner(new CertificatePinner.Builder()
-                .add("partnerapi.judopay-sandbox.com", "sha1/SSAG1hz7m8LI/eapL/SSpd5o564=")
-                .add("partnerapi.judopay-sandbox.com", "sha1/o5OZxATDsgmwgcIfIWIneMJ0jkw=")
-                .build());
+        if(JudoPay.isSslPinningEnabled()) {
+            client.setCertificatePinner(new CertificatePinner.Builder()
+                    .add("partnerapi.judopay-sandbox.com", "sha1/SSAG1hz7m8LI/eapL/SSpd5o564=")
+                    .add("partnerapi.judopay-sandbox.com", "sha1/o5OZxATDsgmwgcIfIWIneMJ0jkw=")
+                    .add("partnerapi.judopay.com", "sha1/SSAG1hz7m8LI/eapL/SSpd5o564=")
+                    .add("partnerapi.judopay.com", "sha1/o5OZxATDsgmwgcIfIWIneMJ0jkw=")
+                    .build());
+        }
 
         client.interceptors()
                 .add(interceptor);
