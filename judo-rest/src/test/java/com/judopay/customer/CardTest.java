@@ -37,4 +37,28 @@ public class CardTest {
         assertThat(card.isExpiryDateValid(), is(true));
     }
 
+    @Test
+    public void shouldMatchAmexCardType() {
+        Card card = new Card("340000000000009", null, null);
+        assertThat(card.getType(), is(Card.Type.AMEX));
+    }
+
+    @Test
+    public void shouldMatchVisaCardType() {
+        Card card = new Card("4111111111111111", null, null);
+        assertThat(card.getType(), is(Card.Type.VISA));
+    }
+
+    @Test
+    public void shouldMatchMastercardCardType() {
+        Card card = new Card("5500000000000004", null, null);
+        assertThat(card.getType(), is(Card.Type.MASTERCARD));
+    }
+
+    @Test
+    public void shouldMatchMaestroCardType() {
+        Card card = new Card("6759649826438453", null, null);
+        assertThat(card.getType(), is(Card.Type.MAESTRO));
+    }
+
 }
