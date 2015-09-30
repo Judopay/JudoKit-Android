@@ -9,6 +9,8 @@ public class JudoPay {
     public static final int SUCCESS = Activity.RESULT_OK;
     public static final int ERROR = Activity.RESULT_CANCELED;
 
+    public static final String API_HOST_SANDBOX = "https://partnerapi.judopay-sandbox.com";
+
     private static Context context;
 
     private static final String SHARED_PREFS = "JudoPrefs";
@@ -34,6 +36,6 @@ public class JudoPay {
     }
 
     public static String getBaseUrl() {
-        return "https://partnerapi.judopay-sandbox.com";
+        return API_HOST_SANDBOX;
     }
 }
