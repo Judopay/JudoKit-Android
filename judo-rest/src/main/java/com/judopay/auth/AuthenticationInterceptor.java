@@ -13,7 +13,7 @@ public class AuthenticationInterceptor implements Interceptor {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String CONTENT_TYPE_HEADER = "Content-Type";
-    private static final String ACCEPTS_HEADER = "Accepts";
+    private static final String ACCEPT_HEADER = "Accept";
     private static final String API_VERSION_HEADER = "Api-Version";
     private static final String CACHE_CONTROL_HEADER = "Cache-Control";
 
@@ -42,7 +42,7 @@ public class AuthenticationInterceptor implements Interceptor {
 
         headers.put(AUTHORIZATION_HEADER, authorizationEncoder.getAuthorization());
         headers.put(CONTENT_TYPE_HEADER, JSON_MIME_TYPE);
-        headers.put(ACCEPTS_HEADER, JSON_MIME_TYPE);
+        headers.put(ACCEPT_HEADER, JSON_MIME_TYPE);
         headers.put(API_VERSION_HEADER, API_VERSION);
         headers.put(CACHE_CONTROL_HEADER, CACHE_CONTROL);
         headers.put(SDK_VERSION_HEADER, BuildConfig.VERSION_NAME);
