@@ -1,4 +1,4 @@
-package com.judopay.util;
+package com.judopay.arch.api;
 
 import com.google.gson.JsonElement;
 
