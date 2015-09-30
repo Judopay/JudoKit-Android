@@ -9,6 +9,22 @@ import static org.hamcrest.core.IsEqual.equalTo;
 public class CardDateTest {
 
     @Test
+    public void shouldCreateFromString() {
+        CardDate cardDate = new CardDate("12/15");
+
+        assertThat(cardDate.getMonth(), is(12));
+        assertThat(cardDate.getYear(), is(15));
+    }
+
+    @Test
+    public void shouldCreateFromStringZeroPadded() {
+        CardDate cardDate = new CardDate("01/01");
+
+        assertThat(cardDate.getMonth(), is(1));
+        assertThat(cardDate.getYear(), is(1));
+    }
+
+    @Test
     public void shouldHavePastDate() {
         CardDate cardDate = new CardDate(1, 12);
         assertThat(cardDate.isPastDate(), is(true));

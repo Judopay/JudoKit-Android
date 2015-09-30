@@ -14,6 +14,13 @@ public class CardDate {
         this.year = year;
     }
 
+    public CardDate(String date) {
+        String[] splitDate = date.split("/");
+
+        this.month = Integer.parseInt(splitDate[0]);
+        this.year = Integer.parseInt(splitDate[1]);
+    }
+
     public int getMonth() {
         return month;
     }
