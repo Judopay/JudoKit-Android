@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
+
 public class AuthorizationEncoder {
 
     public static final String SHARED_PREFS = "JudoPrefs";
@@ -28,7 +29,7 @@ public class AuthorizationEncoder {
             throw new RuntimeException("Judo Payments API Secret not specified");
         }
 
-        String encoded = Base64.encodeToString(String.format("%s:%s", apiToken, apiSecret).getBytes(), Base64.DEFAULT);
+        String encoded = Base64.encodeToString(String.format("%s:%s", apiToken, apiSecret).getBytes(), Base64.NO_WRAP);
         return String.format("Basic %s", encoded);
     }
 
