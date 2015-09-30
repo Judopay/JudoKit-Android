@@ -1,7 +1,7 @@
 package com.judopay.payment;
 
-import com.judopay.customer.Card;
 import com.judopay.Consumer;
+import com.judopay.customer.CardSummary;
 
 import java.util.Date;
 
@@ -20,7 +20,7 @@ public class PaymentResponse {
     private String netAmount;
     private String amount;
     private String currency;
-    private Card cardDetails;
+    private CardSummary cardDetails;
     private Consumer consumer;
     private Risks risks;
 
@@ -84,7 +84,7 @@ public class PaymentResponse {
         return currency;
     }
 
-    public Card getCardDetails() {
+    public CardSummary getCardDetails() {
         return cardDetails;
     }
 
