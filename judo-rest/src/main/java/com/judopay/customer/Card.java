@@ -1,5 +1,7 @@
 package com.judopay.customer;
 
+import java.util.Locale;
+
 public class Card {
 
     private String cardNumber;
@@ -28,8 +30,8 @@ public class Card {
         return startDate;
     }
 
-    public CardDate getExpiryDate() {
-        return expiryDate;
+    public String getExpiryDate() {
+        return String.format(Locale.ENGLISH, "%02d%02d", expiryDate.getMonth(), expiryDate.getYear());
     }
 
     public String getIssueNumber() {
