@@ -81,9 +81,7 @@ public class Card {
         private static final String REGEX_MC = "^5[1-5][0-9]{2}.*?";
         private static final String REGEX_MAESTRO = "^(5018|5020|5038|6304|6759|6761|6763|6334|6767|4903|4905|4911|4936|564182|633110|6333|6759|5600|5602|5603|5610|5611|5656|6700|6706|6773|6775|6709|6771|6773|6775).*?";
         private static final String REGEX_AMEX = "^3[47][0-9]{2}.*?";
-        private static final String REGEX_DISCOVER = "^6(?:011|5[0-9]{2})$";
-        private static final String REGEX_DINERS = "^3(?:0[0-5]|[68][0-9])[0-9]$";
-        
+
         public static final int UNKNOWN=0;
         public static final int VISA=1;
         public static final int MASTERCARD=2;
