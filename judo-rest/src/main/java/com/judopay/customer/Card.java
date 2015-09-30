@@ -7,11 +7,13 @@ public class Card {
     private CardDate expiryDate;
     private CardDate startDate;
     private String issueNumber;
+    private String cvv;
 
-    public Card(String cardNumber, CardDate startDate, CardDate expiryDate) {
+    public Card(String cardNumber, CardDate startDate, CardDate expiryDate, String cvv) {
         this.cardNumber = cardNumber;
         this.startDate = startDate;
         this.expiryDate = expiryDate;
+        this.cvv = cvv;
     }
 
     public String getCardNumber() {
@@ -73,6 +75,33 @@ public class Card {
             return Type.AMEX;
         }
         return Type.UNKNOWN;
+    }
+
+    public boolean isCvvValid() {
+        try {
+            switch (getType()) {
+                case Type.AMEX:
+                    return isCidvValid();
+                default:
+                    return isCv2Valid();
+            }
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private boolean isCv2Valid() {
+        int cv2 = Integer.parseInt(cvv);
+        return (cv2 >= 0 && cv2 < 1000);
+    }
+
+    private boolean isCidvValid() {
+        int cidv = Integer.parseInt(cvv);
+        return (cidv >= 0 && cidv < 10000);
+    }
+
+    public String getCv2() {
+        return cvv;
     }
 
     public static class Type {
