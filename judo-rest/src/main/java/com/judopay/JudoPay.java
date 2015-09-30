@@ -10,6 +10,7 @@ public class JudoPay {
     public static final int ERROR = Activity.RESULT_CANCELED;
 
     public static final String API_HOST_SANDBOX = "https://partnerapi.judopay-sandbox.com";
+    public static final String SSL_PINNING_ENABLED = "JudoSslPinningEnabled";
 
     private static Context context;
 
@@ -23,7 +24,7 @@ public class JudoPay {
     }
 
     private void saveApiCredentials(String apiToken, String apiSecret) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getPreferences();
 
         sharedPreferences.edit()
                 .putString(API_TOKEN, apiToken)
@@ -38,4 +39,20 @@ public class JudoPay {
     public static String getBaseUrl() {
         return API_HOST_SANDBOX;
     }
+
+    public static boolean isSslPinningEnabled() {
+        return getPreferences().getBoolean(SSL_PINNING_ENABLED, true);
+    }
+
+    public static void setSslPinningEnabled(boolean enabled) {
+        getPreferences()
+                .edit()
+                .putBoolean(SSL_PINNING_ENABLED, enabled)
+                .commit();
+    }
+
+    private static SharedPreferences getPreferences() {
+        return context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+    }
+
 }
