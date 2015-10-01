@@ -10,11 +10,12 @@ public class JudoPay {
     public static final int ERROR = Activity.RESULT_CANCELED;
 
     public static final String API_HOST_SANDBOX = "https://partnerapi.judopay-sandbox.com";
-    public static final String SSL_PINNING_ENABLED = "JudoSslPinningEnabled";
 
     private static Context context;
 
     private static final String SHARED_PREFS = "JudoPrefs";
+
+    private static final String SSL_PINNING_ENABLED = "JudoSslPinningEnabled";
     private static final String API_TOKEN = "JudoApiToken";
     private static final String API_SECRET = "JudoApiSecret";
 
