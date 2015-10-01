@@ -11,8 +11,9 @@ public class Card {
     private String issueNumber;
     private String cvv;
 
-    public Card(String cardNumber, CardDate startDate, CardDate expiryDate, String cvv) {
+    public Card(String cardNumber, CardAddress cardAddress, CardDate startDate, CardDate expiryDate, String cvv) {
         this.cardNumber = cardNumber;
+        this.cardAddress = cardAddress;
         this.startDate = startDate;
         this.expiryDate = expiryDate;
         this.cvv = cvv;
