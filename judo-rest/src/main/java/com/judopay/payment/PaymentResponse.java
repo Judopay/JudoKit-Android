@@ -1,11 +1,14 @@
 package com.judopay.payment;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.judopay.Consumer;
 import com.judopay.customer.CardSummary;
 
 import java.util.Date;
 
-public class PaymentResponse {
+public class PaymentResponse implements Parcelable {
 
     private long judoID;
     private String receiptId;
@@ -25,6 +28,8 @@ public class PaymentResponse {
     private CardSummary cardDetails;
     private Consumer consumer;
     private Risks risks;
+
+    public PaymentResponse() { }
 
     public String getReceiptId() {
         return receiptId;
@@ -121,4 +126,64 @@ public class PaymentResponse {
                 ", risks=" + risks +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.judoID);
+        dest.writeString(this.receiptId);
+        dest.writeString(this.originalReceiptId);
+        dest.writeString(this.partnerServiceFee);
+        dest.writeString(this.yourPaymentReference);
+        dest.writeString(this.type);
+        dest.writeLong(createdAt != null ? createdAt.getTime() : -1);
+        dest.writeString(this.result);
+        dest.writeString(this.message);
+        dest.writeString(this.merchantName);
+        dest.writeString(this.appearsOnStatementAs);
+        dest.writeFloat(this.originalAmount);
+        dest.writeFloat(this.netAmount);
+        dest.writeFloat(this.amount);
+        dest.writeString(this.currency);
+        dest.writeParcelable(this.cardDetails, flags);
+        dest.writeParcelable(this.consumer, 0);
+        dest.writeParcelable(this.risks, flags);
+    }
+
+    private PaymentResponse(Parcel in) {
+        this.judoID = in.readLong();
+        this.receiptId = in.readString();
+        this.originalReceiptId = in.readString();
+        this.partnerServiceFee = in.readString();
+        this.yourPaymentReference = in.readString();
+        this.type = in.readString();
+        long tmpCreatedAt = in.readLong();
+        this.createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
+        this.result = in.readString();
+        this.message = in.readString();
+        this.merchantName = in.readString();
+        this.appearsOnStatementAs = in.readString();
+        this.originalAmount = in.readFloat();
+        this.netAmount = in.readFloat();
+        this.amount = in.readFloat();
+        this.currency = in.readString();
+        this.cardDetails = in.readParcelable(CardSummary.class.getClassLoader());
+        this.consumer = in.readParcelable(Consumer.class.getClassLoader());
+        this.risks = in.readParcelable(Risks.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<PaymentResponse> CREATOR = new Parcelable.Creator<PaymentResponse>() {
+        public PaymentResponse createFromParcel(Parcel source) {
+            return new PaymentResponse(source);
+        }
+
+        public PaymentResponse[] newArray(int size) {
+            return new PaymentResponse[size];
+        }
+    };
+
 }
