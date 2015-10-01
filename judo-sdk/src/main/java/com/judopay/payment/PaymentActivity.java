@@ -6,14 +6,12 @@ import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
+import com.judopay.Callback;
 import com.judopay.Client;
 import com.judopay.JudoPay;
 import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.customer.Location;
-
-import retrofit.Callback;
-import retrofit.Response;
 
 public class PaymentActivity extends AppCompatActivity implements PaymentFormListener {
 
@@ -68,14 +66,15 @@ public class PaymentActivity extends AppCompatActivity implements PaymentFormLis
 
         paymentService.payment(builder.build(), new Callback<PaymentResponse>() {
             @Override
-            public void onResponse(Response<PaymentResponse> response) {
+            public void onSuccess(PaymentResponse paymentResponse) {
                 setResult(JudoPay.SUCCESS, new Intent());
                 finish();
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure() {
                 setResult(JudoPay.ERROR, new Intent());
+                finish();
             }
         });
     }
