@@ -7,18 +7,20 @@ import java.util.Date;
 
 public class PaymentResponse {
 
+    private long judoID;
     private String receiptId;
+    private String originalReceiptId;
+    private String partnerServiceFee;
     private String yourPaymentReference;
     private String type;
     private Date createdAt;
     private String result;
     private String message;
-    private long judoId;
     private String merchantName;
     private String appearsOnStatementAs;
-    private String originalAmount;
-    private String netAmount;
-    private String amount;
+    private float originalAmount;
+    private float netAmount;
+    private float amount;
     private String currency;
     private CardSummary cardDetails;
     private Consumer consumer;
@@ -56,8 +58,8 @@ public class PaymentResponse {
         return message;
     }
 
-    public long getJudoId() {
-        return judoId;
+    public long getJudoID() {
+        return judoID;
     }
 
     public String getMerchantName() {
@@ -68,15 +70,15 @@ public class PaymentResponse {
         return appearsOnStatementAs;
     }
 
-    public String getOriginalAmount() {
+    public float getOriginalAmount() {
         return originalAmount;
     }
 
-    public String getNetAmount() {
+    public float getNetAmount() {
         return netAmount;
     }
 
-    public String getAmount() {
+    public float getAmount() {
         return amount;
     }
 
@@ -99,22 +101,24 @@ public class PaymentResponse {
     @Override
     public String toString() {
         return "PaymentResponse{" +
-                "risks=" + risks +
-                ", consumer=" + consumer +
-                ", cardDetails=" + cardDetails +
-                ", currency='" + currency + '\'' +
-                ", amount='" + amount + '\'' +
-                ", netAmount='" + netAmount + '\'' +
-                ", originalAmount='" + originalAmount + '\'' +
-                ", appearsOnStatementAs='" + appearsOnStatementAs + '\'' +
-                ", merchantName='" + merchantName + '\'' +
-                ", judoId=" + judoId +
-                ", message='" + message + '\'' +
-                ", result='" + result + '\'' +
-                ", createdAt=" + createdAt +
-                ", type='" + type + '\'' +
-                ", yourPaymentReference='" + yourPaymentReference + '\'' +
+                "judoID=" + judoID +
                 ", receiptId='" + receiptId + '\'' +
+                ", originalReceiptId='" + originalReceiptId + '\'' +
+                ", partnerServiceFee='" + partnerServiceFee + '\'' +
+                ", yourPaymentReference='" + yourPaymentReference + '\'' +
+                ", type='" + type + '\'' +
+                ", createdAt=" + createdAt +
+                ", result='" + result + '\'' +
+                ", message='" + message + '\'' +
+                ", merchantName='" + merchantName + '\'' +
+                ", appearsOnStatementAs='" + appearsOnStatementAs + '\'' +
+                ", originalAmount=" + originalAmount +
+                ", netAmount=" + netAmount +
+                ", amount=" + amount +
+                ", currency='" + currency + '\'' +
+                ", cardDetails=" + cardDetails +
+                ", consumer=" + consumer +
+                ", risks=" + risks +
                 '}';
     }
 }
