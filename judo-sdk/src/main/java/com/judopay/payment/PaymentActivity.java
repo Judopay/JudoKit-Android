@@ -8,14 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.judopay.Callback;
 import com.judopay.Client;
-import com.judopay.JudoPay;
 import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.customer.Location;
 
-public class PaymentActivity extends AppCompatActivity implements PaymentFormListener {
+import static com.judopay.JudoPay.ERROR;
+import static com.judopay.JudoPay.JUDO_PAYMENT;
+import static com.judopay.JudoPay.JUDO_RECEIPT;
+import static com.judopay.JudoPay.SUCCESS;
 
-    public static final String JUDO_PAYMENT = "Judo-Payment";
+public class PaymentActivity extends AppCompatActivity implements PaymentFormListener {
 
     private PaymentService paymentService;
 
@@ -67,13 +69,15 @@ public class PaymentActivity extends AppCompatActivity implements PaymentFormLis
         paymentService.payment(builder.build(), new Callback<PaymentResponse>() {
             @Override
             public void onSuccess(PaymentResponse paymentResponse) {
-                setResult(JudoPay.SUCCESS, new Intent());
+                Intent intent = new Intent();
+                intent.putExtra(JUDO_RECEIPT, paymentResponse);
+                setResult(SUCCESS, intent);
                 finish();
             }
 
             @Override
             public void onFailure() {
-                setResult(JudoPay.ERROR, new Intent());
+                setResult(ERROR, new Intent());
                 finish();
             }
         });
