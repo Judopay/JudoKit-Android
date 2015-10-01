@@ -25,6 +25,14 @@ public class Consumer implements Parcelable {
         }
     };
 
+    public String getConsumerToken() {
+        return consumerToken;
+    }
+
+    public String getYourConsumerReference() {
+        return yourConsumerReference;
+    }
+
     @Override
     public int describeContents() {
         return 0;
