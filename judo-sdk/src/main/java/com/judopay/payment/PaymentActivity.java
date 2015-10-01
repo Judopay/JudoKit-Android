@@ -62,7 +62,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentFormLis
                 .setCurrency(payment.getCurrency())
                 .setCv2(card.getCv2())
                 .setJudoId(payment.getJudoId())
-                .setYourConsumerReference(payment.getConsumer().toString())
+                .setYourConsumerReference(payment.getConsumer().getYourConsumerReference())
                 .setYourPaymentReference(payment.getPaymentRef())
                 .setExpiryDate(card.getExpiryDate());
 
