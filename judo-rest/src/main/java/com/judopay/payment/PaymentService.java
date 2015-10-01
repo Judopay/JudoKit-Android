@@ -7,18 +7,19 @@ import retrofit.Callback;
 
 public class PaymentService {
 
-    private PaymentsApiService paymentsApiService;
+    private PaymentApiService paymentApiService;
 
-    public PaymentService(PaymentsApiService paymentsApiService) {
-        this.paymentsApiService = paymentsApiService;
+    public PaymentService(PaymentApiService paymentApiService) {
+        this.paymentApiService = paymentApiService;
     }
 
     public PaymentService() {
-        this.paymentsApiService = RetrofitFactory.get().create(PaymentsApiService.class);
+        this.paymentApiService = RetrofitFactory.get()
+                .create(PaymentApiService.class);
     }
 
     public void payment(Transaction transaction, Callback<PaymentResponse> callback) {
-        Call<PaymentResponse> call = paymentsApiService.payment(transaction);
+        Call<PaymentResponse> call = paymentApiService.payment(transaction);
         call.enqueue(callback);
     }
 
