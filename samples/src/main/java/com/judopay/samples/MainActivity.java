@@ -2,7 +2,6 @@ package com.judopay.samples;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +16,6 @@ import com.judopay.payment.PaymentResponse;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static com.judopay.JudoPay.Environment.LIVE;
 import static com.judopay.JudoPay.Environment.SANDBOX;
 import static com.judopay.JudoPay.JUDO_PAYMENT;
 import static com.judopay.JudoPay.JUDO_RECEIPT;
@@ -66,12 +64,16 @@ public class MainActivity extends AppCompatActivity {
 
         if (REQUEST_CODE == requestCode) {
             switch (resultCode) {
-                case JudoPay.SUCCESS:
+                case JudoPay.RESULT_PAYMENT_SUCCESS:
                     PaymentResponse response = data.getParcelableExtra(JUDO_RECEIPT);
                     Toast.makeText(MainActivity.this, "Payment response success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
                     break;
 
-                case JudoPay.ERROR:
+                case JudoPay.RESULT_CANCELED:
+                    Toast.makeText(MainActivity.this, "Payment canceled", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case JudoPay.RESULT_ERROR:
                     Toast.makeText(MainActivity.this, "Payment response error", Toast.LENGTH_SHORT).show();
                     break;
             }

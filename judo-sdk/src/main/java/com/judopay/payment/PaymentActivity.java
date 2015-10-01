@@ -8,14 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.judopay.Callback;
 import com.judopay.Client;
+import com.judopay.JudoPay;
 import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.customer.Location;
-
-import static com.judopay.JudoPay.ERROR;
-import static com.judopay.JudoPay.JUDO_PAYMENT;
-import static com.judopay.JudoPay.JUDO_RECEIPT;
-import static com.judopay.JudoPay.SUCCESS;
 
 public class PaymentActivity extends AppCompatActivity implements PaymentFormListener {
 
@@ -25,11 +21,11 @@ public class PaymentActivity extends AppCompatActivity implements PaymentFormLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        validateParcelableExtra(JUDO_PAYMENT);
+        validateParcelableExtra(JudoPay.JUDO_PAYMENT);
         this.paymentService = new PaymentService();
 
         if (savedInstanceState == null) {
-            Parcelable payment = getIntent().getParcelableExtra(JUDO_PAYMENT);
+            Parcelable payment = getIntent().getParcelableExtra(JudoPay.JUDO_PAYMENT);
             Fragment fragment = CardFormFragment.newInstance(payment, this);
 
             getSupportFragmentManager()
@@ -48,8 +44,14 @@ public class PaymentActivity extends AppCompatActivity implements PaymentFormLis
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(RESULT_CANCELED);
+    }
+
+    @Override
     public void onSubmitCard(Card card) {
-        Payment payment = getIntent().getParcelableExtra(JUDO_PAYMENT);
+        Payment payment = getIntent().getParcelableExtra(JudoPay.JUDO_PAYMENT);
 
         Transaction.Builder builder = new Transaction.Builder()
                 .setAmount(String.valueOf(payment.getAmount()))
@@ -70,14 +72,14 @@ public class PaymentActivity extends AppCompatActivity implements PaymentFormLis
             @Override
             public void onSuccess(PaymentResponse paymentResponse) {
                 Intent intent = new Intent();
-                intent.putExtra(JUDO_RECEIPT, paymentResponse);
-                setResult(SUCCESS, intent);
+                intent.putExtra(JudoPay.JUDO_RECEIPT, paymentResponse);
+                setResult(JudoPay.RESULT_PAYMENT_SUCCESS, intent);
                 finish();
             }
 
             @Override
             public void onFailure() {
-                setResult(ERROR, new Intent());
+                setResult(JudoPay.RESULT_ERROR, new Intent());
                 finish();
             }
         });
