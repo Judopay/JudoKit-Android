@@ -9,55 +9,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.judopay.samples.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Amount: £9.99" />
-
-    <EditText
-        android:id="@+id/card_number_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:digits="01234 56789"
-        android:hint="Card No."
-        android:inputType="number"
-        android:maxLength="19" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/expiry_date_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:digits="01234/56789"
-            android:hint="MM/YY"
-            android:maxLength="5"
-            tools:ignore="TextFields" />
-
-        <EditText
-            android:id="@+id/cv2_edit_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="0123456789"
-            android:hint="CV2"
-            android:inputType="number"
-            android:maxLength="3" />
-
-        <EditText
-            android:id="@+id/post_code_edit_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Postcode" />
-
-    </LinearLayout>
-
     <Button
         android:id="@+id/payment_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Make Payment" />
+        android:text="Make Payment £9.99" />
 
 </LinearLayout>

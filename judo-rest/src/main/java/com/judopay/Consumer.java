@@ -8,7 +8,14 @@ public class Consumer implements Parcelable {
     private String consumerToken;
     private String yourConsumerReference;
 
-    public Consumer() { }
+    public Consumer(String consumerToken, String yourConsumerReference) {
+        this.consumerToken = consumerToken;
+        this.yourConsumerReference = yourConsumerReference;
+    }
+
+    public Consumer(String yourConsumerReference) {
+        this.yourConsumerReference = yourConsumerReference;
+    }
 
     private Consumer(Parcel in) {
         this.consumerToken = in.readString();
@@ -24,6 +31,14 @@ public class Consumer implements Parcelable {
             return new Consumer[size];
         }
     };
+
+    public String getConsumerToken() {
+        return consumerToken;
+    }
+
+    public String getYourConsumerReference() {
+        return yourConsumerReference;
+    }
 
     @Override
     public int describeContents() {
