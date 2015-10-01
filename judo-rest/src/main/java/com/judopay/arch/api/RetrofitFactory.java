@@ -49,7 +49,7 @@ public class RetrofitFactory {
         return new Retrofit.Builder()
                 .addConverterFactory(converterFactory)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .baseUrl(JudoPay.getBaseUrl())
+                .baseUrl(JudoPay.getApiEnvironmentHost())
                 .client(client)
                 .build();
     }
