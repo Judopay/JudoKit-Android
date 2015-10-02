@@ -20,6 +20,7 @@ public class JudoPay {
 
     private static final String SHARED_PREFS = "JudoPrefs";
 
+    private static final String AVS_ENABLED = "JudoAvsEnabled";
     private static final String SSL_PINNING_ENABLED = "JudoSslPinningEnabled";
     private static final String API_TOKEN = "JudoApiToken";
     private static final String API_SECRET = "JudoApiSecret";
@@ -66,6 +67,18 @@ public class JudoPay {
 
     private static SharedPreferences getPreferences() {
         return context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+    }
+
+    public static void setAvsEnabled(boolean enabled) {
+        getPreferences()
+                .edit()
+                .putBoolean(AVS_ENABLED, enabled)
+                .commit();
+    }
+
+    public static boolean isAvsEnabled() {
+        return getPreferences()
+                .getBoolean(AVS_ENABLED, false);
     }
 
     public class Environment {
