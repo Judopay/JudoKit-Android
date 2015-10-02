@@ -3,19 +3,12 @@ package com.judopay;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.IntDef;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 public class JudoPay {
 
-    @IntDef({Environment.LIVE, Environment.SANDBOX})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface JudoEnvironment {}
-
-    public static final int SUCCESS = Activity.RESULT_OK;
-    public static final int ERROR = Activity.RESULT_CANCELED;
+    public static final int RESULT_PAYMENT_SUCCESS = Activity.RESULT_OK;
+    public static final int RESULT_CANCELED = Activity.RESULT_CANCELED;
+    public static final int RESULT_ERROR = 1;
 
     public static final String JUDO_PAYMENT = "Judo-Payment";
     public static final String JUDO_RECEIPT = "Judo-Receipt";
@@ -32,15 +25,15 @@ public class JudoPay {
     private static final String API_SECRET = "JudoApiSecret";
     private static final String API_ENVIRONMENT = "JudoApiEnvironment";
 
-    public void initialise(Context context,
-                           String apiToken,
-                           String apiSecret,
-                           int apiEnvironment) {
+    public static void setup(Context context,
+                             String apiToken,
+                             String apiSecret,
+                             int apiEnvironment) {
         JudoPay.context = context.getApplicationContext();
         saveConfiguration(apiToken, apiSecret, apiEnvironment);
     }
 
-    private void saveConfiguration(String apiToken, String apiSecret, @JudoEnvironment int apiEnvironment) {
+    private static void saveConfiguration(String apiToken, String apiSecret, int apiEnvironment) {
         SharedPreferences sharedPreferences = getPreferences();
 
         sharedPreferences.edit()
