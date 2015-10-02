@@ -36,8 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        JudoPay judoPay = new JudoPay();
-        judoPay.initialise(this, "823Eja2fEM6E9NAE", "382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6", SANDBOX);
+        JudoPay.setup(this, "823Eja2fEM6E9NAE", "382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6", SANDBOX);
 
         initialiseView();
     }
@@ -47,13 +46,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
-                intent.putExtra(JUDO_PAYMENT, new Payment.Builder()
+
+                Payment payment = new Payment.Builder()
                         .setJudoId(100407196)
                         .setCurrency("GBP")
                         .setAmount(9.99f)
                         .setConsumer(new Consumer("yourConsumerRef"))
                         .setPaymentRef("paymentRef")
-                        .build());
+                        .build();
+
+                intent.putExtra(JUDO_PAYMENT, payment);
 
                 startActivityForResult(intent, REQUEST_CODE);
             }
@@ -66,12 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (REQUEST_CODE == requestCode) {
             switch (resultCode) {
-                case JudoPay.SUCCESS:
+                case JudoPay.RESULT_PAYMENT_SUCCESS:
                     PaymentResponse response = data.getParcelableExtra(JUDO_RECEIPT);
                     Toast.makeText(MainActivity.this, "Payment response success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
                     break;
 
-                case JudoPay.ERROR:
+                case JudoPay.RESULT_ERROR:
                     Toast.makeText(MainActivity.this, "Payment response error", Toast.LENGTH_SHORT).show();
                     break;
             }
