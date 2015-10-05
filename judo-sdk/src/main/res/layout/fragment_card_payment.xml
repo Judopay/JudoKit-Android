@@ -28,14 +28,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <EditText
+        <com.judopay.payment.CardDateEditText
             android:id="@+id/expiry_date_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:digits="01234/56789"
-            android:hint="MM/YY"
-            android:maxLength="5"
-            tools:ignore="TextFields" />
+            android:maxLength="5" />
 
         <EditText
             android:id="@+id/cvv_edit_text"
@@ -52,10 +50,10 @@
             android:hint="Postcode" />
 
         <Spinner
-            android:visibility="gone"
             android:id="@+id/country_spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
     </LinearLayout>
 
