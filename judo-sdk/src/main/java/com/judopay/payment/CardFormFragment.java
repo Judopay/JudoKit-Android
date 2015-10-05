@@ -29,9 +29,10 @@ public class CardFormFragment extends Fragment {
     private Button paymentButton;
     private EditText cvvEditText;
     private EditText postcodeEditText;
-    private EditText cardNumberEditText;
-    private EditText expiryDateEditText;
+
     private Spinner countrySpinner;
+    private EditText cardNumberEditText;
+    private CardDateEditText expiryDateEditText;
 
     private PaymentFormListener paymentFormListener;
     private CountrySpinnerAdapter countryAdapter;
@@ -44,7 +45,7 @@ public class CardFormFragment extends Fragment {
         cvvEditText = (EditText) view.findViewById(R.id.cvv_edit_text);
         postcodeEditText = (EditText) view.findViewById(R.id.post_code_edit_text);
         cardNumberEditText = (EditText) view.findViewById(R.id.card_number_edit_text);
-        expiryDateEditText = (EditText) view.findViewById(R.id.expiry_date_edit_text);
+        expiryDateEditText = (CardDateEditText) view.findViewById(R.id.expiry_date_edit_text);
         countrySpinner = (Spinner) view.findViewById(R.id.country_spinner);
 
         initialiseView();
@@ -56,7 +57,9 @@ public class CardFormFragment extends Fragment {
         paymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                attemptPayment();
+                if(expiryDateEditText.isValid()) {
+                    attemptPayment();
+                }
             }
         });
 
@@ -92,6 +95,7 @@ public class CardFormFragment extends Fragment {
                 getCvv());
 
         boolean errors = false;
+
         if (!card.isLuhnValid()) {
             errors = true;
             cardNumberEditText.setError("Invalid card no.");
