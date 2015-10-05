@@ -2,8 +2,7 @@ package com.judopay.payment;
 
 import com.judopay.arch.api.RetrofitFactory;
 
-import retrofit.Call;
-import retrofit.Callback;
+import rx.Observable;
 
 public class PaymentService {
 
@@ -18,9 +17,8 @@ public class PaymentService {
                 .create(PaymentApiService.class);
     }
 
-    public void payment(Transaction transaction, Callback<PaymentResponse> callback) {
-        Call<PaymentResponse> call = paymentApiService.payment(transaction);
-        call.enqueue(callback);
+    public Observable<PaymentResponse> payment(Transaction transaction) {
+        return paymentApiService.payment(transaction);
     }
 
 }
