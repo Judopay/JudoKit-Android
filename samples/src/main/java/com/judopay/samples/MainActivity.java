@@ -17,7 +17,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import static com.judopay.JudoPay.Environment.SANDBOX;
-import static com.judopay.JudoPay.JUDO_PAYMENT;
 import static com.judopay.JudoPay.JUDO_RECEIPT;
 
 public class MainActivity extends AppCompatActivity {
@@ -54,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
                         .setPaymentRef("paymentRef")
                         .build();
 
-                intent.putExtra(JUDO_PAYMENT, payment);
+                intent.putExtra(JudoPay.EXTRA_PAYMENT, payment);
+                intent.putExtra(Intent.EXTRA_TITLE, "Payment example");
 
                 startActivityForResult(intent, REQUEST_CODE);
             }
