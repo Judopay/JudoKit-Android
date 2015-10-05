@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:digits="01234 56789"
+        android:text="4976000000003436"
         android:hint="Card No."
         android:inputType="number"
         android:maxLength="19" />
@@ -33,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:digits="01234/56789"
+            android:text="12/15"
             android:maxLength="5" />
 
         <EditText
@@ -41,6 +43,7 @@
             android:layout_height="wrap_content"
             android:digits="0123456789/"
             android:hint="CV2"
+            android:text="452"
             android:maxLength="5" />
 
         <EditText
