@@ -11,8 +11,8 @@ public class JudoPay {
     public static final int RESULT_PAYMENT_DECLINED = 2;
     public static final int RESULT_ERROR = 1;
 
-    public static final String JUDO_PAYMENT = "Judo-Payment";
     public static final String JUDO_RECEIPT = "Judo-Receipt";
+    public static final String EXTRA_PAYMENT = "Judo-Payment";
 
     private static final String API_HOST_SANDBOX = "https://partnerapi.judopay-sandbox.com";
     private static final String API_HOST_LIVE = "https://partnerapi.judopay.com";
