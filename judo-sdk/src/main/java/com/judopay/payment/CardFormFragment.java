@@ -8,11 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
+import com.judopay.JudoPay;
 import com.judopay.R;
 import com.judopay.customer.Card;
 import com.judopay.customer.CardAddress;
 import com.judopay.customer.CardDate;
+import com.neovisionaries.i18n.CountryCode;
+
+import java.util.ArrayList;
+import java.util.Locale;
+
+import static android.view.View.VISIBLE;
 
 public class CardFormFragment extends Fragment {
 
@@ -23,8 +31,10 @@ public class CardFormFragment extends Fragment {
     private EditText postcodeEditText;
     private EditText cardNumberEditText;
     private EditText expiryDateEditText;
+    private Spinner countrySpinner;
 
     private PaymentFormListener paymentFormListener;
+    private CountrySpinnerAdapter countryAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,24 +45,51 @@ public class CardFormFragment extends Fragment {
         postcodeEditText = (EditText) view.findViewById(R.id.post_code_edit_text);
         cardNumberEditText = (EditText) view.findViewById(R.id.card_number_edit_text);
         expiryDateEditText = (EditText) view.findViewById(R.id.expiry_date_edit_text);
+        countrySpinner = (Spinner) view.findViewById(R.id.country_spinner);
+
+        initialiseView();
 
         return view;
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+    private void initialiseView() {
         paymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 attemptPayment();
             }
         });
+
+        if (JudoPay.isAvsEnabled()) {
+            initialiseCountrySpinner();
+        }
+    }
+
+    private void initialiseCountrySpinner() {
+        countrySpinner.setVisibility(VISIBLE);
+        ArrayList<Locale> list = new ArrayList<>();
+        list.add(Locale.UK);
+        list.add(Locale.CANADA);
+        list.add(Locale.US);
+
+        this.countryAdapter = new CountrySpinnerAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
+        countrySpinner.setAdapter(countryAdapter);
     }
 
     private void attemptPayment() {
-        Card card = new Card(getCardNumber(), new CardAddress(getPostcode()), null, new CardDate(getExpiryDate()), getCvv());
+        CardAddress.Builder cardAddressBuilder = new CardAddress.Builder();
+
+        if (JudoPay.isAvsEnabled()) {
+            Locale locale = countryAdapter.getItem(countrySpinner.getSelectedItemPosition());
+            cardAddressBuilder.setPostcode(getPostcode())
+                    .setCountryCode(CountryCode.getByCode(locale.getCountry()).getNumeric());
+        }
+
+        Card card = new Card(getCardNumber(),
+                cardAddressBuilder.build(),
+                null,
+                new CardDate(getExpiryDate()),
+                getCvv());
 
         boolean errors = false;
         if (!card.isLuhnValid()) {
