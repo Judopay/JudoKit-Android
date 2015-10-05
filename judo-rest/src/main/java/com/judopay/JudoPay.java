@@ -8,6 +8,7 @@ public class JudoPay {
 
     public static final int RESULT_PAYMENT_SUCCESS = Activity.RESULT_OK;
     public static final int RESULT_CANCELED = Activity.RESULT_CANCELED;
+    public static final int RESULT_PAYMENT_DECLINED = 2;
     public static final int RESULT_ERROR = 1;
 
     public static final String JUDO_PAYMENT = "Judo-Payment";
