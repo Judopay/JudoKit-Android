@@ -4,11 +4,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.judopay.Consumer;
+import com.judopay.Response;
 import com.judopay.customer.CardSummary;
 
 import java.util.Date;
 
-public class PaymentResponse implements Parcelable {
+public class PaymentResponse extends Response implements Parcelable {
 
     private long judoID;
     private String receiptId;
@@ -17,7 +18,6 @@ public class PaymentResponse implements Parcelable {
     private String yourPaymentReference;
     private String type;
     private Date createdAt;
-    private String result;
     private String message;
     private String merchantName;
     private String appearsOnStatementAs;
@@ -45,18 +45,6 @@ public class PaymentResponse implements Parcelable {
 
     public Date getCreatedAt() {
         return createdAt;
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-    public boolean isSuccess() {
-        return "Success".equals(result);
-    }
-
-    public boolean isDeclined() {
-        return "Declined".equals(result);
     }
 
     public String getMessage() {
