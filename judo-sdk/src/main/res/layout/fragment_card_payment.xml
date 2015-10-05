@@ -51,6 +51,12 @@
             android:layout_height="wrap_content"
             android:hint="Postcode" />
 
+        <Spinner
+            android:visibility="gone"
+            android:id="@+id/country_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
     <Button
