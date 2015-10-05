@@ -72,6 +72,14 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Payment response success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
                     break;
 
+                case JudoPay.RESULT_PAYMENT_DECLINED:
+                    Toast.makeText(MainActivity.this, "Payment cancelled", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case JudoPay.RESULT_CANCELED:
+                    Toast.makeText(MainActivity.this, "Payment cancelled", Toast.LENGTH_SHORT).show();
+                    break;
+
                 case JudoPay.RESULT_ERROR:
                     Toast.makeText(MainActivity.this, "Payment response error", Toast.LENGTH_SHORT).show();
                     break;
