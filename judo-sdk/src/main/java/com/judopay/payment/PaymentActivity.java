@@ -8,13 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.judopay.Callback;
 import com.judopay.Client;
+import com.judopay.JudoPay;
 import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.customer.Location;
 
 import static com.judopay.JudoPay.JUDO_PAYMENT;
 import static com.judopay.JudoPay.JUDO_RECEIPT;
-import static com.judopay.JudoPay.RESULT_CANCELED;
 import static com.judopay.JudoPay.RESULT_ERROR;
 import static com.judopay.JudoPay.RESULT_PAYMENT_SUCCESS;
 
@@ -51,7 +51,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentFormLis
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        setResult(RESULT_CANCELED);
+        setResult(JudoPay.RESULT_CANCELED);
     }
 
     @Override
@@ -79,6 +79,12 @@ public class PaymentActivity extends AppCompatActivity implements PaymentFormLis
                 Intent intent = new Intent();
                 intent.putExtra(JUDO_RECEIPT, paymentResponse);
                 setResult(RESULT_PAYMENT_SUCCESS, intent);
+                finish();
+            }
+
+            @Override
+            public void onDecline(PaymentResponse paymentResponse) {
+                setResult(JudoPay.RESULT_PAYMENT_DECLINED, new Intent());
                 finish();
             }
 
