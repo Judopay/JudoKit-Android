@@ -59,6 +59,8 @@ public class CardFormFragment extends Fragment {
             public void onClick(View v) {
                 if(expiryDateEditText.isValid()) {
                     attemptPayment();
+                } else {
+                    expiryDateEditText.setError("Invalid expiry date");
                 }
             }
         });
