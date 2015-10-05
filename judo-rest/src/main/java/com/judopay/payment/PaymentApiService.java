@@ -1,12 +1,12 @@
 package com.judopay.payment;
 
-import retrofit.Call;
 import retrofit.http.Body;
 import retrofit.http.POST;
+import rx.Observable;
 
 public interface PaymentApiService {
 
     @POST("transactions/payments")
-    Call<PaymentResponse> payment(@Body Transaction transaction);
+    Observable<PaymentResponse> payment(@Body Transaction transaction);
 
 }
