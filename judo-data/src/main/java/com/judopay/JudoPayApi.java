@@ -7,7 +7,7 @@ public class JudoPayApi {
     private String apiSecret;
     private int apiEnvironment;
 
-    private boolean sslPinningEnabled;
+    private boolean sslPinningEnabled = true;
     private boolean avsEnabled;
 
     public JudoPayApi(String apiToken, String apiSecret, int apiEnvironment) {
