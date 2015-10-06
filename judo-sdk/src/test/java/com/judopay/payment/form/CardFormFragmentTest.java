@@ -1,4 +1,4 @@
-package com.judopay.payment;
+package com.judopay.payment.form;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +8,7 @@ import com.judopay.BuildConfig;
 import com.judopay.Consumer;
 import com.judopay.JudoPay;
 import com.judopay.R;
+import com.judopay.payment.Payment;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,7 +65,7 @@ public class CardFormFragmentTest {
                 .build();
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable(JudoPay.JUDO_PAYMENT, payment);
+        bundle.putParcelable(JudoPay.EXTRA_PAYMENT, payment);
         fragment.setArguments(bundle);
         return fragment;
     }

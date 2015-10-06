@@ -1,4 +1,4 @@
-package com.judopay.payment;
+package com.judopay.payment.form;
 
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -15,10 +15,8 @@ import com.judopay.R;
 import com.judopay.customer.Card;
 import com.judopay.customer.CardAddress;
 import com.judopay.customer.CardDate;
-import com.neovisionaries.i18n.CountryCode;
-
-import java.util.ArrayList;
-import java.util.Locale;
+import com.judopay.customer.Country;
+import com.judopay.payment.PaymentFormListener;
 
 import static android.view.View.VISIBLE;
 
@@ -30,12 +28,11 @@ public class CardFormFragment extends Fragment {
     private EditText cvvEditText;
     private EditText postcodeEditText;
 
-    private Spinner countrySpinner;
+    private CountrySpinner countrySpinner;
     private EditText cardNumberEditText;
     private CardDateEditText expiryDateEditText;
 
     private PaymentFormListener paymentFormListener;
-    private CountrySpinnerAdapter countryAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,7 +43,7 @@ public class CardFormFragment extends Fragment {
         postcodeEditText = (EditText) view.findViewById(R.id.post_code_edit_text);
         cardNumberEditText = (EditText) view.findViewById(R.id.card_number_edit_text);
         expiryDateEditText = (CardDateEditText) view.findViewById(R.id.expiry_date_edit_text);
-        countrySpinner = (Spinner) view.findViewById(R.id.country_spinner);
+        countrySpinner = (CountrySpinner) view.findViewById(R.id.country_spinner);
 
         initialiseView();
 
@@ -57,7 +54,7 @@ public class CardFormFragment extends Fragment {
         paymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(expiryDateEditText.isValid()) {
+                if (expiryDateEditText.isValid()) {
                     attemptPayment();
                 } else {
                     expiryDateEditText.setError("Invalid expiry date");
@@ -72,22 +69,15 @@ public class CardFormFragment extends Fragment {
 
     private void initialiseCountrySpinner() {
         countrySpinner.setVisibility(VISIBLE);
-        ArrayList<Locale> list = new ArrayList<>();
-        list.add(Locale.UK);
-        list.add(Locale.CANADA);
-        list.add(Locale.US);
-
-        this.countryAdapter = new CountrySpinnerAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
-        countrySpinner.setAdapter(countryAdapter);
     }
 
     private void attemptPayment() {
         CardAddress.Builder cardAddressBuilder = new CardAddress.Builder();
 
         if (JudoPay.isAvsEnabled()) {
-            Locale locale = countryAdapter.getItem(countrySpinner.getSelectedItemPosition());
+            Country country = countrySpinner.getSelectedCountry();
             cardAddressBuilder.setPostcode(getPostcode())
-                    .setCountryCode(CountryCode.getByCode(locale.getCountry()).getNumeric());
+                    .setCountryCode(country.getCode());
         }
 
         Card card = new Card(getCardNumber(),
