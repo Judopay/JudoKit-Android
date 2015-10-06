@@ -23,12 +23,11 @@ android {
 }
 
 dependencies {
+    compile project(':judo-data')
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':judo-rest')
 
     compile 'com.android.support:appcompat-v7:23.0.1'
-
-    compile 'com.neovisionaries:nv-i18n:1.17'
+    compile 'com.nineoldandroids:library:2.4.0'
 
     testCompile 'junit:junit:4.12'
     testCompile "org.robolectric:robolectric:3.0"

@@ -14,28 +14,33 @@
         android:layout_height="wrap_content"
         android:text="Amount: £9.99" />
 
-    <EditText
+    <com.judopay.payment.form.CardNumberEditText
         android:id="@+id/card_number_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:digits="01234 56789"
-        android:text="4976000000003436"
         android:hint="Card No."
         android:inputType="number"
-        android:maxLength="19" />
+        android:maxLength="19"
+        android:text="4976000000003436" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.judopay.payment.CardDateEditText
+        <com.judopay.payment.form.CardDateEditText
             android:id="@+id/expiry_date_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:digits="01234/56789"
-            android:text="12/15"
-            android:maxLength="5" />
+            android:maxLength="5"
+            android:text="12/15" />
+
+        <com.judopay.payment.form.CardTypeView
+            android:id="@+id/card_type_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <EditText
             android:id="@+id/cvv_edit_text"
@@ -43,8 +48,8 @@
             android:layout_height="wrap_content"
             android:digits="0123456789/"
             android:hint="CV2"
-            android:text="452"
-            android:maxLength="5" />
+            android:maxLength="5"
+            android:text="452" />
 
         <EditText
             android:id="@+id/post_code_edit_text"
@@ -52,7 +57,7 @@
             android:layout_height="wrap_content"
             android:hint="Postcode" />
 
-        <Spinner
+        <com.judopay.payment.form.CountrySpinner
             android:id="@+id/country_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

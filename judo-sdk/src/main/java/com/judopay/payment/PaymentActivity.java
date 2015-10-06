@@ -14,6 +14,7 @@ import com.judopay.R;
 import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.customer.Location;
+import com.judopay.payment.form.CardFormFragment;
 
 import static com.judopay.JudoPay.EXTRA_PAYMENT;
 

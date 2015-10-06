@@ -1,4 +1,4 @@
-package com.judopay.payment;
+package com.judopay.payment.form;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,10 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.List;
-import java.util.Locale;
+import com.judopay.customer.Country;
 
-public class CountrySpinnerAdapter extends ArrayAdapter<Locale> {
+import java.util.List;
+
+public class CountrySpinnerAdapter extends ArrayAdapter<Country> {
 
     public CountrySpinnerAdapter(Context context, int resource) {
         super(context, resource);
@@ -21,19 +22,19 @@ public class CountrySpinnerAdapter extends ArrayAdapter<Locale> {
         super(context, resource, textViewResourceId);
     }
 
-    public CountrySpinnerAdapter(Context context, int resource, Locale[] objects) {
+    public CountrySpinnerAdapter(Context context, int resource, Country[] objects) {
         super(context, resource, objects);
     }
 
-    public CountrySpinnerAdapter(Context context, int resource, int textViewResourceId, Locale[] objects) {
+    public CountrySpinnerAdapter(Context context, int resource, int textViewResourceId, Country[] objects) {
         super(context, resource, textViewResourceId, objects);
     }
 
-    public CountrySpinnerAdapter(Context context, int resource, List<Locale> objects) {
+    public CountrySpinnerAdapter(Context context, int resource, List<Country> objects) {
         super(context, resource, objects);
     }
 
-    public CountrySpinnerAdapter(Context context, int resource, int textViewResourceId, List<Locale> objects) {
+    public CountrySpinnerAdapter(Context context, int resource, int textViewResourceId, List<Country> objects) {
         super(context, resource, textViewResourceId, objects);
     }
 
@@ -54,7 +55,7 @@ public class CountrySpinnerAdapter extends ArrayAdapter<Locale> {
         View view = inflater.inflate(layout, parent, false);
         TextView textView = (TextView) view.findViewById(android.R.id.text1);
 
-        textView.setText(getItem(position).getDisplayCountry());
+        textView.setText(getItem(position).getDisplayName());
 
         return view;
     }
