@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="Amount: £9.99" />
 
-    <EditText
+    <com.judopay.payment.form.CardNumberEditText
         android:id="@+id/card_number_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,6 +36,11 @@
             android:digits="01234/56789"
             android:maxLength="5"
             android:text="12/15" />
+
+        <com.judopay.payment.form.CardTypeView
+            android:id="@+id/card_type_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <EditText
             android:id="@+id/cvv_edit_text"

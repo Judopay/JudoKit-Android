@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.judopay.JudoPay;
 import com.judopay.R;
@@ -28,9 +28,10 @@ public class CardFormFragment extends Fragment {
     private EditText cvvEditText;
     private EditText postcodeEditText;
 
+    private CardTypeView cardTypeView;
     private CountrySpinner countrySpinner;
-    private EditText cardNumberEditText;
     private CardDateEditText expiryDateEditText;
+    private CardNumberEditText cardNumberEditText;
 
     private PaymentFormListener paymentFormListener;
 
@@ -41,9 +42,10 @@ public class CardFormFragment extends Fragment {
         paymentButton = (Button) view.findViewById(R.id.payment_button);
         cvvEditText = (EditText) view.findViewById(R.id.cvv_edit_text);
         postcodeEditText = (EditText) view.findViewById(R.id.post_code_edit_text);
-        cardNumberEditText = (EditText) view.findViewById(R.id.card_number_edit_text);
+        cardNumberEditText = (CardNumberEditText) view.findViewById(R.id.card_number_edit_text);
         expiryDateEditText = (CardDateEditText) view.findViewById(R.id.expiry_date_edit_text);
         countrySpinner = (CountrySpinner) view.findViewById(R.id.country_spinner);
+        cardTypeView = (CardTypeView) view.findViewById(R.id.card_type_view);
 
         initialiseView();
 
@@ -59,6 +61,13 @@ public class CardFormFragment extends Fragment {
                 } else {
                     expiryDateEditText.setError("Invalid expiry date");
                 }
+            }
+        });
+
+        cardNumberEditText.setCardListener(new CardNumberEditText.CardListener() {
+            @Override
+            public void onCardTypeChanged(int cardType) {
+                cardTypeView.setCardType(cardType);
             }
         });
 
