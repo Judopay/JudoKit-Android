@@ -20,9 +20,12 @@ import static com.judopay.JudoPay.EXTRA_PAYMENT;
 
 public class PaymentActivity extends AppCompatActivity implements PaymentFormListener, PaymentView {
 
+    private static final String KEY_CARD_FRAGMENT = "CardFormFragment";
     private static PaymentPresenter presenter;
 
     private ProgressBar progressBar;
+
+    private CardFormFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,19 +41,28 @@ public class PaymentActivity extends AppCompatActivity implements PaymentFormLis
 
             Parcelable payment = getIntent().getParcelableExtra(EXTRA_PAYMENT);
 
-            Fragment fragment = CardFormFragment.newInstance(payment, this);
-
             String title = getIntent().getStringExtra(Intent.EXTRA_TITLE);
-
             this.setTitle(title != null ? title : "Payment");
 
+            this.fragment = CardFormFragment.newInstance(payment, this);
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.container, fragment)
                     .commit();
+        } else {
+            this.fragment = (CardFormFragment) getSupportFragmentManager()
+                    .getFragment(savedInstanceState, KEY_CARD_FRAGMENT);
+            this.fragment.setPaymentFormListener(this);
         }
 
         presenter.bindView(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        getSupportFragmentManager().putFragment(outState, KEY_CARD_FRAGMENT, fragment);
     }
 
     @Override
