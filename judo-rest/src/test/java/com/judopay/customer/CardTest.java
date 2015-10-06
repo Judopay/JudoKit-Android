@@ -40,25 +40,25 @@ public class CardTest {
     @Test
     public void shouldMatchAmexCardType() {
         Card card = new Card("340000000000009", null, null, null, null);
-        assertThat(card.getType(), is(Card.Type.AMEX));
+        assertThat(card.getType(), is(CardType.AMEX));
     }
 
     @Test
     public void shouldMatchVisaCardType() {
         Card card = new Card("4111111111111111", null, null, null, null);
-        assertThat(card.getType(), is(Card.Type.VISA));
+        assertThat(card.getType(), is(CardType.VISA));
     }
 
     @Test
     public void shouldMatchMastercardCardType() {
         Card card = new Card("5500000000000004", null, null, null, null);
-        assertThat(card.getType(), is(Card.Type.MASTERCARD));
+        assertThat(card.getType(), is(CardType.MASTERCARD));
     }
 
     @Test
     public void shouldMatchMaestroCardType() {
         Card card = new Card("6759649826438453", null, null, null, null);
-        assertThat(card.getType(), is(Card.Type.MAESTRO));
+        assertThat(card.getType(), is(CardType.MAESTRO));
     }
 
     @Test
