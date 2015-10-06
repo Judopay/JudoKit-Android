@@ -137,7 +137,7 @@ public class CardFormFragment extends Fragment {
         return trim(cardNumberEditText);
     }
 
-    public static Fragment newInstance(Parcelable payment, PaymentFormListener paymentListener) {
+    public static CardFormFragment newInstance(Parcelable payment, PaymentFormListener paymentListener) {
         CardFormFragment cardFormFragment = new CardFormFragment();
 
         Bundle arguments = new Bundle();
