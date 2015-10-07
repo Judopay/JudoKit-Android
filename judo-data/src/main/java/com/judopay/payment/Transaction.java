@@ -17,6 +17,8 @@ public class Transaction {
     private String cardNumber;
     private String cv2;
     private String expiryDate;
+    private String startDate;
+    private String issueNumber;
 
     public String getAmount() {
         return amount;
@@ -122,6 +124,16 @@ public class Transaction {
 
         public Builder setExpiryDate(String expiryDate) {
             transaction.expiryDate = expiryDate;
+            return this;
+        }
+
+        public Builder setStartDate(String startDate) {
+            transaction.startDate = startDate;
+            return this;
+        }
+
+        public Builder setIssueNumber(String issueNumber) {
+            transaction.issueNumber = issueNumber;
             return this;
         }
 
