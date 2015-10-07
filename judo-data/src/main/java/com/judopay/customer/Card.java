@@ -11,14 +11,6 @@ public class Card {
     private String issueNumber;
     private String cvv;
 
-    public Card(String cardNumber, CardAddress cardAddress, CardDate startDate, CardDate expiryDate, String cvv) {
-        this.cardNumber = cardNumber;
-        this.cardAddress = cardAddress;
-        this.startDate = startDate;
-        this.expiryDate = expiryDate;
-        this.cvv = cvv;
-    }
-
     public String getCardNumber() {
         return cardNumber;
     }
@@ -27,12 +19,16 @@ public class Card {
         return cardAddress;
     }
 
-    public CardDate getStartDate() {
-        return startDate;
+    public String getStartDate() {
+        return formatDateString(startDate);
     }
 
     public String getExpiryDate() {
-        return String.format(Locale.ENGLISH, "%02d%02d", expiryDate.getMonth(), expiryDate.getYear());
+        return formatDateString(expiryDate);
+    }
+
+    private String formatDateString(CardDate date) {
+        return String.format(Locale.ENGLISH, "%02d%02d", date.getMonth(), date.getYear());
     }
 
     public String getIssueNumber() {
@@ -95,4 +91,51 @@ public class Card {
         return cvv;
     }
 
+    public boolean startDateAndIssueNumberRequired() {
+        return CardType.MAESTRO == getType();
+    }
+
+    public static class Builder {
+
+        private Card card;
+
+        public Builder() {
+            this.card = new Card();
+        }
+
+        public Builder setCardNumber(String cardNumber) {
+            card.cardNumber = cardNumber;
+            return this;
+        }
+
+        public Builder setCardAddress(CardAddress cardAddress) {
+            card.cardAddress = cardAddress;
+            return this;
+        }
+
+        public Builder setExpiryDate(CardDate expiryDate) {
+            card.expiryDate = expiryDate;
+            return this;
+        }
+
+        public Builder setStartDate(CardDate startDate) {
+            card.startDate = startDate;
+            return this;
+        }
+
+        public Builder setIssueNumber(String issueNumber) {
+            card.issueNumber = issueNumber;
+            return this;
+        }
+
+        public Builder setCvv(String cvv) {
+            card.cvv = cvv;
+            return this;
+        }
+
+        public Card build() {
+            return card;
+        }
+
+    }
 }
