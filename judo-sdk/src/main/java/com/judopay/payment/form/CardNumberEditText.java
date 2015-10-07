@@ -61,13 +61,21 @@ public class CardNumberEditText extends EditText {
             public void afterTextChanged(Editable s) {
                 int cardType = CardType.matchCardNumber(s.toString());
                 if (cardListener != null) {
-                    if(cardType != lastCardType) {
+                    if (cardType != lastCardType) {
                         cardListener.onCardTypeChanged(cardType);
                     }
                 }
                 lastCardType = cardType;
             }
         });
+    }
+
+    public boolean isValid() {
+        return CardType.matchCardNumber(getText().toString()) != CardType.UNKNOWN;
+    }
+
+    public boolean isMaestroCardType() {
+        return lastCardType == CardType.MAESTRO;
     }
 
 }
