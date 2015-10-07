@@ -45,6 +45,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentFormLis
             this.setTitle(title != null ? title : "Payment");
 
             this.fragment = CardFormFragment.newInstance(payment, this);
+
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.container, fragment)
@@ -95,6 +96,11 @@ public class PaymentActivity extends AppCompatActivity implements PaymentFormLis
                 .setYourConsumerReference(payment.getConsumer().getYourConsumerReference())
                 .setYourPaymentReference(payment.getPaymentRef())
                 .setExpiryDate(card.getExpiryDate());
+
+        if(card.startDateAndIssueNumberRequired()) {
+            builder.setIssueNumber(card.getIssueNumber())
+                    .setStartDate(card.getStartDate());
+        }
 
         presenter.performPayment(builder.build());
     }
