@@ -3,6 +3,8 @@ package com.judopay.samples;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -37,6 +39,26 @@ public class MainActivity extends AppCompatActivity {
         JudoPay.setAvsEnabled(true);
 
         initialiseView();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.sample_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings_menu_item:
+                showSettings();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showSettings() {
+        startActivity(new Intent(this, SettingsActivity.class));
     }
 
     private void initialiseView() {
