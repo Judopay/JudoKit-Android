@@ -2,22 +2,24 @@ package com.judopay.payment.form;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.judopay.JudoPay;
 import com.judopay.R;
 import com.judopay.customer.Card;
 import com.judopay.customer.CardAddress;
 import com.judopay.customer.CardDate;
+import com.judopay.customer.CardType;
 import com.judopay.customer.Country;
 import com.judopay.payment.PaymentFormListener;
 
+import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 public class CardFormFragment extends Fragment {
@@ -29,7 +31,9 @@ public class CardFormFragment extends Fragment {
     private EditText postcodeEditText;
 
     private CardTypeView cardTypeView;
+    private EditText issueNumberEditText;
     private CountrySpinner countrySpinner;
+    private CardDateEditText startDateEditText;
     private CardDateEditText expiryDateEditText;
     private CardNumberEditText cardNumberEditText;
 
@@ -46,6 +50,8 @@ public class CardFormFragment extends Fragment {
         expiryDateEditText = (CardDateEditText) view.findViewById(R.id.expiry_date_edit_text);
         countrySpinner = (CountrySpinner) view.findViewById(R.id.country_spinner);
         cardTypeView = (CardTypeView) view.findViewById(R.id.card_type_view);
+        startDateEditText = (CardDateEditText) view.findViewById(R.id.start_date_edit_text);
+        issueNumberEditText = (EditText) view.findViewById(R.id.issue_number_edit_text);
 
         initialiseView();
 
@@ -56,10 +62,8 @@ public class CardFormFragment extends Fragment {
         paymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (expiryDateEditText.isValid()) {
+                if (formValid()) {
                     attemptPayment();
-                } else {
-                    expiryDateEditText.setError("Invalid expiry date");
                 }
             }
         });
@@ -68,6 +72,12 @@ public class CardFormFragment extends Fragment {
             @Override
             public void onCardTypeChanged(int cardType) {
                 cardTypeView.setCardType(cardType);
+
+                if (CardType.MAESTRO == cardType) {
+                    showAdditionalFields();
+                } else {
+                    hideAdditionalFields();
+                }
             }
         });
 
@@ -76,25 +86,46 @@ public class CardFormFragment extends Fragment {
         }
     }
 
+    private boolean formValid() {
+        return expiryDateEditText.isValid()
+                && startDateEditText.isValid()
+                && cardNumberEditText.isValid();
+    }
+
+    private void hideAdditionalFields() {
+        issueNumberEditText.setVisibility(GONE);
+        startDateEditText.setVisibility(GONE);
+    }
+
+    private void showAdditionalFields() {
+        issueNumberEditText.setVisibility(VISIBLE);
+        startDateEditText.setVisibility(VISIBLE);
+    }
+
     private void initialiseCountrySpinner() {
         countrySpinner.setVisibility(VISIBLE);
     }
 
     private void attemptPayment() {
-        CardAddress.Builder cardAddressBuilder = new CardAddress.Builder();
+        Card.Builder cardBuilder = new Card.Builder()
+                .setCardNumber(getCardNumber())
+                .setExpiryDate(getExpiryDate())
+                .setCvv(getCvv());
 
         if (JudoPay.isAvsEnabled()) {
             Country country = countrySpinner.getSelectedCountry();
-            cardAddressBuilder.setPostcode(getPostcode())
-                    .setCountryCode(country.getCode());
+            cardBuilder.setCardAddress(new CardAddress.Builder()
+                    .setPostcode(getPostcode())
+                    .setCountryCode(country.getCode())
+                    .build());
         }
 
-        Card card = new Card(getCardNumber(),
-                cardAddressBuilder.build(),
-                null,
-                new CardDate(getExpiryDate()),
-                getCvv());
+        if (cardNumberEditText.isMaestroCardType()) {
+            cardBuilder.setIssueNumber(getIssueNumber())
+                    .setStartDate(getStartDate());
+        }
 
+        Card card = cardBuilder.build();
         boolean errors = false;
 
         if (!card.isLuhnValid()) {
@@ -117,6 +148,14 @@ public class CardFormFragment extends Fragment {
         }
     }
 
+    private CardDate getStartDate() {
+        return new CardDate(trim(startDateEditText));
+    }
+
+    private String getIssueNumber() {
+        return trim(issueNumberEditText);
+    }
+
     private String getPostcode() {
         return trim(postcodeEditText);
     }
@@ -129,8 +168,8 @@ public class CardFormFragment extends Fragment {
         return trim(cvvEditText);
     }
 
-    private String getExpiryDate() {
-        return trim(expiryDateEditText);
+    private CardDate getExpiryDate() {
+        return new CardDate(trim(expiryDateEditText));
     }
 
     private String getCardNumber() {
