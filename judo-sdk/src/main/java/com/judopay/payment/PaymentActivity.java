@@ -113,7 +113,12 @@ public class PaymentActivity extends AppCompatActivity implements PaymentFormLis
     public void setViewModel(PaymentResponse paymentResponse) {
         Intent intent = new Intent();
         intent.putExtra(JudoPay.JUDO_RECEIPT, paymentResponse);
-        setResult(JudoPay.RESULT_PAYMENT_SUCCESS, intent);
+
+        if(paymentResponse.isSuccess()) {
+            setResult(JudoPay.RESULT_PAYMENT_SUCCESS, intent);
+        } else {
+            setResult(JudoPay.RESULT_PAYMENT_DECLINED, intent);
+        }
 
         finish();
     }
