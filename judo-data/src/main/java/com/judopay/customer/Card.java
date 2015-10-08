@@ -68,23 +68,31 @@ public class Card {
         try {
             switch (getType()) {
                 case CardType.AMEX:
-                    return isCidvValid();
+                    return isCidvValid(cvv);
                 default:
-                    return isCv2Valid();
+                    return isCv2Valid(cvv);
             }
         } catch (NumberFormatException e) {
             return false;
         }
     }
 
-    private boolean isCv2Valid() {
-        int cv2 = Integer.parseInt(cvv);
-        return (cv2 >= 0 && cv2 < 1000);
+    public static boolean isCv2Valid(String cv2) {
+        if(cv2 == null || cv2.length() == 0) {
+            return false;
+        }
+
+        int cv2Int = Integer.parseInt(cv2);
+        return (cv2Int >= 0 && cv2Int < 1000);
     }
 
-    private boolean isCidvValid() {
-        int cidv = Integer.parseInt(cvv);
-        return (cidv >= 0 && cidv < 10000);
+    public static boolean isCidvValid(String cidv) {
+        if(cidv == null || cidv.length() == 0) {
+            return false;
+        }
+
+        int cidvInt = Integer.parseInt(cidv);
+        return (cidvInt >= 0 && cidvInt < 10000);
     }
 
     public String getCv2() {
