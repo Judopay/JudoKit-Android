@@ -9,6 +9,8 @@ public class JudoPayApi {
 
     private boolean sslPinningEnabled = true;
     private boolean avsEnabled;
+    private boolean maestroEnabled;
+    private boolean amexEnabled;
 
     public JudoPayApi(String apiToken, String apiSecret, int apiEnvironment) {
         this.apiToken = apiToken;
@@ -64,4 +66,19 @@ public class JudoPayApi {
         this.avsEnabled = avsEnabled;
     }
 
+    public void setMaestroEnabled(boolean enabled) {
+        this.maestroEnabled = enabled;
+    }
+
+    public boolean isMaestroEnabled() {
+        return maestroEnabled;
+    }
+
+    public void setAmexEnabled(boolean enabled) {
+        this.amexEnabled = enabled;
+    }
+
+    public boolean isAmexEnabled() {
+        return this.amexEnabled;
+    }
 }

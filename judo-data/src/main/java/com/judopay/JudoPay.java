@@ -49,6 +49,22 @@ public class JudoPay {
         return api.isAvsEnabled();
     }
 
+    public static void setMaestroEnabled(boolean enabled) {
+        api.setMaestroEnabled(enabled);
+    }
+
+    public static boolean isMaestroEnabled() {
+        return api.isMaestroEnabled();
+    }
+
+    public static void setAmexEnabled(boolean enabled) {
+        api.setAmexEnabled(enabled);
+    }
+
+    public static boolean isAmexEnabled() {
+        return api.isAmexEnabled();
+    }
+
     public class Environment {
         public static final int LIVE = 0;
         public static final int SANDBOX = 1;

@@ -102,7 +102,13 @@ public class CardFormFragment extends Fragment implements TextWatcher, AdapterVi
     private boolean formValid() {
         return expiryDateEditText.isValid()
                 && cardNumberEditText.isValid()
+                && isCardTypeAllowed()
                 && isMandatoryCardTypeFieldsValid();
+    }
+
+    private boolean isCardTypeAllowed() {
+        return (!cardNumberEditText.isMaestroEntered() || JudoPay.isMaestroEnabled())
+                && (!cardNumberEditText.isAmexEntered() || JudoPay.isAmexEnabled());
     }
 
     private boolean isMandatoryCardTypeFieldsValid() {

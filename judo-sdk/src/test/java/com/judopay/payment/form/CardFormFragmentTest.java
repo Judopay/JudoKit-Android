@@ -12,6 +12,7 @@ import com.judopay.JudoPay;
 import com.judopay.R;
 import com.judopay.payment.Payment;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -37,9 +38,13 @@ public class CardFormFragmentTest {
     public static final String ISSUE_NUMBER = "01";
     public static final String POSTCODE = "SW16";
 
+    @Before
+    public void initialiseJudoPay() {
+        JudoPay.setup(RuntimeEnvironment.application, null, null, 0);
+    }
+
     @Test
     public void shouldShowCountrySpinnerWhenAvsEnabled() {
-        JudoPay.setup(RuntimeEnvironment.application, null, null, 0);
         JudoPay.setAvsEnabled(true);
 
         CardFormFragment fragment = getFragment();
@@ -53,7 +58,6 @@ public class CardFormFragmentTest {
 
     @Test
     public void shouldHideCountrySpinnerWhenAvsDisabled() {
-        JudoPay.setup(RuntimeEnvironment.application, null, null, 0);
         JudoPay.setAvsEnabled(false);
 
         CardFormFragment fragment = getFragment();
@@ -67,7 +71,6 @@ public class CardFormFragmentTest {
 
     @Test
     public void shouldShowIssueNumberAndStartDateFieldsWhenMaestro() {
-        JudoPay.setup(RuntimeEnvironment.application, null, null, 0);
         JudoPay.setAvsEnabled(false);
 
         CardFormFragment fragment = getFragment();
@@ -86,7 +89,6 @@ public class CardFormFragmentTest {
 
     @Test
     public void shouldHideIssueNumberAndStartDateFieldsWhenNoLongerMaestro() {
-        JudoPay.setup(RuntimeEnvironment.application, null, null, 0);
         JudoPay.setAvsEnabled(false);
 
         CardFormFragment fragment = getFragment();
@@ -108,7 +110,6 @@ public class CardFormFragmentTest {
 
     @Test
     public void shouldEnablePayButtonWhenFormValid() {
-        JudoPay.setup(RuntimeEnvironment.application, null, null, 0);
         JudoPay.setAvsEnabled(false);
 
         CardFormFragment fragment = getFragment();
@@ -126,7 +127,6 @@ public class CardFormFragmentTest {
 
     @Test
     public void shouldEnablePayButtonWhenFormValidAndAvsEnabled() {
-        JudoPay.setup(RuntimeEnvironment.application, null, null, 0);
         JudoPay.setAvsEnabled(true);
 
         CardFormFragment fragment = getFragment();
@@ -150,8 +150,8 @@ public class CardFormFragmentTest {
 
     @Test
     public void shouldEnablePayButtonWhenFormValidAndMaestroCardEntered() {
-        JudoPay.setup(RuntimeEnvironment.application, null, null, 0);
         JudoPay.setAvsEnabled(false);
+        JudoPay.setMaestroEnabled(true);
 
         CardFormFragment fragment = getFragment();
         startFragment(fragment);
@@ -163,18 +163,13 @@ public class CardFormFragmentTest {
 
         enterCardDetails(fragmentView, MAESTRO_CARD_NUMBER, EXPIRY_DATE, CV2);
 
-        EditText startDateEditText = findView(fragmentView, R.id.start_date_edit_text);
-        startDateEditText.setText(START_DATE);
-
-        EditText issueNumberEditText = findView(fragmentView, R.id.issue_number_edit_text);
-        issueNumberEditText.setText(ISSUE_NUMBER);
+        enterStartDateAndIssueNumber(fragmentView, START_DATE, ISSUE_NUMBER);
 
         assertThat(paymentButton.isEnabled(), is(true));
     }
 
     @Test
     public void shouldDisablePayButtonWhenInvalidCidvEntered() {
-        JudoPay.setup(RuntimeEnvironment.application, null, null, 0);
         JudoPay.setAvsEnabled(false);
 
         CardFormFragment fragment = getFragment();
@@ -190,7 +185,6 @@ public class CardFormFragmentTest {
 
     @Test
     public void shouldDisablePayButtonWhenInvalidCv2Entered() {
-        JudoPay.setup(RuntimeEnvironment.application, null, null, 0);
         JudoPay.setAvsEnabled(false);
 
         CardFormFragment fragment = getFragment();
@@ -199,6 +193,38 @@ public class CardFormFragmentTest {
         View fragmentView = fragment.getView();
 
         enterCardDetails(fragmentView, VISA_CARD_NUMBER, EXPIRY_DATE, "1000");
+
+        View paymentButton = findView(fragmentView, R.id.payment_button);
+        assertThat(paymentButton.isEnabled(), is(false));
+    }
+
+    @Test
+    public void shouldPreventMaestroPaymentWhenMaestroDisabled() {
+        JudoPay.setMaestroEnabled(false);
+        JudoPay.setAvsEnabled(false);
+
+        CardFormFragment fragment = getFragment();
+        startFragment(fragment);
+
+        View fragmentView = fragment.getView();
+
+        enterCardDetails(fragmentView, MAESTRO_CARD_NUMBER, EXPIRY_DATE, CV2);
+        enterStartDateAndIssueNumber(fragmentView, START_DATE, ISSUE_NUMBER);
+
+        View paymentButton = findView(fragmentView, R.id.payment_button);
+        assertThat(paymentButton.isEnabled(), is(false));
+    }
+
+    @Test
+    public void shouldPreventAmexPaymentWhenAmexDisabled() {
+        JudoPay.setAvsEnabled(false);
+        JudoPay.setAmexEnabled(false);
+
+        CardFormFragment fragment = getFragment();
+        startFragment(fragment);
+
+        View fragmentView = fragment.getView();
+        enterCardDetails(fragmentView, AMEX_CARD_NUMBER, EXPIRY_DATE, "1234");
 
         View paymentButton = findView(fragmentView, R.id.payment_button);
         assertThat(paymentButton.isEnabled(), is(false));
@@ -234,6 +260,14 @@ public class CardFormFragmentTest {
 
         EditText cvvEditText = findView(fragmentView, R.id.cvv_edit_text);
         cvvEditText.setText(cvv);
+    }
+
+    private void enterStartDateAndIssueNumber(View fragmentView, String startDate, String issueNumber) {
+        EditText startDateEditText = findView(fragmentView, R.id.start_date_edit_text);
+        startDateEditText.setText(startDate);
+
+        EditText issueNumberEditText = findView(fragmentView, R.id.issue_number_edit_text);
+        issueNumberEditText.setText(issueNumber);
     }
 
     private void enterCardNumber(View fragmentView, String amexCardNumber) {
