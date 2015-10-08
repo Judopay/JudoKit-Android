@@ -106,7 +106,11 @@ public class CardFormFragment extends Fragment implements TextWatcher, AdapterVi
     }
 
     private boolean isMandatoryCardTypeFieldsValid() {
-        return isAvsRequiredFieldsValid() && isMaestroRequiredFieldsValid();
+        return isAvsRequiredFieldsValid() && isMaestroRequiredFieldsValid() && isCvvValid();
+    }
+
+    private boolean isCvvValid() {
+        return cardNumberEditText.isAmexEntered() && Card.isCidvValid(getCvv()) || Card.isCv2Valid(getCvv());
     }
 
     private boolean isAvsRequiredFieldsValid() {
@@ -114,7 +118,7 @@ public class CardFormFragment extends Fragment implements TextWatcher, AdapterVi
     }
 
     private boolean isMaestroRequiredFieldsValid() {
-        return !cardNumberEditText.isMaestroCardType() || issueNumberEditText.isValid() && startDateEditText.isValid();
+        return !cardNumberEditText.isMaestroEntered() || issueNumberEditText.isValid() && startDateEditText.isValid();
     }
 
     private void hideAdditionalFields() {
@@ -145,7 +149,7 @@ public class CardFormFragment extends Fragment implements TextWatcher, AdapterVi
                     .build());
         }
 
-        if (cardNumberEditText.isMaestroCardType()) {
+        if (cardNumberEditText.isMaestroEntered()) {
             cardBuilder.setIssueNumber(getIssueNumber())
                     .setStartDate(getStartDate());
         }

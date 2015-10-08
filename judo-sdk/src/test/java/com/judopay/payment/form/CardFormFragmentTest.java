@@ -29,6 +29,7 @@ public class CardFormFragmentTest {
 
     public static final String VISA_CARD_NUMBER = "4976000000003436";
     public static final String MAESTRO_CARD_NUMBER = "6759000000005462";
+    public static final String AMEX_CARD_NUMBER = "340000432128428";
 
     public static final String EXPIRY_DATE = "12/15";
     public static final String CV2 = "452";
@@ -74,9 +75,7 @@ public class CardFormFragmentTest {
 
         View fragmentView = fragment.getView();
 
-        EditText cardNumberEditText = findView(fragmentView, R.id.card_number_edit_text);
-
-        cardNumberEditText.setText(MAESTRO_CARD_NUMBER);
+        enterCardNumber(fragmentView, MAESTRO_CARD_NUMBER);
 
         View issueNumberView = findView(fragmentView, R.id.issue_number_edit_text);
         assertThat(issueNumberView.getVisibility(), equalTo(View.VISIBLE));
@@ -120,14 +119,7 @@ public class CardFormFragmentTest {
         View paymentButton = findView(fragmentView, R.id.payment_button);
         assertThat(paymentButton.isEnabled(), is(false));
 
-        EditText cardNumberEditText = findView(fragmentView, R.id.card_number_edit_text);
-        cardNumberEditText.setText(VISA_CARD_NUMBER);
-
-        EditText expiryDateEditText = findView(fragmentView, R.id.expiry_date_edit_text);
-        expiryDateEditText.setText(EXPIRY_DATE);
-
-        EditText cvvEditText = findView(fragmentView, R.id.cvv_edit_text);
-        cvvEditText.setText(CV2);
+        enterCardDetails(fragmentView, VISA_CARD_NUMBER, EXPIRY_DATE, CV2);
 
         assertThat(paymentButton.isEnabled(), is(true));
     }
@@ -145,14 +137,7 @@ public class CardFormFragmentTest {
         View paymentButton = findView(fragmentView, R.id.payment_button);
         assertThat(paymentButton.isEnabled(), is(false));
 
-        EditText cardNumberEditText = findView(fragmentView, R.id.card_number_edit_text);
-        cardNumberEditText.setText(VISA_CARD_NUMBER);
-
-        EditText expiryDateEditText = findView(fragmentView, R.id.expiry_date_edit_text);
-        expiryDateEditText.setText(EXPIRY_DATE);
-
-        EditText cvvEditText = findView(fragmentView, R.id.cvv_edit_text);
-        cvvEditText.setText(CV2);
+        enterCardDetails(fragmentView, VISA_CARD_NUMBER, EXPIRY_DATE, CV2);
 
         EditText postcodeEditText = findView(fragmentView, R.id.post_code_edit_text);
         postcodeEditText.setText(POSTCODE);
@@ -176,14 +161,7 @@ public class CardFormFragmentTest {
         View paymentButton = findView(fragmentView, R.id.payment_button);
         assertThat(paymentButton.isEnabled(), is(false));
 
-        EditText cardNumberEditText = findView(fragmentView, R.id.card_number_edit_text);
-        cardNumberEditText.setText(MAESTRO_CARD_NUMBER);
-
-        EditText expiryDateEditText = findView(fragmentView, R.id.expiry_date_edit_text);
-        expiryDateEditText.setText(EXPIRY_DATE);
-
-        EditText cvvEditText = findView(fragmentView, R.id.cvv_edit_text);
-        cvvEditText.setText(CV2);
+        enterCardDetails(fragmentView, MAESTRO_CARD_NUMBER, EXPIRY_DATE, CV2);
 
         EditText startDateEditText = findView(fragmentView, R.id.start_date_edit_text);
         startDateEditText.setText(START_DATE);
@@ -192,6 +170,38 @@ public class CardFormFragmentTest {
         issueNumberEditText.setText(ISSUE_NUMBER);
 
         assertThat(paymentButton.isEnabled(), is(true));
+    }
+
+    @Test
+    public void shouldDisablePayButtonWhenInvalidCidvEntered() {
+        JudoPay.setup(RuntimeEnvironment.application, null, null, 0);
+        JudoPay.setAvsEnabled(false);
+
+        CardFormFragment fragment = getFragment();
+        startFragment(fragment);
+
+        View fragmentView = fragment.getView();
+
+        enterCardDetails(fragmentView, AMEX_CARD_NUMBER, EXPIRY_DATE, "10001");
+
+        View paymentButton = findView(fragmentView, R.id.payment_button);
+        assertThat(paymentButton.isEnabled(), is(false));
+    }
+
+    @Test
+    public void shouldDisablePayButtonWhenInvalidCv2Entered() {
+        JudoPay.setup(RuntimeEnvironment.application, null, null, 0);
+        JudoPay.setAvsEnabled(false);
+
+        CardFormFragment fragment = getFragment();
+        startFragment(fragment);
+
+        View fragmentView = fragment.getView();
+
+        enterCardDetails(fragmentView, VISA_CARD_NUMBER, EXPIRY_DATE, "1000");
+
+        View paymentButton = findView(fragmentView, R.id.payment_button);
+        assertThat(paymentButton.isEnabled(), is(false));
     }
 
     @SuppressWarnings("unchecked")
@@ -214,6 +224,21 @@ public class CardFormFragmentTest {
         bundle.putParcelable(JudoPay.EXTRA_PAYMENT, payment);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    private void enterCardDetails(View fragmentView, String cardNumber, String expiryDate, String cvv) {
+        enterCardNumber(fragmentView, cardNumber);
+
+        EditText expiryDateEditText = findView(fragmentView, R.id.expiry_date_edit_text);
+        expiryDateEditText.setText(expiryDate);
+
+        EditText cvvEditText = findView(fragmentView, R.id.cvv_edit_text);
+        cvvEditText.setText(cvv);
+    }
+
+    private void enterCardNumber(View fragmentView, String amexCardNumber) {
+        EditText cardNumberEditText = findView(fragmentView, R.id.card_number_edit_text);
+        cardNumberEditText.setText(amexCardNumber);
     }
 
 }

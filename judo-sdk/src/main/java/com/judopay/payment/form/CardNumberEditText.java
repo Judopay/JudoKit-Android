@@ -74,7 +74,11 @@ public class CardNumberEditText extends EditText {
         return CardType.matchCardNumber(getText().toString()) != CardType.UNKNOWN;
     }
 
-    public boolean isMaestroCardType() {
+    public boolean isAmexEntered() {
+        return lastCardType == CardType.AMEX;
+    }
+
+    public boolean isMaestroEntered() {
         return lastCardType == CardType.MAESTRO;
     }
 
