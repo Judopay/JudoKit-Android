@@ -65,6 +65,10 @@ public class JudoPay {
         return api.isAmexEnabled();
     }
 
+    public static JudoPayApi getApi() {
+        return api;
+    }
+
     public class Environment {
         public static final int LIVE = 0;
         public static final int SANDBOX = 1;

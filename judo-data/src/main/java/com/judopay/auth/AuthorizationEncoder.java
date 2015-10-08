@@ -1,25 +1,19 @@
 package com.judopay.auth;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Base64;
 
+import com.judopay.JudoPay;
+import com.judopay.JudoPayApi;
 
 public class AuthorizationEncoder {
 
     public static final String SHARED_PREFS = "JudoPrefs";
-    public static final String API_TOKEN_SHARED_PREF = "JudoApiToken";
-    public static final String API_SECRET_SHARED_PREF = "JudoApiSecret";
-
-    private SharedPreferences sharedPreferences;
-
-    public AuthorizationEncoder(Context context) {
-        this.sharedPreferences = context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-    }
 
     public String getAuthorization() {
-        String apiToken = sharedPreferences.getString(API_TOKEN_SHARED_PREF, null);
-        String apiSecret = sharedPreferences.getString(API_SECRET_SHARED_PREF, null);
+        JudoPayApi api = JudoPay.getApi();
+
+        String apiToken = api.getApiToken();
+        String apiSecret = api.getApiSecret();
 
         if (apiToken == null || apiToken.length() == 0) {
             throw new RuntimeException("Judo Payments API Token not specified");
