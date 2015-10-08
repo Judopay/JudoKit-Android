@@ -13,6 +13,6 @@
         android:id="@+id/payment_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Make Payment £9.99" />
+        android:text="@string/sample_payment_label" />
 
 </LinearLayout>
