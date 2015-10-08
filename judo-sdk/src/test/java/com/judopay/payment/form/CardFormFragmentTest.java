@@ -18,7 +18,6 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import static com.judopay.JudoPay.Environment.SANDBOX;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -30,6 +29,12 @@ public class CardFormFragmentTest {
 
     public static final String VISA_CARD_NUMBER = "4976000000003436";
     public static final String MAESTRO_CARD_NUMBER = "6759000000005462";
+
+    public static final String EXPIRY_DATE = "12/15";
+    public static final String CV2 = "452";
+    public static final String START_DATE = "01/12";
+    public static final String ISSUE_NUMBER = "01";
+    public static final String POSTCODE = "SW16";
 
     @Test
     public void shouldShowCountrySpinnerWhenAvsEnabled() {
@@ -71,7 +76,7 @@ public class CardFormFragmentTest {
 
         EditText cardNumberEditText = findView(fragmentView, R.id.card_number_edit_text);
 
-        cardNumberEditText.setText("6759000000005462");
+        cardNumberEditText.setText(MAESTRO_CARD_NUMBER);
 
         View issueNumberView = findView(fragmentView, R.id.issue_number_edit_text);
         assertThat(issueNumberView.getVisibility(), equalTo(View.VISIBLE));
@@ -119,10 +124,10 @@ public class CardFormFragmentTest {
         cardNumberEditText.setText(VISA_CARD_NUMBER);
 
         EditText expiryDateEditText = findView(fragmentView, R.id.expiry_date_edit_text);
-        expiryDateEditText.setText("12/15");
+        expiryDateEditText.setText(EXPIRY_DATE);
 
         EditText cvvEditText = findView(fragmentView, R.id.cvv_edit_text);
-        cvvEditText.setText("452");
+        cvvEditText.setText(CV2);
 
         assertThat(paymentButton.isEnabled(), is(true));
     }
@@ -144,13 +149,13 @@ public class CardFormFragmentTest {
         cardNumberEditText.setText(VISA_CARD_NUMBER);
 
         EditText expiryDateEditText = findView(fragmentView, R.id.expiry_date_edit_text);
-        expiryDateEditText.setText("12/15");
+        expiryDateEditText.setText(EXPIRY_DATE);
 
         EditText cvvEditText = findView(fragmentView, R.id.cvv_edit_text);
-        cvvEditText.setText("452");
+        cvvEditText.setText(CV2);
 
         EditText postcodeEditText = findView(fragmentView, R.id.post_code_edit_text);
-        postcodeEditText.setText("SW16");
+        postcodeEditText.setText(POSTCODE);
 
         Spinner countrySpinner = findView(fragmentView, R.id.country_spinner);
         countrySpinner.setSelection(0);
@@ -175,16 +180,16 @@ public class CardFormFragmentTest {
         cardNumberEditText.setText(MAESTRO_CARD_NUMBER);
 
         EditText expiryDateEditText = findView(fragmentView, R.id.expiry_date_edit_text);
-        expiryDateEditText.setText("12/15");
+        expiryDateEditText.setText(EXPIRY_DATE);
 
         EditText cvvEditText = findView(fragmentView, R.id.cvv_edit_text);
-        cvvEditText.setText("452");
+        cvvEditText.setText(CV2);
 
         EditText startDateEditText = findView(fragmentView, R.id.start_date_edit_text);
-        startDateEditText.setText("01/12");
+        startDateEditText.setText(START_DATE);
 
         EditText issueNumberEditText = findView(fragmentView, R.id.issue_number_edit_text);
-        issueNumberEditText.setText("01");
+        issueNumberEditText.setText(ISSUE_NUMBER);
 
         assertThat(paymentButton.isEnabled(), is(true));
     }
