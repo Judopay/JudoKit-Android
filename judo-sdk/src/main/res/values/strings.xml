@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Judo Android SDK</string>
+
+    <string name="card">Card</string>
+    <string name="postcode_uk">Postcode</string>
+    <string name="month_year_date_hint">MM/YY</string>
+    <string name="pay">Pay</string>
+
 </resources>
