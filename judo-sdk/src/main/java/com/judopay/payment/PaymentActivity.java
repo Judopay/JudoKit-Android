@@ -3,7 +3,6 @@ package com.judopay.payment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -14,18 +13,17 @@ import com.judopay.R;
 import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.customer.Location;
-import com.judopay.payment.form.CardFormFragment;
+import com.judopay.payment.form.PaymentFormFragment;
 
 import static com.judopay.JudoPay.EXTRA_PAYMENT;
 
 public class PaymentActivity extends AppCompatActivity implements PaymentFormListener, PaymentView {
 
-    private static final String KEY_CARD_FRAGMENT = "CardFormFragment";
-    private static PaymentPresenter presenter;
+    private static final String KEY_PAYMENT_FRAGMENT = "PaymentFormFragment";
 
     private ProgressBar progressBar;
-
-    private CardFormFragment fragment;
+    private PaymentFormFragment fragment;
+    private static PaymentPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +42,15 @@ public class PaymentActivity extends AppCompatActivity implements PaymentFormLis
             String title = getIntent().getStringExtra(Intent.EXTRA_TITLE);
             this.setTitle(title != null ? title : "Payment");
 
-            this.fragment = CardFormFragment.newInstance(payment, this);
+            this.fragment = PaymentFormFragment.newInstance(payment, this);
 
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.container, fragment)
                     .commit();
         } else {
-            this.fragment = (CardFormFragment) getSupportFragmentManager()
-                    .getFragment(savedInstanceState, KEY_CARD_FRAGMENT);
+            this.fragment = (PaymentFormFragment) getSupportFragmentManager()
+                    .getFragment(savedInstanceState, KEY_PAYMENT_FRAGMENT);
             this.fragment.setPaymentFormListener(this);
         }
 
@@ -63,7 +61,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentFormLis
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        getSupportFragmentManager().putFragment(outState, KEY_CARD_FRAGMENT, fragment);
+        getSupportFragmentManager().putFragment(outState, KEY_PAYMENT_FRAGMENT, fragment);
     }
 
     @Override
@@ -79,7 +77,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentFormLis
     }
 
     @Override
-    public void onSubmitCard(Card card) {
+    public void onSubmit(Card card) {
         Payment payment = getIntent().getParcelableExtra(EXTRA_PAYMENT);
 
         Transaction.Builder builder = new Transaction.Builder()

@@ -4,6 +4,6 @@ import com.judopay.customer.Card;
 
 public interface PaymentFormListener {
 
-    void onSubmitCard(Card card);
+    void onSubmit(Card card);
 
 }

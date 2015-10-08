@@ -18,13 +18,13 @@ import com.judopay.customer.Card;
 import com.judopay.customer.CardAddress;
 import com.judopay.customer.CardDate;
 import com.judopay.customer.CardType;
-import com.judopay.customer.Country;
 import com.judopay.payment.PaymentFormListener;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static com.judopay.JudoPay.isAvsEnabled;
 
-public class CardFormFragment extends Fragment implements TextWatcher, AdapterView.OnItemSelectedListener {
+public class PaymentFormFragment extends Fragment implements TextWatcher, AdapterView.OnItemSelectedListener {
 
     private static final String JUDO_PAYMENT = "Judo-Payment";
 
@@ -65,7 +65,7 @@ public class CardFormFragment extends Fragment implements TextWatcher, AdapterVi
             @Override
             public void onClick(View v) {
                 if (formValid()) {
-                    attemptPayment();
+                    submitForm();
                 }
             }
         });
@@ -88,13 +88,13 @@ public class CardFormFragment extends Fragment implements TextWatcher, AdapterVi
             }
         });
 
-        if (JudoPay.isAvsEnabled()) {
+        if (isAvsEnabled()) {
             initialiseCountrySpinner();
         }
     }
 
     private void addTextChangeListeners(EditText... editTexts) {
-        for(EditText editText : editTexts) {
+        for (EditText editText : editTexts) {
             editText.addTextChangedListener(this);
         }
     }
@@ -120,7 +120,7 @@ public class CardFormFragment extends Fragment implements TextWatcher, AdapterVi
     }
 
     private boolean isAvsRequiredFieldsValid() {
-        return !JudoPay.isAvsEnabled() || JudoPay.isAvsEnabled() && postcodeEditText.isValid() && countrySpinner.isCountrySelected();
+        return !isAvsEnabled() || isAvsEnabled() && postcodeEditText.isValid() && countrySpinner.isCountrySelected();
     }
 
     private boolean isMaestroRequiredFieldsValid() {
@@ -141,19 +141,20 @@ public class CardFormFragment extends Fragment implements TextWatcher, AdapterVi
         countrySpinner.setVisibility(VISIBLE);
     }
 
-    private void attemptPayment() {
+    private void submitForm() {
         Card.Builder cardBuilder = new Card.Builder()
                 .setCardNumber(getCardNumber())
                 .setExpiryDate(getExpiryDate())
                 .setCvv(getCvv());
 
-        if (JudoPay.isAvsEnabled()) {
-            Country country = countrySpinner.getSelectedCountry();
-            cardBuilder.setCardAddress(new CardAddress.Builder()
-                    .setPostcode(getPostcode())
-                    .setCountryCode(country.getCode())
-                    .build());
+        CardAddress.Builder cardAddressBuilder = new CardAddress.Builder()
+                .setPostcode(getPostcode());
+
+        if (isAvsEnabled()) {
+            cardAddressBuilder.setCountryCode(countrySpinner.getSelectedCountry().getCode());
         }
+
+        cardBuilder.setCardAddress(cardAddressBuilder.build());
 
         if (cardNumberEditText.isMaestroEntered()) {
             cardBuilder.setIssueNumber(getIssueNumber())
@@ -179,7 +180,7 @@ public class CardFormFragment extends Fragment implements TextWatcher, AdapterVi
         }
 
         if (!errors && paymentFormListener != null) {
-            paymentFormListener.onSubmitCard(card);
+            paymentFormListener.onSubmit(card);
         }
     }
 
@@ -211,15 +212,15 @@ public class CardFormFragment extends Fragment implements TextWatcher, AdapterVi
         return trim(cardNumberEditText);
     }
 
-    public static CardFormFragment newInstance(Parcelable payment, PaymentFormListener paymentListener) {
-        CardFormFragment cardFormFragment = new CardFormFragment();
+    public static PaymentFormFragment newInstance(Parcelable payment, PaymentFormListener paymentListener) {
+        PaymentFormFragment paymentFormFragment = new PaymentFormFragment();
 
         Bundle arguments = new Bundle();
         arguments.putParcelable(JUDO_PAYMENT, payment);
-        cardFormFragment.setArguments(arguments);
-        cardFormFragment.setPaymentFormListener(paymentListener);
+        paymentFormFragment.setArguments(arguments);
+        paymentFormFragment.setPaymentFormListener(paymentListener);
 
-        return cardFormFragment;
+        return paymentFormFragment;
     }
 
     public void setPaymentFormListener(PaymentFormListener paymentFormListener) {

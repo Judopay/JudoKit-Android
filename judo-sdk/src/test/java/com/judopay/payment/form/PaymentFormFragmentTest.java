@@ -26,7 +26,7 @@ import static org.robolectric.shadows.support.v4.SupportFragmentTestUtil.startFr
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
-public class CardFormFragmentTest {
+public class PaymentFormFragmentTest {
 
     public static final String VISA_CARD_NUMBER = "4976000000003436";
     public static final String MAESTRO_CARD_NUMBER = "6759000000005462";
@@ -47,7 +47,7 @@ public class CardFormFragmentTest {
     public void shouldShowCountrySpinnerWhenAvsEnabled() {
         JudoPay.setAvsEnabled(true);
 
-        CardFormFragment fragment = getFragment();
+        PaymentFormFragment fragment = getFragment();
 
         startFragment(fragment);
 
@@ -60,7 +60,7 @@ public class CardFormFragmentTest {
     public void shouldHideCountrySpinnerWhenAvsDisabled() {
         JudoPay.setAvsEnabled(false);
 
-        CardFormFragment fragment = getFragment();
+        PaymentFormFragment fragment = getFragment();
 
         startFragment(fragment);
 
@@ -73,7 +73,7 @@ public class CardFormFragmentTest {
     public void shouldShowIssueNumberAndStartDateFieldsWhenMaestro() {
         JudoPay.setAvsEnabled(false);
 
-        CardFormFragment fragment = getFragment();
+        PaymentFormFragment fragment = getFragment();
         startFragment(fragment);
 
         View fragmentView = fragment.getView();
@@ -91,7 +91,7 @@ public class CardFormFragmentTest {
     public void shouldHideIssueNumberAndStartDateFieldsWhenNoLongerMaestro() {
         JudoPay.setAvsEnabled(false);
 
-        CardFormFragment fragment = getFragment();
+        PaymentFormFragment fragment = getFragment();
         startFragment(fragment);
 
         View fragmentView = fragment.getView();
@@ -112,7 +112,7 @@ public class CardFormFragmentTest {
     public void shouldEnablePayButtonWhenFormValid() {
         JudoPay.setAvsEnabled(false);
 
-        CardFormFragment fragment = getFragment();
+        PaymentFormFragment fragment = getFragment();
         startFragment(fragment);
 
         View fragmentView = fragment.getView();
@@ -129,7 +129,7 @@ public class CardFormFragmentTest {
     public void shouldEnablePayButtonWhenFormValidAndAvsEnabled() {
         JudoPay.setAvsEnabled(true);
 
-        CardFormFragment fragment = getFragment();
+        PaymentFormFragment fragment = getFragment();
         startFragment(fragment);
 
         View fragmentView = fragment.getView();
@@ -153,7 +153,7 @@ public class CardFormFragmentTest {
         JudoPay.setAvsEnabled(false);
         JudoPay.setMaestroEnabled(true);
 
-        CardFormFragment fragment = getFragment();
+        PaymentFormFragment fragment = getFragment();
         startFragment(fragment);
 
         View fragmentView = fragment.getView();
@@ -172,7 +172,7 @@ public class CardFormFragmentTest {
     public void shouldDisablePayButtonWhenInvalidCidvEntered() {
         JudoPay.setAvsEnabled(false);
 
-        CardFormFragment fragment = getFragment();
+        PaymentFormFragment fragment = getFragment();
         startFragment(fragment);
 
         View fragmentView = fragment.getView();
@@ -187,7 +187,7 @@ public class CardFormFragmentTest {
     public void shouldDisablePayButtonWhenInvalidCv2Entered() {
         JudoPay.setAvsEnabled(false);
 
-        CardFormFragment fragment = getFragment();
+        PaymentFormFragment fragment = getFragment();
         startFragment(fragment);
 
         View fragmentView = fragment.getView();
@@ -203,7 +203,7 @@ public class CardFormFragmentTest {
         JudoPay.setMaestroEnabled(false);
         JudoPay.setAvsEnabled(false);
 
-        CardFormFragment fragment = getFragment();
+        PaymentFormFragment fragment = getFragment();
         startFragment(fragment);
 
         View fragmentView = fragment.getView();
@@ -220,7 +220,7 @@ public class CardFormFragmentTest {
         JudoPay.setAvsEnabled(false);
         JudoPay.setAmexEnabled(false);
 
-        CardFormFragment fragment = getFragment();
+        PaymentFormFragment fragment = getFragment();
         startFragment(fragment);
 
         View fragmentView = fragment.getView();
@@ -236,8 +236,8 @@ public class CardFormFragmentTest {
     }
 
     @NonNull
-    private CardFormFragment getFragment() {
-        CardFormFragment fragment = new CardFormFragment();
+    private PaymentFormFragment getFragment() {
+        PaymentFormFragment fragment = new PaymentFormFragment();
         Payment payment = new Payment.Builder()
                 .setAmount(100)
                 .setConsumer(new Consumer("consumerRef"))
