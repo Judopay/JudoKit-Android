@@ -2,6 +2,8 @@ package com.judopay.customer;
 
 public class Country {
 
+    public static final String OTHER = "Other";
+
     private final int code;
     private final String displayName;
 
@@ -16,19 +18,6 @@ public class Country {
 
     public String getDisplayName() {
         return displayName;
-    }
-
-    public static int getCodeFromCountry(String country) {
-        switch (country) {
-            case "GB":
-                return 826;
-            case "CA":
-                return 124;
-            case "US":
-                return 840;
-            default:
-                return 0;
-        }
     }
 
 }

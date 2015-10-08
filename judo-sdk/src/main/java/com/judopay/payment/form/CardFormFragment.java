@@ -2,11 +2,13 @@ package com.judopay.payment.form;
 
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -22,20 +24,20 @@ import com.judopay.payment.PaymentFormListener;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class CardFormFragment extends Fragment {
+public class CardFormFragment extends Fragment implements TextWatcher, AdapterView.OnItemSelectedListener {
 
     private static final String JUDO_PAYMENT = "Judo-Payment";
 
     private Button paymentButton;
     private EditText cvvEditText;
-    private EditText postcodeEditText;
 
     private CardTypeView cardTypeView;
-    private EditText issueNumberEditText;
     private CountrySpinner countrySpinner;
+    private PostcodeEditText postcodeEditText;
     private CardDateEditText startDateEditText;
     private CardDateEditText expiryDateEditText;
     private CardNumberEditText cardNumberEditText;
+    private IssueNumberEditText issueNumberEditText;
 
     private PaymentFormListener paymentFormListener;
 
@@ -45,13 +47,13 @@ public class CardFormFragment extends Fragment {
 
         paymentButton = (Button) view.findViewById(R.id.payment_button);
         cvvEditText = (EditText) view.findViewById(R.id.cvv_edit_text);
-        postcodeEditText = (EditText) view.findViewById(R.id.post_code_edit_text);
+        postcodeEditText = (PostcodeEditText) view.findViewById(R.id.post_code_edit_text);
         cardNumberEditText = (CardNumberEditText) view.findViewById(R.id.card_number_edit_text);
         expiryDateEditText = (CardDateEditText) view.findViewById(R.id.expiry_date_edit_text);
         countrySpinner = (CountrySpinner) view.findViewById(R.id.country_spinner);
         cardTypeView = (CardTypeView) view.findViewById(R.id.card_type_view);
         startDateEditText = (CardDateEditText) view.findViewById(R.id.start_date_edit_text);
-        issueNumberEditText = (EditText) view.findViewById(R.id.issue_number_edit_text);
+        issueNumberEditText = (IssueNumberEditText) view.findViewById(R.id.issue_number_edit_text);
 
         initialiseView();
 
@@ -67,6 +69,11 @@ public class CardFormFragment extends Fragment {
                 }
             }
         });
+
+        addTextChangeListeners(cvvEditText, postcodeEditText, cardNumberEditText,
+                expiryDateEditText, startDateEditText, issueNumberEditText);
+
+        countrySpinner.setOnItemSelectedListener(this);
 
         cardNumberEditText.setCardListener(new CardNumberEditText.CardListener() {
             @Override
@@ -86,10 +93,28 @@ public class CardFormFragment extends Fragment {
         }
     }
 
+    private void addTextChangeListeners(EditText... editTexts) {
+        for(EditText editText : editTexts) {
+            editText.addTextChangedListener(this);
+        }
+    }
+
     private boolean formValid() {
         return expiryDateEditText.isValid()
-                && startDateEditText.isValid()
-                && cardNumberEditText.isValid();
+                && cardNumberEditText.isValid()
+                && isMandatoryCardTypeFieldsValid();
+    }
+
+    private boolean isMandatoryCardTypeFieldsValid() {
+        return isAvsRequiredFieldsValid() && isMaestroRequiredFieldsValid();
+    }
+
+    private boolean isAvsRequiredFieldsValid() {
+        return !JudoPay.isAvsEnabled() || JudoPay.isAvsEnabled() && postcodeEditText.isValid() && countrySpinner.isCountrySelected();
+    }
+
+    private boolean isMaestroRequiredFieldsValid() {
+        return !cardNumberEditText.isMaestroCardType() || issueNumberEditText.isValid() && startDateEditText.isValid();
     }
 
     private void hideAdditionalFields() {
@@ -190,4 +215,30 @@ public class CardFormFragment extends Fragment {
     public void setPaymentFormListener(PaymentFormListener paymentFormListener) {
         this.paymentFormListener = paymentFormListener;
     }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        paymentButton.setEnabled(formValid());
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        paymentButton.setEnabled(formValid());
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
 }

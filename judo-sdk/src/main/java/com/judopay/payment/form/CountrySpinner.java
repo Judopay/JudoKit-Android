@@ -15,9 +15,9 @@ import java.util.List;
 
 public class CountrySpinner extends Spinner {
 
-    public static final String OTHER_COUNTRY = "Other";
-    private CountrySpinnerAdapter adapter;
     private Listener listener;
+    private CountrySpinnerAdapter adapter;
+    private OnItemSelectedListener delegatedListener;
 
     public interface Listener {
         void onCountrySelected();
@@ -55,19 +55,30 @@ public class CountrySpinner extends Spinner {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Country country = adapter.getItem(position);
                 if (listener != null) {
-                    if (OTHER_COUNTRY.equals(country.getDisplayName())) {
+                    if (Country.OTHER.equals(country.getDisplayName())) {
                         listener.onOtherCountrySelected();
                     } else {
                         listener.onCountrySelected();
                     }
                 }
+
+                if (delegatedListener != null) {
+                    delegatedListener.onItemSelected(parent, view, position, id);
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                if (delegatedListener != null) {
+                    delegatedListener.onNothingSelected(parent);
+                }
             }
         });
+    }
+
+    @Override
+    public void setOnItemSelectedListener(OnItemSelectedListener listener) {
+        this.delegatedListener = listener;
     }
 
     private List<Country> getCountries() {
@@ -76,9 +87,13 @@ public class CountrySpinner extends Spinner {
         countries.add(new Country(826, "United Kingdom"));
         countries.add(new Country(840, "United States"));
         countries.add(new Country(124, "Canada"));
-        countries.add(new Country(0, OTHER_COUNTRY));
+        countries.add(new Country(0, Country.OTHER));
 
         return countries;
+    }
+
+    public boolean isCountrySelected() {
+        return !Country.OTHER.equals(getSelectedCountry().getDisplayName());
     }
 
     public void setListener(Listener listener) {
