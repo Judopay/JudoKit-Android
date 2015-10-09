@@ -19,7 +19,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class RetrofitFactory {
 
     public static Retrofit get() {
-        AuthorizationEncoder authorizationEncoder = new AuthorizationEncoder(JudoPay.getContext());
+        AuthorizationEncoder authorizationEncoder = new AuthorizationEncoder();
         ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(authorizationEncoder);
 
         OkHttpClient client = new OkHttpClient();

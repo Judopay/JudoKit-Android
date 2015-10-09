@@ -7,8 +7,6 @@ import com.judopay.JudoPayApi;
 
 public class AuthorizationEncoder {
 
-    public static final String SHARED_PREFS = "JudoPrefs";
-
     public String getAuthorization() {
         JudoPayApi api = JudoPay.getApi();
 
