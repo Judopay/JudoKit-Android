@@ -3,6 +3,8 @@ package com.judopay.samples;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -17,7 +19,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import static com.judopay.JudoPay.Environment.SANDBOX;
-import static com.judopay.JudoPay.JUDO_PAYMENT;
 import static com.judopay.JudoPay.JUDO_RECEIPT;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,9 +36,28 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         JudoPay.setup(this, "823Eja2fEM6E9NAE", "382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6", SANDBOX);
-        JudoPay.setAvsEnabled(true);
 
         initialiseView();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.sample_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings_menu_item:
+                showSettings();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showSettings() {
+        startActivity(new Intent(this, SettingsActivity.class));
     }
 
     private void initialiseView() {
@@ -54,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
                         .setPaymentRef("paymentRef")
                         .build();
 
-                intent.putExtra(JUDO_PAYMENT, payment);
+                intent.putExtra(JudoPay.EXTRA_PAYMENT, payment);
+                intent.putExtra(Intent.EXTRA_TITLE, "Payment example");
 
                 startActivityForResult(intent, REQUEST_CODE);
             }
@@ -73,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case JudoPay.RESULT_PAYMENT_DECLINED:
-                    Toast.makeText(MainActivity.this, "Payment cancelled", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Payment declined", Toast.LENGTH_SHORT).show();
                     break;
 
                 case JudoPay.RESULT_CANCELED:

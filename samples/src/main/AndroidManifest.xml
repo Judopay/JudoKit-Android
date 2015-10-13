@@ -5,10 +5,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppBaseTheme">
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main">
@@ -20,6 +21,8 @@
 
         <activity android:name="com.judopay.payment.PaymentActivity"
             android:theme="@style/AppTheme" />
+
+        <activity android:name=".SettingsActivity" />
 
     </application>
 
