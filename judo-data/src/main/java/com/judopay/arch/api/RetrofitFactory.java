@@ -42,6 +42,7 @@ public class RetrofitFactory {
 
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Date.class, new DateJsonDeserializer())
+                .registerTypeAdapter(Float.class, new FormattedFloatDeserializer())
                 .create();
 
         GsonConverterFactory converterFactory = GsonConverterFactory.create(gson);
