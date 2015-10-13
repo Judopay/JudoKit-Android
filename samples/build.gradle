@@ -10,6 +10,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -28,6 +30,14 @@ dependencies {
     compile 'com.android.support:support-annotations:23.0.1'
 
     compile 'com.jakewharton:butterknife:7.0.1'
-
     compile project(':judo-sdk')
+
+    // Testing-only dependencies
+    androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
+    androidTestCompile 'io.appium:droiddriver:0.9.1'
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-Xlint:all'
 }

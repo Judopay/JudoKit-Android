@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.judopay.payment.PaymentActivity" />
+        <activity android:name="com.judopay.payment.PaymentActivity"
+            android:theme="@style/AppTheme" />
 
         <activity android:name=".SettingsActivity" />
 
