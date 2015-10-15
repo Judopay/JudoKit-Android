@@ -1,6 +1,11 @@
 <resources>
-    <string name="card">Card</string>
+    <string name="card_number_hint">0000 0000 0000 0000</string>
     <string name="postcode_uk">Postcode</string>
-    <string name="month_year_date_hint">MM/YY</string>
-    <string name="pay">Pay</string>
+    <string name="pay">PAY</string>
+    <string name="card_number_label">Card number</string>
+    <string name="expiry_date_label">Expiry date</string>
+    <string name="start_date_label">Start date</string>
+    <string name="date_hint">MM/YY</string>
+    <string name="cvv_label">CVV</string>
+    <string name="cvv_hint">000</string>
 </resources>

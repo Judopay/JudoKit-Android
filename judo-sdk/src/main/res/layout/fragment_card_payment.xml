@@ -1,120 +1,214 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/large_padding"
+            android:paddingRight="@dimen/large_padding">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.judopay.payment.form.CardTypeView
+                    android:id="@+id/card_type_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    tools:ignore="RtlHardcoded" />
+
+                <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/card_number_label" />-->
+
+                <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
+
+                <com.judopay.view.TextInputLayout2
+                    android:id="@+id/card_number_input_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.judopay.payment.form.CardNumberEditText
+                        android:id="@+id/card_number_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/small_padding"
+                        android:digits="01234 56789"
+                        android:hint="@string/card_number_label"
+                        android:inputType="number"
+                        android:maxLength="19" />
+
+                </com.judopay.view.TextInputLayout2>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <com.judopay.view.HintedTextInputLayout
+                    android:id="@+id/expiry_date_input_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/expiry_date_label" />
+
+                    <com.judopay.payment.form.CardDateEditText
+                        android:id="@+id/expiry_date_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:digits="01234/56789"
+                        android:hint="@string/date_hint"
+                        android:maxLength="5" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </com.judopay.view.HintedTextInputLayout>
+
+                <com.judopay.view.HintedTextInputLayout
+                    android:id="@+id/cvv_input_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cvv_label" />
+
+                    <EditText
+                        android:id="@+id/cvv_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/cvv_hint"
+                        android:inputType="number"
+                        android:maxLength="5" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </com.judopay.view.HintedTextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <com.judopay.view.HintedTextInputLayout
+                    android:id="@+id/start_date_input_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/start_date_label" />
+
+                    <com.judopay.payment.form.CardDateEditText
+                        android:id="@+id/start_date_edit_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:digits="01234/56789"
+                        android:hint="@string/date_hint"
+                        android:maxLength="5"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </com.judopay.view.HintedTextInputLayout>
+
+                <com.judopay.payment.form.IssueNumberEditText
+                    android:id="@+id/issue_number_edit_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:maxLength="2"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2">
+
+                <com.judopay.payment.form.CountrySpinner
+                    android:id="@+id/country_spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <com.judopay.view.HintedTextInputLayout
+                    android:id="@+id/post_code_input_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/post_code_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/postcode_uk" />
+
+                    <com.judopay.payment.form.PostcodeEditText
+                        android:id="@+id/post_code_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="text|textNoSuggestions"
+                        android:textAllCaps="true"
+                        tools:ignore="UnusedAttribute" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </com.judopay.view.HintedTextInputLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/payment_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_gravity="bottom"
+        android:background="?colorButtonNormal"
+        android:enabled="false"
+        android:text="@string/pay" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.judopay.payment.form.CardTypeView
-                android:id="@+id/card_type_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true" />
-
-            <com.judopay.payment.form.CardNumberEditText
-                android:id="@+id/card_number_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:digits="01234 56789"
-                android:hint="@string/card"
-                android:inputType="number"
-                android:maxLength="19" />
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <com.judopay.payment.form.CardDateEditText
-                android:id="@+id/expiry_date_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:digits="01234/56789"
-                android:hint="@string/month_year_date_hint"
-                android:maxLength="5" />
-
-            <EditText
-                android:id="@+id/cvv_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="CV2"
-                android:inputType="number"
-                android:maxLength="5" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <com.judopay.payment.form.CardDateEditText
-                android:id="@+id/start_date_edit_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:digits="01234/56789"
-                android:hint="@string/month_year_date_hint"
-                android:maxLength="5"
-                android:visibility="gone" />
-
-            <com.judopay.payment.form.IssueNumberEditText
-                android:id="@+id/issue_number_edit_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="number"
-                android:maxLength="2"
-                android:visibility="gone" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="2">
-
-            <com.judopay.payment.form.CountrySpinner
-                android:id="@+id/country_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:visibility="gone"
-                tools:visibility="visible" />
-
-            <com.judopay.payment.form.PostcodeEditText
-                android:id="@+id/post_code_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/postcode_uk" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/payment_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:text="@string/pay" />
-
-    </LinearLayout>
-
-</ScrollView>
+</FrameLayout>
