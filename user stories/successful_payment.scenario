@@ -1,0 +1,4 @@
+Given I am on a payment screen
+When I enter my card details
+And I click the pay button
+Then I should be given a successful message

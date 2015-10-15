@@ -1,4 +1,4 @@
-package com.judopay.testing;
+package com.judopay;
 
 import android.app.Activity;
 import android.support.test.internal.runner.lifecycle.ActivityLifecycleMonitorRegistry;
