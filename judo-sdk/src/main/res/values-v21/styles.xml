@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Judo" parent="Theme.AppCompat.Light">
+        <item name="android:statusBarColor">@color/judo_dark_blue</item>
+
+        <item name="colorPrimary">@color/judo_blue</item>
+        <item name="android:colorPrimary">@color/judo_blue</item>
+
+        <item name="colorAccent">@color/judo_blue</item>
+        <item name="android:colorAccent">@color/judo_blue</item>
+        <item name="android:colorControlNormal">@color/judo_black_16</item>
+
+        <item name="colorButtonNormal">@color/judo_teal</item>
+        <item name="android:colorButtonNormal">@color/judo_teal</item>
+
+        <item name="android:editTextColor">@android:color/black</item>
+        <item name="android:toolbarStyle">@style/ToolbarStyle</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorHint">@color/judo_black_38</item>
+    </style>
+
+    <style name="ToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="titleTextColor">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+    </style>
+
+</resources>
