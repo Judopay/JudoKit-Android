@@ -1,7 +1,9 @@
 package com.judopay.payment;
 
-/**
- * Created by jamesgoodwin on 13/10/2015.
- */
-public class PaymentListener {
+public interface PaymentListener {
+
+    void onPaymentSuccess(PaymentResponse paymentResponse);
+
+    void onPaymentDeclined(PaymentResponse paymentResponse);
+
 }

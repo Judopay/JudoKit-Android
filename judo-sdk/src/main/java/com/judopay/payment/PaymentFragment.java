@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import com.judopay.Client;
 import com.judopay.JudoPay;
 import com.judopay.R;
+import com.judopay.arch.api.RetrofitFactory;
 import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.customer.Location;
@@ -22,9 +23,10 @@ import static com.judopay.JudoPay.EXTRA_PAYMENT;
 
 public class PaymentFragment extends Fragment implements PaymentFormListener {
 
-    private PaymentService paymentService;
     private PaymentListener paymentListener;
     private ProgressBar progressBar;
+
+    private PaymentApiService paymentApiService;
 
     public static PaymentFragment newInstance(Payment payment) {
         PaymentFragment paymentFragment = new PaymentFragment();
@@ -40,8 +42,10 @@ public class PaymentFragment extends Fragment implements PaymentFormListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_payment, container, false);
 
+        this.paymentApiService = RetrofitFactory.getInstance()
+                .create(PaymentApiService.class);
+
         setRetainInstance(true);
-        paymentService = new PaymentService();
 
         return view;
     }
@@ -95,7 +99,7 @@ public class PaymentFragment extends Fragment implements PaymentFormListener {
     }
 
     private void performPayment(Transaction transaction) {
-        paymentService.payment(transaction)
+        paymentApiService.payment(transaction)
                 .subscribe(new Observer<PaymentResponse>() {
                     @Override
                     public void onCompleted() {
