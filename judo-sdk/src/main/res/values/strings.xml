@@ -8,4 +8,5 @@
     <string name="date_hint">MM/YY</string>
     <string name="cvv_label">CVV</string>
     <string name="cvv_hint">000</string>
+    <string name="empty" />
 </resources>
