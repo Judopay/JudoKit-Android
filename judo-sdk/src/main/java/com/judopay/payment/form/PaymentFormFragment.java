@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.judopay.HintChangingFocusListener;
 import com.judopay.JudoPay;
 import com.judopay.R;
 import com.judopay.customer.Card;
@@ -20,12 +19,13 @@ import com.judopay.customer.CardAddress;
 import com.judopay.customer.CardDate;
 import com.judopay.customer.CardType;
 import com.judopay.payment.PaymentFormListener;
+import com.judopay.payment.form.date.DateEditText;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static com.judopay.JudoPay.isAvsEnabled;
 
-public class PaymentFormFragment extends Fragment implements TextWatcher, AdapterView.OnItemSelectedListener {
+public class PaymentFormFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private static final String JUDO_PAYMENT = "Judo-Payment";
 
@@ -35,8 +35,8 @@ public class PaymentFormFragment extends Fragment implements TextWatcher, Adapte
     private CardTypeView cardTypeView;
     private CountrySpinner countrySpinner;
     private PostcodeEditText postcodeEditText;
-    private CardDateEditText startDateEditText;
-    private CardDateEditText expiryDateEditText;
+    private DateEditText startDateEditText;
+    private DateEditText expiryDateEditText;
     private CardNumberEditText cardNumberEditText;
     private IssueNumberEditText issueNumberEditText;
 
@@ -62,14 +62,14 @@ public class PaymentFormFragment extends Fragment implements TextWatcher, Adapte
         cardNumberEditText = (CardNumberEditText) view.findViewById(R.id.card_number_edit_text);
         cardNumberInputLayout = (TextInputLayout) view.findViewById(R.id.card_number_input_layout);
 
-        expiryDateEditText = (CardDateEditText) view.findViewById(R.id.expiry_date_edit_text);
+        expiryDateEditText = (DateEditText) view.findViewById(R.id.expiry_date_edit_text);
         expiryDateInputLayout = (TextInputLayout) view.findViewById(R.id.expiry_date_input_layout);
 
         countrySpinner = (CountrySpinner) view.findViewById(R.id.country_spinner);
 
         cardTypeView = (CardTypeView) view.findViewById(R.id.card_type_view);
 
-        startDateEditText = (CardDateEditText) view.findViewById(R.id.start_date_edit_text);
+        startDateEditText = (DateEditText) view.findViewById(R.id.start_date_edit_text);
         startDateInputLayout = (TextInputLayout) view.findViewById(R.id.start_date_input_layout);
 
         issueNumberEditText = (IssueNumberEditText) view.findViewById(R.id.issue_number_edit_text);
@@ -105,8 +105,44 @@ public class PaymentFormFragment extends Fragment implements TextWatcher, Adapte
             }
         });
 
-        addTextChangeListeners(cvvEditText, postcodeEditText, cardNumberEditText,
-                expiryDateEditText, startDateEditText, issueNumberEditText);
+        cardNumberEditText.addTextChangedListener(new SimpleTextWatcher() {
+            @Override
+            protected void onTextChanged() {
+                if (cardNumberEditText.isValid()) {
+                    cardNumberInputLayout.setErrorEnabled(false);
+                    cardNumberInputLayout.setError(null);
+                } else {
+                    cardNumberInputLayout.setErrorEnabled(true);
+                    cardNumberInputLayout.setError("Card not valid");
+                }
+            }
+        });
+
+        expiryDateEditText.addTextChangedListener(new SimpleTextWatcher() {
+            @Override
+            protected void onTextChanged() {
+                if (expiryDateEditText.isValid()) {
+                    expiryDateInputLayout.setErrorEnabled(false);
+                    expiryDateInputLayout.setError(null);
+                } else {
+                    expiryDateInputLayout.setError("Please check date");
+                    cardNumberInputLayout.setErrorEnabled(true);
+                }
+            }
+        });
+
+        startDateEditText.addTextChangedListener(new SimpleTextWatcher() {
+            @Override
+            protected void onTextChanged() {
+                if(startDateEditText.isValid()) {
+                    startDateInputLayout.setErrorEnabled(false);
+                    startDateInputLayout.setError(null);
+                } else {
+                    startDateInputLayout.setErrorEnabled(false);
+                    startDateInputLayout.setError("Please check date");
+                }
+            }
+        });
 
         countrySpinner.setOnItemSelectedListener(this);
 
@@ -125,12 +161,6 @@ public class PaymentFormFragment extends Fragment implements TextWatcher, Adapte
 
         if (isAvsEnabled()) {
             initialiseCountrySpinner();
-        }
-    }
-
-    private void addTextChangeListeners(EditText... editTexts) {
-        for (EditText editText : editTexts) {
-            editText.addTextChangedListener(this);
         }
     }
 
@@ -199,10 +229,10 @@ public class PaymentFormFragment extends Fragment implements TextWatcher, Adapte
         Card card = cardBuilder.build();
         boolean errors = false;
 
-        if (!card.isLuhnValid()) {
-            errors = true;
-            cardNumberInputLayout.setError("Invalid card no.");
-        }
+//        if (!card.isLuhnValid()) {
+//            errors = true;
+//            cardNumberInputLayout.setError("Invalid card no.");
+//        }
 
         if (!card.isExpiryDateValid()) {
             errors = true;
@@ -260,24 +290,6 @@ public class PaymentFormFragment extends Fragment implements TextWatcher, Adapte
 
     public void setPaymentFormListener(PaymentFormListener paymentFormListener) {
         this.paymentFormListener = paymentFormListener;
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        boolean formValid = formValid();
-        paymentButton.setEnabled(formValid);
-
-        cardNumberInputLayout.setError(cardNumberEditText.isValid() ? "" : "Card not valid");
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
     }
 
     @Override
