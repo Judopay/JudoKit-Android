@@ -11,8 +11,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/large_padding"
-            android:paddingRight="@dimen/large_padding">
+            android:paddingLeft="@dimen/medium_padding"
+            android:paddingRight="@dimen/medium_padding">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -28,8 +28,7 @@
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/card_number_input_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    style="@style/input_layout">
 
                     <com.judopay.payment.form.CardNumberEditText
                         android:id="@+id/card_number_edit_text"
@@ -52,26 +51,24 @@
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/expiry_date_input_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/input_layout"
                     android:layout_weight="1">
 
-                    <com.judopay.payment.form.CardDateEditText
+                    <com.judopay.payment.form.date.ExpiryDateEditText
                         android:id="@+id/expiry_date_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:digits="01234/56789"
+                        android:digits="0123456789/"
                         android:hint="@string/expiry_date_label"
-                        android:inputType="textNoSuggestions"
+                        android:inputType="number"
                         android:maxLength="5" />
 
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/cvv_input_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/input_layout"
                     android:layout_weight="1">
 
                     <EditText
@@ -81,7 +78,7 @@
                         android:layout_weight="1"
                         android:hint="@string/cvv_label"
                         android:inputType="number"
-                        android:maxLength="5" />
+                        android:maxLength="3" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -95,26 +92,26 @@
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/start_date_input_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/input_layout"
                     android:layout_weight="1"
                     android:visibility="gone">
 
-                    <com.judopay.payment.form.CardDateEditText
+                    <com.judopay.payment.form.date.StartDateEditText
                         android:id="@+id/start_date_edit_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:digits="01234/56789"
                         android:hint="@string/start_date_label"
+                        android:inputType="number"
                         android:maxLength="5" />
 
                 </android.support.design.widget.TextInputLayout>
 
                 <com.judopay.payment.form.IssueNumberEditText
                     android:id="@+id/issue_number_edit_text"
+                    style="@style/input_layout"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:inputType="number"
                     android:maxLength="2"
@@ -137,16 +134,15 @@
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/post_code_input_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/input_layout"
                     android:layout_weight="1">
 
                     <com.judopay.payment.form.PostcodeEditText
                         android:id="@+id/post_code_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textNoSuggestions|textCapCharacters"
                         android:hint="@string/postcode_uk"
+                        android:inputType="textNoSuggestions|textCapCharacters"
                         tools:ignore="UnusedAttribute" />
 
                 </android.support.design.widget.TextInputLayout>
