@@ -5,7 +5,14 @@
         <item name="colorButtonNormal">@color/judo_teal</item>
     </style>
 
+    <style name="input_layout">
+        <item name="android:layout_marginTop">@dimen/medium_padding</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <dimen name="small_padding">4dp</dimen>
-    <dimen name="large_padding">8dp</dimen>
+    <dimen name="medium_padding">8dp</dimen>
+    <dimen name="large_padding">16dp</dimen>
 
 </resources>
