@@ -3,13 +3,17 @@ package com.judopay;
 import android.view.View;
 import android.widget.EditText;
 
-public class HintChangingFocusListener implements View.OnFocusChangeListener {
+public class HintFocusListener implements View.OnFocusChangeListener {
 
     private final EditText editText;
-    private final int hintResourceId;
+    private int hintResourceId;
 
-    public HintChangingFocusListener(EditText editText, int hintResourceId) {
+    public HintFocusListener(EditText editText, int hintResourceId) {
         this.editText = editText;
+        this.hintResourceId = hintResourceId;
+    }
+
+    protected void setHintResourceId(int hintResourceId) {
         this.hintResourceId = hintResourceId;
     }
 
