@@ -8,24 +8,6 @@ import static org.hamcrest.core.Is.is;
 public class CardTest {
 
     @Test
-    public void shouldHaveInvalidLuhn() {
-        Card card = new Card.Builder()
-                .setCardNumber("1234567890123456")
-                .build();
-
-        assertThat(card.isLuhnValid(), is(false));
-    }
-
-    @Test
-    public void shouldHaveValidLuhn() {
-        Card card = new Card.Builder()
-                .setCardNumber("4976000000003436")
-                .build();
-
-        assertThat(card.isLuhnValid(), is(true));
-    }
-
-    @Test
     public void shouldHaveValidStartDate() {
         Card card = new Card.Builder()
                 .setStartDate(new CardDate(1, 12))
