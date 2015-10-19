@@ -1,12 +1,11 @@
 package com.judopay.payment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import com.judopay.Client;
 import com.judopay.JudoPay;
@@ -23,13 +22,18 @@ import static com.judopay.JudoPay.EXTRA_PAYMENT;
 
 public class PaymentFragment extends Fragment implements PaymentFormListener {
 
-    private PaymentListener paymentListener;
-    private ProgressBar progressBar;
+    public static final String TAG_PAYMENT_FORM = "PaymentFormFragment";
 
+    private View progressBar;
+
+    private PaymentListener paymentListener;
     private PaymentApiService paymentApiService;
 
-    public static PaymentFragment newInstance(Payment payment) {
+    private boolean paymentInProgress;
+
+    public static PaymentFragment newInstance(Payment payment, PaymentListener listener) {
         PaymentFragment paymentFragment = new PaymentFragment();
+        paymentFragment.paymentListener = listener;
 
         Bundle arguments = new Bundle();
         arguments.putParcelable(JudoPay.EXTRA_PAYMENT, payment);
@@ -39,30 +43,46 @@ public class PaymentFragment extends Fragment implements PaymentFormListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_payment, container, false);
-
-        this.paymentApiService = RetrofitFactory.getInstance()
-                .create(PaymentApiService.class);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
 
-        return view;
+        this.paymentApiService = RetrofitFactory.getInstance()
+                .create(PaymentApiService.class);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_payment, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        this.progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+        this.progressBar = view.findViewById(R.id.progress_container);
 
-        Payment payment = getArguments().getParcelable(JudoPay.EXTRA_PAYMENT);
-        PaymentFormFragment paymentFormFragment = PaymentFormFragment.newInstance(payment, this);
+        if(paymentInProgress) {
+            showLoading();
+        }
+    }
 
-        if(savedInstanceState == null) {
-            getChildFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.container, paymentFormFragment)
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        FragmentManager fm = getFragmentManager();
+
+        PaymentFormFragment paymentFormFragment = (PaymentFormFragment) fm.findFragmentByTag(TAG_PAYMENT_FORM);
+
+        if (paymentFormFragment == null) {
+            paymentFormFragment = PaymentFormFragment.newInstance(getArguments().getParcelable(EXTRA_PAYMENT), this);
+
+            paymentFormFragment.setTargetFragment(this, 0);
+
+            fm.beginTransaction()
+                    .add(R.id.container, paymentFormFragment, TAG_PAYMENT_FORM)
                     .commit();
         }
     }
@@ -94,25 +114,23 @@ public class PaymentFragment extends Fragment implements PaymentFormListener {
         performPayment(builder.build());
     }
 
-    public void setPaymentListener(PaymentListener paymentListener) {
-        this.paymentListener = paymentListener;
-    }
-
     private void performPayment(Transaction transaction) {
+        onLoadStarted();
         paymentApiService.payment(transaction)
                 .subscribe(new Observer<PaymentResponse>() {
                     @Override
                     public void onCompleted() {
-                        hideLoading();
+                        onLoadFinished();
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        onLoadFinished();
                     }
 
                     @Override
                     public void onNext(PaymentResponse paymentResponse) {
-                        if(paymentResponse.isSuccess()) {
+                        if (paymentResponse.isSuccess()) {
                             paymentListener.onPaymentSuccess(paymentResponse);
                         } else {
                             paymentListener.onPaymentDeclined(paymentResponse);
@@ -121,8 +139,18 @@ public class PaymentFragment extends Fragment implements PaymentFormListener {
                 });
     }
 
-    private void hideLoading() {
+    private void onLoadFinished() {
         progressBar.setVisibility(View.GONE);
+        paymentInProgress = false;
+    }
+
+    private void onLoadStarted() {
+        showLoading();
+        paymentInProgress = true;
+    }
+
+    private void showLoading() {
+        progressBar.setVisibility(View.VISIBLE);
     }
 
 }
