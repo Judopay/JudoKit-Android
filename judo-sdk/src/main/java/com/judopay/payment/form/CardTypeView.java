@@ -55,7 +55,7 @@ public class CardTypeView extends FrameLayout {
             case CardType.MAESTRO:
                 return R.drawable.ic_card_maestro;
             case CardType.VISA:
-                return R.drawable.ic_visa;
+                return R.drawable.ic_card_visa;
             default:
                 return R.drawable.ic_card_unknown;
         }
