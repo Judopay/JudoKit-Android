@@ -5,6 +5,9 @@
     <string name="card_number_label">Card number</string>
     <string name="expiry_date_label">Expiry date</string>
     <string name="start_date_label">Start date</string>
+    <string name="issue_number_label">Issue number</string>
+    <string name="issue_number_hint">00</string>
+    <string name="amex_issue_number_hint">0000</string>
     <string name="date_hint">MM/YY</string>
     <string name="cvv_label">CVV</string>
     <string name="cvv_hint">000</string>
