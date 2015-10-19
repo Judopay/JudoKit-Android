@@ -1,6 +1,5 @@
 package com.judopay.payment;
 
-
 import com.judopay.DroidDriverTest;
 import com.judopay.samples.MainActivity;
 import com.judopay.samples.R;
