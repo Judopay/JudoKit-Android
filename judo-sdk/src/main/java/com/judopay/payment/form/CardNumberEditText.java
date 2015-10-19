@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
+import com.judopay.customer.CardNumber;
 import com.judopay.customer.CardType;
 
 public class CardNumberEditText extends EditText {
@@ -71,7 +72,9 @@ public class CardNumberEditText extends EditText {
     }
 
     public boolean isValid() {
-        return CardType.matchCardNumber(getText().toString()) != CardType.UNKNOWN;
+        String cardNumber = getText().toString();
+        return CardType.matchCardNumber(cardNumber) != CardType.UNKNOWN
+                && CardNumber.isLuhnValid(cardNumber);
     }
 
     public boolean isAmexEntered() {
