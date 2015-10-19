@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static com.judopay.JudoPay.isAvsEnabled;
 
-public class PaymentFormFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class PaymentFormFragment extends Fragment {
 
     private static final String JUDO_PAYMENT = "Judo-Payment";
 
@@ -99,6 +100,7 @@ public class PaymentFormFragment extends Fragment implements AdapterView.OnItemS
         paymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(this.getClass().getSimpleName(), "Payment button pressed!");
                 if (formValid()) {
                     submitForm();
                 }
@@ -134,7 +136,7 @@ public class PaymentFormFragment extends Fragment implements AdapterView.OnItemS
         startDateEditText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             protected void onTextChanged() {
-                if(startDateEditText.isValid()) {
+                if (startDateEditText.isValid()) {
                     startDateInputLayout.setErrorEnabled(false);
                     startDateInputLayout.setError(null);
                 } else {
@@ -144,7 +146,7 @@ public class PaymentFormFragment extends Fragment implements AdapterView.OnItemS
             }
         });
 
-        countrySpinner.setOnItemSelectedListener(this);
+//        countrySpinner.setOnItemSelectedListener(this);
 
         cardNumberEditText.setCardListener(new CardNumberEditText.CardListener() {
             @Override
@@ -290,16 +292,6 @@ public class PaymentFormFragment extends Fragment implements AdapterView.OnItemS
 
     public void setPaymentFormListener(PaymentFormListener paymentFormListener) {
         this.paymentFormListener = paymentFormListener;
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        paymentButton.setEnabled(formValid());
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
 }
