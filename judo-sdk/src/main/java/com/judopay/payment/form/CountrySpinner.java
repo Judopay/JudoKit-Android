@@ -84,9 +84,9 @@ public class CountrySpinner extends Spinner {
     private List<Country> getCountries() {
         ArrayList<Country> countries = new ArrayList<>();
 
-        countries.add(new Country(826, "United Kingdom"));
-        countries.add(new Country(840, "United States"));
-        countries.add(new Country(124, "Canada"));
+        countries.add(new Country(826, Country.UNITED_KINGDOM));
+        countries.add(new Country(840, Country.UNITED_STATES));
+        countries.add(new Country(124, Country.CANADA));
         countries.add(new Country(0, Country.OTHER));
 
         return countries;
