@@ -1,6 +1,8 @@
 <resources>
     <string name="card_number_hint">0000 0000 0000 0000</string>
     <string name="postcode_uk">Postcode</string>
+    <string name="postcode_us">Zipcode</string>
+    <string name="postcode_canada">Postal code</string>
     <string name="pay">PAY</string>
     <string name="card_number_label">Card number</string>
     <string name="expiry_date_label">Expiry date</string>
@@ -14,4 +16,7 @@
     <string name="empty" />
     <string name="error_check_date">Please check date</string>
     <string name="error_card_number">Please check number</string>
+    <string name="error_generic">Please check value</string>
+    <string name="error_maestro_not_supported">Maestro not supported</string>
+    <string name="error_amex_not_supported">American Express not supported</string>
 </resources>
