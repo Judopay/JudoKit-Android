@@ -19,6 +19,7 @@ public class PaymentFormViewTest {
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .build());
 
@@ -34,6 +35,7 @@ public class PaymentFormViewTest {
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .build());
 
@@ -49,6 +51,7 @@ public class PaymentFormViewTest {
                         .setExpiryDate("01/30")
                         .setStartDate("")
                         .setIssueNumber("")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .build());
 
@@ -64,6 +67,7 @@ public class PaymentFormViewTest {
                         .setExpiryDate("09/15")
                         .setStartDate("")
                         .setIssueNumber("")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .build());
 
@@ -79,6 +83,7 @@ public class PaymentFormViewTest {
                         .setExpiryDate("01/30")
                         .setStartDate("09/15")
                         .setIssueNumber("01")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .build());
 
@@ -94,10 +99,12 @@ public class PaymentFormViewTest {
                         .setExpiryDate("01/35")
                         .setStartDate("01/30")
                         .setIssueNumber("01")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .build());
 
         assertThat(paymentFormView.isStartDateValid(), is(false));
+        assertThat(paymentFormView.getStartDateError(), is(R.string.error_check_date));
     }
 
     @Test
@@ -109,6 +116,7 @@ public class PaymentFormViewTest {
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .build());
 
@@ -124,6 +132,7 @@ public class PaymentFormViewTest {
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .build());
 
@@ -139,6 +148,7 @@ public class PaymentFormViewTest {
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .build());
 
@@ -154,6 +164,7 @@ public class PaymentFormViewTest {
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .setMaestroSupported(false)
                         .build());
@@ -171,6 +182,7 @@ public class PaymentFormViewTest {
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .setAmexSupported(false)
                         .build());
@@ -188,6 +200,7 @@ public class PaymentFormViewTest {
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .setMaestroSupported(true)
                         .build());
@@ -204,6 +217,7 @@ public class PaymentFormViewTest {
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .setMaestroSupported(false)
                         .build());
@@ -220,6 +234,7 @@ public class PaymentFormViewTest {
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .setAddressRequired(true)
                         .build());
@@ -236,6 +251,7 @@ public class PaymentFormViewTest {
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .setAddressRequired(true)
                         .build());
@@ -252,6 +268,7 @@ public class PaymentFormViewTest {
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .setAddressRequired(false)
                         .build());
@@ -268,6 +285,7 @@ public class PaymentFormViewTest {
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .setAddressRequired(true)
                         .build());
@@ -284,6 +302,7 @@ public class PaymentFormViewTest {
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_STATES))
                         .setAddressRequired(true)
                         .build());
@@ -300,11 +319,163 @@ public class PaymentFormViewTest {
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
+                        .setPostcode("")
                         .setCountry(new Country(0, Country.CANADA))
                         .setAddressRequired(true)
                         .build());
 
         assertThat(paymentFormView.getPostcodeLabel(), is(R.string.postcode_canada));
+    }
+
+    @Test
+    public void shouldHavePostcodeErrorWhenPostcodeNotEntered() {
+        PaymentFormView paymentFormView = new PaymentFormView.Builder()
+                .build(new PaymentForm.Builder()
+                        .setCardNumber("4282730000002397")
+                        .setCvv("789")
+                        .setExpiryDate("12/99")
+                        .setStartDate("")
+                        .setIssueNumber("")
+                        .setPostcode("")
+                        .setCountry(new Country(0, Country.UNITED_KINGDOM))
+                        .setAddressRequired(true)
+                        .build());
+
+        assertThat(paymentFormView.getPostcodeError(), is(R.string.error_postcode_uk));
+    }
+
+    @Test
+    public void shouldHaveZipCodeErrorWhenZipCodeNotEntered() {
+        PaymentFormView paymentFormView = new PaymentFormView.Builder()
+                .build(new PaymentForm.Builder()
+                        .setCardNumber("4282730000002397")
+                        .setCvv("789")
+                        .setExpiryDate("12/99")
+                        .setStartDate("")
+                        .setIssueNumber("")
+                        .setPostcode("")
+                        .setCountry(new Country(0, Country.UNITED_STATES))
+                        .setAddressRequired(true)
+                        .build());
+
+        assertThat(paymentFormView.getPostcodeError(), is(R.string.error_postcode_us));
+    }
+
+    @Test
+    public void shouldHavePostalCodeErrorWhenPostalCodeNotEntered() {
+        PaymentFormView paymentFormView = new PaymentFormView.Builder()
+                .build(new PaymentForm.Builder()
+                        .setCardNumber("4282730000002397")
+                        .setCvv("789")
+                        .setExpiryDate("12/99")
+                        .setStartDate("")
+                        .setIssueNumber("")
+                        .setPostcode("")
+                        .setCountry(new Country(0, Country.CANADA))
+                        .setAddressRequired(true)
+                        .build());
+
+        assertThat(paymentFormView.getPostcodeError(), is(R.string.error_postcode_canada));
+    }
+
+    @Test
+    public void shouldHavePaymentButtonDisabledWhenFormStarted() {
+        PaymentFormView paymentFormView = new PaymentFormView.Builder()
+                .build(new PaymentForm.Builder()
+                        .setCardNumber("4282730000002397")
+                        .setCvv("")
+                        .setExpiryDate("")
+                        .setStartDate("")
+                        .setIssueNumber("")
+                        .setPostcode("")
+                        .setCountry(new Country(0, Country.CANADA))
+                        .build());
+
+        assertThat(paymentFormView.isPaymentButtonEnabled(), is(false));
+    }
+
+    @Test
+    public void shouldHavePaymentButtonEnabledWhenCardDetailsEntered() {
+        PaymentFormView paymentFormView = new PaymentFormView.Builder()
+                .build(new PaymentForm.Builder()
+                        .setCardNumber("4282730000002397")
+                        .setCvv("123")
+                        .setExpiryDate("12/30")
+                        .setStartDate("")
+                        .setIssueNumber("")
+                        .setPostcode("")
+                        .setCountry(new Country(0, Country.CANADA))
+                        .build());
+
+        assertThat(paymentFormView.isPaymentButtonEnabled(), is(true));
+    }
+
+    @Test
+    public void shouldNotHavePaymentButtonEnabledWhenMaestroCardDetailsIncomplete() {
+        PaymentFormView paymentFormView = new PaymentFormView.Builder()
+                .build(new PaymentForm.Builder()
+                        .setCardNumber("6759649826438453")
+                        .setCvv("123")
+                        .setExpiryDate("12/30")
+                        .setStartDate("")
+                        .setIssueNumber("")
+                        .setPostcode("")
+                        .setMaestroSupported(true)
+                        .setCountry(new Country(0, Country.CANADA))
+                        .build());
+
+        assertThat(paymentFormView.isPaymentButtonEnabled(), is(false));
+    }
+
+    @Test
+    public void shouldHavePaymentButtonEnabledWhenMaestroCardDetailsComplete() {
+        PaymentFormView paymentFormView = new PaymentFormView.Builder()
+                .build(new PaymentForm.Builder()
+                        .setCardNumber("6759649826438453")
+                        .setCvv("123")
+                        .setExpiryDate("12/30")
+                        .setStartDate("12/12")
+                        .setIssueNumber("01")
+                        .setPostcode("")
+                        .setMaestroSupported(true)
+                        .setCountry(new Country(0, Country.CANADA))
+                        .build());
+
+        assertThat(paymentFormView.isPaymentButtonEnabled(), is(true));
+    }
+
+    @Test
+    public void shouldHavePaymentButtonDisabledWhenAddressIncomplete() {
+        PaymentFormView paymentFormView = new PaymentFormView.Builder()
+                .build(new PaymentForm.Builder()
+                        .setCardNumber("4282730000002397")
+                        .setCvv("123")
+                        .setExpiryDate("12/30")
+                        .setStartDate("12/12")
+                        .setIssueNumber("01")
+                        .setPostcode("")
+                        .setAddressRequired(true)
+                        .setCountry(new Country(0, Country.OTHER))
+                        .build());
+
+        assertThat(paymentFormView.isPaymentButtonEnabled(), is(false));
+    }
+
+    @Test
+    public void shouldHavePaymentButtonEnabledWhenAddressComplete() {
+        PaymentFormView paymentFormView = new PaymentFormView.Builder()
+                .build(new PaymentForm.Builder()
+                        .setCardNumber("4282730000002397")
+                        .setCvv("123")
+                        .setExpiryDate("12/30")
+                        .setStartDate("12/12")
+                        .setIssueNumber("01")
+                        .setPostcode("SW1A 1AA")
+                        .setAddressRequired(true)
+                        .setCountry(new Country(0, Country.UNITED_KINGDOM))
+                        .build());
+
+        assertThat(paymentFormView.isPaymentButtonEnabled(), is(true));
     }
 
 }
