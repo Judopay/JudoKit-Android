@@ -18,7 +18,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.judopay.payment.form.CardTypeView
+                <com.judopay.payment.form.CardTypeImageView
                     android:id="@+id/card_type_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -67,21 +67,35 @@
 
                 </com.judopay.JudoTextInputLayout>
 
-                <com.judopay.JudoTextInputLayout
-                    android:id="@+id/cvv_input_layout"
-                    style="@style/input_layout"
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1">
 
-                    <EditText
-                        android:id="@+id/cvv_edit_text"
-                        android:layout_width="match_parent"
+                    <com.judopay.payment.form.CvvImageView
+                        android:id="@+id/cvv_image_view"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="@string/cvv_label"
-                        android:inputType="number"
-                        android:maxLength="3" />
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="@dimen/large_padding"
+                        tools:ignore="RtlHardcoded" />
 
-                </com.judopay.JudoTextInputLayout>
+                    <com.judopay.JudoTextInputLayout
+                        android:id="@+id/cvv_input_layout"
+                        style="@style/input_layout">
+
+                        <EditText
+                            android:id="@+id/cvv_edit_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="@string/cvv_label"
+                            android:inputType="number"
+                            android:maxLength="3" />
+
+                    </com.judopay.JudoTextInputLayout>
+
+                </RelativeLayout>
 
             </LinearLayout>
 
