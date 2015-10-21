@@ -156,6 +156,38 @@ public class PaymentFormViewTest {
     }
 
     @Test
+    public void shouldHaveFourCharacterCvvLengthWhenAmex() {
+        PaymentFormView paymentFormView = new PaymentFormView.Builder()
+                .build(new PaymentForm.Builder()
+                        .setCardNumber("340000146304174")
+                        .setCvv("1234")
+                        .setExpiryDate("12/99")
+                        .setStartDate("")
+                        .setIssueNumber("")
+                        .setPostcode("")
+                        .setCountry(new Country(0, Country.UNITED_KINGDOM))
+                        .build());
+
+        assertThat(paymentFormView.getCvvLength(), is(4));
+    }
+
+    @Test
+    public void shouldHaveThreeCharacterCvvLengthWhenNotAmex() {
+        PaymentFormView paymentFormView = new PaymentFormView.Builder()
+                .build(new PaymentForm.Builder()
+                        .setCardNumber("4282730000002397")
+                        .setCvv("1234")
+                        .setExpiryDate("12/99")
+                        .setStartDate("")
+                        .setIssueNumber("")
+                        .setPostcode("")
+                        .setCountry(new Country(0, Country.UNITED_KINGDOM))
+                        .build());
+
+        assertThat(paymentFormView.getCvvLength(), is(3));
+    }
+
+    @Test
     public void shouldHaveCardErrorWhenMaestroEnteredAndMaestroNotSupported() {
         PaymentFormView paymentFormView = new PaymentFormView.Builder()
                 .build(new PaymentForm.Builder()
