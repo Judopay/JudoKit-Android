@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="Theme.Judo" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.Judo" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/judo_blue</item>
         <item name="colorButtonNormal">@color/judo_teal</item>
     </style>
