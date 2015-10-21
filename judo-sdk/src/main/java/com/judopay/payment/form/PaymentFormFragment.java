@@ -1,13 +1,16 @@
 package com.judopay.payment.form;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,7 +36,8 @@ public class PaymentFormFragment extends Fragment {
     private EditText cvvEditText;
 
     private Button paymentButton;
-    private CardTypeView cardTypeView;
+    private CardTypeImageView cardTypeImageView;
+    private CvvImageView cvvImageView;
     private CountrySpinner countrySpinner;
     private PostcodeEditText postcodeEditText;
     private EditText startDateEditText;
@@ -71,7 +75,8 @@ public class PaymentFormFragment extends Fragment {
 
         countrySpinner = (CountrySpinner) view.findViewById(R.id.country_spinner);
 
-        cardTypeView = (CardTypeView) view.findViewById(R.id.card_type_view);
+        cardTypeImageView = (CardTypeImageView) view.findViewById(R.id.card_type_view);
+        cvvImageView = (CvvImageView) view.findViewById(R.id.cvv_image_view);
 
         issueNumberEditText = (EditText) view.findViewById(R.id.issue_number_edit_text);
 
@@ -130,9 +135,18 @@ public class PaymentFormFragment extends Fragment {
         paymentButton.setOnClickListener(new SingleClickOnClickListener() {
             @Override
             public void doClick(View v) {
+                hideKeyboard();
                 submitForm();
             }
         });
+    }
+
+    private void hideKeyboard() {
+        View view = this.getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     private void updateFormView() {
@@ -151,7 +165,7 @@ public class PaymentFormFragment extends Fragment {
         PaymentFormView formView = new PaymentFormView.Builder()
                 .build(builder.build());
 
-        cardTypeView.setCardType(formView.getCardType());
+        cardTypeImageView.setCardType(formView.getCardType());
 
         Log.d(this.getClass().getSimpleName(),
                 String.format("Update card number input, card valid: %b, error: %s", formView.isCardNumberValid(), formView.getCardNumberError()));
@@ -166,6 +180,9 @@ public class PaymentFormFragment extends Fragment {
         startDateInputLayout.setError(formView.isStartDateValid() ? "" : getString(formView.getStartDateError()));
 
         cvvHintChangeListener.setHintResourceId(formView.getCvvHint());
+        cvvEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(formView.getCvvLength())});
+
+        cvvImageView.setCardType(formView.getCardType());
 
         startDateAndIssueNumberContainer.setVisibility(formView.isIssueNumberAndStartDateRequired() ? View.VISIBLE : View.GONE);
         countryAndPostcodeContainer.setVisibility(formView.isCountryAndPostcodeRequired() ? View.VISIBLE : View.GONE);
