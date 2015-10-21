@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.judopay.R;
 import com.judopay.customer.Country;
 
 import java.util.List;
@@ -40,12 +41,12 @@ public class CountrySpinnerAdapter extends ArrayAdapter<Country> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return getViewWithCountry(position, parent, android.R.layout.simple_dropdown_item_1line);
+        return getViewWithCountry(position, parent, R.layout.support_simple_spinner_dropdown_item);
     }
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        return getViewWithCountry(position, parent, android.R.layout.simple_spinner_dropdown_item);
+        return getViewWithCountry(position, parent, R.layout.support_simple_spinner_dropdown_item);
     }
 
     @NonNull
