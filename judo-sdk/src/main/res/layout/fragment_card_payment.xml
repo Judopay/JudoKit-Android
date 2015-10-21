@@ -26,11 +26,11 @@
                     android:layout_marginTop="@dimen/large_padding"
                     tools:ignore="RtlHardcoded" />
 
-                <android.support.design.widget.TextInputLayout
+                <com.judopay.JudoTextInputLayout
                     android:id="@+id/card_number_input_layout"
                     style="@style/input_layout">
 
-                    <com.judopay.payment.form.CardNumberEditText
+                    <EditText
                         android:id="@+id/card_number_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
                         android:inputType="number"
                         android:maxLength="19" />
 
-                </android.support.design.widget.TextInputLayout>
+                </com.judopay.JudoTextInputLayout>
 
             </RelativeLayout>
 
@@ -49,12 +49,12 @@
                 android:orientation="horizontal"
                 android:weightSum="2">
 
-                <android.support.design.widget.TextInputLayout
+                <com.judopay.JudoTextInputLayout
                     android:id="@+id/expiry_date_input_layout"
                     style="@style/input_layout"
                     android:layout_weight="1">
 
-                    <com.judopay.payment.form.date.ExpiryDateEditText
+                    <EditText
                         android:id="@+id/expiry_date_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -62,16 +62,17 @@
                         android:digits="0123456789/"
                         android:hint="@string/expiry_date_label"
                         android:inputType="number"
-                        android:maxLength="5" />
+                        android:maxLength="5"
+                        tools:ignore="TextFields" />
 
-                </android.support.design.widget.TextInputLayout>
+                </com.judopay.JudoTextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.judopay.JudoTextInputLayout
                     android:id="@+id/cvv_input_layout"
                     style="@style/input_layout"
                     android:layout_weight="1">
 
-                    <com.judopay.payment.form.CvvEditText
+                    <EditText
                         android:id="@+id/cvv_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -80,7 +81,7 @@
                         android:inputType="number"
                         android:maxLength="3" />
 
-                </android.support.design.widget.TextInputLayout>
+                </com.judopay.JudoTextInputLayout>
 
             </LinearLayout>
 
@@ -93,28 +94,29 @@
                 android:weightSum="2"
                 tools:visibility="visible">
 
-                <android.support.design.widget.TextInputLayout
+                <com.judopay.JudoTextInputLayout
                     android:id="@+id/start_date_input_layout"
                     style="@style/input_layout"
                     android:layout_weight="1">
 
-                    <com.judopay.payment.form.date.StartDateEditText
+                    <EditText
                         android:id="@+id/start_date_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:digits="01234/56789"
                         android:hint="@string/start_date_label"
                         android:inputType="number"
-                        android:maxLength="5" />
+                        android:maxLength="5"
+                        tools:ignore="TextFields" />
 
-                </android.support.design.widget.TextInputLayout>
+                </com.judopay.JudoTextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.judopay.JudoTextInputLayout
                     android:id="@+id/issue_number_input_layout"
                     style="@style/input_layout"
                     android:layout_weight="1">
 
-                    <com.judopay.payment.form.IssueNumberEditText
+                    <EditText
                         android:id="@+id/issue_number_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -122,7 +124,7 @@
                         android:inputType="number"
                         android:maxLength="3" />
 
-                </android.support.design.widget.TextInputLayout>
+                </com.judopay.JudoTextInputLayout>
 
             </LinearLayout>
 
@@ -140,7 +142,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
-                <android.support.design.widget.TextInputLayout
+                <com.judopay.JudoTextInputLayout
                     android:id="@+id/post_code_input_layout"
                     style="@style/input_layout"
                     android:layout_width="match_parent"
@@ -154,7 +156,7 @@
                         android:inputType="textNoSuggestions|textCapCharacters"
                         tools:ignore="UnusedAttribute" />
 
-                </android.support.design.widget.TextInputLayout>
+                </com.judopay.JudoTextInputLayout>
 
             </LinearLayout>
 
@@ -168,7 +170,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="?colorButtonNormal"
-        android:visibility="gone"
-        android:text="@string/pay" />
+        android:text="@string/pay"
+        android:visibility="gone" />
 
 </FrameLayout>
