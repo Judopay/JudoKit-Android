@@ -78,12 +78,13 @@ public class PaymentFragment extends Fragment implements PaymentFormListener {
 
         if (paymentFormFragment == null) {
             paymentFormFragment = PaymentFormFragment.newInstance(getArguments().getParcelable(EXTRA_PAYMENT), this);
-
             paymentFormFragment.setTargetFragment(this, 0);
 
             fm.beginTransaction()
                     .add(R.id.container, paymentFormFragment, TAG_PAYMENT_FORM)
                     .commit();
+        } else {
+            paymentFormFragment.setPaymentFormListener(this);
         }
     }
 
