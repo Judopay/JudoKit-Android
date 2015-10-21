@@ -35,55 +35,12 @@ public class Card {
         return issueNumber;
     }
 
-    public boolean isStartDateValid() {
-        return startDate.isPastDate();
-    }
-
-    public boolean isExpiryDateValid() {
-        return !expiryDate.isPastDate();
-    }
-
-    public int getType() {
-        return CardType.matchCardNumber(cardNumber);
-    }
-
-    public boolean isCvvValid() {
-        try {
-            switch (getType()) {
-                case CardType.AMEX:
-                    return isCidvValid(cvv);
-                default:
-                    return isCv2Valid(cvv);
-            }
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    public static boolean isCv2Valid(String cv2) {
-        if(cv2 == null || cv2.length() == 0) {
-            return false;
-        }
-
-        int cv2Int = Integer.parseInt(cv2);
-        return (cv2Int >= 0 && cv2Int < 1000);
-    }
-
-    public static boolean isCidvValid(String cidv) {
-        if(cidv == null || cidv.length() == 0) {
-            return false;
-        }
-
-        int cidvInt = Integer.parseInt(cidv);
-        return (cidvInt >= 0 && cidvInt < 10000);
-    }
-
     public String getCv2() {
         return cvv;
     }
 
     public boolean startDateAndIssueNumberRequired() {
-        return CardType.MAESTRO == getType();
+        return CardType.MAESTRO == CardType.matchCardNumber(cardNumber);
     }
 
     public static class Builder {
