@@ -1,5 +1,7 @@
 package com.judopay.payment.form;
 
+import android.support.annotation.StringRes;
+
 import com.judopay.R;
 import com.judopay.customer.CardNumber;
 import com.judopay.customer.CardType;
@@ -19,16 +21,19 @@ public class PaymentFormView {
     private boolean cvvValid;
     private boolean startDateValid;
     private boolean issueNumberValid;
+    private boolean postcodeValid;
     private boolean issueNumberAndStartDateRequired;
-    private boolean cardEntryComplete;
+    private boolean paymentButtonEnabled;
     private boolean countryAndPostcodeRequired;
 
+    private int cvvLength;
     private int cvvHint;
     private int cardNumberError;
     private int expiryDateError;
     private int startDateError;
     private int cvvError;
     private int postcodeLabel;
+    private int postcodeError;
 
     public boolean isCardNumberValid() {
         return cardNumberValid;
@@ -50,6 +55,10 @@ public class PaymentFormView {
         return issueNumberValid;
     }
 
+    public boolean isPostcodeValid() {
+        return postcodeValid;
+    }
+
     public boolean isIssueNumberAndStartDateRequired() {
         return issueNumberAndStartDateRequired;
     }
@@ -58,8 +67,8 @@ public class PaymentFormView {
         return countryAndPostcodeRequired;
     }
 
-    public boolean isCardEntryComplete() {
-        return cardEntryComplete;
+    public boolean isPaymentButtonEnabled() {
+        return paymentButtonEnabled;
     }
 
     public int getCardType() {
@@ -70,28 +79,43 @@ public class PaymentFormView {
         return showAmexCvvView;
     }
 
+    @StringRes
     public int getCardNumberError() {
         return cardNumberError;
     }
 
+    @StringRes
     public int getExpiryDateError() {
         return expiryDateError;
     }
 
+    @StringRes
     public int getStartDateError() {
         return startDateError;
     }
 
+    @StringRes
     public int getCvvError() {
         return cvvError;
     }
 
+    @StringRes
     public int getPostcodeLabel() {
         return postcodeLabel;
     }
 
+    @StringRes
     public int getCvvHint() {
         return cvvHint;
+    }
+
+    public int getCvvLength() {
+        return cvvLength;
+    }
+
+    @StringRes
+    public int getPostcodeError() {
+        return postcodeError;
     }
 
     public static class Builder {
@@ -126,6 +150,7 @@ public class PaymentFormView {
 
             boolean cvvValid = isCvvValid(paymentForm);
             setCvv(paymentForm, builder, cvvValid);
+            builder.setCvvLength(paymentForm.getCardType() == CardType.AMEX ? 4 : 3);
 
             boolean expiryDateValid = isExpiryDateValid(paymentForm.getExpiryDate());
             setExpiryDate(paymentForm, builder, expiryDateValid);
@@ -133,22 +158,52 @@ public class PaymentFormView {
             boolean startDateValid = isStartDateValid(paymentForm.getStartDate());
             builder.setStartDateValid(startDateValid);
 
+            if (!startDateValid) {
+                builder.setStartDateError(R.string.error_check_date);
+            }
+
             boolean issueNumberValid = isIssueNumberValid(paymentForm.getIssueNumber());
             builder.setIssueNumberValid(issueNumberValid);
 
             boolean maestroCardType = paymentForm.getCardType() == CardType.MAESTRO;
-            builder.setCardEntryComplete(cardNumberValid && cvvValid && expiryDateValid && (!maestroCardType || startDateValid && issueNumberValid));
+
+            boolean postcodeValid = paymentForm.getPostcode().length() > 0;
+            boolean countryValid = !paymentForm.getCountry().getDisplayName().equals(Country.OTHER);
+
+            builder.setPaymentButtonEnabled(cardNumberValid && cvvValid && expiryDateValid && (!maestroCardType || startDateValid && issueNumberValid)
+                    && (!paymentForm.isAddressRequired() || postcodeValid && countryValid));
 
             builder.setIssueNumberAndStartDateRequired(paymentForm.isMaestroSupported() && maestroCardType && cardNumberValid && cvvValid && expiryDateValid);
 
             builder.setCountryAndPostcodeRequired(paymentForm.isAddressRequired() && cardNumberValid && cvvValid && expiryDateValid);
 
-            setPostcodeLabel(builder, paymentForm);
+            setPostcodeLabel(paymentForm, builder);
+            builder.setPostcodeValid(postcodeValid);
+
+            if(!postcodeValid) {
+                setPostcodeError(paymentForm, builder);
+            }
 
             return builder.build();
         }
 
-        private void setPostcodeLabel(Builder builder, PaymentForm paymentForm) {
+        private void setPostcodeError(PaymentForm paymentForm, Builder builder) {
+            switch (paymentForm.getCountry().getDisplayName()) {
+                case Country.UNITED_KINGDOM:
+                default:
+                    builder.setPostcodeError(R.string.error_postcode_uk);
+                    break;
+
+                case Country.CANADA:
+                    builder.setPostcodeError(R.string.error_postcode_canada);
+                    break;
+
+                case Country.UNITED_STATES:
+                    builder.setPostcodeError(R.string.error_postcode_us);
+            }
+        }
+
+        private void setPostcodeLabel(PaymentForm paymentForm, Builder builder) {
             switch (paymentForm.getCountry().getDisplayName()) {
                 case Country.UNITED_STATES:
                     builder.setPostcodeLabel(R.string.postcode_us);
@@ -264,6 +319,11 @@ public class PaymentFormView {
             return this;
         }
 
+        public Builder setCvvLength(int cvvLength) {
+            paymentFormView.cvvLength = cvvLength;
+            return this;
+        }
+
         public Builder setShowAmexCvvView(boolean showAmexCvvView) {
             paymentFormView.showAmexCvvView = showAmexCvvView;
             return this;
@@ -304,8 +364,13 @@ public class PaymentFormView {
             return this;
         }
 
-        public Builder setCardEntryComplete(boolean cardEntryComplete) {
-            paymentFormView.cardEntryComplete = cardEntryComplete;
+        public Builder setPostcodeValid(boolean postcodeValid) {
+            paymentFormView.postcodeValid = postcodeValid;
+            return this;
+        }
+
+        public Builder setPaymentButtonEnabled(boolean paymentButtonEnabled) {
+            paymentFormView.paymentButtonEnabled = paymentButtonEnabled;
             return this;
         }
 
@@ -336,6 +401,11 @@ public class PaymentFormView {
 
         public Builder setPostcodeLabel(int postcodeLabel) {
             paymentFormView.postcodeLabel = postcodeLabel;
+            return this;
+        }
+
+        public Builder setPostcodeError(int postcodeError) {
+            paymentFormView.postcodeError = postcodeError;
             return this;
         }
 
