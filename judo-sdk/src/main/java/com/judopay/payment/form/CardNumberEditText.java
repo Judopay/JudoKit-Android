@@ -71,12 +71,6 @@ public class CardNumberEditText extends EditText {
         });
     }
 
-    public boolean isValid() {
-        String cardNumber = getText().toString();
-        return CardType.matchCardNumber(cardNumber) != CardType.UNKNOWN
-                && CardNumber.isLuhnValid(cardNumber);
-    }
-
     public boolean isAmexEntered() {
         return lastCardType == CardType.AMEX;
     }
