@@ -1,5 +1,6 @@
 package com.judopay;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -15,6 +16,7 @@ public class JudoTextInputLayout extends android.support.design.widget.TextInput
         super(context, attrs);
     }
 
+    @TargetApi(11)
     public JudoTextInputLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
