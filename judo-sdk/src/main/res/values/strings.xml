@@ -14,9 +14,13 @@
     <string name="cvv_hint">000</string>
     <string name="amex_cvv_hint">0000</string>
     <string name="empty" />
+    <string name="error_postcode_uk">Please enter postcode</string>
+    <string name="error_postcode_us">Please enter zipcode</string>
+    <string name="error_postcode_canada">Please enter postal code</string>
     <string name="error_check_date">Please check date</string>
     <string name="error_card_number">Please check number</string>
     <string name="error_generic">Please check value</string>
     <string name="error_maestro_not_supported">Maestro not supported</string>
-    <string name="error_amex_not_supported">American Express not supported</string>
+    <string name="error_amex_not_supported">We don\'t accept AmEx, please use other cards</string>
+    <string name="processing_payment">Processing payment</string>
 </resources>
