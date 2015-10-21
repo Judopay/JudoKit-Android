@@ -13,7 +13,7 @@ public class HintFocusListener implements View.OnFocusChangeListener {
         this.hintResourceId = hintResourceId;
     }
 
-    protected void setHintResourceId(int hintResourceId) {
+    public void setHintResourceId(int hintResourceId) {
         this.hintResourceId = hintResourceId;
     }
 
