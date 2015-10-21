@@ -11,25 +11,25 @@ import android.widget.ImageView;
 import com.judopay.R;
 import com.judopay.customer.CardType;
 
-public class CardTypeView extends FrameLayout {
+public class CardTypeImageView extends FrameLayout {
 
-    public CardTypeView(Context context) {
+    public CardTypeImageView(Context context) {
         super(context);
         setCardType(0);
     }
 
-    public CardTypeView(Context context, AttributeSet attrs) {
+    public CardTypeImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setCardType(0);
     }
 
-    public CardTypeView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CardTypeImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setCardType(0);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public CardTypeView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public CardTypeImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         setCardType(0);
     }
