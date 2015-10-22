@@ -15,23 +15,19 @@ public class CardTypeImageView extends FrameLayout {
 
     public CardTypeImageView(Context context) {
         super(context);
-        setCardType(0);
     }
 
     public CardTypeImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setCardType(0);
     }
 
     public CardTypeImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setCardType(0);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public CardTypeImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        setCardType(0);
     }
 
     public void setCardType(int cardType) {
