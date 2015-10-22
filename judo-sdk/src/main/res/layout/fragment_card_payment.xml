@@ -36,6 +36,7 @@
                         android:layout_height="wrap_content"
                         android:digits="01234 56789"
                         android:hint="@string/card_number_label"
+                        android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="19" />
 
@@ -61,6 +62,7 @@
                         android:layout_weight="1"
                         android:digits="0123456789/"
                         android:hint="@string/expiry_date_label"
+                        android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="5"
                         tools:ignore="TextFields" />
@@ -90,6 +92,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:hint="@string/cvv_label"
+                            android:imeOptions="actionNext"
                             android:inputType="number"
                             android:maxLength="3" />
 
@@ -119,6 +122,7 @@
                         android:layout_height="wrap_content"
                         android:digits="01234/56789"
                         android:hint="@string/start_date_label"
+                        android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="5"
                         tools:ignore="TextFields" />
@@ -135,6 +139,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/issue_number_label"
+                        android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="3" />
 
@@ -167,6 +172,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/postcode_uk"
+                        android:imeOptions="actionDone"
                         android:inputType="textNoSuggestions|textCapCharacters"
                         tools:ignore="UnusedAttribute" />
 
@@ -184,7 +190,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="?colorButtonNormal"
+        android:textSize="18sp"
         android:text="@string/pay"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 </FrameLayout>
