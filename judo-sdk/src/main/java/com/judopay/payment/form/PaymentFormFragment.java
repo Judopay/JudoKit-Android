@@ -144,7 +144,7 @@ public class PaymentFormFragment extends Fragment {
     private void hideKeyboard() {
         View view = this.getActivity().getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
@@ -169,6 +169,20 @@ public class PaymentFormFragment extends Fragment {
 
         Log.d(this.getClass().getSimpleName(),
                 String.format("Update card number input, card valid: %b, error: %s", formView.isCardNumberValid(), formView.getCardNumberError()));
+
+        if (cardNumberEditText.hasFocus() && formView.isCardNumberValid()) {
+            expiryDateEditText.requestFocus();
+        } else if (expiryDateEditText.hasFocus() && formView.isExpiryDateValid()) {
+            cvvEditText.requestFocus();
+        } else if (cvvEditText.hasFocus() && formView.isCvvValid()) {
+            if (startDateAndIssueNumberContainer.getVisibility() == View.VISIBLE) {
+                startDateEditText.requestFocus();
+            } else if (countryAndPostcodeContainer.getVisibility() == View.VISIBLE) {
+
+            }
+        } else if (startDateEditText.hasFocus() && formView.isStartDateValid()) {
+            issueNumberEditText.requestFocus();
+        }
 
         cardNumberInputLayout.setErrorEnabled(!formView.isCardNumberValid());
         cardNumberInputLayout.setError(formView.isCardNumberValid() ? "" : getString(formView.getCardNumberError()));
