@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 
+import com.judopay.CompositeOnFocusChangeListener;
 import com.judopay.HintFocusListener;
 import com.judopay.JudoPay;
 import com.judopay.R;
@@ -24,7 +25,7 @@ import com.judopay.customer.CardDate;
 import com.judopay.customer.CardType;
 import com.judopay.customer.Country;
 import com.judopay.payment.PaymentFormListener;
-import com.judopay.payment.ScrollHintFocusListener;
+import com.judopay.payment.ScrollOnFocusChangeListener;
 import com.judopay.payment.SingleClickOnClickListener;
 import com.judopay.payment.form.address.CountryAndPostcodeValidation;
 import com.judopay.payment.form.address.CountrySpinner;
@@ -130,7 +131,11 @@ public class PaymentFormFragment extends Fragment {
         issueNumberEditText.setOnFocusChangeListener(new HintFocusListener(issueNumberEditText, R.string.issue_number_hint));
         issueNumberEditText.addTextChangedListener(formValidator);
 
-        postcodeEditText.setOnFocusChangeListener(new ScrollHintFocusListener(postcodeEditText, scrollView, R.string.empty));
+        postcodeEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+                        new HintFocusListener(postcodeEditText, R.string.empty),
+                        new ScrollOnFocusChangeListener(scrollView))
+        );
+
         postcodeEditText.addTextChangedListener(formValidator);
 
         countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -230,7 +235,7 @@ public class PaymentFormFragment extends Fragment {
         }
 
         cardsAcceptedErrorText.setVisibility(countryAndPostcodeValidation.isCountryValid() ? View.GONE : View.VISIBLE);
-        postcodeInputLayout.setVisibility(countryAndPostcodeValidation.isCountryValid() ? View.VISIBLE: View.INVISIBLE);
+        postcodeInputLayout.setVisibility(countryAndPostcodeValidation.isCountryValid() ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void showExpiryDateErrors(PaymentFormValidation formView) {
