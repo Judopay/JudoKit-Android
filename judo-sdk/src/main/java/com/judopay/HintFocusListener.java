@@ -1,5 +1,6 @@
 package com.judopay;
 
+import android.support.annotation.StringRes;
 import android.view.View;
 import android.widget.EditText;
 
@@ -8,12 +9,12 @@ public class HintFocusListener implements View.OnFocusChangeListener {
     private final EditText editText;
     private int hintResourceId;
 
-    public HintFocusListener(EditText editText, int hintResourceId) {
+    public HintFocusListener(EditText editText, @StringRes int hintResourceId) {
         this.editText = editText;
         this.hintResourceId = hintResourceId;
     }
 
-    public void setHintResourceId(int hintResourceId) {
+    public void setHintResourceId(@StringRes int hintResourceId) {
         this.hintResourceId = hintResourceId;
     }
 
