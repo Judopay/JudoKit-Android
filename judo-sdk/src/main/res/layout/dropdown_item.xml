@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
+        android:layout_marginBottom="@dimen/small_padding"
         android:singleLine="true"
         android:textSize="@dimen/judo_small_text_size" />
 
