@@ -13,6 +13,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="50dp"
+            android:paddingTop="@dimen/medium_padding"
             android:paddingLeft="@dimen/medium_padding"
             android:paddingRight="@dimen/medium_padding">
 
@@ -25,6 +26,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/small_padding"
                     android:layout_marginTop="@dimen/large_padding"
                     tools:ignore="RtlHardcoded" />
 
@@ -81,6 +83,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/small_padding"
                         android:layout_marginTop="@dimen/large_padding"
                         tools:ignore="RtlHardcoded" />
 
@@ -171,11 +174,11 @@
 
                     <TextView
                         android:id="@+id/cards_accepted_error_text"
+                        style="@style/TextAppearance.AppCompat.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/country_cards_accepted_message"
                         android:textColor="@color/judo_red"
-                        style="@style/TextAppearance.AppCompat.Small"
                         android:textSize="@dimen/judo_small_text_size"
                         android:visibility="gone"
                         tools:visibility="visible" />
