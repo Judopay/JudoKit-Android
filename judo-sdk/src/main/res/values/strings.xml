@@ -24,4 +24,6 @@
     <string name="error_maestro_not_supported">Maestro not supported</string>
     <string name="error_amex_not_supported">We don\'t accept AmEx, please use other cards</string>
     <string name="processing_payment">Processing payment</string>
+    <string name="billing_country">Billing country</string>
+    <string name="country_cards_accepted_message">We only accept cards issued in UK, USA and Canada</string>
 </resources>
