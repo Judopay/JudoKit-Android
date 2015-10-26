@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.InputFilter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 
 import com.judopay.HintFocusListener;
 import com.judopay.JudoPay;
@@ -24,7 +24,14 @@ import com.judopay.customer.CardDate;
 import com.judopay.customer.CardType;
 import com.judopay.customer.Country;
 import com.judopay.payment.PaymentFormListener;
+import com.judopay.payment.ScrollHintFocusListener;
 import com.judopay.payment.SingleClickOnClickListener;
+import com.judopay.payment.form.address.CountryAndPostcodeValidation;
+import com.judopay.payment.form.address.CountrySpinner;
+import com.judopay.payment.form.address.PostcodeEditText;
+import com.judopay.payment.form.cardnumber.CardNumberFormattingTextWatcher;
+import com.judopay.payment.form.cardnumber.CardNumberValidation;
+import com.judopay.payment.form.cvv.CvvImageView;
 import com.judopay.payment.form.date.DateSeparatorTextWatcher;
 
 import static com.judopay.JudoPay.isAvsEnabled;
@@ -34,7 +41,6 @@ public class PaymentFormFragment extends Fragment {
     private static final String JUDO_PAYMENT = "Judo-Payment";
 
     private EditText cvvEditText;
-
     private Button paymentButton;
     private CardTypeImageView cardTypeImageView;
     private CvvImageView cvvImageView;
@@ -44,8 +50,7 @@ public class PaymentFormFragment extends Fragment {
     private EditText expiryDateEditText;
     private EditText cardNumberEditText;
     private EditText issueNumberEditText;
-
-    private PaymentFormListener paymentFormListener;
+    private TextInputLayout cvvInputLayout;
     private TextInputLayout cardNumberInputLayout;
     private TextInputLayout expiryDateInputLayout;
     private TextInputLayout startDateInputLayout;
@@ -53,13 +58,17 @@ public class PaymentFormFragment extends Fragment {
     private View startDateAndIssueNumberContainer;
     private View countryAndPostcodeContainer;
     private HintFocusListener cvvHintChangeListener;
+    private ScrollView scrollView;
+
+    private PaymentFormListener paymentFormListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_card_payment, container, false);
+        View view = inflater.inflate(R.layout.fragment_payment_form, container, false);
 
         paymentButton = (Button) view.findViewById(R.id.payment_button);
         cvvEditText = (EditText) view.findViewById(R.id.cvv_edit_text);
+        cvvInputLayout = (TextInputLayout) view.findViewById(R.id.cvv_input_layout);
 
         postcodeEditText = (PostcodeEditText) view.findViewById(R.id.post_code_edit_text);
         postcodeInputLayout = (TextInputLayout) view.findViewById(R.id.post_code_input_layout);
@@ -82,6 +91,7 @@ public class PaymentFormFragment extends Fragment {
 
         startDateAndIssueNumberContainer = view.findViewById(R.id.start_date_issue_number_container);
         countryAndPostcodeContainer = view.findViewById(R.id.country_postcode_container);
+        scrollView = (ScrollView) view.findViewById(R.id.scroll_view);
 
         return view;
     }
@@ -117,7 +127,7 @@ public class PaymentFormFragment extends Fragment {
         issueNumberEditText.setOnFocusChangeListener(new HintFocusListener(issueNumberEditText, R.string.issue_number_hint));
         issueNumberEditText.addTextChangedListener(formValidator);
 
-        postcodeEditText.setOnFocusChangeListener(new HintFocusListener(postcodeEditText, R.string.empty));
+        postcodeEditText.setOnFocusChangeListener(new ScrollHintFocusListener(postcodeEditText, scrollView, R.string.empty));
         postcodeEditText.addTextChangedListener(formValidator);
 
         countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -162,49 +172,96 @@ public class PaymentFormFragment extends Fragment {
                 .setAmexSupported(JudoPay.isAmexEnabled())
                 .setMaestroSupported(JudoPay.isMaestroEnabled());
 
-        PaymentFormView formView = new PaymentFormView.Builder()
+        PaymentFormValidation formView = new PaymentFormValidation.Builder()
                 .build(builder.build());
 
         cardTypeImageView.setCardType(formView.getCardType());
 
-        Log.d(this.getClass().getSimpleName(),
-                String.format("Update card number input, card valid: %b, error: %s", formView.isCardNumberValid(), formView.getCardNumberError()));
+        updateFormErrors(formView);
+        moveFieldFocus(formView);
+    }
 
-        if (cardNumberEditText.hasFocus() && formView.isCardNumberValid()) {
-            expiryDateEditText.requestFocus();
-        } else if (expiryDateEditText.hasFocus() && formView.isExpiryDateValid()) {
-            cvvEditText.requestFocus();
-        } else if (cvvEditText.hasFocus() && formView.isCvvValid()) {
-            if (startDateAndIssueNumberContainer.getVisibility() == View.VISIBLE) {
-                startDateEditText.requestFocus();
-            } else if (countryAndPostcodeContainer.getVisibility() == View.VISIBLE) {
+    private void updateFormErrors(PaymentFormValidation formView) {
+        showCardNumberErrors(formView.getCardNumberValidation());
 
-            }
-        } else if (startDateEditText.hasFocus() && formView.isStartDateValid()) {
-            issueNumberEditText.requestFocus();
-        }
+        showExpiryDateErrors(formView);
 
-        cardNumberInputLayout.setErrorEnabled(!formView.isCardNumberValid());
-        cardNumberInputLayout.setError(formView.isCardNumberValid() ? "" : getString(formView.getCardNumberError()));
+        showStartDateAndIssueNumberErrors(formView.getStartDateAndIssueNumberState());
 
-        expiryDateInputLayout.setErrorEnabled(!formView.isExpiryDateValid());
-        expiryDateInputLayout.setError(formView.isExpiryDateValid() ? "" : getString(formView.getExpiryDateError()));
-
-        startDateInputLayout.setErrorEnabled(!formView.isStartDateValid());
-        startDateInputLayout.setError(formView.isStartDateValid() ? "" : getString(formView.getStartDateError()));
-
+        cvvInputLayout.setHint(getString(formView.getCvvLabel()));
         cvvHintChangeListener.setHintResourceId(formView.getCvvHint());
+
         cvvEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(formView.getCvvLength())});
 
         cvvImageView.setCardType(formView.getCardType());
 
-        startDateAndIssueNumberContainer.setVisibility(formView.isIssueNumberAndStartDateRequired() ? View.VISIBLE : View.GONE);
-        countryAndPostcodeContainer.setVisibility(formView.isCountryAndPostcodeRequired() ? View.VISIBLE : View.GONE);
-
-        postcodeInputLayout.setErrorEnabled(!formView.isPostcodeValid());
-        postcodeInputLayout.setError(formView.isPostcodeValid() ? null : getString(formView.getPostcodeError()));
+        updateCountryAndPostcode(formView.getCountryAndPostcodeValidation());
 
         paymentButton.setVisibility(formView.isPaymentButtonEnabled() ? View.VISIBLE : View.GONE);
+    }
+
+    private void showStartDateAndIssueNumberErrors(StartDateAndIssueNumberValidation startDateAndIssueNumberValidation) {
+        startDateInputLayout.setErrorEnabled(startDateAndIssueNumberValidation.isShowStartDateError());
+
+        if(startDateAndIssueNumberValidation.isShowStartDateError()) {
+            startDateInputLayout.setError(getString(startDateAndIssueNumberValidation.getStartDateError()));
+        } else {
+            startDateInputLayout.setError("");
+        }
+
+        startDateAndIssueNumberContainer.setVisibility(startDateAndIssueNumberValidation.isIssueNumberAndStartDateRequired() ? View.VISIBLE : View.GONE);
+    }
+
+    private void updateCountryAndPostcode(CountryAndPostcodeValidation countryAndPostcodeValidation) {
+        countryAndPostcodeContainer.setVisibility(countryAndPostcodeValidation.isCountryAndPostcodeRequired() ? View.VISIBLE : View.GONE);
+
+        postcodeInputLayout.setErrorEnabled(countryAndPostcodeValidation.isShowPostcodeError());
+        postcodeInputLayout.setHint(getString(countryAndPostcodeValidation.getPostcodeLabel()));
+
+        if(countryAndPostcodeValidation.isShowPostcodeError()) {
+            postcodeInputLayout.setError(getString(countryAndPostcodeValidation.getPostcodeError()));
+        } else {
+            postcodeInputLayout.setError("");
+        }
+    }
+
+    private void showExpiryDateErrors(PaymentFormValidation formView) {
+        expiryDateInputLayout.setErrorEnabled(formView.isShowExpiryDateError());
+        if (formView.isShowExpiryDateError()) {
+            expiryDateInputLayout.setError(getString(formView.getExpiryDateError()));
+        } else {
+            expiryDateInputLayout.setError("");
+        }
+    }
+
+    private void showCardNumberErrors(CardNumberValidation cardNumberValidation) {
+        cardNumberInputLayout.setErrorEnabled(cardNumberValidation.isShowError());
+
+        if (cardNumberValidation.isShowError()) {
+            cardNumberInputLayout.setError(getString(cardNumberValidation.getError()));
+        } else {
+            cardNumberInputLayout.setError("");
+        }
+
+        cardNumberEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(cardNumberValidation.getMaxLength())});
+    }
+
+    private void moveFieldFocus(PaymentFormValidation formView) {
+        if (cardNumberEditText.hasFocus() && formView.getCardNumberValidation().isEntryComplete() && !formView.getCardNumberValidation().isShowError()) {
+            expiryDateEditText.requestFocus();
+        } else if (expiryDateEditText.hasFocus() && formView.isExpiryDateEntryComplete() && !formView.isShowExpiryDateError()) {
+            cvvEditText.requestFocus();
+        } else if (cvvEditText.hasFocus() && formView.isCvvValid()) {
+            if (startDateAndIssueNumberContainer.getVisibility() == View.VISIBLE) {
+                startDateEditText.requestFocus();
+            } else if(countryAndPostcodeContainer.getVisibility() == View.VISIBLE) {
+                postcodeEditText.requestFocus();
+            }
+        } else if (startDateEditText.hasFocus()
+                && formView.getStartDateAndIssueNumberState().isStartDateEntryComplete()
+                && !formView.getStartDateAndIssueNumberState().isShowStartDateError()) {
+            issueNumberEditText.requestFocus();
+        }
     }
 
     private Country getCountry() {
