@@ -41,7 +41,17 @@ public class CountrySpinnerAdapter extends ArrayAdapter<Country> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return getViewWithCountry(position, parent, R.layout.support_simple_spinner_dropdown_item);
+        final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+
+        View view = inflater.inflate(R.layout.dropdown_item, parent, false);
+
+        TextView textView = (TextView) view.findViewById(android.R.id.text1);
+        textView.setText(R.string.billing_country);
+
+        TextView textView2 = (TextView) view.findViewById(android.R.id.text2);
+        textView2.setText(getItem(position).getDisplayName());
+
+        return view;
     }
 
     @Override
