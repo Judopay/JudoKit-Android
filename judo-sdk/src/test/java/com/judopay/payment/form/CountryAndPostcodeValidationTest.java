@@ -23,9 +23,9 @@ public class CountryAndPostcodeValidationTest {
                         .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .setAddressRequired(true)
-                        .build(), true, false, true);
+                        .build(), true, false, true, true);
 
-        assertThat(countryAndPostcodeValidation.isCountryAndPostcodeRequired(), is(false));
+        assertThat(countryAndPostcodeValidation.isShowCountryAndPostcode(), is(false));
     }
 
     @Test
@@ -40,9 +40,9 @@ public class CountryAndPostcodeValidationTest {
                         .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .setAddressRequired(true)
-                        .build(), true, true, true);
+                        .build(), true, true, true, true);
 
-        assertThat(countryAndPostcodeValidation.isCountryAndPostcodeRequired(), is(true));
+        assertThat(countryAndPostcodeValidation.isShowCountryAndPostcode(), is(true));
     }
 
     @Test
@@ -57,9 +57,9 @@ public class CountryAndPostcodeValidationTest {
                         .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .setAddressRequired(false)
-                        .build(), true, true, true);
+                        .build(), true, true, true, true);
 
-        assertThat(countryAndPostcodeValidation.isCountryAndPostcodeRequired(), is(false));
+        assertThat(countryAndPostcodeValidation.isShowCountryAndPostcode(), is(false));
     }
 
     @Test
@@ -74,7 +74,7 @@ public class CountryAndPostcodeValidationTest {
                         .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .setAddressRequired(true)
-                        .build(), true, true, true);
+                        .build(), true, true, true, true);
 
         assertThat(countryAndPostcodeValidation.getPostcodeLabel(), is(R.string.postcode_uk));
     }
@@ -91,7 +91,7 @@ public class CountryAndPostcodeValidationTest {
                         .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_STATES))
                         .setAddressRequired(true)
-                        .build(), true, true, true);
+                        .build(), true, true, true, true);
 
         assertThat(countryAndPostcodeValidation.getPostcodeLabel(), is(R.string.postcode_us));
     }
@@ -108,7 +108,7 @@ public class CountryAndPostcodeValidationTest {
                 .setPostcode("")
                 .setCountry(new Country(0, Country.CANADA))
                 .setAddressRequired(true)
-                .build(), true, true, true);
+                .build(), true, true, true, true);
 
         assertThat(countryAndPostcodeValidation.getPostcodeLabel(), is(R.string.postcode_canada));
     }
@@ -125,7 +125,7 @@ public class CountryAndPostcodeValidationTest {
                 .setPostcode("")
                 .setCountry(new Country(0, Country.UNITED_KINGDOM))
                 .setAddressRequired(true)
-                .build(), true, true, true);
+                .build(), true, true, true, true);
 
         assertThat(countryAndPostcodeValidation.getPostcodeError(), is(R.string.error_postcode_uk));
     }
@@ -142,7 +142,7 @@ public class CountryAndPostcodeValidationTest {
                 .setPostcode("")
                 .setCountry(new Country(0, Country.UNITED_STATES))
                 .setAddressRequired(true)
-                .build(), true, true, true);
+                .build(), true, true, true, true);
 
         assertThat(countryAndPostcodeValidation.getPostcodeError(), is(R.string.error_postcode_us));
     }
@@ -159,9 +159,45 @@ public class CountryAndPostcodeValidationTest {
                 .setPostcode("")
                 .setCountry(new Country(0, Country.CANADA))
                 .setAddressRequired(true)
-                .build(), true, true, true);
+                .build(), true, true, true, true);
 
         assertThat(countryAndPostcodeValidation.getPostcodeError(), is(R.string.error_postcode_canada));
+    }
+
+    @Test
+    public void shouldNotShowCountryAndPostcodeWhenMaestroInvalid() {
+        CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
+                new PaymentForm.Builder()
+                        .setCardNumber("4282730000002397")
+                        .setCvv("789")
+                        .setExpiryDate("12/99")
+                        .setStartDate("")
+                        .setIssueNumber("")
+                        .setPostcode("")
+                        .setCountry(new Country(0, Country.CANADA))
+                        .setMaestroSupported(true)
+                        .setAddressRequired(true)
+                        .build(), true, true, true, false);
+
+        assertThat(countryAndPostcodeValidation.isShowCountryAndPostcode(), is(false));
+    }
+
+    @Test
+    public void shouldShowCountryAndPostcodeWhenMaestroValidAndAvsTurnedOn() {
+        CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
+                new PaymentForm.Builder()
+                        .setCardNumber("4282730000002397")
+                        .setCvv("789")
+                        .setExpiryDate("12/99")
+                        .setStartDate("12/12")
+                        .setIssueNumber("01")
+                        .setPostcode("")
+                        .setCountry(new Country(0, Country.CANADA))
+                        .setMaestroSupported(true)
+                        .setAddressRequired(true)
+                        .build(), true, true, true, true);
+
+        assertThat(countryAndPostcodeValidation.isShowCountryAndPostcode(), is(true));
     }
 
 }

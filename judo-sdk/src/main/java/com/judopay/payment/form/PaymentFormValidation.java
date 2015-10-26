@@ -119,11 +119,17 @@ public class PaymentFormValidation {
                     paymentForm.isMaestroSupported(),
                     paymentForm.isAmexSupported());
 
-            CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(paymentForm,
-                    cardNumberValidation.isValid(), cvvValid, expiryDateValid);
+            boolean maestroCardType = paymentForm.getCardType() == CardType.MAESTRO;
 
             StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(paymentForm,
                     cardNumberValidation.isValid(), cvvValid, expiryDateValid);
+
+            boolean maestroValid = !maestroCardType ||
+                    (startDateAndIssueNumberValidation.isStartDateEntryComplete() && !startDateAndIssueNumberValidation.isShowStartDateError())
+                            && startDateAndIssueNumberValidation.isIssueNumberValid();
+
+            CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(paymentForm,
+                    cardNumberValidation.isValid(), cvvValid, expiryDateValid, maestroValid);
 
             builder.setCardNumberState(cardNumberValidation)
                     .setCvvHint(getCvvHint(paymentForm.getCardType()))
@@ -135,12 +141,6 @@ public class PaymentFormValidation {
 
             setCvv(paymentForm, builder, cvvValid);
             builder.setCvvLength(paymentForm.getCardType() == CardType.AMEX ? 4 : 3);
-
-            boolean maestroCardType = paymentForm.getCardType() == CardType.MAESTRO;
-
-            boolean maestroValid = !maestroCardType ||
-                    (startDateAndIssueNumberValidation.isStartDateEntryComplete() && !startDateAndIssueNumberValidation.isShowStartDateError())
-                            && startDateAndIssueNumberValidation.isIssueNumberValid();
 
             builder.setPaymentButtonEnabled(cardNumberValidation.isValid() && cvvValid && expiryDateValid && maestroValid
                     && (!paymentForm.isAddressRequired() || countryAndPostcodeValidation.isPostcodeEntryComplete() && countryAndPostcodeValidation.isCountryValid()));

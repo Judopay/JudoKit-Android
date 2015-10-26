@@ -13,9 +13,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="50dp"
-            android:paddingTop="@dimen/medium_padding"
             android:paddingLeft="@dimen/medium_padding"
-            android:paddingRight="@dimen/medium_padding">
+            android:paddingRight="@dimen/medium_padding"
+            android:paddingTop="@dimen/medium_padding">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -23,11 +23,7 @@
 
                 <com.judopay.payment.form.CardTypeImageView
                     android:id="@+id/card_type_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/small_padding"
-                    android:layout_marginTop="@dimen/large_padding"
+                    style="@style/judo_card_image"
                     tools:ignore="RtlHardcoded" />
 
                 <com.judopay.JudoTextInputLayout
@@ -36,13 +32,7 @@
 
                     <EditText
                         android:id="@+id/card_number_edit_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:digits="0123456789 "
-                        android:hint="@string/card_number_label"
-                        android:imeOptions="actionNext"
-                        android:inputType="number"
-                        android:maxLength="19" />
+                        style="@style/judo_card_number" />
 
                 </com.judopay.JudoTextInputLayout>
 
@@ -61,14 +51,8 @@
 
                     <EditText
                         android:id="@+id/expiry_date_edit_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/judo_expiry_date"
                         android:layout_weight="1"
-                        android:digits="0123456789/"
-                        android:hint="@string/expiry_date_label"
-                        android:imeOptions="actionNext"
-                        android:inputType="number"
-                        android:maxLength="5"
                         tools:ignore="TextFields" />
 
                 </com.judopay.JudoTextInputLayout>
@@ -80,11 +64,7 @@
 
                     <com.judopay.payment.form.cvv.CvvImageView
                         android:id="@+id/cvv_image_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/small_padding"
-                        android:layout_marginTop="@dimen/large_padding"
+                        style="@style/judo_cvv_image"
                         tools:ignore="RtlHardcoded" />
 
                     <com.judopay.JudoTextInputLayout
@@ -93,13 +73,8 @@
 
                         <EditText
                             android:id="@+id/cvv_edit_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="@string/cvv_label"
-                            android:imeOptions="actionNext"
-                            android:inputType="number"
-                            android:maxLength="3" />
+                            style="@style/judo_cvv"
+                            android:layout_weight="1" />
 
                     </com.judopay.JudoTextInputLayout>
 
@@ -168,19 +143,12 @@
 
                     <com.judopay.payment.form.address.CountrySpinner
                         android:id="@+id/country_spinner"
-                        style="@style/Widget.AppCompat.Spinner.Underlined"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        style="@style/judo_country_spinner" />
 
                     <TextView
                         android:id="@+id/cards_accepted_error_text"
-                        style="@style/TextAppearance.AppCompat.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/judo_cards_accepted_text"
                         android:text="@string/country_cards_accepted_message"
-                        android:textColor="@color/judo_red"
-                        android:textSize="@dimen/judo_small_text_size"
-                        android:visibility="gone"
                         tools:visibility="visible" />
 
                 </LinearLayout>
@@ -193,12 +161,8 @@
 
                     <com.judopay.payment.form.address.PostcodeEditText
                         android:id="@+id/post_code_edit_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/judo_postcode"
                         android:hint="@string/postcode_uk"
-                        android:imeOptions="actionDone"
-                        android:inputType="textNoSuggestions|textCapCharacters"
-                        android:privateImeOptions="nm"
                         tools:ignore="UnusedAttribute" />
 
                 </com.judopay.JudoTextInputLayout>
@@ -211,12 +175,6 @@
 
     <Button
         android:id="@+id/payment_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="?colorButtonNormal"
-        android:text="@string/pay"
-        android:textSize="18sp"
-        android:visibility="gone" />
+        style="@style/judo_payment_button" />
 
 </FrameLayout>
