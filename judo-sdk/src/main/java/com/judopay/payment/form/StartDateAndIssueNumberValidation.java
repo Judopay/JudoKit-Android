@@ -25,7 +25,7 @@ public class StartDateAndIssueNumberValidation {
         this.startDateEntryComplete = paymentForm.getStartDate().length() == 5;
         this.showStartDateError = !isStartDateValid(paymentForm.getStartDate()) && startDateEntryComplete;
 
-        if (!showStartDateError) {
+        if (showStartDateError) {
             startDateError = R.string.error_check_date;
         }
 
