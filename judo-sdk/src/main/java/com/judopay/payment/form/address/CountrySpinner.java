@@ -1,4 +1,4 @@
-package com.judopay.payment.form;
+package com.judopay.payment.form.address;
 
 import android.annotation.TargetApi;
 import android.content.Context;
