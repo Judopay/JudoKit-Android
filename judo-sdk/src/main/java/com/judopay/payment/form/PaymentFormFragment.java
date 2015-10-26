@@ -59,6 +59,7 @@ public class PaymentFormFragment extends Fragment {
     private View countryAndPostcodeContainer;
     private HintFocusListener cvvHintChangeListener;
     private ScrollView scrollView;
+    private View cardsAcceptedErrorText;
 
     private PaymentFormListener paymentFormListener;
 
@@ -92,6 +93,8 @@ public class PaymentFormFragment extends Fragment {
         startDateAndIssueNumberContainer = view.findViewById(R.id.start_date_issue_number_container);
         countryAndPostcodeContainer = view.findViewById(R.id.country_postcode_container);
         scrollView = (ScrollView) view.findViewById(R.id.scroll_view);
+
+        cardsAcceptedErrorText = view.findViewById(R.id.cards_accepted_error_text);
 
         return view;
     }
@@ -188,22 +191,24 @@ public class PaymentFormFragment extends Fragment {
 
         showStartDateAndIssueNumberErrors(formView.getStartDateAndIssueNumberState());
 
-        cvvInputLayout.setHint(getString(formView.getCvvLabel()));
-        cvvHintChangeListener.setHintResourceId(formView.getCvvHint());
-
-        cvvEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(formView.getCvvLength())});
-
-        cvvImageView.setCardType(formView.getCardType());
+        updateCvvErrors(formView);
 
         updateCountryAndPostcode(formView.getCountryAndPostcodeValidation());
 
         paymentButton.setVisibility(formView.isPaymentButtonEnabled() ? View.VISIBLE : View.GONE);
     }
 
+    private void updateCvvErrors(PaymentFormValidation formView) {
+        cvvInputLayout.setHint(getString(formView.getCvvLabel()));
+        cvvHintChangeListener.setHintResourceId(formView.getCvvHint());
+        cvvEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(formView.getCvvLength())});
+        cvvImageView.setCardType(formView.getCardType());
+    }
+
     private void showStartDateAndIssueNumberErrors(StartDateAndIssueNumberValidation startDateAndIssueNumberValidation) {
         startDateInputLayout.setErrorEnabled(startDateAndIssueNumberValidation.isShowStartDateError());
 
-        if(startDateAndIssueNumberValidation.isShowStartDateError()) {
+        if (startDateAndIssueNumberValidation.isShowStartDateError()) {
             startDateInputLayout.setError(getString(startDateAndIssueNumberValidation.getStartDateError()));
         } else {
             startDateInputLayout.setError("");
@@ -218,11 +223,14 @@ public class PaymentFormFragment extends Fragment {
         postcodeInputLayout.setErrorEnabled(countryAndPostcodeValidation.isShowPostcodeError());
         postcodeInputLayout.setHint(getString(countryAndPostcodeValidation.getPostcodeLabel()));
 
-        if(countryAndPostcodeValidation.isShowPostcodeError()) {
+        if (countryAndPostcodeValidation.isShowPostcodeError()) {
             postcodeInputLayout.setError(getString(countryAndPostcodeValidation.getPostcodeError()));
         } else {
             postcodeInputLayout.setError("");
         }
+
+        cardsAcceptedErrorText.setVisibility(countryAndPostcodeValidation.isCountryValid() ? View.GONE : View.VISIBLE);
+        postcodeInputLayout.setVisibility(countryAndPostcodeValidation.isCountryValid() ? View.VISIBLE: View.INVISIBLE);
     }
 
     private void showExpiryDateErrors(PaymentFormValidation formView) {
@@ -254,7 +262,7 @@ public class PaymentFormFragment extends Fragment {
         } else if (cvvEditText.hasFocus() && formView.isCvvValid()) {
             if (startDateAndIssueNumberContainer.getVisibility() == View.VISIBLE) {
                 startDateEditText.requestFocus();
-            } else if(countryAndPostcodeContainer.getVisibility() == View.VISIBLE) {
+            } else if (countryAndPostcodeContainer.getVisibility() == View.VISIBLE) {
                 postcodeEditText.requestFocus();
             }
         } else if (startDateEditText.hasFocus()
