@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
 
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -11,6 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingBottom="80dp"
             android:paddingLeft="@dimen/medium_padding"
             android:paddingRight="@dimen/medium_padding">
 
@@ -34,7 +36,7 @@
                         android:id="@+id/card_number_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:digits="01234 56789"
+                        android:digits="0123456789 "
                         android:hint="@string/card_number_label"
                         android:imeOptions="actionNext"
                         android:inputType="number"
@@ -74,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
 
-                    <com.judopay.payment.form.CvvImageView
+                    <com.judopay.payment.form.cvv.CvvImageView
                         android:id="@+id/cvv_image_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -155,7 +157,7 @@
                 android:weightSum="2"
                 tools:visibility="visible">
 
-                <com.judopay.payment.form.CountrySpinner
+                <com.judopay.payment.form.address.CountrySpinner
                     android:id="@+id/country_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -167,13 +169,14 @@
                     android:layout_width="match_parent"
                     android:layout_weight="1">
 
-                    <com.judopay.payment.form.PostcodeEditText
+                    <com.judopay.payment.form.address.PostcodeEditText
                         android:id="@+id/post_code_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/postcode_uk"
                         android:imeOptions="actionDone"
                         android:inputType="textNoSuggestions|textCapCharacters"
+                        android:privateImeOptions="nm"
                         tools:ignore="UnusedAttribute" />
 
                 </com.judopay.JudoTextInputLayout>
@@ -190,8 +193,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="?colorButtonNormal"
-        android:textSize="18sp"
         android:text="@string/pay"
-        android:visibility="gone"/>
+        android:textSize="18sp"
+        android:visibility="gone" />
 
 </FrameLayout>
