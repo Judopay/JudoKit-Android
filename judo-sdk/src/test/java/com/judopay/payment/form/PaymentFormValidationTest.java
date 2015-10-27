@@ -23,7 +23,7 @@ public class PaymentFormValidationTest {
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .build());
 
-        assertThat(paymentFormValidation.isShowExpiryDateError(), is(true));
+        assertThat(paymentFormValidation.isShowExpiryDateError(), is(false));
     }
 
     @Test
@@ -39,7 +39,7 @@ public class PaymentFormValidationTest {
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .build());
 
-        assertThat(paymentFormValidation.isShowExpiryDateError(), is(false));
+        assertThat(paymentFormValidation.isShowExpiryDateError(), is(true));
     }
 
     @Test
