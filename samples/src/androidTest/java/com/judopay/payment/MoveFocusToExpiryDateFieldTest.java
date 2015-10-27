@@ -5,7 +5,7 @@ import com.judopay.samples.R;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class MoveFocusToExpiryDateField extends PaymentTest {
+public class MoveFocusToExpiryDateFieldTest extends PaymentTest {
 
     public void testGivenIAmOnThePaymentForm() {
 

@@ -18,9 +18,8 @@ public class SuccessfulPaymentTest extends PaymentTest {
 
         whenIPressPayButton();
 
-        //this should assert the payment successful bubble which is achievable by:
-        //TODO take x screenshots
-        //TODO verify text using text recognition (tesseract)
         assertThat(id(R.id.progress_container).isVisible(), equalTo(true));
     }
+
+
 }

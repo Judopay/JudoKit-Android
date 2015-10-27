@@ -5,7 +5,7 @@ import com.judopay.samples.R;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class MoveFocusToCV2Field extends PaymentTest {
+public class MoveFocusToCV2FieldTest extends PaymentTest {
 
     public void testGivenIAmOnThePaymentForm() {
 
