@@ -36,6 +36,12 @@
 
                 </com.judopay.JudoTextInputLayout>
 
+                <TextView
+                    android:id="@+id/card_number_extra_hint"
+                    style="@style/judo_hint_text"
+                    android:layout_below="@id/card_number_input_layout"
+                    android:text="@string/long_card_number" />
+
             </RelativeLayout>
 
             <LinearLayout
@@ -44,18 +50,31 @@
                 android:orientation="horizontal"
                 android:weightSum="2">
 
-                <com.judopay.JudoTextInputLayout
-                    android:id="@+id/expiry_date_input_layout"
-                    style="@style/input_layout"
-                    android:layout_weight="1">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                    <EditText
-                        android:id="@+id/expiry_date_edit_text"
-                        style="@style/judo_expiry_date"
-                        android:layout_weight="1"
-                        tools:ignore="TextFields" />
+                    <com.judopay.JudoTextInputLayout
+                        android:id="@+id/expiry_date_input_layout"
+                        style="@style/input_layout">
 
-                </com.judopay.JudoTextInputLayout>
+                        <EditText
+                            android:id="@+id/expiry_date_edit_text"
+                            style="@style/judo_expiry_date"
+                            android:layout_weight="1"
+                            tools:ignore="TextFields" />
+
+                    </com.judopay.JudoTextInputLayout>
+
+                    <TextView
+                        android:id="@+id/expiry_date_extra_hint"
+                        style="@style/judo_hint_text"
+                        android:text="@string/date_hint"
+                        tools:visibility="visible" />
+
+                </LinearLayout>
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -77,6 +96,13 @@
                             android:layout_weight="1" />
 
                     </com.judopay.JudoTextInputLayout>
+
+                    <TextView
+                        android:id="@+id/cvv_extra_hint"
+                        style="@style/judo_hint_text"
+                        android:layout_below="@id/cvv_input_layout"
+                        android:text="@string/security_code"
+                        tools:visibility="visible" />
 
                 </RelativeLayout>
 
