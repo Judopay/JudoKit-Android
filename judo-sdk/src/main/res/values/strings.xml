@@ -26,4 +26,7 @@
     <string name="processing_payment">Processing payment</string>
     <string name="billing_country">Billing country</string>
     <string name="country_cards_accepted_message">We only accept cards issued in UK, USA and Canada</string>
+    <string name="long_card_number">Long card number</string>
+    <string name="security_code">Security code</string>
+    <string name="issue_number_front_of_card">Issue on front of card</string>
 </resources>
