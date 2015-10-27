@@ -33,9 +33,27 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
     }
 
     protected void whenIEnterCV2(String cv2) {
-        UiElement cvelement = id(R.id.cvv_edit_text);
-        cvelement.setText(cv2);
+        UiElement cvElement = id(R.id.cvv_edit_text);
+        cvElement.setText(cv2);
     }
 
+    protected void whenIPressSettingsButton() {
+        UiElement settingsButton = id(R.id.settings_menu_item);
+        settingsButton.click();
+    }
 
+    protected void whenIPressAVSSwitch() {
+        UiElement aVSSwitch = id(R.id.avs_switch);
+        aVSSwitch.click();
+    }
+
+    protected void whenIPressMaestroSwitch() {
+        UiElement maestroSwitch = id(R.id.maestro_switch);
+        maestroSwitch.click();
+    }
+
+    protected void whenIPressAMEXSwitch() {
+        UiElement aMEXSwitch = id(R.id.amex_switch);
+        aMEXSwitch.click();
+    }
 }
