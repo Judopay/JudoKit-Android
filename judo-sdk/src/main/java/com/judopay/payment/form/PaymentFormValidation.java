@@ -111,31 +111,30 @@ public class PaymentFormValidation {
         public PaymentFormValidation build(PaymentForm paymentForm) {
             Builder builder = new Builder();
 
-            boolean cvvValid = isCvvValid(paymentForm);
-            boolean expiryDateValid = isExpiryDateValid(paymentForm.getExpiryDate());
-
             CardNumberValidation cardNumberValidation = new CardNumberValidation(paymentForm.getCardNumber(),
                     paymentForm.getCardType(),
                     paymentForm.isMaestroSupported(),
                     paymentForm.isAmexSupported());
 
-            boolean maestroCardType = paymentForm.getCardType() == CardType.MAESTRO;
-
             StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(paymentForm,
-                    cardNumberValidation.isValid(), cvvValid, expiryDateValid);
+                    cardNumberValidation.isValid());
 
+            boolean maestroCardType = paymentForm.getCardType() == CardType.MAESTRO;
             boolean maestroValid = !maestroCardType ||
                     (startDateAndIssueNumberValidation.isStartDateEntryComplete() && !startDateAndIssueNumberValidation.isShowStartDateError())
                             && startDateAndIssueNumberValidation.isIssueNumberValid();
 
+            boolean cvvValid = isCvvValid(paymentForm);
+            boolean expiryDateValid = isExpiryDateValid(paymentForm.getExpiryDate());
+
             CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(paymentForm,
                     cardNumberValidation.isValid(), cvvValid, expiryDateValid, maestroValid);
 
-            builder.setCardNumberState(cardNumberValidation)
+            builder.setCardNumberValidation(cardNumberValidation)
                     .setCvvHint(getCvvHint(paymentForm.getCardType()))
-                    .setCountryAndPostcodeState(countryAndPostcodeValidation)
+                    .setCountryAndPostcodeValidation(countryAndPostcodeValidation)
                     .setCardType(paymentForm.getCardType())
-                    .setStartDateAndIssueNumberState(startDateAndIssueNumberValidation);
+                    .setStartDateAndIssueNumberValidation(startDateAndIssueNumberValidation);
 
             setExpiryDate(builder, expiryDateValid, paymentForm);
 
@@ -204,17 +203,17 @@ public class PaymentFormValidation {
             }
         }
 
-        public Builder setCardNumberState(CardNumberValidation cardNumberValidation) {
+        public Builder setCardNumberValidation(CardNumberValidation cardNumberValidation) {
             paymentFormValidation.cardNumberValidation = cardNumberValidation;
             return this;
         }
 
-        public Builder setCountryAndPostcodeState(CountryAndPostcodeValidation countryAndPostcodeValidation) {
+        public Builder setCountryAndPostcodeValidation(CountryAndPostcodeValidation countryAndPostcodeValidation) {
             paymentFormValidation.countryAndPostcodeValidation = countryAndPostcodeValidation;
             return this;
         }
 
-        public Builder setStartDateAndIssueNumberState(StartDateAndIssueNumberValidation startDateAndIssueNumberValidation) {
+        public Builder setStartDateAndIssueNumberValidation(StartDateAndIssueNumberValidation startDateAndIssueNumberValidation) {
             paymentFormValidation.startDateAndIssueNumberValidation = startDateAndIssueNumberValidation;
             return this;
         }

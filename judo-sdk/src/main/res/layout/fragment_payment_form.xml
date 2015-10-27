@@ -40,9 +40,81 @@
                     android:id="@+id/card_number_extra_hint"
                     style="@style/judo_hint_text"
                     android:layout_below="@id/card_number_input_layout"
-                    android:text="@string/long_card_number" />
+                    android:text="@string/long_card_number"
+                    tools:visibility="visible" />
 
             </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/start_date_issue_number_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="2"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.judopay.JudoTextInputLayout
+                        android:id="@+id/start_date_input_layout"
+                        style="@style/input_layout">
+
+                        <EditText
+                            android:id="@+id/start_date_edit_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:digits="01234/56789"
+                            android:hint="@string/start_date_label"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLength="5"
+                            tools:ignore="TextFields" />
+
+                    </com.judopay.JudoTextInputLayout>
+
+                    <TextView
+                        android:id="@+id/start_date_extra_hint"
+                        style="@style/judo_hint_text"
+                        android:text="@string/date_hint"
+                        tools:visibility="visible" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.judopay.JudoTextInputLayout
+                        android:id="@+id/issue_number_input_layout"
+                        style="@style/input_layout">
+
+                        <EditText
+                            android:id="@+id/issue_number_edit_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/issue_number_label"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLength="3" />
+
+                    </com.judopay.JudoTextInputLayout>
+
+                    <TextView
+                        android:id="@+id/issue_number_extra_hint"
+                        style="@style/judo_hint_text"
+                        android:text="@string/issue_number_front_of_card"
+                        tools:visibility="visible" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -105,51 +177,6 @@
                         tools:visibility="visible" />
 
                 </RelativeLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/start_date_issue_number_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                android:weightSum="2"
-                tools:visibility="visible">
-
-                <com.judopay.JudoTextInputLayout
-                    android:id="@+id/start_date_input_layout"
-                    style="@style/input_layout"
-                    android:layout_weight="1">
-
-                    <EditText
-                        android:id="@+id/start_date_edit_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:digits="01234/56789"
-                        android:hint="@string/start_date_label"
-                        android:imeOptions="actionNext"
-                        android:inputType="number"
-                        android:maxLength="5"
-                        tools:ignore="TextFields" />
-
-                </com.judopay.JudoTextInputLayout>
-
-                <com.judopay.JudoTextInputLayout
-                    android:id="@+id/issue_number_input_layout"
-                    style="@style/input_layout"
-                    android:layout_weight="1">
-
-                    <EditText
-                        android:id="@+id/issue_number_edit_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/issue_number_label"
-                        android:imeOptions="actionNext"
-                        android:inputType="number"
-                        android:maxLength="3" />
-
-                </com.judopay.JudoTextInputLayout>
 
             </LinearLayout>
 

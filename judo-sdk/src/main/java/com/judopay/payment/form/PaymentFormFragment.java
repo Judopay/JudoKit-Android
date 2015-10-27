@@ -24,6 +24,7 @@ import com.judopay.customer.CardAddress;
 import com.judopay.customer.CardDate;
 import com.judopay.customer.CardType;
 import com.judopay.customer.Country;
+import com.judopay.payment.EmptyTextHintOnFocusChangeListener;
 import com.judopay.payment.PaymentFormListener;
 import com.judopay.payment.ScrollOnFocusChangeListener;
 import com.judopay.payment.SingleClickOnClickListener;
@@ -42,6 +43,7 @@ public class PaymentFormFragment extends Fragment {
     private static final String JUDO_PAYMENT = "Judo-Payment";
 
     private EditText cvvEditText;
+    private View cvvExtraHint;
     private Button paymentButton;
     private CardTypeImageView cardTypeImageView;
     private CvvImageView cvvImageView;
@@ -49,7 +51,9 @@ public class PaymentFormFragment extends Fragment {
     private PostcodeEditText postcodeEditText;
     private EditText startDateEditText;
     private EditText expiryDateEditText;
+    private View expiryDateExtraHint;
     private EditText cardNumberEditText;
+    private View cardNumberExtraHint;
     private EditText issueNumberEditText;
     private TextInputLayout cvvInputLayout;
     private TextInputLayout cardNumberInputLayout;
@@ -63,26 +67,33 @@ public class PaymentFormFragment extends Fragment {
     private View cardsAcceptedErrorText;
 
     private PaymentFormListener paymentFormListener;
+    private View startDateExtraHint;
+    private View issueNumberExtraHint;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_payment_form, container, false);
 
         paymentButton = (Button) view.findViewById(R.id.payment_button);
+
         cvvEditText = (EditText) view.findViewById(R.id.cvv_edit_text);
         cvvInputLayout = (TextInputLayout) view.findViewById(R.id.cvv_input_layout);
+        cvvExtraHint = view.findViewById(R.id.cvv_extra_hint);
 
         postcodeEditText = (PostcodeEditText) view.findViewById(R.id.post_code_edit_text);
         postcodeInputLayout = (TextInputLayout) view.findViewById(R.id.post_code_input_layout);
 
         cardNumberEditText = (EditText) view.findViewById(R.id.card_number_edit_text);
         cardNumberInputLayout = (TextInputLayout) view.findViewById(R.id.card_number_input_layout);
+        cardNumberExtraHint = view.findViewById(R.id.card_number_extra_hint);
 
         expiryDateEditText = (EditText) view.findViewById(R.id.expiry_date_edit_text);
         expiryDateInputLayout = (TextInputLayout) view.findViewById(R.id.expiry_date_input_layout);
+        expiryDateExtraHint = view.findViewById(R.id.expiry_date_extra_hint);
 
         startDateEditText = (EditText) view.findViewById(R.id.start_date_edit_text);
         startDateInputLayout = (TextInputLayout) view.findViewById(R.id.start_date_input_layout);
+        startDateExtraHint = view.findViewById(R.id.start_date_extra_hint);
 
         countrySpinner = (CountrySpinner) view.findViewById(R.id.country_spinner);
 
@@ -90,6 +101,7 @@ public class PaymentFormFragment extends Fragment {
         cvvImageView = (CvvImageView) view.findViewById(R.id.cvv_image_view);
 
         issueNumberEditText = (EditText) view.findViewById(R.id.issue_number_edit_text);
+        issueNumberExtraHint = view.findViewById(R.id.issue_number_extra_hint);
 
         startDateAndIssueNumberContainer = view.findViewById(R.id.start_date_issue_number_container);
         countryAndPostcodeContainer = view.findViewById(R.id.country_postcode_container);
@@ -111,24 +123,43 @@ public class PaymentFormFragment extends Fragment {
             }
         };
 
-        cardNumberEditText.setOnFocusChangeListener(new HintFocusListener(cardNumberEditText, R.string.card_number_hint));
+        cardNumberEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+                new EmptyTextHintOnFocusChangeListener(cardNumberExtraHint),
+                new HintFocusListener(cardNumberEditText, R.string.card_number_hint)
+        ));
+
         cardNumberEditText.addTextChangedListener(formValidator);
         cardNumberEditText.addTextChangedListener(new CardNumberFormattingTextWatcher());
 
-        expiryDateEditText.setOnFocusChangeListener(new HintFocusListener(expiryDateEditText, R.string.date_hint));
+        expiryDateEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+                new EmptyTextHintOnFocusChangeListener(expiryDateExtraHint),
+                new HintFocusListener(expiryDateEditText, R.string.date_hint)
+        ));
+
         expiryDateEditText.addTextChangedListener(formValidator);
         expiryDateEditText.addTextChangedListener(new DateSeparatorTextWatcher(expiryDateEditText));
 
-        startDateEditText.setOnFocusChangeListener(new HintFocusListener(startDateEditText, R.string.date_hint));
+        startDateEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+                new EmptyTextHintOnFocusChangeListener(startDateExtraHint),
+                new HintFocusListener(startDateEditText, R.string.date_hint)
+        ));
+
         startDateEditText.addTextChangedListener(formValidator);
         startDateEditText.addTextChangedListener(new DateSeparatorTextWatcher(startDateEditText));
 
         cvvHintChangeListener = new HintFocusListener(cvvEditText, R.string.cvv_hint);
+        cvvEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+                new EmptyTextHintOnFocusChangeListener(cvvExtraHint),
+                cvvHintChangeListener
+        ));
 
-        cvvEditText.setOnFocusChangeListener(cvvHintChangeListener);
         cvvEditText.addTextChangedListener(formValidator);
 
-        issueNumberEditText.setOnFocusChangeListener(new HintFocusListener(issueNumberEditText, R.string.issue_number_hint));
+        issueNumberEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+                new EmptyTextHintOnFocusChangeListener(issueNumberExtraHint),
+                new HintFocusListener(issueNumberEditText, R.string.issue_number_hint)
+        ));
+
         issueNumberEditText.addTextChangedListener(formValidator);
 
         postcodeEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
@@ -219,7 +250,7 @@ public class PaymentFormFragment extends Fragment {
             startDateInputLayout.setError("");
         }
 
-        startDateAndIssueNumberContainer.setVisibility(startDateAndIssueNumberValidation.isIssueNumberAndStartDateRequired() ? View.VISIBLE : View.GONE);
+        startDateAndIssueNumberContainer.setVisibility(startDateAndIssueNumberValidation.isShowIssueNumberAndStartDate() ? View.VISIBLE : View.GONE);
     }
 
     private void updateCountryAndPostcode(CountryAndPostcodeValidation countryAndPostcodeValidation) {
@@ -261,13 +292,15 @@ public class PaymentFormFragment extends Fragment {
 
     private void moveFieldFocus(PaymentFormValidation formView) {
         if (cardNumberEditText.hasFocus() && formView.getCardNumberValidation().isEntryComplete() && !formView.getCardNumberValidation().isShowError()) {
-            expiryDateEditText.requestFocus();
+            if (startDateAndIssueNumberContainer.getVisibility() == View.VISIBLE) {
+                startDateEditText.requestFocus();
+            } else {
+                expiryDateEditText.requestFocus();
+            }
         } else if (expiryDateEditText.hasFocus() && formView.isExpiryDateEntryComplete() && !formView.isShowExpiryDateError()) {
             cvvEditText.requestFocus();
         } else if (cvvEditText.hasFocus() && formView.isCvvValid()) {
-            if (startDateAndIssueNumberContainer.getVisibility() == View.VISIBLE) {
-                startDateEditText.requestFocus();
-            } else if (countryAndPostcodeContainer.getVisibility() == View.VISIBLE) {
+            if (countryAndPostcodeContainer.getVisibility() == View.VISIBLE) {
                 postcodeEditText.requestFocus();
             }
         } else if (startDateEditText.hasFocus()
