@@ -7,11 +7,11 @@ public class EmptyTextHintOnFocusChangeListener implements View.OnFocusChangeLis
 
     private static final int THREE_SECONDS = 3000;
 
-    private final TextView textView;
+    private final View hintView;
     private Runnable action;
 
-    public EmptyTextHintOnFocusChangeListener(TextView textView) {
-        this.textView = textView;
+    public EmptyTextHintOnFocusChangeListener(View hintView) {
+        this.hintView = hintView;
     }
 
     @Override
@@ -22,14 +22,14 @@ public class EmptyTextHintOnFocusChangeListener implements View.OnFocusChangeLis
                     @Override
                     public void run() {
                         if (((TextView) view).getText().length() == 0 && view.hasFocus()) {
-                            textView.setVisibility(View.VISIBLE);
+                            EmptyTextHintOnFocusChangeListener.this.hintView.setVisibility(View.VISIBLE);
                         }
                     }
                 };
                 view.postDelayed(action, THREE_SECONDS);
             }
         } else {
-            textView.setVisibility(View.GONE);
+            this.hintView.setVisibility(View.GONE);
             if (action != null) {
                 view.removeCallbacks(action);
             }
