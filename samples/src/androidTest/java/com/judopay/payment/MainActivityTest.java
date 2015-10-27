@@ -15,6 +15,8 @@ public class MainActivityTest extends PaymentTest {
         assertThat(paymentButton.getText(), equalTo("Make Payment £9.99"));
 
         paymentButton.click();
+
+
         // todo - verify it opens the payment form
     }
 

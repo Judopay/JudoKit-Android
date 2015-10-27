@@ -23,8 +23,8 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
     }
 
     protected void whenIPressPayButton() {
-        UiElement paybutton = id(R.id.payment_button);
-        paybutton.click();
+        UiElement payButton = id(R.id.payment_button);
+        payButton.click();
     }
 
     protected void whenIEnterACardNumber(String cardNo) {
@@ -36,5 +36,6 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         UiElement cvelement = id(R.id.cvv_edit_text);
         cvelement.setText(cv2);
     }
+
 
 }
