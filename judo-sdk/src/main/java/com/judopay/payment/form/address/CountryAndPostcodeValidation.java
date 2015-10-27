@@ -12,16 +12,16 @@ public class CountryAndPostcodeValidation {
     private boolean postcodeEntryComplete;
 
     private boolean countryValid;
-    private boolean countryAndPostcodeRequired;
+    private boolean showCountryAndPostcode;
 
-    public CountryAndPostcodeValidation(PaymentForm paymentForm, boolean cardNumberValid, boolean cvvValid, boolean expiryDateValid) {
+    public CountryAndPostcodeValidation(PaymentForm paymentForm, boolean cardNumberValid, boolean cvvValid, boolean expiryDateValid, boolean maestroValid) {
         boolean postcodeValid = isPostcodeValid(paymentForm.getPostcode());
 
         this.postcodeEntryComplete = postcodeValid;
         this.showPostcodeError = !postcodeValid && paymentForm.getPostcode().length() > 0;
 
         this.countryValid = isCountryValid(paymentForm.getCountry().getDisplayName());
-        this.countryAndPostcodeRequired = paymentForm.isAddressRequired() && cardNumberValid && cvvValid && expiryDateValid;
+        this.showCountryAndPostcode = (paymentForm.isAddressRequired() && cardNumberValid && cvvValid && expiryDateValid) && (!paymentForm.isMaestroSupported() || maestroValid);
         this.postcodeLabel = getPostcodeLabel(paymentForm.getCountry());
         this.postcodeError = getPostcodeError(paymentForm.getCountry());
     }
@@ -38,8 +38,8 @@ public class CountryAndPostcodeValidation {
         return countryValid;
     }
 
-    public boolean isCountryAndPostcodeRequired() {
-        return countryAndPostcodeRequired;
+    public boolean isShowCountryAndPostcode() {
+        return showCountryAndPostcode;
     }
 
     private boolean isCountryValid(String country) {

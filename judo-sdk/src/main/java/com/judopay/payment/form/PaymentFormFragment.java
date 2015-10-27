@@ -223,7 +223,7 @@ public class PaymentFormFragment extends Fragment {
     }
 
     private void updateCountryAndPostcode(CountryAndPostcodeValidation countryAndPostcodeValidation) {
-        countryAndPostcodeContainer.setVisibility(countryAndPostcodeValidation.isCountryAndPostcodeRequired() ? View.VISIBLE : View.GONE);
+        countryAndPostcodeContainer.setVisibility(countryAndPostcodeValidation.isShowCountryAndPostcode() ? View.VISIBLE : View.GONE);
 
         postcodeInputLayout.setErrorEnabled(countryAndPostcodeValidation.isShowPostcodeError());
         postcodeInputLayout.setHint(getString(countryAndPostcodeValidation.getPostcodeLabel()));
