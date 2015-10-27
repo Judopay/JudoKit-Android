@@ -16,11 +16,9 @@ public class StartDateAndIssueNumberValidation {
     private boolean startDateEntryComplete;
 
     private boolean issueNumberValid;
-    private boolean issueNumberAndStartDateRequired;
+    private boolean showIssueNumberAndStartDate;
 
-    public StartDateAndIssueNumberValidation(PaymentForm paymentForm,
-                                             boolean cardNumberValid, boolean cvvValid,
-                                             boolean expiryDateValid) {
+    public StartDateAndIssueNumberValidation(PaymentForm paymentForm, boolean cardNumberValid) {
 
         this.startDateEntryComplete = paymentForm.getStartDate().length() == 5;
         this.showStartDateError = !isStartDateValid(paymentForm.getStartDate()) && startDateEntryComplete;
@@ -32,11 +30,8 @@ public class StartDateAndIssueNumberValidation {
         boolean maestroCardType = CardType.matchCardNumber(paymentForm.getCardNumber()) == CardType.MAESTRO;
 
         this.issueNumberValid = isIssueNumberValid(paymentForm.getIssueNumber());
-        this.issueNumberAndStartDateRequired = paymentForm.isMaestroSupported()
-                && maestroCardType
-                && cardNumberValid
-                && cvvValid
-                && expiryDateValid;
+        this.showIssueNumberAndStartDate = paymentForm.isMaestroSupported()
+                && maestroCardType && cardNumberValid;
     }
 
     private boolean isIssueNumberValid(String issueNumber) {
@@ -75,8 +70,8 @@ public class StartDateAndIssueNumberValidation {
         return issueNumberValid;
     }
 
-    public boolean isIssueNumberAndStartDateRequired() {
-        return issueNumberAndStartDateRequired;
+    public boolean isShowIssueNumberAndStartDate() {
+        return showIssueNumberAndStartDate;
     }
 
     @StringRes
