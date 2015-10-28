@@ -35,7 +35,7 @@ public class SettingsButtonsTest extends PaymentTest {
         pressSettingsButton();
 
         //When I press the Maestro Switch
-        pressMaestroSwitch();
+        pressMaestroSwitch(true);
 
         //Then Maestro is switched on
         assertThat(id(R.id.maestro_switch).isChecked(), equalTo(true));

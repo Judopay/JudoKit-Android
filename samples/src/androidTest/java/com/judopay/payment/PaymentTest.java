@@ -29,11 +29,11 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
 
     protected void navigateToSettingsAndPress(String button) {
         pressSettingsButton();
-        setSettingSwitch(button);
+        setSettingSwitch(button, true);
         pressSettingsBackButton();
     }
 
-    protected void setSettingSwitch(String setting) {
+    protected void setSettingSwitch(String setting, boolean enable) {
         switch(setting.toLowerCase()){
             case "avs":
                 pressAVSSwitch();
@@ -42,7 +42,7 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
                 pressSSLPinningSwitch();
                 break;
             case "maestro":
-                pressMaestroSwitch();
+                pressMaestroSwitch(enable);
                 break;
             case "amex":
                 pressAMEXSwitch();
@@ -102,9 +102,18 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         sSLSwitch.click();
     }
 
-    protected void pressMaestroSwitch() {
+    protected void pressMaestroSwitch(boolean enable) {
         UiElement maestroSwitch = id(R.id.maestro_switch);
-        maestroSwitch.click();
+
+        if(enable){
+            if(!maestroSwitch.isChecked()){
+                maestroSwitch.click();
+            }
+        } else {
+            if(maestroSwitch.isChecked()){
+                maestroSwitch.click();
+            }
+        }
     }
 
     protected void pressAMEXSwitch() {
