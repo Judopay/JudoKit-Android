@@ -39,7 +39,7 @@ public class SuccessfulPaymentTest extends PaymentTest {
 
     public void testAuthSuccessfulNo3DSecureMaestro() {
         //Given Maestro is enabled
-        navigateToSettingsAndPress("Maestro");
+        enable("Maestro", true);
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -102,7 +102,7 @@ public class SuccessfulPaymentTest extends PaymentTest {
 
     public void testAuthSuccessfulNo3DSecureAMEX() {
         //Given AMEX is enabled
-        navigateToSettingsAndPress("AMEX");
+        enable("AMEX", true);
 
         //And I am on a payment screen
         pressPaymentScreenButton();

@@ -27,28 +27,47 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         enterCVV(cvv);
     }
 
-    protected void navigateToSettingsAndPress(String button) {
+    protected void enable(String button, boolean enable) {
         pressSettingsButton();
-        setSettingSwitch(button, true);
+        setSettingSwitch(button, enable);
         pressSettingsBackButton();
     }
 
     protected void setSettingSwitch(String setting, boolean enable) {
+        UiElement buttonElement;
+
         switch(setting.toLowerCase()){
             case "avs":
-                pressAVSSwitch();
+                buttonElement = id(R.id.avs_switch);
+                pressSwitch(enable, buttonElement);
                 break;
             case "ssl pinning":
-                pressSSLPinningSwitch();
+                buttonElement = id(R.id.ssl_pinning_switch);
+                pressSwitch(enable, buttonElement);
                 break;
             case "maestro":
-                pressMaestroSwitch(enable);
+                buttonElement = id(R.id.maestro_switch);
+                pressSwitch(enable, buttonElement);
                 break;
             case "amex":
-                pressAMEXSwitch();
+                buttonElement = id(R.id.amex_switch);
+                pressSwitch(enable, buttonElement);
                 break;
             default:
                 break;
+        }
+
+    }
+
+    protected void pressSwitch(boolean enable, UiElement buttonElement) {
+        if(enable){
+            if(!buttonElement.isChecked()){
+                buttonElement.click();
+            }
+        } else {
+            if(buttonElement.isChecked()){
+                buttonElement.click();
+            }
         }
     }
 

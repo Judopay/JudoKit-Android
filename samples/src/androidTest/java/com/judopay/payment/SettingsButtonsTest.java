@@ -49,7 +49,7 @@ public class SettingsButtonsTest extends PaymentTest {
         pressAMEXSwitch();
 
         //Then AMEX is switched on
-        assertThat(id(R.id.amex_switch).isChecked(), equalTo(false));
+        assertThat(id(R.id.amex_switch).isChecked(), equalTo(true));
     }
 
 }
