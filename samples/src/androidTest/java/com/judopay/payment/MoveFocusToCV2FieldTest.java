@@ -9,11 +9,11 @@ public class MoveFocusToCV2FieldTest extends PaymentTest {
 
     public void testGivenIAmOnThePaymentForm() {
 
-        whenIPressPaymentScreenButton();
+        pressPaymentScreenButton();
 
-        whenIEnterACardNumber("4976000000003436");
+        enterACardNumber("4976000000003436");
 
-        whenIEnterAnExpiryDate("1215");
+        enterAnExpiryDate("1215");
 
         assertThat(id(R.id.cvv_edit_text).getText(), equalTo("000"));
     }

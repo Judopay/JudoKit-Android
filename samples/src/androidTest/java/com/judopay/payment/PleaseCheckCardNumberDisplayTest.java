@@ -1,17 +1,20 @@
 package com.judopay.payment;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import io.appium.droiddriver.UiElement;
+import io.appium.droiddriver.finders.By;
+
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class PleaseCheckCardNumberDisplayTest extends PaymentTest {
 
     public void testGivenIAmOnThePaymentForm() {
-        whenIPressPaymentScreenButton();
+        pressPaymentScreenButton();
 
-        whenIEnterACardNumber("1234000000001234");
+        enterACardNumber("1234000000001234");
 
-        onView(withText("Please check number")).check(matches(isDisplayed()));
+        UiElement errorMessage = find(By.text("Please check number"));
+
+        assertThat(errorMessage, notNullValue());
     }
 }

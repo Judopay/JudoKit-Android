@@ -9,9 +9,9 @@ public class MoveFocusToExpiryDateFieldTest extends PaymentTest {
 
     public void testGivenIAmOnThePaymentForm() {
 
-        whenIPressPaymentScreenButton();
+        pressPaymentScreenButton();
 
-        whenIEnterACardNumber("4976000000003436");
+        enterACardNumber("4976000000003436");
 
         assertThat(id(R.id.expiry_date_edit_text).getText(), equalTo("MM/YY"));
     }
