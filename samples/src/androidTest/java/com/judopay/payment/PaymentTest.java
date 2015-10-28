@@ -13,21 +13,46 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         super(MainActivity.class);
     }
 
-    protected void enterVisaCardDetails(String cardNo, String expiryDate, String cv2) {
+    protected void enterCardDetails(String cardNo, String expiryDate, String cvv) {
         enterACardNumber(cardNo);
         enterAnExpiryDate(expiryDate);
-        enterCV2(cv2);
+        enterCVV(cvv);
     }
 
-    protected void enterMaestroCardDetails(String cardNo, String startDate, String issueNo, String expiryDate, String cv2) {
+    protected void enterCardDetails(String cardNo, String startDate, String issueNo, String expiryDate, String cvv) {
         enterACardNumber(cardNo);
         enterAStartDate(startDate);
         enterAnIssueNumber(issueNo);
         enterAnExpiryDate(expiryDate);
-        enterCV2(cv2);
+        enterCVV(cvv);
     }
 
-    private void enterAnIssueNumber(String issueNo) {
+    protected void navigateToSettingsAndPress(String button) {
+        pressSettingsButton();
+        setSettingSwitch(button);
+        pressSettingsBackButton();
+    }
+
+    protected void setSettingSwitch(String setting) {
+        switch(setting.toLowerCase()){
+            case "avs":
+                pressAVSSwitch();
+                break;
+            case "ssl pinning":
+                pressSSLPinningSwitch();
+                break;
+            case "maestro":
+                pressMaestroSwitch();
+                break;
+            case "amex":
+                pressAMEXSwitch();
+                break;
+            default:
+                break;
+        }
+    }
+
+    protected void enterAnIssueNumber(String issueNo) {
         UiElement issueNumberElement = id(R.id.issue_number_edit_text);
         issueNumberElement.setText(issueNo);
     }
@@ -57,9 +82,9 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         cardNumber.setText(cardNo);
     }
 
-    protected void enterCV2(String cv2) {
+    protected void enterCVV(String cvv) {
         UiElement cvElement = id(R.id.cvv_edit_text);
-        cvElement.setText(cv2);
+        cvElement.setText(cvv);
     }
 
     protected void pressSettingsButton() {
@@ -87,7 +112,7 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         aMEXSwitch.click();
     }
 
-    protected void pressBackButton() {
+    protected void pressSettingsBackButton() {
         UiElement backButton = find(By.className("android.widget.ImageButton"));
         backButton.click();
     }
