@@ -111,35 +111,6 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         settingsButton.click();
     }
 
-    protected void pressAVSSwitch() {
-        UiElement aVSSwitch = id(R.id.avs_switch);
-        aVSSwitch.click();
-    }
-
-    protected void pressSSLPinningSwitch() {
-        UiElement sSLSwitch = id(R.id.ssl_pinning_switch);
-        sSLSwitch.click();
-    }
-
-    protected void pressMaestroSwitch(boolean enable) {
-        UiElement maestroSwitch = id(R.id.maestro_switch);
-
-        if(enable){
-            if(!maestroSwitch.isChecked()){
-                maestroSwitch.click();
-            }
-        } else {
-            if(maestroSwitch.isChecked()){
-                maestroSwitch.click();
-            }
-        }
-    }
-
-    protected void pressAMEXSwitch() {
-        UiElement aMEXSwitch = id(R.id.amex_switch);
-        aMEXSwitch.click();
-    }
-
     protected void pressSettingsBackButton() {
         UiElement backButton = find(By.className("android.widget.ImageButton"));
         backButton.click();

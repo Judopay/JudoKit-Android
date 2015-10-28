@@ -7,8 +7,11 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class SuccessfulPaymentTest extends PaymentTest {
 
-    public void testAuthSuccessfulNo3DSecureVisa() {
-        //Given I am on a payment screen
+    public void testAuthSuccessfulNoAVSNo3DSecureVisa() {
+        //Given AVS is disabled
+        enable("AVS", false);
+
+        //And I am on a payment screen
         pressPaymentScreenButton();
 
         //When I enter my card details
@@ -22,8 +25,11 @@ public class SuccessfulPaymentTest extends PaymentTest {
         assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
     }
 
-    public void testAuthSuccessfulNo3DSecureVisaDebit() {
-        //Given I am on a payment screen
+    public void testAuthSuccessfulNoAVSNo3DSecureVisaDebit() {
+        //Given AVS is disabled
+        enable("AVS", false);
+
+        //And I am on a payment screen
         pressPaymentScreenButton();
 
         //When I enter my card details
@@ -37,8 +43,11 @@ public class SuccessfulPaymentTest extends PaymentTest {
         assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
     }
 
-    public void testAuthSuccessfulNo3DSecureMaestro() {
-        //Given Maestro is enabled
+    public void testAuthSuccessfulNoAVSNo3DSecureMaestro() {
+        //Given AVS is disabled
+        enable("AVS", false);
+
+        //And Maestro is enabled
         enable("Maestro", true);
 
         //And I am on a payment screen
@@ -55,8 +64,11 @@ public class SuccessfulPaymentTest extends PaymentTest {
         assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
     }
 
-    public void testAuthSuccessfulNo3DSecureMasterCard() {
-        //Given I am on a payment screen
+    public void testAuthSuccessfulNoAVSNo3DSecureMasterCard() {
+        //Given AVS is disabled
+        enable("AVS", false);
+
+        //And I am on a payment screen
         pressPaymentScreenButton();
 
         //When I enter my card details
@@ -70,8 +82,11 @@ public class SuccessfulPaymentTest extends PaymentTest {
         assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
     }
 
-    public void testAuthSuccessfulNo3DSecureVisaElectron() {
-        //Given I am on a payment screen
+    public void testAuthSuccessfulNoAVSNo3DSecureVisaElectron() {
+        //Given AVS is disabled
+        enable("AVS", false);
+
+        //And I am on a payment screen
         pressPaymentScreenButton();
 
         //When I enter my card details
@@ -85,8 +100,11 @@ public class SuccessfulPaymentTest extends PaymentTest {
         assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
     }
 
-    public void testAuthSuccessfulNo3DSecureVisaPurchasing() {
-        //Given I am on a payment screen
+    public void testAuthSuccessfulNoAVSNo3DSecureVisaPurchasing() {
+        //Given AVS is disabled
+        enable("AVS", false);
+
+        //And I am on a payment screen
         pressPaymentScreenButton();
 
         //When I enter my card details
@@ -100,8 +118,11 @@ public class SuccessfulPaymentTest extends PaymentTest {
         assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
     }
 
-    public void testAuthSuccessfulNo3DSecureAMEX() {
-        //Given AMEX is enabled
+    public void testAuthSuccessfulNoAVSNo3DSecureAMEX() {
+        //Given AVS is disabled
+        enable("AVS", false);
+
+        //And AMEX is enabled
         enable("AMEX", true);
 
         //And I am on a payment screen

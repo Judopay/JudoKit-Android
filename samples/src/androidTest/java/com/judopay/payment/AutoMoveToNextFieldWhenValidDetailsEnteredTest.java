@@ -5,8 +5,10 @@ import com.judopay.samples.R;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class AutoMoveToNextFieldWhenCorrectDetailsEnteredTest extends PaymentTest {
+public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest {
 
+
+    /*Visa Tests*/
     public void testVisaMovesToExpiryDateFieldWhenValidCardNumberEntered() {
         //Given I am on the payment screen
         pressPaymentScreenButton();
@@ -29,6 +31,22 @@ public class AutoMoveToNextFieldWhenCorrectDetailsEnteredTest extends PaymentTes
         assertThat(id(R.id.cvv_edit_text).isFocused(), equalTo(true));
     }
 
+    public void testVisaMovesToPostcodeFieldWhenValidCardDetailsEntered() {
+        //Given AVS is enabled
+        enable("AVS", true);
+
+        //When I enter valid card details
+        enterCardDetails("4976000000003436", "1215", "452");
+
+        //Then the Postcode field is in focus
+        assertThat(id(R.id.post_code_edit_text).isFocused(), equalTo(true));
+    }
+
+    //TODO AVS tests
+
+
+
+    /*Maestro Tests*/
     public void testMaestroMovesToStartDateFieldWhenValidCardNumberEntered() {
         //Given Maestro is enabled
         enable("Maestro", true);
@@ -93,5 +111,27 @@ public class AutoMoveToNextFieldWhenCorrectDetailsEnteredTest extends PaymentTes
         //Then the CVV field is in focus
         assertThat(id(R.id.cvv_edit_text).isFocused(), equalTo(true));
     }
+
+    // TODO AVS tests
+
+
+
+
+    /*AMEX Tests*/
+    public void testAMEXMovesToExpiryDateFieldWhenValidCardNumberEntered() {
+        //Given AMEX is enabled
+        enable("AMEX", true);
+
+        //And I am on a payment screen
+        pressPaymentScreenButton();
+
+        //When I enter a valid card number
+        enterACardNumber("340000432128428");
+
+        //Then the expiry date field is in focus
+        assertThat(id(R.id.expiry_date_edit_text).isFocused(), equalTo(true));
+    }
+
+    //TODO AVS tests
 
 }
