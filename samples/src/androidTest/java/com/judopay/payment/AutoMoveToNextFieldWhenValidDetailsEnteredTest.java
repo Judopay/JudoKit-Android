@@ -49,7 +49,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
         assertThat(id(R.id.post_code_edit_text).isFocused(), equalTo(true));
     }
 
-    //TODO AVS tests
+
 
 
 
@@ -114,7 +114,26 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
         assertThat(id(R.id.cvv_edit_text).isFocused(), equalTo(true));
     }
 
-    // TODO AVS tests
+    public void testMaestroMovesToPostcodeFieldWhenValidCardDetailsEntered() {
+        //Given Maestro is enabled
+        pressSettingsButton();
+
+        enableMaestro(true);
+
+        //And AVS is enabled
+        enableAVS(true);
+
+        pressSettingsBackButton();
+
+        //And I am on a payment screen
+        pressPaymentScreenButton();
+
+        //When I enter valid card details
+        enterCardDetails("6759000000005462", "0107", "01", "1215", "789");
+
+        //Then the Postcode field is in focus
+        assertThat(id(R.id.post_code_edit_text).isFocused(), equalTo(true));
+    }
 
 
 
@@ -138,6 +157,25 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
         assertThat(id(R.id.expiry_date_edit_text).isFocused(), equalTo(true));
     }
 
-    //TODO AVS tests
+    public void testAMEXMovesToPostcodeFieldWhenValidCardDetailsEntered() {
+        //Given AMEX is enabled
+        pressSettingsButton();
+
+        enableAMEX(true);
+
+        //And AVS is enabled
+        enableAVS(true);
+
+        pressSettingsBackButton();
+
+        //And I am on a payment screen
+        pressPaymentScreenButton();
+
+        //When I enter valid card details
+        enterCardDetails("340000432128428", "1215", "3469");
+
+        //Then the Postcode field is in focus
+        assertThat(id(R.id.post_code_edit_text).isFocused(), equalTo(true));
+    }
 
 }

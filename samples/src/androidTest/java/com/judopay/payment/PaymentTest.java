@@ -13,22 +13,52 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         super(MainActivity.class);
     }
 
-    protected void enterCardDetails(String cardNo, String expiryDate, String cvv) {
-        enterACardNumber(cardNo);
-        enterAnExpiryDate(expiryDate);
-        enterCVV(cvv);
+
+
+
+
+    /*
+        Main screen
+     */
+
+    protected void pressSettingsButton() {
+        UiElement settingsButton = id(R.id.settings_menu_item);
+
+        settingsButton.click();
     }
 
-    protected void enterCardDetails(String cardNo, String startDate, String issueNo, String expiryDate, String cvv) {
-        enterACardNumber(cardNo);
-        enterAStartDate(startDate);
-        enterAnIssueNumber(issueNo);
-        enterAnExpiryDate(expiryDate);
-        enterCVV(cvv);
+    protected void pressPaymentScreenButton() {
+        UiElement paymentButton = id(R.id.payment_button);
+
+        paymentButton.click();
     }
 
 
 
+
+
+
+    /*
+        Settings screen
+     */
+
+    protected void pressSwitch(UiElement buttonElement, boolean enable) {
+        if(enable){
+            if(!buttonElement.isChecked()){
+                buttonElement.click();
+            }
+        } else {
+            if(buttonElement.isChecked()){
+                buttonElement.click();
+            }
+        }
+    }
+
+    protected void pressSettingsBackButton() {
+        UiElement backButton = find(By.className("android.widget.ImageButton"));
+
+        backButton.click();
+    }
 
     protected void enableAVS(boolean enable) {
         UiElement buttonElement = id(R.id.avs_switch);
@@ -36,7 +66,7 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         pressSwitch(buttonElement, enable);
     }
 
-    protected void enableAASLPinning(boolean enable) {
+    protected void enableSSLPinning(boolean enable) {
         UiElement buttonElement = id(R.id.ssl_pinning_switch);
 
         pressSwitch(buttonElement, enable);
@@ -54,22 +84,35 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         pressSwitch(buttonElement, enable);
     }
 
-    protected void pressSwitch(UiElement buttonElement, boolean enable) {
-        if(enable){
-            if(!buttonElement.isChecked()){
-                buttonElement.click();
-            }
-        } else {
-            if(buttonElement.isChecked()){
-                buttonElement.click();
-            }
-        }
+
+
+
+
+
+
+
+    /*
+        Payments screen
+     */
+
+    protected void enterCardDetails(String cardNo, String expiryDate, String cvv) {
+        enterACardNumber(cardNo);
+        enterAnExpiryDate(expiryDate);
+        enterCVV(cvv);
     }
 
-    protected void enterAnIssueNumber(String issueNo) {
-        UiElement issueNumberElement = id(R.id.issue_number_edit_text);
+    protected void enterCardDetails(String cardNo, String startDate, String issueNo, String expiryDate, String cvv) {
+        enterACardNumber(cardNo);
+        enterAStartDate(startDate);
+        enterAnIssueNumber(issueNo);
+        enterAnExpiryDate(expiryDate);
+        enterCVV(cvv);
+    }
 
-        issueNumberElement.setText(issueNo);
+    protected void enterACardNumber(String cardNo) {
+        UiElement cardNumber = id(R.id.card_number_edit_text);
+
+        cardNumber.setText(cardNo);
     }
 
     protected void enterAStartDate(String startDate) {
@@ -84,22 +127,10 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         expiryDateElement.setText(expiryDate);
     }
 
-    protected void pressPaymentScreenButton() {
-        UiElement paymentButton = id(R.id.payment_button);
+    protected void enterAnIssueNumber(String issueNo) {
+        UiElement issueNumberElement = id(R.id.issue_number_edit_text);
 
-        paymentButton.click();
-    }
-
-    protected void pressPayButton() {
-        UiElement payButton = id(R.id.payment_button);
-
-        payButton.click();
-    }
-
-    protected void enterACardNumber(String cardNo) {
-        UiElement cardNumber = id(R.id.card_number_edit_text);
-
-        cardNumber.setText(cardNo);
+        issueNumberElement.setText(issueNo);
     }
 
     protected void enterCVV(String cvv) {
@@ -108,16 +139,43 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         cvElement.setText(cvv);
     }
 
-    protected void pressSettingsButton() {
-        UiElement settingsButton = id(R.id.settings_menu_item);
+    protected void pressPayButton() {
+        UiElement payButton = id(R.id.payment_button);
 
-        settingsButton.click();
+        payButton.click();
     }
 
-    protected void pressSettingsBackButton() {
-        UiElement backButton = find(By.className("android.widget.ImageButton"));
+    /*
+        Billing country dropdown options.
+     */
+    protected void pressBillingCountry() {
+        UiElement billingElement = find(By.resourceId("android:id/text2"));
 
-        backButton.click();
+        billingElement.click();
+    }
+
+    protected void pressUK() {
+        UiElement uKElement = find(By.text("UK"));
+
+        uKElement.click();
+    }
+
+    protected void pressUSA() {
+        UiElement uSAElement = find(By.text("USA"));
+
+        uSAElement.click();
+    }
+
+    protected void pressCanada() {
+        UiElement canadaElement = find(By.text("Canada"));
+
+        canadaElement.click();
+    }
+
+    protected void pressOther() {
+        UiElement otherElement = find(By.text("Other"));
+
+        otherElement.click();
     }
 
 }
