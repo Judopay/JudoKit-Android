@@ -33,7 +33,14 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
 
     public void testVisaMovesToPostcodeFieldWhenValidCardDetailsEntered() {
         //Given AVS is enabled
-        enable("AVS", true);
+        pressSettingsButton();
+
+        enableAVS(true);
+
+        pressSettingsBackButton();
+
+        //And I am on the payment screen
+        pressPaymentScreenButton();
 
         //When I enter valid card details
         enterCardDetails("4976000000003436", "1215", "452");
@@ -49,7 +56,11 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
     /*Maestro Tests*/
     public void testMaestroMovesToStartDateFieldWhenValidCardNumberEntered() {
         //Given Maestro is enabled
-        enable("Maestro", true);
+        pressSettingsButton();
+
+        enableMaestro(true);
+
+        pressSettingsBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -63,7 +74,11 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
 
     public void testMaestroMovesToIssueNumberFieldWhenValidStartDateEntered() {
         //Given Maestro is enabled
-        enable("Maestro", true);
+        pressSettingsButton();
+
+        enableMaestro(true);
+
+        pressSettingsBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -78,26 +93,13 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
         assertThat(id(R.id.issue_number_edit_text).isFocused(), equalTo(true));
     }
 
-    public void testMaestroMovesToExpiryDateFieldWhenValidIssueNumberEntered() {
-        //Given Maestro is enabled
-        enable("Maestro", true);
-
-        //And I am on a payment screen
-        pressPaymentScreenButton();
-
-        //When I enter a valid card number
-        enterACardNumber("6759000000005462");
-
-        //And I enter a valid issue number
-        enterAnIssueNumber("01");
-
-        //Then the expiry date field is in focus
-        assertThat(id(R.id.expiry_date_edit_text).isFocused(), equalTo(true));
-    }
-
     public void testMaestroMovesToCVVFieldWhenValidExpiryDateEntered() {
         //Given Maestro is enabled
-        enable("Maestro", true);
+        pressSettingsButton();
+
+        enableMaestro(true);
+
+        pressSettingsBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -120,7 +122,11 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
     /*AMEX Tests*/
     public void testAMEXMovesToExpiryDateFieldWhenValidCardNumberEntered() {
         //Given AMEX is enabled
-        enable("AMEX", true);
+        pressSettingsButton();
+
+        enableAMEX(true);
+
+        pressSettingsBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();

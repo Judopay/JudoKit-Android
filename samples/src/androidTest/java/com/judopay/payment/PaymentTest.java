@@ -27,39 +27,34 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         enterCVV(cvv);
     }
 
-    protected void enable(String button, boolean enable) {
-        pressSettingsButton();
-        setSettingSwitch(button, enable);
-        pressSettingsBackButton();
+
+
+
+    protected void enableAVS(boolean enable) {
+        UiElement buttonElement = id(R.id.avs_switch);
+
+        pressSwitch(buttonElement, enable);
     }
 
-    protected void setSettingSwitch(String setting, boolean enable) {
-        UiElement buttonElement;
+    protected void enableAASLPinning(boolean enable) {
+        UiElement buttonElement = id(R.id.ssl_pinning_switch);
 
-        switch(setting.toLowerCase()){
-            case "avs":
-                buttonElement = id(R.id.avs_switch);
-                pressSwitch(enable, buttonElement);
-                break;
-            case "ssl pinning":
-                buttonElement = id(R.id.ssl_pinning_switch);
-                pressSwitch(enable, buttonElement);
-                break;
-            case "maestro":
-                buttonElement = id(R.id.maestro_switch);
-                pressSwitch(enable, buttonElement);
-                break;
-            case "amex":
-                buttonElement = id(R.id.amex_switch);
-                pressSwitch(enable, buttonElement);
-                break;
-            default:
-                break;
-        }
-
+        pressSwitch(buttonElement, enable);
     }
 
-    protected void pressSwitch(boolean enable, UiElement buttonElement) {
+    protected void enableMaestro(boolean enable) {
+        UiElement buttonElement = id(R.id.maestro_switch);
+
+        pressSwitch(buttonElement, enable);
+    }
+
+    protected void enableAMEX(boolean enable) {
+        UiElement buttonElement = id(R.id.amex_switch);
+
+        pressSwitch(buttonElement, enable);
+    }
+
+    protected void pressSwitch(UiElement buttonElement, boolean enable) {
         if(enable){
             if(!buttonElement.isChecked()){
                 buttonElement.click();
@@ -73,46 +68,55 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
 
     protected void enterAnIssueNumber(String issueNo) {
         UiElement issueNumberElement = id(R.id.issue_number_edit_text);
+
         issueNumberElement.setText(issueNo);
     }
 
     protected void enterAStartDate(String startDate) {
         UiElement expiryDateElement = id(R.id.start_date_edit_text);
+
         expiryDateElement.setText(startDate);
     }
 
     protected void enterAnExpiryDate(String expiryDate) {
         UiElement expiryDateElement = id(R.id.expiry_date_edit_text);
+
         expiryDateElement.setText(expiryDate);
     }
 
     protected void pressPaymentScreenButton() {
         UiElement paymentButton = id(R.id.payment_button);
+
         paymentButton.click();
     }
 
     protected void pressPayButton() {
         UiElement payButton = id(R.id.payment_button);
+
         payButton.click();
     }
 
     protected void enterACardNumber(String cardNo) {
         UiElement cardNumber = id(R.id.card_number_edit_text);
+
         cardNumber.setText(cardNo);
     }
 
     protected void enterCVV(String cvv) {
         UiElement cvElement = id(R.id.cvv_edit_text);
+
         cvElement.setText(cvv);
     }
 
     protected void pressSettingsButton() {
         UiElement settingsButton = id(R.id.settings_menu_item);
+
         settingsButton.click();
     }
 
     protected void pressSettingsBackButton() {
         UiElement backButton = find(By.className("android.widget.ImageButton"));
+
         backButton.click();
     }
 

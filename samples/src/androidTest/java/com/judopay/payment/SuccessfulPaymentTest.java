@@ -9,7 +9,11 @@ public class SuccessfulPaymentTest extends PaymentTest {
 
     public void testAuthSuccessfulNoAVSNo3DSecureVisa() {
         //Given AVS is disabled
-        enable("AVS", false);
+        pressSettingsButton();
+
+        enableAVS(false);
+
+        pressSettingsBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -27,7 +31,11 @@ public class SuccessfulPaymentTest extends PaymentTest {
 
     public void testAuthSuccessfulNoAVSNo3DSecureVisaDebit() {
         //Given AVS is disabled
-        enable("AVS", false);
+        pressSettingsButton();
+
+        enableAVS(false);
+
+        pressSettingsBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -45,10 +53,14 @@ public class SuccessfulPaymentTest extends PaymentTest {
 
     public void testAuthSuccessfulNoAVSNo3DSecureMaestro() {
         //Given AVS is disabled
-        enable("AVS", false);
+        pressSettingsButton();
+
+        enableAVS(false);
 
         //And Maestro is enabled
-        enable("Maestro", true);
+        enableMaestro(true);
+
+        pressSettingsBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -66,7 +78,11 @@ public class SuccessfulPaymentTest extends PaymentTest {
 
     public void testAuthSuccessfulNoAVSNo3DSecureMasterCard() {
         //Given AVS is disabled
-        enable("AVS", false);
+        pressSettingsButton();
+
+        enableAVS(false);
+
+        pressSettingsBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -84,7 +100,11 @@ public class SuccessfulPaymentTest extends PaymentTest {
 
     public void testAuthSuccessfulNoAVSNo3DSecureVisaElectron() {
         //Given AVS is disabled
-        enable("AVS", false);
+        pressSettingsButton();
+
+        enableAVS(false);
+
+        pressSettingsBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -102,7 +122,11 @@ public class SuccessfulPaymentTest extends PaymentTest {
 
     public void testAuthSuccessfulNoAVSNo3DSecureVisaPurchasing() {
         //Given AVS is disabled
-        enable("AVS", false);
+        pressSettingsButton();
+
+        enableAVS(false);
+
+        pressSettingsBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -120,10 +144,14 @@ public class SuccessfulPaymentTest extends PaymentTest {
 
     public void testAuthSuccessfulNoAVSNo3DSecureAMEX() {
         //Given AVS is disabled
-        enable("AVS", false);
+        pressSettingsButton();
+
+        enableAVS(false);
 
         //And AMEX is enabled
-        enable("AMEX", true);
+        enableAMEX(true);
+
+        pressSettingsBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
