@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="50dp"
+            android:paddingBottom="70dp"
             android:paddingLeft="@dimen/medium_padding"
             android:paddingRight="@dimen/medium_padding"
             android:paddingTop="@dimen/medium_padding">
@@ -37,7 +37,7 @@
                 </com.judopay.JudoTextInputLayout>
 
                 <TextView
-                    android:id="@+id/card_number_extra_hint"
+                    android:id="@+id/card_number_helper_text"
                     style="@style/judo_hint_text"
                     android:layout_below="@id/card_number_input_layout"
                     android:text="@string/long_card_number"
@@ -83,7 +83,7 @@
                     </com.judopay.JudoTextInputLayout>
 
                     <TextView
-                        android:id="@+id/issue_number_extra_hint"
+                        android:id="@+id/issue_number_helper_text"
                         style="@style/judo_hint_text"
                         android:text="@string/issue_number_front_of_card"
                         tools:visibility="visible" />
@@ -133,7 +133,7 @@
                     </com.judopay.JudoTextInputLayout>
 
                     <TextView
-                        android:id="@+id/cvv_extra_hint"
+                        android:id="@+id/cvv_helper_text"
                         style="@style/judo_hint_text"
                         android:layout_below="@id/cvv_input_layout"
                         android:text="@string/security_code"
