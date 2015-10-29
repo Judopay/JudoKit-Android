@@ -21,7 +21,7 @@
     <string name="error_check_date">Please check date</string>
     <string name="error_card_number">Please check number</string>
     <string name="error_generic">Please check value</string>
-    <string name="error_maestro_not_supported">We don\’t accept Maestro, please use other cards</string>
+    <string name="error_maestro_not_supported">We don\'t accept Maestro, please use other cards</string>
     <string name="error_amex_not_supported">We don\'t accept AmEx, please use other cards</string>
     <string name="processing_payment">Processing payment</string>
     <string name="billing_country">Billing country</string>
