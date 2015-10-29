@@ -51,7 +51,6 @@ public class PaymentFormFragment extends Fragment {
     private PostcodeEditText postcodeEditText;
     private EditText startDateEditText;
     private EditText expiryDateEditText;
-    private View expiryDateExtraHint;
     private EditText cardNumberEditText;
     private View cardNumberExtraHint;
     private EditText issueNumberEditText;
@@ -67,7 +66,6 @@ public class PaymentFormFragment extends Fragment {
     private View cardsAcceptedErrorText;
 
     private PaymentFormListener paymentFormListener;
-    private View startDateExtraHint;
     private View issueNumberExtraHint;
 
     @Override
@@ -89,11 +87,9 @@ public class PaymentFormFragment extends Fragment {
 
         expiryDateEditText = (EditText) view.findViewById(R.id.expiry_date_edit_text);
         expiryDateInputLayout = (TextInputLayout) view.findViewById(R.id.expiry_date_input_layout);
-        expiryDateExtraHint = view.findViewById(R.id.expiry_date_extra_hint);
 
         startDateEditText = (EditText) view.findViewById(R.id.start_date_edit_text);
         startDateInputLayout = (TextInputLayout) view.findViewById(R.id.start_date_input_layout);
-        startDateExtraHint = view.findViewById(R.id.start_date_extra_hint);
 
         countrySpinner = (CountrySpinner) view.findViewById(R.id.country_spinner);
 
@@ -131,18 +127,12 @@ public class PaymentFormFragment extends Fragment {
         cardNumberEditText.addTextChangedListener(formValidator);
         cardNumberEditText.addTextChangedListener(new CardNumberFormattingTextWatcher());
 
-        expiryDateEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
-                new EmptyTextHintOnFocusChangeListener(expiryDateExtraHint),
-                new HintFocusListener(expiryDateEditText, R.string.date_hint)
-        ));
+        expiryDateEditText.setOnFocusChangeListener(new HintFocusListener(expiryDateEditText, R.string.date_hint));
 
         expiryDateEditText.addTextChangedListener(formValidator);
         expiryDateEditText.addTextChangedListener(new DateSeparatorTextWatcher(expiryDateEditText));
 
-        startDateEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
-                new EmptyTextHintOnFocusChangeListener(startDateExtraHint),
-                new HintFocusListener(startDateEditText, R.string.date_hint)
-        ));
+        startDateEditText.setOnFocusChangeListener(new HintFocusListener(startDateEditText, R.string.date_hint));
 
         startDateEditText.addTextChangedListener(formValidator);
         startDateEditText.addTextChangedListener(new DateSeparatorTextWatcher(startDateEditText));
