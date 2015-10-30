@@ -25,7 +25,7 @@ import com.judopay.customer.CardAddress;
 import com.judopay.customer.CardDate;
 import com.judopay.customer.CardType;
 import com.judopay.customer.Country;
-import com.judopay.payment.EmptyTextHintOnFocusChangeListener;
+import com.judopay.EmptyTextHintOnFocusChangeListener;
 import com.judopay.payment.PaymentFormListener;
 import com.judopay.payment.ScrollOnFocusChangeListener;
 import com.judopay.payment.SingleClickOnClickListener;
