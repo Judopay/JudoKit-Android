@@ -1,16 +1,27 @@
 <resources>
 
-    <style name="Theme.Judo" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.Judo.Light.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="actionBarTheme">@style/ThemeOverlay.AppTheme.ActionBar</item>
         <item name="colorPrimary">@color/judo_blue</item>
         <item name="colorButtonNormal">@color/judo_teal</item>
         <item name="loadingOverlayStyle">@style/light_loading_overlay</item>
     </style>
 
-    <style name="Theme.Judo.Dark" parent="Theme.AppCompat">
+    <style name="Theme.Judo.Light" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/judo_blue</item>
+        <item name="colorButtonNormal">@color/judo_teal</item>
+        <item name="loadingOverlayStyle">@style/light_loading_overlay</item>
+    </style>
+
+    <style name="Theme.Judo" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/judo_dark_blue</item>
         <item name="colorButtonNormal">@color/judo_teal</item>
         <item name="colorAccent">@android:color/white</item>
         <item name="loadingOverlayStyle">@style/loading_overlay</item>
+    </style>
+
+    <style name="ThemeOverlay.AppTheme.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
     <style name="light_loading_overlay">
