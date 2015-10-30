@@ -91,10 +91,10 @@ public class StartDateAndIssueNumberValidationTest {
     }
 
     @Test
-    public void shouldShowIssueNumberAndStartDateWhenCardNumberEntered() {
+    public void shouldShowIssueNumberAndStartDateWhenCardNumberPartiallyEntered() {
         StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(
                 new PaymentForm.Builder()
-                        .setCardNumber("6759649826438453")
+                        .setCardNumber("6759")
                         .setCvv("")
                         .setExpiryDate("")
                         .setStartDate("")
@@ -102,7 +102,7 @@ public class StartDateAndIssueNumberValidationTest {
                         .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .setMaestroSupported(true)
-                        .build(), true);
+                        .build(), false);
 
         assertThat(startDateAndIssueNumberValidation.isShowIssueNumberAndStartDate(), is(true));
     }
