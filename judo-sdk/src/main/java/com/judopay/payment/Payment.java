@@ -7,17 +7,19 @@ import com.judopay.Consumer;
 
 public class Payment implements Parcelable {
 
-    private float amount;
-    private long judoId;
+    private String amount;
+    private String judoId;
     private String currency;
     private String paymentRef;
     private Consumer consumer;
 
-    public float getAmount() {
+    public Payment() { }
+
+    public String getAmount() {
         return amount;
     }
 
-    public long getJudoId() {
+    public String getJudoId() {
         return judoId;
     }
 
@@ -40,24 +42,22 @@ public class Payment implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeFloat(this.amount);
-        dest.writeLong(this.judoId);
+        dest.writeString(this.amount);
+        dest.writeString(this.judoId);
         dest.writeString(this.currency);
         dest.writeString(this.paymentRef);
-        dest.writeParcelable(this.consumer, flags);
+        dest.writeParcelable(this.consumer, 0);
     }
 
-    private Payment() { }
-
     private Payment(Parcel in) {
-        this.amount = in.readFloat();
-        this.judoId = in.readLong();
+        this.amount = in.readString();
+        this.judoId = in.readString();
         this.currency = in.readString();
         this.paymentRef = in.readString();
         this.consumer = in.readParcelable(Consumer.class.getClassLoader());
     }
 
-    public static final Creator<Payment> CREATOR = new Creator<Payment>() {
+    public static final Parcelable.Creator<Payment> CREATOR = new Parcelable.Creator<Payment>() {
         public Payment createFromParcel(Parcel source) {
             return new Payment(source);
         }
@@ -75,12 +75,12 @@ public class Payment implements Parcelable {
             payment = new Payment();
         }
 
-        public Builder setAmount(float amount) {
+        public Builder setAmount(String amount) {
             payment.amount = amount;
             return this;
         }
 
-        public Builder setJudoId(long judoId) {
+        public Builder setJudoId(String judoId) {
             payment.judoId = judoId;
             return this;
         }
@@ -101,28 +101,27 @@ public class Payment implements Parcelable {
         }
 
         public Payment build() {
-            if(payment.amount == 0) {
+            if (payment.amount == null || payment.amount.length() == 0) {
                 throw new IllegalArgumentException("Payment.amount must be supplied");
             }
 
-            if(payment.judoId == 0) {
+            if (payment.judoId == null || payment.judoId.length() == 0) {
                 throw new IllegalArgumentException("Payment.judoId must be supplied");
             }
 
-            if(payment.currency == null || payment.currency.length() == 0) {
+            if (payment.currency == null || payment.currency.length() == 0) {
                 throw new IllegalArgumentException("Payment.currency must be supplied");
             }
 
-            if(payment.paymentRef == null || payment.paymentRef.length() == 0) {
+            if (payment.paymentRef == null || payment.paymentRef.length() == 0) {
                 throw new IllegalArgumentException("Payment.paymentRef must be supplied");
             }
 
-            if(payment.consumer == null) {
+            if (payment.consumer == null) {
                 throw new IllegalArgumentException("Payment.consumer must be supplied");
             }
 
             return payment;
         }
-
     }
 }
