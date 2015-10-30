@@ -139,6 +139,12 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         cvElement.setText(cvv);
     }
 
+    protected void pressCVVField() {
+        UiElement cVVElement = id(R.id.cvv_edit_text);
+
+        cVVElement.click();
+    }
+
     protected void pressPayButton() {
         UiElement payButton = id(R.id.payment_button);
 

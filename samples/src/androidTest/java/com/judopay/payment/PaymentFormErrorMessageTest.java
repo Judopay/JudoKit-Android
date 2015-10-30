@@ -134,5 +134,4 @@ public class PaymentFormErrorMessageTest extends PaymentTest {
         assertThat(errorMessage, notNullValue());
     }
 
-
 }

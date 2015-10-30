@@ -54,8 +54,6 @@ public abstract class DroidDriverTest<T extends Activity> extends BaseDroidDrive
     }
 
     // DroidDriver can't hide the keyboard to use Espresso for now.
-    void hideKeyboard(int viewId) {
-        onView(withId(viewId)).perform(closeSoftKeyboard());
-    }
+    void hideKeyboard(int viewId) {onView(withId(viewId)).perform(closeSoftKeyboard());}
 
 }
