@@ -22,6 +22,8 @@
         </activity>
 
         <activity android:name="com.judopay.payment.PaymentActivity" />
+        <activity android:name="com.judopay.payment.PreAuthActivity" />
+
         <activity android:name=".SettingsActivity" />
 
     </application>
