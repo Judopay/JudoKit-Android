@@ -1,8 +1,24 @@
 <resources>
 
-    <style name="Theme.Judo" parent="Theme.AppCompat.Light">
+    <style name="Theme.Judo" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/judo_blue</item>
         <item name="colorButtonNormal">@color/judo_teal</item>
+        <item name="loadingOverlayStyle">@style/light_loading_overlay</item>
+    </style>
+
+    <style name="Theme.Judo.Dark" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/judo_dark_blue</item>
+        <item name="colorButtonNormal">@color/judo_teal</item>
+        <item name="colorAccent">@android:color/white</item>
+        <item name="loadingOverlayStyle">@style/loading_overlay</item>
+    </style>
+
+    <style name="light_loading_overlay">
+        <item name="android:background">@color/judo_white_90</item>
+    </style>
+
+    <style name="loading_overlay">
+        <item name="android:background">@color/judo_black_87</item>
     </style>
 
     <style name="input_layout">
@@ -17,19 +33,26 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:digits">01234 56789</item>
-        <item name="android:imeOptions">actionNext</item>
+        <item name="android:imeOptions">actionNext|flagNoExtractUi</item>
         <item name="android:inputType">number</item>
         <item name="android:maxLength">19</item>
     </style>
 
-    <style name="judo_expiry_date">
-        <item name="android:hint">@string/expiry_date_label</item>
+    <style name="judo_date">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:digits">0123456789/</item>
-        <item name="android:imeOptions">actionNext</item>
+        <item name="android:imeOptions">actionNext|flagNoExtractUi</item>
         <item name="android:inputType">number</item>
         <item name="android:maxLength">5</item>
+    </style>
+
+    <style name="judo_expiry_date" parent="judo_date">
+        <item name="android:hint">@string/expiry_date_label</item>
+    </style>
+
+    <style name="judo_start_date" parent="judo_date">
+        <item name="android:hint">@string/start_date_label</item>
     </style>
 
     <style name="judo_cvv_image">
@@ -44,7 +67,7 @@
         <item name="android:hint">@string/cvv_label</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:imeOptions">actionNext</item>
+        <item name="android:imeOptions">actionNext|flagNoExtractUi</item>
         <item name="android:inputType">number</item>
         <item name="android:maxLength">3</item>
     </style>
@@ -94,6 +117,15 @@
         <item name="android:textSize">@dimen/judo_small_text_size</item>
         <item name="android:visibility">gone</item>
         <item name="android:layout_marginLeft">@dimen/small_padding</item>
+    </style>
+
+    <style name="judo_issue_number">
+        <item name="android:hint">@string/issue_number_label</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:imeOptions">actionNext|flagNoExtractUi</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">3</item>
     </style>
 
     <dimen name="small_padding">4dp</dimen>

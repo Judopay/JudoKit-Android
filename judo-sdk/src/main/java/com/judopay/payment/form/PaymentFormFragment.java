@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 
 import com.judopay.CompositeOnFocusChangeListener;
+import com.judopay.HidingViewTextWatcher;
 import com.judopay.HintFocusListener;
 import com.judopay.JudoPay;
 import com.judopay.R;
@@ -43,7 +44,7 @@ public class PaymentFormFragment extends Fragment {
     private static final String JUDO_PAYMENT = "Judo-Payment";
 
     private EditText cvvEditText;
-    private View cvvExtraHint;
+    private View cvvHelperText;
     private Button paymentButton;
     private CardTypeImageView cardTypeImageView;
     private CvvImageView cvvImageView;
@@ -51,9 +52,8 @@ public class PaymentFormFragment extends Fragment {
     private PostcodeEditText postcodeEditText;
     private EditText startDateEditText;
     private EditText expiryDateEditText;
-    private View expiryDateExtraHint;
     private EditText cardNumberEditText;
-    private View cardNumberExtraHint;
+    private View cardNumberHelperText;
     private EditText issueNumberEditText;
     private TextInputLayout cvvInputLayout;
     private TextInputLayout cardNumberInputLayout;
@@ -67,8 +67,7 @@ public class PaymentFormFragment extends Fragment {
     private View cardsAcceptedErrorText;
 
     private PaymentFormListener paymentFormListener;
-    private View startDateExtraHint;
-    private View issueNumberExtraHint;
+    private View issueNumberHelperText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,22 +77,20 @@ public class PaymentFormFragment extends Fragment {
 
         cvvEditText = (EditText) view.findViewById(R.id.cvv_edit_text);
         cvvInputLayout = (TextInputLayout) view.findViewById(R.id.cvv_input_layout);
-        cvvExtraHint = view.findViewById(R.id.cvv_extra_hint);
+        cvvHelperText = view.findViewById(R.id.cvv_helper_text);
 
         postcodeEditText = (PostcodeEditText) view.findViewById(R.id.post_code_edit_text);
         postcodeInputLayout = (TextInputLayout) view.findViewById(R.id.post_code_input_layout);
 
         cardNumberEditText = (EditText) view.findViewById(R.id.card_number_edit_text);
         cardNumberInputLayout = (TextInputLayout) view.findViewById(R.id.card_number_input_layout);
-        cardNumberExtraHint = view.findViewById(R.id.card_number_extra_hint);
+        cardNumberHelperText = view.findViewById(R.id.card_number_helper_text);
 
         expiryDateEditText = (EditText) view.findViewById(R.id.expiry_date_edit_text);
         expiryDateInputLayout = (TextInputLayout) view.findViewById(R.id.expiry_date_input_layout);
-        expiryDateExtraHint = view.findViewById(R.id.expiry_date_extra_hint);
 
         startDateEditText = (EditText) view.findViewById(R.id.start_date_edit_text);
         startDateInputLayout = (TextInputLayout) view.findViewById(R.id.start_date_input_layout);
-        startDateExtraHint = view.findViewById(R.id.start_date_extra_hint);
 
         countrySpinner = (CountrySpinner) view.findViewById(R.id.country_spinner);
 
@@ -101,7 +98,7 @@ public class PaymentFormFragment extends Fragment {
         cvvImageView = (CvvImageView) view.findViewById(R.id.cvv_image_view);
 
         issueNumberEditText = (EditText) view.findViewById(R.id.issue_number_edit_text);
-        issueNumberExtraHint = view.findViewById(R.id.issue_number_extra_hint);
+        issueNumberHelperText = view.findViewById(R.id.issue_number_helper_text);
 
         startDateAndIssueNumberContainer = view.findViewById(R.id.start_date_issue_number_container);
         countryAndPostcodeContainer = view.findViewById(R.id.country_postcode_container);
@@ -124,43 +121,39 @@ public class PaymentFormFragment extends Fragment {
         };
 
         cardNumberEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
-                new EmptyTextHintOnFocusChangeListener(cardNumberExtraHint),
+                new EmptyTextHintOnFocusChangeListener(cardNumberHelperText),
                 new HintFocusListener(cardNumberEditText, R.string.card_number_hint)
         ));
 
         cardNumberEditText.addTextChangedListener(formValidator);
         cardNumberEditText.addTextChangedListener(new CardNumberFormattingTextWatcher());
+        cardNumberEditText.addTextChangedListener(new HidingViewTextWatcher(cardNumberHelperText));
 
-        expiryDateEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
-                new EmptyTextHintOnFocusChangeListener(expiryDateExtraHint),
-                new HintFocusListener(expiryDateEditText, R.string.date_hint)
-        ));
+        expiryDateEditText.setOnFocusChangeListener(new HintFocusListener(expiryDateEditText, R.string.date_hint));
 
         expiryDateEditText.addTextChangedListener(formValidator);
         expiryDateEditText.addTextChangedListener(new DateSeparatorTextWatcher(expiryDateEditText));
 
-        startDateEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
-                new EmptyTextHintOnFocusChangeListener(startDateExtraHint),
-                new HintFocusListener(startDateEditText, R.string.date_hint)
-        ));
-
+        startDateEditText.setOnFocusChangeListener(new HintFocusListener(startDateEditText, R.string.date_hint));
         startDateEditText.addTextChangedListener(formValidator);
         startDateEditText.addTextChangedListener(new DateSeparatorTextWatcher(startDateEditText));
 
         cvvHintChangeListener = new HintFocusListener(cvvEditText, R.string.cvv_hint);
         cvvEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
-                new EmptyTextHintOnFocusChangeListener(cvvExtraHint),
+                new EmptyTextHintOnFocusChangeListener(cvvHelperText),
                 cvvHintChangeListener
         ));
 
         cvvEditText.addTextChangedListener(formValidator);
+        cvvEditText.addTextChangedListener(new HidingViewTextWatcher(cvvHelperText));
 
         issueNumberEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
-                new EmptyTextHintOnFocusChangeListener(issueNumberExtraHint),
+                new EmptyTextHintOnFocusChangeListener(issueNumberHelperText),
                 new HintFocusListener(issueNumberEditText, R.string.issue_number_hint)
         ));
 
         issueNumberEditText.addTextChangedListener(formValidator);
+        issueNumberEditText.addTextChangedListener(new HidingViewTextWatcher(issueNumberHelperText));
 
         postcodeEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
                         new HintFocusListener(postcodeEditText, R.string.empty),

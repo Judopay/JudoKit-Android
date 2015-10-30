@@ -9,12 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <LinearLayout
+    <com.judopay.ThemedLinearLayout
         android:id="@+id/progress_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:background="@color/judo_white_90"
         android:clickable="true"
         android:gravity="center"
         android:orientation="vertical"
@@ -37,6 +36,6 @@
             android:layout_gravity="center"
             android:indeterminate="true" />
 
-    </LinearLayout>
+    </com.judopay.ThemedLinearLayout>
 
 </FrameLayout>
