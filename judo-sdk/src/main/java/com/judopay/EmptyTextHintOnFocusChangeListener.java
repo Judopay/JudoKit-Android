@@ -1,4 +1,4 @@
-package com.judopay.payment;
+package com.judopay;
 
 import android.view.View;
 import android.widget.TextView;
