@@ -15,21 +15,30 @@ public class CardNumberValidation {
     public CardNumberValidation(String cardNumber, int cardType, boolean maestroSupported, boolean amexSupported) {
         boolean cardNumberLengthValid = isCardNumberLengthValid(cardNumber, cardType);
 
+        boolean maestroAndNotSupported = isMaestroAndNotSupported(cardType, maestroSupported);
+
+        boolean amexAndNotSupported = isAmexAndNotSupported(cardType, amexSupported);
+
         this.entryComplete = cardNumberLengthValid;
         this.valid = isCardNumberValid(cardNumber, cardType, maestroSupported, amexSupported) && cardNumberLengthValid;
-        this.showError = !valid && cardNumberLengthValid;
+        this.showError = !valid && (cardNumberLengthValid || maestroAndNotSupported || amexAndNotSupported);
         this.maxLength = getMaxLength(cardType);
 
-        boolean maestroError = cardType == CardType.MAESTRO && !maestroSupported;
-        boolean amexError = cardType == CardType.AMEX && !amexSupported;
-
-        if (maestroError) {
+        if (maestroAndNotSupported) {
             this.error = R.string.error_maestro_not_supported;
-        } else if (amexError) {
+        } else if (amexAndNotSupported) {
             this.error = R.string.error_amex_not_supported;
         } else if (!valid) {
             this.error = R.string.error_card_number;
         }
+    }
+
+    private boolean isAmexAndNotSupported(int cardType, boolean amexSupported) {
+        return cardType == CardType.AMEX && !amexSupported;
+    }
+
+    private boolean isMaestroAndNotSupported(int cardType, boolean maestroSupported) {
+        return cardType == CardType.MAESTRO && !maestroSupported;
     }
 
     private int getMaxLength(int cardType) {

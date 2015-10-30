@@ -2,6 +2,7 @@ package com.judopay.payment.form;
 
 import com.judopay.R;
 import com.judopay.customer.CardType;
+import com.judopay.customer.Country;
 import com.judopay.payment.form.cardnumber.CardNumberValidation;
 
 import org.junit.Test;
@@ -29,6 +30,18 @@ public class CardNumberValidationTest {
     public void shouldValidateCardNumberAsInvalid() {
         CardNumberValidation cardNumberValidation = new CardNumberValidation("1234567812345678", CardType.UNKNOWN, false, true);
 
+        assertThat(cardNumberValidation.isShowError(), is(true));
+    }
+
+    @Test
+    public void shouldShowErrorWhenMaestroPartiallyEnteredAndMaestroNotSupported() {
+        CardNumberValidation cardNumberValidation = new CardNumberValidation("6759", CardType.MAESTRO, false, false);
+        assertThat(cardNumberValidation.isShowError(), is(true));
+    }
+
+    @Test
+    public void shouldShowErrorWhenAmexPartiallyEnteredAndAmexNotSupported() {
+        CardNumberValidation cardNumberValidation = new CardNumberValidation("3400", CardType.AMEX, false, false);
         assertThat(cardNumberValidation.isShowError(), is(true));
     }
 
