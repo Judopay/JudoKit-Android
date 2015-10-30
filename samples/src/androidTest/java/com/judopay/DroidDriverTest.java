@@ -43,7 +43,7 @@ public abstract class DroidDriverTest<T extends Activity> extends BaseDroidDrive
         return getTargetContext().getResources().getResourceName(rID);
     }
 
-    UiElement find(Finder finder) {
+    protected UiElement find(Finder finder) {
         // Note that we use on to ensure refreshUiElementTree() is called
         // the 'find' method will not refresh the uielementtree
         return DroidDrivers.get().on(finder);
@@ -54,8 +54,6 @@ public abstract class DroidDriverTest<T extends Activity> extends BaseDroidDrive
     }
 
     // DroidDriver can't hide the keyboard to use Espresso for now.
-    void hideKeyboard(int viewId) {
-        onView(withId(viewId)).perform(closeSoftKeyboard());
-    }
+    void hideKeyboard(int viewId) {onView(withId(viewId)).perform(closeSoftKeyboard());}
 
 }

@@ -10,15 +10,14 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.judopay.Consumer;
+import com.judopay.payment.PaymentActivity;
 import com.judopay.JudoPay;
 import com.judopay.payment.Payment;
-import com.judopay.payment.PaymentActivity;
 import com.judopay.payment.PaymentResponse;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static com.judopay.JudoPay.Environment.SANDBOX;
 import static com.judopay.JudoPay.JUDO_RECEIPT;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        JudoPay.setup(this, "823Eja2fEM6E9NAE", "382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6", SANDBOX);
 
         initialiseView();
     }
@@ -65,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
-
                 Payment payment = new Payment.Builder()
                         .setJudoId(100407196)
                         .setCurrency("GBP")
@@ -75,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                         .build();
 
                 intent.putExtra(JudoPay.EXTRA_PAYMENT, payment);
-                intent.putExtra(Intent.EXTRA_TITLE, "Payment example");
+                intent.putExtra(Intent.EXTRA_TITLE, "Payment");
 
                 startActivityForResult(intent, REQUEST_CODE);
             }

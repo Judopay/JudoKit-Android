@@ -1,8 +1,135 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="Theme.Judo" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/judo_blue</item>
+        <item name="colorButtonNormal">@color/judo_teal</item>
+        <item name="loadingOverlayStyle">@style/light_loading_overlay</item>
     </style>
+
+    <style name="Theme.Judo.Dark" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/judo_dark_blue</item>
+        <item name="colorButtonNormal">@color/judo_teal</item>
+        <item name="colorAccent">@android:color/white</item>
+        <item name="loadingOverlayStyle">@style/loading_overlay</item>
+    </style>
+
+    <style name="light_loading_overlay">
+        <item name="android:background">@color/judo_white_90</item>
+    </style>
+
+    <style name="loading_overlay">
+        <item name="android:background">@color/judo_black_87</item>
+    </style>
+
+    <style name="input_layout">
+        <item name="android:layout_marginTop">@dimen/medium_padding</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="hintAnimationEnabled">false</item>
+    </style>
+
+    <style name="judo_card_number">
+        <item name="android:hint">@string/card_number_label</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:digits">01234 56789</item>
+        <item name="android:imeOptions">actionNext|flagNoExtractUi</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">19</item>
+    </style>
+
+    <style name="judo_date">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:digits">0123456789/</item>
+        <item name="android:imeOptions">actionNext|flagNoExtractUi</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">5</item>
+    </style>
+
+    <style name="judo_expiry_date" parent="judo_date">
+        <item name="android:hint">@string/expiry_date_label</item>
+    </style>
+
+    <style name="judo_start_date" parent="judo_date">
+        <item name="android:hint">@string/start_date_label</item>
+    </style>
+
+    <style name="judo_cvv_image">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_marginRight">@dimen/small_padding</item>
+        <item name="android:layout_marginTop">@dimen/large_padding</item>
+    </style>
+
+    <style name="judo_cvv">
+        <item name="android:hint">@string/cvv_label</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:imeOptions">actionNext|flagNoExtractUi</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">3</item>
+    </style>
+
+    <style name="judo_card_image">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_marginRight">@dimen/small_padding</item>
+        <item name="android:layout_marginTop">@dimen/large_padding</item>
+    </style>
+
+    <style name="judo_country_spinner" parent="Widget.AppCompat.Spinner.Underlined">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="judo_cards_accepted_text" parent="TextAppearance.AppCompat.Small">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/judo_red</item>
+        <item name="android:textSize">@dimen/judo_small_text_size</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="judo_postcode">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:imeOptions">actionDone</item>
+        <item name="android:inputType">textNoSuggestions|textCapCharacters</item>
+        <item name="android:privateImeOptions">nm</item>
+    </style>
+
+    <style name="judo_payment_button">
+        <item name="android:text">@string/pay</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:background">?colorButtonNormal</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="judo_hint_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/judo_small_text_size</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:layout_marginLeft">@dimen/small_padding</item>
+    </style>
+
+    <style name="judo_issue_number">
+        <item name="android:hint">@string/issue_number_label</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:imeOptions">actionNext|flagNoExtractUi</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">3</item>
+    </style>
+
+    <dimen name="small_padding">4dp</dimen>
+    <dimen name="medium_padding">8dp</dimen>
+    <dimen name="large_padding">16dp</dimen>
 
 </resources>

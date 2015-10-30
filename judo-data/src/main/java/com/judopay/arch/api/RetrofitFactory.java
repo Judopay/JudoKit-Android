@@ -1,5 +1,7 @@
 package com.judopay.arch.api;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.judopay.JudoPay;
@@ -18,7 +20,17 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class RetrofitFactory {
 
-    public static Retrofit get() {
+    private static Retrofit retrofit;
+
+    public static Retrofit getInstance() {
+        if(retrofit == null) {
+            retrofit = createRetrofit();
+        }
+        return retrofit;
+    }
+
+    @NonNull
+    private static Retrofit createRetrofit() {
         AuthorizationEncoder authorizationEncoder = new AuthorizationEncoder();
         ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(authorizationEncoder);
 
@@ -28,7 +40,7 @@ public class RetrofitFactory {
         client.setReadTimeout(30, SECONDS);
         client.setWriteTimeout(30, SECONDS);
 
-        if(JudoPay.isSslPinningEnabled()) {
+        if (JudoPay.isSslPinningEnabled()) {
             client.setCertificatePinner(new CertificatePinner.Builder()
                     .add("partnerapi.judopay-sandbox.com", "sha1/SSAG1hz7m8LI/eapL/SSpd5o564=")
                     .add("partnerapi.judopay-sandbox.com", "sha1/o5OZxATDsgmwgcIfIWIneMJ0jkw=")

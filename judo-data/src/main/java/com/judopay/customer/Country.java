@@ -2,6 +2,9 @@ package com.judopay.customer;
 
 public class Country {
 
+    public static final String UNITED_KINGDOM = "UK";
+    public static final String UNITED_STATES = "USA";
+    public static final String CANADA = "Canada";
     public static final String OTHER = "Other";
 
     private final int code;

@@ -1,144 +1,310 @@
 package com.judopay.payment.form;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 
+import com.judopay.CompositeOnFocusChangeListener;
+import com.judopay.HidingViewTextWatcher;
+import com.judopay.HintFocusListener;
 import com.judopay.JudoPay;
 import com.judopay.R;
 import com.judopay.customer.Card;
 import com.judopay.customer.CardAddress;
 import com.judopay.customer.CardDate;
 import com.judopay.customer.CardType;
+import com.judopay.customer.Country;
+import com.judopay.payment.EmptyTextHintOnFocusChangeListener;
 import com.judopay.payment.PaymentFormListener;
+import com.judopay.payment.ScrollOnFocusChangeListener;
+import com.judopay.payment.SingleClickOnClickListener;
+import com.judopay.payment.form.address.CountryAndPostcodeValidation;
+import com.judopay.payment.form.address.CountrySpinner;
+import com.judopay.payment.form.address.PostcodeEditText;
+import com.judopay.payment.form.cardnumber.CardNumberFormattingTextWatcher;
+import com.judopay.payment.form.cardnumber.CardNumberValidation;
+import com.judopay.payment.form.cvv.CvvImageView;
+import com.judopay.payment.form.date.DateSeparatorTextWatcher;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static com.judopay.JudoPay.isAvsEnabled;
 
-public class PaymentFormFragment extends Fragment implements TextWatcher, AdapterView.OnItemSelectedListener {
+public class PaymentFormFragment extends Fragment {
 
     private static final String JUDO_PAYMENT = "Judo-Payment";
 
-    private Button paymentButton;
     private EditText cvvEditText;
-
-    private CardTypeView cardTypeView;
+    private View cvvHelperText;
+    private Button paymentButton;
+    private CardTypeImageView cardTypeImageView;
+    private CvvImageView cvvImageView;
     private CountrySpinner countrySpinner;
     private PostcodeEditText postcodeEditText;
-    private CardDateEditText startDateEditText;
-    private CardDateEditText expiryDateEditText;
-    private CardNumberEditText cardNumberEditText;
-    private IssueNumberEditText issueNumberEditText;
+    private EditText startDateEditText;
+    private EditText expiryDateEditText;
+    private EditText cardNumberEditText;
+    private View cardNumberHelperText;
+    private EditText issueNumberEditText;
+    private TextInputLayout cvvInputLayout;
+    private TextInputLayout cardNumberInputLayout;
+    private TextInputLayout expiryDateInputLayout;
+    private TextInputLayout startDateInputLayout;
+    private TextInputLayout postcodeInputLayout;
+    private View startDateAndIssueNumberContainer;
+    private View countryAndPostcodeContainer;
+    private HintFocusListener cvvHintChangeListener;
+    private ScrollView scrollView;
+    private View cardsAcceptedErrorText;
 
     private PaymentFormListener paymentFormListener;
+    private View issueNumberHelperText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_card_payment, container, false);
+        View view = inflater.inflate(R.layout.fragment_payment_form, container, false);
 
         paymentButton = (Button) view.findViewById(R.id.payment_button);
-        cvvEditText = (EditText) view.findViewById(R.id.cvv_edit_text);
-        postcodeEditText = (PostcodeEditText) view.findViewById(R.id.post_code_edit_text);
-        cardNumberEditText = (CardNumberEditText) view.findViewById(R.id.card_number_edit_text);
-        expiryDateEditText = (CardDateEditText) view.findViewById(R.id.expiry_date_edit_text);
-        countrySpinner = (CountrySpinner) view.findViewById(R.id.country_spinner);
-        cardTypeView = (CardTypeView) view.findViewById(R.id.card_type_view);
-        startDateEditText = (CardDateEditText) view.findViewById(R.id.start_date_edit_text);
-        issueNumberEditText = (IssueNumberEditText) view.findViewById(R.id.issue_number_edit_text);
 
-        initialiseView();
+        cvvEditText = (EditText) view.findViewById(R.id.cvv_edit_text);
+        cvvInputLayout = (TextInputLayout) view.findViewById(R.id.cvv_input_layout);
+        cvvHelperText = view.findViewById(R.id.cvv_helper_text);
+
+        postcodeEditText = (PostcodeEditText) view.findViewById(R.id.post_code_edit_text);
+        postcodeInputLayout = (TextInputLayout) view.findViewById(R.id.post_code_input_layout);
+
+        cardNumberEditText = (EditText) view.findViewById(R.id.card_number_edit_text);
+        cardNumberInputLayout = (TextInputLayout) view.findViewById(R.id.card_number_input_layout);
+        cardNumberHelperText = view.findViewById(R.id.card_number_helper_text);
+
+        expiryDateEditText = (EditText) view.findViewById(R.id.expiry_date_edit_text);
+        expiryDateInputLayout = (TextInputLayout) view.findViewById(R.id.expiry_date_input_layout);
+
+        startDateEditText = (EditText) view.findViewById(R.id.start_date_edit_text);
+        startDateInputLayout = (TextInputLayout) view.findViewById(R.id.start_date_input_layout);
+
+        countrySpinner = (CountrySpinner) view.findViewById(R.id.country_spinner);
+
+        cardTypeImageView = (CardTypeImageView) view.findViewById(R.id.card_type_view);
+        cvvImageView = (CvvImageView) view.findViewById(R.id.cvv_image_view);
+
+        issueNumberEditText = (EditText) view.findViewById(R.id.issue_number_edit_text);
+        issueNumberHelperText = view.findViewById(R.id.issue_number_helper_text);
+
+        startDateAndIssueNumberContainer = view.findViewById(R.id.start_date_issue_number_container);
+        countryAndPostcodeContainer = view.findViewById(R.id.country_postcode_container);
+        scrollView = (ScrollView) view.findViewById(R.id.scroll_view);
+
+        cardsAcceptedErrorText = view.findViewById(R.id.cards_accepted_error_text);
 
         return view;
     }
 
-    private void initialiseView() {
-        paymentButton.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        SimpleTextWatcher formValidator = new SimpleTextWatcher() {
             @Override
-            public void onClick(View v) {
-                if (formValid()) {
-                    submitForm();
-                }
+            protected void onTextChanged(CharSequence text) {
+                updateFormView();
+            }
+        };
+
+        cardNumberEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+                new EmptyTextHintOnFocusChangeListener(cardNumberHelperText),
+                new HintFocusListener(cardNumberEditText, R.string.card_number_hint)
+        ));
+
+        cardNumberEditText.addTextChangedListener(formValidator);
+        cardNumberEditText.addTextChangedListener(new CardNumberFormattingTextWatcher());
+        cardNumberEditText.addTextChangedListener(new HidingViewTextWatcher(cardNumberHelperText));
+
+        expiryDateEditText.setOnFocusChangeListener(new HintFocusListener(expiryDateEditText, R.string.date_hint));
+
+        expiryDateEditText.addTextChangedListener(formValidator);
+        expiryDateEditText.addTextChangedListener(new DateSeparatorTextWatcher(expiryDateEditText));
+
+        startDateEditText.setOnFocusChangeListener(new HintFocusListener(startDateEditText, R.string.date_hint));
+        startDateEditText.addTextChangedListener(formValidator);
+        startDateEditText.addTextChangedListener(new DateSeparatorTextWatcher(startDateEditText));
+
+        cvvHintChangeListener = new HintFocusListener(cvvEditText, R.string.cvv_hint);
+        cvvEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+                new EmptyTextHintOnFocusChangeListener(cvvHelperText),
+                cvvHintChangeListener
+        ));
+
+        cvvEditText.addTextChangedListener(formValidator);
+        cvvEditText.addTextChangedListener(new HidingViewTextWatcher(cvvHelperText));
+
+        issueNumberEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+                new EmptyTextHintOnFocusChangeListener(issueNumberHelperText),
+                new HintFocusListener(issueNumberEditText, R.string.issue_number_hint)
+        ));
+
+        issueNumberEditText.addTextChangedListener(formValidator);
+        issueNumberEditText.addTextChangedListener(new HidingViewTextWatcher(issueNumberHelperText));
+
+        postcodeEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+                        new HintFocusListener(postcodeEditText, R.string.empty),
+                        new ScrollOnFocusChangeListener(scrollView))
+        );
+
+        postcodeEditText.addTextChangedListener(formValidator);
+
+        countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                updateFormView();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
-        addTextChangeListeners(cvvEditText, postcodeEditText, cardNumberEditText,
-                expiryDateEditText, startDateEditText, issueNumberEditText);
-
-        countrySpinner.setOnItemSelectedListener(this);
-
-        cardNumberEditText.setCardListener(new CardNumberEditText.CardListener() {
+        paymentButton.setOnClickListener(new SingleClickOnClickListener() {
             @Override
-            public void onCardTypeChanged(int cardType) {
-                cardTypeView.setCardType(cardType);
-
-                if (CardType.MAESTRO == cardType) {
-                    showAdditionalFields();
-                } else {
-                    hideAdditionalFields();
-                }
+            public void doClick(View v) {
+                hideKeyboard();
+                submitForm();
             }
         });
+    }
 
-        if (isAvsEnabled()) {
-            initialiseCountrySpinner();
+    private void hideKeyboard() {
+        View view = this.getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
-    private void addTextChangeListeners(EditText... editTexts) {
-        for (EditText editText : editTexts) {
-            editText.addTextChangedListener(this);
+    private void updateFormView() {
+        PaymentForm.Builder builder = new PaymentForm.Builder()
+                .setCardNumber(getCardNumber())
+                .setCvv(getCvv())
+                .setExpiryDate(trim(expiryDateEditText))
+                .setCountry(getCountry())
+                .setPostcode(getPostcode())
+                .setIssueNumber(getIssueNumber())
+                .setStartDate(trim(startDateEditText))
+                .setAddressRequired(JudoPay.isAvsEnabled())
+                .setAmexSupported(JudoPay.isAmexEnabled())
+                .setMaestroSupported(JudoPay.isMaestroEnabled());
+
+        PaymentFormValidation formView = new PaymentFormValidation.Builder()
+                .build(builder.build());
+
+        cardTypeImageView.setCardType(formView.getCardType());
+
+        updateFormErrors(formView);
+        moveFieldFocus(formView);
+    }
+
+    private void updateFormErrors(PaymentFormValidation formView) {
+        showCardNumberErrors(formView.getCardNumberValidation());
+
+        showExpiryDateErrors(formView);
+
+        showStartDateAndIssueNumberErrors(formView.getStartDateAndIssueNumberState());
+
+        updateCvvErrors(formView);
+
+        updateCountryAndPostcode(formView.getCountryAndPostcodeValidation());
+
+        paymentButton.setVisibility(formView.isPaymentButtonEnabled() ? View.VISIBLE : View.GONE);
+    }
+
+    private void updateCvvErrors(PaymentFormValidation formView) {
+        cvvInputLayout.setHint(getString(formView.getCvvLabel()));
+        cvvHintChangeListener.setHintResourceId(formView.getCvvHint());
+        cvvEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(formView.getCvvLength())});
+        cvvImageView.setCardType(formView.getCardType());
+    }
+
+    private void showStartDateAndIssueNumberErrors(StartDateAndIssueNumberValidation startDateAndIssueNumberValidation) {
+        startDateInputLayout.setErrorEnabled(startDateAndIssueNumberValidation.isShowStartDateError());
+
+        if (startDateAndIssueNumberValidation.isShowStartDateError()) {
+            startDateInputLayout.setError(getString(startDateAndIssueNumberValidation.getStartDateError()));
+        } else {
+            startDateInputLayout.setError("");
+        }
+
+        startDateAndIssueNumberContainer.setVisibility(startDateAndIssueNumberValidation.isShowIssueNumberAndStartDate() ? View.VISIBLE : View.GONE);
+    }
+
+    private void updateCountryAndPostcode(CountryAndPostcodeValidation countryAndPostcodeValidation) {
+        countryAndPostcodeContainer.setVisibility(countryAndPostcodeValidation.isShowCountryAndPostcode() ? View.VISIBLE : View.GONE);
+
+        postcodeInputLayout.setErrorEnabled(countryAndPostcodeValidation.isShowPostcodeError());
+        postcodeInputLayout.setHint(getString(countryAndPostcodeValidation.getPostcodeLabel()));
+
+        if (countryAndPostcodeValidation.isShowPostcodeError()) {
+            postcodeInputLayout.setError(getString(countryAndPostcodeValidation.getPostcodeError()));
+        } else {
+            postcodeInputLayout.setError("");
+        }
+
+        cardsAcceptedErrorText.setVisibility(countryAndPostcodeValidation.isCountryValid() ? View.GONE : View.VISIBLE);
+        postcodeInputLayout.setVisibility(countryAndPostcodeValidation.isCountryValid() ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    private void showExpiryDateErrors(PaymentFormValidation formView) {
+        expiryDateInputLayout.setErrorEnabled(formView.isShowExpiryDateError());
+        if (formView.isShowExpiryDateError()) {
+            expiryDateInputLayout.setError(getString(formView.getExpiryDateError()));
+        } else {
+            expiryDateInputLayout.setError("");
         }
     }
 
-    private boolean formValid() {
-        return expiryDateEditText.isValid()
-                && cardNumberEditText.isValid()
-                && isCardTypeAllowed()
-                && isMandatoryCardTypeFieldsValid();
+    private void showCardNumberErrors(CardNumberValidation cardNumberValidation) {
+        cardNumberInputLayout.setErrorEnabled(cardNumberValidation.isShowError());
+
+        if (cardNumberValidation.isShowError()) {
+            cardNumberInputLayout.setError(getString(cardNumberValidation.getError()));
+        } else {
+            cardNumberInputLayout.setError("");
+        }
+
+        cardNumberEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(cardNumberValidation.getMaxLength())});
     }
 
-    private boolean isCardTypeAllowed() {
-        return (!cardNumberEditText.isMaestroEntered() || JudoPay.isMaestroEnabled())
-                && (!cardNumberEditText.isAmexEntered() || JudoPay.isAmexEnabled());
+    private void moveFieldFocus(PaymentFormValidation formView) {
+        if (cardNumberEditText.hasFocus() && formView.getCardNumberValidation().isEntryComplete() && !formView.getCardNumberValidation().isShowError()) {
+            if (startDateAndIssueNumberContainer.getVisibility() == View.VISIBLE) {
+                startDateEditText.requestFocus();
+            } else {
+                expiryDateEditText.requestFocus();
+            }
+        } else if (expiryDateEditText.hasFocus() && formView.isExpiryDateEntryComplete() && !formView.isShowExpiryDateError()) {
+            cvvEditText.requestFocus();
+        } else if (cvvEditText.hasFocus() && formView.isCvvValid()) {
+            if (countryAndPostcodeContainer.getVisibility() == View.VISIBLE) {
+                postcodeEditText.requestFocus();
+            }
+        } else if (startDateEditText.hasFocus()
+                && formView.getStartDateAndIssueNumberState().isStartDateEntryComplete()
+                && !formView.getStartDateAndIssueNumberState().isShowStartDateError()) {
+            issueNumberEditText.requestFocus();
+        }
     }
 
-    private boolean isMandatoryCardTypeFieldsValid() {
-        return isAvsRequiredFieldsValid() && isMaestroRequiredFieldsValid() && isCvvValid();
-    }
-
-    private boolean isCvvValid() {
-        return cardNumberEditText.isAmexEntered() && Card.isCidvValid(getCvv()) || Card.isCv2Valid(getCvv());
-    }
-
-    private boolean isAvsRequiredFieldsValid() {
-        return !isAvsEnabled() || isAvsEnabled() && postcodeEditText.isValid() && countrySpinner.isCountrySelected();
-    }
-
-    private boolean isMaestroRequiredFieldsValid() {
-        return !cardNumberEditText.isMaestroEntered() || issueNumberEditText.isValid() && startDateEditText.isValid();
-    }
-
-    private void hideAdditionalFields() {
-        issueNumberEditText.setVisibility(GONE);
-        startDateEditText.setVisibility(GONE);
-    }
-
-    private void showAdditionalFields() {
-        issueNumberEditText.setVisibility(VISIBLE);
-        startDateEditText.setVisibility(VISIBLE);
-    }
-
-    private void initialiseCountrySpinner() {
-        countrySpinner.setVisibility(VISIBLE);
+    private Country getCountry() {
+        return countrySpinner.getSelectedCountry();
     }
 
     private void submitForm() {
@@ -156,31 +322,13 @@ public class PaymentFormFragment extends Fragment implements TextWatcher, Adapte
 
         cardBuilder.setCardAddress(cardAddressBuilder.build());
 
-        if (cardNumberEditText.isMaestroEntered()) {
+        if (CardType.matchCardNumber(cardNumberEditText.getText().toString()) == CardType.MAESTRO) {
             cardBuilder.setIssueNumber(getIssueNumber())
                     .setStartDate(getStartDate());
         }
 
-        Card card = cardBuilder.build();
-        boolean errors = false;
-
-        if (!card.isLuhnValid()) {
-            errors = true;
-            cardNumberEditText.setError("Invalid card no.");
-        }
-
-        if (!card.isExpiryDateValid()) {
-            errors = true;
-            expiryDateEditText.setError("Invalid expiry date");
-        }
-
-        if (!card.isCvvValid()) {
-            errors = true;
-            cvvEditText.setError("Invalid CV2");
-        }
-
-        if (!errors && paymentFormListener != null) {
-            paymentFormListener.onSubmit(card);
+        if (paymentFormListener != null) {
+            paymentFormListener.onSubmit(cardBuilder.build());
         }
     }
 
@@ -209,7 +357,7 @@ public class PaymentFormFragment extends Fragment implements TextWatcher, Adapte
     }
 
     private String getCardNumber() {
-        return trim(cardNumberEditText);
+        return trim(cardNumberEditText).replaceAll(" ", "");
     }
 
     public static PaymentFormFragment newInstance(Parcelable payment, PaymentFormListener paymentListener) {
@@ -225,31 +373,6 @@ public class PaymentFormFragment extends Fragment implements TextWatcher, Adapte
 
     public void setPaymentFormListener(PaymentFormListener paymentFormListener) {
         this.paymentFormListener = paymentFormListener;
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        paymentButton.setEnabled(formValid());
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        paymentButton.setEnabled(formValid());
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
 }
