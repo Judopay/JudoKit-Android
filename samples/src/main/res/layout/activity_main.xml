@@ -13,6 +13,12 @@
         android:id="@+id/payment_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/sample_payment_label" />
+        android:text="@string/payment" />
+
+    <Button
+        android:id="@+id/pre_auth_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pre_auth" />
 
 </LinearLayout>
