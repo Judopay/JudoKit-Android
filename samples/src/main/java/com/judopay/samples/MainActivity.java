@@ -27,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.payment_button)
     Button paymentButton;
 
+    @Bind(R.id.pre_auth_button)
+    Button preAuthButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,9 +66,28 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
                 Payment payment = new Payment.Builder()
-                        .setJudoId(100407196)
+                        .setJudoId("100407196")
                         .setCurrency("GBP")
-                        .setAmount(9.99f)
+                        .setAmount("9.99")
+                        .setConsumer(new Consumer("yourConsumerRef"))
+                        .setPaymentRef("paymentRef")
+                        .build();
+
+                intent.putExtra(JudoPay.EXTRA_PAYMENT, payment);
+                intent.putExtra(Intent.EXTRA_TITLE, "Payment");
+
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
+
+        preAuthButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
+                Payment payment = new Payment.Builder()
+                        .setJudoId("100407196")
+                        .setCurrency("GBP")
+                        .setAmount("9.99")
                         .setConsumer(new Consumer("yourConsumerRef"))
                         .setPaymentRef("paymentRef")
                         .build();
