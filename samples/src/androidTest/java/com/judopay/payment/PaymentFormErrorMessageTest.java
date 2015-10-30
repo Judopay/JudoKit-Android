@@ -79,7 +79,7 @@ public class PaymentFormErrorMessageTest extends PaymentTest {
         pressPaymentScreenButton();
 
         //When I enter an AMEX card number
-        enterACardNumber("340000432128428");
+        enterACardNumber("3400");
 
         //Then I am given an error message
         UiElement errorMessage = find(By.text("We don't accept AmEx, please use other cards"));
@@ -101,7 +101,7 @@ public class PaymentFormErrorMessageTest extends PaymentTest {
         pressPaymentScreenButton();
 
         //When I enter a Maestro card number
-        enterACardNumber("6759000000005462");
+        enterACardNumber("6759");
 
         //Then I am given an error message
         UiElement errorMessage = find(By.text("We don't accept Maestro, please use other cards"));

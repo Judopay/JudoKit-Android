@@ -135,47 +135,4 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
         assertThat(id(R.id.post_code_edit_text).isFocused(), equalTo(true));
     }
 
-
-
-
-    /*AMEX Tests*/
-    public void testAMEXMovesToExpiryDateFieldWhenValidCardNumberEntered() {
-        //Given AMEX is enabled
-        pressSettingsButton();
-
-        enableAMEX(true);
-
-        pressSettingsBackButton();
-
-        //And I am on a payment screen
-        pressPaymentScreenButton();
-
-        //When I enter a valid card number
-        enterACardNumber("340000432128428");
-
-        //Then the expiry date field is in focus
-        assertThat(id(R.id.expiry_date_edit_text).isFocused(), equalTo(true));
-    }
-
-    public void testAMEXMovesToPostcodeFieldWhenValidCardDetailsEntered() {
-        //Given AMEX is enabled
-        pressSettingsButton();
-
-        enableAMEX(true);
-
-        //And AVS is enabled
-        enableAVS(true);
-
-        pressSettingsBackButton();
-
-        //And I am on a payment screen
-        pressPaymentScreenButton();
-
-        //When I enter valid card details
-        enterCardDetails("340000432128428", "1215", "3469");
-
-        //Then the Postcode field is in focus
-        assertThat(id(R.id.post_code_edit_text).isFocused(), equalTo(true));
-    }
-
 }

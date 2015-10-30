@@ -99,10 +99,10 @@ public class PaymentFormFieldFormattingTest extends PaymentTest {
         //When I enter a non-AMEX card number
         enterACardNumber("4976000000003436");
 
-        //Then the CVV field should display "CV2"
+        //Then the CVV field should display "CVV"
         UiElement cVVInput = id(R.id.cvv_input_layout);
 
-        assertThat(cVVInput.getText(), equalTo("CV2"));
+        assertThat(cVVInput.getText(), equalTo("CVV"));
     }
 
     public void testCVVTextFormattingWhenCardIsAMEX() {
