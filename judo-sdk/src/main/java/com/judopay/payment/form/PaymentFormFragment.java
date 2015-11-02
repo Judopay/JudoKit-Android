@@ -2,7 +2,6 @@ package com.judopay.payment.form;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.InputFilter;
@@ -16,16 +15,16 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 
 import com.judopay.CompositeOnFocusChangeListener;
+import com.judopay.EmptyTextHintOnFocusChangeListener;
 import com.judopay.HidingViewTextWatcher;
 import com.judopay.HintFocusListener;
 import com.judopay.JudoPay;
 import com.judopay.R;
 import com.judopay.customer.Card;
 import com.judopay.customer.CardAddress;
-import com.judopay.customer.CardDate;
+import com.judopay.customer.CardToken;
 import com.judopay.customer.CardType;
 import com.judopay.customer.Country;
-import com.judopay.EmptyTextHintOnFocusChangeListener;
 import com.judopay.payment.PaymentFormListener;
 import com.judopay.payment.ScrollOnFocusChangeListener;
 import com.judopay.payment.SingleClickOnClickListener;
@@ -41,7 +40,7 @@ import static com.judopay.JudoPay.isAvsEnabled;
 
 public class PaymentFormFragment extends Fragment {
 
-    private static final String JUDO_PAYMENT = "Judo-Payment";
+    public static final String KEY_CARD_TOKEN = "Judo-CardToken";
 
     private EditText cvvEditText;
     private View cvvHelperText;
@@ -68,6 +67,8 @@ public class PaymentFormFragment extends Fragment {
 
     private PaymentFormListener paymentFormListener;
     private View issueNumberHelperText;
+
+    private CardToken cardToken;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -106,6 +107,10 @@ public class PaymentFormFragment extends Fragment {
 
         cardsAcceptedErrorText = view.findViewById(R.id.cards_accepted_error_text);
 
+        if (getArguments().containsKey(KEY_CARD_TOKEN)) {
+            this.cardToken = getArguments().getParcelable(KEY_CARD_TOKEN);
+        }
+
         return view;
     }
 
@@ -113,31 +118,72 @@ public class PaymentFormFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        SimpleTextWatcher formValidator = new SimpleTextWatcher() {
+        SimpleTextWatcher validationWatcher = new SimpleTextWatcher() {
             @Override
             protected void onTextChanged(CharSequence text) {
                 updateFormView();
             }
         };
 
-        cardNumberEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
-                new EmptyTextHintOnFocusChangeListener(cardNumberHelperText),
-                new HintFocusListener(cardNumberEditText, R.string.card_number_hint)
+        if (cardToken != null) {
+            cardTypeImageView.setCardType(cardToken.getType());
+        }
+
+        initialiseCardNumber(validationWatcher);
+        initialiseExpiryDate(validationWatcher);
+        initialiseCvv(validationWatcher);
+
+        initialiseStartDate(validationWatcher);
+        initialiseIssueNumber(validationWatcher);
+
+        initialisePostcode(validationWatcher);
+        initialiseCountry();
+
+        initialisePayButton();
+    }
+
+    private void initialisePayButton() {
+        paymentButton.setOnClickListener(new SingleClickOnClickListener() {
+            @Override
+            public void doClick(View v) {
+                hideKeyboard();
+                submitForm();
+            }
+        });
+    }
+
+    private void initialiseCountry() {
+        countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                updateFormView();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+    }
+
+    private void initialisePostcode(SimpleTextWatcher formValidator) {
+        postcodeEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+                        new HintFocusListener(postcodeEditText, R.string.empty),
+                        new ScrollOnFocusChangeListener(scrollView))
+        );
+
+        postcodeEditText.addTextChangedListener(formValidator);
+    }
+
+    private void initialiseIssueNumber(SimpleTextWatcher formValidator) {
+        issueNumberEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+                new EmptyTextHintOnFocusChangeListener(issueNumberHelperText),
+                new HintFocusListener(issueNumberEditText, R.string.issue_number_hint)
         ));
 
-        cardNumberEditText.addTextChangedListener(formValidator);
-        cardNumberEditText.addTextChangedListener(new CardNumberFormattingTextWatcher());
-        cardNumberEditText.addTextChangedListener(new HidingViewTextWatcher(cardNumberHelperText));
+        issueNumberEditText.addTextChangedListener(formValidator);
+        issueNumberEditText.addTextChangedListener(new HidingViewTextWatcher(issueNumberHelperText));
+    }
 
-        expiryDateEditText.setOnFocusChangeListener(new HintFocusListener(expiryDateEditText, R.string.date_hint));
-
-        expiryDateEditText.addTextChangedListener(formValidator);
-        expiryDateEditText.addTextChangedListener(new DateSeparatorTextWatcher(expiryDateEditText));
-
-        startDateEditText.setOnFocusChangeListener(new HintFocusListener(startDateEditText, R.string.date_hint));
-        startDateEditText.addTextChangedListener(formValidator);
-        startDateEditText.addTextChangedListener(new DateSeparatorTextWatcher(startDateEditText));
-
+    private void initialiseCvv(SimpleTextWatcher formValidator) {
         cvvHintChangeListener = new HintFocusListener(cvvEditText, R.string.cvv_hint);
         cvvEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
                 new EmptyTextHintOnFocusChangeListener(cvvHelperText),
@@ -146,41 +192,40 @@ public class PaymentFormFragment extends Fragment {
 
         cvvEditText.addTextChangedListener(formValidator);
         cvvEditText.addTextChangedListener(new HidingViewTextWatcher(cvvHelperText));
+    }
 
-        issueNumberEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
-                new EmptyTextHintOnFocusChangeListener(issueNumberHelperText),
-                new HintFocusListener(issueNumberEditText, R.string.issue_number_hint)
-        ));
+    private void initialiseStartDate(SimpleTextWatcher formValidator) {
+        startDateEditText.setOnFocusChangeListener(new HintFocusListener(startDateEditText, R.string.date_hint));
+        startDateEditText.addTextChangedListener(formValidator);
+        startDateEditText.addTextChangedListener(new DateSeparatorTextWatcher(startDateEditText));
+    }
 
-        issueNumberEditText.addTextChangedListener(formValidator);
-        issueNumberEditText.addTextChangedListener(new HidingViewTextWatcher(issueNumberHelperText));
+    private void initialiseExpiryDate(SimpleTextWatcher formValidator) {
+        if (cardToken == null) {
+            expiryDateEditText.setOnFocusChangeListener(new HintFocusListener(expiryDateEditText, R.string.date_hint));
 
-        postcodeEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
-                        new HintFocusListener(postcodeEditText, R.string.empty),
-                        new ScrollOnFocusChangeListener(scrollView))
-        );
+            expiryDateEditText.addTextChangedListener(formValidator);
+            expiryDateEditText.addTextChangedListener(new DateSeparatorTextWatcher(expiryDateEditText));
+        } else {
+            expiryDateEditText.setEnabled(false);
+            expiryDateEditText.setText(getString(R.string.token_date));
+        }
+    }
 
-        postcodeEditText.addTextChangedListener(formValidator);
+    private void initialiseCardNumber(SimpleTextWatcher formValidator) {
+        if (cardToken == null) {
+            cardNumberEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+                    new EmptyTextHintOnFocusChangeListener(cardNumberHelperText),
+                    new HintFocusListener(cardNumberEditText, R.string.card_number_hint)
+            ));
 
-        countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                updateFormView();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        paymentButton.setOnClickListener(new SingleClickOnClickListener() {
-            @Override
-            public void doClick(View v) {
-                hideKeyboard();
-                submitForm();
-            }
-        });
+            cardNumberEditText.addTextChangedListener(formValidator);
+            cardNumberEditText.addTextChangedListener(new CardNumberFormattingTextWatcher());
+            cardNumberEditText.addTextChangedListener(new HidingViewTextWatcher(cardNumberHelperText));
+        } else {
+            cardNumberEditText.setEnabled(false);
+            cardNumberEditText.setText(getString(R.string.token_card_number, cardToken.getLastFour()));
+        }
     }
 
     private void hideKeyboard() {
@@ -195,14 +240,19 @@ public class PaymentFormFragment extends Fragment {
         PaymentForm.Builder builder = new PaymentForm.Builder()
                 .setCardNumber(getCardNumber())
                 .setCvv(getCvv())
-                .setExpiryDate(trim(expiryDateEditText))
                 .setCountry(getCountry())
                 .setPostcode(getPostcode())
                 .setIssueNumber(getIssueNumber())
+                .setExpiryDate(trim(expiryDateEditText))
                 .setStartDate(trim(startDateEditText))
                 .setAddressRequired(JudoPay.isAvsEnabled())
                 .setAmexSupported(JudoPay.isAmexEnabled())
-                .setMaestroSupported(JudoPay.isMaestroEnabled());
+                .setMaestroSupported(JudoPay.isMaestroEnabled())
+                .setTokenCard(cardToken != null);
+
+        if (cardToken != null) {
+            builder.setCardType(cardToken.getType());
+        }
 
         PaymentFormValidation formView = new PaymentFormValidation.Builder()
                 .build(builder.build());
@@ -310,7 +360,7 @@ public class PaymentFormFragment extends Fragment {
     private void submitForm() {
         Card.Builder cardBuilder = new Card.Builder()
                 .setCardNumber(getCardNumber())
-                .setExpiryDate(getExpiryDate())
+                .setExpiryDate(trim(expiryDateEditText))
                 .setCvv(getCvv());
 
         CardAddress.Builder cardAddressBuilder = new CardAddress.Builder()
@@ -324,16 +374,12 @@ public class PaymentFormFragment extends Fragment {
 
         if (CardType.matchCardNumber(cardNumberEditText.getText().toString()) == CardType.MAESTRO) {
             cardBuilder.setIssueNumber(getIssueNumber())
-                    .setStartDate(getStartDate());
+                    .setStartDate(trim(startDateEditText));
         }
 
         if (paymentFormListener != null) {
             paymentFormListener.onSubmit(cardBuilder.build());
         }
-    }
-
-    private CardDate getStartDate() {
-        return new CardDate(trim(startDateEditText));
     }
 
     private String getIssueNumber() {
@@ -352,19 +398,25 @@ public class PaymentFormFragment extends Fragment {
         return trim(cvvEditText);
     }
 
-    private CardDate getExpiryDate() {
-        return new CardDate(trim(expiryDateEditText));
-    }
-
     private String getCardNumber() {
         return trim(cardNumberEditText).replaceAll(" ", "");
     }
 
-    public static PaymentFormFragment newInstance(Parcelable payment, PaymentFormListener paymentListener) {
+    public static PaymentFormFragment newInstance(CardToken cardToken, PaymentFormListener paymentListener) {
+        PaymentFormFragment paymentFormFragment = new PaymentFormFragment();
+        paymentFormFragment.setPaymentFormListener(paymentListener);
+
+        Bundle arguments = new Bundle();
+        arguments.putParcelable(PaymentFormFragment.KEY_CARD_TOKEN, cardToken);
+        paymentFormFragment.setArguments(arguments);
+
+        return paymentFormFragment;
+    }
+
+    public static PaymentFormFragment newInstance(PaymentFormListener paymentListener) {
         PaymentFormFragment paymentFormFragment = new PaymentFormFragment();
 
         Bundle arguments = new Bundle();
-        arguments.putParcelable(JUDO_PAYMENT, payment);
         paymentFormFragment.setArguments(arguments);
         paymentFormFragment.setPaymentFormListener(paymentListener);
 
