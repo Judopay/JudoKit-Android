@@ -56,9 +56,9 @@ public class PaymentActivity extends AppCompatActivity implements PaymentListene
     }
 
     @Override
-    public void onPaymentSuccess(PaymentResponse paymentResponse) {
+    public void onPaymentSuccess(Receipt receipt) {
         Intent intent = new Intent();
-        intent.putExtra(JudoPay.JUDO_RECEIPT, paymentResponse);
+        intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
 
         setResult(JudoPay.RESULT_PAYMENT_SUCCESS, intent);
 
@@ -66,9 +66,9 @@ public class PaymentActivity extends AppCompatActivity implements PaymentListene
     }
 
     @Override
-    public void onPaymentDeclined(PaymentResponse paymentResponse) {
+    public void onPaymentDeclined(Receipt receipt) {
         Intent intent = new Intent();
-        intent.putExtra(JudoPay.JUDO_RECEIPT, paymentResponse);
+        intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
 
         setResult(JudoPay.RESULT_PAYMENT_DECLINED, intent);
 
