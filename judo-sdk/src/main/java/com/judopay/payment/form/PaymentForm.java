@@ -1,6 +1,5 @@
 package com.judopay.payment.form;
 
-import com.judopay.customer.CardType;
 import com.judopay.customer.Country;
 
 public class PaymentForm {
@@ -18,6 +17,7 @@ public class PaymentForm {
     private String issueNumber;
     private Country country;
     private String postcode;
+    private boolean tokenCard;
 
     public boolean isAddressRequired() {
         return addressRequired;
@@ -63,6 +63,10 @@ public class PaymentForm {
         return postcode;
     }
 
+    public boolean isTokenCard() {
+        return tokenCard;
+    }
+
     public static class Builder {
 
         private PaymentForm paymentForm;
@@ -88,8 +92,11 @@ public class PaymentForm {
 
         public Builder setCardNumber(String cardNumber) {
             paymentForm.cardNumber = cardNumber;
-            paymentForm.cardType = CardType.matchCardNumber(cardNumber);
+            return this;
+        }
 
+        public Builder setCardType(int cardType) {
+            paymentForm.cardType = cardType;
             return this;
         }
 
@@ -120,6 +127,11 @@ public class PaymentForm {
 
         public Builder setPostcode(String postcode) {
             paymentForm.postcode = postcode;
+            return this;
+        }
+
+        public Builder setTokenCard(boolean tokenCard) {
+            paymentForm.tokenCard = tokenCard;
             return this;
         }
 
