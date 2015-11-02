@@ -8,18 +8,21 @@ import rx.Observable;
 public interface PaymentApiService {
 
     @POST("transactions/payments")
-    Observable<PaymentResponse> payment(@Body Transaction transaction);
+    Observable<Receipt> payment(@Body Transaction transaction);
+
+    @POST("transactions/payments")
+    Observable<Receipt> tokenPayment(@Body TokenTransaction transaction);
 
     @PUT("transactions/{receiptId}")
-    Observable<PaymentResponse> threeDSecurePayment(String receiptId, @Body ThreeDSecureInfo threeDSecureInfo);
+    Observable<Receipt> threeDSecurePayment(String receiptId, @Body ThreeDSecureInfo threeDSecureInfo);
 
     @POST("transactions/collections")
-    Observable<PaymentResponse> collection(@Body Collection collection);
+    Observable<Receipt> collection(@Body Collection collection);
 
     @POST("transactions/refunds")
-    Observable<PaymentResponse> refund(@Body Refund refund);
+    Observable<Receipt> refund(@Body Refund refund);
 
     @POST("transactions/preauths")
-    Observable<PaymentResponse> preAuth(@Body Transaction transaction);
+    Observable<Receipt> preAuth(@Body Transaction transaction);
 
 }
