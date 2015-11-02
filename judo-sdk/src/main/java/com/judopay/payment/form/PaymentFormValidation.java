@@ -4,8 +4,8 @@ import android.support.annotation.StringRes;
 
 import com.judopay.R;
 import com.judopay.customer.CardType;
-import com.judopay.payment.form.cardnumber.CardNumberValidation;
 import com.judopay.payment.form.address.CountryAndPostcodeValidation;
+import com.judopay.payment.form.cardnumber.CardNumberValidation;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -113,6 +113,7 @@ public class PaymentFormValidation {
 
             CardNumberValidation cardNumberValidation = new CardNumberValidation(paymentForm.getCardNumber(),
                     paymentForm.getCardType(),
+                    paymentForm.isTokenCard(),
                     paymentForm.isMaestroSupported(),
                     paymentForm.isAmexSupported());
 
@@ -125,7 +126,7 @@ public class PaymentFormValidation {
                             && startDateAndIssueNumberValidation.isIssueNumberValid();
 
             boolean cvvValid = isCvvValid(paymentForm);
-            boolean expiryDateValid = isExpiryDateValid(paymentForm.getExpiryDate());
+            boolean expiryDateValid = paymentForm.isTokenCard() || isExpiryDateValid(paymentForm.getExpiryDate());
 
             CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(paymentForm,
                     cardNumberValidation.isValid(), cvvValid, expiryDateValid, maestroValid);
