@@ -13,11 +13,10 @@ import com.judopay.payment.form.PaymentFormFragment;
 
 import rx.Observer;
 
-import static com.judopay.JudoPay.EXTRA_PAYMENT;
-
-public abstract class BasePaymentFragment extends Fragment implements PaymentFormListener, Observer<PaymentResponse> {
+public abstract class BasePaymentFragment extends Fragment implements PaymentFormListener, Observer<Receipt> {
 
     private static final String TAG_PAYMENT_FORM = "PaymentFormFragment";
+    public static final String KEY_TOKEN_PAYMENT = "tokenPayment";
 
     protected View progressBar;
     protected PaymentListener paymentListener;
@@ -35,6 +34,10 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
                 .create(PaymentApiService.class);
     }
 
+    public void setPaymentListener(PaymentListener paymentListener) {
+        this.paymentListener = paymentListener;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_payment, container, false);
@@ -46,7 +49,7 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
 
         this.progressBar = view.findViewById(R.id.progress_container);
 
-        if(paymentInProgress) {
+        if (paymentInProgress) {
             showLoading();
         }
     }
@@ -60,7 +63,14 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
         PaymentFormFragment paymentFormFragment = (PaymentFormFragment) fm.findFragmentByTag(TAG_PAYMENT_FORM);
 
         if (paymentFormFragment == null) {
-            paymentFormFragment = PaymentFormFragment.newInstance(getArguments().getParcelable(EXTRA_PAYMENT), this);
+            TokenPayment tokenPayment = getArguments().getParcelable(KEY_TOKEN_PAYMENT);
+
+            if (tokenPayment != null) {
+                paymentFormFragment = PaymentFormFragment.newInstance(tokenPayment.getCardToken(), this);
+            } else {
+                paymentFormFragment = PaymentFormFragment.newInstance(this);
+            }
+
             paymentFormFragment.setTargetFragment(this, 0);
 
             fm.beginTransaction()
@@ -82,11 +92,11 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
     }
 
     @Override
-    public void onNext(PaymentResponse paymentResponse) {
-        if (paymentResponse.isSuccess()) {
-            paymentListener.onPaymentSuccess(paymentResponse);
+    public void onNext(Receipt receipt) {
+        if (receipt.isSuccess()) {
+            paymentListener.onPaymentSuccess(receipt);
         } else {
-            paymentListener.onPaymentDeclined(paymentResponse);
+            paymentListener.onPaymentDeclined(receipt);
         }
     }
 
