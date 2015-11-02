@@ -10,10 +10,13 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.judopay.Consumer;
-import com.judopay.payment.PaymentActivity;
 import com.judopay.JudoPay;
+import com.judopay.customer.CardToken;
 import com.judopay.payment.Payment;
-import com.judopay.payment.PaymentResponse;
+import com.judopay.payment.PaymentActivity;
+import com.judopay.payment.Receipt;
+import com.judopay.payment.TokenPayment;
+import com.judopay.payment.TokenPaymentActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.pre_auth_button)
     Button preAuthButton;
+
+    @Bind(R.id.token_payment_button)
+    Button tokenPaymentButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
                 Payment payment = new Payment.Builder()
-                        .setJudoId("100407196")
+                        .setJudoId("100016")
                         .setCurrency("GBP")
                         .setAmount("9.99")
                         .setConsumer(new Consumer("yourConsumerRef"))
@@ -85,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
                 Payment payment = new Payment.Builder()
-                        .setJudoId("100407196")
+                        .setJudoId("100016")
                         .setCurrency("GBP")
                         .setAmount("9.99")
                         .setConsumer(new Consumer("yourConsumerRef"))
@@ -94,6 +100,25 @@ public class MainActivity extends AppCompatActivity {
 
                 intent.putExtra(JudoPay.EXTRA_PAYMENT, payment);
                 intent.putExtra(Intent.EXTRA_TITLE, "Payment");
+
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
+
+        tokenPaymentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, TokenPaymentActivity.class);
+                TokenPayment tokenPayment = new TokenPayment.Builder()
+                        .setCardToken(new CardToken("1215", "3436", "PKMxI4788SERKz0w7opSubZGU0I5g8kb", 1))
+                        .setConsumer(new Consumer("zGEHXkSTZO08FljI", "consumer10102"))
+                        .setPaymentReference("payment1010102")
+                        .setJudoId("100016")
+                        .setAmount("4.99")
+                        .setCurrency("GBP")
+                        .build();
+
+                intent.putExtra(JudoPay.EXTRA_TOKEN_PAYMENT, tokenPayment);
 
                 startActivityForResult(intent, REQUEST_CODE);
             }
@@ -107,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         if (REQUEST_CODE == requestCode) {
             switch (resultCode) {
                 case JudoPay.RESULT_PAYMENT_SUCCESS:
-                    PaymentResponse response = data.getParcelableExtra(JUDO_RECEIPT);
+                    Receipt response = data.getParcelableExtra(JUDO_RECEIPT);
                     Toast.makeText(MainActivity.this, "Payment response success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
                     break;
 
