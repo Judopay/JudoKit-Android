@@ -2,8 +2,8 @@ package com.judopay.payment;
 
 public interface PaymentListener {
 
-    void onPaymentSuccess(PaymentResponse paymentResponse);
+    void onPaymentSuccess(Receipt receipt);
 
-    void onPaymentDeclined(PaymentResponse paymentResponse);
+    void onPaymentDeclined(Receipt receipt);
 
 }
