@@ -5,11 +5,11 @@ import android.os.Parcelable;
 
 import com.judopay.Consumer;
 import com.judopay.Response;
-import com.judopay.customer.CardSummary;
+import com.judopay.customer.CardToken;
 
 import java.util.Date;
 
-public class PaymentResponse extends Response implements Parcelable {
+public class Receipt extends Response implements Parcelable {
 
     private long judoID;
     private String receiptId;
@@ -25,11 +25,11 @@ public class PaymentResponse extends Response implements Parcelable {
     private float netAmount;
     private float amount;
     private String currency;
-    private CardSummary cardDetails;
+    private CardToken cardDetails;
     private Consumer consumer;
     private Risks risks;
 
-    public PaymentResponse() { }
+    public Receipt() { }
 
     public String getReceiptId() {
         return receiptId;
@@ -79,7 +79,7 @@ public class PaymentResponse extends Response implements Parcelable {
         return currency;
     }
 
-    public CardSummary getCardDetails() {
+    public CardToken getCardDetails() {
         return cardDetails;
     }
 
@@ -93,7 +93,7 @@ public class PaymentResponse extends Response implements Parcelable {
 
     @Override
     public String toString() {
-        return "PaymentResponse{" +
+        return "Receipt{" +
                 "judoID=" + judoID +
                 ", receiptId='" + receiptId + '\'' +
                 ", originalReceiptId='" + originalReceiptId + '\'' +
@@ -142,7 +142,7 @@ public class PaymentResponse extends Response implements Parcelable {
         dest.writeParcelable(this.risks, flags);
     }
 
-    private PaymentResponse(Parcel in) {
+    private Receipt(Parcel in) {
         this.judoID = in.readLong();
         this.receiptId = in.readString();
         this.originalReceiptId = in.readString();
@@ -159,19 +159,117 @@ public class PaymentResponse extends Response implements Parcelable {
         this.netAmount = in.readFloat();
         this.amount = in.readFloat();
         this.currency = in.readString();
-        this.cardDetails = in.readParcelable(CardSummary.class.getClassLoader());
+        this.cardDetails = in.readParcelable(CardToken.class.getClassLoader());
         this.consumer = in.readParcelable(Consumer.class.getClassLoader());
         this.risks = in.readParcelable(Risks.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<PaymentResponse> CREATOR = new Parcelable.Creator<PaymentResponse>() {
-        public PaymentResponse createFromParcel(Parcel source) {
-            return new PaymentResponse(source);
+    public static final Parcelable.Creator<Receipt> CREATOR = new Parcelable.Creator<Receipt>() {
+        public Receipt createFromParcel(Parcel source) {
+            return new Receipt(source);
         }
 
-        public PaymentResponse[] newArray(int size) {
-            return new PaymentResponse[size];
+        public Receipt[] newArray(int size) {
+            return new Receipt[size];
         }
     };
 
+    public static class Builder {
+
+        private Receipt receipt;
+
+        public Builder() {
+            this.receipt = new Receipt();
+        }
+
+        public Builder setJudoID(long judoID) {
+            this.receipt.judoID = judoID;
+            return this;
+        }
+
+        public Builder setReceiptId(String receiptId) {
+            this.receipt.receiptId = receiptId;
+            return this;
+        }
+
+        public Builder setOriginalReceiptId(String originalReceiptId) {
+            this.receipt.originalReceiptId = originalReceiptId;
+            return this;
+        }
+
+        public Builder setPartnerServiceFee(String partnerServiceFee) {
+            this.receipt.partnerServiceFee = partnerServiceFee;
+            return this;
+        }
+
+        public Builder setYourPaymentReference(String yourPaymentReference) {
+            this.receipt.yourPaymentReference = yourPaymentReference;
+            return this;
+        }
+
+        public Builder setType(String type) {
+            this.receipt.type = type;
+            return this;
+        }
+
+        public Builder setCreatedAt(Date createdAt) {
+            this.receipt.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder setMessage(String message) {
+            this.receipt.message = message;
+            return this;
+        }
+
+        public Builder setMerchantName(String merchantName) {
+            this.receipt.merchantName = merchantName;
+            return this;
+        }
+
+        public Builder setAppearsOnStatementAs(String appearsOnStatementAs) {
+            this.receipt.appearsOnStatementAs = appearsOnStatementAs;
+            return this;
+        }
+
+        public Builder setOriginalAmount(float originalAmount) {
+            this.receipt.originalAmount = originalAmount;
+            return this;
+        }
+
+        public Builder setNetAmount(float netAmount) {
+            this.receipt.netAmount = netAmount;
+            return this;
+        }
+
+        public Builder setAmount(float amount) {
+            this.receipt.amount = amount;
+            return this;
+        }
+
+        public Builder setCurrency(String currency) {
+            this.receipt.currency = currency;
+            return this;
+        }
+
+        public Builder setCardDetails(CardToken cardDetails) {
+            this.receipt.cardDetails = cardDetails;
+            return this;
+        }
+
+        public Builder setConsumer(Consumer consumer) {
+            this.receipt.consumer = consumer;
+            return this;
+        }
+
+        public Builder setRisks(Risks risks) {
+            this.receipt.risks = risks;
+            return this;
+        }
+        
+        public Receipt build() {
+            return receipt;
+        }
+    }
+    
 }
