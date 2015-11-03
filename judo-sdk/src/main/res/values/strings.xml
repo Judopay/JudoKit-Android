@@ -29,4 +29,6 @@
     <string name="long_card_number">Long card number</string>
     <string name="security_code">Security code</string>
     <string name="issue_number_front_of_card">Issue on front of card</string>
+    <string name="token_card_number">**** **** **** %1$s</string>
+    <string name="token_date">**/**</string>
 </resources>
