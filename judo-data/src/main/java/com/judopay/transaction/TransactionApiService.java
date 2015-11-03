@@ -1,6 +1,6 @@
 package com.judopay.transaction;
 
-import com.judopay.payment.PaymentResponse;
+import com.judopay.payment.Receipt;
 
 import retrofit.http.GET;
 import rx.Observable;
@@ -8,9 +8,9 @@ import rx.Observable;
 public interface TransactionApiService {
 
     @GET("transactions/")
-    Observable<PaymentResponse> receipts();
+    Observable<Receipt> receipts();
 
     @GET("consumers/{consumerToken}")
-    Observable<PaymentResponse> consumerReceipts(String consumerToken);
+    Observable<Receipt> consumerReceipts(String consumerToken);
 
 }
