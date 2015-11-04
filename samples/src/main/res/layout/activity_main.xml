@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -9,10 +10,40 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.judopay.samples.MainActivity">
 
-    <Button
-        android:id="@+id/payment_button"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/sample_payment_label" />
+        android:layout_marginBottom="@dimen/large_padding"
+        android:text="Judo Café"
+        android:textSize="32sp"
+        android:textStyle="italic" />
+
+    <Button
+        android:id="@+id/payment_1_pound_button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pay £1" />
+
+    <Button
+        android:id="@+id/payment_2_pound_button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pay £2" />
+
+    <Button
+        android:id="@+id/payment_5_pound_button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pay £5" />
+
+    <Button
+        android:id="@+id/payment_10_pound_button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pay £10" />
 
 </LinearLayout>
