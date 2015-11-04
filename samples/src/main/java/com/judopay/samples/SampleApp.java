@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.judopay.JudoPay;
 
-import static com.judopay.JudoPay.Environment.SANDBOX;
+import static com.judopay.JudoPay.Environment.LIVE;
 
 public class SampleApp extends Application {
 
@@ -12,7 +12,7 @@ public class SampleApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        JudoPay.setup(this, "823Eja2fEM6E9NAE","382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6", SANDBOX);
+        JudoPay.setup(this, "M2VcTpiyM05eZwOr","71479addc43b5424b95f22407ca96f8503709ddede67c596af393d5b93ff4bd7", LIVE);
     }
 
 }
