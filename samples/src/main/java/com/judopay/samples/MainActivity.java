@@ -14,6 +14,7 @@ import com.judopay.payment.PaymentActivity;
 import com.judopay.JudoPay;
 import com.judopay.payment.Payment;
 import com.judopay.payment.PaymentResponse;
+import com.judopay.payment.SingleClickOnClickListener;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -24,8 +25,17 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 101;
 
-    @Bind(R.id.payment_button)
-    Button paymentButton;
+    @Bind(R.id.payment_1_pound_button)
+    Button pay1PoundButton;
+
+    @Bind(R.id.payment_2_pound_button)
+    Button pay2PoundButton;
+
+    @Bind(R.id.payment_5_pound_button)
+    Button pay5PoundButton;
+
+    @Bind(R.id.payment_10_pound_button)
+    Button pay10PoundButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,24 +68,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initialiseView() {
-        paymentButton.setOnClickListener(new View.OnClickListener() {
+        pay1PoundButton.setOnClickListener(new SingleClickOnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
-                Payment payment = new Payment.Builder()
-                        .setJudoId(100407196)
-                        .setCurrency("GBP")
-                        .setAmount(9.99f)
-                        .setConsumer(new Consumer("yourConsumerRef"))
-                        .setPaymentRef("paymentRef")
-                        .build();
-
-                intent.putExtra(JudoPay.EXTRA_PAYMENT, payment);
-                intent.putExtra(Intent.EXTRA_TITLE, "Payment");
-
-                startActivityForResult(intent, REQUEST_CODE);
+            public void doClick(View v) {
+                performPayment(1.00f);
             }
         });
+
+        pay2PoundButton.setOnClickListener(new SingleClickOnClickListener() {
+            @Override
+            public void doClick(View v) {
+                performPayment(2.00f);
+            }
+        });
+
+        pay5PoundButton.setOnClickListener(new SingleClickOnClickListener() {
+            @Override
+            public void doClick(View v) {
+                performPayment(5.00f);
+            }
+        });
+
+        pay10PoundButton.setOnClickListener(new SingleClickOnClickListener() {
+            @Override
+            public void doClick(View v) {
+                performPayment(10.00f);
+            }
+        });
+    }
+
+    private void performPayment(float amount) {
+        Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
+        Payment payment = new Payment.Builder()
+                .setJudoId(100407196)
+                .setCurrency("GBP")
+                .setAmount(amount)
+                .setConsumer(new Consumer("yourConsumerRef"))
+                .setPaymentRef("paymentRef")
+                .build();
+
+        intent.putExtra(JudoPay.EXTRA_PAYMENT, payment);
+        intent.putExtra(Intent.EXTRA_TITLE, "Payment");
+
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
     @Override
