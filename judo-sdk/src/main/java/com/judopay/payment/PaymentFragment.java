@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.judopay.Client;
 import com.judopay.JudoPay;
 import com.judopay.R;
 import com.judopay.arch.api.RetrofitFactory;
@@ -15,6 +14,7 @@ import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.customer.Location;
 import com.judopay.payment.form.PaymentFormFragment;
+import com.judopay.sheild.JudoShield;
 
 import rx.Observer;
 
@@ -91,14 +91,15 @@ public class PaymentFragment extends Fragment implements PaymentFormListener {
     @Override
     public void onSubmit(Card card) {
         Payment payment = getArguments().getParcelable(EXTRA_PAYMENT);
+        JudoShield judoShield = new JudoShield();
 
         Transaction.Builder builder = new Transaction.Builder()
                 .setAmount(String.valueOf(payment.getAmount()))
                 .setCardAddress(new Address.Builder()
                         .setPostCode(card.getCardAddress().getPostcode())
                         .build())
-                .setClientDetails(new Client())
                 .setConsumerLocation(new Location())
+                .setClientDetails(judoShield.getShieldData(getContext()))
                 .setCardNumber(card.getCardNumber())
                 .setCurrency(payment.getCurrency())
                 .setCv2(card.getCv2())
