@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     private void performPayment(float amount) {
         Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
         Payment payment = new Payment.Builder()
-                .setJudoId(100407196)
+                .setJudoId(100347582)
                 .setCurrency("GBP")
                 .setAmount(amount)
                 .setConsumer(new Consumer("yourConsumerRef"))
