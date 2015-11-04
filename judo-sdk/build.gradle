@@ -38,6 +38,8 @@ android {
 
 dependencies {
     compile project(':judo-data')
+    compile project(':shield')
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile 'com.android.support:appcompat-v7:23.1.0'
