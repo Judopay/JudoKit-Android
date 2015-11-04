@@ -1,9 +1,3 @@
 <resources>
 
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/golden_poppy</item>
-        <item name="colorPrimaryDark">@color/galliano</item>
-        <item name="colorAccent">@color/golden_poppy</item>
-    </style>
-
 </resources>
