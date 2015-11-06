@@ -7,9 +7,6 @@ public class PaymentForm {
     private boolean addressRequired;
     private boolean amexSupported;
     private boolean maestroSupported;
-
-    private int cardType;
-
     private String cardNumber;
     private String expiryDate;
     private String cvv;
@@ -33,10 +30,6 @@ public class PaymentForm {
 
     public String getCardNumber() {
         return cardNumber;
-    }
-
-    public int getCardType() {
-        return cardType;
     }
 
     public String getExpiryDate() {
@@ -92,11 +85,6 @@ public class PaymentForm {
 
         public Builder setCardNumber(String cardNumber) {
             paymentForm.cardNumber = cardNumber;
-            return this;
-        }
-
-        public Builder setCardType(int cardType) {
-            paymentForm.cardType = cardType;
             return this;
         }
 
