@@ -1,9 +1,9 @@
 package com.judopay.payment.form;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -249,10 +249,6 @@ public class PaymentFormFragment extends Fragment {
                 .setAmexSupported(JudoPay.isAmexEnabled())
                 .setMaestroSupported(JudoPay.isMaestroEnabled())
                 .setTokenCard(cardToken != null);
-
-        if (cardToken != null) {
-            builder.setCardType(cardToken.getType());
-        }
 
         PaymentFormValidation formView = new PaymentFormValidation.Builder()
                 .build(builder.build());
