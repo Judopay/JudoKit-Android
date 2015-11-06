@@ -3,24 +3,17 @@ package com.judopay.payment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 
+import com.judopay.JudoActivity;
 import com.judopay.JudoPay;
 
 import static com.judopay.JudoPay.EXTRA_PAYMENT;
 
-public class PaymentActivity extends AppCompatActivity implements PaymentListener {
+public class PaymentActivity extends JudoActivity implements PaymentListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         validateParcelableExtra(EXTRA_PAYMENT);
 
@@ -31,21 +24,10 @@ public class PaymentActivity extends AppCompatActivity implements PaymentListene
             Payment payment = getIntent().getParcelableExtra(EXTRA_PAYMENT);
             PaymentFragment fragment = PaymentFragment.newInstance(payment, this);
 
-            getSupportFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .add(android.R.id.content, fragment)
                     .commit();
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 
