@@ -2,29 +2,22 @@ package com.judopay.payment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-
+import com.judopay.JudoActivity;
 import com.judopay.JudoPay;
 
 import static com.judopay.JudoPay.EXTRA_PAYMENT;
 
-public class PreAuthActivity extends AppCompatActivity implements PaymentListener {
+public class PreAuthActivity extends JudoActivity implements PaymentListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
         if (savedInstanceState == null) {
             Payment payment = getIntent().getParcelableExtra(EXTRA_PAYMENT);
             PreAuthFragment fragment = PreAuthFragment.newInstance(payment, this);
 
-            getSupportFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .add(android.R.id.content, fragment)
                     .commit();
