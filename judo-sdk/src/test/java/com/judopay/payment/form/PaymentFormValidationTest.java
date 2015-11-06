@@ -54,7 +54,6 @@ public class PaymentFormValidationTest {
                         .setIssueNumber("")
                         .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
-                        .setCardType(CardType.AMEX)
                         .build());
 
         assertThat(paymentFormValidation.getCvvHint(), is(R.string.amex_cvv_hint));
@@ -87,7 +86,6 @@ public class PaymentFormValidationTest {
                         .setIssueNumber("")
                         .setPostcode("")
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
-                        .setCardType(CardType.AMEX)
                         .build());
 
         assertThat(paymentFormValidation.getCvvLength(), is(4));
@@ -153,7 +151,6 @@ public class PaymentFormValidationTest {
                         .setPostcode("")
                         .setMaestroSupported(true)
                         .setCountry(new Country(0, Country.CANADA))
-                        .setCardType(CardType.MAESTRO)
                         .build());
 
         assertThat(paymentFormValidation.isPaymentButtonEnabled(), is(false));
