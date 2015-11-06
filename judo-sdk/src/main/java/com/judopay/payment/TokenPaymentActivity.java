@@ -2,21 +2,15 @@ package com.judopay.payment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 
+import com.judopay.JudoActivity;
 import com.judopay.JudoPay;
 
-public class TokenPaymentActivity extends AppCompatActivity implements PaymentListener {
+public class TokenPaymentActivity extends JudoActivity implements PaymentListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         if (savedInstanceState == null) {
             TokenPayment tokenPayment = getIntent().getParcelableExtra(JudoPay.EXTRA_TOKEN_PAYMENT);
@@ -28,7 +22,7 @@ public class TokenPaymentActivity extends AppCompatActivity implements PaymentLi
             arguments.putParcelable(TokenPaymentFragment.KEY_TOKEN_PAYMENT, tokenPayment);
             paymentFragment.setArguments(arguments);
 
-            getSupportFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .add(android.R.id.content, paymentFragment)
                     .commit();
