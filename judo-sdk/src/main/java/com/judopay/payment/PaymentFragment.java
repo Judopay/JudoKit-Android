@@ -28,11 +28,11 @@ public class PaymentFragment extends BasePaymentFragment {
 
     @Override
     public void onSubmit(Card card) {
-        Payment payment = getArguments().getParcelable(EXTRA_PAYMENT);
-
-        if (payment == null) {
+        if (!getArguments().containsKey(EXTRA_PAYMENT)) {
             throw new RuntimeException("Payment extra must be provided to PaymentFragment");
         }
+
+        Payment payment = getArguments().getParcelable(EXTRA_PAYMENT);
 
         Transaction.Builder builder = new Transaction.Builder()
                 .setAmount(payment.getAmount())
