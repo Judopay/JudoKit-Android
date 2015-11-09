@@ -81,10 +81,10 @@ public class SuccessfulPreAuthTest extends PaymentTest {
     }
 
     public void testPreAuthSuccessfulAVSEnabled3DSecureDisabledVisa() {
-        //Given AVS is disabled
+        //Given AVS is enabled
         pressSettingsButton();
 
-        enableAVS(false);
+        enableAVS(true);
 
         pressBackButton();
 
@@ -103,10 +103,10 @@ public class SuccessfulPreAuthTest extends PaymentTest {
     }
 
     public void testPreAuthSuccessfulAVSEnabled3DSecureDisabledMaestro() {
-        //Given AVS is disabled
+        //Given AVS is enabled
         pressSettingsButton();
 
-        enableAVS(false);
+        enableAVS(true);
 
         //And Maestro is enabled
         enableMaestro(true);
@@ -128,10 +128,10 @@ public class SuccessfulPreAuthTest extends PaymentTest {
     }
 
     public void testPreAuthSuccessfulAVSEnabled3DSecureDisabledAMEX() {
-        //Given AVS is disabled
+        //Given AVS is enabled
         pressSettingsButton();
 
-        enableAVS(false);
+        enableAVS(true);
 
         //And AMEX is enabled
         enableAMEX(true);

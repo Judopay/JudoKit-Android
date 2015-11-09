@@ -132,7 +132,7 @@ public class SuccessfulPaymentTest extends PaymentTest {
         //Given AVS is enabled
         pressSettingsButton();
 
-        enableAVS(false);
+        enableAVS(true);
 
         //And AMEX is enabled
         enableAMEX(true);
