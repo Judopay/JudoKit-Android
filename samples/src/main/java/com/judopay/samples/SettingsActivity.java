@@ -26,6 +26,9 @@ public class SettingsActivity extends AppCompatActivity {
     @Bind(R.id.amex_switch)
     SwitchCompat amexSwitch;
 
+    @Bind(R.id.three_d_secure_switch)
+    SwitchCompat threeDSecureSwitch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +61,7 @@ public class SettingsActivity extends AppCompatActivity {
         sslPinningSwitch.setChecked(JudoPay.isSslPinningEnabled());
         maestroSwitch.setChecked(JudoPay.isMaestroEnabled());
         amexSwitch.setChecked(JudoPay.isAmexEnabled());
+        threeDSecureSwitch.setChecked(JudoPay.isThreeDSecureEnabled());
 
         avsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -84,6 +88,13 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 JudoPay.setAmexEnabled(isChecked);
+            }
+        });
+
+        threeDSecureSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                JudoPay.setThreeDSecureEnabled(isChecked);
             }
         });
     }
