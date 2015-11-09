@@ -72,6 +72,14 @@ public class JudoPay {
         return api;
     }
 
+    public static boolean isThreeDSecureEnabled() {
+        return api.isThreeDSecureEnabled();
+    }
+
+    public static void setThreeDSecureEnabled(boolean enabled) {
+        api.setThreeDSecureEnabled(enabled);
+    }
+
     public class Environment {
         public static final int LIVE = 0;
         public static final int SANDBOX = 1;
