@@ -1,13 +1,14 @@
 package com.judopay.payment;
 
+
 import com.judopay.samples.R;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class SuccessfulPaymentTest extends PaymentTest {
+public class SuccessfulPreAuthTest extends PaymentTest {
 
-    public void testPaymentSuccessfulAVSDisabled3DSecureDisabledVisa() {
+    public void testPreAuthSuccessfulAVSDisabled3DSecureDisabledVisa() {
         //Given AVS is disabled
         pressSettingsButton();
 
@@ -15,8 +16,8 @@ public class SuccessfulPaymentTest extends PaymentTest {
 
         pressBackButton();
 
-        //And I am on a payment screen
-        pressPaymentScreenButton();
+        //And I am on a pre-auth pre-auth screen
+        pressPreAuthScreenButton();
 
         //When I enter my card details
         enterCardDetails("4976000000003436", "1215", "452");
@@ -29,8 +30,7 @@ public class SuccessfulPaymentTest extends PaymentTest {
         assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
     }
 
-
-    public void testPaymentSuccessfulAVSDisabled3DSecureDisabledMaestro() {
+    public void testPreAuthSuccessfulAVSDisabled3DSecureDisabledMaestro() {
         //Given AVS is disabled
         pressSettingsButton();
 
@@ -41,12 +41,12 @@ public class SuccessfulPaymentTest extends PaymentTest {
 
         pressBackButton();
 
-        //And I am on a payment screen
-        pressPaymentScreenButton();
+        //And I am on a pre-auth screen
+        pressPreAuthScreenButton();
 
         //When I enter my card details
         enterCardDetails("6759000000005462", "0107", "01", "1215", "789");
-        
+
         //And I press the pay button
         pressPayButton();
 
@@ -55,8 +55,7 @@ public class SuccessfulPaymentTest extends PaymentTest {
         assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
     }
 
-
-    public void testPaymentSuccessfulAVSDisabled3DSecureDisabledAMEX() {
+    public void testPreAuthSuccessfulAVSDisabled3DSecureDisabledAMEX() {
         //Given AVS is disabled
         pressSettingsButton();
 
@@ -67,8 +66,8 @@ public class SuccessfulPaymentTest extends PaymentTest {
 
         pressBackButton();
 
-        //And I am on a payment screen
-        pressPaymentScreenButton();
+        //And I am on a pre-auth screen
+        pressPreAuthScreenButton();
 
         //When I enter my card details
         enterCardDetails("340000432128428", "1215", "3469");
@@ -81,16 +80,16 @@ public class SuccessfulPaymentTest extends PaymentTest {
         assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
     }
 
-    public void testPaymentSuccessfulAVSEnabled3DSecureDisabledVisa() {
-        //Given AVS is enabled
+    public void testPreAuthSuccessfulAVSEnabled3DSecureDisabledVisa() {
+        //Given AVS is disabled
         pressSettingsButton();
 
-        enableAVS(true);
+        enableAVS(false);
 
         pressBackButton();
 
-        //And I am on a payment screen
-        pressPaymentScreenButton();
+        //And I am on a pre-auth pre-auth screen
+        pressPreAuthScreenButton();
 
         //When I enter my card details
         enterCardDetails("4976000000003436", "1215", "452", "TR148PA");
@@ -103,19 +102,19 @@ public class SuccessfulPaymentTest extends PaymentTest {
         assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
     }
 
-    public void testPaymentSuccessfulAVSEnabled3DSecureDisabledMaestro() {
-        //Given AVS is enabled
+    public void testPreAuthSuccessfulAVSEnabled3DSecureDisabledMaestro() {
+        //Given AVS is disabled
         pressSettingsButton();
 
-        enableAVS(true);
+        enableAVS(false);
 
         //And Maestro is enabled
         enableMaestro(true);
 
         pressBackButton();
 
-        //And I am on a payment screen
-        pressPaymentScreenButton();
+        //And I am on a pre-auth screen
+        pressPreAuthScreenButton();
 
         //When I enter my card details
         enterCardDetails("6759000000005462", "0107", "01", "1215", "789", "RG48NL");
@@ -128,8 +127,8 @@ public class SuccessfulPaymentTest extends PaymentTest {
         assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
     }
 
-    public void testPaymentSuccessfulAVSEnabled3DSecureDisabledAMEX() {
-        //Given AVS is enabled
+    public void testPreAuthSuccessfulAVSEnabled3DSecureDisabledAMEX() {
+        //Given AVS is disabled
         pressSettingsButton();
 
         enableAVS(false);
@@ -139,8 +138,8 @@ public class SuccessfulPaymentTest extends PaymentTest {
 
         pressBackButton();
 
-        //And I am on a payment screen
-        pressPaymentScreenButton();
+        //And I am on a pre-auth screen
+        pressPreAuthScreenButton();
 
         //When I enter my card details
         enterCardDetails("340000432128428", "1215", "3469", "NW67BB");
@@ -152,6 +151,4 @@ public class SuccessfulPaymentTest extends PaymentTest {
         //TODO update this to assert "Payment Response Success:" message
         assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
     }
-
 }
-

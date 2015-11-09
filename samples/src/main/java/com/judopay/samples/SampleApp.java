@@ -12,7 +12,7 @@ public class SampleApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        JudoPay.setup(this, "823Eja2fEM6E9NAE","382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6", SANDBOX);
+        JudoPay.setup(this, "7hljj3yIMwmj8uAy","a8e09ea2299896e6ef4279cb19c1e37bbf04b94650f29ef95721319264ffa00a", SANDBOX);
     }
 
 }

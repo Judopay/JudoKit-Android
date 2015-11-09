@@ -16,7 +16,7 @@ public class PaymentFormFieldFormattingTest extends PaymentTest {
 
         enableAMEX(true);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -27,7 +27,7 @@ public class PaymentFormFieldFormattingTest extends PaymentTest {
         //Then the result should format as 0000 000000 00000
         UiElement cardNumberField = id(R.id.card_number_edit_text);
 
-        assertThat(cardNumberField.getText(), equalTo("340 0004321 28428"));
+        assertThat(cardNumberField.getText(), equalTo("3400 004321 28428"));
     }
 
 
@@ -55,7 +55,7 @@ public class PaymentFormFieldFormattingTest extends PaymentTest {
 
         enableAMEX(true);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -111,7 +111,7 @@ public class PaymentFormFieldFormattingTest extends PaymentTest {
 
         enableAMEX(true);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
