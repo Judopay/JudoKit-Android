@@ -7,7 +7,7 @@
 
 Secure in-app payments native SDK for Android.
 
-The judoPay library lets you integrate card payments into your Xamarin project. It is built to be mobile first with ease of integration in mind. Judo's SDK enables a faster, simpler and more secure payment experience within your app. Build trust and user loyalty in your app with our secure and intuitive UX.
+The judoPay library lets you integrate card payments into your Android app. It's built to be mobile first with ease of integration in mind. Judo's SDK enables a faster, simpler and more secure payment experience within your app. Build trust and user loyalty in your app with our secure and intuitive UX.
 
 |Feature|Support|
 |---|---|
