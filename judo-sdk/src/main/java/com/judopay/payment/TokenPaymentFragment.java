@@ -1,11 +1,13 @@
 package com.judopay.payment;
 
-import com.google.gson.Gson;
 import com.judopay.Client;
 import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.customer.CardToken;
 import com.judopay.customer.Location;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class TokenPaymentFragment extends BasePaymentFragment {
 
@@ -13,9 +15,12 @@ public class TokenPaymentFragment extends BasePaymentFragment {
     public void onSubmit(Card card) {
         TokenPayment tokenPayment = getArguments().getParcelable(KEY_TOKEN_PAYMENT);
 
-        TokenTransaction.Builder builder = new TokenTransaction.Builder();
+        if (tokenPayment == null) {
+            throw new RuntimeException("TokenPayment argument must be provided to TokenPaymentFragment");
+        }
 
-        builder.setAmount(tokenPayment.getAmount())
+        TokenTransaction.Builder builder = new TokenTransaction.Builder()
+                .setAmount(tokenPayment.getAmount())
                 .setCardAddress(new Address.Builder()
                         .setPostCode(card.getCardAddress().getPostcode())
                         .build())
@@ -40,9 +45,9 @@ public class TokenPaymentFragment extends BasePaymentFragment {
 
     private void performTokenPayment(TokenTransaction transaction) {
         onLoadStarted();
-
-        new Gson().toJson(transaction);
         paymentApiService.tokenPayment(transaction)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);
     }
 
