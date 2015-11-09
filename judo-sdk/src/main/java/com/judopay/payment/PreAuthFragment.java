@@ -10,17 +10,17 @@ import com.judopay.customer.Location;
 
 import static com.judopay.JudoPay.EXTRA_PAYMENT;
 
-public class PaymentFragment extends BasePaymentFragment {
+public class PreAuthFragment extends BasePaymentFragment {
 
-    public static PaymentFragment newInstance(Payment payment, PaymentListener listener) {
-        PaymentFragment paymentFragment = new PaymentFragment();
-        paymentFragment.paymentListener = listener;
+    public static PreAuthFragment newInstance(Payment payment, PaymentListener listener) {
+        PreAuthFragment preAuthFragment = new PreAuthFragment();
+        preAuthFragment.paymentListener = listener;
 
         Bundle arguments = new Bundle();
         arguments.putParcelable(JudoPay.EXTRA_PAYMENT, payment);
-        paymentFragment.setArguments(arguments);
+        preAuthFragment.setArguments(arguments);
 
-        return paymentFragment;
+        return preAuthFragment;
     }
 
     @Override
@@ -47,12 +47,12 @@ public class PaymentFragment extends BasePaymentFragment {
                     .setStartDate(card.getStartDate());
         }
 
-        performPayment(builder.build());
+        performPreAuth(builder.build());
     }
 
-    private void performPayment(Transaction transaction) {
+    private void performPreAuth(Transaction transaction) {
         onLoadStarted();
-        paymentApiService.payment(transaction)
+        paymentApiService.preAuth(transaction)
                 .subscribe(this);
     }
 

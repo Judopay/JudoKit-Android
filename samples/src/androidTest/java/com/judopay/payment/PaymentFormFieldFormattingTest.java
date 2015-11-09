@@ -16,7 +16,7 @@ public class PaymentFormFieldFormattingTest extends PaymentTest {
 
         enableAMEX(true);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -55,7 +55,7 @@ public class PaymentFormFieldFormattingTest extends PaymentTest {
 
         enableAMEX(true);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -111,7 +111,7 @@ public class PaymentFormFieldFormattingTest extends PaymentTest {
 
         enableAMEX(true);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();

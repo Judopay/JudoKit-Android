@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class CardSummary implements Parcelable {
+public class CardToken implements Parcelable {
 
     private String endDate;
 
@@ -16,9 +16,16 @@ public class CardSummary implements Parcelable {
     private String token;
 
     @SerializedName("cardType")
-    private long type;
+    private int type;
 
-    public CardSummary() { }
+    public CardToken() { }
+
+    public CardToken(String endDate, String lastFour, String token, int type) {
+        this.endDate = endDate;
+        this.lastFour = lastFour;
+        this.token = token;
+        this.type = type;
+    }
 
     public String getLastFour() {
         return lastFour;
@@ -32,20 +39,19 @@ public class CardSummary implements Parcelable {
         return token;
     }
 
-    public long getType() {
+    public int getType() {
         return type;
     }
 
     @Override
     public String toString() {
-        return "CardSummary{" +
+        return "CardToken{" +
                 "endDate='" + endDate + '\'' +
                 ", lastFour='" + lastFour + '\'' +
                 ", token='" + token + '\'' +
                 ", type=" + type +
                 '}';
     }
-
 
     @Override
     public int describeContents() {
@@ -57,23 +63,23 @@ public class CardSummary implements Parcelable {
         dest.writeString(this.endDate);
         dest.writeString(this.lastFour);
         dest.writeString(this.token);
-        dest.writeLong(this.type);
+        dest.writeInt(this.type);
     }
 
-    private CardSummary(Parcel in) {
+    private CardToken(Parcel in) {
         this.endDate = in.readString();
         this.lastFour = in.readString();
         this.token = in.readString();
-        this.type = in.readLong();
+        this.type = in.readInt();
     }
 
-    public static final Parcelable.Creator<CardSummary> CREATOR = new Parcelable.Creator<CardSummary>() {
-        public CardSummary createFromParcel(Parcel source) {
-            return new CardSummary(source);
+    public static final Parcelable.Creator<CardToken> CREATOR = new Parcelable.Creator<CardToken>() {
+        public CardToken createFromParcel(Parcel source) {
+            return new CardToken(source);
         }
 
-        public CardSummary[] newArray(int size) {
-            return new CardSummary[size];
+        public CardToken[] newArray(int size) {
+            return new CardToken[size];
         }
     };
 

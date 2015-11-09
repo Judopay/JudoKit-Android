@@ -1,11 +1,12 @@
 package com.judopay.payment.form;
 
 import android.support.annotation.StringRes;
+import android.util.Log;
 
 import com.judopay.R;
 import com.judopay.customer.CardType;
-import com.judopay.payment.form.cardnumber.CardNumberValidation;
 import com.judopay.payment.form.address.CountryAndPostcodeValidation;
+import com.judopay.payment.form.cardnumber.CardNumberValidation;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -111,35 +112,43 @@ public class PaymentFormValidation {
         public PaymentFormValidation build(PaymentForm paymentForm) {
             Builder builder = new Builder();
 
+            int cardType = CardType.matchCardNumber(paymentForm.getCardNumber());
+            boolean maestroCardType = cardType == CardType.MAESTRO;
+
             CardNumberValidation cardNumberValidation = new CardNumberValidation(paymentForm.getCardNumber(),
-                    paymentForm.getCardType(),
+                    cardType,
+                    paymentForm.isTokenCard(),
                     paymentForm.isMaestroSupported(),
                     paymentForm.isAmexSupported());
 
             StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(paymentForm,
                     cardNumberValidation.isValid());
 
-            boolean maestroCardType = paymentForm.getCardType() == CardType.MAESTRO;
             boolean maestroValid = !maestroCardType ||
                     (startDateAndIssueNumberValidation.isStartDateEntryComplete() && !startDateAndIssueNumberValidation.isShowStartDateError())
                             && startDateAndIssueNumberValidation.isIssueNumberValid();
 
             boolean cvvValid = isCvvValid(paymentForm);
-            boolean expiryDateValid = isExpiryDateValid(paymentForm.getExpiryDate());
+
+            Log.d(this.getClass().getSimpleName(), String.format("Expiry validation start: %d", System.currentTimeMillis()));
+
+            boolean expiryDateValid = paymentForm.isTokenCard() || isExpiryDateValid(paymentForm.getExpiryDate());
+
+            Log.d(this.getClass().getSimpleName(), String.format("Expiry validation end: %d", System.currentTimeMillis()));
 
             CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(paymentForm,
                     cardNumberValidation.isValid(), cvvValid, expiryDateValid, maestroValid);
 
             builder.setCardNumberValidation(cardNumberValidation)
-                    .setCvvHint(getCvvHint(paymentForm.getCardType()))
+                    .setCvvHint(getCvvHint(cardType))
+                    .setCardType(cardType)
                     .setCountryAndPostcodeValidation(countryAndPostcodeValidation)
-                    .setCardType(paymentForm.getCardType())
                     .setStartDateAndIssueNumberValidation(startDateAndIssueNumberValidation);
 
             setExpiryDate(builder, expiryDateValid, paymentForm);
 
             setCvv(paymentForm, builder, cvvValid);
-            builder.setCvvLength(paymentForm.getCardType() == CardType.AMEX ? 4 : 3);
+            builder.setCvvLength(cardType == CardType.AMEX ? 4 : 3);
 
             builder.setPaymentButtonEnabled(cardNumberValidation.isValid() && cvvValid && expiryDateValid && maestroValid
                     && (!paymentForm.isAddressRequired() || countryAndPostcodeValidation.isPostcodeEntryComplete() && countryAndPostcodeValidation.isCountryValid()));

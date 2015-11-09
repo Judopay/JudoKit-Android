@@ -48,7 +48,7 @@ public class PaymentFormErrorMessageTest extends PaymentTest {
         //And Maestro is enabled
         enableMaestro(true);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on the payment screen
         pressPaymentScreenButton();
@@ -73,7 +73,7 @@ public class PaymentFormErrorMessageTest extends PaymentTest {
 
         enableAMEX(false);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on the payment screen
         pressPaymentScreenButton();
@@ -95,7 +95,7 @@ public class PaymentFormErrorMessageTest extends PaymentTest {
 
         enableMaestro(false);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on the payment screen
         pressPaymentScreenButton();
@@ -116,7 +116,7 @@ public class PaymentFormErrorMessageTest extends PaymentTest {
 
         enableAVS(true);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on the payment screen
         pressPaymentScreenButton();

@@ -7,8 +7,8 @@ public class PaymentTest {
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenNoCurrency() {
         new Payment.Builder()
-                .setAmount(9.99f)
-                .setJudoId(1234567L)
+                .setAmount("9.99")
+                .setJudoId("1234567")
                 .setPaymentRef("paymentRef")
                 .build();
     }
@@ -17,7 +17,7 @@ public class PaymentTest {
     public void shouldThrowExceptionWhenNoAmount() {
         new Payment.Builder()
                 .setCurrency("GBP")
-                .setJudoId(1234567L)
+                .setJudoId("1234567")
                 .setPaymentRef("paymentRef")
                 .build();
     }
@@ -26,8 +26,8 @@ public class PaymentTest {
     public void shouldThrowExceptionWhenNoConsumer() {
         new Payment.Builder()
                 .setCurrency("GBP")
-                .setJudoId(1234567L)
-                .setAmount(9.99f)
+                .setJudoId("1234567")
+                .setAmount("9.99")
                 .setPaymentRef("paymentRef")
                 .build();
     }
@@ -36,8 +36,8 @@ public class PaymentTest {
     public void shouldThrowExceptionWhenNoPaymentRef() {
         new Payment.Builder()
                 .setCurrency("GBP")
-                .setJudoId(1234567L)
-                .setAmount(9.99f)
+                .setJudoId("1234567")
+                .setAmount("9.99")
                 .build();
     }
 
@@ -45,7 +45,7 @@ public class PaymentTest {
     public void shouldThrowExceptionWhenNoJudoId() {
         new Payment.Builder()
                 .setCurrency("GBP")
-                .setAmount(9.99f)
+                .setAmount("9.99")
                 .setPaymentRef("paymentRef")
                 .build();
     }

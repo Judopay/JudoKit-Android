@@ -33,6 +33,18 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         paymentButton.click();
     }
 
+    protected void pressPreAuthScreenButton() {
+        UiElement preAuthButton = id(R.id.pre_auth_button);
+
+        preAuthButton.click();
+    }
+
+    protected void pressTokenPaymentScreenButton() {
+        UiElement tokenPaymentButton = id(R.id.token_payment_button);
+
+        tokenPaymentButton.click();
+    }
+
 
 
 
@@ -54,7 +66,7 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         }
     }
 
-    protected void pressSettingsBackButton() {
+    protected void pressBackButton() {
         UiElement backButton = find(By.className("android.widget.ImageButton"));
 
         backButton.click();
@@ -101,6 +113,13 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         enterCVV(cvv);
     }
 
+    protected void enterCardDetails(String cardNo, String expiryDate, String cvv, String avs) {
+        enterACardNumber(cardNo);
+        enterAnExpiryDate(expiryDate);
+        enterCVV(cvv);
+        enterAVS(avs);
+    }
+
     protected void enterCardDetails(String cardNo, String startDate, String issueNo, String expiryDate, String cvv) {
         enterACardNumber(cardNo);
         enterAStartDate(startDate);
@@ -108,6 +127,17 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         enterAnExpiryDate(expiryDate);
         enterCVV(cvv);
     }
+
+    protected void enterCardDetails(String cardNo, String startDate, String issueNo, String expiryDate, String cvv, String avs) {
+        enterACardNumber(cardNo);
+        enterAStartDate(startDate);
+        enterAnIssueNumber(issueNo);
+        enterAnExpiryDate(expiryDate);
+        enterCVV(cvv);
+        enterAVS(avs);
+    }
+
+
 
     protected void enterACardNumber(String cardNo) {
         UiElement cardNumber = id(R.id.card_number_edit_text);
@@ -139,6 +169,13 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         cvElement.setText(cvv);
     }
 
+    private void enterAVS(String avs) {
+        UiElement avsElement = id(R.id.post_code_edit_text);
+
+        avsElement.setText(avs);
+    }
+
+
     protected void pressCVVField() {
         UiElement cVVElement = id(R.id.cvv_edit_text);
 
@@ -152,7 +189,7 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
     }
 
     /*
-        Billing country dropdown options.
+        Billing country dropdown options:
      */
     protected void pressBillingCountry() {
         UiElement billingElement = find(By.resourceId("android:id/text2"));

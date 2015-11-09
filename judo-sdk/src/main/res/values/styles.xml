@@ -112,7 +112,7 @@
         <item name="android:privateImeOptions">nm</item>
     </style>
 
-    <style name="judo_payment_button">
+    <style name="judo_payment_button" parent="Widget.AppCompat.Button.Colored">
         <item name="android:text">@string/pay</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

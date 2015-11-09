@@ -56,6 +56,14 @@ public class Transaction {
         return cardNumber;
     }
 
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public String getIssueNumber() {
+        return issueNumber;
+    }
+
     public String getCv2() {
         return cv2;
     }
@@ -138,7 +146,7 @@ public class Transaction {
         }
 
         public Transaction build() {
-            if(transaction.currency == null || transaction.currency.length() == 0) {
+            if (transaction.currency == null || transaction.currency.length() == 0) {
                 throw new IllegalArgumentException("Currency must be set for Transaction");
             }
 
