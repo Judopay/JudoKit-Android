@@ -15,10 +15,10 @@ The judoPay library lets you integrate card payments into your Android app. It's
 |Out of the box UI|Yes|
 |UI Components|Yes|
 |Android Pay|No|
-|3DSecure|No (coming in new SDK)|
-|Fraud signals|No (Coming in new SDK)|
+|3DSecure|Coming in new SDK|
+|Fraud signals|Coming in new SDK|
 |Card scanning|No|
-|One line install (Maven)|No (Coming in new SDK)|
+|One line install (Maven)|Coming in new SDK|
 |Example apps|Yes|
 |Documentation|On website|
 |File size|178 KB (80% smaller)|
