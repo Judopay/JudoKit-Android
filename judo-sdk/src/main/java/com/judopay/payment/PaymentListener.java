@@ -6,4 +6,6 @@ public interface PaymentListener {
 
     void onPaymentDeclined(Receipt receipt);
 
+    void onError();
+
 }
