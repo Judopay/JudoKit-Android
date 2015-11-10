@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
@@ -21,7 +22,11 @@ public class ThreeDSecureDialogFragment extends DialogFragment implements ThreeD
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_three_d_secure, container, false);
+        View view = inflater.inflate(R.layout.dialog_three_d_secure, container, false);
+
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
+        return view;
     }
 
     @Override
