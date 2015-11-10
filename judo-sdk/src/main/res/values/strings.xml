@@ -34,4 +34,5 @@
     <string name="redirecting">Redirecting...</string>
     <string name="completing_payment">Completing payment</string>
     <string name="authenticating">Authenticating</string>
+    <string name="verifying_payment">Verifying payment</string>
 </resources>
