@@ -50,4 +50,10 @@ public class PreAuthActivity extends JudoActivity implements PaymentListener {
         finish();
     }
 
+    @Override
+    public void onError() {
+        setResult(JudoPay.RESULT_ERROR);
+        finish();
+    }
+
 }

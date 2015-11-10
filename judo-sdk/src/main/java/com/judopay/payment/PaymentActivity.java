@@ -61,6 +61,12 @@ public class PaymentActivity extends JudoActivity implements PaymentListener {
         finish();
     }
 
+    @Override
+    public void onError() {
+        setResult(JudoPay.RESULT_ERROR);
+        finish();
+    }
+
     private void validateParcelableExtra(String extraName) {
         Parcelable extra = getIntent().getParcelableExtra(extraName);
         if (extra == null) {
