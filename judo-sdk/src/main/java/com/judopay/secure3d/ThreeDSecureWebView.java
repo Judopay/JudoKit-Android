@@ -5,7 +5,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.google.gson.Gson;
@@ -29,6 +28,8 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
     private String postbackUrl;
     private ThreeDSecureListener threeDSecureListener;
     private String receiptId;
+
+    private ThreeDSecureWebViewClient webViewClient;
 
     public ThreeDSecureWebView(Context context) {
         super(context);
@@ -76,7 +77,8 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
         this.postbackUrl = termUrl;
         this.receiptId = receiptId;
 
-        setWebViewClient(new ThreeDSecureWebViewClient(acsUrl, postbackUrl, JS_NAMESPACE, threeDSecureListener));
+        this.webViewClient = new ThreeDSecureWebViewClient(acsUrl, postbackUrl, JS_NAMESPACE, threeDSecureListener);
+        setWebViewClient(webViewClient);
 
         postUrl(acsUrl, bos.toByteArray());
     }
@@ -92,6 +94,10 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
         ThreeDSecureInfo threeDSecureResult = gson.fromJson(json, ThreeDSecureInfo.class);
 
         threeDSecureListener.onAuthorizationCompleted(threeDSecureResult, receiptId);
+    }
+
+    public void setResultPageListener(ThreeDSecureResultPageListener resultPageListener) {
+        this.webViewClient.setResultPageListener(resultPageListener);
     }
 
 }
