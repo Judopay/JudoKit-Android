@@ -8,10 +8,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <com.judopay.ThemedLinearLayout
+    <LinearLayout
         android:id="@+id/loading_overlay_3dsecure"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/judo_white_90"
         android:layout_gravity="center"
         android:clickable="true"
         android:gravity="center"
@@ -25,7 +26,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/large_padding"
             android:gravity="center"
-            android:text="@string/redirecting"
+            android:text="@string/verifying_payment"
             android:textSize="16sp" />
 
         <ProgressBar
@@ -35,6 +36,6 @@
             android:layout_gravity="center"
             android:indeterminate="true" />
 
-    </com.judopay.ThemedLinearLayout>
+    </LinearLayout>
 
 </FrameLayout>
