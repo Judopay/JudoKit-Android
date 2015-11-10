@@ -76,7 +76,7 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
         this.postbackUrl = termUrl;
         this.receiptId = receiptId;
 
-        setWebViewClient(new ThreeDSecureWebViewClient(postbackUrl, JS_NAMESPACE, threeDSecureListener));
+        setWebViewClient(new ThreeDSecureWebViewClient(acsUrl, postbackUrl, JS_NAMESPACE, threeDSecureListener));
 
         postUrl(acsUrl, bos.toByteArray());
     }
