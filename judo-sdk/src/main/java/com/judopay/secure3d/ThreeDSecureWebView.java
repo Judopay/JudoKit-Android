@@ -3,13 +3,11 @@ package com.judopay.secure3d;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.google.gson.Gson;
-import com.judopay.BuildConfig;
 import com.judopay.payment.ThreeDSecureInfo;
 
 import org.apache.http.NameValuePair;
@@ -22,11 +20,14 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.KITKAT;
+import static android.os.Build.VERSION_CODES.LOLLIPOP;
+
 public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScriptInterface.JsonListener {
 
     private static final String JS_NAMESPACE = "JudoPay";
 
-    private String postbackUrl;
     private ThreeDSecureListener threeDSecureListener;
     private String receiptId;
 
@@ -47,7 +48,7 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
         initialise();
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(LOLLIPOP)
     public ThreeDSecureWebView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initialise();
@@ -58,20 +59,26 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
         initialise();
     }
 
-    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
+    @SuppressLint("AddJavascriptInterface")
     private void initialise() {
-        getSettings().setJavaScriptEnabled(true);
-        getSettings().setBuiltInZoomControls(true);
+        configureSettings();
 
-        if (Build.VERSION.SDK_INT >= 21) {
+        if (SDK_INT >= LOLLIPOP) {
             getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
 
-        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (SDK_INT >= KITKAT) {
             setWebContentsDebuggingEnabled(true);
         }
 
         addJavascriptInterface(new JsonParsingJavaScriptInterface(this), JS_NAMESPACE);
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private void configureSettings() {
+        WebSettings settings = getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setBuiltInZoomControls(true);
     }
 
     public void authorize(final String acsUrl, final String md, final String paReq, final String termUrl, String receiptId) throws IOException {
@@ -84,10 +91,9 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         new UrlEncodedFormEntity(params, HTTP.UTF_8).writeTo(bos);
 
-        this.postbackUrl = termUrl;
         this.receiptId = receiptId;
 
-        this.webViewClient = new ThreeDSecureWebViewClient(acsUrl, postbackUrl, JS_NAMESPACE, threeDSecureListener);
+        this.webViewClient = new ThreeDSecureWebViewClient(acsUrl, termUrl, JS_NAMESPACE, threeDSecureListener);
         setWebViewClient(webViewClient);
 
         postUrl(acsUrl, bos.toByteArray());
