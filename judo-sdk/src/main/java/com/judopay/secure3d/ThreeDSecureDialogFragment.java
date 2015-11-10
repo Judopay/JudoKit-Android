@@ -14,9 +14,10 @@ import com.judopay.R;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-public class ThreeDSecureDialogFragment extends DialogFragment {
+public class ThreeDSecureDialogFragment extends DialogFragment implements ThreeDSecureResultPageListener {
 
     private WebView webView;
+    private View loadingView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -28,21 +29,26 @@ public class ThreeDSecureDialogFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         ViewGroup webViewContainer = (ViewGroup) view.findViewById(R.id.web_view_container);
+        loadingView = view.findViewById(R.id.loading_overlay_3dsecure);
+
         webViewContainer.addView(webView);
     }
 
     @Override
     public void onResume() {
+        resizeDialog();
+        super.onResume();
+    }
+
+    private void resizeDialog() {
         LayoutParams params = getDialog().getWindow().getAttributes();
         params.width = LayoutParams.MATCH_PARENT;
         params.height = LayoutParams.MATCH_PARENT;
 
         getDialog().getWindow().setAttributes((WindowManager.LayoutParams) params);
-
-        super.onResume();
     }
 
-    public void setWebView(WebView webView) {
+    public void setWebView(ThreeDSecureWebView webView) {
         ViewGroup parent = (ViewGroup) webView.getParent();
 
         if (parent != null) {
@@ -51,8 +57,16 @@ public class ThreeDSecureDialogFragment extends DialogFragment {
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
         webView.setLayoutParams(params);
+        webView.setVisibility(View.VISIBLE);
+
+        webView.setResultPageListener(this);
 
         this.webView = webView;
+    }
+
+    @Override
+    public void onPageStarted() {
+        loadingView.setVisibility(View.VISIBLE);
     }
 
 }
