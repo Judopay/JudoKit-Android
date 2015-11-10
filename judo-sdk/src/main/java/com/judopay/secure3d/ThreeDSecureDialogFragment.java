@@ -5,64 +5,54 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
+import android.webkit.WebView;
+import android.widget.FrameLayout;
 
 import com.judopay.R;
 
-import java.io.IOException;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class ThreeDSecureDialogFragment extends DialogFragment {
 
-    public static final String KEY_TERM_URL = "Judo-TermUrl";
-    public static final String KEY_ACS_URL = "Judo-AcsUrl";
-    public static final String KEY_MD = "Judo-MD";
-    public static final String KEY_PA_REQ = "Judo-PaReq";
-    public static final String KEY_RECEIPT_ID = "Judo-ReceiptId";
-
-    private ThreeDSecureListener threeDSecureListener;
-    private ThreeDSecureWebView webView;
+    private WebView webView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_three_d_secure, container, false);
+        return inflater.inflate(R.layout.dialog_three_d_secure, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        webView = (ThreeDSecureWebView) view.findViewById(R.id.three_d_secure_web_view);
-
-        if (savedInstanceState != null) {
-            webView.restoreState(savedInstanceState);
-        } else {
-            webView.setThreeDSecureListener(threeDSecureListener);
-            load3dSecureAcsUrl();
-        }
-    }
-
-    private void load3dSecureAcsUrl() {
-        try {
-            Bundle arguments = getArguments();
-            String acsUrl = arguments.getString(KEY_ACS_URL);
-            String md = arguments.getString(KEY_MD);
-            String paReq = arguments.getString(KEY_PA_REQ);
-            String termUrl = arguments.getString(KEY_TERM_URL);
-            String receiptId = arguments.getString(KEY_RECEIPT_ID);
-
-            webView.authorize(acsUrl, md, paReq, termUrl, receiptId);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        ViewGroup webViewContainer = (ViewGroup) view.findViewById(R.id.web_view_container);
+        webViewContainer.addView(webView);
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        webView.saveState(outState);
+    public void onResume() {
+        LayoutParams params = getDialog().getWindow().getAttributes();
+        params.width = LayoutParams.MATCH_PARENT;
+        params.height = LayoutParams.MATCH_PARENT;
+
+        getDialog().getWindow().setAttributes((WindowManager.LayoutParams) params);
+
+        super.onResume();
     }
 
-    public void setThreeDSecureListener(ThreeDSecureListener threeDSecureListener) {
-        this.threeDSecureListener = threeDSecureListener;
+    public void setWebView(WebView webView) {
+        ViewGroup parent = (ViewGroup) webView.getParent();
+
+        if (parent != null) {
+            parent.removeView(webView);
+        }
+
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
+        webView.setLayoutParams(params);
+
+        this.webView = webView;
     }
 
 }
