@@ -19,13 +19,21 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 public abstract class DroidDriverTest<T extends Activity> extends BaseDroidDriverTest<T> {
 
+
+
     protected DroidDriverTest(Class<T> activityClass) {
         super(activityClass);
     }
 
+
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
+        //default timeout set to 20 seconds as payment response time
+        //and latency can cause tests to fail
+        driver.getPoller().setTimeoutMillis(20000L);
 
         ActivityUtils.setRunningActivitySupplier(new ActivityUtils.Supplier<Activity>() {
             @Override
@@ -33,6 +41,8 @@ public abstract class DroidDriverTest<T extends Activity> extends BaseDroidDrive
                 return Iterables.getFirst(ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED), null);
             }
         });
+
+
 
         // For each test method invocation, the Activity will not actually be created
         // until the first time this method is called.
