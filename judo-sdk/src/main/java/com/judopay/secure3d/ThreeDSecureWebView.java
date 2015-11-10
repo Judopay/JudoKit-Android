@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.google.gson.Gson;
@@ -52,10 +53,19 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
         initialise();
     }
 
+    public ThreeDSecureWebView(Context context, AttributeSet attrs, int defStyleAttr, boolean privateBrowsing) {
+        super(context, attrs, defStyleAttr, privateBrowsing);
+        initialise();
+    }
+
     @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     private void initialise() {
         getSettings().setJavaScriptEnabled(true);
         getSettings().setBuiltInZoomControls(true);
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
 
         if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setWebContentsDebuggingEnabled(true);
