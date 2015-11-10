@@ -31,8 +31,6 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
 
     public static final String REDIRECT_URL = "http://pay.android-3ds-parser.testweb01.hq.judo/Android/Parse3DS";
 
-    private ViewGroup container;
-
     protected View progressBar;
     protected TextView progressText;
     protected PaymentListener paymentListener;
@@ -72,7 +70,7 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
 
         this.progressBar = view.findViewById(R.id.progress_container);
         this.progressText = (TextView) view.findViewById(R.id.progress_text);
-        this.container = (ViewGroup) view.findViewById(R.id.container);
+        this.threeDSecureWebView = (ThreeDSecureWebView) view.findViewById(R.id.three_d_secure_web_view);
 
         if (paymentInProgress) {
             showLoading();
@@ -117,8 +115,8 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
     @Override
     public void onNext(Receipt receipt) {
         if (receipt.isSuccess()) {
-            onLoadFinished();
             paymentListener.onPaymentSuccess(receipt);
+            onLoadFinished();
         } else {
             try {
                 handle3dSecureOrDeclinedPayment(receipt);
@@ -130,11 +128,9 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
 
     private void handle3dSecureOrDeclinedPayment(Receipt receipt) throws IOException {
         if (JudoPay.isThreeDSecureEnabled() && receipt.is3dSecureRequired()) {
-            threeDSecureWebView = new ThreeDSecureWebView(getActivity());
+            progressText.setText(R.string.redirecting);
+
             threeDSecureWebView.setThreeDSecureListener(this);
-
-            container.addView(threeDSecureWebView);
-
             threeDSecureWebView.authorize(receipt.getAcsUrl(), receipt.getMd(), receipt.getPaReq(), REDIRECT_URL, receipt.getReceiptId());
         } else {
             paymentListener.onPaymentDeclined(receipt);
