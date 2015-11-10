@@ -26,8 +26,6 @@ public class ThreeDSecureWebViewClient extends WebViewClient {
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
 
-        view.zoomOut();
-
         if (url.equals(acsUrl)) {
             threeDSecureListener.onAuthorizationWebPageLoaded();
         } else if (url.equals(postbackUrl)) {
