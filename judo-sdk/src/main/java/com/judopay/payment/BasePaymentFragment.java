@@ -3,10 +3,10 @@ package com.judopay.payment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.judopay.JudoPay;
 import com.judopay.R;
@@ -14,6 +14,9 @@ import com.judopay.arch.api.RetrofitFactory;
 import com.judopay.payment.form.PaymentFormFragment;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
+import com.judopay.secure3d.ThreeDSecureWebView;
+
+import java.io.IOException;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -26,15 +29,19 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
 
     protected static final String TAG_3DS_DIALOG = "3dSecureDialog";
 
+    public static final String REDIRECT_URL = "http://pay.android-3ds-parser.testweb01.hq.judo/Android/Parse3DS";
+
+    private ViewGroup container;
+
     protected View progressBar;
+    protected TextView progressText;
     protected PaymentListener paymentListener;
     protected PaymentApiService paymentApiService;
 
     private boolean paymentInProgress;
 
-    public static final String REDIRECT_URL = "http://pay.android-3ds-parser.testweb01.hq.judo/Android/Parse3DS";
-
-    protected ThreeDSecureDialogFragment dialog;
+    protected ThreeDSecureDialogFragment threeDSecureDialog;
+    private ThreeDSecureWebView threeDSecureWebView;
 
     public boolean isPaymentInProgress() {
         return paymentInProgress;
@@ -64,6 +71,8 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
         super.onViewCreated(view, savedInstanceState);
 
         this.progressBar = view.findViewById(R.id.progress_container);
+        this.progressText = (TextView) view.findViewById(R.id.progress_text);
+        this.container = (ViewGroup) view.findViewById(R.id.container);
 
         if (paymentInProgress) {
             showLoading();
@@ -101,7 +110,9 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
     public void onCompleted() { }
 
     @Override
-    public void onError(Throwable e) { }
+    public void onError(Throwable e) {
+        paymentListener.onError();
+    }
 
     @Override
     public void onNext(Receipt receipt) {
@@ -109,34 +120,38 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
             onLoadFinished();
             paymentListener.onPaymentSuccess(receipt);
         } else {
-            if (JudoPay.isThreeDSecureEnabled() && receipt.is3dSecureRequired()) {
-                FragmentManager fm = getFragmentManager();
-                dialog = new ThreeDSecureDialogFragment();
-                dialog.setThreeDSecureListener(BasePaymentFragment.this);
-
-                Bundle args = new Bundle();
-                args.putString(ThreeDSecureDialogFragment.KEY_ACS_URL, receipt.getAcsUrl());
-                args.putString(ThreeDSecureDialogFragment.KEY_MD, receipt.getMd());
-                args.putString(ThreeDSecureDialogFragment.KEY_PA_REQ, receipt.getPaReq());
-                args.putString(ThreeDSecureDialogFragment.KEY_TERM_URL, REDIRECT_URL);
-                args.putString(ThreeDSecureDialogFragment.KEY_RECEIPT_ID, receipt.getReceiptId());
-                dialog.setArguments(args);
-
-                dialog.setCancelable(false);
-                dialog.show(fm, TAG_3DS_DIALOG);
-
-            } else {
-                paymentListener.onPaymentDeclined(receipt);
+            try {
+                handle3dSecureOrDeclinedPayment(receipt);
+            } catch (IOException e) {
+                paymentListener.onError();
             }
         }
     }
 
+    private void handle3dSecureOrDeclinedPayment(Receipt receipt) throws IOException {
+        if (JudoPay.isThreeDSecureEnabled() && receipt.is3dSecureRequired()) {
+            threeDSecureWebView = new ThreeDSecureWebView(getActivity());
+            threeDSecureWebView.setThreeDSecureListener(this);
+
+            container.addView(threeDSecureWebView);
+
+            threeDSecureWebView.authorize(receipt.getAcsUrl(), receipt.getMd(), receipt.getPaReq(), REDIRECT_URL, receipt.getReceiptId());
+        } else {
+            paymentListener.onPaymentDeclined(receipt);
+        }
+    }
+
+    private void show3dSecureDialog() {
+        FragmentManager fm = getFragmentManager();
+        threeDSecureDialog = new ThreeDSecureDialogFragment();
+        threeDSecureDialog.setCancelable(false);
+
+        threeDSecureDialog.setWebView(threeDSecureWebView);
+        threeDSecureDialog.show(fm, TAG_3DS_DIALOG);
+    }
+
     @Override
     public void onAuthorizationCompleted(ThreeDSecureInfo threeDSecureInfo, String receiptId) {
-        if (dialog != null && dialog.isVisible()) {
-            dialog.dismiss();
-        }
-
         paymentApiService.threeDSecurePayment(receiptId, threeDSecureInfo)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -146,7 +161,16 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
     @Override
     public void onAuthorizationWebPageLoadingError(int errorCode, String description, String failingUrl) { }
 
+    @Override
+    public void onAuthorizationWebPageLoaded() {
+        show3dSecureDialog();
+    }
+
     protected void onLoadFinished() {
+        if (threeDSecureDialog != null && threeDSecureDialog.isVisible()) {
+            threeDSecureDialog.dismiss();
+        }
+
         progressBar.setVisibility(View.GONE);
         paymentInProgress = false;
     }
