@@ -1,5 +1,6 @@
 package com.judopay.samples;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import com.judopay.payment.PaymentActivity;
 import com.judopay.payment.Receipt;
 import com.judopay.payment.TokenPayment;
 import com.judopay.payment.TokenPaymentActivity;
+import com.judopay.register.RegisterCardActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -25,7 +27,14 @@ import static com.judopay.JudoPay.JUDO_RECEIPT;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE = 101;
+    // Constants to define different actions (for use with startActivityForResult(...))
+    private static final int PAYMENT_REQUEST = 101;
+    private static final int TOKEN_PAYMENT_REQUEST = 102;
+    private static final int PRE_AUTH_REQUEST = 201;
+    private static final int TOKEN_PRE_AUTH_REQUEST = 202;
+    private static final int REGISTER_CARD_REQUEST = 301;
+    private static final int REGISTER_CARD_TOKEN_PAYMENT_REQUEST = 501;
+    private static final int REGISTER_CARD_TOKEN_PRE_AUTH_REQUEST = 601;
 
     @Bind(R.id.payment_button)
     Button paymentButton;
@@ -35,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.token_payment_button)
     Button tokenPaymentButton;
+
+    @Bind(R.id.register_card_button)
+    Button registerCardButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
                 Payment payment = new Payment.Builder()
-                        .setJudoId("100016")
+                        .setJudoId("100407196")
                         .setCurrency("GBP")
                         .setAmount("9.99")
                         .setConsumer(new Consumer("yourConsumerRef"))
@@ -82,33 +94,26 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(JudoPay.EXTRA_PAYMENT, payment);
                 intent.putExtra(Intent.EXTRA_TITLE, "Payment");
 
-                startActivityForResult(intent, REQUEST_CODE);
+                startActivityForResult(intent, PAYMENT_REQUEST);
             }
         });
 
         preAuthButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
-                Payment payment = new Payment.Builder()
-                        .setJudoId("100016")
+                startPreAuthPaymentActivity(MainActivity.this, new Payment.Builder()
+                        .setJudoId("100407196")
                         .setCurrency("GBP")
                         .setAmount("9.99")
                         .setConsumer(new Consumer("yourConsumerRef"))
                         .setPaymentRef("paymentRef")
-                        .build();
-
-                intent.putExtra(JudoPay.EXTRA_PAYMENT, payment);
-                intent.putExtra(Intent.EXTRA_TITLE, "Payment");
-
-                startActivityForResult(intent, REQUEST_CODE);
+                        .build(), PRE_AUTH_REQUEST);
             }
         });
 
         tokenPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, TokenPaymentActivity.class);
                 TokenPayment tokenPayment = new TokenPayment.Builder()
                         .setCardToken(new CardToken("1215", "3436", "PKMxI4788SERKz0w7opSubZGU0I5g8kb", 1))
                         .setConsumer(new Consumer("zGEHXkSTZO08FljI", "consumer10102"))
@@ -118,36 +123,132 @@ public class MainActivity extends AppCompatActivity {
                         .setCurrency("GBP")
                         .build();
 
-                intent.putExtra(JudoPay.EXTRA_TOKEN_PAYMENT, tokenPayment);
-
-                startActivityForResult(intent, REQUEST_CODE);
+                startTokenPaymentActivity(MainActivity.this, tokenPayment, TOKEN_PAYMENT_REQUEST);
             }
         });
+
+        registerCardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Consumer consumer = new Consumer("consumerToken", "consumer10102");
+                startRegisterCardActivity(MainActivity.this, consumer, REGISTER_CARD_REQUEST);
+            }
+        });
+    }
+
+    private void startPreAuthPaymentActivity(Context context, Payment payment, int requestCode) {
+        if (context != null) {
+            Intent intent = new Intent(context, PaymentActivity.class);
+            intent.putExtra(JudoPay.EXTRA_PAYMENT, payment);
+
+            startActivityForResult(intent, requestCode);
+        }
+    }
+
+    private void startRegisterCardActivity(Context context, Consumer consumer, int requestCode) {
+        if (context != null) {
+            Intent intent = new Intent(context, RegisterCardActivity.class);
+            intent.putExtra(RegisterCardActivity.EXTRA_CONSUMER, consumer);
+            startActivityForResult(intent, requestCode);
+        }
+    }
+
+    public void startTokenPaymentActivity(Context context, TokenPayment tokenPayment, int requestCode) {
+        if (context != null) {
+            Intent intent = new Intent(context, TokenPaymentActivity.class);
+            intent.putExtra(TokenPaymentActivity.EXTRA_TOKEN_PAYMENT, tokenPayment);
+
+            startActivityForResult(intent, requestCode);
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (REQUEST_CODE == requestCode) {
-            switch (resultCode) {
-                case JudoPay.RESULT_PAYMENT_SUCCESS:
-                    Receipt response = data.getParcelableExtra(JUDO_RECEIPT);
-                    Toast.makeText(MainActivity.this, "Payment response success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
-                    break;
+        switch (requestCode) {
+            case PAYMENT_REQUEST:
+                handlePaymentResult(resultCode, data);
+                break;
 
-                case JudoPay.RESULT_PAYMENT_DECLINED:
-                    Toast.makeText(MainActivity.this, "Payment declined", Toast.LENGTH_SHORT).show();
-                    break;
+            case TOKEN_PAYMENT_REQUEST:
+                handleTokenPaymentResult(resultCode, data);
+                break;
 
-                case JudoPay.RESULT_CANCELED:
-                    Toast.makeText(MainActivity.this, "Payment cancelled", Toast.LENGTH_SHORT).show();
-                    break;
+            case PRE_AUTH_REQUEST:
+                handlePreAuthResult(resultCode, data);
+                break;
 
-                case JudoPay.RESULT_ERROR:
-                    Toast.makeText(MainActivity.this, "Payment response error", Toast.LENGTH_SHORT).show();
-                    break;
-            }
+            case REGISTER_CARD_REQUEST:
+                handleRegisterCardResult(resultCode, data);
+                break;
+        }
+    }
+
+    private void handleRegisterCardResult(int resultCode, Intent data) {
+
+    }
+
+    private void handlePreAuthResult(int resultCode, Intent data) {
+        switch (resultCode) {
+            case JudoPay.RESULT_PAYMENT_SUCCESS:
+                Receipt response = data.getParcelableExtra(JUDO_RECEIPT);
+                Toast.makeText(MainActivity.this, "Pre-auth success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
+                break;
+
+            case JudoPay.RESULT_PAYMENT_DECLINED:
+                Toast.makeText(MainActivity.this, "Pre-auth declined", Toast.LENGTH_SHORT).show();
+                break;
+
+            case JudoPay.RESULT_CANCELED:
+                Toast.makeText(MainActivity.this, "Pre-auth cancelled", Toast.LENGTH_SHORT).show();
+                break;
+
+            case JudoPay.RESULT_ERROR:
+                Toast.makeText(MainActivity.this, "Pre-auth error", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    private void handleTokenPaymentResult(int resultCode, Intent data) {
+        switch (resultCode) {
+            case JudoPay.RESULT_PAYMENT_SUCCESS:
+                Receipt response = data.getParcelableExtra(JUDO_RECEIPT);
+                Toast.makeText(MainActivity.this, "Token payment success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
+                break;
+
+            case JudoPay.RESULT_PAYMENT_DECLINED:
+                Toast.makeText(MainActivity.this, "Token payment declined", Toast.LENGTH_SHORT).show();
+                break;
+
+            case JudoPay.RESULT_CANCELED:
+                Toast.makeText(MainActivity.this, "Token payment cancelled", Toast.LENGTH_SHORT).show();
+                break;
+
+            case JudoPay.RESULT_ERROR:
+                Toast.makeText(MainActivity.this, "Token payment response error", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    private void handlePaymentResult(int resultCode, Intent data) {
+        switch (resultCode) {
+            case JudoPay.RESULT_PAYMENT_SUCCESS:
+                Receipt response = data.getParcelableExtra(JUDO_RECEIPT);
+                Toast.makeText(MainActivity.this, "Payment success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
+                break;
+
+            case JudoPay.RESULT_PAYMENT_DECLINED:
+                Toast.makeText(MainActivity.this, "Payment declined", Toast.LENGTH_SHORT).show();
+                break;
+
+            case JudoPay.RESULT_CANCELED:
+                Toast.makeText(MainActivity.this, "Payment cancelled", Toast.LENGTH_SHORT).show();
+                break;
+
+            case JudoPay.RESULT_ERROR:
+                Toast.makeText(MainActivity.this, "Payment error", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
