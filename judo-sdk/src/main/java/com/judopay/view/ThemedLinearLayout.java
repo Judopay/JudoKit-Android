@@ -1,10 +1,12 @@
-package com.judopay;
+package com.judopay.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
+
+import com.judopay.R;
 
 public class ThemedLinearLayout extends LinearLayout {
 

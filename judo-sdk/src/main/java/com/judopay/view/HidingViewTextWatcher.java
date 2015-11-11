@@ -1,4 +1,4 @@
-package com.judopay;
+package com.judopay.view;
 
 import android.text.Editable;
 import android.text.TextWatcher;

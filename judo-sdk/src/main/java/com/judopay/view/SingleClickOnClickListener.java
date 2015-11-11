@@ -1,4 +1,4 @@
-package com.judopay.payment;
+package com.judopay.view;
 
 import android.view.View;
 
