@@ -186,7 +186,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleRegisterCardResult(int resultCode, Intent data) {
+        switch (resultCode) {
+            case JudoPay.RESULT_REGISTER_CARD_SUCCESS:
+                Receipt response = data.getParcelableExtra(JUDO_RECEIPT);
+                Toast.makeText(MainActivity.this, "Register card success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
+                break;
 
+            case JudoPay.RESULT_REGISTER_CARD_DECLINED:
+                Toast.makeText(MainActivity.this, "Register card declined", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     private void handlePreAuthResult(int resultCode, Intent data) {
