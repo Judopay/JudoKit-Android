@@ -17,7 +17,7 @@ public class RegisterCardActivity extends JudoActivity implements PaymentListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!getIntent().getExtras().containsKey(EXTRA_CONSUMER)) {
+        if (!getIntent().hasExtra(EXTRA_CONSUMER)) {
             throw new IllegalArgumentException("consumer must be provided to RegisterCardActivity");
         }
 
