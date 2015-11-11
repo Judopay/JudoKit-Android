@@ -15,7 +15,7 @@ public class TokenPaymentActivity extends JudoActivity implements PaymentListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTitle(R.string.add_card);
+        setTitle(R.string.payment);
 
         if (savedInstanceState == null) {
             TokenPayment tokenPayment = getIntent().getParcelableExtra(EXTRA_TOKEN_PAYMENT);
