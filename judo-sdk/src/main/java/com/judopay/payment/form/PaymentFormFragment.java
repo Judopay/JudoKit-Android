@@ -14,10 +14,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 
-import com.judopay.CompositeOnFocusChangeListener;
-import com.judopay.EmptyTextHintOnFocusChangeListener;
-import com.judopay.HidingViewTextWatcher;
-import com.judopay.HintFocusListener;
+import com.judopay.register.RegisterCardActivity;
+import com.judopay.view.CompositeOnFocusChangeListener;
+import com.judopay.view.EmptyTextHintOnFocusChangeListener;
+import com.judopay.view.HidingViewTextWatcher;
+import com.judopay.view.HintFocusListener;
 import com.judopay.JudoPay;
 import com.judopay.R;
 import com.judopay.customer.Card;
@@ -26,8 +27,8 @@ import com.judopay.customer.CardToken;
 import com.judopay.customer.CardType;
 import com.judopay.customer.Country;
 import com.judopay.payment.PaymentFormListener;
-import com.judopay.payment.ScrollOnFocusChangeListener;
-import com.judopay.payment.SingleClickOnClickListener;
+import com.judopay.view.ScrollOnFocusChangeListener;
+import com.judopay.view.SingleClickOnClickListener;
 import com.judopay.payment.form.address.CountryAndPostcodeValidation;
 import com.judopay.payment.form.address.CountrySpinner;
 import com.judopay.payment.form.address.PostcodeEditText;
@@ -41,6 +42,7 @@ import static com.judopay.JudoPay.isAvsEnabled;
 public class PaymentFormFragment extends Fragment {
 
     public static final String KEY_CARD_TOKEN = "Judo-CardToken";
+    public static final String KEY_BUTTON_LABEL = "Judo-ButtonLabel";
 
     private EditText cvvEditText;
     private View cvvHelperText;
@@ -109,6 +111,10 @@ public class PaymentFormFragment extends Fragment {
 
         if (getArguments().containsKey(KEY_CARD_TOKEN)) {
             this.cardToken = getArguments().getParcelable(KEY_CARD_TOKEN);
+        }
+
+        if(getArguments().containsKey(KEY_BUTTON_LABEL)) {
+            this.paymentButton.setText(getArguments().getString(KEY_BUTTON_LABEL));
         }
 
         return view;
@@ -409,11 +415,19 @@ public class PaymentFormFragment extends Fragment {
         return paymentFormFragment;
     }
 
-    public static PaymentFormFragment newInstance(PaymentFormListener paymentListener) {
+    public static PaymentFormFragment newInstance(PaymentFormListener listener, String buttonLabel) {
         PaymentFormFragment paymentFormFragment = new PaymentFormFragment();
+        paymentFormFragment.setPaymentFormListener(listener);
 
         Bundle arguments = new Bundle();
+        arguments.putString(PaymentFormFragment.KEY_BUTTON_LABEL, buttonLabel);
         paymentFormFragment.setArguments(arguments);
+
+        return paymentFormFragment;
+    }
+
+    public static PaymentFormFragment newInstance(PaymentFormListener paymentListener) {
+        PaymentFormFragment paymentFormFragment = new PaymentFormFragment();
         paymentFormFragment.setPaymentFormListener(paymentListener);
 
         return paymentFormFragment;
