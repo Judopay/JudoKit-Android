@@ -2,7 +2,6 @@ package com.judopay.payment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 
 import com.judopay.JudoActivity;
 import com.judopay.JudoPay;
@@ -16,13 +15,11 @@ public class PaymentActivity extends JudoActivity implements PaymentListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        validateParcelableExtra(EXTRA_PAYMENT);
-
-        if (getIntent().getExtras().containsKey(Intent.EXTRA_TITLE)) {
-            setTitle(getIntent().getStringExtra(Intent.EXTRA_TITLE));
-        } else {
-            setTitle(R.string.payment);
+        if (!getIntent().hasExtra(EXTRA_PAYMENT)) {
+            throw new IllegalArgumentException("payment must be provided to PaymentActivity");
         }
+
+        setTitle(R.string.payment);
 
         if (savedInstanceState == null) {
             Payment payment = getIntent().getParcelableExtra(EXTRA_PAYMENT);
@@ -59,14 +56,6 @@ public class PaymentActivity extends JudoActivity implements PaymentListener {
         setResult(JudoPay.RESULT_PAYMENT_DECLINED, intent);
 
         finish();
-    }
-
-    private void validateParcelableExtra(String extraName) {
-        Parcelable extra = getIntent().getParcelableExtra(extraName);
-        if (extra == null) {
-            throw new IllegalArgumentException(String.format("%s extra must be supplied to %s", extraName,
-                    this.getClass().getSimpleName()));
-        }
     }
 
 }
