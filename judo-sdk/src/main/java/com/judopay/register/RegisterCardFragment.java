@@ -14,7 +14,6 @@ import com.judopay.arch.api.RetrofitFactory;
 import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.payment.PaymentFormListener;
-import com.judopay.payment.PaymentListener;
 import com.judopay.payment.Receipt;
 import com.judopay.payment.form.PaymentFormFragment;
 
@@ -25,7 +24,7 @@ public class RegisterCardFragment extends Fragment implements PaymentFormListene
     public static final String KEY_CONSUMER = "Judo-Consumer";
 
     private boolean paymentInProgress;
-    private PaymentListener paymentListener;
+    private RegisterCardListener registerCardListener;
 
     private JudoApiService judoApiService;
 
@@ -53,7 +52,7 @@ public class RegisterCardFragment extends Fragment implements PaymentFormListene
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_payment, container, false);
+        return inflater.inflate(R.layout.fragment_register_card, container, false);
     }
 
     @Override
@@ -95,10 +94,6 @@ public class RegisterCardFragment extends Fragment implements PaymentFormListene
                 .subscribe(this);
     }
 
-    public void setPaymentListener(PaymentListener paymentListener) {
-        this.paymentListener = paymentListener;
-    }
-
     @Override
     public void onCompleted() {
         onLoadFinished();
@@ -112,9 +107,9 @@ public class RegisterCardFragment extends Fragment implements PaymentFormListene
     @Override
     public void onNext(Receipt receipt) {
         if (receipt.isSuccess()) {
-            paymentListener.onPaymentSuccess(receipt);
+            registerCardListener.onSuccess(receipt);
         } else {
-            paymentListener.onPaymentDeclined(receipt);
+            registerCardListener.onDeclined(receipt);
         }
     }
 
@@ -132,4 +127,7 @@ public class RegisterCardFragment extends Fragment implements PaymentFormListene
         progressOverlay.setVisibility(View.VISIBLE);
     }
 
+    public void setRegisterCardListener(RegisterCardListener registerCardListener) {
+        this.registerCardListener = registerCardListener;
+    }
 }
