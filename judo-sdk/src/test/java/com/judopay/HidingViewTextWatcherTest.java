@@ -2,6 +2,8 @@ package com.judopay;
 
 import android.view.View;
 
+import com.judopay.view.HidingViewTextWatcher;
+
 import org.junit.Test;
 
 import static org.mockito.Mockito.mock;
