@@ -34,5 +34,5 @@
     <string name="issue_number_front_of_card">Issue on front of card</string>
     <string name="token_card_number">**** **** **** %1$s</string>
     <string name="token_date">**/**</string>
-    <string name="registering_card">Registering card</string>
+    <string name="adding_card">Adding card…</string>
 </resources>
