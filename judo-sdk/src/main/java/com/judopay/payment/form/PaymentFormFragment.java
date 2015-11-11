@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 
-import com.judopay.register.RegisterCardActivity;
 import com.judopay.view.CompositeOnFocusChangeListener;
 import com.judopay.view.EmptyTextHintOnFocusChangeListener;
 import com.judopay.view.HidingViewTextWatcher;
@@ -109,11 +108,11 @@ public class PaymentFormFragment extends Fragment {
 
         cardsAcceptedErrorText = view.findViewById(R.id.cards_accepted_error_text);
 
-        if (getArguments().containsKey(KEY_CARD_TOKEN)) {
+        if (getArguments() != null && getArguments().containsKey(KEY_CARD_TOKEN)) {
             this.cardToken = getArguments().getParcelable(KEY_CARD_TOKEN);
         }
 
-        if(getArguments().containsKey(KEY_BUTTON_LABEL)) {
+        if(getArguments() != null && getArguments().containsKey(KEY_BUTTON_LABEL)) {
             this.paymentButton.setText(getArguments().getString(KEY_BUTTON_LABEL));
         }
 
