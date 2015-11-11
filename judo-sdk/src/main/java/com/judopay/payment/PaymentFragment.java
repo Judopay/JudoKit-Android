@@ -27,7 +27,7 @@ public class PaymentFragment extends BasePaymentFragment {
     public void onSubmit(Card card) {
         Payment payment = getArguments().getParcelable(EXTRA_PAYMENT);
 
-        Transaction.Builder builder = new Transaction.Builder()
+        PaymentTransaction.Builder builder = new PaymentTransaction.Builder()
                 .setAmount(payment.getAmount())
                 .setCardAddress(new Address.Builder()
                         .setPostCode(card.getCardAddress().getPostcode())
@@ -50,9 +50,9 @@ public class PaymentFragment extends BasePaymentFragment {
         performPayment(builder.build());
     }
 
-    private void performPayment(Transaction transaction) {
+    private void performPayment(PaymentTransaction paymentTransaction) {
         onLoadStarted();
-        paymentApiService.payment(transaction)
+        judoApiService.payment(paymentTransaction)
                 .subscribe(this);
     }
 
