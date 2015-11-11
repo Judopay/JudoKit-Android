@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.judopay.JudoActivity;
 import com.judopay.JudoPay;
+import com.judopay.R;
 
 public class TokenPaymentActivity extends JudoActivity implements PaymentListener {
 
@@ -13,6 +14,8 @@ public class TokenPaymentActivity extends JudoActivity implements PaymentListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setTitle(R.string.add_card);
 
         if (savedInstanceState == null) {
             TokenPayment tokenPayment = getIntent().getParcelableExtra(EXTRA_TOKEN_PAYMENT);
