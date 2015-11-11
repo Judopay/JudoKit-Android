@@ -1,8 +1,10 @@
 package com.judopay.samples;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -188,14 +190,37 @@ public class MainActivity extends AppCompatActivity {
     private void handleRegisterCardResult(int resultCode, Intent data) {
         switch (resultCode) {
             case JudoPay.RESULT_REGISTER_CARD_SUCCESS:
-                Receipt response = data.getParcelableExtra(JUDO_RECEIPT);
-                Toast.makeText(MainActivity.this, "Register card success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
+                Receipt receipt = data.getParcelableExtra(JUDO_RECEIPT);
+                showRegisteredCardDialog(receipt);
                 break;
 
             case JudoPay.RESULT_REGISTER_CARD_DECLINED:
                 Toast.makeText(MainActivity.this, "Register card declined", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    private void showRegisteredCardDialog(final Receipt receipt) {
+        new AlertDialog.Builder(this)
+                .setTitle("Make token payment?")
+                .setMessage("Registered card can now be used to perform token payments")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        TokenPayment tokenPayment = new TokenPayment.Builder()
+                                .setCardToken(receipt.getCardDetails())
+                                .setConsumer(receipt.getConsumer())
+                                .setPaymentReference(receipt.getYourPaymentReference())
+                                .setJudoId("100016")
+                                .setAmount("4.99")
+                                .setCurrency("GBP")
+                                .build();
+
+                        startTokenPaymentActivity(MainActivity.this, tokenPayment, TOKEN_PAYMENT_REQUEST);
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
     private void handlePreAuthResult(int resultCode, Intent data) {
