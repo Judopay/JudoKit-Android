@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.judopay.JudoActivity;
 import com.judopay.JudoPay;
+import com.judopay.R;
 
 import static com.judopay.JudoPay.EXTRA_PAYMENT;
 
@@ -12,6 +13,7 @@ public class PreAuthActivity extends JudoActivity implements PaymentListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(R.string.payment);
 
         if (savedInstanceState == null) {
             Payment payment = getIntent().getParcelableExtra(EXTRA_PAYMENT);
