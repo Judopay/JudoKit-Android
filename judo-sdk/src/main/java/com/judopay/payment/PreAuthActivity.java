@@ -2,6 +2,7 @@ package com.judopay.payment;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.judopay.JudoActivity;
 import com.judopay.JudoPay;
 import com.judopay.R;
@@ -13,6 +14,11 @@ public class PreAuthActivity extends JudoActivity implements PaymentListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!getIntent().hasExtra(EXTRA_PAYMENT)) {
+            throw new IllegalArgumentException("payment must be provided to PreAuthActivity");
+        }
+
         setTitle(R.string.payment);
 
         if (savedInstanceState == null) {
