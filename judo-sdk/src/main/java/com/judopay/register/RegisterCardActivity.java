@@ -6,10 +6,9 @@ import android.os.Bundle;
 import com.judopay.JudoActivity;
 import com.judopay.JudoPay;
 import com.judopay.R;
-import com.judopay.payment.PaymentListener;
 import com.judopay.payment.Receipt;
 
-public class RegisterCardActivity extends JudoActivity implements PaymentListener {
+public class RegisterCardActivity extends JudoActivity implements RegisterCardListener {
 
     public static final String EXTRA_CONSUMER = "Judo-Consumer";
 
@@ -30,7 +29,7 @@ public class RegisterCardActivity extends JudoActivity implements PaymentListene
             arguments.putParcelable(RegisterCardFragment.KEY_CONSUMER, getIntent().getParcelableExtra(EXTRA_CONSUMER));
 
             registerCardFragment.setArguments(arguments);
-            registerCardFragment.setPaymentListener(this);
+            registerCardFragment.setRegisterCardListener(this);
 
             getFragmentManager()
                     .beginTransaction()
@@ -46,21 +45,21 @@ public class RegisterCardActivity extends JudoActivity implements PaymentListene
     }
 
     @Override
-    public void onPaymentSuccess(Receipt receipt) {
+    public void onSuccess(Receipt receipt) {
         Intent intent = new Intent();
         intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
 
-        setResult(JudoPay.RESULT_PAYMENT_SUCCESS, intent);
+        setResult(JudoPay.RESULT_REGISTER_CARD_SUCCESS, intent);
 
         finish();
     }
 
     @Override
-    public void onPaymentDeclined(Receipt receipt) {
+    public void onDeclined(Receipt receipt) {
         Intent intent = new Intent();
         intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
 
-        setResult(JudoPay.RESULT_PAYMENT_DECLINED, intent);
+        setResult(JudoPay.RESULT_REGISTER_CARD_DECLINED, intent);
 
         finish();
     }
