@@ -42,7 +42,7 @@ public class TokenPaymentFragment extends BasePaymentFragment {
         onLoadStarted();
 
         new Gson().toJson(transaction);
-        paymentApiService.tokenPayment(transaction)
+        judoApiService.tokenPayment(transaction)
                 .subscribe(this);
     }
 
