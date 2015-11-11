@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 import com.judopay.JudoActivity;
 import com.judopay.JudoPay;
+import com.judopay.R;
 
 import static com.judopay.JudoPay.EXTRA_PAYMENT;
 
@@ -17,8 +18,11 @@ public class PaymentActivity extends JudoActivity implements PaymentListener {
 
         validateParcelableExtra(EXTRA_PAYMENT);
 
-        String title = getIntent().getStringExtra(Intent.EXTRA_TITLE);
-        this.setTitle(title != null ? title : "Payment");
+        if (getIntent().getExtras().containsKey(Intent.EXTRA_TITLE)) {
+            setTitle(getIntent().getStringExtra(Intent.EXTRA_TITLE));
+        } else {
+            setTitle(R.string.payment);
+        }
 
         if (savedInstanceState == null) {
             Payment payment = getIntent().getParcelableExtra(EXTRA_PAYMENT);
