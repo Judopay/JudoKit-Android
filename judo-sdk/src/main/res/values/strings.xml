@@ -4,6 +4,8 @@
     <string name="postcode_us">ZIP code</string>
     <string name="postcode_canada">Postal code</string>
     <string name="pay">PAY</string>
+    <string name="payment">Payment</string>
+    <string name="token_payment">Token Payment</string>
     <string name="card_number_label">Card number</string>
     <string name="expiry_date_label">Expiry date</string>
     <string name="start_date_label">Start date</string>
@@ -14,6 +16,7 @@
     <string name="amex_cvv_label">CIDV</string>
     <string name="cvv_hint">000</string>
     <string name="amex_cvv_hint">0000</string>
+    <string name="add_card">Add Card</string>
     <string name="empty" />
     <string name="error_postcode_uk">Please enter postcode</string>
     <string name="error_postcode_us">Please enter ZIP code</string>
@@ -31,4 +34,5 @@
     <string name="issue_number_front_of_card">Issue on front of card</string>
     <string name="token_card_number">**** **** **** %1$s</string>
     <string name="token_date">**/**</string>
+    <string name="registering_card">Registering card</string>
 </resources>
