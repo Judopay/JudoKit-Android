@@ -29,7 +29,7 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
 
     protected static final String TAG_3DS_DIALOG = "3dSecureDialog";
 
-    public static final String REDIRECT_URL = "http://pay.android-3ds-parser.testweb01.hq.judo/Android/Parse3DS";
+    public static final String REDIRECT_URL = "http://pay.uat.hq.judo/Android/Parse3DS";
 
     protected View progressBar;
     protected TextView progressText;
