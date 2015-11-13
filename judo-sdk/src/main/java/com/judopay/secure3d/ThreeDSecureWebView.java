@@ -75,10 +75,9 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
     @SuppressLint("SetJavaScriptEnabled")
     private void configureSettings() {
         WebSettings settings = getSettings();
+
         settings.setJavaScriptEnabled(true);
         settings.setBuiltInZoomControls(true);
-
-        setInitialScale(50);
     }
 
     public void authorize(final String acsUrl, final String md, final String paReq, String receiptId) throws IOException {
