@@ -3,17 +3,17 @@ package com.judopay.payment.form.address;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.v7.widget.AppCompatSpinner;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Spinner;
 
 import com.judopay.customer.Country;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CountrySpinner extends Spinner {
+public class CountrySpinner extends AppCompatSpinner {
 
     private Listener listener;
     private CountrySpinnerAdapter adapter;
