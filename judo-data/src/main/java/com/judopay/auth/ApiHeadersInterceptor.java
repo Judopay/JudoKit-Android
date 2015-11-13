@@ -25,7 +25,7 @@ public class ApiHeadersInterceptor implements Interceptor {
     private static final String API_VERSION = "4.1.0";
     private static final String CACHE_CONTROL = "no-cache";
     private static final String SDK_VERSION_HEADER = "Sdk-Version";
-    public static final String USER_AGENT_HEADER = "User-Agent";
+    private static final String USER_AGENT_HEADER = "User-Agent";
 
     private final UserAgent userAgent;
     private final AuthorizationEncoder authorizationEncoder;
