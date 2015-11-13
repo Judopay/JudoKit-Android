@@ -31,8 +31,9 @@
     <string name="issue_number_front_of_card">Issue on front of card</string>
     <string name="token_card_number">**** **** **** %1$s</string>
     <string name="token_date">**/**</string>
-    <string name="redirecting">Redirecting...</string>
+    <string name="redirecting">Redirecting…</string>
     <string name="completing_payment">Completing payment</string>
     <string name="authenticating">Authenticating</string>
+    <string name="authentication">Authentication</string>
     <string name="verifying_payment">Verifying payment</string>
 </resources>
