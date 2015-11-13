@@ -1,15 +1,16 @@
 package com.judopay.secure3d;
 
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.judopay.R;
 
@@ -17,24 +18,39 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class ThreeDSecureDialogFragment extends DialogFragment implements ThreeDSecureResultPageListener {
 
+    public static final String KEY_LOADING_TEXT = "Judo-LoadingText";
+
     private WebView webView;
     private View loadingView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_three_d_secure, container, false);
+        return inflater.inflate(R.layout.dialog_three_d_secure, container, false);
+    }
 
-        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.setTitle(R.string.authentication);
 
-        return view;
+        return dialog;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         ViewGroup webViewContainer = (ViewGroup) view.findViewById(R.id.web_view_container);
         loadingView = view.findViewById(R.id.loading_overlay_3dsecure);
+
+        TextView loadingText = (TextView) view.findViewById(R.id.three_d_secure_progress_text);
+
+        Bundle arguments = getArguments();
+
+        if (arguments != null && arguments.containsKey(KEY_LOADING_TEXT)) {
+            loadingText.setText(arguments.getString(KEY_LOADING_TEXT));
+        }
 
         webViewContainer.addView(webView);
     }
