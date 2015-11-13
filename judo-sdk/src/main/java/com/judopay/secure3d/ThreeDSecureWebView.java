@@ -8,6 +8,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.google.gson.Gson;
+import com.judopay.BuildConfig;
 import com.judopay.payment.ThreeDSecureInfo;
 
 import org.apache.http.NameValuePair;
@@ -27,6 +28,7 @@ import static android.os.Build.VERSION_CODES.LOLLIPOP;
 public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScriptInterface.JsonListener {
 
     private static final String JS_NAMESPACE = "JudoPay";
+    private static final String REDIRECT_URL = "https://pay.judopay.com/Android/Parse3DS";
 
     private ThreeDSecureListener threeDSecureListener;
     private String receiptId;
@@ -63,11 +65,7 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
     private void initialise() {
         configureSettings();
 
-        if (SDK_INT >= LOLLIPOP) {
-            getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        }
-
-        if (SDK_INT >= KITKAT) {
+        if (BuildConfig.DEBUG && SDK_INT >= KITKAT) {
             setWebContentsDebuggingEnabled(true);
         }
 
@@ -80,14 +78,14 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
         settings.setJavaScriptEnabled(true);
         settings.setBuiltInZoomControls(true);
 
-        setInitialScale(100);
+        setInitialScale(50);
     }
 
-    public void authorize(final String acsUrl, final String md, final String paReq, final String termUrl, String receiptId) throws IOException {
+    public void authorize(final String acsUrl, final String md, final String paReq, String receiptId) throws IOException {
         List<NameValuePair> params = new LinkedList<>();
 
         params.add(new BasicNameValuePair("MD", md));
-        params.add(new BasicNameValuePair("TermUrl", termUrl));
+        params.add(new BasicNameValuePair("TermUrl", REDIRECT_URL));
         params.add(new BasicNameValuePair("PaReq", paReq));
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -95,7 +93,7 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
 
         this.receiptId = receiptId;
 
-        this.webViewClient = new ThreeDSecureWebViewClient(acsUrl, termUrl, JS_NAMESPACE, threeDSecureListener);
+        this.webViewClient = new ThreeDSecureWebViewClient(acsUrl, REDIRECT_URL, JS_NAMESPACE, threeDSecureListener);
         setWebViewClient(webViewClient);
 
         postUrl(acsUrl, bos.toByteArray());

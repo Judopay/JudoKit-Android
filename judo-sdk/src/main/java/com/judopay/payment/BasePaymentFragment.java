@@ -29,8 +29,6 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
 
     protected static final String TAG_3DS_DIALOG = "3dSecureDialog";
 
-    public static final String REDIRECT_URL = "http://pay.uat.hq.judo/Android/Parse3DS";
-
     protected View progressBar;
     protected TextView progressText;
     protected PaymentListener paymentListener;
@@ -131,7 +129,7 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
             progressText.setText(R.string.redirecting);
 
             threeDSecureWebView.setThreeDSecureListener(this);
-            threeDSecureWebView.authorize(receipt.getAcsUrl(), receipt.getMd(), receipt.getPaReq(), REDIRECT_URL, receipt.getReceiptId());
+            threeDSecureWebView.authorize(receipt.getAcsUrl(), receipt.getMd(), receipt.getPaReq(), receipt.getReceiptId());
         } else {
             paymentListener.onPaymentDeclined(receipt);
         }
