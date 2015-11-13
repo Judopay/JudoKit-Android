@@ -139,6 +139,16 @@
         <item name="android:maxLength">3</item>
     </style>
 
+    <style name="payment_form_container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingBottom">70dp</item>
+        <item name="android:paddingLeft">@dimen/medium_padding</item>
+        <item name="android:paddingRight">@dimen/medium_padding</item>
+        <item name="android:paddingTop">@dimen/medium_padding</item>
+    </style>
+
     <dimen name="small_padding">4dp</dimen>
     <dimen name="medium_padding">8dp</dimen>
     <dimen name="large_padding">16dp</dimen>

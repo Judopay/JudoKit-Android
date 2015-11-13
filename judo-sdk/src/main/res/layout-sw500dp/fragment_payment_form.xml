@@ -178,12 +178,12 @@
 
             </LinearLayout>
 
+            <Button
+                android:id="@+id/payment_button"
+                style="@style/judo_payment_button" />
+
         </LinearLayout>
 
     </ScrollView>
-
-    <Button
-        android:id="@+id/payment_button"
-        style="@style/judo_payment_button" />
 
 </FrameLayout>
