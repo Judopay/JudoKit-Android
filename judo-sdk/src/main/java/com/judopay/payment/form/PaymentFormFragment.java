@@ -127,6 +127,7 @@ public class PaymentFormFragment extends Fragment {
 
         if (cardToken != null) {
             cardTypeImageView.setCardType(cardToken.getType());
+            cvvEditText.requestFocus();
         }
 
         initialiseCardNumber(validationWatcher);
