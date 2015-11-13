@@ -96,7 +96,7 @@
                     style="@style/input_layout"
                     android:layout_weight="1">
 
-                    <EditText
+                    <com.judopay.payment.form.date.DateEditText
                         android:id="@+id/expiry_date_edit_text"
                         style="@style/judo_expiry_date"
                         android:layout_weight="1"
@@ -168,7 +168,7 @@
                     android:layout_width="match_parent"
                     android:layout_weight="1">
 
-                    <com.judopay.payment.form.address.PostcodeEditText
+                    <EditText
                         android:id="@+id/post_code_edit_text"
                         style="@style/judo_postcode"
                         android:hint="@string/postcode_uk"
