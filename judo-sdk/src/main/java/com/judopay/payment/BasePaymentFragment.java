@@ -135,9 +135,15 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
         }
     }
 
-    private void show3dSecureDialog() {
+    private void show3dSecureDialog(String loadingText) {
         FragmentManager fm = getFragmentManager();
+
         threeDSecureDialog = new ThreeDSecureDialogFragment();
+
+        Bundle arguments = new Bundle();
+        arguments.putString(ThreeDSecureDialogFragment.KEY_LOADING_TEXT, loadingText);
+
+        threeDSecureDialog.setArguments(arguments);
         threeDSecureDialog.setCancelable(false);
 
         threeDSecureDialog.setWebView(threeDSecureWebView);
@@ -157,7 +163,11 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
 
     @Override
     public void onAuthorizationWebPageLoaded() {
-        show3dSecureDialog();
+        show3dSecureDialog(get3dSecureLoadingText());
+    }
+
+    protected String get3dSecureLoadingText() {
+        return getString(R.string.verifying_payment);
     }
 
     protected void onLoadFinished() {
