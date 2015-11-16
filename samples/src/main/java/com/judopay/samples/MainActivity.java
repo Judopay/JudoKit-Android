@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.judopay.Consumer;
@@ -28,13 +27,13 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 101;
 
     @Bind(R.id.payment_button)
-    Button paymentButton;
+    View paymentButton;
 
     @Bind(R.id.pre_auth_button)
-    Button preAuthButton;
+    View preAuthButton;
 
     @Bind(R.id.token_payment_button)
-    Button tokenPaymentButton;
+    View tokenPaymentButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
                 Payment payment = new Payment.Builder()
-                        .setJudoId("100016")
+                        .setJudoId("100407196")
                         .setCurrency("GBP")
                         .setAmount("9.99")
                         .setConsumer(new Consumer("yourConsumerRef"))
@@ -91,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
                 Payment payment = new Payment.Builder()
-                        .setJudoId("100016")
+                        .setJudoId("100407196")
                         .setCurrency("GBP")
                         .setAmount("9.99")
                         .setConsumer(new Consumer("yourConsumerRef"))
@@ -119,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
                         .build();
 
                 intent.putExtra(JudoPay.EXTRA_TOKEN_PAYMENT, tokenPayment);
-
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
