@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.judopay.Client;
 import com.judopay.JudoPay;
-import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.customer.Location;
 
@@ -29,9 +28,7 @@ public class PreAuthFragment extends BasePaymentFragment {
 
         Transaction.Builder builder = new Transaction.Builder()
                 .setAmount(payment.getAmount())
-                .setCardAddress(new Address.Builder()
-                        .setPostCode(card.getCardAddress().getPostcode())
-                        .build())
+                .setCardAddress(card.getCardAddress())
                 .setClientDetails(new Client())
                 .setConsumerLocation(new Location())
                 .setCardNumber(card.getCardNumber())

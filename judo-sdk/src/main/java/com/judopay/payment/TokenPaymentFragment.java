@@ -1,8 +1,6 @@
 package com.judopay.payment;
 
-import com.google.gson.Gson;
 import com.judopay.Client;
-import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.customer.CardToken;
 import com.judopay.customer.Location;
@@ -16,9 +14,7 @@ public class TokenPaymentFragment extends BasePaymentFragment {
         TokenTransaction.Builder builder = new TokenTransaction.Builder();
 
         builder.setAmount(tokenPayment.getAmount())
-                .setCardAddress(new Address.Builder()
-                        .setPostCode(card.getCardAddress().getPostcode())
-                        .build())
+                .setCardAddress(card.getCardAddress())
                 .setClientDetails(new Client())
                 .setConsumerLocation(new Location())
                 .setCurrency(tokenPayment.getCurrency())
@@ -40,8 +36,6 @@ public class TokenPaymentFragment extends BasePaymentFragment {
 
     private void performTokenPayment(TokenTransaction transaction) {
         onLoadStarted();
-
-        new Gson().toJson(transaction);
         paymentApiService.tokenPayment(transaction)
                 .subscribe(this);
     }
