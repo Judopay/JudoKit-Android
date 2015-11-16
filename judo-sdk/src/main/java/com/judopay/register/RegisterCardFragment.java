@@ -1,33 +1,26 @@
 package com.judopay.register;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.judopay.Client;
 import com.judopay.Consumer;
 import com.judopay.JudoApiService;
+import com.judopay.JudoPay;
 import com.judopay.R;
 import com.judopay.arch.api.RetrofitFactory;
-import com.judopay.customer.Address;
-import com.judopay.customer.Card;
-import com.judopay.payment.PaymentFormListener;
 import com.judopay.payment.Receipt;
 import com.judopay.payment.form.PaymentFormFragment;
 
-import rx.Observer;
-
-public class RegisterCardFragment extends Fragment implements PaymentFormListener, Observer<Receipt> {
+public class RegisterCardFragment extends Fragment implements PaymentFormView {
 
     public static final String KEY_CONSUMER = "Judo-Consumer";
 
-    private boolean paymentInProgress;
-    private RegisterCardListener registerCardListener;
-
-    private JudoApiService judoApiService;
-
+    private RegisterCardPresenter presenter;
     private View progressOverlay;
 
     @Override
@@ -36,11 +29,12 @@ public class RegisterCardFragment extends Fragment implements PaymentFormListene
 
         setRetainInstance(true);
 
-        this.judoApiService = RetrofitFactory.getInstance()
-                .create(JudoApiService.class);
-
         if (savedInstanceState == null) {
-            PaymentFormFragment paymentFormFragment = PaymentFormFragment.newInstance(this, getString(R.string.add_card));
+            Consumer consumer = getArguments().getParcelable(KEY_CONSUMER);
+
+            this.presenter = new RegisterCardPresenter(consumer, this, RetrofitFactory.getInstance().create(JudoApiService.class));
+
+            PaymentFormFragment paymentFormFragment = PaymentFormFragment.newInstance(this.presenter, getString(R.string.add_card));
             paymentFormFragment.setRetainInstance(true);
 
             getFragmentManager()
@@ -61,73 +55,43 @@ public class RegisterCardFragment extends Fragment implements PaymentFormListene
 
         this.progressOverlay = view.findViewById(R.id.progress_overlay);
 
-        if (paymentInProgress) {
-            showLoading();
-        }
+        this.presenter.reconnect();
     }
 
     @Override
-    public void onSubmit(Card card) {
-        Consumer consumer = getArguments().getParcelable(KEY_CONSUMER);
-
-        RegisterTransaction.Builder builder = new RegisterTransaction.Builder()
-                .setCardAddress(new Address.Builder()
-                        .setPostCode(card.getCardAddress().getPostcode())
-                        .build())
-                .setClientDetails(new Client())
-                .setCardNumber(card.getCardNumber())
-                .setCv2(card.getCv2())
-                .setExpiryDate(card.getExpiryDate());
-
-        if (consumer != null) {
-            builder.setYourConsumerReference(consumer.getYourConsumerReference());
-        }
-
-        if (card.startDateAndIssueNumberRequired()) {
-            builder.setIssueNumber(card.getIssueNumber())
-                    .setStartDate(card.getStartDate());
-        }
-
-        onLoadStarted();
-
-        judoApiService.registerCard(builder.build())
-                .subscribe(this);
-    }
-
-    @Override
-    public void onCompleted() {
-        onLoadFinished();
-    }
-
-    @Override
-    public void onError(Throwable e) {
-        onLoadFinished();
-    }
-
-    @Override
-    public void onNext(Receipt receipt) {
-        if (receipt.isSuccess()) {
-            registerCardListener.onSuccess(receipt);
-        } else {
-            registerCardListener.onDeclined(receipt);
-        }
-    }
-
-    private void onLoadFinished() {
-        progressOverlay.setVisibility(View.GONE);
-        paymentInProgress = false;
-    }
-
-    private void onLoadStarted() {
-        showLoading();
-        paymentInProgress = true;
-    }
-
-    private void showLoading() {
+    public void showLoading() {
         progressOverlay.setVisibility(View.VISIBLE);
     }
 
-    public void setRegisterCardListener(RegisterCardListener registerCardListener) {
-        this.registerCardListener = registerCardListener;
+    @Override
+    public void hideLoading() {
+        progressOverlay.setVisibility(View.GONE);
     }
+
+    @Override
+    public void finish(Receipt receipt) {
+        Intent intent = new Intent();
+        intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
+
+        Activity activity = getActivity();
+
+        if (activity != null) {
+            activity.setResult(JudoPay.RESULT_REGISTER_CARD_SUCCESS, intent);
+            activity.finish();
+        }
+    }
+
+    @Override
+    public void showDeclinedMessage(Receipt receipt) {
+        Intent intent = new Intent();
+        intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
+
+        Activity activity = getActivity();
+
+        if (activity != null) {
+            activity.setResult(JudoPay.RESULT_REGISTER_CARD_DECLINED, intent);
+            activity.finish();
+        }
+    }
+
 }
