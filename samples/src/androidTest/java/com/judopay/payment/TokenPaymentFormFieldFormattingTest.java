@@ -56,4 +56,25 @@ public class TokenPaymentFormFieldFormattingTest extends PaymentTest {
         assertThat(cVVInputLayout.getText(), equalTo("CVV"));
     }
 
+    public void testAVSFieldDisplaysAndFocusAutoMovesAfterCVVEnteredWhenAVSEnabled() {
+        //Given I have a card saved for a token payment
+        //And AVS is enabled
+        pressSettingsButton();
+
+        enableAVS(true);
+
+        pressBackButton();
+
+        //When I am on the token payment screen
+        pressTokenPaymentScreenButton();
+
+        //And I enter my CVV
+        enterCVV("452");
+
+        //Then the Postcode field should be in focus
+        UiElement aVSField = id(R.id.post_code_edit_text);
+
+        assertThat(aVSField.isFocused(), equalTo(true));
+    }
+
 }

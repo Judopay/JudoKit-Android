@@ -24,4 +24,8 @@ The judoPay library lets you integrate card payments into your Android app. It's
 |File size|178 KB (80% smaller)|
 
 
-View the [changelog](https://github.com/JudoPay/Judo-Android/blob/feature-preauth-token-payments/CHANGELOG.md)
+View the [changelog](https://github.com/JudoPay/Judo-Android/blob/master/CHANGELOG.md)
+
+## License
+
+See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
