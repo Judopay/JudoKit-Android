@@ -29,9 +29,7 @@ public class PaymentFragment extends BasePaymentFragment {
 
         Transaction.Builder builder = new Transaction.Builder()
                 .setAmount(payment.getAmount())
-                .setCardAddress(new Address.Builder()
-                        .setPostCode(card.getCardAddress().getPostcode())
-                        .build())
+                .setCardAddress(card.getCardAddress())
                 .setClientDetails(new Client())
                 .setConsumerLocation(new Location())
                 .setCardNumber(card.getCardNumber())
