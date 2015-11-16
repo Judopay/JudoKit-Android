@@ -1,7 +1,6 @@
 package com.judopay.payment.form;
 
 import android.support.annotation.StringRes;
-import android.util.Log;
 
 import com.judopay.R;
 import com.judopay.customer.CardType;
@@ -129,12 +128,7 @@ public class PaymentFormValidation {
                             && startDateAndIssueNumberValidation.isIssueNumberValid();
 
             boolean cvvValid = isCvvValid(paymentForm);
-
-            Log.d(this.getClass().getSimpleName(), String.format("Expiry validation start: %d", System.currentTimeMillis()));
-
             boolean expiryDateValid = paymentForm.isTokenCard() || isExpiryDateValid(paymentForm.getExpiryDate());
-
-            Log.d(this.getClass().getSimpleName(), String.format("Expiry validation end: %d", System.currentTimeMillis()));
 
             CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(paymentForm,
                     cardNumberValidation.isValid(), cvvValid, expiryDateValid, maestroValid);
