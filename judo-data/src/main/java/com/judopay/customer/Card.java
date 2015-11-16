@@ -3,7 +3,7 @@ package com.judopay.customer;
 public class Card {
 
     private String cardNumber;
-    private CardAddress cardAddress;
+    private Address cardAddress;
     private String expiryDate;
     private String startDate;
     private String issueNumber;
@@ -13,7 +13,7 @@ public class Card {
         return cardNumber;
     }
 
-    public CardAddress getCardAddress() {
+    public Address getCardAddress() {
         return cardAddress;
     }
 
@@ -54,7 +54,7 @@ public class Card {
             return this;
         }
 
-        public Builder setCardAddress(CardAddress cardAddress) {
+        public Builder setCardAddress(Address cardAddress) {
             card.cardAddress = cardAddress;
             return this;
         }
