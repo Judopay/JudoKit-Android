@@ -20,8 +20,8 @@ import com.judopay.HidingViewTextWatcher;
 import com.judopay.HintFocusListener;
 import com.judopay.JudoPay;
 import com.judopay.R;
+import com.judopay.customer.Address;
 import com.judopay.customer.Card;
-import com.judopay.customer.CardAddress;
 import com.judopay.customer.CardToken;
 import com.judopay.customer.CardType;
 import com.judopay.customer.Country;
@@ -359,14 +359,14 @@ public class PaymentFormFragment extends Fragment {
                 .setExpiryDate(trim(expiryDateEditText))
                 .setCvv(getCvv());
 
-        CardAddress.Builder cardAddressBuilder = new CardAddress.Builder()
-                .setPostcode(getPostcode());
+        Address.Builder addressBuilder = new Address.Builder()
+                .setPostCode(getPostcode());
 
         if (isAvsEnabled()) {
-            cardAddressBuilder.setCountryCode(countrySpinner.getSelectedCountry().getCode());
+            addressBuilder.setCountryCode(countrySpinner.getSelectedCountry().getCode());
         }
 
-        cardBuilder.setCardAddress(cardAddressBuilder.build());
+        cardBuilder.setCardAddress(addressBuilder.build());
 
         if (CardType.matchCardNumber(cardNumberEditText.getText().toString()) == CardType.MAESTRO) {
             cardBuilder.setIssueNumber(getIssueNumber())
