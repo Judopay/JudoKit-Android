@@ -15,22 +15,25 @@ import io.appium.droiddriver.util.ActivityUtils;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static com.judopay.util.OrientationChangeAction.orientationLandscape;
-import static com.judopay.util.OrientationChangeAction.orientationPortrait;
 
 public abstract class DroidDriverTest<T extends Activity> extends BaseDroidDriverTest<T> {
+
+
 
     protected DroidDriverTest(Class<T> activityClass) {
         super(activityClass);
     }
 
+
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
 
-        driver.getPoller().setTimeoutMillis(20000);
+        //default timeout set to 20 seconds as payment response time
+        //and latency can cause tests to fail
+        driver.getPoller().setTimeoutMillis(20000L);
 
         ActivityUtils.setRunningActivitySupplier(new ActivityUtils.Supplier<Activity>() {
             @Override
@@ -39,13 +42,11 @@ public abstract class DroidDriverTest<T extends Activity> extends BaseDroidDrive
             }
         });
 
+
+
         // For each test method invocation, the Activity will not actually be created
         // until the first time this method is called.
         getActivity();
-
-        // Perform an orientation change on setUp() after getActivity() is called
-        // and within tests.
-        onView(isRoot()).perform(orientationPortrait());
     }
 
     String resourceId(int rID) {

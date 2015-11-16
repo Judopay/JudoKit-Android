@@ -169,7 +169,7 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         cvElement.setText(cvv);
     }
 
-    private void enterAVS(String avs) {
+    protected void enterAVS(String avs) {
         UiElement avsElement = id(R.id.post_code_edit_text);
 
         avsElement.setText(avs);
