@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 Payment payment = new Payment.Builder()
                         .setJudoId("100407196")
                         .setCurrency("GBP")
-                        .setAmount("9.99")
+                        .setAmount("1.99")
                         .setConsumer(new Consumer("yourConsumerRef"))
                         .setPaymentRef("paymentRef")
                         .build();
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 Payment payment = new Payment.Builder()
                         .setJudoId("100407196")
                         .setCurrency("GBP")
-                        .setAmount("9.99")
+                        .setAmount("1.99")
                         .setConsumer(new Consumer("yourConsumerRef"))
                         .setPaymentRef("paymentRef")
                         .build();
@@ -112,8 +112,8 @@ public class MainActivity extends AppCompatActivity {
                         .setCardToken(new CardToken("1215", "3436", "PKMxI4788SERKz0w7opSubZGU0I5g8kb", 1))
                         .setConsumer(new Consumer("zGEHXkSTZO08FljI", "consumer10102"))
                         .setPaymentReference("payment1010102")
-                        .setJudoId("100016")
-                        .setAmount("4.99")
+                        .setJudoId("100407196")
+                        .setAmount("1.99")
                         .setCurrency("GBP")
                         .build();
 
