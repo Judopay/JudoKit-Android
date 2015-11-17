@@ -2,6 +2,7 @@ package com.judopay.samples;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -130,12 +131,11 @@ public class MainActivity extends AppCompatActivity {
         if (REQUEST_CODE == requestCode) {
             switch (resultCode) {
                 case JudoPay.RESULT_PAYMENT_SUCCESS:
-                    Receipt response = data.getParcelableExtra(JUDO_RECEIPT);
-                    Toast.makeText(MainActivity.this, "Payment response success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
+                    handlePaymentSuccess(data);
                     break;
 
                 case JudoPay.RESULT_PAYMENT_DECLINED:
-                    Toast.makeText(MainActivity.this, "Payment declined", Toast.LENGTH_SHORT).show();
+                    handlePaymentDeclined();
                     break;
 
                 case JudoPay.RESULT_CANCELED:
@@ -147,6 +147,26 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
+    }
+
+    private void handlePaymentDeclined() {
+        new AlertDialog.Builder(this)
+                .setTitle("Payment failed")
+                .setMessage("Please check your details and try again")
+                .setPositiveButton("OK", null)
+                .create()
+                .show();
+    }
+
+    private void handlePaymentSuccess(Intent data) {
+        Receipt receipt = data.getParcelableExtra(JUDO_RECEIPT);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Payment successful")
+                .setMessage(String.format("Receipt ID: %s", receipt.getReceiptId()))
+                .setPositiveButton("OK", null)
+                .create()
+                .show();
     }
 
 }
