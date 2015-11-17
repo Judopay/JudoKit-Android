@@ -19,13 +19,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 public abstract class DroidDriverTest<T extends Activity> extends BaseDroidDriverTest<T> {
 
-
-
     protected DroidDriverTest(Class<T> activityClass) {
         super(activityClass);
     }
-
-
 
     @Override
     protected void setUp() throws Exception {
@@ -41,8 +37,6 @@ public abstract class DroidDriverTest<T extends Activity> extends BaseDroidDrive
                 return Iterables.getFirst(ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED), null);
             }
         });
-
-
 
         // For each test method invocation, the Activity will not actually be created
         // until the first time this method is called.
