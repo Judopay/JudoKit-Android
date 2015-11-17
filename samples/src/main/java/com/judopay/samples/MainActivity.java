@@ -110,9 +110,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, TokenPaymentActivity.class);
                 TokenPayment tokenPayment = new TokenPayment.Builder()
-                        .setCardToken(new CardToken("1215", "3436", "PKMxI4788SERKz0w7opSubZGU0I5g8kb", 1))
-                        .setConsumer(new Consumer("zGEHXkSTZO08FljI", "consumer10102"))
-                        .setPaymentReference("payment1010102")
+                        .setCardToken(new CardToken("1215", "3436", "mAFOQ2hGGvyeyzcXKVwIujzWPRmag1hK", 1))
+                        .setConsumer(new Consumer("consumerToken", "consumer100407196"))
+                        .setPaymentReference("Judo_RegisterCardPreAuth_635833719833639217")
                         .setJudoId("100407196")
                         .setAmount("1.99")
                         .setCurrency("GBP")

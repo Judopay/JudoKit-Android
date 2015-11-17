@@ -109,6 +109,7 @@ public class PaymentFormFragment extends Fragment {
 
         if (getArguments().containsKey(KEY_CARD_TOKEN)) {
             this.cardToken = getArguments().getParcelable(KEY_CARD_TOKEN);
+            cvvEditText.requestFocus();
         }
 
         return view;
