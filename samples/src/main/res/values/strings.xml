@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">JudoPay Android</string>
-    <string name="title_activity_main">JudoPay</string>
+    <string name="title_activity_main">judoPay examples</string>
 
     <string name="avs_label">Address Verification System (AVS)</string>
     <string name="ssl_pinning_label">SSL Pinning</string>
@@ -11,7 +11,8 @@
     <string name="three_d_secure">3D-Secure</string>
     <string name="payment">Payment</string>
     <string name="pre_auth">Pre-Auth</string>
-    <string name="token_payment">Token Payment</string>
-    <string name="register_card">Register Card</string>
+    <string name="token_payment">Token payment</string>
+    <string name="test_card_detail_instructions">To view test card details:\nSign in to judo and go to Developer/Tools.</string>
+    <string name="register_card">Register card</string>
 
 </resources>

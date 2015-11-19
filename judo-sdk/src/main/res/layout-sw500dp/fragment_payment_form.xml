@@ -19,7 +19,7 @@
                     style="@style/judo_card_image"
                     tools:ignore="RtlHardcoded" />
 
-                <com.judopay.view.JudoTextInputLayout
+                <com.judopay.JudoTextInputLayout
                     android:id="@+id/card_number_input_layout"
                     style="@style/input_layout">
 
@@ -27,7 +27,7 @@
                         android:id="@+id/card_number_edit_text"
                         style="@style/judo_card_number" />
 
-                </com.judopay.view.JudoTextInputLayout>
+                </com.judopay.JudoTextInputLayout>
 
                 <TextView
                     android:id="@+id/card_number_helper_text"
@@ -47,7 +47,7 @@
                 android:weightSum="2"
                 tools:visibility="visible">
 
-                <com.judopay.view.JudoTextInputLayout
+                <com.judopay.JudoTextInputLayout
                     android:id="@+id/start_date_input_layout"
                     style="@style/input_layout"
                     android:layout_weight="1">
@@ -57,7 +57,7 @@
                         style="@style/judo_start_date"
                         tools:ignore="TextFields" />
 
-                </com.judopay.view.JudoTextInputLayout>
+                </com.judopay.JudoTextInputLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -65,7 +65,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <com.judopay.view.JudoTextInputLayout
+                    <com.judopay.JudoTextInputLayout
                         android:id="@+id/issue_number_input_layout"
                         style="@style/input_layout">
 
@@ -73,7 +73,7 @@
                             android:id="@+id/issue_number_edit_text"
                             style="@style/judo_issue_number" />
 
-                    </com.judopay.view.JudoTextInputLayout>
+                    </com.judopay.JudoTextInputLayout>
 
                     <TextView
                         android:id="@+id/issue_number_helper_text"
@@ -91,7 +91,7 @@
                 android:orientation="horizontal"
                 android:weightSum="2">
 
-                <com.judopay.view.JudoTextInputLayout
+                <com.judopay.JudoTextInputLayout
                     android:id="@+id/expiry_date_input_layout"
                     style="@style/input_layout"
                     android:layout_weight="1">
@@ -102,7 +102,7 @@
                         android:layout_weight="1"
                         tools:ignore="TextFields" />
 
-                </com.judopay.view.JudoTextInputLayout>
+                </com.judopay.JudoTextInputLayout>
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -114,7 +114,7 @@
                         style="@style/judo_cvv_image"
                         tools:ignore="RtlHardcoded" />
 
-                    <com.judopay.view.JudoTextInputLayout
+                    <com.judopay.JudoTextInputLayout
                         android:id="@+id/cvv_input_layout"
                         style="@style/input_layout">
 
@@ -123,7 +123,7 @@
                             style="@style/judo_cvv"
                             android:layout_weight="1" />
 
-                    </com.judopay.view.JudoTextInputLayout>
+                    </com.judopay.JudoTextInputLayout>
 
                     <TextView
                         android:id="@+id/cvv_helper_text"
@@ -162,7 +162,7 @@
 
                 </LinearLayout>
 
-                <com.judopay.view.JudoTextInputLayout
+                <com.judopay.JudoTextInputLayout
                     android:id="@+id/post_code_input_layout"
                     style="@style/input_layout"
                     android:layout_width="match_parent"
@@ -174,16 +174,16 @@
                         android:hint="@string/postcode_uk"
                         tools:ignore="UnusedAttribute" />
 
-                </com.judopay.view.JudoTextInputLayout>
+                </com.judopay.JudoTextInputLayout>
 
             </LinearLayout>
+
+            <Button
+                android:id="@+id/payment_button"
+                style="@style/judo_payment_button" />
 
         </LinearLayout>
 
     </ScrollView>
-
-    <Button
-        android:id="@+id/payment_button"
-        style="@style/judo_payment_button" />
 
 </FrameLayout>

@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.judopay.Consumer;
@@ -39,16 +38,16 @@ public class MainActivity extends AppCompatActivity {
     private static final int REGISTER_CARD_TOKEN_PRE_AUTH_REQUEST = 601;
 
     @Bind(R.id.payment_button)
-    Button paymentButton;
+    View paymentButton;
 
     @Bind(R.id.pre_auth_button)
-    Button preAuthButton;
+    View preAuthButton;
 
     @Bind(R.id.token_payment_button)
-    Button tokenPaymentButton;
+    View tokenPaymentButton;
 
     @Bind(R.id.register_card_button)
-    Button registerCardButton;
+    View registerCardButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -39,7 +39,7 @@
         <item name="hintAnimationEnabled">false</item>
     </style>
 
-    <style name="judo_card_number">
+    <style name="judo_card_number" parent="Widget.AppCompat.EditText">
         <item name="android:hint">@string/card_number_label</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -49,7 +49,7 @@
         <item name="android:maxLength">19</item>
     </style>
 
-    <style name="judo_date">
+    <style name="judo_date" parent="Widget.AppCompat.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:digits">0123456789/</item>
@@ -74,7 +74,7 @@
         <item name="android:layout_marginTop">@dimen/large_padding</item>
     </style>
 
-    <style name="judo_cvv">
+    <style name="judo_cvv" parent="Widget.AppCompat.EditText">
         <item name="android:hint">@string/cvv_label</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -104,7 +104,7 @@
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="judo_postcode">
+    <style name="judo_postcode" parent="Widget.AppCompat.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:imeOptions">actionDone</item>
@@ -130,13 +130,23 @@
         <item name="android:layout_marginLeft">@dimen/small_padding</item>
     </style>
 
-    <style name="judo_issue_number">
+    <style name="judo_issue_number" parent="Widget.AppCompat.EditText">
         <item name="android:hint">@string/issue_number_label</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:imeOptions">actionNext|flagNoExtractUi</item>
         <item name="android:inputType">number</item>
         <item name="android:maxLength">3</item>
+    </style>
+
+    <style name="payment_form_container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingBottom">70dp</item>
+        <item name="android:paddingLeft">@dimen/medium_padding</item>
+        <item name="android:paddingRight">@dimen/medium_padding</item>
+        <item name="android:paddingTop">@dimen/medium_padding</item>
     </style>
 
     <dimen name="small_padding">4dp</dimen>

@@ -30,7 +30,6 @@ import com.judopay.view.ScrollOnFocusChangeListener;
 import com.judopay.view.SingleClickOnClickListener;
 import com.judopay.payment.form.address.CountryAndPostcodeValidation;
 import com.judopay.payment.form.address.CountrySpinner;
-import com.judopay.payment.form.address.PostcodeEditText;
 import com.judopay.payment.form.cardnumber.CardNumberFormattingTextWatcher;
 import com.judopay.payment.form.cardnumber.CardNumberValidation;
 import com.judopay.payment.form.cvv.CvvImageView;
@@ -49,7 +48,8 @@ public class PaymentFormFragment extends Fragment {
     private CardTypeImageView cardTypeImageView;
     private CvvImageView cvvImageView;
     private CountrySpinner countrySpinner;
-    private PostcodeEditText postcodeEditText;
+    private EditText postcodeEditText;
+
     private EditText startDateEditText;
     private EditText expiryDateEditText;
     private EditText cardNumberEditText;
@@ -81,7 +81,7 @@ public class PaymentFormFragment extends Fragment {
         cvvInputLayout = (TextInputLayout) view.findViewById(R.id.cvv_input_layout);
         cvvHelperText = view.findViewById(R.id.cvv_helper_text);
 
-        postcodeEditText = (PostcodeEditText) view.findViewById(R.id.post_code_edit_text);
+        postcodeEditText = (EditText) view.findViewById(R.id.post_code_edit_text);
         postcodeInputLayout = (TextInputLayout) view.findViewById(R.id.post_code_input_layout);
 
         cardNumberEditText = (EditText) view.findViewById(R.id.card_number_edit_text);
