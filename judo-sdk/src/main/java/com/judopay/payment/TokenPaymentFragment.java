@@ -5,22 +5,20 @@ import com.judopay.customer.Card;
 import com.judopay.customer.CardToken;
 import com.judopay.customer.Location;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-
 public class TokenPaymentFragment extends BasePaymentFragment {
 
     @Override
     public void onSubmit(Card card) {
-        if (!getArguments().containsKey(KEY_TOKEN_PAYMENT)) {
+        TokenPayment tokenPayment = getArguments().getParcelable(KEY_TOKEN_PAYMENT);
+
+        if (tokenPayment == null) {
             throw new RuntimeException("TokenPayment argument must be provided to TokenPaymentFragment");
         }
 
-        TokenPayment tokenPayment = getArguments().getParcelable(KEY_TOKEN_PAYMENT);
+        CardToken cardToken = tokenPayment.getCardToken();
 
-        TokenTransaction.Builder builder = new TokenTransaction.Builder();
-
-        builder.setAmount(tokenPayment.getAmount())
+        TokenTransaction tokenTransaction = new TokenTransaction.Builder()
+                .setAmount(tokenPayment.getAmount())
                 .setCardAddress(card.getCardAddress())
                 .setClientDetails(new Client())
                 .setConsumerLocation(new Location())
@@ -29,22 +27,19 @@ public class TokenPaymentFragment extends BasePaymentFragment {
                 .setYourConsumerReference(tokenPayment.getConsumer().getYourConsumerReference())
                 .setYourPaymentReference(tokenPayment.getPaymentReference())
                 .setCv2(card.getCv2())
-                .setYourPaymentMetaData(tokenPayment.getYourMetaData());
-
-        CardToken cardToken = tokenPayment.getCardToken();
-
-        builder.setEndDate(cardToken.getEndDate())
+                .setYourPaymentMetaData(tokenPayment.getYourMetaData())
+                .setEndDate(cardToken.getEndDate())
                 .setLastFour(cardToken.getLastFour())
                 .setToken(cardToken.getToken())
-                .setType(cardToken.getType());
+                .setType(cardToken.getType())
+                .build();
 
-        performTokenPayment(builder.build());
+        performTokenPayment(tokenTransaction);
     }
 
     private void performTokenPayment(TokenTransaction transaction) {
         onLoadStarted();
 
-        new Gson().toJson(transaction);
         judoApiService.tokenPayment(transaction)
                 .subscribe(this);
     }

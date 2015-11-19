@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
                                 .setCardToken(receipt.getCardDetails())
                                 .setConsumer(receipt.getConsumer())
                                 .setPaymentReference(receipt.getYourPaymentReference())
-                                .setJudoId("100016")
+                                .setJudoId("100407196")
                                 .setAmount("4.99")
                                 .setCurrency("GBP")
                                 .build();

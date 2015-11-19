@@ -22,8 +22,6 @@ import java.io.IOException;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public abstract class BasePaymentFragment extends Fragment implements PaymentFormListener, ThreeDSecureListener, Observer<Receipt> {
 
@@ -70,7 +68,6 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
         super.onViewCreated(view, savedInstanceState);
 
         this.progressBar = view.findViewById(R.id.progress_overlay);
-        this.progressBar = view.findViewById(R.id.progress_container);
         this.progressText = (TextView) view.findViewById(R.id.progress_text);
         this.threeDSecureWebView = (ThreeDSecureWebView) view.findViewById(R.id.three_d_secure_web_view);
 
@@ -166,6 +163,9 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
     public void onAuthorizationWebPageLoaded() {
         show3dSecureDialog(get3dSecureLoadingText());
     }
+
+    @Override
+    public void onAuthorizationWebPageLoadingError(int errorCode, String description, String failingUrl) { }
 
     protected String get3dSecureLoadingText() {
         return getString(R.string.verifying_payment);

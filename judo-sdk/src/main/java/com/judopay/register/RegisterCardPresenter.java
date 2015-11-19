@@ -3,7 +3,6 @@ package com.judopay.register;
 import com.judopay.Client;
 import com.judopay.Consumer;
 import com.judopay.JudoApiService;
-import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.payment.PaymentFormListener;
 import com.judopay.payment.Receipt;
@@ -29,9 +28,7 @@ class RegisterCardPresenter implements PaymentFormListener, Observer<Receipt> {
     @Override
     public void onSubmit(Card card) {
         RegisterTransaction.Builder builder = new RegisterTransaction.Builder()
-                .setCardAddress(new Address.Builder()
-                        .setPostCode(card.getCardAddress().getPostcode())
-                        .build())
+                .setCardAddress(card.getCardAddress())
                 .setClientDetails(new Client())
                 .setCardNumber(card.getCardNumber())
                 .setCv2(card.getCv2())

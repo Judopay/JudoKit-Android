@@ -2,8 +2,8 @@ package com.judopay.register;
 
 import com.judopay.Consumer;
 import com.judopay.JudoApiService;
+import com.judopay.customer.Address;
 import com.judopay.customer.Card;
-import com.judopay.customer.CardAddress;
 import com.judopay.payment.Receipt;
 
 import org.junit.Test;
@@ -32,7 +32,7 @@ public class RegisterCardPresenterTest {
     Consumer consumer;
 
     @Mock
-    CardAddress cardAddress;
+    Address cardAddress;
 
     @Mock
     JudoApiService apiService;
