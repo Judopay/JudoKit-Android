@@ -19,6 +19,7 @@ public class PaymentTransaction {
     private String expiryDate;
     private String startDate;
     private String issueNumber;
+    private Boolean saveCardOnly;
 
     public String getAmount() {
         return amount;
@@ -70,6 +71,10 @@ public class PaymentTransaction {
 
     public String getExpiryDate() {
         return expiryDate;
+    }
+
+    public Boolean getSaveCardOnly() {
+        return saveCardOnly;
     }
 
     public static class Builder {
@@ -142,6 +147,11 @@ public class PaymentTransaction {
 
         public Builder setIssueNumber(String issueNumber) {
             paymentTransaction.issueNumber = issueNumber;
+            return this;
+        }
+
+        public Builder setSaveCardOnly(Boolean saveCardOnly) {
+            paymentTransaction.saveCardOnly = saveCardOnly;
             return this;
         }
 
