@@ -9,6 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <com.judopay.secure3d.ThreeDSecureWebView
+        android:id="@+id/three_d_secure_web_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
     <com.judopay.view.ThemedLinearLayout
         android:id="@+id/progress_overlay"
         android:layout_width="match_parent"
@@ -21,6 +27,7 @@
         tools:visibility="visible">
 
         <TextView
+            android:id="@+id/progress_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
