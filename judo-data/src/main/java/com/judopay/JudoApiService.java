@@ -11,6 +11,7 @@ import com.judopay.register.RegisterTransaction;
 import retrofit.http.Body;
 import retrofit.http.POST;
 import retrofit.http.PUT;
+import retrofit.http.Path;
 import rx.Observable;
 
 public interface JudoApiService {
@@ -22,7 +23,7 @@ public interface JudoApiService {
     Observable<Receipt> tokenPayment(@Body TokenTransaction transaction);
 
     @PUT("transactions/{receiptId}")
-    Observable<Receipt> threeDSecurePayment(String receiptId, @Body ThreeDSecureInfo threeDSecureInfo);
+    Observable<Receipt> threeDSecurePayment(@Path("receiptId") String receiptId, @Body ThreeDSecureInfo threeDSecureInfo);
 
     @POST("transactions/collections")
     Observable<Receipt> collection(@Body Collection collection);
