@@ -16,40 +16,19 @@ public class RootDetector {
 
     /**
      * Detects using several methods if the device is rooted.
+     *
      * @return if the device is rooted
      */
     public static boolean isRooted() {
-        return isTestKeysPresent() || isSystemPathAccessible();
+        return isSuRunnable();
     }
 
-    private static boolean isTestKeysPresent() {
-        String buildTags = android.os.Build.TAGS;
-        return buildTags != null && buildTags.contains("test-keys");
-    }
-
-    private static boolean isSystemPathAccessible() {
-        String[] paths = {"/system/app/Superuser.apk",
-                "/sbin/su",
-                "/system/bin/su",
-                "/system/xbin/su",
-                "/data/local/xbin/su",
-                "/data/local/bin/su",
-                "/system/sd/xbin/su",
-                "/system/bin/failsafe/su",
-                "/data/local/su"};
-
-        for (String path : paths) {
-            if (new File(path).exists()) return true;
-        }
-        return false;
-    }
-
-    private static boolean isSystemCommandExecutable() {
+    private static boolean isSuRunnable() {
         Process process = null;
         try {
             process = new ProcessBuilder()
-                    .command("/system/bin/ping", "android.com")
-                    .redirectErrorStream(true)
+                    .command("/system/bin/su")
+                    .redirectErrorStream(false)
                     .start();
             BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
             return in.readLine() != null;
