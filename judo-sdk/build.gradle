@@ -40,16 +40,10 @@ dependencies {
     compile project(':judo-data')
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.android.support:appcompat-v7:23.1.0'
-
-    // should be upgraded when possible to resolve issue
-    // https://code.google.com/p/android/issues/detail?id=190355&q=label%3AType-Defect&colspec=ID%20Type%20Status%20Owner%20Summary%20Stars
-    compile 'com.android.support:design:23.1.0'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
 
     testCompile 'junit:junit:4.12'
-    testCompile "org.robolectric:robolectric:3.0"
-    testCompile "org.robolectric:shadows-support-v4:3.0"
-
     testCompile 'org.mockito:mockito-core:1.10.19'
 
 }
