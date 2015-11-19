@@ -3,15 +3,18 @@ package com.judopay;
 import com.judopay.payment.Collection;
 import com.judopay.payment.PaymentTransaction;
 import com.judopay.payment.Receipt;
+import com.judopay.payment.Receipts;
 import com.judopay.payment.Refund;
 import com.judopay.payment.ThreeDSecureInfo;
 import com.judopay.payment.TokenTransaction;
 import com.judopay.register.RegisterTransaction;
 
 import retrofit.http.Body;
+import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import rx.Observable;
 
 public interface JudoApiService {
@@ -36,5 +39,23 @@ public interface JudoApiService {
 
     @POST("transactions/registercard")
     Observable<Receipt> registerCard(@Body RegisterTransaction transaction);
+
+    @GET("transactions/preauths")
+    Observable<Receipts> paymentReceipts(@Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+
+    @GET("transactions/preauths")
+    Observable<Receipts> preAuthReceipts(@Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+
+    @GET("transactions/refunds")
+    Observable<Receipts> refundReceipts(@Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+
+    @GET("transactions/collections")
+    Observable<Receipts> collectionReceipts(@Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+
+    @GET("consumers/{consumerToken}")
+    Observable<Receipts> consumerReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+
+    @GET("consumers/{consumerToken}/{receiptId}")
+    Observable<Receipts> consumerReceipts(@Path("consumerToken") String consumerToken, @Path("receiptId") String receiptId, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
 }
