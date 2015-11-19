@@ -12,11 +12,11 @@
 
         <TextView
             style="@style/list_button_primary_text"
-            android:text="Payment" />
+            android:text="@string/payment" />
 
         <TextView
             style="@style/list_button_secondary_text"
-            android:text="with default settings" />
+            android:text="@string/with_default_settings" />
 
     </LinearLayout>
 
@@ -26,11 +26,11 @@
 
         <TextView
             style="@style/list_button_primary_text"
-            android:text="Pre-auth" />
+            android:text="@string/pre_auth" />
 
         <TextView
             style="@style/list_button_secondary_text"
-            android:text="to reserve funds on a card" />
+            android:text="@string/reserve_funds_on_card" />
 
     </LinearLayout>
 
@@ -40,11 +40,25 @@
 
         <TextView
             style="@style/list_button_primary_text"
-            android:text="Token payment" />
+            android:text="@string/token_payment" />
 
         <TextView
             style="@style/list_button_secondary_text"
-            android:text="with a stored card token" />
+            android:text="@string/with_stored_card_token" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/register_card_button"
+        style="@style/list_button">
+
+        <TextView
+            style="@style/list_button_primary_text"
+            android:text="@string/register_card" />
+
+        <TextView
+            style="@style/list_button_secondary_text"
+            android:text="@string/stored_for_future_transactions" />
 
     </LinearLayout>
 
@@ -55,12 +69,5 @@
         android:text="@string/test_card_detail_instructions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/register_card_button"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/register_card" />
 
 </LinearLayout>
