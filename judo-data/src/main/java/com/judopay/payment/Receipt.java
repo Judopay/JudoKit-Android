@@ -29,7 +29,23 @@ public class Receipt extends Response implements Parcelable {
     private Consumer consumer;
     private Risks risks;
 
+    private String md;
+    private String paReq;
+    private String acsUrl;
+
     public Receipt() { }
+
+    public String getMd() {
+        return md;
+    }
+
+    public String getPaReq() {
+        return paReq;
+    }
+
+    public String getAcsUrl() {
+        return acsUrl;
+    }
 
     public String getReceiptId() {
         return receiptId;
@@ -101,7 +117,6 @@ public class Receipt extends Response implements Parcelable {
                 ", yourPaymentReference='" + yourPaymentReference + '\'' +
                 ", type='" + type + '\'' +
                 ", createdAt=" + createdAt +
-                ", result='" + result + '\'' +
                 ", message='" + message + '\'' +
                 ", merchantName='" + merchantName + '\'' +
                 ", appearsOnStatementAs='" + appearsOnStatementAs + '\'' +
@@ -112,6 +127,9 @@ public class Receipt extends Response implements Parcelable {
                 ", cardDetails=" + cardDetails +
                 ", consumer=" + consumer +
                 ", risks=" + risks +
+                ", md='" + md + '\'' +
+                ", paReq='" + paReq + '\'' +
+                ", acsUrl='" + acsUrl + '\'' +
                 '}';
     }
 
@@ -173,6 +191,10 @@ public class Receipt extends Response implements Parcelable {
             return new Receipt[size];
         }
     };
+
+    public boolean is3dSecureRequired() {
+        return acsUrl != null && md != null && paReq != null;
+    }
 
     public static class Builder {
 

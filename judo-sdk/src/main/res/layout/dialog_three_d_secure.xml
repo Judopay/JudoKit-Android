@@ -1,39 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <FrameLayout
-        android:id="@+id/container"
+        android:id="@+id/web_view_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
-    <com.judopay.secure3d.ThreeDSecureWebView
-        android:id="@+id/three_d_secure_web_view"
+    <LinearLayout
+        android:id="@+id/loading_overlay_3dsecure"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
-
-    <com.judopay.ThemedLinearLayout
-        android:id="@+id/progress_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:background="@color/judo_white_90"
         android:layout_gravity="center"
         android:clickable="true"
         android:gravity="center"
-        android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="visible">
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/progress_text"
+            android:id="@+id/three_d_secure_progress_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/large_padding"
             android:gravity="center"
-            android:text="@string/processing_payment"
             android:textSize="16sp" />
 
         <ProgressBar
@@ -43,6 +35,6 @@
             android:layout_gravity="center"
             android:indeterminate="true" />
 
-    </com.judopay.ThemedLinearLayout>
+    </LinearLayout>
 
 </FrameLayout>

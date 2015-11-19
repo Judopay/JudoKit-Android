@@ -8,6 +8,9 @@ import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.customer.Location;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 import static com.judopay.JudoPay.EXTRA_PAYMENT;
 
 public class PaymentFragment extends BasePaymentFragment {
@@ -25,6 +28,10 @@ public class PaymentFragment extends BasePaymentFragment {
 
     @Override
     public void onSubmit(Card card) {
+        if (!getArguments().containsKey(EXTRA_PAYMENT)) {
+            throw new RuntimeException("Payment extra must be provided to PaymentFragment");
+        }
+
         Payment payment = getArguments().getParcelable(EXTRA_PAYMENT);
 
         Transaction.Builder builder = new Transaction.Builder()
@@ -51,6 +58,8 @@ public class PaymentFragment extends BasePaymentFragment {
     private void performPayment(Transaction transaction) {
         onLoadStarted();
         paymentApiService.payment(transaction)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);
     }
 

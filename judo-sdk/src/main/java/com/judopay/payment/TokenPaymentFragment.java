@@ -5,10 +5,17 @@ import com.judopay.customer.Card;
 import com.judopay.customer.CardToken;
 import com.judopay.customer.Location;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class TokenPaymentFragment extends BasePaymentFragment {
 
     @Override
     public void onSubmit(Card card) {
+        if (!getArguments().containsKey(KEY_TOKEN_PAYMENT)) {
+            throw new RuntimeException("TokenPayment argument must be provided to TokenPaymentFragment");
+        }
+
         TokenPayment tokenPayment = getArguments().getParcelable(KEY_TOKEN_PAYMENT);
 
         TokenTransaction.Builder builder = new TokenTransaction.Builder();
@@ -37,6 +44,8 @@ public class TokenPaymentFragment extends BasePaymentFragment {
     private void performTokenPayment(TokenTransaction transaction) {
         onLoadStarted();
         paymentApiService.tokenPayment(transaction)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);
     }
 

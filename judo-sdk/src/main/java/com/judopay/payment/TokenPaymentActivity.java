@@ -55,4 +55,10 @@ public class TokenPaymentActivity extends JudoActivity implements PaymentListene
         finish();
     }
 
+    @Override
+    public void onError() {
+        setResult(JudoPay.RESULT_ERROR);
+        finish();
+    }
+
 }

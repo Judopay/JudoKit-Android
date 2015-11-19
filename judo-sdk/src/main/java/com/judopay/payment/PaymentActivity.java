@@ -11,6 +11,8 @@ import static com.judopay.JudoPay.EXTRA_PAYMENT;
 
 public class PaymentActivity extends JudoActivity implements PaymentListener {
 
+    private PaymentFragment paymentFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,19 +24,21 @@ public class PaymentActivity extends JudoActivity implements PaymentListener {
 
         if (savedInstanceState == null) {
             Payment payment = getIntent().getParcelableExtra(EXTRA_PAYMENT);
-            PaymentFragment fragment = PaymentFragment.newInstance(payment, this);
+            paymentFragment = PaymentFragment.newInstance(payment, this);
 
             getFragmentManager()
                     .beginTransaction()
-                    .add(android.R.id.content, fragment)
+                    .add(android.R.id.content, paymentFragment)
                     .commit();
         }
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        setResult(JudoPay.RESULT_CANCELED);
+        if (paymentFragment == null || !paymentFragment.isPaymentInProgress()) {
+            super.onBackPressed();
+            setResult(JudoPay.RESULT_CANCELED);
+        }
     }
 
     @Override
@@ -54,6 +58,12 @@ public class PaymentActivity extends JudoActivity implements PaymentListener {
 
         setResult(JudoPay.RESULT_PAYMENT_DECLINED, intent);
 
+        finish();
+    }
+
+    @Override
+    public void onError() {
+        setResult(JudoPay.RESULT_ERROR);
         finish();
     }
 
