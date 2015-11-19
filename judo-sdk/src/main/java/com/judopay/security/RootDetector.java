@@ -19,7 +19,7 @@ public class RootDetector {
      * @return if the device is rooted
      */
     public static boolean isRooted() {
-        return isTestKeysPresent() || isSystemPathAccessible() || isSystemCommandExecutable();
+        return isTestKeysPresent() || isSystemPathAccessible();
     }
 
     private static boolean isTestKeysPresent() {
