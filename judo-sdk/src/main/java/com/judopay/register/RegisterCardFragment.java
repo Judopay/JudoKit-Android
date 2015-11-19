@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.judopay.AndroidScheduler;
 import com.judopay.Consumer;
 import com.judopay.JudoApiService;
 import com.judopay.JudoPay;
@@ -45,6 +46,7 @@ public class RegisterCardFragment extends Fragment implements PaymentFormView {
 
             this.presenter = new RegisterCardPresenter(consumer, this,
                     RetrofitFactory.getInstance().create(JudoApiService.class),
+                    new AndroidScheduler(),
                     JudoPay.isThreeDSecureEnabled());
 
             PaymentFormFragment paymentFormFragment = PaymentFormFragment.newInstance(this.presenter, getString(R.string.add_card));

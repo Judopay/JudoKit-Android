@@ -3,8 +3,8 @@ package com.judopay.register;
 import com.judopay.Client;
 import com.judopay.Consumer;
 import com.judopay.JudoApiService;
-import com.judopay.JudoPay;
 import com.judopay.R;
+import com.judopay.Scheduler;
 import com.judopay.customer.Card;
 import com.judopay.payment.PaymentFormListener;
 import com.judopay.payment.Receipt;
@@ -12,8 +12,6 @@ import com.judopay.payment.ThreeDSecureInfo;
 import com.judopay.secure3d.ThreeDSecureListener;
 
 import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 class RegisterCardPresenter implements PaymentFormListener, Observer<Receipt>, ThreeDSecureListener {
 
@@ -21,16 +19,18 @@ class RegisterCardPresenter implements PaymentFormListener, Observer<Receipt>, T
     private final PaymentFormView paymentFormView;
     private final JudoApiService apiService;
     private final boolean threeDSecureEnabled;
+    private final Scheduler scheduler;
 
     private boolean paymentInProgress;
 
     public RegisterCardPresenter(Consumer consumer,
                                  PaymentFormView paymentFormView,
                                  JudoApiService apiService,
-                                 boolean threeDSecureEnabled) {
+                                 Scheduler scheduler, boolean threeDSecureEnabled) {
         this.consumer = consumer;
         this.paymentFormView = paymentFormView;
         this.apiService = apiService;
+        this.scheduler = scheduler;
         this.threeDSecureEnabled = threeDSecureEnabled;
     }
 
@@ -55,8 +55,8 @@ class RegisterCardPresenter implements PaymentFormListener, Observer<Receipt>, T
         this.paymentInProgress = true;
 
         apiService.registerCard(builder.build())
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(scheduler.backgroundThread())
+                .observeOn(scheduler.mainThread())
                 .subscribe(this);
 
         paymentFormView.showLoading();
@@ -64,7 +64,6 @@ class RegisterCardPresenter implements PaymentFormListener, Observer<Receipt>, T
 
     @Override
     public void onCompleted() {
-        paymentFormView.hideLoading();
     }
 
     @Override
@@ -77,6 +76,7 @@ class RegisterCardPresenter implements PaymentFormListener, Observer<Receipt>, T
         if (receipt.isSuccess()) {
             paymentInProgress = false;
             paymentFormView.finish(receipt);
+            paymentFormView.hideLoading();
         } else {
             handle3dSecureOrDeclinedPayment(receipt);
         }
@@ -107,12 +107,13 @@ class RegisterCardPresenter implements PaymentFormListener, Observer<Receipt>, T
     @Override
     public void onAuthorizationCompleted(ThreeDSecureInfo threeDSecureInfo, String receiptId) {
         apiService.threeDSecurePayment(receiptId, threeDSecureInfo)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(scheduler.backgroundThread())
+                .observeOn(scheduler.mainThread())
                 .subscribe(this);
     }
 
     @Override
-    public void onAuthorizationWebPageLoadingError(int errorCode, String description, String failingUrl) { }
+    public void onAuthorizationWebPageLoadingError(int errorCode, String description, String failingUrl) {
+    }
 
 }
