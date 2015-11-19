@@ -5,7 +5,7 @@
     <string name="postcode_canada">Postal code</string>
     <string name="pay">PAY</string>
     <string name="payment">Payment</string>
-    <string name="token_payment">Token Payment</string>
+    <string name="token_payment">Token payment</string>
     <string name="card_number_label">Card number</string>
     <string name="expiry_date_label">Expiry date</string>
     <string name="start_date_label">Start date</string>
