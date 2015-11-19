@@ -2,6 +2,7 @@ package com.judopay.register;
 
 import com.judopay.Consumer;
 import com.judopay.JudoApiService;
+import com.judopay.R;
 import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.payment.Receipt;
@@ -15,6 +16,7 @@ import rx.Observable;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -42,7 +44,7 @@ public class RegisterCardPresenterTest {
 
     @Test
     public void shouldRegisterCard() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService, false);
 
         when(card.getCardAddress()).thenReturn(cardAddress);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
@@ -54,7 +56,7 @@ public class RegisterCardPresenterTest {
 
     @Test
     public void shouldHideLoadingOnComplete() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService, false);
 
         presenter.onCompleted();
 
@@ -63,7 +65,7 @@ public class RegisterCardPresenterTest {
 
     @Test
     public void showShowLoadingWhenSubmittingCard() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService, false);
 
         when(card.getCardAddress()).thenReturn(cardAddress);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
@@ -75,7 +77,7 @@ public class RegisterCardPresenterTest {
 
     @Test
     public void shouldFinishPaymentFormViewOnSuccess() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService, false);
 
         when(receipt.isSuccess()).thenReturn(true);
         presenter.onNext(receipt);
@@ -85,7 +87,7 @@ public class RegisterCardPresenterTest {
 
     @Test
     public void shouldShowDeclinedMessageWhenDeclined() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService, false);
 
         when(receipt.isSuccess()).thenReturn(false);
 
@@ -96,7 +98,7 @@ public class RegisterCardPresenterTest {
 
     @Test
     public void shouldHideLoadingIfReconnectAndPaymentNotInProgress() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService, false);
         presenter.reconnect();
 
         verify(paymentFormView).hideLoading();
@@ -104,7 +106,7 @@ public class RegisterCardPresenterTest {
 
     @Test
     public void shouldShowLoadingIfReconnectAndPaymentInProgress() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService, false);
 
         when(card.getCardAddress()).thenReturn(cardAddress);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
@@ -114,6 +116,32 @@ public class RegisterCardPresenterTest {
         presenter.reconnect();
 
         verify(paymentFormView, times(2)).showLoading();
+    }
+
+    @Test
+    public void shouldStart3dSecureWebViewIfRequired() {
+        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService, true);
+
+        when(receipt.isSuccess()).thenReturn(false);
+        when(receipt.is3dSecureRequired()).thenReturn(true);
+
+        presenter.onNext(receipt);
+
+        verify(paymentFormView).setLoadingText(eq(R.string.redirecting));
+        verify(paymentFormView).start3dSecureWebView(eq(receipt));
+    }
+
+    @Test
+    public void shouldDeclineIf3dSecureRequiredButNotEnabled() {
+        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService, false);
+
+        when(receipt.isSuccess()).thenReturn(false);
+        when(receipt.is3dSecureRequired()).thenReturn(true);
+
+        presenter.onNext(receipt);
+
+        verify(paymentFormView).showDeclinedMessage(eq(receipt));
+        verify(paymentFormView, never()).start3dSecureWebView(eq(receipt));
     }
 
 }
