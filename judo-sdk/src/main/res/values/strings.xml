@@ -40,4 +40,5 @@
     <string name="authenticating">Authenticating</string>
     <string name="authentication">Authentication</string>
     <string name="verifying_payment">Verifying payment</string>
+    <string name="verifying_card">Verifying card</string>
 </resources>
