@@ -33,7 +33,7 @@ public class PreAuthFragment extends BasePaymentFragment {
 
         Payment payment = getArguments().getParcelable(EXTRA_PAYMENT);
 
-        Transaction.Builder builder = new Transaction.Builder()
+        PaymentTransaction.Builder builder = new PaymentTransaction.Builder()
                 .setAmount(payment.getAmount())
                 .setCardAddress(card.getCardAddress())
                 .setClientDetails(new Client())
@@ -54,9 +54,9 @@ public class PreAuthFragment extends BasePaymentFragment {
         performPreAuth(builder.build());
     }
 
-    private void performPreAuth(Transaction transaction) {
+    private void performPreAuth(PaymentTransaction paymentTransaction) {
         onLoadStarted();
-        paymentApiService.preAuth(transaction)
+        judoApiService.preAuth(paymentTransaction)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.judopay.JudoApiService;
 import com.judopay.JudoPay;
 import com.judopay.R;
 import com.judopay.arch.api.RetrofitFactory;
@@ -21,6 +22,8 @@ import java.io.IOException;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public abstract class BasePaymentFragment extends Fragment implements PaymentFormListener, ThreeDSecureListener, Observer<Receipt> {
 
@@ -32,7 +35,7 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
     protected View progressBar;
     protected TextView progressText;
     protected PaymentListener paymentListener;
-    protected PaymentApiService paymentApiService;
+    protected JudoApiService judoApiService;
 
     private boolean paymentInProgress;
 
@@ -49,8 +52,8 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
 
         setRetainInstance(true);
 
-        this.paymentApiService = RetrofitFactory.getInstance()
-                .create(PaymentApiService.class);
+        this.judoApiService = RetrofitFactory.getInstance()
+                .create(JudoApiService.class);
     }
 
     public void setPaymentListener(PaymentListener paymentListener) {
@@ -66,6 +69,7 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        this.progressBar = view.findViewById(R.id.progress_overlay);
         this.progressBar = view.findViewById(R.id.progress_container);
         this.progressText = (TextView) view.findViewById(R.id.progress_text);
         this.threeDSecureWebView = (ThreeDSecureWebView) view.findViewById(R.id.three_d_secure_web_view);
@@ -152,15 +156,12 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
 
     @Override
     public void onAuthorizationCompleted(ThreeDSecureInfo threeDSecureInfo, String receiptId) {
-        paymentApiService.threeDSecurePayment(receiptId, threeDSecureInfo)
+        judoApiService.threeDSecurePayment(receiptId, threeDSecureInfo)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);
     }
-
-    @Override
-    public void onAuthorizationWebPageLoadingError(int errorCode, String description, String failingUrl) { }
-
+    
     @Override
     public void onAuthorizationWebPageLoaded() {
         show3dSecureDialog(get3dSecureLoadingText());

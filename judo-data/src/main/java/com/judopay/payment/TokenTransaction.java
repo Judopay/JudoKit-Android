@@ -169,7 +169,7 @@ public class TokenTransaction {
 
         public TokenTransaction build() {
             if (tokenTransaction.currency == null || tokenTransaction.currency.length() == 0) {
-                throw new IllegalArgumentException("Currency must be set for Transaction");
+                throw new IllegalArgumentException("currency must be set for TokenTransaction");
             }
 
             return tokenTransaction;

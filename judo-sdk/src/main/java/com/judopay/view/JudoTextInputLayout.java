@@ -1,4 +1,4 @@
-package com.judopay;
+package com.judopay.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;

@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.judopay.Client;
 import com.judopay.JudoPay;
-import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.customer.Location;
 
@@ -34,7 +33,7 @@ public class PaymentFragment extends BasePaymentFragment {
 
         Payment payment = getArguments().getParcelable(EXTRA_PAYMENT);
 
-        Transaction.Builder builder = new Transaction.Builder()
+        PaymentTransaction.Builder builder = new PaymentTransaction.Builder()
                 .setAmount(payment.getAmount())
                 .setCardAddress(card.getCardAddress())
                 .setClientDetails(new Client())
@@ -55,9 +54,9 @@ public class PaymentFragment extends BasePaymentFragment {
         performPayment(builder.build());
     }
 
-    private void performPayment(Transaction transaction) {
+    private void performPayment(PaymentTransaction paymentTransaction) {
         onLoadStarted();
-        paymentApiService.payment(transaction)
+        judoApiService.payment(paymentTransaction)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);

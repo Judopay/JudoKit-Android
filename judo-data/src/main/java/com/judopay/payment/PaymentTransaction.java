@@ -4,7 +4,7 @@ import com.judopay.Client;
 import com.judopay.customer.Address;
 import com.judopay.customer.Location;
 
-public class Transaction {
+public class PaymentTransaction {
 
     private String amount;
     private Client clientDetails;
@@ -74,83 +74,91 @@ public class Transaction {
 
     public static class Builder {
 
-        private Transaction transaction;
+        private PaymentTransaction paymentTransaction;
 
         public Builder() {
-            this.transaction = new Transaction();
+            this.paymentTransaction = new PaymentTransaction();
         }
 
         public Builder setAmount(String amount) {
-            transaction.amount = amount;
+            paymentTransaction.amount = amount;
             return this;
         }
 
         public Builder setClientDetails(Client clientDetails) {
-            transaction.clientDetails = clientDetails;
+            paymentTransaction.clientDetails = clientDetails;
             return this;
         }
 
         public Builder setConsumerLocation(Location consumerLocation) {
-            transaction.consumerLocation = consumerLocation;
+            paymentTransaction.consumerLocation = consumerLocation;
             return this;
         }
 
         public Builder setCurrency(String currency) {
-            transaction.currency = currency;
+            paymentTransaction.currency = currency;
             return this;
         }
 
         public Builder setJudoId(long judoId) {
-            transaction.judoId = judoId;
+            paymentTransaction.judoId = judoId;
             return this;
         }
 
         public Builder setYourConsumerReference(String yourConsumerReference) {
-            transaction.yourConsumerReference = yourConsumerReference;
+            paymentTransaction.yourConsumerReference = yourConsumerReference;
             return this;
         }
 
         public Builder setYourPaymentReference(String yourPaymentReference) {
-            transaction.yourPaymentReference = yourPaymentReference;
+            paymentTransaction.yourPaymentReference = yourPaymentReference;
             return this;
         }
 
         public Builder setCardAddress(Address cardAddress) {
-            transaction.cardAddress = cardAddress;
+            paymentTransaction.cardAddress = cardAddress;
             return this;
         }
 
         public Builder setCardNumber(String cardNumber) {
-            transaction.cardNumber = cardNumber;
+            paymentTransaction.cardNumber = cardNumber;
             return this;
         }
 
         public Builder setCv2(String cv2) {
-            transaction.cv2 = cv2;
+            paymentTransaction.cv2 = cv2;
             return this;
         }
 
         public Builder setExpiryDate(String expiryDate) {
-            transaction.expiryDate = expiryDate;
+            paymentTransaction.expiryDate = expiryDate;
             return this;
         }
 
         public Builder setStartDate(String startDate) {
-            transaction.startDate = startDate;
+            paymentTransaction.startDate = startDate;
             return this;
         }
 
         public Builder setIssueNumber(String issueNumber) {
-            transaction.issueNumber = issueNumber;
+            paymentTransaction.issueNumber = issueNumber;
             return this;
         }
 
-        public Transaction build() {
-            if (transaction.currency == null || transaction.currency.length() == 0) {
-                throw new IllegalArgumentException("Currency must be set for Transaction");
+        public PaymentTransaction build() {
+            if (paymentTransaction.currency == null || paymentTransaction.currency.length() == 0) {
+                throw new IllegalArgumentException("currency must be set");
             }
 
-            return transaction;
+            if (paymentTransaction.judoId == 0) {
+                throw new IllegalArgumentException("judoId must be set");
+            }
+
+            if (paymentTransaction.amount == null || paymentTransaction.amount.length() == 0) {
+                throw new IllegalArgumentException("amount must be set");
+            }
+
+            return paymentTransaction;
         }
 
     }

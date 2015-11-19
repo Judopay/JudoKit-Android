@@ -2,7 +2,9 @@ package com.judopay;
 
 import android.content.pm.ActivityInfo;
 import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -26,14 +28,22 @@ public class JudoActivity extends AppCompatActivity {
     }
 
     @Override
+    public void setTitle(@StringRes int titleId) {
+        if (getIntent().hasExtra(Intent.EXTRA_TITLE)) {
+            super.setTitle(getIntent().getStringExtra(Intent.EXTRA_TITLE));
+        } else {
+            super.setTitle(titleId);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.judopay;
+package com.judopay.view;
 
 import android.support.annotation.StringRes;
 import android.view.View;

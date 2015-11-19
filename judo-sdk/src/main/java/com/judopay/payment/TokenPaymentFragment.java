@@ -43,9 +43,9 @@ public class TokenPaymentFragment extends BasePaymentFragment {
 
     private void performTokenPayment(TokenTransaction transaction) {
         onLoadStarted();
-        paymentApiService.tokenPayment(transaction)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+
+        new Gson().toJson(transaction);
+        judoApiService.tokenPayment(transaction)
                 .subscribe(this);
     }
 

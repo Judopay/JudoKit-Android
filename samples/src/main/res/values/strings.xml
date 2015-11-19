@@ -12,5 +12,6 @@
     <string name="payment">Payment</string>
     <string name="pre_auth">Pre-Auth</string>
     <string name="token_payment">Token Payment</string>
+    <string name="register_card">Register Card</string>
 
 </resources>

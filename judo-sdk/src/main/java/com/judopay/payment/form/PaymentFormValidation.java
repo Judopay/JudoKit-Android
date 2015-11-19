@@ -129,6 +129,7 @@ public class PaymentFormValidation {
                             && startDateAndIssueNumberValidation.isIssueNumberValid();
 
             boolean cvvValid = isCvvValid(paymentForm);
+
             boolean expiryDateValid = paymentForm.isTokenCard() || isExpiryDateValid(paymentForm.getExpiryDate());
 
             CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(paymentForm,
