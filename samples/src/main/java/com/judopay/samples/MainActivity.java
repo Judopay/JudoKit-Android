@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                         .setCardToken(new CardToken("1215", "3436", "PKMxI4788SERKz0w7opSubZGU0I5g8kb", 1))
                         .setConsumer(new Consumer("zGEHXkSTZO08FljI", "consumer10102"))
                         .setPaymentReference("payment1010102")
-                        .setJudoId("100016")
+                        .setJudoId("100407196")
                         .setAmount("4.99")
                         .setCurrency("GBP")
                         .build();
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         registerCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Consumer consumer = new Consumer("consumerToken", "consumer10102");
+                Consumer consumer = new Consumer("consumerToken", "consumerRef_100407196");
                 startRegisterCardActivity(MainActivity.this, consumer, REGISTER_CARD_REQUEST);
             }
         });
