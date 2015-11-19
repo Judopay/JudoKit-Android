@@ -80,6 +80,14 @@ public class JudoPay {
         api.setThreeDSecureEnabled(enabled);
     }
 
+    public static void setRootedDevicesAllowed(boolean allowed) {
+        api.setRootedDevicesAllowed(allowed);
+    }
+
+    public static boolean isRootedDevicesAllowed() {
+        return api.isRootedDevicesAllowed();
+    }
+
     public class Environment {
         public static final int LIVE = 0;
         public static final int SANDBOX = 1;

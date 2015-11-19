@@ -1,7 +1,6 @@
 package com.judopay.payment.form;
 
 import android.support.annotation.StringRes;
-import android.util.Log;
 
 import com.judopay.R;
 import com.judopay.customer.CardType;
