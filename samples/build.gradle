@@ -14,12 +14,6 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-    repositories {
-        maven {
-            url "http://dl.bintray.com/jamesgoodwin/maven"
-        }
-    }
-
     buildTypes {
         release {
             minifyEnabled false
