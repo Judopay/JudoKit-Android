@@ -1,45 +1,39 @@
-package com.judopay.payment;
+package com.judopay;
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.judopay.JudoActivity;
-import com.judopay.JudoPay;
-import com.judopay.R;
+import com.judopay.payment.Receipt;
 
 import static com.judopay.JudoPay.EXTRA_PAYMENT;
 
-public class PaymentActivity extends JudoActivity implements PaymentListener {
-
-    private PaymentFragment paymentFragment;
+public class PreAuthActivity extends JudoActivity implements PaymentListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (!getIntent().hasExtra(EXTRA_PAYMENT)) {
-            throw new IllegalArgumentException("payment must be provided to PaymentActivity");
+            throw new IllegalArgumentException("payment must be provided to PreAuthActivity");
         }
 
         setTitle(R.string.payment);
 
         if (savedInstanceState == null) {
             Payment payment = getIntent().getParcelableExtra(EXTRA_PAYMENT);
-            paymentFragment = PaymentFragment.newInstance(payment, this);
+            PreAuthFragment fragment = PreAuthFragment.newInstance(payment);
 
             getFragmentManager()
                     .beginTransaction()
-                    .add(android.R.id.content, paymentFragment)
+                    .add(android.R.id.content, fragment)
                     .commit();
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (paymentFragment == null || !paymentFragment.isPaymentInProgress()) {
-            super.onBackPressed();
-            setResult(JudoPay.RESULT_CANCELED);
-        }
+        super.onBackPressed();
+        setResult(JudoPay.RESULT_CANCELED);
     }
 
     @Override

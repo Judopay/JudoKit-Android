@@ -1,16 +1,9 @@
-package com.judopay.register;
+package com.judopay;
 
-import android.test.InstrumentationTestCase;
-
-import com.judopay.Consumer;
-import com.judopay.JudoApiService;
-import com.judopay.PaymentFormView;
-import com.judopay.R;
-import com.judopay.Scheduler;
-import com.judopay.TestScheduler;
 import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.payment.Receipt;
+import com.judopay.register.RegisterTransaction;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RegisterCardPresenterTest extends InstrumentationTestCase {
+public class RegisterCardPresenterTest {
 
     @Mock
     Card card;
@@ -53,10 +46,7 @@ public class RegisterCardPresenterTest extends InstrumentationTestCase {
     public void shouldRegisterCard() {
         RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
 
-        when(card.getCardAddress()).thenReturn(cardAddress);
-        when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
-
-        presenter.onSubmit(card, consumer, false);
+        presenter.performApiCall(card, consumer);
 
         verify(apiService, times(1)).registerCard(any(RegisterTransaction.class));
     }

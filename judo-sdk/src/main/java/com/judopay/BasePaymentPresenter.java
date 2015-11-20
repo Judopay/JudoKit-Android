@@ -1,28 +1,23 @@
-package com.judopay.register;
+package com.judopay;
 
-import com.judopay.Client;
-import com.judopay.Consumer;
-import com.judopay.JudoApiService;
-import com.judopay.PaymentFormView;
-import com.judopay.R;
-import com.judopay.Scheduler;
 import com.judopay.customer.Card;
 import com.judopay.payment.PaymentFormListener;
 import com.judopay.payment.Receipt;
 import com.judopay.payment.ThreeDSecureInfo;
 import com.judopay.secure3d.ThreeDSecureListener;
 
+import rx.Observable;
 import rx.functions.Action1;
 
-class RegisterCardPresenter implements PaymentFormListener, ThreeDSecureListener {
+abstract class BasePaymentPresenter implements PaymentFormListener, ThreeDSecureListener {
 
     private final PaymentFormView paymentFormView;
-    private final JudoApiService apiService;
     private final Scheduler scheduler;
+    protected final JudoApiService apiService;
 
     private boolean paymentInProgress;
 
-    public RegisterCardPresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler) {
+    public BasePaymentPresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler) {
         this.paymentFormView = paymentFormView;
         this.apiService = apiService;
         this.scheduler = scheduler;
@@ -30,25 +25,9 @@ class RegisterCardPresenter implements PaymentFormListener, ThreeDSecureListener
 
     @Override
     public void onSubmit(Card card, Consumer consumer, final boolean threeDSecureEnabled) {
-        RegisterTransaction.Builder builder = new RegisterTransaction.Builder()
-                .setCardAddress(card.getCardAddress())
-                .setClientDetails(new Client())
-                .setCardNumber(card.getCardNumber())
-                .setCv2(card.getCv2())
-                .setExpiryDate(card.getExpiryDate());
-
-        if (consumer != null) {
-            builder.setYourConsumerReference(consumer.getYourConsumerReference());
-        }
-
-        if (card.startDateAndIssueNumberRequired()) {
-            builder.setIssueNumber(card.getIssueNumber())
-                    .setStartDate(card.getStartDate());
-        }
-
         this.paymentInProgress = true;
 
-        apiService.registerCard(builder.build())
+        performApiCall(card, consumer)
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread())
                 .subscribe(new Action1<Receipt>() {
@@ -76,6 +55,8 @@ class RegisterCardPresenter implements PaymentFormListener, ThreeDSecureListener
 
         paymentFormView.showLoading();
     }
+
+    protected abstract Observable<Receipt> performApiCall(Card card, Consumer consumer);
 
     public void reconnect() {
         if (paymentInProgress) {

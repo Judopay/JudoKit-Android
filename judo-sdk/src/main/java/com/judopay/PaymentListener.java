@@ -1,6 +1,8 @@
-package com.judopay.payment;
+package com.judopay;
 
-public interface PaymentListener {
+import com.judopay.payment.Receipt;
+
+interface PaymentListener {
 
     void onPaymentSuccess(Receipt receipt);
 

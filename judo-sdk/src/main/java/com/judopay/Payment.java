@@ -1,9 +1,7 @@
-package com.judopay.payment;
+package com.judopay;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.judopay.Consumer;
 
 public class Payment implements Parcelable {
 

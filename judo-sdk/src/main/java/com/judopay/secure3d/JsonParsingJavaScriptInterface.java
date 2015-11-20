@@ -1,6 +1,6 @@
 package com.judopay.secure3d;
 
-public class JsonParsingJavaScriptInterface {
+class JsonParsingJavaScriptInterface {
 
     private final JsonListener jsonListener;
 

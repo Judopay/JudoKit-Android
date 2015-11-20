@@ -1,5 +1,7 @@
 package com.judopay.payment;
 
+import com.judopay.Payment;
+
 import org.junit.Test;
 
 public class PaymentTest {

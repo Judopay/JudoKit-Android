@@ -1,4 +1,4 @@
-package com.judopay.register;
+package com.judopay;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -11,13 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.judopay.AndroidScheduler;
-import com.judopay.Consumer;
-import com.judopay.JudoApiService;
-import com.judopay.JudoPay;
-import com.judopay.PaymentFormView;
-import com.judopay.R;
-import com.judopay.arch.api.RetrofitFactory;
 import com.judopay.payment.Receipt;
 import com.judopay.payment.form.PaymentFormFragment;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
@@ -25,50 +18,38 @@ import com.judopay.secure3d.ThreeDSecureWebView;
 
 import java.io.IOException;
 
-public class RegisterCardFragment extends Fragment implements PaymentFormView {
+abstract class BasePaymentFragment extends Fragment implements PaymentFormView {
 
-    public static final String KEY_CONSUMER = "Judo-Consumer";
-    private static final String TAG_3DS_DIALOG = "3dSecureDialog";
+    private static final String TAG_PAYMENT_FORM = "PaymentFormFragment";
+    public static final String KEY_TOKEN_PAYMENT = "tokenPayment";
 
-    private RegisterCardPresenter presenter;
-    private View progressOverlay;
-    private TextView progressText;
+    protected static final String TAG_3DS_DIALOG = "3dSecureDialog";
+
+    protected View progressBar;
+    protected TextView progressText;
+
+    protected BasePaymentPresenter presenter;
+
+    protected ThreeDSecureDialogFragment threeDSecureDialog;
     private ThreeDSecureWebView threeDSecureWebView;
-    private ThreeDSecureDialogFragment threeDSecureDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
-
-        if (savedInstanceState == null) {
-            Consumer consumer = getArguments().getParcelable(KEY_CONSUMER);
-
-            this.presenter = new RegisterCardPresenter(this,
-                    RetrofitFactory.getInstance().create(JudoApiService.class),
-                    new AndroidScheduler());
-
-            PaymentFormFragment paymentFormFragment = PaymentFormFragment.newInstance(this.presenter, getString(R.string.add_card));
-            paymentFormFragment.setRetainInstance(true);
-
-            getFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.container, paymentFormFragment)
-                    .commit();
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_register_card, container, false);
+        return inflater.inflate(R.layout.fragment_payment, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        this.progressOverlay = view.findViewById(R.id.progress_overlay);
+        this.progressBar = view.findViewById(R.id.progress_overlay);
         this.progressText = (TextView) view.findViewById(R.id.progress_text);
         this.threeDSecureWebView = (ThreeDSecureWebView) view.findViewById(R.id.three_d_secure_web_view);
 
@@ -76,13 +57,40 @@ public class RegisterCardFragment extends Fragment implements PaymentFormView {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        FragmentManager fm = getFragmentManager();
+
+        PaymentFormFragment paymentFormFragment = (PaymentFormFragment) fm.findFragmentByTag(TAG_PAYMENT_FORM);
+
+        if (paymentFormFragment == null) {
+            TokenPayment tokenPayment = getArguments().getParcelable(KEY_TOKEN_PAYMENT);
+
+            if (tokenPayment != null) {
+                paymentFormFragment = PaymentFormFragment.newInstance(tokenPayment.getCardToken(), presenter);
+            } else {
+                paymentFormFragment = PaymentFormFragment.newInstance(presenter);
+            }
+
+            paymentFormFragment.setTargetFragment(this, 0);
+
+            fm.beginTransaction()
+                    .add(R.id.container, paymentFormFragment, TAG_PAYMENT_FORM)
+                    .commit();
+        } else {
+            paymentFormFragment.setPaymentFormListener(presenter);
+        }
+    }
+
+    @Override
     public void showLoading() {
-        progressOverlay.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-        progressOverlay.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override

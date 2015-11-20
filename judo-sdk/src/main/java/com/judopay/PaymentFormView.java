@@ -4,7 +4,7 @@ import android.support.annotation.StringRes;
 
 import com.judopay.payment.Receipt;
 
-public interface PaymentFormView {
+interface PaymentFormView {
 
     void showLoading();
 

@@ -1,33 +1,27 @@
-package com.judopay.token;
+package com.judopay;
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.judopay.JudoActivity;
-import com.judopay.JudoPay;
-import com.judopay.R;
-import com.judopay.payment.PaymentListener;
 import com.judopay.payment.Receipt;
 
-public class TokenPaymentActivity extends JudoActivity implements PaymentListener {
+import static com.judopay.JudoPay.EXTRA_PAYMENT;
 
-    public static String EXTRA_TOKEN_PAYMENT = "Judo-TokenPayment";
+public class PaymentActivity extends JudoActivity implements PaymentListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (!getIntent().hasExtra(EXTRA_PAYMENT)) {
+            throw new IllegalArgumentException("payment must be provided to PaymentActivity");
+        }
+
         setTitle(R.string.payment);
 
         if (savedInstanceState == null) {
-            TokenPayment tokenPayment = getIntent().getParcelableExtra(EXTRA_TOKEN_PAYMENT);
-
-            TokenPaymentFragment paymentFragment = new TokenPaymentFragment();
-            paymentFragment.setPaymentListener(this);
-
-            Bundle arguments = new Bundle();
-            arguments.putParcelable(TokenPaymentFragment.KEY_TOKEN_PAYMENT, tokenPayment);
-            paymentFragment.setArguments(arguments);
+            Payment payment = getIntent().getParcelableExtra(EXTRA_PAYMENT);
+            PaymentFragment paymentFragment = PaymentFragment.newInstance(payment);
 
             getFragmentManager()
                     .beginTransaction()

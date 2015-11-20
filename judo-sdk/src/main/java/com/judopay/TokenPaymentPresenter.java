@@ -1,23 +1,24 @@
-package com.judopay.token;
+package com.judopay;
 
-import com.judopay.Client;
-import com.judopay.Consumer;
 import com.judopay.customer.Card;
 import com.judopay.customer.CardToken;
 import com.judopay.customer.Location;
-import com.judopay.payment.BasePaymentFragment;
+import com.judopay.payment.Receipt;
 import com.judopay.payment.TokenTransaction;
 
-public class TokenPaymentFragment extends BasePaymentFragment {
+import rx.Observable;
+
+class TokenPaymentPresenter extends BasePaymentPresenter {
+
+    private final TokenPayment tokenPayment;
+
+    public TokenPaymentPresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler, TokenPayment tokenPayment) {
+        super(paymentFormView, apiService, scheduler);
+        this.tokenPayment = tokenPayment;
+    }
 
     @Override
-    public void onSubmit(Card card, Consumer consumer, boolean threeDSecureEnabled) {
-        TokenPayment tokenPayment = getArguments().getParcelable(KEY_TOKEN_PAYMENT);
-
-        if (tokenPayment == null) {
-            throw new RuntimeException("TokenPayment argument must be provided to TokenPaymentFragment");
-        }
-
+    protected Observable<Receipt> performApiCall(Card card, Consumer consumer) {
         CardToken cardToken = tokenPayment.getCardToken();
 
         TokenTransaction tokenTransaction = new TokenTransaction.Builder()
@@ -37,14 +38,7 @@ public class TokenPaymentFragment extends BasePaymentFragment {
                 .setType(cardToken.getType())
                 .build();
 
-        performTokenPayment(tokenTransaction);
-    }
-
-    private void performTokenPayment(TokenTransaction transaction) {
-        onLoadStarted();
-
-        judoApiService.tokenPayment(transaction)
-                .subscribe(this);
+        return apiService.tokenPayment(tokenTransaction);
     }
 
 }

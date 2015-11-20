@@ -1,10 +1,6 @@
-package com.judopay.register;
+package com.judopay;
 
 import android.os.Bundle;
-
-import com.judopay.JudoActivity;
-import com.judopay.JudoPay;
-import com.judopay.R;
 
 public class RegisterCardActivity extends JudoActivity {
 

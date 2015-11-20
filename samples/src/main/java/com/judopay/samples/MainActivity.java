@@ -14,18 +14,24 @@ import android.widget.Toast;
 import com.judopay.Consumer;
 import com.judopay.JudoPay;
 import com.judopay.customer.CardToken;
-import com.judopay.payment.Payment;
-import com.judopay.payment.PaymentActivity;
+import com.judopay.Payment;
+import com.judopay.PaymentActivity;
 import com.judopay.payment.Receipt;
-import com.judopay.token.TokenPayment;
-import com.judopay.token.TokenPaymentActivity;
-import com.judopay.register.RegisterCardActivity;
+import com.judopay.TokenPayment;
+import com.judopay.TokenPaymentActivity;
+import com.judopay.RegisterCardActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import static com.judopay.JudoPay.JUDO_RECEIPT;
 
+/**
+ * Sample app screen containing buttons to activate the different features of the Judo SDK
+ *
+ * Update the MY_JUDO_ID string with the Judo ID from the judo website: http://www.judopay.com,
+ * In the SampleApp, you will also need to update the token and secret with the values for your account.
+ */
 public class MainActivity extends AppCompatActivity {
 
     // Constants to define different actions (for use with startActivityForResult(...))
