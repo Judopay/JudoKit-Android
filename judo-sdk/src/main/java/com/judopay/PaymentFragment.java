@@ -10,7 +10,9 @@ public class PaymentFragment extends BasePaymentFragment {
         PaymentFragment paymentFragment = new PaymentFragment();
 
         Bundle arguments = new Bundle();
-        arguments.putParcelable(JudoPay.EXTRA_PAYMENT, payment);
+        arguments.putParcelable(JudoPay.KEY_PAYMENT, payment);
+        arguments.putBoolean(JudoPay.KEY_HANDLE_DECLINED, true);
+
         paymentFragment.setArguments(arguments);
 
         return paymentFragment;

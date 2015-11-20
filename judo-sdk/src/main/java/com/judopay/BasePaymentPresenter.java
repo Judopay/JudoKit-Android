@@ -44,6 +44,7 @@ abstract class BasePaymentPresenter implements PaymentFormListener, ThreeDSecure
                             } else {
                                 paymentFormView.showDeclinedMessage(receipt);
                             }
+                            paymentFormView.hideLoading();
                         }
                     }
                 }, new Action1<Throwable>() {
@@ -82,10 +83,10 @@ abstract class BasePaymentPresenter implements PaymentFormListener, ThreeDSecure
                         if (receipt.isSuccess()) {
                             paymentInProgress = false;
                             paymentFormView.finish(receipt);
-                            paymentFormView.hideLoading();
                         } else {
                             paymentFormView.showDeclinedMessage(receipt);
                         }
+                        paymentFormView.hideLoading();
                     }
                 }, new Action1<Throwable>() {
                     @Override

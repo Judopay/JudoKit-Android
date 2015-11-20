@@ -1,8 +1,10 @@
 package com.judopay;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
@@ -21,8 +23,6 @@ import java.io.IOException;
 abstract class BasePaymentFragment extends Fragment implements PaymentFormView {
 
     private static final String TAG_PAYMENT_FORM = "PaymentFormFragment";
-    public static final String KEY_TOKEN_PAYMENT = "tokenPayment";
-
     protected static final String TAG_3DS_DIALOG = "3dSecureDialog";
 
     protected View progressBar;
@@ -65,7 +65,7 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView {
         PaymentFormFragment paymentFormFragment = (PaymentFormFragment) fm.findFragmentByTag(TAG_PAYMENT_FORM);
 
         if (paymentFormFragment == null) {
-            TokenPayment tokenPayment = getArguments().getParcelable(KEY_TOKEN_PAYMENT);
+            TokenPayment tokenPayment = getArguments().getParcelable(JudoPay.KEY_TOKEN_PAYMENT);
 
             if (tokenPayment != null) {
                 paymentFormFragment = PaymentFormFragment.newInstance(tokenPayment.getCardToken(), presenter);
@@ -99,12 +99,12 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView {
             threeDSecureDialog.dismiss();
         }
 
-        Intent intent = new Intent();
-        intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
-
         Activity activity = getActivity();
 
         if (activity != null) {
+            Intent intent = new Intent();
+            intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
+
             activity.setResult(JudoPay.RESULT_REGISTER_CARD_SUCCESS, intent);
             activity.finish();
         }
@@ -112,14 +112,27 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView {
 
     @Override
     public void showDeclinedMessage(Receipt receipt) {
-        Intent intent = new Intent();
-        intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
+        if (receipt.isDeclined() && getArguments().getBoolean(JudoPay.KEY_HANDLE_DECLINED)) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.payment_failed)
+                    .setMessage(R.string.please_check_details_try_again)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            dialog.show();
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
 
-        Activity activity = getActivity();
+            Activity activity = getActivity();
 
-        if (activity != null) {
-            activity.setResult(JudoPay.RESULT_REGISTER_CARD_DECLINED, intent);
-            activity.finish();
+            if (activity != null) {
+                activity.setResult(JudoPay.RESULT_PAYMENT_DECLINED, intent);
+                activity.finish();
+            }
         }
     }
 

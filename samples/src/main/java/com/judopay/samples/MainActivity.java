@@ -112,8 +112,6 @@ public class MainActivity extends AppCompatActivity {
                         .build();
 
                 intent.putExtra(JudoPay.EXTRA_PAYMENT, payment);
-                intent.putExtra(Intent.EXTRA_TITLE, "Payment");
-
                 startActivityForResult(intent, PAYMENT_REQUEST);
             }
         });

@@ -85,6 +85,7 @@ public class RegisterCardPresenterTest {
         presenter.onSubmit(card, consumer, false);
 
         verify(paymentFormView).showDeclinedMessage(eq(receipt));
+        verify(paymentFormView).hideLoading();
     }
 
     @Test

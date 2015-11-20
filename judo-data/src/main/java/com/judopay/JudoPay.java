@@ -14,6 +14,10 @@ public class JudoPay {
     public static final String JUDO_RECEIPT = "Judo-Receipt";
     public static final String EXTRA_PAYMENT = "Judo-Payment";
 
+    public static final String KEY_PAYMENT = "Judo-Payment";
+    public static final String KEY_TOKEN_PAYMENT = "tokenPayment";
+    public static final String KEY_HANDLE_DECLINED = "Judo-HandleDeclined";
+
     private static final String API_HOST_SANDBOX = "https://gw1.judopay-sandbox.com";
     private static final String API_HOST_LIVE = "https://gw1.judopay.com";
 
