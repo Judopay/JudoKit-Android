@@ -109,6 +109,13 @@ public class SettingsActivity extends AppCompatActivity {
                 JudoPay.setAmexEnabled(isChecked);
             }
         });
+
+        threeDSecureSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                JudoPay.setThreeDSecureEnabled(isChecked);
+            }
+        });
     }
 
     private void saveCurrency(String currency) {
