@@ -1,14 +1,17 @@
-package com.judopay.payment;
+package com.judopay.token;
 
 import com.judopay.Client;
+import com.judopay.Consumer;
 import com.judopay.customer.Card;
 import com.judopay.customer.CardToken;
 import com.judopay.customer.Location;
+import com.judopay.payment.BasePaymentFragment;
+import com.judopay.payment.TokenTransaction;
 
 public class TokenPaymentFragment extends BasePaymentFragment {
 
     @Override
-    public void onSubmit(Card card) {
+    public void onSubmit(Card card, Consumer consumer, boolean threeDSecureEnabled) {
         TokenPayment tokenPayment = getArguments().getParcelable(KEY_TOKEN_PAYMENT);
 
         if (tokenPayment == null) {

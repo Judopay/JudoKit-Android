@@ -17,8 +17,8 @@ import com.judopay.customer.CardToken;
 import com.judopay.payment.Payment;
 import com.judopay.payment.PaymentActivity;
 import com.judopay.payment.Receipt;
-import com.judopay.payment.TokenPayment;
-import com.judopay.payment.TokenPaymentActivity;
+import com.judopay.token.TokenPayment;
+import com.judopay.token.TokenPaymentActivity;
 import com.judopay.register.RegisterCardActivity;
 
 import butterknife.Bind;
@@ -37,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int REGISTER_CARD_TOKEN_PAYMENT_REQUEST = 501;
     private static final int REGISTER_CARD_TOKEN_PRE_AUTH_REQUEST = 601;
 
+    private static final String MY_AMOUNT = "1.99";
+    private static final String MY_JUDO_ID = "100407196";
+
     @Bind(R.id.payment_button)
     View paymentButton;
 
@@ -49,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.register_card_button)
     View registerCardButton;
 
+    private String currency;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +62,14 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         initialiseView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        this.currency = getSharedPreferences(SampleApp.SHARED_PREFS_NAME, MODE_PRIVATE)
+                .getString(SampleApp.CURRENCY_KEY, "GBP");
     }
 
     @Override
@@ -85,9 +98,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
                 Payment payment = new Payment.Builder()
-                        .setJudoId("100407196")
-                        .setCurrency("GBP")
-                        .setAmount("9.99")
+                        .setJudoId(MY_JUDO_ID)
+                        .setAmount(MY_AMOUNT)
+                        .setCurrency(currency)
                         .setConsumer(new Consumer("yourConsumerRef"))
                         .setPaymentRef("paymentRef")
                         .build();
@@ -103,9 +116,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startPreAuthPaymentActivity(MainActivity.this, new Payment.Builder()
-                        .setJudoId("100407196")
-                        .setCurrency("GBP")
-                        .setAmount("9.99")
+                        .setJudoId(MY_JUDO_ID)
+                        .setAmount(MY_AMOUNT)
+                        .setCurrency(currency)
                         .setConsumer(new Consumer("yourConsumerRef"))
                         .setPaymentRef("paymentRef")
                         .build(), PRE_AUTH_REQUEST);
@@ -119,9 +132,9 @@ public class MainActivity extends AppCompatActivity {
                         .setCardToken(new CardToken("1215", "3436", "PKMxI4788SERKz0w7opSubZGU0I5g8kb", 1))
                         .setConsumer(new Consumer("zGEHXkSTZO08FljI", "consumer10102"))
                         .setPaymentReference("payment1010102")
-                        .setJudoId("100407196")
-                        .setAmount("4.99")
-                        .setCurrency("GBP")
+                        .setJudoId(MY_JUDO_ID)
+                        .setAmount(MY_AMOUNT)
+                        .setCurrency(currency)
                         .build();
 
                 startTokenPaymentActivity(MainActivity.this, tokenPayment, TOKEN_PAYMENT_REQUEST);
@@ -210,9 +223,9 @@ public class MainActivity extends AppCompatActivity {
                                 .setCardToken(receipt.getCardDetails())
                                 .setConsumer(receipt.getConsumer())
                                 .setPaymentReference(receipt.getYourPaymentReference())
-                                .setJudoId("100407196")
-                                .setAmount("4.99")
-                                .setCurrency("GBP")
+                                .setJudoId(MY_JUDO_ID)
+                                .setAmount(MY_AMOUNT)
+                                .setCurrency(currency)
                                 .build();
 
                         startTokenPaymentActivity(MainActivity.this, tokenPayment, TOKEN_PAYMENT_REQUEST);

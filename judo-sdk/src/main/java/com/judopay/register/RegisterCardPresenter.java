@@ -3,6 +3,7 @@ package com.judopay.register;
 import com.judopay.Client;
 import com.judopay.Consumer;
 import com.judopay.JudoApiService;
+import com.judopay.PaymentFormView;
 import com.judopay.R;
 import com.judopay.Scheduler;
 import com.judopay.customer.Card;
@@ -11,31 +12,24 @@ import com.judopay.payment.Receipt;
 import com.judopay.payment.ThreeDSecureInfo;
 import com.judopay.secure3d.ThreeDSecureListener;
 
-import rx.Observer;
+import rx.functions.Action1;
 
-class RegisterCardPresenter implements PaymentFormListener, Observer<Receipt>, ThreeDSecureListener {
+class RegisterCardPresenter implements PaymentFormListener, ThreeDSecureListener {
 
-    private final Consumer consumer;
     private final PaymentFormView paymentFormView;
     private final JudoApiService apiService;
-    private final boolean threeDSecureEnabled;
     private final Scheduler scheduler;
 
     private boolean paymentInProgress;
 
-    public RegisterCardPresenter(Consumer consumer,
-                                 PaymentFormView paymentFormView,
-                                 JudoApiService apiService,
-                                 Scheduler scheduler, boolean threeDSecureEnabled) {
-        this.consumer = consumer;
+    public RegisterCardPresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler) {
         this.paymentFormView = paymentFormView;
         this.apiService = apiService;
         this.scheduler = scheduler;
-        this.threeDSecureEnabled = threeDSecureEnabled;
     }
 
     @Override
-    public void onSubmit(Card card) {
+    public void onSubmit(Card card, Consumer consumer, final boolean threeDSecureEnabled) {
         RegisterTransaction.Builder builder = new RegisterTransaction.Builder()
                 .setCardAddress(card.getCardAddress())
                 .setClientDetails(new Client())
@@ -57,38 +51,30 @@ class RegisterCardPresenter implements PaymentFormListener, Observer<Receipt>, T
         apiService.registerCard(builder.build())
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread())
-                .subscribe(this);
+                .subscribe(new Action1<Receipt>() {
+                    @Override
+                    public void call(Receipt receipt) {
+                        if (receipt.isSuccess()) {
+                            paymentInProgress = false;
+                            paymentFormView.finish(receipt);
+                            paymentFormView.hideLoading();
+                        } else {
+                            if (threeDSecureEnabled && receipt.is3dSecureRequired()) {
+                                paymentFormView.setLoadingText(R.string.redirecting);
+                                paymentFormView.start3dSecureWebView(receipt);
+                            } else {
+                                paymentFormView.showDeclinedMessage(receipt);
+                            }
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        paymentFormView.hideLoading();
+                    }
+                });
 
         paymentFormView.showLoading();
-    }
-
-    @Override
-    public void onCompleted() {
-    }
-
-    @Override
-    public void onError(Throwable e) {
-        paymentFormView.hideLoading();
-    }
-
-    @Override
-    public void onNext(Receipt receipt) {
-        if (receipt.isSuccess()) {
-            paymentInProgress = false;
-            paymentFormView.finish(receipt);
-            paymentFormView.hideLoading();
-        } else {
-            handle3dSecureOrDeclinedPayment(receipt);
-        }
-    }
-
-    private void handle3dSecureOrDeclinedPayment(Receipt receipt) {
-        if (threeDSecureEnabled && receipt.is3dSecureRequired()) {
-            paymentFormView.setLoadingText(R.string.redirecting);
-            paymentFormView.start3dSecureWebView(receipt);
-        } else {
-            paymentFormView.showDeclinedMessage(receipt);
-        }
     }
 
     public void reconnect() {
@@ -109,7 +95,23 @@ class RegisterCardPresenter implements PaymentFormListener, Observer<Receipt>, T
         apiService.threeDSecurePayment(receiptId, threeDSecureInfo)
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread())
-                .subscribe(this);
+                .subscribe(new Action1<Receipt>() {
+                    @Override
+                    public void call(Receipt receipt) {
+                        if (receipt.isSuccess()) {
+                            paymentInProgress = false;
+                            paymentFormView.finish(receipt);
+                            paymentFormView.hideLoading();
+                        } else {
+                            paymentFormView.showDeclinedMessage(receipt);
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        paymentFormView.hideLoading();
+                    }
+                });
     }
 
     @Override

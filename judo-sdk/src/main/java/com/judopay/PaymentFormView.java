@@ -1,10 +1,10 @@
-package com.judopay.register;
+package com.judopay;
 
 import android.support.annotation.StringRes;
 
 import com.judopay.payment.Receipt;
 
-interface PaymentFormView {
+public interface PaymentFormView {
 
     void showLoading();
 

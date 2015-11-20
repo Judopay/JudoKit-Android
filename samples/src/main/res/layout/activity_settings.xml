@@ -12,13 +12,6 @@
         android:text="@string/avs_label" />
 
     <android.support.v7.widget.SwitchCompat
-        android:id="@+id/ssl_pinning_switch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/activity_vertical_margin"
-        android:text="@string/ssl_pinning_label" />
-
-    <android.support.v7.widget.SwitchCompat
         android:id="@+id/maestro_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,5 +31,24 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/activity_vertical_margin"
         android:text="@string/three_d_secure" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:text="Currency" />
+
+        <Spinner
+            android:id="@+id/currency_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp" />
+
+    </LinearLayout>
 
 </LinearLayout>

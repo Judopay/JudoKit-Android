@@ -3,6 +3,7 @@ package com.judopay.payment;
 import android.os.Bundle;
 
 import com.judopay.Client;
+import com.judopay.Consumer;
 import com.judopay.JudoPay;
 import com.judopay.customer.Card;
 import com.judopay.customer.Location;
@@ -26,7 +27,7 @@ public class PaymentFragment extends BasePaymentFragment {
     }
 
     @Override
-    public void onSubmit(Card card) {
+    public void onSubmit(Card card, Consumer consumer, boolean threeDSecureEnabled) {
         if (!getArguments().containsKey(EXTRA_PAYMENT)) {
             throw new RuntimeException("Payment extra must be provided to PaymentFragment");
         }

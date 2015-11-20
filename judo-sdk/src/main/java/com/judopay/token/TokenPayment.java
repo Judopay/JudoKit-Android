@@ -1,4 +1,4 @@
-package com.judopay.payment;
+package com.judopay.token;
 
 import android.os.Parcel;
 import android.os.Parcelable;
