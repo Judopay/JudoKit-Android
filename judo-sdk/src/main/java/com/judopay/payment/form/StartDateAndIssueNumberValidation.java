@@ -18,8 +18,7 @@ public class StartDateAndIssueNumberValidation {
     private boolean issueNumberValid;
     private boolean showIssueNumberAndStartDate;
 
-    public StartDateAndIssueNumberValidation(PaymentForm paymentForm, boolean cardNumberValid) {
-
+    public StartDateAndIssueNumberValidation(PaymentForm paymentForm) {
         this.startDateEntryComplete = paymentForm.getStartDate().length() == 5;
         this.showStartDateError = !isStartDateValid(paymentForm.getStartDate()) && startDateEntryComplete;
 

@@ -120,8 +120,7 @@ public class PaymentFormValidation {
                     paymentForm.isMaestroSupported(),
                     paymentForm.isAmexSupported());
 
-            StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(paymentForm,
-                    cardNumberValidation.isValid());
+            StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(paymentForm);
 
             boolean maestroValid = !maestroCardType ||
                     (startDateAndIssueNumberValidation.isStartDateEntryComplete() && !startDateAndIssueNumberValidation.isShowStartDateError())
