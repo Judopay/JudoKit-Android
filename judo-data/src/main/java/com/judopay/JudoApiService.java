@@ -22,55 +22,62 @@ public interface JudoApiService {
     /**
      * Perform a payment transaction
      *
-     * @param paymentTransaction
-     * @return
+     * @param transaction the details for the payment, including the payment method, amount and Judo account ID
+     * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/payments")
-    Observable<Receipt> payment(@Body PaymentTransaction paymentTransaction);
+    Observable<Receipt> payment(@Body PaymentTransaction transaction);
+
+    /**
+     * Perform a pre-auth transaction
+     *
+     * @param transaction
+     * @return the receipt for the payment with the status of the transaction
+     */
+    @POST("transactions/preauths")
+    Observable<Receipt> preAuth(@Body PaymentTransaction transaction);
 
     /**
      * Perform a token payment using a tokenised card
      *
      * @param transaction the payment details for making the transaction
-     * @return an Observable Receipt object containing the receipt for the transaction
+     * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/payments")
     Observable<Receipt> tokenPayment(@Body TokenTransaction transaction);
 
     /**
-     * Perform a payment using the returned data from a 3D-Secure authorisatino
+     * Perform a payment using the returned data from a 3D-Secure authorisation
      *
      * @param receiptId        the receipt ID from the original transaction
      * @param threeDSecureInfo the 3D-Secure details returned from successfully validating the card with the merchant bank
-     * @return an Observable Receipt object containing the receipt for the transaction
+     * @return the receipt for the payment with the status of the transaction
      */
     @PUT("transactions/{receiptId}")
     Observable<Receipt> threeDSecurePayment(@Path("receiptId") String receiptId, @Body ThreeDSecureInfo threeDSecureInfo);
 
     /**
      * @param collection
-     * @return
+     * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/collections")
     Observable<Receipt> collection(@Body Collection collection);
 
     /**
-     * @param refund
-     * @return
+     * Perform a refund for a transaction
+     *
+     * @param refund the object containing the amount to be refunded and receiptId
+     * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/refunds")
     Observable<Receipt> refund(@Body Refund refund);
 
-    /**
-     * @param paymentTransaction
-     * @return
-     */
-    @POST("transactions/preauths")
-    Observable<Receipt> preAuth(@Body PaymentTransaction paymentTransaction);
 
     /**
-     * @param transaction
-     * @return
+     * Register a card to be used for making future tokenised payments
+     *
+     * @param transaction the details for the payment, including the payment method, amount and Judo account ID
+     * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/registercard")
     Observable<Receipt> registerCard(@Body RegisterTransaction transaction);
@@ -81,9 +88,9 @@ public interface JudoApiService {
      * @param pageSize maximum number of results to return, default is 10
      * @param offset   the position to return results from, default is 0
      * @param sort     the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
-     * @return an Observable Receipts object containing the list of payment receipts
+     * @return Receipts containing the list of payment receipts
      */
-    @GET("transactions/preauths")
+    @GET("transactions/payments")
     Observable<Receipts> paymentReceipts(@Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
     /**
@@ -92,7 +99,7 @@ public interface JudoApiService {
      * @param pageSize maximum number of results to return, default is 10
      * @param offset   the position to return results from, default is 0
      * @param sort     the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
-     * @return an Observable Receipts object containing the list of pre-auth receipts
+     * @return Receipts containing the list of pre-auth receipts
      */
     @GET("transactions/preauths")
     Observable<Receipts> preAuthReceipts(@Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
@@ -103,7 +110,7 @@ public interface JudoApiService {
      * @param pageSize maximum number of results to return, default is 10
      * @param offset   the position to return results from, default is 0
      * @param sort     the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
-     * @return an Observable Receipts object containing the list of refund receipts
+     * @return Receipts containing the list of refund receipts
      */
     @GET("transactions/refunds")
     Observable<Receipts> refundReceipts(@Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
@@ -114,7 +121,7 @@ public interface JudoApiService {
      * @param pageSize maximum number of results to return, default is 10
      * @param offset   the position to return results from, default is 0
      * @param sort     the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
-     * @return an Observable Receipts object containing the list of collection receipts
+     * @return Receipts containing the list of collection receipts
      */
     @GET("transactions/collections")
     Observable<Receipts> collectionReceipts(@Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
@@ -126,13 +133,12 @@ public interface JudoApiService {
      * @param pageSize      maximum number of results to return, default is 10
      * @param offset        the position to return results from, default is 0
      * @param sort          the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
-     * @return an Observable Receipts object containing the list of consumer receipts for the consumerToken
+     * @return Receipts containing the list of consumer receipts for the consumerToken
      */
     @GET("consumers/{consumerToken}")
     Observable<Receipts> consumerReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
     /**
-     *
      * List receipts for a consumer matching a given receiptId
      *
      * @param consumerToken the consumer to use for finding receipts for
@@ -140,9 +146,109 @@ public interface JudoApiService {
      * @param pageSize      maximum number of results to return, default is 10
      * @param offset        the position to return results from, default is 0
      * @param sort          the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
-     * @return an Observable Receipts object containing the list of consumer receipts for the consumerToken and receiptId
+     * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
      */
     @GET("consumers/{consumerToken}/{receiptId}")
     Observable<Receipts> consumerReceipts(@Path("consumerToken") String consumerToken, @Path("receiptId") String receiptId, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+
+    /**
+     * List all payment receipts for a consumer
+     *
+     * @param consumerToken the consumer to use for finding receipts for
+     * @param pageSize      maximum number of results to return, default is 10
+     * @param offset        the position to return results from, default is 0
+     * @param sort          the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
+     * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
+     */
+    @GET("consumers/{consumerToken}/payments")
+    Observable<Receipts> consumerPaymentReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+
+    /**
+     * List all payment receipts for a consumer matching a given receiptId
+     *
+     * @param consumerToken the consumer to use for finding receipts for
+     * @param receiptId     the receipt ID to find consumer receipts for
+     * @param pageSize      maximum number of results to return, default is 10
+     * @param offset        the position to return results from, default is 0
+     * @param sort          the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
+     * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
+     */
+    @GET("consumers/{consumerToken}/payments/{receiptId}")
+    Observable<Receipts> consumerPaymentReceipts(@Path("consumerToken") String consumerToken, @Path("receiptId") String receiptId, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+
+    /**
+     * List all pre-auth receipts for a consumer
+     *
+     * @param consumerToken the consumer to use for finding receipts for
+     * @param pageSize      maximum number of results to return, default is 10
+     * @param offset        the position to return results from, default is 0
+     * @param sort          the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
+     * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
+     */
+    @GET("consumers/{consumerToken}/preauths")
+    Observable<Receipts> consumerPreAuthReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+
+    /**
+     * List all pre-auth receipts for a consumer matching a given receiptId
+     *
+     * @param consumerToken the consumer to use for finding receipts for
+     * @param receiptId     the receipt ID to find consumer receipts for
+     * @param pageSize      maximum number of results to return, default is 10
+     * @param offset        the position to return results from, default is 0
+     * @param sort          the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
+     * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
+     */
+    @GET("consumers/{consumerToken}/preauths/{receiptId}")
+    Observable<Receipts> consumerPreAuthReceipts(@Path("consumerToken") String consumerToken, @Path("receiptId") String receiptId, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+
+    /**
+     * List all collection receipts for a consumer
+     *
+     * @param consumerToken the consumer to use for finding receipts for
+     * @param pageSize      maximum number of results to return, default is 10
+     * @param offset        the position to return results from, default is 0
+     * @param sort          the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
+     * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
+     */
+    @GET("consumers/{consumerToken}/collections")
+    Observable<Receipts> consumerCollectionReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+
+    /**
+     * List all collection receipts for a consumer matching a given receiptId
+     *
+     * @param consumerToken the consumer to use for finding receipts for
+     * @param receiptId     the receipt ID to find consumer receipts for
+     * @param pageSize      maximum number of results to return, default is 10
+     * @param offset        the position to return results from, default is 0
+     * @param sort          the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
+     * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
+     */
+    @GET("consumers/{consumerToken}/collections/{receiptId}")
+    Observable<Receipts> consumerCollectionReceipts(@Path("consumerToken") String consumerToken, @Path("receiptId") String receiptId, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+
+    /**
+     * List all refund receipts for a consumer
+     *
+     * @param consumerToken the consumer to use for finding receipts for
+     * @param pageSize      maximum number of results to return, default is 10
+     * @param offset        the position to return results from, default is 0
+     * @param sort          the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
+     * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
+     */
+    @GET("consumers/{consumerToken}/refunds")
+    Observable<Receipts> consumerRefundReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+
+    /**
+     * List all refund receipts for a consumer matching a given receiptId
+     *
+     * @param consumerToken the consumer to use for finding receipts for
+     * @param receiptId     the receipt ID to find consumer receipts for
+     * @param pageSize      maximum number of results to return, default is 10
+     * @param offset        the position to return results from, default is 0
+     * @param sort          the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
+     * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
+     */
+    @GET("consumers/{consumerToken}/refunds/{receiptId}")
+    Observable<Receipts> consumerRefundReceipts(@Path("consumerToken") String consumerToken, @Path("receiptId") String receiptId, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
 }
