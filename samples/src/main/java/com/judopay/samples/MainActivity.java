@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.token_payment_button)
     View tokenPaymentButton;
 
-    @Bind(R.id.register_card_button)
-    View registerCardButton;
+    @Bind(R.id.add_card_button)
+    View addCardButton;
 
     private String currency;
 
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        registerCardButton.setOnClickListener(new View.OnClickListener() {
+        addCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Consumer consumer = new Consumer("consumerToken", "consumerRef_100407196");
