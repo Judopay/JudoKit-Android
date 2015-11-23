@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 
-import com.judopay.view.CompositeOnFocusChangeListener;
-import com.judopay.view.EmptyTextHintOnFocusChangeListener;
-import com.judopay.view.HidingViewTextWatcher;
-import com.judopay.view.HintFocusListener;
 import com.judopay.JudoPay;
 import com.judopay.R;
 import com.judopay.customer.Address;
@@ -26,14 +23,18 @@ import com.judopay.customer.CardToken;
 import com.judopay.customer.CardType;
 import com.judopay.customer.Country;
 import com.judopay.payment.PaymentFormListener;
-import com.judopay.view.ScrollOnFocusChangeListener;
-import com.judopay.view.SingleClickOnClickListener;
 import com.judopay.payment.form.address.CountryAndPostcodeValidation;
 import com.judopay.payment.form.address.CountrySpinner;
 import com.judopay.payment.form.cardnumber.CardNumberFormattingTextWatcher;
 import com.judopay.payment.form.cardnumber.CardNumberValidation;
 import com.judopay.payment.form.cvv.CvvImageView;
 import com.judopay.payment.form.date.DateSeparatorTextWatcher;
+import com.judopay.view.CompositeOnFocusChangeListener;
+import com.judopay.view.EmptyTextHintOnFocusChangeListener;
+import com.judopay.view.HidingViewTextWatcher;
+import com.judopay.view.HintFocusListener;
+import com.judopay.view.ScrollOnFocusChangeListener;
+import com.judopay.view.SingleClickOnClickListener;
 
 import static com.judopay.JudoPay.isAvsEnabled;
 
@@ -112,7 +113,7 @@ public class PaymentFormFragment extends Fragment {
             this.cardToken = getArguments().getParcelable(KEY_CARD_TOKEN);
         }
 
-        if(getArguments() != null && getArguments().containsKey(KEY_BUTTON_LABEL)) {
+        if (getArguments() != null && getArguments().containsKey(KEY_BUTTON_LABEL)) {
             this.paymentButton.setText(getArguments().getString(KEY_BUTTON_LABEL));
         }
 
@@ -295,23 +296,30 @@ public class PaymentFormFragment extends Fragment {
             startDateInputLayout.setError("");
         }
 
-        startDateAndIssueNumberContainer.setVisibility(startDateAndIssueNumberValidation.isShowIssueNumberAndStartDate() ? View.VISIBLE : View.GONE);
+        startDateAndIssueNumberContainer.setVisibility(startDateAndIssueNumberValidation.isShowIssueNumberAndStartDate()
+                ? View.VISIBLE : View.GONE);
     }
 
-    private void updateCountryAndPostcode(CountryAndPostcodeValidation countryAndPostcodeValidation) {
-        countryAndPostcodeContainer.setVisibility(countryAndPostcodeValidation.isShowCountryAndPostcode() ? View.VISIBLE : View.GONE);
+    private void updateCountryAndPostcode(CountryAndPostcodeValidation validation) {
+        countryAndPostcodeContainer.setVisibility(validation.isShowCountryAndPostcode() ? View.VISIBLE : View.GONE);
 
-        postcodeInputLayout.setErrorEnabled(countryAndPostcodeValidation.isShowPostcodeError());
-        postcodeInputLayout.setHint(getString(countryAndPostcodeValidation.getPostcodeLabel()));
+        postcodeInputLayout.setErrorEnabled(validation.isShowPostcodeError());
+        postcodeInputLayout.setHint(getString(validation.getPostcodeLabel()));
 
-        if (countryAndPostcodeValidation.isShowPostcodeError()) {
-            postcodeInputLayout.setError(getString(countryAndPostcodeValidation.getPostcodeError()));
+        if (validation.isShowPostcodeError()) {
+            postcodeInputLayout.setError(getString(validation.getPostcodeError()));
         } else {
             postcodeInputLayout.setError("");
         }
 
-        cardsAcceptedErrorText.setVisibility(countryAndPostcodeValidation.isCountryValid() ? View.GONE : View.VISIBLE);
-        postcodeInputLayout.setVisibility(countryAndPostcodeValidation.isCountryValid() ? View.VISIBLE : View.INVISIBLE);
+        postcodeEditText.setInputType(validation.isPostcodeNumeric() ?
+                InputType.TYPE_CLASS_NUMBER : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+
+        postcodeEditText.setPrivateImeOptions("nm"); // prevent text suggestions in keyboard
+        postcodeEditText.setSelection(postcodeEditText.getText().length());
+
+        cardsAcceptedErrorText.setVisibility(validation.isCountryValid() ? View.GONE : View.VISIBLE);
+        postcodeInputLayout.setVisibility(validation.isCountryValid() ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void showExpiryDateErrors(PaymentFormValidation formView) {
