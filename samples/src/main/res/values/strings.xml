@@ -13,7 +13,7 @@
     <string name="pre_auth">Pre-Auth</string>
     <string name="token_payment">Token payment</string>
     <string name="test_card_detail_instructions">To view test card details:\nSign in to judo and go to Developer/Tools.</string>
-    <string name="register_card">Register card</string>
+    <string name="add_card">Add card</string>
     <string name="reserve_funds_on_card">to reserve funds on a card</string>
     <string name="with_stored_card_token">with a stored card token</string>
     <string name="stored_for_future_transactions">to be stored for future transactions</string>

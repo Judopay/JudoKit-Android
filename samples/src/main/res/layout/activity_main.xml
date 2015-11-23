@@ -54,7 +54,7 @@
 
         <TextView
             style="@style/list_button_primary_text"
-            android:text="@string/register_card" />
+            android:text="@string/add_card" />
 
         <TextView
             style="@style/list_button_secondary_text"
