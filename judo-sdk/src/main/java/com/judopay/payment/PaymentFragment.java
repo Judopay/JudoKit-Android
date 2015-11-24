@@ -14,7 +14,6 @@ import com.judopay.customer.Address;
 import com.judopay.customer.Card;
 import com.judopay.customer.Location;
 import com.judopay.payment.form.PaymentFormFragment;
-import com.judopay.sheild.JudoShield;
 
 import rx.Observer;
 
@@ -48,7 +47,7 @@ public class PaymentFragment extends Fragment implements PaymentFormListener {
 
         setRetainInstance(true);
 
-        this.paymentApiService = RetrofitFactory.getInstance()
+        this.paymentApiService = RetrofitFactory.getInstance(getActivity())
                 .create(PaymentApiService.class);
     }
 
@@ -91,7 +90,6 @@ public class PaymentFragment extends Fragment implements PaymentFormListener {
     @Override
     public void onSubmit(Card card) {
         Payment payment = getArguments().getParcelable(EXTRA_PAYMENT);
-        JudoShield judoShield = new JudoShield();
 
         Transaction.Builder builder = new Transaction.Builder()
                 .setAmount(String.valueOf(payment.getAmount()))
@@ -99,7 +97,6 @@ public class PaymentFragment extends Fragment implements PaymentFormListener {
                         .setPostCode(card.getCardAddress().getPostcode())
                         .build())
                 .setConsumerLocation(new Location())
-                .setClientDetails(judoShield.getShieldData(getContext()))
                 .setCardNumber(card.getCardNumber())
                 .setCurrency(payment.getCurrency())
                 .setCv2(card.getCv2())
