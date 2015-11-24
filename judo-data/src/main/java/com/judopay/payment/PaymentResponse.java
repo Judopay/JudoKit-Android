@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.judopay.Consumer;
-import com.judopay.Response;
+import com.judopay.arch.api.Response;
 import com.judopay.customer.CardSummary;
 
 import java.util.Date;
