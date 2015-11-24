@@ -14,10 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 
-import com.judopay.view.CompositeOnFocusChangeListener;
-import com.judopay.view.EmptyTextHintOnFocusChangeListener;
-import com.judopay.view.HidingViewTextWatcher;
-import com.judopay.view.HintFocusListener;
 import com.judopay.JudoPay;
 import com.judopay.R;
 import com.judopay.customer.Address;
@@ -26,14 +22,18 @@ import com.judopay.customer.CardToken;
 import com.judopay.customer.CardType;
 import com.judopay.customer.Country;
 import com.judopay.payment.PaymentFormListener;
-import com.judopay.view.ScrollOnFocusChangeListener;
-import com.judopay.view.SingleClickOnClickListener;
 import com.judopay.payment.form.address.CountryAndPostcodeValidation;
 import com.judopay.payment.form.address.CountrySpinner;
 import com.judopay.payment.form.cardnumber.CardNumberFormattingTextWatcher;
 import com.judopay.payment.form.cardnumber.CardNumberValidation;
 import com.judopay.payment.form.cvv.CvvImageView;
 import com.judopay.payment.form.date.DateSeparatorTextWatcher;
+import com.judopay.view.CompositeOnFocusChangeListener;
+import com.judopay.view.EmptyTextHintOnFocusChangeListener;
+import com.judopay.view.HidingViewTextWatcher;
+import com.judopay.view.HintFocusListener;
+import com.judopay.view.ScrollOnFocusChangeListener;
+import com.judopay.view.SingleClickOnClickListener;
 
 import static com.judopay.JudoPay.isAvsEnabled;
 
@@ -256,10 +256,16 @@ public class PaymentFormFragment extends Fragment {
                 .setMaestroSupported(JudoPay.isMaestroEnabled())
                 .setTokenCard(cardToken != null);
 
+        if(cardToken != null) {
+            builder.setCardType(cardToken.getType());
+        }
+
         PaymentFormValidation formView = new PaymentFormValidation.Builder()
                 .build(builder.build());
 
-        cardTypeImageView.setCardType(formView.getCardType());
+        if (cardToken == null) {
+            cardTypeImageView.setCardType(formView.getCardType());
+        }
 
         updateFormErrors(formView);
         moveFieldFocus(formView);
@@ -380,7 +386,7 @@ public class PaymentFormFragment extends Fragment {
         }
 
         if (paymentFormListener != null) {
-            paymentFormListener.onSubmit(cardBuilder.build(), null, JudoPay.isThreeDSecureEnabled());
+            paymentFormListener.onSubmit(cardBuilder.build(), JudoPay.isThreeDSecureEnabled());
         }
     }
 
