@@ -2,8 +2,8 @@ package com.judopay.arch.api;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.judopay.sheild.JudoShield;
@@ -21,14 +21,9 @@ public class ClientDetailsSerializer implements JsonSerializer<ClientDetails> {
 
     @Override
     public JsonElement serialize(ClientDetails src, Type typeOfSrc, JsonSerializationContext context) {
-        JsonObject jsonObject = new JsonObject();
         Map<String, String> shieldData = JudoShield.getShieldData(this.context);
 
-        for(Map.Entry<String, String> entry : shieldData.entrySet()) {
-            jsonObject.addProperty(entry.getKey(), entry.getValue());
-        }
-
-        return jsonObject;
+        return new Gson().toJsonTree(shieldData);
     }
 
 }
