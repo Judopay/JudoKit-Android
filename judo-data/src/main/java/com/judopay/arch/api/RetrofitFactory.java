@@ -8,12 +8,9 @@ import com.judopay.JudoPay;
 import com.judopay.auth.ApiHeadersInterceptor;
 import com.judopay.auth.AuthorizationEncoder;
 import com.squareup.okhttp.CertificatePinner;
-import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
 import java.util.Date;
-import java.util.List;
 
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
