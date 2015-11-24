@@ -12,7 +12,7 @@ public class CardNumberValidation {
     private boolean showError;
     private boolean entryComplete;
 
-    public CardNumberValidation(String cardNumber, int cardType, boolean maestroSupported, boolean amexSupported) {
+    public CardNumberValidation(String cardNumber, int cardType, boolean tokenCard, boolean maestroSupported, boolean amexSupported) {
         boolean cardNumberLengthValid = isCardNumberLengthValid(cardNumber, cardType);
 
         boolean maestroAndNotSupported = isMaestroAndNotSupported(cardType, maestroSupported);
@@ -20,7 +20,7 @@ public class CardNumberValidation {
         boolean amexAndNotSupported = isAmexAndNotSupported(cardType, amexSupported);
 
         this.entryComplete = cardNumberLengthValid;
-        this.valid = isCardNumberValid(cardNumber, cardType, maestroSupported, amexSupported) && cardNumberLengthValid;
+        this.valid = isCardNumberValid(cardNumber, cardType, tokenCard, maestroSupported, amexSupported) && cardNumberLengthValid;
         this.showError = !valid && (cardNumberLengthValid || maestroAndNotSupported || amexAndNotSupported);
         this.maxLength = getMaxLength(cardType);
 
@@ -71,8 +71,8 @@ public class CardNumberValidation {
         return entryComplete;
     }
 
-    private boolean isCardNumberValid(String cardNumber, int cardType, boolean maestroSupported, boolean amexSupported) {
-        return CardNumber.isLuhnValid(cardNumber)
+    private boolean isCardNumberValid(String cardNumber, int cardType, boolean tokenCard, boolean maestroSupported, boolean amexSupported) {
+        return tokenCard || CardNumber.isLuhnValid(cardNumber)
                 && (((cardType != CardType.MAESTRO || maestroSupported))
                 && (cardType != CardType.AMEX || amexSupported));
     }

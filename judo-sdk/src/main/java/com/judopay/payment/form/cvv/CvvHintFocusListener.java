@@ -2,7 +2,7 @@ package com.judopay.payment.form.cvv;
 
 import android.widget.EditText;
 
-import com.judopay.HintFocusListener;
+import com.judopay.view.HintFocusListener;
 import com.judopay.R;
 import com.judopay.customer.CardType;
 

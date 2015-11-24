@@ -1,13 +1,11 @@
 package com.judopay.customer;
 
-import java.util.Locale;
-
 public class Card {
 
     private String cardNumber;
-    private CardAddress cardAddress;
-    private CardDate expiryDate;
-    private CardDate startDate;
+    private Address cardAddress;
+    private String expiryDate;
+    private String startDate;
     private String issueNumber;
     private String cvv;
 
@@ -15,20 +13,20 @@ public class Card {
         return cardNumber;
     }
 
-    public CardAddress getCardAddress() {
+    public Address getCardAddress() {
         return cardAddress;
     }
 
-    public String getStartDate() {
-        return formatDateString(startDate);
-    }
-
     public String getExpiryDate() {
-        return formatDateString(expiryDate);
+        return expiryDate;
     }
 
-    private String formatDateString(CardDate date) {
-        return String.format(Locale.ENGLISH, "%02d%02d", date.getMonth(), date.getYear());
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public String getCvv() {
+        return cvv;
     }
 
     public String getIssueNumber() {
@@ -56,17 +54,17 @@ public class Card {
             return this;
         }
 
-        public Builder setCardAddress(CardAddress cardAddress) {
+        public Builder setCardAddress(Address cardAddress) {
             card.cardAddress = cardAddress;
             return this;
         }
 
-        public Builder setExpiryDate(CardDate expiryDate) {
+        public Builder setExpiryDate(String expiryDate) {
             card.expiryDate = expiryDate;
             return this;
         }
 
-        public Builder setStartDate(CardDate startDate) {
+        public Builder setStartDate(String startDate) {
             card.startDate = startDate;
             return this;
         }

@@ -25,11 +25,12 @@ android {
 }
 
 dependencies {
-    compile project(':judo-sdk')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:support-annotations:23.1.1'
 
-    compile 'com.android.support:appcompat-v7:23.1.0'
-    compile 'com.android.support:support-annotations:23.1.0'
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile project(':judo-sdk')
 
     // Testing-only dependencies
     androidTestCompile 'com.android.support.test:testing-support-lib:0.1'

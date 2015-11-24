@@ -8,6 +8,9 @@ import static com.judopay.JudoPay.Environment.LIVE;
 
 public class SampleApp extends Application {
 
+    public static final String SHARED_PREFS_NAME = "Judo-SampleApp";
+    public static final String CURRENCY_KEY = "Judo-SampleApp-Currency";
+
     @Override
     public void onCreate() {
         super.onCreate();

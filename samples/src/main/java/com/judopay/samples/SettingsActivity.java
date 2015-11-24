@@ -5,9 +5,16 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.Spinner;
 
 import com.judopay.JudoPay;
+
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -17,18 +24,23 @@ public class SettingsActivity extends AppCompatActivity {
     @Bind(R.id.avs_switch)
     SwitchCompat avsSwitch;
 
-    @Bind(R.id.ssl_pinning_switch)
-    SwitchCompat sslPinningSwitch;
-
     @Bind(R.id.maestro_switch)
     SwitchCompat maestroSwitch;
 
     @Bind(R.id.amex_switch)
     SwitchCompat amexSwitch;
 
+    @Bind(R.id.three_d_secure_switch)
+    SwitchCompat threeDSecureSwitch;
+
+    @Bind(R.id.currency_spinner)
+    Spinner currencySpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setTitle(R.string.settings);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -55,21 +67,32 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void initialise() {
         avsSwitch.setChecked(JudoPay.isAvsEnabled());
-        sslPinningSwitch.setChecked(JudoPay.isSslPinningEnabled());
         maestroSwitch.setChecked(JudoPay.isMaestroEnabled());
         amexSwitch.setChecked(JudoPay.isAmexEnabled());
+        threeDSecureSwitch.setChecked(JudoPay.isThreeDSecureEnabled());
+
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, getCurrencies());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        currencySpinner.setAdapter(adapter);
+
+        currencySpinner.setSelection(getCurrencySelection());
+
+        currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                saveCurrency(adapter.getItem(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         avsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 JudoPay.setAvsEnabled(isChecked);
-            }
-        });
-
-        sslPinningSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                JudoPay.setSslPinningEnabled(isChecked);
             }
         });
 
@@ -86,5 +109,31 @@ public class SettingsActivity extends AppCompatActivity {
                 JudoPay.setAmexEnabled(isChecked);
             }
         });
+
+        threeDSecureSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                JudoPay.setThreeDSecureEnabled(isChecked);
+            }
+        });
+    }
+
+    private void saveCurrency(String currency) {
+        getSharedPreferences(SampleApp.SHARED_PREFS_NAME, MODE_PRIVATE)
+                .edit()
+                .putString(SampleApp.CURRENCY_KEY, currency)
+                .apply();
+    }
+
+    private List<String> getCurrencies() {
+        String[] currencies = {"GBP", "USD", "CAD"};
+        return Arrays.asList(currencies);
+    }
+
+    public int getCurrencySelection() {
+        String currency = getSharedPreferences(SampleApp.SHARED_PREFS_NAME, MODE_PRIVATE)
+                .getString(SampleApp.CURRENCY_KEY, null);
+
+        return getCurrencies().indexOf(currency);
     }
 }

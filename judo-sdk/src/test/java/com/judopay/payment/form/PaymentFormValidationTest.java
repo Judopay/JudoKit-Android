@@ -1,6 +1,7 @@
 package com.judopay.payment.form;
 
 import com.judopay.R;
+import com.judopay.customer.CardType;
 import com.judopay.customer.Country;
 
 import org.junit.Test;

@@ -37,7 +37,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
 
         enableAVS(true);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on the payment screen
         pressPaymentScreenButton();
@@ -60,7 +60,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
 
         enableMaestro(true);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -78,7 +78,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
 
         enableMaestro(true);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -99,7 +99,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
 
         enableMaestro(true);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -123,7 +123,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
         //And AVS is enabled
         enableAVS(true);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();

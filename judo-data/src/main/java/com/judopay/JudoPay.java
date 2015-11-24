@@ -17,6 +17,9 @@ public class JudoPay {
     private static final String API_HOST_SANDBOX = "https://gw1.judopay-sandbox.com";
     private static final String API_HOST_LIVE = "https://gw1.judopay.com";
 
+    public static final int RESULT_REGISTER_CARD_DECLINED = 2;
+    public static final int RESULT_REGISTER_CARD_SUCCESS = Activity.RESULT_OK;
+
     private static Context context;
     private static JudoPayApi api;
 
@@ -67,6 +70,22 @@ public class JudoPay {
 
     public static JudoPayApi getApi() {
         return api;
+    }
+
+    public static boolean isThreeDSecureEnabled() {
+        return api.isThreeDSecureEnabled();
+    }
+
+    public static void setThreeDSecureEnabled(boolean enabled) {
+        api.setThreeDSecureEnabled(enabled);
+    }
+
+    public static void setRootedDevicesAllowed(boolean allowed) {
+        api.setRootedDevicesAllowed(allowed);
+    }
+
+    public static boolean isRootedDevicesAllowed() {
+        return api.isRootedDevicesAllowed();
     }
 
     public class Environment {

@@ -7,13 +7,13 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class SuccessfulPaymentTest extends PaymentTest {
 
-    public void testAuthSuccessfulNoAVSNo3DSecureVisa() {
+    public void testPaymentSuccessfulAVSDisabled3DSecureDisabledVisa() {
         //Given AVS is disabled
         pressSettingsButton();
 
         enableAVS(false);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -29,29 +29,8 @@ public class SuccessfulPaymentTest extends PaymentTest {
         assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
     }
 
-    public void testAuthSuccessfulNoAVSNo3DSecureVisaDebit() {
-        //Given AVS is disabled
-        pressSettingsButton();
 
-        enableAVS(false);
-
-        pressSettingsBackButton();
-
-        //And I am on a payment screen
-        pressPaymentScreenButton();
-
-        //When I enter my card details
-        enterCardDetails("4921810000005462", "1215", "441");
-
-        //And I press the pay button
-        pressPayButton();
-
-        //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
-    }
-
-    public void testAuthSuccessfulNoAVSNo3DSecureMaestro() {
+    public void testPaymentSuccessfulAVSDisabled3DSecureDisabledMaestro() {
         //Given AVS is disabled
         pressSettingsButton();
 
@@ -60,7 +39,7 @@ public class SuccessfulPaymentTest extends PaymentTest {
         //And Maestro is enabled
         enableMaestro(true);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -76,73 +55,8 @@ public class SuccessfulPaymentTest extends PaymentTest {
         assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
     }
 
-    public void testAuthSuccessfulNoAVSNo3DSecureMasterCard() {
-        //Given AVS is disabled
-        pressSettingsButton();
 
-        enableAVS(false);
-
-        pressSettingsBackButton();
-
-        //And I am on a payment screen
-        pressPaymentScreenButton();
-
-        //When I enter my card details
-        enterCardDetails("5100000000005460", "1215", "524");
-
-        //And I press the pay button
-        pressPayButton();
-
-        //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
-    }
-
-    public void testAuthSuccessfulNoAVSNo3DSecureVisaElectron() {
-        //Given AVS is disabled
-        pressSettingsButton();
-
-        enableAVS(false);
-
-        pressSettingsBackButton();
-
-        //And I am on a payment screen
-        pressPaymentScreenButton();
-
-        //When I enter my card details
-        enterCardDetails("4508750000005461", "1215", "568");
-
-        //And I press the pay button
-        pressPayButton();
-
-        //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
-    }
-
-    public void testAuthSuccessfulNoAVSNo3DSecureVisaPurchasing() {
-        //Given AVS is disabled
-        pressSettingsButton();
-
-        enableAVS(false);
-
-        pressSettingsBackButton();
-
-        //And I am on a payment screen
-        pressPaymentScreenButton();
-
-        //When I enter my card details
-        enterCardDetails("4001658035486204", "1215", "234");
-
-        //And I press the pay button
-        pressPayButton();
-
-        //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
-    }
-
-    public void testAuthSuccessfulNoAVSNo3DSecureAMEX() {
+    public void testPaymentSuccessfulAVSDisabled3DSecureDisabledAMEX() {
         //Given AVS is disabled
         pressSettingsButton();
 
@@ -151,7 +65,7 @@ public class SuccessfulPaymentTest extends PaymentTest {
         //And AMEX is enabled
         enableAMEX(true);
 
-        pressSettingsBackButton();
+        pressBackButton();
 
         //And I am on a payment screen
         pressPaymentScreenButton();
@@ -166,5 +80,78 @@ public class SuccessfulPaymentTest extends PaymentTest {
         //TODO update this to assert "Payment Response Success:" message
         assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
     }
+
+    public void testPaymentSuccessfulAVSEnabled3DSecureDisabledVisa() {
+        //Given AVS is enabled
+        pressSettingsButton();
+
+        enableAVS(true);
+
+        pressBackButton();
+
+        //And I am on a payment screen
+        pressPaymentScreenButton();
+
+        //When I enter my card details
+        enterCardDetails("4976000000003436", "1215", "452", "TR148PA");
+
+        //And I press the pay button
+        pressPayButton();
+
+        //Then I should be given a successful message
+        //TODO update this to assert "Payment Response Success:" message
+        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+    }
+
+    public void testPaymentSuccessfulAVSEnabled3DSecureDisabledMaestro() {
+        //Given AVS is enabled
+        pressSettingsButton();
+
+        enableAVS(true);
+
+        //And Maestro is enabled
+        enableMaestro(true);
+
+        pressBackButton();
+
+        //And I am on a payment screen
+        pressPaymentScreenButton();
+
+        //When I enter my card details
+        enterCardDetails("6759000000005462", "0107", "01", "1215", "789", "RG48NL");
+
+        //And I press the pay button
+        pressPayButton();
+
+        //Then I should be given a successful message
+        //TODO update this to assert "Payment Response Success:" message
+        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+    }
+
+    public void testPaymentSuccessfulAVSEnabled3DSecureDisabledAMEX() {
+        //Given AVS is enabled
+        pressSettingsButton();
+
+        enableAVS(true);
+
+        //And AMEX is enabled
+        enableAMEX(true);
+
+        pressBackButton();
+
+        //And I am on a payment screen
+        pressPaymentScreenButton();
+
+        //When I enter my card details
+        enterCardDetails("340000432128428", "1215", "3469", "NW67BB");
+
+        //And I press the pay button
+        pressPayButton();
+
+        //Then I should be given a successful message
+        //TODO update this to assert "Payment Response Success:" message
+        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+    }
+
 }
 
