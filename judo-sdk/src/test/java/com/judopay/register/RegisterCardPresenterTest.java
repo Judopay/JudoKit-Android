@@ -51,35 +51,35 @@ public class RegisterCardPresenterTest extends InstrumentationTestCase {
 
     @Test
     public void shouldRegisterCard() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService, scheduler);
 
         when(card.getCardAddress()).thenReturn(cardAddress);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.onSubmit(card, consumer, false);
+        presenter.onSubmit(card, false);
 
         verify(apiService, times(1)).registerCard(any(RegisterTransaction.class));
     }
 
     @Test
     public void showShowLoadingWhenSubmittingCard() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService, scheduler);
 
         when(card.getCardAddress()).thenReturn(cardAddress);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.onSubmit(card, consumer, false);
+        presenter.onSubmit(card, false);
 
         verify(paymentFormView).showLoading();
     }
 
     @Test
     public void shouldFinishPaymentFormViewOnSuccess() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService, scheduler);
 
         when(receipt.isSuccess()).thenReturn(true);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.just(receipt));
-        presenter.onSubmit(card, consumer, false);
+        presenter.onSubmit(card, false);
 
         verify(paymentFormView).finish(eq(receipt));
         verify(paymentFormView).hideLoading();
@@ -87,19 +87,19 @@ public class RegisterCardPresenterTest extends InstrumentationTestCase {
 
     @Test
     public void shouldShowDeclinedMessageWhenDeclined() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService, scheduler);
 
         when(receipt.isSuccess()).thenReturn(false);
 
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.just(receipt));
-        presenter.onSubmit(card, consumer, false);
+        presenter.onSubmit(card, false);
 
         verify(paymentFormView).showDeclinedMessage(eq(receipt));
     }
 
     @Test
     public void shouldHideLoadingIfReconnectAndPaymentNotInProgress() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService, scheduler);
         presenter.reconnect();
 
         verify(paymentFormView).hideLoading();
@@ -107,12 +107,12 @@ public class RegisterCardPresenterTest extends InstrumentationTestCase {
 
     @Test
     public void shouldShowLoadingIfReconnectAndPaymentInProgress() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService, scheduler);
 
         when(card.getCardAddress()).thenReturn(cardAddress);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.onSubmit(card, consumer, false);
+        presenter.onSubmit(card, false);
         presenter.reconnect();
 
         verify(paymentFormView, times(2)).showLoading();
@@ -120,13 +120,13 @@ public class RegisterCardPresenterTest extends InstrumentationTestCase {
 
     @Test
     public void shouldStart3dSecureWebViewIfRequired() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService, scheduler);
 
         when(receipt.isSuccess()).thenReturn(false);
         when(receipt.is3dSecureRequired()).thenReturn(true);
 
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.just(receipt));
-        presenter.onSubmit(card, consumer, true);
+        presenter.onSubmit(card, true);
 
         verify(paymentFormView).setLoadingText(eq(R.string.redirecting));
         verify(paymentFormView).start3dSecureWebView(eq(receipt));
@@ -134,13 +134,13 @@ public class RegisterCardPresenterTest extends InstrumentationTestCase {
 
     @Test
     public void shouldDeclineIf3dSecureRequiredButNotEnabled() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(consumer, paymentFormView, apiService, scheduler);
 
         when(receipt.isSuccess()).thenReturn(false);
         when(receipt.is3dSecureRequired()).thenReturn(true);
 
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.just(receipt));
-        presenter.onSubmit(card, consumer, false);
+        presenter.onSubmit(card, false);
         verify(paymentFormView).showDeclinedMessage(eq(receipt));
         verify(paymentFormView, never()).start3dSecureWebView(eq(receipt));
     }

@@ -31,7 +31,7 @@ public class PreAuthFragment extends BasePaymentFragment {
     }
 
     @Override
-    public void onSubmit(Card card, Consumer consumer, boolean threeDSecureEnabled) {
+    public void onSubmit(Card card, boolean threeDSecureEnabled) {
         if (!getArguments().containsKey(EXTRA_PAYMENT)) {
             throw new RuntimeException("Payment extra must be provided to PaymentFragment");
         }

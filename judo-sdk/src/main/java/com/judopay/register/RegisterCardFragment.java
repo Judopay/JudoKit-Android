@@ -45,7 +45,7 @@ public class RegisterCardFragment extends Fragment implements PaymentFormView {
         if (savedInstanceState == null) {
             Consumer consumer = getArguments().getParcelable(KEY_CONSUMER);
 
-            this.presenter = new RegisterCardPresenter(this,
+            this.presenter = new RegisterCardPresenter(consumer, this,
                     RetrofitFactory.getInstance().create(JudoApiService.class),
                     new AndroidScheduler());
 

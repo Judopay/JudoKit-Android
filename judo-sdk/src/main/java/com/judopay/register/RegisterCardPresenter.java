@@ -19,17 +19,19 @@ class RegisterCardPresenter implements PaymentFormListener, ThreeDSecureListener
     private final PaymentFormView paymentFormView;
     private final JudoApiService apiService;
     private final Scheduler scheduler;
+    private final Consumer consumer;
 
     private boolean paymentInProgress;
 
-    public RegisterCardPresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler) {
+    public RegisterCardPresenter(Consumer consumer, PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler) {
+        this.consumer = consumer;
         this.paymentFormView = paymentFormView;
         this.apiService = apiService;
         this.scheduler = scheduler;
     }
 
     @Override
-    public void onSubmit(Card card, Consumer consumer, final boolean threeDSecureEnabled) {
+    public void onSubmit(Card card, final boolean threeDSecureEnabled) {
         RegisterTransaction.Builder builder = new RegisterTransaction.Builder()
                 .setCardAddress(card.getCardAddress())
                 .setClientDetails(new Client())
