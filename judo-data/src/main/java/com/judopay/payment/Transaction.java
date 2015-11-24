@@ -1,10 +1,8 @@
 package com.judopay.payment;
 
-import com.judopay.Request;
+import com.judopay.arch.api.Request;
 import com.judopay.customer.Address;
 import com.judopay.customer.Location;
-
-import java.util.Map;
 
 public class Transaction extends Request {
 
@@ -74,11 +72,6 @@ public class Transaction extends Request {
             return this;
         }
 
-        public Builder setClientDetails(Map<String, String> clientDetails) {
-            transaction.clientDetails = clientDetails;
-            return this;
-        }
-
         public Builder setConsumerLocation(Location consumerLocation) {
             transaction.consumerLocation = consumerLocation;
             return this;
@@ -135,7 +128,7 @@ public class Transaction extends Request {
         }
 
         public Transaction build() {
-            if(transaction.currency == null || transaction.currency.length() == 0) {
+            if (transaction.currency == null || transaction.currency.length() == 0) {
                 throw new IllegalArgumentException("Currency must be set for Transaction");
             }
 
