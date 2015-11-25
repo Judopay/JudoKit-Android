@@ -11,8 +11,15 @@ public class JudoPay {
     public static final int RESULT_PAYMENT_DECLINED = 2;
     public static final int RESULT_ERROR = 1;
 
-    public static final String JUDO_RECEIPT = "Judo-Receipt";
-    public static final String EXTRA_PAYMENT = "Judo-Payment";
+    public static final String JUDO_PAYMENT_REF = "JudoPay-yourPaymentReference";
+    public static final String JUDO_AMOUNT = "JudoPay-amount";
+    public static final String JUDO_ID = "JudoPay-judoId";
+    public static final String JUDO_CURRENCY = "JudoPay-currency";
+    public static final String JUDO_META_DATA = "JudoPay-yourPaymentMetaData";
+    public static final String JUDO_RECEIPT = "JudoPay-receipt";
+
+    public static final String JUDO_CARD_TOKEN = "JudoPay-cardToken";
+    public static final String JUDO_CONSUMER = "JudoPay-consumer";
 
     private static final String API_HOST_SANDBOX = "https://gw1.judopay-sandbox.com";
     private static final String API_HOST_LIVE = "https://gw1.judopay.com";

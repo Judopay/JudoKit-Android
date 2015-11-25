@@ -2,13 +2,15 @@ package com.judopay;
 
 import com.judopay.customer.Address;
 import com.judopay.customer.Card;
-import com.judopay.payment.PaymentTransaction;
+import com.judopay.payment.Payment;
 import com.judopay.payment.Receipt;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import rx.Observable;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
@@ -35,24 +37,16 @@ public class PaymentPresenterTest {
     @Mock
     PaymentFormView paymentFormView;
 
-    @Mock
-    Payment payment;
-
     Scheduler scheduler = new TestScheduler();
 
     @Test
     public void shouldPerformPayment() {
-        when(payment.getAmount()).thenReturn("1.99");
-        when(payment.getCurrency()).thenReturn("GBP");
-        when(payment.getJudoId()).thenReturn("123456");
+        PaymentPresenter presenter = new PaymentPresenter(paymentFormView, apiService, scheduler);
+        when(apiService.payment(any(Payment.class))).thenReturn(Observable.<Receipt>empty());
 
-        when(payment.getConsumer()).thenReturn(consumer);
+        presenter.performPayment(card, consumer, "123456", "1.99", "GBP", "paymentRef", null, false);
 
-        PaymentPresenter presenter = new PaymentPresenter(paymentFormView, apiService, scheduler, payment);
-
-        presenter.performApiCall(card, consumer);
-
-        verify(apiService).payment(any(PaymentTransaction.class));
+        verify(apiService).payment(any(Payment.class));
     }
 
 }

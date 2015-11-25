@@ -62,4 +62,13 @@ public class JudoActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    protected void checkForExtras(String... keys) {
+        Bundle extras = getIntent().getExtras();
+        for(String key : keys) {
+            if(!extras.containsKey(key)) {
+                throw new IllegalArgumentException(String.format("Extra '%s' is required for %s", key, this.getClass().getSimpleName()));
+            }
+        }
+    }
+
 }

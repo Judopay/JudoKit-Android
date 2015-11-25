@@ -1,7 +1,5 @@
 package com.judopay.payment;
 
-import com.judopay.Payment;
-
 import org.junit.Test;
 
 public class PaymentTest {
@@ -10,8 +8,8 @@ public class PaymentTest {
     public void shouldThrowExceptionWhenNoCurrency() {
         new Payment.Builder()
                 .setAmount("9.99")
-                .setJudoId("1234567")
-                .setPaymentRef("paymentRef")
+                .setJudoId(1234567L)
+                .setYourPaymentReference("paymentRef")
                 .build();
     }
 
@@ -19,8 +17,8 @@ public class PaymentTest {
     public void shouldThrowExceptionWhenNoAmount() {
         new Payment.Builder()
                 .setCurrency("GBP")
-                .setJudoId("1234567")
-                .setPaymentRef("paymentRef")
+                .setJudoId(1234567L)
+                .setYourPaymentReference("paymentRef")
                 .build();
     }
 
@@ -28,9 +26,9 @@ public class PaymentTest {
     public void shouldThrowExceptionWhenNoConsumer() {
         new Payment.Builder()
                 .setCurrency("GBP")
-                .setJudoId("1234567")
+                .setJudoId(1234567L)
                 .setAmount("9.99")
-                .setPaymentRef("paymentRef")
+                .setYourPaymentReference("paymentRef")
                 .build();
     }
 
@@ -38,7 +36,7 @@ public class PaymentTest {
     public void shouldThrowExceptionWhenNoPaymentRef() {
         new Payment.Builder()
                 .setCurrency("GBP")
-                .setJudoId("1234567")
+                .setJudoId(1234567L)
                 .setAmount("9.99")
                 .build();
     }
@@ -48,7 +46,7 @@ public class PaymentTest {
         new Payment.Builder()
                 .setCurrency("GBP")
                 .setAmount("9.99")
-                .setPaymentRef("paymentRef")
+                .setYourPaymentReference("paymentRef")
                 .build();
     }
 

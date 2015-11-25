@@ -1,44 +1,45 @@
 package com.judopay;
 
+import android.os.Bundle;
+
 import com.judopay.customer.Card;
 import com.judopay.customer.CardToken;
 import com.judopay.customer.Location;
-import com.judopay.payment.Receipt;
-import com.judopay.payment.TokenTransaction;
+import com.judopay.payment.TokenPayment;
 
-import rx.Observable;
+import static com.judopay.BundleUtil.toMap;
 
 class TokenPaymentPresenter extends BasePaymentPresenter {
 
-    private final TokenPayment tokenPayment;
-
-    public TokenPaymentPresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler, TokenPayment tokenPayment) {
-        super(paymentFormView, apiService, scheduler);
-        this.tokenPayment = tokenPayment;
+    public TokenPaymentPresenter(PaymentFormView view, JudoApiService judoApiService, AndroidScheduler androidScheduler) {
+        super(view, judoApiService, androidScheduler);
     }
 
-    @Override
-    protected Observable<Receipt> performApiCall(Card card, Consumer consumer) {
-        CardToken cardToken = tokenPayment.getCardToken();
+    public void performTokenPayment(Card card, CardToken cardToken, Consumer consumer, String judoId, String amount, String currency, String paymentRef, Bundle metaData, boolean threeDSecureEnabled) {
+        this.paymentInProgress = true;
+        paymentFormView.showLoading();
 
-        TokenTransaction tokenTransaction = new TokenTransaction.Builder()
-                .setAmount(tokenPayment.getAmount())
+        TokenPayment tokenPayment = new TokenPayment.Builder()
+                .setAmount(amount)
                 .setCardAddress(card.getCardAddress())
                 .setClientDetails(new Client())
                 .setConsumerLocation(new Location())
-                .setCurrency(tokenPayment.getCurrency())
-                .setJudoId(Long.valueOf(tokenPayment.getJudoId()))
-                .setYourConsumerReference(tokenPayment.getConsumer().getYourConsumerReference())
-                .setYourPaymentReference(tokenPayment.getPaymentReference())
+                .setCurrency(currency)
+                .setJudoId(Long.valueOf(judoId))
+                .setYourConsumerReference(consumer.getYourConsumerReference())
+                .setYourPaymentReference(paymentRef)
                 .setCv2(card.getCv2())
-                .setYourPaymentMetaData(tokenPayment.getYourMetaData())
+                .setMetaData(toMap(metaData))
                 .setEndDate(cardToken.getEndDate())
                 .setLastFour(cardToken.getLastFour())
                 .setToken(cardToken.getToken())
                 .setType(cardToken.getType())
                 .build();
 
-        return apiService.tokenPayment(tokenTransaction);
+        apiService.tokenPayment(tokenPayment)
+                .subscribeOn(scheduler.backgroundThread())
+                .observeOn(scheduler.mainThread())
+                .subscribe(callback(threeDSecureEnabled), error());
     }
 
 }

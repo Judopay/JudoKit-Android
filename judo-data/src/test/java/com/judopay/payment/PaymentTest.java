@@ -2,17 +2,17 @@ package com.judopay.payment;
 
 import org.junit.Test;
 
-public class PaymentTransactionTest {
+public class PaymentTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionWhenCurrencyNull() {
-        new PaymentTransaction.Builder()
+        new Payment.Builder()
                 .build();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionWhenCurrencyEmpty() {
-        new PaymentTransaction.Builder()
+        new Payment.Builder()
                 .setCurrency("")
                 .build();
     }

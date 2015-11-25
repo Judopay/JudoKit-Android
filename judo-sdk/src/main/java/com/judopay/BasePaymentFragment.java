@@ -11,24 +11,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.judopay.customer.CardToken;
+import com.judopay.payment.PaymentFormListener;
 import com.judopay.payment.Receipt;
 import com.judopay.payment.form.PaymentFormFragment;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
+import com.judopay.secure3d.ThreeDSecureListener;
 import com.judopay.secure3d.ThreeDSecureWebView;
 
 import java.io.IOException;
 
-abstract class BasePaymentFragment extends Fragment implements PaymentFormView {
+abstract class BasePaymentFragment extends Fragment implements PaymentFormView, PaymentFormListener {
 
     private static final String TAG_PAYMENT_FORM = "PaymentFormFragment";
-    public static final String KEY_TOKEN_PAYMENT = "tokenPayment";
-
-    protected static final String TAG_3DS_DIALOG = "3dSecureDialog";
+    private static final String TAG_3DS_DIALOG = "3dSecureDialog";
 
     protected View progressBar;
     protected TextView progressText;
-
-    protected BasePaymentPresenter presenter;
 
     protected ThreeDSecureDialogFragment threeDSecureDialog;
     private ThreeDSecureWebView threeDSecureWebView;
@@ -52,8 +51,6 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView {
         this.progressBar = view.findViewById(R.id.progress_overlay);
         this.progressText = (TextView) view.findViewById(R.id.progress_text);
         this.threeDSecureWebView = (ThreeDSecureWebView) view.findViewById(R.id.three_d_secure_web_view);
-
-        this.presenter.reconnect();
     }
 
     @Override
@@ -65,12 +62,12 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView {
         PaymentFormFragment paymentFormFragment = (PaymentFormFragment) fm.findFragmentByTag(TAG_PAYMENT_FORM);
 
         if (paymentFormFragment == null) {
-            TokenPayment tokenPayment = getArguments().getParcelable(KEY_TOKEN_PAYMENT);
+            CardToken cardToken = getArguments().getParcelable(JudoPay.JUDO_CARD_TOKEN);
 
-            if (tokenPayment != null) {
-                paymentFormFragment = PaymentFormFragment.newInstance(tokenPayment.getCardToken(), presenter);
+            if (cardToken != null) {
+                paymentFormFragment = PaymentFormFragment.newInstance(cardToken, this);
             } else {
-                paymentFormFragment = PaymentFormFragment.newInstance(presenter);
+                paymentFormFragment = PaymentFormFragment.newInstance(this);
             }
 
             paymentFormFragment.setTargetFragment(this, 0);
@@ -78,8 +75,6 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView {
             fm.beginTransaction()
                     .add(R.id.container, paymentFormFragment, TAG_PAYMENT_FORM)
                     .commit();
-        } else {
-            paymentFormFragment.setPaymentFormListener(presenter);
         }
     }
 
@@ -111,6 +106,15 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView {
     }
 
     @Override
+    public void handleError() {
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.setResult(JudoPay.RESULT_ERROR);
+            activity.finish();
+        }
+    }
+
+    @Override
     public void showDeclinedMessage(Receipt receipt) {
         Intent intent = new Intent();
         intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
@@ -129,8 +133,9 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView {
     }
 
     @Override
-    public void start3dSecureWebView(Receipt receipt) {
-        threeDSecureWebView.setThreeDSecureListener(this.presenter);
+    public void start3dSecureWebView(Receipt receipt, ThreeDSecureListener threeDSecureListener) {
+        threeDSecureWebView.setThreeDSecureListener(threeDSecureListener);
+
         try {
             threeDSecureWebView.authorize(receipt.getAcsUrl(), receipt.getMd(), receipt.getPaReq(), receipt.getReceiptId());
         } catch (IOException e) {

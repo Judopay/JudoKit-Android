@@ -380,7 +380,7 @@ public class PaymentFormFragment extends Fragment {
         }
 
         if (paymentFormListener != null) {
-            paymentFormListener.onSubmit(cardBuilder.build(), null, JudoPay.isThreeDSecureEnabled());
+            paymentFormListener.onSubmit(cardBuilder.build());
         }
     }
 

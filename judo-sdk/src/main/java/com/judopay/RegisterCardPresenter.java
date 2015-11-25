@@ -1,10 +1,7 @@
 package com.judopay;
 
 import com.judopay.customer.Card;
-import com.judopay.payment.Receipt;
 import com.judopay.register.RegisterTransaction;
-
-import rx.Observable;
 
 class RegisterCardPresenter extends BasePaymentPresenter {
 
@@ -12,8 +9,11 @@ class RegisterCardPresenter extends BasePaymentPresenter {
         super(paymentFormView, apiService, scheduler);
     }
 
-    @Override
-    protected Observable<Receipt> performApiCall(Card card, Consumer consumer) {
+    protected void performRegisterCard(Card card, Consumer consumer, boolean threeDSecureEnabled) {
+        this.paymentInProgress = true;
+
+        paymentFormView.showLoading();
+
         RegisterTransaction.Builder builder = new RegisterTransaction.Builder()
                 .setCardAddress(card.getCardAddress())
                 .setClientDetails(new Client())
@@ -30,7 +30,10 @@ class RegisterCardPresenter extends BasePaymentPresenter {
                     .setStartDate(card.getStartDate());
         }
 
-        return apiService.registerCard(builder.build());
+        apiService.registerCard(builder.build())
+                .subscribeOn(scheduler.backgroundThread())
+                .observeOn(scheduler.mainThread())
+                .subscribe(callback(threeDSecureEnabled), error());
     }
 
 }

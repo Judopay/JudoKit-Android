@@ -3,25 +3,31 @@ package com.judopay;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.judopay.payment.Receipt;
+import static com.judopay.JudoPay.*;
 
-import static com.judopay.JudoPay.EXTRA_PAYMENT;
-
-public class PaymentActivity extends JudoActivity implements PaymentListener {
+public class PaymentActivity extends JudoActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!getIntent().hasExtra(EXTRA_PAYMENT)) {
-            throw new IllegalArgumentException("payment must be provided to PaymentActivity");
-        }
+        checkForExtras(JUDO_AMOUNT, JUDO_ID, JUDO_CURRENCY, JUDO_PAYMENT_REF, JUDO_CONSUMER);
 
         setTitle(R.string.payment);
 
         if (savedInstanceState == null) {
-            Payment payment = getIntent().getParcelableExtra(EXTRA_PAYMENT);
-            PaymentFragment paymentFragment = PaymentFragment.newInstance(payment);
+            Intent intent = getIntent();
+
+            Consumer consumer = intent.getParcelableExtra(JUDO_CONSUMER);
+            String judoId = intent.getStringExtra(JUDO_ID);
+            String amount = intent.getStringExtra(JUDO_AMOUNT);
+            String currency = intent.getStringExtra(JUDO_CURRENCY);
+            String paymentRef = intent.getStringExtra(JUDO_PAYMENT_REF);
+
+            //optional meta data
+            Bundle metaData = intent.getBundleExtra(JUDO_META_DATA);
+
+            PaymentFragment paymentFragment = PaymentFragment.newInstance(judoId, amount, currency, paymentRef, consumer, metaData);
 
             getFragmentManager()
                     .beginTransaction()
@@ -34,32 +40,6 @@ public class PaymentActivity extends JudoActivity implements PaymentListener {
     public void onBackPressed() {
         super.onBackPressed();
         setResult(JudoPay.RESULT_CANCELED);
-    }
-
-    @Override
-    public void onPaymentSuccess(Receipt receipt) {
-        Intent intent = new Intent();
-        intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
-
-        setResult(JudoPay.RESULT_PAYMENT_SUCCESS, intent);
-
-        finish();
-    }
-
-    @Override
-    public void onPaymentDeclined(Receipt receipt) {
-        Intent intent = new Intent();
-        intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
-
-        setResult(JudoPay.RESULT_PAYMENT_DECLINED, intent);
-
-        finish();
-    }
-
-    @Override
-    public void onError() {
-        setResult(JudoPay.RESULT_ERROR);
-        finish();
     }
 
 }

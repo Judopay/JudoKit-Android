@@ -1,9 +1,8 @@
 package com.judopay.arch.api;
 
-import android.support.annotation.NonNull;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.judopay.JudoApiService;
 import com.judopay.JudoPay;
 import com.judopay.auth.ApiHeadersInterceptor;
 import com.judopay.auth.AuthorizationEncoder;
@@ -22,14 +21,13 @@ public class RetrofitFactory {
 
     private static Retrofit retrofit;
 
-    public static Retrofit getInstance() {
-        if(retrofit == null) {
+    private static Retrofit getInstance() {
+        if (retrofit == null) {
             retrofit = createRetrofit();
         }
         return retrofit;
     }
 
-    @NonNull
     private static Retrofit createRetrofit() {
         AuthorizationEncoder authorizationEncoder = new AuthorizationEncoder();
         ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(authorizationEncoder);
@@ -65,6 +63,10 @@ public class RetrofitFactory {
                 .baseUrl(JudoPay.getApiEnvironmentHost())
                 .client(client)
                 .build();
+    }
+
+    public static JudoApiService getApiService() {
+        return getInstance().create(JudoApiService.class);
     }
 
 }

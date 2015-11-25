@@ -4,13 +4,11 @@ import android.os.Bundle;
 
 public class RegisterCardActivity extends JudoActivity {
 
-    public static final String EXTRA_CONSUMER = "Judo-Consumer";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!getIntent().hasExtra(EXTRA_CONSUMER)) {
+        if (!getIntent().hasExtra(JudoPay.JUDO_CONSUMER)) {
             throw new IllegalArgumentException("consumer must be provided to RegisterCardActivity");
         }
 
@@ -20,7 +18,7 @@ public class RegisterCardActivity extends JudoActivity {
             RegisterCardFragment registerCardFragment = new RegisterCardFragment();
 
             Bundle arguments = new Bundle();
-            arguments.putParcelable(RegisterCardFragment.KEY_CONSUMER, getIntent().getParcelableExtra(EXTRA_CONSUMER));
+            arguments.putParcelable(JudoPay.JUDO_CONSUMER, getIntent().getParcelableExtra(JudoPay.JUDO_CONSUMER));
 
             registerCardFragment.setArguments(arguments);
 

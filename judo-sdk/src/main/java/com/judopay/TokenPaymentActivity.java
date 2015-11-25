@@ -3,11 +3,17 @@ package com.judopay;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.judopay.payment.Receipt;
+import com.judopay.customer.CardToken;
 
-public class TokenPaymentActivity extends JudoActivity implements PaymentListener {
+import static com.judopay.JudoPay.JUDO_AMOUNT;
+import static com.judopay.JudoPay.JUDO_CARD_TOKEN;
+import static com.judopay.JudoPay.JUDO_CONSUMER;
+import static com.judopay.JudoPay.JUDO_CURRENCY;
+import static com.judopay.JudoPay.JUDO_ID;
+import static com.judopay.JudoPay.JUDO_META_DATA;
+import static com.judopay.JudoPay.JUDO_PAYMENT_REF;
 
-    public static String EXTRA_TOKEN_PAYMENT = "Judo-TokenPayment";
+public class TokenPaymentActivity extends JudoActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,17 +22,23 @@ public class TokenPaymentActivity extends JudoActivity implements PaymentListene
         setTitle(R.string.payment);
 
         if (savedInstanceState == null) {
-            TokenPayment tokenPayment = getIntent().getParcelableExtra(EXTRA_TOKEN_PAYMENT);
+            Intent intent = getIntent();
 
-            TokenPaymentFragment paymentFragment = new TokenPaymentFragment();
+            String judoId = intent.getStringExtra(JUDO_ID);
+            String amount = intent.getStringExtra(JUDO_AMOUNT);
+            String currency = intent.getStringExtra(JUDO_CURRENCY);
+            String paymentRef = intent.getStringExtra(JUDO_PAYMENT_REF);
+            Consumer consumer = intent.getParcelableExtra(JUDO_CONSUMER);
+            CardToken cardToken = intent.getParcelableExtra(JUDO_CARD_TOKEN);
 
-            Bundle arguments = new Bundle();
-            arguments.putParcelable(TokenPaymentFragment.KEY_TOKEN_PAYMENT, tokenPayment);
-            paymentFragment.setArguments(arguments);
+            //optional meta data
+            Bundle metaData = intent.getBundleExtra(JUDO_META_DATA);
+
+            TokenPaymentFragment fragment = TokenPaymentFragment.newInstance(judoId, amount, currency, cardToken, paymentRef, consumer, metaData);
 
             getFragmentManager()
                     .beginTransaction()
-                    .add(android.R.id.content, paymentFragment)
+                    .add(android.R.id.content, fragment)
                     .commit();
         }
     }
@@ -35,32 +47,6 @@ public class TokenPaymentActivity extends JudoActivity implements PaymentListene
     public void onBackPressed() {
         super.onBackPressed();
         setResult(JudoPay.RESULT_CANCELED);
-    }
-
-    @Override
-    public void onPaymentSuccess(Receipt receipt) {
-        Intent intent = new Intent();
-        intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
-
-        setResult(JudoPay.RESULT_PAYMENT_SUCCESS, intent);
-
-        finish();
-    }
-
-    @Override
-    public void onPaymentDeclined(Receipt receipt) {
-        Intent intent = new Intent();
-        intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
-
-        setResult(JudoPay.RESULT_PAYMENT_DECLINED, intent);
-
-        finish();
-    }
-
-    @Override
-    public void onError() {
-        setResult(JudoPay.RESULT_ERROR);
-        finish();
     }
 
 }

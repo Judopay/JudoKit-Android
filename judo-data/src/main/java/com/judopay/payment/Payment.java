@@ -4,7 +4,9 @@ import com.judopay.Client;
 import com.judopay.customer.Address;
 import com.judopay.customer.Location;
 
-public class PaymentTransaction {
+import java.util.Map;
+
+public class Payment {
 
     private String amount;
     private Client clientDetails;
@@ -19,6 +21,7 @@ public class PaymentTransaction {
     private String expiryDate;
     private String startDate;
     private String issueNumber;
+    private Map<String, String> yourPaymentMetaData;
 
     public String getAmount() {
         return amount;
@@ -72,93 +75,102 @@ public class PaymentTransaction {
         return expiryDate;
     }
 
+    public Map<String, String> getMetaData() {
+        return yourPaymentMetaData;
+    }
+
     public static class Builder {
 
-        private PaymentTransaction paymentTransaction;
+        private Payment payment;
 
         public Builder() {
-            this.paymentTransaction = new PaymentTransaction();
+            this.payment = new Payment();
         }
 
         public Builder setAmount(String amount) {
-            paymentTransaction.amount = amount;
+            payment.amount = amount;
             return this;
         }
 
         public Builder setClientDetails(Client clientDetails) {
-            paymentTransaction.clientDetails = clientDetails;
+            payment.clientDetails = clientDetails;
             return this;
         }
 
         public Builder setConsumerLocation(Location consumerLocation) {
-            paymentTransaction.consumerLocation = consumerLocation;
+            payment.consumerLocation = consumerLocation;
             return this;
         }
 
         public Builder setCurrency(String currency) {
-            paymentTransaction.currency = currency;
+            payment.currency = currency;
             return this;
         }
 
         public Builder setJudoId(long judoId) {
-            paymentTransaction.judoId = judoId;
+            payment.judoId = judoId;
             return this;
         }
 
         public Builder setYourConsumerReference(String yourConsumerReference) {
-            paymentTransaction.yourConsumerReference = yourConsumerReference;
+            payment.yourConsumerReference = yourConsumerReference;
             return this;
         }
 
         public Builder setYourPaymentReference(String yourPaymentReference) {
-            paymentTransaction.yourPaymentReference = yourPaymentReference;
+            payment.yourPaymentReference = yourPaymentReference;
             return this;
         }
 
         public Builder setCardAddress(Address cardAddress) {
-            paymentTransaction.cardAddress = cardAddress;
+            payment.cardAddress = cardAddress;
             return this;
         }
 
         public Builder setCardNumber(String cardNumber) {
-            paymentTransaction.cardNumber = cardNumber;
+            payment.cardNumber = cardNumber;
             return this;
         }
 
         public Builder setCv2(String cv2) {
-            paymentTransaction.cv2 = cv2;
+            payment.cv2 = cv2;
             return this;
         }
 
         public Builder setExpiryDate(String expiryDate) {
-            paymentTransaction.expiryDate = expiryDate;
+            payment.expiryDate = expiryDate;
             return this;
         }
 
         public Builder setStartDate(String startDate) {
-            paymentTransaction.startDate = startDate;
+            payment.startDate = startDate;
             return this;
         }
 
         public Builder setIssueNumber(String issueNumber) {
-            paymentTransaction.issueNumber = issueNumber;
+            payment.issueNumber = issueNumber;
             return this;
         }
 
-        public PaymentTransaction build() {
-            if (paymentTransaction.currency == null || paymentTransaction.currency.length() == 0) {
+        public Builder setMetaData(Map<String, String> metaData) {
+            payment.yourPaymentMetaData = metaData;
+            return this;
+        }
+
+        public Payment build() {
+            if (payment.currency == null || payment.currency.length() == 0) {
                 throw new IllegalArgumentException("currency must be set");
             }
 
-            if (paymentTransaction.judoId == 0) {
+            if (payment.judoId == 0) {
                 throw new IllegalArgumentException("judoId must be set");
             }
 
-            if (paymentTransaction.amount == null || paymentTransaction.amount.length() == 0) {
+            if (payment.amount == null || payment.amount.length() == 0) {
                 throw new IllegalArgumentException("amount must be set");
             }
 
-            return paymentTransaction;
+            return payment;
         }
 
     }
