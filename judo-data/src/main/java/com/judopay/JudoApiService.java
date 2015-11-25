@@ -2,13 +2,11 @@ package com.judopay;
 
 import com.judopay.payment.Collection;
 import com.judopay.payment.Payment;
-import com.judopay.payment.PaymentTransaction;
 import com.judopay.payment.Receipt;
 import com.judopay.payment.Receipts;
 import com.judopay.payment.Refund;
 import com.judopay.payment.ThreeDSecureInfo;
 import com.judopay.payment.TokenPayment;
-import com.judopay.payment.TokenTransaction;
 import com.judopay.register.RegisterTransaction;
 
 import retrofit.http.Body;

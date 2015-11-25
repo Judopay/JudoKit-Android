@@ -4,7 +4,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-public class DateSeparatorTextWatcher implements TextWatcher {
+class DateSeparatorTextWatcher implements TextWatcher {
 
     private final EditText editText;
 

@@ -5,7 +5,7 @@ import android.util.Base64;
 import com.judopay.JudoPay;
 import com.judopay.JudoPayApi;
 
-public class AuthorizationEncoder {
+class AuthorizationEncoder {
 
     public String getAuthorization() {
         JudoPayApi api = JudoPay.getApi();

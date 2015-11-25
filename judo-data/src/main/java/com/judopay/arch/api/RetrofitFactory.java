@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.judopay.JudoApiService;
 import com.judopay.JudoPay;
-import com.judopay.auth.ApiHeadersInterceptor;
-import com.judopay.auth.AuthorizationEncoder;
 import com.squareup.okhttp.CertificatePinner;
 import com.squareup.okhttp.OkHttpClient;
 

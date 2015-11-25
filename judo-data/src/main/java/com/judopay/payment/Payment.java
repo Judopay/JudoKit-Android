@@ -154,12 +154,11 @@ public class Payment {
 
         public Builder setIssueNumber(String issueNumber) {
             payment.issueNumber = issueNumber;
-            paymentTransaction.issueNumber = issueNumber;
             return this;
         }
 
         public Builder setSaveCardOnly(Boolean saveCardOnly) {
-            paymentTransaction.saveCardOnly = saveCardOnly;
+            payment.saveCardOnly = saveCardOnly;
             return this;
         }
 

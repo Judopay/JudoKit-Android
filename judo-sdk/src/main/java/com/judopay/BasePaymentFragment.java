@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.judopay.customer.CardToken;
-import com.judopay.payment.PaymentFormListener;
+import com.judopay.payment.form.PaymentFormListener;
 import com.judopay.payment.Receipt;
 import com.judopay.payment.form.PaymentFormFragment;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;

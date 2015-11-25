@@ -2,8 +2,6 @@ package com.judopay.arch.api;
 
 import android.os.Build;
 
-import com.judopay.arch.api.UserAgent;
-import com.judopay.auth.AuthorizationEncoder;
 import com.judopay.rest.BuildConfig;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Interceptor;
@@ -14,7 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class ApiHeadersInterceptor implements Interceptor {
+class ApiHeadersInterceptor implements Interceptor {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String CONTENT_TYPE_HEADER = "Content-Type";

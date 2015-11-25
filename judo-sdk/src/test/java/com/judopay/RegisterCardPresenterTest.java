@@ -45,6 +45,7 @@ public class RegisterCardPresenterTest {
     @Test
     public void shouldRegisterCard() {
         RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
+        when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
         presenter.performRegisterCard(card, consumer, false);
 

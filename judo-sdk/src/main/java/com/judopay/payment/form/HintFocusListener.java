@@ -4,7 +4,7 @@ import android.support.annotation.StringRes;
 import android.view.View;
 import android.widget.EditText;
 
-public class HintFocusListener implements View.OnFocusChangeListener {
+class HintFocusListener implements View.OnFocusChangeListener {
 
     private final EditText editText;
     private int hintResourceId;

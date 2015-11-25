@@ -2,7 +2,7 @@ package com.judopay;
 
 import android.view.View;
 
-import com.judopay.view.HidingViewTextWatcher;
+import com.judopay.payment.form.HidingViewTextWatcher;
 
 import org.junit.Test;
 

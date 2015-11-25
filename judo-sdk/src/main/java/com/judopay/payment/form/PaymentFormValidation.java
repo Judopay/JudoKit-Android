@@ -4,8 +4,6 @@ import android.support.annotation.StringRes;
 
 import com.judopay.R;
 import com.judopay.customer.CardType;
-import com.judopay.payment.form.address.CountryAndPostcodeValidation;
-import com.judopay.payment.form.cardnumber.CardNumberValidation;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;

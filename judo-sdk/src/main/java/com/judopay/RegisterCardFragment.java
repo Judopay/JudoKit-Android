@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.judopay.arch.api.RetrofitFactory;
 import com.judopay.customer.Card;
-import com.judopay.payment.PaymentFormListener;
+import com.judopay.payment.form.PaymentFormListener;
 import com.judopay.payment.Receipt;
 import com.judopay.payment.form.PaymentFormFragment;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;

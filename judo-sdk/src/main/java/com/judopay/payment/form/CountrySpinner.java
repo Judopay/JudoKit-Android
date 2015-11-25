@@ -15,14 +15,7 @@ import java.util.List;
 
 public class CountrySpinner extends AppCompatSpinner {
 
-    private Listener listener;
     private CountrySpinnerAdapter adapter;
-    private OnItemSelectedListener delegatedListener;
-
-    public interface Listener {
-        void onCountrySelected();
-        void onOtherCountrySelected();
-    }
 
     public CountrySpinner(Context context) {
         super(context);
@@ -49,36 +42,6 @@ public class CountrySpinner extends AppCompatSpinner {
         this.adapter = new CountrySpinnerAdapter(this.getContext(), android.R.layout.simple_list_item_1, getCountries());
 
         this.setAdapter(this.adapter);
-
-        super.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Country country = adapter.getItem(position);
-                if (listener != null) {
-                    if (Country.OTHER.equals(country.getDisplayName())) {
-                        listener.onOtherCountrySelected();
-                    } else {
-                        listener.onCountrySelected();
-                    }
-                }
-
-                if (delegatedListener != null) {
-                    delegatedListener.onItemSelected(parent, view, position, id);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                if (delegatedListener != null) {
-                    delegatedListener.onNothingSelected(parent);
-                }
-            }
-        });
-    }
-
-    @Override
-    public void setOnItemSelectedListener(OnItemSelectedListener listener) {
-        this.delegatedListener = listener;
     }
 
     private List<Country> getCountries() {
@@ -94,10 +57,6 @@ public class CountrySpinner extends AppCompatSpinner {
 
     public boolean isCountrySelected() {
         return !Country.OTHER.equals(getSelectedCountry().getDisplayName());
-    }
-
-    public void setListener(Listener listener) {
-        this.listener = listener;
     }
 
     public Country getSelectedCountry() {
