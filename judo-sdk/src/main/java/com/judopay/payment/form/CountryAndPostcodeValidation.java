@@ -1,4 +1,4 @@
-package com.judopay.payment.form.address;
+package com.judopay.payment.form;
 
 import com.judopay.R;
 import com.judopay.customer.Country;

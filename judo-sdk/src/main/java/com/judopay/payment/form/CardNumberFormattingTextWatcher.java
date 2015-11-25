@@ -1,4 +1,4 @@
-package com.judopay.payment.form.cardnumber;
+package com.judopay.payment.form;
 
 import android.text.Editable;
 import android.text.TextUtils;

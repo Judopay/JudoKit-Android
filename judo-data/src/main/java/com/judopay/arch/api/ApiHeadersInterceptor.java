@@ -1,8 +1,9 @@
-package com.judopay.auth;
+package com.judopay.arch.api;
 
 import android.os.Build;
 
 import com.judopay.arch.api.UserAgent;
+import com.judopay.auth.AuthorizationEncoder;
 import com.judopay.rest.BuildConfig;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Interceptor;

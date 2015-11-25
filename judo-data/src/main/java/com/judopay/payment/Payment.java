@@ -21,6 +21,7 @@ public class Payment {
     private String expiryDate;
     private String startDate;
     private String issueNumber;
+    private Boolean saveCardOnly;
     private Map<String, String> yourPaymentMetaData;
 
     public String getAmount() {
@@ -73,6 +74,10 @@ public class Payment {
 
     public String getExpiryDate() {
         return expiryDate;
+    }
+
+    public Boolean getSaveCardOnly() {
+        return saveCardOnly;
     }
 
     public Map<String, String> getMetaData() {
@@ -149,6 +154,12 @@ public class Payment {
 
         public Builder setIssueNumber(String issueNumber) {
             payment.issueNumber = issueNumber;
+            paymentTransaction.issueNumber = issueNumber;
+            return this;
+        }
+
+        public Builder setSaveCardOnly(Boolean saveCardOnly) {
+            paymentTransaction.saveCardOnly = saveCardOnly;
             return this;
         }
 

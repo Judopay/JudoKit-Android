@@ -1,4 +1,4 @@
-package com.judopay.auth;
+package com.judopay.arch.api;
 
 import android.util.Base64;
 
