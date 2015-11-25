@@ -1,9 +1,10 @@
 package com.judopay;
 
-import com.judopay.customer.Address;
-import com.judopay.customer.Card;
-import com.judopay.payment.Receipt;
-import com.judopay.register.RegisterTransaction;
+import com.judopay.model.Address;
+import com.judopay.model.Card;
+import com.judopay.model.Consumer;
+import com.judopay.model.Receipt;
+import com.judopay.model.RegisterTransaction;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

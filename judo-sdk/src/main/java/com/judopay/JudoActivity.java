@@ -21,7 +21,7 @@ import com.judopay.security.RootUserBlockedException;
  * <li>Shows the back button in the action bar, allowing the user to navigate back easily.</li>
  * </ol>
  */
-public class JudoActivity extends AppCompatActivity {
+class JudoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

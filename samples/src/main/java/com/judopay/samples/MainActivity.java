@@ -11,14 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.judopay.Consumer;
+import com.judopay.model.Consumer;
 import com.judopay.JudoPay;
 import com.judopay.PaymentActivity;
 import com.judopay.PreAuthActivity;
 import com.judopay.RegisterCardActivity;
 import com.judopay.TokenPaymentActivity;
-import com.judopay.customer.CardToken;
-import com.judopay.payment.Receipt;
+import com.judopay.model.CardToken;
+import com.judopay.model.Receipt;
 
 import java.util.UUID;
 

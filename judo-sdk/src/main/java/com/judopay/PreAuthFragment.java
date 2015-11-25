@@ -3,8 +3,9 @@ package com.judopay;
 import android.os.Bundle;
 import android.view.View;
 
-import com.judopay.arch.api.RetrofitFactory;
-import com.judopay.customer.Card;
+import com.judopay.arch.api.ApiServiceFactory;
+import com.judopay.model.Card;
+import com.judopay.model.Consumer;
 
 import static com.judopay.JudoPay.JUDO_AMOUNT;
 import static com.judopay.JudoPay.JUDO_CONSUMER;
@@ -51,7 +52,7 @@ public class PreAuthFragment extends BasePaymentFragment {
         consumer = args.getParcelable(JUDO_CONSUMER);
 
         if (savedInstanceState == null) {
-            this.presenter = new PreAuthPresenter(this, RetrofitFactory.getApiService(), new AndroidScheduler());
+            this.presenter = new PreAuthPresenter(this, ApiServiceFactory.getApiService(), new AndroidScheduler());
         }
     }
 

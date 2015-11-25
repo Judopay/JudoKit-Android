@@ -1,8 +1,4 @@
-package com.judopay.register;
-
-import com.judopay.Client;
-import com.judopay.customer.Address;
-import com.judopay.customer.Location;
+package com.judopay.model;
 
 public class RegisterTransaction {
 

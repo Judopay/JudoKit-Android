@@ -1,8 +1,4 @@
-package com.judopay.payment;
-
-import com.judopay.Client;
-import com.judopay.customer.Address;
-import com.judopay.customer.Location;
+package com.judopay.model;
 
 import java.util.Map;
 

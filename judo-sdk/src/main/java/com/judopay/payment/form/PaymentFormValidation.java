@@ -3,7 +3,7 @@ package com.judopay.payment.form;
 import android.support.annotation.StringRes;
 
 import com.judopay.R;
-import com.judopay.customer.CardType;
+import com.judopay.model.CardType;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;

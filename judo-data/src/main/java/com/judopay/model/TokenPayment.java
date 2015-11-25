@@ -1,9 +1,6 @@
-package com.judopay.payment;
+package com.judopay.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.judopay.Client;
-import com.judopay.customer.Address;
-import com.judopay.customer.Location;
 
 import java.util.Map;
 

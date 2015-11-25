@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.judopay.customer.CardToken;
+import com.judopay.model.CardToken;
+import com.judopay.model.Receipt;
 import com.judopay.payment.form.PaymentFormListener;
-import com.judopay.payment.Receipt;
 import com.judopay.payment.form.PaymentFormFragment;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
@@ -100,7 +100,7 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
         Activity activity = getActivity();
 
         if (activity != null) {
-            activity.setResult(JudoPay.RESULT_REGISTER_CARD_SUCCESS, intent);
+            activity.setResult(JudoPay.RESULT_PAYMENT_SUCCESS, intent);
             activity.finish();
         }
     }
@@ -122,7 +122,7 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
         Activity activity = getActivity();
 
         if (activity != null) {
-            activity.setResult(JudoPay.RESULT_REGISTER_CARD_DECLINED, intent);
+            activity.setResult(JudoPay.RESULT_PAYMENT_DECLINED, intent);
             activity.finish();
         }
     }

@@ -5,10 +5,8 @@ import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.AppCompatSpinner;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.AdapterView;
 
-import com.judopay.customer.Country;
+import com.judopay.model.Country;
 
 import java.util.ArrayList;
 import java.util.List;

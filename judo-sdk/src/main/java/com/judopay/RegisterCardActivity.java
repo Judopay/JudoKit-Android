@@ -2,6 +2,15 @@ package com.judopay;
 
 import android.os.Bundle;
 
+/**
+ * Displays a form to the user, allowing for card to be registered and used for token transactions.
+ * <br>
+ * Mandatory extras:
+ * <ol>
+ * <li>{@link JudoPay#JUDO_CONSUMER} identifier for the consumer of the transaction</li>
+ * </ol>
+ * <br>
+ */
 public class RegisterCardActivity extends JudoActivity {
 
     @Override

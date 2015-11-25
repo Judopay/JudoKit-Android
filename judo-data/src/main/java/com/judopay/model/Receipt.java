@@ -1,11 +1,7 @@
-package com.judopay.payment;
+package com.judopay.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.judopay.Consumer;
-import com.judopay.Response;
-import com.judopay.customer.CardToken;
 
 import java.util.Date;
 

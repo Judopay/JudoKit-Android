@@ -3,6 +3,11 @@ package com.judopay;
 import android.app.Activity;
 import android.content.Context;
 
+/**
+ * Lets you configure options for how the SDK interacts with the REST API, including setting of
+ * your token and secret, enabling sandbox and live environments, changing supported card types,
+ * allowing for payments routed through 3D-Secure and requiring Address Verification Checks (AVS).
+ */
 public class JudoPay {
 
     public static final int RESULT_PAYMENT_SUCCESS = Activity.RESULT_OK;

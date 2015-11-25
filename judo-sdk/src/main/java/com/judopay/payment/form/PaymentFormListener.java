@@ -1,6 +1,6 @@
 package com.judopay.payment.form;
 
-import com.judopay.customer.Card;
+import com.judopay.model.Card;
 
 public interface PaymentFormListener {
 

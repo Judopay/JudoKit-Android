@@ -3,7 +3,8 @@ package com.judopay;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.judopay.customer.CardToken;
+import com.judopay.model.CardToken;
+import com.judopay.model.Consumer;
 
 import static com.judopay.JudoPay.JUDO_AMOUNT;
 import static com.judopay.JudoPay.JUDO_CARD_TOKEN;

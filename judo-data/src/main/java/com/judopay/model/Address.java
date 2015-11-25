@@ -1,4 +1,4 @@
-package com.judopay.customer;
+package com.judopay.model;
 
 public class Address {
 

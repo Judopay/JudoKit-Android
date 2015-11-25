@@ -1,4 +1,4 @@
-package com.judopay.customer;
+package com.judopay.model;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;

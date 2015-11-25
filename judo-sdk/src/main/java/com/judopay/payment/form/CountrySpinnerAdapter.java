@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.judopay.R;
-import com.judopay.customer.Country;
+import com.judopay.model.Country;
 
 import java.util.List;
 

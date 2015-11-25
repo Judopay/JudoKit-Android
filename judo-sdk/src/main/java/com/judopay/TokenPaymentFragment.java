@@ -3,9 +3,10 @@ package com.judopay;
 import android.os.Bundle;
 import android.view.View;
 
-import com.judopay.arch.api.RetrofitFactory;
-import com.judopay.customer.Card;
-import com.judopay.customer.CardToken;
+import com.judopay.arch.api.ApiServiceFactory;
+import com.judopay.model.Card;
+import com.judopay.model.CardToken;
+import com.judopay.model.Consumer;
 
 import static com.judopay.JudoPay.JUDO_AMOUNT;
 import static com.judopay.JudoPay.JUDO_CARD_TOKEN;
@@ -64,7 +65,7 @@ public class TokenPaymentFragment extends BasePaymentFragment {
         consumer = args.getParcelable(JUDO_CONSUMER);
 
         if (savedInstanceState == null) {
-            this.presenter = new TokenPaymentPresenter(this, RetrofitFactory.getApiService(), new AndroidScheduler());
+            this.presenter = new TokenPaymentPresenter(this, ApiServiceFactory.getApiService(), new AndroidScheduler());
         }
     }
 

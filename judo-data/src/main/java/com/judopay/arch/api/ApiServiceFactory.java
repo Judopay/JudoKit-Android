@@ -15,7 +15,13 @@ import retrofit.RxJavaCallAdapterFactory;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-public class RetrofitFactory {
+/**
+ * Factory that provides the {@link JudoApiService} used for performing all HTTP requests to the
+ * judoPay APIs. As creating the JudoApiService requires lots of setup, it is better to use a shared
+ * instance than create a new instance per request, so this class ensures that only one instance is
+ * used in the application.
+ */
+public class ApiServiceFactory {
 
     private static Retrofit retrofit;
 
@@ -63,6 +69,10 @@ public class RetrofitFactory {
                 .build();
     }
 
+    /**
+     * @return the Retrofit API service implementation containing the methods used
+     * for interacting with the judoPay API.
+     */
     public static JudoApiService getApiService() {
         return getInstance().create(JudoApiService.class);
     }

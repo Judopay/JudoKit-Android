@@ -1,4 +1,4 @@
-package com.judopay;
+package com.judopay.model;
 
 public class Client {
 

@@ -9,7 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.judopay.R;
-import com.judopay.customer.CardType;
+import com.judopay.model.CardType;
 
 public class CvvImageView extends FrameLayout {
 

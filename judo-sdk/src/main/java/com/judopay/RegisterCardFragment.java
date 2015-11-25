@@ -11,10 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.judopay.arch.api.RetrofitFactory;
-import com.judopay.customer.Card;
+import com.judopay.arch.api.ApiServiceFactory;
+import com.judopay.model.Card;
+import com.judopay.model.Consumer;
+import com.judopay.model.Receipt;
 import com.judopay.payment.form.PaymentFormListener;
-import com.judopay.payment.Receipt;
 import com.judopay.payment.form.PaymentFormFragment;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
@@ -42,12 +43,13 @@ public class RegisterCardFragment extends Fragment implements PaymentFormView, P
         setRetainInstance(true);
 
         if (savedInstanceState == null) {
-            this.presenter = new RegisterCardPresenter(this, RetrofitFactory.getApiService(), new AndroidScheduler());
+            this.presenter = new RegisterCardPresenter(this, ApiServiceFactory.getApiService(), new AndroidScheduler());
 
             PaymentFormFragment paymentFormFragment = PaymentFormFragment.newInstance(this, getString(R.string.add_card));
             paymentFormFragment.setRetainInstance(true);
 
             consumer = getArguments().getParcelable(JUDO_CONSUMER);
+
             getFragmentManager()
                     .beginTransaction()
                     .add(R.id.container, paymentFormFragment)

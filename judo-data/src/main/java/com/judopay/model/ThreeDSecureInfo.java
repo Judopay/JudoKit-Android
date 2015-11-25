@@ -1,4 +1,4 @@
-package com.judopay.payment;
+package com.judopay.model;
 
 import com.google.gson.annotations.SerializedName;
 

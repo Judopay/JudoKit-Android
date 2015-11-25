@@ -1,7 +1,7 @@
 package com.judopay;
 
-import com.judopay.payment.Receipt;
-import com.judopay.payment.ThreeDSecureInfo;
+import com.judopay.model.Receipt;
+import com.judopay.model.ThreeDSecureInfo;
 import com.judopay.secure3d.ThreeDSecureListener;
 
 import rx.functions.Action1;

@@ -2,7 +2,7 @@ package com.judopay;
 
 import android.support.annotation.StringRes;
 
-import com.judopay.payment.Receipt;
+import com.judopay.model.Receipt;
 import com.judopay.secure3d.ThreeDSecureListener;
 
 interface PaymentFormView {

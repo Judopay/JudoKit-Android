@@ -16,11 +16,11 @@ import android.widget.ScrollView;
 
 import com.judopay.JudoPay;
 import com.judopay.R;
-import com.judopay.customer.Address;
-import com.judopay.customer.Card;
-import com.judopay.customer.CardToken;
-import com.judopay.customer.CardType;
-import com.judopay.customer.Country;
+import com.judopay.model.Address;
+import com.judopay.model.Card;
+import com.judopay.model.CardToken;
+import com.judopay.model.CardType;
+import com.judopay.model.Country;
 
 import static com.judopay.JudoPay.isAvsEnabled;
 

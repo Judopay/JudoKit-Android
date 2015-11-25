@@ -1,13 +1,13 @@
 package com.judopay;
 
-import com.judopay.payment.Collection;
-import com.judopay.payment.Payment;
-import com.judopay.payment.Receipt;
-import com.judopay.payment.Receipts;
-import com.judopay.payment.Refund;
-import com.judopay.payment.ThreeDSecureInfo;
-import com.judopay.payment.TokenPayment;
-import com.judopay.register.RegisterTransaction;
+import com.judopay.model.Collection;
+import com.judopay.model.Payment;
+import com.judopay.model.Receipt;
+import com.judopay.model.Receipts;
+import com.judopay.model.Refund;
+import com.judopay.model.RegisterTransaction;
+import com.judopay.model.ThreeDSecureInfo;
+import com.judopay.model.TokenPayment;
 
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -22,7 +22,7 @@ public interface JudoApiService {
     /**
      * Perform a payment transaction
      *
-     * @param payment the details for the payment, including the payment method, amount and Judo account ID
+     * @param payment the details for the payment, including the payment method, amount and Judo ID
      * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/payments")
@@ -31,7 +31,7 @@ public interface JudoApiService {
     /**
      * Perform a pre-auth transaction
      *
-     * @param payment
+     * @param payment the details for the pre-auth, including the payment method, amount and Judo ID
      * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/preauths")
@@ -57,7 +57,7 @@ public interface JudoApiService {
     Observable<Receipt> threeDSecurePayment(@Path("receiptId") String receiptId, @Body ThreeDSecureInfo threeDSecureInfo);
 
     /**
-     * @param collection
+     * @param collection the collection transaction to be performed
      * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/collections")

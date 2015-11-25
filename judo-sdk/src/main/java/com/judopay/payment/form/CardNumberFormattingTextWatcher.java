@@ -3,9 +3,8 @@ package com.judopay.payment.form;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.widget.EditText;
 
-import com.judopay.customer.CardType;
+import com.judopay.model.CardType;
 
 class CardNumberFormattingTextWatcher implements TextWatcher {
 

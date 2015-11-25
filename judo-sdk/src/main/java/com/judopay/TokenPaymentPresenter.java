@@ -2,10 +2,12 @@ package com.judopay;
 
 import android.os.Bundle;
 
-import com.judopay.customer.Card;
-import com.judopay.customer.CardToken;
-import com.judopay.customer.Location;
-import com.judopay.payment.TokenPayment;
+import com.judopay.model.Card;
+import com.judopay.model.CardToken;
+import com.judopay.model.Client;
+import com.judopay.model.Consumer;
+import com.judopay.model.Location;
+import com.judopay.model.TokenPayment;
 
 import static com.judopay.BundleUtil.toMap;
 

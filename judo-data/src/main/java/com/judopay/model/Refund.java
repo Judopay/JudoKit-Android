@@ -1,12 +1,12 @@
-package com.judopay.payment;
+package com.judopay.model;
 
-public class Collection {
+public class Refund {
 
     private final int receiptId;
     private final float amount;
     private final String yourPaymentReference;
 
-    public Collection(int receiptId, float amount, String yourPaymentReference) {
+    public Refund(int receiptId, float amount, String yourPaymentReference) {
         this.receiptId = receiptId;
         this.amount = amount;
         this.yourPaymentReference = yourPaymentReference;
