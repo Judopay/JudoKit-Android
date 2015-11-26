@@ -44,6 +44,17 @@ android {
 
 }
 
+dependencies {
+    compile project(':judo-data')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.10.19'
+}
+
 install {
     repositories.mavenInstaller {
         pom {
@@ -75,17 +86,6 @@ install {
     }
 }
 
-dependencies {
-    compile project(':judo-data')
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
-
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.10.19'
-}
-
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
     classifier = 'sources'
@@ -112,7 +112,9 @@ task findConventions << {
 
 Properties properties = new Properties()
 File propFile = "bintray.properties" as File
-properties.load(propFile.newDataInputStream())
+if (propFile.exists()) {
+    properties.load(propFile.newDataInputStream())
+}
 
 bintray {
     user = properties.getProperty("bintray_user")
