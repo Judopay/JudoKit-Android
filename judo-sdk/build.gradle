@@ -12,7 +12,7 @@ repositories {
 }
 
 group = 'com.judopay'
-version = '5.0-beta1'
+version = '5.0-beta2'
 
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
@@ -110,13 +110,14 @@ task findConventions << {
     println project.getConvention()
 }
 
-Properties properties = new Properties()
-File propFile = "bintray.properties" as File
-if (propFile.exists()) {
-    properties.load(propFile.newDataInputStream())
-}
-
 bintray {
+
+    Properties properties = new Properties()
+    File propFile = "bintray.properties" as File
+    if(propFile.exists()) {
+        properties.load(propFile.newDataInputStream())
+    }
+
     user = properties.getProperty("bintray_user")
     key = properties.getProperty("bintray_api_key")
     configurations = ['archives']
