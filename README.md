@@ -1,5 +1,5 @@
-[![Twitter](https://img.shields.io/badge/twitter-@JudoPayments-orange.svg)](http://twitter.com/JudoPayments)
-[ ![Download](https://api.bintray.com/packages/judopay/android-repo/judo-sdk/images/download.svg) ](https://bintray.com/judopay/android-repo/judo-sdk/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/judopay/maven/android-sdk/images/download.svg) ](https://bintray.com/judopay/maven/android-sdk/_latestVersion)
+
 <p>
   <img  align="right" src="https://github.com/JudoPay/Judo-Xamarin/blob/master/resources/judo_logo.png?raw=true" alt="Judo"/>
 </p>
