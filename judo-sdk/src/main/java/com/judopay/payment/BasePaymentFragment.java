@@ -51,7 +51,7 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
 
         setRetainInstance(true);
 
-        this.judoApiService = RetrofitFactory.getInstance()
+        this.judoApiService = RetrofitFactory.getInstance(getActivity())
                 .create(JudoApiService.class);
     }
 
@@ -159,7 +159,7 @@ public abstract class BasePaymentFragment extends Fragment implements PaymentFor
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);
     }
-    
+
     @Override
     public void onAuthorizationWebPageLoaded() {
         show3dSecureDialog(get3dSecureLoadingText());
