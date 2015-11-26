@@ -1,4 +1,4 @@
-package com.judopay;
+package com.judopay.arch.api;
 
 public class Response {
 
