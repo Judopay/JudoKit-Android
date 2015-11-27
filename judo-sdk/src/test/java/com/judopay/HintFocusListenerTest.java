@@ -2,7 +2,7 @@ package com.judopay;
 
 import android.widget.EditText;
 
-import com.judopay.payment.form.HintFocusListener;
+import com.judopay.view.HintFocusListener;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

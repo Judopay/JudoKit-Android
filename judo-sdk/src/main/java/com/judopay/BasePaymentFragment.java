@@ -13,11 +13,11 @@ import android.widget.TextView;
 
 import com.judopay.model.CardToken;
 import com.judopay.model.Receipt;
-import com.judopay.payment.form.PaymentFormListener;
-import com.judopay.payment.form.PaymentFormFragment;
+import com.judopay.payment.PaymentFormListener;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
 import com.judopay.secure3d.ThreeDSecureWebView;
+import com.judopay.payment.form.PaymentFormFragment;
 
 import java.io.IOException;
 

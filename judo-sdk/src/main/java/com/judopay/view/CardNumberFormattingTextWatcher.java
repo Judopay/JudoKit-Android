@@ -6,7 +6,7 @@ import android.text.TextWatcher;
 
 import com.judopay.model.CardType;
 
-class CardNumberFormattingTextWatcher implements TextWatcher {
+public class CardNumberFormattingTextWatcher implements TextWatcher {
 
     private static final char SPACE = ' ';
 

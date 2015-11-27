@@ -1,9 +1,9 @@
 package com.judopay.payment;
 
-import com.judopay.customer.Card;
+import com.judopay.model.Card;
 
 public interface PaymentFormListener {
 
-    void onSubmit(Card card, final boolean threeDSecureEnabled);
+    void onSubmit(Card card);
 
 }
