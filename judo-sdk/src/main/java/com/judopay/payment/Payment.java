@@ -10,7 +10,6 @@ public class Payment implements Parcelable {
     private String amount;
     private String judoId;
     private String currency;
-    private String paymentRef;
     private Consumer consumer;
 
     public Payment() { }
@@ -27,10 +26,6 @@ public class Payment implements Parcelable {
         return currency;
     }
 
-    public String getPaymentRef() {
-        return paymentRef;
-    }
-
     public Consumer getConsumer() {
         return consumer;
     }
@@ -45,7 +40,6 @@ public class Payment implements Parcelable {
         dest.writeString(this.amount);
         dest.writeString(this.judoId);
         dest.writeString(this.currency);
-        dest.writeString(this.paymentRef);
         dest.writeParcelable(this.consumer, 0);
     }
 
@@ -53,7 +47,6 @@ public class Payment implements Parcelable {
         this.amount = in.readString();
         this.judoId = in.readString();
         this.currency = in.readString();
-        this.paymentRef = in.readString();
         this.consumer = in.readParcelable(Consumer.class.getClassLoader());
     }
 
@@ -90,11 +83,6 @@ public class Payment implements Parcelable {
             return this;
         }
 
-        public Builder setPaymentRef(String paymentRef) {
-            payment.paymentRef = paymentRef;
-            return this;
-        }
-
         public Builder setConsumer(Consumer consumer) {
             payment.consumer = consumer;
             return this;
@@ -111,10 +99,6 @@ public class Payment implements Parcelable {
 
             if (payment.currency == null || payment.currency.length() == 0) {
                 throw new IllegalArgumentException("Payment.currency must be supplied");
-            }
-
-            if (payment.paymentRef == null || payment.paymentRef.length() == 0) {
-                throw new IllegalArgumentException("Payment.paymentRef must be supplied");
             }
 
             if (payment.consumer == null) {
