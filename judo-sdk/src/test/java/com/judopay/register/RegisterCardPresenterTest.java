@@ -51,7 +51,7 @@ public class RegisterCardPresenterTest extends InstrumentationTestCase {
 
     @Test
     public void shouldRegisterCard() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, consumer, scheduler);
 
         when(card.getCardAddress()).thenReturn(cardAddress);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
@@ -63,7 +63,7 @@ public class RegisterCardPresenterTest extends InstrumentationTestCase {
 
     @Test
     public void showShowLoadingWhenSubmittingCard() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, consumer, scheduler);
 
         when(card.getCardAddress()).thenReturn(cardAddress);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
@@ -75,7 +75,7 @@ public class RegisterCardPresenterTest extends InstrumentationTestCase {
 
     @Test
     public void shouldFinishPaymentFormViewOnSuccess() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, consumer, scheduler);
 
         when(receipt.isSuccess()).thenReturn(true);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.just(receipt));
@@ -87,7 +87,7 @@ public class RegisterCardPresenterTest extends InstrumentationTestCase {
 
     @Test
     public void shouldShowDeclinedMessageWhenDeclined() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, consumer, scheduler);
 
         when(receipt.isSuccess()).thenReturn(false);
 
@@ -99,7 +99,7 @@ public class RegisterCardPresenterTest extends InstrumentationTestCase {
 
     @Test
     public void shouldHideLoadingIfReconnectAndPaymentNotInProgress() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, consumer, scheduler);
         presenter.reconnect();
 
         verify(paymentFormView).hideLoading();
@@ -107,7 +107,7 @@ public class RegisterCardPresenterTest extends InstrumentationTestCase {
 
     @Test
     public void shouldShowLoadingIfReconnectAndPaymentInProgress() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, consumer, scheduler);
 
         when(card.getCardAddress()).thenReturn(cardAddress);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
@@ -120,7 +120,7 @@ public class RegisterCardPresenterTest extends InstrumentationTestCase {
 
     @Test
     public void shouldStart3dSecureWebViewIfRequired() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, consumer, scheduler);
 
         when(receipt.isSuccess()).thenReturn(false);
         when(receipt.is3dSecureRequired()).thenReturn(true);
@@ -134,7 +134,7 @@ public class RegisterCardPresenterTest extends InstrumentationTestCase {
 
     @Test
     public void shouldDeclineIf3dSecureRequiredButNotEnabled() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, consumer, scheduler);
 
         when(receipt.isSuccess()).thenReturn(false);
         when(receipt.is3dSecureRequired()).thenReturn(true);
