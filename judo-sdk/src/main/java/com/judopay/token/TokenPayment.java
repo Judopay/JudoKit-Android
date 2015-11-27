@@ -16,8 +16,9 @@ public class TokenPayment implements Parcelable {
     private String judoId;
     private String currency;
     private String amount;
-    private String paymentReference;
     private HashMap<String, String> yourMetaData;
+
+    private TokenPayment() { }
 
     public String getJudoId() {
         return judoId;
@@ -37,10 +38,6 @@ public class TokenPayment implements Parcelable {
 
     public String getAmount() {
         return amount;
-    }
-
-    public String getPaymentReference() {
-        return paymentReference;
     }
 
     public HashMap<String, String> getYourMetaData() {
@@ -75,11 +72,6 @@ public class TokenPayment implements Parcelable {
             return this;
         }
 
-        public Builder setPaymentReference(String paymentReference) {
-            this.tokenPayment.paymentReference = paymentReference;
-            return this;
-        }
-
         public Builder setJudoId(String judoId) {
             this.tokenPayment.judoId = judoId;
             return this;
@@ -101,10 +93,6 @@ public class TokenPayment implements Parcelable {
 
             if (tokenPayment.currency == null || tokenPayment.currency.length() == 0) {
                 throw new IllegalArgumentException("TokenPayment.currency must be supplied");
-            }
-
-            if (tokenPayment.paymentReference == null || tokenPayment.paymentReference.length() == 0) {
-                throw new IllegalArgumentException("TokenPayment.paymentReference must be supplied");
             }
 
             if (tokenPayment.consumer == null) {
@@ -131,11 +119,8 @@ public class TokenPayment implements Parcelable {
         dest.writeString(this.judoId);
         dest.writeString(this.currency);
         dest.writeString(this.amount);
-        dest.writeString(this.paymentReference);
         dest.writeSerializable(this.yourMetaData);
     }
-
-    public TokenPayment() { }
 
     private TokenPayment(Parcel in) {
         this.cardToken = in.readParcelable(CardToken.class.getClassLoader());
@@ -143,7 +128,6 @@ public class TokenPayment implements Parcelable {
         this.judoId = in.readString();
         this.currency = in.readString();
         this.amount = in.readString();
-        this.paymentReference = in.readString();
 
         //noinspection unchecked
         this.yourMetaData = (HashMap<String, String>) in.readSerializable();
