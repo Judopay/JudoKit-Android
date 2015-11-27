@@ -43,7 +43,6 @@ public class PaymentFragment extends BasePaymentFragment {
                 .setCv2(card.getCv2())
                 .setJudoId(Long.valueOf(payment.getJudoId()))
                 .setYourConsumerReference(payment.getConsumer().getYourConsumerReference())
-                .setYourPaymentReference(payment.getPaymentRef())
                 .setExpiryDate(card.getExpiryDate());
 
         if (card.startDateAndIssueNumberRequired()) {
