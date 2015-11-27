@@ -27,14 +27,13 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-annotations:23.1.1'
+    compile project(':judo-shield')
 
+    compile 'com.android.support:support-annotations:23.0.1'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'
     compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta1'
     compile 'io.reactivex:rxandroid:0.23.0'
-
     compile 'joda-time:joda-time:2.8.2'
 
     testCompile 'junit:junit:4.12'
