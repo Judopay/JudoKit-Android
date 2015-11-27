@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
                         .setAmount(MY_AMOUNT)
                         .setCurrency(currency)
                         .setConsumer(new Consumer("yourConsumerRef"))
-                        .setPaymentRef("paymentRef")
                         .build();
 
                 intent.putExtra(JudoPay.EXTRA_PAYMENT, payment);
@@ -120,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
                         .setAmount(MY_AMOUNT)
                         .setCurrency(currency)
                         .setConsumer(new Consumer("yourConsumerRef"))
-                        .setPaymentRef("paymentRef")
                         .build(), PRE_AUTH_REQUEST);
             }
         });
@@ -131,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
                 TokenPayment tokenPayment = new TokenPayment.Builder()
                         .setCardToken(new CardToken("1215", "3436", "PKMxI4788SERKz0w7opSubZGU0I5g8kb", 1))
                         .setConsumer(new Consumer("zGEHXkSTZO08FljI", "consumer10102"))
-                        .setPaymentReference("payment1010102")
                         .setJudoId(MY_JUDO_ID)
                         .setAmount(MY_AMOUNT)
                         .setCurrency(currency)
@@ -222,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
                         TokenPayment tokenPayment = new TokenPayment.Builder()
                                 .setCardToken(receipt.getCardDetails())
                                 .setConsumer(receipt.getConsumer())
-                                .setPaymentReference(receipt.getYourPaymentReference())
                                 .setJudoId(MY_JUDO_ID)
                                 .setAmount(MY_AMOUNT)
                                 .setCurrency(currency)
