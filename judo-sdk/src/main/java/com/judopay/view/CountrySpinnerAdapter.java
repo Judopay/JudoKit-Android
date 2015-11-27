@@ -13,7 +13,7 @@ import com.judopay.model.Country;
 
 import java.util.List;
 
-public class CountrySpinnerAdapter extends ArrayAdapter<Country> {
+class CountrySpinnerAdapter extends ArrayAdapter<Country> {
 
     public CountrySpinnerAdapter(Context context, int resource) {
         super(context, resource);
