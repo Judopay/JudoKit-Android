@@ -14,26 +14,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 
+import com.judopay.CardNumberValidation;
+import com.judopay.CountryAndPostcodeValidation;
 import com.judopay.JudoPay;
+import com.judopay.PaymentForm;
+import com.judopay.PaymentFormValidation;
 import com.judopay.R;
-import com.judopay.customer.Address;
-import com.judopay.customer.Card;
-import com.judopay.customer.CardToken;
-import com.judopay.customer.CardType;
-import com.judopay.customer.Country;
+import com.judopay.StartDateAndIssueNumberValidation;
 import com.judopay.payment.PaymentFormListener;
-import com.judopay.payment.form.address.CountryAndPostcodeValidation;
-import com.judopay.payment.form.address.CountrySpinner;
-import com.judopay.payment.form.cardnumber.CardNumberFormattingTextWatcher;
-import com.judopay.payment.form.cardnumber.CardNumberValidation;
-import com.judopay.payment.form.cvv.CvvImageView;
-import com.judopay.payment.form.date.DateSeparatorTextWatcher;
-import com.judopay.view.CompositeOnFocusChangeListener;
-import com.judopay.view.EmptyTextHintOnFocusChangeListener;
-import com.judopay.view.HidingViewTextWatcher;
-import com.judopay.view.HintFocusListener;
-import com.judopay.view.ScrollOnFocusChangeListener;
-import com.judopay.view.SingleClickOnClickListener;
+import com.judopay.model.Address;
+import com.judopay.model.Card;
+import com.judopay.model.CardToken;
+import com.judopay.model.CardType;
+import com.judopay.model.Country;
 
 import static com.judopay.JudoPay.isAvsEnabled;
 
@@ -386,7 +379,7 @@ public class PaymentFormFragment extends Fragment {
         }
 
         if (paymentFormListener != null) {
-            paymentFormListener.onSubmit(cardBuilder.build(), JudoPay.isThreeDSecureEnabled());
+            paymentFormListener.onSubmit(cardBuilder.build());
         }
     }
 

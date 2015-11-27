@@ -2,7 +2,7 @@ package com.judopay.view;
 
 import android.view.View;
 
-public abstract class SingleClickOnClickListener implements View.OnClickListener {
+abstract class SingleClickOnClickListener implements View.OnClickListener {
 
     private static boolean enabled = true;
 

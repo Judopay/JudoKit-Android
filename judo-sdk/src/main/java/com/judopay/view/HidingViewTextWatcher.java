@@ -4,7 +4,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
-public class HidingViewTextWatcher implements TextWatcher {
+class HidingViewTextWatcher implements TextWatcher {
 
     private final View view;
 

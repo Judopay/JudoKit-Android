@@ -3,7 +3,7 @@ package com.judopay.view;
 import android.view.View;
 import android.widget.TextView;
 
-public class EmptyTextHintOnFocusChangeListener implements View.OnFocusChangeListener {
+class EmptyTextHintOnFocusChangeListener implements View.OnFocusChangeListener {
 
     private static final int THREE_SECONDS = 3000;
 

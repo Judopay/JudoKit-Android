@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CompositeOnFocusChangeListener implements View.OnFocusChangeListener {
+class CompositeOnFocusChangeListener implements View.OnFocusChangeListener {
 
     private final List<View.OnFocusChangeListener> listeners;
 

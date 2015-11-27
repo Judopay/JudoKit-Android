@@ -1,6 +1,6 @@
 package com.judopay.secure3d;
 
-public interface ThreeDSecureResultPageListener {
+interface ThreeDSecureResultPageListener {
 
     void onPageStarted();
 
