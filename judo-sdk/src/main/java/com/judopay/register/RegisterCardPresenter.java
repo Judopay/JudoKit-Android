@@ -19,12 +19,14 @@ class RegisterCardPresenter implements PaymentFormListener, ThreeDSecureListener
     private final PaymentFormView paymentFormView;
     private final JudoApiService apiService;
     private final Scheduler scheduler;
+    private final Consumer consumer;
 
     private boolean paymentInProgress;
 
-    public RegisterCardPresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler) {
+    public RegisterCardPresenter(PaymentFormView paymentFormView, JudoApiService apiService, Consumer consumer, Scheduler scheduler) {
         this.paymentFormView = paymentFormView;
         this.apiService = apiService;
+        this.consumer = consumer;
         this.scheduler = scheduler;
     }
 
@@ -37,8 +39,8 @@ class RegisterCardPresenter implements PaymentFormListener, ThreeDSecureListener
                 .setCv2(card.getCv2())
                 .setExpiryDate(card.getExpiryDate());
 
-        if (consumer != null) {
-            builder.setYourConsumerReference(consumer.getYourConsumerReference());
+        if (this.consumer != null) {
+            builder.setYourConsumerReference(this.consumer.getYourConsumerReference());
         }
 
         if (card.startDateAndIssueNumberRequired()) {
