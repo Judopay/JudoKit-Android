@@ -21,7 +21,7 @@ import com.judopay.security.RootUserBlockedException;
  * <li>Shows the back button in the action bar, allowing the user to navigate back easily.</li>
  * </ol>
  */
-public class JudoActivity extends AppCompatActivity {
+class JudoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +60,15 @@ public class JudoActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void checkForExtras(String... keys) {
+        Bundle extras = getIntent().getExtras();
+        for(String key : keys) {
+            if(!extras.containsKey(key)) {
+                throw new IllegalArgumentException(String.format("Extra '%s' is required for %s", key, this.getClass().getSimpleName()));
+            }
+        }
     }
 
 }

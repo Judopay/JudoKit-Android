@@ -1,6 +1,6 @@
 package com.judopay.secure3d;
 
-import com.judopay.payment.ThreeDSecureInfo;
+import com.judopay.model.ThreeDSecureInfo;
 
 public interface ThreeDSecureListener {
 

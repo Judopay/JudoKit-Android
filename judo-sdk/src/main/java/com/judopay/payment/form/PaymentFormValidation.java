@@ -3,9 +3,7 @@ package com.judopay.payment.form;
 import android.support.annotation.StringRes;
 
 import com.judopay.R;
-import com.judopay.customer.CardType;
-import com.judopay.payment.form.address.CountryAndPostcodeValidation;
-import com.judopay.payment.form.cardnumber.CardNumberValidation;
+import com.judopay.model.CardType;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -175,11 +173,11 @@ public class PaymentFormValidation {
         }
 
         private boolean isExpiryDateValid(String expiryDate) {
-            DateTime midnightToday = new DateTime().withTimeAtStartOfDay();
-
             if (!expiryDate.matches("(?:0[1-9]|1[0-2])/[0-9]{2}")) {
                 return false;
             }
+
+            DateTime midnightToday = new DateTime().withTimeAtStartOfDay();
 
             int year = 2000 + Integer.parseInt(expiryDate.substring(3, 5));
             int month = Integer.parseInt(expiryDate.substring(0, 2));

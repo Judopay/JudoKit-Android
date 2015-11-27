@@ -1,5 +1,7 @@
 package com.judopay.customer;
 
+import com.judopay.model.CardNumber;
+
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;

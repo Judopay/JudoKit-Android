@@ -9,7 +9,7 @@ import android.webkit.WebView;
 
 import com.google.gson.Gson;
 import com.judopay.BuildConfig;
-import com.judopay.payment.ThreeDSecureInfo;
+import com.judopay.model.ThreeDSecureInfo;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;

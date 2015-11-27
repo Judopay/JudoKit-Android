@@ -96,7 +96,7 @@
                     style="@style/input_layout"
                     android:layout_weight="1">
 
-                    <com.judopay.payment.form.date.DateEditText
+                    <com.judopay.payment.form.DateEditText
                         android:id="@+id/expiry_date_edit_text"
                         style="@style/judo_expiry_date"
                         android:layout_weight="1"
@@ -109,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
 
-                    <com.judopay.payment.form.cvv.CvvImageView
+                    <com.judopay.payment.form.CvvImageView
                         android:id="@+id/cvv_image_view"
                         style="@style/judo_cvv_image"
                         tools:ignore="RtlHardcoded" />
@@ -150,7 +150,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <com.judopay.payment.form.address.CountrySpinner
+                    <com.judopay.payment.form.CountrySpinner
                         android:id="@+id/country_spinner"
                         style="@style/judo_country_spinner" />
 

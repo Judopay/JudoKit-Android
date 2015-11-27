@@ -3,7 +3,7 @@ package com.judopay.payment.form;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-public abstract class SimpleTextWatcher implements TextWatcher {
+abstract class SimpleTextWatcher implements TextWatcher {
 
     protected abstract void onTextChanged(CharSequence text);
 

@@ -1,6 +1,7 @@
 package com.judopay.auth;
 
 import com.judopay.JudoPay;
+import com.judopay.arch.api.AuthorizationEncoder;
 
 import org.junit.Test;
 

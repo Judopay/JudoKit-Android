@@ -1,6 +1,6 @@
 package com.judopay.payment.form;
 
-import com.judopay.customer.Country;
+import com.judopay.model.Country;
 
 public class PaymentForm {
 

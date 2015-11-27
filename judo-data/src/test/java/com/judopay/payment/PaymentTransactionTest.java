@@ -1,5 +1,7 @@
 package com.judopay.payment;
 
+import com.judopay.model.PaymentTransaction;
+
 import org.junit.Test;
 
 public class PaymentTransactionTest {
