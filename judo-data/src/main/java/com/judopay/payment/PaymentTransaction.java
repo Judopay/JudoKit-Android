@@ -1,5 +1,6 @@
 package com.judopay.payment;
 
+import com.judopay.UniqueIdentifier;
 import com.judopay.arch.api.Request;
 import com.judopay.customer.Address;
 import com.judopay.customer.Location;
@@ -11,13 +12,18 @@ public class PaymentTransaction extends Request {
     private String currency;
     private long judoId;
     private String yourConsumerReference;
-    private String yourPaymentReference;
     private Address cardAddress;
     private String cardNumber;
     private String cv2;
     private String expiryDate;
     private String startDate;
     private String issueNumber;
+
+    private final String yourPaymentReference;
+
+    private PaymentTransaction() {
+        this.yourPaymentReference = UniqueIdentifier.generate();
+    }
 
     public String getAmount() {
         return amount;
@@ -97,11 +103,6 @@ public class PaymentTransaction extends Request {
 
         public Builder setYourConsumerReference(String yourConsumerReference) {
             paymentTransaction.yourConsumerReference = yourConsumerReference;
-            return this;
-        }
-
-        public Builder setYourPaymentReference(String yourPaymentReference) {
-            paymentTransaction.yourPaymentReference = yourPaymentReference;
             return this;
         }
 
