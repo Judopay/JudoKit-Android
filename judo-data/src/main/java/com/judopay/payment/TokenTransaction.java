@@ -2,6 +2,7 @@ package com.judopay.payment;
 
 import com.google.gson.annotations.SerializedName;
 import com.judopay.Client;
+import com.judopay.UniqueIdentifier;
 import com.judopay.customer.Address;
 import com.judopay.customer.Location;
 
@@ -26,12 +27,15 @@ public class TokenTransaction {
     private String currency;
     private long judoId;
     private String yourConsumerReference;
-    private String yourPaymentReference;
     private Address cardAddress;
     private String cv2;
     private Map<String, String> yourPaymentMetaData;
 
-    public TokenTransaction() { }
+    private final String yourPaymentReference;
+
+    public TokenTransaction() {
+        this.yourPaymentReference = UniqueIdentifier.generate();
+    }
 
     public String getEndDate() {
         return endDate;
@@ -144,11 +148,6 @@ public class TokenTransaction {
 
         public Builder setYourConsumerReference(String yourConsumerReference) {
             this.tokenTransaction.yourConsumerReference = yourConsumerReference;
-            return this;
-        }
-
-        public Builder setYourPaymentReference(String yourPaymentReference) {
-            this.tokenTransaction.yourPaymentReference = yourPaymentReference;
             return this;
         }
 
