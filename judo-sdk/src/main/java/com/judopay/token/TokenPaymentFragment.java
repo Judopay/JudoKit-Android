@@ -28,7 +28,6 @@ public class TokenPaymentFragment extends BasePaymentFragment {
                 .setCurrency(tokenPayment.getCurrency())
                 .setJudoId(Long.valueOf(tokenPayment.getJudoId()))
                 .setYourConsumerReference(tokenPayment.getConsumer().getYourConsumerReference())
-                .setYourPaymentReference(tokenPayment.getPaymentReference())
                 .setCv2(card.getCv2())
                 .setYourPaymentMetaData(tokenPayment.getYourMetaData())
                 .setEndDate(cardToken.getEndDate())
