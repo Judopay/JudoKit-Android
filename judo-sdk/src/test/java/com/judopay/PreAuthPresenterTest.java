@@ -3,7 +3,7 @@ package com.judopay;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.Consumer;
-import com.judopay.model.Payment;
+import com.judopay.model.PaymentTransaction;
 import com.judopay.model.Receipt;
 
 import org.junit.Test;
@@ -43,11 +43,11 @@ public class PreAuthPresenterTest {
     @Test
     public void shouldPerformPreAuth() {
         PreAuthPresenter presenter = new PreAuthPresenter(paymentFormView, apiService, scheduler);
-        when(apiService.preAuth(any(Payment.class))).thenReturn(Observable.<Receipt>empty());
+        when(apiService.preAuth(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
         presenter.performPreAuth(card, consumer, "123456", "1.99", "GBP", "paymentRef", null, false);
 
-        verify(apiService).preAuth(any(Payment.class));
+        verify(apiService).preAuth(any(PaymentTransaction.class));
     }
 
 }

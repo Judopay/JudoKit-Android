@@ -276,15 +276,15 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case JudoPay.RESULT_PAYMENT_DECLINED:
-                Toast.makeText(MainActivity.this, "Payment declined", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "PaymentTransaction declined", Toast.LENGTH_SHORT).show();
                 break;
 
             case JudoPay.RESULT_CANCELED:
-                Toast.makeText(MainActivity.this, "Payment cancelled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "PaymentTransaction cancelled", Toast.LENGTH_SHORT).show();
                 break;
 
             case JudoPay.RESULT_ERROR:
-                Toast.makeText(MainActivity.this, "Payment error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "PaymentTransaction error", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

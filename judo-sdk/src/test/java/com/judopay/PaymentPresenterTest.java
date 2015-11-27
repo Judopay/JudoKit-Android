@@ -3,7 +3,7 @@ package com.judopay;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.Consumer;
-import com.judopay.model.Payment;
+import com.judopay.model.PaymentTransaction;
 import com.judopay.model.Receipt;
 
 import org.junit.Test;
@@ -43,11 +43,11 @@ public class PaymentPresenterTest {
     @Test
     public void shouldPerformPayment() {
         PaymentPresenter presenter = new PaymentPresenter(paymentFormView, apiService, scheduler);
-        when(apiService.payment(any(Payment.class))).thenReturn(Observable.<Receipt>empty());
+        when(apiService.payment(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
         presenter.performPayment(card, consumer, "123456", "1.99", "GBP", "paymentRef", null, false);
 
-        verify(apiService).payment(any(Payment.class));
+        verify(apiService).payment(any(PaymentTransaction.class));
     }
 
 }

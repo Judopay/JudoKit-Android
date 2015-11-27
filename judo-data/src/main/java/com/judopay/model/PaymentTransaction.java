@@ -2,7 +2,7 @@ package com.judopay.model;
 
 import java.util.Map;
 
-public class Payment {
+public class PaymentTransaction {
 
     private String amount;
     private Client clientDetails;
@@ -82,101 +82,101 @@ public class Payment {
 
     public static class Builder {
 
-        private Payment payment;
+        private PaymentTransaction paymentTransaction;
 
         public Builder() {
-            this.payment = new Payment();
+            this.paymentTransaction = new PaymentTransaction();
         }
 
         public Builder setAmount(String amount) {
-            payment.amount = amount;
+            paymentTransaction.amount = amount;
             return this;
         }
 
         public Builder setClientDetails(Client clientDetails) {
-            payment.clientDetails = clientDetails;
+            paymentTransaction.clientDetails = clientDetails;
             return this;
         }
 
         public Builder setConsumerLocation(Location consumerLocation) {
-            payment.consumerLocation = consumerLocation;
+            paymentTransaction.consumerLocation = consumerLocation;
             return this;
         }
 
         public Builder setCurrency(String currency) {
-            payment.currency = currency;
+            paymentTransaction.currency = currency;
             return this;
         }
 
         public Builder setJudoId(long judoId) {
-            payment.judoId = judoId;
+            paymentTransaction.judoId = judoId;
             return this;
         }
 
         public Builder setYourConsumerReference(String yourConsumerReference) {
-            payment.yourConsumerReference = yourConsumerReference;
+            paymentTransaction.yourConsumerReference = yourConsumerReference;
             return this;
         }
 
         public Builder setYourPaymentReference(String yourPaymentReference) {
-            payment.yourPaymentReference = yourPaymentReference;
+            paymentTransaction.yourPaymentReference = yourPaymentReference;
             return this;
         }
 
         public Builder setCardAddress(Address cardAddress) {
-            payment.cardAddress = cardAddress;
+            paymentTransaction.cardAddress = cardAddress;
             return this;
         }
 
         public Builder setCardNumber(String cardNumber) {
-            payment.cardNumber = cardNumber;
+            paymentTransaction.cardNumber = cardNumber;
             return this;
         }
 
         public Builder setCv2(String cv2) {
-            payment.cv2 = cv2;
+            paymentTransaction.cv2 = cv2;
             return this;
         }
 
         public Builder setExpiryDate(String expiryDate) {
-            payment.expiryDate = expiryDate;
+            paymentTransaction.expiryDate = expiryDate;
             return this;
         }
 
         public Builder setStartDate(String startDate) {
-            payment.startDate = startDate;
+            paymentTransaction.startDate = startDate;
             return this;
         }
 
         public Builder setIssueNumber(String issueNumber) {
-            payment.issueNumber = issueNumber;
+            paymentTransaction.issueNumber = issueNumber;
             return this;
         }
 
         public Builder setSaveCardOnly(Boolean saveCardOnly) {
-            payment.saveCardOnly = saveCardOnly;
+            paymentTransaction.saveCardOnly = saveCardOnly;
             return this;
         }
 
         public Builder setMetaData(Map<String, String> metaData) {
-            payment.yourPaymentMetaData = metaData;
+            paymentTransaction.yourPaymentMetaData = metaData;
             return this;
         }
 
-        public Payment build() {
-            if (payment.currency == null || payment.currency.length() == 0) {
+        public PaymentTransaction build() {
+            if (paymentTransaction.currency == null || paymentTransaction.currency.length() == 0) {
                 throw new IllegalArgumentException("currency must be set");
             }
 
-            if (payment.judoId == 0) {
+            if (paymentTransaction.judoId == 0) {
                 throw new IllegalArgumentException("judoId must be set");
             }
 
-            if (payment.amount == null || payment.amount.length() == 0) {
+            if (paymentTransaction.amount == null || paymentTransaction.amount.length() == 0) {
                 throw new IllegalArgumentException("amount must be set");
             }
 
-            return payment;
+            return paymentTransaction;
         }
 
     }

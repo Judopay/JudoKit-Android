@@ -7,7 +7,7 @@ import com.judopay.model.CardToken;
 import com.judopay.model.Client;
 import com.judopay.model.Consumer;
 import com.judopay.model.Location;
-import com.judopay.model.TokenPayment;
+import com.judopay.model.TokenTransaction;
 
 import static com.judopay.BundleUtil.toMap;
 
@@ -21,7 +21,7 @@ class TokenPaymentPresenter extends BasePaymentPresenter {
         this.paymentInProgress = true;
         paymentFormView.showLoading();
 
-        TokenPayment tokenPayment = new TokenPayment.Builder()
+        TokenTransaction tokenTransaction = new TokenTransaction.Builder()
                 .setAmount(amount)
                 .setCardAddress(card.getCardAddress())
                 .setClientDetails(new Client())
@@ -38,7 +38,7 @@ class TokenPaymentPresenter extends BasePaymentPresenter {
                 .setType(cardToken.getType())
                 .build();
 
-        apiService.tokenPayment(tokenPayment)
+        apiService.tokenPayment(tokenTransaction)
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread())
                 .subscribe(callback(threeDSecureEnabled), error());

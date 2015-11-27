@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Map;
 
-public class TokenPayment {
+public class TokenTransaction {
 
     private String endDate;
 
@@ -28,7 +28,7 @@ public class TokenPayment {
     private String cv2;
     private Map<String, String> yourPaymentMetaData;
 
-    public TokenPayment() { }
+    public TokenTransaction() { }
 
     public String getEndDate() {
         return endDate;
@@ -88,88 +88,88 @@ public class TokenPayment {
 
     public static class Builder {
 
-        private TokenPayment tokenPayment;
+        private TokenTransaction tokenTransaction;
 
         public Builder() {
-            this.tokenPayment = new TokenPayment();
+            this.tokenTransaction = new TokenTransaction();
         }
 
         public Builder setEndDate(String endDate) {
-            this.tokenPayment.endDate = endDate;
+            this.tokenTransaction.endDate = endDate;
             return this;
         }
 
         public Builder setLastFour(String lastFour) {
-            this.tokenPayment.lastFour = lastFour;
+            this.tokenTransaction.lastFour = lastFour;
             return this;
         }
 
         public Builder setToken(String token) {
-            this.tokenPayment.token = token;
+            this.tokenTransaction.token = token;
             return this;
         }
 
         public Builder setType(int type) {
-            this.tokenPayment.type = type;
+            this.tokenTransaction.type = type;
             return this;
         }
 
         public Builder setAmount(String amount) {
-            this.tokenPayment.amount = amount;
+            this.tokenTransaction.amount = amount;
             return this;
         }
 
         public Builder setClientDetails(Client clientDetails) {
-            this.tokenPayment.clientDetails = clientDetails;
+            this.tokenTransaction.clientDetails = clientDetails;
             return this;
         }
 
         public Builder setConsumerLocation(Location consumerLocation) {
-            this.tokenPayment.consumerLocation = consumerLocation;
+            this.tokenTransaction.consumerLocation = consumerLocation;
             return this;
         }
 
         public Builder setCurrency(String currency) {
-            this.tokenPayment.currency = currency;
+            this.tokenTransaction.currency = currency;
             return this;
         }
 
         public Builder setJudoId(long judoId) {
-            this.tokenPayment.judoId = judoId;
+            this.tokenTransaction.judoId = judoId;
             return this;
         }
 
         public Builder setYourConsumerReference(String yourConsumerReference) {
-            this.tokenPayment.yourConsumerReference = yourConsumerReference;
+            this.tokenTransaction.yourConsumerReference = yourConsumerReference;
             return this;
         }
 
         public Builder setYourPaymentReference(String yourPaymentReference) {
-            this.tokenPayment.yourPaymentReference = yourPaymentReference;
+            this.tokenTransaction.yourPaymentReference = yourPaymentReference;
             return this;
         }
 
         public Builder setCardAddress(Address cardAddress) {
-            this.tokenPayment.cardAddress = cardAddress;
+            this.tokenTransaction.cardAddress = cardAddress;
             return this;
         }
 
         public Builder setCv2(String cv2) {
-            this.tokenPayment.cv2 = cv2;
+            this.tokenTransaction.cv2 = cv2;
             return this;
         }
 
         public Builder setMetaData(Map<String, String> metaData) {
-            this.tokenPayment.yourPaymentMetaData = metaData;
+            this.tokenTransaction.yourPaymentMetaData = metaData;
             return this;
         }
 
-        public TokenPayment build() {
-            if (tokenPayment.currency == null || tokenPayment.currency.length() == 0) {
-                throw new IllegalArgumentException("currency must be set for TokenPayment");
+        public TokenTransaction build() {
+            if (tokenTransaction.currency == null || tokenTransaction.currency.length() == 0) {
+                throw new IllegalArgumentException("currency must be set for TokenTransaction");
             }
 
-            return tokenPayment;
+            return tokenTransaction;
         }
     }
 

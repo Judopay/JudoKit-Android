@@ -6,7 +6,7 @@ import com.judopay.model.Card;
 import com.judopay.model.Client;
 import com.judopay.model.Consumer;
 import com.judopay.model.Location;
-import com.judopay.model.Payment;
+import com.judopay.model.PaymentTransaction;
 
 import static com.judopay.BundleUtil.toMap;
 
@@ -21,7 +21,7 @@ class PaymentPresenter extends BasePaymentPresenter {
 
         paymentFormView.showLoading();
 
-        Payment.Builder builder = new Payment.Builder()
+        PaymentTransaction.Builder builder = new PaymentTransaction.Builder()
                 .setAmount(amount)
                 .setCardAddress(card.getCardAddress())
                 .setClientDetails(new Client())

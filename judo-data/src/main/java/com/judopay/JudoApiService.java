@@ -1,13 +1,13 @@
 package com.judopay;
 
 import com.judopay.model.Collection;
-import com.judopay.model.Payment;
+import com.judopay.model.PaymentTransaction;
 import com.judopay.model.Receipt;
 import com.judopay.model.Receipts;
 import com.judopay.model.Refund;
 import com.judopay.model.RegisterTransaction;
 import com.judopay.model.ThreeDSecureInfo;
-import com.judopay.model.TokenPayment;
+import com.judopay.model.TokenTransaction;
 
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -22,29 +22,29 @@ public interface JudoApiService {
     /**
      * Perform a payment transaction
      *
-     * @param payment the details for the payment, including the payment method, amount and Judo ID
+     * @param paymentTransaction the details for the payment, including the payment method, amount and Judo ID
      * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/payments")
-    Observable<Receipt> payment(@Body Payment payment);
+    Observable<Receipt> payment(@Body PaymentTransaction paymentTransaction);
 
     /**
      * Perform a pre-auth transaction
      *
-     * @param payment the details for the pre-auth, including the payment method, amount and Judo ID
+     * @param paymentTransaction the details for the pre-auth, including the payment method, amount and Judo ID
      * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/preauths")
-    Observable<Receipt> preAuth(@Body Payment payment);
+    Observable<Receipt> preAuth(@Body PaymentTransaction paymentTransaction);
 
     /**
      * Perform a token payment using a tokenised card
      *
-     * @param tokenPayment the payment details for making the transaction
+     * @param tokenTransaction the payment details for making the transaction
      * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/payments")
-    Observable<Receipt> tokenPayment(@Body TokenPayment tokenPayment);
+    Observable<Receipt> tokenPayment(@Body TokenTransaction tokenTransaction);
 
     /**
      * Perform a payment using the returned data from a 3D-Secure authorisation
