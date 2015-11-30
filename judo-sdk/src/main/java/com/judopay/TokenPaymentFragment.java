@@ -8,14 +8,6 @@ import com.judopay.model.Card;
 import com.judopay.model.CardToken;
 import com.judopay.model.Consumer;
 
-import static com.judopay.JudoPay.JUDO_AMOUNT;
-import static com.judopay.JudoPay.JUDO_CARD_TOKEN;
-import static com.judopay.JudoPay.JUDO_CONSUMER;
-import static com.judopay.JudoPay.JUDO_CURRENCY;
-import static com.judopay.JudoPay.JUDO_ID;
-import static com.judopay.JudoPay.JUDO_META_DATA;
-import static com.judopay.JudoPay.JUDO_PAYMENT_REF;
-
 public final class TokenPaymentFragment extends BasePaymentFragment {
 
     private TokenPaymentPresenter presenter;
@@ -49,4 +41,5 @@ public final class TokenPaymentFragment extends BasePaymentFragment {
 
         presenter.performTokenPayment(card, cardToken, consumer, judoId, amount, currency, paymentRef, metaData, JudoPay.isThreeDSecureEnabled());
     }
+
 }
