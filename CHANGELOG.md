@@ -1,6 +1,6 @@
 # Change Log
 
-## [5.0](https://github.com/skywinder/ActionSheetPicker-3.0/tree/2.0.2) (2015-12-03)
+## [5.0](https://github.com/judopay/Judo-Android/tree/5.0) (2015-12-03)
 
 **Implemented enhancements:**
 - Complete redesign of all screens to use Material Design guidelines
