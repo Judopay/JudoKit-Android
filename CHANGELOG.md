@@ -16,4 +16,4 @@
 - [Javadocs published to GitHub](http://judopay.github.io/Judo-Android/)
 
 **Build changes:**
-- Version support changed to require Android OS Jelly Bean 4.1 or later, due to PCI-Compliance changes.
+- Android OS Version support changed to require Android OS Jelly Bean 4.1 or later, due to PCI-Compliance changes.
