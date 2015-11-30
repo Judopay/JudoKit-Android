@@ -1,4 +1,4 @@
-# change log
+# Change Log
 
 ## [5.0](https://github.com/skywinder/ActionSheetPicker-3.0/tree/2.0.2) (2015-12-03)
 
