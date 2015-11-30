@@ -18,5 +18,9 @@
     <string name="with_stored_card_token">with a stored card token</string>
     <string name="stored_for_future_transactions">to be stored for future transactions</string>
     <string name="with_default_settings">with default settings</string>
+    <string name="make_token_payment">Make token payment?</string>
+    <string name="registered_card_can_perform_token_payments">Registered card can now be used to perform token payments</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>

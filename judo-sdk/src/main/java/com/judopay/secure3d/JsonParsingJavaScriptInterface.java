@@ -1,6 +1,6 @@
 package com.judopay.secure3d;
 
-public class JsonParsingJavaScriptInterface {
+class JsonParsingJavaScriptInterface {
 
     private final JsonListener jsonListener;
 
@@ -19,7 +19,7 @@ public class JsonParsingJavaScriptInterface {
         }
     }
 
-    public interface JsonListener {
+    interface JsonListener {
         void onJsonReceived(String json);
     }
 
