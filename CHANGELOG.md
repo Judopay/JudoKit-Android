@@ -11,9 +11,13 @@
 - Detection of Rooted Android device, with option to block payments from insecure devices.
 - Security checks to prevent payments from rooted devices
 - SSL changes for PCI-Compliance
-- SDK filesize reduced by 80% (now 192 KB)
 - Library available in jCenter repository, for one line install of library into app project.
 - [Javadocs published to GitHub](http://judopay.github.io/Judo-Android/)
 
+**Changed:**
+- Classes for interacting with JudoPay REST endpoints changed to JudoApiService, using Retrofit 2.0 (replaces TransactionQueryApiService, TransactionProcessingApiService, PaymentAction, RegisterAction and TransactionAction)
+
 **Build changes:**
+- SDK now built in Android archive format (.aar)
+- SDK filesize reduced by 80% (now 192 KB)
 - Android OS Version support changed to require Android OS Jelly Bean 4.1 or later, due to PCI-Compliance changes.
