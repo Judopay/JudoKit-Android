@@ -8,8 +8,7 @@ import android.view.ViewGroup;
 import com.judopay.arch.api.ApiServiceFactory;
 import com.judopay.model.Card;
 import com.judopay.model.Consumer;
-import com.judopay.payment.PaymentFormListener;
-import com.judopay.payment.form.PaymentFormFragment;
+import com.judopay.payment.form.PaymentFormListener;
 
 public class RegisterCardFragment extends BasePaymentFragment implements PaymentFormView, PaymentFormListener {
 

@@ -21,7 +21,6 @@ import com.judopay.PaymentForm;
 import com.judopay.PaymentFormValidation;
 import com.judopay.R;
 import com.judopay.StartDateAndIssueNumberValidation;
-import com.judopay.payment.PaymentFormListener;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;

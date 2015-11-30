@@ -1,7 +1,6 @@
 package com.judopay.security;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -10,7 +9,6 @@ import java.io.InputStreamReader;
  * methods, such as attempting to access system paths or run system processes that are only
  * accessible when the device is rooted. The methods are not full-proof as if the device is rooted,
  * anything could be changed to simulate an un-rooted device.
- * Credit to Kevin Kowalewski for providing the root detection methods used.
  */
 public class RootDetector {
 
