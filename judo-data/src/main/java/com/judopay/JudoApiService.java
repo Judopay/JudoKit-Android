@@ -22,29 +22,38 @@ public interface JudoApiService {
     /**
      * Perform a payment transaction
      *
-     * @param paymentTransaction the details for the payment, including the payment method, amount and Judo ID
+     * @param transaction the details for the payment, including the payment method, amount and Judo ID
      * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/payments")
-    Observable<Receipt> payment(@Body PaymentTransaction paymentTransaction);
+    Observable<Receipt> payment(@Body PaymentTransaction transaction);
 
     /**
      * Perform a pre-auth transaction
      *
-     * @param paymentTransaction the details for the pre-auth, including the payment method, amount and Judo ID
+     * @param transaction the details for the pre-auth, including the payment method, amount and Judo ID
      * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/preauths")
-    Observable<Receipt> preAuth(@Body PaymentTransaction paymentTransaction);
+    Observable<Receipt> preAuth(@Body PaymentTransaction transaction);
 
     /**
      * Perform a token payment using a tokenised card
      *
-     * @param tokenTransaction the payment details for making the transaction
+     * @param transaction the payment details for making the transaction
      * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/payments")
-    Observable<Receipt> tokenPayment(@Body TokenTransaction tokenTransaction);
+    Observable<Receipt> tokenPayment(@Body TokenTransaction transaction);
+
+    /**
+     * Perform a token pre-auth using a tokenised card
+     *
+     * @param transaction the token card details
+     * @return the receipt for the payment with the status of the transaction
+     */
+    @POST("transactions/preauths")
+    Observable<Receipt> tokenPreAuth(@Body TokenTransaction transaction);
 
     /**
      * Perform a payment using the returned data from a 3D-Secure authorisation
