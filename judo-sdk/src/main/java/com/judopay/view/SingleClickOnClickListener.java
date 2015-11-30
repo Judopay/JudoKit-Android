@@ -1,8 +1,8 @@
-package com.judopay.payment.form;
+package com.judopay.view;
 
 import android.view.View;
 
-abstract class SingleClickOnClickListener implements View.OnClickListener {
+public abstract class SingleClickOnClickListener implements View.OnClickListener {
 
     private static boolean enabled = true;
 

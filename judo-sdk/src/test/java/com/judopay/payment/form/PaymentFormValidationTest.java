@@ -1,5 +1,7 @@
 package com.judopay.payment.form;
 
+import com.judopay.PaymentForm;
+import com.judopay.PaymentFormValidation;
 import com.judopay.R;
 import com.judopay.model.Country;
 

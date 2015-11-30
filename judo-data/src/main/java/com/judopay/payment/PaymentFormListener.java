@@ -1,4 +1,4 @@
-package com.judopay.payment.form;
+package com.judopay.payment;
 
 import com.judopay.model.Card;
 

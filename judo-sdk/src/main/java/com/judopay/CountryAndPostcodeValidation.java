@@ -1,6 +1,5 @@
-package com.judopay.payment.form;
+package com.judopay;
 
-import com.judopay.R;
 import com.judopay.model.Country;
 
 public class CountryAndPostcodeValidation {

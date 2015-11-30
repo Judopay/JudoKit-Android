@@ -1,10 +1,10 @@
-package com.judopay.payment.form;
+package com.judopay.view;
 
 import android.support.annotation.StringRes;
 import android.view.View;
 import android.widget.EditText;
 
-class HintFocusListener implements View.OnFocusChangeListener {
+public class HintFocusListener implements View.OnFocusChangeListener {
 
     private final EditText editText;
     private int hintResourceId;

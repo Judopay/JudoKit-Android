@@ -1,9 +1,10 @@
-package com.judopay.payment.form;
+package com.judopay;
 
 import com.judopay.model.Country;
 
 public class PaymentForm {
 
+    private int cardType;
     private boolean addressRequired;
     private boolean amexSupported;
     private boolean maestroSupported;
@@ -15,6 +16,10 @@ public class PaymentForm {
     private Country country;
     private String postcode;
     private boolean tokenCard;
+
+    public int getCardType() {
+        return cardType;
+    }
 
     public boolean isAddressRequired() {
         return addressRequired;
@@ -85,6 +90,11 @@ public class PaymentForm {
 
         public Builder setCardNumber(String cardNumber) {
             paymentForm.cardNumber = cardNumber;
+            return this;
+        }
+
+        public Builder setCardType(int cardType) {
+            paymentForm.cardType = cardType;
             return this;
         }
 

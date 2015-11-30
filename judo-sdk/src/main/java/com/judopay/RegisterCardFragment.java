@@ -15,15 +15,13 @@ import com.judopay.arch.api.ApiServiceFactory;
 import com.judopay.model.Card;
 import com.judopay.model.Consumer;
 import com.judopay.model.Receipt;
-import com.judopay.payment.form.PaymentFormListener;
-import com.judopay.payment.form.PaymentFormFragment;
+import com.judopay.payment.PaymentFormListener;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
 import com.judopay.secure3d.ThreeDSecureWebView;
+import com.judopay.payment.form.PaymentFormFragment;
 
 import java.io.IOException;
-
-import static com.judopay.JudoPay.JUDO_CONSUMER;
 
 public class RegisterCardFragment extends Fragment implements PaymentFormView, PaymentFormListener {
 
@@ -34,7 +32,6 @@ public class RegisterCardFragment extends Fragment implements PaymentFormView, P
     private TextView progressText;
     private ThreeDSecureWebView threeDSecureWebView;
     private ThreeDSecureDialogFragment threeDSecureDialog;
-    private Consumer consumer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,8 +44,6 @@ public class RegisterCardFragment extends Fragment implements PaymentFormView, P
 
             PaymentFormFragment paymentFormFragment = PaymentFormFragment.newInstance(this, getString(R.string.add_card));
             paymentFormFragment.setRetainInstance(true);
-
-            consumer = getArguments().getParcelable(JUDO_CONSUMER);
 
             getFragmentManager()
                     .beginTransaction()
@@ -156,6 +151,7 @@ public class RegisterCardFragment extends Fragment implements PaymentFormView, P
 
     @Override
     public void onSubmit(Card card) {
+        Consumer consumer = getArguments().getParcelable(JudoPay.JUDO_CONSUMER);
         presenter.performRegisterCard(card, consumer, JudoPay.isThreeDSecureEnabled());
     }
 }

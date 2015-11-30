@@ -9,9 +9,10 @@ import java.util.Map;
 class BundleUtil {
 
     public static Map<String, String> toMap(Bundle bundle) {
+        Map<String, String> map = new HashMap<>();
+
         if (bundle != null) {
             Iterator<String> it = bundle.keySet().iterator();
-            Map<String, String> map = new HashMap<>();
 
             while (it.hasNext()) {
                 String key = it.next();
@@ -19,7 +20,7 @@ class BundleUtil {
                 map.put(key, value);
             }
         }
-        return null;
+        return map;
     }
 
 }

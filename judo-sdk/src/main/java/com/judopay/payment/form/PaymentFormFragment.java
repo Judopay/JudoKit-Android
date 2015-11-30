@@ -14,13 +14,31 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 
+import com.judopay.CardNumberValidation;
+import com.judopay.CountryAndPostcodeValidation;
 import com.judopay.JudoPay;
+import com.judopay.PaymentForm;
+import com.judopay.PaymentFormValidation;
 import com.judopay.R;
+import com.judopay.StartDateAndIssueNumberValidation;
+import com.judopay.payment.PaymentFormListener;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
 import com.judopay.model.CardType;
 import com.judopay.model.Country;
+import com.judopay.view.CardNumberFormattingTextWatcher;
+import com.judopay.view.CardTypeImageView;
+import com.judopay.view.CompositeOnFocusChangeListener;
+import com.judopay.view.CountrySpinner;
+import com.judopay.view.CvvImageView;
+import com.judopay.view.DateSeparatorTextWatcher;
+import com.judopay.view.EmptyTextHintOnFocusChangeListener;
+import com.judopay.view.HidingViewTextWatcher;
+import com.judopay.view.HintFocusListener;
+import com.judopay.view.ScrollOnFocusChangeListener;
+import com.judopay.view.SimpleTextWatcher;
+import com.judopay.view.SingleClickOnClickListener;
 
 import static com.judopay.JudoPay.isAvsEnabled;
 
@@ -243,10 +261,16 @@ public class PaymentFormFragment extends Fragment {
                 .setMaestroSupported(JudoPay.isMaestroEnabled())
                 .setTokenCard(cardToken != null);
 
+        if(cardToken != null) {
+            builder.setCardType(cardToken.getType());
+        }
+
         PaymentFormValidation formView = new PaymentFormValidation.Builder()
                 .build(builder.build());
 
-        cardTypeImageView.setCardType(formView.getCardType());
+        if (cardToken == null) {
+            cardTypeImageView.setCardType(formView.getCardType());
+        }
 
         updateFormErrors(formView);
         moveFieldFocus(formView);

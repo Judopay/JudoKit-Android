@@ -1,10 +1,10 @@
-package com.judopay.payment.form;
+package com.judopay.view;
 
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-class DateSeparatorTextWatcher implements TextWatcher {
+public class DateSeparatorTextWatcher implements TextWatcher {
 
     private final EditText editText;
 

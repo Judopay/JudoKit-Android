@@ -1,4 +1,4 @@
-package com.judopay.payment.form;
+package com.judopay.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -11,23 +11,27 @@ import android.widget.ImageView;
 import com.judopay.R;
 import com.judopay.model.CardType;
 
-public class CvvImageView extends FrameLayout {
+public class CardTypeImageView extends FrameLayout {
 
-    public CvvImageView(Context context) {
+    public CardTypeImageView(Context context) {
         super(context);
+        setCardType(0);
     }
 
-    public CvvImageView(Context context, AttributeSet attrs) {
+    public CardTypeImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setCardType(0);
     }
 
-    public CvvImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CardTypeImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setCardType(0);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public CvvImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public CardTypeImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        setCardType(0);
     }
 
     public void setCardType(int cardType) {
@@ -45,9 +49,15 @@ public class CvvImageView extends FrameLayout {
     private int getCardResourceId(int cardType) {
         switch (cardType) {
             case CardType.AMEX:
-                return R.drawable.ic_card_cidv;
+                return R.drawable.ic_card_amex;
+            case CardType.MASTERCARD:
+                return R.drawable.ic_card_mastercard;
+            case CardType.MAESTRO:
+                return R.drawable.ic_card_maestro;
+            case CardType.VISA:
+                return R.drawable.ic_card_visa;
             default:
-                return R.drawable.ic_card_cvv;
+                return R.drawable.ic_card_unknown;
         }
     }
 

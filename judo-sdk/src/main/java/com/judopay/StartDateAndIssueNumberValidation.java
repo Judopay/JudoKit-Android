@@ -1,8 +1,7 @@
-package com.judopay.payment.form;
+package com.judopay;
 
 import android.support.annotation.StringRes;
 
-import com.judopay.R;
 import com.judopay.model.CardType;
 
 import org.joda.time.DateTime;
@@ -18,8 +17,7 @@ public class StartDateAndIssueNumberValidation {
     private boolean issueNumberValid;
     private boolean showIssueNumberAndStartDate;
 
-    public StartDateAndIssueNumberValidation(PaymentForm paymentForm, boolean cardNumberValid) {
-
+    public StartDateAndIssueNumberValidation(PaymentForm paymentForm, int cardType) {
         this.startDateEntryComplete = paymentForm.getStartDate().length() == 5;
         this.showStartDateError = !isStartDateValid(paymentForm.getStartDate()) && startDateEntryComplete;
 
@@ -27,7 +25,7 @@ public class StartDateAndIssueNumberValidation {
             startDateError = R.string.error_check_date;
         }
 
-        boolean maestroCardType = CardType.matchCardNumber(paymentForm.getCardNumber()) == CardType.MAESTRO;
+        boolean maestroCardType = cardType == CardType.MAESTRO;
 
         this.issueNumberValid = isIssueNumberValid(paymentForm.getIssueNumber());
         this.showIssueNumberAndStartDate = paymentForm.isMaestroSupported() && maestroCardType;
