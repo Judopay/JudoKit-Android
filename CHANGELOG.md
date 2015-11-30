@@ -11,6 +11,5 @@
 - Detection of Rooted Android device, with option to block payments from insecure devices.
 - Security checks to prevent payments from rooted devices
 - SSL changes for PCI-Compliance
-
 - SDK filesize reduced by 80% (now 192 KB)
 - Library available in jCenter repository, for one line install of library into app project.
