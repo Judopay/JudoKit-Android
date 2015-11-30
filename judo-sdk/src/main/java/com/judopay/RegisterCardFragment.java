@@ -11,20 +11,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.judopay.arch.api.RetrofitFactory;
-import com.judopay.payment.Receipt;
-import com.judopay.payment.form.PaymentFormFragment;
+import com.judopay.arch.api.ApiServiceFactory;
+import com.judopay.model.Card;
+import com.judopay.model.Consumer;
+import com.judopay.model.Receipt;
+import com.judopay.payment.PaymentFormListener;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
+import com.judopay.secure3d.ThreeDSecureListener;
 import com.judopay.secure3d.ThreeDSecureWebView;
+import com.judopay.payment.form.PaymentFormFragment;
 
 import java.io.IOException;
 
-public class RegisterCardFragment extends Fragment implements PaymentFormView {
+public class RegisterCardFragment extends Fragment implements PaymentFormView, PaymentFormListener {
 
-    public static final String KEY_CONSUMER = "Judo-Consumer";
     private static final String TAG_3DS_DIALOG = "3dSecureDialog";
 
-    private BasePaymentPresenter presenter;
+    private RegisterCardPresenter presenter;
     private View progressOverlay;
     private TextView progressText;
     private ThreeDSecureWebView threeDSecureWebView;
@@ -37,11 +40,9 @@ public class RegisterCardFragment extends Fragment implements PaymentFormView {
         setRetainInstance(true);
 
         if (savedInstanceState == null) {
-            this.presenter = new RegisterCardPresenter(this,
-                    RetrofitFactory.getInstance().create(JudoApiService.class),
-                    new AndroidScheduler());
+            this.presenter = new RegisterCardPresenter(this, ApiServiceFactory.getApiService(getActivity()), new AndroidScheduler());
 
-            PaymentFormFragment paymentFormFragment = PaymentFormFragment.newInstance(this.presenter, getString(R.string.add_card));
+            PaymentFormFragment paymentFormFragment = PaymentFormFragment.newInstance(this, getString(R.string.add_card));
             paymentFormFragment.setRetainInstance(true);
 
             getFragmentManager()
@@ -95,6 +96,16 @@ public class RegisterCardFragment extends Fragment implements PaymentFormView {
     }
 
     @Override
+    public void handleError() {
+        Activity activity = getActivity();
+
+        if (activity != null) {
+            activity.setResult(JudoPay.RESULT_ERROR);
+            activity.finish();
+        }
+    }
+
+    @Override
     public void showDeclinedMessage(Receipt receipt) {
         Intent intent = new Intent();
         intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
@@ -113,8 +124,8 @@ public class RegisterCardFragment extends Fragment implements PaymentFormView {
     }
 
     @Override
-    public void start3dSecureWebView(Receipt receipt) {
-        threeDSecureWebView.setThreeDSecureListener(this.presenter);
+    public void start3dSecureWebView(Receipt receipt, ThreeDSecureListener threeDSecureListener) {
+        threeDSecureWebView.setThreeDSecureListener(threeDSecureListener);
         try {
             threeDSecureWebView.authorize(receipt.getAcsUrl(), receipt.getMd(), receipt.getPaReq(), receipt.getReceiptId());
         } catch (IOException e) {
@@ -138,4 +149,9 @@ public class RegisterCardFragment extends Fragment implements PaymentFormView {
         threeDSecureDialog.show(fm, TAG_3DS_DIALOG);
     }
 
+    @Override
+    public void onSubmit(Card card) {
+        Consumer consumer = getArguments().getParcelable(JudoPay.JUDO_CONSUMER);
+        presenter.performRegisterCard(card, consumer, JudoPay.isThreeDSecureEnabled());
+    }
 }

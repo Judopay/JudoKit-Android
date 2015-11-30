@@ -6,14 +6,30 @@ import com.judopay.arch.api.RetrofitFactory;
 
 public class PaymentFragment extends BasePaymentFragment {
 
-    public static PaymentFragment newInstance(Payment payment) {
+    private PaymentPresenter presenter;
+
+    private PaymentPresenter presenter;
+    private Consumer consumer;
+    private String judoId;
+    private String amount;
+    private String currency;
+    private String paymentRef;
+    private Bundle metaData;
+
+    public static PaymentFragment newInstance(String judoId, String amount, String currency, String paymentRef, Consumer consumer, Bundle metaData) {
         PaymentFragment paymentFragment = new PaymentFragment();
 
         Bundle arguments = new Bundle();
-        arguments.putParcelable(JudoPay.KEY_PAYMENT, payment);
-        arguments.putBoolean(JudoPay.KEY_HANDLE_DECLINED, true);
 
-        paymentFragment.setArguments(arguments);
+        Bundle args = new Bundle();
+        args.putString(JudoPay.JUDO_ID, judoId);
+        args.putString(JudoPay.JUDO_AMOUNT, amount);
+        args.putString(JudoPay.JUDO_CURRENCY, currency);
+        args.putString(JudoPay.JUDO_PAYMENT_REF, paymentRef);
+        args.putParcelable(JudoPay.JUDO_CONSUMER, consumer);
+        args.putBundle(JudoPay.JUDO_META_DATA, metaData);
+
+        paymentFragment.setArguments(args);
 
         return paymentFragment;
     }
@@ -22,15 +38,27 @@ public class PaymentFragment extends BasePaymentFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Payment payment = getArguments().getParcelable(JudoPay.EXTRA_PAYMENT);
+        Bundle args = getArguments();
+        consumer = args.getParcelable(JUDO_CONSUMER);
+        judoId = args.getString(JUDO_ID);
+        amount = args.getString(JUDO_AMOUNT);
+        currency = args.getString(JUDO_CURRENCY);
+        paymentRef = args.getString(JUDO_PAYMENT_REF);
+        metaData = args.getBundle(JUDO_META_DATA);
 
-        if (payment == null) {
-            throw new RuntimeException("Payment extra must be provided to PaymentFragment");
-        }
-
-        if(savedInstanceState == null) {
-            this.presenter = new PaymentPresenter(this, RetrofitFactory.getInstance().create(JudoApiService.class), new AndroidScheduler(), payment);
+        if (savedInstanceState == null) {
+            this.presenter = new PaymentPresenter(this, ApiServiceFactory.getApiService(getActivity()), new AndroidScheduler());
         }
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.presenter.reconnect();
+    }
+
+    @Override
+    public void onSubmit(Card card) {
+        presenter.performPayment(card, consumer, judoId, amount, currency, paymentRef, metaData, JudoPay.isThreeDSecureEnabled());
+    }
 }

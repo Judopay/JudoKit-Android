@@ -19,7 +19,7 @@ class JsonParsingJavaScriptInterface {
         }
     }
 
-    public interface JsonListener {
+    interface JsonListener {
         void onJsonReceived(String json);
     }
 

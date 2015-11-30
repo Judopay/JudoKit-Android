@@ -57,8 +57,6 @@ abstract class BasePaymentPresenter implements PaymentFormListener, ThreeDSecure
         paymentFormView.showLoading();
     }
 
-    protected abstract Observable<Receipt> performApiCall(Card card, Consumer consumer);
-
     public void reconnect() {
         if (paymentInProgress) {
             paymentFormView.showLoading();
@@ -97,7 +95,6 @@ abstract class BasePaymentPresenter implements PaymentFormListener, ThreeDSecure
     }
 
     @Override
-    public void onAuthorizationWebPageLoadingError(int errorCode, String description, String failingUrl) {
-    }
+    public void onAuthorizationWebPageLoadingError(int errorCode, String description, String failingUrl) { }
 
 }

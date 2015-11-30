@@ -1,5 +1,7 @@
 package com.judopay.customer;
 
+import com.judopay.model.Card;
+
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

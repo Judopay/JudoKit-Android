@@ -78,12 +78,6 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         pressSwitch(buttonElement, enable);
     }
 
-    protected void enableSSLPinning(boolean enable) {
-        UiElement buttonElement = id(R.id.ssl_pinning_switch);
-
-        pressSwitch(buttonElement, enable);
-    }
-
     protected void enableMaestro(boolean enable) {
         UiElement buttonElement = id(R.id.maestro_switch);
 
