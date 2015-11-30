@@ -7,8 +7,10 @@
 - Improved payment form layout for tablet devices
 - Completely themeable UI, allowing payment screens to match app theme
 - 3D-Secure support when required by merchant bank
-- SDK filesize reduced by 80% (now 192 KB)
 - JudoShield integration for automatic fraud detection
 - Detection of Rooted Android device, with option to block payments from insecure devices.
 - Security checks to prevent payments from rooted devices
 - SSL changes for PCI-Compliance
+
+- SDK filesize reduced by 80% (now 192 KB)
+- Library available in jCenter repository, for one line install of library into app project.
