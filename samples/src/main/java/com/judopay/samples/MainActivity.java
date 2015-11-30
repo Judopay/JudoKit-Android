@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.judopay.Dialogs;
 import com.judopay.JudoPay;
 import com.judopay.PaymentActivity;
 import com.judopay.PreAuthActivity;
@@ -25,6 +27,7 @@ import java.util.UUID;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static com.judopay.JudoPay.Environment.SANDBOX;
 import static com.judopay.JudoPay.JUDO_RECEIPT;
 
 /**
@@ -35,6 +38,9 @@ import static com.judopay.JudoPay.JUDO_RECEIPT;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private static final String MY_AMOUNT = "1.99";
+    private static final String MY_JUDO_ID = "100407196";
+
     // Constants to define different actions (for use with startActivityForResult(...))
     private static final int PAYMENT_REQUEST = 101;
     private static final int TOKEN_PAYMENT_REQUEST = 102;
@@ -44,8 +50,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int REGISTER_CARD_TOKEN_PAYMENT_REQUEST = 501;
     private static final int REGISTER_CARD_TOKEN_PRE_AUTH_REQUEST = 601;
 
-    private static final String MY_AMOUNT = "1.99";
-    private static final String MY_JUDO_ID = "100407196";
+    private static final String SHARED_PREFS_NAME = "Judo-SampleApp";
+    private static final String CURRENCY_KEY = "Judo-SampleApp-Currency";
+    private static final String TOKEN_RECEIPT_KEY = "Judo-SampleApp-TokenReceipt";
 
     @Bind(R.id.payment_button)
     View paymentButton;
@@ -56,8 +63,8 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.token_payment_button)
     View tokenPaymentButton;
 
-    @Bind(R.id.register_card_button)
-    View registerCardButton;
+    @Bind(R.id.add_card_button)
+    View addCardButton;
 
     private String currency;
 
@@ -68,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        JudoPay.setup(this, "823Eja2fEM6E9NAE", "382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6", SANDBOX);
+
         initialiseView();
     }
 
@@ -75,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        this.currency = getSharedPreferences(SampleApp.SHARED_PREFS_NAME, MODE_PRIVATE)
-                .getString(SampleApp.CURRENCY_KEY, "GBP");
+        this.currency = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
+                .getString(CURRENCY_KEY, "GBP");
     }
 
     @Override
@@ -134,21 +143,33 @@ public class MainActivity extends AppCompatActivity {
         tokenPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Consumer consumer = new Consumer("zGEHXkSTZO08FljI", "consumer10102");
-                CardToken cardToken = new CardToken("1215", "6208", "P96xnOZjsJDdwEYgHZSbVB70A4U1VLz7", 0);
-                Intent intent = getTokenPaymentIntent(currency, consumer, "payment1010102", cardToken, MY_JUDO_ID, null, MY_AMOUNT);
-
-                startActivityForResult(intent, TOKEN_PAYMENT_REQUEST);
+                attemptTokenPayment();
             }
         });
 
-        registerCardButton.setOnClickListener(new View.OnClickListener() {
+        addCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Consumer consumer = new Consumer("consumerToken", UUID.randomUUID().toString());
                 startRegisterCardActivity(MainActivity.this, consumer, REGISTER_CARD_REQUEST);
             }
         });
+    }
+
+    protected void attemptTokenPayment() {
+        String tokenReceiptJson = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
+                .getString(TOKEN_RECEIPT_KEY, null);
+
+        if (tokenReceiptJson != null) {
+            Gson gson = new Gson();
+            Receipt tokenReceipt = gson.fromJson(tokenReceiptJson, Receipt.class);
+
+            Intent intent = getTokenPaymentIntent(currency, tokenReceipt.getConsumer(),
+                    tokenReceipt.getYourPaymentReference(), tokenReceipt.getCardDetails(), MY_JUDO_ID, null, MY_AMOUNT);
+            startActivityForResult(intent, TOKEN_PAYMENT_REQUEST);
+        } else {
+            Toast.makeText(MainActivity.this, R.string.add_card_to_make_token_transaction, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void startRegisterCardActivity(Context context, Consumer consumer, int requestCode) {
@@ -165,15 +186,9 @@ public class MainActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case PAYMENT_REQUEST:
-                handlePaymentResult(resultCode, data);
-                break;
-
             case TOKEN_PAYMENT_REQUEST:
-                handleTokenPaymentResult(resultCode, data);
-                break;
-
             case PRE_AUTH_REQUEST:
-                handlePreAuthResult(resultCode, data);
+                handlePaymentResult(resultCode, data);
                 break;
 
             case REGISTER_CARD_REQUEST:
@@ -186,6 +201,12 @@ public class MainActivity extends AppCompatActivity {
         switch (resultCode) {
             case JudoPay.RESULT_REGISTER_CARD_SUCCESS:
                 Receipt receipt = data.getParcelableExtra(JUDO_RECEIPT);
+
+                getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
+                        .edit()
+                        .putString(TOKEN_RECEIPT_KEY, new Gson().toJson(receipt))
+                        .apply();
+
                 showRegisteredCardDialog(receipt);
                 break;
 
@@ -225,57 +246,15 @@ public class MainActivity extends AppCompatActivity {
         return intent;
     }
 
-    private void handlePreAuthResult(int resultCode, Intent data) {
-        switch (resultCode) {
-            case JudoPay.RESULT_PAYMENT_SUCCESS:
-                Receipt response = data.getParcelableExtra(JUDO_RECEIPT);
-                Toast.makeText(MainActivity.this, "Pre-auth success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
-                break;
-
-            case JudoPay.RESULT_PAYMENT_DECLINED:
-                Toast.makeText(MainActivity.this, "Pre-auth declined", Toast.LENGTH_SHORT).show();
-                break;
-
-            case JudoPay.RESULT_CANCELED:
-                Toast.makeText(MainActivity.this, "Pre-auth cancelled", Toast.LENGTH_SHORT).show();
-                break;
-
-            case JudoPay.RESULT_ERROR:
-                Toast.makeText(MainActivity.this, "Pre-auth error", Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
-
-    private void handleTokenPaymentResult(int resultCode, Intent data) {
-        switch (resultCode) {
-            case JudoPay.RESULT_PAYMENT_SUCCESS:
-                Receipt response = data.getParcelableExtra(JUDO_RECEIPT);
-                Toast.makeText(MainActivity.this, "Token payment success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
-                break;
-
-            case JudoPay.RESULT_PAYMENT_DECLINED:
-                Toast.makeText(MainActivity.this, "Token payment declined", Toast.LENGTH_SHORT).show();
-                break;
-
-            case JudoPay.RESULT_CANCELED:
-                Toast.makeText(MainActivity.this, "Token payment cancelled", Toast.LENGTH_SHORT).show();
-                break;
-
-            case JudoPay.RESULT_ERROR:
-                Toast.makeText(MainActivity.this, "Token payment response error", Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
-
     private void handlePaymentResult(int resultCode, Intent data) {
         switch (resultCode) {
             case JudoPay.RESULT_PAYMENT_SUCCESS:
                 Receipt response = data.getParcelableExtra(JUDO_RECEIPT);
-                Toast.makeText(MainActivity.this, "Payment success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
                 break;
 
             case JudoPay.RESULT_PAYMENT_DECLINED:
-                Toast.makeText(MainActivity.this, "PaymentTransaction declined", Toast.LENGTH_SHORT).show();
+                Dialogs.createDeclinedPaymentDialog(this).show();
                 break;
 
             case JudoPay.RESULT_CANCELED:

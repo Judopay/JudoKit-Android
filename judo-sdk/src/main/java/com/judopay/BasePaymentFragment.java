@@ -1,10 +1,8 @@
 package com.judopay;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -114,7 +112,7 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
     @Override
     public void showDeclinedMessage(Receipt receipt) {
         if (receipt.isDeclined() && getArguments().getBoolean(JudoPay.JUDO_ALLOW_DECLINED_CARD_AMEND, true)) {
-            showDeclinedDialog();
+            Dialogs.createDeclinedPaymentDialog(getActivity()).show();
         } else {
             setDeclinedAndFinish(receipt);
         }
@@ -130,18 +128,6 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
             activity.setResult(JudoPay.RESULT_REGISTER_CARD_DECLINED, intent);
             activity.finish();
         }
-    }
-
-    protected void showDeclinedDialog() {
-        new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.payment_failed)
-                .setMessage(R.string.please_check_details_try_again)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
     }
 
     @Override
