@@ -15,6 +15,7 @@
 - [Javadocs published to GitHub](http://judopay.github.io/Judo-Android/)
 
 **Changed:**
+- New class JudoPay, replacing JudoSDKManager for performing initial setup and turning on/off configuration options.
 - New class JudoApiService for interacting with JudoPay REST endpoints, using Retrofit 2.0 and rxjava Observable (replaces TransactionQueryApiService, TransactionProcessingApiService, PaymentAction, RegisterAction and TransactionAction).
 - Domain classes used with JudoPay REST API moved to judo-data module, new package: com.judopay.model
 
