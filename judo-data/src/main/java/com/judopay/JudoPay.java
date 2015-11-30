@@ -26,7 +26,7 @@ public class JudoPay {
     public static final String JUDO_CARD_TOKEN = "JudoPay-cardToken";
     public static final String JUDO_CONSUMER = "JudoPay-consumer";
 
-    public static final String JUDO_ALLOW_DECLINED_CARD_AMEND = "Judo-AllowDecliendPaymentAmend";
+    public static final String JUDO_ALLOW_DECLINED_CARD_AMEND = "Judo-AllowDeclinedPaymentAmend";
 
     private static final String API_HOST_SANDBOX = "https://gw1.judopay-sandbox.com";
     private static final String API_HOST_LIVE = "https://gw1.judopay.com";
