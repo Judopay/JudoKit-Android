@@ -1,11 +1,12 @@
 package com.judopay.model;
 
+import com.judopay.arch.api.Request;
+
 import java.util.Map;
 
-public class PaymentTransaction {
+public class PaymentTransaction extends Request {
 
     private String amount;
-    private Client clientDetails;
     private Location consumerLocation;
     private String currency;
     private long judoId;
@@ -22,10 +23,6 @@ public class PaymentTransaction {
 
     public String getAmount() {
         return amount;
-    }
-
-    public Client getClientDetails() {
-        return clientDetails;
     }
 
     public Location getConsumerLocation() {
@@ -90,11 +87,6 @@ public class PaymentTransaction {
 
         public Builder setAmount(String amount) {
             paymentTransaction.amount = amount;
-            return this;
-        }
-
-        public Builder setClientDetails(Client clientDetails) {
-            paymentTransaction.clientDetails = clientDetails;
             return this;
         }
 

@@ -11,7 +11,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class DateJsonDeserializerTest {
+public class DateJsonDeserializerTest {
 
     @Test
     public void shouldDeserializeDate() {

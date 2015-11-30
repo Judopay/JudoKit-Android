@@ -1,8 +1,6 @@
-package com.judopay;
+package com.judopay.payment.form;
 
 import android.widget.EditText;
-
-import com.judopay.payment.form.HintFocusListener;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

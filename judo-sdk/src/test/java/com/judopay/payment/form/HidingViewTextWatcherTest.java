@@ -1,8 +1,6 @@
-package com.judopay;
+package com.judopay.payment.form;
 
 import android.view.View;
-
-import com.judopay.payment.form.HidingViewTextWatcher;
 
 import org.junit.Test;
 

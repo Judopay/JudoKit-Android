@@ -18,7 +18,6 @@ class RegisterCardPresenter extends BasePaymentPresenter {
 
         RegisterTransaction.Builder builder = new RegisterTransaction.Builder()
                 .setCardAddress(card.getCardAddress())
-                .setClientDetails(new Client())
                 .setCardNumber(card.getCardNumber())
                 .setCv2(card.getCv2())
                 .setExpiryDate(card.getExpiryDate());

@@ -53,7 +53,7 @@ public class PaymentFragment extends BasePaymentFragment {
         metaData = args.getBundle(JUDO_META_DATA);
 
         if (savedInstanceState == null) {
-            this.presenter = new PaymentPresenter(this, ApiServiceFactory.getApiService(), new AndroidScheduler());
+            this.presenter = new PaymentPresenter(this, ApiServiceFactory.getApiService(getActivity()), new AndroidScheduler());
         }
     }
 
