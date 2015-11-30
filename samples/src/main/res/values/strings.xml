@@ -1,8 +1,5 @@
 <resources>
-
-    <string name="app_name">JudoPay Android</string>
-    <string name="title_activity_main">judoPay examples</string>
-
+    <string name="judopay">judoPay</string>
     <string name="avs_label">Address Verification System (AVS)</string>
     <string name="ssl_pinning_label">SSL Pinning</string>
     <string name="settings">Settings</string>
@@ -22,5 +19,5 @@
     <string name="registered_card_can_perform_token_payments">Registered card can now be used to perform token payments</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-
+    <string name="add_card_to_make_token_transaction">Add card to make token transaction</string>
 </resources>
