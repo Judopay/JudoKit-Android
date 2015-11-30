@@ -1,10 +1,11 @@
 package com.judopay.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.judopay.arch.api.Request;
 
 import java.util.Map;
 
-public class TokenTransaction {
+public class TokenTransaction extends Request {
 
     private String endDate;
 
@@ -18,7 +19,6 @@ public class TokenTransaction {
     private int type;
 
     private String amount;
-    private Client clientDetails;
     private Location consumerLocation;
     private String currency;
     private long judoId;
@@ -48,10 +48,6 @@ public class TokenTransaction {
 
     public String getAmount() {
         return amount;
-    }
-
-    public Client getClientDetails() {
-        return clientDetails;
     }
 
     public Location getConsumerLocation() {
@@ -116,11 +112,6 @@ public class TokenTransaction {
 
         public Builder setAmount(String amount) {
             this.tokenTransaction.amount = amount;
-            return this;
-        }
-
-        public Builder setClientDetails(Client clientDetails) {
-            this.tokenTransaction.clientDetails = clientDetails;
             return this;
         }
 

@@ -43,7 +43,7 @@ public class RegisterCardFragment extends Fragment implements PaymentFormView, P
         setRetainInstance(true);
 
         if (savedInstanceState == null) {
-            this.presenter = new RegisterCardPresenter(this, ApiServiceFactory.getApiService(), new AndroidScheduler());
+            this.presenter = new RegisterCardPresenter(this, ApiServiceFactory.getApiService(getActivity()), new AndroidScheduler());
 
             PaymentFormFragment paymentFormFragment = PaymentFormFragment.newInstance(this, getString(R.string.add_card));
             paymentFormFragment.setRetainInstance(true);

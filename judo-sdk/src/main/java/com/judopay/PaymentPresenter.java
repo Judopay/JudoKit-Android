@@ -24,7 +24,6 @@ class PaymentPresenter extends BasePaymentPresenter {
         PaymentTransaction.Builder builder = new PaymentTransaction.Builder()
                 .setAmount(amount)
                 .setCardAddress(card.getCardAddress())
-                .setClientDetails(new Client())
                 .setConsumerLocation(new Location())
                 .setCardNumber(card.getCardNumber())
                 .setCurrency(currency)

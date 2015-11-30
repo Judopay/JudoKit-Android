@@ -24,7 +24,6 @@ class TokenPaymentPresenter extends BasePaymentPresenter {
         TokenTransaction tokenTransaction = new TokenTransaction.Builder()
                 .setAmount(amount)
                 .setCardAddress(card.getCardAddress())
-                .setClientDetails(new Client())
                 .setConsumerLocation(new Location())
                 .setCurrency(currency)
                 .setJudoId(Long.valueOf(judoId))

@@ -52,7 +52,7 @@ public class PreAuthFragment extends BasePaymentFragment {
         consumer = args.getParcelable(JUDO_CONSUMER);
 
         if (savedInstanceState == null) {
-            this.presenter = new PreAuthPresenter(this, ApiServiceFactory.getApiService(), new AndroidScheduler());
+            this.presenter = new PreAuthPresenter(this, ApiServiceFactory.getApiService(getActivity()), new AndroidScheduler());
         }
     }
 
