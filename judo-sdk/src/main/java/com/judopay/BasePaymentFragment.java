@@ -27,9 +27,7 @@ import java.io.IOException;
 abstract class BasePaymentFragment extends Fragment implements PaymentFormView, PaymentFormListener {
 
     private static final String TAG_PAYMENT_FORM = "PaymentFormFragment";
-    public static final String KEY_TOKEN_PAYMENT = "tokenPayment";
-
-    protected static final String TAG_3DS_DIALOG = "3dSecureDialog";
+    private static final String TAG_3DS_DIALOG = "3dSecureDialog";
 
     protected View progressBar;
     protected TextView progressText;

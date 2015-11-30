@@ -10,40 +10,10 @@ import com.judopay.model.Consumer;
 public final class PaymentFragment extends BasePaymentFragment {
 
     private PaymentPresenter presenter;
-    private Consumer consumer;
-    private String judoId;
-    private String amount;
-    private String currency;
-    private String paymentRef;
-    private Bundle metaData;
-
-    public static PaymentFragment newInstance(String judoId, String amount, String currency, String paymentRef, Consumer consumer, Bundle metaData) {
-        PaymentFragment paymentFragment = new PaymentFragment();
-
-        Bundle args = new Bundle();
-        args.putString(JudoPay.JUDO_ID, judoId);
-        args.putString(JudoPay.JUDO_AMOUNT, amount);
-        args.putString(JudoPay.JUDO_CURRENCY, currency);
-        args.putString(JudoPay.JUDO_PAYMENT_REF, paymentRef);
-        args.putParcelable(JudoPay.JUDO_CONSUMER, consumer);
-        args.putBundle(JudoPay.JUDO_META_DATA, metaData);
-
-        paymentFragment.setArguments(args);
-
-        return paymentFragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Bundle args = getArguments();
-        consumer = args.getParcelable(JudoPay.JUDO_CONSUMER);
-        judoId = args.getString(JudoPay.JUDO_ID);
-        amount = args.getString(JudoPay.JUDO_AMOUNT);
-        currency = args.getString(JudoPay.JUDO_CURRENCY);
-        paymentRef = args.getString(JudoPay.JUDO_PAYMENT_REF);
-        metaData = args.getBundle(JudoPay.JUDO_META_DATA);
 
         if (savedInstanceState == null) {
             this.presenter = new PaymentPresenter(this, ApiServiceFactory.getApiService(getActivity()), new AndroidScheduler());
@@ -58,6 +28,15 @@ public final class PaymentFragment extends BasePaymentFragment {
 
     @Override
     public void onSubmit(Card card) {
+        Bundle args = getArguments();
+
+        Consumer consumer = args.getParcelable(JudoPay.JUDO_CONSUMER);
+        String judoId = args.getString(JudoPay.JUDO_ID);
+        String amount = args.getString(JudoPay.JUDO_AMOUNT);
+        String currency = args.getString(JudoPay.JUDO_CURRENCY);
+        String paymentRef = args.getString(JudoPay.JUDO_PAYMENT_REF);
+        Bundle metaData = args.getBundle(JudoPay.JUDO_META_DATA);
+
         presenter.performPayment(card, consumer, judoId, amount, currency, paymentRef, metaData, JudoPay.isThreeDSecureEnabled());
     }
 }

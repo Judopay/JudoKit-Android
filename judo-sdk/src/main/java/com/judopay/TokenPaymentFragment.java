@@ -19,29 +19,14 @@ import static com.judopay.JudoPay.JUDO_PAYMENT_REF;
 public final class TokenPaymentFragment extends BasePaymentFragment {
 
     private TokenPaymentPresenter presenter;
-    private CardToken cardToken;
-    private Bundle metaData;
-    private String paymentRef;
-    private String currency;
-    private String amount;
-    private String judoId;
-    private Consumer consumer;
 
-    public static TokenPaymentFragment newInstance(String judoId, String amount, String currency, CardToken cardToken, String paymentRef, Consumer consumer, Bundle metaData) {
-        TokenPaymentFragment tokenPaymentFragment = new TokenPaymentFragment();
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        Bundle args = new Bundle();
-        args.putString(JudoPay.JUDO_ID, judoId);
-        args.putString(JudoPay.JUDO_AMOUNT, amount);
-        args.putString(JudoPay.JUDO_CURRENCY, currency);
-        args.putString(JudoPay.JUDO_PAYMENT_REF, paymentRef);
-        args.putParcelable(JudoPay.JUDO_CONSUMER, consumer);
-        args.putBundle(JudoPay.JUDO_META_DATA, metaData);
-        args.putParcelable(JudoPay.JUDO_CARD_TOKEN, cardToken);
-
-        tokenPaymentFragment.setArguments(args);
-
-        return tokenPaymentFragment;
+        if (savedInstanceState == null) {
+            this.presenter = new TokenPaymentPresenter(this, ApiServiceFactory.getApiService(getActivity()), new AndroidScheduler());
+        }
     }
 
     @Override
@@ -51,26 +36,17 @@ public final class TokenPaymentFragment extends BasePaymentFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public void onSubmit(Card card) {
         Bundle args = getArguments();
 
-        judoId = args.getString(JUDO_ID);
-        amount = args.getString(JUDO_AMOUNT);
-        currency = args.getString(JUDO_CURRENCY);
-        paymentRef = args.getString(JUDO_PAYMENT_REF);
-        metaData = args.getBundle(JUDO_META_DATA);
-        cardToken = args.getParcelable(JUDO_CARD_TOKEN);
-        consumer = args.getParcelable(JUDO_CONSUMER);
+        Consumer consumer = args.getParcelable(JudoPay.JUDO_CONSUMER);
+        CardToken cardToken = args.getParcelable(JudoPay.JUDO_CARD_TOKEN);
+        String judoId = args.getString(JudoPay.JUDO_ID);
+        String amount = args.getString(JudoPay.JUDO_AMOUNT);
+        String currency = args.getString(JudoPay.JUDO_CURRENCY);
+        String paymentRef = args.getString(JudoPay.JUDO_PAYMENT_REF);
+        Bundle metaData = args.getBundle(JudoPay.JUDO_META_DATA);
 
-        if (savedInstanceState == null) {
-            this.presenter = new TokenPaymentPresenter(this, ApiServiceFactory.getApiService(getActivity()), new AndroidScheduler());
-        }
-    }
-
-    @Override
-    public void onSubmit(Card card) {
         presenter.performTokenPayment(card, cardToken, consumer, judoId, amount, currency, paymentRef, metaData, JudoPay.isThreeDSecureEnabled());
     }
 }
