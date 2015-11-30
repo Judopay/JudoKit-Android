@@ -13,6 +13,7 @@
 - SSL changes for PCI-Compliance
 - SDK filesize reduced by 80% (now 192 KB)
 - Library available in jCenter repository, for one line install of library into app project.
+- [Javadocs published to GitHub](http://judopay.github.io/Judo-Android/)
 
 **Build changes:**
 - Version support changed from previous release (4.1.11) to require Android OS Jelly Bean 4.1 or later
