@@ -1,8 +1,9 @@
 package com.judopay.model;
 
-public class RegisterTransaction {
+import com.judopay.arch.api.Request;
 
-    private Client clientDetails;
+public class RegisterTransaction extends Request {
+
     private Location consumerLocation;
     private String yourConsumerReference;
     private Address cardAddress;
@@ -11,10 +12,6 @@ public class RegisterTransaction {
     private String expiryDate;
     private String startDate;
     private String issueNumber;
-
-    public Client getClientDetails() {
-        return clientDetails;
-    }
 
     public Location getConsumerLocation() {
         return consumerLocation;
@@ -54,11 +51,6 @@ public class RegisterTransaction {
 
         public Builder() {
             this.registerTransaction = new RegisterTransaction();
-        }
-
-        public Builder setClientDetails(Client clientDetails) {
-            this.registerTransaction.clientDetails = clientDetails;
-            return this;
         }
 
         public Builder setConsumerLocation(Location consumerLocation) {

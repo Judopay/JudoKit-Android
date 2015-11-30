@@ -65,7 +65,7 @@ public class TokenPaymentFragment extends BasePaymentFragment {
         consumer = args.getParcelable(JUDO_CONSUMER);
 
         if (savedInstanceState == null) {
-            this.presenter = new TokenPaymentPresenter(this, ApiServiceFactory.getApiService(), new AndroidScheduler());
+            this.presenter = new TokenPaymentPresenter(this, ApiServiceFactory.getApiService(getActivity()), new AndroidScheduler());
         }
     }
 
