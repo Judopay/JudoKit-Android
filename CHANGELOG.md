@@ -2,7 +2,7 @@
 
 ## [5.0](https://github.com/skywinder/ActionSheetPicker-3.0/tree/2.0.2) (2015-12-03)
 
-**New features:**
+**Implemented enhancements:**
 - Complete redesign of all screens to use Material Design guidelines
 - Improved payment form layout for tablet devices
 - Completely themeable UI, allowing payment screens to match app theme
@@ -13,3 +13,6 @@
 - SSL changes for PCI-Compliance
 - SDK filesize reduced by 80% (now 192 KB)
 - Library available in jCenter repository, for one line install of library into app project.
+
+**Build changes:**
+- Version support changed from previous release (4.1.11) to require Android OS Jelly Bean 4.1 or later
