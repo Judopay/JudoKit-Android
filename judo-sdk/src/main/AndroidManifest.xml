@@ -1,5 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.judopay">
-
-    <application />
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application>
+        <activity android:name="com.judopay.PaymentActivity" />
+        <activity android:name="com.judopay.PreAuthActivity" />
+        <activity android:name="com.judopay.TokenPaymentActivity" />
+        <activity android:name="com.judopay.RegisterCardActivity" />
+    </application>
 </manifest>
