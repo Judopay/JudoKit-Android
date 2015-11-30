@@ -58,7 +58,7 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
     }
 
     @Override
-    public final void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         FragmentManager fm = getFragmentManager();
