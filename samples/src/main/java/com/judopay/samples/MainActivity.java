@@ -11,13 +11,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.judopay.model.Consumer;
 import com.judopay.JudoPay;
 import com.judopay.PaymentActivity;
 import com.judopay.PreAuthActivity;
 import com.judopay.RegisterCardActivity;
 import com.judopay.TokenPaymentActivity;
 import com.judopay.model.CardToken;
+import com.judopay.model.Consumer;
 import com.judopay.model.Receipt;
 
 import java.util.UUID;
@@ -25,7 +25,6 @@ import java.util.UUID;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static com.judopay.JudoPay.JUDO_CONSUMER;
 import static com.judopay.JudoPay.JUDO_RECEIPT;
 
 /**
@@ -155,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
     private void startRegisterCardActivity(Context context, Consumer consumer, int requestCode) {
         if (context != null) {
             Intent intent = new Intent(context, RegisterCardActivity.class);
-            intent.putExtra(JUDO_CONSUMER, consumer);
+            intent.putExtra(JudoPay.JUDO_CONSUMER, consumer);
             startActivityForResult(intent, requestCode);
         }
     }

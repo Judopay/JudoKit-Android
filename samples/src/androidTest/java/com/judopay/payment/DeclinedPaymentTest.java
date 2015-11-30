@@ -1,6 +1,6 @@
 package com.judopay.payment;
 
-import com.judopay.samples.R;
+import io.appium.droiddriver.finders.By;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -25,10 +25,9 @@ public class DeclinedPaymentTest extends PaymentTest {
         pressPayButton();
 
         //Then I should be given a declined message
-        //TODO update this to assert "Payment Response Declined:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertDeclinedDialogDisplayed();
+        pressDialogPrimaryButton();
     }
-
 
     public void testPaymentDeclinedAVSDisabled3DSecureDisabledMaestro() {
         //Given AVS is disabled
@@ -51,10 +50,9 @@ public class DeclinedPaymentTest extends PaymentTest {
         pressPayButton();
 
         //Then I should be given a declined message
-        //TODO update this to assert "Payment Response Declined:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertDeclinedDialogDisplayed();
+        pressDialogPrimaryButton();
     }
-
 
     public void testPaymentDeclinedAVSDisabled3DSecureDisabledAMEX() {
         //Given AVS is disabled
@@ -77,8 +75,8 @@ public class DeclinedPaymentTest extends PaymentTest {
         pressPayButton();
 
         //Then I should be given a declined message
-        //TODO update this to assert "Payment Response Declined:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertDeclinedDialogDisplayed();
+        pressDialogPrimaryButton();
     }
 
     public void testPaymentDeclinedAVSEnabled3DSecureDisabledVisa() {
@@ -99,8 +97,8 @@ public class DeclinedPaymentTest extends PaymentTest {
         pressPayButton();
 
         //Then I should be given a declined message
-        //TODO update this to assert "Payment Response Declined:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertDeclinedDialogDisplayed();
+        pressDialogPrimaryButton();
     }
 
     public void testPaymentDeclinedAVSEnabled3DSecureDisabledMaestro() {
@@ -124,8 +122,8 @@ public class DeclinedPaymentTest extends PaymentTest {
         pressPayButton();
 
         //Then I should be given a declined message
-        //TODO update this to assert "Payment Response Declined:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertDeclinedDialogDisplayed();
+        pressDialogPrimaryButton();
     }
 
     public void testPaymentDeclinedAVSEnabled3DSecureDisabledAMEX() {
@@ -149,9 +147,13 @@ public class DeclinedPaymentTest extends PaymentTest {
         pressPayButton();
 
         //Then I should be given a declined message
-        //TODO update this to assert "Payment Response Declined:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertDeclinedDialogDisplayed();
+        pressDialogPrimaryButton();
+    }
+
+    protected void assertDeclinedDialogDisplayed() {
+        assertThat(find(By.text("Payment failed")).isVisible(), equalTo(true));
+        assertThat(find(By.text("Please check your details and try again")).isVisible(), equalTo(true));
     }
 
 }
-

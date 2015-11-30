@@ -1,10 +1,13 @@
 package com.judopay;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +17,10 @@ import android.widget.TextView;
 import com.judopay.model.CardToken;
 import com.judopay.model.Receipt;
 import com.judopay.payment.PaymentFormListener;
+import com.judopay.payment.form.PaymentFormFragment;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
 import com.judopay.secure3d.ThreeDSecureWebView;
-import com.judopay.payment.form.PaymentFormFragment;
 
 import java.io.IOException;
 
@@ -45,6 +48,7 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
     }
 
     @Override
+    @CallSuper
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -75,6 +79,8 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
             fm.beginTransaction()
                     .add(R.id.container, paymentFormFragment, TAG_PAYMENT_FORM)
                     .commit();
+        } else {
+            paymentFormFragment.setPaymentFormListener(this);
         }
     }
 
@@ -100,31 +106,42 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
         Activity activity = getActivity();
 
         if (activity != null) {
-            activity.setResult(JudoPay.RESULT_PAYMENT_SUCCESS, intent);
-            activity.finish();
-        }
-    }
-
-    @Override
-    public void handleError() {
-        Activity activity = getActivity();
-        if (activity != null) {
-            activity.setResult(JudoPay.RESULT_ERROR);
+            activity.setResult(JudoPay.RESULT_REGISTER_CARD_SUCCESS, intent);
             activity.finish();
         }
     }
 
     @Override
     public void showDeclinedMessage(Receipt receipt) {
+        if (receipt.isDeclined() && getArguments().getBoolean(JudoPay.JUDO_ALLOW_DECLINED_CARD_AMEND, true)) {
+            showDeclinedDialog();
+        } else {
+            setDeclinedAndFinish(receipt);
+        }
+    }
+
+    protected void setDeclinedAndFinish(Receipt receipt) {
         Intent intent = new Intent();
         intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
 
         Activity activity = getActivity();
 
         if (activity != null) {
-            activity.setResult(JudoPay.RESULT_PAYMENT_DECLINED, intent);
+            activity.setResult(JudoPay.RESULT_REGISTER_CARD_DECLINED, intent);
             activity.finish();
         }
+    }
+
+    protected void showDeclinedDialog() {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.payment_failed)
+                .setMessage(R.string.please_check_details_try_again)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 
     @Override
@@ -133,9 +150,8 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
     }
 
     @Override
-    public void start3dSecureWebView(Receipt receipt, ThreeDSecureListener threeDSecureListener) {
-        threeDSecureWebView.setThreeDSecureListener(threeDSecureListener);
-
+    public void start3dSecureWebView(Receipt receipt, ThreeDSecureListener listener) {
+        threeDSecureWebView.setThreeDSecureListener(listener);
         try {
             threeDSecureWebView.authorize(receipt.getAcsUrl(), receipt.getMd(), receipt.getPaReq(), receipt.getReceiptId());
         } catch (IOException e) {
@@ -157,6 +173,15 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
 
         threeDSecureDialog.setWebView(threeDSecureWebView);
         threeDSecureDialog.show(fm, TAG_3DS_DIALOG);
+    }
+
+    @Override
+    public void handleError() {
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.setResult(JudoPay.RESULT_ERROR);
+            activity.finish();
+        }
     }
 
 }

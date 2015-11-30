@@ -8,11 +8,11 @@ import rx.functions.Action1;
 
 abstract class BasePaymentPresenter implements ThreeDSecureListener {
 
-    protected final PaymentFormView paymentFormView;
     protected final Scheduler scheduler;
     protected final JudoApiService apiService;
+    protected final PaymentFormView paymentFormView;
 
-    protected boolean paymentInProgress;
+    protected boolean loading;
 
     public BasePaymentPresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler) {
         this.paymentFormView = paymentFormView;
@@ -24,10 +24,11 @@ abstract class BasePaymentPresenter implements ThreeDSecureListener {
         return new Action1<Receipt>() {
             @Override
             public void call(Receipt receipt) {
+                paymentFormView.hideLoading();
+                loading = false;
+
                 if (receipt.isSuccess()) {
-                    paymentInProgress = false;
                     paymentFormView.finish(receipt);
-                    paymentFormView.hideLoading();
                 } else {
                     if (threeDSecureEnabled && receipt.is3dSecureRequired()) {
                         paymentFormView.setLoadingText(R.string.redirecting);
@@ -51,7 +52,7 @@ abstract class BasePaymentPresenter implements ThreeDSecureListener {
     }
 
     public void reconnect() {
-        if (paymentInProgress) {
+        if (loading) {
             paymentFormView.showLoading();
         } else {
             paymentFormView.hideLoading();
@@ -72,12 +73,12 @@ abstract class BasePaymentPresenter implements ThreeDSecureListener {
                     @Override
                     public void call(Receipt receipt) {
                         if (receipt.isSuccess()) {
-                            paymentInProgress = false;
+                            loading = false;
                             paymentFormView.finish(receipt);
-                            paymentFormView.hideLoading();
                         } else {
                             paymentFormView.showDeclinedMessage(receipt);
                         }
+                        paymentFormView.hideLoading();
                     }
                 }, new Action1<Throwable>() {
                     @Override

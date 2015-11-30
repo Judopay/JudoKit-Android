@@ -62,7 +62,7 @@ class JudoActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected void checkForExtras(String... keys) {
+    protected void checkRequiredExtras(String... keys) {
         Bundle extras = getIntent().getExtras();
         for(String key : keys) {
             if(!extras.containsKey(key)) {

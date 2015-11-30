@@ -13,14 +13,9 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         super(MainActivity.class);
     }
 
-
-
-
-
     /*
         Main screen
      */
-
     protected void pressSettingsButton() {
         UiElement settingsButton = id(R.id.settings_menu_item);
 
@@ -41,26 +36,19 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
 
     protected void pressTokenPaymentScreenButton() {
         UiElement tokenPaymentButton = id(R.id.token_payment_button);
-
         tokenPaymentButton.click();
     }
-
-
-
-
-
 
     /*
         Settings screen
      */
-
     protected void pressSwitch(UiElement buttonElement, boolean enable) {
-        if(enable){
-            if(!buttonElement.isChecked()){
+        if (enable) {
+            if (!buttonElement.isChecked()) {
                 buttonElement.click();
             }
         } else {
-            if(buttonElement.isChecked()){
+            if (buttonElement.isChecked()) {
                 buttonElement.click();
             }
         }
@@ -90,17 +78,9 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         pressSwitch(buttonElement, enable);
     }
 
-
-
-
-
-
-
-
     /*
         Payments screen
      */
-
     protected void enterCardDetails(String cardNo, String expiryDate, String cvv) {
         enterACardNumber(cardNo);
         enterAnExpiryDate(expiryDate);
@@ -130,7 +110,6 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         enterCVV(cvv);
         enterAVS(avs);
     }
-
 
 
     protected void enterACardNumber(String cardNo) {
@@ -215,4 +194,7 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         otherElement.click();
     }
 
+    protected void pressDialogPrimaryButton() {
+        id(android.R.id.button1).click();
+    }
 }

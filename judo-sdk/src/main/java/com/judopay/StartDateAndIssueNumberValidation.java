@@ -63,10 +63,6 @@ public class StartDateAndIssueNumberValidation {
         return startDateEntryComplete;
     }
 
-    public boolean issueNumberValid() {
-        return issueNumberValid;
-    }
-
     public boolean isShowIssueNumberAndStartDate() {
         return showIssueNumberAndStartDate;
     }
