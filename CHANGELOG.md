@@ -15,7 +15,8 @@
 - [Javadocs published to GitHub](http://judopay.github.io/Judo-Android/)
 
 **Changed:**
-- Classes for interacting with JudoPay REST endpoints changed to JudoApiService, using Retrofit 2.0 (replaces TransactionQueryApiService, TransactionProcessingApiService, PaymentAction, RegisterAction and TransactionAction)
+- Classes for interacting with JudoPay REST endpoints changed to JudoApiService, using Retrofit 2.0 (replaces TransactionQueryApiService, TransactionProcessingApiService, PaymentAction, RegisterAction and TransactionAction).
+- Domain classes used with JudoPay REST API moved to judo-data module, new package: com.judopay.model
 
 **Build changes:**
 - SDK now built in Android archive format (.aar)
