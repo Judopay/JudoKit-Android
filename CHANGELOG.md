@@ -5,7 +5,7 @@
 **Implemented enhancements:**
 - Complete redesign of all screens to use Material Design guidelines
 - Improved payment form layout for tablet devices
-- Completely themeable UI, allowing payment screens to match app theme
+- Customisable UI using AppCompat themes to allow payment screen design to be changed.
 - 3D-Secure support when required by merchant bank
 - JudoShield integration for automatic fraud detection
 - Detection of Rooted Android device, with option to block payments from insecure devices.
