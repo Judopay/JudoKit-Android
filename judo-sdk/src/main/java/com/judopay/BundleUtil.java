@@ -10,12 +10,8 @@ class BundleUtil {
 
     public static Map<String, String> toMap(Bundle bundle) {
         Map<String, String> map = new HashMap<>();
-
         if (bundle != null) {
-            Iterator<String> it = bundle.keySet().iterator();
-
-            while (it.hasNext()) {
-                String key = it.next();
+            for (String key : bundle.keySet()) {
                 String value = bundle.getString(key);
                 map.put(key, value);
             }

@@ -1,12 +1,13 @@
 package com.judopay;
 
 import android.os.Bundle;
+import android.view.View;
 
-import com.judopay.arch.api.RetrofitFactory;
+import com.judopay.arch.api.ApiServiceFactory;
+import com.judopay.model.Card;
+import com.judopay.model.Consumer;
 
-public class PaymentFragment extends BasePaymentFragment {
-
-    private PaymentPresenter presenter;
+public final class PaymentFragment extends BasePaymentFragment {
 
     private PaymentPresenter presenter;
     private Consumer consumer;
@@ -18,8 +19,6 @@ public class PaymentFragment extends BasePaymentFragment {
 
     public static PaymentFragment newInstance(String judoId, String amount, String currency, String paymentRef, Consumer consumer, Bundle metaData) {
         PaymentFragment paymentFragment = new PaymentFragment();
-
-        Bundle arguments = new Bundle();
 
         Bundle args = new Bundle();
         args.putString(JudoPay.JUDO_ID, judoId);
@@ -39,12 +38,12 @@ public class PaymentFragment extends BasePaymentFragment {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
-        consumer = args.getParcelable(JUDO_CONSUMER);
-        judoId = args.getString(JUDO_ID);
-        amount = args.getString(JUDO_AMOUNT);
-        currency = args.getString(JUDO_CURRENCY);
-        paymentRef = args.getString(JUDO_PAYMENT_REF);
-        metaData = args.getBundle(JUDO_META_DATA);
+        consumer = args.getParcelable(JudoPay.JUDO_CONSUMER);
+        judoId = args.getString(JudoPay.JUDO_ID);
+        amount = args.getString(JudoPay.JUDO_AMOUNT);
+        currency = args.getString(JudoPay.JUDO_CURRENCY);
+        paymentRef = args.getString(JudoPay.JUDO_PAYMENT_REF);
+        metaData = args.getBundle(JudoPay.JUDO_META_DATA);
 
         if (savedInstanceState == null) {
             this.presenter = new PaymentPresenter(this, ApiServiceFactory.getApiService(getActivity()), new AndroidScheduler());

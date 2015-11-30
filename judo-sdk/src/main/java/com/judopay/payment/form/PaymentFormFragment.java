@@ -42,7 +42,7 @@ import com.judopay.view.SingleClickOnClickListener;
 
 import static com.judopay.JudoPay.isAvsEnabled;
 
-public class PaymentFormFragment extends Fragment {
+public final class PaymentFormFragment extends Fragment {
 
     public static final String KEY_CARD_TOKEN = "Judo-CardToken";
     public static final String KEY_BUTTON_LABEL = "Judo-ButtonLabel";

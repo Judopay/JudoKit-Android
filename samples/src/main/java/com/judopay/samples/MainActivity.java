@@ -11,15 +11,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.judopay.Consumer;
 import com.judopay.JudoPay;
-import com.judopay.customer.CardToken;
-import com.judopay.Payment;
 import com.judopay.PaymentActivity;
-import com.judopay.payment.Receipt;
-import com.judopay.TokenPayment;
-import com.judopay.TokenPaymentActivity;
+import com.judopay.PreAuthActivity;
 import com.judopay.RegisterCardActivity;
+import com.judopay.TokenPaymentActivity;
+import com.judopay.model.CardToken;
+import com.judopay.model.Consumer;
+import com.judopay.model.Receipt;
+
+import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,7 +29,7 @@ import static com.judopay.JudoPay.JUDO_RECEIPT;
 
 /**
  * Sample app screen containing buttons to activate the different features of the Judo SDK
- *
+ * <p/>
  * Update the MY_JUDO_ID string with the Judo ID from the judo website: http://www.judopay.com,
  * In the SampleApp, you will also need to update the token and secret with the values for your account.
  */
@@ -103,16 +104,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
-                Payment payment = new Payment.Builder()
-                        .setJudoId(MY_JUDO_ID)
-                        .setAmount(MY_AMOUNT)
-                        .setCurrency(currency)
-                        .setConsumer(new Consumer("yourConsumerRef"))
-                        .setPaymentRef("paymentRef")
-                        .build();
 
-                intent.putExtra(JudoPay.EXTRA_PAYMENT, payment);
-                intent.putExtra(Intent.EXTRA_TITLE, "Payment");
+                intent.putExtra(JudoPay.JUDO_ID, MY_JUDO_ID);
+                intent.putExtra(JudoPay.JUDO_AMOUNT, MY_AMOUNT);
+                intent.putExtra(JudoPay.JUDO_CURRENCY, currency);
+                intent.putExtra(JudoPay.JUDO_CONSUMER, new Consumer("yourConsumerRef"));
+                intent.putExtra(JudoPay.JUDO_PAYMENT_REF, "paymentRef");
+                intent.putExtra(JudoPay.JUDO_META_DATA, new Bundle());
 
                 startActivityForResult(intent, PAYMENT_REQUEST);
             }
@@ -156,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
     private void startRegisterCardActivity(Context context, Consumer consumer, int requestCode) {
         if (context != null) {
             Intent intent = new Intent(context, RegisterCardActivity.class);
-            intent.putExtra(JUDO_CONSUMER, consumer);
+            intent.putExtra(JudoPay.JUDO_CONSUMER, consumer);
             startActivityForResult(intent, requestCode);
         }
     }

@@ -1,21 +1,18 @@
 package com.judopay;
 
-import com.judopay.customer.Card;
-import com.judopay.payment.PaymentFormListener;
-import com.judopay.payment.Receipt;
-import com.judopay.payment.ThreeDSecureInfo;
+import com.judopay.model.Receipt;
+import com.judopay.model.ThreeDSecureInfo;
 import com.judopay.secure3d.ThreeDSecureListener;
 
-import rx.Observable;
 import rx.functions.Action1;
 
-abstract class BasePaymentPresenter implements PaymentFormListener, ThreeDSecureListener {
+abstract class BasePaymentPresenter implements ThreeDSecureListener {
 
-    private final PaymentFormView paymentFormView;
-    private final Scheduler scheduler;
+    protected final Scheduler scheduler;
     protected final JudoApiService apiService;
+    protected final PaymentFormView paymentFormView;
 
-    private boolean paymentInProgress;
+    protected boolean loading;
 
     public BasePaymentPresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler) {
         this.paymentFormView = paymentFormView;
@@ -23,42 +20,39 @@ abstract class BasePaymentPresenter implements PaymentFormListener, ThreeDSecure
         this.scheduler = scheduler;
     }
 
-    @Override
-    public void onSubmit(Card card, Consumer consumer, final boolean threeDSecureEnabled) {
-        this.paymentInProgress = true;
+    protected Action1<Receipt> callback(final boolean threeDSecureEnabled) {
+        return new Action1<Receipt>() {
+            @Override
+            public void call(Receipt receipt) {
+                paymentFormView.hideLoading();
+                loading = false;
 
-        performApiCall(card, consumer)
-                .subscribeOn(scheduler.backgroundThread())
-                .observeOn(scheduler.mainThread())
-                .subscribe(new Action1<Receipt>() {
-                    @Override
-                    public void call(Receipt receipt) {
-                        if (receipt.isSuccess()) {
-                            paymentInProgress = false;
-                            paymentFormView.finish(receipt);
-                            paymentFormView.hideLoading();
-                        } else {
-                            if (threeDSecureEnabled && receipt.is3dSecureRequired()) {
-                                paymentFormView.setLoadingText(R.string.redirecting);
-                                paymentFormView.start3dSecureWebView(receipt);
-                            } else {
-                                paymentFormView.showDeclinedMessage(receipt);
-                            }
-                            paymentFormView.hideLoading();
-                        }
+                if (receipt.isSuccess()) {
+                    paymentFormView.finish(receipt);
+                } else {
+                    if (threeDSecureEnabled && receipt.is3dSecureRequired()) {
+                        paymentFormView.setLoadingText(R.string.redirecting);
+                        paymentFormView.start3dSecureWebView(receipt, BasePaymentPresenter.this);
+                    } else {
+                        paymentFormView.showDeclinedMessage(receipt);
                     }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        paymentFormView.hideLoading();
-                    }
-                });
+                }
+            }
+        };
+    }
 
-        paymentFormView.showLoading();
+    protected Action1<Throwable> error() {
+        return new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                paymentFormView.hideLoading();
+                paymentFormView.handleError();
+            }
+        };
     }
 
     public void reconnect() {
-        if (paymentInProgress) {
+        if (loading) {
             paymentFormView.showLoading();
         } else {
             paymentFormView.hideLoading();
@@ -79,7 +73,7 @@ abstract class BasePaymentPresenter implements PaymentFormListener, ThreeDSecure
                     @Override
                     public void call(Receipt receipt) {
                         if (receipt.isSuccess()) {
-                            paymentInProgress = false;
+                            loading = false;
                             paymentFormView.finish(receipt);
                         } else {
                             paymentFormView.showDeclinedMessage(receipt);

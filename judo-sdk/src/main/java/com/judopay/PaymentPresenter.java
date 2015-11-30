@@ -3,7 +3,6 @@ package com.judopay;
 import android.os.Bundle;
 
 import com.judopay.model.Card;
-import com.judopay.model.Client;
 import com.judopay.model.Consumer;
 import com.judopay.model.Location;
 import com.judopay.model.PaymentTransaction;
@@ -17,7 +16,7 @@ class PaymentPresenter extends BasePaymentPresenter {
     }
 
     public void performPayment(Card card, Consumer consumer, String judoId, String amount, String currency, String paymentRef, Bundle metaData, boolean threeDSecureEnabled) {
-        this.paymentInProgress = true;
+        this.loading = true;
 
         paymentFormView.showLoading();
 

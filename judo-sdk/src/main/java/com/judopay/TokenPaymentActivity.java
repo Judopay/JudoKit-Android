@@ -14,7 +14,7 @@ import static com.judopay.JudoPay.JUDO_ID;
 import static com.judopay.JudoPay.JUDO_META_DATA;
 import static com.judopay.JudoPay.JUDO_PAYMENT_REF;
 
-public class TokenPaymentActivity extends JudoActivity {
+public final class TokenPaymentActivity extends JudoActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

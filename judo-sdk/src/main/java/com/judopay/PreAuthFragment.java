@@ -14,7 +14,7 @@ import static com.judopay.JudoPay.JUDO_ID;
 import static com.judopay.JudoPay.JUDO_META_DATA;
 import static com.judopay.JudoPay.JUDO_PAYMENT_REF;
 
-public class PreAuthFragment extends BasePaymentFragment {
+public final class PreAuthFragment extends BasePaymentFragment {
 
     private PreAuthPresenter presenter;
     private Consumer consumer;

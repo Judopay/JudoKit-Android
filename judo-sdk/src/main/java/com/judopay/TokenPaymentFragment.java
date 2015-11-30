@@ -16,7 +16,7 @@ import static com.judopay.JudoPay.JUDO_ID;
 import static com.judopay.JudoPay.JUDO_META_DATA;
 import static com.judopay.JudoPay.JUDO_PAYMENT_REF;
 
-public class TokenPaymentFragment extends BasePaymentFragment {
+public final class TokenPaymentFragment extends BasePaymentFragment {
 
     private TokenPaymentPresenter presenter;
     private CardToken cardToken;

@@ -1,7 +1,6 @@
 package com.judopay;
 
 import com.judopay.model.Card;
-import com.judopay.model.Client;
 import com.judopay.model.Consumer;
 import com.judopay.model.RegisterTransaction;
 
@@ -12,7 +11,7 @@ class RegisterCardPresenter extends BasePaymentPresenter {
     }
 
     protected void performRegisterCard(Card card, Consumer consumer, boolean threeDSecureEnabled) {
-        this.paymentInProgress = true;
+        this.loading = true;
 
         paymentFormView.showLoading();
 
