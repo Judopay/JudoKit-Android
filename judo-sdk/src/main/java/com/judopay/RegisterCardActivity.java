@@ -17,7 +17,7 @@ public final class RegisterCardActivity extends JudoActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        checkRequiredExtras(JudoPay.JUDO_CONSUMER);
+        checkRequiredExtras(JudoPay.JUDO_CONSUMER, JudoPay.JUDO_ID);
 
         setTitle(R.string.add_card);
 

@@ -119,9 +119,9 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void saveCurrency(String currency) {
-        getSharedPreferences(SampleApp.SHARED_PREFS_NAME, MODE_PRIVATE)
+        getSharedPreferences(Constants.SHARED_PREFS_NAME, MODE_PRIVATE)
                 .edit()
-                .putString(SampleApp.CURRENCY_KEY, currency)
+                .putString(Constants.CURRENCY_KEY, currency)
                 .apply();
     }
 
@@ -131,8 +131,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public int getCurrencySelection() {
-        String currency = getSharedPreferences(SampleApp.SHARED_PREFS_NAME, MODE_PRIVATE)
-                .getString(SampleApp.CURRENCY_KEY, null);
+        String currency = getSharedPreferences(Constants.SHARED_PREFS_NAME, MODE_PRIVATE)
+                .getString(Constants.CURRENCY_KEY, null);
 
         return getCurrencies().indexOf(currency);
     }
