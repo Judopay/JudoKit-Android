@@ -3,7 +3,6 @@
     package="com.judopay.samples">
 
     <application
-        android:name=".SampleApp"
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
