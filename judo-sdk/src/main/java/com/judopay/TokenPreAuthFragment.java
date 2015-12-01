@@ -8,16 +8,16 @@ import com.judopay.model.Card;
 import com.judopay.model.CardToken;
 import com.judopay.model.Consumer;
 
-public final class TokenPaymentFragment extends BasePaymentFragment {
+public class TokenPreAuthFragment extends BasePaymentFragment {
 
-    private TokenPaymentPresenter presenter;
+    private TokenPreAuthPresenter presenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
-            this.presenter = new TokenPaymentPresenter(this, ApiServiceFactory.getApiService(getActivity()), new AndroidScheduler());
+            this.presenter = new TokenPreAuthPresenter(this, ApiServiceFactory.getApiService(getActivity()), new AndroidScheduler());
         }
     }
 
@@ -39,7 +39,7 @@ public final class TokenPaymentFragment extends BasePaymentFragment {
         String paymentRef = args.getString(JudoPay.JUDO_PAYMENT_REF);
         Bundle metaData = args.getBundle(JudoPay.JUDO_META_DATA);
 
-        presenter.performTokenPayment(card, cardToken, consumer, judoId, amount, currency, paymentRef, metaData, JudoPay.isThreeDSecureEnabled());
+        presenter.performTokenPreAuth(card, cardToken, consumer, judoId, amount, currency, paymentRef, metaData, JudoPay.isThreeDSecureEnabled());
     }
 
 }

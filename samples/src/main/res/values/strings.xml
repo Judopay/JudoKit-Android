@@ -19,5 +19,7 @@
     <string name="registered_card_can_perform_token_payments">Registered card can now be used to perform token payments</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="token_pre_auth">Token pre-auth</string>
+
     <string name="add_card_to_make_token_transaction">Add card to make token transaction</string>
 </resources>
