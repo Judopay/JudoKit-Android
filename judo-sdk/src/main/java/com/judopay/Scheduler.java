@@ -1,6 +1,6 @@
 package com.judopay;
 
-public interface Scheduler {
+interface Scheduler {
 
     rx.Scheduler mainThread();
 

@@ -3,7 +3,7 @@ package com.judopay;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class AndroidScheduler implements Scheduler {
+class AndroidScheduler implements Scheduler {
 
     @Override
     public rx.Scheduler mainThread() {
