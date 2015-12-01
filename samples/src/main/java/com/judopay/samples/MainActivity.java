@@ -50,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int REGISTER_CARD_TOKEN_PAYMENT_REQUEST = 501;
     private static final int REGISTER_CARD_TOKEN_PRE_AUTH_REQUEST = 601;
 
+    static final String SHARED_PREFS_NAME = "Judo-SampleApp";
+    static final String CURRENCY_KEY = "Judo-SampleApp-Currency";
+    private static final String TOKEN_RECEIPT_KEY = "Judo-SampleApp-TokenReceipt";
+
     @Bind(R.id.payment_button)
     View paymentButton;
 
@@ -58,9 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.token_payment_button)
     View tokenPaymentButton;
-
-    @Bind(R.id.token_pre_auth_button)
-    View tokenPreAuthButton;
 
     @Bind(R.id.add_card_button)
     View addCardButton;
@@ -83,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        this.currency = getSharedPreferences(Constants.SHARED_PREFS_NAME, MODE_PRIVATE)
-                .getString(Constants.CURRENCY_KEY, "GBP");
+        this.currency = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
+                .getString(CURRENCY_KEY, "GBP");
     }
 
     @Override
@@ -139,13 +140,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        tokenPreAuthButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
         tokenPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,8 +157,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void attemptTokenPayment() {
-        String tokenReceiptJson = getSharedPreferences(Constants.SHARED_PREFS_NAME, MODE_PRIVATE)
-                .getString(Constants.TOKEN_RECEIPT_KEY, null);
+        String tokenReceiptJson = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
+                .getString(TOKEN_RECEIPT_KEY, null);
 
         if (tokenReceiptJson != null) {
             Gson gson = new Gson();
@@ -208,9 +202,9 @@ public class MainActivity extends AppCompatActivity {
             case JudoPay.RESULT_REGISTER_CARD_SUCCESS:
                 Receipt receipt = data.getParcelableExtra(JUDO_RECEIPT);
 
-                getSharedPreferences(Constants.SHARED_PREFS_NAME, MODE_PRIVATE)
+                getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
                         .edit()
-                        .putString(Constants.TOKEN_RECEIPT_KEY, new Gson().toJson(receipt))
+                        .putString(TOKEN_RECEIPT_KEY, new Gson().toJson(receipt))
                         .apply();
 
                 showRegisteredCardDialog(receipt);
