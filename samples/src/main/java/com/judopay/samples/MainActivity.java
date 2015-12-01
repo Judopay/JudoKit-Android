@@ -50,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int REGISTER_CARD_TOKEN_PAYMENT_REQUEST = 501;
     private static final int REGISTER_CARD_TOKEN_PRE_AUTH_REQUEST = 601;
 
-    private static final String SHARED_PREFS_NAME = "Judo-SampleApp";
-    private static final String CURRENCY_KEY = "Judo-SampleApp-Currency";
+    static final String SHARED_PREFS_NAME = "Judo-SampleApp";
+    static final String CURRENCY_KEY = "Judo-SampleApp-Currency";
     private static final String TOKEN_RECEIPT_KEY = "Judo-SampleApp-TokenReceipt";
 
     @Bind(R.id.payment_button)

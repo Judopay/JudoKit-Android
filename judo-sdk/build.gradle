@@ -4,6 +4,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.novoda:bintray-release:0.3.4'
     }
 }
 
@@ -11,12 +12,8 @@ repositories {
     jcenter()
 }
 
-group = 'com.judopay'
-version = '5.0-beta2'
-
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -44,6 +41,15 @@ android {
 
 }
 
+publish {
+    userOrg = 'judopay'
+    groupId = 'com.judopay'
+    artifactId = 'android-sdk'
+    publishVersion = '5.0'
+    desc = 'Android Mobile Payments SDK'
+    website = 'https://github.com/JudoPay/Judo-Android'
+}
+
 dependencies {
     compile project(':judo-data')
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -53,95 +59,4 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
-}
-
-install {
-    repositories.mavenInstaller {
-        pom {
-            project {
-                packaging 'aar'
-                name 'Bintray publish Gradle aar example'
-                url 'https://github.com/JudoPay/Judo-Android'
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'jamesgoodwin'
-                        name 'James Goodwin'
-                        email 'james.goodwin@judopayments.com'
-                    }
-                }
-                scm {
-                    connection 'https://github.com/JudoPay/Judo-Android.git'
-                    developerConnection 'https://github.com/JudoPay/Judo-Android.git'
-                    url 'https://github.com/JudoPay/Judo-Android'
-
-                }
-            }
-        }
-    }
-}
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-//    archives javadocJar
-    archives sourcesJar
-}
-
-task findConventions << {
-    println project.getConvention()
-}
-
-bintray {
-
-    Properties properties = new Properties()
-    File propFile = "bintray.properties" as File
-    if(propFile.exists()) {
-        properties.load(propFile.newDataInputStream())
-    }
-
-    user = properties.getProperty("bintray_user")
-    key = properties.getProperty("bintray_api_key")
-    configurations = ['archives']
-
-    pkg {
-        repo = 'maven'
-        userOrg = 'judopay'
-        name = 'android-sdk'
-        desc = 'JudoPay Android SDK'
-
-        websiteUrl = 'https://github.com/JudoPay/Judo-Android'
-        issueTrackerUrl = 'https://github.com/JudoPay/Judo-Android/issues'
-        vcsUrl = 'https://github.com/JudoPay/Judo-Android.git'
-
-        licenses = ['MIT']
-        labels = ['aar', 'android', 'sdk', 'payments']
-        publicDownloadNumbers = true
-
-        version {
-            gpg {
-                sign = true
-                passphrase = properties.getProperty("bintray_password")
-            }
-        }
-    }
-
 }
