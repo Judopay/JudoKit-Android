@@ -1,6 +1,7 @@
 package com.judopay.samples;
 
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
@@ -119,9 +120,9 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void saveCurrency(String currency) {
-        getSharedPreferences(SampleApp.SHARED_PREFS_NAME, MODE_PRIVATE)
+        getSharedPreferences(MainActivity.SHARED_PREFS_NAME, MODE_PRIVATE)
                 .edit()
-                .putString(SampleApp.CURRENCY_KEY, currency)
+                .putString(MainActivity.CURRENCY_KEY, currency)
                 .apply();
     }
 
@@ -131,8 +132,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public int getCurrencySelection() {
-        String currency = getSharedPreferences(SampleApp.SHARED_PREFS_NAME, MODE_PRIVATE)
-                .getString(SampleApp.CURRENCY_KEY, null);
+        String currency = getSharedPreferences(MainActivity.SHARED_PREFS_NAME, MODE_PRIVATE)
+                .getString(MainActivity.CURRENCY_KEY, null);
 
         return getCurrencies().indexOf(currency);
     }
