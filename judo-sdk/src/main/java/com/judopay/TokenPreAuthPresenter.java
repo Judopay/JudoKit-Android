@@ -12,11 +12,11 @@ import static com.judopay.BundleUtil.toMap;
 
 class TokenPreAuthPresenter extends BasePaymentPresenter {
 
-    public TokenPreAuthPresenter(PaymentFormView view, JudoApiService judoApiService, AndroidScheduler androidScheduler) {
-        super(view, judoApiService, androidScheduler);
+    public TokenPreAuthPresenter(PaymentFormView view, JudoApiService judoApiService, Scheduler scheduler) {
+        super(view, judoApiService, scheduler);
     }
 
-    public void performTokenPayment(Card card, CardToken cardToken, Consumer consumer, String judoId, String amount, String currency, String paymentRef, Bundle metaData, boolean threeDSecureEnabled) {
+    public void performTokenPreAuth(Card card, CardToken cardToken, Consumer consumer, String judoId, String amount, String currency, String paymentRef, Bundle metaData, boolean threeDSecureEnabled) {
         this.loading = true;
         paymentFormView.showLoading();
 

@@ -39,7 +39,7 @@ public class TokenPreAuthFragment extends BasePaymentFragment {
         String paymentRef = args.getString(JudoPay.JUDO_PAYMENT_REF);
         Bundle metaData = args.getBundle(JudoPay.JUDO_META_DATA);
 
-        presenter.performTokenPayment(card, cardToken, consumer, judoId, amount, currency, paymentRef, metaData, JudoPay.isThreeDSecureEnabled());
+        presenter.performTokenPreAuth(card, cardToken, consumer, judoId, amount, currency, paymentRef, metaData, JudoPay.isThreeDSecureEnabled());
     }
 
 }

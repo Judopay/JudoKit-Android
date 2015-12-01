@@ -12,8 +12,8 @@ import static com.judopay.BundleUtil.toMap;
 
 class TokenPaymentPresenter extends BasePaymentPresenter {
 
-    public TokenPaymentPresenter(PaymentFormView view, JudoApiService judoApiService, AndroidScheduler androidScheduler) {
-        super(view, judoApiService, androidScheduler);
+    public TokenPaymentPresenter(PaymentFormView view, JudoApiService judoApiService, Scheduler scheduler) {
+        super(view, judoApiService, scheduler);
     }
 
     public void performTokenPayment(Card card, CardToken cardToken, Consumer consumer, String judoId, String amount, String currency, String paymentRef, Bundle metaData, boolean threeDSecureEnabled) {
