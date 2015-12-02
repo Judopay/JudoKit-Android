@@ -3,7 +3,7 @@
 <p>
   <img  align="right" src="https://github.com/JudoPay/Judo-Xamarin/blob/master/resources/judo_logo.png?raw=true" alt="Judo"/>
 </p>
-#judo-android
+#judoNative SDK for Android
 
 Secure in-app payments native SDK for Android.
 
@@ -15,7 +15,7 @@ The judoPay library lets you integrate card payments into your Android app. It's
 |Out of the box UI|Yes|
 |UI Components|Yes|
 |Android Pay|No|
-|3DSecure|Coming in new SDK|
+|3D Secure|Coming in new SDK|
 |Fraud signals|Coming in new SDK|
 |Card scanning|Supported with library|
 |One line install (Maven)|Coming in new SDK|
