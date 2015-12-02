@@ -6,13 +6,15 @@ Secure in-app payments native SDK for Android.
 
 The judoNative Android library lets you integrate card payments into your Android app. It's built to be mobile first with ease of integration in mind. Judo's SDK enables a faster, simpler and more secure payment experience within your app. Build trust and user loyalty in your app with our secure and intuitive UX.
 
+<br>
+
 ## Getting started
 ##### 1. Add the library to your project
 If you're using Android Studio and Gradle, you can just add the android-sdk as a dependency in your app's build.gradle file:
 ```groovy
 compile 'com.judopay:android-sdk:5.0'
 ```
-
+<br>
 
 ##### 2. Initialise the SDK
 From your app's main Activity class, or Application class, initialise the JudoPay SDK with your API token and secret:
