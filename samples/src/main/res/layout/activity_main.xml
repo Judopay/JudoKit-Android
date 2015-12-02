@@ -49,12 +49,26 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/register_card_button"
+        android:id="@+id/token_pre_auth_button"
         style="@style/list_button">
 
         <TextView
             style="@style/list_button_primary_text"
-            android:text="@string/register_card" />
+            android:text="@string/token_pre_auth" />
+
+        <TextView
+            style="@style/list_button_secondary_text"
+            android:text="@string/with_stored_card_token" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/add_card_button"
+        style="@style/list_button">
+
+        <TextView
+            style="@style/list_button_primary_text"
+            android:text="@string/add_card" />
 
         <TextView
             style="@style/list_button_secondary_text"

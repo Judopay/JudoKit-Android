@@ -6,7 +6,7 @@ import android.webkit.WebViewClient;
 
 import static android.view.View.INVISIBLE;
 
-public class ThreeDSecureWebViewClient extends WebViewClient {
+class ThreeDSecureWebViewClient extends WebViewClient {
 
     private final String acsUrl;
     private final String postbackUrl;
