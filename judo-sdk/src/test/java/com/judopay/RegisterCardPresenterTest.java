@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RegisterCardPresenterTest {
-
+    
     @Mock
     Card card;
 
@@ -41,6 +41,7 @@ public class RegisterCardPresenterTest {
     @Mock
     PaymentFormView paymentFormView;
 
+    String judoId = "123456";
     Scheduler scheduler = new TestScheduler();
 
     @Test
@@ -48,7 +49,7 @@ public class RegisterCardPresenterTest {
         RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performRegisterCard(card, consumer, false);
+        presenter.performRegisterCard(judoId, card, consumer, false);
 
         verify(apiService, times(1)).registerCard(any(RegisterTransaction.class));
     }
@@ -60,7 +61,7 @@ public class RegisterCardPresenterTest {
         when(card.getCardAddress()).thenReturn(cardAddress);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performRegisterCard(card, consumer, false);
+        presenter.performRegisterCard(judoId, card, consumer, false);
 
         verify(paymentFormView).showLoading();
     }
@@ -71,7 +72,7 @@ public class RegisterCardPresenterTest {
 
         when(receipt.isSuccess()).thenReturn(true);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.just(receipt));
-        presenter.performRegisterCard(card, consumer, false);
+        presenter.performRegisterCard(judoId, card, consumer, false);
 
         verify(paymentFormView).finish(eq(receipt));
         verify(paymentFormView).hideLoading();
@@ -84,7 +85,7 @@ public class RegisterCardPresenterTest {
         when(receipt.isSuccess()).thenReturn(false);
 
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.just(receipt));
-        presenter.performRegisterCard(card, consumer, false);
+        presenter.performRegisterCard(judoId, card, consumer, false);
 
         verify(paymentFormView).showDeclinedMessage(eq(receipt));
         verify(paymentFormView).hideLoading();
@@ -105,7 +106,7 @@ public class RegisterCardPresenterTest {
         when(card.getCardAddress()).thenReturn(cardAddress);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performRegisterCard(card, consumer, false);
+        presenter.performRegisterCard(judoId, card, consumer, false);
         presenter.reconnect();
 
         verify(paymentFormView, times(2)).showLoading();
@@ -119,7 +120,7 @@ public class RegisterCardPresenterTest {
         when(receipt.is3dSecureRequired()).thenReturn(true);
 
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.just(receipt));
-        presenter.performRegisterCard(card, consumer, true);
+        presenter.performRegisterCard(judoId, card, consumer, true);
 
         verify(paymentFormView).setLoadingText(eq(R.string.redirecting));
         verify(paymentFormView).start3dSecureWebView(eq(receipt), eq(presenter));
@@ -134,7 +135,7 @@ public class RegisterCardPresenterTest {
 
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.just(receipt));
 
-        presenter.performRegisterCard(card, consumer, false);
+        presenter.performRegisterCard(judoId, card, consumer, false);
 
         verify(paymentFormView).showDeclinedMessage(eq(receipt));
         verify(paymentFormView, never()).start3dSecureWebView(eq(receipt), eq(presenter));

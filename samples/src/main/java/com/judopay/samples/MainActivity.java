@@ -15,7 +15,6 @@ import com.google.gson.Gson;
 import com.judopay.Dialogs;
 import com.judopay.JudoActivity;
 import com.judopay.JudoPay;
-import com.judopay.PreAuthActivity;
 import com.judopay.RegisterCardActivity;
 import com.judopay.TokenPaymentActivity;
 import com.judopay.model.CardToken;
@@ -28,7 +27,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import static com.judopay.JudoPay.Environment.SANDBOX;
-import static com.judopay.JudoPay.JUDO_ALLOW_DECLINED_CARD_AMEND;
 import static com.judopay.JudoPay.JUDO_RECEIPT;
 
 /**
@@ -201,6 +199,8 @@ public class MainActivity extends AppCompatActivity {
         if (context != null) {
             Intent intent = new Intent(context, RegisterCardActivity.class);
             intent.putExtra(JudoPay.JUDO_CONSUMER, consumer);
+            intent.putExtra(JudoPay.JUDO_ID, MY_JUDO_ID);
+
             startActivityForResult(intent, requestCode);
         }
     }
@@ -215,16 +215,16 @@ public class MainActivity extends AppCompatActivity {
                         .putString(TOKEN_RECEIPT_KEY, new Gson().toJson(receipt))
                         .apply();
 
-                showRegisteredCardDialog(receipt);
+                showTokenPaymentDialog(receipt);
                 break;
 
             case JudoPay.RESULT_REGISTER_CARD_DECLINED:
-                Toast.makeText(MainActivity.this, "Register card declined", Toast.LENGTH_SHORT).show();
+                Dialogs.createDeclinedPaymentDialog(this).show();
                 break;
         }
     }
 
-    private void showRegisteredCardDialog(final Receipt receipt) {
+    private void showTokenPaymentDialog(final Receipt receipt) {
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.make_token_payment))
                 .setMessage(getString(R.string.registered_card_can_perform_token_payments))
@@ -263,10 +263,6 @@ public class MainActivity extends AppCompatActivity {
 
             case JudoPay.RESULT_PAYMENT_DECLINED:
                 Dialogs.createDeclinedPaymentDialog(this).show();
-                break;
-
-            case JudoPay.RESULT_CANCELED:
-                Toast.makeText(MainActivity.this, "PaymentTransaction cancelled", Toast.LENGTH_SHORT).show();
                 break;
 
             case JudoPay.RESULT_ERROR:

@@ -21,14 +21,14 @@ public class TokenTransaction extends Request {
     private String amount;
     private Location consumerLocation;
     private String currency;
-    private long judoId;
+    private Long judoId;
     private String yourConsumerReference;
     private String yourPaymentReference;
     private Address cardAddress;
     private String cv2;
     private Map<String, String> yourPaymentMetaData;
 
-    public TokenTransaction() { }
+    private TokenTransaction() { }
 
     public String getEndDate() {
         return endDate;
@@ -84,83 +84,115 @@ public class TokenTransaction extends Request {
 
     public static class Builder {
 
-        private TokenTransaction tokenTransaction;
-
-        public Builder() {
-            this.tokenTransaction = new TokenTransaction();
-        }
+        private String endDate;
+        private String lastFour;
+        private String token;
+        private int type;
+        private String amount;
+        private Location consumerLocation;
+        private String currency;
+        private Long judoId;
+        private String yourConsumerReference;
+        private String yourPaymentReference;
+        private Address cardAddress;
+        private String cv2;
+        private Map<String, String> yourPaymentMetaData;
 
         public Builder setEndDate(String endDate) {
-            this.tokenTransaction.endDate = endDate;
+            this.endDate = endDate;
             return this;
         }
 
         public Builder setLastFour(String lastFour) {
-            this.tokenTransaction.lastFour = lastFour;
+            this.lastFour = lastFour;
             return this;
         }
 
         public Builder setToken(String token) {
-            this.tokenTransaction.token = token;
+            this.token = token;
             return this;
         }
 
         public Builder setType(int type) {
-            this.tokenTransaction.type = type;
+            this.type = type;
             return this;
         }
 
         public Builder setAmount(String amount) {
-            this.tokenTransaction.amount = amount;
+            this.amount = amount;
             return this;
         }
 
         public Builder setConsumerLocation(Location consumerLocation) {
-            this.tokenTransaction.consumerLocation = consumerLocation;
+            this.consumerLocation = consumerLocation;
             return this;
         }
 
         public Builder setCurrency(String currency) {
-            this.tokenTransaction.currency = currency;
+            this.currency = currency;
             return this;
         }
 
-        public Builder setJudoId(long judoId) {
-            this.tokenTransaction.judoId = judoId;
+        public Builder setJudoId(Long judoId) {
+            this.judoId = judoId;
             return this;
         }
 
         public Builder setYourConsumerReference(String yourConsumerReference) {
-            this.tokenTransaction.yourConsumerReference = yourConsumerReference;
+            this.yourConsumerReference = yourConsumerReference;
             return this;
         }
 
         public Builder setYourPaymentReference(String yourPaymentReference) {
-            this.tokenTransaction.yourPaymentReference = yourPaymentReference;
+            this.yourPaymentReference = yourPaymentReference;
             return this;
         }
 
         public Builder setCardAddress(Address cardAddress) {
-            this.tokenTransaction.cardAddress = cardAddress;
+            this.cardAddress = cardAddress;
             return this;
         }
 
         public Builder setCv2(String cv2) {
-            this.tokenTransaction.cv2 = cv2;
+            this.cv2 = cv2;
             return this;
         }
 
         public Builder setMetaData(Map<String, String> metaData) {
-            this.tokenTransaction.yourPaymentMetaData = metaData;
+            this.yourPaymentMetaData = metaData;
             return this;
         }
 
         public TokenTransaction build() {
-            if (tokenTransaction.currency == null || tokenTransaction.currency.length() == 0) {
+            if (currency == null || currency.length() == 0) {
                 throw new IllegalArgumentException("currency must be set for TokenTransaction");
             }
 
-            return tokenTransaction;
+            if (this.judoId == null) {
+                throw new IllegalArgumentException("judoId must be set");
+            }
+
+            if (this.amount == null || this.amount.length() == 0) {
+                throw new IllegalArgumentException("amount must be set");
+            }
+
+            TokenTransaction transaction = new TokenTransaction();
+
+            transaction.judoId = judoId;
+            transaction.amount = amount;
+            transaction.currency = currency;
+            transaction.cardAddress = cardAddress;
+            transaction.consumerLocation = consumerLocation;
+            transaction.cv2 = cv2;
+            transaction.token = token;
+            transaction.lastFour = lastFour;
+            transaction.type = type;
+            transaction.endDate = endDate;
+            transaction.yourPaymentMetaData = yourPaymentMetaData;
+            transaction.yourConsumerReference = yourConsumerReference;
+            transaction.yourPaymentReference = yourPaymentReference;
+
+            return transaction;
         }
     }
 
