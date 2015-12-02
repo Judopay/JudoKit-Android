@@ -1,4 +1,4 @@
-# judo-android
+# Judo-Android
 
 ## Getting started
 ##### 1. Add the library to your project
