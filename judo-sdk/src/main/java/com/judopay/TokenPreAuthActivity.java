@@ -11,6 +11,8 @@ import static com.judopay.JudoPay.JUDO_PAYMENT_REF;
 
 public class TokenPreAuthActivity extends JudoActivity {
 
+    private TokenPreAuthFragment tokenPreAuthFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,20 +22,21 @@ public class TokenPreAuthActivity extends JudoActivity {
         setTitle(R.string.payment);
 
         if (savedInstanceState == null) {
-            TokenPreAuthFragment fragment = new TokenPreAuthFragment();
-            fragment.setArguments(getIntent().getExtras());
+            tokenPreAuthFragment = new TokenPreAuthFragment();
+            tokenPreAuthFragment.setArguments(getIntent().getExtras());
 
             getFragmentManager()
                     .beginTransaction()
-                    .add(android.R.id.content, fragment)
+                    .add(android.R.id.content, tokenPreAuthFragment)
                     .commit();
         }
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        setResult(JudoPay.RESULT_CANCELED);
+        if (!tokenPreAuthFragment.isPaymentInProgress()) {
+            super.onBackPressed();
+        }
     }
 
 }

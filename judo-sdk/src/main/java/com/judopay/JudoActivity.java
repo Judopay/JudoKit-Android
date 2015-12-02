@@ -65,6 +65,12 @@ public abstract class JudoActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(JudoPay.RESULT_CANCELED);
+    }
+
     protected void checkRequiredExtras(String... keys) {
         Bundle extras = getIntent().getExtras();
         for (String key : keys) {
