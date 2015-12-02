@@ -1,31 +1,52 @@
-[![Twitter](https://img.shields.io/badge/twitter-@JudoPayments-orange.svg)](http://twitter.com/JudoPayments)
+# Judo-Android
 
-<p>
-  <img  align="right" src="https://github.com/JudoPay/Judo-Xamarin/blob/master/resources/judo_logo.png?raw=true" alt="Judo"/>
-</p>
-#JudoPay Android
+## Getting started
+##### 1. Add the library to your project
+If you're using Android Studio and Gradle, you can just add the android-sdk as a dependency in your app's build.gradle file:
+```groovy
+compile 'com.judopay:android-sdk:5.0'
+```
+##### 2. Initialise the SDK
+From your app's main Activity class, or Application class, initialise the JudoPay SDK with your API token and secret:
+```java
+JudoPay.setup(this, "MY_API_TOKEN", "MY_API_SECRET", JudoPay.Environment.SANDBOX);
+```
+##### 3. Perform a payment
+To show the payment screen, create an Intent for the PaymentActivity class, and provide the required Intent extras:
+```java
+Intent intent = new Intent(activity, PaymentActivity.class);
+intent.putExtra(JudoPay.JUDO_ID, judoId);
+intent.putExtra(JudoPay.JUDO_AMOUNT, amount);
+intent.putExtra(JudoPay.JUDO_CURRENCY, currency);
+intent.putExtra(JudoPay.JUDO_CONSUMER, consumer);
+intent.putExtra(JudoPay.JUDO_PAYMENT_REF, paymentRef);
+startActivityForResult(intent, requestCode);
+```
+##### 4. Check the payment result
+In the Activity that calls the JudoPay SDK, override the ```Activity.onActivityResult``` method to receive the Receipt from the payment:
+```java
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if(requestCode == PAYMENT_REQUEST) {
+        switch (resultCode) {
+            case JudoPay.RESULT_PAYMENT_SUCCESS:
+                Receipt receipt = data.getParcelableExtra(JudoPay.JUDO_RECEIPT);
+                // handle successful payment
+      }
+    }
+}
+```
 
-Secure in-app payments native SDK for Android.
 
-The judoPay library lets you integrate card payments into your Android app. It's built to be mobile first with ease of integration in mind. Judo's SDK enables a faster, simpler and more secure payment experience within your app. Build trust and user loyalty in your app with our secure and intuitive UX.
+## ProGuard
+If you are using ProGuard for shrinking and optimising your app code, you will need to add this to your ProGuard configuration:
+```
+-keep class com.judopay.** { *; }
+```
+## Latest changes
 
-|Feature|Support|
-|---|---|
-|Android version support|Jelly Bean 4.1+ (2012)|
-|Out of the box UI|Yes|
-|UI Components|Yes|
-|Android Pay|No|
-|3DSecure|Coming in new SDK|
-|Fraud signals|Coming in new SDK|
-|Card scanning|Supported with library|
-|One line install (Maven)|Coming in new SDK|
-|Example apps|Yes|
-|Documentation|On website|
-|File size|178 KB (80% smaller)|
-
-
-View the [changelog](https://github.com/JudoPay/Judo-Android/blob/master/CHANGELOG.md)
+## Contributing
 
 ## License
-
-See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
+See the [LICENSE](https://github.com/JudoPay/Judo-Android/blob/master/LICENSE) file for license rights and limitations (MIT).

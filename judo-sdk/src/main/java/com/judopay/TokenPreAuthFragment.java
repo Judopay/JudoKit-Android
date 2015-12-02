@@ -42,4 +42,8 @@ public class TokenPreAuthFragment extends BasePaymentFragment {
         presenter.performTokenPreAuth(card, cardToken, consumer, judoId, amount, currency, paymentRef, metaData, JudoPay.isThreeDSecureEnabled());
     }
 
+    public boolean isPaymentInProgress() {
+        return this.presenter.loading;
+    }
+
 }
