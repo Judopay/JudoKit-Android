@@ -42,4 +42,7 @@ public class RegisterCardFragment extends BasePaymentFragment implements Payment
         presenter.performRegisterCard(judoId, card, consumer, JudoPay.isThreeDSecureEnabled());
     }
 
+    public boolean isPaymentInProgress() {
+        return this.presenter.loading;
+    }
 }

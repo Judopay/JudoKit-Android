@@ -39,4 +39,8 @@ public final class PaymentFragment extends BasePaymentFragment {
 
         presenter.performPayment(card, consumer, judoId, amount, currency, paymentRef, metaData, JudoPay.isThreeDSecureEnabled());
     }
+
+    public boolean isPaymentInProgress() {
+        return this.presenter.loading;
+    }
 }
