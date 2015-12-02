@@ -3,17 +3,17 @@
 ## Getting started
 ##### 1. Add the library to your project
 If you're using Android Studio and Gradle, you can just add the android-sdk as a dependency in your app's build.gradle file:
-```
+```groovy
 compile 'com.judopay:android-sdk:5.0'
 ```
 ##### 2. Initialise the SDK
 From your app's main Activity class, or Application class, initialise the JudoPay SDK with your API token and secret:
-```
+```java
 JudoPay.setup(this, "MY_API_TOKEN", "MY_API_SECRET", JudoPay.Environment.SANDBOX);
 ```
 ##### 3. Perform a payment
 To show the payment screen, create an Intent for the PaymentActivity class, and provide the required Intent extras:
-```
+```java
 Intent intent = new Intent(activity, PaymentActivity.class);
 intent.putExtra(JudoPay.JUDO_ID, judoId);
 intent.putExtra(JudoPay.JUDO_AMOUNT, amount);
@@ -24,7 +24,7 @@ startActivityForResult(intent, requestCode);
 ```
 ##### 4. Check the payment result
 In the Activity that calls the JudoPay SDK, override the ```Activity.onActivityResult``` method to receive the Receipt from the payment:
-```
+```java
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
