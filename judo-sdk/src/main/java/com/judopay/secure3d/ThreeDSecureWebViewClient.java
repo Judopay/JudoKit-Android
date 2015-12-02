@@ -8,16 +8,14 @@ import static android.view.View.INVISIBLE;
 
 class ThreeDSecureWebViewClient extends WebViewClient {
 
-    private final String acsUrl;
-    private final String postbackUrl;
+    private final String redirectUrl;
     private final String javaScriptNamespace;
     private final ThreeDSecureListener threeDSecureListener;
 
     private ThreeDSecureResultPageListener resultPageListener;
 
-    public ThreeDSecureWebViewClient(String acsUrl, String postbackUrl, String javaScriptNamespace, ThreeDSecureListener threeDSecureListener) {
-        this.acsUrl = acsUrl;
-        this.postbackUrl = postbackUrl;
+    public ThreeDSecureWebViewClient(String redirectUrl, String javaScriptNamespace, ThreeDSecureListener threeDSecureListener) {
+        this.redirectUrl = redirectUrl;
         this.javaScriptNamespace = javaScriptNamespace;
         this.threeDSecureListener = threeDSecureListener;
     }
@@ -26,10 +24,10 @@ class ThreeDSecureWebViewClient extends WebViewClient {
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
 
-        if (url.equals(acsUrl)) {
+        if (url.equals(redirectUrl)) {
+            view.loadUrl(String.format("javascript:window.%s.parseJsonFromHtml(document.documentElement.innerHTML);", javaScriptNamespace));
+        } else {
             threeDSecureListener.onAuthorizationWebPageLoaded();
-        } else if (url.equals(postbackUrl)) {
-            view.loadUrl(String.format("javascript:window.%s.parseJsonFromHtml(document.getElementsByTagName('html')[0].innerHTML);", javaScriptNamespace));
         }
     }
 
@@ -37,7 +35,7 @@ class ThreeDSecureWebViewClient extends WebViewClient {
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
 
-        if (url.equals(postbackUrl)) {
+        if (url.equals(redirectUrl)) {
             if (resultPageListener != null) {
                 resultPageListener.onPageStarted();
             }
@@ -53,7 +51,7 @@ class ThreeDSecureWebViewClient extends WebViewClient {
     public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
         super.onReceivedError(view, errorCode, description, failingUrl);
 
-        if (!failingUrl.startsWith(postbackUrl)) {
+        if (!failingUrl.startsWith(redirectUrl)) {
             threeDSecureListener.onAuthorizationWebPageLoadingError(errorCode, description, failingUrl);
         }
     }
