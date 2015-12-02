@@ -40,7 +40,6 @@ public class ThreeDSecureDialogFragment extends DialogFragment implements ThreeD
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         ViewGroup webViewContainer = (ViewGroup) view.findViewById(R.id.web_view_container);
         loadingView = view.findViewById(R.id.loading_overlay_3dsecure);
 
@@ -87,7 +86,9 @@ public class ThreeDSecureDialogFragment extends DialogFragment implements ThreeD
 
     @Override
     public void onPageStarted() {
-        loadingView.setVisibility(View.VISIBLE);
+        if (loadingView != null) {
+            loadingView.setVisibility(View.VISIBLE);
+        }
     }
 
 }
