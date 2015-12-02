@@ -41,11 +41,11 @@ public class StartDateAndIssueNumberValidation {
     }
 
     private boolean isStartDateValid(String startDate) {
+        DateTime midnightToday = new DateTime().withTimeAtStartOfDay();
+
         if (!startDate.matches("(?:0[1-9]|1[0-2])/[0-9]{2}")) {
             return false;
         }
-
-        DateTime midnightToday = new DateTime().withTimeAtStartOfDay();
 
         int year = 2000 + Integer.parseInt(startDate.substring(3, 5));
         int month = Integer.parseInt(startDate.substring(0, 2));

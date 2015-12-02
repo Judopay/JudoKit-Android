@@ -10,13 +10,13 @@ import com.judopay.model.TokenTransaction;
 
 import static com.judopay.BundleUtil.toMap;
 
-class TokenPaymentPresenter extends BasePaymentPresenter {
+class TokenPreAuthPresenter extends BasePaymentPresenter {
 
-    public TokenPaymentPresenter(PaymentFormView view, JudoApiService judoApiService, Scheduler scheduler) {
+    public TokenPreAuthPresenter(PaymentFormView view, JudoApiService judoApiService, Scheduler scheduler) {
         super(view, judoApiService, scheduler);
     }
 
-    public void performTokenPayment(Card card, CardToken cardToken, Consumer consumer, String judoId, String amount, String currency, String paymentRef, Bundle metaData, boolean threeDSecureEnabled) {
+    public void performTokenPreAuth(Card card, CardToken cardToken, Consumer consumer, String judoId, String amount, String currency, String paymentRef, Bundle metaData, boolean threeDSecureEnabled) {
         this.loading = true;
         paymentFormView.showLoading();
 
@@ -36,7 +36,7 @@ class TokenPaymentPresenter extends BasePaymentPresenter {
                 .setType(cardToken.getType())
                 .build();
 
-        apiService.tokenPayment(tokenTransaction)
+        apiService.tokenPreAuth(tokenTransaction)
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread())
                 .subscribe(callback(threeDSecureEnabled), error());
