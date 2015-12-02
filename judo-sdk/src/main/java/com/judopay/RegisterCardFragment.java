@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.judopay.arch.api.ApiServiceFactory;
+import com.judopay.arch.api.JudoApiServiceFactory;
 import com.judopay.model.Card;
 import com.judopay.model.Consumer;
 import com.judopay.payment.form.PaymentFormListener;
@@ -19,7 +19,7 @@ public class RegisterCardFragment extends BasePaymentFragment implements Payment
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
-            this.presenter = new RegisterCardPresenter(this, ApiServiceFactory.getApiService(getActivity()), new AndroidScheduler());
+            this.presenter = new RegisterCardPresenter(this, JudoApiServiceFactory.getInstance(getActivity()), new AndroidScheduler());
         }
     }
 

@@ -27,8 +27,9 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  */
 public class JudoApiServiceFactory {
 
-    public static final String PARTNER_API_SANDBOX_HOST = "partnerapi.judopay-sandbox.com";
-    public static final String PARTNER_API_LIVE_HOST = "partnerapi.judopay.com";
+    private static final String PARTNER_API_SANDBOX_HOST = "partnerapi.judopay-sandbox.com";
+    private static final String PARTNER_API_LIVE_HOST = "partnerapi.judopay.com";
+
     private static Retrofit retrofit;
 
     /**
@@ -36,11 +37,11 @@ public class JudoApiServiceFactory {
      * @return the Retrofit API service implementation containing the methods used
      * for interacting with the judoPay REST API.
      */
-    public static JudoApiService getApiService(Context context) {
-        return getInstance(context).create(JudoApiService.class);
+    public static JudoApiService getInstance(Context context) {
+        return createOrGetInstance(context).create(JudoApiService.class);
     }
 
-    private static Retrofit getInstance(Context context) {
+    private static Retrofit createOrGetInstance(Context context) {
         if (retrofit == null) {
             retrofit = createRetrofit(context.getApplicationContext());
         }
@@ -62,14 +63,17 @@ public class JudoApiServiceFactory {
         setTimeouts(client);
         setSslSocketFactory(client);
         setSslPinning(client);
+        setInterceptors(client);
 
+        return client;
+    }
+
+    private static void setInterceptors(OkHttpClient client) {
         AuthorizationEncoder authorizationEncoder = new AuthorizationEncoder();
         ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(authorizationEncoder);
 
         client.interceptors()
                 .add(interceptor);
-
-        return client;
     }
 
     private static GsonConverterFactory getGsonConverterFactory(Context context) {
