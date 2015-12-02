@@ -10,12 +10,13 @@ class RegisterCardPresenter extends BasePaymentPresenter {
         super(paymentFormView, apiService, scheduler);
     }
 
-    protected void performRegisterCard(Card card, Consumer consumer, boolean threeDSecureEnabled) {
+    protected void performRegisterCard(String judoId, Card card, Consumer consumer, boolean threeDSecureEnabled) {
         this.loading = true;
 
         paymentFormView.showLoading();
 
         RegisterTransaction.Builder builder = new RegisterTransaction.Builder()
+                .setJudoId(Long.valueOf(judoId))
                 .setCardAddress(card.getCardAddress())
                 .setCardNumber(card.getCardNumber())
                 .setCv2(card.getCv2())

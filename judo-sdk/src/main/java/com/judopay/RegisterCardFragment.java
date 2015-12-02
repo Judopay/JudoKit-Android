@@ -37,6 +37,9 @@ public class RegisterCardFragment extends BasePaymentFragment implements Payment
     @Override
     public void onSubmit(Card card) {
         Consumer consumer = getArguments().getParcelable(JudoPay.JUDO_CONSUMER);
-        presenter.performRegisterCard(card, consumer, JudoPay.isThreeDSecureEnabled());
+        String judoId = getArguments().getString(JudoPay.JUDO_ID);
+
+        presenter.performRegisterCard(judoId, card, consumer, JudoPay.isThreeDSecureEnabled());
     }
+
 }
