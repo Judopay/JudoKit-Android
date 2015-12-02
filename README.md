@@ -12,6 +12,8 @@ If you're using Android Studio and Gradle, you can just add the android-sdk as a
 ```groovy
 compile 'com.judopay:android-sdk:5.0'
 ```
+
+
 ##### 2. Initialise the SDK
 From your app's main Activity class, or Application class, initialise the JudoPay SDK with your API token and secret:
 ```java
