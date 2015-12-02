@@ -25,17 +25,17 @@ startActivityForResult(intent, requestCode);
 ##### 4. Check the payment result
 In the Activity that calls the JudoPay SDK, override the ```Activity.onActivityResult``` method to receive the Receipt from the payment:
 ```java
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PAYMENT_REQUEST) {
-            switch (resultCode) {
-                case JudoPay.RESULT_PAYMENT_SUCCESS:
-                    Receipt receipt = data.getParcelableExtra(JudoPay.JUDO_RECEIPT);
-                    // handle successful payment
-            }
-        }
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if(requestCode == PAYMENT_REQUEST) {
+        switch (resultCode) {
+            case JudoPay.RESULT_PAYMENT_SUCCESS:
+                Receipt receipt = data.getParcelableExtra(JudoPay.JUDO_RECEIPT);
+                // handle successful payment
+      }
     }
+}
 ```
 
 
