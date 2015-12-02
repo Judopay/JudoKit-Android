@@ -20,6 +20,8 @@ public class PaymentTransaction extends Request {
     private String issueNumber;
     private Boolean saveCardOnly;
     private Map<String, String> yourPaymentMetaData;
+    
+    private PaymentTransaction() { }
 
     public String getAmount() {
         return amount;
@@ -78,97 +80,122 @@ public class PaymentTransaction extends Request {
     }
 
     public static class Builder {
-
-        private PaymentTransaction paymentTransaction;
-
-        public Builder() {
-            this.paymentTransaction = new PaymentTransaction();
-        }
-
+        
+        private String amount;
+        private Location consumerLocation;
+        private String currency;
+        private long judoId;
+        private String yourConsumerReference;
+        private String yourPaymentReference;
+        private Address cardAddress;
+        private String cardNumber;
+        private String cv2;
+        private String expiryDate;
+        private String startDate;
+        private String issueNumber;
+        private Boolean saveCardOnly;
+        private Map<String, String> yourPaymentMetaData;
+        
         public Builder setAmount(String amount) {
-            paymentTransaction.amount = amount;
+            this.amount = amount;
             return this;
         }
 
         public Builder setConsumerLocation(Location consumerLocation) {
-            paymentTransaction.consumerLocation = consumerLocation;
+            this.consumerLocation = consumerLocation;
             return this;
         }
 
         public Builder setCurrency(String currency) {
-            paymentTransaction.currency = currency;
+            this.currency = currency;
             return this;
         }
 
         public Builder setJudoId(long judoId) {
-            paymentTransaction.judoId = judoId;
+            this.judoId = judoId;
             return this;
         }
 
         public Builder setYourConsumerReference(String yourConsumerReference) {
-            paymentTransaction.yourConsumerReference = yourConsumerReference;
+            this.yourConsumerReference = yourConsumerReference;
             return this;
         }
 
         public Builder setYourPaymentReference(String yourPaymentReference) {
-            paymentTransaction.yourPaymentReference = yourPaymentReference;
+            this.yourPaymentReference = yourPaymentReference;
             return this;
         }
 
         public Builder setCardAddress(Address cardAddress) {
-            paymentTransaction.cardAddress = cardAddress;
+            this.cardAddress = cardAddress;
             return this;
         }
 
         public Builder setCardNumber(String cardNumber) {
-            paymentTransaction.cardNumber = cardNumber;
+            this.cardNumber = cardNumber;
             return this;
         }
 
         public Builder setCv2(String cv2) {
-            paymentTransaction.cv2 = cv2;
+            this.cv2 = cv2;
             return this;
         }
 
         public Builder setExpiryDate(String expiryDate) {
-            paymentTransaction.expiryDate = expiryDate;
+            this.expiryDate = expiryDate;
             return this;
         }
 
         public Builder setStartDate(String startDate) {
-            paymentTransaction.startDate = startDate;
+            this.startDate = startDate;
             return this;
         }
 
         public Builder setIssueNumber(String issueNumber) {
-            paymentTransaction.issueNumber = issueNumber;
+            this.issueNumber = issueNumber;
             return this;
         }
 
         public Builder setSaveCardOnly(Boolean saveCardOnly) {
-            paymentTransaction.saveCardOnly = saveCardOnly;
+            this.saveCardOnly = saveCardOnly;
             return this;
         }
 
         public Builder setMetaData(Map<String, String> metaData) {
-            paymentTransaction.yourPaymentMetaData = metaData;
+            this.yourPaymentMetaData = metaData;
             return this;
         }
 
         public PaymentTransaction build() {
-            if (paymentTransaction.currency == null || paymentTransaction.currency.length() == 0) {
+            if (this.currency == null || this.currency.length() == 0) {
                 throw new IllegalArgumentException("currency must be set");
             }
 
-            if (paymentTransaction.judoId == 0) {
+            if (this.judoId == 0) {
                 throw new IllegalArgumentException("judoId must be set");
             }
 
-            if (paymentTransaction.amount == null || paymentTransaction.amount.length() == 0) {
+            if (this.amount == null || this.amount.length() == 0) {
                 throw new IllegalArgumentException("amount must be set");
             }
 
-            return paymentTransaction;
+            PaymentTransaction transaction = new PaymentTransaction();
+            transaction.amount = amount;
+            transaction.consumerLocation = consumerLocation;
+            transaction.currency = currency;
+            transaction.judoId = judoId;
+            transaction.yourConsumerReference = yourConsumerReference;
+            transaction.yourPaymentReference = yourPaymentReference;
+            transaction.cardAddress = cardAddress;
+            transaction.cardNumber = cardNumber;
+            transaction.cv2 = cv2;
+            transaction.expiryDate = expiryDate;
+            transaction.startDate = startDate;
+            transaction.issueNumber = issueNumber;
+            transaction.saveCardOnly = saveCardOnly;
+            transaction.yourPaymentMetaData = yourPaymentMetaData;
+
+            return transaction;
         }
 
     }
