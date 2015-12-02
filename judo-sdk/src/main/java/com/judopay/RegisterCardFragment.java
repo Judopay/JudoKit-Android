@@ -7,8 +7,11 @@ import android.view.ViewGroup;
 
 import com.judopay.arch.api.ApiServiceFactory;
 import com.judopay.model.Card;
+import com.judopay.model.CardToken;
 import com.judopay.model.Consumer;
+import com.judopay.payment.form.PaymentFormFragment;
 import com.judopay.payment.form.PaymentFormListener;
+import com.judopay.payment.form.PaymentFormOptions;
 
 public class RegisterCardFragment extends BasePaymentFragment implements PaymentFormView, PaymentFormListener {
 
@@ -26,6 +29,19 @@ public class RegisterCardFragment extends BasePaymentFragment implements Payment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_register_card, container, false);
+    }
+
+    @Override
+    protected PaymentFormFragment createPaymentFormFragment() {
+        CardToken cardToken = getArguments().getParcelable(JudoPay.JUDO_CARD_TOKEN);
+        String buttonLabel = getString(R.string.add_card);
+
+        PaymentFormOptions paymentFormOptions = new PaymentFormOptions.Builder()
+                .setCardToken(cardToken)
+                .setButtonLabel(buttonLabel)
+                .build();
+
+        return PaymentFormFragment.newInstance(paymentFormOptions, this);
     }
 
     @Override

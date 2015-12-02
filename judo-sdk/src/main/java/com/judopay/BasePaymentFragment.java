@@ -14,8 +14,9 @@ import android.widget.TextView;
 
 import com.judopay.model.CardToken;
 import com.judopay.model.Receipt;
-import com.judopay.payment.form.PaymentFormListener;
 import com.judopay.payment.form.PaymentFormFragment;
+import com.judopay.payment.form.PaymentFormListener;
+import com.judopay.payment.form.PaymentFormOptions;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
 import com.judopay.secure3d.ThreeDSecureWebView;
@@ -59,27 +60,29 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        FragmentManager fm = getFragmentManager();
-
-        PaymentFormFragment paymentFormFragment = (PaymentFormFragment) fm.findFragmentByTag(TAG_PAYMENT_FORM);
+        PaymentFormFragment paymentFormFragment = (PaymentFormFragment) getFragmentManager().findFragmentByTag(TAG_PAYMENT_FORM);
 
         if (paymentFormFragment == null) {
-            CardToken cardToken = getArguments().getParcelable(JudoPay.JUDO_CARD_TOKEN);
-
-            if (cardToken != null) {
-                paymentFormFragment = PaymentFormFragment.newInstance(cardToken, this);
-            } else {
-                paymentFormFragment = PaymentFormFragment.newInstance(this);
-            }
-
+            paymentFormFragment = createPaymentFormFragment();
             paymentFormFragment.setTargetFragment(this, 0);
 
-            fm.beginTransaction()
+            getFragmentManager()
+                    .beginTransaction()
                     .add(R.id.container, paymentFormFragment, TAG_PAYMENT_FORM)
                     .commit();
         } else {
             paymentFormFragment.setPaymentFormListener(this);
         }
+    }
+
+    protected PaymentFormFragment createPaymentFormFragment() {
+        CardToken cardToken = getArguments().getParcelable(JudoPay.JUDO_CARD_TOKEN);
+
+        PaymentFormOptions paymentFormOptions = new PaymentFormOptions.Builder()
+                .setCardToken(cardToken)
+                .build();
+
+        return PaymentFormFragment.newInstance(paymentFormOptions, this);
     }
 
     @Override
