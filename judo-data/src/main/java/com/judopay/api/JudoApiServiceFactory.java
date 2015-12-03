@@ -1,7 +1,9 @@
-package com.judopay.arch.api;
+package com.judopay.api;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.judopay.JudoApiService;
 import com.judopay.JudoPay;
@@ -29,6 +31,9 @@ public class JudoApiServiceFactory {
 
     private static final String PARTNER_API_SANDBOX_HOST = "partnerapi.judopay-sandbox.com";
     private static final String PARTNER_API_LIVE_HOST = "partnerapi.judopay.com";
+
+    private static final String CERTIFICATE_1 = "sha1/SSAG1hz7m8LI/eapL/SSpd5o564=";
+    private static final String CERTIFICATE_2 = "sha1/o5OZxATDsgmwgcIfIWIneMJ0jkw=";
 
     private static Retrofit retrofit;
 
@@ -77,21 +82,29 @@ public class JudoApiServiceFactory {
     }
 
     private static GsonConverterFactory getGsonConverterFactory(Context context) {
-        return GsonConverterFactory.create(new GsonBuilder()
-                .registerTypeAdapter(Date.class, new DateJsonDeserializer())
-                .registerTypeAdapter(Float.class, new FormattedFloatDeserializer())
+        return GsonConverterFactory.create(getGson(context));
+    }
+
+    private static Gson getGson(Context context) {
+        return getGsonBuilder()
                 .registerTypeAdapter(ClientDetails.class, new ClientDetailsSerializer(context))
-                .create()
-        );
+                .create();
+    }
+
+    @NonNull
+    protected static GsonBuilder getGsonBuilder() {
+        return new GsonBuilder()
+                .registerTypeAdapter(Date.class, new DateJsonDeserializer())
+                .registerTypeAdapter(Float.class, new FormattedFloatDeserializer());
     }
 
     private static void setSslPinning(OkHttpClient client) {
         if (JudoPay.isSslPinningEnabled()) {
             client.setCertificatePinner(new CertificatePinner.Builder()
-                    .add(PARTNER_API_SANDBOX_HOST, "sha1/SSAG1hz7m8LI/eapL/SSpd5o564=")
-                    .add(PARTNER_API_SANDBOX_HOST, "sha1/o5OZxATDsgmwgcIfIWIneMJ0jkw=")
-                    .add(PARTNER_API_LIVE_HOST, "sha1/SSAG1hz7m8LI/eapL/SSpd5o564=")
-                    .add(PARTNER_API_LIVE_HOST, "sha1/o5OZxATDsgmwgcIfIWIneMJ0jkw=")
+                    .add(PARTNER_API_SANDBOX_HOST, CERTIFICATE_1)
+                    .add(PARTNER_API_SANDBOX_HOST, CERTIFICATE_2)
+                    .add(PARTNER_API_LIVE_HOST, CERTIFICATE_1)
+                    .add(PARTNER_API_LIVE_HOST, CERTIFICATE_2)
                     .build());
         }
     }

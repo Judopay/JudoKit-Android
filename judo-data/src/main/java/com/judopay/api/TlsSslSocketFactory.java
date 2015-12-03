@@ -1,4 +1,4 @@
-package com.judopay.arch.api;
+package com.judopay.api;
 
 import java.io.IOException;
 import java.net.InetAddress;
