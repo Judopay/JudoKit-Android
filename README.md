@@ -1,10 +1,11 @@
 # judoNative SDK for Android
 
-<p><img align="right" src="samples/payment_screen.png" width="287" height="510"></p>
+<p><img align="right" src="samples/payment_screen.png" width="277" height="500"></p>
+<br>
 
-Secure in-app payments native SDK for Android.
+The judoNative Android library lets you integrate secure in-app card payments into your Android app. Judo's SDK enables a faster, simpler and more secure payment experience within your app. 
 
-The judoNative Android library lets you integrate card payments into your Android app. It's built to be mobile first with ease of integration in mind. Judo's SDK enables a faster, simpler and more secure payment experience within your app. Build trust and user loyalty in your app with our secure and intuitive UX.
+You can use our out of the box UI for a fully PCI Level 1 compliant payment experience that is customisable to match your app. Alternatively, you can also use the RESTful API directly to implement your own UI.
 
 <br>
 
@@ -14,8 +15,6 @@ If you're using Android Studio and Gradle, you can just add the android-sdk as a
 ```groovy
 compile 'com.judopay:android-sdk:5.0'
 ```
-<br>
-
 ##### 2. Initialise the SDK
 From your app's main Activity class, or Application class, initialise the JudoPay SDK with your API token and secret:
 ```java
