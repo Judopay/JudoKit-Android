@@ -1,7 +1,6 @@
 # judoNative SDK for Android
 
-<p><img align="right" src="samples/payment_screen.png" width="267" height="490"></p>
-<br>
+<p><img align="right" src="samples/payment_screen.png" width="257" height="480"></p>
 
 The judoNative Android library lets you integrate secure in-app card payments into your Android app. Judo's SDK enables a faster, simpler and more secure payment experience within your app. 
 
