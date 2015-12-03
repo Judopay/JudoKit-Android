@@ -12,7 +12,7 @@ import com.judopay.shield.JudoShield;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-public class ClientDetailsSerializer implements JsonSerializer<ClientDetails> {
+class ClientDetailsSerializer implements JsonSerializer<ClientDetails> {
 
     private final Context context;
 

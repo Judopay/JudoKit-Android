@@ -3,7 +3,8 @@ package com.judopay;
 import android.os.Bundle;
 import android.view.View;
 
-import com.judopay.arch.api.JudoApiServiceFactory;
+import com.google.gson.Gson;
+import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
 import com.judopay.model.Consumer;
@@ -17,7 +18,7 @@ public final class TokenPaymentFragment extends BasePaymentFragment {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
-            this.presenter = new TokenPaymentPresenter(this, JudoApiServiceFactory.getInstance(getActivity()), new AndroidScheduler());
+            this.presenter = new TokenPaymentPresenter(this, JudoApiServiceFactory.getInstance(getActivity()), new AndroidScheduler(), new Gson());
         }
     }
 

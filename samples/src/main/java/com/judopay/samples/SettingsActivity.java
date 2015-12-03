@@ -1,7 +1,6 @@
 package com.judopay.samples;
 
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
@@ -23,19 +22,19 @@ import butterknife.ButterKnife;
 public class SettingsActivity extends AppCompatActivity {
 
     @Bind(R.id.avs_switch)
-    SwitchCompat avsSwitch;
+    private SwitchCompat avsSwitch;
 
     @Bind(R.id.maestro_switch)
-    SwitchCompat maestroSwitch;
+    private SwitchCompat maestroSwitch;
 
     @Bind(R.id.amex_switch)
-    SwitchCompat amexSwitch;
+    private SwitchCompat amexSwitch;
 
     @Bind(R.id.three_d_secure_switch)
-    SwitchCompat threeDSecureSwitch;
+    private SwitchCompat threeDSecureSwitch;
 
     @Bind(R.id.currency_spinner)
-    Spinner currencySpinner;
+    private Spinner currencySpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +130,7 @@ public class SettingsActivity extends AppCompatActivity {
         return Arrays.asList(currencies);
     }
 
-    public int getCurrencySelection() {
+    private int getCurrencySelection() {
         String currency = getSharedPreferences(MainActivity.SHARED_PREFS_NAME, MODE_PRIVATE)
                 .getString(MainActivity.CURRENCY_KEY, null);
 

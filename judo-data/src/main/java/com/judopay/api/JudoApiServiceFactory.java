@@ -38,7 +38,7 @@ public class JudoApiServiceFactory {
     private static Retrofit retrofit;
 
     /**
-     * @param context
+     * @param context the calling Context
      * @return the Retrofit API service implementation containing the methods used
      * for interacting with the judoPay REST API.
      */
@@ -92,7 +92,7 @@ public class JudoApiServiceFactory {
     }
 
     @NonNull
-    protected static GsonBuilder getGsonBuilder() {
+    static GsonBuilder getGsonBuilder() {
         return new GsonBuilder()
                 .registerTypeAdapter(Date.class, new DateJsonDeserializer())
                 .registerTypeAdapter(Float.class, new FormattedFloatDeserializer());

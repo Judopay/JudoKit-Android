@@ -2,6 +2,7 @@ package com.judopay;
 
 import android.os.Bundle;
 
+import com.google.gson.Gson;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
 import com.judopay.model.Consumer;
@@ -12,8 +13,8 @@ import static com.judopay.BundleUtil.toMap;
 
 class TokenPreAuthPresenter extends BasePaymentPresenter {
 
-    public TokenPreAuthPresenter(PaymentFormView view, JudoApiService judoApiService, Scheduler scheduler) {
-        super(view, judoApiService, scheduler);
+    public TokenPreAuthPresenter(PaymentFormView view, JudoApiService judoApiService, Scheduler scheduler, Gson gson) {
+        super(view, judoApiService, scheduler, gson);
     }
 
     public void performTokenPreAuth(Card card, CardToken cardToken, Consumer consumer, String judoId, String amount, String currency, String paymentRef, Bundle metaData, boolean threeDSecureEnabled) {

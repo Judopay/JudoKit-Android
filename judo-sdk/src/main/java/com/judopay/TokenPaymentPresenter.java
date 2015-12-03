@@ -2,18 +2,22 @@ package com.judopay;
 
 import android.os.Bundle;
 
+import com.google.gson.Gson;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
 import com.judopay.model.Consumer;
 import com.judopay.model.Location;
+import com.judopay.model.Receipt;
 import com.judopay.model.TokenTransaction;
+
+import retrofit.Call;
 
 import static com.judopay.BundleUtil.toMap;
 
 class TokenPaymentPresenter extends BasePaymentPresenter {
 
-    public TokenPaymentPresenter(PaymentFormView view, JudoApiService judoApiService, Scheduler scheduler) {
-        super(view, judoApiService, scheduler);
+    public TokenPaymentPresenter(PaymentFormView view, JudoApiService judoApiService, Scheduler scheduler, Gson gson) {
+        super(view, judoApiService, scheduler, gson);
     }
 
     public void performTokenPayment(Card card, CardToken cardToken, Consumer consumer, String judoId, String amount, String currency, String paymentRef, Bundle metaData, boolean threeDSecureEnabled) {
