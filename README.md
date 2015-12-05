@@ -44,12 +44,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
-
-## ProGuard
-If you are using ProGuard for shrinking and optimising your app code, you will need to add this to your ProGuard configuration:
-```
--keep class com.judopay.** { *; }
-```
 ## Latest changes
 
 ## Contributing
