@@ -18,7 +18,7 @@ From your app's main Activity class, or Application class, initialise the JudoPa
 JudoPay.setup(this, "MY_API_TOKEN", "MY_API_SECRET", JudoPay.Environment.SANDBOX);
 ```
 ##### 3. Perform a test payment
-To show the payment screen, create an Intent for the PaymentActivity class, and provide the required Intent extras:
+To show the payment screen, create an Intent for the PaymentActivity with the required Intent extras:
 ```java
 Intent intent = new Intent(activity, PaymentActivity.class);
 intent.putExtra(JudoPay.JUDO_ID, "35843095834");
