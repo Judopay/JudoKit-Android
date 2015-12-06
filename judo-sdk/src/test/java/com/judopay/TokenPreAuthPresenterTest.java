@@ -29,9 +29,6 @@ public class TokenPreAuthPresenterTest {
     Receipt receipt;
 
     @Mock
-    Consumer consumer;
-
-    @Mock
     CardToken cardToken;
 
     @Mock
@@ -43,6 +40,7 @@ public class TokenPreAuthPresenterTest {
     @Mock
     PaymentFormView paymentFormView;
 
+    String consumer = "consumerRef";
     Scheduler scheduler = new TestScheduler();
 
     @Test
@@ -50,7 +48,7 @@ public class TokenPreAuthPresenterTest {
         TokenPreAuthPresenter presenter = new TokenPreAuthPresenter(paymentFormView, apiService, scheduler);
         when(apiService.tokenPreAuth(any(TokenTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performTokenPreAuth(card, cardToken, consumer, "123456", "1.99", "GBP", "paymentRef", null, false);
+        presenter.performTokenPreAuth(card, cardToken, consumer, "123456", "1.99", "GBP", null, false);
 
         verify(paymentFormView).showLoading();
         verify(apiService).tokenPreAuth(any(TokenTransaction.class));

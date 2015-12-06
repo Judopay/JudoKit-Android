@@ -3,7 +3,6 @@ package com.judopay;
 import android.os.Bundle;
 
 import com.judopay.model.Card;
-import com.judopay.model.Consumer;
 import com.judopay.model.Location;
 import com.judopay.model.PaymentTransaction;
 
@@ -15,7 +14,7 @@ class PaymentPresenter extends BasePaymentPresenter {
         super(view, judoApiService, scheduler);
     }
 
-    public void performPayment(Card card, Consumer consumer, String judoId, String amount, String currency, String paymentRef, Bundle metaData, boolean threeDSecureEnabled) {
+    public void performPayment(Card card, String consumerRef, String judoId, String amount, String currency, Bundle metaData, boolean threeDSecureEnabled) {
         this.loading = true;
 
         paymentFormView.showLoading();
@@ -28,8 +27,7 @@ class PaymentPresenter extends BasePaymentPresenter {
                 .setCurrency(currency)
                 .setCv2(card.getCv2())
                 .setJudoId(Long.valueOf(judoId))
-                .setYourConsumerReference(consumer.getYourConsumerReference())
-                .setYourPaymentReference(paymentRef)
+                .setYourConsumerReference(consumerRef)
                 .setExpiryDate(card.getExpiryDate());
 
         if (metaData != null) {

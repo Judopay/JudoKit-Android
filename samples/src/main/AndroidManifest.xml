@@ -2,15 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.judopay.samples">
 
+
     <application
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/judopay"
-        android:theme="@style/Theme.Judo.Light.DarkActionBar">
+        android:label="@string/judopay">
         <activity
             android:name=".MainActivity"
             android:label="@string/judopay"
+            android:theme="@style/Theme.Judo.Light.DarkActionBar"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -30,9 +30,6 @@ public class RegisterCardPresenterTest {
     Receipt receipt;
 
     @Mock
-    Consumer consumer;
-
-    @Mock
     Address cardAddress;
 
     @Mock
@@ -42,6 +39,7 @@ public class RegisterCardPresenterTest {
     PaymentFormView paymentFormView;
 
     String judoId = "123456";
+    String consumer = "consumerRef";
     Scheduler scheduler = new TestScheduler();
 
     @Test

@@ -20,6 +20,7 @@ public class PaymentTransaction extends Request {
     private String issueNumber;
     private Boolean saveCardOnly;
     private Map<String, String> yourPaymentMetaData;
+
     private final String yourPaymentReference;
 
     private PaymentTransaction() {
@@ -124,11 +125,6 @@ public class PaymentTransaction extends Request {
             return this;
         }
 
-        public Builder setYourPaymentReference(String yourPaymentReference) {
-            this.yourPaymentReference = yourPaymentReference;
-            return this;
-        }
-
         public Builder setCardAddress(Address cardAddress) {
             this.cardAddress = cardAddress;
             return this;
@@ -183,12 +179,12 @@ public class PaymentTransaction extends Request {
             }
 
             PaymentTransaction transaction = new PaymentTransaction();
+
             transaction.amount = amount;
             transaction.consumerLocation = consumerLocation;
             transaction.currency = currency;
             transaction.judoId = judoId;
             transaction.yourConsumerReference = yourConsumerReference;
-            transaction.yourPaymentReference = yourPaymentReference;
             transaction.cardAddress = cardAddress;
             transaction.cardNumber = cardNumber;
             transaction.cv2 = cv2;

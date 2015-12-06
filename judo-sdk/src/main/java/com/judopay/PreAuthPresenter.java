@@ -16,7 +16,7 @@ class PreAuthPresenter extends BasePaymentPresenter {
         super(view, judoApiService, scheduler);
     }
 
-    public void performPreAuth(Card card, Consumer consumer, String judoId, String amount, String currency, String paymentRef, Bundle metaData, boolean threeDSecureEnabled) {
+    public void performPreAuth(Card card, String consumerRef, String judoId, String amount, String currency, Bundle metaData, boolean threeDSecureEnabled) {
         this.loading = true;
 
         paymentFormView.showLoading();
@@ -29,8 +29,7 @@ class PreAuthPresenter extends BasePaymentPresenter {
                 .setCurrency(currency)
                 .setCv2(card.getCv2())
                 .setJudoId(Long.valueOf(judoId))
-                .setYourConsumerReference(consumer.getYourConsumerReference())
-                .setYourPaymentReference(paymentRef)
+                .setYourConsumerReference(consumerRef)
                 .setExpiryDate(card.getExpiryDate());
 
         if (metaData != null) {

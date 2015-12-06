@@ -3,7 +3,6 @@ package com.judopay;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
-import com.judopay.model.Consumer;
 import com.judopay.model.Receipt;
 import com.judopay.model.ThreeDSecureInfo;
 import com.judopay.model.TokenTransaction;
@@ -30,9 +29,6 @@ public class TokenPaymentPresenterTest {
     Receipt receipt;
 
     @Mock
-    Consumer consumer;
-
-    @Mock
     CardToken cardToken;
 
     @Mock
@@ -47,6 +43,7 @@ public class TokenPaymentPresenterTest {
     @Mock
     ThreeDSecureInfo threeDSecureInfo;
 
+    String consumer = "consumerRef";
     Scheduler scheduler = new TestScheduler();
 
     @Test
@@ -54,7 +51,7 @@ public class TokenPaymentPresenterTest {
         TokenPaymentPresenter presenter = new TokenPaymentPresenter(paymentFormView, apiService, scheduler);
         when(apiService.tokenPayment(any(TokenTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performTokenPayment(card, cardToken, consumer, "123456", "1.99", "GBP", "paymentRef", null, false);
+        presenter.performTokenPayment(card, cardToken, consumer, "123456", "1.99", "GBP", null, false);
 
         verify(paymentFormView).showLoading();
         verify(apiService).tokenPayment(any(TokenTransaction.class));
