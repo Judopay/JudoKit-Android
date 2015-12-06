@@ -2,7 +2,7 @@ package com.judopay.arch.api;
 
 import java.util.Locale;
 
-public class UserAgent {
+class UserAgent {
 
     private final String sdkVersion;
     private final String androidVersion;

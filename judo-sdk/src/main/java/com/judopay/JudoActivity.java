@@ -1,14 +1,17 @@
 package com.judopay;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.judopay.model.CardToken;
+import com.judopay.model.Consumer;
 import com.judopay.security.RootDetector;
 import com.judopay.security.RootUserBlockedException;
 
@@ -21,7 +24,7 @@ import com.judopay.security.RootUserBlockedException;
  * <li>Shows the back button in the action bar, allowing the user to navigate back easily.</li>
  * </ol>
  */
-public class JudoActivity extends AppCompatActivity {
+public abstract class JudoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,4 +65,58 @@ public class JudoActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(JudoPay.RESULT_CANCELED);
+    }
+
+    protected void checkRequiredExtras(String... keys) {
+        Bundle extras = getIntent().getExtras();
+        for (String key : keys) {
+            if (!extras.containsKey(key)) {
+                throw new IllegalArgumentException(String.format("Extra '%s' is required for %s", key, this.getClass().getSimpleName()));
+            }
+        }
+    }
+
+    public static void startPaymentActivity(Activity activity, int requestCode, String judoId, String amount, String currency, Consumer consumer, String paymentRef, Bundle metaData) {
+        Intent intent = new Intent(activity, PaymentActivity.class);
+
+        intent.putExtra(JudoPay.JUDO_ID, judoId);
+        intent.putExtra(JudoPay.JUDO_AMOUNT, amount);
+        intent.putExtra(JudoPay.JUDO_CURRENCY, currency);
+        intent.putExtra(JudoPay.JUDO_CONSUMER, consumer);
+        intent.putExtra(JudoPay.JUDO_PAYMENT_REF, paymentRef);
+        intent.putExtra(JudoPay.JUDO_META_DATA, metaData);
+
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+    public static void startPreAuthActivity(Activity activity, int requestCode, String judoId, String amount, String currency, Consumer consumer, String paymentRef, Bundle metaData) {
+        Intent intent = new Intent(activity, PreAuthActivity.class);
+
+        intent.putExtra(JudoPay.JUDO_ID, judoId);
+        intent.putExtra(JudoPay.JUDO_AMOUNT, amount);
+        intent.putExtra(JudoPay.JUDO_CURRENCY, currency);
+        intent.putExtra(JudoPay.JUDO_CONSUMER, consumer);
+        intent.putExtra(JudoPay.JUDO_PAYMENT_REF, paymentRef);
+        intent.putExtra(JudoPay.JUDO_META_DATA, metaData);
+
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+    public static void startTokenPreAuthActivity(Activity activity, int requestCode, String judoId, String amount, String currency, Consumer consumer, String yourPaymentReference, CardToken cardToken, Bundle metaData) {
+        Intent intent = new Intent(activity, TokenPreAuthActivity.class);
+
+        intent.putExtra(JudoPay.JUDO_ID, judoId);
+        intent.putExtra(JudoPay.JUDO_AMOUNT, amount);
+        intent.putExtra(JudoPay.JUDO_CURRENCY, currency);
+        intent.putExtra(JudoPay.JUDO_CONSUMER, consumer);
+        intent.putExtra(JudoPay.JUDO_PAYMENT_REF, yourPaymentReference);
+        intent.putExtra(JudoPay.JUDO_CARD_TOKEN, cardToken);
+        intent.putExtra(JudoPay.JUDO_META_DATA, metaData);
+
+        activity.startActivityForResult(intent, requestCode);
+    }
 }

@@ -7,7 +7,7 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-public class FormattedFloatDeserializer implements JsonDeserializer<Float> {
+class FormattedFloatDeserializer implements JsonDeserializer<Float> {
 
     @Override
     public Float deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
