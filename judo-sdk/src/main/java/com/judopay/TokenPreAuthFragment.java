@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
-import com.judopay.model.Consumer;
 
 public class TokenPreAuthFragment extends BasePaymentFragment {
 
@@ -32,7 +31,7 @@ public class TokenPreAuthFragment extends BasePaymentFragment {
     public void onSubmit(Card card) {
         Bundle args = getArguments();
 
-        String consumerRef = args.getParcelable(JudoPay.JUDO_CONSUMER);
+        String consumerRef = args.getString(JudoPay.JUDO_CONSUMER);
         CardToken cardToken = args.getParcelable(JudoPay.JUDO_CARD_TOKEN);
         String judoId = args.getString(JudoPay.JUDO_ID);
         String amount = args.getString(JudoPay.JUDO_AMOUNT);
