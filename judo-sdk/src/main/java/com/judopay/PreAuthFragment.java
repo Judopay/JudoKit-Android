@@ -30,7 +30,7 @@ public final class PreAuthFragment extends BasePaymentFragment {
     public void onSubmit(Card card) {
         Bundle args = getArguments();
 
-        String consumerRef = args.getParcelable(JudoPay.JUDO_CONSUMER);
+        String consumerRef = args.getString(JudoPay.JUDO_CONSUMER);
         String judoId = args.getString(JudoPay.JUDO_ID);
         String amount = args.getString(JudoPay.JUDO_AMOUNT);
         String currency = args.getString(JudoPay.JUDO_CURRENCY);
