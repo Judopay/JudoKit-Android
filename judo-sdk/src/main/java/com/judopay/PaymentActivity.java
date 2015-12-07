@@ -14,8 +14,8 @@ import static com.judopay.JudoPay.JUDO_PAYMENT_REF;
  * Displays a payment form to the user, allowing for a payment to be made.
  * <br>
  * The {@link Receipt} containing the result of the payment transaction is
- * returned in the Activity result and can be either {@link JudoPay#RESULT_PAYMENT_SUCCESS},
- * {@link JudoPay#RESULT_PAYMENT_DECLINED} or {@link JudoPay#RESULT_ERROR} if an error occurred.
+ * returned in the Activity result and can be either {@link JudoPay#RESULT_SUCCESS},
+ * {@link JudoPay#RESULT_DECLINED} or {@link JudoPay#RESULT_ERROR} if an error occurred.
  * <br>
  * Mandatory extras:
  * <ol>

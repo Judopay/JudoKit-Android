@@ -1,5 +1,6 @@
 package com.judopay;
 
+import com.google.gson.Gson;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
@@ -47,11 +48,12 @@ public class TokenPaymentPresenterTest {
     @Mock
     ThreeDSecureInfo threeDSecureInfo;
 
+    Gson gson = new Gson();
     Scheduler scheduler = new TestScheduler();
 
     @Test
     public void shouldPerformTokenPayment() {
-        TokenPaymentPresenter presenter = new TokenPaymentPresenter(paymentFormView, apiService, scheduler);
+        TokenPaymentPresenter presenter = new TokenPaymentPresenter(paymentFormView, apiService, scheduler, gson);
         when(apiService.tokenPayment(any(TokenTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
         presenter.performTokenPayment(card, cardToken, consumer, "123456", "1.99", "GBP", "paymentRef", null, false);
@@ -62,7 +64,7 @@ public class TokenPaymentPresenterTest {
 
     @Test
     public void shouldShowWebViewWhenAuthWebPageLoaded() {
-        TokenPaymentPresenter presenter = new TokenPaymentPresenter(paymentFormView, apiService, scheduler);
+        TokenPaymentPresenter presenter = new TokenPaymentPresenter(paymentFormView, apiService, scheduler, gson);
 
         presenter.onAuthorizationWebPageLoaded();
 
@@ -71,7 +73,7 @@ public class TokenPaymentPresenterTest {
 
     @Test
     public void shouldFinishWhenSuccessfulReceipt() {
-        TokenPaymentPresenter presenter = new TokenPaymentPresenter(paymentFormView, apiService, scheduler);
+        TokenPaymentPresenter presenter = new TokenPaymentPresenter(paymentFormView, apiService, scheduler, gson);
         String receiptId = "123456";
 
         when(receipt.isSuccess()).thenReturn(true);
@@ -85,7 +87,7 @@ public class TokenPaymentPresenterTest {
 
     @Test
     public void shouldShowDeclinedMessageWhenDeclinedReceipt() {
-        TokenPaymentPresenter presenter = new TokenPaymentPresenter(paymentFormView, apiService, scheduler);
+        TokenPaymentPresenter presenter = new TokenPaymentPresenter(paymentFormView, apiService, scheduler, gson);
         String receiptId = "123456";
 
         when(receipt.isSuccess()).thenReturn(false);

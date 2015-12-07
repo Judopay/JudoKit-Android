@@ -1,6 +1,6 @@
 package com.judopay.samples;
 
-public class Constants {
+class Constants {
 
     public static final String SHARED_PREFS_NAME = "Judo-SampleApp";
 

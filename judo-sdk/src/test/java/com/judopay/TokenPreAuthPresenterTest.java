@@ -1,10 +1,10 @@
 package com.judopay;
 
+import com.google.gson.Gson;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
 import com.judopay.model.Consumer;
-import com.judopay.model.PaymentTransaction;
 import com.judopay.model.Receipt;
 import com.judopay.model.TokenTransaction;
 
@@ -43,11 +43,9 @@ public class TokenPreAuthPresenterTest {
     @Mock
     PaymentFormView paymentFormView;
 
-    Scheduler scheduler = new TestScheduler();
-
     @Test
     public void shouldPerformTokenPreAuth() {
-        TokenPreAuthPresenter presenter = new TokenPreAuthPresenter(paymentFormView, apiService, scheduler);
+        TokenPreAuthPresenter presenter = new TokenPreAuthPresenter(paymentFormView, apiService, new TestScheduler(), new Gson());
         when(apiService.tokenPreAuth(any(TokenTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
         presenter.performTokenPreAuth(card, cardToken, consumer, "123456", "1.99", "GBP", "paymentRef", null, false);

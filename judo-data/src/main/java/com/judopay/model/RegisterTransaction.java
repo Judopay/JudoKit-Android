@@ -1,6 +1,6 @@
 package com.judopay.model;
 
-import com.judopay.arch.api.Request;
+import com.judopay.api.Request;
 
 public class RegisterTransaction extends Request {
 

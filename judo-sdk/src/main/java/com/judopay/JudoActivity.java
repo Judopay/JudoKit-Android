@@ -71,7 +71,7 @@ public abstract class JudoActivity extends AppCompatActivity {
         setResult(JudoPay.RESULT_CANCELED);
     }
 
-    protected void checkRequiredExtras(String... keys) {
+    void checkRequiredExtras(String... keys) {
         Bundle extras = getIntent().getExtras();
         for (String key : keys) {
             if (!extras.containsKey(key)) {

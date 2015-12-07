@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:text="Currency" />
+            android:text="@string/currency" />
 
         <Spinner
             android:id="@+id/currency_spinner"

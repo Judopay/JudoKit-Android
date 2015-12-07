@@ -6,7 +6,7 @@ import android.os.Parcelable;
 public class Consumer implements Parcelable {
 
     private String consumerToken;
-    private String yourConsumerReference;
+    private final String yourConsumerReference;
 
     public Consumer(String consumerToken, String yourConsumerReference) {
         this.consumerToken = consumerToken;
