@@ -1,45 +1,54 @@
 package com.judopay.view;
 
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.widget.EditText;
 
 import com.judopay.model.CardType;
 
 public class CardNumberFormattingTextWatcher implements TextWatcher {
 
-    private static final char SPACE = ' ';
+    private final EditText editText;
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+    public CardNumberFormattingTextWatcher(EditText editText) {
+        this.editText = editText;
     }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
-    }
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) { }
 
     @Override
     public void afterTextChanged(Editable s) {
-        int cardType = CardType.matchCardNumber(s.toString());
-        if (cardType != CardType.AMEX) {
-            if (s.length() > 0 && (s.length() % 5) == 0) {
-                char c = s.charAt(s.length() - 1);
-                if (Character.isDigit(c) && TextUtils.split(s.toString(), String.valueOf(SPACE)).length <= 3) {
-                    appendSpace(s);
-                }
-            }
-        } else if (s.length() == 5 || s.length() == 12) {
-            char c = s.charAt(s.length() - 1);
-            if (Character.isDigit(c)) {
-                appendSpace(s);
+        if (s.length() > 0) {
+            int cardType = CardType.matchCardNumber(s.toString());
+            int selectionEnd = editText.getSelectionEnd();
+
+            String formattedCardNumber = getFormattedCardNumber(cardType, s.toString().replaceAll(" ", ""));
+
+            editText.removeTextChangedListener(this);
+            editText.setText(formattedCardNumber);
+            editText.addTextChangedListener(this);
+
+            if (formattedCardNumber.length() < selectionEnd) {
+                editText.setSelection(formattedCardNumber.length());
+            } else if (formattedCardNumber.length() > selectionEnd) {
+                editText.setSelection(formattedCardNumber.length());
+            } else {
+                editText.setSelection(selectionEnd);
             }
         }
     }
 
-    private void appendSpace(Editable s) {
-        s.insert(s.length() - 1, String.valueOf(SPACE));
+    private String getFormattedCardNumber(int cardType, String number) {
+        if (cardType == CardType.AMEX) {
+            return PaddedNumberFormatter.format(number, CardType.AMEX_PATTERN);
+        } else {
+            return PaddedNumberFormatter.format(number, CardType.VISA_PATTERN);
+        }
     }
 
 }
