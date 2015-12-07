@@ -1,10 +1,9 @@
 package com.judopay;
 
+import com.google.gson.Gson;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
-import com.judopay.model.Consumer;
-import com.judopay.model.PaymentTransaction;
 import com.judopay.model.Receipt;
 import com.judopay.model.TokenTransaction;
 
