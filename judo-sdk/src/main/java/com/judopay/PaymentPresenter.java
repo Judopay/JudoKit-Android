@@ -2,7 +2,9 @@ package com.judopay;
 
 import android.os.Bundle;
 
+import com.google.gson.Gson;
 import com.judopay.model.Card;
+import com.judopay.model.Consumer;
 import com.judopay.model.Location;
 import com.judopay.model.PaymentTransaction;
 
@@ -10,8 +12,8 @@ import static com.judopay.BundleUtil.toMap;
 
 class PaymentPresenter extends BasePaymentPresenter {
 
-    public PaymentPresenter(PaymentFormView view, JudoApiService judoApiService, Scheduler scheduler) {
-        super(view, judoApiService, scheduler);
+    public PaymentPresenter(PaymentFormView view, JudoApiService judoApiService, Scheduler scheduler, Gson gson) {
+        super(view, judoApiService, scheduler, gson);
     }
 
     public void performPayment(Card card, String consumerRef, String judoId, String amount, String currency, Bundle metaData, boolean threeDSecureEnabled) {

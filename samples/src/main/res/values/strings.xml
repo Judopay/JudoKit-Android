@@ -22,4 +22,7 @@
     <string name="token_pre_auth">Token pre-auth</string>
 
     <string name="add_card_to_make_token_transaction">Add card to make token transaction</string>
+    <string name="transaction_error">Transaction error</string>
+    <string name="could_not_perform_transaction_check_settings">Could not perform the transaction, please check your settings</string>
+    <string name="currency">Currency</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.judopay;
 
+import com.google.gson.Gson;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.Consumer;
@@ -35,11 +36,12 @@ public class PaymentPresenterTest {
     @Mock
     PaymentFormView paymentFormView;
 
+    Gson gson = new Gson();
     Scheduler scheduler = new TestScheduler();
 
     @Test
     public void shouldPerformPayment() {
-        PaymentPresenter presenter = new PaymentPresenter(paymentFormView, apiService, scheduler);
+        PaymentPresenter presenter = new PaymentPresenter(paymentFormView, apiService, scheduler, gson);
         when(apiService.payment(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
         presenter.performPayment(card, "consumerRef", "123456", "1.99", "GBP", null, false);

@@ -1,4 +1,4 @@
-package com.judopay.arch.api;
+package com.judopay.api;
 
 import android.os.Build;
 
@@ -21,7 +21,7 @@ class ApiHeadersInterceptor implements Interceptor {
     private static final String CACHE_CONTROL_HEADER = "Cache-Control";
 
     private static final String JSON_MIME_TYPE = "application/json";
-    private static final String API_VERSION = "4.1.0";
+    private static final String API_VERSION = "5.0.0";
     private static final String CACHE_CONTROL = "no-cache";
     private static final String SDK_VERSION_HEADER = "Sdk-Version";
     private static final String USER_AGENT_HEADER = "User-Agent";

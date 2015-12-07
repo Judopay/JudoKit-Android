@@ -17,15 +17,15 @@ From your app's main Activity class, or Application class, initialise the JudoPa
 ```java
 JudoPay.setup(this, "MY_API_TOKEN", "MY_API_SECRET", JudoPay.Environment.SANDBOX);
 ```
-##### 3. Perform a payment
-To show the payment screen, create an Intent for the PaymentActivity class, and provide the required Intent extras:
+##### 3. Perform a test payment
+To show the payment screen, create an Intent for the PaymentActivity with the required Intent extras:
 ```java
 Intent intent = new Intent(activity, PaymentActivity.class);
-intent.putExtra(JudoPay.JUDO_ID, judoId);
-intent.putExtra(JudoPay.JUDO_AMOUNT, amount);
-intent.putExtra(JudoPay.JUDO_CURRENCY, currency);
+intent.putExtra(JudoPay.JUDO_ID, "35843095834");
+intent.putExtra(JudoPay.JUDO_AMOUNT, "13.37");
+intent.putExtra(JudoPay.JUDO_CURRENCY, "GBP");
 intent.putExtra(JudoPay.JUDO_CONSUMER, consumer);
-intent.putExtra(JudoPay.JUDO_PAYMENT_REF, paymentRef);
+intent.putExtra(JudoPay.JUDO_PAYMENT_REF, "myPaymenRef");
 startActivityForResult(intent, requestCode);
 ```
 ##### 4. Check the payment result
@@ -44,12 +44,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
-
-## ProGuard
-If you are using ProGuard for shrinking and optimising your app code, you will need to add this to your ProGuard configuration:
-```
--keep class com.judopay.** { *; }
-```
 ## Latest changes
 
 ## Contributing

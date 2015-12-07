@@ -4,27 +4,27 @@ import java.util.List;
 
 public class Receipts {
 
-    private final int resultCount;
-    private final int pageSize;
-    private final int offset;
-    private List<Receipt> results;
+    private final Integer resultCount;
+    private final Integer pageSize;
+    private final Integer offset;
+    private final List<Receipt> results;
 
-    public Receipts(int resultCount, int pageSize, int offset, List<Receipt> results) {
+    public Receipts(Integer resultCount, Integer pageSize, Integer offset, List<Receipt> results) {
         this.resultCount = resultCount;
         this.pageSize = pageSize;
         this.offset = offset;
         this.results = results;
     }
 
-    public int getResultCount() {
+    public Integer getResultCount() {
         return resultCount;
     }
 
-    public int getPageSize() {
+    public Integer getPageSize() {
         return pageSize;
     }
 
-    public int getOffset() {
+    public Integer getOffset() {
         return offset;
     }
 

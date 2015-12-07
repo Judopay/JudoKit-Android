@@ -1,26 +1,35 @@
 package com.judopay;
 
+
+import com.google.gson.Gson;
 import com.judopay.model.Receipt;
 import com.judopay.model.ThreeDSecureInfo;
 import com.judopay.secure3d.ThreeDSecureListener;
 
+import java.io.IOException;
+import java.io.Reader;
+
+import retrofit.HttpException;
+import retrofit.Response;
 import rx.functions.Action1;
 
 abstract class BasePaymentPresenter implements ThreeDSecureListener {
 
-    protected final Scheduler scheduler;
-    protected final JudoApiService apiService;
-    protected final PaymentFormView paymentFormView;
+    final JudoApiService apiService;
+    final PaymentFormView paymentFormView;
+    final Scheduler scheduler;
+    private final Gson gson;
 
-    protected boolean loading;
+    boolean loading;
 
-    public BasePaymentPresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler) {
+    BasePaymentPresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler, Gson gson) {
         this.paymentFormView = paymentFormView;
         this.apiService = apiService;
         this.scheduler = scheduler;
+        this.gson = gson;
     }
 
-    protected Action1<Receipt> callback(final boolean threeDSecureEnabled) {
+    Action1<Receipt> callback(final boolean threeDSecureEnabled) {
         return new Action1<Receipt>() {
             @Override
             public void call(Receipt receipt) {
@@ -28,6 +37,7 @@ abstract class BasePaymentPresenter implements ThreeDSecureListener {
                 loading = false;
 
                 if (receipt.isSuccess()) {
+                    paymentFormView.dismiss3dSecureDialog();
                     paymentFormView.finish(receipt);
                 } else {
                     if (threeDSecureEnabled && receipt.is3dSecureRequired()) {
@@ -41,12 +51,24 @@ abstract class BasePaymentPresenter implements ThreeDSecureListener {
         };
     }
 
-    protected Action1<Throwable> error() {
+    Action1<Throwable> error() {
         return new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
+                if (throwable instanceof HttpException) {
+                    Response<?> response = ((HttpException) throwable).response();
+                    if (response.errorBody() != null) {
+                        try {
+                            Reader reader = response.errorBody().charStream();
+                            Receipt receipt = gson.fromJson(reader, Receipt.class);
+                            paymentFormView.handleError(receipt);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+                paymentFormView.dismiss3dSecureDialog();
                 paymentFormView.hideLoading();
-                paymentFormView.handleError();
             }
         };
     }
@@ -78,6 +100,7 @@ abstract class BasePaymentPresenter implements ThreeDSecureListener {
                         } else {
                             paymentFormView.showDeclinedMessage(receipt);
                         }
+                        paymentFormView.dismiss3dSecureDialog();
                         paymentFormView.hideLoading();
                     }
                 }, new Action1<Throwable>() {
@@ -87,8 +110,5 @@ abstract class BasePaymentPresenter implements ThreeDSecureListener {
                     }
                 });
     }
-
-    @Override
-    public void onAuthorizationWebPageLoadingError(int errorCode, String description, String failingUrl) { }
 
 }

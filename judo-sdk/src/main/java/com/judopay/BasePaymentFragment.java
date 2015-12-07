@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,10 +29,10 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
     private static final String TAG_PAYMENT_FORM = "PaymentFormFragment";
     private static final String TAG_3DS_DIALOG = "3dSecureDialog";
 
-    protected View progressBar;
-    protected TextView progressText;
+    private View progressBar;
+    private TextView progressText;
 
-    protected ThreeDSecureDialogFragment threeDSecureDialog;
+    private ThreeDSecureDialogFragment threeDSecureDialog;
     private ThreeDSecureWebView threeDSecureWebView;
 
     @Override
@@ -75,7 +76,7 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
         }
     }
 
-    protected PaymentFormFragment createPaymentFormFragment() {
+    PaymentFormFragment createPaymentFormFragment() {
         CardToken cardToken = getArguments().getParcelable(JudoPay.JUDO_CARD_TOKEN);
 
         PaymentFormOptions paymentFormOptions = new PaymentFormOptions.Builder()
@@ -97,18 +98,21 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
 
     @Override
     public void finish(Receipt receipt) {
-        if (threeDSecureDialog != null && threeDSecureDialog.isVisible()) {
-            threeDSecureDialog.dismiss();
-        }
-
         Intent intent = new Intent();
         intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
 
         Activity activity = getActivity();
 
         if (activity != null) {
-            activity.setResult(JudoPay.RESULT_REGISTER_CARD_SUCCESS, intent);
+            activity.setResult(JudoPay.RESULT_SUCCESS, intent);
             activity.finish();
+        }
+    }
+
+    @Override
+    public void dismiss3dSecureDialog() {
+        if (threeDSecureDialog != null && threeDSecureDialog.isVisible()) {
+            threeDSecureDialog.dismiss();
         }
     }
 
@@ -121,14 +125,14 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
         }
     }
 
-    protected void setDeclinedAndFinish(Receipt receipt) {
+    private void setDeclinedAndFinish(Receipt receipt) {
         Intent intent = new Intent();
         intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
 
         Activity activity = getActivity();
 
         if (activity != null) {
-            activity.setResult(JudoPay.RESULT_REGISTER_CARD_DECLINED, intent);
+            activity.setResult(JudoPay.RESULT_DECLINED, intent);
             activity.finish();
         }
     }
@@ -165,10 +169,16 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
     }
 
     @Override
-    public void handleError() {
+    public void handleError(@Nullable Receipt receipt) {
         Activity activity = getActivity();
         if (activity != null) {
-            activity.setResult(JudoPay.RESULT_ERROR);
+            if (receipt != null) {
+                Intent data = new Intent();
+                data.putExtra(JudoPay.JUDO_RECEIPT, receipt);
+                activity.setResult(JudoPay.RESULT_ERROR, data);
+            } else {
+                activity.setResult(JudoPay.RESULT_ERROR);
+            }
             activity.finish();
         }
     }

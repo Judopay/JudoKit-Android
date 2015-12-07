@@ -3,7 +3,8 @@ package com.judopay;
 import android.os.Bundle;
 import android.view.View;
 
-import com.judopay.arch.api.ApiServiceFactory;
+import com.google.gson.Gson;
+import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.model.Card;
 
 public final class PreAuthFragment extends BasePaymentFragment {
@@ -15,7 +16,7 @@ public final class PreAuthFragment extends BasePaymentFragment {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
-            this.presenter = new PreAuthPresenter(this, ApiServiceFactory.getApiService(getActivity()), new AndroidScheduler());
+            this.presenter = new PreAuthPresenter(this, JudoApiServiceFactory.getInstance(getActivity()), new AndroidScheduler(), new Gson());
         }
     }
 

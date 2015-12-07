@@ -1,12 +1,13 @@
 package com.judopay;
 
+import com.google.gson.Gson;
 import com.judopay.model.Card;
 import com.judopay.model.RegisterTransaction;
 
 class RegisterCardPresenter extends BasePaymentPresenter {
 
-    public RegisterCardPresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler) {
-        super(paymentFormView, apiService, scheduler);
+    public RegisterCardPresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler, Gson gson) {
+        super(paymentFormView, apiService, scheduler, gson);
     }
 
     protected void performRegisterCard(String judoId, Card card, String consumerRef, boolean threeDSecureEnabled) {
