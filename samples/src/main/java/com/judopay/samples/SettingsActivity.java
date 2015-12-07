@@ -22,19 +22,19 @@ import butterknife.ButterKnife;
 public class SettingsActivity extends AppCompatActivity {
 
     @Bind(R.id.avs_switch)
-    private SwitchCompat avsSwitch;
+    SwitchCompat avsSwitch;
 
     @Bind(R.id.maestro_switch)
-    private SwitchCompat maestroSwitch;
+    SwitchCompat maestroSwitch;
 
     @Bind(R.id.amex_switch)
-    private SwitchCompat amexSwitch;
+    SwitchCompat amexSwitch;
 
     @Bind(R.id.three_d_secure_switch)
-    private SwitchCompat threeDSecureSwitch;
+    SwitchCompat threeDSecureSwitch;
 
     @Bind(R.id.currency_spinner)
-    private Spinner currencySpinner;
+    Spinner currencySpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
