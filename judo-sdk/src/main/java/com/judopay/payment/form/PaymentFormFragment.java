@@ -232,7 +232,7 @@ public final class PaymentFormFragment extends Fragment {
             ));
 
             cardNumberEditText.addTextChangedListener(formValidator);
-            cardNumberEditText.addTextChangedListener(new CardNumberFormattingTextWatcher());
+            cardNumberEditText.addTextChangedListener(new CardNumberFormattingTextWatcher(cardNumberEditText));
             cardNumberEditText.addTextChangedListener(new HidingViewTextWatcher(cardNumberHelperText));
         } else {
             cardNumberEditText.setEnabled(false);
