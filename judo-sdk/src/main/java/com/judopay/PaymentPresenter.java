@@ -42,7 +42,6 @@ class PaymentPresenter extends BasePaymentPresenter {
                     .setStartDate(card.getStartDate());
         }
 
-        builder.setCardNumber("12345");
         apiService.payment(builder.build())
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread())

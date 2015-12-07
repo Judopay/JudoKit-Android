@@ -52,19 +52,19 @@ public class MainActivity extends AppCompatActivity {
     private static final String TOKEN_RECEIPT_KEY = "Judo-SampleApp-TokenReceipt";
 
     @Bind(R.id.payment_button)
-    private View paymentButton;
+    View paymentButton;
 
     @Bind(R.id.pre_auth_button)
-    private View preAuthButton;
+    View preAuthButton;
 
     @Bind(R.id.token_payment_button)
-    private View tokenPaymentButton;
+    View tokenPaymentButton;
 
     @Bind(R.id.token_pre_auth_button)
-    private View tokenPreAuthButton;
+    View tokenPreAuthButton;
 
     @Bind(R.id.add_card_button)
-    private View addCardButton;
+    View addCardButton;
 
     private String currency;
 
