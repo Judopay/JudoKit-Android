@@ -5,7 +5,6 @@ import android.os.Bundle;
 import com.google.gson.Gson;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
-import com.judopay.model.Consumer;
 import com.judopay.model.Location;
 import com.judopay.model.TokenTransaction;
 
@@ -17,7 +16,7 @@ class TokenPreAuthPresenter extends BasePaymentPresenter {
         super(view, judoApiService, scheduler, gson);
     }
 
-    public void performTokenPreAuth(Card card, CardToken cardToken, Consumer consumer, String judoId, String amount, String currency, String paymentRef, Bundle metaData, boolean threeDSecureEnabled) {
+    public void performTokenPreAuth(Card card, CardToken cardToken, String consumerRef, String judoId, String amount, String currency, Bundle metaData, boolean threeDSecureEnabled) {
         this.loading = true;
         paymentFormView.showLoading();
 
@@ -27,8 +26,7 @@ class TokenPreAuthPresenter extends BasePaymentPresenter {
                 .setConsumerLocation(new Location())
                 .setCurrency(currency)
                 .setJudoId(Long.valueOf(judoId))
-                .setYourConsumerReference(consumer.getYourConsumerReference())
-                .setYourPaymentReference(paymentRef)
+                .setYourConsumerReference(consumerRef)
                 .setCv2(card.getCv2())
                 .setMetaData(toMap(metaData))
                 .setEndDate(cardToken.getEndDate())

@@ -80,40 +80,37 @@ public abstract class JudoActivity extends AppCompatActivity {
         }
     }
 
-    public static void startPaymentActivity(Activity activity, int requestCode, String judoId, String amount, String currency, Consumer consumer, String paymentRef, Bundle metaData) {
+    public static void startPaymentActivity(Activity activity, int requestCode, String judoId, String amount, String currency, String consumerRef, Bundle metaData) {
         Intent intent = new Intent(activity, PaymentActivity.class);
 
         intent.putExtra(JudoPay.JUDO_ID, judoId);
         intent.putExtra(JudoPay.JUDO_AMOUNT, amount);
         intent.putExtra(JudoPay.JUDO_CURRENCY, currency);
-        intent.putExtra(JudoPay.JUDO_CONSUMER, consumer);
-        intent.putExtra(JudoPay.JUDO_PAYMENT_REF, paymentRef);
+        intent.putExtra(JudoPay.JUDO_CONSUMER, consumerRef);
         intent.putExtra(JudoPay.JUDO_META_DATA, metaData);
 
         activity.startActivityForResult(intent, requestCode);
     }
 
-    public static void startPreAuthActivity(Activity activity, int requestCode, String judoId, String amount, String currency, Consumer consumer, String paymentRef, Bundle metaData) {
+    public static void startPreAuthActivity(Activity activity, int requestCode, String judoId, String amount, String currency, String consumerRef, Bundle metaData) {
         Intent intent = new Intent(activity, PreAuthActivity.class);
 
         intent.putExtra(JudoPay.JUDO_ID, judoId);
         intent.putExtra(JudoPay.JUDO_AMOUNT, amount);
         intent.putExtra(JudoPay.JUDO_CURRENCY, currency);
-        intent.putExtra(JudoPay.JUDO_CONSUMER, consumer);
-        intent.putExtra(JudoPay.JUDO_PAYMENT_REF, paymentRef);
+        intent.putExtra(JudoPay.JUDO_CONSUMER, consumerRef);
         intent.putExtra(JudoPay.JUDO_META_DATA, metaData);
 
         activity.startActivityForResult(intent, requestCode);
     }
 
-    public static void startTokenPreAuthActivity(Activity activity, int requestCode, String judoId, String amount, String currency, Consumer consumer, String yourPaymentReference, CardToken cardToken, Bundle metaData) {
+    public static void startTokenPreAuthActivity(Activity activity, int requestCode, String judoId, String amount, String currency, String consumerRef, CardToken cardToken, Bundle metaData) {
         Intent intent = new Intent(activity, TokenPreAuthActivity.class);
 
         intent.putExtra(JudoPay.JUDO_ID, judoId);
         intent.putExtra(JudoPay.JUDO_AMOUNT, amount);
         intent.putExtra(JudoPay.JUDO_CURRENCY, currency);
-        intent.putExtra(JudoPay.JUDO_CONSUMER, consumer);
-        intent.putExtra(JudoPay.JUDO_PAYMENT_REF, yourPaymentReference);
+        intent.putExtra(JudoPay.JUDO_CONSUMER, consumerRef);
         intent.putExtra(JudoPay.JUDO_CARD_TOKEN, cardToken);
         intent.putExtra(JudoPay.JUDO_META_DATA, metaData);
 

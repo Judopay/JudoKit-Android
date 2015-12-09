@@ -2,7 +2,6 @@ package com.judopay;
 
 import com.google.gson.Gson;
 import com.judopay.model.Card;
-import com.judopay.model.Consumer;
 import com.judopay.model.RegisterTransaction;
 
 class RegisterCardPresenter extends BasePaymentPresenter {
@@ -11,7 +10,7 @@ class RegisterCardPresenter extends BasePaymentPresenter {
         super(paymentFormView, apiService, scheduler, gson);
     }
 
-    void performRegisterCard(String judoId, Card card, Consumer consumer, boolean threeDSecureEnabled) {
+    protected void performRegisterCard(String judoId, Card card, String consumerRef, boolean threeDSecureEnabled) {
         this.loading = true;
 
         paymentFormView.showLoading();
@@ -23,8 +22,8 @@ class RegisterCardPresenter extends BasePaymentPresenter {
                 .setCv2(card.getCv2())
                 .setExpiryDate(card.getExpiryDate());
 
-        if (consumer != null) {
-            builder.setYourConsumerReference(consumer.getYourConsumerReference());
+        if (consumerRef != null) {
+            builder.setYourConsumerReference(consumerRef);
         }
 
         if (card.startDateAndIssueNumberRequired()) {

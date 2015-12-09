@@ -8,7 +8,6 @@ import static com.judopay.JudoPay.JUDO_AMOUNT;
 import static com.judopay.JudoPay.JUDO_CONSUMER;
 import static com.judopay.JudoPay.JUDO_CURRENCY;
 import static com.judopay.JudoPay.JUDO_ID;
-import static com.judopay.JudoPay.JUDO_PAYMENT_REF;
 
 /**
  * Displays a payment form to the user, allowing for a payment to be made.
@@ -23,7 +22,6 @@ import static com.judopay.JudoPay.JUDO_PAYMENT_REF;
  * <li>{@link JudoPay#JUDO_AMOUNT} the total amount for the transaction</li>
  * <li>{@link JudoPay#JUDO_CURRENCY} the currency for the transaction (GBP, USD, CAD)</li>
  * <li>{@link JudoPay#JUDO_CONSUMER} identifier for the consumer of the transaction</li>
- * <li>{@link JudoPay#JUDO_PAYMENT_REF} identifier for the payment</li>
  * </ol>
  * <br>
  * Optional extras:
@@ -38,7 +36,7 @@ public final class PaymentActivity extends JudoActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        checkRequiredExtras(JUDO_AMOUNT, JUDO_ID, JUDO_CURRENCY, JUDO_PAYMENT_REF, JUDO_CONSUMER);
+        checkRequiredExtras(JUDO_AMOUNT, JUDO_ID, JUDO_CURRENCY, JUDO_CONSUMER);
 
         setTitle(R.string.payment);
 
@@ -55,7 +53,7 @@ public final class PaymentActivity extends JudoActivity {
 
     @Override
     public void onBackPressed() {
-        if(!paymentFragment.isPaymentInProgress()) {
+        if (!paymentFragment.isPaymentInProgress()) {
             super.onBackPressed();
         }
     }

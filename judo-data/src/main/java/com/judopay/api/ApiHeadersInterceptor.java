@@ -52,7 +52,7 @@ class ApiHeadersInterceptor implements Interceptor {
         headers.put(ACCEPT_HEADER, JSON_MIME_TYPE);
         headers.put(API_VERSION_HEADER, API_VERSION);
         headers.put(CACHE_CONTROL_HEADER, CACHE_CONTROL);
-        headers.put(SDK_VERSION_HEADER, BuildConfig.VERSION_NAME);
+        headers.put(SDK_VERSION_HEADER, "Android-" + BuildConfig.VERSION_NAME);
         headers.put(USER_AGENT_HEADER, userAgent.toString());
 
         return Headers.of(headers);

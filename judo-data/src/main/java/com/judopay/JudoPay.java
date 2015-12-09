@@ -15,7 +15,6 @@ public class JudoPay {
     public static final int RESULT_DECLINED = 2;
     public static final int RESULT_ERROR = 1;
 
-    public static final String JUDO_PAYMENT_REF = "JudoPay-yourPaymentReference";
     public static final String JUDO_AMOUNT = "JudoPay-amount";
     public static final String JUDO_ID = "JudoPay-judoId";
     public static final String JUDO_CURRENCY = "JudoPay-currency";

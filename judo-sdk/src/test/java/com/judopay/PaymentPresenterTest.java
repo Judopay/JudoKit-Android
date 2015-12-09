@@ -28,9 +28,6 @@ public class PaymentPresenterTest {
     Receipt receipt;
 
     @Mock
-    Consumer consumer;
-
-    @Mock
     Address cardAddress;
 
     @Mock
@@ -47,7 +44,7 @@ public class PaymentPresenterTest {
         PaymentPresenter presenter = new PaymentPresenter(paymentFormView, apiService, scheduler, gson);
         when(apiService.payment(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performPayment(card, consumer, "123456", "1.99", "GBP", "paymentRef", null, false);
+        presenter.performPayment(card, "consumerRef", "123456", "1.99", "GBP", null, false);
 
         verify(apiService).payment(any(PaymentTransaction.class));
     }

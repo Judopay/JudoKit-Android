@@ -1,10 +1,17 @@
 package com.judopay.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.judopay.UniqueIdentifier;
 import com.judopay.api.Request;
 
 import java.util.Map;
 
+/**
+ * Used for performing a token transaction request (payment or pre-auth) with the JudoPay API
+ * The included {@link Builder} is used to simplify object construction. When creating a {@link TokenTransaction}
+ * the {@link TokenTransaction#judoId}, {@link TokenTransaction#amount} and {@link TokenTransaction#currency}
+ * must be supplied.
+ */
 public class TokenTransaction extends Request {
 
     private String endDate;
@@ -23,12 +30,16 @@ public class TokenTransaction extends Request {
     private String currency;
     private Long judoId;
     private String yourConsumerReference;
-    private String yourPaymentReference;
     private Address cardAddress;
     private String cv2;
+
     private Map<String, String> yourPaymentMetaData;
 
-    private TokenTransaction() { }
+    private final String yourPaymentReference;
+
+    public TokenTransaction() {
+        this.yourPaymentReference = UniqueIdentifier.generate();
+    }
 
     public String getEndDate() {
         return endDate;
@@ -93,7 +104,6 @@ public class TokenTransaction extends Request {
         private String currency;
         private Long judoId;
         private String yourConsumerReference;
-        private String yourPaymentReference;
         private Address cardAddress;
         private String cv2;
         private Map<String, String> yourPaymentMetaData;
@@ -143,11 +153,6 @@ public class TokenTransaction extends Request {
             return this;
         }
 
-        public Builder setYourPaymentReference(String yourPaymentReference) {
-            this.yourPaymentReference = yourPaymentReference;
-            return this;
-        }
-
         public Builder setCardAddress(Address cardAddress) {
             this.cardAddress = cardAddress;
             return this;
@@ -190,7 +195,6 @@ public class TokenTransaction extends Request {
             transaction.endDate = endDate;
             transaction.yourPaymentMetaData = yourPaymentMetaData;
             transaction.yourConsumerReference = yourConsumerReference;
-            transaction.yourPaymentReference = yourPaymentReference;
 
             return transaction;
         }

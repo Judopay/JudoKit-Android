@@ -1,5 +1,6 @@
 package com.judopay.model;
 
+import com.judopay.UniqueIdentifier;
 import com.judopay.api.Request;
 
 import java.util.Map;
@@ -11,7 +12,6 @@ public class PaymentTransaction extends Request {
     private String currency;
     private long judoId;
     private String yourConsumerReference;
-    private String yourPaymentReference;
     private Address cardAddress;
     private String cardNumber;
     private String cv2;
@@ -20,8 +20,12 @@ public class PaymentTransaction extends Request {
     private String issueNumber;
     private Boolean saveCardOnly;
     private Map<String, String> yourPaymentMetaData;
-    
-    private PaymentTransaction() { }
+
+    private final String yourPaymentReference;
+
+    private PaymentTransaction() {
+        this.yourPaymentReference = UniqueIdentifier.generate();
+    }
 
     public String getAmount() {
         return amount;
@@ -80,7 +84,7 @@ public class PaymentTransaction extends Request {
     }
 
     public static class Builder {
-        
+
         private String amount;
         private Location consumerLocation;
         private String currency;
@@ -95,7 +99,7 @@ public class PaymentTransaction extends Request {
         private String issueNumber;
         private Boolean saveCardOnly;
         private Map<String, String> yourPaymentMetaData;
-        
+
         public Builder setAmount(String amount) {
             this.amount = amount;
             return this;
@@ -118,11 +122,6 @@ public class PaymentTransaction extends Request {
 
         public Builder setYourConsumerReference(String yourConsumerReference) {
             this.yourConsumerReference = yourConsumerReference;
-            return this;
-        }
-
-        public Builder setYourPaymentReference(String yourPaymentReference) {
-            this.yourPaymentReference = yourPaymentReference;
             return this;
         }
 
@@ -180,12 +179,12 @@ public class PaymentTransaction extends Request {
             }
 
             PaymentTransaction transaction = new PaymentTransaction();
+
             transaction.amount = amount;
             transaction.consumerLocation = consumerLocation;
             transaction.currency = currency;
             transaction.judoId = judoId;
             transaction.yourConsumerReference = yourConsumerReference;
-            transaction.yourPaymentReference = yourPaymentReference;
             transaction.cardAddress = cardAddress;
             transaction.cardNumber = cardNumber;
             transaction.cv2 = cv2;

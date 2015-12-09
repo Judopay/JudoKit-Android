@@ -7,7 +7,6 @@ import static com.judopay.JudoPay.JUDO_CARD_TOKEN;
 import static com.judopay.JudoPay.JUDO_CONSUMER;
 import static com.judopay.JudoPay.JUDO_CURRENCY;
 import static com.judopay.JudoPay.JUDO_ID;
-import static com.judopay.JudoPay.JUDO_PAYMENT_REF;
 
 public final class TokenPaymentActivity extends JudoActivity {
 
@@ -17,7 +16,7 @@ public final class TokenPaymentActivity extends JudoActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        checkRequiredExtras(JUDO_AMOUNT, JUDO_ID, JUDO_CURRENCY, JUDO_PAYMENT_REF, JUDO_CONSUMER, JUDO_CARD_TOKEN);
+        checkRequiredExtras(JUDO_AMOUNT, JUDO_ID, JUDO_CURRENCY, JUDO_CONSUMER, JUDO_CARD_TOKEN);
 
         setTitle(R.string.payment);
 
@@ -34,7 +33,7 @@ public final class TokenPaymentActivity extends JudoActivity {
 
     @Override
     public void onBackPressed() {
-        if(!tokenPaymentFragment.isPaymentInProgress()) {
+        if (!tokenPaymentFragment.isPaymentInProgress()) {
             super.onBackPressed();
         }
     }
