@@ -113,6 +113,7 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
     public void dismiss3dSecureDialog() {
         if (threeDSecureDialog != null && threeDSecureDialog.isVisible()) {
             threeDSecureDialog.dismiss();
+            threeDSecureDialog = null;
         }
     }
 
@@ -145,27 +146,27 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
     @Override
     public void start3dSecureWebView(Receipt receipt, ThreeDSecureListener listener) {
         threeDSecureWebView.setThreeDSecureListener(listener);
-        try {
-            threeDSecureWebView.authorize(receipt.getAcsUrl(), receipt.getMd(), receipt.getPaReq(), receipt.getReceiptId());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        threeDSecureWebView.authorize(receipt.getAcsUrl(), receipt.getMd(), receipt.getPaReq(), receipt.getReceiptId());
+
     }
 
     @Override
     public void show3dSecureWebView() {
-        FragmentManager fm = getFragmentManager();
+        if(threeDSecureDialog == null) {
+            FragmentManager fm = getFragmentManager();
 
-        threeDSecureDialog = new ThreeDSecureDialogFragment();
+            threeDSecureDialog = new ThreeDSecureDialogFragment();
 
-        Bundle arguments = new Bundle();
-        arguments.putString(ThreeDSecureDialogFragment.KEY_LOADING_TEXT, getString(R.string.verifying_card));
+            Bundle arguments = new Bundle();
+            arguments.putString(ThreeDSecureDialogFragment.KEY_LOADING_TEXT, getString(R.string.verifying_card));
 
-        threeDSecureDialog.setArguments(arguments);
-        threeDSecureDialog.setCancelable(false);
+            threeDSecureDialog.setArguments(arguments);
+            threeDSecureDialog.setCancelable(false);
 
-        threeDSecureDialog.setWebView(threeDSecureWebView);
-        threeDSecureDialog.show(fm, TAG_3DS_DIALOG);
+            threeDSecureDialog.setWebView(threeDSecureWebView);
+            threeDSecureDialog.show(fm, TAG_3DS_DIALOG);
+        }
     }
 
     @Override
