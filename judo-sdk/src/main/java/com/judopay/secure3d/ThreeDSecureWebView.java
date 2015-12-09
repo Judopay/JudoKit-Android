@@ -88,7 +88,7 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
      */
     public void authorize(final String acsUrl, final String md, final String paReq, String receiptId) {
         try {
-            String postData = String.format(Locale.ENGLISH, "MD=%s,TermUrl=%s,PaReq=%s",
+            String postData = String.format(Locale.ENGLISH, "MD=%s&TermUrl=%s&PaReq=%s",
                     encode(md, CHARSET), encode(REDIRECT_URL, CHARSET), encode(paReq, CHARSET));
 
             this.receiptId = receiptId;
