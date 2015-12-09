@@ -21,10 +21,12 @@ JudoPay.setup(this, "MY_API_TOKEN", "MY_API_SECRET", JudoPay.Environment.SANDBOX
 To show the payment screen, create an Intent for the PaymentActivity with the required Intent extras:
 ```java
 Intent intent = new Intent(activity, PaymentActivity.class);
+
 intent.putExtra(JudoPay.JUDO_ID, "35843095834");
 intent.putExtra(JudoPay.JUDO_AMOUNT, "9.99");
 intent.putExtra(JudoPay.JUDO_CURRENCY, "GBP");
 intent.putExtra(JudoPay.JUDO_CONSUMER, "consumerRef");
+
 startActivityForResult(intent, requestCode);
 ```
 ##### 4. Check the payment result
@@ -35,7 +37,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if(requestCode == PAYMENT_REQUEST) {
         switch (resultCode) {
-            case JudoPay.RESULT_PAYMENT_SUCCESS:
+            case JudoPay.RESULT_SUCCESS:
                 Receipt receipt = data.getParcelableExtra(JudoPay.JUDO_RECEIPT);
                 // handle successful payment
       }
