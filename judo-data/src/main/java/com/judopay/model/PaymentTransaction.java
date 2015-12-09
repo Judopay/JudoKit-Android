@@ -1,7 +1,7 @@
 package com.judopay.model;
 
-import com.judopay.api.Request;
 import com.judopay.UniqueIdentifier;
+import com.judopay.api.Request;
 
 import java.util.Map;
 

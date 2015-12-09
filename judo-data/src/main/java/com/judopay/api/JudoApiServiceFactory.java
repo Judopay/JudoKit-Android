@@ -8,11 +8,13 @@ import com.judopay.JudoApiService;
 import com.judopay.JudoPay;
 import com.judopay.model.ClientDetails;
 import com.squareup.okhttp.CertificatePinner;
+import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.List;
 
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
@@ -76,8 +78,9 @@ public class JudoApiServiceFactory {
         AuthorizationEncoder authorizationEncoder = new AuthorizationEncoder();
         ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(authorizationEncoder);
 
-        client.interceptors()
-                .add(interceptor);
+        List<Interceptor> interceptors = client.interceptors();
+        interceptors.add(new DeDuplicationInterceptor());
+        interceptors.add(interceptor);
     }
 
     private static GsonConverterFactory getGsonConverterFactory(Context context) {

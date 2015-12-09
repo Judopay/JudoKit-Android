@@ -1,11 +1,17 @@
 package com.judopay.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.judopay.UniqueIdentifier;
 import com.judopay.api.Request;
 
-import com.judopay.UniqueIdentifier;
 import java.util.Map;
 
+/**
+ * Used for performing a token transaction request (payment or pre-auth) with the JudoPay API
+ * The included {@link Builder} is used to simplify object construction. When creating a {@link TokenTransaction}
+ * the {@link TokenTransaction#judoId}, {@link TokenTransaction#amount} and {@link TokenTransaction#currency}
+ * must be supplied.
+ */
 public class TokenTransaction extends Request {
 
     private String endDate;
