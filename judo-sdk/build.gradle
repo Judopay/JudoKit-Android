@@ -27,9 +27,7 @@ android {
 
         consumerProguardFiles 'proguard-rules.pro'
     }
-
-    useLibrary 'org.apache.http.legacy'
-
+    
     buildTypes {
         release {
             minifyEnabled false

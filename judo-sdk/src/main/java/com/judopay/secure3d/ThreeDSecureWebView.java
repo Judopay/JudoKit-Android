@@ -11,19 +11,13 @@ import com.google.gson.Gson;
 import com.judopay.BuildConfig;
 import com.judopay.model.ThreeDSecureInfo;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.UnsupportedEncodingException;
+import java.util.Locale;
 
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.KITKAT;
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
+import static java.net.URLEncoder.encode;
 
 /**
  * A view that displays a 3D-Secure web page for performing additional security checks when validating
@@ -34,6 +28,7 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
 
     private static final String JS_NAMESPACE = "JudoPay";
     private static final String REDIRECT_URL = "https://pay.judopay.com/Android/Parse3DS";
+    private static final String CHARSET = "UTF-8";
 
     private ThreeDSecureListener threeDSecureListener;
     private String receiptId;
@@ -86,29 +81,25 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
     }
 
     /**
-     *
-     * @param acsUrl URL to request in the WebView for displaying the 3D-Secure page to the user
-     * @param md parameter submitted to the acsUrl
-     * @param paReq parameter submitted to the acsUrl
+     * @param acsUrl    URL to request in the WebView for displaying the 3D-Secure page to the user
+     * @param md        parameter submitted to the acsUrl
+     * @param paReq     parameter submitted to the acsUrl
      * @param receiptId the receipt ID of the transaction
-     * @throws IOException
      */
-    public void authorize(final String acsUrl, final String md, final String paReq, String receiptId) throws IOException {
-        List<NameValuePair> params = new LinkedList<>();
+    public void authorize(final String acsUrl, final String md, final String paReq, String receiptId) {
+        try {
+            String postData = String.format(Locale.ENGLISH, "MD=%s,TermUrl=%s,PaReq=%s",
+                    encode(md, CHARSET), encode(REDIRECT_URL, CHARSET), encode(paReq, CHARSET));
 
-        params.add(new BasicNameValuePair("MD", md));
-        params.add(new BasicNameValuePair("TermUrl", REDIRECT_URL));
-        params.add(new BasicNameValuePair("PaReq", paReq));
+            this.receiptId = receiptId;
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        new UrlEncodedFormEntity(params, HTTP.UTF_8).writeTo(bos);
+            this.webViewClient = new ThreeDSecureWebViewClient(REDIRECT_URL, JS_NAMESPACE, threeDSecureListener);
+            setWebViewClient(webViewClient);
 
-        this.receiptId = receiptId;
-
-        this.webViewClient = new ThreeDSecureWebViewClient(REDIRECT_URL, JS_NAMESPACE, threeDSecureListener);
-        setWebViewClient(webViewClient);
-
-        postUrl(acsUrl, bos.toByteArray());
+            postUrl(acsUrl, postData.getBytes());
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

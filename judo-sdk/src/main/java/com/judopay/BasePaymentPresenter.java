@@ -103,13 +103,7 @@ abstract class BasePaymentPresenter implements ThreeDSecureListener {
                         paymentFormView.dismiss3dSecureDialog();
                         paymentFormView.hideLoading();
                     }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        paymentFormView.dismiss3dSecureDialog();
-                        paymentFormView.hideLoading();
-                    }
-                });
+                }, error());
     }
 
 }
