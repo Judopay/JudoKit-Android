@@ -22,8 +22,6 @@ import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
 import com.judopay.secure3d.ThreeDSecureWebView;
 
-import java.io.IOException;
-
 abstract class BasePaymentFragment extends Fragment implements PaymentFormView, PaymentFormListener {
 
     private static final String TAG_PAYMENT_FORM = "PaymentFormFragment";
@@ -153,7 +151,7 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
 
     @Override
     public void show3dSecureWebView() {
-        if(threeDSecureDialog == null) {
+        if (threeDSecureDialog == null) {
             FragmentManager fm = getFragmentManager();
 
             threeDSecureDialog = new ThreeDSecureDialogFragment();
@@ -184,4 +182,8 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
         }
     }
 
+    @Override
+    public void showConnectionErrorDialog() {
+        Dialogs.createConnectionErrorDialog(getActivity()).show();
+    }
 }

@@ -13,7 +13,7 @@ import retrofit.HttpException;
 import retrofit.Response;
 import rx.functions.Action1;
 
-abstract class BasePaymentPresenter implements ThreeDSecureListener {
+abstract class BasePresenter implements ThreeDSecureListener {
 
     final JudoApiService apiService;
     final PaymentFormView paymentFormView;
@@ -22,7 +22,7 @@ abstract class BasePaymentPresenter implements ThreeDSecureListener {
 
     boolean loading;
 
-    BasePaymentPresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler, Gson gson) {
+    BasePresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler, Gson gson) {
         this.paymentFormView = paymentFormView;
         this.apiService = apiService;
         this.scheduler = scheduler;
@@ -42,7 +42,7 @@ abstract class BasePaymentPresenter implements ThreeDSecureListener {
                 } else {
                     if (threeDSecureEnabled && receipt.is3dSecureRequired()) {
                         paymentFormView.setLoadingText(R.string.redirecting);
-                        paymentFormView.start3dSecureWebView(receipt, BasePaymentPresenter.this);
+                        paymentFormView.start3dSecureWebView(receipt, BasePresenter.this);
                     } else {
                         paymentFormView.showDeclinedMessage(receipt);
                     }
@@ -66,6 +66,8 @@ abstract class BasePaymentPresenter implements ThreeDSecureListener {
                             throw new RuntimeException(e);
                         }
                     }
+                } else if(throwable instanceof java.net.UnknownHostException) {
+                    paymentFormView.showConnectionErrorDialog();
                 }
                 paymentFormView.dismiss3dSecureDialog();
                 paymentFormView.hideLoading();

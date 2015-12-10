@@ -44,4 +44,6 @@
     <string name="payment_failed">Payment failed</string>
     <string name="please_check_details_try_again">Please check your details and try again</string>
     <string name="ok">OK</string>
+    <string name="please_check_your_internet_connection">Please check your Internet connection and try againm</string>
+    <string name="connection_error">Connection error</string>
 </resources>
