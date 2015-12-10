@@ -55,6 +55,7 @@ abstract class BasePresenter implements ThreeDSecureListener {
         return new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
+                loading = false;
                 if (throwable instanceof HttpException) {
                     Response<?> response = ((HttpException) throwable).response();
                     if (response.errorBody() != null) {
