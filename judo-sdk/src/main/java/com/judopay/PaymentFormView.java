@@ -26,4 +26,5 @@ interface PaymentFormView {
 
     void show3dSecureWebView();
 
+    void showConnectionErrorDialog();
 }

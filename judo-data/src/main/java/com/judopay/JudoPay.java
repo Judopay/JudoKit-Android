@@ -29,16 +29,10 @@ public class JudoPay {
     private static final String API_HOST_SANDBOX = "https://gw1.judopay-sandbox.com";
     private static final String API_HOST_LIVE = "https://gw1.judopay.com";
 
-    private static Context context;
     private static JudoPayApi api;
 
-    public static void setup(Context context, String apiToken, String apiSecret, int apiEnvironment) {
-        JudoPay.context = context.getApplicationContext();
+    public static void setup(String apiToken, String apiSecret, int apiEnvironment) {
         api = new JudoPayApi(apiToken, apiSecret, apiEnvironment);
-    }
-
-    public static Context getContext() {
-        return context;
     }
 
     public static String getApiEnvironmentHost() {

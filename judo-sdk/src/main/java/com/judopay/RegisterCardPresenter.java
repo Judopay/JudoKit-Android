@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.judopay.model.Card;
 import com.judopay.model.RegisterTransaction;
 
-class RegisterCardPresenter extends BasePaymentPresenter {
+class RegisterCardPresenter extends BasePresenter {
 
     public RegisterCardPresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler, Gson gson) {
         super(paymentFormView, apiService, scheduler, gson);

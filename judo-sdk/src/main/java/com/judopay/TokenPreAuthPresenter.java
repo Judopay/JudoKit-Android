@@ -10,7 +10,7 @@ import com.judopay.model.TokenTransaction;
 
 import static com.judopay.BundleUtil.toMap;
 
-class TokenPreAuthPresenter extends BasePaymentPresenter {
+class TokenPreAuthPresenter extends BasePresenter {
 
     public TokenPreAuthPresenter(PaymentFormView view, JudoApiService judoApiService, Scheduler scheduler, Gson gson) {
         super(view, judoApiService, scheduler, gson);
