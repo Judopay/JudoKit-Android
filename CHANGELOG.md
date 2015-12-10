@@ -11,7 +11,7 @@
 - Detection of rooted Android devices, with option to block payments from insecure devices.
 - Important change for PCI compliance - SSL settings have been changed to make our SDK compliant and more secure. Due to this change we have had to drop support for older Android versions (prior to Jelly Bean OS, released on phones in 2012).
 - SDK is now easier to integrate than ever, due to upgrading the build tools used by the project. Only takes 3 lines of code to bring up a payment screen.
-- SDK can now automatically be downloaded from a repository manager (similar to CocoaPods), for one line install of library into app project.
+- SDK can now automatically be downloaded from jCenter repository, for one line install of library into app project.
 - [Javadocs published to GitHub](http://judopay.github.io/Judo-Android/)
 
 **Bugs fixed:**
