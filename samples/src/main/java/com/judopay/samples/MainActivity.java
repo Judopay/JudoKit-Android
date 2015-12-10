@@ -33,7 +33,7 @@ import static com.judopay.JudoPay.JUDO_RECEIPT;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private static final String MY_AMOUNT = "1000.99";
+    private static final String MY_AMOUNT = "1.99";
     private static final String MY_JUDO_ID = "100407196";
 
     // Constants to define different actions (for use with startActivityForResult(...))
