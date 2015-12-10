@@ -24,4 +24,5 @@
 
 **Build changes:**
 - SDK now built in Android archive format (.aar)
-- SDK filesize reduced by 80% (now 215 KB)  
+- SDK filesize reduced by 80% (now 215 KB)
+- Publish tasks for uploading to bintray
