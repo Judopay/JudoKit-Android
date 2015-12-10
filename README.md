@@ -13,7 +13,7 @@ If you're using Android Studio and Gradle, you can just add the android-sdk as a
 compile 'com.judopay:android-sdk:5.0'
 ```
 ##### 2. Initialise the SDK
-From your app's main Activity class, or Application class, initialise the JudoPay SDK with your API token and secret:
+From your app's main Activity class, or Application class, initialise the judo SDK with your API token and secret:
 ```java
 JudoPay.setup(this, "MY_API_TOKEN", "MY_API_SECRET", JudoPay.Environment.SANDBOX);
 ```
@@ -30,7 +30,7 @@ intent.putExtra(JudoPay.JUDO_CONSUMER, "consumerRef");
 startActivityForResult(intent, requestCode);
 ```
 ##### 4. Check the payment result
-In the Activity that calls the JudoPay SDK, override the ```Activity.onActivityResult``` method to receive the Receipt from the payment:
+In the Activity that calls the judo SDK, override the ```Activity.onActivityResult``` method to receive the Receipt from the payment:
 ```java
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
