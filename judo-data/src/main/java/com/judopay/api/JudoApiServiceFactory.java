@@ -11,6 +11,7 @@ import com.squareup.okhttp.CertificatePinner;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 
+import java.math.BigDecimal;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
@@ -96,7 +97,7 @@ public class JudoApiServiceFactory {
     static GsonBuilder getGsonBuilder() {
         return new GsonBuilder()
                 .registerTypeAdapter(Date.class, new DateJsonDeserializer())
-                .registerTypeAdapter(Float.class, new FormattedFloatDeserializer());
+                .registerTypeAdapter(BigDecimal.class, new FormattedBigDecimalDeserializer());
     }
 
     private static void setSslPinning(OkHttpClient client) {

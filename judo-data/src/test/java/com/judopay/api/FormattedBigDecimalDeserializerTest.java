@@ -4,44 +4,46 @@ import com.google.gson.JsonElement;
 
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class FormattedFloatDeserializerTest {
+public class FormattedBigDecimalDeserializerTest {
 
     @Test
     public void shouldReturnZeroWhenNull() {
-        FormattedFloatDeserializer deserializer = new FormattedFloatDeserializer();
+        FormattedBigDecimalDeserializer deserializer = new FormattedBigDecimalDeserializer();
         JsonElement jsonElement = mock(JsonElement.class);
 
-        Float result = deserializer.deserialize(jsonElement, null, null);
-        Float zero = 0f;
+        BigDecimal result = deserializer.deserialize(jsonElement, null, null);
+        BigDecimal zero = new BigDecimal(0);
         assertThat(result, equalTo(zero));
     }
 
     @Test
     public void shouldReturnNumberWhenNoThousandSeparator() {
-        FormattedFloatDeserializer deserializer = new FormattedFloatDeserializer();
+        FormattedBigDecimalDeserializer deserializer = new FormattedBigDecimalDeserializer();
         JsonElement jsonElement = mock(JsonElement.class);
 
         when(jsonElement.getAsString()).thenReturn("123.45");
 
-        Float result = deserializer.deserialize(jsonElement, null, null);
-        Float expected = 123.45f;
+        BigDecimal result = deserializer.deserialize(jsonElement, null, null);
+        BigDecimal expected = new BigDecimal("123.45");
         assertThat(result, equalTo(expected));
     }
 
     @Test
     public void shouldReturnNumberWhenThousandSeparator() {
-        FormattedFloatDeserializer deserializer = new FormattedFloatDeserializer();
+        FormattedBigDecimalDeserializer deserializer = new FormattedBigDecimalDeserializer();
         JsonElement jsonElement = mock(JsonElement.class);
 
         when(jsonElement.getAsString()).thenReturn("1,234.56");
 
-        Float result = deserializer.deserialize(jsonElement, null, null);
-        Float expected = 1234.56f;
+        BigDecimal result = deserializer.deserialize(jsonElement, null, null);
+        BigDecimal expected = new BigDecimal("1234.56");
         assertThat(result, equalTo(expected));
     }
 

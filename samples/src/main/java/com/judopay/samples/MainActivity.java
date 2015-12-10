@@ -23,18 +23,17 @@ import com.judopay.model.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static com.judopay.JudoPay.Environment.SANDBOX;
 import static com.judopay.JudoPay.JUDO_RECEIPT;
 
 /**
  * Sample app screen containing buttons to activate the different features of the Judo SDK
- * <p/>
+ * <br>
  * Update the MY_JUDO_ID string with the Judo ID from the judo website: http://www.judopay.com,
- * In the SampleApp, you will also need to update the token and secret with the values for your account.
+ * Update the call to JudoPay.setup with your API token and secret.
  */
 public class MainActivity extends AppCompatActivity {
 
-    private static final String MY_AMOUNT = "1.99";
+    private static final String MY_AMOUNT = "1000.99";
     private static final String MY_JUDO_ID = "100407196";
 
     // Constants to define different actions (for use with startActivityForResult(...))
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        JudoPay.setup(this, "823Eja2fEM6E9NAE", "382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6", SANDBOX);
+        JudoPay.setup("823Eja2fEM6E9NAE", "382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6", JudoPay.Environment.SANDBOX);
 
         paymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
