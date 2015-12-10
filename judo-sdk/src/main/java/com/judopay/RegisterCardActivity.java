@@ -9,6 +9,7 @@ import static com.judopay.JudoPay.JUDO_ID;
  * Displays a form to the user, allowing for card to be registered and used for token transactions.
  * <br>
  * Mandatory extras:
+ * <ol>
  * <li>{@link JudoPay#JUDO_ID} Judo ID of your account</li>
  * <li>{@link JudoPay#JUDO_CONSUMER} identifier for the consumer of the transaction</li>
  * </ol>
@@ -39,7 +40,7 @@ public final class RegisterCardActivity extends JudoActivity {
 
     @Override
     public void onBackPressed() {
-        if(!registerCardFragment.isPaymentInProgress()) {
+        if (!registerCardFragment.isPaymentInProgress()) {
             super.onBackPressed();
         }
     }
