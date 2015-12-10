@@ -26,6 +26,7 @@
 package com.judopay.util;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.support.test.espresso.UiController;
@@ -58,6 +59,7 @@ public class OrientationChangeAction implements ViewAction {
     }
 
     @Override
+    @SuppressLint("WrongConstant")
     public void perform(UiController uiController, View view) {
         uiController.loopMainThreadUntilIdle();
         final Activity activity = (Activity) view.getContext();
