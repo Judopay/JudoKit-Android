@@ -6,16 +6,17 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 
-class FormattedFloatDeserializer implements JsonDeserializer<Float> {
+class FormattedBigDecimalDeserializer implements JsonDeserializer<BigDecimal> {
 
     @Override
-    public Float deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public BigDecimal deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         String jsonString = json.getAsString();
         if (jsonString != null && jsonString.length() > 0) {
-            return Float.parseFloat(jsonString.replaceAll(",", ""));
+            return new BigDecimal(jsonString.replaceAll(",", ""));
         } else {
-            return 0f;
+            return new BigDecimal(0);
         }
     }
 

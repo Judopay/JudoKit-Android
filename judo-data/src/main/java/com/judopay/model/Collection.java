@@ -1,22 +1,24 @@
 package com.judopay.model;
 
+import java.math.BigDecimal;
+
 public class Collection {
 
-    private final int receiptId;
-    private final float amount;
+    private final String receiptId;
+    private final BigDecimal amount;
     private final String yourPaymentReference;
 
-    public Collection(int receiptId, float amount, String yourPaymentReference) {
+    public Collection(String receiptId, BigDecimal amount, String yourPaymentReference) {
         this.receiptId = receiptId;
         this.amount = amount;
         this.yourPaymentReference = yourPaymentReference;
     }
 
-    public int getReceiptId() {
+    public String getReceiptId() {
         return receiptId;
     }
 
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
