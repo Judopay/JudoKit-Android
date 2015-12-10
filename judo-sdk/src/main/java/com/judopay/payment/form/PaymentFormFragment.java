@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,33 +15,36 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 
-import com.judopay.CompositeOnFocusChangeListener;
-import com.judopay.EmptyTextHintOnFocusChangeListener;
-import com.judopay.HidingViewTextWatcher;
-import com.judopay.HintFocusListener;
+import com.judopay.CardNumberValidation;
+import com.judopay.CountryAndPostcodeValidation;
 import com.judopay.JudoPay;
+import com.judopay.PaymentForm;
+import com.judopay.PaymentFormValidation;
 import com.judopay.R;
-import com.judopay.customer.Card;
-import com.judopay.customer.CardAddress;
-import com.judopay.customer.CardToken;
-import com.judopay.customer.CardType;
-import com.judopay.customer.Country;
-import com.judopay.payment.PaymentFormListener;
-import com.judopay.payment.ScrollOnFocusChangeListener;
-import com.judopay.payment.SingleClickOnClickListener;
-import com.judopay.payment.form.address.CountryAndPostcodeValidation;
-import com.judopay.payment.form.address.CountrySpinner;
-import com.judopay.payment.form.address.PostcodeEditText;
-import com.judopay.payment.form.cardnumber.CardNumberFormattingTextWatcher;
-import com.judopay.payment.form.cardnumber.CardNumberValidation;
-import com.judopay.payment.form.cvv.CvvImageView;
-import com.judopay.payment.form.date.DateSeparatorTextWatcher;
+import com.judopay.StartDateAndIssueNumberValidation;
+import com.judopay.model.Address;
+import com.judopay.model.Card;
+import com.judopay.model.CardToken;
+import com.judopay.model.CardType;
+import com.judopay.model.Country;
+import com.judopay.view.CardNumberFormattingTextWatcher;
+import com.judopay.view.CardTypeImageView;
+import com.judopay.view.CompositeOnFocusChangeListener;
+import com.judopay.view.CountrySpinner;
+import com.judopay.view.CvvImageView;
+import com.judopay.view.DateSeparatorTextWatcher;
+import com.judopay.view.EmptyTextHintOnFocusChangeListener;
+import com.judopay.view.HidingViewTextWatcher;
+import com.judopay.view.HintFocusListener;
+import com.judopay.view.ScrollOnFocusChangeListener;
+import com.judopay.view.SimpleTextWatcher;
+import com.judopay.view.SingleClickOnClickListener;
 
 import static com.judopay.JudoPay.isAvsEnabled;
 
-public class PaymentFormFragment extends Fragment {
+public final class PaymentFormFragment extends Fragment {
 
-    public static final String KEY_CARD_TOKEN = "Judo-CardToken";
+    public static final String KEY_PAYMENT_FORM_OPTIONS = "Judo-PaymentFormOptions";
 
     private EditText cvvEditText;
     private View cvvHelperText;
@@ -48,7 +52,8 @@ public class PaymentFormFragment extends Fragment {
     private CardTypeImageView cardTypeImageView;
     private CvvImageView cvvImageView;
     private CountrySpinner countrySpinner;
-    private PostcodeEditText postcodeEditText;
+    private EditText postcodeEditText;
+
     private EditText startDateEditText;
     private EditText expiryDateEditText;
     private EditText cardNumberEditText;
@@ -64,11 +69,10 @@ public class PaymentFormFragment extends Fragment {
     private HintFocusListener cvvHintChangeListener;
     private ScrollView scrollView;
     private View cardsAcceptedErrorText;
-
-    private PaymentFormListener paymentFormListener;
     private View issueNumberHelperText;
 
-    private CardToken cardToken;
+    private PaymentFormOptions paymentFormOptions;
+    private PaymentFormListener paymentFormListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,7 +84,7 @@ public class PaymentFormFragment extends Fragment {
         cvvInputLayout = (TextInputLayout) view.findViewById(R.id.cvv_input_layout);
         cvvHelperText = view.findViewById(R.id.cvv_helper_text);
 
-        postcodeEditText = (PostcodeEditText) view.findViewById(R.id.post_code_edit_text);
+        postcodeEditText = (EditText) view.findViewById(R.id.post_code_edit_text);
         postcodeInputLayout = (TextInputLayout) view.findViewById(R.id.post_code_input_layout);
 
         cardNumberEditText = (EditText) view.findViewById(R.id.card_number_edit_text);
@@ -107,10 +111,6 @@ public class PaymentFormFragment extends Fragment {
 
         cardsAcceptedErrorText = view.findViewById(R.id.cards_accepted_error_text);
 
-        if (getArguments().containsKey(KEY_CARD_TOKEN)) {
-            this.cardToken = getArguments().getParcelable(KEY_CARD_TOKEN);
-        }
-
         return view;
     }
 
@@ -125,8 +125,19 @@ public class PaymentFormFragment extends Fragment {
             }
         };
 
-        if (cardToken != null) {
-            cardTypeImageView.setCardType(cardToken.getType());
+        if (getArguments() != null && getArguments().containsKey(KEY_PAYMENT_FORM_OPTIONS)) {
+            this.paymentFormOptions = getArguments().getParcelable(KEY_PAYMENT_FORM_OPTIONS);
+
+            if (paymentFormOptions != null) {
+                if (paymentFormOptions.getButtonLabel() != null) {
+                    this.paymentButton.setText(paymentFormOptions.getButtonLabel());
+                }
+
+                if (paymentFormOptions.getCardToken() != null) {
+                    cardTypeImageView.setCardType(paymentFormOptions.getCardToken().getType());
+                    cvvEditText.requestFocus();
+                }
+            }
         }
 
         initialiseCardNumber(validationWatcher);
@@ -160,14 +171,15 @@ public class PaymentFormFragment extends Fragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
     }
 
     private void initialisePostcode(SimpleTextWatcher formValidator) {
         postcodeEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
-                        new HintFocusListener(postcodeEditText, R.string.empty),
-                        new ScrollOnFocusChangeListener(scrollView))
+                new HintFocusListener(postcodeEditText, R.string.empty),
+                new ScrollOnFocusChangeListener(scrollView))
         );
 
         postcodeEditText.addTextChangedListener(formValidator);
@@ -201,7 +213,7 @@ public class PaymentFormFragment extends Fragment {
     }
 
     private void initialiseExpiryDate(SimpleTextWatcher formValidator) {
-        if (cardToken == null) {
+        if (paymentFormOptions.getCardToken() == null) {
             expiryDateEditText.setOnFocusChangeListener(new HintFocusListener(expiryDateEditText, R.string.date_hint));
 
             expiryDateEditText.addTextChangedListener(formValidator);
@@ -213,18 +225,18 @@ public class PaymentFormFragment extends Fragment {
     }
 
     private void initialiseCardNumber(SimpleTextWatcher formValidator) {
-        if (cardToken == null) {
+        if (paymentFormOptions.getCardToken() == null) {
             cardNumberEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
                     new EmptyTextHintOnFocusChangeListener(cardNumberHelperText),
                     new HintFocusListener(cardNumberEditText, R.string.card_number_hint)
             ));
 
             cardNumberEditText.addTextChangedListener(formValidator);
-            cardNumberEditText.addTextChangedListener(new CardNumberFormattingTextWatcher());
+            cardNumberEditText.addTextChangedListener(new CardNumberFormattingTextWatcher(cardNumberEditText));
             cardNumberEditText.addTextChangedListener(new HidingViewTextWatcher(cardNumberHelperText));
         } else {
             cardNumberEditText.setEnabled(false);
-            cardNumberEditText.setText(getString(R.string.token_card_number, cardToken.getLastFour()));
+            cardNumberEditText.setText(getString(R.string.token_card_number, paymentFormOptions.getCardToken().getLastFour()));
         }
     }
 
@@ -247,13 +259,21 @@ public class PaymentFormFragment extends Fragment {
                 .setStartDate(trim(startDateEditText))
                 .setAddressRequired(JudoPay.isAvsEnabled())
                 .setAmexSupported(JudoPay.isAmexEnabled())
-                .setMaestroSupported(JudoPay.isMaestroEnabled())
-                .setTokenCard(cardToken != null);
+                .setMaestroSupported(JudoPay.isMaestroEnabled());
+
+        CardToken cardToken = paymentFormOptions.getCardToken();
+
+        if (cardToken != null) {
+            builder.setTokenCard(true)
+                    .setCardType(cardToken.getType());
+        }
 
         PaymentFormValidation formView = new PaymentFormValidation.Builder()
                 .build(builder.build());
 
-        cardTypeImageView.setCardType(formView.getCardType());
+        if (cardToken == null) {
+            cardTypeImageView.setCardType(formView.getCardType());
+        }
 
         updateFormErrors(formView);
         moveFieldFocus(formView);
@@ -289,23 +309,30 @@ public class PaymentFormFragment extends Fragment {
             startDateInputLayout.setError("");
         }
 
-        startDateAndIssueNumberContainer.setVisibility(startDateAndIssueNumberValidation.isShowIssueNumberAndStartDate() ? View.VISIBLE : View.GONE);
+        startDateAndIssueNumberContainer.setVisibility(startDateAndIssueNumberValidation.isShowIssueNumberAndStartDate()
+                ? View.VISIBLE : View.GONE);
     }
 
-    private void updateCountryAndPostcode(CountryAndPostcodeValidation countryAndPostcodeValidation) {
-        countryAndPostcodeContainer.setVisibility(countryAndPostcodeValidation.isShowCountryAndPostcode() ? View.VISIBLE : View.GONE);
+    private void updateCountryAndPostcode(CountryAndPostcodeValidation validation) {
+        countryAndPostcodeContainer.setVisibility(validation.isShowCountryAndPostcode() ? View.VISIBLE : View.GONE);
 
-        postcodeInputLayout.setErrorEnabled(countryAndPostcodeValidation.isShowPostcodeError());
-        postcodeInputLayout.setHint(getString(countryAndPostcodeValidation.getPostcodeLabel()));
+        postcodeInputLayout.setErrorEnabled(validation.isShowPostcodeError());
+        postcodeInputLayout.setHint(getString(validation.getPostcodeLabel()));
 
-        if (countryAndPostcodeValidation.isShowPostcodeError()) {
-            postcodeInputLayout.setError(getString(countryAndPostcodeValidation.getPostcodeError()));
+        if (validation.isShowPostcodeError()) {
+            postcodeInputLayout.setError(getString(validation.getPostcodeError()));
         } else {
             postcodeInputLayout.setError("");
         }
 
-        cardsAcceptedErrorText.setVisibility(countryAndPostcodeValidation.isCountryValid() ? View.GONE : View.VISIBLE);
-        postcodeInputLayout.setVisibility(countryAndPostcodeValidation.isCountryValid() ? View.VISIBLE : View.INVISIBLE);
+        postcodeEditText.setInputType(validation.isPostcodeNumeric() ?
+                InputType.TYPE_CLASS_NUMBER : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+
+        postcodeEditText.setPrivateImeOptions("nm"); // prevent text suggestions in keyboard
+        postcodeEditText.setSelection(postcodeEditText.getText().length());
+
+        cardsAcceptedErrorText.setVisibility(validation.isCountryValid() ? View.GONE : View.VISIBLE);
+        postcodeInputLayout.setVisibility(validation.isCountryValid() ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void showExpiryDateErrors(PaymentFormValidation formView) {
@@ -359,14 +386,14 @@ public class PaymentFormFragment extends Fragment {
                 .setExpiryDate(trim(expiryDateEditText))
                 .setCvv(getCvv());
 
-        CardAddress.Builder cardAddressBuilder = new CardAddress.Builder()
-                .setPostcode(getPostcode());
+        Address.Builder addressBuilder = new Address.Builder()
+                .setPostCode(getPostcode());
 
         if (isAvsEnabled()) {
-            cardAddressBuilder.setCountryCode(countrySpinner.getSelectedCountry().getCode());
+            addressBuilder.setCountryCode(countrySpinner.getSelectedCountry().getCode());
         }
 
-        cardBuilder.setCardAddress(cardAddressBuilder.build());
+        cardBuilder.setCardAddress(addressBuilder.build());
 
         if (CardType.matchCardNumber(cardNumberEditText.getText().toString()) == CardType.MAESTRO) {
             cardBuilder.setIssueNumber(getIssueNumber())
@@ -398,12 +425,12 @@ public class PaymentFormFragment extends Fragment {
         return trim(cardNumberEditText).replaceAll(" ", "");
     }
 
-    public static PaymentFormFragment newInstance(CardToken cardToken, PaymentFormListener paymentListener) {
+    public static PaymentFormFragment newInstance(PaymentFormOptions paymentFormOptions, PaymentFormListener listener) {
         PaymentFormFragment paymentFormFragment = new PaymentFormFragment();
-        paymentFormFragment.setPaymentFormListener(paymentListener);
+        paymentFormFragment.setPaymentFormListener(listener);
 
         Bundle arguments = new Bundle();
-        arguments.putParcelable(PaymentFormFragment.KEY_CARD_TOKEN, cardToken);
+        arguments.putParcelable(PaymentFormFragment.KEY_PAYMENT_FORM_OPTIONS, paymentFormOptions);
         paymentFormFragment.setArguments(arguments);
 
         return paymentFormFragment;
@@ -411,9 +438,6 @@ public class PaymentFormFragment extends Fragment {
 
     public static PaymentFormFragment newInstance(PaymentFormListener paymentListener) {
         PaymentFormFragment paymentFormFragment = new PaymentFormFragment();
-
-        Bundle arguments = new Bundle();
-        paymentFormFragment.setArguments(arguments);
         paymentFormFragment.setPaymentFormListener(paymentListener);
 
         return paymentFormFragment;

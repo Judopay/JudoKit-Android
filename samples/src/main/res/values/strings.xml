@@ -1,15 +1,28 @@
 <resources>
-
-    <string name="app_name">JudoPay Android</string>
-    <string name="title_activity_main">JudoPay</string>
-
+    <string name="judopay">judoPay</string>
     <string name="avs_label">Address Verification System (AVS)</string>
     <string name="ssl_pinning_label">SSL Pinning</string>
     <string name="settings">Settings</string>
     <string name="american_express">American Express</string>
     <string name="maestro">Maestro</string>
+    <string name="three_d_secure">3D-Secure</string>
     <string name="payment">Payment</string>
     <string name="pre_auth">Pre-Auth</string>
-    <string name="token_payment">Token Payment</string>
+    <string name="token_payment">Token payment</string>
+    <string name="test_card_detail_instructions">To view test card details:\nSign in to judo and go to Developer/Tools.</string>
+    <string name="add_card">Add card</string>
+    <string name="reserve_funds_on_card">to reserve funds on a card</string>
+    <string name="with_stored_card_token">with a stored card token</string>
+    <string name="stored_for_future_transactions">to be stored for future transactions</string>
+    <string name="with_default_settings">with default settings</string>
+    <string name="make_token_payment">Make token payment?</string>
+    <string name="registered_card_can_perform_token_payments">Registered card can now be used to perform token payments</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="token_pre_auth">Token pre-auth</string>
 
+    <string name="add_card_to_make_token_transaction">Add card to make token transaction</string>
+    <string name="transaction_error">Transaction error</string>
+    <string name="could_not_perform_transaction_check_settings">Could not perform the transaction, please check your settings</string>
+    <string name="currency">Currency</string>
 </resources>

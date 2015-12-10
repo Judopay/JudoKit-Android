@@ -1,9 +1,8 @@
 package com.judopay.payment.form;
 
+import com.judopay.CardNumberValidation;
 import com.judopay.R;
-import com.judopay.customer.CardType;
-import com.judopay.customer.Country;
-import com.judopay.payment.form.cardnumber.CardNumberValidation;
+import com.judopay.model.CardType;
 
 import org.junit.Test;
 

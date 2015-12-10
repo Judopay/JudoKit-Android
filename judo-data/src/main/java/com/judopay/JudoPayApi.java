@@ -11,6 +11,8 @@ public class JudoPayApi {
     private boolean avsEnabled;
     private boolean maestroEnabled;
     private boolean amexEnabled;
+    private boolean threeDSecureEnabled;
+    private boolean rootedDevicesAllowed;
 
     public JudoPayApi(String apiToken, String apiSecret, int apiEnvironment) {
         this.apiToken = apiToken;
@@ -80,5 +82,21 @@ public class JudoPayApi {
 
     public boolean isAmexEnabled() {
         return this.amexEnabled;
+    }
+
+    public boolean isRootedDevicesAllowed() {
+        return rootedDevicesAllowed;
+    }
+
+    public void setRootedDevicesAllowed(boolean rootedDevicesAllowed) {
+        this.rootedDevicesAllowed = rootedDevicesAllowed;
+    }
+
+    public void setThreeDSecureEnabled(boolean enabled) {
+        this.threeDSecureEnabled = enabled;
+    }
+
+    public boolean isThreeDSecureEnabled() {
+        return threeDSecureEnabled;
     }
 }

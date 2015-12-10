@@ -1,1 +1,4 @@
-include ':judo-data', ':judo-sdk', ':samples'
+include ':judo-data'
+include ':judo-sdk'
+//include ':judo-shield'
+include ':samples'
