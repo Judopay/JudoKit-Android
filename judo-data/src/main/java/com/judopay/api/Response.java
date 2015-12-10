@@ -189,7 +189,8 @@ public class Response implements Parcelable {
         dest.writeList(this.errorDetails);
     }
 
-    public Response() { }
+    public Response() {
+    }
 
     protected Response(Parcel in) {
         this.result = in.readString();
@@ -198,7 +199,7 @@ public class Response implements Parcelable {
         this.errorResolution = in.readString();
         this.message = in.readString();
         this.errorCode = in.readString();
-        this.errorDetails = new ArrayList<>();
+        this.errorDetails = new ArrayList<ApiError>();
         in.readList(this.errorDetails, List.class.getClassLoader());
     }
 
