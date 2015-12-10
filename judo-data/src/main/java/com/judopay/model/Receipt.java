@@ -1,13 +1,13 @@
 package com.judopay.model;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
 import com.judopay.api.Response;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
-public class Receipt extends Response implements Parcelable {
+public class Receipt extends Response {
 
     private Long judoID;
     private String receiptId;
@@ -18,9 +18,9 @@ public class Receipt extends Response implements Parcelable {
     private Date createdAt;
     private String merchantName;
     private String appearsOnStatementAs;
-    private Float originalAmount;
-    private Float netAmount;
-    private Float amount;
+    private BigDecimal originalAmount;
+    private BigDecimal netAmount;
+    private BigDecimal amount;
     private String currency;
     private CardToken cardDetails;
     private Consumer consumer;
@@ -68,15 +68,15 @@ public class Receipt extends Response implements Parcelable {
         return appearsOnStatementAs;
     }
 
-    public Float getOriginalAmount() {
+    public BigDecimal getOriginalAmount() {
         return originalAmount;
     }
 
-    public Float getNetAmount() {
+    public BigDecimal getNetAmount() {
         return netAmount;
     }
 
-    public Float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
@@ -140,7 +140,7 @@ public class Receipt extends Response implements Parcelable {
 
     public static class Builder {
 
-        private long judoID;
+        private Long judoID;
         private String receiptId;
         private String originalReceiptId;
         private String partnerServiceFee;
@@ -149,9 +149,9 @@ public class Receipt extends Response implements Parcelable {
         private Date createdAt;
         private String merchantName;
         private String appearsOnStatementAs;
-        private float originalAmount;
-        private float netAmount;
-        private float amount;
+        private BigDecimal originalAmount;
+        private BigDecimal netAmount;
+        private BigDecimal amount;
         private String currency;
         private CardToken cardDetails;
         private Consumer consumer;
@@ -161,9 +161,10 @@ public class Receipt extends Response implements Parcelable {
         private String paReq;
         private String acsUrl;
 
-        public Builder() { }
+        public Builder() {
+        }
 
-        public Builder setJudoID(long judoID) {
+        public Builder setJudoID(Long judoID) {
             this.judoID = judoID;
             return this;
         }
@@ -208,17 +209,17 @@ public class Receipt extends Response implements Parcelable {
             return this;
         }
 
-        public Builder setOriginalAmount(float originalAmount) {
+        public Builder setOriginalAmount(BigDecimal originalAmount) {
             this.originalAmount = originalAmount;
             return this;
         }
 
-        public Builder setNetAmount(float netAmount) {
+        public Builder setNetAmount(BigDecimal netAmount) {
             this.netAmount = netAmount;
             return this;
         }
 
-        public Builder setAmount(float amount) {
+        public Builder setAmount(BigDecimal amount) {
             this.amount = amount;
             return this;
         }
@@ -242,7 +243,7 @@ public class Receipt extends Response implements Parcelable {
             this.risks = risks;
             return this;
         }
-        
+
         public Receipt build() {
             Receipt receipt = new Receipt();
 
@@ -277,6 +278,7 @@ public class Receipt extends Response implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
         dest.writeValue(this.judoID);
         dest.writeString(this.receiptId);
         dest.writeString(this.originalReceiptId);
@@ -286,9 +288,9 @@ public class Receipt extends Response implements Parcelable {
         dest.writeLong(createdAt != null ? createdAt.getTime() : -1);
         dest.writeString(this.merchantName);
         dest.writeString(this.appearsOnStatementAs);
-        dest.writeValue(this.originalAmount);
-        dest.writeValue(this.netAmount);
-        dest.writeValue(this.amount);
+        dest.writeSerializable(this.originalAmount);
+        dest.writeSerializable(this.netAmount);
+        dest.writeSerializable(this.amount);
         dest.writeString(this.currency);
         dest.writeParcelable(this.cardDetails, 0);
         dest.writeParcelable(this.consumer, 0);
@@ -299,6 +301,7 @@ public class Receipt extends Response implements Parcelable {
     }
 
     protected Receipt(Parcel in) {
+        super(in);
         this.judoID = (Long) in.readValue(Long.class.getClassLoader());
         this.receiptId = in.readString();
         this.originalReceiptId = in.readString();
@@ -309,9 +312,9 @@ public class Receipt extends Response implements Parcelable {
         this.createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
         this.merchantName = in.readString();
         this.appearsOnStatementAs = in.readString();
-        this.originalAmount = (Float) in.readValue(Float.class.getClassLoader());
-        this.netAmount = (Float) in.readValue(Float.class.getClassLoader());
-        this.amount = (Float) in.readValue(Float.class.getClassLoader());
+        this.originalAmount = (BigDecimal) in.readSerializable();
+        this.netAmount = (BigDecimal) in.readSerializable();
+        this.amount = (BigDecimal) in.readSerializable();
         this.currency = in.readString();
         this.cardDetails = in.readParcelable(CardToken.class.getClassLoader());
         this.consumer = in.readParcelable(Consumer.class.getClassLoader());
@@ -321,7 +324,7 @@ public class Receipt extends Response implements Parcelable {
         this.acsUrl = in.readString();
     }
 
-    public static final Parcelable.Creator<Receipt> CREATOR = new Parcelable.Creator<Receipt>() {
+    public static final Creator<Receipt> CREATOR = new Creator<Receipt>() {
         public Receipt createFromParcel(Parcel source) {
             return new Receipt(source);
         }
