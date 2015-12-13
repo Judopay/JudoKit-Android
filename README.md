@@ -1,4 +1,4 @@
-# judoNative SDK for Android
+# judoNative SDK for Android [ ![Download](https://api.bintray.com/packages/judopay/maven/android-sdk/images/download.svg) ](https://bintray.com/judopay/maven/android-sdk/_latestVersion)
 
 <p><img align="right" src="samples/payment_screen.png" width="257" height="480"></p>
 
