@@ -27,7 +27,7 @@ intent.putExtra(JudoPay.JUDO_AMOUNT, "9.99");
 intent.putExtra(JudoPay.JUDO_CURRENCY, "GBP");
 intent.putExtra(JudoPay.JUDO_CONSUMER, "consumerRef");
 
-startActivityForResult(intent, requestCode);
+startActivityForResult(intent, PAYMENT_REQUEST);
 ```
 ##### 4. Check the payment result
 In the Activity that calls the judo SDK, override the ```Activity.onActivityResult``` method to receive the Receipt from the payment:
