@@ -1,7 +1,6 @@
 package com.judopay;
 
 import android.app.Activity;
-import android.content.Context;
 
 /**
  * Lets you configure options for how the SDK interacts with the REST API, including setting of

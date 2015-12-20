@@ -13,7 +13,7 @@ import java.util.Map;
 
 import okio.Buffer;
 
-public class DeDuplicationInterceptor implements Interceptor {
+class DeDuplicationInterceptor implements Interceptor {
 
     private static final Map<String, Response> uniqueResponses = new HashMap<>();
 

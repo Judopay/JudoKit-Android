@@ -37,7 +37,7 @@ public class CountrySpinner extends AppCompatSpinner {
     }
 
     private void initialise() {
-        this.adapter = new CountrySpinnerAdapter(this.getContext(), android.R.layout.simple_list_item_1, getCountries());
+        this.adapter = new CountrySpinnerAdapter(this.getContext(), getCountries());
 
         this.setAdapter(this.adapter);
     }

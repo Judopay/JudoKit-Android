@@ -10,7 +10,7 @@ class RegisterCardPresenter extends BasePresenter {
         super(paymentFormView, apiService, scheduler, gson);
     }
 
-    protected void performRegisterCard(String judoId, Card card, String consumerRef, boolean threeDSecureEnabled) {
+    void performRegisterCard(String judoId, Card card, String consumerRef, boolean threeDSecureEnabled) {
         this.loading = true;
 
         paymentFormView.showLoading();

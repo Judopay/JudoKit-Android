@@ -2,7 +2,7 @@ package com.judopay.api;
 
 import android.os.Build;
 
-import com.judopay.rest.BuildConfig;
+import com.judopay.BuildConfig;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.Request;

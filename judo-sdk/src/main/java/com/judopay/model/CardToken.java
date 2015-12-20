@@ -73,7 +73,7 @@ public class CardToken implements Parcelable {
         this.type = in.readInt();
     }
 
-    public static final Parcelable.Creator<CardToken> CREATOR = new Parcelable.Creator<CardToken>() {
+    public static final Creator<CardToken> CREATOR = new Creator<CardToken>() {
         public CardToken createFromParcel(Parcel source) {
             return new CardToken(source);
         }

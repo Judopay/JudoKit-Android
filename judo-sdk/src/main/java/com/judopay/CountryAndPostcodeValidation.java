@@ -4,14 +4,14 @@ import com.judopay.model.Country;
 
 public class CountryAndPostcodeValidation {
 
-    private int postcodeLabel;
-    private int postcodeError;
-    private boolean showPostcodeError;
-    private boolean postcodeEntryComplete;
+    private final int postcodeLabel;
+    private final int postcodeError;
+    private final boolean showPostcodeError;
+    private final boolean postcodeEntryComplete;
 
-    private boolean countryValid;
-    private boolean showCountryAndPostcode;
-    private boolean postcodeNumeric;
+    private final boolean countryValid;
+    private final boolean showCountryAndPostcode;
+    private final boolean postcodeNumeric;
 
     public CountryAndPostcodeValidation(PaymentForm paymentForm, boolean cardNumberValid, boolean cvvValid, boolean expiryDateValid, boolean maestroValid) {
         boolean postcodeValid = isPostcodeValid(paymentForm.getPostcode());

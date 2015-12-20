@@ -120,7 +120,7 @@ public final class PaymentFormFragment extends Fragment {
 
         SimpleTextWatcher validationWatcher = new SimpleTextWatcher() {
             @Override
-            protected void onTextChanged(CharSequence text) {
+            protected void onTextChanged() {
                 updateFormView();
             }
         };
@@ -156,7 +156,7 @@ public final class PaymentFormFragment extends Fragment {
     private void initialisePayButton() {
         paymentButton.setOnClickListener(new SingleClickOnClickListener() {
             @Override
-            public void doClick(View v) {
+            public void doClick() {
                 hideKeyboard();
                 submitForm();
             }

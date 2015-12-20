@@ -44,15 +44,21 @@ publish {
     userOrg = 'judopay'
     groupId = 'com.judopay'
     artifactId = 'android-sdk'
-    publishVersion = '5.0'
+    publishVersion = '5.0.0'
     desc = 'Android Mobile Payments SDK'
     website = 'https://github.com/JudoPay/Judo-Android'
 }
 
 dependencies {
-    compile project(':judo-data')
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.judopay:shield:1.0'
 
+    compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
+    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'
+    compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta1'
+    compile 'io.reactivex:rxandroid:0.23.0'
+
+    compile 'joda-time:joda-time:2.8.2'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
 

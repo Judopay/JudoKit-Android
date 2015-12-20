@@ -199,11 +199,11 @@ public class Response implements Parcelable {
         this.errorResolution = in.readString();
         this.message = in.readString();
         this.errorCode = in.readString();
-        this.errorDetails = new ArrayList<ApiError>();
+        this.errorDetails = new ArrayList<>();
         in.readList(this.errorDetails, List.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<Response> CREATOR = new Parcelable.Creator<Response>() {
+    public static final Creator<Response> CREATOR = new Creator<Response>() {
         public Response createFromParcel(Parcel source) {
             return new Response(source);
         }
