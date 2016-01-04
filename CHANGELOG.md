@@ -1,5 +1,12 @@
 # judoNative Android SDK Change Log
 
+## [5.0.1](https://github.com/judopay/Judo-Android/tree/5.0.1) (2016-01-07)
+
+**Bugs fixed:**
+- Resolved a crashing issue that would occur when any API error was encountered when performing a transaction, due to ApiError class not being Parcelable when attempting to pass back the Receipt for the transaction.
+- Fixed an issue with card digits being skipped when attempting to type into the card number input field.
+- Merged judo-sdk and judo-data modules due to an issue with resolving library internal dependencies found when releasing previous SDK version.
+
 ## [5.0](https://github.com/judopay/Judo-Android/tree/5.0) (2015-12-10)
 
 **Implemented enhancements:**
