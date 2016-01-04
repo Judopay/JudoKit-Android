@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.judopay.model.CardToken;
 import com.judopay.model.Receipt;
-import com.judopay.payment.form.PaymentFormFragment;
+import com.judopay.payment.form.CardEntryFragment;
 import com.judopay.payment.form.PaymentFormListener;
 import com.judopay.payment.form.PaymentFormOptions;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
@@ -24,7 +24,7 @@ import com.judopay.secure3d.ThreeDSecureWebView;
 
 abstract class BasePaymentFragment extends Fragment implements PaymentFormView, PaymentFormListener {
 
-    private static final String TAG_PAYMENT_FORM = "PaymentFormFragment";
+    private static final String TAG_PAYMENT_FORM = "CardEntryFragment";
     private static final String TAG_3DS_DIALOG = "3dSecureDialog";
 
     private View progressBar;
@@ -59,29 +59,29 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        PaymentFormFragment paymentFormFragment = (PaymentFormFragment) getFragmentManager().findFragmentByTag(TAG_PAYMENT_FORM);
+        CardEntryFragment cardEntryFragment = (CardEntryFragment) getFragmentManager().findFragmentByTag(TAG_PAYMENT_FORM);
 
-        if (paymentFormFragment == null) {
-            paymentFormFragment = createPaymentFormFragment();
-            paymentFormFragment.setTargetFragment(this, 0);
+        if (cardEntryFragment == null) {
+            cardEntryFragment = createPaymentFormFragment();
+            cardEntryFragment.setTargetFragment(this, 0);
 
             getFragmentManager()
                     .beginTransaction()
-                    .add(R.id.container, paymentFormFragment, TAG_PAYMENT_FORM)
+                    .add(R.id.container, cardEntryFragment, TAG_PAYMENT_FORM)
                     .commit();
         } else {
-            paymentFormFragment.setPaymentFormListener(this);
+            cardEntryFragment.setPaymentFormListener(this);
         }
     }
 
-    PaymentFormFragment createPaymentFormFragment() {
+    CardEntryFragment createPaymentFormFragment() {
         CardToken cardToken = getArguments().getParcelable(JudoPay.JUDO_CARD_TOKEN);
 
         PaymentFormOptions paymentFormOptions = new PaymentFormOptions.Builder()
                 .setCardToken(cardToken)
                 .build();
 
-        return PaymentFormFragment.newInstance(paymentFormOptions, this);
+        return CardEntryFragment.newInstance(paymentFormOptions, this);
     }
 
     @Override

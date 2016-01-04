@@ -42,7 +42,7 @@ import com.judopay.view.SingleClickOnClickListener;
 
 import static com.judopay.JudoPay.isAvsEnabled;
 
-public final class PaymentFormFragment extends Fragment {
+public final class CardEntryFragment extends Fragment {
 
     public static final String KEY_PAYMENT_FORM_OPTIONS = "Judo-PaymentFormOptions";
 
@@ -76,7 +76,7 @@ public final class PaymentFormFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_payment_form, container, false);
+        View view = inflater.inflate(R.layout.fragment_card_entry, container, false);
 
         paymentButton = (Button) view.findViewById(R.id.payment_button);
 
@@ -232,7 +232,7 @@ public final class PaymentFormFragment extends Fragment {
             ));
 
             cardNumberEditText.addTextChangedListener(formValidator);
-            cardNumberEditText.addTextChangedListener(new CardNumberFormattingTextWatcher(cardNumberEditText));
+            cardNumberEditText.addTextChangedListener(new CardNumberFormattingTextWatcher());
             cardNumberEditText.addTextChangedListener(new HidingViewTextWatcher(cardNumberHelperText));
         } else {
             cardNumberEditText.setEnabled(false);
@@ -425,22 +425,22 @@ public final class PaymentFormFragment extends Fragment {
         return trim(cardNumberEditText).replaceAll(" ", "");
     }
 
-    public static PaymentFormFragment newInstance(PaymentFormOptions paymentFormOptions, PaymentFormListener listener) {
-        PaymentFormFragment paymentFormFragment = new PaymentFormFragment();
-        paymentFormFragment.setPaymentFormListener(listener);
+    public static CardEntryFragment newInstance(PaymentFormOptions paymentFormOptions, PaymentFormListener listener) {
+        CardEntryFragment cardEntryFragment = new CardEntryFragment();
+        cardEntryFragment.setPaymentFormListener(listener);
 
         Bundle arguments = new Bundle();
-        arguments.putParcelable(PaymentFormFragment.KEY_PAYMENT_FORM_OPTIONS, paymentFormOptions);
-        paymentFormFragment.setArguments(arguments);
+        arguments.putParcelable(CardEntryFragment.KEY_PAYMENT_FORM_OPTIONS, paymentFormOptions);
+        cardEntryFragment.setArguments(arguments);
 
-        return paymentFormFragment;
+        return cardEntryFragment;
     }
 
-    public static PaymentFormFragment newInstance(PaymentFormListener paymentListener) {
-        PaymentFormFragment paymentFormFragment = new PaymentFormFragment();
-        paymentFormFragment.setPaymentFormListener(paymentListener);
+    public static CardEntryFragment newInstance(PaymentFormListener paymentListener) {
+        CardEntryFragment cardEntryFragment = new CardEntryFragment();
+        cardEntryFragment.setPaymentFormListener(paymentListener);
 
-        return paymentFormFragment;
+        return cardEntryFragment;
     }
 
     public void setPaymentFormListener(PaymentFormListener paymentFormListener) {
