@@ -1,22 +1,20 @@
 package com.judopay.api;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * A single error instance that occurred when calling the JudoPay API, in response to performing
  * a request, most likely for a type of transaction such as a payment, pre-auth or token payment.
  */
-public class ApiError {
+public class ApiError implements Parcelable {
 
-    private final int code;
-    private final String fieldName;
-    private final String message;
-    private final String detail;
+    public ApiError() { }
 
-    public ApiError(int code, String fieldName, String message, String detail) {
-        this.code = code;
-        this.fieldName = fieldName;
-        this.message = message;
-        this.detail = detail;
-    }
+    private Integer code;
+    private String fieldName;
+    private String message;
+    private String detail;
 
     public static final int JUDO_ID_NOT_SUPPLIED = 0;
     public static final int JUDO_ID_NOT_SUPPLIED_1 = 1;
@@ -147,7 +145,7 @@ public class ApiError {
     public static final int GENERIC_IS_INVALID = 200;
     public static final int GENERIC_HTML_INVALID = 210;
 
-    public int getCode() {
+    public Integer getCode() {
         return code;
     }
 
@@ -162,4 +160,35 @@ public class ApiError {
     public String getDetail() {
         return detail;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.code);
+        dest.writeString(this.fieldName);
+        dest.writeString(this.message);
+        dest.writeString(this.detail);
+    }
+
+    protected ApiError(Parcel in) {
+        this.code = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.fieldName = in.readString();
+        this.message = in.readString();
+        this.detail = in.readString();
+    }
+
+    public static final Parcelable.Creator<ApiError> CREATOR = new Parcelable.Creator<ApiError>() {
+        public ApiError createFromParcel(Parcel source) {
+            return new ApiError(source);
+        }
+
+        public ApiError[] newArray(int size) {
+            return new ApiError[size];
+        }
+    };
+
 }
