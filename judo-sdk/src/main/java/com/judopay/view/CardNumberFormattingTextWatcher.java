@@ -10,15 +10,21 @@ public class CardNumberFormattingTextWatcher implements TextWatcher {
     private static final String SPACE = " ";
     private static final char SPACE_CHAR = ' ';
 
-    private boolean charDeleted;
+    private int start;
+    private int before;
+    private int count;
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        charDeleted = count == 1;
+
     }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) { }
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        this.start = start;
+        this.before = before;
+        this.count = count;
+    }
 
     @Override
     public void afterTextChanged(Editable string) {
@@ -37,20 +43,14 @@ public class CardNumberFormattingTextWatcher implements TextWatcher {
         for (int i = 0; i < string.length(); i++) {
             if (string.charAt(i) == SPACE_CHAR) {
                 if (SPACE_CHAR != pattern.charAt(i)) {
-                    if(charDeleted) {
+                    if (count == 1 && start == i) { // there is a space in a position where it shouldn't be
                         string.delete(i - 1, i + 1);
                     } else {
                         string.delete(i, i + 1);
                     }
                 }
-            } else {
-                if (SPACE_CHAR == pattern.charAt(i)) {
-                    if (charDeleted) {
-//                        string.delete(i - 1, i);
-                    } else {
-                        string.insert(i, SPACE);
-                    }
-                }
+            } else if (SPACE_CHAR == pattern.charAt(i)) { // there is a space in the pattern but not in the string
+                string.insert(i, SPACE);
             }
         }
     }
