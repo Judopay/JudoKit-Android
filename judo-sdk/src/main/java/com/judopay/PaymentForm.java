@@ -67,7 +67,7 @@ public class PaymentForm {
 
     public static class Builder {
 
-        private PaymentForm paymentForm;
+        private final PaymentForm paymentForm;
 
         public Builder() {
             this.paymentForm = new PaymentForm();

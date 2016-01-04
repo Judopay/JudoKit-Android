@@ -43,7 +43,7 @@ public class Card {
 
     public static class Builder {
 
-        private Card card;
+        private final Card card;
 
         public Builder() {
             this.card = new Card();

@@ -94,7 +94,7 @@ public class JudoApiServiceFactory {
                 .create();
     }
 
-    static GsonBuilder getGsonBuilder() {
+    private static GsonBuilder getGsonBuilder() {
         return new GsonBuilder()
                 .registerTypeAdapter(Date.class, new DateJsonDeserializer())
                 .registerTypeAdapter(BigDecimal.class, new FormattedBigDecimalDeserializer());

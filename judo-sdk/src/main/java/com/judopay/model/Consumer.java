@@ -22,7 +22,7 @@ public class Consumer implements Parcelable {
         this.yourConsumerReference = in.readString();
     }
 
-    public static final Parcelable.Creator<Consumer> CREATOR = new Parcelable.Creator<Consumer>() {
+    public static final Creator<Consumer> CREATOR = new Creator<Consumer>() {
         public Consumer createFromParcel(Parcel source) {
             return new Consumer(source);
         }

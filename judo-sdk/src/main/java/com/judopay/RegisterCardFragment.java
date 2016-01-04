@@ -9,7 +9,6 @@ import com.google.gson.Gson;
 import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
-import com.judopay.model.Consumer;
 import com.judopay.payment.form.PaymentFormFragment;
 import com.judopay.payment.form.PaymentFormListener;
 import com.judopay.payment.form.PaymentFormOptions;

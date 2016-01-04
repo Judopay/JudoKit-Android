@@ -50,17 +50,6 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
         initialise();
     }
 
-    @TargetApi(LOLLIPOP)
-    public ThreeDSecureWebView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        initialise();
-    }
-
-    public ThreeDSecureWebView(Context context, AttributeSet attrs, int defStyleAttr, boolean privateBrowsing) {
-        super(context, attrs, defStyleAttr, privateBrowsing);
-        initialise();
-    }
-
     @SuppressLint("AddJavascriptInterface")
     private void initialise() {
         configureSettings();

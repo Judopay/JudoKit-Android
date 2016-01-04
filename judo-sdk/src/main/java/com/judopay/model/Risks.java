@@ -34,7 +34,7 @@ public class Risks implements Parcelable {
         this.postCodeCheck = in.readString();
     }
 
-    public static final Parcelable.Creator<Risks> CREATOR = new Parcelable.Creator<Risks>() {
+    public static final Creator<Risks> CREATOR = new Creator<Risks>() {
         public Risks createFromParcel(Parcel source) {
             return new Risks(source);
         }

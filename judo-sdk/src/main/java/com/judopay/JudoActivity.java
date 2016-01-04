@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.judopay.model.CardToken;
-import com.judopay.model.Consumer;
 import com.judopay.security.RootDetector;
 import com.judopay.security.RootUserBlockedException;
 

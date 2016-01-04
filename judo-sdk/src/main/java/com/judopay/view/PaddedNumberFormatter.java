@@ -1,6 +1,6 @@
 package com.judopay.view;
 
-public class PaddedNumberFormatter {
+class PaddedNumberFormatter {
 
     public static String format(String number, String format) {
         StringBuilder formatBuilder = new StringBuilder();

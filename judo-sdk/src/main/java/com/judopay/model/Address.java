@@ -15,7 +15,7 @@ public class Address {
 
     public static class Builder {
 
-        private Address address;
+        private final Address address;
 
         public Builder() {
             this.address = new Address();

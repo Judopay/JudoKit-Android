@@ -91,7 +91,7 @@ public class PaymentFormValidation {
 
     public static class Builder {
 
-        private PaymentFormValidation paymentFormValidation;
+        private final PaymentFormValidation paymentFormValidation;
 
         public Builder() {
             this.paymentFormValidation = new PaymentFormValidation();
