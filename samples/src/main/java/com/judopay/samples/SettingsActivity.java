@@ -69,7 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
         amexSwitch.setChecked(JudoPay.isAmexEnabled());
         threeDSecureSwitch.setChecked(JudoPay.isThreeDSecureEnabled());
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CurrencyCode.currencyCodes());
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CurrencyCode.currencyNames());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currencySpinner.setAdapter(adapter);
 
@@ -78,7 +78,8 @@ public class SettingsActivity extends AppCompatActivity {
         currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                saveCurrency(adapter.getItem(position));
+                String currency = CurrencyCode.currencyCodes().get(position);
+                saveCurrency(currency);
             }
 
             @Override
