@@ -17,7 +17,7 @@ public class Response implements Parcelable {
 
     private String result;
 
-    @SerializedName("errorCategory")
+    @SerializedName("category")
     private Integer errorCategory;
 
     @SerializedName("explanation")
@@ -173,6 +173,7 @@ public class Response implements Parcelable {
                 '}';
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -186,7 +187,7 @@ public class Response implements Parcelable {
         dest.writeString(this.errorResolution);
         dest.writeString(this.message);
         dest.writeString(this.errorCode);
-        dest.writeList(this.errorDetails);
+        dest.writeTypedList(errorDetails);
     }
 
     public Response() {
@@ -199,11 +200,10 @@ public class Response implements Parcelable {
         this.errorResolution = in.readString();
         this.message = in.readString();
         this.errorCode = in.readString();
-        this.errorDetails = new ArrayList<>();
-        in.readList(this.errorDetails, List.class.getClassLoader());
+        this.errorDetails = in.createTypedArrayList(ApiError.CREATOR);
     }
 
-    public static final Creator<Response> CREATOR = new Creator<Response>() {
+    public static final Parcelable.Creator<Response> CREATOR = new Parcelable.Creator<Response>() {
         public Response createFromParcel(Parcel source) {
             return new Response(source);
         }
