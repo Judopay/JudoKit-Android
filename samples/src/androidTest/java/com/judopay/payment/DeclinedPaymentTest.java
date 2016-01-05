@@ -19,7 +19,7 @@ public class DeclinedPaymentTest extends PaymentTest {
         pressPaymentScreenButton();
 
         //When I enter my card details
-        enterCardDetails("4221690000004963", "1219", "125");
+        enterCardDetails("4221690000004963", "1220", "125");
 
         //And I press the pay button
         pressPayButton();
@@ -44,7 +44,7 @@ public class DeclinedPaymentTest extends PaymentTest {
         pressPaymentScreenButton();
 
         //When I enter my card details
-        enterCardDetails("6759000000009076", "0107", "01", "1219", "671");
+        enterCardDetails("6759000000009076", "0107", "01", "1220", "671");
 
         //And I press the pay button
         pressPayButton();
@@ -69,7 +69,7 @@ public class DeclinedPaymentTest extends PaymentTest {
         pressPaymentScreenButton();
 
         //When I enter my card details
-        enterCardDetails("340000150358074", "1219", "7654");
+        enterCardDetails("340000150358074", "1220", "7654");
 
         //And I press the pay button
         pressPayButton();
@@ -91,7 +91,7 @@ public class DeclinedPaymentTest extends PaymentTest {
         pressPaymentScreenButton();
 
         //When I enter my card details
-        enterCardDetails("4221690000004963", "1219", "125", "N226JN");
+        enterCardDetails("4221690000004963", "1220", "125", "N226JN");
 
         //And I press the pay button
         pressPayButton();
@@ -116,7 +116,7 @@ public class DeclinedPaymentTest extends PaymentTest {
         pressPaymentScreenButton();
 
         //When I enter my card details
-        enterCardDetails("6759000000009076", "0107", "01", "1219", "671", "OX143AL");
+        enterCardDetails("6759000000009076", "0107", "01", "1220", "671", "OX143AL");
 
         //And I press the pay button
         pressPayButton();
@@ -141,7 +141,7 @@ public class DeclinedPaymentTest extends PaymentTest {
         pressPaymentScreenButton();
 
         //When I enter my card details
-        enterCardDetails("340000150358074", "1219", "7654", "TQ11BH");
+        enterCardDetails("340000150358074", "1220", "7654", "TQ11BH");
 
         //And I press the pay button
         pressPayButton();

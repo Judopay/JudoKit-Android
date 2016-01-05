@@ -25,7 +25,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
         pressPaymentScreenButton();
 
         //When I enter a valid expiry date
-        enterAnExpiryDate("1219");
+        enterAnExpiryDate("1220");
 
         //Then the CVV field is in focus
         assertThat(id(R.id.cvv_edit_text).isFocused(), equalTo(true));
@@ -43,7 +43,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
         pressPaymentScreenButton();
 
         //When I enter valid card details
-        enterCardDetails("4976000000003436", "1219", "452");
+        enterCardDetails("4976000000003436", "1220", "452");
 
         //Then the Postcode field is in focus
         assertThat(id(R.id.post_code_edit_text).isFocused(), equalTo(true));
@@ -108,7 +108,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
         enterACardNumber("6759000000005462");
 
         //And I enter a valid expiry date
-        enterAnExpiryDate("1219");
+        enterAnExpiryDate("1220");
 
         //Then the CVV field is in focus
         assertThat(id(R.id.cvv_edit_text).isFocused(), equalTo(true));
@@ -129,7 +129,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest extends PaymentTest 
         pressPaymentScreenButton();
 
         //When I enter valid card details
-        enterCardDetails("6759000000005462", "0107", "01", "1219", "789");
+        enterCardDetails("6759000000005462", "0107", "01", "1220", "789");
 
         //Then the Postcode field is in focus
         assertThat(id(R.id.post_code_edit_text).isFocused(), equalTo(true));
