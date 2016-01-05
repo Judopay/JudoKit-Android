@@ -76,7 +76,7 @@ public final class PaymentFormFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_payment_form, container, false);
+        View view = inflater.inflate(R.layout.fragment_card_entry, container, false);
 
         paymentButton = (Button) view.findViewById(R.id.payment_button);
 
