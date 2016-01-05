@@ -122,7 +122,7 @@ public class PaymentFormErrorMessageTest extends PaymentTest {
         pressPaymentScreenButton();
 
         //When I enter card details
-        enterCardDetails("4976000000003436", "1220", "452");
+        enterCardDetails("4976000000003436", "1219", "452");
 
         //And select "Other" as billing country
         pressBillingCountry();
