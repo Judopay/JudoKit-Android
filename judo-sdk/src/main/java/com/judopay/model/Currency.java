@@ -1,9 +1,9 @@
-package com.judopay;
+package com.judopay.model;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class CurrencyCode {
+public class Currency {
 
     public static final String AUD = "AUD";
     public static final String CAD = "CAD";

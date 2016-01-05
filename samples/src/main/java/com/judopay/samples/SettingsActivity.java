@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 
-import com.judopay.CurrencyCode;
+import com.judopay.model.Currency;
 import com.judopay.JudoPay;
 
 import butterknife.Bind;
@@ -69,7 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
         amexSwitch.setChecked(JudoPay.isAmexEnabled());
         threeDSecureSwitch.setChecked(JudoPay.isThreeDSecureEnabled());
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CurrencyCode.currencyNames());
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Currency.currencyNames());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currencySpinner.setAdapter(adapter);
 
@@ -78,7 +78,7 @@ public class SettingsActivity extends AppCompatActivity {
         currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String currency = CurrencyCode.currencyCodes().get(position);
+                String currency = Currency.currencyCodes().get(position);
                 saveCurrency(currency);
             }
 
@@ -128,6 +128,6 @@ public class SettingsActivity extends AppCompatActivity {
         String currency = getSharedPreferences(MainActivity.SHARED_PREFS_NAME, MODE_PRIVATE)
                 .getString(MainActivity.CURRENCY_KEY, null);
 
-        return CurrencyCode.currencyCodes().indexOf(currency);
+        return Currency.currencyCodes().indexOf(currency);
     }
 }
