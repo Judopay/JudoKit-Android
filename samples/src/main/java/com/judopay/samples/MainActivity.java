@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.judopay.CurrencyCode;
 import com.judopay.Dialogs;
 import com.judopay.JudoActivity;
 import com.judopay.JudoPay;
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         this.currency = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
-                .getString(CURRENCY_KEY, "GBP");
+                .getString(CURRENCY_KEY, CurrencyCode.GBP);
     }
 
     @Override

@@ -11,10 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 
+import com.judopay.CurrencyCode;
 import com.judopay.JudoPay;
-
-import java.util.Arrays;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -71,7 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
         amexSwitch.setChecked(JudoPay.isAmexEnabled());
         threeDSecureSwitch.setChecked(JudoPay.isThreeDSecureEnabled());
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, getCurrencies());
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CurrencyCode.currencyCodes());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currencySpinner.setAdapter(adapter);
 
@@ -125,15 +123,10 @@ public class SettingsActivity extends AppCompatActivity {
                 .apply();
     }
 
-    private List<String> getCurrencies() {
-        String[] currencies = {"GBP", "USD", "CAD"};
-        return Arrays.asList(currencies);
-    }
-
     private int getCurrencySelection() {
         String currency = getSharedPreferences(MainActivity.SHARED_PREFS_NAME, MODE_PRIVATE)
                 .getString(MainActivity.CURRENCY_KEY, null);
 
-        return getCurrencies().indexOf(currency);
+        return CurrencyCode.currencyCodes().indexOf(currency);
     }
 }
