@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.judopay.model.Currency;
 import com.judopay.Dialogs;
 import com.judopay.JudoActivity;
 import com.judopay.JudoPay;
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         this.currency = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
-                .getString(CURRENCY_KEY, "GBP");
+                .getString(CURRENCY_KEY, Currency.GBP);
     }
 
     @Override
@@ -246,9 +247,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleResult(int resultCode, Intent data) {
+        Receipt response = data.getParcelableExtra(JUDO_RECEIPT);
+
         switch (resultCode) {
             case JudoPay.RESULT_SUCCESS:
-                Receipt response = data.getParcelableExtra(JUDO_RECEIPT);
                 Toast.makeText(MainActivity.this, "Success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
                 break;
 
