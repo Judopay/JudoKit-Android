@@ -247,10 +247,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleResult(int resultCode, Intent data) {
-        Receipt response = data.getParcelableExtra(JUDO_RECEIPT);
-
         switch (resultCode) {
             case JudoPay.RESULT_SUCCESS:
+                Receipt response = data.getParcelableExtra(JUDO_RECEIPT);
                 Toast.makeText(MainActivity.this, "Success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
                 break;
 
