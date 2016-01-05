@@ -49,8 +49,11 @@ public class CardNumberFormattingTextWatcher implements TextWatcher {
                         string.delete(i, i + 1);
                     }
                 }
-            } else if (SPACE_CHAR == pattern.charAt(i)) { // there is a space in the pattern but not in the string
-                string.insert(i, SPACE);
+            } else if (SPACE_CHAR == pattern.charAt(i)) {
+                // there is a space in the pattern but not in the string
+                if(!(before == 1 && count == 0)) {
+                    string.insert(i, SPACE);
+                }
             }
         }
     }
