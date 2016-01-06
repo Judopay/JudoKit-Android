@@ -62,9 +62,9 @@ abstract class BasePresenter implements ThreeDSecureListener {
                         try {
                             Reader reader = response.errorBody().charStream();
                             Receipt receipt = gson.fromJson(reader, Receipt.class);
-                            paymentFormView.handleError(receipt);
+                            paymentFormView.showDeclinedMessage(receipt);
                         } catch (IOException e) {
-                            throw new RuntimeException(e);
+                            paymentFormView.handleError(null);
                         }
                     }
                 } else if(throwable instanceof java.net.UnknownHostException) {
