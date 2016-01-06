@@ -13,7 +13,7 @@ import com.judopay.payment.form.CardEntryFragment;
 import com.judopay.payment.form.PaymentFormListener;
 import com.judopay.payment.form.PaymentFormOptions;
 
-public class RegisterCardFragment extends BasePaymentFragment implements PaymentFormView, PaymentFormListener {
+public class RegisterCardFragment extends BaseFragment implements PaymentFormView, PaymentFormListener {
 
     private RegisterCardPresenter presenter;
 

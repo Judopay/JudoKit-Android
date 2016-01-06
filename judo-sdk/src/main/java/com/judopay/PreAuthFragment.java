@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.model.Card;
 
-public final class PreAuthFragment extends BasePaymentFragment {
+public final class PreAuthFragment extends BaseFragment {
 
     private PreAuthPresenter presenter;
 
