@@ -9,7 +9,7 @@ import com.google.gson.Gson;
 import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
-import com.judopay.payment.form.PaymentFormFragment;
+import com.judopay.payment.form.CardEntryFragment;
 import com.judopay.payment.form.PaymentFormListener;
 import com.judopay.payment.form.PaymentFormOptions;
 
@@ -32,7 +32,7 @@ public class RegisterCardFragment extends BaseFragment implements PaymentFormVie
     }
 
     @Override
-    protected PaymentFormFragment createPaymentFormFragment() {
+    protected CardEntryFragment createPaymentFormFragment() {
         CardToken cardToken = getArguments().getParcelable(JudoPay.JUDO_CARD_TOKEN);
         String buttonLabel = getString(R.string.add_card);
 
@@ -41,7 +41,7 @@ public class RegisterCardFragment extends BaseFragment implements PaymentFormVie
                 .setButtonLabel(buttonLabel)
                 .build();
 
-        return PaymentFormFragment.newInstance(paymentFormOptions, this);
+        return CardEntryFragment.newInstance(paymentFormOptions, this);
     }
 
     @Override
