@@ -8,7 +8,7 @@ import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
 
-public class TokenPreAuthFragment extends BasePaymentFragment {
+public class TokenPreAuthFragment extends BaseFragment {
 
     private TokenPreAuthPresenter presenter;
 

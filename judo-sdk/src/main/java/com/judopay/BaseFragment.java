@@ -22,7 +22,7 @@ import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
 import com.judopay.secure3d.ThreeDSecureWebView;
 
-abstract class BasePaymentFragment extends Fragment implements PaymentFormView, PaymentFormListener {
+abstract class BaseFragment extends Fragment implements PaymentFormView, PaymentFormListener {
 
     private static final String TAG_PAYMENT_FORM = "PaymentFormFragment";
     private static final String TAG_3DS_DIALOG = "3dSecureDialog";
@@ -117,7 +117,7 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
 
     @Override
     public void showDeclinedMessage(Receipt receipt) {
-        if (receipt.isDeclined() && getArguments().getBoolean(JudoPay.JUDO_ALLOW_DECLINED_CARD_AMEND, true)) {
+        if (getArguments().getBoolean(JudoPay.JUDO_ALLOW_DECLINED_CARD_AMEND, true)) {
             Dialogs.createDeclinedPaymentDialog(getActivity()).show();
         } else {
             setDeclinedAndFinish(receipt);
@@ -146,7 +146,6 @@ abstract class BasePaymentFragment extends Fragment implements PaymentFormView, 
         threeDSecureWebView.setThreeDSecureListener(listener);
 
         threeDSecureWebView.authorize(receipt.getAcsUrl(), receipt.getMd(), receipt.getPaReq(), receipt.getReceiptId());
-
     }
 
     @Override
