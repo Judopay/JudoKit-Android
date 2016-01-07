@@ -53,12 +53,9 @@ The judoNative Android SDK provides 3 base Themes for the out-of-the-box UI, whi
   
 Depending on the styles used in your app, you should expand on the most appropriate theme to ensure the seamlessness of the whole UX.
 
-<p><img align="left" src="/samples/screens/android-theme-light.png" width="257" height="480"></p>
-<p><img align="left" src="/samples/screens/android-theme-dark.png" width="257" height="480"></p>
-<p><img align="left" src="/samples/screens/android-theme-custom.png" width="257" height="480"></p>
-
-</br>
-</br>
+![Screenshot of judo light theme](/samples/screens/android-theme-light.png)
+![Screenshot of judo light theme](/samples/screens/android-theme-dark.png)
+![Screenshot of judo light theme](/samples/screens/android-theme-custom.png)
 
 #### Customizing the theme
 
