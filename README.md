@@ -1,7 +1,5 @@
 # judoNative SDK for Android [ ![Download](https://api.bintray.com/packages/judopay/maven/android-sdk/images/download.svg) ](https://bintray.com/judopay/maven/android-sdk/_latestVersion)
 
-<p><img align="right" src="samples/screens/payment_screen.png" width="257" height="480"></p>
-
 The judoNative Android library lets you integrate secure in-app card payments into your Android app. Judo's SDK enables a faster, simpler and more secure payment experience within your app. 
 
 You can use our out of the box UI for a fully PCI Level 1 compliant payment experience that is customisable to match your app. Alternatively, you can also use the RESTful API directly to implement your own UI.
@@ -44,6 +42,55 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     }
 }
 ```
+
+## Android theming
+
+The judoNative Android SDK provides 3 base Themes for the out-of-the-box UI, which can be used to customize the appearance of the payment form:
+
+  - **Theme.Judo** — Theme with dark background and action bar
+  - **Theme.Judo.Light** — Theme with light background and action bar
+  - **Theme.Judo.Light.DarkActionBar** — Theme with light background and dark action bar
+  
+Depending on the styles used in your app, you should expand on the most appropriate theme to ensure the seamlessness of the whole UX.
+
+<p><img align="left" src="/samples/screens/android-theme-light.png" width="257" height="480"></p>
+<p><img align="left" src="/samples/screens/android-theme-dark.png" width="257" height="480"></p>
+<p><img align="left" src="/samples/screens/android-theme-custom.png" width="257" height="480"></p>
+
+</br>
+</br>
+
+#### Customizing the theme
+
+ 1. Create a style that extends from one of the provided base Themes, for example:
+```
+<style name="AppTheme" parent="Theme.Judo.Light">
+    <item name="colorPrimary">#3F51B5</item> // action bar colour
+    <item name="colorPrimaryDark">#303F9F</item> // status bar colour
+    <item name="colorButtonNormal">#E91E63</item> // button colour
+    <item name="textColorPrimary">#333333</item> // text colour
+    <item name="colorControlActivated">#3F51B5</item> // form field hint colour
+</style>
+```
+ 
+ 2. Specify the activity in your AndroidManifest.xml file with the customized theme:
+```
+<activity
+    android:name="com.judopay.PaymentActivity"
+    android:theme="@style/AppTheme" />
+```
+
+The full list of Activity classes that can be changed are:
+
+ - com.judopay.PaymentActivity
+ - com.judopay.PreAuthActivity
+ - com.judopay.RegisterCardActivity
+ - com.judopay.TokenPaymentActivity
+ - com.judopay.TokenPreAuthActivity
+
+Find more information on how to customize themes on the Android website:
+http://developer.android.com/training/material/theme.html#ColorPalette5
+
 
 ## License
 See the [LICENSE](https://github.com/JudoPay/Judo-Android/blob/master/LICENSE) file for license rights and limitations (MIT).
