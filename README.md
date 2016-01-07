@@ -58,19 +58,18 @@ Depending on the styles used in your app, you should expand on the most appropri
 ![Screenshot of judo light theme](/samples/screens/android-theme-custom.png)
 
 #### Customizing the theme
+1. Create a style that extends from one of the provided base Themes, for example:
 
- 1. Create a style that extends from one of the provided base Themes, for example:
-```
-<style name="AppTheme" parent="Theme.Judo.Light">
-    <item name="colorPrimary">#3F51B5</item> // action bar colour
-    <item name="colorPrimaryDark">#303F9F</item> // status bar colour
-    <item name="colorButtonNormal">#E91E63</item> // button colour
-    <item name="textColorPrimary">#333333</item> // text colour
-    <item name="colorControlActivated">#3F51B5</item> // form field hint colour
-</style>
-```
- 
- 2. Specify the activity in your AndroidManifest.xml file with the customized theme:
+    ```
+    <style name="AppTheme" parent="Theme.Judo.Light">
+        <item name="colorPrimary">#3F51B5</item> // action bar colour
+        <item name="colorPrimaryDark">#303F9F</item> // status bar colour
+        <item name="colorButtonNormal">#E91E63</item> // button colour
+        <item name="textColorPrimary">#333333</item> // text colour
+        <item name="colorControlActivated">#3F51B5</item> // form field hint colour
+    </style>
+    ```
+2. Specify the activity in your AndroidManifest.xml file with the customized theme:
 ```
 <activity
     android:name="com.judopay.PaymentActivity"
