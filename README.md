@@ -59,7 +59,6 @@ Depending on the styles used in your app, you should expand on the most appropri
 
 #### Customizing the theme
 1. Create a style that extends from one of the provided base Themes, for example:
-
     ```
     <style name="AppTheme" parent="Theme.Judo.Light">
         <item name="colorPrimary">#3F51B5</item> // action bar colour
