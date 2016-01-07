@@ -51,7 +51,7 @@ The judoNative Android SDK provides 3 base Themes for the out-of-the-box UI, whi
   - **Theme.Judo.Light** — Theme with light background and action bar
   - **Theme.Judo.Light.DarkActionBar** — Theme with light background and dark action bar
   
-Depending on the styles used in your app, you should expand on the most appropriate theme to ensure the seamlessness of the whole UX.
+Depending on the styles used in your app, you should expand on the most appropriate theme to ensure a seamless user experience.
 
 ![Screenshot of judo light theme](/samples/screens/android-theme-light.png)
 ![Screenshot of judo light theme](/samples/screens/android-theme-dark.png)
