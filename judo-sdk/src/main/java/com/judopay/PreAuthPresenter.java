@@ -27,7 +27,7 @@ class PreAuthPresenter extends BasePresenter {
                 .setCardNumber(card.getCardNumber())
                 .setCurrency(currency)
                 .setCv2(card.getCv2())
-                .setJudoId(Long.valueOf(judoId))
+                .setJudoId(judoId)
                 .setYourConsumerReference(consumerRef)
                 .setExpiryDate(card.getExpiryDate());
 

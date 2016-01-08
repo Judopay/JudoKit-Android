@@ -1,10 +1,11 @@
 package com.judopay.model;
 
+import com.judopay.UniqueIdentifier;
 import com.judopay.api.Request;
 
 public class RegisterTransaction extends Request {
 
-    private Long judoId;
+    private String judoId;
     private Location consumerLocation;
     private String yourConsumerReference;
     private Address cardAddress;
@@ -14,9 +15,17 @@ public class RegisterTransaction extends Request {
     private String startDate;
     private String issueNumber;
 
-    private RegisterTransaction() { }
+    private final String yourPaymentReference;
 
-    public Long getJudoId() {
+    private RegisterTransaction() {
+        this.yourPaymentReference = UniqueIdentifier.generate();
+    }
+
+    public String getYourPaymentReference() {
+        return yourPaymentReference;
+    }
+
+    public String getJudoId() {
         return judoId;
     }
 
@@ -54,7 +63,7 @@ public class RegisterTransaction extends Request {
 
     public static class Builder {
 
-        private Long judoId;
+        private String judoId;
         private Location consumerLocation;
         private String yourConsumerReference;
         private Address cardAddress;
@@ -64,7 +73,7 @@ public class RegisterTransaction extends Request {
         private String startDate;
         private String issueNumber;
 
-        public Builder setJudoId(Long judoId) {
+        public Builder setJudoId(String judoId) {
             this.judoId = judoId;
             return this;
         }
