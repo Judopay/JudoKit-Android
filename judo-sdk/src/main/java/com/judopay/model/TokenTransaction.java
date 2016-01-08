@@ -25,10 +25,10 @@ public class TokenTransaction extends Request {
     @SerializedName("cardType")
     private int type;
 
+    private String judoId;
     private String amount;
     private Location consumerLocation;
     private String currency;
-    private Long judoId;
     private String yourConsumerReference;
     private Address cardAddress;
     private String cv2;
@@ -69,7 +69,7 @@ public class TokenTransaction extends Request {
         return currency;
     }
 
-    public long getJudoId() {
+    public String getJudoId() {
         return judoId;
     }
 
@@ -102,7 +102,7 @@ public class TokenTransaction extends Request {
         private String amount;
         private Location consumerLocation;
         private String currency;
-        private Long judoId;
+        private String judoId;
         private String yourConsumerReference;
         private Address cardAddress;
         private String cv2;
@@ -143,7 +143,7 @@ public class TokenTransaction extends Request {
             return this;
         }
 
-        public Builder setJudoId(Long judoId) {
+        public Builder setJudoId(String judoId) {
             this.judoId = judoId;
             return this;
         }

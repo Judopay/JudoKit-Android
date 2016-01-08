@@ -16,7 +16,7 @@ class RegisterCardPresenter extends BasePresenter {
         paymentFormView.showLoading();
 
         RegisterTransaction.Builder builder = new RegisterTransaction.Builder()
-                .setJudoId(Long.valueOf(judoId))
+                .setJudoId(judoId)
                 .setCardAddress(card.getCardAddress())
                 .setCardNumber(card.getCardNumber())
                 .setCv2(card.getCv2())

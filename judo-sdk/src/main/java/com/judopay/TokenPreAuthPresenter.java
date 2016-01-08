@@ -25,7 +25,7 @@ class TokenPreAuthPresenter extends BasePresenter {
                 .setCardAddress(card.getCardAddress())
                 .setConsumerLocation(new Location())
                 .setCurrency(currency)
-                .setJudoId(Long.valueOf(judoId))
+                .setJudoId(judoId)
                 .setYourConsumerReference(consumerRef)
                 .setCv2(card.getCv2())
                 .setMetaData(toMap(metaData))

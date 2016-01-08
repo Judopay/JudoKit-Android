@@ -10,7 +10,7 @@ public class PaymentTransaction extends Request {
     private String amount;
     private Location consumerLocation;
     private String currency;
-    private long judoId;
+    private String judoId;
     private String yourConsumerReference;
     private Address cardAddress;
     private String cardNumber;
@@ -39,7 +39,7 @@ public class PaymentTransaction extends Request {
         return currency;
     }
 
-    public long getJudoId() {
+    public String getJudoId() {
         return judoId;
     }
 
@@ -88,7 +88,7 @@ public class PaymentTransaction extends Request {
         private String amount;
         private Location consumerLocation;
         private String currency;
-        private long judoId;
+        private String judoId;
         private String yourConsumerReference;
         private String yourPaymentReference;
         private Address cardAddress;
@@ -115,7 +115,7 @@ public class PaymentTransaction extends Request {
             return this;
         }
 
-        public Builder setJudoId(long judoId) {
+        public Builder setJudoId(String judoId) {
             this.judoId = judoId;
             return this;
         }
@@ -170,7 +170,7 @@ public class PaymentTransaction extends Request {
                 throw new IllegalArgumentException("currency must be set");
             }
 
-            if (this.judoId == 0) {
+            if (this.judoId == null || this.judoId.length() == 0) {
                 throw new IllegalArgumentException("judoId must be set");
             }
 
