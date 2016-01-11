@@ -7,6 +7,7 @@
 - Maestro card type support is now enabled in the SDK by default.
 - The sample app settings page now includes the full list of current and future supported currencies.
 - A more useful error message is provided if the judoNative SDK is not properly initialized.
+- Duplication prevention built in to protect merchants and consumers against duplicated transactions.
 
 **Bugs fixed:**
 - Fixed an issue that prevented card details from being amended when attempting to register a card with validation errors.
