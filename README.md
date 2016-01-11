@@ -13,7 +13,7 @@ compile 'com.judopay:android-sdk:5.0.1'
 ##### 2. Initialise the SDK
 From your app's main Activity class, or Application class, initialise the judo SDK with your API token and secret:
 ```java
-Judo.setup("MY_API_TOKEN", "MY_API_SECRET", JudoPay.Environment.SANDBOX);
+Judo.setup("MY_API_TOKEN", "MY_API_SECRET", Judo.Environment.SANDBOX);
 ```
 ##### 3. Perform a test payment
 To show the payment screen, create an Intent for the PaymentActivity with the required Intent extras:
