@@ -12,13 +12,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.judopay.model.Currency;
 import com.judopay.Dialogs;
 import com.judopay.JudoActivity;
 import com.judopay.JudoPay;
 import com.judopay.RegisterCardActivity;
 import com.judopay.TokenPaymentActivity;
 import com.judopay.model.CardToken;
+import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
 
 import butterknife.Bind;
@@ -250,7 +250,17 @@ public class MainActivity extends AppCompatActivity {
         switch (resultCode) {
             case JudoPay.RESULT_SUCCESS:
                 Receipt response = data.getParcelableExtra(JUDO_RECEIPT);
-                Toast.makeText(MainActivity.this, "Success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.payment_successful))
+                        .setMessage("Receipt ID: " + response.getReceiptId())
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .create()
+                        .show();
                 break;
 
             case JudoPay.RESULT_DECLINED:

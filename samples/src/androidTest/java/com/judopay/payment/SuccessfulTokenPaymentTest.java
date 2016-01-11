@@ -1,14 +1,9 @@
 package com.judopay.payment;
 
 
-import com.judopay.samples.R;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-
 public class SuccessfulTokenPaymentTest extends PaymentTest {
 
-    public void testTokenPaymentAVSDisabled3DSecureDisabledSuccessfulVisa(){
+    public void testTokenPaymentAVSDisabled3DSecureDisabledSuccessfulVisa() {
         //Given AVS is disabled
         pressSettingsButton();
 
@@ -34,8 +29,8 @@ public class SuccessfulTokenPaymentTest extends PaymentTest {
         pressPayButton();
 
         //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertPaymentSuccessDialogDisplayed();
+        pressDialogPrimaryButton();
     }
 
     public void testTokenPaymentAVSEnabled3DSecureDisabledSuccessfulVisa() {
@@ -65,8 +60,9 @@ public class SuccessfulTokenPaymentTest extends PaymentTest {
         pressPayButton();
 
         //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertPaymentSuccessDialogDisplayed();
+        pressDialogPrimaryButton();
     }
+
 }
 
