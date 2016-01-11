@@ -3,6 +3,7 @@
 ## [5.0.1](https://github.com/judopay/Judo-Android/tree/5.0.1) (2016-01-07)
 
 **Implemented enhancements:**
+- SHA 256 SSL/TLS Certificate upgrade - an industry-wide security update to protect you against man-in-the-middle attacks
 - Maestro card type support is now enabled in the SDK by default.
 - The sample app settings page now includes the full list of current and future supported currencies.
 - A more useful error message is provided if the judoNative SDK is not properly initialised.
