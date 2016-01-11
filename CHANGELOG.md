@@ -14,6 +14,9 @@
 - Fixed an issue with card digits being skipped when attempting to type into the card number input field.
 - Merged judo-sdk and judo-data modules due to an issue with resolving library internal dependencies found when releasing previous SDK version.
 
+**Changes:**
+- Renamed JudoPay initialization class to be called Judo, for consistency across SDK platforms.
+
 ## [5.0](https://github.com/judopay/Judo-Android/tree/5.0) (2015-12-10)
 
 **Implemented enhancements:**
