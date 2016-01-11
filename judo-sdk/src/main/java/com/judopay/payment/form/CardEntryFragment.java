@@ -17,7 +17,7 @@ import android.widget.ScrollView;
 
 import com.judopay.CardNumberValidation;
 import com.judopay.CountryAndPostcodeValidation;
-import com.judopay.JudoPay;
+import com.judopay.Judo;
 import com.judopay.PaymentForm;
 import com.judopay.PaymentFormValidation;
 import com.judopay.R;
@@ -40,7 +40,7 @@ import com.judopay.view.ScrollOnFocusChangeListener;
 import com.judopay.view.SimpleTextWatcher;
 import com.judopay.view.SingleClickOnClickListener;
 
-import static com.judopay.JudoPay.isAvsEnabled;
+import static com.judopay.Judo.isAvsEnabled;
 
 public final class CardEntryFragment extends Fragment {
 
@@ -257,9 +257,9 @@ public final class CardEntryFragment extends Fragment {
                 .setIssueNumber(getIssueNumber())
                 .setExpiryDate(trim(expiryDateEditText))
                 .setStartDate(trim(startDateEditText))
-                .setAddressRequired(JudoPay.isAvsEnabled())
-                .setAmexSupported(JudoPay.isAmexEnabled())
-                .setMaestroSupported(JudoPay.isMaestroEnabled());
+                .setAddressRequired(Judo.isAvsEnabled())
+                .setAmexSupported(Judo.isAmexEnabled())
+                .setMaestroSupported(Judo.isMaestroEnabled());
 
         CardToken cardToken = paymentFormOptions.getCardToken();
 

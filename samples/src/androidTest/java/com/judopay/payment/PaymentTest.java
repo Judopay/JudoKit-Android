@@ -7,6 +7,9 @@ import com.judopay.samples.R;
 import io.appium.droiddriver.UiElement;
 import io.appium.droiddriver.finders.By;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+
 public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
 
     public PaymentTest() {
@@ -181,7 +184,6 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         payButton.click();
     }
 
-
     /*
         Billing country dropdown options:
      */
@@ -214,6 +216,11 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
 
         otherElement.click();
     }
+
+    protected void assertPaymentSuccessDialogDisplayed() {
+        assertThat(find(By.text("Payment successful")).isVisible(), equalTo(true));
+    }
+
 
     protected void pressDialogPrimaryButton() {
         id(android.R.id.button1).click();

@@ -2,13 +2,13 @@ package com.judopay.api;
 
 import android.util.Base64;
 
-import com.judopay.JudoPay;
+import com.judopay.Judo;
 
 class AuthorizationEncoder {
 
     public String getAuthorization() {
-        String apiToken = JudoPay.getApiToken();
-        String apiSecret = JudoPay.getApiSecret();
+        String apiToken = Judo.getApiToken();
+        String apiSecret = Judo.getApiSecret();
 
         if (apiToken == null || apiToken.length() == 0) {
             throw new RuntimeException("Judo Payments API Token not specified");

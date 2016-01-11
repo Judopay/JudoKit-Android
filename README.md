@@ -13,17 +13,17 @@ compile 'com.judopay:android-sdk:5.0.1'
 ##### 2. Initialise the SDK
 From your app's main Activity class, or Application class, initialise the judo SDK with your API token and secret:
 ```java
-JudoPay.setup("MY_API_TOKEN", "MY_API_SECRET", JudoPay.Environment.SANDBOX);
+Judo.setup("MY_API_TOKEN", "MY_API_SECRET", Judo.Environment.SANDBOX);
 ```
 ##### 3. Perform a test payment
 To show the payment screen, create an Intent for the PaymentActivity with the required Intent extras:
 ```java
 Intent intent = new Intent(activity, PaymentActivity.class);
 
-intent.putExtra(JudoPay.JUDO_ID, "35843095834");
-intent.putExtra(JudoPay.JUDO_AMOUNT, "9.99");
-intent.putExtra(JudoPay.JUDO_CURRENCY, "GBP");
-intent.putExtra(JudoPay.JUDO_CONSUMER, "consumerRef");
+intent.putExtra(Judo.JUDO_ID, "35843095834");
+intent.putExtra(Judo.JUDO_AMOUNT, "9.99");
+intent.putExtra(Judo.JUDO_CURRENCY, "GBP");
+intent.putExtra(Judo.JUDO_CONSUMER, "consumerRef");
 
 startActivityForResult(intent, PAYMENT_REQUEST);
 ```
@@ -35,8 +35,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if(requestCode == PAYMENT_REQUEST) {
         switch (resultCode) {
-            case JudoPay.RESULT_SUCCESS:
-                Receipt receipt = data.getParcelableExtra(JudoPay.JUDO_RECEIPT);
+            case Judo.RESULT_SUCCESS:
+                Receipt receipt = data.getParcelableExtra(Judo.JUDO_RECEIPT);
                 // handle successful payment
       }
     }

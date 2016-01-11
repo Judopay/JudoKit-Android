@@ -2,11 +2,11 @@ package com.judopay;
 
 import android.os.Bundle;
 
-import static com.judopay.JudoPay.JUDO_AMOUNT;
-import static com.judopay.JudoPay.JUDO_CARD_TOKEN;
-import static com.judopay.JudoPay.JUDO_CONSUMER;
-import static com.judopay.JudoPay.JUDO_CURRENCY;
-import static com.judopay.JudoPay.JUDO_ID;
+import static com.judopay.Judo.JUDO_AMOUNT;
+import static com.judopay.Judo.JUDO_CARD_TOKEN;
+import static com.judopay.Judo.JUDO_CONSUMER;
+import static com.judopay.Judo.JUDO_CURRENCY;
+import static com.judopay.Judo.JUDO_ID;
 
 public final class TokenPaymentActivity extends JudoActivity {
 

@@ -1,10 +1,5 @@
 package com.judopay.payment;
 
-import com.judopay.samples.R;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-
 public class SuccessfulPaymentTest extends PaymentTest {
 
     public void testPaymentSuccessfulAVSDisabled3DSecureDisabledVisa() {
@@ -25,10 +20,9 @@ public class SuccessfulPaymentTest extends PaymentTest {
         pressPayButton();
 
         //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertPaymentSuccessDialogDisplayed();
+        pressDialogPrimaryButton();
     }
-
 
     public void testPaymentSuccessfulAVSDisabled3DSecureDisabledMaestro() {
         //Given AVS is disabled
@@ -51,10 +45,9 @@ public class SuccessfulPaymentTest extends PaymentTest {
         pressPayButton();
 
         //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertPaymentSuccessDialogDisplayed();
+        pressDialogPrimaryButton();
     }
-
 
     public void testPaymentSuccessfulAVSDisabled3DSecureDisabledAMEX() {
         //Given AVS is disabled
@@ -77,8 +70,8 @@ public class SuccessfulPaymentTest extends PaymentTest {
         pressPayButton();
 
         //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertPaymentSuccessDialogDisplayed();
+        pressDialogPrimaryButton();
     }
 
     public void testPaymentSuccessfulAVSEnabled3DSecureDisabledVisa() {
@@ -99,8 +92,8 @@ public class SuccessfulPaymentTest extends PaymentTest {
         pressPayButton();
 
         //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertPaymentSuccessDialogDisplayed();
+        pressDialogPrimaryButton();
     }
 
     public void testPaymentSuccessfulAVSEnabled3DSecureDisabledMaestro() {
@@ -124,8 +117,8 @@ public class SuccessfulPaymentTest extends PaymentTest {
         pressPayButton();
 
         //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertPaymentSuccessDialogDisplayed();
+        pressDialogPrimaryButton();
     }
 
     public void testPaymentSuccessfulAVSEnabled3DSecureDisabledAMEX() {
@@ -149,8 +142,8 @@ public class SuccessfulPaymentTest extends PaymentTest {
         pressPayButton();
 
         //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertPaymentSuccessDialogDisplayed();
+        pressDialogPrimaryButton();
     }
 
 }

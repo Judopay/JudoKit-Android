@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.judopay.Judo;
 import com.judopay.JudoApiService;
-import com.judopay.JudoPay;
 import com.judopay.model.ClientDetails;
 import com.squareup.okhttp.CertificatePinner;
 import com.squareup.okhttp.Interceptor;
@@ -59,7 +59,7 @@ public class JudoApiServiceFactory {
         return new Retrofit.Builder()
                 .addConverterFactory(getGsonConverterFactory(context))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .baseUrl(JudoPay.getApiEnvironmentHost())
+                .baseUrl(Judo.getApiEnvironmentHost())
                 .client(getOkHttpClient())
                 .build();
     }
@@ -101,7 +101,7 @@ public class JudoApiServiceFactory {
     }
 
     private static void setSslPinning(OkHttpClient client) {
-        if (JudoPay.isSslPinningEnabled()) {
+        if (Judo.isSslPinningEnabled()) {
             client.setCertificatePinner(new CertificatePinner.Builder()
                     .add(PARTNER_API_SANDBOX_HOST, CERTIFICATE_1)
                     .add(PARTNER_API_SANDBOX_HOST, CERTIFICATE_2)
