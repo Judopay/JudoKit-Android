@@ -2,16 +2,16 @@ package com.judopay;
 
 import android.os.Bundle;
 
-import static com.judopay.JudoPay.JUDO_CONSUMER;
-import static com.judopay.JudoPay.JUDO_ID;
+import static com.judopay.Judo.JUDO_CONSUMER;
+import static com.judopay.Judo.JUDO_ID;
 
 /**
  * Displays a form to the user, allowing for card to be registered and used for token transactions.
  * <br>
  * Mandatory extras:
  * <ol>
- * <li>{@link JudoPay#JUDO_ID} Judo ID of your account</li>
- * <li>{@link JudoPay#JUDO_CONSUMER} identifier for the consumer of the transaction</li>
+ * <li>{@link Judo#JUDO_ID} Judo ID of your account</li>
+ * <li>{@link Judo#JUDO_CONSUMER} identifier for the consumer of the transaction</li>
  * </ol>
  * <br>
  */

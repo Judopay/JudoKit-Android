@@ -1,5 +1,6 @@
 package com.judopay.model;
 
+// TODO Unit test for card type matching
 public class CardType {
 
     private static final String REGEX_VISA = "^4[0-9]{3}.*?";

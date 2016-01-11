@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Base class for all HTTP responses that come back from the JudoPay API, this contains fields
+ * Base class for all HTTP responses that come back from the Judo API, this contains fields
  * that are common to all responses, such as the result, message and details of any errors that
  * occurred.
  */
