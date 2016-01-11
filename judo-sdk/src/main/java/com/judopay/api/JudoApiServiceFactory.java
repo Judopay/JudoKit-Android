@@ -59,24 +59,24 @@ public class JudoApiServiceFactory {
         return new Retrofit.Builder()
                 .addConverterFactory(getGsonConverterFactory(context))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .baseUrl(JudoPay.getApiEnvironmentHost())
-                .client(getOkHttpClient())
+                .baseUrl(JudoPay.getApiHost())
+                .client(getOkHttpClient(context))
                 .build();
     }
 
-    private static OkHttpClient getOkHttpClient() {
+    private static OkHttpClient getOkHttpClient(Context context) {
         OkHttpClient client = new OkHttpClient();
 
         setTimeouts(client);
         setSslSocketFactory(client);
         setSslPinning(client);
-        setInterceptors(client);
+        setInterceptors(context, client);
 
         return client;
     }
 
-    private static void setInterceptors(OkHttpClient client) {
-        AuthorizationEncoder authorizationEncoder = new AuthorizationEncoder();
+    private static void setInterceptors(Context context, OkHttpClient client) {
+        AuthorizationEncoder authorizationEncoder = new AuthorizationEncoder(context);
         ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(authorizationEncoder);
 
         List<Interceptor> interceptors = client.interceptors();

@@ -28,66 +28,91 @@ public class JudoPay {
     private static final String API_HOST_SANDBOX = "https://gw1.judopay-sandbox.com";
     private static final String API_HOST_LIVE = "https://gw1.judopay.com";
 
-    private static JudoPayApi api;
+    private static String apiToken;
+    private static String apiSecret;
 
+    private static boolean sslPinningEnabled = true;
+    private static boolean avsEnabled;
+    private static boolean maestroEnabled;
+    private static boolean amexEnabled;
+    private static boolean threeDSecureEnabled;
+    private static boolean rootedDevicesAllowed;
+
+    private static int environment;
+
+    @Deprecated
     public static void setup(String apiToken, String apiSecret, int apiEnvironment) {
-        api = new JudoPayApi(apiToken, apiSecret, apiEnvironment);
+        JudoPay.apiToken = apiToken;
+        JudoPay.apiSecret = apiSecret;
+        JudoPay.environment = apiEnvironment;
     }
 
-    public static String getApiEnvironmentHost() {
-        return api.getApiEnvironment() == Environment.SANDBOX ? API_HOST_SANDBOX : API_HOST_LIVE;
+    public static String getApiHost() {
+        return environment == Environment.SANDBOX ? API_HOST_SANDBOX : API_HOST_LIVE;
+    }
+
+    public static void setEnvironment(int environment) {
+        JudoPay.environment = environment;
     }
 
     public static boolean isSslPinningEnabled() {
-        return api.isSslPinningEnabled();
+        return sslPinningEnabled;
     }
 
     public static void setSslPinningEnabled(boolean enabled) {
-        api.setSslPinningEnabled(enabled);
+        sslPinningEnabled = enabled;
     }
 
     public static void setAvsEnabled(boolean enabled) {
-        api.setAvsEnabled(enabled);
+        avsEnabled = enabled;
     }
 
     public static boolean isAvsEnabled() {
-        return api.isAvsEnabled();
+        return avsEnabled;
     }
 
     public static void setMaestroEnabled(boolean enabled) {
-        api.setMaestroEnabled(enabled);
+        maestroEnabled = enabled;
     }
 
     public static boolean isMaestroEnabled() {
-        return api.isMaestroEnabled();
+        return maestroEnabled;
     }
 
     public static void setAmexEnabled(boolean enabled) {
-        api.setAmexEnabled(enabled);
+        amexEnabled = enabled;
     }
 
     public static boolean isAmexEnabled() {
-        return api.isAmexEnabled();
-    }
-
-    public static JudoPayApi getApi() {
-        return api;
+        return amexEnabled;
     }
 
     public static boolean isThreeDSecureEnabled() {
-        return api.isThreeDSecureEnabled();
+        return threeDSecureEnabled;
     }
 
     public static void setThreeDSecureEnabled(boolean enabled) {
-        api.setThreeDSecureEnabled(enabled);
+        threeDSecureEnabled = enabled;
     }
 
     public static void setRootedDevicesAllowed(boolean allowed) {
-        api.setRootedDevicesAllowed(allowed);
+        rootedDevicesAllowed = allowed;
     }
 
     public static boolean isRootedDevicesAllowed() {
-        return api.isRootedDevicesAllowed();
+        return rootedDevicesAllowed;
+    }
+
+    public static String getApiToken() {
+        return apiToken;
+    }
+
+    public static String getApiSecret() {
+        return apiSecret;
+    }
+
+    public static int getEnvironment() {
+        return environment;
     }
 
     public class Environment {

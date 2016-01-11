@@ -46,4 +46,6 @@
     <string name="ok">OK</string>
     <string name="please_check_your_internet_connection">Please check your Internet connection and try again</string>
     <string name="connection_error">Connection error</string>
+    <string name="judo_api_token">judo_api_token</string>
+    <string name="judo_api_secret">judo_api_secret</string>
 </resources>
