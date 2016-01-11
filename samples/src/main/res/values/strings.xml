@@ -25,4 +25,5 @@
     <string name="transaction_error">Transaction error</string>
     <string name="could_not_perform_transaction_check_settings">Could not perform the transaction, please check your settings</string>
     <string name="currency">Currency</string>
+    <string name="payment_successful">Payment successful</string>
 </resources>
