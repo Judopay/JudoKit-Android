@@ -2,6 +2,11 @@
 
 ## [5.0.1](https://github.com/judopay/Judo-Android/tree/5.0.1) (2016-01-07)
 
+**Implemented enhancements:**
+- Maestro card type support is now enabled in the SDK by default
+- The sample app settings page now includes the full list of current and future supported currencies.
+- A more useful error message is provided if the JudoPay SDK is not properly initialised.
+
 **Bugs fixed:**
 - Fixed an issue that prevented card details from being amended when attempting to register a card with validation errors.
 - Resolved a crashing issue that would occur when any API error was encountered when performing a transaction, due to ApiError class not being Parcelable when attempting to pass back the Receipt for the transaction.
