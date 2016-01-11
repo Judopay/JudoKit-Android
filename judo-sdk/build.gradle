@@ -46,7 +46,7 @@ publish {
     artifactId = 'android-sdk'
     publishVersion = '5.0.0'
     desc = 'Android Mobile Payments SDK'
-    website = 'https://github.com/Judo/Judo-Android'
+    website = 'https://github.com/JudoPay/Judo-Android'
 }
 
 dependencies {
