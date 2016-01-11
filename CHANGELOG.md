@@ -1,6 +1,6 @@
 # judoNative Android SDK change log
 
-## [5.0.1](https://github.com/judopay/Judo-Android/tree/5.0.1) (2016-01-07)
+## [5.0.1](https://github.com/judopay/Judo-Android/tree/5.0.1) (2016-01-12)
 
 **Implemented enhancements:**
 - SHA 256 SSL/TLS Certificate upgrade - an industry-wide security update to protect you against man-in-the-middle attacks
