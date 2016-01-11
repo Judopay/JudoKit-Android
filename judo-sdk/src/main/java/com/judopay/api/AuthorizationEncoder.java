@@ -2,13 +2,13 @@ package com.judopay.api;
 
 import android.util.Base64;
 
-import com.judopay.JudoPay;
-import com.judopay.JudoPayApi;
+import com.judopay.Judo;
+import com.judopay.JudoApi;
 
 class AuthorizationEncoder {
 
     public String getAuthorization() {
-        JudoPayApi api = JudoPay.getApi();
+        JudoApi api = Judo.getApi();
 
         String apiToken = api.getApiToken();
         String apiSecret = api.getApiSecret();

@@ -75,7 +75,7 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, Payment
     }
 
     CardEntryFragment createPaymentFormFragment() {
-        CardToken cardToken = getArguments().getParcelable(JudoPay.JUDO_CARD_TOKEN);
+        CardToken cardToken = getArguments().getParcelable(Judo.JUDO_CARD_TOKEN);
 
         PaymentFormOptions paymentFormOptions = new PaymentFormOptions.Builder()
                 .setCardToken(cardToken)
@@ -97,12 +97,12 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, Payment
     @Override
     public void finish(Receipt receipt) {
         Intent intent = new Intent();
-        intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
+        intent.putExtra(Judo.JUDO_RECEIPT, receipt);
 
         Activity activity = getActivity();
 
         if (activity != null) {
-            activity.setResult(JudoPay.RESULT_SUCCESS, intent);
+            activity.setResult(Judo.RESULT_SUCCESS, intent);
             activity.finish();
         }
     }
@@ -117,7 +117,7 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, Payment
 
     @Override
     public void showDeclinedMessage(Receipt receipt) {
-        if (getArguments().getBoolean(JudoPay.JUDO_ALLOW_DECLINED_CARD_AMEND, true)) {
+        if (getArguments().getBoolean(Judo.JUDO_ALLOW_DECLINED_CARD_AMEND, true)) {
             Dialogs.createDeclinedPaymentDialog(getActivity()).show();
         } else {
             setDeclinedAndFinish(receipt);
@@ -126,12 +126,12 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, Payment
 
     private void setDeclinedAndFinish(Receipt receipt) {
         Intent intent = new Intent();
-        intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
+        intent.putExtra(Judo.JUDO_RECEIPT, receipt);
 
         Activity activity = getActivity();
 
         if (activity != null) {
-            activity.setResult(JudoPay.RESULT_DECLINED, intent);
+            activity.setResult(Judo.RESULT_DECLINED, intent);
             activity.finish();
         }
     }
@@ -172,10 +172,10 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, Payment
         if (activity != null) {
             if (receipt != null) {
                 Intent data = new Intent();
-                data.putExtra(JudoPay.JUDO_RECEIPT, receipt);
-                activity.setResult(JudoPay.RESULT_ERROR, data);
+                data.putExtra(Judo.JUDO_RECEIPT, receipt);
+                activity.setResult(Judo.RESULT_ERROR, data);
             } else {
-                activity.setResult(JudoPay.RESULT_ERROR);
+                activity.setResult(Judo.RESULT_ERROR);
             }
             activity.finish();
         }

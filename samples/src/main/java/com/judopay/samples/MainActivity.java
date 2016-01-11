@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 import com.judopay.model.Currency;
 import com.judopay.Dialogs;
 import com.judopay.JudoActivity;
-import com.judopay.JudoPay;
+import com.judopay.Judo;
 import com.judopay.RegisterCardActivity;
 import com.judopay.TokenPaymentActivity;
 import com.judopay.model.CardToken;
@@ -24,7 +24,7 @@ import com.judopay.model.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static com.judopay.JudoPay.JUDO_RECEIPT;
+import static com.judopay.Judo.JUDO_RECEIPT;
 
 /**
  * Sample app screen containing buttons to activate the different features of the Judo SDK
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        JudoPay.setup("823Eja2fEM6E9NAE", "382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6", JudoPay.Environment.SANDBOX);
+        Judo.setup("823Eja2fEM6E9NAE", "382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6", Judo.Environment.SANDBOX);
 
         paymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,8 +192,8 @@ public class MainActivity extends AppCompatActivity {
     private void startRegisterCardActivity(Context context, String consumer, int requestCode) {
         if (context != null) {
             Intent intent = new Intent(context, RegisterCardActivity.class);
-            intent.putExtra(JudoPay.JUDO_CONSUMER, consumer);
-            intent.putExtra(JudoPay.JUDO_ID, MY_JUDO_ID);
+            intent.putExtra(Judo.JUDO_CONSUMER, consumer);
+            intent.putExtra(Judo.JUDO_ID, MY_JUDO_ID);
 
             startActivityForResult(intent, requestCode);
         }
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleRegisterCardResult(int resultCode, Intent data) {
         switch (resultCode) {
-            case JudoPay.RESULT_SUCCESS:
+            case Judo.RESULT_SUCCESS:
                 Receipt receipt = data.getParcelableExtra(JUDO_RECEIPT);
 
                 getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                 showTokenPaymentDialog(receipt);
                 break;
 
-            case JudoPay.RESULT_DECLINED:
+            case Judo.RESULT_DECLINED:
                 Dialogs.createDeclinedPaymentDialog(this).show();
                 break;
         }
@@ -236,28 +236,28 @@ public class MainActivity extends AppCompatActivity {
     private Intent getTokenPaymentIntent(String currency, String consumer, CardToken cardDetails, String judoId, Bundle metaData, String amount) {
         Intent intent = new Intent(MainActivity.this, TokenPaymentActivity.class);
 
-        intent.putExtra(JudoPay.JUDO_ID, judoId);
-        intent.putExtra(JudoPay.JUDO_AMOUNT, amount);
-        intent.putExtra(JudoPay.JUDO_CURRENCY, currency);
-        intent.putExtra(JudoPay.JUDO_CONSUMER, consumer);
-        intent.putExtra(JudoPay.JUDO_META_DATA, metaData);
-        intent.putExtra(JudoPay.JUDO_CARD_TOKEN, cardDetails);
+        intent.putExtra(Judo.JUDO_ID, judoId);
+        intent.putExtra(Judo.JUDO_AMOUNT, amount);
+        intent.putExtra(Judo.JUDO_CURRENCY, currency);
+        intent.putExtra(Judo.JUDO_CONSUMER, consumer);
+        intent.putExtra(Judo.JUDO_META_DATA, metaData);
+        intent.putExtra(Judo.JUDO_CARD_TOKEN, cardDetails);
 
         return intent;
     }
 
     private void handleResult(int resultCode, Intent data) {
         switch (resultCode) {
-            case JudoPay.RESULT_SUCCESS:
+            case Judo.RESULT_SUCCESS:
                 Receipt response = data.getParcelableExtra(JUDO_RECEIPT);
                 Toast.makeText(MainActivity.this, "Success: " + response.getReceiptId(), Toast.LENGTH_SHORT).show();
                 break;
 
-            case JudoPay.RESULT_DECLINED:
+            case Judo.RESULT_DECLINED:
                 Dialogs.createDeclinedPaymentDialog(this).show();
                 break;
 
-            case JudoPay.RESULT_ERROR:
+            case Judo.RESULT_ERROR:
                 new AlertDialog.Builder(this)
                         .setTitle(getString(R.string.transaction_error))
                         .setMessage(getString(R.string.could_not_perform_transaction_check_settings))

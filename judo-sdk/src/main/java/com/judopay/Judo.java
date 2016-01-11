@@ -7,7 +7,7 @@ import android.app.Activity;
  * your token and secret, enabling sandbox and live environments, changing supported card types,
  * allowing for payments routed through 3D-Secure and requiring Address Verification Checks (AVS).
  */
-public class JudoPay {
+public class Judo {
 
     public static final int RESULT_SUCCESS = Activity.RESULT_OK;
     public static final int RESULT_CANCELED = Activity.RESULT_CANCELED;
@@ -28,10 +28,10 @@ public class JudoPay {
     private static final String API_HOST_SANDBOX = "https://gw1.judopay-sandbox.com";
     private static final String API_HOST_LIVE = "https://gw1.judopay.com";
 
-    private static JudoPayApi api;
+    private static JudoApi api;
 
     public static void setup(String apiToken, String apiSecret, int apiEnvironment) {
-        api = new JudoPayApi(apiToken, apiSecret, apiEnvironment);
+        api = new JudoApi(apiToken, apiSecret, apiEnvironment);
     }
 
     public static String getApiEnvironmentHost() {
@@ -70,7 +70,7 @@ public class JudoPay {
         return api.isAmexEnabled();
     }
 
-    public static JudoPayApi getApi() {
+    public static JudoApi getApi() {
         return api;
     }
 

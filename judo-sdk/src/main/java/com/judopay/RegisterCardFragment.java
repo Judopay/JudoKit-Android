@@ -33,7 +33,7 @@ public class RegisterCardFragment extends BaseFragment implements PaymentFormVie
 
     @Override
     protected CardEntryFragment createPaymentFormFragment() {
-        CardToken cardToken = getArguments().getParcelable(JudoPay.JUDO_CARD_TOKEN);
+        CardToken cardToken = getArguments().getParcelable(Judo.JUDO_CARD_TOKEN);
         String buttonLabel = getString(R.string.add_card);
 
         PaymentFormOptions paymentFormOptions = new PaymentFormOptions.Builder()
@@ -52,10 +52,10 @@ public class RegisterCardFragment extends BaseFragment implements PaymentFormVie
 
     @Override
     public void onSubmit(Card card) {
-        String consumerRef = getArguments().getString(JudoPay.JUDO_CONSUMER);
-        String judoId = getArguments().getString(JudoPay.JUDO_ID);
+        String consumerRef = getArguments().getString(Judo.JUDO_CONSUMER);
+        String judoId = getArguments().getString(Judo.JUDO_ID);
 
-        presenter.performRegisterCard(judoId, card, consumerRef, JudoPay.isThreeDSecureEnabled());
+        presenter.performRegisterCard(judoId, card, consumerRef, Judo.isThreeDSecureEnabled());
     }
 
     public boolean isPaymentInProgress() {
