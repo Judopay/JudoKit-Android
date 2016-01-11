@@ -9,7 +9,7 @@ public class JudoApi {
 
     private boolean sslPinningEnabled = true;
     private boolean avsEnabled;
-    private boolean maestroEnabled;
+    private boolean maestroEnabled = true;
     private boolean amexEnabled;
     private boolean threeDSecureEnabled;
     private boolean rootedDevicesAllowed;
