@@ -6,7 +6,7 @@
 - SHA 256 SSL/TLS Certificate upgrade - an industry-wide security update to protect you against man-in-the-middle attacks
 - Maestro card type support is now enabled in the SDK by default.
 - The sample app settings page now includes the full list of current and future supported currencies.
-- A more useful error message is provided if the judoNative SDK is not properly initialised.
+- A more useful error message is provided if the judoNative SDK is not properly initialized.
 
 **Bugs fixed:**
 - Fixed an issue that prevented card details from being amended when attempting to register a card with validation errors.
