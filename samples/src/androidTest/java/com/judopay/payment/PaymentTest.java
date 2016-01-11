@@ -39,6 +39,26 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
         tokenPaymentButton.click();
     }
 
+    protected void pressTokenPreAuthScreenButton() {
+        UiElement tokenPreAuthButton = id(R.id.token_pre_auth_button);
+        tokenPreAuthButton.click();
+    }
+
+    protected void pressAddCardScreenButton() {
+        UiElement addCardButton = id(R.id.add_card_button);
+        addCardButton.click();
+    }
+
+    protected void pressYesButton() {
+        UiElement yesButton = find(By.text("Yes"));
+        yesButton.click();
+    }
+
+    protected void pressNoButton() {
+        UiElement noButton = find(By.text("No"));
+        noButton.click();
+    }
+
     /*
         Settings screen
      */
@@ -160,6 +180,7 @@ public abstract class PaymentTest extends DroidDriverTest<MainActivity> {
 
         payButton.click();
     }
+
 
     /*
         Billing country dropdown options:
