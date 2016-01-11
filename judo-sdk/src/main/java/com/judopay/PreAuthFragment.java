@@ -30,13 +30,13 @@ public final class PreAuthFragment extends BaseFragment {
     public void onSubmit(Card card) {
         Bundle args = getArguments();
 
-        String consumerRef = args.getString(JudoPay.JUDO_CONSUMER);
-        String judoId = args.getString(JudoPay.JUDO_ID);
-        String amount = args.getString(JudoPay.JUDO_AMOUNT);
-        String currency = args.getString(JudoPay.JUDO_CURRENCY);
-        Bundle metaData = args.getBundle(JudoPay.JUDO_META_DATA);
+        String consumerRef = args.getString(Judo.JUDO_CONSUMER);
+        String judoId = args.getString(Judo.JUDO_ID);
+        String amount = args.getString(Judo.JUDO_AMOUNT);
+        String currency = args.getString(Judo.JUDO_CURRENCY);
+        Bundle metaData = args.getBundle(Judo.JUDO_META_DATA);
 
-        presenter.performPreAuth(card, consumerRef, judoId, amount, currency, metaData, JudoPay.isThreeDSecureEnabled());
+        presenter.performPreAuth(card, consumerRef, judoId, amount, currency, metaData, Judo.isThreeDSecureEnabled());
     }
 
     public boolean isPaymentInProgress() {

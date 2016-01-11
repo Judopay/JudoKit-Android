@@ -3,7 +3,7 @@ package com.judopay.api;
 import com.judopay.model.ClientDetails;
 
 /**
- * Base class for all HTTP responses that come back from the JudoPay API.
+ * Base class for all HTTP responses that come back from the Judo API.
  */
 public abstract class Request {
 

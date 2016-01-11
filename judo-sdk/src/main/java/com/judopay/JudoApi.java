@@ -1,6 +1,6 @@
 package com.judopay;
 
-public class JudoPayApi {
+public class JudoApi {
 
     private int judoId;
     private String apiToken;
@@ -9,12 +9,12 @@ public class JudoPayApi {
 
     private boolean sslPinningEnabled = true;
     private boolean avsEnabled;
-    private boolean maestroEnabled;
+    private boolean maestroEnabled = true;
     private boolean amexEnabled;
     private boolean threeDSecureEnabled;
     private boolean rootedDevicesAllowed;
 
-    public JudoPayApi(String apiToken, String apiSecret, int apiEnvironment) {
+    public JudoApi(String apiToken, String apiSecret, int apiEnvironment) {
         this.apiToken = apiToken;
         this.apiSecret = apiSecret;
         this.apiEnvironment = apiEnvironment;
