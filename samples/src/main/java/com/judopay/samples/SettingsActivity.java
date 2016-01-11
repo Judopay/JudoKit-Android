@@ -126,7 +126,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private int getCurrencySelection() {
         String currency = getSharedPreferences(MainActivity.SHARED_PREFS_NAME, MODE_PRIVATE)
-                .getString(MainActivity.CURRENCY_KEY, null);
+                .getString(MainActivity.CURRENCY_KEY, Currency.GBP);
 
         return Currency.currencyCodes().indexOf(currency);
     }
