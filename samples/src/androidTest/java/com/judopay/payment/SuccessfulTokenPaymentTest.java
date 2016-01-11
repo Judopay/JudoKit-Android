@@ -16,8 +16,16 @@ public class SuccessfulTokenPaymentTest extends PaymentTest {
 
         pressBackButton();
 
+        //And I have registered a card to the device
+        pressAddCardScreenButton();
+
+        enterCardDetails("4976000000003436", "1220", "452");
+
+        pressPayButton();
+
         //And I am on the token payment screen
-        pressTokenPaymentScreenButton();
+        //pressTokenPaymentScreenButton();
+        pressYesButton();
 
         //When I enter my CVV
         enterCVV("452");
@@ -30,7 +38,7 @@ public class SuccessfulTokenPaymentTest extends PaymentTest {
         assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
     }
 
-    public void testTokenPaymentAVSEnabled2DSecureDisabledSuccessfulVisa() {
+    public void testTokenPaymentAVSEnabled3DSecureDisabledSuccessfulVisa() {
         //Given AVS is enabled
         pressSettingsButton();
 
@@ -38,8 +46,16 @@ public class SuccessfulTokenPaymentTest extends PaymentTest {
 
         pressBackButton();
 
+        //And I have registered a card to the device
+        pressAddCardScreenButton();
+
+        enterCardDetails("4976000000003436", "1220", "452", "TR148PA");
+
+        pressPayButton();
+
         //And I am on the token payment screen
-        pressTokenPaymentScreenButton();
+        //pressTokenPaymentScreenButton();
+        pressYesButton();
 
         //When I enter my card details
         enterCVV("452");
