@@ -35,59 +35,84 @@ public class JudoPay {
     }
 
     public static String getApiEnvironmentHost() {
+        checkInitialised();
         return api.getApiEnvironment() == Environment.SANDBOX ? API_HOST_SANDBOX : API_HOST_LIVE;
     }
 
     public static boolean isSslPinningEnabled() {
+        checkInitialised();
         return api.isSslPinningEnabled();
     }
 
     public static void setSslPinningEnabled(boolean enabled) {
+        checkInitialised();
         api.setSslPinningEnabled(enabled);
     }
 
     public static void setAvsEnabled(boolean enabled) {
+        checkInitialised();
         api.setAvsEnabled(enabled);
     }
 
     public static boolean isAvsEnabled() {
+        checkInitialised();
         return api.isAvsEnabled();
     }
 
     public static void setMaestroEnabled(boolean enabled) {
+        checkInitialised();
         api.setMaestroEnabled(enabled);
     }
 
     public static boolean isMaestroEnabled() {
+        checkInitialised();
         return api.isMaestroEnabled();
     }
 
     public static void setAmexEnabled(boolean enabled) {
+        checkInitialised();
         api.setAmexEnabled(enabled);
     }
 
     public static boolean isAmexEnabled() {
+        checkInitialised();
         return api.isAmexEnabled();
     }
 
-    public static JudoPayApi getApi() {
-        return api;
-    }
-
     public static boolean isThreeDSecureEnabled() {
+        checkInitialised();
         return api.isThreeDSecureEnabled();
     }
 
     public static void setThreeDSecureEnabled(boolean enabled) {
+        checkInitialised();
         api.setThreeDSecureEnabled(enabled);
     }
 
     public static void setRootedDevicesAllowed(boolean allowed) {
+        checkInitialised();
         api.setRootedDevicesAllowed(allowed);
     }
 
     public static boolean isRootedDevicesAllowed() {
+        checkInitialised();
         return api.isRootedDevicesAllowed();
+    }
+
+    public static String getApiToken() {
+        checkInitialised();
+        return api.getApiToken();
+    }
+
+    public static String getApiSecret() {
+        checkInitialised();
+        return api.getApiSecret();
+    }
+
+    private static void checkInitialised() {
+        if (api == null) {
+            throw new RuntimeException("JudoPay SDK not initialised, call JudoPay.setup() with your API token and secret to configure");
+        }
     }
 
     public class Environment {
