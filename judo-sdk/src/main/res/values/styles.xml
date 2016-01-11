@@ -1,7 +1,7 @@
 <resources>
 
     <style name="Theme.Judo.Light.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:buttonStyle">@style/judo_payment_button</item>
+        <item name="buttonStyle">@style/judo_payment_button</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppTheme.ActionBar</item>
         <item name="colorPrimary">@color/judo_blue</item>
         <item name="colorButtonNormal">@color/judo_teal</item>
@@ -9,14 +9,14 @@
     </style>
 
     <style name="Theme.Judo.Light" parent="Theme.AppCompat.Light">
-        <item name="android:buttonStyle">@style/judo_payment_button</item>
+        <item name="buttonStyle">@style/judo_payment_button</item>
         <item name="colorPrimary">@color/judo_blue</item>
         <item name="colorButtonNormal">@color/judo_teal</item>
         <item name="loadingOverlayStyle">@style/light_loading_overlay</item>
     </style>
 
     <style name="Theme.Judo" parent="Theme.AppCompat">
-        <item name="android:buttonStyle">@style/judo_payment_button</item>
+        <item name="buttonStyle">@style/judo_payment_button</item>
         <item name="colorPrimary">@color/judo_dark_blue</item>
         <item name="colorButtonNormal">@color/judo_teal</item>
         <item name="colorAccent">@android:color/white</item>
