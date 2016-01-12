@@ -6,10 +6,10 @@ import com.judopay.model.CardType;
 public class CardNumberValidation {
 
     private int error;
-    private int maxLength;
-    private boolean valid;
-    private boolean showError;
-    private boolean entryComplete;
+    private final int maxLength;
+    private final boolean valid;
+    private final boolean showError;
+    private final boolean entryComplete;
 
     public CardNumberValidation(String cardNumber, int cardType, boolean tokenCard, boolean maestroSupported, boolean amexSupported) {
         boolean cardNumberLengthValid = isCardNumberLengthValid(cardNumber, cardType);

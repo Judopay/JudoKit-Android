@@ -1,11 +1,5 @@
 package com.judopay.payment;
 
-
-import com.judopay.samples.R;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-
 public class SuccessfulPreAuthTest extends PaymentTest {
 
     public void testPreAuthSuccessfulAVSDisabled3DSecureDisabledVisa() {
@@ -20,14 +14,14 @@ public class SuccessfulPreAuthTest extends PaymentTest {
         pressPreAuthScreenButton();
 
         //When I enter my card details
-        enterCardDetails("4976000000003436", "1215", "452");
+        enterCardDetails("4976000000003436", "1220", "452");
 
         //And I press the pay button
         pressPayButton();
 
         //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertPaymentSuccessDialogDisplayed();
+        pressDialogPrimaryButton();
     }
 
     public void testPreAuthSuccessfulAVSDisabled3DSecureDisabledMaestro() {
@@ -45,14 +39,14 @@ public class SuccessfulPreAuthTest extends PaymentTest {
         pressPreAuthScreenButton();
 
         //When I enter my card details
-        enterCardDetails("6759000000005462", "0107", "01", "1215", "789");
+        enterCardDetails("6759000000005462", "0107", "01", "1220", "789");
 
         //And I press the pay button
         pressPayButton();
 
         //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertPaymentSuccessDialogDisplayed();
+        pressDialogPrimaryButton();
     }
 
     public void testPreAuthSuccessfulAVSDisabled3DSecureDisabledAMEX() {
@@ -70,14 +64,14 @@ public class SuccessfulPreAuthTest extends PaymentTest {
         pressPreAuthScreenButton();
 
         //When I enter my card details
-        enterCardDetails("340000432128428", "1215", "3469");
+        enterCardDetails("340000432128428", "1220", "3469");
 
         //And I press the pay button
         pressPayButton();
 
         //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertPaymentSuccessDialogDisplayed();
+        pressDialogPrimaryButton();
     }
 
     public void testPreAuthSuccessfulAVSEnabled3DSecureDisabledVisa() {
@@ -92,14 +86,14 @@ public class SuccessfulPreAuthTest extends PaymentTest {
         pressPreAuthScreenButton();
 
         //When I enter my card details
-        enterCardDetails("4976000000003436", "1215", "452", "TR148PA");
+        enterCardDetails("4976000000003436", "1220", "452", "TR148PA");
 
         //And I press the pay button
         pressPayButton();
 
         //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertPaymentSuccessDialogDisplayed();
+        pressDialogPrimaryButton();
     }
 
     public void testPreAuthSuccessfulAVSEnabled3DSecureDisabledMaestro() {
@@ -117,14 +111,14 @@ public class SuccessfulPreAuthTest extends PaymentTest {
         pressPreAuthScreenButton();
 
         //When I enter my card details
-        enterCardDetails("6759000000005462", "0107", "01", "1215", "789", "RG48NL");
+        enterCardDetails("6759000000005462", "0107", "01", "1220", "789", "RG48NL");
 
         //And I press the pay button
         pressPayButton();
 
         //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertPaymentSuccessDialogDisplayed();
+        pressDialogPrimaryButton();
     }
 
     public void testPreAuthSuccessfulAVSEnabled3DSecureDisabledAMEX() {
@@ -142,13 +136,14 @@ public class SuccessfulPreAuthTest extends PaymentTest {
         pressPreAuthScreenButton();
 
         //When I enter my card details
-        enterCardDetails("340000432128428", "1215", "3469", "NW67BB");
+        enterCardDetails("340000432128428", "1220", "3469", "NW67BB");
 
         //And I press the pay button
         pressPayButton();
 
         //Then I should be given a successful message
-        //TODO update this to assert "Payment Response Success:" message
-        assertThat(id(R.id.settings_menu_item).isVisible(), equalTo(true));
+        assertPaymentSuccessDialogDisplayed();
+        pressDialogPrimaryButton();
     }
+
 }

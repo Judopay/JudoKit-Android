@@ -1,4 +1,22 @@
-# judoNative Android SDK Change Log
+# judoNative Android SDK change log
+
+## [5.0.1](https://github.com/judopay/Judo-Android/tree/5.0.1) (2016-01-12)
+
+**Implemented enhancements:**
+- SHA 256 SSL/TLS Certificate upgrade - an industry-wide security update to protect you against man-in-the-middle attacks
+- Maestro card type support is now enabled in the SDK by default.
+- The sample app settings page now includes the full list of current and future supported currencies.
+- A more useful error message is provided if the judoNative SDK is not properly initialized.
+- Duplication prevention built in to protect merchants and consumers against duplicated transactions via unique payment reference.
+
+**Bugs fixed:**
+- Fixed an issue that prevented card details from being amended when attempting to register a card with validation errors.
+- Resolved a crashing issue that would occur when any API error was encountered when performing a transaction, due to ApiError class not being Parcelable when attempting to pass back the Receipt for the transaction.
+- Fixed an issue with card digits being skipped when attempting to type into the card number input field.
+- Merged judo-sdk and judo-data modules due to an issue with resolving library internal dependencies found when releasing previous SDK version.
+
+**Changes:**
+- Renamed JudoPay initialization class to be called Judo, for consistency across SDK platforms.
 
 ## [5.0](https://github.com/judopay/Judo-Android/tree/5.0) (2015-12-10)
 

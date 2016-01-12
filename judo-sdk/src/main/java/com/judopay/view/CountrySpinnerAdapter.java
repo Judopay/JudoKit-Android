@@ -15,28 +15,8 @@ import java.util.List;
 
 class CountrySpinnerAdapter extends ArrayAdapter<Country> {
 
-    public CountrySpinnerAdapter(Context context, int resource) {
-        super(context, resource);
-    }
-
-    public CountrySpinnerAdapter(Context context, int resource, int textViewResourceId) {
-        super(context, resource, textViewResourceId);
-    }
-
-    public CountrySpinnerAdapter(Context context, int resource, Country[] objects) {
-        super(context, resource, objects);
-    }
-
-    public CountrySpinnerAdapter(Context context, int resource, int textViewResourceId, Country[] objects) {
-        super(context, resource, textViewResourceId, objects);
-    }
-
-    public CountrySpinnerAdapter(Context context, int resource, List<Country> objects) {
-        super(context, resource, objects);
-    }
-
-    public CountrySpinnerAdapter(Context context, int resource, int textViewResourceId, List<Country> objects) {
-        super(context, resource, textViewResourceId, objects);
+    public CountrySpinnerAdapter(Context context, List<Country> objects) {
+        super(context, android.R.layout.simple_list_item_1, objects);
     }
 
     @Override

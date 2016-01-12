@@ -78,7 +78,21 @@ public class PaymentPresenterTest {
         when(apiService.payment(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>error(exception));
 
         presenter.performPayment(card, "consumerRef", "123456", "1.99", "GBP", null, false);
-        verify(paymentFormView).handleError(any(Receipt.class));
+        verify(paymentFormView).showDeclinedMessage(any(Receipt.class));
+    }
+
+    @Test
+    public void shouldReturnReceiptWhenBadRequest() {
+        PreAuthPresenter presenter = new PreAuthPresenter(paymentFormView, apiService, scheduler, gson);
+
+        RealResponseBody responseBody = new RealResponseBody(Headers.of("SdkVersion", "5.0"), new Buffer());
+
+        HttpException exception = new HttpException(retrofit.Response.error(400, responseBody));
+
+        when(apiService.preAuth(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>error(exception));
+
+        presenter.performPreAuth(card, "consumerRef", "123456", "1.99", "GBP", null, false);
+        verify(paymentFormView).showDeclinedMessage(any(Receipt.class));
     }
 
 }

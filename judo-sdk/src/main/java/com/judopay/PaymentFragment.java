@@ -6,9 +6,8 @@ import android.view.View;
 import com.google.gson.Gson;
 import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.model.Card;
-import com.judopay.model.Consumer;
 
-public final class PaymentFragment extends BasePaymentFragment {
+public final class PaymentFragment extends BaseFragment {
 
     private PaymentPresenter presenter;
 
@@ -31,13 +30,13 @@ public final class PaymentFragment extends BasePaymentFragment {
     public void onSubmit(Card card) {
         Bundle args = getArguments();
 
-        String consumerRef = args.getString(JudoPay.JUDO_CONSUMER);
-        String judoId = args.getString(JudoPay.JUDO_ID);
-        String amount = args.getString(JudoPay.JUDO_AMOUNT);
-        String currency = args.getString(JudoPay.JUDO_CURRENCY);
-        Bundle metaData = args.getBundle(JudoPay.JUDO_META_DATA);
+        String consumerRef = args.getString(Judo.JUDO_CONSUMER);
+        String judoId = args.getString(Judo.JUDO_ID);
+        String amount = args.getString(Judo.JUDO_AMOUNT);
+        String currency = args.getString(Judo.JUDO_CURRENCY);
+        Bundle metaData = args.getBundle(Judo.JUDO_META_DATA);
 
-        presenter.performPayment(card, consumerRef, judoId, amount, currency, metaData, JudoPay.isThreeDSecureEnabled());
+        presenter.performPayment(card, consumerRef, judoId, amount, currency, metaData, Judo.isThreeDSecureEnabled());
     }
 
     public boolean isPaymentInProgress() {

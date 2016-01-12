@@ -9,12 +9,11 @@ import com.google.gson.Gson;
 import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
-import com.judopay.model.Consumer;
-import com.judopay.payment.form.PaymentFormFragment;
+import com.judopay.payment.form.CardEntryFragment;
 import com.judopay.payment.form.PaymentFormListener;
 import com.judopay.payment.form.PaymentFormOptions;
 
-public class RegisterCardFragment extends BasePaymentFragment implements PaymentFormView, PaymentFormListener {
+public class RegisterCardFragment extends BaseFragment implements PaymentFormView, PaymentFormListener {
 
     private RegisterCardPresenter presenter;
 
@@ -33,8 +32,8 @@ public class RegisterCardFragment extends BasePaymentFragment implements Payment
     }
 
     @Override
-    protected PaymentFormFragment createPaymentFormFragment() {
-        CardToken cardToken = getArguments().getParcelable(JudoPay.JUDO_CARD_TOKEN);
+    protected CardEntryFragment createPaymentFormFragment() {
+        CardToken cardToken = getArguments().getParcelable(Judo.JUDO_CARD_TOKEN);
         String buttonLabel = getString(R.string.add_card);
 
         PaymentFormOptions paymentFormOptions = new PaymentFormOptions.Builder()
@@ -42,7 +41,7 @@ public class RegisterCardFragment extends BasePaymentFragment implements Payment
                 .setButtonLabel(buttonLabel)
                 .build();
 
-        return PaymentFormFragment.newInstance(paymentFormOptions, this);
+        return CardEntryFragment.newInstance(paymentFormOptions, this);
     }
 
     @Override
@@ -53,10 +52,10 @@ public class RegisterCardFragment extends BasePaymentFragment implements Payment
 
     @Override
     public void onSubmit(Card card) {
-        String consumerRef = getArguments().getString(JudoPay.JUDO_CONSUMER);
-        String judoId = getArguments().getString(JudoPay.JUDO_ID);
+        String consumerRef = getArguments().getString(Judo.JUDO_CONSUMER);
+        String judoId = getArguments().getString(Judo.JUDO_ID);
 
-        presenter.performRegisterCard(judoId, card, consumerRef, JudoPay.isThreeDSecureEnabled());
+        presenter.performRegisterCard(judoId, card, consumerRef, Judo.isThreeDSecureEnabled());
     }
 
     public boolean isPaymentInProgress() {

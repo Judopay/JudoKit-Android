@@ -16,9 +16,9 @@ public abstract class SingleClickOnClickListener implements View.OnClickListener
         if (enabled) {
             enabled = false;
             v.post(ENABLE_AGAIN);
-            doClick(v);
+            doClick();
         }
     }
 
-    public abstract void doClick(View v);
+    public abstract void doClick();
 }

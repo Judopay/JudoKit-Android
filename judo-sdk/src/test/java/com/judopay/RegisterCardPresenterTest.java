@@ -3,15 +3,21 @@ package com.judopay;
 import com.google.gson.Gson;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
-import com.judopay.model.Consumer;
+import com.judopay.model.PaymentTransaction;
 import com.judopay.model.Receipt;
 import com.judopay.model.RegisterTransaction;
+import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.internal.http.RealResponseBody;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.net.UnknownHostException;
+
+import okio.Buffer;
+import retrofit.HttpException;
 import rx.Observable;
 
 import static org.mockito.Matchers.any;
@@ -140,5 +146,31 @@ public class RegisterCardPresenterTest {
         verify(paymentFormView).showDeclinedMessage(eq(receipt));
         verify(paymentFormView, never()).start3dSecureWebView(eq(receipt), eq(presenter));
     }
+
+    @Test
+    public void shouldReturnReceiptWhenBadRequest() {
+        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
+
+        RealResponseBody responseBody = new RealResponseBody(Headers.of("SdkVersion", "5.0"), new Buffer());
+
+        HttpException exception = new HttpException(retrofit.Response.error(400, responseBody));
+
+        when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>error(exception));
+
+        presenter.performRegisterCard("123456", card, "consumerRef", false);
+        verify(paymentFormView).showDeclinedMessage(any(Receipt.class));
+    }
+
+    @Test
+    public void shouldShowConnectionErrorDialog() {
+        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
+        when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>error(new UnknownHostException()));
+
+        presenter.performRegisterCard("123456", card, "consumerRef", false);
+        verify(apiService).registerCard(any(RegisterTransaction.class));
+
+        verify(paymentFormView).showConnectionErrorDialog();
+    }
+
 
 }

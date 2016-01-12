@@ -30,9 +30,6 @@ public class PaymentFormFieldFormattingTest extends PaymentTest {
         assertThat(cardNumberField.getText(), equalTo("3400 004321 28428"));
     }
 
-
-
-
     public void testCardNumberFormattingWhenCardIsNotAMEX() {
         //Given I am on a payment screen
         pressPaymentScreenButton();
@@ -45,9 +42,6 @@ public class PaymentFormFieldFormattingTest extends PaymentTest {
 
         assertThat(cardNumberField.getText(), equalTo("4976 0000 0000 3436"));
     }
-
-
-
 
     public void testCVVNumberFormattingWhenCardIsAMEX() {
         //Given AMEX is enabled
@@ -72,9 +66,6 @@ public class PaymentFormFieldFormattingTest extends PaymentTest {
         assertThat(cVVField.getText(), equalTo("0000"));
     }
 
-
-
-
     public void testCVVNumberFormattingWhenCardIsNotAMEX() {
         //Given I am on a payment screen
         pressPaymentScreenButton();
@@ -90,7 +81,6 @@ public class PaymentFormFieldFormattingTest extends PaymentTest {
 
         assertThat(cVVField.getText(), equalTo("000"));
     }
-
 
     public void testCVVTextFormattingWhenCardIsNotAMEX() {
         //Given I am on a payment screen

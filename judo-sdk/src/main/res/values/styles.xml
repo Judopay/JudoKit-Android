@@ -1,6 +1,7 @@
 <resources>
 
     <style name="Theme.Judo.Light.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="buttonStyle">@style/judo_payment_button</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppTheme.ActionBar</item>
         <item name="colorPrimary">@color/judo_blue</item>
         <item name="colorButtonNormal">@color/judo_teal</item>
@@ -8,12 +9,14 @@
     </style>
 
     <style name="Theme.Judo.Light" parent="Theme.AppCompat.Light">
+        <item name="buttonStyle">@style/judo_payment_button</item>
         <item name="colorPrimary">@color/judo_blue</item>
         <item name="colorButtonNormal">@color/judo_teal</item>
         <item name="loadingOverlayStyle">@style/light_loading_overlay</item>
     </style>
 
     <style name="Theme.Judo" parent="Theme.AppCompat">
+        <item name="buttonStyle">@style/judo_payment_button</item>
         <item name="colorPrimary">@color/judo_dark_blue</item>
         <item name="colorButtonNormal">@color/judo_teal</item>
         <item name="colorAccent">@android:color/white</item>
@@ -117,7 +120,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">bottom</item>
-        <item name="android:background">?colorButtonNormal</item>
+        <item name="android:background">@drawable/button_selector</item>
         <item name="android:textSize">18sp</item>
         <item name="android:visibility">gone</item>
     </style>
