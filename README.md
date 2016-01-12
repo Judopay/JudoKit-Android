@@ -22,7 +22,7 @@ Intent intent = new Intent(activity, PaymentActivity.class);
 
 intent.putExtra(Judo.JUDO_ID, "35843095834");
 intent.putExtra(Judo.JUDO_AMOUNT, "9.99");
-intent.putExtra(Judo.JUDO_CURRENCY, "GBP");
+intent.putExtra(Judo.JUDO_CURRENCY, Currency.GBP);
 intent.putExtra(Judo.JUDO_CONSUMER, "consumerRef");
 
 startActivityForResult(intent, PAYMENT_REQUEST);
