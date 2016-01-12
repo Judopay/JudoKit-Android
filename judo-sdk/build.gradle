@@ -44,7 +44,7 @@ publish {
     userOrg = 'judopay'
     groupId = 'com.judopay'
     artifactId = 'android-sdk'
-    publishVersion = '5.0.0'
+    publishVersion = '5.0.1'
     desc = 'Android Mobile Payments SDK'
     website = 'https://github.com/JudoPay/Judo-Android'
 }
