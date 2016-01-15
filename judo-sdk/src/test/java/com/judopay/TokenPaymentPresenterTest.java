@@ -53,7 +53,7 @@ public class TokenPaymentPresenterTest {
         TokenPaymentPresenter presenter = new TokenPaymentPresenter(paymentFormView, apiService, scheduler, gson);
         when(apiService.tokenPayment(any(TokenTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performTokenPayment(card, cardToken, consumer, "123456", "1.99", "GBP", null, false);
+        presenter.performTokenPayment(card, cardToken, consumer, "123456", "1.99", "GBP", null);
 
         verify(paymentFormView).showLoading();
         verify(apiService).tokenPayment(any(TokenTransaction.class));

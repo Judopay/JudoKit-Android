@@ -79,16 +79,6 @@ public class Judo {
         return api.isAmexEnabled();
     }
 
-    public static boolean isThreeDSecureEnabled() {
-        checkInitialised();
-        return api.isThreeDSecureEnabled();
-    }
-
-    public static void setThreeDSecureEnabled(boolean enabled) {
-        checkInitialised();
-        api.setThreeDSecureEnabled(enabled);
-    }
-
     public static void setRootedDevicesAllowed(boolean allowed) {
         checkInitialised();
         api.setRootedDevicesAllowed(allowed);

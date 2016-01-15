@@ -55,7 +55,7 @@ public class RegisterCardPresenterTest {
         RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performRegisterCard(judoId, card, consumer, false);
+        presenter.performRegisterCard(judoId, card, consumer);
 
         verify(apiService, times(1)).registerCard(any(RegisterTransaction.class));
     }
@@ -67,7 +67,7 @@ public class RegisterCardPresenterTest {
         when(card.getCardAddress()).thenReturn(cardAddress);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performRegisterCard(judoId, card, consumer, false);
+        presenter.performRegisterCard(judoId, card, consumer);
 
         verify(paymentFormView).showLoading();
     }
@@ -78,7 +78,7 @@ public class RegisterCardPresenterTest {
 
         when(receipt.isSuccess()).thenReturn(true);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.just(receipt));
-        presenter.performRegisterCard(judoId, card, consumer, false);
+        presenter.performRegisterCard(judoId, card, consumer);
 
         verify(paymentFormView).finish(eq(receipt));
         verify(paymentFormView).hideLoading();
@@ -91,7 +91,7 @@ public class RegisterCardPresenterTest {
         when(receipt.isSuccess()).thenReturn(false);
 
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.just(receipt));
-        presenter.performRegisterCard(judoId, card, consumer, false);
+        presenter.performRegisterCard(judoId, card, consumer);
 
         verify(paymentFormView).showDeclinedMessage(eq(receipt));
         verify(paymentFormView).hideLoading();
@@ -112,7 +112,7 @@ public class RegisterCardPresenterTest {
         when(card.getCardAddress()).thenReturn(cardAddress);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performRegisterCard(judoId, card, consumer, false);
+        presenter.performRegisterCard(judoId, card, consumer);
         presenter.reconnect();
 
         verify(paymentFormView, times(2)).showLoading();
@@ -126,25 +126,10 @@ public class RegisterCardPresenterTest {
         when(receipt.is3dSecureRequired()).thenReturn(true);
 
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.just(receipt));
-        presenter.performRegisterCard(judoId, card, consumer, true);
+        presenter.performRegisterCard(judoId, card, consumer);
 
         verify(paymentFormView).setLoadingText(eq(R.string.redirecting));
         verify(paymentFormView).start3dSecureWebView(eq(receipt), eq(presenter));
-    }
-
-    @Test
-    public void shouldDeclineIf3dSecureRequiredButNotEnabled() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
-
-        when(receipt.isSuccess()).thenReturn(false);
-        when(receipt.is3dSecureRequired()).thenReturn(true);
-
-        when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.just(receipt));
-
-        presenter.performRegisterCard(judoId, card, consumer, false);
-
-        verify(paymentFormView).showDeclinedMessage(eq(receipt));
-        verify(paymentFormView, never()).start3dSecureWebView(eq(receipt), eq(presenter));
     }
 
     @Test
@@ -157,7 +142,7 @@ public class RegisterCardPresenterTest {
 
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>error(exception));
 
-        presenter.performRegisterCard("123456", card, "consumerRef", false);
+        presenter.performRegisterCard("123456", card, "consumerRef");
         verify(paymentFormView).showDeclinedMessage(any(Receipt.class));
     }
 
@@ -166,7 +151,7 @@ public class RegisterCardPresenterTest {
         RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>error(new UnknownHostException()));
 
-        presenter.performRegisterCard("123456", card, "consumerRef", false);
+        presenter.performRegisterCard("123456", card, "consumerRef");
         verify(apiService).registerCard(any(RegisterTransaction.class));
 
         verify(paymentFormView).showConnectionErrorDialog();

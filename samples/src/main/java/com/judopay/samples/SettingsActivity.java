@@ -28,9 +28,6 @@ public class SettingsActivity extends AppCompatActivity {
     @Bind(R.id.amex_switch)
     SwitchCompat amexSwitch;
 
-    @Bind(R.id.three_d_secure_switch)
-    SwitchCompat threeDSecureSwitch;
-
     @Bind(R.id.currency_spinner)
     Spinner currencySpinner;
 
@@ -67,7 +64,6 @@ public class SettingsActivity extends AppCompatActivity {
         avsSwitch.setChecked(Judo.isAvsEnabled());
         maestroSwitch.setChecked(Judo.isMaestroEnabled());
         amexSwitch.setChecked(Judo.isAmexEnabled());
-        threeDSecureSwitch.setChecked(Judo.isThreeDSecureEnabled());
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Currency.currencyNames());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -106,13 +102,6 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Judo.setAmexEnabled(isChecked);
-            }
-        });
-
-        threeDSecureSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Judo.setThreeDSecureEnabled(isChecked);
             }
         });
     }

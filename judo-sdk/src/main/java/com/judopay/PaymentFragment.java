@@ -36,7 +36,7 @@ public final class PaymentFragment extends BaseFragment {
         String currency = args.getString(Judo.JUDO_CURRENCY);
         Bundle metaData = args.getBundle(Judo.JUDO_META_DATA);
 
-        presenter.performPayment(card, consumerRef, judoId, amount, currency, metaData, Judo.isThreeDSecureEnabled());
+        presenter.performPayment(card, consumerRef, judoId, amount, currency, metaData);
     }
 
     public boolean isPaymentInProgress() {

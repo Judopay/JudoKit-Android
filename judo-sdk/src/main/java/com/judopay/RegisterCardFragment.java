@@ -55,7 +55,7 @@ public class RegisterCardFragment extends BaseFragment implements PaymentFormVie
         String consumerRef = getArguments().getString(Judo.JUDO_CONSUMER);
         String judoId = getArguments().getString(Judo.JUDO_ID);
 
-        presenter.performRegisterCard(judoId, card, consumerRef, Judo.isThreeDSecureEnabled());
+        presenter.performRegisterCard(judoId, card, consumerRef);
     }
 
     public boolean isPaymentInProgress() {

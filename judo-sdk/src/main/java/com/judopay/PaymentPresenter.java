@@ -15,7 +15,7 @@ class PaymentPresenter extends BasePresenter {
         super(view, judoApiService, scheduler, gson);
     }
 
-    public void performPayment(Card card, String consumerRef, String judoId, String amount, String currency, Bundle metaData, boolean threeDSecureEnabled) {
+    public void performPayment(Card card, String consumerRef, String judoId, String amount, String currency, Bundle metaData) {
         this.loading = true;
 
         paymentFormView.showLoading();
@@ -43,7 +43,7 @@ class PaymentPresenter extends BasePresenter {
         apiService.payment(builder.build())
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread())
-                .subscribe(callback(threeDSecureEnabled), error());
+                .subscribe(callback(), error());
     }
 
 }

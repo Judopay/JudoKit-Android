@@ -49,7 +49,7 @@ public class PaymentPresenterTest {
         PaymentPresenter presenter = new PaymentPresenter(paymentFormView, apiService, scheduler, gson);
         when(apiService.payment(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performPayment(card, "consumerRef", "123456", "1.99", "GBP", null, false);
+        presenter.performPayment(card, "consumerRef", "123456", "1.99", "GBP", null);
 
         verify(apiService).payment(any(PaymentTransaction.class));
     }
@@ -59,7 +59,7 @@ public class PaymentPresenterTest {
         PaymentPresenter presenter = new PaymentPresenter(paymentFormView, apiService, scheduler, gson);
         when(apiService.payment(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>error(new UnknownHostException()));
 
-        presenter.performPayment(card, "consumerRef", "123456", "1.99", "GBP", null, false);
+        presenter.performPayment(card, "consumerRef", "123456", "1.99", "GBP", null);
         verify(apiService).payment(any(PaymentTransaction.class));
 
         verify(paymentFormView).showConnectionErrorDialog();
@@ -77,7 +77,7 @@ public class PaymentPresenterTest {
 
         when(apiService.payment(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>error(exception));
 
-        presenter.performPayment(card, "consumerRef", "123456", "1.99", "GBP", null, false);
+        presenter.performPayment(card, "consumerRef", "123456", "1.99", "GBP", null);
         verify(paymentFormView).showDeclinedMessage(any(Receipt.class));
     }
 
@@ -91,7 +91,7 @@ public class PaymentPresenterTest {
 
         when(apiService.preAuth(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>error(exception));
 
-        presenter.performPreAuth(card, "consumerRef", "123456", "1.99", "GBP", null, false);
+        presenter.performPreAuth(card, "consumerRef", "123456", "1.99", "GBP", null);
         verify(paymentFormView).showDeclinedMessage(any(Receipt.class));
     }
 
