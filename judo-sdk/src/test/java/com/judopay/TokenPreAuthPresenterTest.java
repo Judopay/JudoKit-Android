@@ -47,7 +47,7 @@ public class TokenPreAuthPresenterTest {
         TokenPreAuthPresenter presenter = new TokenPreAuthPresenter(paymentFormView, apiService, new TestScheduler(), new Gson());
         when(apiService.tokenPreAuth(any(TokenTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performTokenPreAuth(card, cardToken, consumer, "123456", "1.99", "GBP", null, false);
+        presenter.performTokenPreAuth(card, cardToken, consumer, "123456", "1.99", "GBP", null);
 
         verify(paymentFormView).showLoading();
         verify(apiService).tokenPreAuth(any(TokenTransaction.class));

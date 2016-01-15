@@ -47,7 +47,7 @@ public class PreAuthPresenterTest {
         PreAuthPresenter presenter = new PreAuthPresenter(paymentFormView, apiService, scheduler, gson);
         when(apiService.preAuth(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performPreAuth(card, "consumerRef", "123456", "1.99", "GBP", null, false);
+        presenter.performPreAuth(card, "consumerRef", "123456", "1.99", "GBP", null);
 
         verify(apiService).preAuth(any(PaymentTransaction.class));
     }
@@ -62,7 +62,7 @@ public class PreAuthPresenterTest {
 
         when(apiService.preAuth(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>error(exception));
 
-        presenter.performPreAuth(card, "consumerRef", "123456", "1.99", "GBP", null, false);
+        presenter.performPreAuth(card, "consumerRef", "123456", "1.99", "GBP", null);
         verify(paymentFormView).showDeclinedMessage(any(Receipt.class));
     }
 

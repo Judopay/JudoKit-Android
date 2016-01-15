@@ -16,7 +16,7 @@ class TokenPreAuthPresenter extends BasePresenter {
         super(view, judoApiService, scheduler, gson);
     }
 
-    public void performTokenPreAuth(Card card, CardToken cardToken, String consumerRef, String judoId, String amount, String currency, Bundle metaData, boolean threeDSecureEnabled) {
+    public void performTokenPreAuth(Card card, CardToken cardToken, String consumerRef, String judoId, String amount, String currency, Bundle metaData) {
         this.loading = true;
         paymentFormView.showLoading();
 
@@ -38,7 +38,7 @@ class TokenPreAuthPresenter extends BasePresenter {
         apiService.tokenPreAuth(tokenTransaction)
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread())
-                .subscribe(callback(threeDSecureEnabled), error());
+                .subscribe(callback(), error());
     }
 
 }

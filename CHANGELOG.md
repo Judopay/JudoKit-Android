@@ -1,5 +1,8 @@
 # judoNative Android SDK change log
 
+## [5.1](https://github.com/judopay/Judo-Android/tree/5.1) (2016-01-15)
+- Enable 3D-Secure verification for all transactions if required by the Merchant's bank
+
 ## [5.0.1](https://github.com/judopay/Judo-Android/tree/5.0.1) (2016-01-12)
 
 **Implemented enhancements:**

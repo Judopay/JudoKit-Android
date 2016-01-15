@@ -10,7 +10,7 @@ class RegisterCardPresenter extends BasePresenter {
         super(paymentFormView, apiService, scheduler, gson);
     }
 
-    void performRegisterCard(String judoId, Card card, String consumerRef, boolean threeDSecureEnabled) {
+    void performRegisterCard(String judoId, Card card, String consumerRef) {
         this.loading = true;
 
         paymentFormView.showLoading();
@@ -34,7 +34,7 @@ class RegisterCardPresenter extends BasePresenter {
         apiService.registerCard(builder.build())
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread())
-                .subscribe(callback(threeDSecureEnabled), error());
+                .subscribe(callback(), error());
     }
 
 }

@@ -1,6 +1,5 @@
 package com.judopay;
 
-
 import com.google.gson.Gson;
 import com.judopay.model.Receipt;
 import com.judopay.model.ThreeDSecureInfo;
@@ -29,7 +28,7 @@ abstract class BasePresenter implements ThreeDSecureListener {
         this.gson = gson;
     }
 
-    Action1<Receipt> callback(final boolean threeDSecureEnabled) {
+    Action1<Receipt> callback() {
         return new Action1<Receipt>() {
             @Override
             public void call(Receipt receipt) {
@@ -40,7 +39,7 @@ abstract class BasePresenter implements ThreeDSecureListener {
                     paymentFormView.dismiss3dSecureDialog();
                     paymentFormView.finish(receipt);
                 } else {
-                    if (threeDSecureEnabled && receipt.is3dSecureRequired()) {
+                    if (receipt.is3dSecureRequired()) {
                         paymentFormView.setLoadingText(R.string.redirecting);
                         paymentFormView.start3dSecureWebView(receipt, BasePresenter.this);
                     } else {
