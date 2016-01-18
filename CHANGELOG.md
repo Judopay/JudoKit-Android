@@ -2,6 +2,7 @@
 
 ## [5.1](https://github.com/judopay/Judo-Android/tree/5.1) (2016-01-15)
 - Enable 3D-Secure verification for all transactions if required by the Merchant's bank
+- Allow transactions for Android devices with root permissions, with option to block if required.
 
 ## [5.0.1](https://github.com/judopay/Judo-Android/tree/5.0.1) (2016-01-12)
 
