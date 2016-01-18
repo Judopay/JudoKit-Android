@@ -12,7 +12,7 @@ public class JudoApi {
     private boolean maestroEnabled = true;
     private boolean amexEnabled;
     private boolean threeDSecureEnabled;
-    private boolean rootedDevicesAllowed;
+    private boolean rootedDevicesAllowed = true;
 
     public JudoApi(String apiToken, String apiSecret, int apiEnvironment) {
         this.apiToken = apiToken;
