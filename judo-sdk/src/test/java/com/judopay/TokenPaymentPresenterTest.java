@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
+import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
 import com.judopay.model.ThreeDSecureInfo;
 import com.judopay.model.TokenTransaction;
+import com.judopay.payment.form.JudoOptions;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,7 +55,13 @@ public class TokenPaymentPresenterTest {
         TokenPaymentPresenter presenter = new TokenPaymentPresenter(paymentFormView, apiService, scheduler, gson);
         when(apiService.tokenPayment(any(TokenTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performTokenPayment(card, cardToken, consumer, "123456", "1.99", "GBP", null);
+        presenter.performTokenPayment(card, new JudoOptions.Builder()
+                .setCardToken(cardToken)
+                .setConsumerRef(consumer)
+                .setAmount("1.99")
+                .setCurrency(Currency.GBP)
+                .setJudoId("123456")
+                .build());
 
         verify(paymentFormView).showLoading();
         verify(apiService).tokenPayment(any(TokenTransaction.class));

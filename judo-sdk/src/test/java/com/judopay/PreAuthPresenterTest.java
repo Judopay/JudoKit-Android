@@ -3,8 +3,10 @@ package com.judopay;
 import com.google.gson.Gson;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
+import com.judopay.model.Currency;
 import com.judopay.model.PaymentTransaction;
 import com.judopay.model.Receipt;
+import com.judopay.payment.form.JudoOptions;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.internal.http.RealResponseBody;
 
@@ -47,7 +49,12 @@ public class PreAuthPresenterTest {
         PreAuthPresenter presenter = new PreAuthPresenter(paymentFormView, apiService, scheduler, gson);
         when(apiService.preAuth(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performPreAuth(card, "consumerRef", "123456", "1.99", "GBP", null);
+        presenter.performPreAuth(card, new JudoOptions.Builder()
+                .setAmount("1.99")
+                .setCurrency(Currency.GBP)
+                .setConsumerRef("consumerRef")
+                .setJudoId("123456")
+                .build());
 
         verify(apiService).preAuth(any(PaymentTransaction.class));
     }
@@ -62,7 +69,13 @@ public class PreAuthPresenterTest {
 
         when(apiService.preAuth(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>error(exception));
 
-        presenter.performPreAuth(card, "consumerRef", "123456", "1.99", "GBP", null);
+        presenter.performPreAuth(card, new JudoOptions.Builder()
+                .setAmount("1.99")
+                .setCurrency(Currency.GBP)
+                .setConsumerRef("consumerRef")
+                .setJudoId("123456")
+                .build());
+
         verify(paymentFormView).showDeclinedMessage(any(Receipt.class));
     }
 

@@ -1,6 +1,5 @@
 package com.judopay.samples;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,21 +8,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.judopay.Dialogs;
-import com.judopay.JudoActivity;
 import com.judopay.Judo;
+import com.judopay.PaymentActivity;
+import com.judopay.PreAuthActivity;
 import com.judopay.RegisterCardActivity;
 import com.judopay.TokenPaymentActivity;
-import com.judopay.model.CardToken;
+import com.judopay.TokenPreAuthActivity;
 import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
+import com.judopay.payment.form.JudoOptions;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static com.judopay.Judo.JUDO_OPTIONS;
 import static com.judopay.Judo.JUDO_RECEIPT;
 
 /**
@@ -63,8 +66,6 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.add_card_button)
     View addCardButton;
 
-    private String currency;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,14 +78,35 @@ public class MainActivity extends AppCompatActivity {
         paymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                JudoActivity.startPaymentActivity(MainActivity.this, PAYMENT_REQUEST, MY_JUDO_ID, MY_AMOUNT, currency, "yourConsumerRef", null);
+                Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
+
+                JudoOptions judoOptions = new JudoOptions.Builder()
+                        .setJudoId(MY_JUDO_ID)
+                        .setAmount(MY_AMOUNT)
+                        .setCardNumber("4976000000003436")
+                        .setCurrency(getCurrency())
+                        .setConsumerRef("yourConsumerRef")
+                        .build();
+
+                intent.putExtra(Judo.JUDO_OPTIONS, judoOptions);
+                startActivityForResult(intent, PAYMENT_REQUEST);
             }
         });
 
         preAuthButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                JudoActivity.startPreAuthActivity(MainActivity.this, PRE_AUTH_REQUEST, MY_JUDO_ID, MY_AMOUNT, currency, "yourConsumerRef", null);
+                Intent intent = new Intent(MainActivity.this, PreAuthActivity.class);
+
+                JudoOptions options = new JudoOptions.Builder()
+                        .setJudoId(MY_JUDO_ID)
+                        .setAmount(MY_AMOUNT)
+                        .setCurrency(getCurrency())
+                        .setConsumerRef("yourConsumerRef")
+                        .build();
+
+                intent.putExtra(Judo.JUDO_OPTIONS, options);
+                startActivityForResult(intent, PRE_AUTH_REQUEST);
             }
         });
 
@@ -105,16 +127,13 @@ public class MainActivity extends AppCompatActivity {
         addCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startRegisterCardActivity(MainActivity.this, "consumerToken", REGISTER_CARD_REQUEST);
+                startRegisterCardActivity("consumerToken", REGISTER_CARD_REQUEST);
             }
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        this.currency = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
+    private String getCurrency() {
+        return getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
                 .getString(CURRENCY_KEY, Currency.GBP);
     }
 
@@ -159,8 +178,17 @@ public class MainActivity extends AppCompatActivity {
     private void attemptTokenPreAuth() {
         Receipt receipt = getLastReceipt();
         if (receipt != null) {
-            JudoActivity.startTokenPreAuthActivity(MainActivity.this, TOKEN_PRE_AUTH_REQUEST,
-                    MY_JUDO_ID, MY_AMOUNT, currency, receipt.getConsumer().getYourConsumerReference(), receipt.getCardDetails(), null);
+            Intent intent = new Intent(MainActivity.this, TokenPreAuthActivity.class);
+
+            intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+                    .setJudoId(MY_JUDO_ID)
+                    .setAmount(MY_AMOUNT)
+                    .setCurrency(getCurrency())
+                    .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
+                    .setCardToken(receipt.getCardDetails())
+                    .build());
+
+            startActivityForResult(intent, TOKEN_PRE_AUTH_REQUEST);
         } else {
             Toast.makeText(MainActivity.this, R.string.add_card_to_make_token_transaction, Toast.LENGTH_SHORT).show();
         }
@@ -170,8 +198,16 @@ public class MainActivity extends AppCompatActivity {
         Receipt receipt = getLastReceipt();
 
         if (receipt != null) {
-            Intent intent = getTokenPaymentIntent(currency, receipt.getConsumer().getYourConsumerReference(),
-                    receipt.getCardDetails(), MY_JUDO_ID, null, MY_AMOUNT);
+            Intent intent = new Intent(this, TokenPaymentActivity.class);
+
+            intent.putExtra(JUDO_OPTIONS, new JudoOptions.Builder()
+                    .setJudoId(MY_JUDO_ID)
+                    .setAmount(MY_AMOUNT)
+                    .setCurrency(getCurrency())
+                    .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
+                    .setCardToken(receipt.getCardDetails())
+                    .build());
+
             startActivityForResult(intent, TOKEN_PAYMENT_REQUEST);
         } else {
             Toast.makeText(MainActivity.this, R.string.add_card_to_make_token_transaction, Toast.LENGTH_SHORT).show();
@@ -189,14 +225,15 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
-    private void startRegisterCardActivity(Context context, String consumer, int requestCode) {
-        if (context != null) {
-            Intent intent = new Intent(context, RegisterCardActivity.class);
-            intent.putExtra(Judo.JUDO_CONSUMER, consumer);
-            intent.putExtra(Judo.JUDO_ID, MY_JUDO_ID);
+    private void startRegisterCardActivity(String consumer, int requestCode) {
+        Intent intent = new Intent(this, RegisterCardActivity.class);
 
-            startActivityForResult(intent, requestCode);
-        }
+        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+                .setJudoId(MY_JUDO_ID)
+                .setConsumerRef(consumer)
+                .build());
+
+        startActivityForResult(intent, requestCode);
     }
 
     private void handleRegisterCardResult(int resultCode, Intent data) {
@@ -225,25 +262,25 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = getTokenPaymentIntent(currency, receipt.getConsumer().getYourConsumerReference(), receipt.getCardDetails(), MY_JUDO_ID, new Bundle(), MY_AMOUNT);
-                        startActivityForResult(intent, TOKEN_PAYMENT_REQUEST);
+                        startTokenPayment(receipt);
                     }
                 })
                 .setNegativeButton(getString(R.string.no), null)
                 .show();
     }
 
-    private Intent getTokenPaymentIntent(String currency, String consumer, CardToken cardDetails, String judoId, Bundle metaData, String amount) {
+    private void startTokenPayment(Receipt receipt) {
         Intent intent = new Intent(MainActivity.this, TokenPaymentActivity.class);
 
-        intent.putExtra(Judo.JUDO_ID, judoId);
-        intent.putExtra(Judo.JUDO_AMOUNT, amount);
-        intent.putExtra(Judo.JUDO_CURRENCY, currency);
-        intent.putExtra(Judo.JUDO_CONSUMER, consumer);
-        intent.putExtra(Judo.JUDO_META_DATA, metaData);
-        intent.putExtra(Judo.JUDO_CARD_TOKEN, cardDetails);
+        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+                .setJudoId(MY_JUDO_ID)
+                .setAmount(MY_AMOUNT)
+                .setCurrency(getCurrency())
+                .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
+                .setCardToken(receipt.getCardDetails())
+                .build());
 
-        return intent;
+        startActivityForResult(intent, TOKEN_PAYMENT_REQUEST);
     }
 
     private void handleResult(int resultCode, Intent data) {

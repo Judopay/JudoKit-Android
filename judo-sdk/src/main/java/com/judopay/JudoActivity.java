@@ -79,40 +79,4 @@ public abstract class JudoActivity extends AppCompatActivity {
         }
     }
 
-    public static void startPaymentActivity(Activity activity, int requestCode, String judoId, String amount, String currency, String consumerRef, Bundle metaData) {
-        Intent intent = new Intent(activity, PaymentActivity.class);
-
-        intent.putExtra(Judo.JUDO_ID, judoId);
-        intent.putExtra(Judo.JUDO_AMOUNT, amount);
-        intent.putExtra(Judo.JUDO_CURRENCY, currency);
-        intent.putExtra(Judo.JUDO_CONSUMER, consumerRef);
-        intent.putExtra(Judo.JUDO_META_DATA, metaData);
-
-        activity.startActivityForResult(intent, requestCode);
-    }
-
-    public static void startPreAuthActivity(Activity activity, int requestCode, String judoId, String amount, String currency, String consumerRef, Bundle metaData) {
-        Intent intent = new Intent(activity, PreAuthActivity.class);
-
-        intent.putExtra(Judo.JUDO_ID, judoId);
-        intent.putExtra(Judo.JUDO_AMOUNT, amount);
-        intent.putExtra(Judo.JUDO_CURRENCY, currency);
-        intent.putExtra(Judo.JUDO_CONSUMER, consumerRef);
-        intent.putExtra(Judo.JUDO_META_DATA, metaData);
-
-        activity.startActivityForResult(intent, requestCode);
-    }
-
-    public static void startTokenPreAuthActivity(Activity activity, int requestCode, String judoId, String amount, String currency, String consumerRef, CardToken cardToken, Bundle metaData) {
-        Intent intent = new Intent(activity, TokenPreAuthActivity.class);
-
-        intent.putExtra(Judo.JUDO_ID, judoId);
-        intent.putExtra(Judo.JUDO_AMOUNT, amount);
-        intent.putExtra(Judo.JUDO_CURRENCY, currency);
-        intent.putExtra(Judo.JUDO_CONSUMER, consumerRef);
-        intent.putExtra(Judo.JUDO_CARD_TOKEN, cardToken);
-        intent.putExtra(Judo.JUDO_META_DATA, metaData);
-
-        activity.startActivityForResult(intent, requestCode);
-    }
 }

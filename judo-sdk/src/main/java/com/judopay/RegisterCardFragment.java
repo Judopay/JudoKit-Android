@@ -11,7 +11,7 @@ import com.judopay.model.Card;
 import com.judopay.model.CardToken;
 import com.judopay.payment.form.CardEntryFragment;
 import com.judopay.payment.form.PaymentFormListener;
-import com.judopay.payment.form.PaymentFormOptions;
+import com.judopay.payment.form.JudoOptions;
 
 public class RegisterCardFragment extends BaseFragment implements PaymentFormView, PaymentFormListener {
 
@@ -36,12 +36,12 @@ public class RegisterCardFragment extends BaseFragment implements PaymentFormVie
         CardToken cardToken = getArguments().getParcelable(Judo.JUDO_CARD_TOKEN);
         String buttonLabel = getString(R.string.add_card);
 
-        PaymentFormOptions paymentFormOptions = new PaymentFormOptions.Builder()
+        JudoOptions judoOptions = new JudoOptions.Builder()
                 .setCardToken(cardToken)
                 .setButtonLabel(buttonLabel)
                 .build();
 
-        return CardEntryFragment.newInstance(paymentFormOptions, this);
+        return CardEntryFragment.newInstance(judoOptions, this);
     }
 
     @Override
