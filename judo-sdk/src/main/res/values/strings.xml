@@ -12,6 +12,7 @@
     <string name="issue_number_label">Issue number</string>
     <string name="issue_number_hint">00</string>
     <string name="date_hint">MM/YY</string>
+    <string name="expiry_date_format">%1$s/%2$s</string>
     <string name="cvv_label">CVV</string>
     <string name="amex_cvv_label">CIDV</string>
     <string name="cvv_hint">000</string>
