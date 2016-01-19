@@ -44,8 +44,6 @@ import static com.judopay.Judo.isAvsEnabled;
 
 public final class CardEntryFragment extends Fragment {
 
-    public static final String KEY_PAYMENT_FORM_OPTIONS = "Judo-JudoOptions";
-
     private EditText cvvEditText;
     private View cvvHelperText;
     private Button paymentButton;
@@ -125,8 +123,8 @@ public final class CardEntryFragment extends Fragment {
             }
         };
 
-        if (getArguments() != null && getArguments().containsKey(KEY_PAYMENT_FORM_OPTIONS)) {
-            this.judoOptions = getArguments().getParcelable(KEY_PAYMENT_FORM_OPTIONS);
+        if (getArguments() != null && getArguments().containsKey(Judo.JUDO_OPTIONS)) {
+            this.judoOptions = getArguments().getParcelable(Judo.JUDO_OPTIONS);
 
             if (judoOptions != null) {
                 if (judoOptions.getButtonLabel() != null) {
@@ -140,10 +138,13 @@ public final class CardEntryFragment extends Fragment {
 
                 if (judoOptions.getCardNumber() != null) {
                     cardNumberEditText.setText(judoOptions.getCardNumber());
+
+                    int cardType = CardType.fromCardNumber(judoOptions.getCardNumber());
+                    cardTypeImageView.setCardType(cardType);
                 }
 
                 if (judoOptions.getExpiryYear() != null && judoOptions.getExpiryMonth() != null) {
-                    expiryDateEditText.setText(judoOptions.getExpiryMonth() + "/" + judoOptions.getExpiryYear());
+                    expiryDateEditText.setText(getString(R.string.expiry_date_format, judoOptions.getExpiryMonth(), judoOptions.getExpiryYear()));
                 }
 
                 if (judoOptions.getCvv() != null) {
@@ -407,7 +408,7 @@ public final class CardEntryFragment extends Fragment {
 
         cardBuilder.setCardAddress(addressBuilder.build());
 
-        if (CardType.matchCardNumber(cardNumberEditText.getText().toString()) == CardType.MAESTRO) {
+        if (CardType.fromCardNumber(cardNumberEditText.getText().toString()) == CardType.MAESTRO) {
             cardBuilder.setIssueNumber(getIssueNumber())
                     .setStartDate(trim(startDateEditText));
         }
@@ -442,7 +443,7 @@ public final class CardEntryFragment extends Fragment {
         cardEntryFragment.setPaymentFormListener(listener);
 
         Bundle arguments = new Bundle();
-        arguments.putParcelable(CardEntryFragment.KEY_PAYMENT_FORM_OPTIONS, judoOptions);
+        arguments.putParcelable(Judo.JUDO_OPTIONS, judoOptions);
         cardEntryFragment.setArguments(arguments);
 
         return cardEntryFragment;
