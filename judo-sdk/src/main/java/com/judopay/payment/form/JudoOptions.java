@@ -17,8 +17,8 @@ public class JudoOptions implements Parcelable {
     private String consumerRef;
     private Bundle metaData;
     private String cardNumber;
-    private String expiryMonth;
-    private String expiryYear;
+    private Integer expiryMonth;
+    private Integer expiryYear;
     private String cvv;
     private String buttonLabel;
     private CardToken cardToken;
@@ -53,7 +53,7 @@ public class JudoOptions implements Parcelable {
         return cardToken;
     }
 
-    public String getExpiryMonth() {
+    public Integer getExpiryMonth() {
         return expiryMonth;
     }
 
@@ -61,7 +61,7 @@ public class JudoOptions implements Parcelable {
         return cardNumber;
     }
 
-    public String getExpiryYear() {
+    public Integer getExpiryYear() {
         return expiryYear;
     }
 
@@ -86,8 +86,8 @@ public class JudoOptions implements Parcelable {
         private String buttonLabel;
         private CardToken cardToken;
         private String cardNumber;
-        private String expiryMonth;
-        private String expiryYear;
+        private Integer expiryMonth;
+        private Integer expiryYear;
         private String cvv;
         private String amount;
         private String judoId;
@@ -125,12 +125,12 @@ public class JudoOptions implements Parcelable {
             return this;
         }
 
-        public Builder setExpiryMonth(String expiryMonth) {
+        public Builder setExpiryMonth(Integer expiryMonth) {
             this.expiryMonth = expiryMonth;
             return this;
         }
 
-        public Builder setExpiryYear(String expiryYear) {
+        public Builder setExpiryYear(Integer expiryYear) {
             this.expiryYear = expiryYear;
             return this;
         }
@@ -177,28 +177,28 @@ public class JudoOptions implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.amount);
         dest.writeString(this.judoId);
+        dest.writeString(this.amount);
         dest.writeString(this.currency);
         dest.writeString(this.consumerRef);
         dest.writeBundle(metaData);
         dest.writeString(this.cardNumber);
-        dest.writeString(this.expiryMonth);
-        dest.writeString(this.expiryYear);
+        dest.writeValue(this.expiryMonth);
+        dest.writeValue(this.expiryYear);
         dest.writeString(this.cvv);
         dest.writeString(this.buttonLabel);
         dest.writeParcelable(this.cardToken, 0);
     }
 
     protected JudoOptions(Parcel in) {
-        this.amount = in.readString();
         this.judoId = in.readString();
+        this.amount = in.readString();
         this.currency = in.readString();
         this.consumerRef = in.readString();
         metaData = in.readBundle();
         this.cardNumber = in.readString();
-        this.expiryMonth = in.readString();
-        this.expiryYear = in.readString();
+        this.expiryMonth = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.expiryYear = (Integer) in.readValue(Integer.class.getClassLoader());
         this.cvv = in.readString();
         this.buttonLabel = in.readString();
         this.cardToken = in.readParcelable(CardToken.class.getClassLoader());
