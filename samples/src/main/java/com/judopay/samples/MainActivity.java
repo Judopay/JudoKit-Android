@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -83,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
                 JudoOptions judoOptions = new JudoOptions.Builder()
                         .setJudoId(MY_JUDO_ID)
                         .setAmount(MY_AMOUNT)
-                        .setCardNumber("4976000000003436")
                         .setCurrency(getCurrency())
                         .setConsumerRef("yourConsumerRef")
                         .build();
@@ -127,7 +125,13 @@ public class MainActivity extends AppCompatActivity {
         addCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startRegisterCardActivity("consumerToken", REGISTER_CARD_REQUEST);
+                Intent intent = new Intent(MainActivity.this, RegisterCardActivity.class);
+                intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+                        .setJudoId(MY_JUDO_ID)
+                        .setConsumerRef("consumerRef")
+                        .build());
+
+                startActivityForResult(intent, REGISTER_CARD_REQUEST);
             }
         });
     }
@@ -223,17 +227,6 @@ public class MainActivity extends AppCompatActivity {
             return gson.fromJson(tokenReceiptJson, Receipt.class);
         }
         return null;
-    }
-
-    private void startRegisterCardActivity(String consumer, int requestCode) {
-        Intent intent = new Intent(this, RegisterCardActivity.class);
-
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
-                .setJudoId(MY_JUDO_ID)
-                .setConsumerRef(consumer)
-                .build());
-
-        startActivityForResult(intent, requestCode);
     }
 
     private void handleRegisterCardResult(int resultCode, Intent data) {
