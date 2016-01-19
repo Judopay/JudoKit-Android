@@ -8,10 +8,9 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.model.Card;
-import com.judopay.model.CardToken;
 import com.judopay.payment.form.CardEntryFragment;
-import com.judopay.payment.form.PaymentFormListener;
 import com.judopay.payment.form.JudoOptions;
+import com.judopay.payment.form.PaymentFormListener;
 
 public class RegisterCardFragment extends BaseFragment implements PaymentFormView, PaymentFormListener {
 
@@ -32,16 +31,32 @@ public class RegisterCardFragment extends BaseFragment implements PaymentFormVie
     }
 
     @Override
+    protected JudoOptions getJudoOptions() {
+        Bundle args = getArguments();
+
+        if (args.containsKey(Judo.JUDO_OPTIONS)) {
+            JudoOptions judoOptions = args.getParcelable(Judo.JUDO_OPTIONS);
+
+            return new JudoOptions.Builder()
+                    .setJudoId(judoOptions.getJudoId())
+                    .setConsumerRef(judoOptions.getConsumerRef())
+                    .setCardNumber(judoOptions.getCardNumber())
+                    .setExpiryMonth(judoOptions.getExpiryMonth())
+                    .setExpiryYear(judoOptions.getExpiryYear())
+                    .setButtonLabel(getString(R.string.add_card))
+                    .build();
+        } else {
+            return new JudoOptions.Builder()
+                    .setJudoId(args.getString(Judo.JUDO_ID))
+                    .setButtonLabel(getString(R.string.add_card))
+                    .setConsumerRef(args.getString(Judo.JUDO_CONSUMER))
+                    .build();
+        }
+    }
+
+    @Override
     protected CardEntryFragment createPaymentFormFragment() {
-        CardToken cardToken = getArguments().getParcelable(Judo.JUDO_CARD_TOKEN);
-        String buttonLabel = getString(R.string.add_card);
-
-        JudoOptions judoOptions = new JudoOptions.Builder()
-                .setCardToken(cardToken)
-                .setButtonLabel(buttonLabel)
-                .build();
-
-        return CardEntryFragment.newInstance(judoOptions, this);
+        return CardEntryFragment.newInstance(getJudoOptions(), this);
     }
 
     @Override
@@ -52,10 +67,9 @@ public class RegisterCardFragment extends BaseFragment implements PaymentFormVie
 
     @Override
     public void onSubmit(Card card) {
-        String consumerRef = getArguments().getString(Judo.JUDO_CONSUMER);
-        String judoId = getArguments().getString(Judo.JUDO_ID);
+        JudoOptions options = getJudoOptions();
 
-        presenter.performRegisterCard(judoId, card, consumerRef);
+        presenter.performRegisterCard(card, options);
     }
 
     public boolean isPaymentInProgress() {

@@ -1,13 +1,17 @@
 package com.judopay;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 
 import com.judopay.model.Receipt;
+import com.judopay.payment.form.JudoOptions;
 
 import static com.judopay.Judo.JUDO_AMOUNT;
+import static com.judopay.Judo.JUDO_CARD_TOKEN;
 import static com.judopay.Judo.JUDO_CONSUMER;
 import static com.judopay.Judo.JUDO_CURRENCY;
 import static com.judopay.Judo.JUDO_ID;
+import static com.judopay.Judo.JUDO_OPTIONS;
 
 /**
  * Displays a payment form to the user, allowing for a payment to be made.
@@ -36,7 +40,15 @@ public final class PaymentActivity extends JudoActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        checkRequiredExtras(JUDO_AMOUNT, JUDO_ID, JUDO_CURRENCY, JUDO_CONSUMER);
+        if (getIntent().hasExtra((JUDO_OPTIONS))) {
+            JudoOptions options = getIntent().getParcelableExtra(JUDO_OPTIONS);
+
+            if (options.getAmount() == null || options.getJudoId() == null || options.getCurrency() == null || options.getConsumerRef() == null) {
+                throw new IllegalArgumentException("Intent must contain all required extras for PaymentActivity");
+            }
+        } else {
+            checkRequiredExtras(JUDO_AMOUNT, JUDO_ID, JUDO_CURRENCY, JUDO_CONSUMER);
+        }
 
         setTitle(R.string.payment);
 
