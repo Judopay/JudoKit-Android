@@ -24,8 +24,7 @@ public class JudoOptions implements Parcelable {
     private String buttonLabel;
     private CardToken cardToken;
 
-    private JudoOptions() {
-    }
+    private JudoOptions() { }
 
     public String getAmount() {
         return amount;
