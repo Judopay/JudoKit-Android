@@ -142,12 +142,12 @@ public final class CardEntryFragment extends Fragment {
                     cardNumberEditText.setText(judoOptions.getCardNumber());
                 }
 
-                if (judoOptions.getExpiryDate() != null) {
-                    expiryDateEditText.setText(judoOptions.getExpiryDate());
+                if (judoOptions.getExpiryYear() != null && judoOptions.getExpiryMonth() != null) {
+                    expiryDateEditText.setText(judoOptions.getExpiryMonth() + "/" + judoOptions.getExpiryYear());
                 }
 
-                if (judoOptions.getCv2() != null) {
-                    cvvEditText.setText(judoOptions.getCv2());
+                if (judoOptions.getCvv() != null) {
+                    cvvEditText.setText(judoOptions.getCvv());
                 }
             }
         }
