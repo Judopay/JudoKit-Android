@@ -28,7 +28,7 @@ public class CardType {
     public static final String VISA_PATTERN = "0000 0000 0000 0000";
     public static final String AMEX_PATTERN = "0000 000000 00000";
 
-    public static int matchCardNumber(String cardNumber) {
+    public static int fromCardNumber(String cardNumber) {
         if (startsWith(VISA_PREFIXES, cardNumber) || cardNumber.matches(REGEX_VISA)) {
             return VISA;
         }
