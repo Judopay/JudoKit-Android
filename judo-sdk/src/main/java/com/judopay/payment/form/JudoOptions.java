@@ -11,12 +11,11 @@ import java.util.Map;
 
 public class JudoOptions implements Parcelable {
 
-    private String amount;
     private String judoId;
+    private String amount;
     private String currency;
     private String consumerRef;
     private Bundle metaData;
-
     private String cardNumber;
     private String expiryMonth;
     private String expiryYear;
