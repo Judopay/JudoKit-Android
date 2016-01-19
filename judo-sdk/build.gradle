@@ -8,9 +8,6 @@ buildscript {
     }
 }
 
-repositories {
-    jcenter()
-}
 
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
@@ -44,7 +41,7 @@ publish {
     userOrg = 'judopay'
     groupId = 'com.judopay'
     artifactId = 'android-sdk'
-    publishVersion = '5.0.1'
+    publishVersion = rootProject.ext.versionName
     desc = 'Android Mobile Payments SDK'
     website = 'https://github.com/JudoPay/Judo-Android'
 }

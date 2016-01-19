@@ -2,8 +2,14 @@ package com.judopay;
 
 import android.os.Bundle;
 
+import com.judopay.payment.form.JudoOptions;
+
+import static com.judopay.Judo.JUDO_AMOUNT;
+import static com.judopay.Judo.JUDO_CARD_TOKEN;
 import static com.judopay.Judo.JUDO_CONSUMER;
+import static com.judopay.Judo.JUDO_CURRENCY;
 import static com.judopay.Judo.JUDO_ID;
+import static com.judopay.Judo.JUDO_OPTIONS;
 
 /**
  * Displays a form to the user, allowing for card to be registered and used for token transactions.
@@ -23,7 +29,15 @@ public final class RegisterCardActivity extends JudoActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        checkRequiredExtras(JUDO_CONSUMER, JUDO_ID);
+        if (getIntent().hasExtra((JUDO_OPTIONS))) {
+            JudoOptions options = getIntent().getParcelableExtra(JUDO_OPTIONS);
+
+            if (options.getConsumerRef() == null || options.getJudoId() == null) {
+                throw new IllegalArgumentException("Intent must contain all required extras for RegisterCardActivity");
+            }
+        } else {
+            checkRequiredExtras(JUDO_CONSUMER, JUDO_ID);
+        }
 
         setTitle(R.string.add_card);
 

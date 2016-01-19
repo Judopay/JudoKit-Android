@@ -16,8 +16,8 @@ import android.widget.TextView;
 import com.judopay.model.CardToken;
 import com.judopay.model.Receipt;
 import com.judopay.payment.form.CardEntryFragment;
+import com.judopay.payment.form.JudoOptions;
 import com.judopay.payment.form.PaymentFormListener;
-import com.judopay.payment.form.PaymentFormOptions;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
 import com.judopay.secure3d.ThreeDSecureWebView;
@@ -74,14 +74,37 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, Payment
         }
     }
 
-    CardEntryFragment createPaymentFormFragment() {
-        CardToken cardToken = getArguments().getParcelable(Judo.JUDO_CARD_TOKEN);
+    protected CardEntryFragment createPaymentFormFragment() {
+        JudoOptions judoOptions;
 
-        PaymentFormOptions paymentFormOptions = new PaymentFormOptions.Builder()
-                .setCardToken(cardToken)
-                .build();
+        if (getArguments().containsKey(Judo.JUDO_OPTIONS)) {
+            judoOptions = getArguments().getParcelable(Judo.JUDO_OPTIONS);
+        } else {
+            CardToken cardToken = getArguments().getParcelable(Judo.JUDO_CARD_TOKEN);
 
-        return CardEntryFragment.newInstance(paymentFormOptions, this);
+            judoOptions = new JudoOptions.Builder()
+                    .setCardToken(cardToken)
+                    .build();
+        }
+
+        return CardEntryFragment.newInstance(judoOptions, this);
+    }
+
+    protected JudoOptions getJudoOptions() {
+        Bundle args = getArguments();
+
+        if (args.containsKey(Judo.JUDO_OPTIONS)) {
+            return args.getParcelable(Judo.JUDO_OPTIONS);
+        } else {
+            return new JudoOptions.Builder()
+                    .setJudoId(args.getString(Judo.JUDO_ID))
+                    .setAmount(args.getString(Judo.JUDO_AMOUNT))
+                    .setCardToken((CardToken) args.getParcelable(Judo.JUDO_CARD_TOKEN))
+                    .setCurrency(args.getString(Judo.JUDO_CURRENCY))
+                    .setConsumerRef(args.getString(Judo.JUDO_CONSUMER))
+                    .setMetaData(args.getBundle(Judo.JUDO_META_DATA))
+                    .build();
+        }
     }
 
     @Override

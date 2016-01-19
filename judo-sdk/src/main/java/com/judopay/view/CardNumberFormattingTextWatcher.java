@@ -29,7 +29,7 @@ public class CardNumberFormattingTextWatcher implements TextWatcher {
     @Override
     public void afterTextChanged(Editable string) {
         if (string.length() > 0) {
-            int cardType = CardType.matchCardNumber(string.toString());
+            int cardType = CardType.fromCardNumber(string.toString());
 
             if (cardType == CardType.AMEX) {
                 insertSpaces(string, CardType.AMEX_PATTERN);

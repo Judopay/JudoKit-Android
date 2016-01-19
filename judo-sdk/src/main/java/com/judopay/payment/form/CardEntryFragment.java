@@ -44,8 +44,6 @@ import static com.judopay.Judo.isAvsEnabled;
 
 public final class CardEntryFragment extends Fragment {
 
-    public static final String KEY_PAYMENT_FORM_OPTIONS = "Judo-PaymentFormOptions";
-
     private EditText cvvEditText;
     private View cvvHelperText;
     private Button paymentButton;
@@ -71,7 +69,7 @@ public final class CardEntryFragment extends Fragment {
     private View cardsAcceptedErrorText;
     private View issueNumberHelperText;
 
-    private PaymentFormOptions paymentFormOptions;
+    private JudoOptions judoOptions;
     private PaymentFormListener paymentFormListener;
 
     @Override
@@ -125,17 +123,32 @@ public final class CardEntryFragment extends Fragment {
             }
         };
 
-        if (getArguments() != null && getArguments().containsKey(KEY_PAYMENT_FORM_OPTIONS)) {
-            this.paymentFormOptions = getArguments().getParcelable(KEY_PAYMENT_FORM_OPTIONS);
+        if (getArguments() != null && getArguments().containsKey(Judo.JUDO_OPTIONS)) {
+            this.judoOptions = getArguments().getParcelable(Judo.JUDO_OPTIONS);
 
-            if (paymentFormOptions != null) {
-                if (paymentFormOptions.getButtonLabel() != null) {
-                    this.paymentButton.setText(paymentFormOptions.getButtonLabel());
+            if (judoOptions != null) {
+                if (judoOptions.getButtonLabel() != null) {
+                    this.paymentButton.setText(judoOptions.getButtonLabel());
                 }
 
-                if (paymentFormOptions.getCardToken() != null) {
-                    cardTypeImageView.setCardType(paymentFormOptions.getCardToken().getType());
+                if (judoOptions.getCardToken() != null) {
+                    cardTypeImageView.setCardType(judoOptions.getCardToken().getType());
                     cvvEditText.requestFocus();
+                }
+
+                if (judoOptions.getCardNumber() != null) {
+                    cardNumberEditText.setText(judoOptions.getCardNumber());
+
+                    int cardType = CardType.fromCardNumber(judoOptions.getCardNumber());
+                    cardTypeImageView.setCardType(cardType);
+                }
+
+                if (judoOptions.getExpiryYear() != null && judoOptions.getExpiryMonth() != null) {
+                    expiryDateEditText.setText(getString(R.string.expiry_date_format, judoOptions.getExpiryMonth(), judoOptions.getExpiryYear()));
+                }
+
+                if (judoOptions.getCvv() != null) {
+                    cvvEditText.setText(judoOptions.getCvv());
                 }
             }
         }
@@ -213,7 +226,7 @@ public final class CardEntryFragment extends Fragment {
     }
 
     private void initialiseExpiryDate(SimpleTextWatcher formValidator) {
-        if (paymentFormOptions.getCardToken() == null) {
+        if (judoOptions.getCardToken() == null) {
             expiryDateEditText.setOnFocusChangeListener(new HintFocusListener(expiryDateEditText, R.string.date_hint));
 
             expiryDateEditText.addTextChangedListener(formValidator);
@@ -225,7 +238,7 @@ public final class CardEntryFragment extends Fragment {
     }
 
     private void initialiseCardNumber(SimpleTextWatcher formValidator) {
-        if (paymentFormOptions.getCardToken() == null) {
+        if (judoOptions.getCardToken() == null) {
             cardNumberEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
                     new EmptyTextHintOnFocusChangeListener(cardNumberHelperText),
                     new HintFocusListener(cardNumberEditText, R.string.card_number_hint)
@@ -236,7 +249,7 @@ public final class CardEntryFragment extends Fragment {
             cardNumberEditText.addTextChangedListener(new HidingViewTextWatcher(cardNumberHelperText));
         } else {
             cardNumberEditText.setEnabled(false);
-            cardNumberEditText.setText(getString(R.string.token_card_number, paymentFormOptions.getCardToken().getLastFour()));
+            cardNumberEditText.setText(getString(R.string.token_card_number, judoOptions.getCardToken().getLastFour()));
         }
     }
 
@@ -261,7 +274,7 @@ public final class CardEntryFragment extends Fragment {
                 .setAmexSupported(Judo.isAmexEnabled())
                 .setMaestroSupported(Judo.isMaestroEnabled());
 
-        CardToken cardToken = paymentFormOptions.getCardToken();
+        CardToken cardToken = judoOptions.getCardToken();
 
         if (cardToken != null) {
             builder.setTokenCard(true)
@@ -395,7 +408,7 @@ public final class CardEntryFragment extends Fragment {
 
         cardBuilder.setCardAddress(addressBuilder.build());
 
-        if (CardType.matchCardNumber(cardNumberEditText.getText().toString()) == CardType.MAESTRO) {
+        if (CardType.fromCardNumber(cardNumberEditText.getText().toString()) == CardType.MAESTRO) {
             cardBuilder.setIssueNumber(getIssueNumber())
                     .setStartDate(trim(startDateEditText));
         }
@@ -425,12 +438,12 @@ public final class CardEntryFragment extends Fragment {
         return trim(cardNumberEditText).replaceAll(" ", "");
     }
 
-    public static CardEntryFragment newInstance(PaymentFormOptions paymentFormOptions, PaymentFormListener listener) {
+    public static CardEntryFragment newInstance(JudoOptions judoOptions, PaymentFormListener listener) {
         CardEntryFragment cardEntryFragment = new CardEntryFragment();
         cardEntryFragment.setPaymentFormListener(listener);
 
         Bundle arguments = new Bundle();
-        arguments.putParcelable(CardEntryFragment.KEY_PAYMENT_FORM_OPTIONS, paymentFormOptions);
+        arguments.putParcelable(Judo.JUDO_OPTIONS, judoOptions);
         cardEntryFragment.setArguments(arguments);
 
         return cardEntryFragment;

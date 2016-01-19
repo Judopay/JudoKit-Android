@@ -38,7 +38,7 @@ public class Card {
     }
 
     public boolean startDateAndIssueNumberRequired() {
-        return CardType.MAESTRO == CardType.matchCardNumber(cardNumber);
+        return CardType.MAESTRO == CardType.fromCardNumber(cardNumber);
     }
 
     public static class Builder {

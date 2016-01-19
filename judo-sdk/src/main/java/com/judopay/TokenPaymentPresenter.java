@@ -1,14 +1,9 @@
 package com.judopay;
 
-import android.os.Bundle;
-
 import com.google.gson.Gson;
 import com.judopay.model.Card;
-import com.judopay.model.CardToken;
-import com.judopay.model.Location;
 import com.judopay.model.TokenTransaction;
-
-import static com.judopay.BundleUtil.toMap;
+import com.judopay.payment.form.JudoOptions;
 
 class TokenPaymentPresenter extends BasePresenter {
 
@@ -16,23 +11,24 @@ class TokenPaymentPresenter extends BasePresenter {
         super(view, judoApiService, scheduler, gson);
     }
 
-    public void performTokenPayment(Card card, CardToken cardToken, String consumer, String judoId, String amount, String currency, Bundle metaData) {
+    public void performTokenPayment(Card card, JudoOptions options) {
         this.loading = true;
+
         paymentFormView.showLoading();
 
         TokenTransaction tokenTransaction = new TokenTransaction.Builder()
-                .setAmount(amount)
+                .setAmount(options.getAmount())
                 .setCardAddress(card.getCardAddress())
-                .setConsumerLocation(new Location())
-                .setCurrency(currency)
-                .setJudoId(judoId)
-                .setYourConsumerReference(consumer)
+                .setConsumerLocation(null)
+                .setCurrency(options.getCurrency())
+                .setJudoId(options.getJudoId())
+                .setYourConsumerReference(options.getConsumerRef())
                 .setCv2(card.getCv2())
-                .setMetaData(toMap(metaData))
-                .setEndDate(cardToken.getEndDate())
-                .setLastFour(cardToken.getLastFour())
-                .setToken(cardToken.getToken())
-                .setType(cardToken.getType())
+                .setMetaData(options.getMetaDataMap())
+                .setEndDate(options.getCardToken().getEndDate())
+                .setLastFour(options.getCardToken().getLastFour())
+                .setToken(options.getCardToken().getToken())
+                .setType(options.getCardToken().getType())
                 .build();
 
         apiService.tokenPayment(tokenTransaction)
