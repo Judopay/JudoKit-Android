@@ -20,6 +20,7 @@ import com.judopay.card.CardEntryListener;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
 import com.judopay.secure3d.ThreeDSecureWebView;
+import com.judopay.view.Dialogs;
 
 abstract class BaseFragment extends Fragment implements PaymentFormView, CardEntryListener {
 

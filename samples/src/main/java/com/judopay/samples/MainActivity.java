@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.judopay.Dialogs;
+import com.judopay.view.Dialogs;
 import com.judopay.Judo;
 import com.judopay.PaymentActivity;
 import com.judopay.PreAuthActivity;
