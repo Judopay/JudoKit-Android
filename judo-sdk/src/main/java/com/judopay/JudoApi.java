@@ -7,11 +7,11 @@ public class JudoApi {
     private String apiSecret;
     private int apiEnvironment;
 
-    private boolean sslPinningEnabled = true;
     private boolean avsEnabled;
-    private boolean maestroEnabled = true;
     private boolean amexEnabled;
-    private boolean threeDSecureEnabled;
+
+    private boolean maestroEnabled = true;
+    private boolean sslPinningEnabled = true;
     private boolean rootedDevicesAllowed = true;
 
     public JudoApi(String apiToken, String apiSecret, int apiEnvironment) {
@@ -92,11 +92,4 @@ public class JudoApi {
         this.rootedDevicesAllowed = rootedDevicesAllowed;
     }
 
-    public void setThreeDSecureEnabled(boolean enabled) {
-        this.threeDSecureEnabled = enabled;
-    }
-
-    public boolean isThreeDSecureEnabled() {
-        return threeDSecureEnabled;
-    }
 }
