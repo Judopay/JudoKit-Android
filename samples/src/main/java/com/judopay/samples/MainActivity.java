@@ -11,8 +11,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.judopay.Dialogs;
 import com.judopay.Judo;
+import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;
 import com.judopay.PreAuthActivity;
 import com.judopay.RegisterCardActivity;
@@ -20,7 +20,7 @@ import com.judopay.TokenPaymentActivity;
 import com.judopay.TokenPreAuthActivity;
 import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
-import com.judopay.payment.form.JudoOptions;
+import com.judopay.view.Dialogs;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
