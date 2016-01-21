@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TOKEN_RECEIPT_KEY = "Judo-SampleApp-TokenReceipt";
 
     private static final String AMOUNT = "0.99";
-    private static final String JUDO_ID = "100407196";
+    private static final String JUDO_ID = "00000000";
 
     private static final String API_TOKEN = "sampleApiToken";
     private static final String API_SECRET = "sampleApiSecret";
