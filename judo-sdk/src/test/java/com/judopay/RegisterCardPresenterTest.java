@@ -5,7 +5,6 @@ import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.Receipt;
 import com.judopay.model.RegisterTransaction;
-import com.judopay.payment.form.JudoOptions;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.internal.http.RealResponseBody;
 

@@ -20,7 +20,7 @@ import com.judopay.TokenPaymentActivity;
 import com.judopay.TokenPreAuthActivity;
 import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
-import com.judopay.payment.form.JudoOptions;
+import com.judopay.JudoOptions;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

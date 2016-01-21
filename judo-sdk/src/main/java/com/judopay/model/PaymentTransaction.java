@@ -90,7 +90,6 @@ public class PaymentTransaction extends Request {
         private String currency;
         private String judoId;
         private String yourConsumerReference;
-        private String yourPaymentReference;
         private Address cardAddress;
         private String cardNumber;
         private String cv2;
