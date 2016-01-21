@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.judopay.view.CardTypeImageView
+        android:id="@+id/card_type_view"
+        style="@style/judo_card_image"
+        tools:ignore="RtlHardcoded" />
+
+    <com.judopay.view.JudoTextInputLayout
+        android:id="@+id/card_number_input_layout"
+        style="@style/input_layout">
+
+        <EditText
+            android:id="@+id/card_number_edit_text"
+            style="@style/judo_card_number" />
+
+    </com.judopay.view.JudoTextInputLayout>
+
+    <TextView
+        android:id="@+id/card_number_helper_text"
+        style="@style/judo_hint_text"
+        android:layout_below="@id/card_number_input_layout"
+        android:text="@string/long_card_number"
+        tools:visibility="visible" />
+
+</merge>

@@ -3,7 +3,6 @@ package com.judopay;
 import com.google.gson.Gson;
 import com.judopay.model.Card;
 import com.judopay.model.PaymentTransaction;
-import com.judopay.payment.form.JudoOptions;
 
 class PreAuthPresenter extends BasePresenter {
 

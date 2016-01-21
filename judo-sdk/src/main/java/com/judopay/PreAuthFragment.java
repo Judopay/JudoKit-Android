@@ -6,7 +6,6 @@ import android.view.View;
 import com.google.gson.Gson;
 import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.model.Card;
-import com.judopay.payment.form.JudoOptions;
 
 public final class PreAuthFragment extends BaseFragment {
 

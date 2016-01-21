@@ -15,14 +15,14 @@ import android.widget.TextView;
 
 import com.judopay.model.CardToken;
 import com.judopay.model.Receipt;
-import com.judopay.payment.form.CardEntryFragment;
-import com.judopay.payment.form.JudoOptions;
-import com.judopay.payment.form.PaymentFormListener;
+import com.judopay.card.CardEntryFragment;
+import com.judopay.card.CardEntryListener;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
 import com.judopay.secure3d.ThreeDSecureWebView;
+import com.judopay.view.Dialogs;
 
-abstract class BaseFragment extends Fragment implements PaymentFormView, PaymentFormListener {
+abstract class BaseFragment extends Fragment implements PaymentFormView, CardEntryListener {
 
     private static final String TAG_PAYMENT_FORM = "CardEntryFragment";
     private static final String TAG_3DS_DIALOG = "3dSecureDialog";
@@ -70,7 +70,7 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, Payment
                     .add(R.id.container, cardEntryFragment, TAG_PAYMENT_FORM)
                     .commit();
         } else {
-            cardEntryFragment.setPaymentFormListener(this);
+            cardEntryFragment.setCardEntryListener(this);
         }
     }
 

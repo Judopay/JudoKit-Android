@@ -1,7 +1,6 @@
 package com.judopay.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.judopay.UniqueIdentifier;
 import com.judopay.api.Request;
 
 import java.util.Map;

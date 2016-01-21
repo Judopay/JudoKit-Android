@@ -3,7 +3,6 @@ package com.judopay;
 import android.os.Bundle;
 
 import com.judopay.model.Receipt;
-import com.judopay.payment.form.JudoOptions;
 
 import static com.judopay.Judo.JUDO_AMOUNT;
 import static com.judopay.Judo.JUDO_CONSUMER;

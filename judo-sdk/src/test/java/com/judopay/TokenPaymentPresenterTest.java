@@ -8,7 +8,6 @@ import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
 import com.judopay.model.ThreeDSecureInfo;
 import com.judopay.model.TokenTransaction;
-import com.judopay.payment.form.JudoOptions;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

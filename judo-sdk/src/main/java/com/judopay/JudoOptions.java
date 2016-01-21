@@ -1,4 +1,4 @@
-package com.judopay.payment.form;
+package com.judopay;
 
 import android.os.Bundle;
 import android.os.Parcel;

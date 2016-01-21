@@ -1,8 +1,10 @@
-package com.judopay;
+package com.judopay.view;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+
+import com.judopay.R;
 
 public class Dialogs {
 

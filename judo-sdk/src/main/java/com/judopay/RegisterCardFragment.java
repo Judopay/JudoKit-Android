@@ -8,11 +8,10 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.model.Card;
-import com.judopay.payment.form.CardEntryFragment;
-import com.judopay.payment.form.JudoOptions;
-import com.judopay.payment.form.PaymentFormListener;
+import com.judopay.card.CardEntryFragment;
+import com.judopay.card.CardEntryListener;
 
-public class RegisterCardFragment extends BaseFragment implements PaymentFormView, PaymentFormListener {
+public class RegisterCardFragment extends BaseFragment implements PaymentFormView, CardEntryListener {
 
     private RegisterCardPresenter presenter;
 

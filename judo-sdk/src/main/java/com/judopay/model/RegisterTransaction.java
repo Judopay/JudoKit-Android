@@ -1,6 +1,5 @@
 package com.judopay.model;
 
-import com.judopay.UniqueIdentifier;
 import com.judopay.api.Request;
 
 public class RegisterTransaction extends Request {

@@ -10,33 +10,10 @@
 
         <LinearLayout style="@style/payment_form_container">
 
-            <RelativeLayout
+            <com.judopay.view.CardNumberEntryView
+                android:id="@+id/card_number_entry_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.judopay.view.CardTypeImageView
-                    android:id="@+id/card_type_view"
-                    style="@style/judo_card_image"
-                    tools:ignore="RtlHardcoded" />
-
-                <com.judopay.view.JudoTextInputLayout
-                    android:id="@+id/card_number_input_layout"
-                    style="@style/input_layout">
-
-                    <EditText
-                        android:id="@+id/card_number_edit_text"
-                        style="@style/judo_card_number" />
-
-                </com.judopay.view.JudoTextInputLayout>
-
-                <TextView
-                    android:id="@+id/card_number_helper_text"
-                    style="@style/judo_hint_text"
-                    android:layout_below="@id/card_number_input_layout"
-                    android:text="@string/long_card_number"
-                    tools:visibility="visible" />
-
-            </RelativeLayout>
+                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:id="@+id/start_date_issue_number_container"
@@ -91,18 +68,11 @@
                 android:orientation="horizontal"
                 android:weightSum="2">
 
-                <com.judopay.view.JudoTextInputLayout
-                    android:id="@+id/expiry_date_input_layout"
-                    style="@style/input_layout"
-                    android:layout_weight="1">
-
-                    <com.judopay.view.DateEditText
-                        android:id="@+id/expiry_date_edit_text"
-                        style="@style/judo_expiry_date"
-                        android:layout_weight="1"
-                        tools:ignore="TextFields" />
-
-                </com.judopay.view.JudoTextInputLayout>
+                <com.judopay.view.ExpiryDateEntryView
+                    android:id="@+id/expiry_date_entry_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -182,7 +152,7 @@
                 android:id="@+id/payment_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </LinearLayout>
 
