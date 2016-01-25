@@ -7,7 +7,7 @@
 - Enable 3D-Secure verification for all transactions by default, if required by the Merchant's bank
 - Allow transactions for Android devices with root permissions, with option to block if required.
 - New Android views provided for card data entry for use when writing a custom UI.
-- Add secure server transmission text to payment form, to indicate that transaction is performed securely.
+- Display secure server transmission text in the payment form, to indicate transaction is performed securely.
 
 **Bugs fixed:**
 - Fixed a crashing issue that could occur if an Activity was restarted due to low memory, due to saved state not being restored.
