@@ -47,4 +47,5 @@
     <string name="ok">OK</string>
     <string name="please_check_your_internet_connection">Please check your Internet connection and try again</string>
     <string name="connection_error">Connection error</string>
+    <string name="secure_server_transmission">Secure server: Your card details are encrypted using SSL before transmission to our secure payment service provider. They will not be stored on this device or on our servers.</string>
 </resources>
