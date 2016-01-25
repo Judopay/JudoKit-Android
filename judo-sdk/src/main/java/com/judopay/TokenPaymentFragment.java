@@ -15,7 +15,7 @@ public final class TokenPaymentFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
+        if (this.presenter == null) {
             this.presenter = new TokenPaymentPresenter(this, JudoApiServiceFactory.getInstance(getActivity()), new AndroidScheduler(), new Gson());
         }
     }
