@@ -1,8 +1,21 @@
 # judoNative Android SDK change log
 
 ## [5.1](https://github.com/judopay/Judo-Android/tree/5.1) (2016-01-15)
-- Enable 3D-Secure verification for all transactions if required by the Merchant's bank
+
+**Implemented enhancements:**
+- Add Brazilian Real to list of supported currencies.
+- Enable 3D-Secure verification for all transactions by default, if required by the Merchant's bank
 - Allow transactions for Android devices with root permissions, with option to block if required.
+- New Android views provided for card data entry for use when writing a custom UI.
+- Add secure server transmission text to payment form, to indicate that transaction is performed securely.
+
+**Bugs fixed:**
+- Fixed a crashing issue that could occur if an Activity was restarted due to low memory, due to saved state not being restored.
+- Fixed an issue where the postcode field would not pick up the theme's tint color on pre-Lollipop devices.
+- Visa Electron/Visa Debit now correctly detected as a Visa card during card number entry.
+
+**Changes:**
+- New ```JudoOptions``` class for easier passing of data between Activity and Fragment instances.
 
 ## [5.0.1](https://github.com/judopay/Judo-Android/tree/5.0.1) (2016-01-12)
 
