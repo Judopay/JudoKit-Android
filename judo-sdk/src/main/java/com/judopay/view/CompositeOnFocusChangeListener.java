@@ -21,4 +21,8 @@ public class CompositeOnFocusChangeListener implements View.OnFocusChangeListene
         }
     }
 
+    public void add(View.OnFocusChangeListener listener) {
+        this.listeners.add(listener);
+    }
+
 }
