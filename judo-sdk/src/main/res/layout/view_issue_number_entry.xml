@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.judopay.view.JudoTextInputLayout
+        android:id="@+id/issue_number_input_layout"
+        style="@style/input_layout">
+
+        <EditText
+            android:id="@+id/issue_number_edit_text"
+            style="@style/judo_issue_number" />
+
+    </com.judopay.view.JudoTextInputLayout>
+
+    <TextView
+        android:id="@+id/issue_number_helper_text"
+        style="@style/judo_hint_text"
+        android:text="@string/issue_number_front_of_card"
+        tools:visibility="visible" />
+
+</merge>

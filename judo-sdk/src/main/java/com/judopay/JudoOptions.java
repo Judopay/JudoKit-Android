@@ -22,6 +22,7 @@ public class JudoOptions implements Parcelable {
     private String cvv;
     private String buttonLabel;
     private CardToken cardToken;
+    private boolean secureServerMessageShown;
 
     private JudoOptions() { }
 
@@ -69,6 +70,10 @@ public class JudoOptions implements Parcelable {
         return cvv;
     }
 
+    public boolean isSecureServerMessageShown() {
+        return secureServerMessageShown;
+    }
+
     public Map<String, String> getMetaDataMap() {
         Map<String, String> map = new HashMap<>();
 
@@ -94,6 +99,12 @@ public class JudoOptions implements Parcelable {
         private String currency;
         private String consumerRef;
         private Bundle metaData;
+        private boolean secureServerMessageShown;
+
+        public Builder setSecureServerMessageShown(boolean secureServerMessageShown) {
+            this.secureServerMessageShown = secureServerMessageShown;
+            return this;
+        }
 
         public Builder setAmount(String amount) {
             this.amount = amount;
@@ -164,6 +175,7 @@ public class JudoOptions implements Parcelable {
             options.currency = currency;
             options.consumerRef = consumerRef;
             options.metaData = metaData;
+            options.secureServerMessageShown = secureServerMessageShown;
 
             return options;
         }
@@ -188,6 +200,7 @@ public class JudoOptions implements Parcelable {
         dest.writeString(this.cvv);
         dest.writeString(this.buttonLabel);
         dest.writeParcelable(this.cardToken, 0);
+        dest.writeByte(secureServerMessageShown ? (byte) 1 : (byte) 0);
     }
 
     protected JudoOptions(Parcel in) {
@@ -202,9 +215,10 @@ public class JudoOptions implements Parcelable {
         this.cvv = in.readString();
         this.buttonLabel = in.readString();
         this.cardToken = in.readParcelable(CardToken.class.getClassLoader());
+        this.secureServerMessageShown = in.readByte() != 0;
     }
 
-    public static final Parcelable.Creator<JudoOptions> CREATOR = new Parcelable.Creator<JudoOptions>() {
+    public static final Creator<JudoOptions> CREATOR = new Creator<JudoOptions>() {
         public JudoOptions createFromParcel(Parcel source) {
             return new JudoOptions(source);
         }

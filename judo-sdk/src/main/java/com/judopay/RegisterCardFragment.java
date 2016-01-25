@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.judopay.api.JudoApiServiceFactory;
-import com.judopay.model.Card;
 import com.judopay.card.CardEntryFragment;
 import com.judopay.card.CardEntryListener;
+import com.judopay.model.Card;
 
 public class RegisterCardFragment extends BaseFragment implements PaymentFormView, CardEntryListener {
 
@@ -42,6 +42,7 @@ public class RegisterCardFragment extends BaseFragment implements PaymentFormVie
                     .setCardNumber(judoOptions.getCardNumber())
                     .setExpiryMonth(judoOptions.getExpiryMonth())
                     .setExpiryYear(judoOptions.getExpiryYear())
+                    .setSecureServerMessageShown(judoOptions.isSecureServerMessageShown())
                     .setButtonLabel(getString(R.string.add_card))
                     .build();
         } else {

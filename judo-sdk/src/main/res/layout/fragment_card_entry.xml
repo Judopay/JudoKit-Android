@@ -13,52 +13,28 @@
             <com.judopay.view.CardNumberEntryView
                 android:id="@+id/card_number_entry_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:id="@+id/start_date_issue_number_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:visibility="gone"
                 android:weightSum="2"
                 tools:visibility="visible">
 
-                <com.judopay.view.JudoTextInputLayout
-                    android:id="@+id/start_date_input_layout"
-                    style="@style/input_layout"
-                    android:layout_weight="1">
+                <com.judopay.view.StartDateEntryView
+                    android:id="@+id/start_date_entry_view"
+                    android:layout_weight="1"
+                    style="@style/input_layout" />
 
-                    <EditText
-                        android:id="@+id/start_date_edit_text"
-                        style="@style/judo_start_date"
-                        tools:ignore="TextFields" />
-
-                </com.judopay.view.JudoTextInputLayout>
-
-                <LinearLayout
+                <com.judopay.view.IssueNumberEntryView
+                    android:id="@+id/issue_number_entry_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <com.judopay.view.JudoTextInputLayout
-                        android:id="@+id/issue_number_input_layout"
-                        style="@style/input_layout">
-
-                        <EditText
-                            android:id="@+id/issue_number_edit_text"
-                            style="@style/judo_issue_number" />
-
-                    </com.judopay.view.JudoTextInputLayout>
-
-                    <TextView
-                        android:id="@+id/issue_number_helper_text"
-                        style="@style/judo_hint_text"
-                        android:text="@string/issue_number_front_of_card"
-                        tools:visibility="visible" />
-
-                </LinearLayout>
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
@@ -74,35 +50,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
-                <RelativeLayout
+                <com.judopay.view.CvvEntryView
+                    android:id="@+id/cvv_entry_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <com.judopay.view.CvvImageView
-                        android:id="@+id/cvv_image_view"
-                        style="@style/judo_cvv_image"
-                        tools:ignore="RtlHardcoded" />
-
-                    <com.judopay.view.JudoTextInputLayout
-                        android:id="@+id/cvv_input_layout"
-                        style="@style/input_layout">
-
-                        <EditText
-                            android:id="@+id/cvv_edit_text"
-                            style="@style/judo_cvv"
-                            android:layout_weight="1" />
-
-                    </com.judopay.view.JudoTextInputLayout>
-
-                    <TextView
-                        android:id="@+id/cvv_helper_text"
-                        style="@style/judo_hint_text"
-                        android:layout_below="@id/cvv_input_layout"
-                        android:text="@string/security_code"
-                        tools:visibility="visible" />
-
-                </RelativeLayout>
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
@@ -132,21 +84,21 @@
 
                 </LinearLayout>
 
-                <com.judopay.view.JudoTextInputLayout
-                    android:id="@+id/post_code_input_layout"
+                <com.judopay.view.PostcodeEntryView
+                    android:id="@+id/postcode_entry_view"
                     style="@style/input_layout"
                     android:layout_width="match_parent"
-                    android:layout_weight="1">
-
-                    <EditText
-                        android:id="@+id/post_code_edit_text"
-                        style="@style/judo_postcode"
-                        android:hint="@string/postcode_uk"
-                        tools:ignore="UnusedAttribute" />
-
-                </com.judopay.view.JudoTextInputLayout>
+                    android:layout_weight="1" />
 
             </LinearLayout>
+
+            <com.judopay.view.SecureServerTextView
+                android:id="@+id/secure_server_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="@dimen/judo_small_text_size"
+                android:visibility="gone" />
 
         </LinearLayout>
 
