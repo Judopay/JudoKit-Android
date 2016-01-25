@@ -4,6 +4,13 @@ import com.judopay.api.Request;
 
 import java.util.Map;
 
+/**
+ * Represents the data needed to perform a register card transaction with the judo API.
+ * Use the {@link PaymentTransaction.Builder} for object construction.
+ *
+ * When creating a {@link PaymentTransaction} the {@link PaymentTransaction#judoId},
+ * {@link PaymentTransaction#amount} and {@link PaymentTransaction#currency} must be provided.
+ */
 public class PaymentTransaction extends Request {
 
     private String amount;

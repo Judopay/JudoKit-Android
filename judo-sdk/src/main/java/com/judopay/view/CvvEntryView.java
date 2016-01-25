@@ -13,6 +13,10 @@ import android.widget.RelativeLayout;
 
 import com.judopay.R;
 
+/**
+ * A view that allows for the CVV (CV2/CIDV) of a card to be input and an image displayed to
+ * indicate where on the payment card the CVV number can be located.
+ */
 public class CvvEntryView extends RelativeLayout {
 
     private EditText cvvEditText;

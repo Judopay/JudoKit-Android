@@ -74,7 +74,7 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, CardEnt
         }
     }
 
-    protected CardEntryFragment createPaymentFormFragment() {
+    CardEntryFragment createPaymentFormFragment() {
         JudoOptions judoOptions;
 
         if (getArguments().containsKey(Judo.JUDO_OPTIONS)) {
@@ -90,7 +90,7 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, CardEnt
         return CardEntryFragment.newInstance(judoOptions, this);
     }
 
-    protected JudoOptions getJudoOptions() {
+    JudoOptions getJudoOptions() {
         Bundle args = getArguments();
 
         if (args.containsKey(Judo.JUDO_OPTIONS)) {

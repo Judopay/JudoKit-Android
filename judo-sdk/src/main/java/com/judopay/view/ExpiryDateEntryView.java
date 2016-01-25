@@ -9,6 +9,9 @@ import android.widget.LinearLayout;
 
 import com.judopay.R;
 
+/**
+ * A view that allows for a card expiry date to be entered or for a tokenized expiry number to be shown.
+ */
 public class ExpiryDateEntryView extends LinearLayout {
 
     private EditText expiryDateEditText;

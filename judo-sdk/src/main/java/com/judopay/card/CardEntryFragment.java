@@ -37,6 +37,28 @@ import com.judopay.view.StartDateEntryView;
 
 import static com.judopay.Judo.isAvsEnabled;
 
+/**
+ * A Fragment that allows for card details to be entered by the user, with validation checks
+ * on input data.
+ * Configuration options can be provided by passing a {@link JudoOptions} instance in the fragment
+ * arguments, identified using the {@link Judo#JUDO_OPTIONS} as a key, e.g.
+ * <code>
+ * <p/>
+ * CardEntryFragment fragment = new CardEntryFragment();
+ * Bundle args = new Bundle();
+ *
+ * args.putParcelable(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+ *      .setJudoId("123456")
+ *      .setAmount("1.99")
+ *      .setCurrency(Currency.USD)
+ *      .setButtonLabel("Perform payment")
+ *      .setSecureServerMessageShown(true)
+ *      .build());
+ *
+ * fragment.setArguments(args);
+ * <p/>
+ * </code>
+ */
 public final class CardEntryFragment extends Fragment {
 
     private Button paymentButton;

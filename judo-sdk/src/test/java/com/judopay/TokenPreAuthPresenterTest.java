@@ -32,22 +32,17 @@ public class TokenPreAuthPresenterTest {
     CardToken cardToken;
 
     @Mock
-    Address cardAddress;
-
-    @Mock
     JudoApiService apiService;
 
     @Mock
     PaymentFormView paymentFormView;
-
-    String consumer = "consumerRef";
-    Scheduler scheduler = new TestScheduler();
 
     @Test
     public void shouldPerformTokenPreAuth() {
         TokenPreAuthPresenter presenter = new TokenPreAuthPresenter(paymentFormView, apiService, new TestScheduler(), new Gson());
         when(apiService.tokenPreAuth(any(TokenTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
+        String consumer = "consumerRef";
         presenter.performTokenPreAuth(card, new JudoOptions.Builder()
                 .setCardToken(cardToken)
                 .setConsumerRef(consumer)

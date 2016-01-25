@@ -6,10 +6,11 @@ import com.judopay.api.Request;
 import java.util.Map;
 
 /**
- * Used for performing a token transaction request (payment or pre-auth) with the Judo API
- * The included {@link Builder} is used to simplify object construction. When creating a {@link TokenTransaction}
- * the {@link TokenTransaction#judoId}, {@link TokenTransaction#amount} and {@link TokenTransaction#currency}
- * must be supplied.
+ * Represents the data needed to perform a token transaction with the judo API.
+ * Use the {@link TokenTransaction.Builder} for object construction.
+ *
+ * When creating a {@link TokenTransaction} the {@link TokenTransaction#judoId},
+ * {@link TokenTransaction#amount} and {@link TokenTransaction#currency} must be provided.
  */
 public class TokenTransaction extends Request {
 

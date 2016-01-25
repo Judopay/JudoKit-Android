@@ -3,6 +3,9 @@ package com.judopay.model;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Represents all the currencies that can be used when performing transactions with the judo API.
+ */
 public class Currency {
 
     public static final String AUD = "AUD";

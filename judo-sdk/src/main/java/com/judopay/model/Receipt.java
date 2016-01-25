@@ -7,6 +7,9 @@ import com.judopay.api.Response;
 import java.math.BigDecimal;
 import java.util.Date;
 
+/**
+ * The Receipt of a transaction performed with the judo API.
+ */
 public class Receipt extends Response {
 
     private Long judoID;
@@ -133,142 +136,8 @@ public class Receipt extends Response {
                 '}';
     }
 
-
     public boolean is3dSecureRequired() {
         return acsUrl != null && md != null && paReq != null;
-    }
-
-    public static class Builder {
-
-        private Long judoID;
-        private String receiptId;
-        private String originalReceiptId;
-        private String partnerServiceFee;
-        private String yourPaymentReference;
-        private String type;
-        private Date createdAt;
-        private String merchantName;
-        private String appearsOnStatementAs;
-        private BigDecimal originalAmount;
-        private BigDecimal netAmount;
-        private BigDecimal amount;
-        private String currency;
-        private CardToken cardDetails;
-        private Consumer consumer;
-        private Risks risks;
-
-        private String md;
-        private String paReq;
-        private String acsUrl;
-
-        public Builder() {
-        }
-
-        public Builder setJudoID(Long judoID) {
-            this.judoID = judoID;
-            return this;
-        }
-
-        public Builder setReceiptId(String receiptId) {
-            this.receiptId = receiptId;
-            return this;
-        }
-
-        public Builder setOriginalReceiptId(String originalReceiptId) {
-            this.originalReceiptId = originalReceiptId;
-            return this;
-        }
-
-        public Builder setPartnerServiceFee(String partnerServiceFee) {
-            this.partnerServiceFee = partnerServiceFee;
-            return this;
-        }
-
-        public Builder setYourPaymentReference(String yourPaymentReference) {
-            this.yourPaymentReference = yourPaymentReference;
-            return this;
-        }
-
-        public Builder setType(String type) {
-            this.type = type;
-            return this;
-        }
-
-        public Builder setCreatedAt(Date createdAt) {
-            this.createdAt = createdAt;
-            return this;
-        }
-
-        public Builder setMerchantName(String merchantName) {
-            this.merchantName = merchantName;
-            return this;
-        }
-
-        public Builder setAppearsOnStatementAs(String appearsOnStatementAs) {
-            this.appearsOnStatementAs = appearsOnStatementAs;
-            return this;
-        }
-
-        public Builder setOriginalAmount(BigDecimal originalAmount) {
-            this.originalAmount = originalAmount;
-            return this;
-        }
-
-        public Builder setNetAmount(BigDecimal netAmount) {
-            this.netAmount = netAmount;
-            return this;
-        }
-
-        public Builder setAmount(BigDecimal amount) {
-            this.amount = amount;
-            return this;
-        }
-
-        public Builder setCurrency(String currency) {
-            this.currency = currency;
-            return this;
-        }
-
-        public Builder setCardDetails(CardToken cardDetails) {
-            this.cardDetails = cardDetails;
-            return this;
-        }
-
-        public Builder setConsumer(Consumer consumer) {
-            this.consumer = consumer;
-            return this;
-        }
-
-        public Builder setRisks(Risks risks) {
-            this.risks = risks;
-            return this;
-        }
-
-        public Receipt build() {
-            Receipt receipt = new Receipt();
-
-            receipt.judoID = judoID;
-            receipt.receiptId = receiptId;
-            receipt.originalReceiptId = originalReceiptId;
-            receipt.partnerServiceFee = partnerServiceFee;
-            receipt.yourPaymentReference = yourPaymentReference;
-            receipt.type = type;
-            receipt.createdAt = createdAt;
-            receipt.merchantName = merchantName;
-            receipt.appearsOnStatementAs = appearsOnStatementAs;
-            receipt.originalAmount = originalAmount;
-            receipt.netAmount = netAmount;
-            receipt.amount = amount;
-            receipt.currency = currency;
-            receipt.cardDetails = cardDetails;
-            receipt.consumer = consumer;
-            receipt.risks = risks;
-            receipt.md = md;
-            receipt.paReq = paReq;
-            receipt.acsUrl = acsUrl;
-
-            return receipt;
-        }
     }
 
     @Override

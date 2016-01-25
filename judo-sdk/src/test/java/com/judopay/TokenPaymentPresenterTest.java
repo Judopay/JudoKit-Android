@@ -34,9 +34,6 @@ public class TokenPaymentPresenterTest {
     CardToken cardToken;
 
     @Mock
-    Address cardAddress;
-
-    @Mock
     JudoApiService apiService;
 
     @Mock
@@ -45,15 +42,15 @@ public class TokenPaymentPresenterTest {
     @Mock
     ThreeDSecureInfo threeDSecureInfo;
 
-    String consumer = "consumerRef";
-    Gson gson = new Gson();
-    Scheduler scheduler = new TestScheduler();
+    private Gson gson = new Gson();
+    private Scheduler scheduler = new TestScheduler();
 
     @Test
     public void shouldPerformTokenPayment() {
         TokenPaymentPresenter presenter = new TokenPaymentPresenter(paymentFormView, apiService, scheduler, gson);
         when(apiService.tokenPayment(any(TokenTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
+        String consumer = "consumerRef";
         presenter.performTokenPayment(card, new JudoOptions.Builder()
                 .setCardToken(cardToken)
                 .setConsumerRef(consumer)

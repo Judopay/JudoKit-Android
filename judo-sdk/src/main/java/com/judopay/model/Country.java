@@ -1,5 +1,9 @@
 package com.judopay.model;
 
+/**
+ * A Country that can be selected by the user when providing information for
+ * address verification (AVS) checks during a transaction.
+ */
 public class Country {
 
     public static final String UNITED_KINGDOM = "UK";

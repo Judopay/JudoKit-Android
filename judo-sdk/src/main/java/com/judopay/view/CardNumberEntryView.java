@@ -13,6 +13,13 @@ import android.widget.TextView;
 import com.judopay.R;
 import com.judopay.model.CardType;
 
+/**
+ * A view that allows for card number data to be input by the user and the detected card type
+ * to be displayed alongside the card number.
+ * <p/>
+ * Does not perform validation itself, this is done by the {@link com.judopay.CardNumberValidation}
+ * class.
+ */
 public class CardNumberEntryView extends RelativeLayout {
 
     private EditText cardNumberEditText;

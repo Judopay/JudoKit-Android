@@ -62,6 +62,7 @@
                 android:id="@+id/country_postcode_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:visibility="gone"
                 android:weightSum="2"
                 tools:visibility="visible">
