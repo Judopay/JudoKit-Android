@@ -35,7 +35,7 @@ public class CardNumberEntryView extends RelativeLayout {
     }
 
     private void initialize(Context context) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.view_card_number_entry, this);
     }
 
