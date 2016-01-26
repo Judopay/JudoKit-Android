@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * A single error instance that occurred when calling the Judo API, in response to performing
+ * A single error instance that occurred when calling the judo API, in response to performing
  * a request, most likely for a type of transaction such as a payment, pre-auth or token payment.
  */
 public class ApiError implements Parcelable {
