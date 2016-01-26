@@ -59,7 +59,7 @@ public class PostcodeEntryView extends FrameLayout {
     }
 
     public void setHint(@StringRes int hint) {
-        postcodeEditText.setHint(hint);
+        postcodeInputLayout.setHint(getResources().getString(hint));
     }
 
     public void setError(@StringRes int error, boolean show) {
@@ -73,8 +73,15 @@ public class PostcodeEntryView extends FrameLayout {
     }
 
     public void setNumericInput(boolean numeric) {
-        postcodeEditText.setInputType(numeric ?
-                InputType.TYPE_CLASS_NUMBER : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        if (numeric && postcodeEditText.getInputType() != InputType.TYPE_CLASS_NUMBER) {
+            postcodeEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        } else {
+            int alphanumericInputTypes = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
+
+            if (!numeric && postcodeEditText.getInputType() != alphanumericInputTypes) {
+                postcodeEditText.setInputType(alphanumericInputTypes);
+            }
+        }
 
         postcodeEditText.setPrivateImeOptions("nm"); // prevent text suggestions in keyboard
     }
