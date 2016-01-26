@@ -25,6 +25,8 @@ public class PaymentTransaction extends Request {
     private String startDate;
     private String issueNumber;
     private Boolean saveCardOnly;
+    private String emailAddress;
+    private String mobileNumber;
     private Map<String, String> yourPaymentMetaData;
 
     private final String yourPaymentReference;
@@ -85,6 +87,14 @@ public class PaymentTransaction extends Request {
         return saveCardOnly;
     }
 
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
     public Map<String, String> getMetaData() {
         return yourPaymentMetaData;
     }
@@ -103,6 +113,8 @@ public class PaymentTransaction extends Request {
         private String startDate;
         private String issueNumber;
         private Boolean saveCardOnly;
+        private String emailAddress;
+        private String mobileNumber;
         private Map<String, String> yourPaymentMetaData;
 
         public Builder setAmount(String amount) {
@@ -165,6 +177,16 @@ public class PaymentTransaction extends Request {
             return this;
         }
 
+        public Builder setEmailAddress(String emailAddress) {
+            this.emailAddress = emailAddress;
+            return this;
+        }
+
+        public Builder setMobileNumber(String mobileNumber) {
+            this.mobileNumber = mobileNumber;
+            return this;
+        }
+
         public Builder setMetaData(Map<String, String> metaData) {
             this.yourPaymentMetaData = metaData;
             return this;
@@ -197,6 +219,8 @@ public class PaymentTransaction extends Request {
             transaction.startDate = startDate;
             transaction.issueNumber = issueNumber;
             transaction.saveCardOnly = saveCardOnly;
+            transaction.emailAddress = emailAddress;
+            transaction.mobileNumber = mobileNumber;
             transaction.yourPaymentMetaData = yourPaymentMetaData;
 
             return transaction;
