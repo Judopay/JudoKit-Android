@@ -119,10 +119,7 @@ public final class CardEntryFragment extends Fragment {
 
                 if (judoOptions.getExpiryYear() != null && judoOptions.getExpiryMonth() != null) {
                     expiryDateEntryView.setText(getString(R.string.expiry_date_format, judoOptions.getExpiryMonth(), judoOptions.getExpiryYear()));
-                }
-
-                if (judoOptions.getCvv() != null) {
-                    cvvEntryView.setText(judoOptions.getCvv());
+                    cvvEntryView.requestFocus();
                 }
 
                 if (judoOptions.isSecureServerMessageShown()) {
