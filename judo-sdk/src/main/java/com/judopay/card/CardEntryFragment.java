@@ -43,7 +43,6 @@ import static com.judopay.Judo.isAvsEnabled;
  * Configuration options can be provided by passing a {@link JudoOptions} instance in the fragment
  * arguments, identified using the {@link Judo#JUDO_OPTIONS} as a key, e.g.
  * <code>
- * <p/>
  * CardEntryFragment fragment = new CardEntryFragment();
  * Bundle args = new Bundle();
  *
@@ -56,7 +55,6 @@ import static com.judopay.Judo.isAvsEnabled;
  *      .build());
  *
  * fragment.setArguments(args);
- * <p/>
  * </code>
  */
 public final class CardEntryFragment extends Fragment {
