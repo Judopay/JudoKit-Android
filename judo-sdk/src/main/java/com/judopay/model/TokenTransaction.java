@@ -32,7 +32,8 @@ public class TokenTransaction extends Request {
     private String yourConsumerReference;
     private Address cardAddress;
     private String cv2;
-
+    private String emailAddress;
+    private String mobileNumber;
     private Map<String, String> yourPaymentMetaData;
 
     private final String yourPaymentReference;
@@ -89,6 +90,14 @@ public class TokenTransaction extends Request {
         return cv2;
     }
 
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
     public Map<String, String> getYourPaymentMetaData() {
         return yourPaymentMetaData;
     }
@@ -106,6 +115,8 @@ public class TokenTransaction extends Request {
         private String yourConsumerReference;
         private Address cardAddress;
         private String cv2;
+        private String emailAddress;
+        private String mobileNumber;
         private Map<String, String> yourPaymentMetaData;
 
         public Builder setEndDate(String endDate) {
@@ -163,6 +174,16 @@ public class TokenTransaction extends Request {
             return this;
         }
 
+        public Builder setEmailAddress(String emailAddress) {
+            this.emailAddress = emailAddress;
+            return this;
+        }
+
+        public Builder setMobileNumber(String mobileNumber) {
+            this.mobileNumber = mobileNumber;
+            return this;
+        }
+
         public Builder setMetaData(Map<String, String> metaData) {
             this.yourPaymentMetaData = metaData;
             return this;
@@ -193,6 +214,8 @@ public class TokenTransaction extends Request {
             transaction.lastFour = lastFour;
             transaction.type = type;
             transaction.endDate = endDate;
+            transaction.emailAddress = emailAddress;
+            transaction.mobileNumber = mobileNumber;
             transaction.yourPaymentMetaData = yourPaymentMetaData;
             transaction.yourConsumerReference = yourConsumerReference;
 
