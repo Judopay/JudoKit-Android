@@ -1,6 +1,6 @@
 package com.judopay;
 
-public class JudoApi {
+class JudoApi {
 
     private int judoId;
     private String apiToken;

@@ -1,6 +1,5 @@
 package com.judopay;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
@@ -10,7 +9,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.judopay.model.CardToken;
 import com.judopay.security.RootDetector;
 import com.judopay.security.RootUserBlockedException;
 

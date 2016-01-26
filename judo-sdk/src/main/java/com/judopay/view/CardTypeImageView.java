@@ -11,6 +11,10 @@ import android.widget.ImageView;
 import com.judopay.R;
 import com.judopay.model.CardType;
 
+/**
+ * A view that displays a card type image (Visa, Amex, etc.) to provide the user with feedback
+ * that their card type has been recognised.
+ */
 public class CardTypeImageView extends FrameLayout {
 
     public CardTypeImageView(Context context) {

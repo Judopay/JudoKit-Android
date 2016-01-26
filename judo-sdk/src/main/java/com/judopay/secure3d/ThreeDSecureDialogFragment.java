@@ -16,6 +16,9 @@ import com.judopay.R;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
+/**
+ * A dialog for showing the web page during 3D-Secure verification.
+ */
 public class ThreeDSecureDialogFragment extends DialogFragment implements ThreeDSecureResultPageListener {
 
     public static final String KEY_LOADING_TEXT = "Judo-LoadingText";

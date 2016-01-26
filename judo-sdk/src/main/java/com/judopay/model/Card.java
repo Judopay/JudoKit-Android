@@ -1,5 +1,9 @@
 package com.judopay.model;
 
+/**
+ * Represents the card data entered by the user.
+ * Use {@link Card.Builder} to construct an instance.
+ */
 public class Card {
 
     private String cardNumber;
@@ -43,45 +47,54 @@ public class Card {
 
     public static class Builder {
 
-        private final Card card;
-
-        public Builder() {
-            this.card = new Card();
-        }
+        private String cardNumber;
+        private Address cardAddress;
+        private String expiryDate;
+        private String startDate;
+        private String issueNumber;
+        private String cvv;
 
         public Builder setCardNumber(String cardNumber) {
-            card.cardNumber = cardNumber;
+            this.cardNumber = cardNumber;
             return this;
         }
 
         public Builder setCardAddress(Address cardAddress) {
-            card.cardAddress = cardAddress;
+            this.cardAddress = cardAddress;
             return this;
         }
 
         public Builder setExpiryDate(String expiryDate) {
-            card.expiryDate = expiryDate;
+            this.expiryDate = expiryDate;
             return this;
         }
 
         public Builder setStartDate(String startDate) {
-            card.startDate = startDate;
+            this.startDate = startDate;
             return this;
         }
 
         public Builder setIssueNumber(String issueNumber) {
-            card.issueNumber = issueNumber;
+            this.issueNumber = issueNumber;
             return this;
         }
 
         public Builder setCvv(String cvv) {
-            card.cvv = cvv;
+            this.cvv = cvv;
             return this;
         }
 
         public Card build() {
+            Card card = new Card();
+
+            card.cardNumber = cardNumber;
+            card.cardAddress = cardAddress;
+            card.expiryDate = expiryDate;
+            card.startDate = startDate;
+            card.issueNumber = issueNumber;
+            card.cvv = cvv;
+
             return card;
         }
-
     }
 }

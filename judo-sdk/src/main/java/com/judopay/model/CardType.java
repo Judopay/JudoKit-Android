@@ -1,6 +1,9 @@
 package com.judopay.model;
 
-// TODO Unit test for card type matching
+/**
+ * The type of a payment card (e.g. Visa, Mastercard, American Express)
+ * Can be detected from the card number digits using the {@link CardType#fromCardNumber(String)} method.
+ */
 public class CardType {
 
     private static final String REGEX_VISA = "^4[0-9]{3}.*?";

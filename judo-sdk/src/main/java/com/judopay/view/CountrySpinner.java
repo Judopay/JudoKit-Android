@@ -11,6 +11,10 @@ import com.judopay.model.Country;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A view that shows a drop-down list of countries that can be selected when performing address
+ * verification checks (AVS) during card input.
+ */
 public class CountrySpinner extends AppCompatSpinner {
 
     private CountrySpinnerAdapter adapter;

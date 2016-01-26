@@ -2,6 +2,9 @@ package com.judopay.model;
 
 import java.util.List;
 
+/**
+ * Represents the list of {@link Receipt} objects returned when querying the judo API for Receipts.
+ */
 public class Receipts {
 
     private final Integer resultCount;
@@ -41,4 +44,5 @@ public class Receipts {
                 ", resultCount=" + resultCount +
                 '}';
     }
+
 }

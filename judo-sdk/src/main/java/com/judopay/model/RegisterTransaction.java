@@ -2,6 +2,13 @@ package com.judopay.model;
 
 import com.judopay.api.Request;
 
+/**
+ * Represents the data needed to perform a register card transaction with the judo API.
+ * Use the {@link RegisterTransaction.Builder} for object construction.
+ *
+ * When creating a {@link RegisterTransaction} the {@link RegisterTransaction#judoId}
+ * must be provided.
+ */
 public class RegisterTransaction extends Request {
 
     private String judoId;

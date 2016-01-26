@@ -1,5 +1,7 @@
 package com.judopay.model;
 
-public class ClientDetails {
-
-}
+/**
+ * Empty class used to provide additional fields into the serialized
+ * {@link com.judopay.api.Request} for fraud detection purposes.
+ */
+public class ClientDetails { }

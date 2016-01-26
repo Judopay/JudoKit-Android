@@ -2,6 +2,9 @@ package com.judopay.model;
 
 import java.math.BigDecimal;
 
+/**
+ * A Collection allows for the funds reserved in a pre-auth transaction to be collected.
+ */
 public class Collection {
 
     private final String receiptId;

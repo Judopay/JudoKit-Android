@@ -32,16 +32,13 @@ public class PreAuthPresenterTest {
     Receipt receipt;
 
     @Mock
-    Address cardAddress;
-
-    @Mock
     JudoApiService apiService;
 
     @Mock
     PaymentFormView paymentFormView;
 
-    Gson gson = new Gson();
-    Scheduler scheduler = new TestScheduler();
+    private Gson gson = new Gson();
+    private Scheduler scheduler = new TestScheduler();
 
     @Test
     public void shouldPerformPreAuth() {

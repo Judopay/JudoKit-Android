@@ -1,22 +1,27 @@
 package com.judopay.model;
 
+import java.math.BigDecimal;
+
+/**
+ * Represents a refund to be made for a payment transaction.
+ */
 public class Refund {
 
-    private final int receiptId;
-    private final float amount;
+    private final Integer receiptId;
+    private final BigDecimal amount;
     private final String yourPaymentReference;
 
-    public Refund(int receiptId, float amount, String yourPaymentReference) {
+    public Refund(int receiptId, BigDecimal amount, String yourPaymentReference) {
         this.receiptId = receiptId;
         this.amount = amount;
         this.yourPaymentReference = yourPaymentReference;
     }
 
-    public int getReceiptId() {
+    public Integer getReceiptId() {
         return receiptId;
     }
 
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 

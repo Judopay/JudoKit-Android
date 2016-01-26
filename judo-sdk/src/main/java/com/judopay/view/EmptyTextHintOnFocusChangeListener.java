@@ -3,6 +3,11 @@ package com.judopay.view;
 import android.view.View;
 import android.widget.TextView;
 
+/**
+ * A {@link android.view.View.OnFocusChangeListener} that detects when a TextView is empty
+ * and shows the provided {@link EmptyTextHintOnFocusChangeListener#hintView} if nothing has
+ * been entered after 3 seconds.
+ */
 public class EmptyTextHintOnFocusChangeListener implements View.OnFocusChangeListener {
 
     private static final int THREE_SECONDS = 3000;

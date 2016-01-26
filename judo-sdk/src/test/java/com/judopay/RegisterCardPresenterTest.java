@@ -43,10 +43,10 @@ public class RegisterCardPresenterTest {
     @Mock
     PaymentFormView paymentFormView;
 
-    Gson gson = new Gson();
-    String judoId = "123456";
-    String consumer = "consumerRef";
-    Scheduler scheduler = new TestScheduler();
+    private Gson gson = new Gson();
+    private String judoId = "123456";
+    private String consumer = "consumerRef";
+    private Scheduler scheduler = new TestScheduler();
 
     @Test
     public void shouldRegisterCard() {

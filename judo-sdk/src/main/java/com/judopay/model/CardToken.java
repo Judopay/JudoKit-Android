@@ -5,6 +5,10 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * The tokenized card data from registering a card, allowing for token payments and token pre-auths
+ * to be performed.
+ */
 public class CardToken implements Parcelable {
 
     private String endDate;
@@ -18,7 +22,7 @@ public class CardToken implements Parcelable {
     @SerializedName("cardType")
     private int type;
 
-    public CardToken() { }
+    public CardToken() {}
 
     public CardToken(String endDate, String lastFour, String token, int type) {
         this.endDate = endDate;
