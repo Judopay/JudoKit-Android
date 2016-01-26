@@ -17,9 +17,8 @@ public class JudoOptions implements Parcelable {
     private String consumerRef;
     private Bundle metaData;
     private String cardNumber;
-    private Integer expiryMonth;
-    private Integer expiryYear;
-    private String cvv;
+    private String expiryMonth;
+    private String expiryYear;
     private String buttonLabel;
     private CardToken cardToken;
     private boolean secureServerMessageShown;
@@ -54,7 +53,7 @@ public class JudoOptions implements Parcelable {
         return cardToken;
     }
 
-    public Integer getExpiryMonth() {
+    public String getExpiryMonth() {
         return expiryMonth;
     }
 
@@ -62,12 +61,8 @@ public class JudoOptions implements Parcelable {
         return cardNumber;
     }
 
-    public Integer getExpiryYear() {
+    public String getExpiryYear() {
         return expiryYear;
-    }
-
-    public String getCvv() {
-        return cvv;
     }
 
     public boolean isSecureServerMessageShown() {
@@ -91,9 +86,8 @@ public class JudoOptions implements Parcelable {
         private String buttonLabel;
         private CardToken cardToken;
         private String cardNumber;
-        private Integer expiryMonth;
-        private Integer expiryYear;
-        private String cvv;
+        private String expiryMonth;
+        private String expiryYear;
         private String amount;
         private String judoId;
         private String currency;
@@ -136,18 +130,13 @@ public class JudoOptions implements Parcelable {
             return this;
         }
 
-        public Builder setExpiryMonth(Integer expiryMonth) {
+        public Builder setExpiryMonth(String expiryMonth) {
             this.expiryMonth = expiryMonth;
             return this;
         }
 
-        public Builder setExpiryYear(Integer expiryYear) {
+        public Builder setExpiryYear(String expiryYear) {
             this.expiryYear = expiryYear;
-            return this;
-        }
-
-        public Builder setCvv(String cvv) {
-            this.cvv = cvv;
             return this;
         }
 
@@ -169,7 +158,6 @@ public class JudoOptions implements Parcelable {
             options.cardNumber = cardNumber;
             options.expiryMonth = expiryMonth;
             options.expiryYear = expiryYear;
-            options.cvv = cvv;
             options.amount = amount;
             options.judoId = judoId;
             options.currency = currency;
@@ -195,9 +183,8 @@ public class JudoOptions implements Parcelable {
         dest.writeString(this.consumerRef);
         dest.writeBundle(metaData);
         dest.writeString(this.cardNumber);
-        dest.writeValue(this.expiryMonth);
-        dest.writeValue(this.expiryYear);
-        dest.writeString(this.cvv);
+        dest.writeString(this.expiryMonth);
+        dest.writeString(this.expiryYear);
         dest.writeString(this.buttonLabel);
         dest.writeParcelable(this.cardToken, 0);
         dest.writeByte(secureServerMessageShown ? (byte) 1 : (byte) 0);
@@ -210,9 +197,8 @@ public class JudoOptions implements Parcelable {
         this.consumerRef = in.readString();
         metaData = in.readBundle();
         this.cardNumber = in.readString();
-        this.expiryMonth = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.expiryYear = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.cvv = in.readString();
+        this.expiryMonth = in.readString();
+        this.expiryYear = in.readString();
         this.buttonLabel = in.readString();
         this.cardToken = in.readParcelable(CardToken.class.getClassLoader());
         this.secureServerMessageShown = in.readByte() != 0;
@@ -227,5 +213,4 @@ public class JudoOptions implements Parcelable {
             return new JudoOptions[size];
         }
     };
-
 }
