@@ -11,11 +11,13 @@
 
 **Bugs fixed:**
 - Fixed a crashing issue that could occur if an Activity was restarted due to low memory, due to saved state not being restored.
+- Resolved an issue where the postcode field hint would not render correctly when switching between countries.
 - Fixed an issue where the postcode field would not pick up the theme's tint color on pre-Lollipop devices.
 - Visa Electron/Visa Debit now correctly detected as a Visa card during card number entry.
 
 **Changes:**
-- New ```JudoOptions``` class for easier passing of data between Activity and Fragment instances.
+- New ```JudoOptions``` class for sending type safe data between Activity and Fragment instances.
+- New fields included in Transaction classes for setting mobile number and email address.
 
 ## [5.0.1](https://github.com/judopay/Judo-Android/tree/5.0.1) (2016-01-12)
 
