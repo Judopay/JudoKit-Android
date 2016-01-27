@@ -1,6 +1,6 @@
 # judoNative Android SDK change log
 
-## [5.1](https://github.com/judopay/Judo-Android/tree/5.1) (2016-01-27)
+## [5.1](https://github.com/judopay/Judo-Android/tree/5.1) (2016-01-28)
 
 **Implemented enhancements:**
 - Add Brazilian Real to list of supported currencies.
