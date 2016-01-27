@@ -4,7 +4,7 @@
 
 **Implemented enhancements:**
 - Add Brazilian Real to list of supported currencies.
-- Enable 3D-Secure verification for all transactions by default, if required by the Merchant's bank
+- Enable 3D Secure verification for all transactions by default, if required by the Merchant's bank.
 - Allow transactions for Android devices with root permissions, with option to block if required.
 - New Android views provided for card data entry for use when writing a custom UI.
 - Display secure server transmission text in the payment form, to indicate transaction is performed securely.
