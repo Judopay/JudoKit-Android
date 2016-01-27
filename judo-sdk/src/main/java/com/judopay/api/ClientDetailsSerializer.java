@@ -15,16 +15,18 @@ import java.util.Map;
 class ClientDetailsSerializer implements JsonSerializer<ClientDetails> {
 
     private final Context context;
+    private Gson gson;
 
     public ClientDetailsSerializer(Context context) {
         this.context = context;
+        this.gson = new Gson();
     }
 
     @Override
     public JsonElement serialize(ClientDetails src, Type typeOfSrc, JsonSerializationContext context) {
         Map<String, String> shieldData = JudoShield.getShieldData(this.context);
 
-        return new Gson().toJsonTree(shieldData);
+        return gson.toJsonTree(shieldData);
     }
 
 }

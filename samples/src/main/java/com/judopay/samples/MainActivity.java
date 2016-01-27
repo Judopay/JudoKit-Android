@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +24,6 @@ import com.judopay.view.Dialogs;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static com.judopay.Judo.JUDO_OPTIONS;
 import static com.judopay.Judo.JUDO_RECEIPT;
 
 /**
@@ -34,7 +32,7 @@ import static com.judopay.Judo.JUDO_RECEIPT;
  * Update the {@link #JUDO_ID} string with the Judo ID from the judo website: http://www.judopay.com,
  * Update the {@link #API_TOKEN} and {@link #API_SECRET} with your credentials and call {@link com.judopay.Judo#setup} to initialize the SDK.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     // Constants to define different actions (for use with startActivityForResult(...))
     private static final int PAYMENT_REQUEST = 101;
@@ -42,10 +40,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int PRE_AUTH_REQUEST = 201;
     private static final int TOKEN_PRE_AUTH_REQUEST = 202;
     private static final int REGISTER_CARD_REQUEST = 301;
-
-    static final String SHARED_PREFS_NAME = "Judo-SampleApp";
-    static final String CURRENCY_KEY = "Judo-SampleApp-Currency";
-    private static final String TOKEN_RECEIPT_KEY = "Judo-SampleApp-TokenReceipt";
 
     private static final String AMOUNT = "0.99";
     private static final String JUDO_ID = "00000000";
@@ -208,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         if (receipt != null) {
             Intent intent = new Intent(this, TokenPaymentActivity.class);
 
-            intent.putExtra(JUDO_OPTIONS, new JudoOptions.Builder()
+            intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
                     .setJudoId(JUDO_ID)
                     .setAmount(AMOUNT)
                     .setCurrency(getCurrency())
@@ -222,26 +216,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private Receipt getLastReceipt() {
-        String tokenReceiptJson = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
-                .getString(TOKEN_RECEIPT_KEY, null);
-
-        if (tokenReceiptJson != null) {
-            Gson gson = new Gson();
-            return gson.fromJson(tokenReceiptJson, Receipt.class);
-        }
-        return null;
-    }
-
     private void handleRegisterCardResult(int resultCode, Intent data) {
         switch (resultCode) {
             case Judo.RESULT_SUCCESS:
                 Receipt receipt = data.getParcelableExtra(JUDO_RECEIPT);
 
-                getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
-                        .edit()
-                        .putString(TOKEN_RECEIPT_KEY, new Gson().toJson(receipt))
-                        .apply();
+                saveReceipt(receipt);
 
                 showTokenPaymentDialog(receipt);
                 break;
