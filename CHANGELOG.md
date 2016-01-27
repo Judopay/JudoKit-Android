@@ -10,7 +10,7 @@
 - Display secure server transmission text in the payment form, to indicate transaction is performed securely.
 
 **Bugs fixed:**
-- Fixed a crashing issue that could occur if an Activity was restarted due to low memory, due to saved state not being restored.
+- Fixed a crashing issue that could occur if an Activity was restarted due to low memory.
 - Resolved an issue where the postcode field hint would not render correctly when switching between countries.
 - Fixed an issue where the postcode field would not pick up the theme's tint color on pre-Lollipop devices.
 - Visa Electron/Visa Debit now correctly detected as a Visa card during card number entry.
