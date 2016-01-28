@@ -1,8 +1,7 @@
 package com.judopay;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import com.judopay.model.Receipt;
 
 import static com.judopay.Judo.JUDO_AMOUNT;
 import static com.judopay.Judo.JUDO_CONSUMER;
@@ -11,23 +10,24 @@ import static com.judopay.Judo.JUDO_ID;
 import static com.judopay.Judo.JUDO_OPTIONS;
 
 /**
- * Displays a payment form to the user, allowing for a payment to be made.
- * <br>
- * The {@link Receipt} containing the result of the payment transaction is
- * returned in the Activity result and can be either {@link Judo#RESULT_SUCCESS},
- * {@link Judo#RESULT_DECLINED} or {@link Judo#RESULT_ERROR} if an error occurred.
- * <br>
- * Mandatory extras:
- * <ol>
- * <li>{@link Judo#JUDO_ID} Judo ID of your account</li>
- * <li>{@link Judo#JUDO_AMOUNT} the total amount for the transaction</li>
- * <li>{@link Judo#JUDO_CURRENCY} the currency for the transaction (GBP, USD, CAD)</li>
- * <li>{@link Judo#JUDO_CONSUMER} identifier for the consumer of the transaction</li>
- * </ol>
- * <br>
- * Optional extras:
- * {@link Judo#JUDO_META_DATA} an optional key-value map of data to be included when making the
- * payment transaction.
+ * Displays a card entry form to the user, allowing for a payment to be made.
+ *
+ * To launch the PaymentActivity, call {@link android.app.Activity#startActivityForResult(Intent, int)}
+ * with an Intent the configuration options:
+ *
+ * <pre class="prettyprint">
+ * Intent intent = new Intent(this, PaymentActivity.class);
+ * intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+ *      .setJudoId("1234567")
+ *      .setCurrency(Currency.GBP)
+ *      .setAmount("1.99")
+ *      .setConsumerRef("consumerRef")
+ *      .build());
+ *
+ * startActivityForResult(intent, PAYMENT_REQUEST);
+ * </pre>
+ *
+ * See {@link JudoOptions} for the full list of supported options
  */
 public final class PaymentActivity extends JudoActivity {
 
@@ -39,10 +39,7 @@ public final class PaymentActivity extends JudoActivity {
 
         if (getIntent().hasExtra((JUDO_OPTIONS))) {
             JudoOptions options = getIntent().getParcelableExtra(JUDO_OPTIONS);
-
-            if (options.getAmount() == null || options.getJudoId() == null || options.getCurrency() == null || options.getConsumerRef() == null) {
-                throw new IllegalArgumentException("Intent must contain all required extras for PaymentActivity");
-            }
+            checkRequiredExtras(options.getAmount(), options.getJudoId(), options.getCurrency(), options.getConsumerRef());
         } else {
             checkRequiredExtras(JUDO_AMOUNT, JUDO_ID, JUDO_CURRENCY, JUDO_CONSUMER);
         }
