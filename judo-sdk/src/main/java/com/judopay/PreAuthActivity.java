@@ -39,7 +39,7 @@ public final class PreAuthActivity extends JudoActivity {
 
         if (getIntent().hasExtra((JUDO_OPTIONS))) {
             JudoOptions options = getIntent().getParcelableExtra(JUDO_OPTIONS);
-            checkRequiredExtras(options.getAmount(), options.getJudoId(), options.getCurrency(), options.getConsumerRef());
+            checkJudoOptionsExtras(options.getAmount(), options.getJudoId(), options.getCurrency(), options.getConsumerRef());
         } else {
             checkRequiredExtras(JUDO_AMOUNT, JUDO_ID, JUDO_CURRENCY, JUDO_CONSUMER);
         }
