@@ -41,7 +41,7 @@ public final class TokenPaymentActivity extends JudoActivity {
 
         if (getIntent().hasExtra((JUDO_OPTIONS))) {
             JudoOptions options = getIntent().getParcelableExtra(JUDO_OPTIONS);
-            checkRequiredExtras(options.getAmount(), options.getJudoId(), options.getCurrency(), options.getConsumerRef(), options.getCardToken());
+            checkJudoOptionsExtras(options.getAmount(), options.getJudoId(), options.getCurrency(), options.getConsumerRef(), options.getCardToken());
         } else {
             checkRequiredExtras(JUDO_AMOUNT, JUDO_ID, JUDO_CURRENCY, JUDO_CONSUMER, JUDO_CARD_TOKEN);
         }

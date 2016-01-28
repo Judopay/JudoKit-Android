@@ -35,7 +35,7 @@ public final class RegisterCardActivity extends JudoActivity {
 
         if (getIntent().hasExtra((JUDO_OPTIONS))) {
             JudoOptions options = getIntent().getParcelableExtra(JUDO_OPTIONS);
-            checkRequiredExtras(options.getConsumerRef(), options.getJudoId());
+            checkJudoOptionsExtras(options.getConsumerRef(), options.getJudoId());
         } else {
             checkRequiredExtras(JUDO_CONSUMER, JUDO_ID);
         }

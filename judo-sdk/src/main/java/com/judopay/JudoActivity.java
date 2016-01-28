@@ -68,10 +68,10 @@ public abstract class JudoActivity extends AppCompatActivity {
         setResult(Judo.RESULT_CANCELED);
     }
 
-    void checkRequiredExtras(Object... objects) {
+    void checkJudoOptionsExtras(Object... objects) {
         for(Object object : objects) {
             if(object == null) {
-                throw new IllegalArgumentException("Intent must contain all required extras for PaymentActivity");
+                throw new IllegalArgumentException("JudoOptions must contain all required fields for Activity");
             }
         }
     }
