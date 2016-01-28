@@ -63,7 +63,7 @@ Depending on the styles used in your app, you should expand on the most appropri
 #### Customizing the theme
 1. Create a style that extends from one of the provided base Themes, for example:
 
-    ```
+    ```xml
     <style name="AppTheme" parent="Theme.Judo.Light">
         <item name="colorPrimary">#3F51B5</item> // action bar colour
         <item name="colorPrimaryDark">#303F9F</item> // status bar colour
@@ -73,11 +73,12 @@ Depending on the styles used in your app, you should expand on the most appropri
     </style>
     ```
 2. Specify the activity in your AndroidManifest.xml file with the customized theme:
-```
-<activity
-    android:name="com.judopay.PaymentActivity"
-    android:theme="@style/AppTheme" />
-```
+```xml
+   <activity
+      android:name="com.judopay.PaymentActivity"
+      android:theme="@style/AppTheme"
+      tools:replace="android:theme" />
+   ```
 
 The full list of Activity classes that can be changed are:
 
