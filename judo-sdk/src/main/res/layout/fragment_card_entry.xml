@@ -27,8 +27,9 @@
 
                 <com.judopay.view.StartDateEntryView
                     android:id="@+id/start_date_entry_view"
-                    android:layout_weight="1"
-                    style="@style/input_layout" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
                 <com.judopay.view.IssueNumberEntryView
                     android:id="@+id/issue_number_entry_view"
@@ -63,8 +64,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:baselineAligned="false"
-                android:visibility="gone"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:weightSum="2"
                 tools:visibility="visible">
 
