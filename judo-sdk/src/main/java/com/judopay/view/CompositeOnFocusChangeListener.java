@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Allows for multiple {@link android.view.View.OnFocusChangeListener} instances to be registered
+ * to a single view, by notifying all listeners when an onFocusChange event occurs.
+ */
 public class CompositeOnFocusChangeListener implements View.OnFocusChangeListener {
 
     private final List<View.OnFocusChangeListener> listeners;
@@ -19,6 +23,10 @@ public class CompositeOnFocusChangeListener implements View.OnFocusChangeListene
         for (View.OnFocusChangeListener listener : listeners) {
             listener.onFocusChange(v, hasFocus);
         }
+    }
+
+    public void add(View.OnFocusChangeListener listener) {
+        this.listeners.add(listener);
     }
 
 }

@@ -15,14 +15,14 @@ import android.widget.TextView;
 
 import com.judopay.model.CardToken;
 import com.judopay.model.Receipt;
-import com.judopay.payment.form.CardEntryFragment;
-import com.judopay.payment.form.PaymentFormListener;
-import com.judopay.payment.form.PaymentFormOptions;
+import com.judopay.card.CardEntryFragment;
+import com.judopay.card.CardEntryListener;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
 import com.judopay.secure3d.ThreeDSecureWebView;
+import com.judopay.view.Dialogs;
 
-abstract class BaseFragment extends Fragment implements PaymentFormView, PaymentFormListener {
+abstract class BaseFragment extends Fragment implements PaymentFormView, CardEntryListener {
 
     private static final String TAG_PAYMENT_FORM = "CardEntryFragment";
     private static final String TAG_3DS_DIALOG = "3dSecureDialog";
@@ -70,18 +70,41 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, Payment
                     .add(R.id.container, cardEntryFragment, TAG_PAYMENT_FORM)
                     .commit();
         } else {
-            cardEntryFragment.setPaymentFormListener(this);
+            cardEntryFragment.setCardEntryListener(this);
         }
     }
 
     CardEntryFragment createPaymentFormFragment() {
-        CardToken cardToken = getArguments().getParcelable(Judo.JUDO_CARD_TOKEN);
+        JudoOptions judoOptions;
 
-        PaymentFormOptions paymentFormOptions = new PaymentFormOptions.Builder()
-                .setCardToken(cardToken)
-                .build();
+        if (getArguments().containsKey(Judo.JUDO_OPTIONS)) {
+            judoOptions = getArguments().getParcelable(Judo.JUDO_OPTIONS);
+        } else {
+            CardToken cardToken = getArguments().getParcelable(Judo.JUDO_CARD_TOKEN);
 
-        return CardEntryFragment.newInstance(paymentFormOptions, this);
+            judoOptions = new JudoOptions.Builder()
+                    .setCardToken(cardToken)
+                    .build();
+        }
+
+        return CardEntryFragment.newInstance(judoOptions, this);
+    }
+
+    JudoOptions getJudoOptions() {
+        Bundle args = getArguments();
+
+        if (args.containsKey(Judo.JUDO_OPTIONS)) {
+            return args.getParcelable(Judo.JUDO_OPTIONS);
+        } else {
+            return new JudoOptions.Builder()
+                    .setJudoId(args.getString(Judo.JUDO_ID))
+                    .setAmount(args.getString(Judo.JUDO_AMOUNT))
+                    .setCardToken((CardToken) args.getParcelable(Judo.JUDO_CARD_TOKEN))
+                    .setCurrency(args.getString(Judo.JUDO_CURRENCY))
+                    .setConsumerRef(args.getString(Judo.JUDO_CONSUMER))
+                    .setMetaData(args.getBundle(Judo.JUDO_META_DATA))
+                    .build();
+        }
     }
 
     @Override

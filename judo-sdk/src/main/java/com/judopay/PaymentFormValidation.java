@@ -107,7 +107,7 @@ public class PaymentFormValidation {
 
         public PaymentFormValidation build(PaymentForm paymentForm) {
             int cardType = paymentForm.getCardType() > 0 ? paymentForm.getCardType() :
-                    CardType.matchCardNumber(paymentForm.getCardNumber());
+                    CardType.fromCardNumber(paymentForm.getCardNumber());
 
             boolean maestroCardType = cardType == CardType.MAESTRO;
 
@@ -160,7 +160,7 @@ public class PaymentFormValidation {
         }
 
         private void setCvv(PaymentForm paymentForm, Builder builder, boolean cvvValid) {
-            boolean amex = CardType.matchCardNumber(paymentForm.getCardNumber()) == CardType.AMEX;
+            boolean amex = CardType.fromCardNumber(paymentForm.getCardNumber()) == CardType.AMEX;
 
             builder.setCvvValid(cvvValid)
                     .setShowAmexCvvView(amex)

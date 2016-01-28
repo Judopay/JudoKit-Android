@@ -1,14 +1,8 @@
 package com.judopay;
 
-import android.os.Bundle;
-
 import com.google.gson.Gson;
 import com.judopay.model.Card;
-import com.judopay.model.CardToken;
-import com.judopay.model.Location;
 import com.judopay.model.TokenTransaction;
-
-import static com.judopay.BundleUtil.toMap;
 
 class TokenPreAuthPresenter extends BasePresenter {
 
@@ -16,29 +10,29 @@ class TokenPreAuthPresenter extends BasePresenter {
         super(view, judoApiService, scheduler, gson);
     }
 
-    public void performTokenPreAuth(Card card, CardToken cardToken, String consumerRef, String judoId, String amount, String currency, Bundle metaData, boolean threeDSecureEnabled) {
+    public void performTokenPreAuth(Card card, JudoOptions options) {
         this.loading = true;
         paymentFormView.showLoading();
 
         TokenTransaction tokenTransaction = new TokenTransaction.Builder()
-                .setAmount(amount)
+                .setAmount(options.getAmount())
                 .setCardAddress(card.getCardAddress())
-                .setConsumerLocation(new Location())
-                .setCurrency(currency)
-                .setJudoId(judoId)
-                .setYourConsumerReference(consumerRef)
+                .setConsumerLocation(null)
+                .setCurrency(options.getCurrency())
+                .setJudoId(options.getJudoId())
+                .setYourConsumerReference(options.getConsumerRef())
                 .setCv2(card.getCv2())
-                .setMetaData(toMap(metaData))
-                .setEndDate(cardToken.getEndDate())
-                .setLastFour(cardToken.getLastFour())
-                .setToken(cardToken.getToken())
-                .setType(cardToken.getType())
+                .setMetaData(options.getMetaDataMap())
+                .setEndDate(options.getCardToken().getEndDate())
+                .setLastFour(options.getCardToken().getLastFour())
+                .setToken(options.getCardToken().getToken())
+                .setType(options.getCardToken().getType())
                 .build();
 
         apiService.tokenPreAuth(tokenTransaction)
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread())
-                .subscribe(callback(threeDSecureEnabled), error());
+                .subscribe(callback(), error());
     }
 
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.judopay.view.JudoTextInputLayout
+        android:id="@+id/post_code_input_layout"
+        style="@style/input_layout"
+        android:layout_marginTop="1dp"
+        android:layout_width="match_parent"
+        android:layout_weight="1">
+
+        <EditText
+            android:id="@+id/post_code_edit_text"
+            style="@style/judo_postcode"
+            android:layout_gravity="bottom"
+            android:hint="@string/postcode_uk"
+            tools:ignore="UnusedAttribute" />
+
+    </com.judopay.view.JudoTextInputLayout>
+
+</merge>

@@ -1,10 +1,16 @@
 package com.judopay.model;
 
-import com.judopay.UniqueIdentifier;
 import com.judopay.api.Request;
 
 import java.util.Map;
 
+/**
+ * Represents the data needed to perform a register card transaction with the judo API.
+ * Use the {@link PaymentTransaction.Builder} for object construction.
+ *
+ * When creating a {@link PaymentTransaction} the {@link PaymentTransaction#judoId},
+ * {@link PaymentTransaction#amount} and {@link PaymentTransaction#currency} must be provided.
+ */
 public class PaymentTransaction extends Request {
 
     private String amount;
@@ -19,6 +25,8 @@ public class PaymentTransaction extends Request {
     private String startDate;
     private String issueNumber;
     private Boolean saveCardOnly;
+    private String emailAddress;
+    private String mobileNumber;
     private Map<String, String> yourPaymentMetaData;
 
     private final String yourPaymentReference;
@@ -79,6 +87,14 @@ public class PaymentTransaction extends Request {
         return saveCardOnly;
     }
 
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
     public Map<String, String> getMetaData() {
         return yourPaymentMetaData;
     }
@@ -90,7 +106,6 @@ public class PaymentTransaction extends Request {
         private String currency;
         private String judoId;
         private String yourConsumerReference;
-        private String yourPaymentReference;
         private Address cardAddress;
         private String cardNumber;
         private String cv2;
@@ -98,6 +113,8 @@ public class PaymentTransaction extends Request {
         private String startDate;
         private String issueNumber;
         private Boolean saveCardOnly;
+        private String emailAddress;
+        private String mobileNumber;
         private Map<String, String> yourPaymentMetaData;
 
         public Builder setAmount(String amount) {
@@ -160,6 +177,16 @@ public class PaymentTransaction extends Request {
             return this;
         }
 
+        public Builder setEmailAddress(String emailAddress) {
+            this.emailAddress = emailAddress;
+            return this;
+        }
+
+        public Builder setMobileNumber(String mobileNumber) {
+            this.mobileNumber = mobileNumber;
+            return this;
+        }
+
         public Builder setMetaData(Map<String, String> metaData) {
             this.yourPaymentMetaData = metaData;
             return this;
@@ -192,6 +219,8 @@ public class PaymentTransaction extends Request {
             transaction.startDate = startDate;
             transaction.issueNumber = issueNumber;
             transaction.saveCardOnly = saveCardOnly;
+            transaction.emailAddress = emailAddress;
+            transaction.mobileNumber = mobileNumber;
             transaction.yourPaymentMetaData = yourPaymentMetaData;
 
             return transaction;

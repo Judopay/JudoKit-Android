@@ -10,21 +10,18 @@ class RegisterCardPresenter extends BasePresenter {
         super(paymentFormView, apiService, scheduler, gson);
     }
 
-    void performRegisterCard(String judoId, Card card, String consumerRef, boolean threeDSecureEnabled) {
+    void performRegisterCard(Card card, JudoOptions options) {
         this.loading = true;
 
         paymentFormView.showLoading();
 
         RegisterTransaction.Builder builder = new RegisterTransaction.Builder()
-                .setJudoId(judoId)
+                .setJudoId(options.getJudoId())
                 .setCardAddress(card.getCardAddress())
                 .setCardNumber(card.getCardNumber())
                 .setCv2(card.getCv2())
-                .setExpiryDate(card.getExpiryDate());
-
-        if (consumerRef != null) {
-            builder.setYourConsumerReference(consumerRef);
-        }
+                .setExpiryDate(card.getExpiryDate())
+                .setYourConsumerReference(options.getConsumerRef());
 
         if (card.startDateAndIssueNumberRequired()) {
             builder.setIssueNumber(card.getIssueNumber())
@@ -34,7 +31,7 @@ class RegisterCardPresenter extends BasePresenter {
         apiService.registerCard(builder.build())
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread())
-                .subscribe(callback(threeDSecureEnabled), error());
+                .subscribe(callback(), error());
     }
 
 }

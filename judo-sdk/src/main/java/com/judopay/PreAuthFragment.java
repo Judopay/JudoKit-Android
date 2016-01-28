@@ -15,7 +15,7 @@ public final class PreAuthFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
+        if (this.presenter == null) {
             this.presenter = new PreAuthPresenter(this, JudoApiServiceFactory.getInstance(getActivity()), new AndroidScheduler(), new Gson());
         }
     }
@@ -28,15 +28,9 @@ public final class PreAuthFragment extends BaseFragment {
 
     @Override
     public void onSubmit(Card card) {
-        Bundle args = getArguments();
+        JudoOptions options = getJudoOptions();
 
-        String consumerRef = args.getString(Judo.JUDO_CONSUMER);
-        String judoId = args.getString(Judo.JUDO_ID);
-        String amount = args.getString(Judo.JUDO_AMOUNT);
-        String currency = args.getString(Judo.JUDO_CURRENCY);
-        Bundle metaData = args.getBundle(Judo.JUDO_META_DATA);
-
-        presenter.performPreAuth(card, consumerRef, judoId, amount, currency, metaData, Judo.isThreeDSecureEnabled());
+        presenter.performPreAuth(card, options);
     }
 
     public boolean isPaymentInProgress() {

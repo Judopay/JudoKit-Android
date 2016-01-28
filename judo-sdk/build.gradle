@@ -8,9 +8,6 @@ buildscript {
     }
 }
 
-repositories {
-    jcenter()
-}
 
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
@@ -44,14 +41,14 @@ publish {
     userOrg = 'judopay'
     groupId = 'com.judopay'
     artifactId = 'android-sdk'
-    publishVersion = '5.0.1'
+    publishVersion = rootProject.ext.versionName
     desc = 'Android Mobile Payments SDK'
     website = 'https://github.com/JudoPay/Judo-Android'
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.judopay:shield:1.0'
+    compile 'com.judopay:shield:1.1'
 
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'

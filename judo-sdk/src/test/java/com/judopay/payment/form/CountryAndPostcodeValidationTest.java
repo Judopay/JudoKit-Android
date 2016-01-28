@@ -81,7 +81,7 @@ public class CountryAndPostcodeValidationTest {
     }
 
     @Test
-    public void shouldHaveZipcodeLabelWhenUnitedStatesCountrySelected() {
+    public void shouldHaveZipCodeLabelWhenUnitedStatesCountrySelected() {
         CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
                 new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")

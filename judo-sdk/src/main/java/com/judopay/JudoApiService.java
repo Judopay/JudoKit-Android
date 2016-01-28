@@ -1,5 +1,7 @@
 package com.judopay;
 
+import android.content.Context;
+
 import com.judopay.model.Collection;
 import com.judopay.model.PaymentTransaction;
 import com.judopay.model.Receipt;
@@ -17,6 +19,11 @@ import retrofit.http.Path;
 import retrofit.http.Query;
 import rx.Observable;
 
+/**
+ * Judo interface with Retrofit annotated list of judo API calls that can be performed.
+ * Use the {@link com.judopay.api.JudoApiServiceFactory#getInstance(Context)} method to obtain an
+ * instance. See <a href="https://github.com/square/retrofit">GitHub</a> for details.
+ */
 public interface JudoApiService {
 
     /**
@@ -80,7 +87,6 @@ public interface JudoApiService {
      */
     @POST("transactions/refunds")
     Observable<Receipt> refund(@Body Refund refund);
-
 
     /**
      * Register a card to be used for making future tokenised payments

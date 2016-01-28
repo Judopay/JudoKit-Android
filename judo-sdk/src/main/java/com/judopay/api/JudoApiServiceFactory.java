@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder;
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
 import com.judopay.model.ClientDetails;
+import com.judopay.model.Location;
 import com.squareup.okhttp.CertificatePinner;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
@@ -89,15 +90,14 @@ public class JudoApiServiceFactory {
     }
 
     private static Gson getGson(Context context) {
-        return getGsonBuilder()
-                .registerTypeAdapter(ClientDetails.class, new ClientDetailsSerializer(context))
-                .create();
-    }
-
-    private static GsonBuilder getGsonBuilder() {
-        return new GsonBuilder()
+        GsonBuilder gsonBuilder = new GsonBuilder()
                 .registerTypeAdapter(Date.class, new DateJsonDeserializer())
                 .registerTypeAdapter(BigDecimal.class, new FormattedBigDecimalDeserializer());
+
+        return gsonBuilder
+                .registerTypeAdapter(Location.class, new LocationTypeAdapter(context))
+                .registerTypeAdapter(ClientDetails.class, new ClientDetailsSerializer(context))
+                .create();
     }
 
     private static void setSslPinning(OkHttpClient client) {
