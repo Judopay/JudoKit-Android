@@ -39,16 +39,7 @@ android {
     }
 
     packagingOptions {
-//    exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/LICENSE.txt'
-//    exclude 'META-INF/NOTICE.txt'
-//    exclude 'META-INF/NOTICE'
-//    exclude 'META-INF/LICENSE'
-//    exclude 'META-INF/DEPENDENCIES'
-//    exclude 'META-INF/notice.txt'
-//    exclude 'META-INF/license.txt'
-//    exclude 'META-INF/dependencies.txt'
-//    exclude 'META-INF/LGPL2.1'
     }
 
 }
@@ -79,18 +70,10 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
 
-    // Testing-only dependencies
-    // Force usage of support annotations in the test app, since it is internally used by the runner module.
-    // androidTestCompile 'com.android.support:support-annotations:23.1.1'
-
-    //Provides AndroidJUnitRunner
     androidTestCompile 'com.android.support.test:runner:0.4.1'
     androidTestCompile 'com.android.support.test:rules:0.4.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.1'
-
-//    androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.1'
-
 
 }
