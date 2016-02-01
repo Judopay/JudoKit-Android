@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import com.judopay.R;
+import com.judopay.model.CardType;
 
 /**
  * A view that allows for the CVV (CV2/CIDV) of a card to be input and an image displayed to
@@ -72,6 +73,14 @@ public class CvvEntryView extends RelativeLayout {
 
     public void setCardType(int cardType) {
         cvvImageView.setCardType(cardType);
+
+        if(CardType.AMEX == cardType) {
+            setHint(R.string.amex_cvv_label);
+            setAlternateHint(R.string.amex_cvv_hint);
+        } else {
+            setHint(R.string.cvv_label);
+            setAlternateHint(R.string.cvv_hint);
+        }
     }
 
     public void setMaxLength(int length) {

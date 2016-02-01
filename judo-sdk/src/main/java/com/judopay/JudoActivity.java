@@ -78,6 +78,9 @@ public abstract class JudoActivity extends AppCompatActivity {
 
     void checkRequiredExtras(String... keys) {
         Bundle extras = getIntent().getExtras();
+        if(extras == null) {
+            throw new RuntimeException(String.format("Activity %s must be started with Intent Extras", this.getClass().getSimpleName()));
+        }
         for (String key : keys) {
             if (!extras.containsKey(key)) {
                 throw new IllegalArgumentException(String.format("Extra '%s' is required for %s", key, this.getClass().getSimpleName()));

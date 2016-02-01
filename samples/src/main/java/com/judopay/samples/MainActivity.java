@@ -72,6 +72,7 @@ public class MainActivity extends BaseActivity {
 
         Judo.setup(API_TOKEN, API_SECRET, Judo.Environment.SANDBOX);
 
+
         paymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

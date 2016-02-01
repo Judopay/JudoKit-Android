@@ -25,19 +25,14 @@
 
 package com.judopay.util;
 
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
-import android.support.test.internal.runner.lifecycle.ActivityLifecycleMonitorRegistry;
-import android.support.test.runner.lifecycle.Stage;
 import android.view.View;
 
 import org.hamcrest.Matcher;
-
-import java.util.Collection;
 
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 
@@ -64,11 +59,6 @@ public class OrientationChangeAction implements ViewAction {
         uiController.loopMainThreadUntilIdle();
         final Activity activity = (Activity) view.getContext();
         activity.setRequestedOrientation(orientation);
-
-        Collection<Activity> resumedActivities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
-        if (resumedActivities.isEmpty()) {
-            throw new RuntimeException("Could not change orientation");
-        }
     }
 
     public static ViewAction orientationLandscape() {

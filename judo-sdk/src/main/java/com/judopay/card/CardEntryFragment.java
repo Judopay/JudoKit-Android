@@ -124,8 +124,10 @@ public final class CardEntryFragment extends Fragment {
                     this.paymentButton.setText(judoOptions.getButtonLabel());
                 }
 
-                if (judoOptions.getCardToken() != null) {
-                    cardNumberEntryView.setCardType(judoOptions.getCardToken().getType());
+                CardToken cardToken = judoOptions.getCardToken();
+                if (cardToken != null) {
+                    cardNumberEntryView.setCardType(cardToken.getType());
+                    cvvEntryView.setCardType(cardToken.getType());
                     cvvEntryView.requestFocus();
                 }
 
