@@ -34,7 +34,7 @@ public class PrefillCardDataTest {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
-                .setJudoId("100407196")
+                .setJudoId("00000000")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setCardNumber("4934123412341234")
@@ -54,7 +54,7 @@ public class PrefillCardDataTest {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
-                .setJudoId("100407196")
+                .setJudoId("00000000")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setCardNumber("343412341234123")
