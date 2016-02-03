@@ -1,5 +1,7 @@
 package com.judopay;
 
+import com.judopay.arch.Scheduler;
+
 import rx.schedulers.Schedulers;
 
 public class TestScheduler implements Scheduler {

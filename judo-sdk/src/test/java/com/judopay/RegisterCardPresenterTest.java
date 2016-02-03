@@ -1,12 +1,11 @@
 package com.judopay;
 
 import com.google.gson.Gson;
+import com.judopay.arch.Scheduler;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.Receipt;
 import com.judopay.model.RegisterTransaction;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.internal.http.RealResponseBody;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,8 +14,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.net.UnknownHostException;
 
+import okhttp3.Headers;
+import okhttp3.internal.http.RealResponseBody;
 import okio.Buffer;
-import retrofit.HttpException;
+import retrofit2.HttpException;
 import rx.Observable;
 
 import static org.mockito.Matchers.any;
@@ -157,7 +158,7 @@ public class RegisterCardPresenterTest {
 
         RealResponseBody responseBody = new RealResponseBody(Headers.of("SdkVersion", "5.0"), new Buffer());
 
-        HttpException exception = new HttpException(retrofit.Response.error(400, responseBody));
+        HttpException exception = new HttpException(retrofit2.Response.error(400, responseBody));
 
         when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>error(exception));
 

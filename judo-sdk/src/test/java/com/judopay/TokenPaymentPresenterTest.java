@@ -1,7 +1,7 @@
 package com.judopay;
 
 import com.google.gson.Gson;
-import com.judopay.model.Address;
+import com.judopay.arch.Scheduler;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
 import com.judopay.model.Currency;
@@ -78,7 +78,7 @@ public class TokenPaymentPresenterTest {
         String receiptId = "123456";
 
         when(receipt.isSuccess()).thenReturn(true);
-        when(apiService.threeDSecurePayment(receiptId, threeDSecureInfo)).thenReturn(Observable.just(receipt));
+        when(apiService.complete3dSecure(receiptId, threeDSecureInfo)).thenReturn(Observable.just(receipt));
 
         presenter.onAuthorizationCompleted(threeDSecureInfo, receiptId);
 
@@ -92,7 +92,7 @@ public class TokenPaymentPresenterTest {
         String receiptId = "123456";
 
         when(receipt.isSuccess()).thenReturn(false);
-        when(apiService.threeDSecurePayment(receiptId, threeDSecureInfo)).thenReturn(Observable.just(receipt));
+        when(apiService.complete3dSecure(receiptId, threeDSecureInfo)).thenReturn(Observable.just(receipt));
 
         presenter.onAuthorizationCompleted(threeDSecureInfo, "123456");
 
