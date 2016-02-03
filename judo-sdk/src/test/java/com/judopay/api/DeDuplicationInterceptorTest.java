@@ -30,15 +30,20 @@ public class DeDuplicationInterceptorTest {
     public void shouldThrowDuplicateTransactionExceptionWhenDuplicate() throws IOException {
         DeDuplicationInterceptor interceptor = new DeDuplicationInterceptor();
 
-        RequestBody body = RequestBody.create(MediaType.parse("application/json"), "{\"yourPaymentReference\": \"uniqueRef\"}");
+        MediaType mediaType = MediaType.parse("application/json");
+
+        String json = "{\"yourPaymentReference\": \"uniqueRef\", \"uniqueRequest\": true}";
+        RequestBody body = RequestBody.create(mediaType, json);
+
         Request request = new Request.Builder()
                 .url("http://www.judopay.com")
                 .post(body)
                 .build();
 
+        ResponseBody responseBody = ResponseBody.create(mediaType, "");
         Response response = new Response.Builder()
                 .request(request)
-                .body(ResponseBody.create(MediaType.parse("application/json"), ""))
+                .body(responseBody)
                 .code(200)
                 .protocol(Protocol.HTTP_1_1)
                 .build();
@@ -56,15 +61,18 @@ public class DeDuplicationInterceptorTest {
     public void shouldProcessWhenRequestBodyNotJson() throws IOException {
         DeDuplicationInterceptor interceptor = new DeDuplicationInterceptor();
 
-        RequestBody body = RequestBody.create(MediaType.parse("text/html"), "");
+        MediaType textHtmlMediaType = MediaType.parse("text/html");
+        RequestBody body = RequestBody.create(textHtmlMediaType, "");
         Request request = new Request.Builder()
                 .url("http://www.judopay.com")
                 .post(body)
                 .build();
 
+        MediaType mediaType = MediaType.parse("application/json");
+        ResponseBody responseBody = ResponseBody.create(mediaType, "");
         Response response = new Response.Builder()
                 .request(request)
-                .body(ResponseBody.create(MediaType.parse("application/json"), ""))
+                .body(responseBody)
                 .code(200)
                 .protocol(Protocol.HTTP_1_1)
                 .build();
@@ -87,9 +95,11 @@ public class DeDuplicationInterceptorTest {
                 .url("http://www.judopay.com")
                 .build();
 
+        MediaType mediaType = MediaType.parse("application/json");
+        ResponseBody responseBody = ResponseBody.create(mediaType, "");
         Response response = new Response.Builder()
                 .request(request)
-                .body(ResponseBody.create(MediaType.parse("application/json"), ""))
+                .body(responseBody)
                 .code(200)
                 .protocol(Protocol.HTTP_1_1)
                 .build();

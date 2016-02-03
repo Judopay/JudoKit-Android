@@ -1,20 +1,21 @@
 package com.judopay.model;
 
+import com.judopay.api.Transaction;
+
 import java.math.BigDecimal;
 
 /**
  * A Collection allows for the funds reserved in a pre-auth transaction to be collected.
  */
-public class Collection {
+public class Collection extends Transaction {
 
     private final String receiptId;
     private final BigDecimal amount;
-    private final String yourPaymentReference;
 
-    public Collection(String receiptId, BigDecimal amount, String yourPaymentReference) {
+    public Collection(String yourPaymentReference, String receiptId, BigDecimal amount) {
+        super(yourPaymentReference);
         this.receiptId = receiptId;
         this.amount = amount;
-        this.yourPaymentReference = yourPaymentReference;
     }
 
     public String getReceiptId() {
@@ -23,10 +24,6 @@ public class Collection {
 
     public BigDecimal getAmount() {
         return amount;
-    }
-
-    public String getYourPaymentReference() {
-        return yourPaymentReference;
     }
 
 }
