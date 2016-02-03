@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -156,7 +157,7 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, CardEnt
     }
 
     @Override
-    public void setLoadingText(int text) {
+    public void setLoadingText(@StringRes int text) {
         this.progressText.setText(getString(text));
     }
 

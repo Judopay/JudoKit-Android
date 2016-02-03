@@ -26,7 +26,7 @@ public class DeDuplicationInterceptorTest {
     @Mock
     Interceptor.Chain chain;
 
-    @Test(expected = DuplicationTransactionException.class)
+    @Test(expected = DuplicateTransactionException.class)
     public void shouldThrowDuplicateTransactionExceptionWhenDuplicate() throws IOException {
         DeDuplicationInterceptor interceptor = new DeDuplicationInterceptor();
 

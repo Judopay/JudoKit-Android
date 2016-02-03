@@ -30,7 +30,7 @@ class DeDuplicationInterceptor implements Interceptor {
                 JsonElement uniqueRequest = jsonObject.get("uniqueRequest");
 
                 if (uniqueRequest != null && uniqueRequest.getAsBoolean() && uniqueReference != null && uniqueResponses.contains(uniqueReference.getAsString())) {
-                    throw new DuplicationTransactionException(uniqueReference.getAsString());
+                    throw new DuplicateTransactionException(uniqueReference.getAsString());
                 } else {
                     okhttp3.Response response = chain.proceed(request);
 
