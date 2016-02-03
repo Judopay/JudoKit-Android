@@ -3,10 +3,19 @@
 ## [5.1.1](https://github.com/judopay/Judo-Android/tree/5.1.1) (2016-02-11)
 
 **Implemented enhancements:**
-- Added support for voiding pre-auth transactions with ```JudoApiService```
+- Added support for voiding pre-auth transactions to ```JudoApiService```
 
 **Bugs fixed:**
 - Fixed an issue where additional API requests would fail after an initial transaction request was performed.
+- Resolved an issue where making a token payment/pre auth would not allow a 4 digit CIDV to be entered for an Amex card.
+- Resolved an issue where the incorrect error message was given if the required Activity Extras was not passed to a ```JudoActivity```
+
+**Changes:**
+- When a duplicated transaction is detected, a ```DuplicateTransactionException``` is now thrown instead of the original transaction response being replayed.
+- UI tests moved to judo-sdk module and test framework upgraded to Espresso 2.
+- Retrofit library upgraded to latest version.
+- New method for obtaining ```JudoApiService``` instance, call ```Judo.getApiService(context);```
+- ```JudoApiService method``` for completing a transaction with 3D Secure verification renamed.
 
 ## [5.1](https://github.com/judopay/Judo-Android/tree/5.1) (2016-01-28)
 
