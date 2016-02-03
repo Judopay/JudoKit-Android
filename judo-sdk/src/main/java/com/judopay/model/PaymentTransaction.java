@@ -1,6 +1,6 @@
 package com.judopay.model;
 
-import com.judopay.api.Request;
+import com.judopay.api.Transaction;
 
 import java.util.Map;
 
@@ -11,7 +11,7 @@ import java.util.Map;
  * When creating a {@link PaymentTransaction} the {@link PaymentTransaction#judoId},
  * {@link PaymentTransaction#amount} and {@link PaymentTransaction#currency} must be provided.
  */
-public class PaymentTransaction extends Request {
+public final class PaymentTransaction extends Transaction {
 
     private String amount;
     private Location consumerLocation;
@@ -29,10 +29,8 @@ public class PaymentTransaction extends Request {
     private String mobileNumber;
     private Map<String, String> yourPaymentMetaData;
 
-    private final String yourPaymentReference;
-
     private PaymentTransaction() {
-        this.yourPaymentReference = UniqueIdentifier.generate();
+        super(true);
     }
 
     public String getAmount() {
@@ -53,10 +51,6 @@ public class PaymentTransaction extends Request {
 
     public String getYourConsumerReference() {
         return yourConsumerReference;
-    }
-
-    public String getYourPaymentReference() {
-        return yourPaymentReference;
     }
 
     public Address getCardAddress() {

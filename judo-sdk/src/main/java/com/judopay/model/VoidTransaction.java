@@ -4,15 +4,12 @@ import com.judopay.api.Transaction;
 
 import java.math.BigDecimal;
 
-/**
- * A Collection allows for the funds reserved in a pre-auth transaction to be collected.
- */
-public class Collection extends Transaction {
+public final class VoidTransaction extends Transaction {
 
-    private final String receiptId;
-    private final BigDecimal amount;
+    private String receiptId;
+    private BigDecimal amount;
 
-    public Collection(String yourPaymentReference, String receiptId, BigDecimal amount) {
+    public VoidTransaction(String yourPaymentReference, String receiptId, BigDecimal amount) {
         super(yourPaymentReference);
         this.receiptId = receiptId;
         this.amount = amount;
