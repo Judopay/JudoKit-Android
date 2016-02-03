@@ -14,11 +14,11 @@ public abstract class Transaction {
 
     private final ClientDetails clientDetails;
 
-    public Transaction(String yourPaymentReference) {
+    protected Transaction(String yourPaymentReference) {
         this(false, yourPaymentReference);
     }
 
-    public Transaction(boolean uniqueRequest) {
+    protected Transaction(boolean uniqueRequest) {
         this(uniqueRequest, UUID.randomUUID().toString());
     }
 
