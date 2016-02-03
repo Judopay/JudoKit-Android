@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;
@@ -71,7 +70,6 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         Judo.setup(API_TOKEN, API_SECRET, Judo.Environment.SANDBOX);
-
 
         paymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
