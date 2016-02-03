@@ -1,6 +1,7 @@
 package com.judopay;
 
 import com.google.gson.Gson;
+import com.judopay.arch.Scheduler;
 import com.judopay.model.Card;
 import com.judopay.model.PaymentTransaction;
 
@@ -18,7 +19,6 @@ class PaymentPresenter extends BasePresenter {
         PaymentTransaction.Builder builder = new PaymentTransaction.Builder()
                 .setAmount(judoOptions.getAmount())
                 .setCardAddress(card.getCardAddress())
-                .setConsumerLocation(null)
                 .setCardNumber(card.getCardNumber())
                 .setCurrency(judoOptions.getCurrency())
                 .setCv2(card.getCv2())

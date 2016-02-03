@@ -3,14 +3,13 @@ package com.judopay.api;
 import android.os.Build;
 
 import com.judopay.BuildConfig;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
+
+import okhttp3.*;
+import okhttp3.Response;
 
 class ApiHeadersInterceptor implements Interceptor {
 
@@ -37,7 +36,7 @@ class ApiHeadersInterceptor implements Interceptor {
 
     @Override
     public Response intercept(Chain chain) throws IOException {
-        Request.Builder builder = chain.request()
+        okhttp3.Request.Builder builder = chain.request()
                 .newBuilder()
                 .headers(getHeaders());
 

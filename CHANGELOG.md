@@ -1,5 +1,13 @@
 # judoNative Android SDK change log
 
+## [5.1.1](https://github.com/judopay/Judo-Android/tree/5.1.1) (2016-02-11)
+
+**Implemented enhancements:**
+- Added support for voiding pre-auth transactions with ```JudoApiService```
+
+**Bugs fixed:**
+- Fixed an issue where additional API requests would fail after an initial transaction request was performed.
+
 ## [5.1](https://github.com/judopay/Judo-Android/tree/5.1) (2016-01-28)
 
 **Implemented enhancements:**

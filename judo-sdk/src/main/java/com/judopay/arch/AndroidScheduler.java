@@ -1,9 +1,9 @@
-package com.judopay;
+package com.judopay.arch;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-class AndroidScheduler implements Scheduler {
+public class AndroidScheduler implements Scheduler {
 
     @Override
     public rx.Scheduler mainThread() {
@@ -12,6 +12,6 @@ class AndroidScheduler implements Scheduler {
 
     @Override
     public rx.Scheduler backgroundThread() {
-        return Schedulers.newThread();
+        return Schedulers.io();
     }
 }
