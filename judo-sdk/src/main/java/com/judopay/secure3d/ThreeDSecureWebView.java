@@ -1,7 +1,6 @@
 package com.judopay.secure3d;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.webkit.WebSettings;
@@ -16,7 +15,6 @@ import java.util.Locale;
 
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.KITKAT;
-import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.net.URLEncoder.encode;
 
 /**

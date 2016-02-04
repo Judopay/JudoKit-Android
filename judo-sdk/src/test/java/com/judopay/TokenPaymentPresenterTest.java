@@ -1,9 +1,10 @@
 package com.judopay;
 
 import com.google.gson.Gson;
-import com.judopay.model.Address;
+import com.judopay.arch.Scheduler;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
+import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
 import com.judopay.model.ThreeDSecureInfo;
 import com.judopay.model.TokenTransaction;
@@ -33,9 +34,6 @@ public class TokenPaymentPresenterTest {
     CardToken cardToken;
 
     @Mock
-    Address cardAddress;
-
-    @Mock
     JudoApiService apiService;
 
     @Mock
@@ -44,16 +42,22 @@ public class TokenPaymentPresenterTest {
     @Mock
     ThreeDSecureInfo threeDSecureInfo;
 
-    String consumer = "consumerRef";
-    Gson gson = new Gson();
-    Scheduler scheduler = new TestScheduler();
+    private Gson gson = new Gson();
+    private Scheduler scheduler = new TestScheduler();
 
     @Test
     public void shouldPerformTokenPayment() {
         TokenPaymentPresenter presenter = new TokenPaymentPresenter(paymentFormView, apiService, scheduler, gson);
         when(apiService.tokenPayment(any(TokenTransaction.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performTokenPayment(card, cardToken, consumer, "123456", "1.99", "GBP", null, false);
+        String consumer = "consumerRef";
+        presenter.performTokenPayment(card, new JudoOptions.Builder()
+                .setCardToken(cardToken)
+                .setConsumerRef(consumer)
+                .setAmount("1.99")
+                .setCurrency(Currency.GBP)
+                .setJudoId("123456")
+                .build());
 
         verify(paymentFormView).showLoading();
         verify(apiService).tokenPayment(any(TokenTransaction.class));
@@ -74,7 +78,7 @@ public class TokenPaymentPresenterTest {
         String receiptId = "123456";
 
         when(receipt.isSuccess()).thenReturn(true);
-        when(apiService.threeDSecurePayment(receiptId, threeDSecureInfo)).thenReturn(Observable.just(receipt));
+        when(apiService.complete3dSecure(receiptId, threeDSecureInfo)).thenReturn(Observable.just(receipt));
 
         presenter.onAuthorizationCompleted(threeDSecureInfo, receiptId);
 
@@ -88,7 +92,7 @@ public class TokenPaymentPresenterTest {
         String receiptId = "123456";
 
         when(receipt.isSuccess()).thenReturn(false);
-        when(apiService.threeDSecurePayment(receiptId, threeDSecureInfo)).thenReturn(Observable.just(receipt));
+        when(apiService.complete3dSecure(receiptId, threeDSecureInfo)).thenReturn(Observable.just(receipt));
 
         presenter.onAuthorizationCompleted(threeDSecureInfo, "123456");
 

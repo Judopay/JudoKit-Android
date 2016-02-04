@@ -1,12 +1,58 @@
-# judoNative Android SDK Change Log
+# judoNative Android SDK change log
 
-## [5.0.1](https://github.com/judopay/Judo-Android/tree/5.0.1) (2016-01-07)
+## [5.1.1](https://github.com/judopay/Judo-Android/tree/5.1.1) (2016-02-11)
+
+**Implemented enhancements:**
+- Added support for voiding pre-auth transactions to ```JudoApiService```
+
+**Bugs fixed:**
+- Fixed an issue where additional API requests would fail after an initial transaction request was performed.
+- Resolved an issue where making a token payment/pre auth would not allow a 4 digit CIDV to be entered for an Amex card.
+- Resolved an issue where the incorrect error message was given if the required Activity Extras was not passed to a ```JudoActivity```
+
+**Changes:**
+- When a duplicated transaction is detected, a ```DuplicateTransactionException``` is now thrown instead of the original transaction response being replayed.
+- UI tests moved to judo-sdk module and test framework upgraded to Espresso 2.
+- Retrofit library upgraded to latest version.
+- New method for obtaining ```JudoApiService``` instance, call ```Judo.getApiService(context);```
+- ```JudoApiService method``` for completing a transaction with 3D Secure verification renamed.
+
+## [5.1](https://github.com/judopay/Judo-Android/tree/5.1) (2016-01-28)
+
+**Implemented enhancements:**
+- Add Brazilian Real to list of supported currencies.
+- Enable 3D Secure verification for all transactions by default, if required by the Merchant's bank.
+- Allow transactions for Android devices with root permissions, with option to block if required.
+- New Android views provided for card data entry for use when writing a custom UI.
+- Display secure server transmission text in the payment form, to indicate transaction is performed securely.
+
+**Bugs fixed:**
+- Fixed a crashing issue that could occur if an Activity was restarted due to low memory.
+- Resolved an issue where the postcode field hint would not render correctly when switching between countries.
+- Fixed an issue where the postcode field would not pick up the theme's tint color on pre-Lollipop devices.
+- Visa Electron/Visa Debit now correctly detected as a Visa card during card number entry.
+
+**Changes:**
+- New ```JudoOptions``` class for sending type safe data between Activity and Fragment instances.
+- New fields included in Transaction classes for setting mobile number and email address.
+
+## [5.0.1](https://github.com/judopay/Judo-Android/tree/5.0.1) (2016-01-12)
+
+**Implemented enhancements:**
+- SHA 256 SSL/TLS Certificate upgrade - an industry-wide security update to protect you against man-in-the-middle attacks
+- Maestro card type support is now enabled in the SDK by default.
+- The sample app settings page now includes the full list of current and future supported currencies.
+- A more useful error message is provided if the judoNative SDK is not properly initialized.
+- Duplication prevention built in to protect merchants and consumers against duplicated transactions via unique payment reference.
 
 **Bugs fixed:**
 - Fixed an issue that prevented card details from being amended when attempting to register a card with validation errors.
 - Resolved a crashing issue that would occur when any API error was encountered when performing a transaction, due to ApiError class not being Parcelable when attempting to pass back the Receipt for the transaction.
 - Fixed an issue with card digits being skipped when attempting to type into the card number input field.
 - Merged judo-sdk and judo-data modules due to an issue with resolving library internal dependencies found when releasing previous SDK version.
+
+**Changes:**
+- Renamed JudoPay initialization class to be called Judo, for consistency across SDK platforms.
 
 ## [5.0](https://github.com/judopay/Judo-Android/tree/5.0) (2015-12-10)
 

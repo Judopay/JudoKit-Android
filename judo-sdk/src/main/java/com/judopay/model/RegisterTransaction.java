@@ -1,9 +1,17 @@
 package com.judopay.model;
 
-import com.judopay.UniqueIdentifier;
-import com.judopay.api.Request;
+import com.judopay.api.Transaction;
 
-public class RegisterTransaction extends Request {
+import java.util.Map;
+
+/**
+ * Represents the data needed to perform a register card transaction with the judo API.
+ * Use the {@link RegisterTransaction.Builder} for object construction.
+ *
+ * When creating a {@link RegisterTransaction} the {@link RegisterTransaction#judoId}
+ * must be provided.
+ */
+public final class RegisterTransaction extends Transaction {
 
     private String judoId;
     private Location consumerLocation;
@@ -13,16 +21,13 @@ public class RegisterTransaction extends Request {
     private String cv2;
     private String expiryDate;
     private String startDate;
+    private String emailAddress;
+    private String mobileNumber;
     private String issueNumber;
-
-    private final String yourPaymentReference;
+    private Map<String, String> yourPaymentMetaData;
 
     private RegisterTransaction() {
-        this.yourPaymentReference = UniqueIdentifier.generate();
-    }
-
-    public String getYourPaymentReference() {
-        return yourPaymentReference;
+        super(true);
     }
 
     public String getJudoId() {
@@ -61,6 +66,18 @@ public class RegisterTransaction extends Request {
         return issueNumber;
     }
 
+    public Map<String, String> getMetaData() {
+        return yourPaymentMetaData;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
     public static class Builder {
 
         private String judoId;
@@ -72,6 +89,9 @@ public class RegisterTransaction extends Request {
         private String expiryDate;
         private String startDate;
         private String issueNumber;
+        private String emailAddress;
+        private String mobileNumber;
+        private Map<String, String> yourPaymentMetaData;
 
         public Builder setJudoId(String judoId) {
             this.judoId = judoId;
@@ -118,24 +138,39 @@ public class RegisterTransaction extends Request {
             return this;
         }
 
+        public void setEmailAddress(String emailAddress) {
+            this.emailAddress = emailAddress;
+        }
+
+        public void setMobileNumber(String mobileNumber) {
+            this.mobileNumber = mobileNumber;
+        }
+
+        public void setMetaData(Map<String, String> metaData) {
+            this.yourPaymentMetaData = metaData;
+        }
+
         public RegisterTransaction build() {
             if (this.judoId == null) {
                 throw new IllegalArgumentException("judoId must be set");
             }
 
-            RegisterTransaction registerTransaction = new RegisterTransaction();
+            RegisterTransaction transaction = new RegisterTransaction();
 
-            registerTransaction.judoId = judoId;
-            registerTransaction.consumerLocation = consumerLocation;
-            registerTransaction.yourConsumerReference = yourConsumerReference;
-            registerTransaction.cardAddress = cardAddress;
-            registerTransaction.cardNumber = cardNumber;
-            registerTransaction.cv2 = cv2;
-            registerTransaction.expiryDate = expiryDate;
-            registerTransaction.startDate = startDate;
-            registerTransaction.issueNumber = issueNumber;
+            transaction.judoId = judoId;
+            transaction.consumerLocation = consumerLocation;
+            transaction.yourConsumerReference = yourConsumerReference;
+            transaction.cardAddress = cardAddress;
+            transaction.cardNumber = cardNumber;
+            transaction.cv2 = cv2;
+            transaction.expiryDate = expiryDate;
+            transaction.startDate = startDate;
+            transaction.issueNumber = issueNumber;
+            transaction.emailAddress = emailAddress;
+            transaction.mobileNumber = mobileNumber;
+            transaction.yourPaymentMetaData = yourPaymentMetaData;
 
-            return registerTransaction;
+            return transaction;
         }
 
     }

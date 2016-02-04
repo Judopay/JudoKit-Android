@@ -18,11 +18,9 @@ class AuthorizationEncoder {
 
             apiToken = bundle.getString("judo_api_token");
             apiSecret = bundle.getString("judo_api_secret");
-        } catch (PackageManager.NameNotFoundException | NullPointerException e) {
-//            this.apiToken = JudoPay.getApiToken();
-//            this.apiSecret = JudoPay.getApiSecret();
-            throw new RuntimeException(e);
-        }
+        } catch (PackageManager.NameNotFoundException | NullPointerException e) { }
+        this.apiToken = JudoPay.getApiToken();
+        this.apiSecret = JudoPay.getApiSecret();
     }
 
     public String getAuthorization() {

@@ -5,24 +5,22 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.judopay.card.CardEntryFragment;
+import com.judopay.card.CardEntryListener;
 import com.judopay.model.CardToken;
 import com.judopay.model.Receipt;
-import com.judopay.payment.form.CardEntryFragment;
-import com.judopay.payment.form.PaymentFormListener;
-import com.judopay.payment.form.PaymentFormOptions;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
 import com.judopay.secure3d.ThreeDSecureWebView;
+import com.judopay.view.Dialogs;
 
-abstract class BaseFragment extends Fragment implements PaymentFormView, PaymentFormListener {
+abstract class BaseFragment extends Fragment implements PaymentFormView, CardEntryListener {
 
     private static final String TAG_PAYMENT_FORM = "CardEntryFragment";
     private static final String TAG_3DS_DIALOG = "3dSecureDialog";
@@ -46,7 +44,6 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, Payment
     }
 
     @Override
-    @CallSuper
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -70,18 +67,41 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, Payment
                     .add(R.id.container, cardEntryFragment, TAG_PAYMENT_FORM)
                     .commit();
         } else {
-            cardEntryFragment.setPaymentFormListener(this);
+            cardEntryFragment.setCardEntryListener(this);
         }
     }
 
     CardEntryFragment createPaymentFormFragment() {
-        CardToken cardToken = getArguments().getParcelable(JudoPay.JUDO_CARD_TOKEN);
+        JudoOptions judoOptions;
 
-        PaymentFormOptions paymentFormOptions = new PaymentFormOptions.Builder()
-                .setCardToken(cardToken)
-                .build();
+        if (getArguments().containsKey(Judo.JUDO_OPTIONS)) {
+            judoOptions = getArguments().getParcelable(Judo.JUDO_OPTIONS);
+        } else {
+            CardToken cardToken = getArguments().getParcelable(Judo.JUDO_CARD_TOKEN);
 
-        return CardEntryFragment.newInstance(paymentFormOptions, this);
+            judoOptions = new JudoOptions.Builder()
+                    .setCardToken(cardToken)
+                    .build();
+        }
+
+        return CardEntryFragment.newInstance(judoOptions, this);
+    }
+
+    JudoOptions getJudoOptions() {
+        Bundle args = getArguments();
+
+        if (args.containsKey(Judo.JUDO_OPTIONS)) {
+            return args.getParcelable(Judo.JUDO_OPTIONS);
+        } else {
+            return new JudoOptions.Builder()
+                    .setJudoId(args.getString(Judo.JUDO_ID))
+                    .setAmount(args.getString(Judo.JUDO_AMOUNT))
+                    .setCardToken((CardToken) args.getParcelable(Judo.JUDO_CARD_TOKEN))
+                    .setCurrency(args.getString(Judo.JUDO_CURRENCY))
+                    .setConsumerRef(args.getString(Judo.JUDO_CONSUMER))
+                    .setMetaData(args.getBundle(Judo.JUDO_META_DATA))
+                    .build();
+        }
     }
 
     @Override
@@ -97,12 +117,12 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, Payment
     @Override
     public void finish(Receipt receipt) {
         Intent intent = new Intent();
-        intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
+        intent.putExtra(Judo.JUDO_RECEIPT, receipt);
 
         Activity activity = getActivity();
 
         if (activity != null) {
-            activity.setResult(JudoPay.RESULT_SUCCESS, intent);
+            activity.setResult(Judo.RESULT_SUCCESS, intent);
             activity.finish();
         }
     }
@@ -117,7 +137,7 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, Payment
 
     @Override
     public void showDeclinedMessage(Receipt receipt) {
-        if (getArguments().getBoolean(JudoPay.JUDO_ALLOW_DECLINED_CARD_AMEND, true)) {
+        if (getArguments().getBoolean(Judo.JUDO_ALLOW_DECLINED_CARD_AMEND, true)) {
             Dialogs.createDeclinedPaymentDialog(getActivity()).show();
         } else {
             setDeclinedAndFinish(receipt);
@@ -126,12 +146,12 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, Payment
 
     private void setDeclinedAndFinish(Receipt receipt) {
         Intent intent = new Intent();
-        intent.putExtra(JudoPay.JUDO_RECEIPT, receipt);
+        intent.putExtra(Judo.JUDO_RECEIPT, receipt);
 
         Activity activity = getActivity();
 
         if (activity != null) {
-            activity.setResult(JudoPay.RESULT_DECLINED, intent);
+            activity.setResult(Judo.RESULT_DECLINED, intent);
             activity.finish();
         }
     }
@@ -167,15 +187,15 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, Payment
     }
 
     @Override
-    public void handleError(@Nullable Receipt receipt) {
+    public void handleError(Receipt receipt) {
         Activity activity = getActivity();
         if (activity != null) {
             if (receipt != null) {
                 Intent data = new Intent();
-                data.putExtra(JudoPay.JUDO_RECEIPT, receipt);
-                activity.setResult(JudoPay.RESULT_ERROR, data);
+                data.putExtra(Judo.JUDO_RECEIPT, receipt);
+                activity.setResult(Judo.RESULT_ERROR, data);
             } else {
-                activity.setResult(JudoPay.RESULT_ERROR);
+                activity.setResult(Judo.RESULT_ERROR);
             }
             activity.finish();
         }

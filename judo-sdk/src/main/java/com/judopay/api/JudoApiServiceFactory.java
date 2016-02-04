@@ -1,15 +1,14 @@
 package com.judopay.api;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.judopay.Judo;
 import com.judopay.JudoApiService;
-import com.judopay.JudoPay;
 import com.judopay.model.ClientDetails;
-import com.squareup.okhttp.CertificatePinner;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
+import com.judopay.model.Location;
 
 import java.math.BigDecimal;
 import java.security.KeyManagementException;
@@ -17,9 +16,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
 
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
+import okhttp3.CertificatePinner;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Retrofit;
+import retrofit2.RxJavaCallAdapterFactory;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -59,24 +61,27 @@ public class JudoApiServiceFactory {
         return new Retrofit.Builder()
                 .addConverterFactory(getGsonConverterFactory(context))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .baseUrl(JudoPay.getApiHost())
-                .client(getOkHttpClient(context))
+                .baseUrl(Judo.getApiEnvironmentHost())
+                .client(getOkHttpClient())
                 .build();
     }
 
-    private static OkHttpClient getOkHttpClient(Context context) {
-        OkHttpClient client = new OkHttpClient();
+    private static OkHttpClient getOkHttpClient() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-        setTimeouts(client);
-        setSslSocketFactory(client);
-        setSslPinning(client);
-        setInterceptors(context, client);
+        if (Judo.isSslPinningEnabled()) {
+            builder.certificatePinner(getCertificatePinner());
+        }
 
-        return client;
+        setTimeouts(builder);
+        setSslSocketFactory(builder);
+        setInterceptors(builder);
+
+        return builder.build();
     }
 
-    private static void setInterceptors(Context context, OkHttpClient client) {
-        AuthorizationEncoder authorizationEncoder = new AuthorizationEncoder(context);
+    private static void setInterceptors(OkHttpClient.Builder client) {
+        AuthorizationEncoder authorizationEncoder = new AuthorizationEncoder();
         ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(authorizationEncoder);
 
         List<Interceptor> interceptors = client.interceptors();
@@ -89,40 +94,38 @@ public class JudoApiServiceFactory {
     }
 
     private static Gson getGson(Context context) {
-        return getGsonBuilder()
+        GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeAdapter(Date.class, new DateJsonDeserializer())
+                .registerTypeAdapter(BigDecimal.class, new FormattedBigDecimalDeserializer());
+
+        return gsonBuilder
+                .registerTypeAdapter(Location.class, new LocationTypeAdapter(context))
                 .registerTypeAdapter(ClientDetails.class, new ClientDetailsSerializer(context))
                 .create();
     }
 
-    private static GsonBuilder getGsonBuilder() {
-        return new GsonBuilder()
-                .registerTypeAdapter(Date.class, new DateJsonDeserializer())
-                .registerTypeAdapter(BigDecimal.class, new FormattedBigDecimalDeserializer());
+    @NonNull
+    private static CertificatePinner getCertificatePinner() {
+        return new CertificatePinner.Builder()
+                .add(PARTNER_API_SANDBOX_HOST, CERTIFICATE_1)
+                .add(PARTNER_API_SANDBOX_HOST, CERTIFICATE_2)
+                .add(PARTNER_API_LIVE_HOST, CERTIFICATE_1)
+                .add(PARTNER_API_LIVE_HOST, CERTIFICATE_2)
+                .build();
     }
 
-    private static void setSslPinning(OkHttpClient client) {
-        if (JudoPay.isSslPinningEnabled()) {
-            client.setCertificatePinner(new CertificatePinner.Builder()
-                    .add(PARTNER_API_SANDBOX_HOST, CERTIFICATE_1)
-                    .add(PARTNER_API_SANDBOX_HOST, CERTIFICATE_2)
-                    .add(PARTNER_API_LIVE_HOST, CERTIFICATE_1)
-                    .add(PARTNER_API_LIVE_HOST, CERTIFICATE_2)
-                    .build());
-        }
-    }
-
-    private static void setSslSocketFactory(OkHttpClient client) {
+    private static void setSslSocketFactory(OkHttpClient.Builder builder) {
         try {
-            client.setSslSocketFactory(new TlsSslSocketFactory());
+            builder.sslSocketFactory(new TlsSslSocketFactory());
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static void setTimeouts(OkHttpClient client) {
-        client.setConnectTimeout(30, SECONDS);
-        client.setReadTimeout(30, SECONDS);
-        client.setWriteTimeout(30, SECONDS);
+    private static void setTimeouts(OkHttpClient.Builder builder) {
+        builder.connectTimeout(30, SECONDS)
+                .readTimeout(30, SECONDS)
+                .writeTimeout(30, SECONDS);
     }
 
 }

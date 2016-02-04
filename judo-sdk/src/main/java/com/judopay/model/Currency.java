@@ -3,9 +3,13 @@ package com.judopay.model;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Represents all the currencies that can be used when performing transactions with the judo API.
+ */
 public class Currency {
 
     public static final String AUD = "AUD";
+    public static final String BRL = "BRL";
     public static final String CAD = "CAD";
     public static final String CHF = "CHF";
     public static final String CZK = "CZK";
@@ -23,6 +27,7 @@ public class Currency {
     public static final String ZAR = "ZAR";
 
     public static final String AUSTRALIAN_DOLLAR = "Australian Dollar";
+    public static final String BRAZILIAN_REAL = "Brazilian Real";
     public static final String CANADIAN_DOLLAR = "Canadian Dollar";
     public static final String SWISS_FRANC = "Swiss Franc";
     public static final String CZECH_REPUBLIC_KRONA = "Czech Republic Krona";
@@ -40,13 +45,14 @@ public class Currency {
     public static final String SOUTH_AFRICAN_RAND = "South African Rand";
 
     public static List<String> currencyCodes() {
-        String[] codes = new String[]{AUD, CAD, CHF, CZK, DKK, EUR, GBP, HKD, HUF, JPY, NOK, NZD, PLN, SEK, USD, ZAR};
+        String[] codes = new String[]{AUD, BRL, CAD, CHF, CZK, DKK, EUR, GBP, HKD, HUF, JPY, NOK, NZD, PLN, SEK, USD, ZAR};
         return Arrays.asList(codes);
     }
 
     public static List<String> currencyNames() {
         String[] names = new String[]{
                 AUSTRALIAN_DOLLAR,
+                BRAZILIAN_REAL,
                 CANADIAN_DOLLAR,
                 SWISS_FRANC,
                 CZECH_REPUBLIC_KRONA,

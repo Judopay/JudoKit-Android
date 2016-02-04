@@ -1,6 +1,5 @@
 package com.judopay;
 
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import com.judopay.model.Receipt;
@@ -14,7 +13,7 @@ interface PaymentFormView {
 
     void finish(Receipt receipt);
 
-    void handleError(@Nullable Receipt receipt);
+    void handleError(Receipt receipt);
 
     void dismiss3dSecureDialog();
 

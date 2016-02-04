@@ -1,13 +1,9 @@
 package com.judopay;
 
-import android.os.Bundle;
-
 import com.google.gson.Gson;
+import com.judopay.arch.Scheduler;
 import com.judopay.model.Card;
-import com.judopay.model.Location;
 import com.judopay.model.PaymentTransaction;
-
-import static com.judopay.BundleUtil.toMap;
 
 class PaymentPresenter extends BasePresenter {
 
@@ -15,24 +11,23 @@ class PaymentPresenter extends BasePresenter {
         super(view, judoApiService, scheduler, gson);
     }
 
-    public void performPayment(Card card, String consumerRef, String judoId, String amount, String currency, Bundle metaData, boolean threeDSecureEnabled) {
+    public void performPayment(Card card, JudoOptions judoOptions) {
         this.loading = true;
 
         paymentFormView.showLoading();
 
         PaymentTransaction.Builder builder = new PaymentTransaction.Builder()
-                .setAmount(amount)
+                .setAmount(judoOptions.getAmount())
                 .setCardAddress(card.getCardAddress())
-                .setConsumerLocation(new Location())
                 .setCardNumber(card.getCardNumber())
-                .setCurrency(currency)
+                .setCurrency(judoOptions.getCurrency())
                 .setCv2(card.getCv2())
-                .setJudoId(judoId)
-                .setYourConsumerReference(consumerRef)
+                .setJudoId(judoOptions.getJudoId())
+                .setYourConsumerReference(judoOptions.getConsumerRef())
                 .setExpiryDate(card.getExpiryDate());
 
-        if (metaData != null) {
-            builder.setMetaData(toMap(metaData));
+        if (judoOptions.getMetaData() != null) {
+            builder.setMetaData(judoOptions.getMetaDataMap());
         }
 
         if (card.startDateAndIssueNumberRequired()) {
@@ -43,7 +38,7 @@ class PaymentPresenter extends BasePresenter {
         apiService.payment(builder.build())
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread())
-                .subscribe(callback(threeDSecureEnabled), error());
+                .subscribe(callback(), error());
     }
 
 }

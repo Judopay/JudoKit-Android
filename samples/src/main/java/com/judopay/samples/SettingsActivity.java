@@ -11,8 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 
+import com.judopay.Judo;
 import com.judopay.model.Currency;
-import com.judopay.JudoPay;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,9 +27,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Bind(R.id.amex_switch)
     SwitchCompat amexSwitch;
-
-    @Bind(R.id.three_d_secure_switch)
-    SwitchCompat threeDSecureSwitch;
 
     @Bind(R.id.currency_spinner)
     Spinner currencySpinner;
@@ -64,10 +61,9 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void initialise() {
-        avsSwitch.setChecked(JudoPay.isAvsEnabled());
-        maestroSwitch.setChecked(JudoPay.isMaestroEnabled());
-        amexSwitch.setChecked(JudoPay.isAmexEnabled());
-        threeDSecureSwitch.setChecked(JudoPay.isThreeDSecureEnabled());
+        avsSwitch.setChecked(Judo.isAvsEnabled());
+        maestroSwitch.setChecked(Judo.isMaestroEnabled());
+        amexSwitch.setChecked(Judo.isAmexEnabled());
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Currency.currencyNames());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -91,28 +87,21 @@ public class SettingsActivity extends AppCompatActivity {
         avsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                JudoPay.setAvsEnabled(isChecked);
+                Judo.setAvsEnabled(isChecked);
             }
         });
 
         maestroSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                JudoPay.setMaestroEnabled(isChecked);
+                Judo.setMaestroEnabled(isChecked);
             }
         });
 
         amexSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                JudoPay.setAmexEnabled(isChecked);
-            }
-        });
-
-        threeDSecureSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                JudoPay.setThreeDSecureEnabled(isChecked);
+                Judo.setAmexEnabled(isChecked);
             }
         });
     }
@@ -126,7 +115,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private int getCurrencySelection() {
         String currency = getSharedPreferences(MainActivity.SHARED_PREFS_NAME, MODE_PRIVATE)
-                .getString(MainActivity.CURRENCY_KEY, null);
+                .getString(MainActivity.CURRENCY_KEY, Currency.GBP);
 
         return Currency.currencyCodes().indexOf(currency);
     }

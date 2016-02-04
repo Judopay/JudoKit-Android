@@ -1,40 +1,41 @@
 package com.judopay.api;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
+import okhttp3.Interceptor;
 import okio.Buffer;
 
 class DeDuplicationInterceptor implements Interceptor {
 
-    private static final Map<String, Response> uniqueResponses = new HashMap<>();
+    private static final List<String> uniqueResponses = new ArrayList<>();
 
     @Override
-    public Response intercept(Chain chain) throws IOException {
-        Request request = chain.request();
+    public okhttp3.Response intercept(Interceptor.Chain chain) throws IOException {
+        okhttp3.Request request = chain.request();
 
         if (request.body() != null) {
             String body = bodyToString(request.body());
 
             JsonParser parser = new JsonParser();
             if (parser.parse(body).isJsonObject()) {
-                JsonElement uniqueReference = parser.parse(body).getAsJsonObject().get("yourPaymentReference");
+                JsonObject jsonObject = parser.parse(body).getAsJsonObject();
 
-                if (uniqueReference != null && uniqueResponses.containsKey(uniqueReference.getAsString())) {
-                    return uniqueResponses.get(uniqueReference.getAsString());
+                JsonElement uniqueReference = jsonObject.get("yourPaymentReference");
+                JsonElement uniqueRequest = jsonObject.get("uniqueRequest");
+
+                if (uniqueRequest != null && uniqueRequest.getAsBoolean() && uniqueReference != null && uniqueResponses.contains(uniqueReference.getAsString())) {
+                    throw new DuplicateTransactionException(uniqueReference.getAsString());
                 } else {
-                    Response response = chain.proceed(request);
+                    okhttp3.Response response = chain.proceed(request);
 
                     if (uniqueReference != null) {
-                        uniqueResponses.put(uniqueReference.getAsString(), response);
+                        uniqueResponses.add(uniqueReference.getAsString());
                     }
                     return response;
                 }
@@ -46,14 +47,10 @@ class DeDuplicationInterceptor implements Interceptor {
         }
     }
 
-    private String bodyToString(final RequestBody request) {
-        try {
-            final Buffer buffer = new Buffer();
-            request.writeTo(buffer);
-            return buffer.readUtf8();
-        } catch (IOException e) {
-            return "";
-        }
+    private String bodyToString(final okhttp3.RequestBody request) throws IOException {
+        final Buffer buffer = new Buffer();
+        request.writeTo(buffer);
+        return buffer.readUtf8();
     }
 
 }

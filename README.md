@@ -4,26 +4,29 @@ The judoNative Android library lets you integrate secure in-app card payments in
 
 You can use our out of the box UI for a fully PCI Level 1 compliant payment experience that is customisable to match your app. Alternatively, you can also use the RESTful API directly to implement your own UI.
 
+##### **\*\*\*Due to industry-wide security updates, versions below 5.0 of this SDK will no longer be supported after 1st Oct 2016. For more information regarding these updates, please read our blog [here](http://hub.judopay.com/pci31-security-updates/).*****
+
 ## Getting started
 ##### 1. Add the library to your project
 If you're using Android Studio and Gradle, you can just add the android-sdk as a dependency in your app's build.gradle file:
 ```groovy
-compile 'com.judopay:android-sdk:5.0.1'
+compile 'com.judopay:android-sdk:5.1.1'
 ```
 ##### 2. Initialise the SDK
 From your app's main Activity class, or Application class, initialise the judo SDK with your API token and secret:
 ```java
-JudoPay.setup("MY_API_TOKEN", "MY_API_SECRET", JudoPay.Environment.SANDBOX);
+Judo.setup("MY_API_TOKEN", "MY_API_SECRET", Judo.Environment.SANDBOX);
 ```
 ##### 3. Perform a test payment
 To show the payment screen, create an Intent for the PaymentActivity with the required Intent extras:
 ```java
 Intent intent = new Intent(activity, PaymentActivity.class);
-
-intent.putExtra(JudoPay.JUDO_ID, "35843095834");
-intent.putExtra(JudoPay.JUDO_AMOUNT, "9.99");
-intent.putExtra(JudoPay.JUDO_CURRENCY, "GBP");
-intent.putExtra(JudoPay.JUDO_CONSUMER, "consumerRef");
+intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+    .setJudoId("35843095834")
+    .setAmout("9.99")
+    .setCurrency(Currency.GBP)
+    .setConsumerRef("consumerRef")
+    .build());
 
 startActivityForResult(intent, PAYMENT_REQUEST);
 ```
@@ -35,8 +38,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if(requestCode == PAYMENT_REQUEST) {
         switch (resultCode) {
-            case JudoPay.RESULT_SUCCESS:
-                Receipt receipt = data.getParcelableExtra(JudoPay.JUDO_RECEIPT);
+            case Judo.RESULT_SUCCESS:
+                Receipt receipt = data.getParcelableExtra(Judo.JUDO_RECEIPT);
                 // handle successful payment
       }
     }
@@ -60,7 +63,7 @@ Depending on the styles used in your app, you should expand on the most appropri
 #### Customizing the theme
 1. Create a style that extends from one of the provided base Themes, for example:
 
-    ```
+    ```xml
     <style name="AppTheme" parent="Theme.Judo.Light">
         <item name="colorPrimary">#3F51B5</item> // action bar colour
         <item name="colorPrimaryDark">#303F9F</item> // status bar colour
@@ -70,11 +73,12 @@ Depending on the styles used in your app, you should expand on the most appropri
     </style>
     ```
 2. Specify the activity in your AndroidManifest.xml file with the customized theme:
-```
-<activity
-    android:name="com.judopay.PaymentActivity"
-    android:theme="@style/AppTheme" />
-```
+```xml
+   <activity
+      android:name="com.judopay.PaymentActivity"
+      android:theme="@style/AppTheme"
+      tools:replace="android:theme" />
+   ```
 
 The full list of Activity classes that can be changed are:
 

@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * A single error instance that occurred when calling the JudoPay API, in response to performing
+ * A single error instance that occurred when calling the judo API, in response to performing
  * a request, most likely for a type of transaction such as a payment, pre-auth or token payment.
  */
 public class ApiError implements Parcelable {
@@ -70,7 +70,7 @@ public class ApiError implements Parcelable {
     public static final int POSTCODE_IS_INVALID = 51;
     public static final int CARD_TOKEN_NOT_SUPPLIED = 52;
     public static final int CARD_TOKEN_ORIGINAL_TRANSACTION_FAILED = 53;
-    public static final int THREEDSECURE_PARES_NOT_SUPPLIED = 54;
+    public static final int THREE_D_SECURE_PARES_NOT_SUPPLIED = 54;
     public static final int RECEIPT_ID_NOT_SUPPLIED = 55;
     public static final int RECEIPT_ID_IS_INVALID = 56;
     public static final int TRANSACTION_TYPE_IN_URL_INVALID = 57;
@@ -120,10 +120,10 @@ public class ApiError implements Parcelable {
     public static final int SCHEDULE_REPEAT_MUST_BE_GREATER_THAN_1 = 101;
     public static final int SCHEDULE_INTERVAL_NOT_VALID = 102;
     public static final int SCHEDULE_INTERVAL_MUST_BE_MINIMUM_5 = 103;
-    public static final int ITEMSPERPAGE_NOT_SUPPLIED = 104;
-    public static final int ITEMSPERPAGE_OUT_OF_RANGE = 105;
-    public static final int PAGENUMBER_NOT_SUPPLIED = 106;
-    public static final int PAGENUMBER_OUT_OF_RANGE = 107;
+    public static final int ITEMS_PER_PAGE_NOT_SUPPLIED = 104;
+    public static final int ITEMS_PER_PAGE_OUT_OF_RANGE = 105;
+    public static final int PAGE_NUMBER_NOT_SUPPLIED = 106;
+    public static final int PAGE_NUMBER_OUT_OF_RANGE = 107;
     public static final int LEGAL_NAME_NOT_SUPPLIED = 108;
     public static final int COMPANY_NUMBER_NOT_SUPPLIED = 109;
     public static final int COMPANY_NUMBER_WRONG_LENGTH = 110;
@@ -140,8 +140,8 @@ public class ApiError implements Parcelable {
     public static final int AVERAGE_TRANSACTION_VALUE_NOT_SUPPLIED = 121;
     public static final int AVERAGE_TRANSACTION_VALUE_GREATER_THAN_0 = 122;
     public static final int AVERAGE_TRANSACTION_VALUE_GREATER_THAN_TURNOVER = 123;
-    public static final int MCCCODE_NOT_SUPPLIED = 124;
-    public static final int MCCCODE_UNKNOWN = 125;
+    public static final int MCC_CODE_NOT_SUPPLIED = 124;
+    public static final int MCC_CODE_UNKNOWN = 125;
     public static final int GENERIC_IS_INVALID = 200;
     public static final int GENERIC_HTML_INVALID = 210;
 

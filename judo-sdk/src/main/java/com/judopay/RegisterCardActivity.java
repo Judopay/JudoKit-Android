@@ -1,19 +1,29 @@
 package com.judopay;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-import static com.judopay.JudoPay.JUDO_CONSUMER;
-import static com.judopay.JudoPay.JUDO_ID;
+import static com.judopay.Judo.JUDO_CONSUMER;
+import static com.judopay.Judo.JUDO_ID;
+import static com.judopay.Judo.JUDO_OPTIONS;
 
 /**
- * Displays a form to the user, allowing for card to be registered and used for token transactions.
- * <br>
- * Mandatory extras:
- * <ol>
- * <li>{@link JudoPay#JUDO_ID} Judo ID of your account</li>
- * <li>{@link JudoPay#JUDO_CONSUMER} identifier for the consumer of the transaction</li>
- * </ol>
- * <br>
+ * Displays a card entry form to the user, allowing for card to be registered and used for token transactions.
+ *
+ * To launch the RegisterCardActivity, call {@link android.app.Activity#startActivityForResult(Intent, int)}
+ * with an Intent the configuration options:
+ *
+ * <pre class="prettyprint">
+ * Intent intent = new Intent(this, RegisterCardActivity.class);
+ * intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+ *      .setJudoId("1234567")
+ *      .setConsumerRef("consumerRef")
+ *      .build());
+ *
+ * startActivityForResult(intent, REGISTER_CARD_REQUEST);
+ * </pre>
+ *
+ * See {@link JudoOptions} for the full list of supported options
  */
 public final class RegisterCardActivity extends JudoActivity {
 
@@ -23,7 +33,12 @@ public final class RegisterCardActivity extends JudoActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        checkRequiredExtras(JUDO_CONSUMER, JUDO_ID);
+        if (getIntent().hasExtra((JUDO_OPTIONS))) {
+            JudoOptions options = getIntent().getParcelableExtra(JUDO_OPTIONS);
+            checkJudoOptionsExtras(options.getConsumerRef(), options.getJudoId());
+        } else {
+            checkRequiredExtras(JUDO_CONSUMER, JUDO_ID);
+        }
 
         setTitle(R.string.add_card);
 

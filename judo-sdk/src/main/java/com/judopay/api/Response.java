@@ -5,11 +5,10 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Base class for all HTTP responses that come back from the JudoPay API, this contains fields
+ * Base class for all HTTP responses that come back from the Judo API, this contains fields
  * that are common to all responses, such as the result, message and details of any errors that
  * occurred.
  */
@@ -98,14 +97,14 @@ public class Response implements Parcelable {
     public static final int VOID_ORIGINAL_TRANSACTION_WRONG_TYPE = 50;
     public static final int VOID_ORIGINAL_TRANSACTION_IS_ALREADY_VOID = 51;
     public static final int VOID_ORIGINAL_TRANSACTION_HAS_BEEN_COLLECTED = 52;
-    public static final int VOID_ORIGINAL_TRANSACTION_AMOUNT_NOT_EQUAL_TO_PREAUTH = 53;
+    public static final int VOID_ORIGINAL_TRANSACTION_AMOUNT_NOT_EQUAL_TO_PRE_AUTH = 53;
     public static final int UNABLE_TO_ACCEPT = 54;
     public static final int ACCOUNT_LOCATION_NOT_FOUND = 55;
     public static final int ACCESS_DENIED_TO_TRANSACTION = 56;
     public static final int NO_CONSUMER_FOR_TRANSACTION = 57;
-    public static final int TRANSACTION_NOT_ENROLLED_IN_THREEDSECURE = 58;
-    public static final int TRANSACTION_ALREADY_AUTHORIZED_BY_THREEDSECURE = 59;
-    public static final int THREEDSECURE_NOT_SUCCESSFUL = 60;
+    public static final int TRANSACTION_NOT_ENROLLED_IN_THREE_D_SECURE = 58;
+    public static final int TRANSACTION_ALREADY_AUTHORIZED_BY_THREE_D_SECURE = 59;
+    public static final int THREE_D_SECURE_NOT_SUCCESSFUL = 60;
     public static final int AP_UNABLE_TO_DECRYPT = 61;
     public static final int REFERENCED_TRANSACTION_NOT_FOUND = 62;
     public static final int REFERENCED_TRANSACTION_NOT_SUCCESSFUL = 63;
@@ -157,7 +156,7 @@ public class Response implements Parcelable {
     public static final int UNABLE_TO_PARSE_DOCUMENT = 20021;
     public static final int UNABLE_TO_FIND_A_DEFAULT_ACCOUNT_LOCATION = 20022;
     public static final int WEB_PAYMENTS_SHOULD_BE_CREATED_BY_POSTING_TO_URL = 20023;
-    public static final int INVALI_DMD = 20025;
+    public static final int INVALID_MD = 20025;
     public static final int INVALID_RECEIPT_ID = 20026;
 
     @Override

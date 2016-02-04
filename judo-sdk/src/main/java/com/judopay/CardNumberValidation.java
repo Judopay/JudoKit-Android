@@ -1,6 +1,6 @@
 package com.judopay;
 
-import com.judopay.model.CardNumber;
+import com.judopay.model.LuhnCheck;
 import com.judopay.model.CardType;
 
 public class CardNumberValidation {
@@ -71,7 +71,7 @@ public class CardNumberValidation {
     }
 
     private boolean isCardNumberValid(String cardNumber, int cardType, boolean tokenCard, boolean maestroSupported, boolean amexSupported) {
-        return tokenCard || CardNumber.isLuhnValid(cardNumber)
+        return tokenCard || LuhnCheck.isValid(cardNumber)
                 && (((cardType != CardType.MAESTRO || maestroSupported))
                 && (cardType != CardType.AMEX || amexSupported));
     }

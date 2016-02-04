@@ -5,8 +5,8 @@ import android.view.View;
 
 import com.google.gson.Gson;
 import com.judopay.api.JudoApiServiceFactory;
+import com.judopay.arch.AndroidScheduler;
 import com.judopay.model.Card;
-import com.judopay.model.CardToken;
 
 public class TokenPreAuthFragment extends BaseFragment {
 
@@ -16,7 +16,7 @@ public class TokenPreAuthFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
+        if (this.presenter == null) {
             this.presenter = new TokenPreAuthPresenter(this, JudoApiServiceFactory.getInstance(getActivity()), new AndroidScheduler(), new Gson());
         }
     }
@@ -29,16 +29,9 @@ public class TokenPreAuthFragment extends BaseFragment {
 
     @Override
     public void onSubmit(Card card) {
-        Bundle args = getArguments();
+        JudoOptions judoOptions = getJudoOptions();
 
-        String consumerRef = args.getString(JudoPay.JUDO_CONSUMER);
-        CardToken cardToken = args.getParcelable(JudoPay.JUDO_CARD_TOKEN);
-        String judoId = args.getString(JudoPay.JUDO_ID);
-        String amount = args.getString(JudoPay.JUDO_AMOUNT);
-        String currency = args.getString(JudoPay.JUDO_CURRENCY);
-        Bundle metaData = args.getBundle(JudoPay.JUDO_META_DATA);
-
-        presenter.performTokenPreAuth(card, cardToken, consumerRef, judoId, amount, currency, metaData, JudoPay.isThreeDSecureEnabled());
+        presenter.performTokenPreAuth(card, judoOptions);
     }
 
     public boolean isPaymentInProgress() {

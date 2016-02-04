@@ -1,5 +1,8 @@
 package com.judopay.model;
 
+/**
+ * An Address linked to a payment card, used when address verification is performed.
+ */
 public class Address {
 
     private long countryCode;

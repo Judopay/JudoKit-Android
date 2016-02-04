@@ -4,6 +4,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
+/**
+ * A TextWatcher that hides the {@link HidingViewTextWatcher#view} when text has been entered.
+ */
 public class HidingViewTextWatcher implements TextWatcher {
 
     private final View view;

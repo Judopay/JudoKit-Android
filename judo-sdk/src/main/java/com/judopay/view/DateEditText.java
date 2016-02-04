@@ -1,12 +1,13 @@
 package com.judopay.view;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
-import android.widget.EditText;
 
-public class DateEditText extends EditText {
+/**
+ * A view that allows for card dates to be entered and formatted during entry (MM/YY).
+ */
+public class DateEditText extends AppCompatEditText {
 
     public DateEditText(Context context) {
         super(context);
@@ -20,12 +21,6 @@ public class DateEditText extends EditText {
 
     public DateEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initialise();
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public DateEditText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         initialise();
     }
 

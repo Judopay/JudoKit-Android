@@ -1,6 +1,5 @@
 package com.judopay;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
@@ -10,7 +9,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.judopay.model.CardToken;
 import com.judopay.security.RootDetector;
 import com.judopay.security.RootUserBlockedException;
 
@@ -29,7 +27,7 @@ public abstract class JudoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (RootDetector.isRooted() && !JudoPay.isRootedDevicesAllowed()) {
+        if (RootDetector.isRooted() && !Judo.isRootedDevicesAllowed()) {
             throw new RootUserBlockedException();
         }
 
@@ -67,11 +65,22 @@ public abstract class JudoActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        setResult(JudoPay.RESULT_CANCELED);
+        setResult(Judo.RESULT_CANCELED);
+    }
+
+    void checkJudoOptionsExtras(Object... objects) {
+        for(Object object : objects) {
+            if(object == null) {
+                throw new IllegalArgumentException("JudoOptions must contain all required fields for Activity");
+            }
+        }
     }
 
     void checkRequiredExtras(String... keys) {
         Bundle extras = getIntent().getExtras();
+        if(extras == null) {
+            throw new RuntimeException(String.format("Activity %s must be started with Intent Extras", this.getClass().getSimpleName()));
+        }
         for (String key : keys) {
             if (!extras.containsKey(key)) {
                 throw new IllegalArgumentException(String.format("Extra '%s' is required for %s", key, this.getClass().getSimpleName()));
@@ -79,40 +88,4 @@ public abstract class JudoActivity extends AppCompatActivity {
         }
     }
 
-    public static void startPaymentActivity(Activity activity, int requestCode, String judoId, String amount, String currency, String consumerRef, Bundle metaData) {
-        Intent intent = new Intent(activity, PaymentActivity.class);
-
-        intent.putExtra(JudoPay.JUDO_ID, judoId);
-        intent.putExtra(JudoPay.JUDO_AMOUNT, amount);
-        intent.putExtra(JudoPay.JUDO_CURRENCY, currency);
-        intent.putExtra(JudoPay.JUDO_CONSUMER, consumerRef);
-        intent.putExtra(JudoPay.JUDO_META_DATA, metaData);
-
-        activity.startActivityForResult(intent, requestCode);
-    }
-
-    public static void startPreAuthActivity(Activity activity, int requestCode, String judoId, String amount, String currency, String consumerRef, Bundle metaData) {
-        Intent intent = new Intent(activity, PreAuthActivity.class);
-
-        intent.putExtra(JudoPay.JUDO_ID, judoId);
-        intent.putExtra(JudoPay.JUDO_AMOUNT, amount);
-        intent.putExtra(JudoPay.JUDO_CURRENCY, currency);
-        intent.putExtra(JudoPay.JUDO_CONSUMER, consumerRef);
-        intent.putExtra(JudoPay.JUDO_META_DATA, metaData);
-
-        activity.startActivityForResult(intent, requestCode);
-    }
-
-    public static void startTokenPreAuthActivity(Activity activity, int requestCode, String judoId, String amount, String currency, String consumerRef, CardToken cardToken, Bundle metaData) {
-        Intent intent = new Intent(activity, TokenPreAuthActivity.class);
-
-        intent.putExtra(JudoPay.JUDO_ID, judoId);
-        intent.putExtra(JudoPay.JUDO_AMOUNT, amount);
-        intent.putExtra(JudoPay.JUDO_CURRENCY, currency);
-        intent.putExtra(JudoPay.JUDO_CONSUMER, consumerRef);
-        intent.putExtra(JudoPay.JUDO_CARD_TOKEN, cardToken);
-        intent.putExtra(JudoPay.JUDO_META_DATA, metaData);
-
-        activity.startActivityForResult(intent, requestCode);
-    }
 }

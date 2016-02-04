@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.judopay.samples">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="false"
         android:fullBackupContent="false"
@@ -19,7 +21,6 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/judopay"
-            android:theme="@style/Theme.Judo.Light.DarkActionBar"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
