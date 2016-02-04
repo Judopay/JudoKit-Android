@@ -3,7 +3,6 @@ package com.judopay;
 import android.content.Intent;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.web.model.Atom;
-import android.support.test.espresso.web.model.ElementReference;
 import android.support.test.espresso.web.webdriver.Locator;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -67,7 +66,7 @@ public class ThreeDSecureTest {
 
         Espresso.unregisterIdlingResources(idlingResource);
 
-        Atom<ElementReference> submitButton = findElement(Locator.CLASS_NAME, "ACSSubmit");
+        Atom submitButton = findElement(Locator.CLASS_NAME, "ACSSubmit");
         onWebView().withElement(submitButton)
                 .perform(webClick());
 
