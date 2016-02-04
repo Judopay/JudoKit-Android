@@ -33,7 +33,7 @@ public class Judo {
 
     private static String apiToken;
     private static String apiSecret;
-    private static int apiEnvironment;
+    private static int environment;
 
     private static boolean avsEnabled;
     private static boolean amexEnabled;
@@ -45,7 +45,7 @@ public class Judo {
     public static void setup(String apiToken, String apiSecret, int apiEnvironment) {
         Judo.apiToken = apiToken;
         Judo.apiSecret = apiSecret;
-        Judo.apiEnvironment = apiEnvironment;
+        Judo.environment = apiEnvironment;
     }
 
     @SuppressWarnings("unused")
@@ -54,94 +54,63 @@ public class Judo {
     }
 
     public static String getApiToken() {
-        checkInitialised();
         return Judo.apiToken;
     }
 
-    public static void setApiToken(String apiToken) {
-        checkInitialised();
-        Judo.apiToken = apiToken;
-    }
-
     public static String getApiSecret() {
-        checkInitialised();
         return apiSecret;
     }
 
-    public static void setApiSecret(String apiSecret) {
-        checkInitialised();
-        Judo.apiSecret = apiSecret;
+    public static void setEnvironment(int environment) {
+        Judo.environment = environment;
     }
 
-    public static int getApiEnvironment() {
-        checkInitialised();
-        return apiEnvironment;
-    }
-
-    public static void setApiEnvironment(int apiEnvironment) {
-        checkInitialised();
-        Judo.apiEnvironment = apiEnvironment;
+    public static int getEnvironment() {
+        return environment;
     }
 
     public static boolean isSslPinningEnabled() {
-        checkInitialised();
         return sslPinningEnabled;
     }
 
     public static void setSslPinningEnabled(boolean sslPinningEnabled) {
-        checkInitialised();
         Judo.sslPinningEnabled = sslPinningEnabled;
     }
 
     public static boolean isAvsEnabled() {
-        checkInitialised();
         return avsEnabled;
     }
 
     public static void setAvsEnabled(boolean avsEnabled) {
-        checkInitialised();
         Judo.avsEnabled = avsEnabled;
     }
 
     public static void setMaestroEnabled(boolean enabled) {
-        checkInitialised();
         Judo.maestroEnabled = enabled;
     }
 
     public static boolean isMaestroEnabled() {
-        checkInitialised();
         return maestroEnabled;
     }
 
     public static void setAmexEnabled(boolean enabled) {
-        checkInitialised();
         Judo.amexEnabled = enabled;
     }
 
     public static boolean isAmexEnabled() {
-        checkInitialised();
         return Judo.amexEnabled;
     }
 
     public static boolean isRootedDevicesAllowed() {
-        checkInitialised();
         return rootedDevicesAllowed;
     }
 
     public static void setRootedDevicesAllowed(boolean rootedDevicesAllowed) {
-        checkInitialised();
         Judo.rootedDevicesAllowed = rootedDevicesAllowed;
     }
 
     public static String getApiEnvironmentHost() {
-        checkInitialised();
-        return apiEnvironment == Environment.SANDBOX ? API_HOST_SANDBOX : API_HOST_LIVE;
-    }
-
-    private static void checkInitialised() {
-        if (apiToken == null || apiSecret == null) {
-            throw new RuntimeException("JudoPay SDK not initialised, call JudoPay.setup() with your API token and secret to configure");
-        }
+        return environment == Environment.SANDBOX ? API_HOST_SANDBOX : API_HOST_LIVE;
     }
 
     public class Environment {

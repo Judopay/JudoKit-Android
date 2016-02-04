@@ -27,7 +27,7 @@ public class JudoOptionsTest {
 
     @Before
     public void setupJudoSdk() {
-        Judo.setup("fakeApiToken", "fakeApiSecret", Judo.Environment.SANDBOX);
+        Judo.setEnvironment(Judo.Environment.SANDBOX);
     }
 
     @Test

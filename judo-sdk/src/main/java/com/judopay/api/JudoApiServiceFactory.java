@@ -62,11 +62,11 @@ public class JudoApiServiceFactory {
                 .addConverterFactory(getGsonConverterFactory(context))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .baseUrl(Judo.getApiEnvironmentHost())
-                .client(getOkHttpClient())
+                .client(getOkHttpClient(context))
                 .build();
     }
 
-    private static OkHttpClient getOkHttpClient() {
+    private static OkHttpClient getOkHttpClient(Context context) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
         if (Judo.isSslPinningEnabled()) {
@@ -75,13 +75,13 @@ public class JudoApiServiceFactory {
 
         setTimeouts(builder);
         setSslSocketFactory(builder);
-        setInterceptors(builder);
+        setInterceptors(builder, context);
 
         return builder.build();
     }
 
-    private static void setInterceptors(OkHttpClient.Builder client) {
-        AuthorizationEncoder authorizationEncoder = new AuthorizationEncoder();
+    private static void setInterceptors(OkHttpClient.Builder client, Context context) {
+        AuthorizationEncoder authorizationEncoder = new AuthorizationEncoder(context);
         ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(authorizationEncoder);
 
         List<Interceptor> interceptors = client.interceptors();
