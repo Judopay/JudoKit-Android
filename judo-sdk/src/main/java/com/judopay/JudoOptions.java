@@ -30,6 +30,7 @@ public class JudoOptions implements Parcelable {
     private String expiryMonth;
     private String expiryYear;
     private String buttonLabel;
+    private String activityTitle;
     private CardToken cardToken;
     private boolean secureServerMessageShown;
 
@@ -75,6 +76,10 @@ public class JudoOptions implements Parcelable {
         return expiryYear;
     }
 
+    public String getActivityTitle() {
+        return activityTitle;
+    }
+
     public boolean isSecureServerMessageShown() {
         return secureServerMessageShown;
     }
@@ -103,7 +108,13 @@ public class JudoOptions implements Parcelable {
         private String currency;
         private String consumerRef;
         private Bundle metaData;
+        private String activityTitle;
         private boolean secureServerMessageShown;
+
+        public Builder setActivityTitle(String activityTitle) {
+            this.activityTitle = activityTitle;
+            return this;
+        }
 
         public Builder setSecureServerMessageShown(boolean secureServerMessageShown) {
             this.secureServerMessageShown = secureServerMessageShown;
@@ -174,10 +185,10 @@ public class JudoOptions implements Parcelable {
             options.consumerRef = consumerRef;
             options.metaData = metaData;
             options.secureServerMessageShown = secureServerMessageShown;
+            options.activityTitle = activityTitle;
 
             return options;
         }
-
     }
 
     @Override
@@ -196,6 +207,7 @@ public class JudoOptions implements Parcelable {
         dest.writeString(this.expiryMonth);
         dest.writeString(this.expiryYear);
         dest.writeString(this.buttonLabel);
+        dest.writeString(this.activityTitle);
         dest.writeParcelable(this.cardToken, 0);
         dest.writeByte(secureServerMessageShown ? (byte) 1 : (byte) 0);
     }
@@ -210,6 +222,7 @@ public class JudoOptions implements Parcelable {
         this.expiryMonth = in.readString();
         this.expiryYear = in.readString();
         this.buttonLabel = in.readString();
+        this.activityTitle = in.readString();
         this.cardToken = in.readParcelable(CardToken.class.getClassLoader());
         this.secureServerMessageShown = in.readByte() != 0;
     }
@@ -223,4 +236,5 @@ public class JudoOptions implements Parcelable {
             return new JudoOptions[size];
         }
     };
+
 }
