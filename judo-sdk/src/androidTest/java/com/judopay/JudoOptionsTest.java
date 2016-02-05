@@ -59,6 +59,21 @@ public class JudoOptionsTest {
                 .check(matches(withText(R.string.secure_server_transmission)));
     }
 
+    @Test
+    public void shouldShowActivityTitle() {
+        Intent intent = new Intent();
+        String activityTitle = "Activity title";
+
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudoOptionsBuilder()
+                .setActivityTitle(activityTitle)
+                .build());
+
+        activityTestRule.launchActivity(intent);
+
+        onView(withText(activityTitle))
+                .check(matches(isDisplayed()));
+    }
+
     public JudoOptions.Builder getJudoOptionsBuilder() {
         return new JudoOptions.Builder()
                 .setJudoId("000000")

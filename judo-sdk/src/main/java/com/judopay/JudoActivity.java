@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -44,8 +45,14 @@ public abstract class JudoActivity extends AppCompatActivity {
 
     @Override
     public void setTitle(@StringRes int titleId) {
-        if (getIntent().hasExtra(Intent.EXTRA_TITLE)) {
-            super.setTitle(getIntent().getStringExtra(Intent.EXTRA_TITLE));
+        if (getIntent().hasExtra(Judo.JUDO_OPTIONS)) {
+            JudoOptions options = getIntent().getParcelableExtra(Judo.JUDO_OPTIONS);
+
+            if(options.getActivityTitle() != null) {
+                super.setTitle(options.getActivityTitle());
+            } else {
+                super.setTitle(titleId);
+            }
         } else {
             super.setTitle(titleId);
         }
