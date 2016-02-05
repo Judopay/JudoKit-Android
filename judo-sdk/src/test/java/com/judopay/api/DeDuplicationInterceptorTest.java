@@ -1,5 +1,7 @@
 package com.judopay.api;
 
+import com.judopay.exception.DuplicateTransactionException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

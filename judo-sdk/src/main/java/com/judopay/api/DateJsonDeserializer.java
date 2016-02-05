@@ -10,13 +10,15 @@ import org.joda.time.DateTime;
 import java.lang.reflect.Type;
 import java.util.Date;
 
+import static android.text.TextUtils.isEmpty;
+
 class DateJsonDeserializer implements JsonDeserializer<Date> {
 
     @Override
     public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         String date = json.getAsString();
 
-        if (date != null && date.length() > 0) {
+        if (!isEmpty(date)) {
             DateTime dateTime = new DateTime(date);
             return dateTime.toDate();
         } else {

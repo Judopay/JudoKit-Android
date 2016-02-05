@@ -2,6 +2,8 @@ package com.judopay;
 
 import com.judopay.model.Country;
 
+import static android.text.TextUtils.isEmpty;
+
 public class CountryAndPostcodeValidation {
 
     private final int postcodeLabel;
@@ -17,7 +19,7 @@ public class CountryAndPostcodeValidation {
         boolean postcodeValid = isPostcodeValid(paymentForm.getPostcode());
 
         this.postcodeEntryComplete = postcodeValid;
-        this.showPostcodeError = !postcodeValid && paymentForm.getPostcode().length() > 0;
+        this.showPostcodeError = !postcodeValid && !isEmpty(paymentForm.getPostcode());
 
         this.postcodeNumeric = Country.UNITED_STATES.equals(paymentForm.getCountry().getDisplayName());
         this.countryValid = isCountryValid(paymentForm.getCountry().getDisplayName());
@@ -47,7 +49,7 @@ public class CountryAndPostcodeValidation {
     }
 
     private boolean isPostcodeValid(String postcode) {
-        return postcode != null && postcode.length() > 0;
+        return !isEmpty(postcode);
     }
 
     public boolean isPostcodeNumeric() {

@@ -8,7 +8,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 
-import okhttp3.*;
+import okhttp3.Headers;
+import okhttp3.Interceptor;
 import okhttp3.Response;
 
 class ApiHeadersInterceptor implements Interceptor {
@@ -26,10 +27,10 @@ class ApiHeadersInterceptor implements Interceptor {
     private static final String USER_AGENT_HEADER = "User-Agent";
 
     private final UserAgent userAgent;
-    private final AuthorizationEncoder authorizationEncoder;
+    private final ApiCredentials apiCredentials;
 
-    public ApiHeadersInterceptor(AuthorizationEncoder authorizationEncoder) {
-        this.authorizationEncoder = authorizationEncoder;
+    public ApiHeadersInterceptor(ApiCredentials apiCredentials) {
+        this.apiCredentials = apiCredentials;
         this.userAgent = new UserAgent(BuildConfig.VERSION_NAME, Build.VERSION.RELEASE,
                 Build.MANUFACTURER, Build.MODEL, Locale.getDefault().getDisplayName());
     }
@@ -46,7 +47,7 @@ class ApiHeadersInterceptor implements Interceptor {
     private Headers getHeaders() {
         HashMap<String, String> headers = new HashMap<>();
 
-        headers.put(AUTHORIZATION_HEADER, authorizationEncoder.getAuthorization());
+        headers.put(AUTHORIZATION_HEADER, apiCredentials.getBasicAuthorizationHeader());
         headers.put(CONTENT_TYPE_HEADER, JSON_MIME_TYPE);
         headers.put(ACCEPT_HEADER, JSON_MIME_TYPE);
         headers.put(API_VERSION_HEADER, API_VERSION);

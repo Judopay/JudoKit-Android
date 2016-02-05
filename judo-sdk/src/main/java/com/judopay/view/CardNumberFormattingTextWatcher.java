@@ -5,6 +5,8 @@ import android.text.TextWatcher;
 
 import com.judopay.model.CardType;
 
+import static android.text.TextUtils.isEmpty;
+
 class CardNumberFormattingTextWatcher implements TextWatcher {
 
     private static final String SPACE = " ";
@@ -28,7 +30,7 @@ class CardNumberFormattingTextWatcher implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable string) {
-        if (string.length() > 0) {
+        if (!isEmpty(string)) {
             int cardType = CardType.fromCardNumber(string.toString());
 
             if (cardType == CardType.AMEX) {

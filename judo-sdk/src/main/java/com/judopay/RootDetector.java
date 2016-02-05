@@ -1,4 +1,4 @@
-package com.judopay.security;
+package com.judopay;
 
 import java.io.BufferedReader;
 import java.io.IOException;

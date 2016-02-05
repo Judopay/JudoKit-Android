@@ -81,8 +81,8 @@ public class JudoApiServiceFactory {
     }
 
     private static void setInterceptors(OkHttpClient.Builder client, Context context) {
-        AuthorizationEncoder authorizationEncoder = new AuthorizationEncoder(context);
-        ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(authorizationEncoder);
+        ApiCredentials apiCredentials = ApiCredentials.fromConfiguration(context);
+        ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(apiCredentials);
 
         List<Interceptor> interceptors = client.interceptors();
         interceptors.add(new DeDuplicationInterceptor());

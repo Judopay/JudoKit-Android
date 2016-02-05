@@ -4,6 +4,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
+import static android.text.TextUtils.isEmpty;
+
 /**
  * A TextWatcher that hides the {@link HidingViewTextWatcher#view} when text has been entered.
  */
@@ -22,7 +24,7 @@ public class HidingViewTextWatcher implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if(s != null && s.length() > 0 && view.getVisibility() == View.VISIBLE) {
+        if(!isEmpty(s) && view.getVisibility() == View.VISIBLE) {
             view.setVisibility(View.GONE);
         }
     }
