@@ -27,8 +27,11 @@ android {
 
         productFlavors { }
     }
-    
+
     buildTypes {
+        debug {
+            testCoverageEnabled = true
+        }
         release {
             minifyEnabled false
         }
@@ -43,7 +46,6 @@ android {
     }
 
 }
-
 
 publish {
     userOrg = 'judopay'
