@@ -9,6 +9,7 @@
 - Fixed an issue where additional API requests would fail after an initial transaction request was performed.
 - Resolved an issue where making a token payment/pre auth would not allow a 4 digit CIDV to be entered for an Amex card.
 - Resolved an issue where the incorrect error message was given if the required Activity Extras was not passed to a ```JudoActivity```
+- Fixed an isssue where the transaction meta data was not sent for register card transactions.
 
 **Changes:**
 - When a duplicated transaction is detected, a ```DuplicateTransactionException``` is now thrown instead of the original transaction response being replayed.

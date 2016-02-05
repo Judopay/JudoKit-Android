@@ -25,14 +25,13 @@ android {
         consumerProguardFiles 'proguard-rules.pro'
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 
-        productFlavors {}
-    }
-
-    dexOptions {
-
+        productFlavors { }
     }
 
     buildTypes {
+        debug {
+            testCoverageEnabled = true
+        }
         release {
             minifyEnabled false
         }
@@ -47,7 +46,6 @@ android {
     }
 
 }
-
 
 publish {
     userOrg = 'judopay'
@@ -75,7 +73,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
 
-    androidTestCompile project(':espresso-web')
     androidTestCompile 'com.android.support.test:runner:0.4.1'
     androidTestCompile 'com.android.support.test:rules:0.4.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
