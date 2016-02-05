@@ -69,7 +69,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        Judo.setEnvironment(Judo.Environment.SANDBOX);
+        Judo.setup(API_TOKEN, API_SECRET, Judo.Environment.SANDBOX);
 
         paymentButton.setOnClickListener(new View.OnClickListener() {
             @Override

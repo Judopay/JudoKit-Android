@@ -10,14 +10,6 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/judopay">
 
-        <meta-data
-            android:name="@string/judo_api_token"
-            android:value="823Eja2fEM6E9NAE" />
-
-        <meta-data
-            android:name="@string/judo_api_secret"
-            android:value="382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6" />
-
         <activity
             android:name=".MainActivity"
             android:label="@string/judopay"
