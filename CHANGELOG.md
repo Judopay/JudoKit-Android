@@ -21,7 +21,7 @@
 ## [5.1](https://github.com/judopay/Judo-Android/tree/5.1) (2016-01-28)
 
 **Implemented enhancements:**
-- Add Brazilian Real to list of supported currencies.
+- Brazilian Real added to list of supported currencies.
 - Enable 3D Secure verification for all transactions by default, if required by the Merchant's bank.
 - Allow transactions for Android devices with root permissions, with option to block if required.
 - New Android views provided for card data entry for use when writing a custom UI.
