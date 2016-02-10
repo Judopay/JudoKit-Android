@@ -62,6 +62,7 @@ public class DeDuplicationInterceptorTest {
     }
 
     @Test
+    @Ignore
     public void shouldProcessWhenRequestBodyNotJson() throws IOException {
         DeDuplicationInterceptor interceptor = new DeDuplicationInterceptor();
 
@@ -94,6 +95,7 @@ public class DeDuplicationInterceptorTest {
     }
 
     @Test
+    @Ignore
     public void shouldProceedWhenRequestBodyNull() throws IOException {
         DeDuplicationInterceptor interceptor = new DeDuplicationInterceptor();
 
