@@ -18,8 +18,10 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.judopay.util.JudoViewMatchers.isDisabled;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -119,8 +121,8 @@ public class PaymentFormErrorMessageTest {
         onView(withText(Country.OTHER))
                 .perform(click());
 
-        onView(withText(R.string.country_cards_accepted_message))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.post_code_edit_text))
+                .check(matches(isDisabled()));
     }
 
     protected Intent getIntent() {

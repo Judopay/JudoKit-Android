@@ -175,7 +175,7 @@ public class PaymentFormValidationTest {
     }
 
     @Test
-    public void shouldHavePaymentButtonDisabledWhenAddressIncomplete() {
+    public void shouldHavePaymentButtonDisabledWhenCountryIsOther() {
         PaymentFormValidation paymentFormValidation = new PaymentFormValidation.Builder()
                 .build(new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")
@@ -188,7 +188,7 @@ public class PaymentFormValidationTest {
                         .setCountry(new Country(0, Country.OTHER))
                         .build());
 
-        assertThat(paymentFormValidation.isPaymentButtonEnabled(), is(false));
+        assertThat(paymentFormValidation.isPaymentButtonEnabled(), is(true));
     }
 
     @Test

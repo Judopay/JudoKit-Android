@@ -1,4 +1,4 @@
-package com.judopay;
+package com.judopay.util;
 
 import android.support.test.espresso.IdlingResource;
 import android.view.View;

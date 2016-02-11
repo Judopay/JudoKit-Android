@@ -90,6 +90,14 @@ public class PostcodeEntryView extends FrameLayout {
         postcodeEditText.setSelection(postcodeEditText.getText().length());
     }
 
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+
+        postcodeEditText.setEnabled(enabled);
+    }
+
     public String getText() {
         return postcodeEditText.getText().toString().trim();
     }
