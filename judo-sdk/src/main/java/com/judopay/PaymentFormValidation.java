@@ -143,7 +143,7 @@ public class PaymentFormValidation {
             builder.setCvvLength(cardType == CardType.AMEX ? 4 : 3);
 
             builder.setPaymentButtonEnabled(paymentForm.isTokenCard() || cardNumberValidation.isValid() && cvvValid && expiryDateValid && maestroValid
-                    && (!paymentForm.isAddressRequired() || countryAndPostcodeValidation.isPostcodeEntryComplete() && countryAndPostcodeValidation.isCountryValid()));
+                    && (!paymentForm.isAddressRequired() || countryAndPostcodeValidation.isPostcodeEntryComplete()));
 
             return builder.build();
         }
