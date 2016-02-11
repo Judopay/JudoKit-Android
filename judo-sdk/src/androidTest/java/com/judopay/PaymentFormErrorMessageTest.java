@@ -58,6 +58,17 @@ public class PaymentFormErrorMessageTest {
     }
 
     @Test
+    public void shouldDisplayErrorWhenExpiryDateMoreThanTenYearsInFuture() {
+        activityTestRule.launchActivity(getIntent());
+
+        onView(withId(R.id.expiry_date_edit_text))
+                .perform(typeText("1230"));
+
+        onView(withText(R.string.error_check_date))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
     public void shouldDisplayErrorMessageWhenFutureStartDateEntered() {
         Judo.setMaestroEnabled(true);
         Judo.setAvsEnabled(true);
@@ -69,6 +80,23 @@ public class PaymentFormErrorMessageTest {
 
         onView(withId(R.id.start_date_edit_text))
                 .perform(typeText("0125"));
+
+        onView(withText(R.string.error_check_date))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void shouldDisplayErrorMessageWhenStartDateOlderThanTenYearsEntered() {
+        Judo.setMaestroEnabled(true);
+        Judo.setAvsEnabled(true);
+
+        activityTestRule.launchActivity(getIntent());
+
+        onView(withId(R.id.card_number_edit_text))
+                .perform(typeText("6759000000005462"));
+
+        onView(withId(R.id.start_date_edit_text))
+                .perform(typeText("1205"));
 
         onView(withText(R.string.error_check_date))
                 .check(matches(isDisplayed()));

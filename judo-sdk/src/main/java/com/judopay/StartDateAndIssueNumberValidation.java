@@ -1,5 +1,6 @@
 package com.judopay;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
 import com.judopay.model.CardType;
@@ -47,12 +48,18 @@ public class StartDateAndIssueNumberValidation {
             return false;
         }
 
-        int year = 2000 + Integer.parseInt(startDate.substring(3, 5));
         int month = Integer.parseInt(startDate.substring(0, 2));
+        int year = 2000 + Integer.parseInt(startDate.substring(3, 5));
 
-        LocalDate monthAndYear = new YearMonth(year, month).toLocalDate(1);
+        LocalDate startDateLocalDate = getLocalDate(month, year);
+        LocalDate minStartDate = getLocalDate(month, midnightToday.getYear() - 10);
 
-        return monthAndYear.isBefore(midnightToday.toLocalDate());
+        return startDateLocalDate.isBefore(midnightToday.toLocalDate()) && startDateLocalDate.isAfter(minStartDate);
+    }
+
+    @NonNull
+    private LocalDate getLocalDate(int month, int year) {
+        return new YearMonth(year, month).toLocalDate(1);
     }
 
     public boolean isShowStartDateError() {
