@@ -1,10 +1,15 @@
-package com.judopay;
+package com.judopay.ui;
 
 import android.content.Intent;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import com.judopay.Judo;
+import com.judopay.JudoOptions;
+import com.judopay.R;
+import com.judopay.TokenPaymentActivity;
 import com.judopay.model.CardToken;
 import com.judopay.model.CardType;
 import com.judopay.model.Currency;
@@ -22,7 +27,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.judopay.util.JudoViewMatchers.withTextInputHint;
+import static com.judopay.ui.util.JudoViewMatchers.withTextInputHint;
 import static com.judopay.model.CardType.AMEX;
 import static com.judopay.model.CardType.VISA;
 
@@ -43,7 +48,7 @@ public class TokenPaymentFormTest {
         Judo.setAvsEnabled(false);
         activityTestRule.launchActivity(getIntent(VISA));
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .check(matches(withText("**** **** **** 1234")));
     }
 

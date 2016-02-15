@@ -1,9 +1,15 @@
-package com.judopay;
+package com.judopay.ui;
 
 import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
+
+import com.judopay.Judo;
+import com.judopay.JudoOptions;
+import com.judopay.R;
+import com.judopay.RegisterCardActivity;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -35,7 +41,7 @@ public class RegisterCardTest {
         Judo.setAvsEnabled(false);
         activityTestRule.launchActivity(getIntent());
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .perform(typeText("4221690000004963"));
 
         onView(withId(R.id.expiry_date_edit_text))

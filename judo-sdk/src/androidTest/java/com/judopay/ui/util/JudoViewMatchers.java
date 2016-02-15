@@ -1,4 +1,4 @@
-package com.judopay.util;
+package com.judopay.ui.util;
 
 import android.support.design.widget.TextInputLayout;
 import android.support.test.espresso.matcher.BoundedMatcher;

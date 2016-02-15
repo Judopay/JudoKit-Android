@@ -1,10 +1,15 @@
-package com.judopay;
+package com.judopay.ui;
 
 import android.content.Intent;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import com.judopay.Judo;
+import com.judopay.JudoOptions;
+import com.judopay.PaymentActivity;
+import com.judopay.R;
 import com.judopay.model.Currency;
 
 import org.junit.Before;
@@ -45,7 +50,7 @@ public class PrefillCardDataTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .check(matches(withText("4934 1234 1234 1234")));
     }
 
