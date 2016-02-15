@@ -21,12 +21,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.judopay.util.ActivityUtil.resultCode;
-import static com.judopay.util.JudoViewMatchers.isDisabled;
 import static com.judopay.util.JudoViewMatchers.isNotDisplayed;
 import static com.judopay.util.JudoViewMatchers.withTextInputHint;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -127,10 +123,10 @@ public class PaymentFormTest {
     }
 
     @Test
-    public void shouldAllowPaymentWhenAvsEnabledAndOtherCountrySelected() {
+    public void shouldShowPaymentButtonWhenAvsEnabledAndOtherCountrySelected() {
         Judo.setAvsEnabled(true);
 
-        PaymentActivity activity = activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(getIntent());
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -141,10 +137,39 @@ public class PaymentFormTest {
         onView(withId(R.id.cvv_edit_text))
                 .perform(typeText("452"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.country_spinner))
                 .perform(click());
 
-        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
+        onView(withText(Country.OTHER))
+                .perform(click());
+
+        onView(withId(R.id.payment_button))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void shouldNotShowPaymentButtonWhenAvsEnabledAndCountrySelected() {
+        Judo.setAvsEnabled(true);
+
+        activityTestRule.launchActivity(getIntent());
+
+        onView(withId(R.id.card_number_edit_text))
+                .perform(typeText("4976000000003436"));
+
+        onView(withId(R.id.expiry_date_edit_text))
+                .perform(typeText("1220"));
+
+        onView(withId(R.id.cvv_edit_text))
+                .perform(typeText("452"));
+
+        onView(withId(R.id.country_spinner))
+                .perform(click());
+
+        onView(withText(Country.UNITED_KINGDOM))
+                .perform(click());
+
+        onView(withId(R.id.payment_button))
+                .check(matches(isNotDisplayed()));
     }
 
     @Test
