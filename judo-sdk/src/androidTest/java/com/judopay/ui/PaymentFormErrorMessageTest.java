@@ -1,10 +1,15 @@
-package com.judopay;
+package com.judopay.ui;
 
 import android.content.Intent;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import com.judopay.Judo;
+import com.judopay.JudoOptions;
+import com.judopay.PaymentActivity;
+import com.judopay.R;
 import com.judopay.model.Country;
 import com.judopay.model.Currency;
 
@@ -18,10 +23,9 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.judopay.util.JudoViewMatchers.isDisabled;
+import static com.judopay.ui.util.JudoViewMatchers.isDisabled;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -39,7 +43,7 @@ public class PaymentFormErrorMessageTest {
     public void shouldDisplayErrorMessageWhenInvalidCardNumberEntered() {
         activityTestRule.launchActivity(getIntent());
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .perform(typeText("1234000000001234"));
 
         onView(withText(R.string.error_card_number))

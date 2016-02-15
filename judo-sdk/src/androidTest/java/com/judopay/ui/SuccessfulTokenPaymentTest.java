@@ -1,11 +1,17 @@
-package com.judopay;
+package com.judopay.ui;
 
 import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import com.judopay.Judo;
+import com.judopay.JudoOptions;
+import com.judopay.R;
+import com.judopay.RegisterCardActivity;
+import com.judopay.TokenPaymentActivity;
 import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
 
@@ -18,8 +24,8 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static com.judopay.util.ActivityUtil.getResultIntent;
-import static com.judopay.util.ActivityUtil.resultCode;
+import static com.judopay.ui.util.ActivityUtil.getResultIntent;
+import static com.judopay.ui.util.ActivityUtil.resultCode;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -44,7 +50,7 @@ public class SuccessfulTokenPaymentTest {
 
         RegisterCardActivity registerCardActivity = registerCardActivityTestRule.launchActivity(getRegisterCardIntent());
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
 
         onView(withId(R.id.expiry_date_edit_text))
