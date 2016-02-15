@@ -32,6 +32,7 @@ public class RegisterCardTest {
 
     @Test
     public void shouldBeSuccessfulPaymentWhenValidVisaEntered() {
+        Judo.setAvsEnabled(false);
         activityTestRule.launchActivity(getIntent());
 
         onView(withId(R.id.card_number_edit_text))
