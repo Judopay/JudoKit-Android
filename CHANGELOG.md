@@ -16,7 +16,7 @@
 - UI tests moved to judo-sdk module and test framework upgraded to Espresso 2.
 - Retrofit library upgraded to latest version.
 - New method for obtaining ```JudoApiService``` instance, call ```Judo.getApiService(context);```
-- ```JudoApiService method``` for completing a transaction with 3D Secure verification renamed.
+- ```JudoApiService``` method for completing a transaction with 3D Secure verification renamed.
 
 ## [5.1](https://github.com/judopay/Judo-Android/tree/5.1) (2016-01-28)
 
