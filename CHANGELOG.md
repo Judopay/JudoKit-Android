@@ -18,7 +18,7 @@
 - Retrofit library upgraded to latest version.
 - New method for obtaining ```JudoApiService``` instance, call ```Judo.getApiService(context);```
 - ```JudoApiService``` method for completing a transaction with 3D Secure verification renamed.
-- Removed the ability to pass pre-filled card data into the card entry form when performing a token payment/pre auth
+- Removed the ability to pass pre-filled card data into the card entry form when performing a token payment/pre-auth
 
 ## [5.1](https://github.com/judopay/Judo-Android/tree/5.1) (2016-01-28)
 
