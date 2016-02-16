@@ -16,12 +16,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import rx.Observable;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 @MediumTest
@@ -34,7 +35,7 @@ public class VoidTransactionTest {
     }
 
     @Test
-    public void shouldWork() {
+    public void shouldPreAuthAndVoidTransaction() {
         Context context = InstrumentationRegistry.getContext();
         final JudoApiService apiService = Judo.getApiService(context);
 
@@ -51,30 +52,21 @@ public class VoidTransactionTest {
         apiService.preAuth(transaction)
                 .observeOn(Schedulers.immediate())
                 .subscribeOn(Schedulers.immediate())
+                .flatMap(new Func1<Receipt, Observable<Receipt>>() {
+                    @Override
+                    public Observable<Receipt> call(Receipt receipt) {
+                        VoidTransaction voidTransaction = new VoidTransaction(
+                                receipt.getConsumer().getYourConsumerReference(),
+                                receipt.getReceiptId(),
+                                receipt.getAmount());
+
+                        return apiService.voidPreAuth(voidTransaction);
+                    }
+                })
                 .subscribe(new Action1<Receipt>() {
                     @Override
                     public void call(Receipt receipt) {
-                        assertNotNull(receipt);
-
-                        VoidTransaction voidTransaction = new VoidTransaction(receipt.getConsumer().getYourConsumerReference(),
-                                receipt.getReceiptId(), receipt.getAmount());
-
-                        apiService.voidPreAuth(voidTransaction)
-                                .observeOn(Schedulers.immediate())
-                                .subscribeOn(Schedulers.immediate())
-                                .subscribe(new Action1<Receipt>() {
-                                    @Override
-                                    public void call(Receipt receipt) {
-                                        assertNotNull(receipt);
-
-                                        assertThat(receipt.isSuccess(), is(true));
-                                    }
-                                }, new Action1<Throwable>() {
-                                    @Override
-                                    public void call(Throwable throwable) {
-                                        fail();
-                                    }
-                                });
+                        assertThat(receipt.isSuccess(), is(true));
                     }
                 }, new Action1<Throwable>() {
                     @Override
