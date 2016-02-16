@@ -4,7 +4,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
-import static android.text.TextUtils.isEmpty;
+import static com.judopay.arch.TextUtil.isEmpty;
 
 /**
  * A TextWatcher that hides the {@link HidingViewTextWatcher#view} when text has been entered.
