@@ -20,7 +20,7 @@ class ApiCredentials {
     private final String apiSecret;
     private final String authorization;
 
-    ApiCredentials(String apiToken, String apiSecret) {
+    private ApiCredentials(String apiToken, String apiSecret) {
         this.apiToken = apiToken;
         this.apiSecret = apiSecret;
         this.authorization = getEncodedCredentials();
@@ -42,7 +42,7 @@ class ApiCredentials {
         return Base64.encodeToString(String.format("%s:%s", apiToken, apiSecret).getBytes(), Base64.NO_WRAP);
     }
 
-    public String getAuthorization() {
+    private String getAuthorization() {
         return authorization;
     }
 

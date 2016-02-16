@@ -217,7 +217,7 @@ public class JudoOptions implements Parcelable {
         this.amount = in.readString();
         this.currency = in.readString();
         this.consumerRef = in.readString();
-        metaData = in.readBundle();
+        this.metaData = in.readBundle(getClass().getClassLoader());
         this.cardNumber = in.readString();
         this.expiryMonth = in.readString();
         this.expiryYear = in.readString();

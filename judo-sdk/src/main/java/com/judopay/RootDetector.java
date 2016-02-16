@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
  * accessible when the device is rooted. The methods are not full-proof as if the device is rooted,
  * anything could be changed to simulate an un-rooted device.
  */
-public class RootDetector {
+class RootDetector {
 
     /**
      * Detects using several methods if the device is rooted.
