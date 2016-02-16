@@ -2,15 +2,16 @@ package com.judopay;
 
 import android.content.Context;
 
-import com.judopay.model.Collection;
-import com.judopay.model.PaymentTransaction;
+import com.judopay.model.AndroidPayRequest;
+import com.judopay.model.CollectionRequest;
+import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
 import com.judopay.model.Receipts;
-import com.judopay.model.Refund;
-import com.judopay.model.RegisterTransaction;
+import com.judopay.model.RefundRequest;
+import com.judopay.model.RegisterCardRequest;
 import com.judopay.model.ThreeDSecureInfo;
-import com.judopay.model.TokenTransaction;
-import com.judopay.model.VoidTransaction;
+import com.judopay.model.TokenRequest;
+import com.judopay.model.VoidRequest;
 
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -30,47 +31,47 @@ public interface JudoApiService {
     /**
      * Perform a payment transaction
      *
-     * @param transaction the details for the payment, including the payment method, amount and Judo ID
+     * @param paymentRequest the details for the payment, including the payment method, amount and Judo ID
      * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/payments")
-    Observable<Receipt> payment(@Body PaymentTransaction transaction);
+    Observable<Receipt> payment(@Body PaymentRequest paymentRequest);
 
     /**
      * Perform a pre-auth transaction
      *
-     * @param transaction the details for the pre-auth, including the payment method, amount and Judo ID
+     * @param paymentRequest the details for the pre-auth, including the payment method, amount and Judo ID
      * @return the receipt for the pre-auth with the status of the transaction
      */
     @POST("transactions/preauths")
-    Observable<Receipt> preAuth(@Body PaymentTransaction transaction);
+    Observable<Receipt> preAuth(@Body PaymentRequest paymentRequest);
 
     /**
      * Perform a token payment using a tokenised card
      *
-     * @param transaction the payment details for making the transaction
+     * @param tokenRequest the payment details for making the transaction
      * @return the receipt for the token payment with the status of the transaction
      */
     @POST("transactions/payments")
-    Observable<Receipt> tokenPayment(@Body TokenTransaction transaction);
+    Observable<Receipt> tokenPayment(@Body TokenRequest tokenRequest);
 
     /**
      * Perform a token pre-auth using a tokenised card
      *
-     * @param transaction the token card details
+     * @param tokenRequest the token card details
      * @return the receipt for the pre-auth with the status of the transaction
      */
     @POST("transactions/preauths")
-    Observable<Receipt> tokenPreAuth(@Body TokenTransaction transaction);
+    Observable<Receipt> tokenPreAuth(@Body TokenRequest tokenRequest);
 
     /**
      * Void a pre-auth transaction, releasing funds back to the card holder.
      *
-     * @param transaction the details from the pre-auth for voiding the transaction
+     * @param voidRequest the details from the pre-auth for voiding the transaction
      * @return the receipt for the pre-auth with the status of the transaction
      */
     @POST("transactions/voids")
-    Observable<Receipt> voidPreAuth(@Body VoidTransaction transaction);
+    Observable<Receipt> voidPreAuth(@Body VoidRequest voidRequest);
 
     /**
      * Complete a transaction that required 3D-Secure verification by providing the 3D-Secure response data.
@@ -83,29 +84,35 @@ public interface JudoApiService {
     Observable<Receipt> complete3dSecure(@Path("receiptId") String receiptId, @Body ThreeDSecureInfo threeDSecureInfo);
 
     /**
-     * @param collection the collection transaction to be performed
+     * @param collectionRequest the collection transaction to be performed
      * @return the receipt for the collection with the status of the transaction
      */
     @POST("transactions/collections")
-    Observable<Receipt> collection(@Body Collection collection);
+    Observable<Receipt> collection(@Body CollectionRequest collectionRequest);
 
     /**
      * Perform a refund for a transaction
      *
-     * @param refund the object containing the amount to be refunded and receiptId
+     * @param refundRequest the object containing the amount to be refunded and the receiptId
      * @return the receipt for the refund with the status of the transaction
      */
     @POST("transactions/refunds")
-    Observable<Receipt> refund(@Body Refund refund);
+    Observable<Receipt> refund(@Body RefundRequest refundRequest);
 
     /**
      * Register a card to be used for making future tokenised payments
      *
-     * @param transaction the details for the payment, including the payment method, amount and Judo account ID
+     * @param registerCardRequest the details for the payment, including the payment method, amount and Judo account ID
      * @return the receipt for the card registration with the status of the transaction
      */
     @POST("transactions/registercard")
-    Observable<Receipt> registerCard(@Body RegisterTransaction transaction);
+    Observable<Receipt> registerCard(@Body RegisterCardRequest registerCardRequest);
+
+    @POST("transactions/androidpay/payment")
+    Observable<Receipt> androidPayPayment(@Body AndroidPayRequest androidPayRequest);
+
+    @POST("transactions/androidpay/preauth")
+    Observable<Receipt> androidPayPreAuth(@Body AndroidPayRequest androidPayRequest);
 
     /**
      * List all payment receipts for the account

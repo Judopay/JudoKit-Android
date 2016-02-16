@@ -1,18 +1,18 @@
 package com.judopay.model;
 
-import com.judopay.api.Transaction;
+import com.judopay.api.Request;
 
 import java.math.BigDecimal;
 
 /**
  * Represents a refund to be made for a payment transaction.
  */
-public class Refund extends Transaction {
+public class RefundRequest extends Request {
 
     private final Integer receiptId;
     private final BigDecimal amount;
 
-    public Refund(int receiptId, BigDecimal amount, String yourPaymentReference) {
+    public RefundRequest(int receiptId, BigDecimal amount, String yourPaymentReference) {
         super(yourPaymentReference);
         this.receiptId = receiptId;
         this.amount = amount;

@@ -1,15 +1,15 @@
 package com.judopay.model;
 
-import com.judopay.api.Transaction;
+import com.judopay.api.Request;
 
 import java.math.BigDecimal;
 
-public final class VoidTransaction extends Transaction {
+public final class VoidRequest extends Request {
 
     private String receiptId;
     private BigDecimal amount;
 
-    public VoidTransaction(String yourPaymentReference, String receiptId, BigDecimal amount) {
+    public VoidRequest(String yourPaymentReference, String receiptId, BigDecimal amount) {
         super(yourPaymentReference);
         this.receiptId = receiptId;
         this.amount = amount;

@@ -5,24 +5,24 @@ import com.judopay.model.ClientDetails;
 import java.util.UUID;
 
 /**
- * A Transaction to be requested with the judo API
+ * A request to be sent to the judo API
  */
-public abstract class Transaction {
+public abstract class Request {
 
     private final boolean uniqueRequest;
     private final String yourPaymentReference;
 
     private final ClientDetails clientDetails;
 
-    protected Transaction(String yourPaymentReference) {
+    protected Request(String yourPaymentReference) {
         this(false, yourPaymentReference);
     }
 
-    protected Transaction(boolean uniqueRequest) {
+    protected Request(boolean uniqueRequest) {
         this(uniqueRequest, UUID.randomUUID().toString());
     }
 
-    Transaction(boolean uniqueRequest, String yourPaymentReference) {
+    Request(boolean uniqueRequest, String yourPaymentReference) {
         this.uniqueRequest = uniqueRequest;
         this.yourPaymentReference = yourPaymentReference;
         clientDetails = new ClientDetails();

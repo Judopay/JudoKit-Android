@@ -1,9 +1,9 @@
 package com.judopay.model;
 
-import com.judopay.api.Transaction;
+import com.judopay.api.Request;
 
 /**
  * Empty class used to provide additional fields into the serialized
- * {@link Transaction} for fraud detection purposes.
+ * {@link Request} for fraud detection purposes.
  */
 public class ClientDetails { }
