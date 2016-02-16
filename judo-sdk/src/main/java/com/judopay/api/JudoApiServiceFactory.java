@@ -14,15 +14,14 @@ import java.math.BigDecimal;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.List;
 
 import okhttp3.CertificatePinner;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
 import retrofit2.RxJavaCallAdapterFactory;
 
+import static java.util.Collections.addAll;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
@@ -81,12 +80,10 @@ public class JudoApiServiceFactory {
     }
 
     private static void setInterceptors(OkHttpClient.Builder client) {
-        AuthorizationEncoder authorizationEncoder = new AuthorizationEncoder();
-        ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(authorizationEncoder);
-
-        List<Interceptor> interceptors = client.interceptors();
-        interceptors.add(new DeDuplicationInterceptor());
-        interceptors.add(interceptor);
+        addAll(client.interceptors(),
+                new DeDuplicationInterceptor(),
+                new MockAndroidPayInterceptor(),
+                new ApiHeadersInterceptor(new AuthorizationEncoder()));
     }
 
     private static GsonConverterFactory getGsonConverterFactory(Context context) {

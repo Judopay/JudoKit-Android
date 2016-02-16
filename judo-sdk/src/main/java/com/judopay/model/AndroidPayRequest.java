@@ -36,7 +36,7 @@ public class AndroidPayRequest {
         return tag;
     }
 
-    public class Builder {
+    public static class Builder {
 
         private int instrumentType;
         private String instrumentDetails;
