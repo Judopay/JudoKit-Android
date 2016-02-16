@@ -123,8 +123,12 @@ public final class TokenTransaction extends Transaction {
             return this;
         }
 
-        public Builder setToken(String token) {
-            this.token = token;
+        public Builder setToken(CardToken token) {
+            this.token = token.getToken();
+            this.endDate = token.getEndDate();
+            this.lastFour = token.getLastFour();
+            this.type = token.getType();
+
             return this;
         }
 

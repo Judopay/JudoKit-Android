@@ -1,10 +1,15 @@
-package com.judopay;
+package com.judopay.ui;
 
 import android.content.Intent;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import com.judopay.Judo;
+import com.judopay.JudoOptions;
+import com.judopay.PreAuthActivity;
+import com.judopay.R;
 import com.judopay.model.Currency;
 
 import org.junit.Before;
@@ -15,17 +20,17 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.judopay.ui.util.ActivityUtil.resultCode;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class DeclinedPaymentTest {
+public class SuccessfulPreAuthTest {
 
     @Rule
-    public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
+    public ActivityTestRule<PreAuthActivity> activityTestRule = new ActivityTestRule<>(PreAuthActivity.class, false, false);
 
     @Before
     public void setupJudoSdk() {
@@ -33,40 +38,40 @@ public class DeclinedPaymentTest {
     }
 
     @Test
-    public void shouldDeclineInvalidVisaCard() {
-        Judo.setAvsEnabled(false);
-        Judo.setMaestroEnabled(false);
-
+    public void shouldBeSuccessfulPaymentWhenValidVisaEntered() {
         activityTestRule.launchActivity(getIntent());
+    }
 
-        onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("4221690000004963"));
+    @Test
+    public void shouldBeSuccessfulPreAuthWhenValidVisaEntered() {
+        Judo.setAvsEnabled(false);
+
+        PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
+
+        onView(ViewMatchers.withId(R.id.card_number_edit_text))
+                .perform(typeText("4976000000003436"));
 
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
         onView(withId(R.id.cvv_edit_text))
-                .perform(typeText("125"));
+                .perform(typeText("452"));
 
         onView(withId(R.id.payment_button))
                 .perform(click());
 
-        onView(withText(R.string.payment_failed))
-                .check(matches(isDisplayed()));
-
-        onView(withText(R.string.please_check_details_try_again))
-                .check(matches(isDisplayed()));
+        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
     }
 
     @Test
-    public void shouldDeclineInvalidMaestroCard() {
+    public void shouldBeSuccessfulPreAuthWhenValidMaestroEntered() {
         Judo.setAvsEnabled(false);
         Judo.setMaestroEnabled(true);
 
-        activityTestRule.launchActivity(getIntent());
+        PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
 
         onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("6759000000009076"));
+                .perform(typeText("6759000000005462"));
 
         onView(withId(R.id.start_date_edit_text))
                 .perform(typeText("0107"));
@@ -78,82 +83,69 @@ public class DeclinedPaymentTest {
                 .perform(typeText("1220"));
 
         onView(withId(R.id.cvv_edit_text))
-                .perform(typeText("671"));
+                .perform(typeText("789"));
 
         onView(withId(R.id.payment_button))
                 .perform(click());
 
-        onView(withText(R.string.payment_failed))
-                .check(matches(isDisplayed()));
-
-        onView(withText(R.string.please_check_details_try_again))
-                .check(matches(isDisplayed()));
+        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
     }
 
     @Test
-    public void shouldDeclineInvalidAmexCard() {
-        Judo.setAmexEnabled(true);
+    public void shouldBeSuccessfulPreAuthWhenValidAmexEntered() {
         Judo.setAvsEnabled(false);
+        Judo.setAmexEnabled(true);
 
-        activityTestRule.launchActivity(getIntent());
+        PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
 
         onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("340000150358074"));
+                .perform(typeText("340000432128428"));
 
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
         onView(withId(R.id.cvv_edit_text))
-                .perform(typeText("7654"));
-
+                .perform(typeText("3469"));
 
         onView(withId(R.id.payment_button))
                 .perform(click());
 
-        onView(withText(R.string.payment_failed))
-                .check(matches(isDisplayed()));
-
-        onView(withText(R.string.please_check_details_try_again))
-                .check(matches(isDisplayed()));
+        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
     }
 
     @Test
-    public void shouldDeclineInvalidVisaCardWhenAvsEnabled() {
+    public void shouldBeSuccessfulPreAuthWhenValidVisaEnteredAndAvsEnabled() {
         Judo.setAvsEnabled(true);
 
-        activityTestRule.launchActivity(getIntent());
+        PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
 
         onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("4221690000004963"));
+                .perform(typeText("4976000000003436"));
 
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
         onView(withId(R.id.cvv_edit_text))
-                .perform(typeText("125"));
+                .perform(typeText("452"));
 
         onView(withId(R.id.post_code_edit_text))
-                .perform(typeText("N226JN"));
+                .perform(typeText("TR148PA"));
 
         onView(withId(R.id.payment_button))
                 .perform(click());
 
-        onView(withText(R.string.payment_failed))
-                .check(matches(isDisplayed()));
-
-        onView(withText(R.string.please_check_details_try_again))
-                .check(matches(isDisplayed()));
+        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
     }
 
     @Test
-    public void shouldDeclineInvalidMaestroWhenAvsEnabled() {
-        Judo.setAvsEnabled(true);
+    public void shouldBeSuccessfulPreAuthWhenValidMaestroEnteredAndAvsEnabled() {
         Judo.setMaestroEnabled(true);
+        Judo.setAvsEnabled(true);
 
-        activityTestRule.launchActivity(getIntent());
+        PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
 
         onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("6759000000009076"));
+                .perform(typeText("6759000000005462"));
 
         onView(withId(R.id.start_date_edit_text))
                 .perform(typeText("0107"));
@@ -165,48 +157,40 @@ public class DeclinedPaymentTest {
                 .perform(typeText("1220"));
 
         onView(withId(R.id.cvv_edit_text))
-                .perform(typeText("671"));
+                .perform(typeText("789"));
 
         onView(withId(R.id.post_code_edit_text))
-                .perform(typeText("OX143AL"));
+                .perform(typeText("RG48NL"));
 
         onView(withId(R.id.payment_button))
                 .perform(click());
 
-        onView(withText(R.string.payment_failed))
-                .check(matches(isDisplayed()));
-
-        onView(withText(R.string.please_check_details_try_again))
-                .check(matches(isDisplayed()));
+        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
     }
 
     @Test
-    public void shouldDeclineInvalidAmexWhenAvsEnabled() {
-        Judo.setAmexEnabled(true);
+    public void shouldBeSuccessfulPaymentWhenValidAmexEnteredAndAvsEnabled() {
         Judo.setAvsEnabled(true);
+        Judo.setAmexEnabled(true);
 
-        activityTestRule.launchActivity(getIntent());
+        PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
 
         onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("340000150358074"));
+                .perform(typeText("340000432128428"));
 
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
         onView(withId(R.id.cvv_edit_text))
-                .perform(typeText("7654"));
+                .perform(typeText("3469"));
 
         onView(withId(R.id.post_code_edit_text))
-                .perform(typeText("TQ11BH"));
+                .perform(typeText("NW67BB"));
 
         onView(withId(R.id.payment_button))
                 .perform(click());
 
-        onView(withText(R.string.payment_failed))
-                .check(matches(isDisplayed()));
-
-        onView(withText(R.string.please_check_details_try_again))
-                .check(matches(isDisplayed()));
+        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
     }
 
     protected Intent getIntent() {
@@ -218,6 +202,7 @@ public class DeclinedPaymentTest {
                 .setCurrency(Currency.GBP)
                 .setConsumerRef("consumerRef")
                 .build());
+
         return intent;
     }
 

@@ -1,17 +1,15 @@
-package com.judopay.util;
+package com.judopay.ui.util;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
 import android.support.test.espresso.matcher.BoundedMatcher;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.view.View;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 
-import java.lang.reflect.Field;
-
-import static org.hamcrest.MatcherAssert.assertThat;
+import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static org.hamcrest.Matchers.is;
 
 public class JudoViewMatchers {
@@ -33,6 +31,34 @@ public class JudoViewMatchers {
             @Override
             public boolean matchesSafely(TextInputLayout textView) {
                 return stringMatcher.matches(textView.getHint());
+            }
+        };
+    }
+
+    public static Matcher<View> isNotDisplayed() {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("is displayed on the screen to the user");
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                return withEffectiveVisibility(ViewMatchers.Visibility.GONE).matches(view);
+            }
+        };
+    }
+
+    public static Matcher<View> isDisabled() {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("is disabled");
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                return !view.isEnabled();
             }
         };
     }

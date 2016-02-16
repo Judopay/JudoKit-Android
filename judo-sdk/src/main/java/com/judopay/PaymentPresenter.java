@@ -11,24 +11,23 @@ class PaymentPresenter extends BasePresenter {
         super(view, judoApiService, scheduler, gson);
     }
 
-    public void performPayment(Card card, JudoOptions judoOptions) {
+    public void performPayment(Card card, JudoOptions options) {
         this.loading = true;
 
         paymentFormView.showLoading();
 
         PaymentTransaction.Builder builder = new PaymentTransaction.Builder()
-                .setAmount(judoOptions.getAmount())
+                .setAmount(options.getAmount())
                 .setCardAddress(card.getCardAddress())
                 .setCardNumber(card.getCardNumber())
-                .setCurrency(judoOptions.getCurrency())
+                .setCurrency(options.getCurrency())
                 .setCv2(card.getCv2())
-                .setJudoId(judoOptions.getJudoId())
-                .setYourConsumerReference(judoOptions.getConsumerRef())
-                .setExpiryDate(card.getExpiryDate());
-
-        if (judoOptions.getMetaData() != null) {
-            builder.setMetaData(judoOptions.getMetaDataMap());
-        }
+                .setJudoId(options.getJudoId())
+                .setYourConsumerReference(options.getConsumerRef())
+                .setExpiryDate(card.getExpiryDate())
+                .setEmailAddress(options.getEmailAddress())
+                .setMobileNumber(options.getMobileNumber())
+                .setMetaData(options.getMetaDataMap());
 
         if (card.startDateAndIssueNumberRequired()) {
             builder.setIssueNumber(card.getIssueNumber())

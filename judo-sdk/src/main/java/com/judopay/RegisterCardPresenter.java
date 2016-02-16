@@ -22,6 +22,9 @@ class RegisterCardPresenter extends BasePresenter {
                 .setCardNumber(card.getCardNumber())
                 .setCv2(card.getCv2())
                 .setExpiryDate(card.getExpiryDate())
+                .setMetaData(options.getMetaDataMap())
+                .setEmailAddress(options.getEmailAddress())
+                .setMobileNumber(options.getMobileNumber())
                 .setYourConsumerReference(options.getConsumerRef());
 
         if (card.startDateAndIssueNumberRequired()) {

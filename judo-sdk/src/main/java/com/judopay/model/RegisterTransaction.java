@@ -138,16 +138,19 @@ public final class RegisterTransaction extends Transaction {
             return this;
         }
 
-        public void setEmailAddress(String emailAddress) {
+        public Builder setEmailAddress(String emailAddress) {
             this.emailAddress = emailAddress;
+            return this;
         }
 
-        public void setMobileNumber(String mobileNumber) {
+        public Builder setMobileNumber(String mobileNumber) {
             this.mobileNumber = mobileNumber;
+            return this;
         }
 
-        public void setMetaData(Map<String, String> metaData) {
+        public Builder setMetaData(Map<String, String> metaData) {
             this.yourPaymentMetaData = metaData;
+            return this;
         }
 
         public RegisterTransaction build() {

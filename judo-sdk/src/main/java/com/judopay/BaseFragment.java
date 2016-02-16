@@ -144,7 +144,7 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, CardEnt
         }
     }
 
-    private void setDeclinedAndFinish(Receipt receipt) {
+    protected void setDeclinedAndFinish(Receipt receipt) {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_RECEIPT, receipt);
 
