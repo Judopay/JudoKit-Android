@@ -5,7 +5,7 @@ import android.text.TextWatcher;
 
 import com.judopay.model.CardType;
 
-import static android.text.TextUtils.isEmpty;
+import static com.judopay.arch.TextUtil.isEmpty;
 
 class CardNumberFormattingTextWatcher implements TextWatcher {
 

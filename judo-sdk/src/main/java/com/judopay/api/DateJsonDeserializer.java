@@ -10,7 +10,7 @@ import org.joda.time.DateTime;
 import java.lang.reflect.Type;
 import java.util.Date;
 
-import static android.text.TextUtils.isEmpty;
+import static com.judopay.arch.TextUtil.isEmpty;
 
 class DateJsonDeserializer implements JsonDeserializer<Date> {
 

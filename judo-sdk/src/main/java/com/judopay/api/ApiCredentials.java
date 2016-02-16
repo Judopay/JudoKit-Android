@@ -9,7 +9,7 @@ import android.util.Base64;
 import com.judopay.Judo;
 import com.judopay.exception.JudoInitializationException;
 
-import static android.text.TextUtils.isEmpty;
+import static com.judopay.arch.TextUtil.isEmpty;
 
 class ApiCredentials {
 

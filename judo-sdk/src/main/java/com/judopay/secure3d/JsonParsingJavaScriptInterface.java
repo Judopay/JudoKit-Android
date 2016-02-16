@@ -1,6 +1,6 @@
 package com.judopay.secure3d;
 
-import static android.text.TextUtils.isEmpty;
+import static com.judopay.arch.TextUtil.isEmpty;
 
 class JsonParsingJavaScriptInterface {
 

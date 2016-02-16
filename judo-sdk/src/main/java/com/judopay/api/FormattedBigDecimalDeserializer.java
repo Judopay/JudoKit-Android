@@ -8,7 +8,7 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 
-import static android.text.TextUtils.isEmpty;
+import static com.judopay.arch.TextUtil.isEmpty;
 
 class FormattedBigDecimalDeserializer implements JsonDeserializer<BigDecimal> {
 
