@@ -1,15 +1,13 @@
 package com.judopay;
 
 import com.google.gson.Gson;
+import com.judopay.arch.Scheduler;
 import com.judopay.model.Receipt;
 import com.judopay.model.ThreeDSecureInfo;
 import com.judopay.secure3d.ThreeDSecureListener;
 
-import java.io.IOException;
 import java.io.Reader;
 
-import retrofit.HttpException;
-import retrofit.Response;
 import rx.functions.Action1;
 
 abstract class BasePresenter implements ThreeDSecureListener {
@@ -55,18 +53,14 @@ abstract class BasePresenter implements ThreeDSecureListener {
             @Override
             public void call(Throwable throwable) {
                 loading = false;
-                if (throwable instanceof HttpException) {
-                    Response<?> response = ((HttpException) throwable).response();
+                if (throwable instanceof retrofit2.HttpException) {
+                    retrofit2.Response<?> response = ((retrofit2.HttpException) throwable).response();
                     if (response.errorBody() != null) {
-                        try {
-                            Reader reader = response.errorBody().charStream();
-                            Receipt receipt = gson.fromJson(reader, Receipt.class);
-                            paymentFormView.showDeclinedMessage(receipt);
-                        } catch (IOException e) {
-                            paymentFormView.handleError(null);
-                        }
+                        Reader reader = response.errorBody().charStream();
+                        Receipt receipt = gson.fromJson(reader, Receipt.class);
+                        paymentFormView.showDeclinedMessage(receipt);
                     }
-                } else if(throwable instanceof java.net.UnknownHostException) {
+                } else if (throwable instanceof java.net.UnknownHostException) {
                     paymentFormView.showConnectionErrorDialog();
                 }
                 paymentFormView.dismiss3dSecureDialog();
@@ -90,7 +84,7 @@ abstract class BasePresenter implements ThreeDSecureListener {
 
     @Override
     public void onAuthorizationCompleted(ThreeDSecureInfo threeDSecureInfo, String receiptId) {
-        apiService.threeDSecurePayment(receiptId, threeDSecureInfo)
+        apiService.complete3dSecure(receiptId, threeDSecureInfo)
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread())
                 .subscribe(new Action1<Receipt>() {

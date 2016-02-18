@@ -5,18 +5,16 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.judopay.model.CardToken;
-import com.judopay.model.Receipt;
 import com.judopay.card.CardEntryFragment;
 import com.judopay.card.CardEntryListener;
+import com.judopay.model.CardToken;
+import com.judopay.model.Receipt;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
 import com.judopay.secure3d.ThreeDSecureWebView;
@@ -46,7 +44,6 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, CardEnt
     }
 
     @Override
-    @CallSuper
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -147,7 +144,7 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, CardEnt
         }
     }
 
-    private void setDeclinedAndFinish(Receipt receipt) {
+    protected void setDeclinedAndFinish(Receipt receipt) {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_RECEIPT, receipt);
 
@@ -190,7 +187,7 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, CardEnt
     }
 
     @Override
-    public void handleError(@Nullable Receipt receipt) {
+    public void handleError(Receipt receipt) {
         Activity activity = getActivity();
         if (activity != null) {
             if (receipt != null) {

@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;

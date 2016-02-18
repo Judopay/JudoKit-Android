@@ -1,6 +1,7 @@
 package com.judopay;
 
 import com.google.gson.Gson;
+import com.judopay.arch.Scheduler;
 import com.judopay.model.Card;
 import com.judopay.model.TokenTransaction;
 
@@ -17,16 +18,14 @@ class TokenPreAuthPresenter extends BasePresenter {
         TokenTransaction tokenTransaction = new TokenTransaction.Builder()
                 .setAmount(options.getAmount())
                 .setCardAddress(card.getCardAddress())
-                .setConsumerLocation(null)
                 .setCurrency(options.getCurrency())
                 .setJudoId(options.getJudoId())
                 .setYourConsumerReference(options.getConsumerRef())
                 .setCv2(card.getCv2())
+                .setEmailAddress(options.getEmailAddress())
+                .setMobileNumber(options.getMobileNumber())
                 .setMetaData(options.getMetaDataMap())
-                .setEndDate(options.getCardToken().getEndDate())
-                .setLastFour(options.getCardToken().getLastFour())
-                .setToken(options.getCardToken().getToken())
-                .setType(options.getCardToken().getType())
+                .setToken(options.getCardToken())
                 .build();
 
         apiService.tokenPreAuth(tokenTransaction)

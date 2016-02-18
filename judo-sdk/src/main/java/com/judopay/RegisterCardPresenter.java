@@ -1,6 +1,7 @@
 package com.judopay;
 
 import com.google.gson.Gson;
+import com.judopay.arch.Scheduler;
 import com.judopay.model.Card;
 import com.judopay.model.RegisterTransaction;
 
@@ -21,6 +22,9 @@ class RegisterCardPresenter extends BasePresenter {
                 .setCardNumber(card.getCardNumber())
                 .setCv2(card.getCv2())
                 .setExpiryDate(card.getExpiryDate())
+                .setMetaData(options.getMetaDataMap())
+                .setEmailAddress(options.getEmailAddress())
+                .setMobileNumber(options.getMobileNumber())
                 .setYourConsumerReference(options.getConsumerRef());
 
         if (card.startDateAndIssueNumberRequired()) {

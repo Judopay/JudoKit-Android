@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -45,8 +46,14 @@ public abstract class JudoActivity extends AppCompatActivity {
 
     @Override
     public void setTitle(@StringRes int titleId) {
-        if (getIntent().hasExtra(Intent.EXTRA_TITLE)) {
-            super.setTitle(getIntent().getStringExtra(Intent.EXTRA_TITLE));
+        if (getIntent().hasExtra(Judo.JUDO_OPTIONS)) {
+            JudoOptions options = getIntent().getParcelableExtra(Judo.JUDO_OPTIONS);
+
+            if(options.getActivityTitle() != null) {
+                super.setTitle(options.getActivityTitle());
+            } else {
+                super.setTitle(titleId);
+            }
         } else {
             super.setTitle(titleId);
         }
@@ -78,6 +85,9 @@ public abstract class JudoActivity extends AppCompatActivity {
 
     void checkRequiredExtras(String... keys) {
         Bundle extras = getIntent().getExtras();
+        if(extras == null) {
+            throw new RuntimeException(String.format("Activity %s must be started with Intent Extras", this.getClass().getSimpleName()));
+        }
         for (String key : keys) {
             if (!extras.containsKey(key)) {
                 throw new IllegalArgumentException(String.format("Extra '%s' is required for %s", key, this.getClass().getSimpleName()));

@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.google.gson.Gson;
 import com.judopay.api.JudoApiServiceFactory;
+import com.judopay.arch.AndroidScheduler;
 import com.judopay.model.Card;
 
 public final class TokenPaymentFragment extends BaseFragment {

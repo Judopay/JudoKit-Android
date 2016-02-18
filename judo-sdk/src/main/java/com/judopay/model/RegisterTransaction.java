@@ -1,6 +1,6 @@
 package com.judopay.model;
 
-import com.judopay.api.Request;
+import com.judopay.api.Transaction;
 
 import java.util.Map;
 
@@ -11,7 +11,7 @@ import java.util.Map;
  * When creating a {@link RegisterTransaction} the {@link RegisterTransaction#judoId}
  * must be provided.
  */
-public class RegisterTransaction extends Request {
+public final class RegisterTransaction extends Transaction {
 
     private String judoId;
     private Location consumerLocation;
@@ -26,14 +26,8 @@ public class RegisterTransaction extends Request {
     private String issueNumber;
     private Map<String, String> yourPaymentMetaData;
 
-    private final String yourPaymentReference;
-
     private RegisterTransaction() {
-        this.yourPaymentReference = UniqueIdentifier.generate();
-    }
-
-    public String getYourPaymentReference() {
-        return yourPaymentReference;
+        super(true);
     }
 
     public String getJudoId() {
@@ -144,16 +138,19 @@ public class RegisterTransaction extends Request {
             return this;
         }
 
-        public void setEmailAddress(String emailAddress) {
+        public Builder setEmailAddress(String emailAddress) {
             this.emailAddress = emailAddress;
+            return this;
         }
 
-        public void setMobileNumber(String mobileNumber) {
+        public Builder setMobileNumber(String mobileNumber) {
             this.mobileNumber = mobileNumber;
+            return this;
         }
 
-        public void setMetaData(Map<String, String> metaData) {
+        public Builder setMetaData(Map<String, String> metaData) {
             this.yourPaymentMetaData = metaData;
+            return this;
         }
 
         public RegisterTransaction build() {

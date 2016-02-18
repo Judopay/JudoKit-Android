@@ -67,7 +67,6 @@ public final class CardEntryFragment extends Fragment {
     private View startDateAndIssueNumberContainer;
     private View countryAndPostcodeContainer;
     private ScrollView scrollView;
-    private View cardsAcceptedErrorText;
     private IssueNumberEntryView issueNumberEntryView;
     private PostcodeEntryView postcodeEntryView;
     private StartDateEntryView startDateEntryView;
@@ -99,7 +98,6 @@ public final class CardEntryFragment extends Fragment {
         countryAndPostcodeContainer = view.findViewById(R.id.country_postcode_container);
         scrollView = (ScrollView) view.findViewById(R.id.scroll_view);
 
-        cardsAcceptedErrorText = view.findViewById(R.id.cards_accepted_error_text);
         secureServerText = view.findViewById(R.id.secure_server_text);
 
         return view;
@@ -124,22 +122,24 @@ public final class CardEntryFragment extends Fragment {
                     this.paymentButton.setText(judoOptions.getButtonLabel());
                 }
 
-                if (judoOptions.getCardToken() != null) {
-                    cardNumberEntryView.setCardType(judoOptions.getCardToken().getType());
+                CardToken cardToken = judoOptions.getCardToken();
+                if (cardToken != null) {
+                    cardNumberEntryView.setCardType(cardToken.getType());
+                    cvvEntryView.setCardType(cardToken.getType());
                     cvvEntryView.requestFocus();
-                }
+                } else {
+                    if (judoOptions.getCardNumber() != null) {
+                        cardNumberEntryView.setText(judoOptions.getCardNumber());
 
-                if (judoOptions.getCardNumber() != null) {
-                    cardNumberEntryView.setText(judoOptions.getCardNumber());
+                        int cardType = CardType.fromCardNumber(judoOptions.getCardNumber());
+                        cardNumberEntryView.setCardType(cardType);
+                        expiryDateEntryView.requestFocus();
+                    }
 
-                    int cardType = CardType.fromCardNumber(judoOptions.getCardNumber());
-                    cardNumberEntryView.setCardType(cardType);
-                    expiryDateEntryView.requestFocus();
-                }
-
-                if (judoOptions.getExpiryYear() != null && judoOptions.getExpiryMonth() != null) {
-                    expiryDateEntryView.setText(getString(R.string.expiry_date_format, judoOptions.getExpiryMonth(), judoOptions.getExpiryYear()));
-                    cvvEntryView.requestFocus();
+                    if (judoOptions.getExpiryYear() != null && judoOptions.getExpiryMonth() != null) {
+                        expiryDateEntryView.setText(getString(R.string.expiry_date_format, judoOptions.getExpiryMonth(), judoOptions.getExpiryYear()));
+                        cvvEntryView.requestFocus();
+                    }
                 }
 
                 if (judoOptions.isSecureServerMessageShown()) {
@@ -283,11 +283,9 @@ public final class CardEntryFragment extends Fragment {
         postcodeEntryView.setHint(validation.getPostcodeLabel());
         postcodeEntryView.setError(validation.getPostcodeError(), validation.isShowPostcodeError());
 
+        postcodeEntryView.setEnabled(validation.isPostcodeEnabled());
         postcodeEntryView.setNumericInput(validation.isPostcodeNumeric());
         postcodeEntryView.setSelectionEnd();
-
-        cardsAcceptedErrorText.setVisibility(validation.isCountryValid() ? View.GONE : View.VISIBLE);
-        postcodeEntryView.setVisibility(validation.isCountryValid() ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void showExpiryDateErrors(PaymentFormValidation formView) {

@@ -23,9 +23,15 @@ android {
         versionName rootProject.ext.versionName
 
         consumerProguardFiles 'proguard-rules.pro'
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+
+        productFlavors { }
     }
-    
+
     buildTypes {
+        debug {
+            testCoverageEnabled = true
+        }
         release {
             minifyEnabled false
         }
@@ -33,6 +39,10 @@ android {
 
     lintOptions {
         warning 'InvalidPackage'
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
     }
 
 }
@@ -50,9 +60,10 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.judopay:shield:1.1'
 
-    compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
-    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'
-    compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta1'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta3'
+
     compile 'io.reactivex:rxandroid:0.23.0'
 
     compile 'joda-time:joda-time:2.8.2'
@@ -61,4 +72,11 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
+
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    androidTestCompile 'com.android.support.test:rules:0.4.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.1'
+
 }

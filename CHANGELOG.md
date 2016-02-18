@@ -1,9 +1,30 @@
 # judoNative Android SDK change log
 
+## [5.1.1](https://github.com/judopay/Judo-Android/tree/5.1.1) (2016-02-11)
+
+**Implemented enhancements:**
+- Added support for voiding pre-auth transactions to ```JudoApiService```
+
+**Bugs fixed:**
+- Fixed an issue where additional API requests would fail after an initial transaction request was performed.
+- Resolved an issue where making a token payment/pre-auth would not allow a 4 digit CIDV to be entered for an Amex card.
+- Resolved an issue where an incorrect error message was given if the required Activity Extras was not passed to a ```JudoActivity```.
+- Fixed an issue where the transaction metadata was not sent for register card transactions.
+- Fixed an issue where the incorrect dialog message was shown when a card was declined during a card registration.
+
+**Changes:**
+- When a duplicated transaction is detected, a ```DuplicateTransactionException``` is now thrown instead of the original transaction response being replayed.
+- UI tests moved to judo-sdk module and test framework upgraded to Espresso 2.
+- Retrofit library upgraded to latest version.
+- New method for obtaining ```JudoApiService``` instance, call ```Judo.getApiService(context);```
+- ```JudoApiService``` method for completing a transaction with 3D Secure verification renamed.
+- Address Verification Service (AVS) postcode field can now be skipped if card holder is outside UK, USA and Canada.  
+- Removed the ability to pass pre-filled card data into the card entry form when performing a token payment/pre-auth
+
 ## [5.1](https://github.com/judopay/Judo-Android/tree/5.1) (2016-01-28)
 
 **Implemented enhancements:**
-- Add Brazilian Real to list of supported currencies.
+- Brazilian Real added to list of supported currencies.
 - Enable 3D Secure verification for all transactions by default, if required by the Merchant's bank.
 - Allow transactions for Android devices with root permissions, with option to block if required.
 - New Android views provided for card data entry for use when writing a custom UI.

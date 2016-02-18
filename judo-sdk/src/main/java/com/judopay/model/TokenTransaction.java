@@ -1,7 +1,7 @@
 package com.judopay.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.judopay.api.Request;
+import com.judopay.api.Transaction;
 
 import java.util.Map;
 
@@ -12,7 +12,7 @@ import java.util.Map;
  * When creating a {@link TokenTransaction} the {@link TokenTransaction#judoId},
  * {@link TokenTransaction#amount} and {@link TokenTransaction#currency} must be provided.
  */
-public class TokenTransaction extends Request {
+public final class TokenTransaction extends Transaction {
 
     private String endDate;
 
@@ -36,10 +36,8 @@ public class TokenTransaction extends Request {
     private String mobileNumber;
     private Map<String, String> yourPaymentMetaData;
 
-    private final String yourPaymentReference;
-
     public TokenTransaction() {
-        this.yourPaymentReference = UniqueIdentifier.generate();
+        super(true);
     }
 
     public String getEndDate() {
@@ -76,10 +74,6 @@ public class TokenTransaction extends Request {
 
     public String getYourConsumerReference() {
         return yourConsumerReference;
-    }
-
-    public String getYourPaymentReference() {
-        return yourPaymentReference;
     }
 
     public Address getCardAddress() {
@@ -129,8 +123,12 @@ public class TokenTransaction extends Request {
             return this;
         }
 
-        public Builder setToken(String token) {
-            this.token = token;
+        public Builder setToken(CardToken token) {
+            this.token = token.getToken();
+            this.endDate = token.getEndDate();
+            this.lastFour = token.getLastFour();
+            this.type = token.getType();
+
             return this;
         }
 

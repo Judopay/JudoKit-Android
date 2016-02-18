@@ -1,6 +1,9 @@
 package com.judopay;
 
 import android.app.Activity;
+import android.content.Context;
+
+import com.judopay.api.JudoApiServiceFactory;
 
 /**
  * Lets you configure options for how the SDK interacts with the REST API, including setting of
@@ -43,6 +46,11 @@ public class Judo {
         Judo.apiToken = apiToken;
         Judo.apiSecret = apiSecret;
         Judo.apiEnvironment = apiEnvironment;
+    }
+
+    @SuppressWarnings("unused")
+    public static JudoApiService getApiService(Context context) {
+        return JudoApiServiceFactory.getInstance(context);
     }
 
     public static String getApiToken() {

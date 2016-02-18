@@ -1,6 +1,7 @@
 package com.judopay;
 
 import com.google.gson.Gson;
+import com.judopay.arch.Scheduler;
 import com.judopay.model.Card;
 import com.judopay.model.PaymentTransaction;
 
@@ -18,17 +19,15 @@ class PreAuthPresenter extends BasePresenter {
         PaymentTransaction.Builder builder = new PaymentTransaction.Builder()
                 .setAmount(options.getAmount())
                 .setCardAddress(card.getCardAddress())
-                .setConsumerLocation(null)
                 .setCardNumber(card.getCardNumber())
                 .setCurrency(options.getCurrency())
                 .setCv2(card.getCv2())
                 .setJudoId(options.getJudoId())
                 .setYourConsumerReference(options.getConsumerRef())
+                .setEmailAddress(options.getEmailAddress())
+                .setMobileNumber(options.getMobileNumber())
+                .setMetaData(options.getMetaDataMap())
                 .setExpiryDate(card.getExpiryDate());
-
-        if (options.getMetaData() != null) {
-            builder.setMetaData(options.getMetaDataMap());
-        }
 
         if (card.startDateAndIssueNumberRequired()) {
             builder.setIssueNumber(card.getIssueNumber())
