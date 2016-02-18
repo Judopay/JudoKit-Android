@@ -1,5 +1,8 @@
 package com.judopay.model;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class AndroidPayRequest {
 
     private final int instrumentType;
@@ -43,6 +46,18 @@ public class AndroidPayRequest {
         private String encryptedMessage;
         private String ephemeralPublicKey;
         private String tag;
+
+        public Builder setPaymentMethodToken(String paymentMethodToken) {
+            try {
+                JSONObject json = new JSONObject(paymentMethodToken);
+                setEncryptedMessage(json.getString("encryptedMessage"))
+                        .setEphemeralPublicKey(json.getString("ephemeralPublicKey"))
+                        .setTag(json.getString("tag"));
+            } catch (JSONException e) {
+                throw new IllegalArgumentException("paymentMethodToken must be a valid JSON object");
+            }
+            return this;
+        }
 
         public Builder setInstrumentType(int instrumentType) {
             this.instrumentType = instrumentType;
