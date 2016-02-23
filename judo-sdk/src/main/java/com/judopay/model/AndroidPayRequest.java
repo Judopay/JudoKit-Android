@@ -3,28 +3,30 @@ package com.judopay.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+
 public class AndroidPayRequest {
 
-    private final int instrumentType;
-    private final String instrumentDetails;
+    private final BigDecimal amount;
+    private final String currency;
     private final String encryptedMessage;
     private final String ephemeralPublicKey;
     private final String tag;
 
-    private AndroidPayRequest(int instrumentType, String instrumentDetails, String encryptedMessage, String ephemeralPublicKey, String tag) {
-        this.instrumentType = instrumentType;
-        this.instrumentDetails = instrumentDetails;
+    private AndroidPayRequest(BigDecimal amount, String currency, String encryptedMessage, String ephemeralPublicKey, String tag) {
+        this.amount = amount;
+        this.currency = currency;
         this.encryptedMessage = encryptedMessage;
         this.ephemeralPublicKey = ephemeralPublicKey;
         this.tag = tag;
     }
 
-    public int getInstrumentType() {
-        return instrumentType;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
-    public String getInstrumentDetails() {
-        return instrumentDetails;
+    public String getCurrency() {
+        return currency;
     }
 
     public String getEncryptedMessage() {
@@ -41,8 +43,8 @@ public class AndroidPayRequest {
 
     public static class Builder {
 
-        private int instrumentType;
-        private String instrumentDetails;
+        private BigDecimal amount;
+        private String currency;
         private String encryptedMessage;
         private String ephemeralPublicKey;
         private String tag;
@@ -59,13 +61,13 @@ public class AndroidPayRequest {
             return this;
         }
 
-        public Builder setInstrumentType(int instrumentType) {
-            this.instrumentType = instrumentType;
+        public Builder setAmount(BigDecimal amount) {
+            this.amount = amount;
             return this;
         }
 
-        public Builder setInstrumentDetails(String instrumentDetails) {
-            this.instrumentDetails = instrumentDetails;
+        public Builder setCurrency(String currency) {
+            this.currency = currency;
             return this;
         }
 
@@ -85,7 +87,7 @@ public class AndroidPayRequest {
         }
 
         public AndroidPayRequest build() {
-            return new AndroidPayRequest(instrumentType, instrumentDetails, encryptedMessage, ephemeralPublicKey, tag);
+            return new AndroidPayRequest(amount, currency, encryptedMessage, ephemeralPublicKey, tag);
         }
     }
 
