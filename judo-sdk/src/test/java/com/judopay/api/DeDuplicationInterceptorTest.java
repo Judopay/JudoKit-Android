@@ -1,7 +1,5 @@
 package com.judopay.api;
 
-import com.judopay.exception.DuplicateTransactionException;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -24,6 +22,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DeDuplicationInterceptorTest {
+
 
     @Test(expected = DuplicateTransactionException.class)
     public void shouldThrowDuplicateTransactionExceptionWhenDuplicate() throws IOException {
