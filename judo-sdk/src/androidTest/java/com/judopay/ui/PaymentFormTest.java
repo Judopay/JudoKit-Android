@@ -202,6 +202,14 @@ public class PaymentFormTest {
                 .check(matches(isNotDisplayed()));
     }
 
+    @Test
+    public void shouldDisplayCvvLogo() {
+        activityTestRule.launchActivity(getIntent());
+
+        onView(withId(R.id.cvv_image_view))
+                .check(matches(isDisplayed()));
+    }
+
     protected Intent getIntent() {
         Intent intent = new Intent();
 
