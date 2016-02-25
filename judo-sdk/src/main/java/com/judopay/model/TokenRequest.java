@@ -1,18 +1,18 @@
 package com.judopay.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.judopay.api.Transaction;
+import com.judopay.api.Request;
 
 import java.util.Map;
 
 /**
  * Represents the data needed to perform a token transaction with the judo API.
- * Use the {@link TokenTransaction.Builder} for object construction.
+ * Use the {@link TokenRequest.Builder} for object construction.
  *
- * When creating a {@link TokenTransaction} the {@link TokenTransaction#judoId},
- * {@link TokenTransaction#amount} and {@link TokenTransaction#currency} must be provided.
+ * When creating a {@link TokenRequest} the {@link TokenRequest#judoId},
+ * {@link TokenRequest#amount} and {@link TokenRequest#currency} must be provided.
  */
-public final class TokenTransaction extends Transaction {
+public final class TokenRequest extends Request {
 
     private String endDate;
 
@@ -36,7 +36,7 @@ public final class TokenTransaction extends Transaction {
     private String mobileNumber;
     private Map<String, String> yourPaymentMetaData;
 
-    public TokenTransaction() {
+    public TokenRequest() {
         super(true);
     }
 
@@ -187,9 +187,9 @@ public final class TokenTransaction extends Transaction {
             return this;
         }
 
-        public TokenTransaction build() {
+        public TokenRequest build() {
             if (currency == null || currency.length() == 0) {
-                throw new IllegalArgumentException("currency must be set for TokenTransaction");
+                throw new IllegalArgumentException("currency must be set for TokenRequest");
             }
 
             if (this.judoId == null) {
@@ -200,7 +200,7 @@ public final class TokenTransaction extends Transaction {
                 throw new IllegalArgumentException("amount must be set");
             }
 
-            TokenTransaction transaction = new TokenTransaction();
+            TokenRequest transaction = new TokenRequest();
 
             transaction.judoId = judoId;
             transaction.amount = amount;

@@ -3,7 +3,7 @@ package com.judopay;
 import com.google.gson.Gson;
 import com.judopay.arch.Scheduler;
 import com.judopay.model.Card;
-import com.judopay.model.PaymentTransaction;
+import com.judopay.model.PaymentRequest;
 
 class PreAuthPresenter extends BasePresenter {
 
@@ -16,7 +16,7 @@ class PreAuthPresenter extends BasePresenter {
 
         paymentFormView.showLoading();
 
-        PaymentTransaction.Builder builder = new PaymentTransaction.Builder()
+        PaymentRequest.Builder builder = new PaymentRequest.Builder()
                 .setAmount(options.getAmount())
                 .setCardAddress(card.getCardAddress())
                 .setCardNumber(card.getCardNumber())
