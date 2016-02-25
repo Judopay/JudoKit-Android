@@ -34,7 +34,7 @@
     <string name="security_code">Security code</string>
     <string name="issue_number_front_of_card">Issue on front of card</string>
     <string name="token_card_number">**** **** **** %1$s</string>
-    <string name="token_date">**/**</string>
+    <string name="card_date_format">%1$s/%2$s</string>
     <string name="adding_card">Adding card…</string>
     <string name="redirecting">Redirecting…</string>
     <string name="completing_payment">Completing payment</string>
