@@ -12,7 +12,7 @@
         android:id="@+id/cvv_input_layout"
         style="@style/input_layout">
 
-        <EditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/cvv_edit_text"
             style="@style/judo_cvv"
             android:layout_weight="1" />
