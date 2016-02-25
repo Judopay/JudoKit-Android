@@ -203,7 +203,7 @@ public class PaymentFormTest {
     }
 
     @Test
-    public void shouldDisplayCvvLogo() {
+    public void shouldDisplayCvvImageOnLaunch() {
         activityTestRule.launchActivity(getIntent());
 
         onView(withId(R.id.cvv_image_view))
