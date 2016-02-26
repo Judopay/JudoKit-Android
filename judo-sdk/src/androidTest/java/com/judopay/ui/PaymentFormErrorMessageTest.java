@@ -46,7 +46,7 @@ public class PaymentFormErrorMessageTest {
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .perform(typeText("1234000000001234"));
 
-        onView(withText(R.string.error_card_number))
+        onView(withText(R.string.check_card_number))
                 .check(matches(isDisplayed()));
     }
 
@@ -57,7 +57,7 @@ public class PaymentFormErrorMessageTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("0101"));
 
-        onView(withText(R.string.error_check_date))
+        onView(withText(R.string.check_expiry_date))
                 .check(matches(isDisplayed()));
     }
 
@@ -68,7 +68,7 @@ public class PaymentFormErrorMessageTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1230"));
 
-        onView(withText(R.string.error_check_date))
+        onView(withText(R.string.check_expiry_date))
                 .check(matches(isDisplayed()));
     }
 
@@ -85,7 +85,7 @@ public class PaymentFormErrorMessageTest {
         onView(withId(R.id.start_date_edit_text))
                 .perform(typeText("0125"));
 
-        onView(withText(R.string.error_check_date))
+        onView(withText(R.string.check_start_date))
                 .check(matches(isDisplayed()));
     }
 
@@ -102,7 +102,7 @@ public class PaymentFormErrorMessageTest {
         onView(withId(R.id.start_date_edit_text))
                 .perform(typeText("1205"));
 
-        onView(withText(R.string.error_check_date))
+        onView(withText(R.string.check_start_date))
                 .check(matches(isDisplayed()));
     }
 

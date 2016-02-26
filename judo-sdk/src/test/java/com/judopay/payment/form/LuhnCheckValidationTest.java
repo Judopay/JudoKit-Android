@@ -48,7 +48,7 @@ public class LuhnCheckValidationTest {
     public void shouldHaveCardNumberErrorWhenInvalid() {
         CardNumberValidation cardNumberValidation = new CardNumberValidation("1234567812345678", CardType.UNKNOWN, false, false, false);
 
-        assertThat(cardNumberValidation.getError(), is(R.string.error_card_number));
+        assertThat(cardNumberValidation.getError(), is(R.string.check_card_number));
     }
 
     @Test
