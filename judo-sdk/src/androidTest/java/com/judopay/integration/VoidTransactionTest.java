@@ -8,9 +8,9 @@ import android.test.suitebuilder.annotation.MediumTest;
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
 import com.judopay.model.Currency;
-import com.judopay.model.PaymentTransaction;
+import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
-import com.judopay.model.VoidTransaction;
+import com.judopay.model.VoidRequest;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class VoidTransactionTest {
         Context context = InstrumentationRegistry.getContext();
         final JudoApiService apiService = Judo.getApiService(context);
 
-        PaymentTransaction transaction = new PaymentTransaction.Builder()
+        PaymentRequest paymentRequest = new PaymentRequest.Builder()
                 .setJudoId("100407196")
                 .setAmount("0.01")
                 .setCardNumber("4976000000003436")
@@ -49,14 +49,13 @@ public class VoidTransactionTest {
                 .setYourConsumerReference("VoidTransactionTest")
                 .build();
 
-        apiService.preAuth(transaction)
+        apiService.preAuth(paymentRequest)
                 .observeOn(Schedulers.immediate())
                 .subscribeOn(Schedulers.immediate())
                 .flatMap(new Func1<Receipt, Observable<Receipt>>() {
                     @Override
                     public Observable<Receipt> call(Receipt receipt) {
-                        VoidTransaction voidTransaction = new VoidTransaction(
-                                receipt.getConsumer().getYourConsumerReference(),
+                        VoidRequest voidTransaction = new VoidRequest(
                                 receipt.getReceiptId(),
                                 receipt.getAmount());
 
