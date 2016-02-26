@@ -3,7 +3,7 @@
 ## [5.1.2](https://github.com/judopay/Judo-Android/tree/5.1.2) (2016-02-29)
 
 **Bugs fixed:**
- - VoidRequest, CollectionRequest and RefundRequest no longer accept a 'yourPaymentReference' constructor argument, due to possibility of the request being detected as a duplicate if the same payment reference was used from the pre-auth or payment request.
+ - VoidRequest, CollectionRequest and RefundRequest no longer accept a 'yourPaymentReference' constructor argument as the request can be detected as a duplicate if the same payment reference was used from the pre-auth or payment request.
 
 **Changes:**
 - Request classes renamed: PaymentRequest, TokenRequest, RegisterCardRequest, VoidRequest, RefundRequest, CollectionRequest
