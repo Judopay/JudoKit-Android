@@ -85,7 +85,7 @@ public class PaymentFormErrorMessageTest {
         onView(withId(R.id.start_date_edit_text))
                 .perform(typeText("0125"));
 
-        onView(withText(R.string.check_expiry_date))
+        onView(withText(R.string.check_start_date))
                 .check(matches(isDisplayed()));
     }
 
@@ -102,7 +102,7 @@ public class PaymentFormErrorMessageTest {
         onView(withId(R.id.start_date_edit_text))
                 .perform(typeText("1205"));
 
-        onView(withText(R.string.check_expiry_date))
+        onView(withText(R.string.check_start_date))
                 .check(matches(isDisplayed()));
     }
 
