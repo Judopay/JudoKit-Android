@@ -3,7 +3,7 @@ package com.judopay;
 import com.google.gson.Gson;
 import com.judopay.arch.Scheduler;
 import com.judopay.model.Card;
-import com.judopay.model.RegisterTransaction;
+import com.judopay.model.RegisterCardRequest;
 
 class RegisterCardPresenter extends BasePresenter {
 
@@ -16,7 +16,7 @@ class RegisterCardPresenter extends BasePresenter {
 
         paymentFormView.showLoading();
 
-        RegisterTransaction.Builder builder = new RegisterTransaction.Builder()
+        RegisterCardRequest.Builder builder = new RegisterCardRequest.Builder()
                 .setJudoId(options.getJudoId())
                 .setCardAddress(card.getCardAddress())
                 .setCardNumber(card.getCardNumber())

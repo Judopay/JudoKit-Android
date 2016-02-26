@@ -1,10 +1,7 @@
 package com.judopay.api;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
@@ -28,7 +25,6 @@ public class DeDuplicationInterceptorTest {
 
 
     @Test(expected = DuplicateTransactionException.class)
-    @Ignore
     public void shouldThrowDuplicateTransactionExceptionWhenDuplicate() throws IOException {
         DeDuplicationInterceptor interceptor = new DeDuplicationInterceptor();
 
@@ -62,7 +58,6 @@ public class DeDuplicationInterceptorTest {
     }
 
     @Test
-    @Ignore
     public void shouldProcessWhenRequestBodyNotJson() throws IOException {
         DeDuplicationInterceptor interceptor = new DeDuplicationInterceptor();
 
@@ -95,7 +90,6 @@ public class DeDuplicationInterceptorTest {
     }
 
     @Test
-    @Ignore
     public void shouldProceedWhenRequestBodyNull() throws IOException {
         DeDuplicationInterceptor interceptor = new DeDuplicationInterceptor();
 

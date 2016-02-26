@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.judopay.arch.Scheduler;
 import com.judopay.model.Card;
 import com.judopay.model.Currency;
-import com.judopay.model.PaymentTransaction;
+import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
 
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class PreAuthPresenterTest {
     @Test
     public void shouldPerformPreAuth() {
         PreAuthPresenter presenter = new PreAuthPresenter(paymentFormView, apiService, scheduler, gson);
-        when(apiService.preAuth(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>empty());
+        when(apiService.preAuth(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>empty());
 
         presenter.performPreAuth(card, new JudoOptions.Builder()
                 .setAmount("1.99")
@@ -52,7 +52,7 @@ public class PreAuthPresenterTest {
                 .setJudoId("123456")
                 .build());
 
-        verify(apiService).preAuth(any(PaymentTransaction.class));
+        verify(apiService).preAuth(any(PaymentRequest.class));
     }
 
     @Test
@@ -63,7 +63,7 @@ public class PreAuthPresenterTest {
 
         HttpException exception = new HttpException(retrofit2.Response.error(400, responseBody));
 
-        when(apiService.preAuth(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>error(exception));
+        when(apiService.preAuth(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>error(exception));
 
         presenter.performPreAuth(card, new JudoOptions.Builder()
                 .setAmount("1.99")
