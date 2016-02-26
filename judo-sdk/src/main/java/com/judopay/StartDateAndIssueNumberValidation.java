@@ -23,7 +23,7 @@ public class StartDateAndIssueNumberValidation {
         this.showStartDateError = !isStartDateValid(paymentForm.getStartDate()) && startDateEntryComplete;
 
         if (showStartDateError) {
-            startDateError = R.string.error_check_date;
+            startDateError = R.string.check_start_date;
         }
 
         boolean maestroCardType = cardType == CardType.MAESTRO;

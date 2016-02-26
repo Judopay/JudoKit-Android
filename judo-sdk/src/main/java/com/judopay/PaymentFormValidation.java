@@ -150,7 +150,7 @@ public class PaymentFormValidation {
 
         private void setExpiryDate(Builder builder, boolean expiryDateValid, PaymentForm paymentForm) {
             if (!expiryDateValid) {
-                builder.setExpiryDateError(R.string.error_check_date);
+                builder.setExpiryDateError(R.string.check_expiry_date);
             }
 
             boolean expiryLengthValid = paymentForm.getExpiryDate().length() == 5;
@@ -167,7 +167,7 @@ public class PaymentFormValidation {
                     .setCvvLabel(amex ? R.string.amex_cvv_label : R.string.cvv_label);
 
             if (!cvvValid) {
-                builder.setCvvError(R.string.error_generic);
+                builder.setCvvError(R.string.check_cvv);
             }
         }
 
