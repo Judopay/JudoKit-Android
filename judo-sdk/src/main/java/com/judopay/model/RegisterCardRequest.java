@@ -1,17 +1,17 @@
 package com.judopay.model;
 
-import com.judopay.api.Transaction;
+import com.judopay.api.Request;
 
 import java.util.Map;
 
 /**
  * Represents the data needed to perform a register card transaction with the judo API.
- * Use the {@link RegisterTransaction.Builder} for object construction.
+ * Use the {@link RegisterCardRequest.Builder} for object construction.
  *
- * When creating a {@link RegisterTransaction} the {@link RegisterTransaction#judoId}
+ * When creating a {@link RegisterCardRequest} the {@link RegisterCardRequest#judoId}
  * must be provided.
  */
-public final class RegisterTransaction extends Transaction {
+public final class RegisterCardRequest extends Request {
 
     private String judoId;
     private Location consumerLocation;
@@ -26,7 +26,7 @@ public final class RegisterTransaction extends Transaction {
     private String issueNumber;
     private Map<String, String> yourPaymentMetaData;
 
-    private RegisterTransaction() {
+    private RegisterCardRequest() {
         super(true);
     }
 
@@ -153,12 +153,12 @@ public final class RegisterTransaction extends Transaction {
             return this;
         }
 
-        public RegisterTransaction build() {
+        public RegisterCardRequest build() {
             if (this.judoId == null) {
                 throw new IllegalArgumentException("judoId must be set");
             }
 
-            RegisterTransaction transaction = new RegisterTransaction();
+            RegisterCardRequest transaction = new RegisterCardRequest();
 
             transaction.judoId = judoId;
             transaction.consumerLocation = consumerLocation;

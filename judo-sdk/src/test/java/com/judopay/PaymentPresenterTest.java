@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.judopay.arch.Scheduler;
 import com.judopay.model.Card;
 import com.judopay.model.Currency;
-import com.judopay.model.PaymentTransaction;
+import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
 
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class PaymentPresenterTest {
     @Test
     public void shouldPerformPayment() {
         PaymentPresenter presenter = new PaymentPresenter(paymentFormView, apiService, scheduler, gson);
-        when(apiService.payment(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>empty());
+        when(apiService.payment(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>empty());
 
         presenter.performPayment(card, new JudoOptions.Builder()
                 .setAmount("1.99")
@@ -54,13 +54,13 @@ public class PaymentPresenterTest {
                 .setJudoId("123456")
                 .build());
 
-        verify(apiService).payment(any(PaymentTransaction.class));
+        verify(apiService).payment(any(PaymentRequest.class));
     }
 
     @Test
     public void shouldShowConnectionErrorDialog() {
         PaymentPresenter presenter = new PaymentPresenter(paymentFormView, apiService, scheduler, gson);
-        when(apiService.payment(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>error(new UnknownHostException()));
+        when(apiService.payment(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>error(new UnknownHostException()));
 
         presenter.performPayment(card, new JudoOptions.Builder()
                 .setAmount("1.99")
@@ -69,7 +69,7 @@ public class PaymentPresenterTest {
                 .setJudoId("123456")
                 .build());
 
-        verify(apiService).payment(any(PaymentTransaction.class));
+        verify(apiService).payment(any(PaymentRequest.class));
         verify(paymentFormView).showConnectionErrorDialog();
     }
 
@@ -83,7 +83,7 @@ public class PaymentPresenterTest {
 
         HttpException exception = new HttpException(retrofit2.Response.error(404, responseBody));
 
-        when(apiService.payment(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>error(exception));
+        when(apiService.payment(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>error(exception));
 
         presenter.performPayment(card, new JudoOptions.Builder()
                 .setAmount("1.99")
@@ -103,7 +103,7 @@ public class PaymentPresenterTest {
 
         HttpException exception = new HttpException(retrofit2.Response.error(400, responseBody));
 
-        when(apiService.payment(any(PaymentTransaction.class))).thenReturn(Observable.<Receipt>error(exception));
+        when(apiService.payment(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>error(exception));
 
         presenter.performPayment(card, new JudoOptions.Builder()
                 .setAmount("1.99")

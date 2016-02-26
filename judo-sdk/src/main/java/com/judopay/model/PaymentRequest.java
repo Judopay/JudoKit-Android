@@ -1,17 +1,17 @@
 package com.judopay.model;
 
-import com.judopay.api.Transaction;
+import com.judopay.api.Request;
 
 import java.util.Map;
 
 /**
  * Represents the data needed to perform a register card transaction with the judo API.
- * Use the {@link PaymentTransaction.Builder} for object construction.
+ * Use the {@link PaymentRequest.Builder} for object construction.
  *
- * When creating a {@link PaymentTransaction} the {@link PaymentTransaction#judoId},
- * {@link PaymentTransaction#amount} and {@link PaymentTransaction#currency} must be provided.
+ * When creating a {@link PaymentRequest} the {@link PaymentRequest#judoId},
+ * {@link PaymentRequest#amount} and {@link PaymentRequest#currency} must be provided.
  */
-public final class PaymentTransaction extends Transaction {
+public final class PaymentRequest extends Request {
 
     private String amount;
     private Location consumerLocation;
@@ -29,7 +29,7 @@ public final class PaymentTransaction extends Transaction {
     private String mobileNumber;
     private Map<String, String> yourPaymentMetaData;
 
-    private PaymentTransaction() {
+    private PaymentRequest() {
         super(true);
     }
 
@@ -186,7 +186,7 @@ public final class PaymentTransaction extends Transaction {
             return this;
         }
 
-        public PaymentTransaction build() {
+        public PaymentRequest build() {
             if (this.currency == null || this.currency.length() == 0) {
                 throw new IllegalArgumentException("currency must be set");
             }
@@ -199,7 +199,7 @@ public final class PaymentTransaction extends Transaction {
                 throw new IllegalArgumentException("amount must be set");
             }
 
-            PaymentTransaction transaction = new PaymentTransaction();
+            PaymentRequest transaction = new PaymentRequest();
 
             transaction.amount = amount;
             transaction.consumerLocation = consumerLocation;
