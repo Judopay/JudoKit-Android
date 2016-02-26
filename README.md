@@ -10,7 +10,7 @@ You can use our out of the box UI for a fully PCI Level 1 compliant payment expe
 ##### 1. Add the library to your project
 If you're using Android Studio and Gradle, you can just add the android-sdk as a dependency in your app's build.gradle file:
 ```groovy
-compile 'com.judopay:android-sdk:5.1.1'
+compile 'com.judopay:android-sdk:5.1.2'
 ```
 ##### 2. Initialise the SDK
 From your app's main Activity class, or Application class, initialise the judo SDK with your API token and secret:
@@ -23,7 +23,7 @@ To show the payment screen, create an Intent for the PaymentActivity with the re
 Intent intent = new Intent(activity, PaymentActivity.class);
 intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
     .setJudoId("35843095834")
-    .setAmout("9.99")
+    .setAmount("9.99")
     .setCurrency(Currency.GBP)
     .setConsumerRef("consumerRef")
     .build());
