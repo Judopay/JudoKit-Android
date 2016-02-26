@@ -5,7 +5,7 @@ import com.judopay.arch.Scheduler;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.Receipt;
-import com.judopay.model.RegisterTransaction;
+import com.judopay.model.RegisterCardRequest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,14 +52,14 @@ public class RegisterCardPresenterTest {
     @Test
     public void shouldRegisterCard() {
         RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
-        when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.<Receipt>empty());
 
         presenter.performRegisterCard(card, new JudoOptions.Builder()
                 .setJudoId(judoId)
                 .setConsumerRef(consumer)
                 .build());
 
-        verify(apiService, times(1)).registerCard(any(RegisterTransaction.class));
+        verify(apiService, times(1)).registerCard(any(RegisterCardRequest.class));
     }
 
     @Test
@@ -67,7 +67,7 @@ public class RegisterCardPresenterTest {
         RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
 
         when(card.getCardAddress()).thenReturn(cardAddress);
-        when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.<Receipt>empty());
 
         presenter.performRegisterCard(card, new JudoOptions.Builder()
                 .setJudoId(judoId)
@@ -82,7 +82,7 @@ public class RegisterCardPresenterTest {
         RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
 
         when(receipt.isSuccess()).thenReturn(true);
-        when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.just(receipt));
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.just(receipt));
 
         presenter.performRegisterCard(card, new JudoOptions.Builder()
                 .setJudoId(judoId)
@@ -99,7 +99,7 @@ public class RegisterCardPresenterTest {
 
         when(receipt.isSuccess()).thenReturn(false);
 
-        when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.just(receipt));
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.just(receipt));
 
         presenter.performRegisterCard(card, new JudoOptions.Builder()
                 .setJudoId(judoId)
@@ -123,7 +123,7 @@ public class RegisterCardPresenterTest {
         RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
 
         when(card.getCardAddress()).thenReturn(cardAddress);
-        when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>empty());
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.<Receipt>empty());
 
         presenter.performRegisterCard(card, new JudoOptions.Builder()
                 .setJudoId(judoId)
@@ -141,7 +141,7 @@ public class RegisterCardPresenterTest {
         when(receipt.isSuccess()).thenReturn(false);
         when(receipt.is3dSecureRequired()).thenReturn(true);
 
-        when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.just(receipt));
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.just(receipt));
 
         presenter.performRegisterCard(card, new JudoOptions.Builder()
                 .setJudoId(judoId)
@@ -160,7 +160,7 @@ public class RegisterCardPresenterTest {
 
         HttpException exception = new HttpException(retrofit2.Response.error(400, responseBody));
 
-        when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>error(exception));
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.<Receipt>error(exception));
 
         presenter.performRegisterCard(card, new JudoOptions.Builder()
                 .setJudoId(judoId)
@@ -173,14 +173,14 @@ public class RegisterCardPresenterTest {
     @Test
     public void shouldShowConnectionErrorDialog() {
         RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
-        when(apiService.registerCard(any(RegisterTransaction.class))).thenReturn(Observable.<Receipt>error(new UnknownHostException()));
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.<Receipt>error(new UnknownHostException()));
 
         presenter.performRegisterCard(card, new JudoOptions.Builder()
                 .setJudoId(judoId)
                 .setConsumerRef(consumer)
                 .build());
 
-        verify(apiService).registerCard(any(RegisterTransaction.class));
+        verify(apiService).registerCard(any(RegisterCardRequest.class));
         verify(paymentFormView).showConnectionErrorDialog();
     }
 

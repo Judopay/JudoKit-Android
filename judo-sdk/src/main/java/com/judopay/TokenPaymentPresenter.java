@@ -3,7 +3,7 @@ package com.judopay;
 import com.google.gson.Gson;
 import com.judopay.arch.Scheduler;
 import com.judopay.model.Card;
-import com.judopay.model.TokenTransaction;
+import com.judopay.model.TokenRequest;
 
 class TokenPaymentPresenter extends BasePresenter {
 
@@ -16,7 +16,7 @@ class TokenPaymentPresenter extends BasePresenter {
 
         paymentFormView.showLoading();
 
-        TokenTransaction tokenTransaction = new TokenTransaction.Builder()
+        TokenRequest tokenTransaction = new TokenRequest.Builder()
                 .setAmount(options.getAmount())
                 .setCardAddress(card.getCardAddress())
                 .setCurrency(options.getCurrency())
