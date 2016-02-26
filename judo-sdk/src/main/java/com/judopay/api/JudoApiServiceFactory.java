@@ -39,22 +39,13 @@ public class JudoApiServiceFactory {
     private static final String CERTIFICATE_1 = "sha1/SSAG1hz7m8LI/eapL/SSpd5o564=";
     private static final String CERTIFICATE_2 = "sha1/o5OZxATDsgmwgcIfIWIneMJ0jkw=";
 
-    private static Retrofit retrofit;
-
     /**
      * @param context the calling Context
      * @return the Retrofit API service implementation containing the methods used
      * for interacting with the judoPay REST API.
      */
-    public static JudoApiService getInstance(Context context) {
-        return createOrGetInstance(context).create(JudoApiService.class);
-    }
-
-    private static Retrofit createOrGetInstance(Context context) {
-        if (retrofit == null) {
-            retrofit = createRetrofit(context.getApplicationContext());
-        }
-        return retrofit;
+    public static JudoApiService createApiService(Context context) {
+        return createRetrofit(context.getApplicationContext()).create(JudoApiService.class);
     }
 
     private static Retrofit createRetrofit(Context context) {
@@ -82,7 +73,7 @@ public class JudoApiServiceFactory {
 
     private static void setInterceptors(OkHttpClient.Builder client) {
         AuthorizationEncoder authorizationEncoder = new AuthorizationEncoder();
-        ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(authorizationEncoder);
+        ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(authorizationEncoder, Judo.getUiClientMode());
 
         List<Interceptor> interceptors = client.interceptors();
         interceptors.add(new DeDuplicationInterceptor());

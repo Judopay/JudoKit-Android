@@ -38,7 +38,7 @@ public class PaymentFormTest {
 
     @Before
     public void setupJudoSdk() {
-        Judo.setup("fakeApiToken", "fakeApiSecret", Judo.Environment.SANDBOX);
+        Judo.setup("", "", Judo.SANDBOX);
     }
 
     @Test

@@ -20,6 +20,8 @@ import com.judopay.secure3d.ThreeDSecureListener;
 import com.judopay.secure3d.ThreeDSecureWebView;
 import com.judopay.view.Dialogs;
 
+import static com.judopay.Judo.setUiClientMode;
+
 abstract class BaseFragment extends Fragment implements PaymentFormView, CardEntryListener {
 
     private static final String TAG_PAYMENT_FORM = "CardEntryFragment";
@@ -34,6 +36,7 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, CardEnt
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setUiClientMode(Judo.UI_CLIENT_MODE_JUDO_UI);
 
         setRetainInstance(true);
     }

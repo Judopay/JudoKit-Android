@@ -2,8 +2,12 @@ package com.judopay;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.IntDef;
 
 import com.judopay.api.JudoApiServiceFactory;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Lets you configure options for how the SDK interacts with the REST API, including setting of
@@ -11,6 +15,16 @@ import com.judopay.api.JudoApiServiceFactory;
  * allowing for payments routed through 3D-Secure and requiring Address Verification Checks (AVS).
  */
 public class Judo {
+
+    @IntDef({UI_CLIENT_MODE_CUSTOM_UI, UI_CLIENT_MODE_JUDO_UI})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface UiClientMode {
+    }
+
+    @IntDef({LIVE, SANDBOX})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Environment {
+    }
 
     public static final int RESULT_SUCCESS = Activity.RESULT_OK;
     public static final int RESULT_CANCELED = Activity.RESULT_CANCELED;
@@ -31,9 +45,17 @@ public class Judo {
     private static final String API_HOST_SANDBOX = "https://gw1.judopay-sandbox.com";
     private static final String API_HOST_LIVE = "https://gw1.judopay.com";
 
+    public static final int UI_CLIENT_MODE_CUSTOM_UI = 0;
+    public static final int UI_CLIENT_MODE_JUDO_UI = 1;
+
+    public static final int LIVE = 0;
+    public static final int SANDBOX = 1;
+
+    private static int uiClientMode;
     private static String apiToken;
     private static String apiSecret;
-    private static int apiEnvironment;
+
+    private static int environment;
 
     private static boolean avsEnabled;
     private static boolean amexEnabled;
@@ -41,16 +63,27 @@ public class Judo {
     private static boolean maestroEnabled = true;
     private static boolean sslPinningEnabled = true;
     private static boolean rootedDevicesAllowed = true;
-    
-    public static void setup(String apiToken, String apiSecret, int apiEnvironment) {
+
+    public static void setup(String apiToken, String apiSecret, @Environment int environment) {
         Judo.apiToken = apiToken;
         Judo.apiSecret = apiSecret;
-        Judo.apiEnvironment = apiEnvironment;
+        Judo.environment = environment;
     }
 
     @SuppressWarnings("unused")
     public static JudoApiService getApiService(Context context) {
-        return JudoApiServiceFactory.getInstance(context);
+        return JudoApiServiceFactory.createApiService(context);
+    }
+
+    @Environment
+    public static int getEnvironment() {
+        checkInitialised();
+        return environment;
+    }
+
+    public static void setEnvironment(@Environment int environment) {
+        checkInitialised();
+        Judo.environment = environment;
     }
 
     public static String getApiToken() {
@@ -73,14 +106,13 @@ public class Judo {
         Judo.apiSecret = apiSecret;
     }
 
-    public static int getApiEnvironment() {
-        checkInitialised();
-        return apiEnvironment;
+    @UiClientMode
+    public static int getUiClientMode() {
+        return uiClientMode;
     }
 
-    public static void setApiEnvironment(int apiEnvironment) {
-        checkInitialised();
-        Judo.apiEnvironment = apiEnvironment;
+    public static void setUiClientMode(@UiClientMode int mode) {
+        uiClientMode = mode;
     }
 
     public static boolean isSslPinningEnabled() {
@@ -135,18 +167,13 @@ public class Judo {
 
     public static String getApiEnvironmentHost() {
         checkInitialised();
-        return apiEnvironment == Environment.SANDBOX ? API_HOST_SANDBOX : API_HOST_LIVE;
+        return environment == SANDBOX ? API_HOST_SANDBOX : API_HOST_LIVE;
     }
 
     private static void checkInitialised() {
         if (apiToken == null || apiSecret == null) {
             throw new RuntimeException("JudoPay SDK not initialised, call JudoPay.setup() with your API token and secret to configure");
         }
-    }
-
-    public class Environment {
-        public static final int LIVE = 0;
-        public static final int SANDBOX = 1;
     }
 
 }

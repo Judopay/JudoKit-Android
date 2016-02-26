@@ -22,7 +22,7 @@ import rx.Observable;
 
 /**
  * Judo interface with Retrofit annotated list of judo API calls that can be performed.
- * Use the {@link com.judopay.api.JudoApiServiceFactory#getInstance(Context)} method to obtain an
+ * Use the {@link com.judopay.api.JudoApiServiceFactory#createApiService(Context)} method to obtain an
  * instance. See <a href="https://github.com/square/retrofit">GitHub</a> for details.
  */
 public interface JudoApiService {

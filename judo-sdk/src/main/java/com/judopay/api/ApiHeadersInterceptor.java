@@ -3,12 +3,14 @@ package com.judopay.api;
 import android.os.Build;
 
 import com.judopay.BuildConfig;
+import com.judopay.Judo;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 
-import okhttp3.*;
+import okhttp3.Headers;
+import okhttp3.Interceptor;
 import okhttp3.Response;
 
 class ApiHeadersInterceptor implements Interceptor {
@@ -18,6 +20,7 @@ class ApiHeadersInterceptor implements Interceptor {
     private static final String ACCEPT_HEADER = "Accept";
     private static final String API_VERSION_HEADER = "Api-Version";
     private static final String CACHE_CONTROL_HEADER = "Cache-Control";
+    private static final String UI_MODE_HEADER = "UI-Client-Mode";
 
     private static final String JSON_MIME_TYPE = "application/json";
     private static final String API_VERSION = "5.0.0";
@@ -27,9 +30,11 @@ class ApiHeadersInterceptor implements Interceptor {
 
     private final UserAgent userAgent;
     private final AuthorizationEncoder authorizationEncoder;
+    private final int uiClientMode;
 
-    public ApiHeadersInterceptor(AuthorizationEncoder authorizationEncoder) {
+    public ApiHeadersInterceptor(AuthorizationEncoder authorizationEncoder, @Judo.UiClientMode int uiClientMode) {
         this.authorizationEncoder = authorizationEncoder;
+        this.uiClientMode = uiClientMode;
         this.userAgent = new UserAgent(BuildConfig.VERSION_NAME, Build.VERSION.RELEASE,
                 Build.MANUFACTURER, Build.MODEL, Locale.getDefault().getDisplayName());
     }
@@ -53,6 +58,7 @@ class ApiHeadersInterceptor implements Interceptor {
         headers.put(CACHE_CONTROL_HEADER, CACHE_CONTROL);
         headers.put(SDK_VERSION_HEADER, "Android-" + BuildConfig.VERSION_NAME);
         headers.put(USER_AGENT_HEADER, userAgent.toString());
+        headers.put(UI_MODE_HEADER, uiClientMode == Judo.UI_CLIENT_MODE_JUDO_UI ? "Judo-SDK" : "Custom-UI");
 
         return Headers.of(headers);
     }

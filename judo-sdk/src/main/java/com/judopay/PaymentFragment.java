@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.google.gson.Gson;
-import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.arch.AndroidScheduler;
 import com.judopay.model.Card;
 
@@ -17,7 +16,8 @@ public final class PaymentFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
 
         if (this.presenter == null) {
-            this.presenter = new PaymentPresenter(this, JudoApiServiceFactory.getInstance(getActivity()), new AndroidScheduler(), new Gson());
+            JudoApiService apiService = Judo.getApiService(getActivity());
+            this.presenter = new PaymentPresenter(this, apiService, new AndroidScheduler(), new Gson());
         }
     }
 
