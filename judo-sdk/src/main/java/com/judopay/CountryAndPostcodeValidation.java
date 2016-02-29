@@ -75,14 +75,13 @@ public class CountryAndPostcodeValidation {
     private int getPostcodeLabel(Country country) {
         switch (country.getDisplayName()) {
             case Country.UNITED_STATES:
-                return R.string.postcode_us;
+                return R.string.billing_zip_code;
 
             case Country.CANADA:
-                return R.string.postcode_canada;
+                return R.string.billing_postal_code;
 
-            case Country.UNITED_KINGDOM:
             default:
-                return R.string.postcode_uk;
+                return R.string.billing_postcode;
         }
     }
 

@@ -9,16 +9,16 @@ import java.math.BigDecimal;
  */
 public class RefundRequest extends Request {
 
-    private final Integer receiptId;
+    private final String receiptId;
     private final BigDecimal amount;
 
-    public RefundRequest(int receiptId, BigDecimal amount, String yourPaymentReference) {
-        super(yourPaymentReference);
+    public RefundRequest(String receiptId, BigDecimal amount) {
+        super(true);
         this.receiptId = receiptId;
         this.amount = amount;
     }
 
-    public Integer getReceiptId() {
+    public String getReceiptId() {
         return receiptId;
     }
 

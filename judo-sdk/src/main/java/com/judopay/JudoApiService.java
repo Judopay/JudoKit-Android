@@ -7,11 +7,11 @@ import com.judopay.model.CollectionRequest;
 import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
 import com.judopay.model.Receipts;
-import com.judopay.model.RefundRequest;
-import com.judopay.model.RegisterCardRequest;
+import com.judopay.model.Refund;
+import com.judopay.model.RegisterTransaction;
 import com.judopay.model.ThreeDSecureInfo;
-import com.judopay.model.TokenRequest;
-import com.judopay.model.VoidRequest;
+import com.judopay.model.TokenTransaction;
+import com.judopay.model.VoidTransaction;
 
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -84,17 +84,17 @@ public interface JudoApiService {
     Observable<Receipt> complete3dSecure(@Path("receiptId") String receiptId, @Body ThreeDSecureInfo threeDSecureInfo);
 
     /**
-     * @param collectionRequest the collection transaction to be performed
-     * @return the receipt for the collection with the status of the transaction
+     * @param collectionRequest the collectionRequest transaction to be performed
+     * @return the receipt for the collectionRequest with the status of the transaction
      */
     @POST("transactions/collections")
     Observable<Receipt> collection(@Body CollectionRequest collectionRequest);
 
     /**
-     * Perform a refund for a transaction
+     * Perform a refundRequest for a transaction
      *
-     * @param refundRequest the object containing the amount to be refunded and the receiptId
-     * @return the receipt for the refund with the status of the transaction
+     * @param refundRequest the object containing the amount to be refunded and receiptId
+     * @return the receipt for the refundRequest with the status of the transaction
      */
     @POST("transactions/refunds")
     Observable<Receipt> refund(@Body RefundRequest refundRequest);
@@ -102,7 +102,7 @@ public interface JudoApiService {
     /**
      * Register a card to be used for making future tokenised payments
      *
-     * @param registerCardRequest the details for the payment, including the payment method, amount and Judo account ID
+     * @param registerCardRequest the details of the card to be registered
      * @return the receipt for the card registration with the status of the transaction
      */
     @POST("transactions/registercard")

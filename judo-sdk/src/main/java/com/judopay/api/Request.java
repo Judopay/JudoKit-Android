@@ -5,7 +5,7 @@ import com.judopay.model.ClientDetails;
 import java.util.UUID;
 
 /**
- * A request to be sent to the judo API
+ * A Request to be requested with the judo API
  */
 public abstract class Request {
 

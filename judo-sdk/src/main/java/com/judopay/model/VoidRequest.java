@@ -9,8 +9,8 @@ public final class VoidRequest extends Request {
     private String receiptId;
     private BigDecimal amount;
 
-    public VoidRequest(String yourPaymentReference, String receiptId, BigDecimal amount) {
-        super(yourPaymentReference);
+    public VoidRequest(String receiptId, BigDecimal amount) {
+        super(true);
         this.receiptId = receiptId;
         this.amount = amount;
     }

@@ -46,7 +46,7 @@ public class PaymentFormErrorMessageTest {
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .perform(typeText("1234000000001234"));
 
-        onView(withText(R.string.error_card_number))
+        onView(withText(R.string.check_card_number))
                 .check(matches(isDisplayed()));
     }
 
@@ -57,7 +57,7 @@ public class PaymentFormErrorMessageTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("0101"));
 
-        onView(withText(R.string.error_check_date))
+        onView(withText(R.string.check_expiry_date))
                 .check(matches(isDisplayed()));
     }
 
@@ -68,14 +68,13 @@ public class PaymentFormErrorMessageTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1230"));
 
-        onView(withText(R.string.error_check_date))
+        onView(withText(R.string.check_expiry_date))
                 .check(matches(isDisplayed()));
     }
 
     @Test
     public void shouldDisplayErrorMessageWhenFutureStartDateEntered() {
         Judo.setMaestroEnabled(true);
-        Judo.setAvsEnabled(true);
 
         activityTestRule.launchActivity(getIntent());
 
@@ -85,14 +84,13 @@ public class PaymentFormErrorMessageTest {
         onView(withId(R.id.start_date_edit_text))
                 .perform(typeText("0125"));
 
-        onView(withText(R.string.error_check_date))
+        onView(withText(R.string.check_start_date))
                 .check(matches(isDisplayed()));
     }
 
     @Test
     public void shouldDisplayErrorMessageWhenStartDateOlderThanTenYearsEntered() {
         Judo.setMaestroEnabled(true);
-        Judo.setAvsEnabled(true);
 
         activityTestRule.launchActivity(getIntent());
 
@@ -102,7 +100,7 @@ public class PaymentFormErrorMessageTest {
         onView(withId(R.id.start_date_edit_text))
                 .perform(typeText("1205"));
 
-        onView(withText(R.string.error_check_date))
+        onView(withText(R.string.check_start_date))
                 .check(matches(isDisplayed()));
     }
 
@@ -130,31 +128,6 @@ public class PaymentFormErrorMessageTest {
 
         onView(withText(R.string.error_maestro_not_supported))
                 .check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void shouldDisplayErrorMessageWhenInvalidBillingCountryChosen() {
-        Judo.setAvsEnabled(true);
-
-        activityTestRule.launchActivity(getIntent());
-
-        onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("4976000000003436"));
-
-        onView(withId(R.id.expiry_date_edit_text))
-                .perform(typeText("1220"));
-
-        onView(withId(R.id.cvv_edit_text))
-                .perform(typeText("452"));
-
-        onView(withId(R.id.country_spinner))
-                .perform(click());
-
-        onView(withText(Country.OTHER))
-                .perform(click());
-
-        onView(withId(R.id.post_code_edit_text))
-                .check(matches(isDisabled()));
     }
 
     protected Intent getIntent() {
