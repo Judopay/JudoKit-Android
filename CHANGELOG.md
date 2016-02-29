@@ -16,6 +16,7 @@
 - Added support for voiding pre-auth transactions to ```JudoApiService```
 
 **Bugs fixed:**
+- Visa Credit, Visa Debit and Visa Electron now show Visa logo when performing a token payment or pre-auth
 - Fixed an issue where additional API requests would fail after an initial transaction request was performed.
 - Resolved an issue where making a token payment/pre-auth would not allow a 4 digit CIDV to be entered for an Amex card.
 - Resolved an issue where an incorrect error message was given if the required Activity Extras was not passed to a ```JudoActivity```.
