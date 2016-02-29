@@ -3,6 +3,7 @@
     <string name="billing_postcode">Billing postcode</string>
     <string name="billing_zip_code">Billing ZIP code</string>
     <string name="billing_postal_code">Billing postal code</string>
+    <string name="checking_billing_postcode">Check billing postcode</string>
     <string name="pay">PAY</string>
     <string name="payment">Payment</string>
     <string name="token_payment">Token payment</string>
