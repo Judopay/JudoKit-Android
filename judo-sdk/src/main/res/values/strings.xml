@@ -1,8 +1,8 @@
 <resources>
     <string name="card_number_hint">0000 0000 0000 0000</string>
-    <string name="postcode_uk">Billing postcode</string>
-    <string name="postcode_us">Billing ZIP code</string>
-    <string name="postcode_canada">Billing postal code</string>
+    <string name="billing_postcode">Billing postcode</string>
+    <string name="billing_zip_code">Billing ZIP code</string>
+    <string name="billing_postal_code">Billing postal code</string>
     <string name="pay">PAY</string>
     <string name="payment">Payment</string>
     <string name="token_payment">Token payment</string>
