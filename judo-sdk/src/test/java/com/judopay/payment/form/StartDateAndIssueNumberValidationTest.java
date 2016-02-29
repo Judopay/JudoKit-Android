@@ -43,7 +43,7 @@ public class StartDateAndIssueNumberValidationTest {
         StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(build, CardType.fromCardNumber(build.getCardNumber()));
 
         assertThat(startDateAndIssueNumberValidation.isShowStartDateError(), is(true));
-        assertThat(startDateAndIssueNumberValidation.getStartDateError(), is(R.string.error_check_date));
+        assertThat(startDateAndIssueNumberValidation.getStartDateError(), is(R.string.check_start_date));
     }
 
     @Test

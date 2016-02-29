@@ -11,7 +11,7 @@
         android:id="@+id/card_number_input_layout"
         style="@style/input_layout">
 
-        <EditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/card_number_edit_text"
             style="@style/judo_card_number" />
 

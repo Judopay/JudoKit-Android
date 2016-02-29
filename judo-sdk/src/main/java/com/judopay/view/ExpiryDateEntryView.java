@@ -58,14 +58,14 @@ public class ExpiryDateEntryView extends LinearLayout {
         expiryDateEditText.addTextChangedListener(watcher);
     }
 
-    public void setTokenized(boolean tokenized) {
-        if (tokenized) {
-            expiryDateEditText.setEnabled(false);
-            expiryDateEditText.setText(getResources().getString(R.string.token_date));
-        } else {
-            expiryDateEditText.setEnabled(true);
-            expiryDateEditText.setText("");
-        }
+    public void setExpiryDate(String expiryDate) {
+        expiryDateEditText.setText(expiryDate);
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        expiryDateEditText.setEnabled(false);
     }
 
     public String getText() {
