@@ -6,7 +6,9 @@
  - VoidRequest, CollectionRequest and RefundRequest no longer accept a 'yourPaymentReference' constructor argument as the request can be detected as a duplicate if the same payment reference was used from the pre-auth or payment request.
 
 **Changes:**
-- Request classes renamed: PaymentRequest, TokenRequest, RegisterCardRequest, VoidRequest, RefundRequest, CollectionRequest
+- When performing a token payment, the expiry date of the token card is now shown along with the card number last 4 digits.
+- Request classes renamed: PaymentRequest, TokenRequest, RegisterCardRequest, VoidRequest, RefundRequest, CollectionRequest.
+- CV2 card location icon now shown on launch of payment screen, previously was only shown after card number input.
 
 ## [5.1.1](https://github.com/judopay/Judo-Android/tree/5.1.1) (2016-02-11)
 
