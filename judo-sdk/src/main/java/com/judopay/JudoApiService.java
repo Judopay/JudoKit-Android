@@ -7,11 +7,11 @@ import com.judopay.model.CollectionRequest;
 import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
 import com.judopay.model.Receipts;
-import com.judopay.model.Refund;
-import com.judopay.model.RegisterTransaction;
+import com.judopay.model.RefundRequest;
+import com.judopay.model.RegisterCardRequest;
 import com.judopay.model.ThreeDSecureInfo;
-import com.judopay.model.TokenTransaction;
-import com.judopay.model.VoidTransaction;
+import com.judopay.model.TokenRequest;
+import com.judopay.model.VoidRequest;
 
 import retrofit2.http.Body;
 import retrofit2.http.GET;
