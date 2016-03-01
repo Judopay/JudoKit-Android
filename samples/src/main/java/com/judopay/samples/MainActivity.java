@@ -71,12 +71,6 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        Rect rectangle = new Rect();
-        Window window = getWindow();
-        window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
-        int statusBarHeight = rectangle.top;
-        int contentViewTop = window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
-
         Judo.setup(API_TOKEN, API_SECRET, Judo.Environment.SANDBOX);
 
         paymentButton.setOnClickListener(new View.OnClickListener() {
