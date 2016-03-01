@@ -35,10 +35,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.web.model.Atoms.script;
 import static android.support.test.espresso.web.model.Atoms.transform;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A collection of {@link WebAssertion}s that assert on {@link WebView}s.

@@ -30,7 +30,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 

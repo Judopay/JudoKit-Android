@@ -17,12 +17,11 @@
 package android.support.test.espresso.web.model;
 
 import android.os.Build;
+import android.support.test.espresso.core.deps.guava.collect.ImmutableSet;
+import android.support.test.espresso.core.deps.guava.collect.Lists;
+import android.support.test.espresso.core.deps.guava.collect.Maps;
 import android.util.JsonReader;
 import android.util.Log;
-
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,9 +40,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkArgument;
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkState;
+
 
 /**
  * Encodes/Decodes JSON.

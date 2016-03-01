@@ -21,11 +21,12 @@ import org.json.JSONStringer;
 
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
+
 
 /**
  * A reference to a javascript element existing within a WebView.
- *
+ * <p>
  * <p>This reference is only a pointer to data held within the javascript context
  * of a given WebView. It may no longer be valid the next time you attempt to
  * use it. For instance the page could be navigated away from. There is not much
@@ -33,63 +34,63 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * to a WebView for further action.
  */
 public final class ElementReference implements JSONAble {
-  static final String KEY = "ELEMENT";
+    static final String KEY = "ELEMENT";
 
-  private final String opaque;
+    private final String opaque;
 
-  @Override
-  public int hashCode() {
-    return opaque.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    if (other instanceof ElementReference) {
-      return (((ElementReference) other).opaque.equals(opaque));
-    } else {
-      return false;
-    }
-  }
-
-  @Override
-  public String toString() {
-    return toJSONString();
-  }
-
-  ElementReference(String opaque) {
-    this.opaque = checkNotNull(opaque);
-  }
-
-  String getOpaque() {
-    return opaque;
-  }
-
-  @Override
-  public String toJSONString() {
-    try {
-      return new JSONStringer()
-          .object()
-          .key(KEY)
-          .value(opaque)
-          .endObject()
-          .toString();
-    } catch (JSONException je) {
-      throw new RuntimeException(je);
+    @Override
+    public int hashCode() {
+        return opaque.hashCode();
     }
 
-  }
-
-  static final DeJSONFactory DEJSONIZER =
-      new DeJSONFactory() {
-        @Override
-        public Object attemptDeJSONize(Map<String, Object> map) {
-          if (map.size() == 1) {
-            Object maybeOpaque = map.get(KEY);
-            if (maybeOpaque instanceof String) {
-              return new ElementReference((String) maybeOpaque);
-            }
-          }
-          return null;
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof ElementReference) {
+            return (((ElementReference) other).opaque.equals(opaque));
+        } else {
+            return false;
         }
-      };
+    }
+
+    @Override
+    public String toString() {
+        return toJSONString();
+    }
+
+    ElementReference(String opaque) {
+        this.opaque = checkNotNull(opaque);
+    }
+
+    String getOpaque() {
+        return opaque;
+    }
+
+    @Override
+    public String toJSONString() {
+        try {
+            return new JSONStringer()
+                    .object()
+                    .key(KEY)
+                    .value(opaque)
+                    .endObject()
+                    .toString();
+        } catch (JSONException je) {
+            throw new RuntimeException(je);
+        }
+
+    }
+
+    static final DeJSONFactory DEJSONIZER =
+            new DeJSONFactory() {
+                @Override
+                public Object attemptDeJSONize(Map<String, Object> map) {
+                    if (map.size() == 1) {
+                        Object maybeOpaque = map.get(KEY);
+                        if (maybeOpaque instanceof String) {
+                            return new ElementReference((String) maybeOpaque);
+                        }
+                    }
+                    return null;
+                }
+            };
 }

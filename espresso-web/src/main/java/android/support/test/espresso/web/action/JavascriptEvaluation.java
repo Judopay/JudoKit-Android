@@ -21,6 +21,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.test.espresso.core.deps.guava.base.Function;
+import android.support.test.espresso.core.deps.guava.util.concurrent.AbstractFuture;
+import android.support.test.espresso.core.deps.guava.util.concurrent.AsyncFunction;
+import android.support.test.espresso.core.deps.guava.util.concurrent.Futures;
+import android.support.test.espresso.core.deps.guava.util.concurrent.ListenableFuture;
+import android.support.test.espresso.core.deps.guava.util.concurrent.MoreExecutors;
 import android.support.test.espresso.web.bridge.Conduit;
 import android.support.test.espresso.web.bridge.JavaScriptBridge;
 import android.support.test.espresso.web.model.Evaluation;
@@ -30,20 +36,13 @@ import android.webkit.ValueCallback;
 import android.webkit.WebHistoryItem;
 import android.webkit.WebView;
 
-import com.google.common.base.Function;
-import com.google.common.util.concurrent.AbstractFuture;
-import com.google.common.util.concurrent.AsyncFunction;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.MoreExecutors;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkState;
 
 /**
  * Wraps scripts into WebDriver atoms, which are used to ensure consistent behaviour cross-browser.
@@ -98,7 +97,7 @@ final class JavascriptEvaluation {
    * A Future is returned which contains the result of the evaluation.
    */
   static ListenableFuture<Evaluation> evaluate(final WebView view, final String script,
-      final List<? extends Object> arguments, @Nullable final WindowReference window) {
+                                               final List<? extends Object> arguments, @Nullable final WindowReference window) {
     UnpreparedScript unprepared = new UnpreparedScript(view, script, arguments, window);
     SanitizerTask sanitizer = new SanitizerTask(unprepared);
     view.post(sanitizer);
@@ -407,12 +406,16 @@ final class JavascriptEvaluation {
           } else {
             final ValueCallbackFuture<String> result = new ValueCallbackFuture<String>();
             if (Looper.myLooper() == Looper.getMainLooper()) {
-              in.view.evaluateJavascript(in.script, result);
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                in.view.evaluateJavascript(in.script, result);
+              }
             } else {
               in.view.post(new Runnable() {
                 @Override
                 public void run() {
-                  in.view.evaluateJavascript(in.script, result);
+                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    in.view.evaluateJavascript(in.script, result);
+                  }
                 }
               });
             }

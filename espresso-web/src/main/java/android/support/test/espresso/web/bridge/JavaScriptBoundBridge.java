@@ -16,14 +16,14 @@
 
 package android.support.test.espresso.web.bridge;
 
+import android.support.test.espresso.core.deps.guava.collect.Lists;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
-import com.google.common.collect.Lists;
-
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
+
 
 /**
  * The actual class injected as a JavascriptInterface in every web view.

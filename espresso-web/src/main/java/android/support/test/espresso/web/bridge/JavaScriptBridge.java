@@ -18,66 +18,66 @@ package android.support.test.espresso.web.bridge;
 
 import android.os.Build;
 import android.os.Looper;
+import android.support.test.espresso.core.deps.guava.util.concurrent.SettableFuture;
 import android.util.Log;
-
-import com.google.common.util.concurrent.SettableFuture;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.google.common.base.Preconditions.checkState;
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkState;
+
 
 /**
  * Provides a gateway for Java and Javascript code to communicate to eachother.
  */
 public final class JavaScriptBridge {
-  private static final AtomicInteger tokenGenerator = new AtomicInteger(0);
-  static final String TAG = "JS_BRIDGE";
-  static final String JS_BRIDGE_NAME = "__g_wd_jsb";
+    private static final AtomicInteger tokenGenerator = new AtomicInteger(0);
+    static final String TAG = "JS_BRIDGE";
+    static final String JS_BRIDGE_NAME = "__g_wd_jsb";
 
-  private static volatile boolean initialized = false;
-  private static JavaScriptBoundBridge boundBridge;
+    private static volatile boolean initialized = false;
+    private static JavaScriptBoundBridge boundBridge;
 
-  /**
-   * Creates a Conduit object which allows Java to wrap Javascript code within a
-   * handler that will foward evaluation results back to the Java process.
-   *
-   * <p>Conduits can be used for only 1 evaluation. Creating new ones is relatively cheap.
-   */
-  public static Conduit makeConduit() {
-    checkState(initialized, "Install bridge not called!");
-    checkState(null != boundBridge, "Bridge not configured; chromium webviews do not need bridge");
-    Conduit conduit = new Conduit.Builder()
-        .withBridgeName(JS_BRIDGE_NAME)
-        .withToken(String.valueOf(tokenGenerator.incrementAndGet()))
-        .withSuccessMethod("setResult")
-        .withErrorMethod("setError")
-        .withJsResult(SettableFuture.<String>create())
-        .build();
-    boundBridge.addConduit(conduit);
-    return conduit;
-  }
-
-  /**
-   * Sets up Java / Javascript bridging on every WebView in the app.
-   *
-   * <p>This method must be called very early (eg: before webviews are loaded in your app).
-   * GoogleInstrumentation invokes this method if this library is present on your classpath.
-   *
-   * <p>This method must be called from the main thread. It'll return immedately if the bridge
-   * is already installed.
-   */
-  public static void installBridge() {
-    checkState(Looper.getMainLooper() == Looper.myLooper(), "Must be on main thread!");
-    if (initialized) {
-      return;
+    /**
+     * Creates a Conduit object which allows Java to wrap Javascript code within a
+     * handler that will foward evaluation results back to the Java process.
+     * <p>
+     * <p>Conduits can be used for only 1 evaluation. Creating new ones is relatively cheap.
+     */
+    public static Conduit makeConduit() {
+        checkState(initialized, "Install bridge not called!");
+        checkState(null != boundBridge, "Bridge not configured; chromium webviews do not need bridge");
+        Conduit conduit = new Conduit.Builder()
+                .withBridgeName(JS_BRIDGE_NAME)
+                .withToken(String.valueOf(tokenGenerator.incrementAndGet()))
+                .withSuccessMethod("setResult")
+                .withErrorMethod("setError")
+                .withJsResult(SettableFuture.<String>create())
+                .build();
+        boundBridge.addConduit(conduit);
+        return conduit;
     }
-    try {
-      if (Build.VERSION.SDK_INT < 19) {
-        boundBridge = new AndroidJavaScriptBridgeInstaller().install();
-      }
-    } catch (JavaScriptBridgeInstallException e) {
-      Log.e(TAG, "Unable to bridge web views!", e);
+
+    /**
+     * Sets up Java / Javascript bridging on every WebView in the app.
+     * <p>
+     * <p>This method must be called very early (eg: before webviews are loaded in your app).
+     * GoogleInstrumentation invokes this method if this library is present on your classpath.
+     * <p>
+     * <p>This method must be called from the main thread. It'll return immedately if the bridge
+     * is already installed.
+     */
+    public static void installBridge() {
+        checkState(Looper.getMainLooper() == Looper.myLooper(), "Must be on main thread!");
+        if (initialized) {
+            return;
+        }
+        try {
+            if (Build.VERSION.SDK_INT < 19) {
+                boundBridge = new AndroidJavaScriptBridgeInstaller().install();
+            }
+        } catch (JavaScriptBridgeInstallException e) {
+            Log.e(TAG, "Unable to bridge web views!", e);
+        }
+        initialized = true;
     }
-    initialized = true;
-  }
 }

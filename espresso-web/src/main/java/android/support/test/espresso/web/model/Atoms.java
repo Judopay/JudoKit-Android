@@ -18,7 +18,7 @@ package android.support.test.espresso.web.model;
 
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
 
 /**
  * Utility class wrapping simple and more commonly used atoms.

@@ -9,24 +9,20 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
+        consumerProguardFiles 'proguard-rules.pro'
     }
-    buildTypes {
-        debug {
-            minifyEnabled true
-        }
-        release {
-            minifyEnabled true
-//            proguardFiles 'proguard-android.txt'
-            proguardFiles 'proguard-rules.pro'
-        }
+
+    lintOptions {
+        disable 'InvalidPackage'
     }
+
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile 'junit:junit:4.12'
-    compile 'com.google.guava:guava:19.0'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.android.support.test.espresso:espresso-core:2.2.1'
 

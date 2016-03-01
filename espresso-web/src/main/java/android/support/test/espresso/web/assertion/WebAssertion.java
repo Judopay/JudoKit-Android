@@ -22,7 +22,8 @@ import android.support.test.espresso.web.model.Atom;
 import android.view.View;
 import android.webkit.WebView;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
+
 
 /**
  * Similar to a ViewAssertion - a WebAssertion allows users to check the results of an atom

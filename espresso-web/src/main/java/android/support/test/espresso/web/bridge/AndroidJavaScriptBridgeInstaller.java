@@ -30,7 +30,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
+
 
 final class AndroidJavaScriptBridgeInstaller {
   private static final JavaScriptBoundBridge boundBridge = new JavaScriptBoundBridge();

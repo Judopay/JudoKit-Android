@@ -16,6 +16,8 @@
 
 package android.support.test.espresso.web.webdriver;
 
+import android.support.test.espresso.core.deps.guava.collect.Lists;
+import android.support.test.espresso.core.deps.guava.collect.Maps;
 import android.support.test.espresso.web.model.Atom;
 import android.support.test.espresso.web.model.ElementReference;
 import android.support.test.espresso.web.model.Evaluation;
@@ -23,14 +25,12 @@ import android.support.test.espresso.web.model.SimpleAtom;
 import android.support.test.espresso.web.model.TransformingAtom;
 import android.support.test.espresso.web.model.WindowReference;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import java.util.List;
 import java.util.Map;
 
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
 import static android.support.test.espresso.web.model.Atoms.castOrDie;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A collection of Javascript Atoms from the WebDriver project.

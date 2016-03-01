@@ -21,6 +21,11 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.core.deps.guava.base.Function;
+import android.support.test.espresso.core.deps.guava.util.concurrent.Futures;
+import android.support.test.espresso.core.deps.guava.util.concurrent.ListenableFuture;
+import android.support.test.espresso.core.deps.guava.util.concurrent.MoreExecutors;
+import android.support.test.espresso.core.deps.guava.util.concurrent.SettableFuture;
 import android.support.test.espresso.web.model.Atom;
 import android.support.test.espresso.web.model.ElementReference;
 import android.support.test.espresso.web.model.Evaluation;
@@ -28,12 +33,6 @@ import android.support.test.espresso.web.model.WindowReference;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
-
-import com.google.common.base.Function;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.google.common.util.concurrent.SettableFuture;
 
 import org.hamcrest.Matcher;
 
@@ -43,9 +42,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkState;
 import static android.support.test.espresso.matcher.ViewMatchers.isJavascriptEnabled;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 /**
  * A ViewAction which causes the provided Atom to be evaluated within a webview.

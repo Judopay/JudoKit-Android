@@ -2,14 +2,18 @@ package com.judopay;
 
 import android.content.Intent;
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.web.model.Atom;
+import android.support.test.espresso.web.model.ElementReference;
 import android.support.test.espresso.web.webdriver.Locator;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
+import android.text.format.DateUtils;
 import android.view.View;
 
 import com.judopay.model.Currency;
+import com.judopay.util.ElapsedTimeIdlingResource;
 import com.judopay.util.ViewVisibilityIdlingResource;
 
 import org.junit.Before;
@@ -66,9 +70,14 @@ public class ThreeDSecureTest {
 
         Espresso.unregisterIdlingResources(idlingResource);
 
-        Atom submitButton = findElement(Locator.CLASS_NAME, "ACSSubmit");
+
+
+
+        Atom<ElementReference> submitButton = findElement(Locator.CLASS_NAME, "ACSSubmit");
         onWebView().withElement(submitButton)
                 .perform(webClick());
+
+        new WebViewIdlingResource();
 
         assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
     }

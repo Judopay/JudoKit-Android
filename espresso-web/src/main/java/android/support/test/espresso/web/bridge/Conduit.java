@@ -16,10 +16,10 @@
 
 package android.support.test.espresso.web.bridge;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.SettableFuture;
+import android.support.test.espresso.core.deps.guava.util.concurrent.ListenableFuture;
+import android.support.test.espresso.core.deps.guava.util.concurrent.SettableFuture;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
 
 /**
  * A mechanism to get results out of a Javascript context and into a Java context.
