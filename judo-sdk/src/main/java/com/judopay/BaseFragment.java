@@ -36,7 +36,7 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, CardEnt
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setUiClientMode(Judo.UI_CLIENT_MODE_JUDO_UI);
+        setUiClientMode(Judo.UI_CLIENT_MODE_JUDO_SDK);
 
         setRetainInstance(true);
     }

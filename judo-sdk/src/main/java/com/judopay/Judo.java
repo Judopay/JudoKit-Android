@@ -16,7 +16,7 @@ import java.lang.annotation.RetentionPolicy;
  */
 public class Judo {
 
-    @IntDef({UI_CLIENT_MODE_CUSTOM_UI, UI_CLIENT_MODE_JUDO_UI})
+    @IntDef({UI_CLIENT_MODE_CUSTOM_UI, UI_CLIENT_MODE_JUDO_SDK})
     @Retention(RetentionPolicy.SOURCE)
     public @interface UiClientMode {
     }
@@ -46,7 +46,7 @@ public class Judo {
     private static final String API_HOST_LIVE = "https://gw1.judopay.com";
 
     public static final int UI_CLIENT_MODE_CUSTOM_UI = 0;
-    public static final int UI_CLIENT_MODE_JUDO_UI = 1;
+    public static final int UI_CLIENT_MODE_JUDO_SDK = 1;
 
     public static final int LIVE = 0;
     public static final int SANDBOX = 1;

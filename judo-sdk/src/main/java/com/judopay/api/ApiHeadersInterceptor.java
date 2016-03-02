@@ -60,7 +60,7 @@ class ApiHeadersInterceptor implements Interceptor {
         headers.put(CACHE_CONTROL_HEADER, CACHE_CONTROL);
         headers.put(SDK_VERSION_HEADER, "Android-" + BuildConfig.VERSION_NAME);
         headers.put(USER_AGENT_HEADER, userAgent.toString());
-        headers.put(UI_MODE_HEADER, uiClientMode == Judo.UI_CLIENT_MODE_JUDO_UI ? JUDO_SDK_UI_MODE : CUSTOM_UI_MODE);
+        headers.put(UI_MODE_HEADER, uiClientMode == Judo.UI_CLIENT_MODE_JUDO_SDK ? JUDO_SDK_UI_MODE : CUSTOM_UI_MODE);
 
         return Headers.of(headers);
     }
