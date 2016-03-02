@@ -7,10 +7,12 @@ import android.support.test.espresso.web.model.Atom;
 import android.support.test.espresso.web.model.ElementReference;
 import android.support.test.espresso.web.webdriver.Locator;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.UiThreadTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.text.format.DateUtils;
 import android.view.View;
+import android.webkit.WebView;
 
 import com.judopay.model.Currency;
 import com.judopay.util.ElapsedTimeIdlingResource;
@@ -40,6 +42,7 @@ public class ThreeDSecureTest {
 
     @Rule
     public ActivityTestRule<PreAuthActivity> activityTestRule = new ActivityTestRule<>(PreAuthActivity.class, false, false);
+    private WebViewIdlingResource webViewIdlingResource;
 
     @Before
     public void setupJudoSdk() {
@@ -47,8 +50,10 @@ public class ThreeDSecureTest {
     }
 
     @Test
-    public void shouldPerform3dSecurePaymentSuccessfully() {
-        PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
+    public void shouldPerform3dSecurePaymentSuccessfully() throws Throwable {
+        final PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
+
+        registerWebViewIdlingResource(activity);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976350000006891"));
@@ -62,24 +67,36 @@ public class ThreeDSecureTest {
         onView(withId(R.id.payment_button))
                 .perform(click());
 
-        ViewVisibilityIdlingResource idlingResource = new ViewVisibilityIdlingResource(activity.findViewById(R.id.three_d_secure_web_view), View.VISIBLE);
-        Espresso.registerIdlingResources(idlingResource);
+//        ViewVisibilityIdlingResource idlingResource = new ViewVisibilityIdlingResource(activity.findViewById(R.id.three_d_secure_web_view), View.VISIBLE);
+//        Espresso.registerIdlingResources(idlingResource);
 
         onView(withId(R.id.three_d_secure_web_view))
                 .check(matches(isDisplayed()));
 
-        Espresso.unregisterIdlingResources(idlingResource);
-
-
-
+//        Espresso.unregisterIdlingResources(idlingResource);
 
         Atom<ElementReference> submitButton = findElement(Locator.CLASS_NAME, "ACSSubmit");
         onWebView().withElement(submitButton)
                 .perform(webClick());
 
-        new WebViewIdlingResource();
+        unregisterWebViewIdlingResource();
 
         assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
+    }
+
+    public void registerWebViewIdlingResource(final PreAuthActivity activity) throws Throwable {
+        UiThreadTestRule uiThreadTestRule = new UiThreadTestRule();
+        uiThreadTestRule.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                webViewIdlingResource = new WebViewIdlingResource((WebView) activity.findViewById(R.id.three_d_secure_web_view));
+                Espresso.registerIdlingResources(webViewIdlingResource);
+            }
+        });
+    }
+
+    public void unregisterWebViewIdlingResource() {
+        Espresso.unregisterIdlingResources(webViewIdlingResource);
     }
 
     private Intent getIntent() {
