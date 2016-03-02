@@ -21,12 +21,14 @@ class ApiHeadersInterceptor implements Interceptor {
     private static final String API_VERSION_HEADER = "Api-Version";
     private static final String CACHE_CONTROL_HEADER = "Cache-Control";
     private static final String UI_MODE_HEADER = "UI-Client-Mode";
+    private static final String SDK_VERSION_HEADER = "Sdk-Version";
+    private static final String USER_AGENT_HEADER = "User-Agent";
 
     private static final String JSON_MIME_TYPE = "application/json";
     private static final String API_VERSION = "5.0.0";
     private static final String CACHE_CONTROL = "no-cache";
-    private static final String SDK_VERSION_HEADER = "Sdk-Version";
-    private static final String USER_AGENT_HEADER = "User-Agent";
+    private static final String JUDO_SDK_UI_MODE = "Judo-SDK";
+    private static final String CUSTOM_UI_MODE = "Custom-UI";
 
     private final UserAgent userAgent;
     private final AuthorizationEncoder authorizationEncoder;
@@ -58,7 +60,7 @@ class ApiHeadersInterceptor implements Interceptor {
         headers.put(CACHE_CONTROL_HEADER, CACHE_CONTROL);
         headers.put(SDK_VERSION_HEADER, "Android-" + BuildConfig.VERSION_NAME);
         headers.put(USER_AGENT_HEADER, userAgent.toString());
-        headers.put(UI_MODE_HEADER, uiClientMode == Judo.UI_CLIENT_MODE_JUDO_UI ? "Judo-SDK" : "Custom-UI");
+        headers.put(UI_MODE_HEADER, uiClientMode == Judo.UI_CLIENT_MODE_JUDO_UI ? JUDO_SDK_UI_MODE : CUSTOM_UI_MODE);
 
         return Headers.of(headers);
     }
