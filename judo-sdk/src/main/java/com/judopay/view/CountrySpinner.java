@@ -57,10 +57,6 @@ public class CountrySpinner extends AppCompatSpinner {
         return countries;
     }
 
-    public boolean isCountrySelected() {
-        return !Country.OTHER.equals(getSelectedCountry().getDisplayName());
-    }
-
     public Country getSelectedCountry() {
         return adapter.getItem(getSelectedItemPosition());
     }

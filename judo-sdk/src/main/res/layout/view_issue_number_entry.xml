@@ -6,7 +6,7 @@
         android:id="@+id/issue_number_input_layout"
         style="@style/input_layout">
 
-        <EditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/issue_number_edit_text"
             style="@style/judo_issue_number" />
 

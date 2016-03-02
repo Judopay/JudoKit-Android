@@ -1,27 +1,41 @@
 # judoNative Android SDK change log
 
+## [5.1.2](https://github.com/judopay/Judo-Android/tree/5.1.2) (2016-02-29)
+
+**Bugs fixed:**
+ - VoidRequest, CollectionRequest and RefundRequest no longer accept a 'yourPaymentReference' constructor argument as the request can be detected as a duplicate if the same payment reference was used from the pre-auth or payment request.
+
+**Changes:**
+- When performing a token payment, the expiry date of the token card is now shown along with the card number last 4 digits.
+- Request classes renamed: PaymentRequest, TokenRequest, RegisterCardRequest, VoidRequest, RefundRequest, CollectionRequest.
+- CV2 card location icon now shown on launch of payment screen, previously was only shown after card number input.
+
 ## [5.1.1](https://github.com/judopay/Judo-Android/tree/5.1.1) (2016-02-11)
 
 **Implemented enhancements:**
 - Added support for voiding pre-auth transactions to ```JudoApiService```
 
 **Bugs fixed:**
+- Visa Credit, Visa Debit and Visa Electron now show Visa logo when performing a token payment or pre-auth
 - Fixed an issue where additional API requests would fail after an initial transaction request was performed.
-- Resolved an issue where making a token payment/pre auth would not allow a 4 digit CIDV to be entered for an Amex card.
-- Resolved an issue where the incorrect error message was given if the required Activity Extras was not passed to a ```JudoActivity```
-- Fixed an isssue where the transaction meta data was not sent for register card transactions.
+- Resolved an issue where making a token payment/pre-auth would not allow a 4 digit CIDV to be entered for an Amex card.
+- Resolved an issue where an incorrect error message was given if the required Activity Extras was not passed to a ```JudoActivity```.
+- Fixed an issue where the transaction metadata was not sent for register card transactions.
+- Fixed an issue where the incorrect dialog message was shown when a card was declined during a card registration.
 
 **Changes:**
 - When a duplicated transaction is detected, a ```DuplicateTransactionException``` is now thrown instead of the original transaction response being replayed.
 - UI tests moved to judo-sdk module and test framework upgraded to Espresso 2.
 - Retrofit library upgraded to latest version.
 - New method for obtaining ```JudoApiService``` instance, call ```Judo.getApiService(context);```
-- ```JudoApiService method``` for completing a transaction with 3D Secure verification renamed.
+- ```JudoApiService``` method for completing a transaction with 3D Secure verification renamed.
+- Address Verification Service (AVS) postcode field can now be skipped if card holder is outside UK, USA and Canada.  
+- Removed the ability to pass pre-filled card data into the card entry form when performing a token payment/pre-auth
 
 ## [5.1](https://github.com/judopay/Judo-Android/tree/5.1) (2016-01-28)
 
 **Implemented enhancements:**
-- Add Brazilian Real to list of supported currencies.
+- Brazilian Real added to list of supported currencies.
 - Enable 3D Secure verification for all transactions by default, if required by the Merchant's bank.
 - Allow transactions for Android devices with root permissions, with option to block if required.
 - New Android views provided for card data entry for use when writing a custom UI.

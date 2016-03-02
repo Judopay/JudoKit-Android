@@ -18,7 +18,7 @@ public class PaymentFormValidationTest {
                 .build(new PaymentForm.Builder()
                         .setCardNumber("1234567812345678")
                         .setCvv("123")
-                        .setExpiryDate("01/30")
+                        .setExpiryDate("01/20")
                         .setStartDate("")
                         .setIssueNumber("")
                         .setPostcode("")
@@ -130,10 +130,10 @@ public class PaymentFormValidationTest {
                 .build(new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")
                         .setCvv("123")
-                        .setExpiryDate("12/30")
+                        .setExpiryDate("12/20")
                         .setStartDate("")
                         .setIssueNumber("")
-                        .setPostcode("")
+                        .setPostcode("12345")
                         .setCountry(new Country(0, Country.CANADA))
                         .build());
 
@@ -146,7 +146,7 @@ public class PaymentFormValidationTest {
                 .build(new PaymentForm.Builder()
                         .setCardNumber("6759649826438453")
                         .setCvv("123")
-                        .setExpiryDate("12/30")
+                        .setExpiryDate("12/20")
                         .setStartDate("")
                         .setIssueNumber("")
                         .setPostcode("")
@@ -163,10 +163,10 @@ public class PaymentFormValidationTest {
                 .build(new PaymentForm.Builder()
                         .setCardNumber("6759649826438453")
                         .setCvv("123")
-                        .setExpiryDate("12/30")
+                        .setExpiryDate("12/20")
                         .setStartDate("12/12")
                         .setIssueNumber("01")
-                        .setPostcode("")
+                        .setPostcode("ABCDEF")
                         .setMaestroSupported(true)
                         .setCountry(new Country(0, Country.CANADA))
                         .build());
@@ -175,12 +175,12 @@ public class PaymentFormValidationTest {
     }
 
     @Test
-    public void shouldHavePaymentButtonDisabledWhenAddressIncomplete() {
+    public void shouldHavePaymentButtonEnabledWhenCountryIsOther() {
         PaymentFormValidation paymentFormValidation = new PaymentFormValidation.Builder()
                 .build(new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")
                         .setCvv("123")
-                        .setExpiryDate("12/30")
+                        .setExpiryDate("12/20")
                         .setStartDate("12/12")
                         .setIssueNumber("01")
                         .setPostcode("")
@@ -188,7 +188,7 @@ public class PaymentFormValidationTest {
                         .setCountry(new Country(0, Country.OTHER))
                         .build());
 
-        assertThat(paymentFormValidation.isPaymentButtonEnabled(), is(false));
+        assertThat(paymentFormValidation.isPaymentButtonEnabled(), is(true));
     }
 
     @Test
@@ -197,7 +197,7 @@ public class PaymentFormValidationTest {
                 .build(new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")
                         .setCvv("123")
-                        .setExpiryDate("12/30")
+                        .setExpiryDate("12/20")
                         .setStartDate("12/12")
                         .setIssueNumber("01")
                         .setPostcode("SW1A 1AA")

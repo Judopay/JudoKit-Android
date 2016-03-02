@@ -61,28 +61,16 @@
             android:weightSum="2"
             tools:visibility="visible">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <com.judopay.view.CountrySpinner
-                    android:id="@+id/country_spinner"
-                    style="@style/judo_country_spinner" />
-
-                <TextView
-                    android:id="@+id/cards_accepted_error_text"
-                    style="@style/judo_cards_accepted_text"
-                    android:text="@string/country_cards_accepted_message"
-                    tools:visibility="visible" />
-
-            </LinearLayout>
+            <com.judopay.view.CountrySpinner
+                android:id="@+id/country_spinner"
+                style="@style/judo_country_spinner"
+                android:layout_weight="1" />
 
             <com.judopay.view.PostcodeEntryView
                 android:id="@+id/postcode_entry_view"
                 style="@style/input_layout"
                 android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
                 android:layout_weight="1" />
 
         </LinearLayout>

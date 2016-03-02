@@ -143,14 +143,14 @@ public class PaymentFormValidation {
             builder.setCvvLength(cardType == CardType.AMEX ? 4 : 3);
 
             builder.setPaymentButtonEnabled(paymentForm.isTokenCard() || cardNumberValidation.isValid() && cvvValid && expiryDateValid && maestroValid
-                    && (!paymentForm.isAddressRequired() || countryAndPostcodeValidation.isPostcodeEntryComplete() && countryAndPostcodeValidation.isCountryValid()));
+                    && (!paymentForm.isAddressRequired() || countryAndPostcodeValidation.isPostcodeEntryComplete()));
 
             return builder.build();
         }
 
         private void setExpiryDate(Builder builder, boolean expiryDateValid, PaymentForm paymentForm) {
             if (!expiryDateValid) {
-                builder.setExpiryDateError(R.string.error_check_date);
+                builder.setExpiryDateError(R.string.check_expiry_date);
             }
 
             boolean expiryLengthValid = paymentForm.getExpiryDate().length() == 5;
@@ -167,7 +167,7 @@ public class PaymentFormValidation {
                     .setCvvLabel(amex ? R.string.amex_cvv_label : R.string.cvv_label);
 
             if (!cvvValid) {
-                builder.setCvvError(R.string.error_generic);
+                builder.setCvvError(R.string.check_cvv);
             }
         }
 
@@ -181,12 +181,16 @@ public class PaymentFormValidation {
             int year = 2000 + Integer.parseInt(expiryDate.substring(3, 5));
             int month = Integer.parseInt(expiryDate.substring(0, 2));
 
-            YearMonth yearMonth = new YearMonth(year, month);
-            DateTime dateTime = yearMonth.toDateTime(null);
+            LocalDate expiryLocalDate = getExpiryLocalDate(year, month);
+            LocalDate maxExpiryLocalDate = getExpiryLocalDate(midnightToday.getYear() + 10, month);
 
-            LocalDate monthAndYear = yearMonth.toLocalDate(dateTime.dayOfMonth().getMaximumValue());
+            return expiryLocalDate.isAfter(midnightToday.toLocalDate()) && expiryLocalDate.isBefore(maxExpiryLocalDate);
+        }
 
-            return monthAndYear.isAfter(midnightToday.toLocalDate());
+        private static LocalDate getExpiryLocalDate(int year, int month) {
+            YearMonth expiryYearMonth = new YearMonth(year, month);
+            DateTime expiryDateTime = expiryYearMonth.toDateTime(null);
+            return expiryYearMonth.toLocalDate(expiryDateTime.dayOfMonth().getMaximumValue());
         }
 
         private boolean isCvvValid(int cardType, String cvv) {
@@ -272,4 +276,5 @@ public class PaymentFormValidation {
             return this;
         }
     }
+
 }

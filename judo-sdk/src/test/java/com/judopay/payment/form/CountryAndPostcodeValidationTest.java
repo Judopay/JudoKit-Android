@@ -77,7 +77,7 @@ public class CountryAndPostcodeValidationTest {
                         .setAddressRequired(true)
                         .build(), true, true, true, true);
 
-        assertThat(countryAndPostcodeValidation.getPostcodeLabel(), is(R.string.postcode_uk));
+        assertThat(countryAndPostcodeValidation.getPostcodeLabel(), is(R.string.billing_postcode));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class CountryAndPostcodeValidationTest {
                         .setAddressRequired(true)
                         .build(), true, true, true, true);
 
-        assertThat(countryAndPostcodeValidation.getPostcodeLabel(), is(R.string.postcode_us));
+        assertThat(countryAndPostcodeValidation.getPostcodeLabel(), is(R.string.billing_zip_code));
     }
 
     @Test
@@ -111,7 +111,7 @@ public class CountryAndPostcodeValidationTest {
                 .setAddressRequired(true)
                 .build(), true, true, true, true);
 
-        assertThat(countryAndPostcodeValidation.getPostcodeLabel(), is(R.string.postcode_canada));
+        assertThat(countryAndPostcodeValidation.getPostcodeLabel(), is(R.string.billing_postal_code));
     }
 
     @Test

@@ -1,8 +1,8 @@
 <resources>
     <string name="card_number_hint">0000 0000 0000 0000</string>
-    <string name="postcode_uk">Postcode</string>
-    <string name="postcode_us">ZIP code</string>
-    <string name="postcode_canada">Postal code</string>
+    <string name="billing_postcode">Billing postcode</string>
+    <string name="billing_zip_code">Billing ZIP code</string>
+    <string name="billing_postal_code">Billing postal code</string>
     <string name="pay">PAY</string>
     <string name="payment">Payment</string>
     <string name="token_payment">Token payment</string>
@@ -19,12 +19,13 @@
     <string name="amex_cvv_hint">0000</string>
     <string name="add_card">Add card</string>
     <string name="empty" />
-    <string name="error_postcode_uk">Please enter postcode</string>
-    <string name="error_postcode_us">Please enter ZIP code</string>
-    <string name="error_postcode_canada">Please enter postal code</string>
-    <string name="error_check_date">Please check date</string>
-    <string name="error_card_number">Please check number</string>
-    <string name="error_generic">Please check value</string>
+    <string name="error_postcode_uk">Check postcode</string>
+    <string name="error_postcode_us">Check ZIP code</string>
+    <string name="error_postcode_canada">Check postal code</string>
+    <string name="check_expiry_date">Check expiry date</string>
+    <string name="check_start_date">Check start date</string>
+    <string name="check_card_number">Check card number</string>
+    <string name="check_cvv">Check CVV</string>
     <string name="error_maestro_not_supported">We don\'t accept Maestro, please use other cards</string>
     <string name="error_amex_not_supported">We don\'t accept AmEx, please use other cards</string>
     <string name="processing_payment">Processing payment</string>
@@ -34,7 +35,7 @@
     <string name="security_code">Security code</string>
     <string name="issue_number_front_of_card">Issue on front of card</string>
     <string name="token_card_number">**** **** **** %1$s</string>
-    <string name="token_date">**/**</string>
+    <string name="card_date_format">%1$s/%2$s</string>
     <string name="adding_card">Adding card…</string>
     <string name="redirecting">Redirecting…</string>
     <string name="completing_payment">Completing payment</string>
@@ -43,6 +44,7 @@
     <string name="verifying_payment">Verifying payment</string>
     <string name="verifying_card">Verifying card</string>
     <string name="payment_failed">Payment failed</string>
+    <string name="add_card_failed">Add card failed</string>
     <string name="please_check_details_try_again">Please check your details and try again</string>
     <string name="ok">OK</string>
     <string name="please_check_your_internet_connection">Please check your Internet connection and try again</string>
