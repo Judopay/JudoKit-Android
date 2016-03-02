@@ -14,7 +14,7 @@ import java.lang.reflect.Field;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class JudoViewMatchers {
+public class ViewMatchers {
 
     public static Matcher<View> withTextInputHint(String hintText) {
         checkNotNull(hintText);

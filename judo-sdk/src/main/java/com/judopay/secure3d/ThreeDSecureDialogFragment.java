@@ -79,6 +79,7 @@ public class ThreeDSecureDialogFragment extends DialogFragment implements ThreeD
         }
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
+        webView.setId(R.id.three_d_secure_web_view);
         webView.setLayoutParams(params);
         webView.setVisibility(View.VISIBLE);
 

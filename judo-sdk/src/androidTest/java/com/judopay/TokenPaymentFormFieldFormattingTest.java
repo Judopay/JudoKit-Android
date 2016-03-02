@@ -21,7 +21,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.judopay.util.JudoViewMatchers.withTextInputHint;
+import static com.judopay.util.ViewMatchers.withTextInputHint;
 import static com.judopay.model.CardType.AMEX;
 import static com.judopay.model.CardType.VISA;
 
