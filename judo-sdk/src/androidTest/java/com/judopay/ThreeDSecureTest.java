@@ -3,7 +3,6 @@ package com.judopay;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.contrib.CountingIdlingResource;
 import android.support.test.espresso.web.model.Atom;
 import android.support.test.espresso.web.model.ElementReference;
 import android.support.test.espresso.web.webdriver.Locator;
@@ -11,8 +10,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.UiThreadTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
-import android.view.View;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
 import com.judopay.model.Currency;
@@ -23,6 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.unregisterIdlingResources;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -31,9 +29,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.web.sugar.Web.onWebView;
 import static android.support.test.espresso.web.webdriver.DriverAtoms.findElement;
 import static android.support.test.espresso.web.webdriver.DriverAtoms.webClick;
-import static com.judopay.util.ActivityUtil.resultCode;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -50,7 +45,7 @@ public class ThreeDSecureTest {
     }
 
     @Test
-    public void shouldPerform3dSecurePaymentSuccessfully() {
+    public void shouldShow3dSecureDialog() {
         final PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
 
         registerWebViewIdlingResource(activity);
@@ -64,49 +59,17 @@ public class ThreeDSecureTest {
         onView(withId(R.id.cvv_edit_text))
                 .perform(typeText("341"));
 
-        final WebView webview = (WebView) activity.findViewById(R.id.three_d_secure_web_view);
-
         onView(withId(R.id.payment_button))
                 .perform(click());
 
         onView(withId(R.id.three_d_secure_web_view))
                 .check(matches(isDisplayed()));
 
-        final CountingIdlingResource idlingResource = new CountingIdlingResource("WebViewFinishedResource");
-
-        UiThreadTestRule uiThreadTestRule = new UiThreadTestRule();
-        try {
-            uiThreadTestRule.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    webview.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-                        @Override
-                        public void onViewAttachedToWindow(View v) {
-
-                        }
-
-                        @Override
-                        public void onViewDetachedFromWindow(View v) {
-                            idlingResource.decrement();
-                        }
-                    });
-                }
-            });
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
-
-        Espresso.registerIdlingResources(idlingResource);
-        idlingResource.increment();
-
         Atom<ElementReference> submitButton = findElement(Locator.CLASS_NAME, "ACSSubmit");
         onWebView().withElement(submitButton)
                 .perform(webClick());
 
-        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
-
-        unregisterWebViewIdlingResource();
-        Espresso.unregisterIdlingResources(idlingResource);
+        unregisterIdlingResources(webViewIdlingResource);
     }
 
     public void registerWebViewIdlingResource(final Activity activity) {
