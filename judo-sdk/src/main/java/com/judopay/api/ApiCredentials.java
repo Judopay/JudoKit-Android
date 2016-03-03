@@ -67,7 +67,7 @@ class ApiCredentials {
             Bundle bundle = ai.metaData;
 
             return bundle.getString(attribute);
-        } catch (PackageManager.NameNotFoundException ignore) { }
+        } catch (NullPointerException | PackageManager.NameNotFoundException ignore) { }
 
         return defaultValue;
     }
