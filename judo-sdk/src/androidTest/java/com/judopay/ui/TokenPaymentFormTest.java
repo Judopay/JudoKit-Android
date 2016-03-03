@@ -39,11 +39,6 @@ public class TokenPaymentFormTest {
     @Rule
     public ActivityTestRule<TokenPaymentActivity> activityTestRule = new ActivityTestRule<>(TokenPaymentActivity.class, false, false);
 
-    @Before
-    public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.Environment.SANDBOX);
-    }
-
     @Test
     public void shouldDisplayFirst12CardNumberDigitsAsAsterisks() {
         Judo.setAvsEnabled(false);

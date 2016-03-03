@@ -32,11 +32,6 @@ public class PaymentFormErrorMessageTest {
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
-    @Before
-    public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.Environment.SANDBOX);
-    }
-
     @Test
     public void shouldDisplayErrorMessageWhenInvalidCardNumberEntered() {
         activityTestRule.launchActivity(getIntent());

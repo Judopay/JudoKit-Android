@@ -30,11 +30,6 @@ public class JudoOptionsTest {
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
-    @Before
-    public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.Environment.SANDBOX);
-    }
-
     @Test
     public void shouldShowCustomButtonLabel() {
         Intent intent = new Intent();
