@@ -23,7 +23,8 @@ public class RegisterCardFragment extends BaseFragment implements PaymentFormVie
         super.onCreate(savedInstanceState);
 
         if (this.presenter == null) {
-            this.presenter = new RegisterCardPresenter(this, Judo.getApiService(getActivity()), new AndroidScheduler(), new Gson());
+            JudoApiService apiService = Judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
+            this.presenter = new RegisterCardPresenter(this, apiService, new AndroidScheduler(), new Gson());
         }
     }
 

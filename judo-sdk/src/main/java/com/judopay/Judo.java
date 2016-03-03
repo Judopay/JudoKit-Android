@@ -71,8 +71,8 @@ public class Judo {
     }
 
     @SuppressWarnings("unused")
-    public static JudoApiService getApiService(Context context) {
-        return JudoApiServiceFactory.createApiService(context);
+    public static JudoApiService getApiService(Context context, @UiClientMode int uiClientMode) {
+        return JudoApiServiceFactory.createApiService(context, uiClientMode);
     }
 
     @Environment
@@ -106,14 +106,14 @@ public class Judo {
         Judo.apiSecret = apiSecret;
     }
 
-    @UiClientMode
-    public static int getUiClientMode() {
-        return uiClientMode;
-    }
-
-    public static void setUiClientMode(@UiClientMode int mode) {
-        uiClientMode = mode;
-    }
+//    @UiClientMode
+//    public static int getUiClientMode() {
+//        return uiClientMode;
+//    }
+//
+//    public static void setUiClientMode(@UiClientMode int mode) {
+//        uiClientMode = mode;
+//    }
 
     public static boolean isSslPinningEnabled() {
         checkInitialised();

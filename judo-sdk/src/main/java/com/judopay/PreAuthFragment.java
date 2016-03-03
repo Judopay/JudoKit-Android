@@ -16,7 +16,7 @@ public final class PreAuthFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
 
         if (this.presenter == null) {
-            JudoApiService apiService = Judo.getApiService(getActivity());
+            JudoApiService apiService = Judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
             this.presenter = new PreAuthPresenter(this, apiService, new AndroidScheduler(), new Gson());
         }
     }

@@ -40,24 +40,25 @@ public class JudoApiServiceFactory {
     private static final String CERTIFICATE_2 = "sha1/o5OZxATDsgmwgcIfIWIneMJ0jkw=";
 
     /**
-     * @param context the calling Context
+     * @param context      the calling Context
+     * @param uiClientMode the UI Client Mode that is being used, either Custom UI or the provided Judo SDK UI
      * @return the Retrofit API service implementation containing the methods used
      * for interacting with the judoPay REST API.
      */
-    public static JudoApiService createApiService(Context context) {
-        return createRetrofit(context.getApplicationContext()).create(JudoApiService.class);
+    public static JudoApiService createApiService(Context context, @Judo.UiClientMode int uiClientMode) {
+        return createRetrofit(context.getApplicationContext(), uiClientMode).create(JudoApiService.class);
     }
 
-    private static Retrofit createRetrofit(Context context) {
+    private static Retrofit createRetrofit(Context context, @Judo.UiClientMode int uiClientMode) {
         return new Retrofit.Builder()
                 .addConverterFactory(getGsonConverterFactory(context))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .baseUrl(Judo.getApiEnvironmentHost())
-                .client(getOkHttpClient())
+                .client(getOkHttpClient(uiClientMode))
                 .build();
     }
 
-    private static OkHttpClient getOkHttpClient() {
+    private static OkHttpClient getOkHttpClient(@Judo.UiClientMode int uiClientMode) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
         if (Judo.isSslPinningEnabled()) {
@@ -66,14 +67,14 @@ public class JudoApiServiceFactory {
 
         setTimeouts(builder);
         setSslSocketFactory(builder);
-        setInterceptors(builder);
+        setInterceptors(builder, uiClientMode);
 
         return builder.build();
     }
 
-    private static void setInterceptors(OkHttpClient.Builder client) {
+    private static void setInterceptors(OkHttpClient.Builder client, @Judo.UiClientMode int uiClientMode) {
         AuthorizationEncoder authorizationEncoder = new AuthorizationEncoder();
-        ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(authorizationEncoder, Judo.getUiClientMode());
+        ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(authorizationEncoder, uiClientMode);
 
         List<Interceptor> interceptors = client.interceptors();
         interceptors.add(new DeDuplicationInterceptor());

@@ -16,7 +16,8 @@ public class TokenPreAuthFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
 
         if (this.presenter == null) {
-            this.presenter = new TokenPreAuthPresenter(this, Judo.getApiService(getActivity()), new AndroidScheduler(), new Gson());
+            JudoApiService apiService = Judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
+            this.presenter = new TokenPreAuthPresenter(this, apiService, new AndroidScheduler(), new Gson());
         }
     }
 
