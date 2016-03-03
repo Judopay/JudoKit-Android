@@ -69,8 +69,11 @@ public class Judo {
         Judo.environment = environment;
     }
 
-    @SuppressWarnings("unused")
-    public static JudoApiService getApiService(Context context, @UiClientMode int uiClientMode) {
+    public static JudoApiService getApiService(Context context) {
+        return JudoApiServiceFactory.createApiService(context, UI_CLIENT_MODE_CUSTOM_UI);
+    }
+
+    static JudoApiService getApiService(Context context, @UiClientMode int uiClientMode) {
         return JudoApiServiceFactory.createApiService(context, uiClientMode);
     }
 
