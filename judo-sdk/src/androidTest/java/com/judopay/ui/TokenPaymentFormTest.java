@@ -27,7 +27,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.judopay.ui.util.JudoViewMatchers.withTextInputHint;
+import static com.judopay.ui.util.ViewMatchers.isDisabled;
+import static com.judopay.ui.util.ViewMatchers.withTextInputHint;
 import static com.judopay.model.CardType.AMEX;
 import static com.judopay.model.CardType.VISA;
 
@@ -53,12 +54,13 @@ public class TokenPaymentFormTest {
     }
 
     @Test
-    public void shouldDisplayExpiryDateAsAsterisks() {
+    public void shouldDisplayTokenExpiryDate() {
         Judo.setAvsEnabled(false);
         activityTestRule.launchActivity(getIntent(VISA));
 
         onView(withId(R.id.expiry_date_edit_text))
-                .check(matches(withText("**/**")));
+                .check(matches(withText("12/20")))
+                .check(matches(isDisabled()));
     }
 
     @Test

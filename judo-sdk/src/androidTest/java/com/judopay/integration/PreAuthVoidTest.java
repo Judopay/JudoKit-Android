@@ -7,73 +7,53 @@ import android.test.suitebuilder.annotation.MediumTest;
 
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
+import com.judopay.JudoTest;
 import com.judopay.model.Currency;
-import com.judopay.model.PaymentTransaction;
+import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
-import com.judopay.model.VoidTransaction;
+import com.judopay.model.VoidRequest;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import rx.Observable;
-import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.fail;
+import static com.judopay.integration.RxHelpers.assertTransactionSuccessful;
+import static com.judopay.integration.RxHelpers.failOnError;
 
 @MediumTest
 @RunWith(AndroidJUnit4.class)
-public class VoidTransactionTest {
-
-    @Before
-    public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.Environment.SANDBOX);
-    }
+public class PreAuthVoidTest extends JudoTest {
 
     @Test
     public void shouldPreAuthAndVoidTransaction() {
         Context context = InstrumentationRegistry.getContext();
         final JudoApiService apiService = Judo.getApiService(context);
 
-        PaymentTransaction transaction = new PaymentTransaction.Builder()
+        PaymentRequest paymentRequest = new PaymentRequest.Builder()
                 .setJudoId("100407196")
                 .setAmount("0.01")
                 .setCardNumber("4976000000003436")
                 .setCv2("452")
                 .setExpiryDate("12/20")
                 .setCurrency(Currency.GBP)
-                .setYourConsumerReference("VoidTransactionTest")
+                .setYourConsumerReference("PreAuthVoidTest")
                 .build();
 
-        apiService.preAuth(transaction)
-                .observeOn(Schedulers.immediate())
-                .subscribeOn(Schedulers.immediate())
+        apiService.preAuth(paymentRequest)
+                .compose(RxHelpers.<Receipt>schedulers())
                 .flatMap(new Func1<Receipt, Observable<Receipt>>() {
                     @Override
                     public Observable<Receipt> call(Receipt receipt) {
-                        VoidTransaction voidTransaction = new VoidTransaction(
-                                receipt.getConsumer().getYourConsumerReference(),
+                        VoidRequest voidTransaction = new VoidRequest(
                                 receipt.getReceiptId(),
                                 receipt.getAmount());
 
                         return apiService.voidPreAuth(voidTransaction);
                     }
                 })
-                .subscribe(new Action1<Receipt>() {
-                    @Override
-                    public void call(Receipt receipt) {
-                        assertThat(receipt.isSuccess(), is(true));
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        fail();
-                    }
-                });
+                .subscribe(assertTransactionSuccessful(), failOnError());
     }
 
 }

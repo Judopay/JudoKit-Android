@@ -1,8 +1,6 @@
 package com.judopay.view;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
@@ -15,19 +13,17 @@ public class CvvImageView extends FrameLayout {
 
     public CvvImageView(Context context) {
         super(context);
+        setCardType(0);
     }
 
     public CvvImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setCardType(0);
     }
 
     public CvvImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public CvvImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+        setCardType(0);
     }
 
     public void setCardType(int cardType) {

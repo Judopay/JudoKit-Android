@@ -28,7 +28,7 @@ public class CardNumberValidation {
         } else if (amexAndNotSupported) {
             this.error = R.string.error_amex_not_supported;
         } else if (!valid) {
-            this.error = R.string.error_card_number;
+            this.error = R.string.check_card_number;
         }
     }
 
