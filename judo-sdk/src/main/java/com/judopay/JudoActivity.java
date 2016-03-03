@@ -1,23 +1,20 @@
 package com.judopay;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.judopay.security.RootDetector;
-import com.judopay.security.RootUserBlockedException;
+import com.judopay.exception.RootUserBlockedException;
 
 /**
  * Base Activity class from which all other Activities should extend from.
  * This class provides two main functions:
  * <ol>
- * <li>Detect if the device is rooted, and throws a {@link com.judopay.security.RootUserBlockedException},
+ * <li>Detect if the device is rooted, and throws a {@link RootUserBlockedException},
  * preventing further access since we cannot guarantee the payment transaction will be secure.</li>
  * <li>Shows the back button in the action bar, allowing the user to navigate back easily.</li>
  * </ol>

@@ -1,4 +1,4 @@
-package com.judopay.api;
+package com.judopay.exception;
 
 public class DuplicateTransactionException extends RuntimeException {
 

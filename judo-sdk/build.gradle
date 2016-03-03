@@ -30,6 +30,13 @@ android {
     buildTypes {
         debug {
             testCoverageEnabled = true
+
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file('local.properties').newDataInputStream())
+            def apiToken = properties.getProperty('judo.api.token')
+            def apiSecret = properties.getProperty('judo.api.secret')
+
+            manifestPlaceholders = [apiToken: apiToken, apiSecret: apiSecret]
         }
         release {
             minifyEnabled false
