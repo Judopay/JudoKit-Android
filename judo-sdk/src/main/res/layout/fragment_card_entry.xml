@@ -96,6 +96,7 @@
     </ScrollView>
 
     <Button
+        android:text="@string/pay"
         android:id="@+id/payment_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
