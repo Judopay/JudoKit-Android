@@ -17,7 +17,7 @@ public final class PaymentFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
 
         if (this.presenter == null) {
-            this.presenter = new PaymentPresenter(this, JudoApiServiceFactory.getInstance(getActivity()), new AndroidScheduler(), new Gson());
+            this.presenter = new PaymentPresenter(this, Judo.getApiService(getActivity()), new AndroidScheduler(), new Gson());
         }
     }
 

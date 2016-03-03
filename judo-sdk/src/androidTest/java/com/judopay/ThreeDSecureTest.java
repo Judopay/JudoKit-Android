@@ -40,8 +40,8 @@ public class ThreeDSecureTest {
     private WebViewIdlingResource webViewIdlingResource;
 
     @Before
-    public void setupJudoSdk() {
-        Judo.setup("823Eja2fEM6E9NAE", "382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6", Judo.Environment.SANDBOX);
+    public void setEnvironment() {
+        Judo.setEnvironment(Judo.Environment.SANDBOX);
     }
 
     @Test

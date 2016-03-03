@@ -33,11 +33,6 @@ public class CardEntryFormBillingAddressTest {
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
-    @Before
-    public void setupJudoSdk() {
-        Judo.setup("", "", Judo.Environment.SANDBOX);
-    }
-
     @Test
     public void shouldDisablePayButtonWhenOtherBillingCountrySelected() {
         Judo.setAvsEnabled(true);
