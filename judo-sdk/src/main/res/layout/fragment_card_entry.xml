@@ -87,7 +87,10 @@
                 android:id="@+id/secure_server_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/small_padding"
+                android:layout_marginRight="@dimen/small_padding"
                 android:layout_marginTop="8dp"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="@dimen/judo_small_text_size"
                 android:visibility="gone" />
 
