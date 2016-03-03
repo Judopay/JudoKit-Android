@@ -61,6 +61,7 @@ public class CvvEntryView extends RelativeLayout {
                 cvvHintChangeListener
         ));
         cvvEditText.addTextChangedListener(new HidingViewTextWatcher(cvvHelperText));
+        cvvEditText.addTextChangedListener(new ViewAlphaChangingTextWatcher(cvvImageView));
     }
 
     public void setText(CharSequence text) {

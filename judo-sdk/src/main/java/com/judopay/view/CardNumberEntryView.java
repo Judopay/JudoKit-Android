@@ -61,6 +61,7 @@ public class CardNumberEntryView extends RelativeLayout {
 
         cardNumberEditText.addTextChangedListener(new CardNumberFormattingTextWatcher());
         cardNumberEditText.addTextChangedListener(new HidingViewTextWatcher(cardNumberHelperText));
+        cardNumberEditText.addTextChangedListener(new ViewAlphaChangingTextWatcher(cardTypeImageView));
     }
 
     public void setCardType(int type) {
