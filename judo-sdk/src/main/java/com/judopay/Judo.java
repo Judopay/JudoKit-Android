@@ -51,7 +51,6 @@ public class Judo {
     public static final int LIVE = 0;
     public static final int SANDBOX = 1;
 
-    private static int uiClientMode;
     private static String apiToken;
     private static String apiSecret;
 
@@ -105,15 +104,6 @@ public class Judo {
         checkInitialised();
         Judo.apiSecret = apiSecret;
     }
-
-//    @UiClientMode
-//    public static int getUiClientMode() {
-//        return uiClientMode;
-//    }
-//
-//    public static void setUiClientMode(@UiClientMode int mode) {
-//        uiClientMode = mode;
-//    }
 
     public static boolean isSslPinningEnabled() {
         checkInitialised();
