@@ -35,7 +35,7 @@ public class CardEntryFormBillingAddressTest {
 
     @Before
     public void setupJudoSdk() {
-        Judo.setup("", "", Judo.Environment.SANDBOX);
+        Judo.setup("", "", Judo.SANDBOX);
     }
 
     @Test
