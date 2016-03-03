@@ -10,7 +10,7 @@ import com.judopay.shield.LocationService;
 
 import java.io.IOException;
 
-public class LocationTypeAdapter extends TypeAdapter<Location> {
+class LocationTypeAdapter extends TypeAdapter<Location> {
 
     private static final String LATITUDE_PROPERTY = "latitude";
     private static final String LONGITUDE_PROPERTY = "longitude";

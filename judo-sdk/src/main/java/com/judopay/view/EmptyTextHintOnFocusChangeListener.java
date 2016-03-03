@@ -8,7 +8,7 @@ import android.widget.TextView;
  * and shows the provided {@link EmptyTextHintOnFocusChangeListener#hintView} if nothing has
  * been entered after 3 seconds.
  */
-public class EmptyTextHintOnFocusChangeListener implements View.OnFocusChangeListener {
+class EmptyTextHintOnFocusChangeListener implements View.OnFocusChangeListener {
 
     private static final int THREE_SECONDS = 3000;
 
