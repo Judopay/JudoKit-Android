@@ -26,8 +26,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.judopay.ui.util.JudoViewMatchers.isNotDisplayed;
-import static com.judopay.ui.util.JudoViewMatchers.withTextInputHint;
+import static com.judopay.ui.util.ViewMatchers.isNotDisplayed;
+import static com.judopay.ui.util.ViewMatchers.withTextInputHint;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
