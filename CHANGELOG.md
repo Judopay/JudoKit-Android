@@ -1,6 +1,6 @@
 # judoNative Android SDK change log
 
- ## [5.2](https://github.com/judopay/Judo-Android/tree/5.2) (TBC)
+## [5.2](https://github.com/judopay/Judo-Android/tree/5.2) (TBC)
  
  **Changes:**
  - Style updates to payment card entry form to match Google Material Design guidelines.
