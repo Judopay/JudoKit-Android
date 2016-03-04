@@ -33,10 +33,12 @@ class ApiHeadersInterceptor implements Interceptor {
     private final UserAgent userAgent;
     private final AuthorizationEncoder authorizationEncoder;
     private final int uiClientMode;
+    private final ApiCredentials apiCredentials;
 
     public ApiHeadersInterceptor(AuthorizationEncoder authorizationEncoder, @Judo.UiClientMode int uiClientMode) {
         this.authorizationEncoder = authorizationEncoder;
         this.uiClientMode = uiClientMode;
+        this.apiCredentials = apiCredentials;
         this.userAgent = new UserAgent(BuildConfig.VERSION_NAME, Build.VERSION.RELEASE,
                 Build.MANUFACTURER, Build.MODEL, Locale.getDefault().getDisplayName());
     }
@@ -53,7 +55,7 @@ class ApiHeadersInterceptor implements Interceptor {
     private Headers getHeaders() {
         HashMap<String, String> headers = new HashMap<>();
 
-        headers.put(AUTHORIZATION_HEADER, authorizationEncoder.getAuthorization());
+        headers.put(AUTHORIZATION_HEADER, apiCredentials.getBasicAuthorizationHeader());
         headers.put(CONTENT_TYPE_HEADER, JSON_MIME_TYPE);
         headers.put(ACCEPT_HEADER, JSON_MIME_TYPE);
         headers.put(API_VERSION_HEADER, API_VERSION);

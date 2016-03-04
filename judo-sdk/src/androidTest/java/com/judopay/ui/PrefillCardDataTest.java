@@ -29,11 +29,6 @@ public class PrefillCardDataTest {
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
-    @Before
-    public void setupJudoSdk() {
-        Judo.setup("", "", Judo.SANDBOX);
-    }
-
     @Test
     public void shouldHaveVisaCardNumberEnteredInPaymentForm() {
         Intent intent = new Intent();

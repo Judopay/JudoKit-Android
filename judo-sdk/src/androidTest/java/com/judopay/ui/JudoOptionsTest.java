@@ -12,7 +12,6 @@ import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,11 +28,6 @@ public class JudoOptionsTest {
 
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
-
-    @Before
-    public void setupJudoSdk() {
-        Judo.setup("fakeApiToken", "fakeApiSecret", Judo.SANDBOX);
-    }
 
     @Test
     public void shouldShowCustomButtonLabel() {

@@ -8,7 +8,7 @@ import android.widget.EditText;
  * Watches user input to detect when a card date has been entered and formats it to match
  * the format on a payment card (MM/YY).
  */
-public class DateSeparatorTextWatcher implements TextWatcher {
+class DateSeparatorTextWatcher implements TextWatcher {
 
     private final EditText editText;
 

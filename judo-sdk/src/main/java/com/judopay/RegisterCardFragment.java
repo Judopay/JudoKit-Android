@@ -36,10 +36,9 @@ public class RegisterCardFragment extends BaseFragment implements PaymentFormVie
     @Override
     protected JudoOptions getJudoOptions() {
         Bundle args = getArguments();
+        JudoOptions judoOptions = args.getParcelable(Judo.JUDO_OPTIONS);
 
-        if (args.containsKey(Judo.JUDO_OPTIONS)) {
-            JudoOptions judoOptions = args.getParcelable(Judo.JUDO_OPTIONS);
-
+        if (judoOptions != null) {
             return new JudoOptions.Builder()
                     .setJudoId(judoOptions.getJudoId())
                     .setConsumerRef(judoOptions.getConsumerRef())
