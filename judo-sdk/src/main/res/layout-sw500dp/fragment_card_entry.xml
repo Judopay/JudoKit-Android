@@ -1,81 +1,14 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout style="@style/payment_form_container">
 
-        <com.judopay.view.CardNumberEntryView
-            android:id="@+id/card_number_entry_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <LinearLayout
-            android:id="@+id/start_date_issue_number_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            android:weightSum="2"
-            tools:visibility="visible">
-
-            <com.judopay.view.StartDateEntryView
-                android:id="@+id/start_date_entry_view"
-                style="@style/input_layout"
-                android:layout_weight="1" />
-
-            <com.judopay.view.IssueNumberEntryView
-                android:id="@+id/issue_number_entry_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <com.judopay.view.ExpiryDateEntryView
-                android:id="@+id/expiry_date_entry_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <com.judopay.view.CvvEntryView
-                android:id="@+id/cvv_entry_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/country_postcode_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:weightSum="2"
-            tools:visibility="visible">
-
-            <com.judopay.view.CountrySpinner
-                android:id="@+id/country_spinner"
-                style="@style/judo_country_spinner"
-                android:layout_weight="1" />
-
-            <com.judopay.view.PostcodeEntryView
-                android:id="@+id/postcode_entry_view"
-                style="@style/input_layout"
-                android:layout_width="match_parent"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1" />
-
-        </LinearLayout>
+        <include layout="@layout/view_card_entry_form" />
 
         <com.judopay.view.SecureServerTextView
+            android:lineSpacingMultiplier="@dimen/spaced_text"
             android:id="@+id/secure_server_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
