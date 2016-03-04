@@ -1,5 +1,12 @@
 # judoNative Android SDK change log
 
+## [5.2](https://github.com/judopay/Judo-Android/tree/5.2) (TBC)
+ 
+ **Changes:**
+ - Style updates to payment card entry form to match Google Material Design guidelines.
+ - judo API token and secret can now be specified directly in the Android Manifest instead of programmatically.
+ - Client integration method reporting data is now sent with the transaction to indicate if a custom UI or judo provided UI is used.
+
 ## [5.1.2](https://github.com/judopay/Judo-Android/tree/5.1.2) (2016-02-29)
 
 **Bugs fixed:**
