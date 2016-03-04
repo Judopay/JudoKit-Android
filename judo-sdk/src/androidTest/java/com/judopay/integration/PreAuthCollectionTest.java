@@ -28,7 +28,7 @@ public class PreAuthCollectionTest {
 
     @Before
     public void setEnvironment() {
-        Judo.setEnvironment(Judo.Environment.SANDBOX);
+        Judo.setEnvironment(Judo.SANDBOX);
     }
 
     @Test
