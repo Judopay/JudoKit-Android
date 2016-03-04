@@ -17,7 +17,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/small_padding"
                 android:layout_marginRight="@dimen/small_padding"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/large_padding"
                 android:lineSpacingMultiplier="@dimen/spaced_text"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="@dimen/judo_small_text_size"
