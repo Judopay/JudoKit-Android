@@ -31,14 +31,12 @@ class ApiHeadersInterceptor implements Interceptor {
     private static final String CUSTOM_UI_MODE = "Custom-UI";
 
     private final UserAgent userAgent;
-    private final AuthorizationEncoder authorizationEncoder;
     private final int uiClientMode;
     private final ApiCredentials apiCredentials;
 
-    public ApiHeadersInterceptor(AuthorizationEncoder authorizationEncoder, @Judo.UiClientMode int uiClientMode) {
-        this.authorizationEncoder = authorizationEncoder;
-        this.uiClientMode = uiClientMode;
+    public ApiHeadersInterceptor(ApiCredentials apiCredentials, @Judo.UiClientMode int uiClientMode) {
         this.apiCredentials = apiCredentials;
+        this.uiClientMode = uiClientMode;
         this.userAgent = new UserAgent(BuildConfig.VERSION_NAME, Build.VERSION.RELEASE,
                 Build.MANUFACTURER, Build.MODEL, Locale.getDefault().getDisplayName());
     }
