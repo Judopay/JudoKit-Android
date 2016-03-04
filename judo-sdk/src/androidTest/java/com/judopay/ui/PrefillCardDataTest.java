@@ -29,11 +29,6 @@ public class PrefillCardDataTest {
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
-    @Before
-    public void setupJudoSdk() {
-        Judo.setup("fakeApiToken", "fakeApiSecret", Judo.Environment.SANDBOX);
-    }
-
     @Test
     public void shouldHaveVisaCardNumberEnteredInPaymentForm() {
         Intent intent = new Intent();

@@ -1,5 +1,7 @@
 package com.judopay.secure3d;
 
+import static com.judopay.arch.TextUtil.isEmpty;
+
 class JsonParsingJavaScriptInterface {
 
     private final JsonListener jsonListener;
@@ -10,7 +12,7 @@ class JsonParsingJavaScriptInterface {
 
     @android.webkit.JavascriptInterface
     public void parseJsonFromHtml(final String content) {
-        if (content != null && content.length() > 0) {
+        if (!isEmpty(content)) {
             try {
                 String json = content.substring(content.indexOf("{"), content.lastIndexOf("}") + 1);
                 jsonListener.onJsonReceived(json);

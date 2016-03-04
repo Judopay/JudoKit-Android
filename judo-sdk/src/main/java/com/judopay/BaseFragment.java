@@ -23,7 +23,7 @@ import com.judopay.view.Dialogs;
 abstract class BaseFragment extends Fragment implements PaymentFormView, CardEntryListener {
 
     private static final String TAG_PAYMENT_FORM = "CardEntryFragment";
-    private static final String TAG_3DS_DIALOG = "3dSecureDialog";
+    public static final String TAG_3DS_DIALOG = "3dSecureDialog";
 
     private View progressBar;
     private TextView progressText;
