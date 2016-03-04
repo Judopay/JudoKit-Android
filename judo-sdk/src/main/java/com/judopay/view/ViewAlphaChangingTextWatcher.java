@@ -1,33 +1,27 @@
 package com.judopay.view;
 
 import android.support.annotation.NonNull;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 
-import com.judopay.arch.TextUtil;
+import static com.judopay.arch.TextUtil.isEmpty;
 
-public class ViewAlphaChangingTextWatcher implements TextWatcher {
+public class ViewAlphaChangingTextWatcher implements View.OnFocusChangeListener {
 
+    private final EditText editText;
     private final View view;
 
-    public ViewAlphaChangingTextWatcher(@NonNull View view) {
+    public ViewAlphaChangingTextWatcher(@NonNull EditText editText, @NonNull View view) {
+        this.editText = editText;
         this.view = view;
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (hasFocus) {
+            view.setAlpha(1f);
+        } else if (isEmpty(editText.getText())) {
+            view.setAlpha(0.5f);
+        }
     }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-        view.setAlpha(TextUtil.isEmpty(s) ? 0.5f : 1.0f);
-    }
-
 }
