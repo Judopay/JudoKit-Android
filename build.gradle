@@ -14,8 +14,8 @@ buildscript {
         compileSdkVersion = 23
         targetSdkVersion = 23
         buildToolsVersion = "23.0.2"
-        versionName = "5.1.2"
-        versionCode = 5
+        versionName = "5.2"
+        versionCode = 6
     }
 }
 
