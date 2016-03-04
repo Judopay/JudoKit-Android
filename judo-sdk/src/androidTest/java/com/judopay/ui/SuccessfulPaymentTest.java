@@ -35,7 +35,7 @@ public class SuccessfulPaymentTest {
 
     @Before
     public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.Environment.SANDBOX);
+        Judo.setEnvironment(Judo.SANDBOX);
     }
 
     @Test
