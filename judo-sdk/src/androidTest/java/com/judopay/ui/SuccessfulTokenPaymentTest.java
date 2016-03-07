@@ -19,6 +19,7 @@ import com.judopay.model.Receipt;
 import com.judopay.model.RegisterCardRequest;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,6 +48,7 @@ public class SuccessfulTokenPaymentTest {
     }
 
     @Test
+    @Ignore
     public void shouldBeSuccessfulTokenPayment() {
         Judo.setAvsEnabled(false);
 
@@ -80,6 +82,7 @@ public class SuccessfulTokenPaymentTest {
     }
 
     @Test
+    @Ignore
     public void shouldBeSuccessfulTokenPaymentWhenAvsEnabled() {
         Judo.setAvsEnabled(true);
 
