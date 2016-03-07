@@ -16,6 +16,7 @@ import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,6 +46,7 @@ public class SuccessfulTokenPaymentTest {
     }
 
     @Test
+    @Ignore
     public void shouldBeSuccessfulTokenPayment() {
         Judo.setAvsEnabled(false);
 
@@ -77,6 +79,7 @@ public class SuccessfulTokenPaymentTest {
     }
 
     @Test
+    @Ignore
     public void shouldBeSuccessfulTokenPaymentWhenAvsEnabled() {
         Judo.setAvsEnabled(true);
         RegisterCardActivity registerCardActivity = registerCardActivityTestRule.launchActivity(getRegisterCardIntent());
