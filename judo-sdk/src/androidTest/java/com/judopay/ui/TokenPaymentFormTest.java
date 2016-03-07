@@ -27,7 +27,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.judopay.model.CardType.MAESTRO;
 import static com.judopay.ui.util.ViewMatchers.isDisabled;
+import static com.judopay.ui.util.ViewMatchers.isNotDisplayed;
 import static com.judopay.ui.util.ViewMatchers.withTextInputHint;
 import static com.judopay.model.CardType.AMEX;
 import static com.judopay.model.CardType.VISA;
@@ -38,6 +40,11 @@ public class TokenPaymentFormTest {
 
     @Rule
     public ActivityTestRule<TokenPaymentActivity> activityTestRule = new ActivityTestRule<>(TokenPaymentActivity.class, false, false);
+
+    @Before
+    public void setupJudoSdk() {
+        Judo.setEnvironment(Judo.Environment.SANDBOX);
+    }
 
     @Test
     public void shouldDisplayFirst12CardNumberDigitsAsAsterisks() {
@@ -105,6 +112,23 @@ public class TokenPaymentFormTest {
 
         onView(withId(R.id.post_code_edit_text))
                 .check(matches(hasFocus()));
+    }
+
+    @Test
+    public void shouldNotShowMaestroFieldsWhenMaestroTokenPayment() {
+        Judo.setAvsEnabled(false);
+
+        activityTestRule.launchActivity(getIntent(MAESTRO));
+
+        onView(withId(R.id.cvv_edit_text))
+                .check(matches(hasFocus()))
+                .perform(typeText("123"));
+
+        onView(withId(R.id.start_date_entry_view))
+                .check(matches(isNotDisplayed()));
+
+        onView(withId(R.id.issue_number_entry_view))
+                .check(matches(isNotDisplayed()));
     }
 
     @Test
