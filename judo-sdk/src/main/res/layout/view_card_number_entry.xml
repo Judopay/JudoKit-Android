@@ -5,6 +5,7 @@
     <com.judopay.view.CardTypeImageView
         android:id="@+id/card_type_view"
         style="@style/judo_card_image"
+        android:layout_marginTop="14.5dp"
         tools:ignore="RtlHardcoded" />
 
     <com.judopay.view.JudoTextInputLayout

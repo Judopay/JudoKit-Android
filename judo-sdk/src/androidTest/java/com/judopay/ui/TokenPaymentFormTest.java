@@ -14,7 +14,6 @@ import com.judopay.model.CardToken;
 import com.judopay.model.CardType;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +32,8 @@ import static com.judopay.ui.util.ViewMatchers.isNotDisplayed;
 import static com.judopay.ui.util.ViewMatchers.withTextInputHint;
 import static com.judopay.model.CardType.AMEX;
 import static com.judopay.model.CardType.VISA;
+import static com.judopay.ui.util.ViewMatchers.isDisabled;
+import static com.judopay.ui.util.ViewMatchers.withTextInputHint;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)

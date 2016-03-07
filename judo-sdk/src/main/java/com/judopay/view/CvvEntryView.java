@@ -58,6 +58,7 @@ public class CvvEntryView extends RelativeLayout {
 
         cvvEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
                 new EmptyTextHintOnFocusChangeListener(cvvHelperText),
+                new ViewAlphaChangingTextWatcher(cvvEditText, cvvImageView),
                 cvvHintChangeListener
         ));
         cvvEditText.addTextChangedListener(new HidingViewTextWatcher(cvvHelperText));
