@@ -45,7 +45,7 @@ public class TokenPaymentFormTest {
 
     @Before
     public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.Environment.SANDBOX);
+        Judo.setEnvironment(Judo.SANDBOX);
     }
 
     @Test
