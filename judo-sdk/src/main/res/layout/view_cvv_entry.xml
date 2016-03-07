@@ -5,7 +5,8 @@
 
     <com.judopay.view.CvvImageView
         android:id="@+id/cvv_image_view"
-        style="@style/judo_cvv_image"
+        style="@style/judo_card_image"
+        android:layout_marginTop="15dp"
         tools:ignore="RtlHardcoded" />
 
     <com.judopay.view.JudoTextInputLayout
