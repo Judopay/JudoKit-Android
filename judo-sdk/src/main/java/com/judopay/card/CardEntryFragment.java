@@ -196,7 +196,7 @@ public final class CardEntryFragment extends Fragment {
         if (judoOptions.getCardToken() == null) {
             expiryDateEntryView.addTextChangedListener(formValidator);
         } else {
-            expiryDateEntryView.setExpiryDate(judoOptions.getCardToken().getEndDate());
+            expiryDateEntryView.setExpiryDate(judoOptions.getCardToken().getFormattedEndDate());
             expiryDateEntryView.setEnabled(false);
         }
     }

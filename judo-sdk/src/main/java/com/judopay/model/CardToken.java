@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.judopay.arch.TextUtil;
 
 /**
  * The tokenized card data from registering a card, allowing for token payments and token pre-auths
@@ -37,6 +38,14 @@ public class CardToken implements Parcelable {
 
     public String getEndDate() {
         return endDate;
+    }
+
+    public String getFormattedEndDate() {
+        if(TextUtil.isEmpty(endDate) || endDate.length() != 4) {
+            return "";
+        } else {
+            return String.format("%s/%s", endDate.substring(0, 2), endDate.substring(2, 4));
+        }
     }
 
     public String getToken() {
