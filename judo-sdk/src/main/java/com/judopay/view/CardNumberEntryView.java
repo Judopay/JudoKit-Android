@@ -56,6 +56,7 @@ public class CardNumberEntryView extends RelativeLayout {
 
         cardNumberEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
                 new EmptyTextHintOnFocusChangeListener(cardNumberHelperText),
+                new ViewAlphaChangingTextWatcher(cardNumberEditText, cardTypeImageView),
                 new HintFocusListener(cardNumberEditText, R.string.card_number_hint)
         ));
 
