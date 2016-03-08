@@ -3,6 +3,7 @@
     <string name="billing_postcode">Billing postcode</string>
     <string name="billing_zip_code">Billing ZIP code</string>
     <string name="billing_postal_code">Billing postal code</string>
+    <string name="checking_billing_postcode">Check billing postcode</string>
     <string name="pay">PAY</string>
     <string name="payment">Payment</string>
     <string name="token_payment">Token payment</string>
@@ -50,4 +51,8 @@
     <string name="please_check_your_internet_connection">Please check your Internet connection and try again</string>
     <string name="connection_error">Connection error</string>
     <string name="secure_server_transmission">Secure server: Your card details are encrypted using SSL before transmission to our secure payment service provider. They will not be stored on this device or on our servers.</string>
+
+    <!-- manifest api configuration meta-data names, do not change -->
+    <string name="judo_api_token">judo_api_token</string>
+    <string name="judo_api_secret">judo_api_secret</string>
 </resources>

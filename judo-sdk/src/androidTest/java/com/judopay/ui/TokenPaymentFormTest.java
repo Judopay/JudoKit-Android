@@ -24,14 +24,17 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
-import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.judopay.ui.util.JudoViewMatchers.isDisabled;
-import static com.judopay.ui.util.JudoViewMatchers.withTextInputHint;
+import static com.judopay.model.CardType.MAESTRO;
+import static com.judopay.ui.util.ViewMatchers.isDisabled;
+import static com.judopay.ui.util.ViewMatchers.isNotDisplayed;
+import static com.judopay.ui.util.ViewMatchers.withTextInputHint;
 import static com.judopay.model.CardType.AMEX;
 import static com.judopay.model.CardType.VISA;
+import static com.judopay.ui.util.ViewMatchers.isDisabled;
+import static com.judopay.ui.util.ViewMatchers.withTextInputHint;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -42,7 +45,7 @@ public class TokenPaymentFormTest {
 
     @Before
     public void setupJudoSdk() {
-        Judo.setup("fakeApiToken", "fakeApiSecret", Judo.Environment.SANDBOX);
+        Judo.setEnvironment(Judo.SANDBOX);
     }
 
     @Test
@@ -111,6 +114,23 @@ public class TokenPaymentFormTest {
 
         onView(withId(R.id.post_code_edit_text))
                 .check(matches(hasFocus()));
+    }
+
+    @Test
+    public void shouldNotShowMaestroFieldsWhenMaestroTokenPayment() {
+        Judo.setAvsEnabled(false);
+
+        activityTestRule.launchActivity(getIntent(MAESTRO));
+
+        onView(withId(R.id.cvv_edit_text))
+                .check(matches(hasFocus()))
+                .perform(typeText("123"));
+
+        onView(withId(R.id.start_date_entry_view))
+                .check(matches(isNotDisplayed()));
+
+        onView(withId(R.id.issue_number_entry_view))
+                .check(matches(isNotDisplayed()));
     }
 
     @Test

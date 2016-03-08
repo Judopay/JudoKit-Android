@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
-import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.arch.AndroidScheduler;
 import com.judopay.card.CardEntryFragment;
 import com.judopay.card.CardEntryListener;
@@ -24,7 +23,8 @@ public class RegisterCardFragment extends BaseFragment implements PaymentFormVie
         super.onCreate(savedInstanceState);
 
         if (this.presenter == null) {
-            this.presenter = new RegisterCardPresenter(this, JudoApiServiceFactory.getInstance(getActivity()), new AndroidScheduler(), new Gson());
+            JudoApiService apiService = Judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
+            this.presenter = new RegisterCardPresenter(this, apiService, new AndroidScheduler(), new Gson());
         }
     }
 
@@ -36,10 +36,9 @@ public class RegisterCardFragment extends BaseFragment implements PaymentFormVie
     @Override
     protected JudoOptions getJudoOptions() {
         Bundle args = getArguments();
+        JudoOptions judoOptions = args.getParcelable(Judo.JUDO_OPTIONS);
 
-        if (args.containsKey(Judo.JUDO_OPTIONS)) {
-            JudoOptions judoOptions = args.getParcelable(Judo.JUDO_OPTIONS);
-
+        if (judoOptions != null) {
             return new JudoOptions.Builder()
                     .setJudoId(judoOptions.getJudoId())
                     .setConsumerRef(judoOptions.getConsumerRef())

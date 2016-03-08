@@ -7,12 +7,12 @@ import android.test.suitebuilder.annotation.MediumTest;
 
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
-import com.judopay.JudoTest;
 import com.judopay.model.Currency;
 import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
 import com.judopay.model.VoidRequest;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -24,7 +24,12 @@ import static com.judopay.integration.RxHelpers.failOnError;
 
 @MediumTest
 @RunWith(AndroidJUnit4.class)
-public class PreAuthVoidTest extends JudoTest {
+public class PreAuthVoidTest {
+
+    @Before
+    public void setEnvironment() {
+        Judo.setEnvironment(Judo.SANDBOX);
+    }
 
     @Test
     public void shouldPreAuthAndVoidTransaction() {

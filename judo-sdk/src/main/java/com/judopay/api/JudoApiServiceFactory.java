@@ -38,34 +38,26 @@ public class JudoApiServiceFactory {
     private static final String CERTIFICATE_1 = "sha1/SSAG1hz7m8LI/eapL/SSpd5o564=";
     private static final String CERTIFICATE_2 = "sha1/o5OZxATDsgmwgcIfIWIneMJ0jkw=";
 
-    private static Retrofit retrofit;
-
     /**
-     * @param context the calling Context
+     * @param context      the calling Context
+     * @param uiClientMode the UI Client Mode that is being used, either Custom UI or the provided Judo SDK UI
      * @return the Retrofit API service implementation containing the methods used
      * for interacting with the judoPay REST API.
      */
-    public static JudoApiService getInstance(Context context) {
-        return createOrGetInstance(context).create(JudoApiService.class);
+    public static JudoApiService createApiService(Context context, @Judo.UiClientMode int uiClientMode) {
+        return createRetrofit(context.getApplicationContext(), uiClientMode).create(JudoApiService.class);
     }
 
-    private static Retrofit createOrGetInstance(Context context) {
-        if (retrofit == null) {
-            retrofit = createRetrofit(context.getApplicationContext());
-        }
-        return retrofit;
-    }
-
-    private static Retrofit createRetrofit(Context context) {
+    private static Retrofit createRetrofit(Context context, @Judo.UiClientMode int uiClientMode) {
         return new Retrofit.Builder()
                 .addConverterFactory(getGsonConverterFactory(context))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .baseUrl(Judo.getApiEnvironmentHost())
-                .client(getOkHttpClient())
+                .client(getOkHttpClient(uiClientMode, context))
                 .build();
     }
 
-    private static OkHttpClient getOkHttpClient() {
+    private static OkHttpClient getOkHttpClient(@Judo.UiClientMode int uiClientMode, Context context) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
         if (Judo.isSslPinningEnabled()) {
@@ -74,16 +66,18 @@ public class JudoApiServiceFactory {
 
         setTimeouts(builder);
         setSslSocketFactory(builder);
-        setInterceptors(builder);
+        setInterceptors(builder, uiClientMode, context);
 
         return builder.build();
     }
 
-    private static void setInterceptors(OkHttpClient.Builder client) {
-        addAll(client.interceptors(),
-                new DeDuplicationInterceptor(),
-                new MockAndroidPayInterceptor(),
-                new ApiHeadersInterceptor(new AuthorizationEncoder()));
+    private static void setInterceptors(OkHttpClient.Builder client, @Judo.UiClientMode int uiClientMode, Context context) {
+        ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(ApiCredentials.fromConfiguration(context), uiClientMode);
+
+        List<Interceptor> interceptors = client.interceptors();
+        interceptors.add(new DeDuplicationInterceptor());
+        interceptors.add(new MockAndroidPayInterceptor());
+        interceptors.add(interceptor);
     }
 
     private static GsonConverterFactory getGsonConverterFactory(Context context) {

@@ -23,7 +23,7 @@ import com.judopay.view.Dialogs;
 abstract class BaseFragment extends Fragment implements PaymentFormView, CardEntryListener {
 
     private static final String TAG_PAYMENT_FORM = "CardEntryFragment";
-    private static final String TAG_3DS_DIALOG = "3dSecureDialog";
+    public static final String TAG_3DS_DIALOG = "3dSecureDialog";
 
     private View progressBar;
     private TextView progressText;
@@ -34,13 +34,12 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, CardEnt
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setRetainInstance(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_payment, container, false);
+        return inflater.inflate(R.layout.fragment_base, container, false);
     }
 
     @Override

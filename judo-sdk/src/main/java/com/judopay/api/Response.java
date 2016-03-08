@@ -189,8 +189,7 @@ public class Response implements Parcelable {
         dest.writeTypedList(errorDetails);
     }
 
-    public Response() {
-    }
+    protected Response() { }
 
     protected Response(Parcel in) {
         this.result = in.readString();
