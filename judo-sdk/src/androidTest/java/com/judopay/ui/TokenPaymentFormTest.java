@@ -21,9 +21,11 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -33,8 +35,6 @@ import static com.judopay.ui.util.ViewMatchers.isNotDisplayed;
 import static com.judopay.ui.util.ViewMatchers.withTextInputHint;
 import static com.judopay.model.CardType.AMEX;
 import static com.judopay.model.CardType.VISA;
-import static com.judopay.ui.util.ViewMatchers.isDisabled;
-import static com.judopay.ui.util.ViewMatchers.withTextInputHint;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -134,9 +134,65 @@ public class TokenPaymentFormTest {
     }
 
     @Test
+    public void shouldNotEnablePayButtonWhenCv2Deleted() {
+        Intent intent = getIntent(CardType.VISA);
+        activityTestRule.launchActivity(intent);
+
+        onView(withId(R.id.cvv_edit_text))
+                .perform(typeText("123"))
+                .perform(replaceText(""));
+
+        onView(withId(R.id.payment_button))
+                .check(matches(isNotDisplayed()));
+    }
+
+    @Test
+    public void shouldRequireValidCv2WhenVisa() {
+        activityTestRule.launchActivity(getIntent(VISA));
+
+        onView(withId(R.id.cvv_edit_text))
+                .perform(typeText("12"));
+
+        onView(withId(R.id.payment_button))
+                .check(matches(isNotDisplayed()));
+
+        onView(withId(R.id.cvv_edit_text))
+                .perform(replaceText("123"));
+
+        onView(withId(R.id.payment_button))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void shouldRequireValidCidWhenAmex() {
+        Judo.setAmexEnabled(true);
+        activityTestRule.launchActivity(getIntent(AMEX));
+
+        onView(withId(R.id.cvv_edit_text))
+                .perform(typeText("123"));
+
+        onView(withId(R.id.payment_button))
+                .check(matches(isNotDisplayed()));
+
+        onView(withId(R.id.cvv_edit_text))
+                .perform(replaceText("1234"));
+
+        onView(withId(R.id.payment_button))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
     public void shouldNotPrefillCardNumberIfProvided() {
         Judo.setAvsEnabled(false);
 
+        Intent intent = getIntent(CardType.VISA);
+        activityTestRule.launchActivity(intent);
+
+        onView(withId(R.id.card_number_edit_text))
+                .check(matches(withText("**** **** **** 1234")));
+    }
+
+    public Intent getIntent(int cardType) {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
@@ -144,27 +200,9 @@ public class TokenPaymentFormTest {
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setCardNumber("6789")
-                .setCardToken(new CardToken("12/20", "1234", "cardToken", CardType.VISA))
-                .setConsumerRef("consumerRef")
-                .build());
-
-        activityTestRule.launchActivity(intent);
-
-        onView(withId(R.id.card_number_edit_text))
-                .check(matches(withText("**** **** **** 1234")));
-    }
-
-    private Intent getIntent(int cardType) {
-        Intent intent = new Intent();
-
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
-                .setJudoId("100407196")
-                .setAmount("0.99")
-                .setCurrency(Currency.GBP)
                 .setCardToken(new CardToken("12/20", "1234", "cardToken", cardType))
                 .setConsumerRef("consumerRef")
                 .build());
-
         return intent;
     }
 
