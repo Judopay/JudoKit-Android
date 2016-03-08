@@ -29,7 +29,7 @@ public class StartDateAndIssueNumberValidation {
         boolean maestroCardType = cardType == CardType.MAESTRO;
 
         this.issueNumberValid = isIssueNumberValid(paymentForm.getIssueNumber());
-        this.showIssueNumberAndStartDate = paymentForm.isMaestroSupported() && maestroCardType;
+        this.showIssueNumberAndStartDate = paymentForm.isMaestroSupported() && maestroCardType && !paymentForm.isTokenCard();
     }
 
     private boolean isIssueNumberValid(String issueNumber) {

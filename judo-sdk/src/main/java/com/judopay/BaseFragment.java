@@ -34,7 +34,6 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, CardEnt
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setRetainInstance(true);
     }
 

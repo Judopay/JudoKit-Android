@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.google.gson.Gson;
-import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.arch.AndroidScheduler;
 import com.judopay.model.Card;
 
@@ -17,7 +16,8 @@ public class TokenPreAuthFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
 
         if (this.presenter == null) {
-            this.presenter = new TokenPreAuthPresenter(this, JudoApiServiceFactory.getInstance(getActivity()), new AndroidScheduler(), new Gson());
+            JudoApiService apiService = Judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
+            this.presenter = new TokenPreAuthPresenter(this, apiService, new AndroidScheduler(), new Gson());
         }
     }
 
