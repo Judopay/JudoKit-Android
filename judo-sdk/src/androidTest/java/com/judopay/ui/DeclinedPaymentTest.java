@@ -31,7 +31,7 @@ public class DeclinedPaymentTest {
 
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
-    
+
     @Test
     public void shouldDeclineInvalidVisaCard() {
         Judo.setAvsEnabled(false);

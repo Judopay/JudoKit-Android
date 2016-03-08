@@ -41,7 +41,7 @@ public class ThreeDSecureTest {
 
     @Before
     public void setEnvironment() {
-        Judo.setEnvironment(Judo.Environment.SANDBOX);
+        Judo.setEnvironment(Judo.SANDBOX);
     }
 
     @Test
