@@ -51,6 +51,7 @@ public class TokenPaymentFormTest {
     @Test
     public void shouldDisplayFirst12CardNumberDigitsAsAsterisks() {
         Judo.setAvsEnabled(false);
+
         activityTestRule.launchActivity(getIntent(VISA));
 
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
@@ -60,6 +61,7 @@ public class TokenPaymentFormTest {
     @Test
     public void shouldDisplayTokenExpiryDate() {
         Judo.setAvsEnabled(false);
+
         activityTestRule.launchActivity(getIntent(VISA));
 
         onView(withId(R.id.expiry_date_edit_text))
@@ -70,6 +72,7 @@ public class TokenPaymentFormTest {
     @Test
     public void shouldHaveEmptyCvvField() {
         Judo.setAvsEnabled(false);
+
         activityTestRule.launchActivity(getIntent(VISA));
 
         onView(withId(R.id.cvv_edit_text))
@@ -79,6 +82,7 @@ public class TokenPaymentFormTest {
     @Test
     public void shouldDisplayCvvLabelAndHintWhenVisaCardToken() {
         Judo.setAvsEnabled(false);
+
         activityTestRule.launchActivity(getIntent(VISA));
 
         onView(withId(R.id.cvv_input_layout))
@@ -135,6 +139,8 @@ public class TokenPaymentFormTest {
 
     @Test
     public void shouldNotEnablePayButtonWhenCv2Deleted() {
+        Judo.setAvsEnabled(false);
+
         Intent intent = getIntent(CardType.VISA);
         activityTestRule.launchActivity(intent);
 
@@ -148,6 +154,8 @@ public class TokenPaymentFormTest {
 
     @Test
     public void shouldRequireValidCv2WhenVisa() {
+        Judo.setAvsEnabled(false);
+
         activityTestRule.launchActivity(getIntent(VISA));
 
         onView(withId(R.id.cvv_edit_text))
@@ -166,6 +174,8 @@ public class TokenPaymentFormTest {
     @Test
     public void shouldRequireValidCidWhenAmex() {
         Judo.setAmexEnabled(true);
+        Judo.setAvsEnabled(false);
+
         activityTestRule.launchActivity(getIntent(AMEX));
 
         onView(withId(R.id.cvv_edit_text))
