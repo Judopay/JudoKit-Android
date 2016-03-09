@@ -1,8 +1,8 @@
 package com.judopay.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.judopay.api.Request;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -12,7 +12,7 @@ import java.util.Map;
  * When creating a {@link TokenRequest} the {@link TokenRequest#judoId},
  * {@link TokenRequest#amount} and {@link TokenRequest#currency} must be provided.
  */
-public final class TokenRequest extends Request {
+public final class TokenRequest extends BasePaymentRequest {
 
     private String endDate;
 
@@ -25,16 +25,11 @@ public final class TokenRequest extends Request {
     @SerializedName("cardType")
     private int type;
 
-    private String judoId;
-    private String amount;
     private Location consumerLocation;
-    private String currency;
-    private String yourConsumerReference;
     private Address cardAddress;
     private String cv2;
     private String emailAddress;
     private String mobileNumber;
-    private Map<String, String> yourPaymentMetaData;
 
     public TokenRequest() {
         super(true);
@@ -56,24 +51,8 @@ public final class TokenRequest extends Request {
         return type;
     }
 
-    public String getAmount() {
-        return amount;
-    }
-
     public Location getConsumerLocation() {
         return consumerLocation;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getJudoId() {
-        return judoId;
-    }
-
-    public String getYourConsumerReference() {
-        return yourConsumerReference;
     }
 
     public Address getCardAddress() {
@@ -92,17 +71,13 @@ public final class TokenRequest extends Request {
         return mobileNumber;
     }
 
-    public Map<String, String> getYourPaymentMetaData() {
-        return yourPaymentMetaData;
-    }
-
     public static class Builder {
 
         private String endDate;
         private String lastFour;
         private String token;
         private int type;
-        private String amount;
+        private BigDecimal amount;
         private Location consumerLocation;
         private String currency;
         private String judoId;
@@ -137,7 +112,7 @@ public final class TokenRequest extends Request {
             return this;
         }
 
-        public Builder setAmount(String amount) {
+        public Builder setAmount(BigDecimal amount) {
             this.amount = amount;
             return this;
         }
@@ -196,7 +171,7 @@ public final class TokenRequest extends Request {
                 throw new IllegalArgumentException("judoId must be set");
             }
 
-            if (this.amount == null || this.amount.length() == 0) {
+            if (this.amount == null) {
                 throw new IllegalArgumentException("amount must be set");
             }
 

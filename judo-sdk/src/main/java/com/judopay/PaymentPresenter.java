@@ -5,6 +5,8 @@ import com.judopay.arch.Scheduler;
 import com.judopay.model.Card;
 import com.judopay.model.PaymentRequest;
 
+import java.math.BigDecimal;
+
 class PaymentPresenter extends BasePresenter {
 
     public PaymentPresenter(PaymentFormView view, JudoApiService judoApiService, Scheduler scheduler, Gson gson) {
@@ -17,7 +19,7 @@ class PaymentPresenter extends BasePresenter {
         paymentFormView.showLoading();
 
         PaymentRequest.Builder builder = new PaymentRequest.Builder()
-                .setAmount(options.getAmount())
+                .setAmount(new BigDecimal(options.getAmount()))
                 .setCardAddress(card.getCardAddress())
                 .setCardNumber(card.getCardNumber())
                 .setCurrency(options.getCurrency())

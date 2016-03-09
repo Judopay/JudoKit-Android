@@ -1,23 +1,18 @@
 package com.judopay.model;
 
-import com.judopay.api.Request;
-
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
- * Represents the data needed to perform a register card transaction with the judo API.
+ * Represents the data needed to perform a payment transaction with the judo API.
  * Use the {@link PaymentRequest.Builder} for object construction.
  *
  * When creating a {@link PaymentRequest} the {@link PaymentRequest#judoId},
  * {@link PaymentRequest#amount} and {@link PaymentRequest#currency} must be provided.
  */
-public final class PaymentRequest extends Request {
+public final class PaymentRequest extends BasePaymentRequest {
 
-    private String amount;
     private Location consumerLocation;
-    private String currency;
-    private String judoId;
-    private String yourConsumerReference;
     private Address cardAddress;
     private String cardNumber;
     private String cv2;
@@ -27,30 +22,13 @@ public final class PaymentRequest extends Request {
     private Boolean saveCardOnly;
     private String emailAddress;
     private String mobileNumber;
-    private Map<String, String> yourPaymentMetaData;
 
     private PaymentRequest() {
         super(true);
     }
 
-    public String getAmount() {
-        return amount;
-    }
-
     public Location getConsumerLocation() {
         return consumerLocation;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getJudoId() {
-        return judoId;
-    }
-
-    public String getYourConsumerReference() {
-        return yourConsumerReference;
     }
 
     public Address getCardAddress() {
@@ -89,13 +67,9 @@ public final class PaymentRequest extends Request {
         return mobileNumber;
     }
 
-    public Map<String, String> getMetaData() {
-        return yourPaymentMetaData;
-    }
-
     public static class Builder {
 
-        private String amount;
+        private BigDecimal amount;
         private Location consumerLocation;
         private String currency;
         private String judoId;
@@ -111,7 +85,7 @@ public final class PaymentRequest extends Request {
         private String mobileNumber;
         private Map<String, String> yourPaymentMetaData;
 
-        public Builder setAmount(String amount) {
+        public Builder setAmount(BigDecimal amount) {
             this.amount = amount;
             return this;
         }
@@ -195,7 +169,7 @@ public final class PaymentRequest extends Request {
                 throw new IllegalArgumentException("judoId must be set");
             }
 
-            if (this.amount == null || this.amount.length() == 0) {
+            if (this.amount == null) {
                 throw new IllegalArgumentException("amount must be set");
             }
 
