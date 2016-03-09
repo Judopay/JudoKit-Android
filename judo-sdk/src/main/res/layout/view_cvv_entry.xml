@@ -5,17 +5,17 @@
 
     <com.judopay.view.CvvImageView
         android:id="@+id/cvv_image_view"
-        style="@style/judo_card_image"
+        style="@style/Widget.Judo.CardImage"
         android:layout_marginTop="15dp"
         tools:ignore="RtlHardcoded" />
 
     <com.judopay.view.JudoTextInputLayout
         android:id="@+id/cvv_input_layout"
-        style="@style/input_layout">
+        style="@style/EntryLayout">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/cvv_edit_text"
-            style="@style/judo_cvv"
+            style="@style/Widget.Judo.Cvv"
             android:layout_weight="1" />
 
     </com.judopay.view.JudoTextInputLayout>
