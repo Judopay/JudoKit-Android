@@ -30,6 +30,61 @@ public class CountryAndPostcodeValidationTest {
     }
 
     @Test
+    public void shouldValidateUkPostcodeWithSpacesAsValid() {
+        CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
+                new PaymentForm.Builder()
+                        .setCardNumber("4282730000002397")
+                        .setCvv("")
+                        .setExpiryDate("12/99")
+                        .setStartDate("")
+                        .setIssueNumber("")
+                        .setPostcode("SW16 1AA")
+                        .setCountry(new Country(0, Country.UNITED_KINGDOM))
+                        .setAddressRequired(true)
+                        .build(), true, false, true, true);
+
+        assertThat(countryAndPostcodeValidation.isPostcodeEntryComplete(), is(true));
+        assertThat(countryAndPostcodeValidation.isShowPostcodeError(), is(false));
+    }
+
+
+    @Test
+    public void shouldValidate6DigitUkPostcodeWithSpacesAsValid() {
+        CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
+                new PaymentForm.Builder()
+                        .setCardNumber("4282730000002397")
+                        .setCvv("")
+                        .setExpiryDate("12/99")
+                        .setStartDate("")
+                        .setIssueNumber("")
+                        .setPostcode("ME1 2UY")
+                        .setCountry(new Country(0, Country.UNITED_KINGDOM))
+                        .setAddressRequired(true)
+                        .build(), true, false, true, true);
+
+        assertThat(countryAndPostcodeValidation.isPostcodeEntryComplete(), is(true));
+        assertThat(countryAndPostcodeValidation.isShowPostcodeError(), is(false));
+    }
+
+    @Test
+    public void shouldValidateUkPostcodeAsValid() {
+        CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
+                new PaymentForm.Builder()
+                        .setCardNumber("4282730000002397")
+                        .setCvv("")
+                        .setExpiryDate("12/99")
+                        .setStartDate("")
+                        .setIssueNumber("")
+                        .setPostcode("SW166AT")
+                        .setCountry(new Country(0, Country.UNITED_KINGDOM))
+                        .setAddressRequired(true)
+                        .build(), true, false, true, true);
+
+        assertThat(countryAndPostcodeValidation.isPostcodeEntryComplete(), is(true));
+        assertThat(countryAndPostcodeValidation.isShowPostcodeError(), is(false));
+    }
+
+    @Test
     public void shouldRequireCountryAndPostcodeWhenCardDetailsEntered() {
         CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
                 new PaymentForm.Builder()
