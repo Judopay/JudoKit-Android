@@ -210,7 +210,7 @@ public class TokenPaymentFormTest {
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setCardNumber("6789")
-                .setCardToken(new CardToken("12/20", "1234", "cardToken", cardType))
+                .setCardToken(new CardToken("1220", "1234", "cardToken", cardType))
                 .setConsumerRef("consumerRef")
                 .build());
         return intent;
