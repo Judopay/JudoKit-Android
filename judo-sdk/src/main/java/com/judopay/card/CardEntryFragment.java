@@ -205,7 +205,7 @@ public final class CardEntryFragment extends Fragment {
         if (judoOptions.getCardToken() == null) {
             cardNumberEntryView.addTextChangedListener(formValidator);
         } else {
-            cardNumberEntryView.setTokenizedNumber(judoOptions.getCardToken().getLastFour());
+            cardNumberEntryView.setTokenCard(judoOptions.getCardToken());
         }
     }
 
@@ -295,7 +295,6 @@ public final class CardEntryFragment extends Fragment {
 
     private void showCardNumberErrors(CardNumberValidation cardNumberValidation) {
         cardNumberEntryView.setError(cardNumberValidation.getError(), cardNumberValidation.isShowError());
-        cardNumberEntryView.setMaxLength(cardNumberValidation.getMaxLength());
     }
 
     private void moveFieldFocus(PaymentFormValidation formView) {
