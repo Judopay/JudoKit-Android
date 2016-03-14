@@ -66,7 +66,29 @@ public class TokenPaymentFormTest {
         activityTestRule.launchActivity(getIntent(AMEX));
 
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
-                .check(matches(withText("**** ***** *1234")));
+                .check(matches(withText("**** ****** *1234")));
+    }
+
+    @Test
+    public void shouldIgnoreCardNumberIfProvided() {
+        Judo.setAvsEnabled(false);
+
+        Intent intent = new Intent();
+
+        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+                .setJudoId("100407196")
+                .setAmount("0.99")
+                .setCardNumber("9999999999999999")
+                .setCurrency(Currency.GBP)
+                .setCardNumber("6789")
+                .setCardToken(new CardToken("1220", "1234", "cardToken", VISA))
+                .setConsumerRef("consumerRef")
+                .build());
+
+        activityTestRule.launchActivity(intent);
+
+        onView(ViewMatchers.withId(R.id.card_number_edit_text))
+                .check(matches(withText("**** **** **** 1234")));
     }
 
     @Test
