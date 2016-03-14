@@ -50,13 +50,23 @@ public class TokenPaymentFormTest {
     }
 
     @Test
-    public void shouldDisplayFirst12CardNumberDigitsAsAsterisks() {
+    public void shouldShowLastFourDigitsWhenVisa() {
         Judo.setAvsEnabled(false);
 
         activityTestRule.launchActivity(getIntent(VISA));
 
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .check(matches(withText("**** **** **** 1234")));
+    }
+
+    @Test
+    public void shouldShowLastFourDigitsWhenAmex() {
+        Judo.setAvsEnabled(false);
+
+        activityTestRule.launchActivity(getIntent(AMEX));
+
+        onView(ViewMatchers.withId(R.id.card_number_edit_text))
+                .check(matches(withText("**** ***** *1234")));
     }
 
     @Test
@@ -217,17 +227,6 @@ public class TokenPaymentFormTest {
                 .check(matches(isDisplayed()));
     }
 
-    @Test
-    public void shouldNotPrefillCardNumberIfProvided() {
-        Judo.setAvsEnabled(false);
-
-        Intent intent = getIntent(CardType.VISA);
-        activityTestRule.launchActivity(intent);
-
-        onView(withId(R.id.card_number_edit_text))
-                .check(matches(withText("**** **** **** 1234")));
-    }
-
     public Intent getIntent(int cardType) {
         Intent intent = new Intent();
 
@@ -239,6 +238,7 @@ public class TokenPaymentFormTest {
                 .setCardToken(new CardToken("1220", "1234", "cardToken", cardType))
                 .setConsumerRef("consumerRef")
                 .build());
+
         return intent;
     }
 
