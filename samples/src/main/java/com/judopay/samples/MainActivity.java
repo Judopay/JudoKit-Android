@@ -41,10 +41,10 @@ public class MainActivity extends BaseActivity {
     private static final int REGISTER_CARD_REQUEST = 301;
 
     private static final String AMOUNT = "0.99";
-    private static final String JUDO_ID = "00000000";
+    private static final String JUDO_ID = "100407196";
 
-    private static final String API_TOKEN = "sampleApiToken";
-    private static final String API_SECRET = "sampleApiSecret";
+    private static final String API_TOKEN = "823Eja2fEM6E9NAE";
+    private static final String API_SECRET = "382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6";
     private static final String CONSUMER_REF = "consumerRef";
 
     @Bind(R.id.payment_button)

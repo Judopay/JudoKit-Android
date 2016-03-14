@@ -10,6 +10,8 @@ import android.view.MenuItem;
 
 import com.judopay.exception.RootUserBlockedException;
 
+import static com.judopay.Judo.JUDO_OPTIONS;
+
 /**
  * Base Activity class from which all other Activities should extend from.
  * This class provides two main functions:
@@ -24,6 +26,10 @@ public abstract class JudoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!getIntent().hasExtra(JUDO_OPTIONS)) {
+            throw new IllegalArgumentException(String.format("%s Intent Extra is required for %s", JUDO_OPTIONS, this.getClass().getSimpleName()));
+        }
 
         if (RootDetector.isRooted() && !Judo.isRootedDevicesAllowed()) {
             throw new RootUserBlockedException();
@@ -46,7 +52,7 @@ public abstract class JudoActivity extends AppCompatActivity {
         if (getIntent().hasExtra(Judo.JUDO_OPTIONS)) {
             JudoOptions options = getIntent().getParcelableExtra(Judo.JUDO_OPTIONS);
 
-            if(options.getActivityTitle() != null) {
+            if (options.getActivityTitle() != null) {
                 super.setTitle(options.getActivityTitle());
             } else {
                 super.setTitle(titleId);
@@ -73,8 +79,8 @@ public abstract class JudoActivity extends AppCompatActivity {
     }
 
     void checkJudoOptionsExtras(Object... objects) {
-        for(Object object : objects) {
-            if(object == null) {
+        for (Object object : objects) {
+            if (object == null) {
                 throw new IllegalArgumentException("JudoOptions must contain all required fields for Activity");
             }
         }
@@ -82,7 +88,7 @@ public abstract class JudoActivity extends AppCompatActivity {
 
     void checkRequiredExtras(String... keys) {
         Bundle extras = getIntent().getExtras();
-        if(extras == null) {
+        if (extras == null) {
             throw new RuntimeException(String.format("Activity %s must be started with Intent Extras", this.getClass().getSimpleName()));
         }
         for (String key : keys) {
