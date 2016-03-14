@@ -102,7 +102,7 @@ public class PaymentFormValidation {
 
             StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(paymentForm, cardType);
 
-            boolean maestroValid = !maestroCardType ||
+            boolean maestroValid = paymentForm.isTokenCard() || !maestroCardType ||
                     (startDateAndIssueNumberValidation.isStartDateEntryComplete() && !startDateAndIssueNumberValidation.isShowStartDateError())
                             && startDateAndIssueNumberValidation.isIssueNumberValid();
 
@@ -126,7 +126,7 @@ public class PaymentFormValidation {
             builder.setCvvLength(cardType == CardType.AMEX ? 4 : 3);
 
             builder.setPaymentButtonEnabled((paymentForm.isTokenCard() || cardNumberValidation.isValid()) && cvvValid && expiryDateValid && maestroValid
-                    && (!paymentForm.isAddressRequired() || countryAndPostcodeValidation.isPostcodeEntryComplete()));
+                    && (!paymentForm.isAddressRequired() || paymentForm.isTokenCard() || countryAndPostcodeValidation.isPostcodeEntryComplete()));
 
             return builder.build();
         }
