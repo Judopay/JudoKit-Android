@@ -82,6 +82,14 @@ public class PaymentFormTest {
     }
 
     @Test
+    public void shouldDisplayCvvSecurityCodeWhenUnknownCard() {
+        activityTestRule.launchActivity(getIntent());
+
+        onView(withId(R.id.cvv_input_layout))
+                .check(matches(withTextInputHint("CVV")));
+    }
+
+    @Test
     public void shouldDisplayVisaSecurityCodeWhenVisaDetected() {
         activityTestRule.launchActivity(getIntent());
 
@@ -89,7 +97,7 @@ public class PaymentFormTest {
                 .perform(typeText("4976000000003436"));
 
         onView(withId(R.id.cvv_input_layout))
-                .check(matches(withTextInputHint("CVV")));
+                .check(matches(withTextInputHint("CVV2")));
     }
 
     @Test
