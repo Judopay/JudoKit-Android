@@ -13,7 +13,6 @@ import com.judopay.R;
 import com.judopay.model.Country;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -83,7 +82,7 @@ public class PaymentFormTest {
     }
 
     @Test
-    public void shouldDisplayCvvLabelWhenVisaCardNumberEntered() {
+    public void shouldDisplayVisaSecurityCodeWhenVisaDetected() {
         activityTestRule.launchActivity(getIntent());
 
         onView(withId(R.id.card_number_edit_text))
@@ -94,7 +93,7 @@ public class PaymentFormTest {
     }
 
     @Test
-    public void shouldDisplayCidvLabelWhenAmexCardNumberEntered() {
+    public void shouldDisplayAmexSecurityCodeWhenAmexDetected() {
         Judo.setAmexEnabled(true);
 
         activityTestRule.launchActivity(getIntent());
@@ -103,7 +102,20 @@ public class PaymentFormTest {
                 .perform(typeText("340000432128428"));
 
         onView(withId(R.id.cvv_input_layout))
-                .check(matches(withTextInputHint("CIDV")));
+                .check(matches(withTextInputHint("CID")));
+    }
+
+    @Test
+    public void shouldDisplayMastercardSecurityCodeWhenMastercardDetected() {
+        Judo.setAmexEnabled(true);
+
+        activityTestRule.launchActivity(getIntent());
+
+        onView(withId(R.id.card_number_edit_text))
+                .perform(typeText("5100000000005460"));
+
+        onView(withId(R.id.cvv_input_layout))
+                .check(matches(withTextInputHint("CVC2")));
     }
 
     @Test
