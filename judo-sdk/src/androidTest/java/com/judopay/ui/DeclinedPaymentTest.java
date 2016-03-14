@@ -1,7 +1,6 @@
 package com.judopay.ui;
 
 import android.content.Intent;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -12,7 +11,6 @@ import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +37,7 @@ public class DeclinedPaymentTest {
 
         activityTestRule.launchActivity(getIntent());
 
-        onView(ViewMatchers.withId(R.id.card_number_edit_text))
+        onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4221690000004963"));
 
         onView(withId(R.id.expiry_date_edit_text))
@@ -105,7 +103,6 @@ public class DeclinedPaymentTest {
 
         onView(withId(R.id.cvv_edit_text))
                 .perform(typeText("7654"));
-
 
         onView(withId(R.id.payment_button))
                 .perform(click());
