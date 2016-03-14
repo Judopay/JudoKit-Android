@@ -15,34 +15,34 @@ import com.judopay.R;
 import com.judopay.model.CardType;
 
 /**
- * A view that allows for the CVV (CV2/CIDV) of a card to be input and an image displayed to
- * indicate where on the payment card the CVV number can be located.
+ * A view that allows for the security code of a card (CV2, CID) to be input and an image displayed to
+ * indicate where on the payment card the security code can be located.
  */
-public class CvvEntryView extends RelativeLayout {
+public class SecurityCodeEntryView extends RelativeLayout {
 
     private EditText cvvEditText;
-    private CvvImageView cvvImageView;
+    private CardSecurityCodeView securityCodeView;
     private TextInputLayout cvvInputLayout;
     private HintFocusListener cvvHintChangeListener;
 
-    public CvvEntryView(Context context) {
+    public SecurityCodeEntryView(Context context) {
         super(context);
         initialize(context);
     }
 
-    public CvvEntryView(Context context, AttributeSet attrs) {
+    public SecurityCodeEntryView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialize(context);
     }
 
-    public CvvEntryView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SecurityCodeEntryView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initialize(context);
     }
 
     private void initialize(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        inflater.inflate(R.layout.view_cvv_entry, this);
+        inflater.inflate(R.layout.view_card_security_code, this);
     }
 
     @Override
@@ -52,13 +52,13 @@ public class CvvEntryView extends RelativeLayout {
         cvvEditText = (EditText) findViewById(R.id.cvv_edit_text);
         cvvInputLayout = (TextInputLayout) findViewById(R.id.cvv_input_layout);
         View cvvHelperText = findViewById(R.id.cvv_helper_text);
-        cvvImageView = (CvvImageView) findViewById(R.id.cvv_image_view);
+        securityCodeView = (CardSecurityCodeView) findViewById(R.id.cvv_image_view);
 
         cvvHintChangeListener = new HintFocusListener(cvvEditText, R.string.cvv_hint);
 
         cvvEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
                 new EmptyTextHintOnFocusChangeListener(cvvHelperText),
-                new ViewAlphaChangingTextWatcher(cvvEditText, cvvImageView),
+                new ViewAlphaChangingTextWatcher(cvvEditText, securityCodeView),
                 cvvHintChangeListener
         ));
         cvvEditText.addTextChangedListener(new HidingViewTextWatcher(cvvHelperText));
@@ -73,14 +73,30 @@ public class CvvEntryView extends RelativeLayout {
     }
 
     public void setCardType(int cardType) {
-        cvvImageView.setCardType(cardType);
+        securityCodeView.setCardType(cardType);
 
-        if(CardType.AMEX == cardType) {
-            setHint(R.string.amex_cvv_label);
+        if (CardType.AMEX == cardType) {
             setAlternateHint(R.string.amex_cvv_hint);
         } else {
-            setHint(R.string.cvv_label);
             setAlternateHint(R.string.cvv_hint);
+        }
+        setHint(getSecurityCodeLabel(cardType));
+    }
+
+    private static int getSecurityCodeLabel(int cardType) {
+        switch (cardType) {
+            case CardType.AMEX:
+                return R.string.cid;
+            case CardType.VISA:
+                return R.string.cvv2;
+            case CardType.MASTERCARD:
+                return R.string.cvc2;
+            case CardType.CHINA_UNION_PAY:
+                return R.string.cvn2;
+            case CardType.JCB:
+                return R.string.cav2;
+            default:
+                return R.string.cvv;
         }
     }
 

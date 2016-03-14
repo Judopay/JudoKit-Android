@@ -9,19 +9,19 @@ import android.widget.ImageView;
 import com.judopay.R;
 import com.judopay.model.CardType;
 
-public class CvvImageView extends FrameLayout {
+public class CardSecurityCodeView extends FrameLayout {
 
-    public CvvImageView(Context context) {
+    public CardSecurityCodeView(Context context) {
         super(context);
         setCardType(0);
     }
 
-    public CvvImageView(Context context, AttributeSet attrs) {
+    public CardSecurityCodeView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setCardType(0);
     }
 
-    public CvvImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CardSecurityCodeView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setCardType(0);
     }
@@ -41,9 +41,9 @@ public class CvvImageView extends FrameLayout {
     private int getCardResourceId(int cardType) {
         switch (cardType) {
             case CardType.AMEX:
-                return R.drawable.ic_card_cidv;
+                return R.drawable.ic_card_cid;
             default:
-                return R.drawable.ic_card_cvv;
+                return R.drawable.ic_card_security_code;
         }
     }
 

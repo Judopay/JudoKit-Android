@@ -3,7 +3,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <com.judopay.view.CvvImageView
+    <com.judopay.view.CardSecurityCodeView
         android:id="@+id/cvv_image_view"
         style="@style/Widget.Judo.CardImage"
         android:layout_marginTop="15dp"
