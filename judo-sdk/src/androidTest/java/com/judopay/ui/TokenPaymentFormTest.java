@@ -204,6 +204,20 @@ public class TokenPaymentFormTest {
     }
 
     @Test
+    public void shouldShowPayButtonWhenAmexCidEnteredAndAvsEnabled() {
+        Judo.setAvsEnabled(true);
+        Judo.setAmexEnabled(true);
+
+        activityTestRule.launchActivity(getIntent(AMEX));
+
+        onView(withId(R.id.cvv_edit_text))
+                .perform(typeText("1234"));
+
+        onView(withId(R.id.payment_button))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
     public void shouldNotPrefillCardNumberIfProvided() {
         Judo.setAvsEnabled(false);
 
