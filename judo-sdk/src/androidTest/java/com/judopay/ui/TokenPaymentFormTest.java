@@ -119,7 +119,7 @@ public class TokenPaymentFormTest {
         activityTestRule.launchActivity(getIntent(VISA));
 
         onView(withId(R.id.cvv_input_layout))
-                .check(matches(withTextInputHint("CVV")));
+                .check(matches(withTextInputHint("CVV2")));
 
         onView(withId(R.id.cvv_edit_text))
                 .perform(click())
@@ -133,7 +133,7 @@ public class TokenPaymentFormTest {
         activityTestRule.launchActivity(getIntent(AMEX));
 
         onView(withId(R.id.cvv_input_layout))
-                .check(matches(withTextInputHint("CIDV")));
+                .check(matches(withTextInputHint("CID")));
 
         onView(withId(R.id.cvv_edit_text))
                 .perform(click())
