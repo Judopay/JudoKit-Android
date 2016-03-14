@@ -91,6 +91,7 @@ public class CardNumberEntryView extends RelativeLayout {
     public void setTokenizedNumber(String lastFour) {
         cardNumberEditText.setEnabled(false);
         cardNumberEditText.setText(getContext().getString(R.string.token_card_number, lastFour));
+        cardTypeImageView.setAlpha(1.0f);
     }
 
     public void setError(@StringRes int message, boolean show) {

@@ -102,7 +102,7 @@ public class PaymentFormValidation {
 
             StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(paymentForm, cardType);
 
-            boolean maestroValid = !maestroCardType ||
+            boolean maestroValid = paymentForm.isTokenCard() || !maestroCardType ||
                     (startDateAndIssueNumberValidation.isStartDateEntryComplete() && !startDateAndIssueNumberValidation.isShowStartDateError())
                             && startDateAndIssueNumberValidation.isIssueNumberValid();
 
