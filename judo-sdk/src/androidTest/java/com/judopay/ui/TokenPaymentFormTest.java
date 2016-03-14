@@ -29,12 +29,13 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.judopay.model.CardType.AMEX;
 import static com.judopay.model.CardType.MAESTRO;
+import static com.judopay.model.CardType.VISA;
 import static com.judopay.ui.util.ViewMatchers.isDisabled;
 import static com.judopay.ui.util.ViewMatchers.isNotDisplayed;
+import static com.judopay.ui.util.ViewMatchers.isOpaque;
 import static com.judopay.ui.util.ViewMatchers.withTextInputHint;
-import static com.judopay.model.CardType.AMEX;
-import static com.judopay.model.CardType.VISA;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -121,6 +122,14 @@ public class TokenPaymentFormTest {
     }
 
     @Test
+    public void shouldShowCardTypeImageAsFullyOpaque() {
+        activityTestRule.launchActivity(getIntent(VISA));
+
+        onView(withId(R.id.card_type_view))
+                .check(matches(isOpaque()));
+    }
+
+    @Test
     public void shouldNotShowMaestroFieldsWhenMaestroTokenPayment() {
         Judo.setAvsEnabled(false);
 
@@ -135,6 +144,9 @@ public class TokenPaymentFormTest {
 
         onView(withId(R.id.issue_number_entry_view))
                 .check(matches(isNotDisplayed()));
+
+        onView(withId(R.id.payment_button))
+                .check(matches(isDisplayed()));
     }
 
     @Test
