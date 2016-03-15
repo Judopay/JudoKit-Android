@@ -35,14 +35,14 @@ public class PreAuthPresenterTest {
     JudoApiService apiService;
 
     @Mock
-    PaymentFormView paymentFormView;
+    TransactionCallbacks transactionCallbacks;
 
     private Gson gson = new Gson();
     private Scheduler scheduler = new TestScheduler();
 
     @Test
     public void shouldPerformPreAuth() {
-        PreAuthPresenter presenter = new PreAuthPresenter(paymentFormView, apiService, scheduler, gson);
+        PreAuthPresenter presenter = new PreAuthPresenter(transactionCallbacks, apiService, scheduler, gson);
         when(apiService.preAuth(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>empty());
 
         presenter.performPreAuth(card, new JudoOptions.Builder()
@@ -57,7 +57,7 @@ public class PreAuthPresenterTest {
 
     @Test
     public void shouldReturnReceiptWhenBadRequest() {
-        PreAuthPresenter presenter = new PreAuthPresenter(paymentFormView, apiService, scheduler, gson);
+        PreAuthPresenter presenter = new PreAuthPresenter(transactionCallbacks, apiService, scheduler, gson);
 
         RealResponseBody responseBody = new RealResponseBody(Headers.of("SdkVersion", "5.0"), new Buffer());
 
@@ -72,7 +72,7 @@ public class PreAuthPresenterTest {
                 .setJudoId("123456")
                 .build());
 
-        verify(paymentFormView).showDeclinedMessage(any(Receipt.class));
+        verify(transactionCallbacks).onError(any(Receipt.class));
     }
 
 }

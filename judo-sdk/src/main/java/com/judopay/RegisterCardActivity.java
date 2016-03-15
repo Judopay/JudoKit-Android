@@ -1,7 +1,11 @@
 package com.judopay;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.judopay.model.Receipt;
 
 import static com.judopay.Judo.JUDO_OPTIONS;
 
@@ -45,6 +49,20 @@ public final class RegisterCardActivity extends JudoActivity {
                     .add(android.R.id.content, registerCardFragment)
                     .commit();
         }
+    }
+
+    @Override
+    public void onDeclined() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.add_card_failed)
+                .setMessage(R.string.please_check_details_try_again)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create()
+                .show();
     }
 
     @Override

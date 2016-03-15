@@ -7,14 +7,14 @@ import com.judopay.model.PaymentRequest;
 
 class PreAuthPresenter extends BasePresenter {
 
-    public PreAuthPresenter(PaymentFormView view, JudoApiService judoApiService, Scheduler scheduler, Gson gson) {
-        super(view, judoApiService, scheduler, gson);
+    public PreAuthPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, Scheduler scheduler, Gson gson) {
+        super(callbacks, judoApiService, scheduler, gson);
     }
 
     public void performPreAuth(Card card, JudoOptions options) {
         this.loading = true;
 
-        paymentFormView.showLoading();
+        transactionCallbacks.showLoading();
 
         PaymentRequest.Builder builder = new PaymentRequest.Builder()
                 .setAmount(options.getAmount())

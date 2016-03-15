@@ -13,14 +13,14 @@ import rx.functions.Action1;
 abstract class BasePresenter implements ThreeDSecureListener {
 
     final JudoApiService apiService;
-    final PaymentFormView paymentFormView;
+    final TransactionCallbacks transactionCallbacks;
     final Scheduler scheduler;
     private final Gson gson;
 
     boolean loading;
 
-    BasePresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler, Gson gson) {
-        this.paymentFormView = paymentFormView;
+    BasePresenter(TransactionCallbacks transactionCallbacks, JudoApiService apiService, Scheduler scheduler, Gson gson) {
+        this.transactionCallbacks = transactionCallbacks;
         this.apiService = apiService;
         this.scheduler = scheduler;
         this.gson = gson;
@@ -30,18 +30,18 @@ abstract class BasePresenter implements ThreeDSecureListener {
         return new Action1<Receipt>() {
             @Override
             public void call(Receipt receipt) {
-                paymentFormView.hideLoading();
+                transactionCallbacks.hideLoading();
                 loading = false;
 
                 if (receipt.isSuccess()) {
-                    paymentFormView.dismiss3dSecureDialog();
-                    paymentFormView.finish(receipt);
+                    transactionCallbacks.dismiss3dSecureDialog();
+                    transactionCallbacks.onSuccess(receipt);
                 } else {
                     if (receipt.is3dSecureRequired()) {
-                        paymentFormView.setLoadingText(R.string.redirecting);
-                        paymentFormView.start3dSecureWebView(receipt, BasePresenter.this);
+                        transactionCallbacks.setLoadingText(R.string.redirecting);
+                        transactionCallbacks.start3dSecureWebView(receipt, BasePresenter.this);
                     } else {
-                        paymentFormView.showDeclinedMessage(receipt);
+                        transactionCallbacks.onDeclined(receipt);
                     }
                 }
             }
@@ -58,28 +58,28 @@ abstract class BasePresenter implements ThreeDSecureListener {
                     if (response.errorBody() != null) {
                         Reader reader = response.errorBody().charStream();
                         Receipt receipt = gson.fromJson(reader, Receipt.class);
-                        paymentFormView.showDeclinedMessage(receipt);
+                        transactionCallbacks.onError(receipt);
                     }
                 } else if (throwable instanceof java.net.UnknownHostException) {
-                    paymentFormView.showConnectionErrorDialog();
+                    transactionCallbacks.onConnectionError();
                 }
-                paymentFormView.dismiss3dSecureDialog();
-                paymentFormView.hideLoading();
+                transactionCallbacks.dismiss3dSecureDialog();
+                transactionCallbacks.hideLoading();
             }
         };
     }
 
     public void reconnect() {
         if (loading) {
-            paymentFormView.showLoading();
+            transactionCallbacks.showLoading();
         } else {
-            paymentFormView.hideLoading();
+            transactionCallbacks.hideLoading();
         }
     }
 
     @Override
     public void onAuthorizationWebPageLoaded() {
-        this.paymentFormView.show3dSecureWebView();
+        this.transactionCallbacks.show3dSecureWebView();
     }
 
     @Override
@@ -92,12 +92,12 @@ abstract class BasePresenter implements ThreeDSecureListener {
                     public void call(Receipt receipt) {
                         if (receipt.isSuccess()) {
                             loading = false;
-                            paymentFormView.finish(receipt);
+                            transactionCallbacks.onSuccess(receipt);
                         } else {
-                            paymentFormView.showDeclinedMessage(receipt);
+                            transactionCallbacks.onDeclined(receipt);
                         }
-                        paymentFormView.dismiss3dSecureDialog();
-                        paymentFormView.hideLoading();
+                        transactionCallbacks.dismiss3dSecureDialog();
+                        transactionCallbacks.hideLoading();
                     }
                 }, error());
     }
