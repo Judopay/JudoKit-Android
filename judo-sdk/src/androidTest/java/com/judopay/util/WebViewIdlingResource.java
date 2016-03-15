@@ -1,4 +1,4 @@
-package com.judopay;
+package com.judopay.util;
 
 /*
  * Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.

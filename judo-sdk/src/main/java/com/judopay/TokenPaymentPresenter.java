@@ -7,14 +7,14 @@ import com.judopay.model.TokenRequest;
 
 class TokenPaymentPresenter extends BasePresenter {
 
-    public TokenPaymentPresenter(PaymentFormView view, JudoApiService judoApiService, Scheduler scheduler, Gson gson) {
-        super(view, judoApiService, scheduler, gson);
+    public TokenPaymentPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, Scheduler scheduler, Gson gson) {
+        super(callbacks, judoApiService, scheduler, gson);
     }
 
     public void performTokenPayment(Card card, JudoOptions options) {
         this.loading = true;
 
-        paymentFormView.showLoading();
+        transactionCallbacks.showLoading();
 
         TokenRequest tokenTransaction = new TokenRequest.Builder()
                 .setAmount(options.getAmount())

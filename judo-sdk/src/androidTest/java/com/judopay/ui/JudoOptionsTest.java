@@ -16,6 +16,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.UUID;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -78,7 +80,7 @@ public class JudoOptionsTest {
                 .setJudoId("000000")
                 .setAmount("0.01")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef("consumerRef");
+                .setConsumerRef(UUID.randomUUID().toString());
     }
 
 }

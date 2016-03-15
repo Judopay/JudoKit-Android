@@ -24,6 +24,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import rx.functions.Action1;
@@ -62,7 +63,7 @@ public class SuccessfulTokenPaymentTest {
                 .setCardNumber("4976000000003436")
                 .setExpiryDate("12/20")
                 .setCv2("452")
-                .setYourConsumerReference("consumerRef")
+                .setYourConsumerReference(UUID.randomUUID().toString())
                 .build();
 
         apiService.registerCard(registerCardRequest)
@@ -95,7 +96,7 @@ public class SuccessfulTokenPaymentTest {
                 .setCardNumber("4976000000003436")
                 .setExpiryDate("12/20")
                 .setCv2("452")
-                .setYourConsumerReference("consumerRef")
+                .setYourConsumerReference(UUID.randomUUID().toString())
                 .setCardAddress(new Address.Builder()
                         .setPostCode("TR148PA")
                         .setCountryCode(826)
