@@ -15,6 +15,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.UUID;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -213,7 +215,7 @@ public class DeclinedPaymentTest {
                 .setJudoId("100407196")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef("consumerRef")
+                .setConsumerRef(UUID.randomUUID().toString())
                 .build());
         return intent;
     }

@@ -12,10 +12,11 @@ import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -40,7 +41,7 @@ public class PrefillCardDataTest {
                 .setCardNumber("4934123412341234")
                 .setExpiryMonth("01")
                 .setExpiryYear("20")
-                .setConsumerRef("consumerRef")
+                .setConsumerRef(UUID.randomUUID().toString())
                 .build());
 
         activityTestRule.launchActivity(intent);
@@ -60,7 +61,7 @@ public class PrefillCardDataTest {
                 .setCardNumber("343412341234123")
                 .setExpiryMonth("01")
                 .setExpiryYear("20")
-                .setConsumerRef("consumerRef")
+                .setConsumerRef(UUID.randomUUID().toString())
                 .build());
 
         activityTestRule.launchActivity(intent);

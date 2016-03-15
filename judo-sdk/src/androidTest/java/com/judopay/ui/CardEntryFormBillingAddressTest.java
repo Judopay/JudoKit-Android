@@ -12,10 +12,11 @@ import com.judopay.R;
 import com.judopay.model.Country;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -68,7 +69,7 @@ public class CardEntryFormBillingAddressTest {
                 .setJudoId("100407196")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef("consumerRef")
+                .setConsumerRef(UUID.randomUUID().toString())
                 .build());
         return intent;
     }
