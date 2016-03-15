@@ -2,7 +2,11 @@
 
 ## [5.2](https://github.com/judopay/Judo-Android/tree/5.2) (TBC)
  
- **Changes:**
+ **Implemented enhancements:**
+ - Fragment transaction callbacks - it's now possible to handle the result from a transaction when using the provided Fragments on the SDK. This allows for more customization around what gets shown when a transaction is successful, declined or an error occurs. If calling an Activity directly and using the ```Activity.onActivityResult()``` method as a callback, this will remain as before.
+
+**Changes:**
+ - Support for passing Activity Intent extras using the constants defined in ```Judo``` has been removed, in favor of using the ```JudoOptions``` builder for more easily passing data to an Activity.
  - Style updates to payment card entry form to match Google Material Design guidelines.
  - judo API token and secret can now be specified directly in the Android Manifest instead of programmatically.
  - Client integration method reporting data is now sent with the transaction to indicate if a custom UI or judo provided UI is used.
