@@ -20,7 +20,7 @@ import static java.net.URLEncoder.encode;
 /**
  * A view that displays a 3D-Secure web page for performing additional security checks when validating
  * the payment method used by a customer. This WebView displays the page and then listens for when
- * the redirect URL is reached to obtain the payment data needed to onSuccess the transaction.
+ * the redirect URL is reached to obtain the payment data needed to finish the transaction.
  */
 public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScriptInterface.JsonListener {
 
