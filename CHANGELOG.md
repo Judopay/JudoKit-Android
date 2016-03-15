@@ -5,8 +5,8 @@
  **Implemented enhancements:**
  - Fragment transaction callbacks - it's now possible to handle the result from a transaction when using the provided Fragments on the SDK. This allows for more customization around what gets shown when a transaction is successful, declined or an error occurs. If using the method of overiding the ```Activity.onActivityResult()``` method in your calling Activity, this will remain as before.
 
-
 **Changes:**
+ - Support for passing Activity Intent extras using the constants defined in ```Judo``` have now been removed, in favor of using the ```JudoOptions``` builder to provide data to the Activity.
  - Style updates to payment card entry form to match Google Material Design guidelines.
  - judo API token and secret can now be specified directly in the Android Manifest instead of programmatically.
  - Client integration method reporting data is now sent with the transaction to indicate if a custom UI or judo provided UI is used.
