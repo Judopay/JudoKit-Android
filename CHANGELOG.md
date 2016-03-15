@@ -3,7 +3,7 @@
 ## [5.2](https://github.com/judopay/Judo-Android/tree/5.2) (TBC)
  
  **Implemented enhancements:**
- - Fragment transaction callbacks - it's now possible to handle the result from a transaction when using the provided Fragments on the SDK. This allows for more customization around what gets shown when a transaction is successful, declined or an error occurrs. Callbacks using Activity result Intent data remain as before.
+ - Fragment transaction callbacks - it's now possible to handle the result from a transaction when using the provided Fragments on the SDK. This allows for more customization around what gets shown when a transaction is successful, declined or an error occurs. If using the method of overiding the ```Activity.onActivityResult()``` method in your calling Activity, this will remain as before.
  
  **Changes:**
  - Style updates to payment card entry form to match Google Material Design guidelines.
