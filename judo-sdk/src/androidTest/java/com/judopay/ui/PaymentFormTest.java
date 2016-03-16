@@ -13,10 +13,11 @@ import com.judopay.R;
 import com.judopay.model.Country;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -83,18 +84,26 @@ public class PaymentFormTest {
     }
 
     @Test
-    public void shouldDisplayCvvLabelWhenVisaCardNumberEntered() {
+    public void shouldDisplayCvvSecurityCodeWhenUnknownCard() {
         activityTestRule.launchActivity(getIntent());
-
-        onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("4976000000003436"));
 
         onView(withId(R.id.cvv_input_layout))
                 .check(matches(withTextInputHint("CVV")));
     }
 
     @Test
-    public void shouldDisplayCidvLabelWhenAmexCardNumberEntered() {
+    public void shouldDisplayVisaSecurityCodeWhenVisaDetected() {
+        activityTestRule.launchActivity(getIntent());
+
+        onView(withId(R.id.card_number_edit_text))
+                .perform(typeText("4976000000003436"));
+
+        onView(withId(R.id.cvv_input_layout))
+                .check(matches(withTextInputHint("CVV2")));
+    }
+
+    @Test
+    public void shouldDisplayAmexSecurityCodeWhenAmexDetected() {
         Judo.setAmexEnabled(true);
 
         activityTestRule.launchActivity(getIntent());
@@ -103,7 +112,20 @@ public class PaymentFormTest {
                 .perform(typeText("340000432128428"));
 
         onView(withId(R.id.cvv_input_layout))
-                .check(matches(withTextInputHint("CIDV")));
+                .check(matches(withTextInputHint("CID")));
+    }
+
+    @Test
+    public void shouldDisplayMastercardSecurityCodeWhenMastercardDetected() {
+        Judo.setAmexEnabled(true);
+
+        activityTestRule.launchActivity(getIntent());
+
+        onView(withId(R.id.card_number_edit_text))
+                .perform(typeText("5100000000005460"));
+
+        onView(withId(R.id.cvv_input_layout))
+                .check(matches(withTextInputHint("CVC2")));
     }
 
     @Test
@@ -212,7 +234,7 @@ public class PaymentFormTest {
                 .setJudoId("100407196")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef("consumerRef")
+                .setConsumerRef(UUID.randomUUID().toString())
                 .build());
         return intent;
     }

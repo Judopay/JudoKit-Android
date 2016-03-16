@@ -5,19 +5,19 @@ import android.support.annotation.StringRes;
 import com.judopay.model.Receipt;
 import com.judopay.secure3d.ThreeDSecureListener;
 
-interface PaymentFormView {
+interface TransactionCallbacks {
+
+    void onSuccess(Receipt receipt);
+
+    void onError(Receipt receipt);
+
+    void onDeclined(Receipt receipt);
+
+    void onConnectionError();
 
     void showLoading();
 
     void hideLoading();
-
-    void finish(Receipt receipt);
-
-    void handleError(Receipt receipt);
-
-    void dismiss3dSecureDialog();
-
-    void showDeclinedMessage(Receipt receipt);
 
     void setLoadingText(@StringRes int text);
 
@@ -25,5 +25,6 @@ interface PaymentFormView {
 
     void show3dSecureWebView();
 
-    void showConnectionErrorDialog();
+    void dismiss3dSecureDialog();
+
 }

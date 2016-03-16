@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="@layout/fragment_card_entry">
@@ -20,7 +21,7 @@
         <com.judopay.view.StartDateEntryView
             android:layout_marginTop="0dp"
             android:id="@+id/start_date_entry_view"
-            style="@style/input_layout"
+            style="@style/EntryLayout"
             android:layout_weight="1" />
 
         <com.judopay.view.IssueNumberEntryView
@@ -43,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <com.judopay.view.CvvEntryView
+        <com.judopay.view.SecurityCodeEntryView
             android:id="@+id/cvv_entry_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,12 +62,12 @@
 
         <com.judopay.view.CountrySpinner
             android:id="@+id/country_spinner"
-            style="@style/judo_country_spinner"
+            style="@style/Widget.Judo.Spinner"
             android:layout_weight="1" />
 
         <com.judopay.view.PostcodeEntryView
             android:id="@+id/postcode_entry_view"
-            style="@style/input_layout"
+            style="@style/EntryLayout"
             android:layout_width="match_parent"
             android:layout_marginTop="8dp"
             android:layout_weight="1" />

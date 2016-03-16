@@ -23,6 +23,7 @@ import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
 import retrofit2.RxJavaCallAdapterFactory;
 
+import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
@@ -115,8 +116,8 @@ public class JudoApiServiceFactory {
     }
 
     private static void setTimeouts(OkHttpClient.Builder builder) {
-        builder.connectTimeout(30, SECONDS)
-                .readTimeout(30, SECONDS)
+        builder.connectTimeout(5, SECONDS)
+                .readTimeout(3, MINUTES)
                 .writeTimeout(30, SECONDS);
     }
 

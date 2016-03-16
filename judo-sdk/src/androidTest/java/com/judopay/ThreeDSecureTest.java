@@ -13,11 +13,14 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.webkit.WebView;
 
 import com.judopay.model.Currency;
+import com.judopay.util.WebViewIdlingResource;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.unregisterIdlingResources;
@@ -97,7 +100,7 @@ public class ThreeDSecureTest {
                 .setJudoId("100407196")
                 .setAmount("0.01")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef("consumerRef")
+                .setConsumerRef(UUID.randomUUID().toString())
                 .build());
 
         return intent;

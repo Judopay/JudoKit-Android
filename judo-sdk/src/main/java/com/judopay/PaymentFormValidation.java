@@ -15,7 +15,6 @@ public class PaymentFormValidation {
     private StartDateAndIssueNumberValidation startDateAndIssueNumberValidation;
 
     private int cardType;
-    private boolean showAmexCvvView;
 
     private int expiryDateError;
     private boolean showExpiryDateError;
@@ -24,8 +23,6 @@ public class PaymentFormValidation {
     private boolean cvvValid;
     private int cvvLength;
     private int cvvHint;
-    private int cvvError;
-    private int cvvLabel;
 
     private boolean paymentButtonEnabled;
 
@@ -61,18 +58,9 @@ public class PaymentFormValidation {
         return cardType;
     }
 
-    public boolean isShowAmexCvvView() {
-        return showAmexCvvView;
-    }
-
     @StringRes
     public int getExpiryDateError() {
         return expiryDateError;
-    }
-
-    @StringRes
-    public int getCvvError() {
-        return cvvError;
     }
 
     @StringRes
@@ -82,11 +70,6 @@ public class PaymentFormValidation {
 
     public int getCvvLength() {
         return cvvLength;
-    }
-
-    @StringRes
-    public int getCvvLabel() {
-        return cvvLabel;
     }
 
     public static class Builder {
@@ -119,7 +102,7 @@ public class PaymentFormValidation {
 
             StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(paymentForm, cardType);
 
-            boolean maestroValid = !maestroCardType ||
+            boolean maestroValid = paymentForm.isTokenCard() || !maestroCardType ||
                     (startDateAndIssueNumberValidation.isStartDateEntryComplete() && !startDateAndIssueNumberValidation.isShowStartDateError())
                             && startDateAndIssueNumberValidation.isIssueNumberValid();
 
@@ -139,11 +122,11 @@ public class PaymentFormValidation {
 
             setExpiryDate(builder, expiryDateValid, paymentForm);
 
-            setCvv(paymentForm, builder, cvvValid);
+            setCvv(builder, cvvValid);
             builder.setCvvLength(cardType == CardType.AMEX ? 4 : 3);
 
             builder.setPaymentButtonEnabled((paymentForm.isTokenCard() || cardNumberValidation.isValid()) && cvvValid && expiryDateValid && maestroValid
-                    && (!paymentForm.isAddressRequired() || countryAndPostcodeValidation.isPostcodeEntryComplete()));
+                    && (!paymentForm.isAddressRequired() || paymentForm.isTokenCard() || countryAndPostcodeValidation.isPostcodeEntryComplete()));
 
             return builder.build();
         }
@@ -159,16 +142,8 @@ public class PaymentFormValidation {
                     .setShowExpiryDateError(!expiryDateValid && expiryLengthValid);
         }
 
-        private void setCvv(PaymentForm paymentForm, Builder builder, boolean cvvValid) {
-            boolean amex = CardType.fromCardNumber(paymentForm.getCardNumber()) == CardType.AMEX;
-
-            builder.setCvvValid(cvvValid)
-                    .setShowAmexCvvView(amex)
-                    .setCvvLabel(amex ? R.string.amex_cvv_label : R.string.cvv_label);
-
-            if (!cvvValid) {
-                builder.setCvvError(R.string.check_cvv);
-            }
+        private void setCvv(Builder builder, boolean cvvValid) {
+            builder.setCvvValid(cvvValid);
         }
 
         private boolean isExpiryDateValid(String expiryDate) {
@@ -227,17 +202,8 @@ public class PaymentFormValidation {
             return this;
         }
 
-        public void setCvvLabel(int cvvLabel) {
-            paymentFormValidation.cvvLabel = cvvLabel;
-        }
-
         public Builder setCvvLength(int cvvLength) {
             paymentFormValidation.cvvLength = cvvLength;
-            return this;
-        }
-
-        public Builder setShowAmexCvvView(boolean showAmexCvvView) {
-            paymentFormValidation.showAmexCvvView = showAmexCvvView;
             return this;
         }
 
@@ -271,10 +237,6 @@ public class PaymentFormValidation {
             return this;
         }
 
-        public Builder setCvvError(int cvvError) {
-            paymentFormValidation.cvvError = cvvError;
-            return this;
-        }
     }
 
 }

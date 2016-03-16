@@ -9,14 +9,14 @@ import java.math.BigDecimal;
 
 class PaymentPresenter extends BasePresenter {
 
-    public PaymentPresenter(PaymentFormView view, JudoApiService judoApiService, Scheduler scheduler, Gson gson) {
-        super(view, judoApiService, scheduler, gson);
+    public PaymentPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, Scheduler scheduler, Gson gson) {
+        super(callbacks, judoApiService, scheduler, gson);
     }
 
     public void performPayment(Card card, JudoOptions options) {
         this.loading = true;
 
-        paymentFormView.showLoading();
+        transactionCallbacks.showLoading();
 
         PaymentRequest.Builder builder = new PaymentRequest.Builder()
                 .setAmount(new BigDecimal(options.getAmount()))

@@ -18,12 +18,16 @@ import com.judopay.TokenPaymentActivity;
 import com.judopay.TokenPreAuthActivity;
 import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
-import com.judopay.view.Dialogs;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import static com.judopay.Judo.JUDO_RECEIPT;
+import static com.judopay.Judo.PAYMENT_REQUEST;
+import static com.judopay.Judo.PRE_AUTH_REQUEST;
+import static com.judopay.Judo.REGISTER_CARD_REQUEST;
+import static com.judopay.Judo.TOKEN_PAYMENT_REQUEST;
+import static com.judopay.Judo.TOKEN_PRE_AUTH_REQUEST;
 
 /**
  * Sample app screen containing buttons to activate the different features of the Judo SDK
@@ -33,18 +37,11 @@ import static com.judopay.Judo.JUDO_RECEIPT;
  */
 public class MainActivity extends BaseActivity {
 
-    // Constants to define different actions (for use with startActivityForResult(...))
-    private static final int PAYMENT_REQUEST = 101;
-    private static final int TOKEN_PAYMENT_REQUEST = 102;
-    private static final int PRE_AUTH_REQUEST = 201;
-    private static final int TOKEN_PRE_AUTH_REQUEST = 202;
-    private static final int REGISTER_CARD_REQUEST = 301;
-
     private static final String AMOUNT = "0.99";
-    private static final String JUDO_ID = "100407196";
+    private static final String JUDO_ID = "00000000";
 
-    private static final String API_TOKEN = "823Eja2fEM6E9NAE";
-    private static final String API_SECRET = "382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6";
+    private static final String API_TOKEN = "sampleApiToken";
+    private static final String API_SECRET = "sampleApiSecret";
     private static final String CONSUMER_REF = "consumerRef";
 
     @Bind(R.id.payment_button)
@@ -229,10 +226,6 @@ public class MainActivity extends BaseActivity {
 
                 showTokenPaymentDialog(receipt);
                 break;
-
-            case Judo.RESULT_DECLINED:
-                Dialogs.createDeclinedPaymentDialog(this).show();
-                break;
         }
     }
 
@@ -280,10 +273,6 @@ public class MainActivity extends BaseActivity {
                         })
                         .create()
                         .show();
-                break;
-
-            case Judo.RESULT_DECLINED:
-                Dialogs.createDeclinedPaymentDialog(this).show();
                 break;
 
             case Judo.RESULT_ERROR:

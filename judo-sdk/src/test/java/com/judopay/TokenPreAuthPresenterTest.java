@@ -34,11 +34,11 @@ public class TokenPreAuthPresenterTest {
     JudoApiService apiService;
 
     @Mock
-    PaymentFormView paymentFormView;
+    TransactionCallbacks transactionCallbacks;
 
     @Test
     public void shouldPerformTokenPreAuth() {
-        TokenPreAuthPresenter presenter = new TokenPreAuthPresenter(paymentFormView, apiService, new TestScheduler(), new Gson());
+        TokenPreAuthPresenter presenter = new TokenPreAuthPresenter(transactionCallbacks, apiService, new TestScheduler(), new Gson());
         when(apiService.tokenPreAuth(any(TokenRequest.class))).thenReturn(Observable.<Receipt>empty());
 
         String consumer = "consumerRef";
@@ -50,7 +50,7 @@ public class TokenPreAuthPresenterTest {
                 .setJudoId("123456")
                 .build());
 
-        verify(paymentFormView).showLoading();
+        verify(transactionCallbacks).showLoading();
         verify(apiService).tokenPreAuth(any(TokenRequest.class));
     }
 

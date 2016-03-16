@@ -3,26 +3,20 @@ package com.judopay;
 import android.content.Intent;
 import android.os.Bundle;
 
-import static com.judopay.Judo.JUDO_AMOUNT;
-import static com.judopay.Judo.JUDO_CONSUMER;
-import static com.judopay.Judo.JUDO_CURRENCY;
-import static com.judopay.Judo.JUDO_ID;
 import static com.judopay.Judo.JUDO_OPTIONS;
 
 /**
  * Displays a card entry form to the user, allowing for a payment to be made.
- *
  * To launch the PaymentActivity, call {@link android.app.Activity#startActivityForResult(Intent, int)}
  * with an Intent the configuration options:
  *
- * <pre class="prettyprint">
  * Intent intent = new Intent(this, PaymentActivity.class);
  * intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
- *      .setJudoId("1234567")
- *      .setCurrency(Currency.GBP)
- *      .setAmount("1.99")
- *      .setConsumerRef("consumerRef")
- *      .build());
+ * .setJudoId("1234567")
+ * .setCurrency(Currency.GBP)
+ * .setAmount("1.99")
+ * .setConsumerRef("consumerRef")
+ * .build());
  *
  * startActivityForResult(intent, PAYMENT_REQUEST);
  * </pre>
@@ -37,12 +31,8 @@ public final class PaymentActivity extends JudoActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getIntent().hasExtra((JUDO_OPTIONS))) {
-            JudoOptions options = getIntent().getParcelableExtra(JUDO_OPTIONS);
-            checkJudoOptionsExtras(options.getAmount(), options.getJudoId(), options.getCurrency(), options.getConsumerRef());
-        } else {
-            checkRequiredExtras(JUDO_AMOUNT, JUDO_ID, JUDO_CURRENCY, JUDO_CONSUMER);
-        }
+        JudoOptions options = getIntent().getParcelableExtra(JUDO_OPTIONS);
+        checkJudoOptionsExtras(options.getAmount(), options.getJudoId(), options.getCurrency(), options.getConsumerRef());
 
         setTitle(R.string.payment);
 
