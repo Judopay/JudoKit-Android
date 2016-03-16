@@ -66,7 +66,10 @@ class ApiCredentials {
             ApplicationInfo ai = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
             Bundle bundle = ai.metaData;
 
-            return bundle.getString(attribute);
+            String metaData = bundle.getString(attribute);
+            if (metaData != null && metaData.length() > 0) {
+                return metaData;
+            }
         } catch (NullPointerException | PackageManager.NameNotFoundException ignore) { }
 
         return defaultValue;
