@@ -96,4 +96,9 @@ public class CardToken implements Parcelable {
         }
     };
 
+    public boolean isExpired() {
+        CardDate cardDate = new CardDate(endDate);
+        return cardDate.isBeforeToday() || !cardDate.isInsideAllowedDateRange();
+    }
+
 }

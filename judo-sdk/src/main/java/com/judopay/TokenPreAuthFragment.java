@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.judopay.arch.AndroidScheduler;
 import com.judopay.model.Card;
 
-public class TokenPreAuthFragment extends BaseFragment {
+public class TokenPreAuthFragment extends AbstractTokenFragment {
 
     private TokenPreAuthPresenter presenter;
 

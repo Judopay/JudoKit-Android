@@ -28,6 +28,7 @@ public class Judo {
     public static final int RESULT_CANCELED = Activity.RESULT_CANCELED;
     public static final int RESULT_DECLINED = 2;
     public static final int RESULT_ERROR = 1;
+    public static final int RESULT_TOKEN_EXPIRED = 3;
     public static final int RESULT_CONNECTION_ERROR = 5;
 
     public static final int JUDO_REQUEST = 100;
