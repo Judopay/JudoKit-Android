@@ -21,7 +21,7 @@ class TokenPreAuthPresenter extends BasePresenter {
                 .setCurrency(options.getCurrency())
                 .setJudoId(options.getJudoId())
                 .setYourConsumerReference(options.getConsumerRef())
-                .setSecurityCode(card.getSecurityCode())
+                .setCv2(card.getSecurityCode())
                 .setEmailAddress(options.getEmailAddress())
                 .setMobileNumber(options.getMobileNumber())
                 .setMetaData(options.getMetaDataMap())

@@ -22,7 +22,7 @@ class TokenPaymentPresenter extends BasePresenter {
                 .setCurrency(options.getCurrency())
                 .setJudoId(options.getJudoId())
                 .setYourConsumerReference(options.getConsumerRef())
-                .setSecurityCode(card.getSecurityCode())
+                .setCv2(card.getSecurityCode())
                 .setToken(options.getCardToken())
                 .setMetaData(options.getMetaDataMap())
                 .setEmailAddress(options.getEmailAddress())
