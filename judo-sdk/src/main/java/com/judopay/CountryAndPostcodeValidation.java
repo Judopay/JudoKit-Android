@@ -19,7 +19,7 @@ public class CountryAndPostcodeValidation {
     private final boolean postcodeEnabled;
     private final boolean postcodeNumeric;
 
-    public CountryAndPostcodeValidation(PaymentForm paymentForm, boolean cardNumberValid, boolean cvvValid, boolean expiryDateValid, boolean maestroValid) {
+    public CountryAndPostcodeValidation(PaymentForm paymentForm, boolean cardNumberValid, boolean securityCodeValid, boolean expiryDateValid, boolean maestroValid) {
         boolean postcodeValid = isPostcodeValid(paymentForm.getPostcode(), paymentForm.getCountry());
 
         this.postcodeEntryComplete = isPostcodeLengthValid(paymentForm.getPostcode().replaceAll("\\s+", ""), paymentForm.getCountry());
@@ -27,7 +27,7 @@ public class CountryAndPostcodeValidation {
 
         this.postcodeNumeric = Country.UNITED_STATES.equals(paymentForm.getCountry().getDisplayName());
         this.postcodeEnabled = !Country.OTHER.equals(paymentForm.getCountry().getDisplayName());
-        this.showCountryAndPostcode = (paymentForm.isAddressRequired() && cardNumberValid && cvvValid && expiryDateValid) && (!paymentForm.isMaestroSupported() || maestroValid);
+        this.showCountryAndPostcode = (paymentForm.isAddressRequired() && cardNumberValid && securityCodeValid && expiryDateValid) && (!paymentForm.isMaestroSupported() || maestroValid);
         this.postcodeLabel = getPostcodeLabel(paymentForm.getCountry());
         this.postcodeError = getPostcodeError(paymentForm.getCountry());
     }

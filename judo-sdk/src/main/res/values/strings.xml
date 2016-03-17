@@ -20,8 +20,8 @@
     <string name="cvc2">CVC2</string>
     <string name="cvn2">CVN2</string>
     <string name="cav2">CAV2</string>
-    <string name="cvv_hint">000</string>
-    <string name="amex_cvv_hint">0000</string>
+    <string name="security_code_hint">000</string>
+    <string name="amex_security_code_hint">0000</string>
     <string name="add_card">Add card</string>
     <string name="empty" />
     <string name="error_postcode_uk">Check postcode</string>

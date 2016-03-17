@@ -7,10 +7,9 @@ import static com.judopay.Judo.JUDO_OPTIONS;
 
 /**
  * Displays a card entry form to the user, allowing for a pre-auth to be made.
- * <p>
  * To launch the PreAuthActivity, call {@link android.app.Activity#startActivityForResult(Intent, int)}
  * with an Intent the configuration options:
- * <p>
+ *
  * <pre class="prettyprint">
  * Intent intent = new Intent(this, PreAuthActivity.class);
  * intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
@@ -19,10 +18,9 @@ import static com.judopay.Judo.JUDO_OPTIONS;
  * .setAmount("1.99")
  * .setConsumerRef("consumerRef")
  * .build());
- * <p>
  * startActivityForResult(intent, PRE_AUTH_REQUEST);
  * </pre>
- * <p>
+ *
  * See {@link JudoOptions} for the full list of supported options
  */
 public final class PreAuthActivity extends JudoActivity {

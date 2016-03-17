@@ -18,6 +18,7 @@ import static com.judopay.Judo.RESULT_CONNECTION_ERROR;
 import static com.judopay.Judo.RESULT_DECLINED;
 import static com.judopay.Judo.RESULT_ERROR;
 import static com.judopay.Judo.RESULT_SUCCESS;
+import static com.judopay.Judo.RESULT_TOKEN_EXPIRED;
 
 /**
  * Base Activity class from which all other Activities should extend from.
@@ -62,6 +63,7 @@ abstract class JudoActivity extends AppCompatActivity {
             switch (resultCode) {
                 case RESULT_SUCCESS:
                 case RESULT_ERROR:
+                case RESULT_TOKEN_EXPIRED:
                     setResult(resultCode, data);
                     finish();
                     break;

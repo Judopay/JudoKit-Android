@@ -17,7 +17,7 @@ public class PaymentFormValidationTest {
         PaymentFormValidation paymentFormValidation = new PaymentFormValidation.Builder()
                 .build(new PaymentForm.Builder()
                         .setCardNumber("1234567812345678")
-                        .setCvv("123")
+                        .setSecurityCode("123")
                         .setExpiryDate("01/20")
                         .setStartDate("")
                         .setIssueNumber("")
@@ -33,7 +33,7 @@ public class PaymentFormValidationTest {
         PaymentFormValidation paymentFormValidation = new PaymentFormValidation.Builder()
                 .build(new PaymentForm.Builder()
                         .setCardNumber("1234567812345678")
-                        .setCvv("123")
+                        .setSecurityCode("123")
                         .setExpiryDate("09/15")
                         .setStartDate("")
                         .setIssueNumber("")
@@ -49,7 +49,7 @@ public class PaymentFormValidationTest {
         PaymentFormValidation paymentFormValidation = new PaymentFormValidation.Builder()
                 .build(new PaymentForm.Builder()
                         .setCardNumber("340000146304174")
-                        .setCvv("1234")
+                        .setSecurityCode("1234")
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
@@ -57,7 +57,7 @@ public class PaymentFormValidationTest {
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .build());
 
-        assertThat(paymentFormValidation.getCvvHint(), is(R.string.amex_cvv_hint));
+        assertThat(paymentFormValidation.getSecurityCodeHint(), is(R.string.amex_security_code_hint));
     }
 
     @Test
@@ -65,7 +65,7 @@ public class PaymentFormValidationTest {
         PaymentFormValidation paymentFormValidation = new PaymentFormValidation.Builder()
                 .build(new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")
-                        .setCvv("123")
+                        .setSecurityCode("123")
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
@@ -73,7 +73,7 @@ public class PaymentFormValidationTest {
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .build());
 
-        assertThat(paymentFormValidation.getCvvHint(), is(R.string.cvv_hint));
+        assertThat(paymentFormValidation.getSecurityCodeHint(), is(R.string.security_code_hint));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class PaymentFormValidationTest {
         PaymentFormValidation paymentFormValidation = new PaymentFormValidation.Builder()
                 .build(new PaymentForm.Builder()
                         .setCardNumber("340000146304174")
-                        .setCvv("1234")
+                        .setSecurityCode("1234")
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
@@ -89,7 +89,7 @@ public class PaymentFormValidationTest {
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .build());
 
-        assertThat(paymentFormValidation.getCvvLength(), is(4));
+        assertThat(paymentFormValidation.getSecurityCodeLength(), is(4));
     }
 
     @Test
@@ -97,7 +97,7 @@ public class PaymentFormValidationTest {
         PaymentFormValidation paymentFormValidation = new PaymentFormValidation.Builder()
                 .build(new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")
-                        .setCvv("1234")
+                        .setSecurityCode("1234")
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
@@ -105,7 +105,7 @@ public class PaymentFormValidationTest {
                         .setCountry(new Country(0, Country.UNITED_KINGDOM))
                         .build());
 
-        assertThat(paymentFormValidation.getCvvLength(), is(3));
+        assertThat(paymentFormValidation.getSecurityCodeLength(), is(3));
     }
 
     @Test
@@ -113,7 +113,7 @@ public class PaymentFormValidationTest {
         PaymentFormValidation paymentFormValidation = new PaymentFormValidation.Builder()
                 .build(new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")
-                        .setCvv("")
+                        .setSecurityCode("")
                         .setExpiryDate("")
                         .setStartDate("")
                         .setIssueNumber("")
@@ -129,7 +129,7 @@ public class PaymentFormValidationTest {
         PaymentFormValidation paymentFormValidation = new PaymentFormValidation.Builder()
                 .build(new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")
-                        .setCvv("123")
+                        .setSecurityCode("123")
                         .setExpiryDate("12/20")
                         .setStartDate("")
                         .setIssueNumber("")
@@ -145,7 +145,7 @@ public class PaymentFormValidationTest {
         PaymentFormValidation paymentFormValidation = new PaymentFormValidation.Builder()
                 .build(new PaymentForm.Builder()
                         .setCardNumber("6759649826438453")
-                        .setCvv("123")
+                        .setSecurityCode("123")
                         .setExpiryDate("12/20")
                         .setStartDate("")
                         .setIssueNumber("")
@@ -162,7 +162,7 @@ public class PaymentFormValidationTest {
         PaymentFormValidation paymentFormValidation = new PaymentFormValidation.Builder()
                 .build(new PaymentForm.Builder()
                         .setCardNumber("6759649826438453")
-                        .setCvv("123")
+                        .setSecurityCode("123")
                         .setExpiryDate("12/20")
                         .setStartDate("12/12")
                         .setIssueNumber("01")
@@ -179,7 +179,7 @@ public class PaymentFormValidationTest {
         PaymentFormValidation paymentFormValidation = new PaymentFormValidation.Builder()
                 .build(new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")
-                        .setCvv("123")
+                        .setSecurityCode("123")
                         .setExpiryDate("12/20")
                         .setStartDate("12/12")
                         .setIssueNumber("01")
@@ -196,7 +196,7 @@ public class PaymentFormValidationTest {
         PaymentFormValidation paymentFormValidation = new PaymentFormValidation.Builder()
                 .build(new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")
-                        .setCvv("123")
+                        .setSecurityCode("123")
                         .setExpiryDate("12/20")
                         .setStartDate("12/12")
                         .setIssueNumber("01")

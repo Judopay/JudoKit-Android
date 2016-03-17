@@ -105,12 +105,12 @@ public class TokenPaymentFormTest {
     }
 
     @Test
-    public void shouldHaveEmptyCvvField() {
+    public void shouldHaveEmptySecurityCode() {
         Judo.setAvsEnabled(false);
 
         activityTestRule.launchActivity(getIntent(VISA));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .check(matches(withText("")));
     }
 
@@ -120,10 +120,10 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(getIntent(VISA));
 
-        onView(withId(R.id.cvv_input_layout))
+        onView(withId(R.id.security_code_input_layout))
                 .check(matches(withTextInputHint("CVV2")));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(click())
                 .check(matches(withHint("000")));
     }
@@ -134,10 +134,10 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(getIntent(AMEX));
 
-        onView(withId(R.id.cvv_input_layout))
+        onView(withId(R.id.security_code_input_layout))
                 .check(matches(withTextInputHint("CID")));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(click())
                 .check(matches(withHint("0000")));
     }
@@ -148,7 +148,7 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(getIntent(VISA));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
 
         onView(withId(R.id.post_code_edit_text))
@@ -169,7 +169,7 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(getIntent(MAESTRO));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .check(matches(hasFocus()))
                 .perform(typeText("123"));
 
@@ -190,7 +190,7 @@ public class TokenPaymentFormTest {
         Intent intent = getIntent(CardType.VISA);
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("123"))
                 .perform(replaceText(""));
 
@@ -204,13 +204,13 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(getIntent(VISA));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("12"));
 
         onView(withId(R.id.payment_button))
                 .check(matches(isNotDisplayed()));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(replaceText("123"));
 
         onView(withId(R.id.payment_button))
@@ -224,13 +224,13 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(getIntent(AMEX));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("123"));
 
         onView(withId(R.id.payment_button))
                 .check(matches(isNotDisplayed()));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(replaceText("1234"));
 
         onView(withId(R.id.payment_button))
@@ -244,7 +244,7 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(getIntent(AMEX));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("1234"));
 
         onView(withId(R.id.payment_button))

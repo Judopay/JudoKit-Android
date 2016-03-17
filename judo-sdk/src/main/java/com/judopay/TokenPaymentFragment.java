@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.judopay.arch.AndroidScheduler;
 import com.judopay.model.Card;
 
-public final class TokenPaymentFragment extends BaseFragment {
+public final class TokenPaymentFragment extends AbstractTokenFragment {
 
     private TokenPaymentPresenter presenter;
 

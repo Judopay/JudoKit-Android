@@ -20,7 +20,7 @@ class RegisterCardPresenter extends BasePresenter {
                 .setJudoId(options.getJudoId())
                 .setCardAddress(card.getCardAddress())
                 .setCardNumber(card.getCardNumber())
-                .setCv2(card.getCv2())
+                .setCv2(card.getSecurityCode())
                 .setExpiryDate(card.getExpiryDate())
                 .setMetaData(options.getMetaDataMap())
                 .setEmailAddress(options.getEmailAddress())

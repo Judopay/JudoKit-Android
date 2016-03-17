@@ -20,10 +20,10 @@ import com.judopay.model.CardType;
  */
 public class SecurityCodeEntryView extends RelativeLayout {
 
-    private EditText cvvEditText;
-    private CardSecurityCodeView securityCodeView;
-    private TextInputLayout cvvInputLayout;
-    private HintFocusListener cvvHintChangeListener;
+    private EditText editText;
+    private CardSecurityCodeView imageView;
+    private TextInputLayout inputLayout;
+    private HintFocusListener hintFocusListener;
 
     public SecurityCodeEntryView(Context context) {
         super(context);
@@ -49,36 +49,36 @@ public class SecurityCodeEntryView extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        cvvEditText = (EditText) findViewById(R.id.cvv_edit_text);
-        cvvInputLayout = (TextInputLayout) findViewById(R.id.cvv_input_layout);
-        View cvvHelperText = findViewById(R.id.cvv_helper_text);
-        securityCodeView = (CardSecurityCodeView) findViewById(R.id.cvv_image_view);
+        editText = (EditText) findViewById(R.id.security_code_edit_text);
+        inputLayout = (TextInputLayout) findViewById(R.id.security_code_input_layout);
+        imageView = (CardSecurityCodeView) findViewById(R.id.security_code_image_view);
+        View helperText = findViewById(R.id.security_code_helper_text);
 
-        cvvHintChangeListener = new HintFocusListener(cvvEditText, R.string.cvv_hint);
+        hintFocusListener = new HintFocusListener(editText, R.string.security_code_hint);
 
-        cvvEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
-                new EmptyTextHintOnFocusChangeListener(cvvHelperText),
-                new ViewAlphaChangingTextWatcher(cvvEditText, securityCodeView),
-                cvvHintChangeListener
+        editText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+                new EmptyTextHintOnFocusChangeListener(helperText),
+                new ViewAlphaChangingTextWatcher(editText, imageView),
+                hintFocusListener
         ));
-        cvvEditText.addTextChangedListener(new HidingViewTextWatcher(cvvHelperText));
+        editText.addTextChangedListener(new HidingViewTextWatcher(helperText));
     }
 
     public void setText(CharSequence text) {
-        cvvEditText.setText(text);
+        editText.setText(text);
     }
 
     public void addTextChangedListener(TextWatcher watcher) {
-        cvvEditText.addTextChangedListener(watcher);
+        editText.addTextChangedListener(watcher);
     }
 
     public void setCardType(int cardType) {
-        securityCodeView.setCardType(cardType);
+        imageView.setCardType(cardType);
 
         if (CardType.AMEX == cardType) {
-            setAlternateHint(R.string.amex_cvv_hint);
+            setAlternateHint(R.string.amex_security_code_hint);
         } else {
-            setAlternateHint(R.string.cvv_hint);
+            setAlternateHint(R.string.security_code_hint);
         }
         setHint(getSecurityCodeLabel(cardType));
     }
@@ -101,19 +101,19 @@ public class SecurityCodeEntryView extends RelativeLayout {
     }
 
     public void setMaxLength(int length) {
-        cvvEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(length)});
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(length)});
     }
 
     public void setHint(@StringRes int hintResId) {
-        cvvInputLayout.setHint(getResources().getString(hintResId));
+        inputLayout.setHint(getResources().getString(hintResId));
     }
 
     public void setAlternateHint(@StringRes int hintResId) {
-        cvvHintChangeListener.setHintResourceId(hintResId);
+        hintFocusListener.setHintResourceId(hintResId);
     }
 
     public String getText() {
-        return cvvEditText.getText().toString().trim();
+        return editText.getText().toString().trim();
     }
 
 }

@@ -73,7 +73,7 @@ public class SuccessfulTokenPaymentTest {
                     public void call(Receipt receipt) {
                         TokenPaymentActivity tokenPaymentActivity = tokenPaymentActivityTestRule.launchActivity(getTokenPaymentIntent(receipt));
 
-                        onView(withId(R.id.cvv_edit_text))
+                        onView(withId(R.id.security_code_edit_text))
                                 .perform(typeText("452"));
 
                         onView(withId(R.id.payment_button))
@@ -110,7 +110,7 @@ public class SuccessfulTokenPaymentTest {
                     public void call(Receipt receipt) {
                         TokenPaymentActivity tokenPaymentActivity = tokenPaymentActivityTestRule.launchActivity(getTokenPaymentIntent(receipt));
 
-                        onView(withId(R.id.cvv_edit_text))
+                        onView(withId(R.id.security_code_edit_text))
                                 .perform(typeText("452"));
 
                         onView(withId(R.id.post_code_edit_text))

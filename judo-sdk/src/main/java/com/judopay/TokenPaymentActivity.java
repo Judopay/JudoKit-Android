@@ -7,10 +7,9 @@ import static com.judopay.Judo.JUDO_OPTIONS;
 
 /**
  * Displays a card entry form to the user, allowing for a token payment to be made.
- * <p>
  * To launch the TokenPaymentActivity, call {@link android.app.Activity#startActivityForResult(Intent, int)}
  * with an Intent the configuration options:
- * <p>
+ *
  * <pre class="prettyprint">
  * Intent intent = new Intent(this, TokenPaymentActivity.class);
  * intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
@@ -20,10 +19,10 @@ import static com.judopay.Judo.JUDO_OPTIONS;
  * .setConsumerRef("consumerRef")
  * .setCardToken(cardToken)
  * .build());
- * <p>
+ *
  * startActivityForResult(intent, TOKEN_PAYMENT_REQUEST);
  * </pre>
- * <p>
+ *
  * See {@link com.judopay.JudoOptions} for the full list of supported options.
  */
 public final class TokenPaymentActivity extends JudoActivity {

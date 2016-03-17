@@ -21,7 +21,7 @@ class PaymentPresenter extends BasePresenter {
                 .setCardAddress(card.getCardAddress())
                 .setCardNumber(card.getCardNumber())
                 .setCurrency(options.getCurrency())
-                .setCv2(card.getCv2())
+                .setCv2(card.getSecurityCode())
                 .setJudoId(options.getJudoId())
                 .setYourConsumerReference(options.getConsumerRef())
                 .setExpiryDate(card.getExpiryDate())
