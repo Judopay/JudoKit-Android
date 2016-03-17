@@ -17,9 +17,9 @@ public class PaymentFormValidation {
     private boolean showExpiryDateError;
     private boolean expiryDateEntryComplete;
 
-    private boolean cvvValid;
-    private int cvvLength;
-    private int cvvHint;
+    private boolean securityCodeValid;
+    private int securityCodeLength;
+    private int securityCodeHint;
 
     private boolean paymentButtonEnabled;
 
@@ -43,8 +43,8 @@ public class PaymentFormValidation {
         return expiryDateEntryComplete;
     }
 
-    public boolean isCvvValid() {
-        return cvvValid;
+    public boolean isSecurityCodeValid() {
+        return securityCodeValid;
     }
 
     public boolean isPaymentButtonEnabled() {
@@ -61,12 +61,12 @@ public class PaymentFormValidation {
     }
 
     @StringRes
-    public int getCvvHint() {
-        return cvvHint;
+    public int getSecurityCodeHint() {
+        return securityCodeHint;
     }
 
-    public int getCvvLength() {
-        return cvvLength;
+    public int getSecurityCodeLength() {
+        return securityCodeLength;
     }
 
     public static class Builder {
@@ -82,7 +82,7 @@ public class PaymentFormValidation {
         }
 
         public int getCvvHint(int cardType) {
-            return CardType.AMEX == cardType ? R.string.amex_cvv_hint : R.string.cvv_hint;
+            return CardType.AMEX == cardType ? R.string.amex_security_code_hint : R.string.security_code_hint;
         }
 
         public PaymentFormValidation build(PaymentForm paymentForm) {
@@ -103,25 +103,25 @@ public class PaymentFormValidation {
                     (startDateAndIssueNumberValidation.isStartDateEntryComplete() && !startDateAndIssueNumberValidation.isShowStartDateError())
                             && startDateAndIssueNumberValidation.isIssueNumberValid();
 
-            boolean cvvValid = isCvvValid(cardType, paymentForm.getCvv());
+            boolean securityCodeValid = isSecurityCodeValid(cardType, paymentForm.getSecurityCode());
 
             boolean expiryDateValid = paymentForm.isTokenCard() || isExpiryDateValid(paymentForm.getExpiryDate());
 
             CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(paymentForm,
-                    cardNumberValidation.isValid(), cvvValid, expiryDateValid, maestroValid);
+                    cardNumberValidation.isValid(), securityCodeValid, expiryDateValid, maestroValid);
 
             Builder builder = new Builder()
                     .setCardNumberValidation(cardNumberValidation)
-                    .setCvvHint(getCvvHint(cardType))
+                    .setSecurityCodeHint(getCvvHint(cardType))
                     .setCardType(cardType)
                     .setCountryAndPostcodeValidation(countryAndPostcodeValidation)
                     .setStartDateAndIssueNumberValidation(startDateAndIssueNumberValidation)
-                    .setCvvValid(cvvValid)
-                    .setCvvLength(cardType == CardType.AMEX ? 4 : 3);
+                    .setSecurityCodeValid(securityCodeValid)
+                    .setSecurityCodeLength(cardType == CardType.AMEX ? 4 : 3);
 
             setExpiryDate(builder, expiryDateValid, paymentForm);
 
-            builder.setPaymentButtonEnabled((paymentForm.isTokenCard() || cardNumberValidation.isValid()) && cvvValid && expiryDateValid && maestroValid
+            builder.setPaymentButtonEnabled((paymentForm.isTokenCard() || cardNumberValidation.isValid()) && securityCodeValid && expiryDateValid && maestroValid
                     && (!paymentForm.isAddressRequired() || paymentForm.isTokenCard() || countryAndPostcodeValidation.isPostcodeEntryComplete()));
 
             return builder.build();
@@ -143,14 +143,14 @@ public class PaymentFormValidation {
             return cardDate.isAfterToday() && cardDate.isInsideAllowedDateRange();
         }
 
-        private boolean isCvvValid(int cardType, String cvv) {
+        private boolean isSecurityCodeValid(int cardType, String securityCode) {
             try {
-                int cvvNumber = Integer.parseInt(cvv);
+                int securityCodeNumber = Integer.parseInt(securityCode);
 
                 if (CardType.AMEX == cardType) {
-                    return cvv.length() == 4 && cvvNumber >= 0 && cvvNumber < 10000;
+                    return securityCode.length() == 4 && securityCodeNumber >= 0 && securityCodeNumber < 10000;
                 } else {
-                    return cvv.length() == 3 && cvvNumber > 0 && cvvNumber < 1000;
+                    return securityCode.length() == 3 && securityCodeNumber > 0 && securityCodeNumber < 1000;
                 }
             } catch (NumberFormatException e) {
                 return false;
@@ -172,13 +172,13 @@ public class PaymentFormValidation {
             return this;
         }
 
-        public Builder setCvvHint(int cvvHint) {
-            paymentFormValidation.cvvHint = cvvHint;
+        public Builder setSecurityCodeHint(int securityCode) {
+            paymentFormValidation.securityCodeHint = securityCode;
             return this;
         }
 
-        public Builder setCvvLength(int cvvLength) {
-            paymentFormValidation.cvvLength = cvvLength;
+        public Builder setSecurityCodeLength(int securityCodeLength) {
+            paymentFormValidation.securityCodeLength = securityCodeLength;
             return this;
         }
 
@@ -187,8 +187,8 @@ public class PaymentFormValidation {
             return this;
         }
 
-        public Builder setCvvValid(boolean cvvValid) {
-            paymentFormValidation.cvvValid = cvvValid;
+        public Builder setSecurityCodeValid(boolean securityCodeValid) {
+            paymentFormValidation.securityCodeValid = securityCodeValid;
             return this;
         }
 

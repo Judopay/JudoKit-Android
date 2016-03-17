@@ -108,7 +108,7 @@ public final class TokenRequest extends Request {
         private String judoId;
         private String yourConsumerReference;
         private Address cardAddress;
-        private String cv2;
+        private String securityCode;
         private String emailAddress;
         private String mobileNumber;
         private Map<String, String> yourPaymentMetaData;
@@ -167,8 +167,8 @@ public final class TokenRequest extends Request {
             return this;
         }
 
-        public Builder setCv2(String cv2) {
-            this.cv2 = cv2;
+        public Builder setSecurityCode(String securityCode) {
+            this.securityCode = securityCode;
             return this;
         }
 
@@ -207,7 +207,7 @@ public final class TokenRequest extends Request {
             transaction.currency = currency;
             transaction.cardAddress = cardAddress;
             transaction.consumerLocation = consumerLocation;
-            transaction.cv2 = cv2;
+            transaction.cv2 = securityCode;
             transaction.token = token;
             transaction.lastFour = lastFour;
             transaction.type = type;

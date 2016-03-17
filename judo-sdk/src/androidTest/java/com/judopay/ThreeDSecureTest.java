@@ -59,7 +59,7 @@ public class ThreeDSecureTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("341"));
 
         onView(withId(R.id.payment_button))
