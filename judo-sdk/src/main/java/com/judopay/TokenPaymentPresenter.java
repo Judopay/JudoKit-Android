@@ -5,6 +5,8 @@ import com.judopay.arch.Scheduler;
 import com.judopay.model.Card;
 import com.judopay.model.TokenRequest;
 
+import java.math.BigDecimal;
+
 class TokenPaymentPresenter extends BasePresenter {
 
     public TokenPaymentPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, Scheduler scheduler, Gson gson) {
@@ -17,7 +19,7 @@ class TokenPaymentPresenter extends BasePresenter {
         transactionCallbacks.showLoading();
 
         TokenRequest tokenTransaction = new TokenRequest.Builder()
-                .setAmount(options.getAmount())
+                .setAmount(new BigDecimal(options.getAmount()))
                 .setCardAddress(card.getCardAddress())
                 .setCurrency(options.getCurrency())
                 .setJudoId(options.getJudoId())
