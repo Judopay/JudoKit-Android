@@ -109,7 +109,7 @@ public final class CardEntryFragment extends Fragment {
 
         SimpleTextWatcher validationWatcher = new SimpleTextWatcher() {
             @Override
-            protected void onTextChanged() {
+            protected void onTextChanged(CharSequence text) {
                 updateFormView();
             }
         };
