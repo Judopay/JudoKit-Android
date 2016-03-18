@@ -17,7 +17,7 @@ public class StartDateAndIssueNumberValidationTest {
     public void shouldHaveValidStartDate() {
         final PaymentForm build = new PaymentForm.Builder()
                 .setCardNumber("1234567812345678")
-                .setCvv("123")
+                .setSecurityCode("123")
                 .setExpiryDate("01/30")
                 .setStartDate("09/15")
                 .setIssueNumber("01")
@@ -33,7 +33,7 @@ public class StartDateAndIssueNumberValidationTest {
     public void shouldHaveInvalidStartDate() {
         final PaymentForm build = new PaymentForm.Builder()
                 .setCardNumber("1234567812345678")
-                .setCvv("123")
+                .setSecurityCode("123")
                 .setExpiryDate("01/35")
                 .setStartDate("01/30")
                 .setIssueNumber("01")
@@ -50,7 +50,7 @@ public class StartDateAndIssueNumberValidationTest {
     public void shouldRequireIssueNumberAndStartDateWhenMaestroEntered() {
         final PaymentForm build = new PaymentForm.Builder()
                 .setCardNumber("6759649826438453")
-                .setCvv("123")
+                .setSecurityCode("123")
                 .setExpiryDate("12/99")
                 .setStartDate("")
                 .setIssueNumber("")
@@ -67,7 +67,7 @@ public class StartDateAndIssueNumberValidationTest {
     public void shouldNotRequireIssueNumberAndStartDateWhenMaestroEnteredButNotSupported() {
         final PaymentForm build = new PaymentForm.Builder()
                 .setCardNumber("6759649826438453")
-                .setCvv("123")
+                .setSecurityCode("123")
                 .setExpiryDate("12/99")
                 .setStartDate("")
                 .setIssueNumber("")
@@ -84,7 +84,7 @@ public class StartDateAndIssueNumberValidationTest {
     public void shouldNotShowIssueNumberAndStartDateBeforeCardNumberEntered() {
         final PaymentForm build = new PaymentForm.Builder()
                 .setCardNumber("")
-                .setCvv("")
+                .setSecurityCode("")
                 .setExpiryDate("")
                 .setStartDate("")
                 .setIssueNumber("")
@@ -102,7 +102,7 @@ public class StartDateAndIssueNumberValidationTest {
     public void shouldShowIssueNumberAndStartDateWhenCardNumberPartiallyEntered() {
         final PaymentForm build = new PaymentForm.Builder()
                 .setCardNumber("6759")
-                .setCvv("")
+                .setSecurityCode("")
                 .setExpiryDate("")
                 .setStartDate("")
                 .setIssueNumber("")

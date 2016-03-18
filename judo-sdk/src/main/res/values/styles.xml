@@ -98,7 +98,7 @@
         <item name="android:hint">@string/start_date_label</item>
     </style>
 
-    <style name="Widget.Judo.Cvv" parent="Widget.Judo.EditText">
+    <style name="Widget.Judo.SecurityCode" parent="Widget.Judo.EditText">
         <item name="android:hint">@string/cvv</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

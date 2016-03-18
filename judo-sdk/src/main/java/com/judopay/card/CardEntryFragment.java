@@ -83,7 +83,7 @@ public final class CardEntryFragment extends Fragment {
 
         paymentButton = (Button) view.findViewById(R.id.payment_button);
 
-        securityCodeEntryView = (SecurityCodeEntryView) view.findViewById(R.id.cvv_entry_view);
+        securityCodeEntryView = (SecurityCodeEntryView) view.findViewById(R.id.security_code_entry_view);
         cardNumberEntryView = (CardNumberEntryView) view.findViewById(R.id.card_number_entry_view);
         expiryDateEntryView = (ExpiryDateEntryView) view.findViewById(R.id.expiry_date_entry_view);
 
@@ -220,7 +220,7 @@ public final class CardEntryFragment extends Fragment {
     private void updateFormView() {
         PaymentForm.Builder builder = new PaymentForm.Builder()
                 .setCardNumber(cardNumberEntryView.getText())
-                .setCvv(securityCodeEntryView.getText())
+                .setSecurityCode(securityCodeEntryView.getText())
                 .setCountry(getCountry())
                 .setPostcode(postcodeEntryView.getText())
                 .setIssueNumber(issueNumberEntryView.getText())
@@ -263,9 +263,9 @@ public final class CardEntryFragment extends Fragment {
     }
 
     private void updateCvvErrors(PaymentFormValidation formView) {
-        securityCodeEntryView.setAlternateHint(formView.getCvvHint());
+        securityCodeEntryView.setAlternateHint(formView.getSecurityCodeHint());
 
-        securityCodeEntryView.setMaxLength(formView.getCvvLength());
+        securityCodeEntryView.setMaxLength(formView.getSecurityCodeLength());
         securityCodeEntryView.setCardType(formView.getCardType());
     }
 
@@ -305,7 +305,7 @@ public final class CardEntryFragment extends Fragment {
             }
         } else if (expiryDateEntryView.hasFocus() && formView.isExpiryDateEntryComplete() && !formView.isShowExpiryDateError()) {
             securityCodeEntryView.requestFocus();
-        } else if (securityCodeEntryView.hasFocus() && formView.isCvvValid()) {
+        } else if (securityCodeEntryView.hasFocus() && formView.isSecurityCodeValid()) {
             if (countryAndPostcodeContainer.getVisibility() == View.VISIBLE) {
                 postcodeEntryView.requestFocus();
             }
@@ -324,7 +324,7 @@ public final class CardEntryFragment extends Fragment {
         Card.Builder cardBuilder = new Card.Builder()
                 .setCardNumber(cardNumberEntryView.getText())
                 .setExpiryDate(expiryDateEntryView.getText())
-                .setCvv(securityCodeEntryView.getText());
+                .setSecurityCode(securityCodeEntryView.getText());
 
         Address.Builder addressBuilder = new Address.Builder()
                 .setPostCode(postcodeEntryView.getText());

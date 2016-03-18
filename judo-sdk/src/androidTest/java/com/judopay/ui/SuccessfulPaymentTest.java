@@ -51,7 +51,7 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
 
         onView(withId(R.id.payment_button))
@@ -79,7 +79,7 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("789"));
 
         onView(withId(R.id.payment_button))
@@ -101,7 +101,7 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("3469"));
 
         onView(withId(R.id.payment_button))
@@ -122,7 +122,7 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
 
         onView(withId(R.id.post_code_edit_text))
@@ -153,7 +153,7 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("789"));
 
         onView(withId(R.id.post_code_edit_text))
@@ -178,7 +178,7 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("3469"));
 
         onView(withId(R.id.post_code_edit_text))

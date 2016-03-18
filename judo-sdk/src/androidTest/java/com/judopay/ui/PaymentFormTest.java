@@ -66,7 +66,7 @@ public class PaymentFormTest {
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(click())
                 .check(matches(withHint("0000")));
     }
@@ -78,7 +78,7 @@ public class PaymentFormTest {
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(click())
                 .check(matches(withHint("000")));
     }
@@ -87,7 +87,7 @@ public class PaymentFormTest {
     public void shouldDisplayCvvSecurityCodeWhenUnknownCard() {
         activityTestRule.launchActivity(getIntent());
 
-        onView(withId(R.id.cvv_input_layout))
+        onView(withId(R.id.security_code_input_layout))
                 .check(matches(withTextInputHint("CVV")));
     }
 
@@ -98,7 +98,7 @@ public class PaymentFormTest {
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
 
-        onView(withId(R.id.cvv_input_layout))
+        onView(withId(R.id.security_code_input_layout))
                 .check(matches(withTextInputHint("CVV2")));
     }
 
@@ -111,7 +111,7 @@ public class PaymentFormTest {
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"));
 
-        onView(withId(R.id.cvv_input_layout))
+        onView(withId(R.id.security_code_input_layout))
                 .check(matches(withTextInputHint("CID")));
     }
 
@@ -124,7 +124,7 @@ public class PaymentFormTest {
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("5100000000005460"));
 
-        onView(withId(R.id.cvv_input_layout))
+        onView(withId(R.id.security_code_input_layout))
                 .check(matches(withTextInputHint("CVC2")));
     }
 
@@ -140,7 +140,7 @@ public class PaymentFormTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
     }
 
@@ -156,7 +156,7 @@ public class PaymentFormTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
 
         onView(withId(R.id.country_spinner))
@@ -181,7 +181,7 @@ public class PaymentFormTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
 
         onView(withId(R.id.country_spinner))
@@ -206,7 +206,7 @@ public class PaymentFormTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
 
         onView(withId(R.id.country_spinner))
@@ -223,7 +223,7 @@ public class PaymentFormTest {
     public void shouldDisplayCvvImageOnLaunch() {
         activityTestRule.launchActivity(getIntent());
 
-        onView(withId(R.id.cvv_image_view))
+        onView(withId(R.id.security_code_image_view))
                 .check(matches(isDisplayed()));
     }
 

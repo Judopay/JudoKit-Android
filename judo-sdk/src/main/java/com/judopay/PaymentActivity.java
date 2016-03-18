@@ -10,6 +10,7 @@ import static com.judopay.Judo.JUDO_OPTIONS;
  * To launch the PaymentActivity, call {@link android.app.Activity#startActivityForResult(Intent, int)}
  * with an Intent the configuration options:
  *
+ * <pre class="prettyprint">
  * Intent intent = new Intent(this, PaymentActivity.class);
  * intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
  * .setJudoId("1234567")

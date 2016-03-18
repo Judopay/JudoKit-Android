@@ -10,7 +10,7 @@ public class PaymentForm {
     private boolean maestroSupported;
     private String cardNumber;
     private String expiryDate;
-    private String cvv;
+    private String securityCode;
     private String startDate;
     private String issueNumber;
     private Country country;
@@ -41,8 +41,8 @@ public class PaymentForm {
         return expiryDate;
     }
 
-    public String getCvv() {
-        return cvv;
+    public String getSecurityCode() {
+        return securityCode;
     }
 
     public String getStartDate() {
@@ -103,8 +103,8 @@ public class PaymentForm {
             return this;
         }
 
-        public Builder setCvv(String cvv) {
-            paymentForm.cvv = cvv;
+        public Builder setSecurityCode(String securityCode) {
+            paymentForm.securityCode = securityCode;
             return this;
         }
 
