@@ -16,6 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.math.BigDecimal;
+
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -38,7 +40,7 @@ public class PaymentRefundTest {
 
         PaymentRequest paymentRequest = new PaymentRequest.Builder()
                 .setJudoId("100407196")
-                .setAmount("0.01")
+                .setAmount(new BigDecimal("0.01"))
                 .setCardNumber("4976000000003436")
                 .setCv2("452")
                 .setExpiryDate("12/20")
