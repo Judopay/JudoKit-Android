@@ -88,6 +88,10 @@ public class Judo {
         Judo.environment = environment;
     }
 
+    public static int getEnvironment() {
+        return environment;
+    }
+
     public static void setEnvironmentHost(String customEnvironmentHost) {
         setEnvironment(CUSTOM);
         Judo.customEnvironmentHost = customEnvironmentHost;
