@@ -8,10 +8,13 @@ import android.test.suitebuilder.annotation.MediumTest;
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
 import com.judopay.model.AndroidPayRequest;
+import com.judopay.model.Currency;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.math.BigDecimal;
 
 import rx.schedulers.Schedulers;
 
@@ -20,11 +23,22 @@ import static com.judopay.integration.TestSubscribers.fail;
 
 @MediumTest
 @RunWith(AndroidJUnit4.class)
-public class AndroidPayRequestTest {
+public class AndroidPayTest {
+
+    private static final String ENCRYPTED_MESSAGE = "ZW5jcnlwdGVkTWVzc2FnZQ==";
+    private static final String EPHEMERAL_PUBLIC_KEY = "ZXBoZW1lcmFsUHVibGljS2V5";
+    private static final String PUBLIC_KEY = "BM7LpaTrg9lzjWJVmiEGMUhLmnUaNh+hQeCavCaOmPqVU6KEj7VSquZzkhCkQOWMiFHiUt/wzdw/pFccmjHZXk4=";
+    private static final String TAG = "c2lnbmF0dXJl";
+    private static final String JUDO_ID = "1234567";
+
+    /**
+     * The Android Pay wallet environment, as defined in com.google.android.gms.wallet.WalletConstants
+     */
+    private static final int ENVIRONMENT_TEST = 3;
 
     @Before
     public void setupJudoSdk() {
-        Judo.setup("823Eja2fEM6E9NAE", "382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6", Judo.Environment.SANDBOX);
+        Judo.setEnvironment(Judo.SANDBOX);
     }
 
     @Test
@@ -33,9 +47,14 @@ public class AndroidPayRequestTest {
         final JudoApiService apiService = Judo.getApiService(context);
 
         AndroidPayRequest androidPayRequest = new AndroidPayRequest.Builder()
-                .setEncryptedMessage("ZW5jcnlwdGVkTWVzc2FnZQ==")
-                .setEphemeralPublicKey("ZXBoZW1lcmFsUHVibGljS2V5")
-                .setTag("c2lnbmF0dXJl")
+                .setJudoId(JUDO_ID)
+                .setWalletEnvironment(ENVIRONMENT_TEST)
+                .setAmount(new BigDecimal(0.10))
+                .setCurrency(Currency.GBP)
+                .setEncryptedMessage(ENCRYPTED_MESSAGE)
+                .setEphemeralPublicKey(EPHEMERAL_PUBLIC_KEY)
+                .setPublicKey(PUBLIC_KEY)
+                .setTag(TAG)
                 .build();
 
         apiService.androidPayPayment(androidPayRequest)
@@ -50,9 +69,14 @@ public class AndroidPayRequestTest {
         final JudoApiService apiService = Judo.getApiService(context);
 
         AndroidPayRequest androidPayRequest = new AndroidPayRequest.Builder()
-                .setEncryptedMessage("ZW5jcnlwdGVkTWVzc2FnZQ==")
-                .setEphemeralPublicKey("ZXBoZW1lcmFsUHVibGljS2V5")
-                .setTag("c2lnbmF0dXJl")
+                .setJudoId(JUDO_ID)
+                .setWalletEnvironment(ENVIRONMENT_TEST)
+                .setAmount(new BigDecimal(0.10))
+                .setCurrency(Currency.GBP)
+                .setEncryptedMessage(ENCRYPTED_MESSAGE)
+                .setEphemeralPublicKey(EPHEMERAL_PUBLIC_KEY)
+                .setPublicKey(PUBLIC_KEY)
+                .setTag(TAG)
                 .build();
 
         apiService.androidPayPreAuth(androidPayRequest)
