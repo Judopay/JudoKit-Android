@@ -124,7 +124,7 @@ public final class CardEntryFragment extends Fragment {
 
                 CardToken cardToken = judoOptions.getCardToken();
                 if (cardToken != null) {
-                    cardNumberEntryView.setCardType(cardToken.getType());
+                    cardNumberEntryView.setCardType(cardToken.getType(), false);
                     securityCodeEntryView.setCardType(cardToken.getType());
                     securityCodeEntryView.requestFocus();
                 } else {
@@ -132,7 +132,7 @@ public final class CardEntryFragment extends Fragment {
                         cardNumberEntryView.setText(judoOptions.getCardNumber());
 
                         int cardType = CardType.fromCardNumber(judoOptions.getCardNumber());
-                        cardNumberEntryView.setCardType(cardType);
+                        cardNumberEntryView.setCardType(cardType, false);
                         expiryDateEntryView.requestFocus();
                     }
 
@@ -241,7 +241,7 @@ public final class CardEntryFragment extends Fragment {
                 .build(builder.build());
 
         if (cardToken == null) {
-            cardNumberEntryView.setCardType(formView.getCardType());
+            cardNumberEntryView.setCardType(formView.getCardType(), false);
         }
 
         updateFormErrors(formView);
