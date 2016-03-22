@@ -15,7 +15,7 @@ public class CardDate {
         this.year = getYear(splitCardDate);
     }
 
-    public int getYear(String year) {
+    private int getYear(String year) {
         if (!isValidDate(year)) {
             return 0;
         }
@@ -23,7 +23,7 @@ public class CardDate {
         return 2000 + Integer.parseInt(year.substring(2, 4));
     }
 
-    public int getMonth(String month) {
+    private int getMonth(String month) {
         if (!isValidDate(month)) {
             return 0;
         }

@@ -15,7 +15,7 @@ import java.util.Map;
 class ClientDetailsSerializer implements JsonSerializer<ClientDetails> {
 
     private final Context context;
-    private Gson gson;
+    private final Gson gson;
 
     public ClientDetailsSerializer(Context context) {
         this.context = context;
