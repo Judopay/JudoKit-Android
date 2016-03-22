@@ -51,7 +51,7 @@ class CardNumberFormattingTextWatcher implements TextWatcher {
                         string.delete(i, i + 1);
                     }
                 }
-            } else if (SPACE_CHAR == pattern.charAt(i)) {
+            } else if (i < pattern.length() && SPACE_CHAR == pattern.charAt(i)) {
                 // there is a space in the pattern but not in the string
                 if(!(before == 1 && count == 0)) {
                     string.insert(i, SPACE);
