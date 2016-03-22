@@ -75,6 +75,8 @@ public class CardNumberEntryView extends RelativeLayout {
         switch (type) {
             case CardType.AMEX:
                 setMaxLength(17);
+                break;
+
             default:
                 setMaxLength(19);
         }
