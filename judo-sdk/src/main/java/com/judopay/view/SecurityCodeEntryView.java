@@ -72,8 +72,8 @@ public class SecurityCodeEntryView extends RelativeLayout {
         editText.addTextChangedListener(watcher);
     }
 
-    public void setCardType(int cardType) {
-        imageView.setCardType(cardType, true);
+    public void setCardType(int cardType, boolean animate) {
+        imageView.setCardType(cardType, animate);
 
         if (CardType.AMEX == cardType) {
             setAlternateHint(R.string.amex_security_code_hint);

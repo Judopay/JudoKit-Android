@@ -47,17 +47,30 @@ public abstract class FlipImageView extends FrameLayout {
 
         int cardResourceId = getImageResource(cardType);
 
-        if (cardResourceId != this.imageResource) {
-            this.imageResource = cardResourceId;
-            backImageView.setImageResource(cardResourceId);
-
-            FlipAnimation flipAnimation = new FlipAnimation(frontImageView, backImageView, 200);
-            startAnimation(flipAnimation);
-
-            ImageView temp = frontImageView;
-            this.frontImageView = backImageView;
-            this.backImageView = temp;
+        if (this.imageResource != cardResourceId) {
+            if (animate) {
+                flipImages(cardResourceId);
+            } else {
+                showImage(cardResourceId);
+            }
         }
+    }
+
+    private void showImage(int cardResourceId) {
+        this.imageResource = cardResourceId;
+        frontImageView.setImageResource(cardResourceId);
+    }
+
+    private void flipImages(int cardResourceId) {
+        this.imageResource = cardResourceId;
+        backImageView.setImageResource(cardResourceId);
+
+        FlipAnimation flipAnimation = new FlipAnimation(frontImageView, backImageView, 200);
+        startAnimation(flipAnimation);
+
+        ImageView temp = frontImageView;
+        this.frontImageView = backImageView;
+        this.backImageView = temp;
     }
 
 }
