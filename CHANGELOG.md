@@ -2,7 +2,7 @@
 
 ## [5.2](https://github.com/judopay/Judo-Android/tree/5.2) (TBC)
  
- **Implemented enhancements:**
+**Implemented enhancements:**
  - Card helper images now animate when a change in card type is detected.
  - Fragment transaction callbacks - it's now possible to handle the result from a transaction when using the provided Fragments on the SDK. This allows for more customization around what gets shown when a transaction is successful, declined or an error occurs. If calling an Activity directly and using the ```Activity.onActivityResult()``` method as a callback, this will remain as before.
 
