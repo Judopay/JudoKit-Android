@@ -5,7 +5,7 @@ import com.judopay.model.Card;
 import com.judopay.model.CardToken;
 import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
-import com.judopay.model.TokenTransaction;
+import com.judopay.model.TokenRequest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +39,7 @@ public class TokenPreAuthPresenterTest {
     @Test
     public void shouldPerformTokenPreAuth() {
         TokenPreAuthPresenter presenter = new TokenPreAuthPresenter(paymentFormView, apiService, new TestScheduler(), new Gson());
-        when(apiService.tokenPreAuth(any(TokenTransaction.class))).thenReturn(Observable.<Receipt>empty());
+        when(apiService.tokenPreAuth(any(TokenRequest.class))).thenReturn(Observable.<Receipt>empty());
 
         String consumer = "consumerRef";
         presenter.performTokenPreAuth(card, new JudoOptions.Builder()
@@ -51,7 +51,7 @@ public class TokenPreAuthPresenterTest {
                 .build());
 
         verify(paymentFormView).showLoading();
-        verify(apiService).tokenPreAuth(any(TokenTransaction.class));
+        verify(apiService).tokenPreAuth(any(TokenRequest.class));
     }
 
 }

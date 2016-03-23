@@ -9,11 +9,11 @@
         android:layout_width="match_parent"
         android:layout_weight="1">
 
-        <EditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/post_code_edit_text"
             style="@style/judo_postcode"
             android:layout_gravity="bottom"
-            android:hint="@string/postcode_uk"
+            android:hint="@string/billing_postcode"
             tools:ignore="UnusedAttribute" />
 
     </com.judopay.view.JudoTextInputLayout>
