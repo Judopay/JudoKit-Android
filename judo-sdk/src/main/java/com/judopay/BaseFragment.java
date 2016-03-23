@@ -24,7 +24,7 @@ import static android.app.PendingIntent.FLAG_ONE_SHOT;
 abstract class BaseFragment extends Fragment implements TransactionCallbacks, CardEntryListener {
 
     private static final String TAG_PAYMENT_FORM = "CardEntryFragment";
-    public static final String TAG_3DS_DIALOG = "3dSecureDialog";
+    private static final String TAG_3DS_DIALOG = "3dSecureDialog";
 
     private View progressBar;
     private TextView progressText;

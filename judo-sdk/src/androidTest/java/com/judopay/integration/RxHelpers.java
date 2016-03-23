@@ -1,6 +1,7 @@
 package com.judopay.integration;
 
 import com.judopay.model.Receipt;
+import com.judopay.model.Receipts;
 
 import rx.Observable;
 import rx.functions.Action1;
@@ -17,6 +18,15 @@ public class RxHelpers {
             @Override
             public void call(Throwable throwable) {
                 fail();
+            }
+        };
+    }
+
+    public static Action1<Receipts> assertHasReceipts() {
+        return new Action1<Receipts>() {
+            @Override
+            public void call(Receipts receipts) {
+                assertThat(receipts.getResults().isEmpty(), is(false));
             }
         };
     }
