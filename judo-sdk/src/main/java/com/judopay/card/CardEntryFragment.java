@@ -26,11 +26,11 @@ import com.judopay.model.CardType;
 import com.judopay.model.Country;
 import com.judopay.view.CardNumberEntryView;
 import com.judopay.view.CountrySpinner;
-import com.judopay.view.SecurityCodeEntryView;
 import com.judopay.view.ExpiryDateEntryView;
 import com.judopay.view.IssueNumberEntryView;
 import com.judopay.view.PostcodeEntryView;
 import com.judopay.view.ScrollOnFocusChangeListener;
+import com.judopay.view.SecurityCodeEntryView;
 import com.judopay.view.SimpleTextWatcher;
 import com.judopay.view.SingleClickOnClickListener;
 import com.judopay.view.StartDateEntryView;
@@ -53,7 +53,6 @@ import static com.judopay.Judo.isAvsEnabled;
  *      .setButtonLabel("Perform payment")
  *      .setSecureServerMessageShown(true)
  *      .build());
- *
  * fragment.setArguments(args);
  * </code>
  */
@@ -124,15 +123,15 @@ public final class CardEntryFragment extends Fragment {
 
                 CardToken cardToken = judoOptions.getCardToken();
                 if (cardToken != null) {
-                    cardNumberEntryView.setCardType(cardToken.getType());
-                    securityCodeEntryView.setCardType(cardToken.getType());
+                    cardNumberEntryView.setCardType(cardToken.getType(), false);
+                    securityCodeEntryView.setCardType(cardToken.getType(), false);
                     securityCodeEntryView.requestFocus();
                 } else {
                     if (judoOptions.getCardNumber() != null) {
                         cardNumberEntryView.setText(judoOptions.getCardNumber());
 
                         int cardType = CardType.fromCardNumber(judoOptions.getCardNumber());
-                        cardNumberEntryView.setCardType(cardType);
+                        cardNumberEntryView.setCardType(cardType, false);
                         expiryDateEntryView.requestFocus();
                     }
 
@@ -241,7 +240,7 @@ public final class CardEntryFragment extends Fragment {
                 .build(builder.build());
 
         if (cardToken == null) {
-            cardNumberEntryView.setCardType(formView.getCardType());
+            cardNumberEntryView.setCardType(formView.getCardType(), true);
         }
 
         updateFormErrors(formView);
@@ -266,7 +265,7 @@ public final class CardEntryFragment extends Fragment {
         securityCodeEntryView.setAlternateHint(formView.getSecurityCodeHint());
 
         securityCodeEntryView.setMaxLength(formView.getSecurityCodeLength());
-        securityCodeEntryView.setCardType(formView.getCardType());
+        securityCodeEntryView.setCardType(formView.getCardType(), true);
     }
 
     private void showStartDateAndIssueNumberErrors(StartDateAndIssueNumberValidation startDateAndIssueNumberValidation) {

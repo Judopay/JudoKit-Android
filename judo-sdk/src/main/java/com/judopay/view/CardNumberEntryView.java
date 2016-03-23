@@ -69,8 +69,8 @@ public class CardNumberEntryView extends RelativeLayout {
         cardNumberEditText.addTextChangedListener(new HidingViewTextWatcher(cardNumberHelperText));
     }
 
-    public void setCardType(int type) {
-        cardTypeImageView.setCardType(type);
+    public void setCardType(int type, boolean animate) {
+        cardTypeImageView.setCardType(type, animate);
 
         switch (type) {
             case CardType.AMEX:
