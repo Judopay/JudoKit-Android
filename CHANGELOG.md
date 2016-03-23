@@ -3,6 +3,7 @@
 ## [5.2](https://github.com/judopay/Judo-Android/tree/5.2) (TBC)
  
  **Implemented enhancements:**
+ - Card helper images now animate when a change in card type is detected.
  - Fragment transaction callbacks - it's now possible to handle the result from a transaction when using the provided Fragments on the SDK. This allows for more customization around what gets shown when a transaction is successful, declined or an error occurs. If calling an Activity directly and using the ```Activity.onActivityResult()``` method as a callback, this will remain as before.
 
 **Changes:**
@@ -10,6 +11,11 @@
  - Style updates to payment card entry form to match Google Material Design guidelines.
  - judo API token and secret can now be specified directly in the Android Manifest instead of programmatically.
  - Client integration method reporting data is now sent with the transaction to indicate if a custom UI or judo provided UI is used.
+ 
+ **Bugs fixed:**
+- The start date and issue number fields were shown when making a token payment when not needed.
+- Billing postcode now longer goes into full screen entry mode when focusing in landscape mode.
+- A crash was occuring when inputting an Amex card number longer than 15 digits, this has now been fixed.
 
 ## [5.1.2](https://github.com/judopay/Judo-Android/tree/5.1.2) (2016-02-29)
 
