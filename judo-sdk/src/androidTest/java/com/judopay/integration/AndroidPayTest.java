@@ -9,6 +9,7 @@ import com.judopay.Judo;
 import com.judopay.JudoApiService;
 import com.judopay.model.AndroidPayRequest;
 import com.judopay.model.Currency;
+import com.judopay.model.Wallet;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -48,13 +49,15 @@ public class AndroidPayTest {
 
         AndroidPayRequest androidPayRequest = new AndroidPayRequest.Builder()
                 .setJudoId(JUDO_ID)
-                .setWalletEnvironment(ENVIRONMENT_TEST)
-                .setAmount(new BigDecimal(0.10))
+                .setWallet(new Wallet.Builder()
+                        .setEncryptedMessage(ENCRYPTED_MESSAGE)
+                        .setEphemeralPublicKey(EPHEMERAL_PUBLIC_KEY)
+                        .setEnvironment(ENVIRONMENT_TEST)
+                        .setTag(TAG)
+                        .setPublicKey(PUBLIC_KEY)
+                        .build())
+                .setAmount(new BigDecimal("0.10"))
                 .setCurrency(Currency.GBP)
-                .setEncryptedMessage(ENCRYPTED_MESSAGE)
-                .setEphemeralPublicKey(EPHEMERAL_PUBLIC_KEY)
-                .setPublicKey(PUBLIC_KEY)
-                .setTag(TAG)
                 .build();
 
         apiService.androidPayPayment(androidPayRequest)
@@ -70,13 +73,15 @@ public class AndroidPayTest {
 
         AndroidPayRequest androidPayRequest = new AndroidPayRequest.Builder()
                 .setJudoId(JUDO_ID)
-                .setWalletEnvironment(ENVIRONMENT_TEST)
-                .setAmount(new BigDecimal(0.10))
+                .setWallet(new Wallet.Builder()
+                        .setEncryptedMessage(ENCRYPTED_MESSAGE)
+                        .setEphemeralPublicKey(EPHEMERAL_PUBLIC_KEY)
+                        .setEnvironment(ENVIRONMENT_TEST)
+                        .setTag(TAG)
+                        .setPublicKey(PUBLIC_KEY)
+                        .build())
+                .setAmount(new BigDecimal("0.10"))
                 .setCurrency(Currency.GBP)
-                .setEncryptedMessage(ENCRYPTED_MESSAGE)
-                .setEphemeralPublicKey(EPHEMERAL_PUBLIC_KEY)
-                .setPublicKey(PUBLIC_KEY)
-                .setTag(TAG)
                 .build();
 
         apiService.androidPayPreAuth(androidPayRequest)
