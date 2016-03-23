@@ -12,7 +12,7 @@
  - judo API token and secret can now be specified directly in the Android Manifest instead of programmatically.
  - Client integration method reporting data is now sent with the transaction to indicate if a custom UI or judo provided UI is used.
  
- **Bugs fixed:**
+**Bugs fixed:**
 - The start date and issue number fields were shown when making a token payment when not needed.
 - Billing postcode now longer goes into full screen entry mode when focusing in landscape mode.
 - A crash was occuring when inputting an Amex card number longer than 15 digits, this has now been fixed.
