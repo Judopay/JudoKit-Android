@@ -72,7 +72,6 @@ dependencies {
 
     compile 'io.reactivex:rxandroid:0.23.0'
 
-    compile 'joda-time:joda-time:2.8.2'
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.android.support:design:23.2.0'
 
