@@ -26,6 +26,12 @@ public class CardDateTest {
     }
 
     @Test
+    public void shouldBeInsideAllowedRange() {
+        CardDate cardDate = new CardDate("12/16");
+        assertThat(cardDate.isInsideAllowedDateRange(), is(true));
+    }
+
+    @Test
     public void dateShouldBeOutsideAllowedRangeWhenOlderThanTenYearsAgo() {
         CardDate cardDate = new CardDate("12/05");
         assertThat(cardDate.isInsideAllowedDateRange(), is(false));

@@ -65,16 +65,16 @@ public class CardDate {
     }
 
     public boolean isInsideAllowedDateRange() {
-        Calendar now = Calendar.getInstance();
-        now.setTime(new Date());
-
-        Calendar minDate = (Calendar) now.clone();
+        Calendar minDate = Calendar.getInstance();
         minDate.set(YEAR, minDate.get(YEAR) - 10);
 
-        Calendar maxDate = (Calendar) now.clone();
-        minDate.set(YEAR, maxDate.get(YEAR) + 10);
+        Calendar maxDate = Calendar.getInstance();
+        maxDate.set(YEAR, maxDate.get(YEAR) + 10);
 
-        return now.after(minDate) && now.before(maxDate);
+        Calendar cardDate = Calendar.getInstance();
+        cardDate.set(year, month - 1, 1);
+
+        return cardDate.after(minDate) && cardDate.before(maxDate);
     }
 
     private boolean isValidDate(String date) {
