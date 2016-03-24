@@ -37,14 +37,13 @@ class DateJsonDeserializer implements JsonDeserializer<Date> {
      * @return the parsed date
      * @throws ParseException
      */
-    public Date iso8601ToDate(final String date) throws ParseException {
-        String s = date.replace("Z", "+00:00");
+    public Date iso8601ToDate(String date) throws ParseException {
         try {
-            s = s.substring(0, 22) + s.substring(23);  // to get rid of the ":"
+            date = date.substring(0, 22) + date.substring(23);  // to remove the ":"
         } catch (IndexOutOfBoundsException e) {
             throw new ParseException("Invalid length", 0);
         }
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.US).parse(s);
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.US).parse(date);
     }
 
 }
