@@ -31,7 +31,7 @@ class DateJsonDeserializer implements JsonDeserializer<Date> {
     }
 
     /**
-     * Transforms a ISO 8601 string to a Date
+     * Transforms an ISO-8601 String to a Date
      *
      * @param date the date as defined in ISO-8601 format
      * @return the parsed date
