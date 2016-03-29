@@ -15,7 +15,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import okhttp3.Headers;
 import okhttp3.internal.http.RealResponseBody;
 import okio.Buffer;
-import retrofit2.HttpException;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 
 import static org.mockito.Matchers.any;
