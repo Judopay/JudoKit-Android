@@ -6,10 +6,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
+
+import fr.turri.jiso8601.Iso8601Deserializer;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
@@ -20,32 +19,10 @@ class DateJsonDeserializer implements JsonDeserializer<Date> {
         String date = json.getAsString();
 
         if (!isEmpty(date)) {
-            try {
-                return iso8601ToDate(date);
-            } catch (ParseException e) {
-                return null;
-            }
+            return Iso8601Deserializer.toDate(date);
         } else {
             return null;
         }
-    }
-
-    /**
-     * Transforms an ISO-8601 String to a Date
-     *
-     * @param date the date as defined in ISO-8601 format
-     * @return the parsed date
-     * @throws ParseException
-     */
-    public Date iso8601ToDate(String date) throws ParseException {
-        try {
-            int timezoneSeparatorIndex = date.lastIndexOf(':');
-            // to remove the last ":"
-            date = date.substring(0, timezoneSeparatorIndex) + timezoneSeparatorIndex;
-        } catch (IndexOutOfBoundsException e) {
-            throw new ParseException("Invalid length", 0);
-        }
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSX", Locale.US).parse(date);
     }
 
 }
