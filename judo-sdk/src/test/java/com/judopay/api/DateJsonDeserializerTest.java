@@ -44,7 +44,7 @@ public class DateJsonDeserializerTest {
         when(jsonElement.getAsString()).thenReturn("2016-03-24T09:55:28.329+00:00");
         Date date = deserializer.deserialize(jsonElement, type, jsonDeserializationContext);
 
-        assertThat(date.getTime(), is(1458813328032L));
+        assertThat(date.getTime(), is(1458813328329L));
     }
 
     @Test
