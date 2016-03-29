@@ -16,7 +16,7 @@ public class Wallet {
     private final String instrumentType;
     private final String merchantTransactionId;
     private final Integer environment;
-    private final String version;
+    private final Integer version;
 
     public Wallet(String encryptedMessage,
                   String ephemeralPublicKey,
@@ -25,7 +25,8 @@ public class Wallet {
                   String instrumentDetails,
                   String instrumentType,
                   String merchantTransactionId,
-                  Integer environment, String version) {
+                  Integer environment,
+                  Integer version) {
         this.encryptedMessage = encryptedMessage;
         this.ephemeralPublicKey = ephemeralPublicKey;
         this.tag = tag;
@@ -69,7 +70,7 @@ public class Wallet {
         return merchantTransactionId;
     }
 
-    public String getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
@@ -83,7 +84,7 @@ public class Wallet {
         private String instrumentType;
         private String merchantTransactionId;
         private Integer environment;
-        private String version;
+        private Integer version;
 
         /**
          * Sets the encrypted payload JSON on the {@link AndroidPayRequest} instance, this is
@@ -191,9 +192,11 @@ public class Wallet {
         /**
          * @param version the version of the wallet, this can be obtained from the
          *                FullWallet.getVersionCode() method.
+         * @return The Builder for creating the {@link AndroidPayRequest} instance
          */
-        public void setVersion(String version) {
+        public Builder setVersion(Integer version) {
             this.version = version;
+            return this;
         }
 
         public Wallet build() {
@@ -205,7 +208,7 @@ public class Wallet {
             checkNotEmpty(instrumentType);
             checkNotEmpty(merchantTransactionId);
             checkNotNull(environment);
-            checkNotEmpty(version);
+            checkNotNull(version);
 
             return new Wallet(encryptedMessage, ephemeralPublicKey, tag, publicKey, instrumentDetails, instrumentType, merchantTransactionId, environment, version);
         }
