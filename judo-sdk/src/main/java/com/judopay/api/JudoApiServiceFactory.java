@@ -86,12 +86,10 @@ public class JudoApiServiceFactory {
         return GsonConverterFactory.create(getGson(context));
     }
 
-    private static Gson getGson(Context context) {
-        GsonBuilder gsonBuilder = new GsonBuilder()
+    public static Gson getGson(Context context) {
+        return new GsonBuilder()
                 .registerTypeAdapter(Date.class, new DateJsonDeserializer())
-                .registerTypeAdapter(BigDecimal.class, new FormattedBigDecimalDeserializer());
-
-        return gsonBuilder
+                .registerTypeAdapter(BigDecimal.class, new FormattedBigDecimalDeserializer())
                 .registerTypeAdapter(Location.class, new LocationTypeAdapter(context))
                 .registerTypeAdapter(ClientDetails.class, new ClientDetailsSerializer(context))
                 .create();
