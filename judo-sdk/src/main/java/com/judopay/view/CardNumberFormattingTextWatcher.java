@@ -30,7 +30,7 @@ class CardNumberFormattingTextWatcher implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable string) {
-        if (!isEmpty(string)) {
+        if (!isEmpty(string) && string.length() > 1) {
             int cardType = CardType.fromCardNumber(string.toString());
 
             if (cardType == CardType.AMEX) {

@@ -27,7 +27,7 @@ public class CardNumberEntryView extends RelativeLayout {
     private EditText cardNumberEditText;
     private CardTypeImageView cardTypeImageView;
     private TextInputLayout cardNumberInputLayout;
-    private CardNumberFormattingTextWatcher cardNumberFormattingTextWatcher;
+    private NumberFormatTextWatcher numberFormatTextWatcher;
 
     public CardNumberEntryView(Context context) {
         super(context);
@@ -64,8 +64,8 @@ public class CardNumberEntryView extends RelativeLayout {
                 new HintFocusListener(cardNumberEditText, R.string.card_number_hint)
         ));
 
-        cardNumberFormattingTextWatcher = new CardNumberFormattingTextWatcher();
-        cardNumberEditText.addTextChangedListener(cardNumberFormattingTextWatcher);
+        numberFormatTextWatcher = new NumberFormatTextWatcher(cardNumberEditText);
+        cardNumberEditText.addTextChangedListener(numberFormatTextWatcher);
         cardNumberEditText.addTextChangedListener(new HidingViewTextWatcher(cardNumberHelperText));
     }
 
@@ -106,9 +106,9 @@ public class CardNumberEntryView extends RelativeLayout {
         cardNumberEditText.setEnabled(false);
         boolean amex = cardToken.getType() == AMEX;
 
-        cardNumberEditText.removeTextChangedListener(cardNumberFormattingTextWatcher);
+        cardNumberEditText.removeTextChangedListener(numberFormatTextWatcher);
         cardNumberEditText.setText(getContext().getString(amex ? R.string.amex_token_card_number : R.string.token_card_number, cardToken.getLastFour()));
-        cardNumberEditText.addTextChangedListener(cardNumberFormattingTextWatcher);
+        cardNumberEditText.addTextChangedListener(numberFormatTextWatcher);
 
         cardTypeImageView.setAlpha(1.0f);
     }
