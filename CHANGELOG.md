@@ -11,7 +11,8 @@
  - Style updates to payment card entry form to match Google Material Design guidelines.
  - judo API token and secret can now be specified directly in the Android Manifest instead of programmatically.
  - Client integration method reporting data is now sent with the transaction to indicate if a custom UI or judo provided UI is used.
- - Joda-Time library used for parsing of dates returned by the judo API has been replaced with a much smaller ISO-8601 parsing library, saving around 5k from the SDK method count and reducing the likelihood that the app will reach the [65k method limit](http://developer.android.com/tools/building/multidex.html).
+ - Joda-Time, the library used for parsing dates has been replaced with a much smaller ISO-8601 parsing library, saving around 5k from the SDK method count and reducing the chance that the app will encounter the [65k method limit](http://developer.android.com/tools/building/multidex.html).
+ - Retrofit, the HTTP client used for calling the judo REST API has been upgraded to version 2.0.0.
  
 **Bugs fixed:**
 - The start date and issue number fields were shown when making a token payment when not needed.
