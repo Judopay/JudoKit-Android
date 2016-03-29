@@ -158,7 +158,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wallet.API, new Wallet.WalletOptions.Builder()
-                        .setEnvironment(WalletConstants.ENVIRONMENT_PRODUCTION)
+                        .setEnvironment(WalletConstants.ENVIRONMENT_TEST)
                         .build())
                 .enableAutoManage(this, this)
                 .build();
