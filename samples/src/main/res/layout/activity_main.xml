@@ -76,6 +76,20 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/android_pay_button"
+        style="@style/list_button">
+
+        <TextView
+            style="@style/list_button_primary_text"
+            android:text="Android Pay" />
+
+        <TextView
+            style="@style/list_button_secondary_text"
+            android:text="to perform a payment with Android Pay" />
+
+    </LinearLayout>
+
     <TextView
         android:textSize="14sp"
         android:layout_marginTop="16dp"

@@ -3,12 +3,19 @@ package com.judopay.samples;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.BooleanResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wallet.Wallet;
+import com.google.android.gms.wallet.WalletConstants;
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;
@@ -35,7 +42,7 @@ import static com.judopay.Judo.TOKEN_PRE_AUTH_REQUEST;
  * Update the {@link #JUDO_ID} string with the Judo ID from the judo website: http://www.judopay.com,
  * Update the {@link #API_TOKEN} and {@link #API_SECRET} with your credentials and call {@link com.judopay.Judo#setup} to initialize the SDK.
  */
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final String AMOUNT = "0.99";
     private static final String JUDO_ID = "00000000";
@@ -58,6 +65,12 @@ public class MainActivity extends BaseActivity {
 
     @Bind(R.id.add_card_button)
     View addCardButton;
+
+    @Bind(R.id.android_pay_button)
+    View androidPayButton;
+
+    private boolean androidPayAvailable;
+    private GoogleApiClient googleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +142,35 @@ public class MainActivity extends BaseActivity {
                         .build());
 
                 startActivityForResult(intent, REGISTER_CARD_REQUEST);
+            }
+        });
+
+        androidPayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (androidPayAvailable) {
+                    startActivity(new Intent(MainActivity.this, AndroidPayActivity.class));
+                } else {
+                    Toast.makeText(MainActivity.this, R.string.please_add_android_pay_card, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Wallet.API, new Wallet.WalletOptions.Builder()
+                        .setEnvironment(WalletConstants.ENVIRONMENT_PRODUCTION)
+                        .build())
+                .enableAutoManage(this, this)
+                .build();
+
+        checkAndroidPayAvailable();
+    }
+
+    private void checkAndroidPayAvailable() {
+        Wallet.Payments.isReadyToPay(googleApiClient).setResultCallback(new ResultCallback<BooleanResult>() {
+            @Override
+            public void onResult(@NonNull BooleanResult result) {
+                androidPayAvailable = result.getStatus().isSuccess() && result.getValue();
             }
         });
     }
@@ -221,9 +263,7 @@ public class MainActivity extends BaseActivity {
         switch (resultCode) {
             case Judo.RESULT_SUCCESS:
                 Receipt receipt = data.getParcelableExtra(JUDO_RECEIPT);
-
                 saveReceipt(receipt);
-
                 showTokenPaymentDialog(receipt);
                 break;
         }
@@ -291,4 +331,8 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 }

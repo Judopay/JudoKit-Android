@@ -26,4 +26,5 @@
     <string name="could_not_perform_transaction_check_settings">Could not perform the transaction, please check your settings</string>
     <string name="currency">Currency</string>
     <string name="payment_successful">Payment successful</string>
+    <string name="please_add_android_pay_card">Please add a card in the Android Pay app</string>
 </resources>
