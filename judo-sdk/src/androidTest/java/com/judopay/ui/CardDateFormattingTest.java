@@ -38,6 +38,7 @@ public class CardDateFormattingTest {
 
     @Test
     public void shouldFormatStartDate() {
+        Judo.setMaestroEnabled(true);
         activityTestRule.launchActivity(getIntent());
 
         onView(withId(R.id.card_number_edit_text))
