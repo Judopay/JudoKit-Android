@@ -14,7 +14,7 @@ public class Wallet {
     private final String publicKey;
     private final String instrumentDetails;
     private final String instrumentType;
-    private final String merchantTransactionId;
+    private final String googleTransactionId;
     private final Integer environment;
     private final Integer version;
 
@@ -24,7 +24,7 @@ public class Wallet {
                   String publicKey,
                   String instrumentDetails,
                   String instrumentType,
-                  String merchantTransactionId,
+                  String googleTransactionId,
                   Integer environment,
                   Integer version) {
         this.encryptedMessage = encryptedMessage;
@@ -33,7 +33,7 @@ public class Wallet {
         this.publicKey = publicKey;
         this.instrumentDetails = instrumentDetails;
         this.instrumentType = instrumentType;
-        this.merchantTransactionId = merchantTransactionId;
+        this.googleTransactionId = googleTransactionId;
         this.environment = environment;
         this.version = version;
     }
@@ -66,8 +66,8 @@ public class Wallet {
         return environment;
     }
 
-    public String getMerchantTransactionId() {
-        return merchantTransactionId;
+    public String getGoogleTransactionId() {
+        return googleTransactionId;
     }
 
     public Integer getVersion() {
@@ -82,7 +82,7 @@ public class Wallet {
         private String publicKey;
         private String instrumentDetails;
         private String instrumentType;
-        private String merchantTransactionId;
+        private String googleTransactionId;
         private Integer environment;
         private Integer version;
 
@@ -168,12 +168,12 @@ public class Wallet {
         }
 
         /**
-         * @param merchantTransactionId the merchant ID for the transaction. This can be obtained
-         *                              from the FullWallet.getMerchantId() method.
+         * @param googleTransactionId the  ID of the transaction. This can be obtained
+         *                              from the FullWallet.getGoogleTransactionId() method.
          * @return The Builder for creating the {@link AndroidPayRequest} instance
          */
-        public Builder setMerchantTransactionId(String merchantTransactionId) {
-            this.merchantTransactionId = merchantTransactionId;
+        public Builder setGoogleTransactionId(String googleTransactionId) {
+            this.googleTransactionId = googleTransactionId;
             return this;
         }
 
@@ -206,11 +206,11 @@ public class Wallet {
             checkNotEmpty(publicKey);
             checkNotEmpty(instrumentDetails);
             checkNotEmpty(instrumentType);
-            checkNotEmpty(merchantTransactionId);
+            checkNotEmpty(googleTransactionId);
             checkNotNull(environment);
             checkNotNull(version);
 
-            return new Wallet(encryptedMessage, ephemeralPublicKey, tag, publicKey, instrumentDetails, instrumentType, merchantTransactionId, environment, version);
+            return new Wallet(encryptedMessage, ephemeralPublicKey, tag, publicKey, instrumentDetails, instrumentType, googleTransactionId, environment, version);
         }
     }
 
