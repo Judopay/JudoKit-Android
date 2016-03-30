@@ -20,6 +20,7 @@ import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -60,6 +61,21 @@ public class CardImageHelpersTest {
                 .perform(click());
 
         onView(withId(R.id.security_code_image_view))
+                .check(matches(isTranslucent()));
+    }
+
+    @Test
+    public void shouldShowCardImageAsTranslucentAfterDeletedAndNotFocused() {
+        activityTestRule.launchActivity(getIntent());
+
+        onView(withId(R.id.card_number_edit_text))
+                .perform(typeText("4976"))
+                .perform(replaceText(""));
+
+        onView(withId(R.id.expiry_date_edit_text))
+                .perform(click());
+
+        onView(withId(R.id.card_type_view))
                 .check(matches(isTranslucent()));
     }
 
