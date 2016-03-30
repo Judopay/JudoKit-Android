@@ -14,6 +14,7 @@
     <string name="issue_number_label">Issue number</string>
     <string name="issue_number_hint">00</string>
     <string name="date_hint">MM/YY</string>
+    <string name="date_format">00/00</string>
     <string name="expiry_date_format">%1$s/%2$s</string>
     <string name="cvv">CVV</string>
     <string name="cid">CID</string>

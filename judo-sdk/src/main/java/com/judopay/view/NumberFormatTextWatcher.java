@@ -13,11 +13,18 @@ public class NumberFormatTextWatcher implements TextWatcher {
     private boolean deleting;
     private int start;
 
+    private boolean formatAhead;
+
     private String format;
 
     public NumberFormatTextWatcher(EditText editText, String format) {
         this.editText = editText;
         this.format = format;
+    }
+
+    public NumberFormatTextWatcher(EditText editText, String format, boolean formatAhead) {
+        this(editText, format);
+        this.formatAhead = formatAhead;
     }
 
     @Override
@@ -37,18 +44,27 @@ public class NumberFormatTextWatcher implements TextWatcher {
         editText.addTextChangedListener(this);
     }
 
-    public void format(Editable s) {
-        for (int i = s.length(); i > 0; i--) {
-            if (!isDigit(s.charAt(i - 1)) || ((deleting && i == start) && !isDigit(format.charAt(i)))) {
-                s.delete(i - 1, i);
+    public void format(Editable string) {
+        if (string.length() > 0) {
+            for (int i = string.length(); i > 0; i--) {
+                if (!isDigit(string.charAt(i - 1)) || ((deleting && i == start) && !isDigit(format.charAt(i)))) {
+                    string.delete(i - 1, i);
+                }
             }
-        }
 
-        for (int i = 0; i < s.length(); i++) {
-            if (i < format.length() && !isDigit(format.charAt(i))) {
-                s.insert(i, String.valueOf(format.charAt(i)));
+            for (int i = 0; i < getStringEnd(string); i++) {
+                if (i < format.length() && !isDigit(format.charAt(i))) {
+                    string.insert(i, String.valueOf(format.charAt(i)));
+                }
             }
         }
+    }
+
+    public int getStringEnd(Editable string) {
+        if(formatAhead) {
+            return string.length() + 1;
+        }
+        return string.length();
     }
 
     public void setFormat(String format) {
