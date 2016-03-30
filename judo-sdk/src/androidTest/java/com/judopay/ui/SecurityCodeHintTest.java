@@ -46,7 +46,6 @@ public class SecurityCodeHintTest {
                 .check(matches(withTextInputHint("CVV2")));
     }
 
-
     @Test
     public void shouldDisplayAmexSecurityCodeWhenAmexDetected() {
         Judo.setAmexEnabled(true);
