@@ -45,14 +45,14 @@ import static com.judopay.Judo.isAvsEnabled;
  * <code>
  * CardEntryFragment fragment = new CardEntryFragment();
  * Bundle args = new Bundle();
- *
+ * <p/>
  * args.putParcelable(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
- *      .setJudoId("123456")
- *      .setAmount("1.99")
- *      .setCurrency(Currency.USD)
- *      .setButtonLabel("Perform payment")
- *      .setSecureServerMessageShown(true)
- *      .build());
+ * .setJudoId("123456")
+ * .setAmount("1.99")
+ * .setCurrency(Currency.USD)
+ * .setButtonLabel("Perform payment")
+ * .setSecureServerMessageShown(true)
+ * .build());
  * fragment.setArguments(args);
  * </code>
  */
@@ -128,10 +128,9 @@ public final class CardEntryFragment extends Fragment {
                     securityCodeEntryView.requestFocus();
                 } else {
                     if (judoOptions.getCardNumber() != null) {
-                        cardNumberEntryView.setText(judoOptions.getCardNumber());
-
                         int cardType = CardType.fromCardNumber(judoOptions.getCardNumber());
                         cardNumberEntryView.setCardType(cardType, false);
+                        cardNumberEntryView.setText(judoOptions.getCardNumber());
                         expiryDateEntryView.requestFocus();
                     }
 
