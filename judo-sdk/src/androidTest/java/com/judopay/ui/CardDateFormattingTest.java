@@ -44,7 +44,7 @@ public class CardDateFormattingTest {
                 .perform(typeText("6759000000005462"));
 
         onView(withId(R.id.start_date_edit_text))
-                .perform(typeText("1225"))
+                .perform(typeText("0116"))
                 .check(matches(withText("01/16")));
     }
 
