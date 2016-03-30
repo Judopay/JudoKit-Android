@@ -66,6 +66,15 @@ public class CardNumberEntryTest {
                 .check(matches(withText("3400 004321 28428")));
     }
 
+    @Test
+    public void shouldNotAllowSpacesAtStartOfCardNumber() {
+        activityTestRule.launchActivity(getIntent());
+
+        onView(withId(R.id.card_number_edit_text))
+                .perform(typeText(" 1234"))
+                .check(matches(withText("1234")));
+    }
+
     private Intent getIntent() {
         Intent intent = new Intent();
 
