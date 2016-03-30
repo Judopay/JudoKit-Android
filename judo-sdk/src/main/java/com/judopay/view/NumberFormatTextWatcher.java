@@ -5,6 +5,8 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.widget.EditText;
 
+import static java.lang.Character.isDigit;
+
 public class NumberFormatTextWatcher implements TextWatcher {
 
     private final EditText editText;
@@ -37,14 +39,14 @@ public class NumberFormatTextWatcher implements TextWatcher {
 
     public void format(Editable s) {
         for (int i = s.length(); i > 0; i--) {
-            if (s.charAt(i - 1) == ' ' || ((deleting && i == start) && format.charAt(i) == ' ')) {
+            if (!isDigit(s.charAt(i - 1)) || ((deleting && i == start) && !isDigit(format.charAt(i)))) {
                 s.delete(i - 1, i);
             }
         }
 
         for (int i = 0; i < s.length(); i++) {
-            if (i < format.length() && format.charAt(i) == ' ') {
-                s.insert(i, " ");
+            if (i < format.length() && !isDigit(format.charAt(i))) {
+                s.insert(i, String.valueOf(format.charAt(i)));
             }
         }
     }
