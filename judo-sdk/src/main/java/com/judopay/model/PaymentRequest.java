@@ -14,7 +14,6 @@ import java.util.Map;
 public final class PaymentRequest extends Request {
 
     private String amount;
-    private Location consumerLocation;
     private String currency;
     private String judoId;
     private String yourConsumerReference;
@@ -35,10 +34,6 @@ public final class PaymentRequest extends Request {
 
     public String getAmount() {
         return amount;
-    }
-
-    public Location getConsumerLocation() {
-        return consumerLocation;
     }
 
     public String getCurrency() {
@@ -96,7 +91,6 @@ public final class PaymentRequest extends Request {
     public static class Builder {
 
         private String amount;
-        private Location consumerLocation;
         private String currency;
         private String judoId;
         private String yourConsumerReference;
@@ -113,11 +107,6 @@ public final class PaymentRequest extends Request {
 
         public Builder setAmount(String amount) {
             this.amount = amount;
-            return this;
-        }
-
-        public Builder setConsumerLocation(Location consumerLocation) {
-            this.consumerLocation = consumerLocation;
             return this;
         }
 
@@ -202,7 +191,6 @@ public final class PaymentRequest extends Request {
             PaymentRequest transaction = new PaymentRequest();
 
             transaction.amount = amount;
-            transaction.consumerLocation = consumerLocation;
             transaction.currency = currency;
             transaction.judoId = judoId;
             transaction.yourConsumerReference = yourConsumerReference;
