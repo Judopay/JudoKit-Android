@@ -72,11 +72,11 @@ public class JudoApiServiceFactory {
     }
 
     private static void setInterceptors(OkHttpClient.Builder client, @Judo.UiClientMode int uiClientMode, Context context) {
-        ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(ApiCredentials.fromConfiguration(context), uiClientMode);
-
         List<Interceptor> interceptors = client.interceptors();
+
         interceptors.add(new DeDuplicationInterceptor());
-        interceptors.add(interceptor);
+        interceptors.add(new JudoShieldInterceptor(context));
+        interceptors.add(new ApiHeadersInterceptor(ApiCredentials.fromConfiguration(context), uiClientMode));
     }
 
     private static GsonConverterFactory getGsonConverterFactory() {
