@@ -19,9 +19,9 @@
         tools:visibility="visible">
 
         <com.judopay.view.StartDateEntryView
-            android:layout_marginTop="0dp"
             android:id="@+id/start_date_entry_view"
             style="@style/EntryLayout"
+            android:layout_marginTop="0dp"
             android:layout_weight="1" />
 
         <com.judopay.view.IssueNumberEntryView
@@ -62,7 +62,10 @@
 
         <com.judopay.view.CountrySpinner
             android:id="@+id/country_spinner"
-            style="@style/Widget.Judo.Spinner"
+            style="@style/Widget.AppCompat.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6.5dp"
             android:layout_weight="1" />
 
         <com.judopay.view.PostcodeEntryView
