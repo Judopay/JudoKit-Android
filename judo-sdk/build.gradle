@@ -72,8 +72,9 @@ dependencies {
 
     compile 'io.reactivex:rxandroid:0.23.0'
 
-    compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'com.android.support:design:23.2.0'
+    // reverting back to 23.1.1 due to issue with Spinner styles (https://code.google.com/p/android/issues/detail?id=201817)
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
 
     compile 'fr.turri:jISO8601:0.2'
 

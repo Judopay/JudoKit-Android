@@ -1,8 +1,6 @@
 package com.judopay.view;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.support.v7.widget.AppCompatSpinner;
 import android.util.AttributeSet;
 
@@ -21,12 +19,6 @@ public class CountrySpinner extends AppCompatSpinner {
 
     public CountrySpinner(Context context) {
         super(context);
-        initialise();
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public CountrySpinner(Context context, int mode) {
-        super(context, mode);
         initialise();
     }
 
