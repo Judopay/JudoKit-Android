@@ -7,8 +7,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
-import com.judopay.model.ClientDetails;
-import com.judopay.model.Location;
 
 import java.math.BigDecimal;
 import java.security.KeyManagementException;
@@ -19,9 +17,9 @@ import java.util.List;
 import okhttp3.CertificatePinner;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -52,7 +50,7 @@ public class JudoApiServiceFactory {
 
     private static Retrofit createRetrofit(Context context, @Judo.UiClientMode int uiClientMode) {
         return new Retrofit.Builder()
-                .addConverterFactory(getGsonConverterFactory(context))
+                .addConverterFactory(getGsonConverterFactory())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .baseUrl(Judo.getApiEnvironmentHost())
                 .client(getOkHttpClient(uiClientMode, context))
@@ -74,25 +72,21 @@ public class JudoApiServiceFactory {
     }
 
     private static void setInterceptors(OkHttpClient.Builder client, @Judo.UiClientMode int uiClientMode, Context context) {
-        ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(ApiCredentials.fromConfiguration(context), uiClientMode);
-
         List<Interceptor> interceptors = client.interceptors();
+
         interceptors.add(new DeDuplicationInterceptor());
-        interceptors.add(interceptor);
+        interceptors.add(new JudoShieldInterceptor(context));
+        interceptors.add(new ApiHeadersInterceptor(ApiCredentials.fromConfiguration(context), uiClientMode));
     }
 
-    private static GsonConverterFactory getGsonConverterFactory(Context context) {
-        return GsonConverterFactory.create(getGson(context));
+    private static GsonConverterFactory getGsonConverterFactory() {
+        return GsonConverterFactory.create(getGson());
     }
 
-    private static Gson getGson(Context context) {
-        GsonBuilder gsonBuilder = new GsonBuilder()
+    private static Gson getGson() {
+        return new GsonBuilder()
                 .registerTypeAdapter(Date.class, new DateJsonDeserializer())
-                .registerTypeAdapter(BigDecimal.class, new FormattedBigDecimalDeserializer());
-
-        return gsonBuilder
-                .registerTypeAdapter(Location.class, new LocationTypeAdapter(context))
-                .registerTypeAdapter(ClientDetails.class, new ClientDetailsSerializer(context))
+                .registerTypeAdapter(BigDecimal.class, new FormattedBigDecimalDeserializer())
                 .create();
     }
 

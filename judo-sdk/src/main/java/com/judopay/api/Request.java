@@ -1,7 +1,5 @@
 package com.judopay.api;
 
-import com.judopay.model.ClientDetails;
-
 import java.util.UUID;
 
 /**
@@ -11,8 +9,6 @@ public abstract class Request {
 
     private final boolean uniqueRequest;
     private final String yourPaymentReference;
-
-    private final ClientDetails clientDetails;
 
     protected Request(String yourPaymentReference) {
         this(false, yourPaymentReference);
@@ -25,7 +21,6 @@ public abstract class Request {
     Request(boolean uniqueRequest, String yourPaymentReference) {
         this.uniqueRequest = uniqueRequest;
         this.yourPaymentReference = yourPaymentReference;
-        clientDetails = new ClientDetails();
     }
 
     public String getYourPaymentReference() {
@@ -34,10 +29,6 @@ public abstract class Request {
 
     public boolean isUniqueRequest() {
         return uniqueRequest;
-    }
-
-    public ClientDetails getClientDetails() {
-        return clientDetails;
     }
 
 }

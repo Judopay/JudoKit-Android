@@ -27,7 +27,6 @@ public final class TokenRequest extends Request {
 
     private String judoId;
     private String amount;
-    private Location consumerLocation;
     private String currency;
     private String yourConsumerReference;
     private Address cardAddress;
@@ -58,10 +57,6 @@ public final class TokenRequest extends Request {
 
     public String getAmount() {
         return amount;
-    }
-
-    public Location getConsumerLocation() {
-        return consumerLocation;
     }
 
     public String getCurrency() {
@@ -103,7 +98,6 @@ public final class TokenRequest extends Request {
         private String token;
         private int type;
         private String amount;
-        private Location consumerLocation;
         private String currency;
         private String judoId;
         private String yourConsumerReference;
@@ -139,11 +133,6 @@ public final class TokenRequest extends Request {
 
         public Builder setAmount(String amount) {
             this.amount = amount;
-            return this;
-        }
-
-        public Builder setConsumerLocation(Location consumerLocation) {
-            this.consumerLocation = consumerLocation;
             return this;
         }
 
@@ -206,7 +195,6 @@ public final class TokenRequest extends Request {
             transaction.amount = amount;
             transaction.currency = currency;
             transaction.cardAddress = cardAddress;
-            transaction.consumerLocation = consumerLocation;
             transaction.cv2 = cv2;
             transaction.token = token;
             transaction.lastFour = lastFour;
