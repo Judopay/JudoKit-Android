@@ -24,10 +24,10 @@ import static com.judopay.model.CardType.AMEX;
  */
 public class CardNumberEntryView extends RelativeLayout {
 
-    private EditText cardNumberEditText;
+    private EditText editText;
+    private TextInputLayout inputLayout;
     private CardTypeImageView cardTypeImageView;
-    private TextInputLayout cardNumberInputLayout;
-    private CardNumberFormattingTextWatcher cardNumberFormattingTextWatcher;
+    private NumberFormatTextWatcher numberFormatTextWatcher;
 
     public CardNumberEntryView(Context context) {
         super(context);
@@ -55,18 +55,18 @@ public class CardNumberEntryView extends RelativeLayout {
 
         this.cardTypeImageView = (CardTypeImageView) findViewById(R.id.card_type_view);
         TextView cardNumberHelperText = (TextView) findViewById(R.id.card_number_helper_text);
-        this.cardNumberEditText = (EditText) findViewById(R.id.card_number_edit_text);
-        this.cardNumberInputLayout = (TextInputLayout) findViewById(R.id.card_number_input_layout);
+        this.editText = (EditText) findViewById(R.id.card_number_edit_text);
+        this.inputLayout = (TextInputLayout) findViewById(R.id.card_number_input_layout);
 
-        cardNumberEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+        editText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
                 new EmptyTextHintOnFocusChangeListener(cardNumberHelperText),
-                new ViewAlphaChangingTextWatcher(cardNumberEditText, cardTypeImageView),
-                new HintFocusListener(cardNumberEditText, R.string.card_number_hint)
+                new ViewAlphaChangingTextWatcher(editText, cardTypeImageView),
+                new HintFocusListener(editText, R.string.card_number_format)
         ));
 
-        cardNumberFormattingTextWatcher = new CardNumberFormattingTextWatcher();
-        cardNumberEditText.addTextChangedListener(cardNumberFormattingTextWatcher);
-        cardNumberEditText.addTextChangedListener(new HidingViewTextWatcher(cardNumberHelperText));
+        numberFormatTextWatcher = new NumberFormatTextWatcher(editText, getResources().getString(R.string.card_number_format));
+        editText.addTextChangedListener(numberFormatTextWatcher);
+        editText.addTextChangedListener(new HidingViewTextWatcher(cardNumberHelperText));
     }
 
     public void setCardType(int type, boolean animate) {
@@ -75,51 +75,53 @@ public class CardNumberEntryView extends RelativeLayout {
         switch (type) {
             case CardType.AMEX:
                 setMaxLength(17);
+                numberFormatTextWatcher.setFormat(getResources().getString(R.string.amex_card_number_format));
                 break;
 
             default:
                 setMaxLength(19);
+                numberFormatTextWatcher.setFormat(getResources().getString(R.string.card_number_format));
         }
     }
 
     public void setText(String text) {
-        cardNumberEditText.setText(text);
+        editText.setText(text);
     }
 
     private void setMaxLength(int maxLength) {
-        cardNumberEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
     }
 
     public int getCardType() {
-        return CardType.fromCardNumber(cardNumberEditText.getText().toString());
+        return CardType.fromCardNumber(editText.getText().toString());
     }
 
     public String getText() {
-        return cardNumberEditText.getText().toString().replaceAll(" ", "");
+        return editText.getText().toString().replaceAll(" ", "");
     }
 
     public void addTextChangedListener(SimpleTextWatcher watcher) {
-        cardNumberEditText.addTextChangedListener(watcher);
+        editText.addTextChangedListener(watcher);
     }
 
     public void setTokenCard(CardToken cardToken) {
-        cardNumberEditText.setEnabled(false);
+        editText.setEnabled(false);
         boolean amex = cardToken.getType() == AMEX;
 
-        cardNumberEditText.removeTextChangedListener(cardNumberFormattingTextWatcher);
-        cardNumberEditText.setText(getContext().getString(amex ? R.string.amex_token_card_number : R.string.token_card_number, cardToken.getLastFour()));
-        cardNumberEditText.addTextChangedListener(cardNumberFormattingTextWatcher);
+        editText.removeTextChangedListener(numberFormatTextWatcher);
+        editText.setText(getContext().getString(amex ? R.string.amex_token_card_number : R.string.token_card_number, cardToken.getLastFour()));
+        editText.addTextChangedListener(numberFormatTextWatcher);
 
         cardTypeImageView.setAlpha(1.0f);
     }
 
     public void setError(@StringRes int message, boolean show) {
-        cardNumberInputLayout.setErrorEnabled(show);
+        inputLayout.setErrorEnabled(show);
 
         if (show) {
-            cardNumberInputLayout.setError(getResources().getString(message));
+            inputLayout.setError(getResources().getString(message));
         } else {
-            cardNumberInputLayout.setError("");
+            inputLayout.setError("");
         }
     }
 }

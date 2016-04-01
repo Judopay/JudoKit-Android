@@ -13,11 +13,15 @@
  - Client integration method reporting data is now sent with the transaction to indicate if a custom UI or judo provided UI is used.
  - Joda-Time, the library used for parsing dates has been replaced with a much smaller ISO-8601 parsing library, saving around 5k from the SDK method count and reducing the chance that the app will encounter the [65k method limit](http://developer.android.com/tools/building/multidex.html).
  - Retrofit, the HTTP client used for calling the judo REST API has been upgraded to version 2.0.0.
+ - Integration tests for all API service methods.
+ - Amex security code CIDV changed to CID
+ - ```CvvEntryView``` renamed to ```SecurityCodeEntryView```
  
 **Bugs fixed:**
 - The start date and issue number fields were shown when making a token payment when not needed.
 - Billing postcode now longer goes into full screen entry mode when focusing in landscape mode.
-- A crash was occuring when inputting an Amex card number longer than 15 digits, this has now been fixed.
+- A crash was occuring when inputting an Amex card number longer than 15 digits.
+- The card number, expiry date and start date had some formatting issues if characters were input into the middle of the text after initial entry.
 
 ## [5.1.2](https://github.com/judopay/Judo-Android/tree/5.1.2) (2016-02-29)
 
