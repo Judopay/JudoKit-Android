@@ -37,6 +37,7 @@ import static com.judopay.model.CardType.VISA;
 import static com.judopay.ui.util.ViewMatchers.isDisabled;
 import static com.judopay.ui.util.ViewMatchers.isNotDisplayed;
 import static com.judopay.ui.util.ViewMatchers.isOpaque;
+import static com.judopay.ui.util.ViewMatchers.isTranslucent;
 import static com.judopay.ui.util.ViewMatchers.withTextInputHint;
 
 @LargeTest
@@ -156,7 +157,7 @@ public class TokenPaymentFormTest {
     }
 
     @Test
-    public void shouldShowCardTypeImageAsFullyOpaque() {
+    public void shouldShowCardTypeImageAsOpaque() {
         activityTestRule.launchActivity(getIntent(VISA));
 
         onView(withId(R.id.card_type_view))
