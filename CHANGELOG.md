@@ -7,16 +7,15 @@
  - Fragment transaction callbacks - it's now possible to handle the result from a transaction when using the provided Fragments on the SDK. This allows for more customization around what gets shown when a transaction is successful, declined or an error occurs. If calling an Activity directly and using the ```Activity.onActivityResult()``` method as a callback, this will remain as before.
 
 **Changes:**
- - Support for passing Activity Intent extras using the constants defined in ```Judo``` has been removed, in favor of using the ```JudoOptions``` builder for more easily passing data to an Activity.
+ - American Express cards are now accepted by default.
  - Style updates to payment card entry form to match Google Material Design guidelines.
  - judo API token and secret can now be specified directly in the Android Manifest instead of programmatically.
  - Client integration method reporting data is now sent with the transaction to indicate if a custom UI or judo provided UI is used.
- - Joda-Time, the library used for parsing dates has been replaced with a much smaller ISO-8601 parsing library, saving around 5k from the SDK method count and reducing the chance that the app will encounter the [65k method limit](http://developer.android.com/tools/building/multidex.html).
- - Retrofit, the HTTP client used for calling the judo REST API has been upgraded to version 2.0.0.
- - Integration tests for all API service methods.
- - Amex security code CIDV changed to CID
- - ```CvvEntryView``` renamed to ```SecurityCodeEntryView```
- 
+ - Joda-Time library has been removed from the SDK to avoid issues with the app method count reaching the [65k dex method limit](http://developer.android.com/tools/building/multidex.html).
+ - The HTTP client library Retrofit has been upgraded to version 2.0.0
+ - The security code hint text for American Express cards has changed from CIDV to CID.
+ - Activity Intent constants have been removed in favour of using the constants defined in ```Judo``` has been removed, in favor of using the ```JudoOptions``` builder for more easily passing data to an Activity.
+
 **Bugs fixed:**
 - The start date and issue number fields were shown when making a token payment when not needed.
 - Billing postcode now longer goes into full screen entry mode when focusing in landscape mode.
