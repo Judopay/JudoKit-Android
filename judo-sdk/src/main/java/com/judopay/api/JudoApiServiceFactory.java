@@ -77,13 +77,6 @@ public class JudoApiServiceFactory {
             builder.certificatePinner(getCertificatePinner());
         }
 
-        builder.hostnameVerifier(new HostnameVerifier() {
-            @Override
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        });
-
         setTimeouts(builder);
         setSslSocketFactory(builder, context);
         setInterceptors(builder, uiClientMode, context);
