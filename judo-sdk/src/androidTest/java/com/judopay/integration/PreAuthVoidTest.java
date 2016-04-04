@@ -28,7 +28,7 @@ public class PreAuthVoidTest {
 
     @Before
     public void setEnvironment() {
-        Judo.setEnvironment(Judo.SANDBOX);
+        Judo.setEnvironment(Judo.UAT);
     }
 
     @Test
@@ -37,7 +37,7 @@ public class PreAuthVoidTest {
         final JudoApiService apiService = Judo.getApiService(context);
 
         PaymentRequest paymentRequest = new PaymentRequest.Builder()
-                .setJudoId("100407196")
+                .setJudoId("100915867")
                 .setAmount("0.01")
                 .setCardNumber("4976000000003436")
                 .setCv2("452")

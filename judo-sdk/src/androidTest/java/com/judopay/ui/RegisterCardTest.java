@@ -35,7 +35,7 @@ public class RegisterCardTest {
 
     @Before
     public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.SANDBOX);
+        Judo.setEnvironment(Judo.UAT);
     }
 
     @Test
@@ -65,7 +65,7 @@ public class RegisterCardTest {
     public Intent getIntent() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
-                .setJudoId("100407196")
+                .setJudoId("100915867")
                 .setConsumerRef(UUID.randomUUID().toString())
                 .build());
 
