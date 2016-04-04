@@ -14,12 +14,12 @@
  - Joda-Time library has been removed from the SDK to avoid issues with the app method count reaching the [65k dex method limit](http://developer.android.com/tools/building/multidex.html).
  - The HTTP client library Retrofit has been upgraded to version 2.0.0
  - The security code hint text for American Express cards has changed from CIDV to CID.
- - Activity Intent constants have been removed in favour of using the constants defined in ```Judo``` has been removed, in favor of using the ```JudoOptions``` builder for more easily passing data to an Activity.
+ - Activity Intent constants have been removed in favour of using the ```JudoOptions``` builder to configure customization options when calling the SDK.
 
 **Bugs fixed:**
-- The start date and issue number fields were shown when making a token payment when not needed.
-- Billing postcode now longer goes into full screen entry mode when focusing in landscape mode.
-- A crash was occuring when inputting an Amex card number longer than 15 digits.
+- Start date and issue number fields will no longer be shown when making a token payment.
+- When using a device in landscape orientation the billing postcode will no longer go into fullscreen input mode when the field has focus.
+- When entering an Amex card number longer than 15 digits, the SDK will no longer crash.
 - The card number, expiry date and start date had some formatting issues if characters were input into the middle of the text after initial entry.
 
 ## [5.1.2](https://github.com/judopay/Judo-Android/tree/5.1.2) (2016-02-29)
