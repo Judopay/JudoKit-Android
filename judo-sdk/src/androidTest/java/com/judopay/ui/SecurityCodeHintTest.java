@@ -48,8 +48,6 @@ public class SecurityCodeHintTest {
 
     @Test
     public void shouldDisplayAmexSecurityCodeWhenAmexDetected() {
-        Judo.setAmexEnabled(true);
-
         rule.launchActivity(getIntent());
 
         onView(withId(R.id.card_number_edit_text))
@@ -61,8 +59,6 @@ public class SecurityCodeHintTest {
 
     @Test
     public void shouldDisplayMastercardSecurityCodeWhenMastercardDetected() {
-        Judo.setAmexEnabled(true);
-
         rule.launchActivity(getIntent());
 
         onView(withId(R.id.card_number_edit_text))

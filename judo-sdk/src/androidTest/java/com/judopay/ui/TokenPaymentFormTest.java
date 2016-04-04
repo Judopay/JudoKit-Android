@@ -220,7 +220,6 @@ public class TokenPaymentFormTest {
 
     @Test
     public void shouldRequireValidCidWhenAmex() {
-        Judo.setAmexEnabled(true);
         Judo.setAvsEnabled(false);
 
         activityTestRule.launchActivity(getIntent(AMEX));
@@ -241,7 +240,6 @@ public class TokenPaymentFormTest {
     @Test
     public void shouldShowPayButtonWhenAmexCidEnteredAndAvsEnabled() {
         Judo.setAvsEnabled(true);
-        Judo.setAmexEnabled(true);
 
         activityTestRule.launchActivity(getIntent(AMEX));
 

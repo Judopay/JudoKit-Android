@@ -58,8 +58,8 @@ public class Judo {
     private static int environment;
 
     private static boolean avsEnabled;
-    private static boolean amexEnabled;
 
+    private static boolean amexEnabled = true;
     private static boolean maestroEnabled = true;
     private static boolean sslPinningEnabled = true;
     private static boolean rootedDevicesAllowed = true;

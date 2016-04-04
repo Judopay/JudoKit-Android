@@ -92,7 +92,6 @@ public class DeclinedPaymentTest {
 
     @Test
     public void shouldDeclineInvalidAmexCard() {
-        Judo.setAmexEnabled(true);
         Judo.setAvsEnabled(false);
 
         activityTestRule.launchActivity(getIntent());
@@ -181,7 +180,6 @@ public class DeclinedPaymentTest {
 
     @Test
     public void shouldDeclineInvalidAmexWhenAvsEnabled() {
-        Judo.setAmexEnabled(true);
         Judo.setAvsEnabled(true);
 
         activityTestRule.launchActivity(getIntent());
