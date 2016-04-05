@@ -1,4 +1,4 @@
-# judoNative Android SDK change log
+# Judo Android SDK change log
 
 ## [5.2](https://github.com/judopay/Judo-Android/tree/5.2) (TBC)
  
@@ -9,10 +9,10 @@
 **Changes:**
  - American Express cards are now accepted by default.
  - Style updates to payment card entry form to match Google Material Design guidelines.
- - judo API token and secret can now be specified directly in the Android Manifest instead of programmatically.
+ - Judo API token and secret can now be specified directly in the Android Manifest instead of programmatically.
  - Client integration method reporting data is now sent with the transaction to indicate if a custom UI or judo provided UI is used.
  - Joda-Time library has been removed from the SDK to avoid issues with the app method count reaching the [65k dex method limit](http://developer.android.com/tools/building/multidex.html).
- - The HTTP client library Retrofit has been upgraded to version 2.0.0
+ - The HTTP client library Retrofit has been upgraded to version 2.0.0.
  - The security code hint text for American Express cards has changed from CIDV to CID.
  - Activity Intent constants have been removed in favour of using the ```JudoOptions``` builder to configure customization options when calling the SDK.
 
