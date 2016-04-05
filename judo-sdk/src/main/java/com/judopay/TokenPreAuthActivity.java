@@ -51,7 +51,7 @@ public class TokenPreAuthActivity extends JudoActivity {
 
     @Override
     public void onBackPressed() {
-        if (!tokenPreAuthFragment.isPaymentInProgress()) {
+        if (tokenPreAuthFragment != null && !tokenPreAuthFragment.isPaymentInProgress()) {
             super.onBackPressed();
         }
     }
