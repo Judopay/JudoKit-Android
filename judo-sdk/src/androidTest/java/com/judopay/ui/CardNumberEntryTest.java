@@ -30,6 +30,8 @@ public class CardNumberEntryTest {
 
     @Test
     public void shouldHaveAmexCardNumberFormattingWhenAmexCardEntered() {
+        Judo.setAmexEnabled(true);
+
         activityTestRule.launchActivity(getIntent());
 
         onView(ViewMatchers.withId(R.id.card_number_edit_text))

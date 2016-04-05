@@ -91,6 +91,7 @@ public class SuccessfulPaymentTest {
 
     @Test
     public void shouldBeSuccessfulPaymentWhenValidAmexEntered() {
+        Judo.setAmexEnabled(true);
         Judo.setAvsEnabled(false);
 
         PaymentActivity activity = activityTestRule.launchActivity(getIntent());
@@ -168,6 +169,7 @@ public class SuccessfulPaymentTest {
     @Test
     public void shouldBeSuccessfulPaymentWhenValidAmexEnteredAndAvsEnabled() {
         Judo.setAvsEnabled(true);
+        Judo.setAmexEnabled(true);
 
         PaymentActivity activity = activityTestRule.launchActivity(getIntent());
 

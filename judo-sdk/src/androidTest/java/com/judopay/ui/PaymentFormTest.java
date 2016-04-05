@@ -38,6 +38,8 @@ public class PaymentFormTest {
 
     @Test
     public void shouldDisplayCidvHintWhenAmexCardNumberEntered() {
+        Judo.setAmexEnabled(true);
+
         activityTestRule.launchActivity(getIntent());
 
         onView(withId(R.id.card_number_edit_text))

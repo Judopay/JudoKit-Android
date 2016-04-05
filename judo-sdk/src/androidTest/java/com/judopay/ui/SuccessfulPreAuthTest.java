@@ -96,6 +96,7 @@ public class SuccessfulPreAuthTest {
     @Test
     public void shouldBeSuccessfulPreAuthWhenValidAmexEntered() {
         Judo.setAvsEnabled(false);
+        Judo.setAmexEnabled(true);
 
         PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
 
@@ -172,6 +173,7 @@ public class SuccessfulPreAuthTest {
     @Test
     public void shouldBeSuccessfulPaymentWhenValidAmexEnteredAndAvsEnabled() {
         Judo.setAvsEnabled(true);
+        Judo.setAmexEnabled(true);
 
         PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
 
