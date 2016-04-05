@@ -22,9 +22,8 @@ import java.security.cert.CertificateFactory;
 import java.util.Date;
 import java.util.List;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
 import okhttp3.CertificatePinner;
@@ -115,37 +114,44 @@ public class JudoApiServiceFactory {
 
     private static void setSslSocketFactory(OkHttpClient.Builder builder, Context context) {
         try {
-            // loading CAs from an InputStream
-            CertificateFactory cf = CertificateFactory.getInstance("X.509");
-            InputStream cert = context.getResources().openRawResource(R.raw.judo_uat);
-            Certificate ca;
+            SSLContext sslContext = SSLContext.getInstance("TLS");
 
-            try {
-                ca = cf.generateCertificate(cert);
-            } finally {
-                cert.close();
+            if (Judo.getEnvironment() == Judo.UAT) {
+                initializeUatEnvironmentSslContext(context, sslContext);
+            } else {
+                sslContext.init(null, null, null);
             }
 
-            // creating a KeyStore containing our trusted CAs
-            String keyStoreType = KeyStore.getDefaultType();
-            KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-            keyStore.load(null, null);
-            keyStore.setCertificateEntry("ca", ca);
-
-            // creating a TrustManager that trusts the CAs in our KeyStore
-            String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-            TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
-            tmf.init(keyStore);
-
-            // creating an SSLSocketFactory that uses our TrustManager
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, tmf.getTrustManagers(), null);
-
-            TlsSslSocketFactory sslSocketFactory = new TlsSslSocketFactory(tmf.getTrustManagers());
-            builder.sslSocketFactory(sslSocketFactory);
+            SSLSocketFactory socketFactory = sslContext.getSocketFactory();
+            builder.sslSocketFactory(new TlsSslSocketFactory(socketFactory));
         } catch (CertificateException | IOException | KeyStoreException | KeyManagementException | NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static void initializeUatEnvironmentSslContext(Context context, SSLContext sslContext) throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+        // loading CAs from an InputStream
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        InputStream cert = context.getResources().openRawResource(R.raw.judo_uat);
+        Certificate ca;
+
+        try {
+            ca = cf.generateCertificate(cert);
+        } finally {
+            cert.close();
+        }
+
+        // creating a KeyStore containing our trusted CAs
+        String keyStoreType = KeyStore.getDefaultType();
+        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+        keyStore.load(null, null);
+        keyStore.setCertificateEntry("ca", ca);
+
+        // creating a TrustManager that trusts the CAs in our KeyStore
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        tmf.init(keyStore);
+
+        sslContext.init(null, tmf.getTrustManagers(), null);
     }
 
     private static void setTimeouts(OkHttpClient.Builder builder) {

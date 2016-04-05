@@ -70,6 +70,11 @@ public class Judo {
         Judo.environment = environment;
     }
 
+    @Environment
+    public static int getEnvironment() {
+        return environment;
+    }
+
     public static JudoApiService getApiService(Context context) {
         return JudoApiServiceFactory.createApiService(context, UI_CLIENT_MODE_CUSTOM_UI);
     }

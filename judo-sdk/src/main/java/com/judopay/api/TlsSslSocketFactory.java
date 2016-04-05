@@ -13,12 +13,10 @@ import javax.net.ssl.TrustManager;
 
 class TlsSslSocketFactory extends SSLSocketFactory {
 
-    private SSLSocketFactory delegate;
+    private final SSLSocketFactory delegate;
 
-    public TlsSslSocketFactory(TrustManager[] trustManagers) throws KeyManagementException, NoSuchAlgorithmException {
-        SSLContext context = SSLContext.getInstance("TLS");
-        context.init(null, trustManagers, null);
-        delegate = context.getSocketFactory();
+    TlsSslSocketFactory(SSLSocketFactory delegate) {
+        this.delegate = delegate;
     }
 
     @Override
