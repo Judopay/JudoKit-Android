@@ -24,7 +24,7 @@ public class FlipAnimation extends Animation {
      *
      * @param fromView First view in the transition.
      * @param toView   Second view in the transition.
-     * @param durationMillis
+     * @param durationMillis duration in milliseconds for the animation
      */
     public FlipAnimation(View fromView, View toView, int durationMillis) {
         this.fromView = fromView;
