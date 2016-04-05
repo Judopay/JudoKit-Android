@@ -1,24 +1,24 @@
-# judoNative SDK for Android [ ![Download](https://api.bintray.com/packages/judopay/maven/android-sdk/images/download.svg) ](https://bintray.com/judopay/maven/android-sdk/_latestVersion)
+# Judo Android SDK [ ![Download](https://api.bintray.com/packages/judopay/maven/android-sdk/images/download.svg) ](https://bintray.com/judopay/maven/android-sdk/_latestVersion)
 
-The judoNative Android library lets you integrate secure in-app card payments into your Android app. Judo's SDK enables a faster, simpler and more secure payment experience within your app. 
+The judo Android library lets you integrate secure in-app card payments into your Android app. Judo's SDK enables a faster, simpler and more secure payment experience within your app. 
 
-You can use our out of the box UI for a fully PCI Level 1 compliant payment experience that is customisable to match your app. Alternatively, you can also use the RESTful API directly to implement your own UI.
+You can use our out of the box UI for a fully PCI Level 1 compliant payment experience that is customizable to match your app. Alternatively, you can also use the RESTful API directly to implement your own UI.
 
 ##### **\*\*\*Due to industry-wide security updates, versions below 5.0 of this SDK will no longer be supported after 1st Oct 2016. For more information regarding these updates, please read our blog [here](http://hub.judopay.com/pci31-security-updates/).*****
 
 ## Getting started
 ##### 1. Add the library to your project
-If you're using Android Studio and Gradle, you can just add the android-sdk as a dependency in your app's build.gradle file:
+If you're using Android Studio and Gradle, you can just add the `android-sdk` as a dependency in your app's `build.gradle` file:
 ```groovy
 compile 'com.judopay:android-sdk:5.2'
 ```
-##### 2. Initialise the SDK
-From your app's main Activity class, or Application class, initialise the judo SDK with your API token and secret:
+##### 2. Initialize the SDK
+From your app's main Activity class, or Application class, initialize the judo SDK with your API token and secret:
 ```java
 Judo.setup("MY_API_TOKEN", "MY_API_SECRET", Judo.SANDBOX);
 ```
 ##### 3. Perform a test payment
-To show the payment screen, create an Intent for the PaymentActivity with the required Intent extras:
+To show the payment screen, create an Intent for the `PaymentActivity` with the required Intent extras:
 ```java
 Intent intent = new Intent(activity, PaymentActivity.class);
 intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
@@ -48,13 +48,13 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 ## Android theming
 
-The judoNative Android SDK provides 3 base Themes for the out-of-the-box UI, which can be used to customize the appearance of the payment form:
+The judo Android SDK provides 3 base Themes for the out of the box UI, which can be used to customize the appearance of the payment form:
 
   - **Theme.Judo** — Theme with dark background and action bar
   - **Theme.Judo.Light** — Theme with light background and action bar
   - **Theme.Judo.Light.DarkActionBar** — Theme with light background and dark action bar
   
-Depending on the styles used in your app, you should expand on the most appropriate theme to ensure a seamless user experience.
+Depending on the styles used in your app, you should expand on the most appropriate theme to ensure a seamless user experience:
 
 ![Screenshot of judo light theme](/samples/screens/android-theme-light.png)
 ![Screenshot of judo light theme](/samples/screens/android-theme-dark.png)
@@ -72,7 +72,7 @@ Depending on the styles used in your app, you should expand on the most appropri
         <item name="colorControlActivated">#3F51B5</item> // form field hint colour
     </style>
     ```
-2. Specify the activity in your AndroidManifest.xml file with the customized theme:
+2. Specify the activity in your `AndroidManifest.xml` file with the customized theme:
 ```xml
    <activity
       android:name="com.judopay.PaymentActivity"
