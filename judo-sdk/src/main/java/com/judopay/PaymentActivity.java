@@ -9,7 +9,7 @@ import static com.judopay.Judo.JUDO_OPTIONS;
  * Displays a card entry form to the user, allowing for a payment to be made.
  * To launch the PaymentActivity, call {@link android.app.Activity#startActivityForResult(Intent, int)}
  * with an Intent the configuration options:
- *
+ * <p/>
  * <pre class="prettyprint">
  * Intent intent = new Intent(this, PaymentActivity.class);
  * intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
@@ -18,10 +18,10 @@ import static com.judopay.Judo.JUDO_OPTIONS;
  * .setAmount("1.99")
  * .setConsumerRef("consumerRef")
  * .build());
- *
+ * <p/>
  * startActivityForResult(intent, PAYMENT_REQUEST);
  * </pre>
- *
+ * <p/>
  * See {@link JudoOptions} for the full list of supported options
  */
 public final class PaymentActivity extends JudoActivity {
@@ -50,7 +50,7 @@ public final class PaymentActivity extends JudoActivity {
 
     @Override
     public void onBackPressed() {
-        if (!paymentFragment.isPaymentInProgress()) {
+        if (paymentFragment != null && !paymentFragment.isPaymentInProgress()) {
             super.onBackPressed();
         }
     }
