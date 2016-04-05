@@ -1,0 +1,17 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.judopay">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application>
+
+        <meta-data
+            android:name="@string/judo_api_token"
+            android:value="${apiToken}" />
+        <meta-data
+            android:name="@string/judo_api_secret"
+            android:value="${apiSecret}" />
+
+    </application>
+
+</manifest>

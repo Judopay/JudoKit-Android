@@ -17,7 +17,7 @@ import java.net.UnknownHostException;
 import okhttp3.Headers;
 import okhttp3.internal.http.RealResponseBody;
 import okio.Buffer;
-import retrofit2.HttpException;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 
 import static org.mockito.Matchers.any;
@@ -42,7 +42,7 @@ public class RegisterCardPresenterTest {
     JudoApiService apiService;
 
     @Mock
-    PaymentFormView paymentFormView;
+    TransactionCallbacks transactionCallbacks;
 
     private Gson gson = new Gson();
     private String judoId = "123456";
@@ -51,7 +51,7 @@ public class RegisterCardPresenterTest {
 
     @Test
     public void shouldRegisterCard() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
         when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.<Receipt>empty());
 
         presenter.performRegisterCard(card, new JudoOptions.Builder()
@@ -64,7 +64,7 @@ public class RegisterCardPresenterTest {
 
     @Test
     public void showShowLoadingWhenSubmittingCard() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
 
         when(card.getCardAddress()).thenReturn(cardAddress);
         when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.<Receipt>empty());
@@ -74,12 +74,12 @@ public class RegisterCardPresenterTest {
                 .setConsumerRef(consumer)
                 .build());
 
-        verify(paymentFormView).showLoading();
+        verify(transactionCallbacks).showLoading();
     }
 
     @Test
     public void shouldFinishPaymentFormViewOnSuccess() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
 
         when(receipt.isSuccess()).thenReturn(true);
         when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.just(receipt));
@@ -89,13 +89,13 @@ public class RegisterCardPresenterTest {
                 .setConsumerRef(consumer)
                 .build());
 
-        verify(paymentFormView).finish(eq(receipt));
-        verify(paymentFormView).hideLoading();
+        verify(transactionCallbacks).onSuccess(eq(receipt));
+        verify(transactionCallbacks).hideLoading();
     }
 
     @Test
     public void shouldShowDeclinedMessageWhenDeclined() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
 
         when(receipt.isSuccess()).thenReturn(false);
 
@@ -106,21 +106,21 @@ public class RegisterCardPresenterTest {
                 .setConsumerRef(consumer)
                 .build());
 
-        verify(paymentFormView).showDeclinedMessage(eq(receipt));
-        verify(paymentFormView).hideLoading();
+        verify(transactionCallbacks).onDeclined(eq(receipt));
+        verify(transactionCallbacks).hideLoading();
     }
 
     @Test
     public void shouldHideLoadingIfReconnectAndPaymentNotInProgress() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
         presenter.reconnect();
 
-        verify(paymentFormView).hideLoading();
+        verify(transactionCallbacks).hideLoading();
     }
 
     @Test
     public void shouldShowLoadingIfReconnectAndPaymentInProgress() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
 
         when(card.getCardAddress()).thenReturn(cardAddress);
         when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.<Receipt>empty());
@@ -131,12 +131,12 @@ public class RegisterCardPresenterTest {
                 .build());
 
         presenter.reconnect();
-        verify(paymentFormView, times(2)).showLoading();
+        verify(transactionCallbacks, times(2)).showLoading();
     }
 
     @Test
     public void shouldStart3dSecureWebViewIfRequired() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
 
         when(receipt.isSuccess()).thenReturn(false);
         when(receipt.is3dSecureRequired()).thenReturn(true);
@@ -148,13 +148,13 @@ public class RegisterCardPresenterTest {
                 .setConsumerRef(consumer)
                 .build());
 
-        verify(paymentFormView).setLoadingText(eq(R.string.redirecting));
-        verify(paymentFormView).start3dSecureWebView(eq(receipt), eq(presenter));
+        verify(transactionCallbacks).setLoadingText(eq(R.string.redirecting));
+        verify(transactionCallbacks).start3dSecureWebView(eq(receipt), eq(presenter));
     }
 
     @Test
     public void shouldReturnReceiptWhenBadRequest() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
 
         RealResponseBody responseBody = new RealResponseBody(Headers.of("SdkVersion", "5.0"), new Buffer());
 
@@ -167,12 +167,12 @@ public class RegisterCardPresenterTest {
                 .setConsumerRef(consumer)
                 .build());
 
-        verify(paymentFormView).showDeclinedMessage(any(Receipt.class));
+        verify(transactionCallbacks).onError(any(Receipt.class));
     }
 
     @Test
     public void shouldShowConnectionErrorDialog() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(paymentFormView, apiService, scheduler, gson);
+        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
         when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.<Receipt>error(new UnknownHostException()));
 
         presenter.performRegisterCard(card, new JudoOptions.Builder()
@@ -181,7 +181,7 @@ public class RegisterCardPresenterTest {
                 .build());
 
         verify(apiService).registerCard(any(RegisterCardRequest.class));
-        verify(paymentFormView).showConnectionErrorDialog();
+        verify(transactionCallbacks).onConnectionError();
     }
 
 }

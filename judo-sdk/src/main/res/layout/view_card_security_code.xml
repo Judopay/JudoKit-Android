@@ -3,26 +3,27 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <com.judopay.view.CvvImageView
-        android:id="@+id/cvv_image_view"
-        style="@style/judo_cvv_image"
+    <com.judopay.view.CardSecurityCodeView
+        android:id="@+id/security_code_image_view"
+        style="@style/Widget.Judo.CardImage"
+        android:layout_marginTop="15dp"
         tools:ignore="RtlHardcoded" />
 
     <com.judopay.view.JudoTextInputLayout
-        android:id="@+id/cvv_input_layout"
-        style="@style/input_layout">
+        android:id="@+id/security_code_input_layout"
+        style="@style/EntryLayout">
 
         <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/cvv_edit_text"
-            style="@style/judo_cvv"
+            android:id="@+id/security_code_edit_text"
+            style="@style/Widget.Judo.SecurityCode"
             android:layout_weight="1" />
 
     </com.judopay.view.JudoTextInputLayout>
 
     <TextView
-        android:id="@+id/cvv_helper_text"
+        android:id="@+id/security_code_helper_text"
         style="@style/judo_hint_text"
-        android:layout_below="@id/cvv_input_layout"
+        android:layout_below="@id/security_code_input_layout"
         android:text="@string/security_code"
         tools:visibility="visible" />
 

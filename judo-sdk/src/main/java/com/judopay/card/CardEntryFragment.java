@@ -26,11 +26,11 @@ import com.judopay.model.CardType;
 import com.judopay.model.Country;
 import com.judopay.view.CardNumberEntryView;
 import com.judopay.view.CountrySpinner;
-import com.judopay.view.CvvEntryView;
 import com.judopay.view.ExpiryDateEntryView;
 import com.judopay.view.IssueNumberEntryView;
 import com.judopay.view.PostcodeEntryView;
 import com.judopay.view.ScrollOnFocusChangeListener;
+import com.judopay.view.SecurityCodeEntryView;
 import com.judopay.view.SimpleTextWatcher;
 import com.judopay.view.SingleClickOnClickListener;
 import com.judopay.view.StartDateEntryView;
@@ -45,15 +45,14 @@ import static com.judopay.Judo.isAvsEnabled;
  * <code>
  * CardEntryFragment fragment = new CardEntryFragment();
  * Bundle args = new Bundle();
- *
+ * <p/>
  * args.putParcelable(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
- *      .setJudoId("123456")
- *      .setAmount("1.99")
- *      .setCurrency(Currency.USD)
- *      .setButtonLabel("Perform payment")
- *      .setSecureServerMessageShown(true)
- *      .build());
- *
+ * .setJudoId("123456")
+ * .setAmount("1.99")
+ * .setCurrency(Currency.USD)
+ * .setButtonLabel("Perform payment")
+ * .setSecureServerMessageShown(true)
+ * .build());
  * fragment.setArguments(args);
  * </code>
  */
@@ -61,7 +60,7 @@ public final class CardEntryFragment extends Fragment {
 
     private Button paymentButton;
     private CountrySpinner countrySpinner;
-    private CvvEntryView cvvEntryView;
+    private SecurityCodeEntryView securityCodeEntryView;
     private CardNumberEntryView cardNumberEntryView;
 
     private View startDateAndIssueNumberContainer;
@@ -83,7 +82,7 @@ public final class CardEntryFragment extends Fragment {
 
         paymentButton = (Button) view.findViewById(R.id.payment_button);
 
-        cvvEntryView = (CvvEntryView) view.findViewById(R.id.cvv_entry_view);
+        securityCodeEntryView = (SecurityCodeEntryView) view.findViewById(R.id.security_code_entry_view);
         cardNumberEntryView = (CardNumberEntryView) view.findViewById(R.id.card_number_entry_view);
         expiryDateEntryView = (ExpiryDateEntryView) view.findViewById(R.id.expiry_date_entry_view);
 
@@ -124,21 +123,20 @@ public final class CardEntryFragment extends Fragment {
 
                 CardToken cardToken = judoOptions.getCardToken();
                 if (cardToken != null) {
-                    cardNumberEntryView.setCardType(cardToken.getType());
-                    cvvEntryView.setCardType(cardToken.getType());
-                    cvvEntryView.requestFocus();
+                    cardNumberEntryView.setCardType(cardToken.getType(), false);
+                    securityCodeEntryView.setCardType(cardToken.getType(), false);
+                    securityCodeEntryView.requestFocus();
                 } else {
                     if (judoOptions.getCardNumber() != null) {
-                        cardNumberEntryView.setText(judoOptions.getCardNumber());
-
                         int cardType = CardType.fromCardNumber(judoOptions.getCardNumber());
-                        cardNumberEntryView.setCardType(cardType);
+                        cardNumberEntryView.setCardType(cardType, false);
+                        cardNumberEntryView.setText(judoOptions.getCardNumber());
                         expiryDateEntryView.requestFocus();
                     }
 
                     if (judoOptions.getExpiryYear() != null && judoOptions.getExpiryMonth() != null) {
                         expiryDateEntryView.setText(getString(R.string.expiry_date_format, judoOptions.getExpiryMonth(), judoOptions.getExpiryYear()));
-                        cvvEntryView.requestFocus();
+                        securityCodeEntryView.requestFocus();
                     }
                 }
 
@@ -154,7 +152,7 @@ public final class CardEntryFragment extends Fragment {
         initialiseCardNumber(validationWatcher);
         initialiseExpiryDate(validationWatcher);
 
-        cvvEntryView.addTextChangedListener(validationWatcher);
+        securityCodeEntryView.addTextChangedListener(validationWatcher);
         startDateEntryView.addTextChangedListener(validationWatcher);
         issueNumberEntryView.addTextChangedListener(validationWatcher);
 
@@ -196,7 +194,7 @@ public final class CardEntryFragment extends Fragment {
         if (judoOptions.getCardToken() == null) {
             expiryDateEntryView.addTextChangedListener(formValidator);
         } else {
-            expiryDateEntryView.setExpiryDate(judoOptions.getCardToken().getEndDate());
+            expiryDateEntryView.setExpiryDate(judoOptions.getCardToken().getFormattedEndDate());
             expiryDateEntryView.setEnabled(false);
         }
     }
@@ -205,7 +203,7 @@ public final class CardEntryFragment extends Fragment {
         if (judoOptions.getCardToken() == null) {
             cardNumberEntryView.addTextChangedListener(formValidator);
         } else {
-            cardNumberEntryView.setTokenizedNumber(judoOptions.getCardToken().getLastFour());
+            cardNumberEntryView.setTokenCard(judoOptions.getCardToken());
         }
     }
 
@@ -220,7 +218,7 @@ public final class CardEntryFragment extends Fragment {
     private void updateFormView() {
         PaymentForm.Builder builder = new PaymentForm.Builder()
                 .setCardNumber(cardNumberEntryView.getText())
-                .setCvv(cvvEntryView.getText())
+                .setSecurityCode(securityCodeEntryView.getText())
                 .setCountry(getCountry())
                 .setPostcode(postcodeEntryView.getText())
                 .setIssueNumber(issueNumberEntryView.getText())
@@ -241,7 +239,7 @@ public final class CardEntryFragment extends Fragment {
                 .build(builder.build());
 
         if (cardToken == null) {
-            cardNumberEntryView.setCardType(formView.getCardType());
+            cardNumberEntryView.setCardType(formView.getCardType(), true);
         }
 
         updateFormErrors(formView);
@@ -263,11 +261,10 @@ public final class CardEntryFragment extends Fragment {
     }
 
     private void updateCvvErrors(PaymentFormValidation formView) {
-        cvvEntryView.setHint(formView.getCvvLabel());
-        cvvEntryView.setAlternateHint(formView.getCvvHint());
+        securityCodeEntryView.setAlternateHint(formView.getSecurityCodeHint());
 
-        cvvEntryView.setMaxLength(formView.getCvvLength());
-        cvvEntryView.setCardType(formView.getCardType());
+        securityCodeEntryView.setMaxLength(formView.getSecurityCodeLength());
+        securityCodeEntryView.setCardType(formView.getCardType(), true);
     }
 
     private void showStartDateAndIssueNumberErrors(StartDateAndIssueNumberValidation startDateAndIssueNumberValidation) {
@@ -295,7 +292,6 @@ public final class CardEntryFragment extends Fragment {
 
     private void showCardNumberErrors(CardNumberValidation cardNumberValidation) {
         cardNumberEntryView.setError(cardNumberValidation.getError(), cardNumberValidation.isShowError());
-        cardNumberEntryView.setMaxLength(cardNumberValidation.getMaxLength());
     }
 
     private void moveFieldFocus(PaymentFormValidation formView) {
@@ -306,8 +302,8 @@ public final class CardEntryFragment extends Fragment {
                 expiryDateEntryView.requestFocus();
             }
         } else if (expiryDateEntryView.hasFocus() && formView.isExpiryDateEntryComplete() && !formView.isShowExpiryDateError()) {
-            cvvEntryView.requestFocus();
-        } else if (cvvEntryView.hasFocus() && formView.isCvvValid()) {
+            securityCodeEntryView.requestFocus();
+        } else if (securityCodeEntryView.hasFocus() && formView.isSecurityCodeValid()) {
             if (countryAndPostcodeContainer.getVisibility() == View.VISIBLE) {
                 postcodeEntryView.requestFocus();
             }
@@ -326,7 +322,7 @@ public final class CardEntryFragment extends Fragment {
         Card.Builder cardBuilder = new Card.Builder()
                 .setCardNumber(cardNumberEntryView.getText())
                 .setExpiryDate(expiryDateEntryView.getText())
-                .setCvv(cvvEntryView.getText());
+                .setSecurityCode(securityCodeEntryView.getText());
 
         Address.Builder addressBuilder = new Address.Builder()
                 .setPostCode(postcodeEntryView.getText());

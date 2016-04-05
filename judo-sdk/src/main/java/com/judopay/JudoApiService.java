@@ -22,7 +22,7 @@ import rx.Observable;
 
 /**
  * Judo interface with Retrofit annotated list of judo API calls that can be performed.
- * Use the {@link com.judopay.api.JudoApiServiceFactory#getInstance(Context)} method to obtain an
+ * Use the {@link com.judopay.api.JudoApiServiceFactory#createApiService(Context, int)} method to obtain an
  * instance. See <a href="https://github.com/square/retrofit">GitHub</a> for details.
  */
 public interface JudoApiService {
@@ -152,6 +152,16 @@ public interface JudoApiService {
     Observable<Receipts> collectionReceipts(@Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
     /**
+     * @param receiptId the receipt ID to use for finding the receipt
+     * @param pageSize  maximum number of results to return, default is 10
+     * @param offset    the position to return results from, default is 0
+     * @param sort      the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
+     * @return the receipt matched with the receiptId
+     */
+    @GET("transactions/{receiptId}")
+    Observable<Receipt> findReceipt(@Path("receiptId") String receiptId, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+
+    /**
      * List all consumer receipts for a consumer token
      *
      * @param consumerToken the consumer to use for finding receipts for
@@ -162,19 +172,6 @@ public interface JudoApiService {
      */
     @GET("consumers/{consumerToken}")
     Observable<Receipts> consumerReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
-
-    /**
-     * List receipts for a consumer matching a given receiptId
-     *
-     * @param consumerToken the consumer to use for finding receipts for
-     * @param receiptId     the receipt ID to find consumer receipts for
-     * @param pageSize      maximum number of results to return, default is 10
-     * @param offset        the position to return results from, default is 0
-     * @param sort          the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
-     * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
-     */
-    @GET("consumers/{consumerToken}/{receiptId}")
-    Observable<Receipts> consumerReceipts(@Path("consumerToken") String consumerToken, @Path("receiptId") String receiptId, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
     /**
      * List all payment receipts for a consumer
@@ -189,19 +186,6 @@ public interface JudoApiService {
     Observable<Receipts> consumerPaymentReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
     /**
-     * List all payment receipts for a consumer matching a given receiptId
-     *
-     * @param consumerToken the consumer to use for finding receipts for
-     * @param receiptId     the receipt ID to find consumer receipts for
-     * @param pageSize      maximum number of results to return, default is 10
-     * @param offset        the position to return results from, default is 0
-     * @param sort          the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
-     * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
-     */
-    @GET("consumers/{consumerToken}/payments/{receiptId}")
-    Observable<Receipts> consumerPaymentReceipts(@Path("consumerToken") String consumerToken, @Path("receiptId") String receiptId, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
-
-    /**
      * List all pre-auth receipts for a consumer
      *
      * @param consumerToken the consumer to use for finding receipts for
@@ -212,19 +196,6 @@ public interface JudoApiService {
      */
     @GET("consumers/{consumerToken}/preauths")
     Observable<Receipts> consumerPreAuthReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
-
-    /**
-     * List all pre-auth receipts for a consumer matching a given receiptId
-     *
-     * @param consumerToken the consumer to use for finding receipts for
-     * @param receiptId     the receipt ID to find consumer receipts for
-     * @param pageSize      maximum number of results to return, default is 10
-     * @param offset        the position to return results from, default is 0
-     * @param sort          the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
-     * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
-     */
-    @GET("consumers/{consumerToken}/preauths/{receiptId}")
-    Observable<Receipts> consumerPreAuthReceipts(@Path("consumerToken") String consumerToken, @Path("receiptId") String receiptId, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
     /**
      * List all collection receipts for a consumer
@@ -239,19 +210,6 @@ public interface JudoApiService {
     Observable<Receipts> consumerCollectionReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
     /**
-     * List all collection receipts for a consumer matching a given receiptId
-     *
-     * @param consumerToken the consumer to use for finding receipts for
-     * @param receiptId     the receipt ID to find consumer receipts for
-     * @param pageSize      maximum number of results to return, default is 10
-     * @param offset        the position to return results from, default is 0
-     * @param sort          the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
-     * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
-     */
-    @GET("consumers/{consumerToken}/collections/{receiptId}")
-    Observable<Receipts> consumerCollectionReceipts(@Path("consumerToken") String consumerToken, @Path("receiptId") String receiptId, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
-
-    /**
      * List all refund receipts for a consumer
      *
      * @param consumerToken the consumer to use for finding receipts for
@@ -262,18 +220,5 @@ public interface JudoApiService {
      */
     @GET("consumers/{consumerToken}/refunds")
     Observable<Receipts> consumerRefundReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
-
-    /**
-     * List all refund receipts for a consumer matching a given receiptId
-     *
-     * @param consumerToken the consumer to use for finding receipts for
-     * @param receiptId     the receipt ID to find consumer receipts for
-     * @param pageSize      maximum number of results to return, default is 10
-     * @param offset        the position to return results from, default is 0
-     * @param sort          the sort type to be used, can be either {@code time-ascending} or {@code time-descending}
-     * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
-     */
-    @GET("consumers/{consumerToken}/refunds/{receiptId}")
-    Observable<Receipts> consumerRefundReceipts(@Path("consumerToken") String consumerToken, @Path("receiptId") String receiptId, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
 }

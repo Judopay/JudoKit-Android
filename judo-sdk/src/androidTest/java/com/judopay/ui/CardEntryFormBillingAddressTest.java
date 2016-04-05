@@ -12,10 +12,11 @@ import com.judopay.R;
 import com.judopay.model.Country;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -24,7 +25,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.judopay.ui.util.JudoViewMatchers.isDisabled;
+import static com.judopay.ui.util.ViewMatchers.isDisabled;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -32,11 +33,6 @@ public class CardEntryFormBillingAddressTest {
 
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
-
-    @Before
-    public void setupJudoSdk() {
-        Judo.setup("", "", Judo.Environment.SANDBOX);
-    }
 
     @Test
     public void shouldDisablePayButtonWhenOtherBillingCountrySelected() {
@@ -50,7 +46,7 @@ public class CardEntryFormBillingAddressTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
 
         onView(withId(R.id.country_spinner))
@@ -73,7 +69,7 @@ public class CardEntryFormBillingAddressTest {
                 .setJudoId("100407196")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef("consumerRef")
+                .setConsumerRef(UUID.randomUUID().toString())
                 .build());
         return intent;
     }

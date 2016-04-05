@@ -4,16 +4,17 @@
 
     <com.judopay.view.CardTypeImageView
         android:id="@+id/card_type_view"
-        style="@style/judo_card_image"
+        style="@style/Widget.Judo.CardImage"
+        android:layout_marginTop="14.5dp"
         tools:ignore="RtlHardcoded" />
 
     <com.judopay.view.JudoTextInputLayout
         android:id="@+id/card_number_input_layout"
-        style="@style/input_layout">
+        style="@style/EntryLayout">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/card_number_edit_text"
-            style="@style/judo_card_number" />
+            style="@style/Widget.Judo.CardNumber" />
 
     </com.judopay.view.JudoTextInputLayout>
 

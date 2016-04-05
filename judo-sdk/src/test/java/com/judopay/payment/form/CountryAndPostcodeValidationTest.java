@@ -17,7 +17,7 @@ public class CountryAndPostcodeValidationTest {
         CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
                 new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")
-                        .setCvv("")
+                        .setSecurityCode("")
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
@@ -30,11 +30,66 @@ public class CountryAndPostcodeValidationTest {
     }
 
     @Test
+    public void shouldValidateUkPostcodeWithSpacesAsValid() {
+        CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
+                new PaymentForm.Builder()
+                        .setCardNumber("4282730000002397")
+                        .setSecurityCode("")
+                        .setExpiryDate("12/99")
+                        .setStartDate("")
+                        .setIssueNumber("")
+                        .setPostcode("SW16 1AA")
+                        .setCountry(new Country(0, Country.UNITED_KINGDOM))
+                        .setAddressRequired(true)
+                        .build(), true, false, true, true);
+
+        assertThat(countryAndPostcodeValidation.isPostcodeEntryComplete(), is(true));
+        assertThat(countryAndPostcodeValidation.isShowPostcodeError(), is(false));
+    }
+
+
+    @Test
+    public void shouldValidate6DigitUkPostcodeWithSpacesAsValid() {
+        CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
+                new PaymentForm.Builder()
+                        .setCardNumber("4282730000002397")
+                        .setSecurityCode("")
+                        .setExpiryDate("12/99")
+                        .setStartDate("")
+                        .setIssueNumber("")
+                        .setPostcode("ME1 2UY")
+                        .setCountry(new Country(0, Country.UNITED_KINGDOM))
+                        .setAddressRequired(true)
+                        .build(), true, false, true, true);
+
+        assertThat(countryAndPostcodeValidation.isPostcodeEntryComplete(), is(true));
+        assertThat(countryAndPostcodeValidation.isShowPostcodeError(), is(false));
+    }
+
+    @Test
+    public void shouldValidateUkPostcodeAsValid() {
+        CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
+                new PaymentForm.Builder()
+                        .setCardNumber("4282730000002397")
+                        .setSecurityCode("")
+                        .setExpiryDate("12/99")
+                        .setStartDate("")
+                        .setIssueNumber("")
+                        .setPostcode("SW166AT")
+                        .setCountry(new Country(0, Country.UNITED_KINGDOM))
+                        .setAddressRequired(true)
+                        .build(), true, false, true, true);
+
+        assertThat(countryAndPostcodeValidation.isPostcodeEntryComplete(), is(true));
+        assertThat(countryAndPostcodeValidation.isShowPostcodeError(), is(false));
+    }
+
+    @Test
     public void shouldRequireCountryAndPostcodeWhenCardDetailsEntered() {
         CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
                 new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")
-                        .setCvv("789")
+                        .setSecurityCode("789")
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
@@ -51,7 +106,7 @@ public class CountryAndPostcodeValidationTest {
         CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
                 new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")
-                        .setCvv("789")
+                        .setSecurityCode("789")
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
@@ -68,7 +123,7 @@ public class CountryAndPostcodeValidationTest {
         CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
                 new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")
-                        .setCvv("789")
+                        .setSecurityCode("789")
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
@@ -85,7 +140,7 @@ public class CountryAndPostcodeValidationTest {
         CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
                 new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")
-                        .setCvv("789")
+                        .setSecurityCode("789")
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
@@ -102,7 +157,7 @@ public class CountryAndPostcodeValidationTest {
         CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
                 new PaymentForm.Builder()
                 .setCardNumber("4282730000002397")
-                .setCvv("789")
+                .setSecurityCode("789")
                 .setExpiryDate("12/99")
                 .setStartDate("")
                 .setIssueNumber("")
@@ -119,7 +174,7 @@ public class CountryAndPostcodeValidationTest {
         CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
                 new PaymentForm.Builder()
                 .setCardNumber("4282730000002397")
-                .setCvv("789")
+                .setSecurityCode("789")
                 .setExpiryDate("12/99")
                 .setStartDate("")
                 .setIssueNumber("")
@@ -136,7 +191,7 @@ public class CountryAndPostcodeValidationTest {
         CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
                 new PaymentForm.Builder()
                 .setCardNumber("4282730000002397")
-                .setCvv("789")
+                .setSecurityCode("789")
                 .setExpiryDate("12/99")
                 .setStartDate("")
                 .setIssueNumber("")
@@ -153,7 +208,7 @@ public class CountryAndPostcodeValidationTest {
         CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
                 new PaymentForm.Builder()
                 .setCardNumber("4282730000002397")
-                .setCvv("789")
+                .setSecurityCode("789")
                 .setExpiryDate("12/99")
                 .setStartDate("")
                 .setIssueNumber("")
@@ -170,7 +225,7 @@ public class CountryAndPostcodeValidationTest {
         CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
                 new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")
-                        .setCvv("789")
+                        .setSecurityCode("789")
                         .setExpiryDate("12/99")
                         .setStartDate("")
                         .setIssueNumber("")
@@ -188,7 +243,7 @@ public class CountryAndPostcodeValidationTest {
         CountryAndPostcodeValidation countryAndPostcodeValidation = new CountryAndPostcodeValidation(
                 new PaymentForm.Builder()
                         .setCardNumber("4282730000002397")
-                        .setCvv("789")
+                        .setSecurityCode("789")
                         .setExpiryDate("12/99")
                         .setStartDate("12/12")
                         .setIssueNumber("01")

@@ -35,7 +35,7 @@ public class RegisterCardTest {
 
     @Before
     public void setupJudoSdk() {
-        Judo.setup("823Eja2fEM6E9NAE", "382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6", Judo.Environment.SANDBOX);
+        Judo.setEnvironment(Judo.SANDBOX);
     }
 
     @Test
@@ -49,7 +49,7 @@ public class RegisterCardTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("125"));
 
         onView(withId(R.id.payment_button))

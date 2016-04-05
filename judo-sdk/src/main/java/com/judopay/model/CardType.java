@@ -28,9 +28,6 @@ public class CardType {
     public static final int MAESTRO = 10;
     public static final int VISA_DEBIT = 11;
 
-    public static final String VISA_PATTERN = "0000 0000 0000 0000";
-    public static final String AMEX_PATTERN = "0000 000000 00000";
-
     public static int fromCardNumber(String cardNumber) {
         if (startsWith(VISA_PREFIXES, cardNumber) || cardNumber.matches(REGEX_VISA)) {
             return VISA;

@@ -12,7 +12,6 @@ import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,11 +30,6 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
 
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
-
-    @Before
-    public void setupJudoSdk() {
-        Judo.setup("fakeApiToken", "fakeApiSecret", Judo.Environment.SANDBOX);
-    }
 
     @Test
     public void shouldMoveToExpiryDateFieldWhenValidCardNumberEntered() {
@@ -61,7 +55,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .check(matches(hasFocus()));
     }
 
@@ -78,7 +72,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
 
         onView(withId(R.id.post_code_edit_text))
@@ -129,7 +123,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .check(matches(hasFocus()));
     }
 
@@ -152,7 +146,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("789"));
 
         onView(withId(R.id.post_code_edit_text))
@@ -170,5 +164,4 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
                 .build());
         return intent;
     }
-
 }

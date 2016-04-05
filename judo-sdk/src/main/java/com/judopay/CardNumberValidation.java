@@ -6,7 +6,6 @@ import com.judopay.model.CardType;
 public class CardNumberValidation {
 
     private int error;
-    private final int maxLength;
     private final boolean valid;
     private final boolean showError;
     private final boolean entryComplete;
@@ -21,7 +20,6 @@ public class CardNumberValidation {
         this.entryComplete = cardNumberLengthValid;
         this.valid = isCardNumberValid(cardNumber, cardType, tokenCard, maestroSupported, amexSupported) && cardNumberLengthValid;
         this.showError = !valid && (cardNumberLengthValid || maestroAndNotSupported || amexAndNotSupported);
-        this.maxLength = getMaxLength(cardType);
 
         if (maestroAndNotSupported) {
             this.error = R.string.error_maestro_not_supported;
@@ -38,20 +36,6 @@ public class CardNumberValidation {
 
     private boolean isMaestroAndNotSupported(int cardType, boolean maestroSupported) {
         return cardType == CardType.MAESTRO && !maestroSupported;
-    }
-
-    private int getMaxLength(int cardType) {
-        switch (cardType) {
-            case CardType.AMEX:
-                return 17;
-
-            default:
-                return 19;
-        }
-    }
-
-    public int getMaxLength() {
-        return maxLength;
     }
 
     public int getError() {

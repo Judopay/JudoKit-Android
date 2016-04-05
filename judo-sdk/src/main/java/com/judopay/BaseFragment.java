@@ -3,6 +3,7 @@ package com.judopay;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
@@ -13,14 +14,14 @@ import android.widget.TextView;
 
 import com.judopay.card.CardEntryFragment;
 import com.judopay.card.CardEntryListener;
-import com.judopay.model.CardToken;
 import com.judopay.model.Receipt;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
 import com.judopay.secure3d.ThreeDSecureWebView;
-import com.judopay.view.Dialogs;
 
-abstract class BaseFragment extends Fragment implements PaymentFormView, CardEntryListener {
+import static android.app.PendingIntent.FLAG_ONE_SHOT;
+
+abstract class BaseFragment extends Fragment implements TransactionCallbacks, CardEntryListener {
 
     private static final String TAG_PAYMENT_FORM = "CardEntryFragment";
     private static final String TAG_3DS_DIALOG = "3dSecureDialog";
@@ -34,13 +35,12 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, CardEnt
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setRetainInstance(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_payment, container, false);
+        return inflater.inflate(R.layout.fragment_base, container, false);
     }
 
     @Override
@@ -71,36 +71,43 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, CardEnt
         }
     }
 
-    CardEntryFragment createPaymentFormFragment() {
-        JudoOptions judoOptions;
+    @Override
+    public void onSuccess(Receipt receipt) {
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_RECEIPT, receipt);
 
-        if (getArguments().containsKey(Judo.JUDO_OPTIONS)) {
-            judoOptions = getArguments().getParcelable(Judo.JUDO_OPTIONS);
-        } else {
-            CardToken cardToken = getArguments().getParcelable(Judo.JUDO_CARD_TOKEN);
-
-            judoOptions = new JudoOptions.Builder()
-                    .setCardToken(cardToken)
-                    .build();
-        }
-
-        return CardEntryFragment.newInstance(judoOptions, this);
+        sendResult(Judo.RESULT_SUCCESS, intent);
     }
 
-    JudoOptions getJudoOptions() {
-        Bundle args = getArguments();
+    @Override
+    public void onDeclined(Receipt receipt) {
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_RECEIPT, receipt);
 
-        if (args.containsKey(Judo.JUDO_OPTIONS)) {
-            return args.getParcelable(Judo.JUDO_OPTIONS);
-        } else {
-            return new JudoOptions.Builder()
-                    .setJudoId(args.getString(Judo.JUDO_ID))
-                    .setAmount(args.getString(Judo.JUDO_AMOUNT))
-                    .setCardToken((CardToken) args.getParcelable(Judo.JUDO_CARD_TOKEN))
-                    .setCurrency(args.getString(Judo.JUDO_CURRENCY))
-                    .setConsumerRef(args.getString(Judo.JUDO_CONSUMER))
-                    .setMetaData(args.getBundle(Judo.JUDO_META_DATA))
-                    .build();
+        sendResult(Judo.RESULT_DECLINED, intent);
+    }
+
+    @Override
+    public void onError(Receipt receipt) {
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_RECEIPT, receipt);
+
+        sendResult(Judo.RESULT_ERROR, intent);
+    }
+
+    @Override
+    public void onConnectionError() {
+        sendResult(Judo.RESULT_CONNECTION_ERROR, new Intent());
+    }
+
+    private void sendResult(int resultCode, Intent intent) {
+        Activity activity = getActivity();
+
+        if(activity != null && !activity.isFinishing()) {
+            try {
+                PendingIntent pendingResult = activity.createPendingResult(Judo.JUDO_REQUEST, intent, FLAG_ONE_SHOT);
+                pendingResult.send(resultCode);
+            } catch (PendingIntent.CanceledException ignore) { }
         }
     }
 
@@ -115,44 +122,10 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, CardEnt
     }
 
     @Override
-    public void finish(Receipt receipt) {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_RECEIPT, receipt);
-
-        Activity activity = getActivity();
-
-        if (activity != null) {
-            activity.setResult(Judo.RESULT_SUCCESS, intent);
-            activity.finish();
-        }
-    }
-
-    @Override
     public void dismiss3dSecureDialog() {
         if (threeDSecureDialog != null && threeDSecureDialog.isVisible()) {
             threeDSecureDialog.dismiss();
             threeDSecureDialog = null;
-        }
-    }
-
-    @Override
-    public void showDeclinedMessage(Receipt receipt) {
-        if (getArguments().getBoolean(Judo.JUDO_ALLOW_DECLINED_CARD_AMEND, true)) {
-            Dialogs.createDeclinedPaymentDialog(getActivity()).show();
-        } else {
-            setDeclinedAndFinish(receipt);
-        }
-    }
-
-    protected void setDeclinedAndFinish(Receipt receipt) {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_RECEIPT, receipt);
-
-        Activity activity = getActivity();
-
-        if (activity != null) {
-            activity.setResult(Judo.RESULT_DECLINED, intent);
-            activity.finish();
         }
     }
 
@@ -186,23 +159,14 @@ abstract class BaseFragment extends Fragment implements PaymentFormView, CardEnt
         }
     }
 
-    @Override
-    public void handleError(Receipt receipt) {
-        Activity activity = getActivity();
-        if (activity != null) {
-            if (receipt != null) {
-                Intent data = new Intent();
-                data.putExtra(Judo.JUDO_RECEIPT, receipt);
-                activity.setResult(Judo.RESULT_ERROR, data);
-            } else {
-                activity.setResult(Judo.RESULT_ERROR);
-            }
-            activity.finish();
-        }
+    CardEntryFragment createPaymentFormFragment() {
+        JudoOptions judoOptions = getArguments().getParcelable(Judo.JUDO_OPTIONS);
+        return CardEntryFragment.newInstance(judoOptions, this);
     }
 
-    @Override
-    public void showConnectionErrorDialog() {
-        Dialogs.createConnectionErrorDialog(getActivity()).show();
+    JudoOptions getJudoOptions() {
+        Bundle args = getArguments();
+        return args.getParcelable(Judo.JUDO_OPTIONS);
     }
+
 }

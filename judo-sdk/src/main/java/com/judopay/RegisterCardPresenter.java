@@ -7,20 +7,20 @@ import com.judopay.model.RegisterCardRequest;
 
 class RegisterCardPresenter extends BasePresenter {
 
-    public RegisterCardPresenter(PaymentFormView paymentFormView, JudoApiService apiService, Scheduler scheduler, Gson gson) {
-        super(paymentFormView, apiService, scheduler, gson);
+    public RegisterCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, Scheduler scheduler, Gson gson) {
+        super(callbacks, apiService, scheduler, gson);
     }
 
     void performRegisterCard(Card card, JudoOptions options) {
         this.loading = true;
 
-        paymentFormView.showLoading();
+        transactionCallbacks.showLoading();
 
         RegisterCardRequest.Builder builder = new RegisterCardRequest.Builder()
                 .setJudoId(options.getJudoId())
                 .setCardAddress(card.getCardAddress())
                 .setCardNumber(card.getCardNumber())
-                .setCv2(card.getCv2())
+                .setCv2(card.getSecurityCode())
                 .setExpiryDate(card.getExpiryDate())
                 .setMetaData(options.getMetaDataMap())
                 .setEmailAddress(options.getEmailAddress())

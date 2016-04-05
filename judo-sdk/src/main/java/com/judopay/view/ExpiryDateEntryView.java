@@ -46,8 +46,12 @@ public class ExpiryDateEntryView extends LinearLayout {
         expiryDateEditText = (EditText) findViewById(R.id.expiry_date_edit_text);
         expiryDateInputLayout = (TextInputLayout) findViewById(R.id.expiry_date_input_layout);
 
-        expiryDateEditText.setOnFocusChangeListener(new HintFocusListener(expiryDateEditText, R.string.date_hint));
-        expiryDateEditText.addTextChangedListener(new DateSeparatorTextWatcher(expiryDateEditText));
+        HintFocusListener hintFocusListener = new HintFocusListener(expiryDateEditText, R.string.date_hint);
+        expiryDateEditText.setOnFocusChangeListener(hintFocusListener);
+
+        String dateFormat = getResources().getString(R.string.date_format);
+        NumberFormatTextWatcher numberFormatTextWatcher = new NumberFormatTextWatcher(expiryDateEditText, dateFormat, true);
+        expiryDateEditText.addTextChangedListener(numberFormatTextWatcher);
     }
 
     public void setText(CharSequence text) {

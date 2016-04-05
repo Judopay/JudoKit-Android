@@ -12,7 +12,6 @@ import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,11 +30,6 @@ public class PrefillCardDataTest {
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
-    @Before
-    public void setupJudoSdk() {
-        Judo.setup("fakeApiToken", "fakeApiSecret", Judo.Environment.SANDBOX);
-    }
-
     @Test
     public void shouldHaveVisaCardNumberEnteredInPaymentForm() {
         Intent intent = new Intent();
@@ -47,7 +41,7 @@ public class PrefillCardDataTest {
                 .setCardNumber("4934123412341234")
                 .setExpiryMonth("01")
                 .setExpiryYear("20")
-                .setConsumerRef("consumerRef")
+                .setConsumerRef(UUID.randomUUID().toString())
                 .build());
 
         activityTestRule.launchActivity(intent);

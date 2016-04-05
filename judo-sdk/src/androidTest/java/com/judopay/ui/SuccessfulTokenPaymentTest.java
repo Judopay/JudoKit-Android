@@ -1,19 +1,23 @@
 package com.judopay.ui;
 
+import android.content.Context;
 import android.content.Intent;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.IdlingPolicies;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
+import com.judopay.JudoApiService;
 import com.judopay.JudoOptions;
 import com.judopay.R;
-import com.judopay.RegisterCardActivity;
 import com.judopay.TokenPaymentActivity;
+import com.judopay.integration.RxHelpers;
+import com.judopay.model.Address;
 import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
+import com.judopay.model.RegisterCardRequest;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -21,12 +25,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import rx.functions.Action1;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static com.judopay.ui.util.ActivityUtil.getResultIntent;
+import static com.judopay.integration.RxHelpers.failOnError;
 import static com.judopay.ui.util.ActivityUtil.resultCode;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -36,85 +43,85 @@ import static org.hamcrest.core.Is.is;
 public class SuccessfulTokenPaymentTest {
 
     @Rule
-    public IntentsTestRule<RegisterCardActivity> registerCardActivityTestRule = new IntentsTestRule<>(RegisterCardActivity.class, false, false);
-
-    @Rule
     public ActivityTestRule<TokenPaymentActivity> tokenPaymentActivityTestRule = new ActivityTestRule<>(TokenPaymentActivity.class, false, false);
 
     @Before
     public void setupJudoSdk() {
-        Judo.setup("823Eja2fEM6E9NAE", "382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6", Judo.Environment.SANDBOX);
+        Judo.setEnvironment(Judo.SANDBOX);
+        IdlingPolicies.setIdlingResourceTimeout(3, TimeUnit.MINUTES);
     }
 
     @Test
     public void shouldBeSuccessfulTokenPayment() {
         Judo.setAvsEnabled(false);
 
-        RegisterCardActivity registerCardActivity = registerCardActivityTestRule.launchActivity(getRegisterCardIntent());
+        Context context = InstrumentationRegistry.getContext();
+        final JudoApiService apiService = Judo.getApiService(context);
 
-        onView(ViewMatchers.withId(R.id.card_number_edit_text))
-                .perform(typeText("4976000000003436"));
+        RegisterCardRequest registerCardRequest = new RegisterCardRequest.Builder()
+                .setJudoId("100407196")
+                .setCardNumber("4976000000003436")
+                .setExpiryDate("12/20")
+                .setCv2("452")
+                .setYourConsumerReference(UUID.randomUUID().toString())
+                .build();
 
-        onView(withId(R.id.expiry_date_edit_text))
-                .perform(typeText("1220"));
+        apiService.registerCard(registerCardRequest)
+                .compose(RxHelpers.<Receipt>schedulers())
+                .subscribe(new Action1<Receipt>() {
+                    @Override
+                    public void call(Receipt receipt) {
+                        TokenPaymentActivity tokenPaymentActivity = tokenPaymentActivityTestRule.launchActivity(getTokenPaymentIntent(receipt));
 
-        onView(withId(R.id.cvv_edit_text))
-                .perform(typeText("452"));
+                        onView(withId(R.id.security_code_edit_text))
+                                .perform(typeText("452"));
 
-        onView(withId(R.id.payment_button))
-                .perform(click());
+                        onView(withId(R.id.payment_button))
+                                .perform(click());
 
-        Intent result = getResultIntent(registerCardActivity);
-        Receipt receipt = result.getParcelableExtra(Judo.JUDO_RECEIPT);
-
-        TokenPaymentActivity tokenPaymentActivity = tokenPaymentActivityTestRule.launchActivity(getTokenPaymentIntent(receipt));
-
-        onView(withId(R.id.cvv_edit_text))
-                .perform(typeText("452"));
-
-        onView(withId(R.id.payment_button))
-                .perform(click());
-
-        assertThat(resultCode(tokenPaymentActivity), is(Judo.RESULT_SUCCESS));
+                        assertThat(resultCode(tokenPaymentActivity), is(Judo.RESULT_SUCCESS));
+                    }
+                }, failOnError());
     }
 
     @Test
     public void shouldBeSuccessfulTokenPaymentWhenAvsEnabled() {
         Judo.setAvsEnabled(true);
-        RegisterCardActivity registerCardActivity = registerCardActivityTestRule.launchActivity(getRegisterCardIntent());
 
-        onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("4976000000003436"));
+        Context context = InstrumentationRegistry.getContext();
+        final JudoApiService apiService = Judo.getApiService(context);
 
-        onView(withId(R.id.expiry_date_edit_text))
-                .perform(typeText("1220"));
+        RegisterCardRequest registerCardRequest = new RegisterCardRequest.Builder()
+                .setJudoId("100407196")
+                .setCardNumber("4976000000003436")
+                .setExpiryDate("12/20")
+                .setCv2("452")
+                .setYourConsumerReference(UUID.randomUUID().toString())
+                .setCardAddress(new Address.Builder()
+                        .setPostCode("TR148PA")
+                        .setCountryCode(826)
+                        .build())
+                .build();
 
-        onView(withId(R.id.cvv_edit_text))
-                .perform(typeText("452"));
+        apiService.registerCard(registerCardRequest)
+                .compose(RxHelpers.<Receipt>schedulers())
+                .subscribe(new Action1<Receipt>() {
+                    @Override
+                    public void call(Receipt receipt) {
+                        TokenPaymentActivity tokenPaymentActivity = tokenPaymentActivityTestRule.launchActivity(getTokenPaymentIntent(receipt));
 
-        onView(withId(R.id.post_code_edit_text))
-                .perform(typeText("TR148PA"));
+                        onView(withId(R.id.security_code_edit_text))
+                                .perform(typeText("452"));
 
-        onView(withId(R.id.payment_button))
-                .perform(click());
+                        onView(withId(R.id.post_code_edit_text))
+                                .perform(typeText("TR148PA"));
 
-        Intent result = getResultIntent(registerCardActivity);
-        assertThat(resultCode(registerCardActivity), is(Judo.RESULT_SUCCESS));
+                        onView(withId(R.id.payment_button))
+                                .perform(click());
 
-        Receipt receipt = result.getParcelableExtra(Judo.JUDO_RECEIPT);
-
-        TokenPaymentActivity tokenPaymentActivity = tokenPaymentActivityTestRule.launchActivity(getTokenPaymentIntent(receipt));
-
-        onView(withId(R.id.cvv_edit_text))
-                .perform(typeText("452"));
-
-        onView(withId(R.id.post_code_edit_text))
-                .perform(typeText("TR148PA"));
-
-        onView(withId(R.id.payment_button))
-                .perform(click());
-
-        assertThat(resultCode(tokenPaymentActivity), is(Judo.RESULT_SUCCESS));
+                        assertThat(resultCode(tokenPaymentActivity), is(Judo.RESULT_SUCCESS));
+                    }
+                }, failOnError());
     }
 
     private Intent getTokenPaymentIntent(Receipt receipt) {
@@ -126,16 +133,6 @@ public class SuccessfulTokenPaymentTest {
                 .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
-                .build());
-
-        return intent;
-    }
-
-    private Intent getRegisterCardIntent() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
-                .setJudoId("100407196")
-                .setConsumerRef(UUID.randomUUID().toString())
                 .build());
 
         return intent;

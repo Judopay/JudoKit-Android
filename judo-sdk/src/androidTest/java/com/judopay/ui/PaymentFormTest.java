@@ -13,7 +13,6 @@ import com.judopay.R;
 import com.judopay.model.Country;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,8 +27,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.judopay.ui.util.JudoViewMatchers.isNotDisplayed;
-import static com.judopay.ui.util.JudoViewMatchers.withTextInputHint;
+import static com.judopay.ui.util.ViewMatchers.isNotDisplayed;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -37,31 +35,6 @@ public class PaymentFormTest {
 
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
-
-    @Before
-    public void setupJudoSdk() {
-        Judo.setup("fakeApiToken", "fakeApiSecret", Judo.Environment.SANDBOX);
-    }
-
-    @Test
-    public void shouldHaveAmexCardNumberFormattingWhenAmexCardEntered() {
-        Judo.setAmexEnabled(true);
-
-        activityTestRule.launchActivity(getIntent());
-
-        onView(ViewMatchers.withId(R.id.card_number_edit_text))
-                .perform(typeText("340000432128428"))
-                .check(matches(withText("3400 004321 28428")));
-    }
-
-    @Test
-    public void shouldHaveNormalCardNumberFormattingWhenVisaCardNumberEntered() {
-        activityTestRule.launchActivity(getIntent());
-
-        onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("4976000000003436"))
-                .check(matches(withText("4976 0000 0000 3436")));
-    }
 
     @Test
     public void shouldDisplayCidvHintWhenAmexCardNumberEntered() {
@@ -72,7 +45,7 @@ public class PaymentFormTest {
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(click())
                 .check(matches(withHint("0000")));
     }
@@ -84,33 +57,9 @@ public class PaymentFormTest {
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(click())
                 .check(matches(withHint("000")));
-    }
-
-    @Test
-    public void shouldDisplayCvvLabelWhenVisaCardNumberEntered() {
-        activityTestRule.launchActivity(getIntent());
-
-        onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("4976000000003436"));
-
-        onView(withId(R.id.cvv_input_layout))
-                .check(matches(withTextInputHint("CVV")));
-    }
-
-    @Test
-    public void shouldDisplayCidvLabelWhenAmexCardNumberEntered() {
-        Judo.setAmexEnabled(true);
-
-        activityTestRule.launchActivity(getIntent());
-
-        onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("340000432128428"));
-
-        onView(withId(R.id.cvv_input_layout))
-                .check(matches(withTextInputHint("CIDV")));
     }
 
     @Test
@@ -125,7 +74,7 @@ public class PaymentFormTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
     }
 
@@ -141,7 +90,7 @@ public class PaymentFormTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
 
         onView(withId(R.id.country_spinner))
@@ -166,7 +115,7 @@ public class PaymentFormTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
 
         onView(withId(R.id.country_spinner))
@@ -191,7 +140,7 @@ public class PaymentFormTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
 
         onView(withId(R.id.country_spinner))
@@ -208,7 +157,7 @@ public class PaymentFormTest {
     public void shouldDisplayCvvImageOnLaunch() {
         activityTestRule.launchActivity(getIntent());
 
-        onView(withId(R.id.cvv_image_view))
+        onView(withId(R.id.security_code_image_view))
                 .check(matches(isDisplayed()));
     }
 

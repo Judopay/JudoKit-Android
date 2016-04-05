@@ -2,7 +2,6 @@ package com.judopay.ui.util;
 
 import android.support.design.widget.TextInputLayout;
 import android.support.test.espresso.matcher.BoundedMatcher;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.view.View;
 
 import org.hamcrest.Description;
@@ -12,7 +11,7 @@ import org.hamcrest.TypeSafeMatcher;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static org.hamcrest.Matchers.is;
 
-public class JudoViewMatchers {
+public class ViewMatchers {
 
     public static Matcher<View> withTextInputHint(String hintText) {
         checkNotNull(hintText);
@@ -44,7 +43,35 @@ public class JudoViewMatchers {
 
             @Override
             public boolean matchesSafely(View view) {
-                return withEffectiveVisibility(ViewMatchers.Visibility.GONE).matches(view);
+                return withEffectiveVisibility(android.support.test.espresso.matcher.ViewMatchers.Visibility.GONE).matches(view);
+            }
+        };
+    }
+
+    public static Matcher<View> isOpaque() {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("is opaque");
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                return view.getAlpha() == 1.0f;
+            }
+        };
+    }
+
+    public static Matcher<View> isTranslucent() {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("is opaque");
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                return view.getAlpha() == 0.5f;
             }
         };
     }

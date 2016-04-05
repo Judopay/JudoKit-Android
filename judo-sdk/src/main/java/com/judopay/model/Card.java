@@ -11,7 +11,7 @@ public class Card {
     private String expiryDate;
     private String startDate;
     private String issueNumber;
-    private String cvv;
+    private String securityCode;
 
     public String getCardNumber() {
         return cardNumber;
@@ -29,16 +29,12 @@ public class Card {
         return startDate;
     }
 
-    public String getCvv() {
-        return cvv;
+    public String getSecurityCode() {
+        return securityCode;
     }
 
     public String getIssueNumber() {
         return issueNumber;
-    }
-
-    public String getCv2() {
-        return cvv;
     }
 
     public boolean startDateAndIssueNumberRequired() {
@@ -52,7 +48,7 @@ public class Card {
         private String expiryDate;
         private String startDate;
         private String issueNumber;
-        private String cvv;
+        private String securityCode;
 
         public Builder setCardNumber(String cardNumber) {
             this.cardNumber = cardNumber;
@@ -79,8 +75,8 @@ public class Card {
             return this;
         }
 
-        public Builder setCvv(String cvv) {
-            this.cvv = cvv;
+        public Builder setSecurityCode(String securityCOde) {
+            this.securityCode = securityCOde;
             return this;
         }
 
@@ -92,7 +88,7 @@ public class Card {
             card.expiryDate = expiryDate;
             card.startDate = startDate;
             card.issueNumber = issueNumber;
-            card.cvv = cvv;
+            card.securityCode = securityCode;
 
             return card;
         }

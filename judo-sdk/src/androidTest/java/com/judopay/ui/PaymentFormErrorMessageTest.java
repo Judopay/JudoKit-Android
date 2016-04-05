@@ -10,10 +10,8 @@ import com.judopay.Judo;
 import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;
 import com.judopay.R;
-import com.judopay.model.Country;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,13 +19,11 @@ import org.junit.runner.RunWith;
 import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.judopay.ui.util.JudoViewMatchers.isDisabled;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -35,11 +31,6 @@ public class PaymentFormErrorMessageTest {
 
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
-
-    @Before
-    public void setupJudoSdk() {
-        Judo.setup("fakeApiToken", "fakeApiSecret", Judo.Environment.SANDBOX);
-    }
 
     @Test
     public void shouldDisplayErrorMessageWhenInvalidCardNumberEntered() {

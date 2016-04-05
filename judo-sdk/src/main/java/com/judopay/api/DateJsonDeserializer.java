@@ -5,10 +5,12 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-import org.joda.time.DateTime;
-
 import java.lang.reflect.Type;
 import java.util.Date;
+
+import fr.turri.jiso8601.Iso8601Deserializer;
+
+import static com.judopay.arch.TextUtil.isEmpty;
 
 class DateJsonDeserializer implements JsonDeserializer<Date> {
 
@@ -16,9 +18,8 @@ class DateJsonDeserializer implements JsonDeserializer<Date> {
     public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         String date = json.getAsString();
 
-        if (date != null && date.length() > 0) {
-            DateTime dateTime = new DateTime(date);
-            return dateTime.toDate();
+        if (!isEmpty(date)) {
+            return Iso8601Deserializer.toDate(date);
         } else {
             return null;
         }

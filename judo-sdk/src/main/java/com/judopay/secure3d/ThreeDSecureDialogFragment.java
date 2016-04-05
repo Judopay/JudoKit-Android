@@ -3,6 +3,7 @@ package com.judopay.secure3d;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ public class ThreeDSecureDialogFragment extends DialogFragment implements ThreeD
         return inflater.inflate(R.layout.dialog_three_d_secure, container, false);
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
@@ -79,6 +81,7 @@ public class ThreeDSecureDialogFragment extends DialogFragment implements ThreeD
         }
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
+        webView.setId(R.id.three_d_secure_web_view);
         webView.setLayoutParams(params);
         webView.setVisibility(View.VISIBLE);
 

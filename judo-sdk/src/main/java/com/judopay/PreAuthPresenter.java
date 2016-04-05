@@ -7,21 +7,21 @@ import com.judopay.model.PaymentRequest;
 
 class PreAuthPresenter extends BasePresenter {
 
-    public PreAuthPresenter(PaymentFormView view, JudoApiService judoApiService, Scheduler scheduler, Gson gson) {
-        super(view, judoApiService, scheduler, gson);
+    public PreAuthPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, Scheduler scheduler, Gson gson) {
+        super(callbacks, judoApiService, scheduler, gson);
     }
 
     public void performPreAuth(Card card, JudoOptions options) {
         this.loading = true;
 
-        paymentFormView.showLoading();
+        transactionCallbacks.showLoading();
 
         PaymentRequest.Builder builder = new PaymentRequest.Builder()
                 .setAmount(options.getAmount())
                 .setCardAddress(card.getCardAddress())
                 .setCardNumber(card.getCardNumber())
                 .setCurrency(options.getCurrency())
-                .setCv2(card.getCv2())
+                .setCv2(card.getSecurityCode())
                 .setJudoId(options.getJudoId())
                 .setYourConsumerReference(options.getConsumerRef())
                 .setEmailAddress(options.getEmailAddress())

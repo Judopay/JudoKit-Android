@@ -1,13 +1,9 @@
 package com.judopay;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
+import com.judopay.model.CardDate;
 import com.judopay.model.CardType;
-
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.joda.time.YearMonth;
 
 public class StartDateAndIssueNumberValidation {
 
@@ -29,7 +25,7 @@ public class StartDateAndIssueNumberValidation {
         boolean maestroCardType = cardType == CardType.MAESTRO;
 
         this.issueNumberValid = isIssueNumberValid(paymentForm.getIssueNumber());
-        this.showIssueNumberAndStartDate = paymentForm.isMaestroSupported() && maestroCardType;
+        this.showIssueNumberAndStartDate = paymentForm.isMaestroSupported() && maestroCardType && !paymentForm.isTokenCard();
     }
 
     private boolean isIssueNumberValid(String issueNumber) {
@@ -42,24 +38,8 @@ public class StartDateAndIssueNumberValidation {
     }
 
     private boolean isStartDateValid(String startDate) {
-        DateTime midnightToday = new DateTime().withTimeAtStartOfDay();
-
-        if (!startDate.matches("(?:0[1-9]|1[0-2])/[0-9]{2}")) {
-            return false;
-        }
-
-        int month = Integer.parseInt(startDate.substring(0, 2));
-        int year = 2000 + Integer.parseInt(startDate.substring(3, 5));
-
-        LocalDate startDateLocalDate = getLocalDate(month, year);
-        LocalDate minStartDate = getLocalDate(month, midnightToday.getYear() - 10);
-
-        return startDateLocalDate.isBefore(midnightToday.toLocalDate()) && startDateLocalDate.isAfter(minStartDate);
-    }
-
-    @NonNull
-    private LocalDate getLocalDate(int month, int year) {
-        return new YearMonth(year, month).toLocalDate(1);
+        CardDate cardDate = new CardDate(startDate);
+        return cardDate.isBeforeToday() && cardDate.isInsideAllowedDateRange();
     }
 
     public boolean isShowStartDateError() {
@@ -82,6 +62,5 @@ public class StartDateAndIssueNumberValidation {
     public boolean isIssueNumberValid() {
         return issueNumberValid;
     }
-
 
 }

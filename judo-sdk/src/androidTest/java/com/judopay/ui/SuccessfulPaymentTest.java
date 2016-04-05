@@ -37,7 +37,7 @@ public class SuccessfulPaymentTest {
 
     @Before
     public void setupJudoSdk() {
-        Judo.setup("823Eja2fEM6E9NAE", "382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6", Judo.Environment.SANDBOX);
+        Judo.setEnvironment(Judo.SANDBOX);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
 
         onView(withId(R.id.payment_button))
@@ -80,7 +80,7 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("789"));
 
         onView(withId(R.id.payment_button))
@@ -102,7 +102,7 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("3469"));
 
         onView(withId(R.id.payment_button))
@@ -123,7 +123,7 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
 
         onView(withId(R.id.post_code_edit_text))
@@ -154,7 +154,7 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("789"));
 
         onView(withId(R.id.post_code_edit_text))
@@ -179,7 +179,7 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.cvv_edit_text))
+        onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("3469"));
 
         onView(withId(R.id.post_code_edit_text))

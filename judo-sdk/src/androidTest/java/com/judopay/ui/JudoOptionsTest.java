@@ -12,16 +12,18 @@ import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.judopay.ui.util.ViewMatchers.isNotDisplayed;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -29,11 +31,6 @@ public class JudoOptionsTest {
 
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
-
-    @Before
-    public void setupJudoSdk() {
-        Judo.setup("fakeApiToken", "fakeApiSecret", Judo.Environment.SANDBOX);
-    }
 
     @Test
     public void shouldShowCustomButtonLabel() {
@@ -65,6 +62,20 @@ public class JudoOptionsTest {
     }
 
     @Test
+    public void shouldNotDisplaySecureServerMessage() {
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudoOptionsBuilder()
+                .setSecureServerMessageShown(false)
+                .build());
+
+        activityTestRule.launchActivity(intent);
+
+        onView(withId(R.id.secure_server_text))
+                .check(matches(isNotDisplayed()))
+                .check(matches(withText(R.string.secure_server_transmission)));
+    }
+
+    @Test
     public void shouldShowActivityTitle() {
         Intent intent = new Intent();
         String activityTitle = "Activity title";
@@ -84,7 +95,7 @@ public class JudoOptionsTest {
                 .setJudoId("000000")
                 .setAmount("0.01")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef("consumerRef");
+                .setConsumerRef(UUID.randomUUID().toString());
     }
 
 }

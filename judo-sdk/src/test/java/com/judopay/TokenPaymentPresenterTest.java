@@ -37,7 +37,7 @@ public class TokenPaymentPresenterTest {
     JudoApiService apiService;
 
     @Mock
-    PaymentFormView paymentFormView;
+    TransactionCallbacks transactionCallbacks;
 
     @Mock
     ThreeDSecureInfo threeDSecureInfo;
@@ -47,7 +47,7 @@ public class TokenPaymentPresenterTest {
 
     @Test
     public void shouldPerformTokenPayment() {
-        TokenPaymentPresenter presenter = new TokenPaymentPresenter(paymentFormView, apiService, scheduler, gson);
+        TokenPaymentPresenter presenter = new TokenPaymentPresenter(transactionCallbacks, apiService, scheduler, gson);
         when(apiService.tokenPayment(any(TokenRequest.class))).thenReturn(Observable.<Receipt>empty());
 
         String consumer = "consumerRef";
@@ -59,22 +59,22 @@ public class TokenPaymentPresenterTest {
                 .setJudoId("123456")
                 .build());
 
-        verify(paymentFormView).showLoading();
+        verify(transactionCallbacks).showLoading();
         verify(apiService).tokenPayment(any(TokenRequest.class));
     }
 
     @Test
     public void shouldShowWebViewWhenAuthWebPageLoaded() {
-        TokenPaymentPresenter presenter = new TokenPaymentPresenter(paymentFormView, apiService, scheduler, gson);
+        TokenPaymentPresenter presenter = new TokenPaymentPresenter(transactionCallbacks, apiService, scheduler, gson);
 
         presenter.onAuthorizationWebPageLoaded();
 
-        verify(paymentFormView).show3dSecureWebView();
+        verify(transactionCallbacks).show3dSecureWebView();
     }
 
     @Test
     public void shouldFinishWhenSuccessfulReceipt() {
-        TokenPaymentPresenter presenter = new TokenPaymentPresenter(paymentFormView, apiService, scheduler, gson);
+        TokenPaymentPresenter presenter = new TokenPaymentPresenter(transactionCallbacks, apiService, scheduler, gson);
         String receiptId = "123456";
 
         when(receipt.isSuccess()).thenReturn(true);
@@ -82,13 +82,13 @@ public class TokenPaymentPresenterTest {
 
         presenter.onAuthorizationCompleted(threeDSecureInfo, receiptId);
 
-        verify(paymentFormView).finish(eq(receipt));
-        verify(paymentFormView).hideLoading();
+        verify(transactionCallbacks).onSuccess(eq(receipt));
+        verify(transactionCallbacks).hideLoading();
     }
 
     @Test
     public void shouldShowDeclinedMessageWhenDeclinedReceipt() {
-        TokenPaymentPresenter presenter = new TokenPaymentPresenter(paymentFormView, apiService, scheduler, gson);
+        TokenPaymentPresenter presenter = new TokenPaymentPresenter(transactionCallbacks, apiService, scheduler, gson);
         String receiptId = "123456";
 
         when(receipt.isSuccess()).thenReturn(false);
@@ -96,8 +96,8 @@ public class TokenPaymentPresenterTest {
 
         presenter.onAuthorizationCompleted(threeDSecureInfo, "123456");
 
-        verify(paymentFormView).showDeclinedMessage(eq(receipt));
-        verify(paymentFormView).hideLoading();
+        verify(transactionCallbacks).onDeclined(eq(receipt));
+        verify(transactionCallbacks).hideLoading();
     }
 
 }
