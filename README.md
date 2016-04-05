@@ -4,6 +4,8 @@ The judo Android library lets you integrate secure in-app card payments into you
 
 You can use our out of the box UI for a fully PCI Level 1 compliant payment experience that is customizable to match your app. Alternatively, you can also use the RESTful API directly to implement your own UI.
 
+##### Android Pay is coming to the UK soon. You can use this SDK to process Android Pay when it's ready. For more information, please have a look at our [sample app](https://github.com/JudoPay/Judo-AndroidPay-Sample).
+
 ##### **\*\*\*Due to industry-wide security updates, versions below 5.0 of this SDK will no longer be supported after 1st Oct 2016. For more information regarding these updates, please read our blog [here](http://hub.judopay.com/pci31-security-updates/).*****
 
 ## Getting started
