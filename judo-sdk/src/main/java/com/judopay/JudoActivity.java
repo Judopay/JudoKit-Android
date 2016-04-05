@@ -9,7 +9,10 @@ import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Display;
 import android.view.MenuItem;
+import android.view.Surface;
+import android.view.WindowManager;
 
 import com.judopay.exception.RootUserBlockedException;
 
@@ -43,15 +46,33 @@ abstract class JudoActivity extends AppCompatActivity {
             throw new RootUserBlockedException();
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
-        } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
-        }
+        //noinspection WrongConstant
+        setRequestedOrientation(getLockedOrientation());
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    private int getLockedOrientation() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            return ActivityInfo.SCREEN_ORIENTATION_LOCKED;
+        } else {
+            Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+            int rotation = display.getRotation();
+
+            switch (rotation) {
+                case Surface.ROTATION_90:
+                    return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+                case Surface.ROTATION_180:
+                    return ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+                case Surface.ROTATION_270:
+                    return ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+                case Surface.ROTATION_0:
+                default:
+                    return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+            }
         }
     }
 
