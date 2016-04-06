@@ -33,7 +33,7 @@ public class ListReceiptsTest {
 
     @Before
     public void setEnvironment() {
-        Judo.setEnvironment(Judo.SANDBOX);
+        Judo.setEnvironment(Judo.UAT);
     }
 
     @Test
@@ -217,7 +217,7 @@ public class ListReceiptsTest {
 
     private PaymentRequest getPaymentRequest() {
         return new PaymentRequest.Builder()
-                .setJudoId("100407196")
+                .setJudoId("100915867")
                 .setAmount("0.01")
                 .setCardNumber("4976000000003436")
                 .setCv2("452")
