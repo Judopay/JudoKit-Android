@@ -108,10 +108,10 @@ public interface JudoApiService {
     @POST("transactions/registercard")
     Observable<Receipt> registerCard(@Body RegisterCardRequest registerCardRequest);
 
-    @POST("transactions/androidpay/payment")
+    @POST("transactions/payments")
     Observable<Receipt> androidPayPayment(@Body AndroidPayRequest androidPayRequest);
 
-    @POST("transactions/androidpay/preauth")
+    @POST("transactions/preauths")
     Observable<Receipt> androidPayPreAuth(@Body AndroidPayRequest androidPayRequest);
 
     /**
