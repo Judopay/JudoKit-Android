@@ -22,7 +22,6 @@ import static com.judopay.Judo.JUDO_OPTIONS;
  *
  * startActivityForResult(intent, TOKEN_PAYMENT_REQUEST);
  * </pre>
- *
  * See {@link com.judopay.JudoOptions} for the full list of supported options.
  */
 public final class TokenPaymentActivity extends JudoActivity {
@@ -51,7 +50,7 @@ public final class TokenPaymentActivity extends JudoActivity {
 
     @Override
     public void onBackPressed() {
-        if (!tokenPaymentFragment.isPaymentInProgress()) {
+        if (tokenPaymentFragment != null && !tokenPaymentFragment.isPaymentInProgress()){
             super.onBackPressed();
         }
     }
