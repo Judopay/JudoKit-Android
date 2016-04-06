@@ -62,6 +62,20 @@ public class ViewMatchers {
         };
     }
 
+    public static Matcher<View> isTranslucent() {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("is opaque");
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                return view.getAlpha() == 0.5f;
+            }
+        };
+    }
+
     public static Matcher<View> isDisabled() {
         return new TypeSafeMatcher<View>() {
             @Override

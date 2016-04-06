@@ -7,21 +7,31 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
-import com.judopay.model.ClientDetails;
-import com.judopay.model.Location;
+import com.judopay.R;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.util.Date;
 import java.util.List;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManagerFactory;
 
 import okhttp3.CertificatePinner;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
-import retrofit2.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -52,9 +62,9 @@ public class JudoApiServiceFactory {
 
     private static Retrofit createRetrofit(Context context, @Judo.UiClientMode int uiClientMode) {
         return new Retrofit.Builder()
-                .addConverterFactory(getGsonConverterFactory(context))
+                .addConverterFactory(getGsonConverterFactory())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .baseUrl(Judo.getApiEnvironmentHost())
+                .baseUrl(Judo.getApiEnvironmentHost(context))
                 .client(getOkHttpClient(uiClientMode, context))
                 .build();
     }
@@ -67,30 +77,28 @@ public class JudoApiServiceFactory {
         }
 
         setTimeouts(builder);
-        setSslSocketFactory(builder);
+        setSslSocketFactory(builder, context);
         setInterceptors(builder, uiClientMode, context);
 
         return builder.build();
     }
 
     private static void setInterceptors(OkHttpClient.Builder client, @Judo.UiClientMode int uiClientMode, Context context) {
-        ApiHeadersInterceptor interceptor = new ApiHeadersInterceptor(ApiCredentials.fromConfiguration(context), uiClientMode);
-
         List<Interceptor> interceptors = client.interceptors();
+
         interceptors.add(new DeDuplicationInterceptor());
-        interceptors.add(interceptor);
+        interceptors.add(new JudoShieldInterceptor(context));
+        interceptors.add(new ApiHeadersInterceptor(ApiCredentials.fromConfiguration(context), uiClientMode));
     }
 
-    private static GsonConverterFactory getGsonConverterFactory(Context context) {
-        return GsonConverterFactory.create(getGson(context));
+    private static GsonConverterFactory getGsonConverterFactory() {
+        return GsonConverterFactory.create(getGson());
     }
 
-    public static Gson getGson(Context context) {
+    private static Gson getGson() {
         return new GsonBuilder()
                 .registerTypeAdapter(Date.class, new DateJsonDeserializer())
                 .registerTypeAdapter(BigDecimal.class, new FormattedBigDecimalDeserializer())
-                .registerTypeAdapter(Location.class, new LocationTypeAdapter(context))
-                .registerTypeAdapter(ClientDetails.class, new ClientDetailsSerializer(context))
                 .create();
     }
 
@@ -104,12 +112,46 @@ public class JudoApiServiceFactory {
                 .build();
     }
 
-    private static void setSslSocketFactory(OkHttpClient.Builder builder) {
+    private static void setSslSocketFactory(OkHttpClient.Builder builder, Context context) {
         try {
-            builder.sslSocketFactory(new TlsSslSocketFactory());
-        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+
+            if (Judo.getEnvironment() == Judo.UAT) {
+                initializeUatEnvironmentSslContext(context, sslContext);
+            } else {
+                sslContext.init(null, null, null);
+            }
+
+            SSLSocketFactory socketFactory = sslContext.getSocketFactory();
+            builder.sslSocketFactory(new TlsSslSocketFactory(socketFactory));
+        } catch (CertificateException | IOException | KeyStoreException | KeyManagementException | NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static void initializeUatEnvironmentSslContext(Context context, SSLContext sslContext) throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+        // loading CAs from an InputStream
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        InputStream cert = context.getResources().openRawResource(R.raw.judo_uat);
+        Certificate ca;
+
+        try {
+            ca = cf.generateCertificate(cert);
+        } finally {
+            cert.close();
+        }
+
+        // creating a KeyStore containing our trusted CAs
+        String keyStoreType = KeyStore.getDefaultType();
+        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+        keyStore.load(null, null);
+        keyStore.setCertificateEntry("ca", ca);
+
+        // creating a TrustManager that trusts the CAs in our KeyStore
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        tmf.init(keyStore);
+
+        sslContext.init(null, tmf.getTrustManagers(), null);
     }
 
     private static void setTimeouts(OkHttpClient.Builder builder) {

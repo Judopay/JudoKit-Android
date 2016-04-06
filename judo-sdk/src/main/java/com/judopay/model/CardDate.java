@@ -1,8 +1,11 @@
 package com.judopay.model;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.joda.time.YearMonth;
+import java.util.Calendar;
+import java.util.Date;
+
+import static java.util.Calendar.DATE;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
 
 public class CardDate {
 
@@ -32,47 +35,50 @@ public class CardDate {
     }
 
     public boolean isBeforeToday() {
-        if(year == 0 && month == 0) {
+        if (year == 0 || month == 0) {
             return false;
         }
 
-        DateTime midnightToday = getTimeAtStartOfDay();
-        LocalDate localDate = getLocalDate(month, year);
+        Calendar cardDate = Calendar.getInstance();
+        cardDate.set(year, month - 1, 1);
 
-        return localDate.isBefore(midnightToday.toLocalDate());
+        Calendar now = Calendar.getInstance();
+        now.setTime(new Date());
+
+        return cardDate.before(now);
     }
 
     public boolean isAfterToday() {
-        if(year == 0 && month == 0) {
+        if (year == 0 || month == 0) {
             return false;
         }
 
-        LocalDate expiryLocalDate = getLocalDate(month, year);
-        DateTime startOfDay = getTimeAtStartOfDay();
+        Calendar cardDate = Calendar.getInstance();
+        cardDate.set(YEAR, year);
+        cardDate.set(MONTH, month - 1);
+        cardDate.set(DATE, cardDate.getActualMaximum(Calendar.DAY_OF_MONTH));
 
-        return expiryLocalDate.isAfter(startOfDay.toLocalDate());
+        Calendar now = Calendar.getInstance();
+        now.setTime(new Date());
+
+        return cardDate.after(now);
     }
 
     public boolean isInsideAllowedDateRange() {
-        DateTime startOfDay = getTimeAtStartOfDay();
+        Calendar minDate = Calendar.getInstance();
+        minDate.set(YEAR, minDate.get(YEAR) - 10);
 
-        LocalDate localDate = getLocalDate(month, year);
-        LocalDate minDate = getLocalDate(month, startOfDay.getYear() - 10);
-        LocalDate maxDate = getLocalDate(month, startOfDay.getYear() + 10);
+        Calendar maxDate = Calendar.getInstance();
+        maxDate.set(YEAR, maxDate.get(YEAR) + 10);
 
-        return localDate.isAfter(minDate) && localDate.isBefore(maxDate);
+        Calendar cardDate = Calendar.getInstance();
+        cardDate.set(year, month - 1, 1);
+
+        return cardDate.after(minDate) && cardDate.before(maxDate);
     }
 
     private boolean isValidDate(String date) {
         return date.matches("(?:0[1-9]|1[0-2])[0-9]{2}");
-    }
-
-    private DateTime getTimeAtStartOfDay() {
-        return new DateTime().withTimeAtStartOfDay();
-    }
-
-    private LocalDate getLocalDate(int month, int year) {
-        return new YearMonth(year, month).toLocalDate(1);
     }
 
 }

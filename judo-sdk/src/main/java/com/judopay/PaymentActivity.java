@@ -18,10 +18,8 @@ import static com.judopay.Judo.JUDO_OPTIONS;
  * .setAmount("1.99")
  * .setConsumerRef("consumerRef")
  * .build());
- *
  * startActivityForResult(intent, PAYMENT_REQUEST);
  * </pre>
- *
  * See {@link JudoOptions} for the full list of supported options
  */
 public final class PaymentActivity extends JudoActivity {
@@ -50,7 +48,7 @@ public final class PaymentActivity extends JudoActivity {
 
     @Override
     public void onBackPressed() {
-        if (!paymentFragment.isPaymentInProgress()) {
+        if (paymentFragment != null && !paymentFragment.isPaymentInProgress()) {
             super.onBackPressed();
         }
     }

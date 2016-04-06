@@ -8,6 +8,7 @@ import com.judopay.secure3d.ThreeDSecureListener;
 
 import java.io.Reader;
 
+import retrofit2.adapter.rxjava.HttpException;
 import rx.functions.Action1;
 
 abstract class BasePresenter implements ThreeDSecureListener {
@@ -53,8 +54,8 @@ abstract class BasePresenter implements ThreeDSecureListener {
             @Override
             public void call(Throwable throwable) {
                 loading = false;
-                if (throwable instanceof retrofit2.HttpException) {
-                    retrofit2.Response<?> response = ((retrofit2.HttpException) throwable).response();
+                if (throwable instanceof HttpException) {
+                    retrofit2.Response<?> response = ((HttpException) throwable).response();
                     if (response.errorBody() != null) {
                         Reader reader = response.errorBody().charStream();
                         Receipt receipt = gson.fromJson(reader, Receipt.class);

@@ -47,7 +47,7 @@ public class SuccessfulTokenPaymentTest {
 
     @Before
     public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.SANDBOX);
+        Judo.setEnvironment(Judo.UAT);
         IdlingPolicies.setIdlingResourceTimeout(3, TimeUnit.MINUTES);
     }
 
@@ -59,7 +59,7 @@ public class SuccessfulTokenPaymentTest {
         final JudoApiService apiService = Judo.getApiService(context);
 
         RegisterCardRequest registerCardRequest = new RegisterCardRequest.Builder()
-                .setJudoId("100407196")
+                .setJudoId("100915867")
                 .setCardNumber("4976000000003436")
                 .setExpiryDate("12/20")
                 .setCv2("452")
@@ -92,7 +92,7 @@ public class SuccessfulTokenPaymentTest {
         final JudoApiService apiService = Judo.getApiService(context);
 
         RegisterCardRequest registerCardRequest = new RegisterCardRequest.Builder()
-                .setJudoId("100407196")
+                .setJudoId("100915867")
                 .setCardNumber("4976000000003436")
                 .setExpiryDate("12/20")
                 .setCv2("452")
@@ -128,7 +128,7 @@ public class SuccessfulTokenPaymentTest {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
-                .setJudoId("100407196")
+                .setJudoId("100915867")
                 .setCardToken(receipt.getCardDetails())
                 .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
                 .setAmount("1.99")

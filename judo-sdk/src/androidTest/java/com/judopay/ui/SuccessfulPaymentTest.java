@@ -36,7 +36,7 @@ public class SuccessfulPaymentTest {
 
     @Before
     public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.SANDBOX);
+        Judo.setEnvironment(Judo.UAT);
     }
 
     @Test
@@ -194,7 +194,7 @@ public class SuccessfulPaymentTest {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
-                .setJudoId("100407196")
+                .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef(UUID.randomUUID().toString())

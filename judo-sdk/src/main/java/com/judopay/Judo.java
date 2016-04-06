@@ -18,11 +18,13 @@ public class Judo {
 
     @IntDef({UI_CLIENT_MODE_CUSTOM_UI, UI_CLIENT_MODE_JUDO_SDK})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface UiClientMode { }
+    public @interface UiClientMode {
+    }
 
-    @IntDef({LIVE, SANDBOX, CUSTOM})
+    @IntDef({LIVE, SANDBOX, CUSTOM, UAT})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface Environment { }
+    public @interface Environment {
+    }
 
     public static final int RESULT_SUCCESS = Activity.RESULT_OK;
     public static final int RESULT_CANCELED = Activity.RESULT_CANCELED;
@@ -43,15 +45,13 @@ public class Judo {
     public static final String JUDO_OPTIONS = "JudoPay-options";
     public static final String JUDO_RECEIPT = "JudoPay-receipt";
 
-    private static final String API_HOST_SANDBOX = "https://gw1.judopay-sandbox.com";
-    private static final String API_HOST_LIVE = "https://gw1.judopay.com";
-
     public static final int UI_CLIENT_MODE_CUSTOM_UI = 0;
     public static final int UI_CLIENT_MODE_JUDO_SDK = 1;
 
     public static final int LIVE = 0;
     public static final int SANDBOX = 1;
     public static final int CUSTOM = 2;
+    public static final int UAT = 3;
 
     private static String apiToken;
     private static String apiSecret;
@@ -61,8 +61,8 @@ public class Judo {
     private static String customEnvironmentHost;
 
     private static boolean avsEnabled;
-    private static boolean amexEnabled;
 
+    private static boolean amexEnabled = true;
     private static boolean maestroEnabled = true;
     private static boolean sslPinningEnabled = true;
     private static boolean rootedDevicesAllowed = true;
@@ -71,6 +71,11 @@ public class Judo {
         Judo.apiToken = apiToken;
         Judo.apiSecret = apiSecret;
         Judo.environment = environment;
+    }
+
+    @Environment
+    public static int getEnvironment() {
+        return environment;
     }
 
     public static JudoApiService getApiService(Context context) {
@@ -106,7 +111,7 @@ public class Judo {
     }
 
     public static boolean isSslPinningEnabled() {
-        return sslPinningEnabled && environment != CUSTOM;
+        return sslPinningEnabled && environment != CUSTOM && environment != UAT;
     }
 
     public static void setSslPinningEnabled(boolean sslPinningEnabled) {
@@ -145,14 +150,16 @@ public class Judo {
         Judo.rootedDevicesAllowed = rootedDevicesAllowed;
     }
 
-    public static String getApiEnvironmentHost() {
+    public static String getApiEnvironmentHost(Context context) {
         switch (environment) {
+            case SANDBOX:
+                return context.getString(R.string.api_host_sandbox);
             case CUSTOM:
                 return customEnvironmentHost;
-            case SANDBOX:
-                return API_HOST_SANDBOX;
+            case UAT:
+                return context.getString(R.string.api_host_uat);
             default:
-                return API_HOST_LIVE;
+                return context.getString(R.string.api_host_live);
         }
     }
 

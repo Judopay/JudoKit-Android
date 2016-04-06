@@ -28,7 +28,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.judopay.ui.util.ViewMatchers.isNotDisplayed;
-import static com.judopay.ui.util.ViewMatchers.withTextInputHint;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -61,51 +60,6 @@ public class PaymentFormTest {
         onView(withId(R.id.security_code_edit_text))
                 .perform(click())
                 .check(matches(withHint("000")));
-    }
-
-    @Test
-    public void shouldDisplayCvvSecurityCodeWhenUnknownCard() {
-        activityTestRule.launchActivity(getIntent());
-
-        onView(withId(R.id.security_code_input_layout))
-                .check(matches(withTextInputHint("CVV")));
-    }
-
-    @Test
-    public void shouldDisplayVisaSecurityCodeWhenVisaDetected() {
-        activityTestRule.launchActivity(getIntent());
-
-        onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("4976000000003436"));
-
-        onView(withId(R.id.security_code_input_layout))
-                .check(matches(withTextInputHint("CVV2")));
-    }
-
-    @Test
-    public void shouldDisplayAmexSecurityCodeWhenAmexDetected() {
-        Judo.setAmexEnabled(true);
-
-        activityTestRule.launchActivity(getIntent());
-
-        onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("340000432128428"));
-
-        onView(withId(R.id.security_code_input_layout))
-                .check(matches(withTextInputHint("CID")));
-    }
-
-    @Test
-    public void shouldDisplayMastercardSecurityCodeWhenMastercardDetected() {
-        Judo.setAmexEnabled(true);
-
-        activityTestRule.launchActivity(getIntent());
-
-        onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("5100000000005460"));
-
-        onView(withId(R.id.security_code_input_layout))
-                .check(matches(withTextInputHint("CVC2")));
     }
 
     @Test
@@ -211,7 +165,7 @@ public class PaymentFormTest {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
-                .setJudoId("100407196")
+                .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef(UUID.randomUUID().toString())

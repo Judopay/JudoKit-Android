@@ -37,6 +37,7 @@ import static com.judopay.model.CardType.VISA;
 import static com.judopay.ui.util.ViewMatchers.isDisabled;
 import static com.judopay.ui.util.ViewMatchers.isNotDisplayed;
 import static com.judopay.ui.util.ViewMatchers.isOpaque;
+import static com.judopay.ui.util.ViewMatchers.isTranslucent;
 import static com.judopay.ui.util.ViewMatchers.withTextInputHint;
 
 @LargeTest
@@ -48,7 +49,7 @@ public class TokenPaymentFormTest {
 
     @Before
     public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.SANDBOX);
+        Judo.setEnvironment(Judo.UAT);
     }
 
     @Test
@@ -78,7 +79,7 @@ public class TokenPaymentFormTest {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
-                .setJudoId("100407196")
+                .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCardNumber("9999999999999999")
                 .setCurrency(Currency.GBP)
@@ -156,7 +157,7 @@ public class TokenPaymentFormTest {
     }
 
     @Test
-    public void shouldShowCardTypeImageAsFullyOpaque() {
+    public void shouldShowCardTypeImageAsOpaque() {
         activityTestRule.launchActivity(getIntent(VISA));
 
         onView(withId(R.id.card_type_view))
@@ -255,7 +256,7 @@ public class TokenPaymentFormTest {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
-                .setJudoId("100407196")
+                .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setCardNumber("6789")

@@ -1,21 +1,27 @@
-# judoNative Android SDK change log
+# Judo Android SDK change log
 
-## [5.2](https://github.com/judopay/Judo-Android/tree/5.2) (TBC)
+## [5.2](https://github.com/judopay/Judo-Android/tree/5.2) (2016-04-06)
  
 **Implemented enhancements:**
  - Card helper images now animate when a change in card type is detected.
- - Fragment transaction callbacks - it's now possible to handle the result from a transaction when using the provided Fragments on the SDK. This allows for more customization around what gets shown when a transaction is successful, declined or an error occurs. If calling an Activity directly and using the ```Activity.onActivityResult()``` method as a callback, this will remain as before.
+ - Better support for using Android Fragments for all transaction types. When using Fragments a callback will be received to indicate the status of the transaction and allowing for more customization. Callbacks using the provided Activity classes remain the same as before.
 
 **Changes:**
- - Support for passing Activity Intent extras using the constants defined in ```Judo``` has been removed, in favor of using the ```JudoOptions``` builder for more easily passing data to an Activity.
+ - American Express cards are now accepted by default.
  - Style updates to payment card entry form to match Google Material Design guidelines.
- - judo API token and secret can now be specified directly in the Android Manifest instead of programmatically.
+ - Judo API token and secret can now be specified directly in the Android Manifest instead of programmatically.
  - Client integration method reporting data is now sent with the transaction to indicate if a custom UI or judo provided UI is used.
- 
+ - Joda-Time library has been removed from the SDK to avoid issues with the app method count reaching the [65k dex method limit](http://developer.android.com/tools/building/multidex.html).
+ - The HTTP client library Retrofit has been upgraded to version 2.0.0.
+ - The security code hint text for American Express cards has changed from CIDV to CID.
+ - Activity Intent constants have been removed in favour of using the ```JudoOptions``` builder to configure customization options when calling the SDK.
+
 **Bugs fixed:**
-- The start date and issue number fields were shown when making a token payment when not needed.
-- Billing postcode now longer goes into full screen entry mode when focusing in landscape mode.
-- A crash was occuring when inputting an Amex card number longer than 15 digits, this has now been fixed.
+- Start date and issue number fields will no longer be shown when making a token payment.
+- When using a device in landscape orientation the billing postcode will no longer go into fullscreen input mode when the field has focus.
+- When entering an Amex card number longer than 15 digits, the SDK will no longer crash.
+- The card number, expiry date and start date had some formatting issues if characters were input into the middle of the text after initial entry.
+- Back button now works correctly when rotation has been changed whilst on the payment screen for JellyBean devices.
 
 ## [5.1.2](https://github.com/judopay/Judo-Android/tree/5.1.2) (2016-02-29)
 

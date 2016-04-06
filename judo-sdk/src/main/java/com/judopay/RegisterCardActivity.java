@@ -63,7 +63,7 @@ public final class RegisterCardActivity extends JudoActivity {
 
     @Override
     public void onBackPressed() {
-        if (!registerCardFragment.isPaymentInProgress()) {
+        if (registerCardFragment != null && !registerCardFragment.isPaymentInProgress()) {
             super.onBackPressed();
         }
     }

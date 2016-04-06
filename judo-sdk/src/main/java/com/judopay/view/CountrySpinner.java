@@ -1,8 +1,6 @@
 package com.judopay.view;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.support.v7.widget.AppCompatSpinner;
 import android.util.AttributeSet;
 
@@ -17,16 +15,8 @@ import java.util.List;
  */
 public class CountrySpinner extends AppCompatSpinner {
 
-    private CountrySpinnerAdapter adapter;
-
     public CountrySpinner(Context context) {
         super(context);
-        initialise();
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public CountrySpinner(Context context, int mode) {
-        super(context, mode);
         initialise();
     }
 
@@ -41,9 +31,7 @@ public class CountrySpinner extends AppCompatSpinner {
     }
 
     private void initialise() {
-        this.adapter = new CountrySpinnerAdapter(this.getContext(), getCountries());
-
-        this.setAdapter(this.adapter);
+        this.setAdapter(new CountrySpinnerAdapter(this.getContext(), getCountries()));
     }
 
     private List<Country> getCountries() {
@@ -58,6 +46,6 @@ public class CountrySpinner extends AppCompatSpinner {
     }
 
     public Country getSelectedCountry() {
-        return adapter.getItem(getSelectedItemPosition());
+        return (Country) getAdapter().getItem(getSelectedItemPosition());
     }
 }
