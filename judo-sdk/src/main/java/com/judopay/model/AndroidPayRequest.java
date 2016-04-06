@@ -98,6 +98,7 @@ public final class AndroidPayRequest extends BasePaymentRequest {
             checkNotNull(wallet);
             checkNotEmpty(judoId);
             checkNotEmpty(currency);
+            checkNotEmpty(consumerReference);
 
             AndroidPayRequest androidPayRequest = new AndroidPayRequest(wallet);
 
