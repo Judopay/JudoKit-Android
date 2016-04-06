@@ -36,7 +36,7 @@ public class CardEntryFormErrorMessagesTest {
 
     @Before
     public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.SANDBOX);
+        Judo.setEnvironment(Judo.UAT);
     }
 
     @Test

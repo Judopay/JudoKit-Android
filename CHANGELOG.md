@@ -1,6 +1,6 @@
 # Judo Android SDK change log
 
-## [5.2](https://github.com/judopay/Judo-Android/tree/5.2) (TBC)
+## [5.2](https://github.com/judopay/Judo-Android/tree/5.2) (2016-04-06)
  
 **Implemented enhancements:**
  - Card helper images now animate when a change in card type is detected.
@@ -21,6 +21,7 @@
 - When using a device in landscape orientation the billing postcode will no longer go into fullscreen input mode when the field has focus.
 - When entering an Amex card number longer than 15 digits, the SDK will no longer crash.
 - The card number, expiry date and start date had some formatting issues if characters were input into the middle of the text after initial entry.
+- Back button now works correctly when rotation has been changed whilst on the payment screen for JellyBean devices.
 
 ## [5.1.2](https://github.com/judopay/Judo-Android/tree/5.1.2) (2016-02-29)
 
