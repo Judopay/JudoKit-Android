@@ -5,8 +5,6 @@ import com.judopay.arch.Scheduler;
 import com.judopay.model.Card;
 import com.judopay.model.PaymentRequest;
 
-import java.math.BigDecimal;
-
 class PreAuthPresenter extends BasePresenter {
 
     public PreAuthPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, Scheduler scheduler, Gson gson) {
@@ -19,7 +17,7 @@ class PreAuthPresenter extends BasePresenter {
         transactionCallbacks.showLoading();
 
         PaymentRequest.Builder builder = new PaymentRequest.Builder()
-                .setAmount(new BigDecimal(options.getAmount()))
+                .setAmount(options.getAmount())
                 .setCardAddress(card.getCardAddress())
                 .setCardNumber(card.getCardNumber())
                 .setCurrency(options.getCurrency())
