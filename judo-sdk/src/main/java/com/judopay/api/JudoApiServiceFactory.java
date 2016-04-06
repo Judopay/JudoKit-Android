@@ -78,7 +78,6 @@ public class JudoApiServiceFactory {
 
         List<Interceptor> interceptors = client.interceptors();
         interceptors.add(new DeDuplicationInterceptor());
-        interceptors.add(new MockAndroidPayInterceptor());
         interceptors.add(interceptor);
     }
 
