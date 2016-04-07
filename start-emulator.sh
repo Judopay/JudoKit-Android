@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [[ $# -eq 0 ]] ; then
-    echo 'No Android AVD name provided'
+    echo 'No AVD name provided'
     exit 1
 fi
 
