@@ -45,14 +45,15 @@ import static com.judopay.Judo.isAvsEnabled;
  * <code>
  * CardEntryFragment fragment = new CardEntryFragment();
  * Bundle args = new Bundle();
- * <p/>
+ *
  * args.putParcelable(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
  * .setJudoId("123456")
  * .setAmount("1.99")
  * .setCurrency(Currency.USD)
  * .setButtonLabel("Perform payment")
  * .setSecureServerMessageShown(true)
- * .build());
+ * .build())
+ *
  * fragment.setArguments(args);
  * </code>
  */
