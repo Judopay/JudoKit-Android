@@ -154,9 +154,10 @@ public final class RegisterCardRequest extends Request {
         }
 
         public RegisterCardRequest build() {
-            if (this.judoId == null) {
-                throw new IllegalArgumentException("judoId must be set");
-            }
+            checkNotNull(judoId);
+            checkNotNull(cardNumber);
+            checkNotNull(cv2);
+            checkNotNull(expiryDate);
 
             RegisterCardRequest transaction = new RegisterCardRequest();
 

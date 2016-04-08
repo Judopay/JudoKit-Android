@@ -4,6 +4,8 @@ import com.judopay.api.Request;
 
 import java.util.Map;
 
+import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
+
 /**
  * Represents the data needed to perform a register card transaction with the judo API.
  * Use the {@link PaymentRequest.Builder} for object construction.
@@ -176,17 +178,13 @@ public final class PaymentRequest extends Request {
         }
 
         public PaymentRequest build() {
-            if (this.currency == null || this.currency.length() == 0) {
-                throw new IllegalArgumentException("currency must be set");
-            }
-
-            if (this.judoId == null || this.judoId.length() == 0) {
-                throw new IllegalArgumentException("judoId must be set");
-            }
-
-            if (this.amount == null || this.amount.length() == 0) {
-                throw new IllegalArgumentException("amount must be set");
-            }
+            checkNotNull(amount);
+            checkNotNull(currency);
+            checkNotNull(judoId);
+            checkNotNull(yourConsumerReference);
+            checkNotNull(cardNumber);
+            checkNotNull(cv2);
+            checkNotNull(expiryDate);
 
             PaymentRequest transaction = new PaymentRequest();
 

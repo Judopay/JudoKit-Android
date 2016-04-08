@@ -23,6 +23,12 @@ public abstract class Request {
         this.yourPaymentReference = yourPaymentReference;
     }
 
+    public static <T> T checkNotNull(T obj) {
+        if (obj == null) {
+            throw new ParameterError();
+        }
+        return obj;
+    }
     public String getYourPaymentReference() {
         return yourPaymentReference;
     }

@@ -177,17 +177,11 @@ public final class TokenRequest extends Request {
         }
 
         public TokenRequest build() {
-            if (currency == null || currency.length() == 0) {
-                throw new IllegalArgumentException("currency must be set for TokenRequest");
-            }
-
-            if (this.judoId == null) {
-                throw new IllegalArgumentException("judoId must be set");
-            }
-
-            if (this.amount == null || this.amount.length() == 0) {
-                throw new IllegalArgumentException("amount must be set");
-            }
+            checkNotNull(judoId);
+            checkNotNull(currency);
+            checkNotNull(amount);
+            checkNotNull(yourConsumerReference);
+            checkNotNull(token);
 
             TokenRequest transaction = new TokenRequest();
 
