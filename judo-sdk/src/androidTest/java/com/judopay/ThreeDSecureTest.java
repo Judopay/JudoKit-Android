@@ -16,6 +16,7 @@ import com.judopay.model.Currency;
 import com.judopay.util.WebViewIdlingResource;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +49,7 @@ public class ThreeDSecureTest {
     }
 
     @Test
+    @Ignore
     public void shouldShow3dSecureDialog() {
         final PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
 
