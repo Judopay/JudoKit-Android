@@ -1,4 +1,4 @@
-package com.judopay.exception;
+package com.judopay.error;
 
 /**
  * An exception thrown if the Android device as been detected as having root permissions and the

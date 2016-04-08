@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import android.view.Surface;
 import android.view.WindowManager;
 
-import com.judopay.exception.RootedDeviceNotPermittedError;
+import com.judopay.error.RootedDeviceNotPermittedError;
 
 import static com.judopay.Judo.JUDO_OPTIONS;
 import static com.judopay.Judo.RESULT_CONNECTION_ERROR;

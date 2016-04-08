@@ -3,7 +3,7 @@ package com.judopay.api;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.judopay.exception.DuplicateTransactionError;
+import com.judopay.error.DuplicateTransactionError;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.judopay.exception;
+package com.judopay.error;
 
 public class DuplicateTransactionError extends Error {
 

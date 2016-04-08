@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.util.Base64;
 
 import com.judopay.Judo;
-import com.judopay.exception.JudoInitializationError;
+import com.judopay.error.JudoInitializationError;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 

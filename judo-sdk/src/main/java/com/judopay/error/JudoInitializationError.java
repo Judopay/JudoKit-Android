@@ -1,4 +1,4 @@
-package com.judopay.exception;
+package com.judopay.error;
 
 /**
  * An exception thrown if the Judo credentials have not been initialized correctly.

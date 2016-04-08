@@ -1,6 +1,6 @@
 package com.judopay.api;
 
-import com.judopay.exception.DuplicateTransactionError;
+import com.judopay.error.DuplicateTransactionError;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
