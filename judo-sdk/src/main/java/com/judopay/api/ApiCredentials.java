@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.util.Base64;
 
 import com.judopay.Judo;
-import com.judopay.exception.JudoInitializationException;
+import com.judopay.exception.JudoInitializationError;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
@@ -32,11 +32,11 @@ class ApiCredentials {
 
     private String getEncodedCredentials() {
         if (isEmpty(apiToken)) {
-            throw new JudoInitializationException("API token must be provided");
+            throw new JudoInitializationError("API token must be provided");
         }
 
         if (isEmpty(apiSecret)) {
-            throw new JudoInitializationException("API secret must be provided");
+            throw new JudoInitializationError("API secret must be provided");
         }
 
         return Base64.encodeToString(String.format("%s:%s", apiToken, apiSecret).getBytes(), Base64.NO_WRAP);

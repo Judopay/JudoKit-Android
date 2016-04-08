@@ -3,7 +3,7 @@ package com.judopay.api;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.judopay.exception.DuplicateTransactionException;
+import com.judopay.exception.DuplicateTransactionError;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ class DeDuplicationInterceptor implements Interceptor {
                 JsonElement uniqueRequest = jsonObject.get("uniqueRequest");
 
                 if (uniqueRequest != null && uniqueRequest.getAsBoolean() && uniqueReference != null && uniqueResponses.contains(uniqueReference.getAsString())) {
-                    throw new DuplicateTransactionException(uniqueReference.getAsString());
+                    throw new DuplicateTransactionError(uniqueReference.getAsString());
                 } else {
                     okhttp3.Response response = chain.proceed(request);
 
