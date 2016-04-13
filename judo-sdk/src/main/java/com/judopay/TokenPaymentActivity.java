@@ -31,10 +31,6 @@ public final class TokenPaymentActivity extends JudoActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        JudoOptions options = getIntent().getParcelableExtra(JUDO_OPTIONS);
-        checkJudoOptionsExtras(options.getAmount(), options.getJudoId(), options.getCurrency(), options.getConsumerRef(), options.getCardToken());
-
         setTitle(R.string.payment);
 
         if (savedInstanceState == null) {

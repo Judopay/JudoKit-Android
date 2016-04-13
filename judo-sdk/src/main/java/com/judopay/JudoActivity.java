@@ -16,7 +16,6 @@ import android.view.WindowManager;
 
 import com.judopay.error.RootedDeviceNotPermittedError;
 
-import static com.judopay.Judo.JUDO_OPTIONS;
 import static com.judopay.Judo.RESULT_CONNECTION_ERROR;
 import static com.judopay.Judo.RESULT_DECLINED;
 import static com.judopay.Judo.RESULT_ERROR;
@@ -37,10 +36,6 @@ abstract class JudoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (!getIntent().hasExtra(JUDO_OPTIONS)) {
-            throw new IllegalArgumentException(String.format("%s Intent Extra is required for %s", JUDO_OPTIONS, this.getClass().getSimpleName()));
-        }
 
         if (RootDetector.isRooted() && !Judo.isRootedDevicesAllowed()) {
             throw new RootedDeviceNotPermittedError();
@@ -151,11 +146,4 @@ abstract class JudoActivity extends AppCompatActivity {
         setResult(Judo.RESULT_CANCELED);
     }
 
-    void checkJudoOptionsExtras(Object... objects) {
-        for (Object object : objects) {
-            if (object == null) {
-                throw new IllegalArgumentException("JudoOptions must contain all required fields for Activity");
-            }
-        }
-    }
 }
