@@ -22,9 +22,6 @@ import static org.mockito.Mockito.when;
 public class TokenPreAuthPresenterTest {
 
     @Mock
-    Card card;
-
-    @Mock
     Receipt receipt;
 
     @Mock
@@ -40,18 +37,28 @@ public class TokenPreAuthPresenterTest {
     public void shouldPerformTokenPreAuth() {
         TokenPreAuthPresenter presenter = new TokenPreAuthPresenter(transactionCallbacks, apiService, new TestScheduler(), new Gson());
         when(apiService.tokenPreAuth(any(TokenRequest.class))).thenReturn(Observable.<Receipt>empty());
+        when(cardToken.getToken()).thenReturn("cardToken");
 
         String consumer = "consumerRef";
-        presenter.performTokenPreAuth(card, new JudoOptions.Builder()
+        presenter.performTokenPreAuth(getCard(), new JudoOptions.Builder()
                 .setCardToken(cardToken)
                 .setConsumerRef(consumer)
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
-                .setJudoId("123456")
+                .setJudoId("100915867")
                 .build());
 
         verify(transactionCallbacks).showLoading();
         verify(apiService).tokenPreAuth(any(TokenRequest.class));
     }
+
+    public Card getCard() {
+        return new Card.Builder()
+                .setCardNumber("4976000000003436")
+                .setSecurityCode("456")
+                .setExpiryDate("12/21")
+                .build();
+    }
+
 
 }
