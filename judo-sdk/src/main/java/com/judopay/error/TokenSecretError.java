@@ -3,9 +3,9 @@ package com.judopay.error;
 /**
  * An exception thrown if the Judo credentials have not been initialized correctly.
  */
-public class JudoInitializationError extends RuntimeException {
+public class TokenSecretError extends Error {
 
-    public JudoInitializationError(String detailMessage) {
+    public TokenSecretError(String detailMessage) {
         super(detailMessage);
     }
 }
