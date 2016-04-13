@@ -48,7 +48,7 @@ public class PaymentPresenterTest {
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef("consumerRef")
-                .setJudoId("123456")
+                .setJudoId("100915867")
                 .build());
 
         verify(apiService).payment(any(PaymentRequest.class));
@@ -63,7 +63,7 @@ public class PaymentPresenterTest {
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef("consumerRef")
-                .setJudoId("123456")
+                .setJudoId("100915867")
                 .build());
 
         verify(apiService).payment(any(PaymentRequest.class));
@@ -86,7 +86,7 @@ public class PaymentPresenterTest {
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef("consumerRef")
-                .setJudoId("123456")
+                .setJudoId("100915867")
                 .build());
 
         verify(transactionCallbacks).onError(any(Receipt.class));
@@ -106,7 +106,7 @@ public class PaymentPresenterTest {
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef("consumerRef")
-                .setJudoId("123456")
+                .setJudoId("100915867")
                 .build());
 
         verify(transactionCallbacks).onError(any(Receipt.class));
