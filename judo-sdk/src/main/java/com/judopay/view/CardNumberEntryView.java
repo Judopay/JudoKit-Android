@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.judopay.R;
 import com.judopay.model.CardToken;
 import com.judopay.model.CardType;
+import com.judopay.validation.Validation;
 
 import static com.judopay.model.CardType.AMEX;
 
@@ -115,13 +116,18 @@ public class CardNumberEntryView extends RelativeLayout {
         cardTypeImageView.setAlpha(1.0f);
     }
 
-    public void setError(@StringRes int message, boolean show) {
-        inputLayout.setErrorEnabled(show);
+    public void setValidation(Validation validation) {
+        inputLayout.setErrorEnabled(validation.isShowError());
 
-        if (show) {
-            inputLayout.setError(getResources().getString(message));
+        if (validation.isShowError()) {
+            inputLayout.setError(getResources().getString(validation.getError()));
         } else {
             inputLayout.setError("");
         }
     }
+
+    public EditText getEditText() {
+        return editText;
+    }
+
 }

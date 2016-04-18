@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 
 import com.judopay.R;
 import com.judopay.model.CardType;
+import com.judopay.validation.Validation;
 
 /**
  * A view that allows for the security code of a card (CV2, CID) to be input and an image displayed to
@@ -116,4 +117,17 @@ public class SecurityCodeEntryView extends RelativeLayout {
         return editText.getText().toString().trim();
     }
 
+    public EditText getEditText() {
+        return editText;
+    }
+
+    public void setValidation(Validation validation) {
+        inputLayout.setErrorEnabled(validation.isShowError());
+
+        if (validation.isShowError()) {
+            inputLayout.setError(getResources().getString(validation.getError()));
+        } else {
+            inputLayout.setError("");
+        }
+    }
 }

@@ -11,11 +11,9 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ScrollView;
 
-import com.judopay.CardNumberValidation;
 import com.judopay.CountryAndPostcodeValidation;
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
-import com.judopay.PaymentForm;
 import com.judopay.PaymentFormValidation;
 import com.judopay.R;
 import com.judopay.StartDateAndIssueNumberValidation;
@@ -24,6 +22,13 @@ import com.judopay.model.Card;
 import com.judopay.model.CardToken;
 import com.judopay.model.CardType;
 import com.judopay.model.Country;
+import com.judopay.validation.CardNumberValidator;
+import com.judopay.validation.ExpiryDateValidator;
+import com.judopay.validation.FormRevealManager;
+import com.judopay.validation.SecurityCodeValidator;
+import com.judopay.validation.Validation;
+import com.judopay.validation.ValidationManager;
+import com.judopay.validation.Validator;
 import com.judopay.view.CardNumberEntryView;
 import com.judopay.view.CountrySpinner;
 import com.judopay.view.ExpiryDateEntryView;
@@ -34,6 +39,10 @@ import com.judopay.view.SecurityCodeEntryView;
 import com.judopay.view.SimpleTextWatcher;
 import com.judopay.view.SingleClickOnClickListener;
 import com.judopay.view.StartDateEntryView;
+
+import java.util.ArrayList;
+
+import rx.functions.Action1;
 
 import static com.judopay.Judo.isAvsEnabled;
 
@@ -57,7 +66,7 @@ import static com.judopay.Judo.isAvsEnabled;
  * fragment.setArguments(args);
  * </code>
  */
-public final class CardEntryFragment extends Fragment {
+public final class CardEntryFragment extends Fragment implements ValidationManager.OnChangeListener {
 
     private Button paymentButton;
     private CountrySpinner countrySpinner;
@@ -76,6 +85,9 @@ public final class CardEntryFragment extends Fragment {
     private JudoOptions judoOptions;
     private CardEntryListener cardEntryListener;
     private ExpiryDateEntryView expiryDateEntryView;
+
+    private ValidationManager validationManager;
+    private FormRevealManager formRevealManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -106,6 +118,41 @@ public final class CardEntryFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ArrayList<Validator> validators = new ArrayList<>();
+        CardNumberValidator cardNumberValidator = new CardNumberValidator(cardNumberEntryView.getEditText(), Judo.isMaestroEnabled(), Judo.isAmexEnabled());
+        cardNumberValidator.onValidate()
+                .subscribe(new Action1<Validation>() {
+                    @Override
+                    public void call(Validation validation) {
+                        cardNumberEntryView.setValidation(validation);
+                    }
+                });
+
+        validators.add(cardNumberValidator);
+
+        ExpiryDateValidator expiryDateValidator = new ExpiryDateValidator(expiryDateEntryView.getEditText());
+        expiryDateValidator.onValidate()
+                .subscribe(new Action1<Validation>() {
+                    @Override
+                    public void call(Validation validation) {
+                        expiryDateEntryView.setValidation(validation);
+                    }
+                });
+
+        validators.add(expiryDateValidator);
+
+        SecurityCodeValidator securityCodeValidator = new SecurityCodeValidator(securityCodeEntryView.getEditText());
+        securityCodeValidator.onValidate()
+                .subscribe(new Action1<Validation>() {
+                    @Override
+                    public void call(Validation validation) {
+                        securityCodeEntryView.setValidation(validation);
+                    }
+                });
+
+        validationManager = new ValidationManager(validators, this);
+        formRevealManager = new FormRevealManager.Builder().build();
 
         if (getArguments() != null && getArguments().containsKey(Judo.JUDO_OPTIONS)) {
             this.judoOptions = getArguments().getParcelable(Judo.JUDO_OPTIONS);
@@ -162,7 +209,7 @@ public final class CardEntryFragment extends Fragment {
         countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                updateFormView();
+                //
             }
 
             @Override
@@ -201,51 +248,6 @@ public final class CardEntryFragment extends Fragment {
         }
     }
 
-    private void updateFormView() {
-        PaymentForm.Builder builder = new PaymentForm.Builder()
-                .setCardNumber(cardNumberEntryView.getText())
-                .setSecurityCode(securityCodeEntryView.getText())
-                .setCountry(getCountry())
-                .setPostcode(postcodeEntryView.getText())
-                .setIssueNumber(issueNumberEntryView.getText())
-                .setExpiryDate(expiryDateEntryView.getText())
-                .setStartDate(startDateEntryView.getText())
-                .setAddressRequired(Judo.isAvsEnabled())
-                .setAmexSupported(Judo.isAmexEnabled())
-                .setMaestroSupported(Judo.isMaestroEnabled());
-
-        CardToken cardToken = judoOptions.getCardToken();
-
-        if (cardToken != null) {
-            builder.setTokenCard(true)
-                    .setCardType(cardToken.getType());
-        }
-
-        PaymentFormValidation formView = new PaymentFormValidation.Builder()
-                .build(builder.build());
-
-        if (cardToken == null) {
-            cardNumberEntryView.setCardType(formView.getCardType(), true);
-        }
-
-        updateFormErrors(formView);
-        moveFieldFocus(formView);
-    }
-
-    private void updateFormErrors(PaymentFormValidation formView) {
-        showCardNumberErrors(formView.getCardNumberValidation());
-
-        showExpiryDateErrors(formView);
-
-        showStartDateAndIssueNumberErrors(formView.getStartDateAndIssueNumberState());
-
-        updateCvvErrors(formView);
-
-        updateCountryAndPostcode(formView.getCountryAndPostcodeValidation());
-
-        paymentButton.setVisibility(formView.isPaymentButtonEnabled() ? View.VISIBLE : View.GONE);
-    }
-
     private void updateCvvErrors(PaymentFormValidation formView) {
         securityCodeEntryView.setAlternateHint(formView.getSecurityCodeHint());
 
@@ -269,14 +271,6 @@ public final class CardEntryFragment extends Fragment {
 
         postcodeEntryView.setEnabled(validation.isPostcodeEnabled());
         postcodeEntryView.setNumericInput(validation.isPostcodeNumeric());
-    }
-
-    private void showExpiryDateErrors(PaymentFormValidation formView) {
-        expiryDateEntryView.setError(formView.getExpiryDateError(), formView.isShowExpiryDateError());
-    }
-
-    private void showCardNumberErrors(CardNumberValidation cardNumberValidation) {
-        cardNumberEntryView.setError(cardNumberValidation.getError(), cardNumberValidation.isShowError());
     }
 
     private void moveFieldFocus(PaymentFormValidation formView) {
@@ -348,6 +342,11 @@ public final class CardEntryFragment extends Fragment {
 
     public void setCardEntryListener(CardEntryListener cardEntryListener) {
         this.cardEntryListener = cardEntryListener;
+    }
+
+    @Override
+    public void onValidate(boolean valid) {
+        paymentButton.setVisibility(valid ? View.VISIBLE : View.GONE);
     }
 
 }
