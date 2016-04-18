@@ -1,11 +1,12 @@
-package com.judopay;
+package com.judopay.validation;
 
 import android.support.annotation.StringRes;
 
+import com.judopay.PaymentForm;
+import com.judopay.R;
 import com.judopay.model.CardDate;
 import com.judopay.model.CardType;
 
-@Deprecated
 public class StartDateAndIssueNumberValidation {
 
     private int startDateError;

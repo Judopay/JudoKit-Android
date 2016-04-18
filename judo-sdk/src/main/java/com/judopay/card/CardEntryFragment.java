@@ -107,13 +107,6 @@ public final class CardEntryFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        SimpleTextWatcher validationWatcher = new SimpleTextWatcher() {
-            @Override
-            protected void onTextChanged() {
-                updateFormView();
-            }
-        };
-
         if (getArguments() != null && getArguments().containsKey(Judo.JUDO_OPTIONS)) {
             this.judoOptions = getArguments().getParcelable(Judo.JUDO_OPTIONS);
 
@@ -150,16 +143,8 @@ public final class CardEntryFragment extends Fragment {
             }
         }
 
-        initialiseCardNumber(validationWatcher);
-        initialiseExpiryDate(validationWatcher);
 
-        securityCodeEntryView.addTextChangedListener(validationWatcher);
-        startDateEntryView.addTextChangedListener(validationWatcher);
-        issueNumberEntryView.addTextChangedListener(validationWatcher);
-
-        initialisePostcode(validationWatcher);
         initialiseCountry();
-
         initialisePayButton();
     }
 
@@ -284,7 +269,6 @@ public final class CardEntryFragment extends Fragment {
 
         postcodeEntryView.setEnabled(validation.isPostcodeEnabled());
         postcodeEntryView.setNumericInput(validation.isPostcodeNumeric());
-        postcodeEntryView.setSelectionEnd();
     }
 
     private void showExpiryDateErrors(PaymentFormValidation formView) {
