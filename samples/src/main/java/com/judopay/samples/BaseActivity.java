@@ -17,8 +17,8 @@ public class BaseActivity extends AppCompatActivity {
 
     protected static final String TOKEN_RECEIPT_KEY = "Judo-SampleApp-TokenReceipt";
 
-    static final String SHARED_PREFS_NAME = "Judo-SampleApp";
-    static final String CURRENCY_KEY = "Judo-SampleApp-Currency";
+    public static final String SHARED_PREFS_NAME = "Judo-SampleApp";
+    public static final String CURRENCY_KEY = "Judo-SampleApp-Currency";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,14 +29,14 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected void saveReceipt(Receipt receipt) {
+    public void saveReceipt(Receipt receipt) {
         getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
                 .edit()
                 .putString(TOKEN_RECEIPT_KEY, new Gson().toJson(receipt))
                 .apply();
     }
 
-    protected Receipt getLastReceipt() {
+    public Receipt getLastReceipt() {
         String tokenReceiptJson = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
                 .getString(TOKEN_RECEIPT_KEY, null);
 
