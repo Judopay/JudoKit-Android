@@ -7,6 +7,8 @@ import com.google.gson.Gson;
 import com.judopay.arch.AndroidScheduler;
 import com.judopay.model.Card;
 
+import static com.judopay.Judo.JUDO_OPTIONS;
+
 public final class PreAuthFragment extends BaseFragment {
 
     private PreAuthPresenter presenter;
@@ -14,6 +16,9 @@ public final class PreAuthFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        JudoOptions options = getArguments().getParcelable(JUDO_OPTIONS);
+        checkJudoOptionsExtras(options.getAmount(), options.getJudoId(), options.getCurrency(), options.getConsumerRef());
 
         if (this.presenter == null) {
             JudoApiService apiService = Judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);

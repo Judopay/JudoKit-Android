@@ -14,9 +14,8 @@ import android.view.MenuItem;
 import android.view.Surface;
 import android.view.WindowManager;
 
-import com.judopay.exception.RootUserBlockedException;
+import com.judopay.error.RootedDeviceNotPermittedError;
 
-import static com.judopay.Judo.JUDO_OPTIONS;
 import static com.judopay.Judo.RESULT_CONNECTION_ERROR;
 import static com.judopay.Judo.RESULT_DECLINED;
 import static com.judopay.Judo.RESULT_ERROR;
@@ -27,7 +26,7 @@ import static com.judopay.Judo.RESULT_TOKEN_EXPIRED;
  * Base Activity class from which all other Activities should extend from.
  * This class provides two main functions:
  * <ol>
- * <li>Detect if the device is rooted, and throws a {@link RootUserBlockedException},
+ * <li>Detect if the device is rooted, and throws a {@link RootedDeviceNotPermittedError},
  * preventing further access since we cannot guarantee the payment transaction will be secure.</li>
  * <li>Shows the back button in the action bar, allowing the user to navigate back easily.</li>
  * </ol>
@@ -38,12 +37,8 @@ abstract class JudoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!getIntent().hasExtra(JUDO_OPTIONS)) {
-            throw new IllegalArgumentException(String.format("%s Intent Extra is required for %s", JUDO_OPTIONS, this.getClass().getSimpleName()));
-        }
-
         if (RootDetector.isRooted() && !Judo.isRootedDevicesAllowed()) {
-            throw new RootUserBlockedException();
+            throw new RootedDeviceNotPermittedError();
         }
 
         //noinspection WrongConstant
@@ -151,11 +146,4 @@ abstract class JudoActivity extends AppCompatActivity {
         setResult(Judo.RESULT_CANCELED);
     }
 
-    void checkJudoOptionsExtras(Object... objects) {
-        for (Object object : objects) {
-            if (object == null) {
-                throw new IllegalArgumentException("JudoOptions must contain all required fields for Activity");
-            }
-        }
-    }
 }

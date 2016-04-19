@@ -30,9 +30,6 @@ public final class PaymentActivity extends JudoActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        JudoOptions options = getIntent().getParcelableExtra(JUDO_OPTIONS);
-        checkJudoOptionsExtras(options.getAmount(), options.getJudoId(), options.getCurrency(), options.getConsumerRef());
-
         setTitle(R.string.payment);
 
         if (savedInstanceState == null) {

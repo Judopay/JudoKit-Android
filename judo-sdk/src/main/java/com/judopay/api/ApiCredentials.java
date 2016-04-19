@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.util.Base64;
 
 import com.judopay.Judo;
-import com.judopay.exception.JudoInitializationException;
+import com.judopay.error.TokenSecretError;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
@@ -20,7 +20,7 @@ class ApiCredentials {
     private final String apiSecret;
     private final String authorization;
 
-    private ApiCredentials(String apiToken, String apiSecret) {
+    public ApiCredentials(String apiToken, String apiSecret) {
         this.apiToken = apiToken;
         this.apiSecret = apiSecret;
         this.authorization = getEncodedCredentials();
@@ -31,14 +31,11 @@ class ApiCredentials {
     }
 
     private String getEncodedCredentials() {
-        if (isEmpty(apiToken)) {
-            throw new JudoInitializationException("API token must be provided");
+        if (isEmpty(apiToken) || isEmpty(apiSecret)) {
+            throw new TokenSecretError("API Token & Secret is not configured correctly, either:" +
+                    "\t - Call to Judo.setup(\"token\", \"secret\", Judo.SANDBOX) in your Activity class" +
+                    "\t - Add a meta-data attributes \"judo_api_token\" and \"judo_api_secret\" to your AndroidManifest.xml file");
         }
-
-        if (isEmpty(apiSecret)) {
-            throw new JudoInitializationException("API secret must be provided");
-        }
-
         return Base64.encodeToString(String.format("%s:%s", apiToken, apiSecret).getBytes(), Base64.NO_WRAP);
     }
 
@@ -70,7 +67,8 @@ class ApiCredentials {
             if (metaData != null && metaData.length() > 0) {
                 return metaData;
             }
-        } catch (NullPointerException | PackageManager.NameNotFoundException ignore) { }
+        } catch (NullPointerException | PackageManager.NameNotFoundException ignore) {
+        }
 
         return defaultValue;
     }

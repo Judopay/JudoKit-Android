@@ -27,7 +27,7 @@ import static com.judopay.ui.util.ViewMatchers.isNotDisplayed;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class JudoOptionsTest {
+public class ActivityConfigurationTest {
 
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);

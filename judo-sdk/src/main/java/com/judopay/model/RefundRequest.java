@@ -14,6 +14,10 @@ public class RefundRequest extends Request {
 
     public RefundRequest(String receiptId, BigDecimal amount) {
         super(true);
+
+        checkNotNull(receiptId);
+        checkNotNull(amount);
+
         this.receiptId = receiptId;
         this.amount = amount;
     }
