@@ -1,8 +1,13 @@
 package com.judopay.model;
 
 import com.judopay.api.Request;
+import com.judopay.error.JudoIdInvalidError;
 
 import java.util.Map;
+
+import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
+import static com.judopay.arch.TextUtil.isEmpty;
+import static com.judopay.model.LuhnCheck.isValid;
 
 /**
  * Represents the data needed to perform a register card transaction with the judo API.
@@ -176,17 +181,16 @@ public final class PaymentRequest extends Request {
         }
 
         public PaymentRequest build() {
-            if (this.currency == null || this.currency.length() == 0) {
-                throw new IllegalArgumentException("currency must be set");
+            if(isEmpty(judoId) || !isValid(judoId)) {
+                throw new JudoIdInvalidError();
             }
 
-            if (this.judoId == null || this.judoId.length() == 0) {
-                throw new IllegalArgumentException("judoId must be set");
-            }
-
-            if (this.amount == null || this.amount.length() == 0) {
-                throw new IllegalArgumentException("amount must be set");
-            }
+            checkNotNull(amount);
+            checkNotNull(currency);
+            checkNotNull(yourConsumerReference);
+            checkNotNull(cardNumber);
+            checkNotNull(cv2);
+            checkNotNull(expiryDate);
 
             PaymentRequest transaction = new PaymentRequest();
 
