@@ -155,13 +155,13 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
 
     protected Intent getIntent() {
         Intent intent = new Intent();
-
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
-                .setJudoId("123456")
+                .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef(UUID.randomUUID().toString())
                 .build());
+
         return intent;
     }
 }

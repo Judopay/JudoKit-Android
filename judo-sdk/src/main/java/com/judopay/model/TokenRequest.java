@@ -2,8 +2,12 @@ package com.judopay.model;
 
 import com.google.gson.annotations.SerializedName;
 import com.judopay.api.Request;
+import com.judopay.error.JudoIdInvalidError;
 
 import java.util.Map;
+
+import static com.judopay.arch.TextUtil.isEmpty;
+import static com.judopay.model.LuhnCheck.isValid;
 
 /**
  * Represents the data needed to perform a token transaction with the judo API.
@@ -177,17 +181,14 @@ public final class TokenRequest extends Request {
         }
 
         public TokenRequest build() {
-            if (currency == null || currency.length() == 0) {
-                throw new IllegalArgumentException("currency must be set for TokenRequest");
+            if(isEmpty(judoId) || !isValid(judoId)) {
+                throw new JudoIdInvalidError();
             }
 
-            if (this.judoId == null) {
-                throw new IllegalArgumentException("judoId must be set");
-            }
-
-            if (this.amount == null || this.amount.length() == 0) {
-                throw new IllegalArgumentException("amount must be set");
-            }
+            checkNotNull(currency);
+            checkNotNull(amount);
+            checkNotNull(yourConsumerReference);
+            checkNotNull(token);
 
             TokenRequest transaction = new TokenRequest();
 

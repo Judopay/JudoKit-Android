@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder;
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
 import com.judopay.R;
+import com.judopay.error.SslInitializationError;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -125,7 +126,7 @@ public class JudoApiServiceFactory {
             SSLSocketFactory socketFactory = sslContext.getSocketFactory();
             builder.sslSocketFactory(new TlsSslSocketFactory(socketFactory));
         } catch (CertificateException | IOException | KeyStoreException | KeyManagementException | NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new SslInitializationError(e);
         }
     }
 
