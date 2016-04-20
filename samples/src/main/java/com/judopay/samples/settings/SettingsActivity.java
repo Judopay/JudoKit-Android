@@ -1,35 +1,25 @@
-package com.judopay.samples;
+package com.judopay.samples.settings;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SwitchCompat;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
-import android.widget.Spinner;
 
 import com.judopay.Judo;
 import com.judopay.model.Currency;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import com.judopay.samples.MainActivity;
+import com.judopay.samples.R;
+import com.judopay.samples.databinding.ActivitySettingsBinding;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    @Bind(R.id.avs_switch)
-    SwitchCompat avsSwitch;
-
-    @Bind(R.id.maestro_switch)
-    SwitchCompat maestroSwitch;
-
-    @Bind(R.id.amex_switch)
-    SwitchCompat amexSwitch;
-
-    @Bind(R.id.currency_spinner)
-    Spinner currencySpinner;
+    private ActivitySettingsBinding binding;
+    private SettingsPrefs settingsPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +32,10 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        setContentView(R.layout.activity_settings);
+        settingsPrefs = new SettingsPrefs(this);
 
-        ButterKnife.bind(this);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_settings);
+        binding.setSettingsViewModel(new SettingsViewModel(settingsPrefs.isAvsEnabled(), settingsPrefs.isAmexEnabled(), settingsPrefs.isMaestroEnabled()));
 
         initialise();
     }
@@ -61,17 +52,12 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void initialise() {
-        avsSwitch.setChecked(Judo.isAvsEnabled());
-        maestroSwitch.setChecked(Judo.isMaestroEnabled());
-        amexSwitch.setChecked(Judo.isAmexEnabled());
-
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Currency.currencyNames());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        currencySpinner.setAdapter(adapter);
+        binding.currencySpinner.setAdapter(adapter);
+        binding.currencySpinner.setSelection(getCurrencySelection());
 
-        currencySpinner.setSelection(getCurrencySelection());
-
-        currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String currency = Currency.currencyCodes().get(position);
@@ -84,26 +70,35 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        avsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        binding.avsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Judo.setAvsEnabled(isChecked);
+                settingsPrefs.setAvsEnabled(isChecked);
+                setupJudo();
             }
         });
 
-        maestroSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        binding.maestroSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Judo.setMaestroEnabled(isChecked);
+                settingsPrefs.setMaestroEnabled(isChecked);
+                setupJudo();
             }
         });
 
-        amexSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        binding.amexSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Judo.setAmexEnabled(isChecked);
+                settingsPrefs.setAmexEnabled(isChecked);
+                setupJudo();
             }
         });
+    }
+
+    private void setupJudo() {
+        Judo.setAmexEnabled(settingsPrefs.isAmexEnabled());
+        Judo.setAvsEnabled(settingsPrefs.isAvsEnabled());
+        Judo.setMaestroEnabled(settingsPrefs.isMaestroEnabled());
     }
 
     private void saveCurrency(String currency) {
