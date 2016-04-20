@@ -24,8 +24,8 @@ To show the payment screen, create an Intent for the `PaymentActivity` with the 
 ```java
 Intent intent = new Intent(activity, PaymentActivity.class);
 intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
-    .setJudoId("35843095834")
-    .setAmount("9.99")
+    .setJudoId("100915867")
+    .setAmount("1.00")
     .setCurrency(Currency.GBP)
     .setConsumerRef("consumerRef")
     .build());
