@@ -20,6 +20,7 @@ import com.judopay.secure3d.ThreeDSecureListener;
 import com.judopay.secure3d.ThreeDSecureWebView;
 
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
+import static com.judopay.Judo.JUDO_OPTIONS;
 
 abstract class BaseFragment extends Fragment implements TransactionCallbacks, CardEntryListener {
 
@@ -35,7 +36,20 @@ abstract class BaseFragment extends Fragment implements TransactionCallbacks, Ca
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!getArguments().containsKey(JUDO_OPTIONS)) {
+            throw new IllegalArgumentException(String.format("%s argument is required for %s", JUDO_OPTIONS, this.getClass().getSimpleName()));
+        }
+
         setRetainInstance(true);
+    }
+
+    protected void checkJudoOptionsExtras(Object... objects) {
+        for (Object object : objects) {
+            if (object == null) {
+                throw new IllegalArgumentException("JudoOptions must contain all required fields");
+            }
+        }
     }
 
     @Override

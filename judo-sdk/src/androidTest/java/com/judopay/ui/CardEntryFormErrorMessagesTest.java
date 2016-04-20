@@ -132,7 +132,7 @@ public class CardEntryFormErrorMessagesTest {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
-                .setJudoId("")
+                .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef(UUID.randomUUID().toString())

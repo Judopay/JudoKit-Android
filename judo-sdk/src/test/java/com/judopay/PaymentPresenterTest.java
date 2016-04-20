@@ -28,9 +28,6 @@ import static org.mockito.Mockito.when;
 public class PaymentPresenterTest {
 
     @Mock
-    Card card;
-
-    @Mock
     Receipt receipt;
 
     @Mock
@@ -47,11 +44,11 @@ public class PaymentPresenterTest {
         PaymentPresenter presenter = new PaymentPresenter(transactionCallbacks, apiService, scheduler, gson);
         when(apiService.payment(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performPayment(card, new JudoOptions.Builder()
+        presenter.performPayment(getCard(), new JudoOptions.Builder()
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef("consumerRef")
-                .setJudoId("123456")
+                .setJudoId("100915867")
                 .build());
 
         verify(apiService).payment(any(PaymentRequest.class));
@@ -62,11 +59,11 @@ public class PaymentPresenterTest {
         PaymentPresenter presenter = new PaymentPresenter(transactionCallbacks, apiService, scheduler, gson);
         when(apiService.payment(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>error(new UnknownHostException()));
 
-        presenter.performPayment(card, new JudoOptions.Builder()
+        presenter.performPayment(getCard(), new JudoOptions.Builder()
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef("consumerRef")
-                .setJudoId("123456")
+                .setJudoId("100915867")
                 .build());
 
         verify(apiService).payment(any(PaymentRequest.class));
@@ -85,11 +82,11 @@ public class PaymentPresenterTest {
 
         when(apiService.payment(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>error(exception));
 
-        presenter.performPayment(card, new JudoOptions.Builder()
+        presenter.performPayment(getCard(), new JudoOptions.Builder()
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef("consumerRef")
-                .setJudoId("123456")
+                .setJudoId("100915867")
                 .build());
 
         verify(transactionCallbacks).onError(any(Receipt.class));
@@ -105,14 +102,22 @@ public class PaymentPresenterTest {
 
         when(apiService.payment(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>error(exception));
 
-        presenter.performPayment(card, new JudoOptions.Builder()
+        presenter.performPayment(getCard(), new JudoOptions.Builder()
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef("consumerRef")
-                .setJudoId("123456")
+                .setJudoId("100915867")
                 .build());
 
         verify(transactionCallbacks).onError(any(Receipt.class));
+    }
+
+    public Card getCard() {
+        return new Card.Builder()
+                .setCardNumber("4976000000003436")
+                .setSecurityCode("456")
+                .setExpiryDate("12/21")
+                .build();
     }
 
 }
