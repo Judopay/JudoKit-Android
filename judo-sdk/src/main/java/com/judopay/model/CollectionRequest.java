@@ -14,6 +14,10 @@ public class CollectionRequest extends Request {
 
     public CollectionRequest(String receiptId, BigDecimal amount) {
         super(true);
+
+        checkNotNull(receiptId);
+        checkNotNull(amount);
+
         this.receiptId = receiptId;
         this.amount = amount;
     }

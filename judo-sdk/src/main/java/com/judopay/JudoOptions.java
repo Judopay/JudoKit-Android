@@ -4,10 +4,14 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.judopay.error.JudoIdInvalidError;
 import com.judopay.model.CardToken;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.judopay.arch.TextUtil.isEmpty;
+import static com.judopay.model.LuhnCheck.isValid;
 
 /**
  * The wrapper for providing data to Activity and Fragments classes in the SDK (e.g. PaymentActivity).
@@ -139,7 +143,7 @@ public class JudoOptions implements Parcelable {
         }
 
         public Builder setJudoId(String judoId) {
-            this.judoId = judoId;
+            this.judoId = judoId.replaceAll("-", "");
             return this;
         }
 
@@ -194,6 +198,10 @@ public class JudoOptions implements Parcelable {
         }
 
         public JudoOptions build() {
+            if(isEmpty(judoId) || !isValid(judoId)) {
+                throw new JudoIdInvalidError();
+            }
+
             JudoOptions options = new JudoOptions();
 
             options.cardToken = cardToken;
