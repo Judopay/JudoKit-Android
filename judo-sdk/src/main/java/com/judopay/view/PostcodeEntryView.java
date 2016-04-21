@@ -103,4 +103,8 @@ public class PostcodeEntryView extends FrameLayout {
         EditText editText = postcodeInputLayout.getEditText();
         return editText == null ? "" : editText.getText().toString().trim();
     }
+
+    public EditText getEditText() {
+        return postcodeInputLayout.getEditText();
+    }
 }

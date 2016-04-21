@@ -58,4 +58,7 @@ public class IssueNumberEntryView extends LinearLayout {
         return issueNumberEditText.getText().toString().trim();
     }
 
+    public EditText getEditText() {
+        return issueNumberEditText;
+    }
 }
