@@ -1,4 +1,4 @@
-package com.judopay.ui;
+package com.judopay;
 
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
@@ -19,7 +19,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static com.judopay.ui.util.ViewMatchers.withTextInputHint;
+import static com.judopay.util.ViewMatchers.withTextInputHint;
 
 @LargeTest
 public class SecurityCodeHintTest {

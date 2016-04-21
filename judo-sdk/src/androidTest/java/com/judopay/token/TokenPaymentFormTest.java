@@ -1,4 +1,4 @@
-package com.judopay.ui;
+package com.judopay.token;
 
 import android.content.Intent;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -34,11 +34,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.judopay.model.CardType.AMEX;
 import static com.judopay.model.CardType.MAESTRO;
 import static com.judopay.model.CardType.VISA;
-import static com.judopay.ui.util.ViewMatchers.isDisabled;
-import static com.judopay.ui.util.ViewMatchers.isNotDisplayed;
-import static com.judopay.ui.util.ViewMatchers.isOpaque;
-import static com.judopay.ui.util.ViewMatchers.isTranslucent;
-import static com.judopay.ui.util.ViewMatchers.withTextInputHint;
+import static com.judopay.util.ViewMatchers.isDisabled;
+import static com.judopay.util.ViewMatchers.isNotDisplayed;
+import static com.judopay.util.ViewMatchers.isOpaque;
+import static com.judopay.util.ViewMatchers.withTextInputHint;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)

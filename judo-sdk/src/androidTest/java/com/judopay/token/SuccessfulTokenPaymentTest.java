@@ -1,4 +1,4 @@
-package com.judopay.ui;
+package com.judopay.token;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,7 @@ import com.judopay.JudoApiService;
 import com.judopay.JudoOptions;
 import com.judopay.R;
 import com.judopay.TokenPaymentActivity;
-import com.judopay.integration.RxHelpers;
+import com.judopay.receipts.RxHelpers;
 import com.judopay.model.Address;
 import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
@@ -33,8 +33,8 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static com.judopay.integration.RxHelpers.failOnError;
-import static com.judopay.ui.util.ActivityUtil.resultCode;
+import static com.judopay.receipts.RxHelpers.failOnError;
+import static com.judopay.util.ActivityUtil.resultCode;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 

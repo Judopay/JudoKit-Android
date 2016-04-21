@@ -1,4 +1,4 @@
-package com.judopay.ui.util;
+package com.judopay.util;
 
 import android.app.Activity;
 import android.content.Intent;

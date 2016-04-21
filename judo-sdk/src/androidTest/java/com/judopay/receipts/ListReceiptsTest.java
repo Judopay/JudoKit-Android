@@ -1,4 +1,4 @@
-package com.judopay.integration;
+package com.judopay.receipts;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -20,10 +20,6 @@ import org.junit.runner.RunWith;
 
 import rx.Observable;
 import rx.functions.Func1;
-
-import static com.judopay.integration.RxHelpers.assertHasReceipts;
-import static com.judopay.integration.RxHelpers.assertTransactionSuccessful;
-import static com.judopay.integration.RxHelpers.failOnError;
 
 @MediumTest
 @RunWith(AndroidJUnit4.class)
@@ -48,7 +44,7 @@ public class ListReceiptsTest {
                         return apiService.paymentReceipts(null, null, "time-descending");
                     }
                 })
-                .subscribe(assertHasReceipts(), failOnError());
+                .subscribe(RxHelpers.assertHasReceipts(), RxHelpers.failOnError());
     }
 
     @Test
@@ -63,7 +59,7 @@ public class ListReceiptsTest {
                         return apiService.preAuthReceipts(null, null, "time-descending");
                     }
                 })
-                .subscribe(assertHasReceipts(), failOnError());
+                .subscribe(RxHelpers.assertHasReceipts(), RxHelpers.failOnError());
     }
 
     @Test
@@ -84,7 +80,7 @@ public class ListReceiptsTest {
                         return apiService.refundReceipts(null, null, "time-descending");
                     }
                 })
-                .subscribe(assertHasReceipts(), failOnError());
+                .subscribe(RxHelpers.assertHasReceipts(), RxHelpers.failOnError());
     }
 
     @Test
@@ -105,7 +101,7 @@ public class ListReceiptsTest {
                         return apiService.collectionReceipts(null, null, "time-descending");
                     }
                 })
-                .subscribe(assertHasReceipts(), failOnError());
+                .subscribe(RxHelpers.assertHasReceipts(), RxHelpers.failOnError());
     }
 
     @Test
@@ -120,7 +116,7 @@ public class ListReceiptsTest {
                         return apiService.consumerReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending");
                     }
                 })
-                .subscribe(assertHasReceipts(), failOnError());
+                .subscribe(RxHelpers.assertHasReceipts(), RxHelpers.failOnError());
     }
 
     @Test
@@ -135,7 +131,7 @@ public class ListReceiptsTest {
                         return apiService.findReceipt(receipt.getReceiptId(), null, null, "time-descending");
                     }
                 })
-                .subscribe(assertTransactionSuccessful(), failOnError());
+                .subscribe(RxHelpers.assertTransactionSuccessful(), RxHelpers.failOnError());
     }
 
     @Test
@@ -150,7 +146,7 @@ public class ListReceiptsTest {
                         return apiService.consumerPaymentReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending");
                     }
                 })
-                .subscribe(assertHasReceipts(), failOnError());
+                .subscribe(RxHelpers.assertHasReceipts(), RxHelpers.failOnError());
     }
 
     @Test
@@ -165,7 +161,7 @@ public class ListReceiptsTest {
                         return apiService.consumerPreAuthReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending");
                     }
                 })
-                .subscribe(assertHasReceipts(), failOnError());
+                .subscribe(RxHelpers.assertHasReceipts(), RxHelpers.failOnError());
     }
 
     @Test
@@ -186,7 +182,7 @@ public class ListReceiptsTest {
                         return apiService.consumerCollectionReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending");
                     }
                 })
-                .subscribe(assertHasReceipts(), failOnError());
+                .subscribe(RxHelpers.assertHasReceipts(), RxHelpers.failOnError());
     }
 
     @Test
@@ -207,7 +203,7 @@ public class ListReceiptsTest {
                         return apiService.consumerRefundReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending");
                     }
                 })
-                .subscribe(assertHasReceipts(), failOnError());
+                .subscribe(RxHelpers.assertHasReceipts(), RxHelpers.failOnError());
     }
 
     private JudoApiService getApiService() {

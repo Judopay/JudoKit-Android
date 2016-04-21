@@ -1,4 +1,4 @@
-package com.judopay.integration;
+package com.judopay.receipts;
 
 import com.judopay.model.Receipt;
 import com.judopay.model.Receipts;

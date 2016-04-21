@@ -1,17 +1,17 @@
-package com.judopay.ui;
+package com.judopay;
 
 import android.content.Intent;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
+import com.judopay.PaymentActivity;
 import com.judopay.R;
-import com.judopay.RegisterCardActivity;
+import com.judopay.model.Country;
+import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,53 +22,56 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.judopay.util.ViewMatchers.isDisabled;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class RegisterCardTest {
+public class CardEntryFormBillingAddressTest {
 
     @Rule
-    public IntentsTestRule<RegisterCardActivity> activityTestRule = new IntentsTestRule<>(RegisterCardActivity.class, false, false);
-
-    @Before
-    public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.UAT);
-    }
+    public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
     @Test
-    public void shouldBeSuccessfulPaymentWhenValidVisaEntered() {
-        Judo.setAvsEnabled(false);
+    public void shouldDisablePayButtonWhenOtherBillingCountrySelected() {
+        Judo.setAvsEnabled(true);
+
         activityTestRule.launchActivity(getIntent());
 
-        onView(ViewMatchers.withId(R.id.card_number_edit_text))
-                .perform(typeText("4221690000004963"));
+        onView(withId(R.id.card_number_edit_text))
+                .perform(typeText("4976000000003436"));
 
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
 
         onView(withId(R.id.security_code_edit_text))
-                .perform(typeText("125"));
+                .perform(typeText("452"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.country_spinner))
                 .perform(click());
 
-        onView(withText(R.string.add_card_failed))
-                .check(matches(isDisplayed()));
+        onView(withText(Country.OTHER))
+                .perform(click());
 
-        onView(withText(R.string.please_check_details_try_again))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.payment_button))
+                .check(matches(isEnabled()));
+
+        onView(withId(R.id.post_code_edit_text))
+                .check(matches(isDisabled()));
     }
 
-    public Intent getIntent() {
+    protected Intent getIntent() {
         Intent intent = new Intent();
+
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
                 .setJudoId("100915867")
+                .setAmount("0.99")
+                .setCurrency(Currency.GBP)
                 .setConsumerRef(UUID.randomUUID().toString())
                 .build());
-
         return intent;
     }
+
 }

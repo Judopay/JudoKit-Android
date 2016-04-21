@@ -1,15 +1,14 @@
-package com.judopay.ui;
-
+package com.judopay.preauth;
 
 import android.content.Intent;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
-import com.judopay.PaymentActivity;
+import com.judopay.PreAuthActivity;
 import com.judopay.R;
 import com.judopay.model.Currency;
 
@@ -24,16 +23,16 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static com.judopay.ui.util.ActivityUtil.resultCode;
+import static com.judopay.util.ActivityUtil.resultCode;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class SuccessfulPaymentTest {
+public class SuccessfulPreAuthTest {
 
     @Rule
-    public IntentsTestRule<PaymentActivity> activityTestRule = new IntentsTestRule<>(PaymentActivity.class, false, false);
+    public ActivityTestRule<PreAuthActivity> activityTestRule = new ActivityTestRule<>(PreAuthActivity.class, false, false);
 
     @Before
     public void setupJudoSdk() {
@@ -42,9 +41,14 @@ public class SuccessfulPaymentTest {
 
     @Test
     public void shouldBeSuccessfulPaymentWhenValidVisaEntered() {
+        activityTestRule.launchActivity(getIntent());
+    }
+
+    @Test
+    public void shouldBeSuccessfulPreAuthWhenValidVisaEntered() {
         Judo.setAvsEnabled(false);
 
-        PaymentActivity activity = activityTestRule.launchActivity(getIntent());
+        PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
 
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -62,11 +66,11 @@ public class SuccessfulPaymentTest {
     }
 
     @Test
-    public void shouldBeSuccessfulPaymentWhenValidMaestroEntered() {
-        Judo.setMaestroEnabled(true);
+    public void shouldBeSuccessfulPreAuthWhenValidMaestroEntered() {
         Judo.setAvsEnabled(false);
+        Judo.setMaestroEnabled(true);
 
-        PaymentActivity activity = activityTestRule.launchActivity(getIntent());
+        PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000005462"));
@@ -90,11 +94,11 @@ public class SuccessfulPaymentTest {
     }
 
     @Test
-    public void shouldBeSuccessfulPaymentWhenValidAmexEntered() {
-        Judo.setAmexEnabled(true);
+    public void shouldBeSuccessfulPreAuthWhenValidAmexEntered() {
         Judo.setAvsEnabled(false);
+        Judo.setAmexEnabled(true);
 
-        PaymentActivity activity = activityTestRule.launchActivity(getIntent());
+        PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"));
@@ -112,10 +116,10 @@ public class SuccessfulPaymentTest {
     }
 
     @Test
-    public void shouldBeSuccessfulPaymentWhenValidVisaEnteredAndAvsEnabled() {
+    public void shouldBeSuccessfulPreAuthWhenValidVisaEnteredAndAvsEnabled() {
         Judo.setAvsEnabled(true);
 
-        PaymentActivity activity = activityTestRule.launchActivity(getIntent());
+        PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -136,11 +140,11 @@ public class SuccessfulPaymentTest {
     }
 
     @Test
-    public void shouldBeSuccessfulPaymentWhenValidMaestroEnteredAndAvsEnabled() {
+    public void shouldBeSuccessfulPreAuthWhenValidMaestroEnteredAndAvsEnabled() {
         Judo.setMaestroEnabled(true);
         Judo.setAvsEnabled(true);
 
-        PaymentActivity activity = activityTestRule.launchActivity(getIntent());
+        PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000005462"));
@@ -171,7 +175,7 @@ public class SuccessfulPaymentTest {
         Judo.setAvsEnabled(true);
         Judo.setAmexEnabled(true);
 
-        PaymentActivity activity = activityTestRule.launchActivity(getIntent());
+        PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"));

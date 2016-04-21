@@ -1,4 +1,4 @@
-package com.judopay.ui;
+package com.judopay;
 
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
@@ -24,8 +24,8 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static com.judopay.ui.util.ViewMatchers.isOpaque;
-import static com.judopay.ui.util.ViewMatchers.isTranslucent;
+import static com.judopay.util.ViewMatchers.isOpaque;
+import static com.judopay.util.ViewMatchers.isTranslucent;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)

@@ -1,4 +1,4 @@
-package com.judopay.integration;
+package com.judopay.receipts;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -18,9 +18,6 @@ import org.junit.runner.RunWith;
 
 import rx.Observable;
 import rx.functions.Func1;
-
-import static com.judopay.integration.RxHelpers.assertTransactionSuccessful;
-import static com.judopay.integration.RxHelpers.failOnError;
 
 @MediumTest
 @RunWith(AndroidJUnit4.class)
@@ -58,7 +55,7 @@ public class PreAuthVoidTest {
                         return apiService.voidPreAuth(voidTransaction);
                     }
                 })
-                .subscribe(assertTransactionSuccessful(), failOnError());
+                .subscribe(RxHelpers.assertTransactionSuccessful(), RxHelpers.failOnError());
     }
 
 }

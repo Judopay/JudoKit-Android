@@ -1,4 +1,4 @@
-package com.judopay.ui;
+package com.judopay;
 
 import android.content.Intent;
 import android.support.test.espresso.matcher.ViewMatchers;

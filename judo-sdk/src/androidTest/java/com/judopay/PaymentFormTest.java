@@ -1,4 +1,4 @@
-package com.judopay.ui;
+package com.judopay;
 
 import android.content.Intent;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -27,7 +27,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.judopay.ui.util.ViewMatchers.isNotDisplayed;
+import static com.judopay.util.ViewMatchers.isNotDisplayed;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
