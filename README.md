@@ -49,22 +49,22 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 ```
 
 #### Integration
-- [Requirements](/JudoPay/Judo-Android/wiki/Requirements)
-- [Gradle](/JudoPay/Judo-Android/wiki/Gradle-Integration)
-- [Manual Integration](/JudoPay/Judo-Android/wiki/Manual-Integration)
+- [Requirements](https://github.com/JudoPay/Judo-Android/wiki/Requirements)
+- [Gradle](https://github.com/JudoPay/Judo-Android/wiki/Gradle-Integration)
+- [Manual Integration](https://github.com/JudoPay/Judo-Android/wiki/Manual-Integration)
 
 #### Setup
-- [Initializing the SDK](/JudoPay/Judo-Android/wiki/Initializing-the-SDK)
-- [Configuration](/JudoPay/Judo-Android/wiki/Configuration)
-- [Customization Options](/JudoPay/Judo-Android/wiki/Customization-Options)
-- [Themes](/JudoPay/Judo-Android/wiki/Themes)
+- [Initializing the SDK](https://github.com/JudoPay/Judo-Android/wiki/Initializing-the-SDK)
+- [Configuration](https://github.com/JudoPay/Judo-Android/wiki/Configuration)
+- [Customization Options](https://github.com/JudoPay/Judo-Android/wiki/Customization-Options)
+- [Themes](https://github.com/JudoPay/Judo-Android/wiki/Themes)
 
 #### Making a Transaction
-- [Payment](/JudoPay/Judo-Android/wiki/Performing-a-Payment)
-- [Pre-auth](/JudoPay/Judo-Android/wiki/Performing-a-Pre-authorization)
-- [Registering a card](/JudoPay/Judo-Android/wiki/Registering-a-Card)
-- [Token Payment](/JudoPay/Judo-Android/wiki/Performing-a-Token-Payment)
-- [Token Pre-auth](/JudoPay/Judo-Android/wiki/Performing-a-Token-Pre-Auth)
+- [Payment](https://github.com/JudoPay/Judo-Android/wiki/Performing-a-Payment)
+- [Pre-auth](https://github.com/JudoPay/Judo-Android/wiki/Performing-a-Pre-authorization)
+- [Registering a card](https://github.com/JudoPay/Judo-Android/wiki/Registering-a-Card)
+- [Token Payment](https://github.com/JudoPay/Judo-Android/wiki/Performing-a-Token-Payment)
+- [Token Pre-auth](https://github.com/JudoPay/Judo-Android/wiki/Performing-a-Token-Pre-Auth)
 
 ## License
 See the [LICENSE](https://github.com/JudoPay/Judo-Android/blob/master/LICENSE) file for license rights and limitations (MIT).
