@@ -39,6 +39,7 @@ public class JudoOptions implements Parcelable {
     private String emailAddress;
     private String mobileNumber;
     private boolean secureServerMessageShown;
+    private CustomLayout customLayout;
 
     private JudoOptions() { }
 
@@ -98,6 +99,10 @@ public class JudoOptions implements Parcelable {
         return secureServerMessageShown;
     }
 
+    public CustomLayout getCustomLayout() {
+        return customLayout;
+    }
+
     public Map<String, String> getMetaDataMap() {
         Map<String, String> map = new HashMap<>();
 
@@ -126,6 +131,7 @@ public class JudoOptions implements Parcelable {
         private String emailAddress;
         private String mobileNumber;
         private boolean secureServerMessageShown;
+        private CustomLayout customLayout;
 
         public Builder setActivityTitle(String activityTitle) {
             this.activityTitle = activityTitle;
@@ -197,6 +203,11 @@ public class JudoOptions implements Parcelable {
             return this;
         }
 
+        public Builder setCustomLayout(CustomLayout customLayout) {
+            this.customLayout = customLayout;
+            return this;
+        }
+
         public JudoOptions build() {
             if(isEmpty(judoId) || !isValid(judoId)) {
                 throw new JudoIdInvalidError();
@@ -221,6 +232,8 @@ public class JudoOptions implements Parcelable {
             options.emailAddress = emailAddress;
             options.mobileNumber = mobileNumber;
 
+            options.customLayout = customLayout;
+
             return options;
         }
     }
@@ -242,10 +255,11 @@ public class JudoOptions implements Parcelable {
         dest.writeString(this.expiryYear);
         dest.writeString(this.buttonLabel);
         dest.writeString(this.activityTitle);
-        dest.writeParcelable(this.cardToken, 0);
+        dest.writeParcelable(this.cardToken, flags);
         dest.writeString(this.emailAddress);
         dest.writeString(this.mobileNumber);
         dest.writeByte(secureServerMessageShown ? (byte) 1 : (byte) 0);
+        dest.writeParcelable(this.customLayout, flags);
     }
 
     protected JudoOptions(Parcel in) {
@@ -253,7 +267,7 @@ public class JudoOptions implements Parcelable {
         this.amount = in.readString();
         this.currency = in.readString();
         this.consumerRef = in.readString();
-        this.metaData = in.readBundle(getClass().getClassLoader());
+        metaData = in.readBundle();
         this.cardNumber = in.readString();
         this.expiryMonth = in.readString();
         this.expiryYear = in.readString();
@@ -263,15 +277,19 @@ public class JudoOptions implements Parcelable {
         this.emailAddress = in.readString();
         this.mobileNumber = in.readString();
         this.secureServerMessageShown = in.readByte() != 0;
+        this.customLayout = in.readParcelable(CustomLayout.class.getClassLoader());
     }
 
-    public static final Creator<JudoOptions> CREATOR = new Creator<JudoOptions>() {
+    public static final Parcelable.Creator<JudoOptions> CREATOR = new Parcelable.Creator<JudoOptions>() {
+        @Override
         public JudoOptions createFromParcel(Parcel source) {
             return new JudoOptions(source);
         }
 
+        @Override
         public JudoOptions[] newArray(int size) {
             return new JudoOptions[size];
         }
     };
+
 }
