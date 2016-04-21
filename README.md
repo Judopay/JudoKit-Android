@@ -43,7 +43,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             case Judo.RESULT_SUCCESS:
                 Receipt receipt = data.getParcelableExtra(Judo.JUDO_RECEIPT);
                 // handle successful payment
-      }
+        }
     }
 }
 ```
