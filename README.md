@@ -49,22 +49,22 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 ```
 
 #### Integration
-- [Requirements](Requirements)
-- [Gradle](Gradle-Integration)
-- [Manual Integration](Manual-Integration)
+- [Requirements](/JudoPay/Judo-Android/wiki/Requirements)
+- [Gradle](/JudoPay/Judo-Android/wiki/Gradle-Integration)
+- [Manual Integration](/JudoPay/Judo-Android/wiki/Manual-Integration)
 
 #### Setup
-- [Initializing the SDK](Initializing-the-SDK)
-- [Configuration](Configuration)
-- [Customization Options](Customization-Options)
-- [Themes](Themes)
+- [Initializing the SDK](/JudoPay/Judo-Android/wiki/Initializing-the-SDK)
+- [Configuration](/JudoPay/Judo-Android/wiki/Configuration)
+- [Customization Options](/JudoPay/Judo-Android/wiki/Customization-Options)
+- [Themes](/JudoPay/Judo-Android/wiki/Themes)
 
 #### Making a Transaction
-- [Payment](Performing-a-Payment)
-- [Pre-auth](Performing-a-Pre-authorization)
-- [Registering a card](Registering-a-Card)
-- [Token Payment](Performing-a-Token-Payment)
-- [Token Pre-auth](Performing-a-Token-Pre-Auth)
+- [Payment](/JudoPay/Judo-Android/wiki/Performing-a-Payment)
+- [Pre-auth](/JudoPay/Judo-Android/wiki/Performing-a-Pre-authorization)
+- [Registering a card](/JudoPay/Judo-Android/wiki/Registering-a-Card)
+- [Token Payment](/JudoPay/Judo-Android/wiki/Performing-a-Token-Payment)
+- [Token Pre-auth](/JudoPay/Judo-Android/wiki/Performing-a-Token-Pre-Auth)
 
 ## License
 See the [LICENSE](https://github.com/JudoPay/Judo-Android/blob/master/LICENSE) file for license rights and limitations (MIT).
