@@ -68,10 +68,6 @@ public class CountryAndPostcodeValidator implements Validator {
         }
     }
 
-    private boolean getPostcodeLabel(String country) {
-        return false;
-    }
-
     private boolean isPostcodeLengthValid(String postcode, String country) {
         switch (country) {
             case Country.UNITED_KINGDOM:
