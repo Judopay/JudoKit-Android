@@ -1,8 +1,9 @@
 package com.judopay;
 
 import com.judopay.model.LuhnCheck;
-import com.judopay.model.CardType;
+import com.judopay.model.CardNetwork;
 
+@Deprecated
 public class CardNumberValidation {
 
     private int error;
@@ -31,11 +32,11 @@ public class CardNumberValidation {
     }
 
     private boolean isAmexAndNotSupported(int cardType, boolean amexSupported) {
-        return cardType == CardType.AMEX && !amexSupported;
+        return cardType == CardNetwork.AMEX && !amexSupported;
     }
 
     private boolean isMaestroAndNotSupported(int cardType, boolean maestroSupported) {
-        return cardType == CardType.MAESTRO && !maestroSupported;
+        return cardType == CardNetwork.MAESTRO && !maestroSupported;
     }
 
     public int getError() {
@@ -56,13 +57,13 @@ public class CardNumberValidation {
 
     private boolean isCardNumberValid(String cardNumber, int cardType, boolean tokenCard, boolean maestroSupported, boolean amexSupported) {
         return tokenCard || LuhnCheck.isValid(cardNumber)
-                && (((cardType != CardType.MAESTRO || maestroSupported))
-                && (cardType != CardType.AMEX || amexSupported));
+                && (((cardType != CardNetwork.MAESTRO || maestroSupported))
+                && (cardType != CardNetwork.AMEX || amexSupported));
     }
 
     private boolean isCardNumberLengthValid(String cardNumber, int cardType) {
         switch (cardType) {
-            case CardType.AMEX:
+            case CardNetwork.AMEX:
                 return cardNumber.length() == 15;
 
             default:
