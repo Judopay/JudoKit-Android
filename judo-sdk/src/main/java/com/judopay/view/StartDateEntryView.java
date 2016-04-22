@@ -42,7 +42,7 @@ public class StartDateEntryView extends FrameLayout {
         startDateEditText = (EditText) findViewById(R.id.start_date_edit_text);
         startDateInputLayout = (TextInputLayout) findViewById(R.id.start_date_input_layout);
 
-        HintFocusListener hintFocusListener = new HintFocusListener(startDateEditText, R.string.date_hint);
+        HintFocusListener hintFocusListener = new HintFocusListener(startDateEditText, getResources().getString(R.string.date_hint));
         startDateEditText.setOnFocusChangeListener(hintFocusListener);
 
         String dateFormat = getResources().getString(R.string.date_format);

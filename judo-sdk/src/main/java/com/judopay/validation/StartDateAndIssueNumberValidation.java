@@ -5,8 +5,9 @@ import android.support.annotation.StringRes;
 import com.judopay.PaymentForm;
 import com.judopay.R;
 import com.judopay.model.CardDate;
-import com.judopay.model.CardType;
+import com.judopay.model.CardNetwork;
 
+@Deprecated
 public class StartDateAndIssueNumberValidation {
 
     private int startDateError;
@@ -24,7 +25,7 @@ public class StartDateAndIssueNumberValidation {
             startDateError = R.string.check_start_date;
         }
 
-        boolean maestroCardType = cardType == CardType.MAESTRO;
+        boolean maestroCardType = cardType == CardNetwork.MAESTRO;
 
         this.issueNumberValid = isIssueNumberValid(paymentForm.getIssueNumber());
         this.showIssueNumberAndStartDate = paymentForm.isMaestroSupported() && maestroCardType && !paymentForm.isTokenCard();

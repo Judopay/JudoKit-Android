@@ -5,8 +5,9 @@ import android.support.annotation.StringRes;
 import com.judopay.PaymentForm;
 import com.judopay.R;
 import com.judopay.model.CardDate;
-import com.judopay.model.CardType;
+import com.judopay.model.CardNetwork;
 
+@Deprecated
 public class PaymentFormValidation {
 
     private CardNumberValidation cardNumberValidation;
@@ -84,14 +85,14 @@ public class PaymentFormValidation {
         }
 
         public int getCvvHint(int cardType) {
-            return CardType.AMEX == cardType ? R.string.amex_security_code_hint : R.string.security_code_hint;
+            return CardNetwork.AMEX == cardType ? R.string.amex_security_code_hint : R.string.security_code_hint;
         }
 
         public PaymentFormValidation build(PaymentForm paymentForm) {
             int cardType = paymentForm.getCardType() > 0 ? paymentForm.getCardType() :
-                    CardType.fromCardNumber(paymentForm.getCardNumber());
+                    CardNetwork.fromCardNumber(paymentForm.getCardNumber());
 
-            boolean maestroCardType = cardType == CardType.MAESTRO;
+            boolean maestroCardType = cardType == CardNetwork.MAESTRO;
 
             CardNumberValidation cardNumberValidation = new CardNumberValidation(paymentForm.getCardNumber(),
                     cardType,
@@ -119,7 +120,7 @@ public class PaymentFormValidation {
                     .setCountryAndPostcodeValidation(countryAndPostcodeValidation)
                     .setStartDateAndIssueNumberValidation(startDateAndIssueNumberValidation)
                     .setSecurityCodeValid(securityCodeValid)
-                    .setSecurityCodeLength(cardType == CardType.AMEX ? 4 : 3);
+                    .setSecurityCodeLength(cardType == CardNetwork.AMEX ? 4 : 3);
 
             setExpiryDate(builder, expiryDateValid, paymentForm);
 
@@ -149,7 +150,7 @@ public class PaymentFormValidation {
             try {
                 int securityCodeNumber = Integer.parseInt(securityCode);
 
-                if (CardType.AMEX == cardType) {
+                if (CardNetwork.AMEX == cardType) {
                     return securityCode.length() == 4 && securityCodeNumber >= 0 && securityCodeNumber < 10000;
                 } else {
                     return securityCode.length() == 3 && securityCodeNumber > 0 && securityCodeNumber < 1000;

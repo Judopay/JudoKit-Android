@@ -3,7 +3,7 @@ package com.judopay.payment.form;
 import com.judopay.PaymentForm;
 import com.judopay.R;
 import com.judopay.StartDateAndIssueNumberValidation;
-import com.judopay.model.CardType;
+import com.judopay.model.CardNetwork;
 import com.judopay.model.Country;
 
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class StartDateAndIssueNumberValidationTest {
                 .setPostcode("")
                 .setCountry(new Country(0, Country.UNITED_KINGDOM))
                 .build();
-        StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(build, CardType.fromCardNumber(build.getCardNumber()));
+        StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(build, CardNetwork.fromCardNumber(build.getCardNumber()));
 
         assertThat(startDateAndIssueNumberValidation.isStartDateEntryComplete(), is(true));
     }
@@ -40,7 +40,7 @@ public class StartDateAndIssueNumberValidationTest {
                 .setPostcode("")
                 .setCountry(new Country(0, Country.UNITED_KINGDOM))
                 .build();
-        StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(build, CardType.fromCardNumber(build.getCardNumber()));
+        StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(build, CardNetwork.fromCardNumber(build.getCardNumber()));
 
         assertThat(startDateAndIssueNumberValidation.isShowStartDateError(), is(true));
         assertThat(startDateAndIssueNumberValidation.getStartDateError(), is(R.string.check_start_date));
@@ -58,7 +58,7 @@ public class StartDateAndIssueNumberValidationTest {
                 .setCountry(new Country(0, Country.UNITED_KINGDOM))
                 .setMaestroSupported(true)
                 .build();
-        StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(build, CardType.fromCardNumber(build.getCardNumber()));
+        StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(build, CardNetwork.fromCardNumber(build.getCardNumber()));
 
         assertThat(startDateAndIssueNumberValidation.isShowIssueNumberAndStartDate(), is(true));
     }
@@ -75,7 +75,7 @@ public class StartDateAndIssueNumberValidationTest {
                 .setCountry(new Country(0, Country.UNITED_KINGDOM))
                 .setMaestroSupported(false)
                 .build();
-        StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(build, CardType.fromCardNumber(build.getCardNumber()));
+        StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(build, CardNetwork.fromCardNumber(build.getCardNumber()));
 
         assertThat(startDateAndIssueNumberValidation.isShowIssueNumberAndStartDate(), is(false));
     }
@@ -93,7 +93,7 @@ public class StartDateAndIssueNumberValidationTest {
                 .setMaestroSupported(true)
                 .build();
         StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(
-                build, CardType.fromCardNumber(build.getCardNumber()));
+                build, CardNetwork.fromCardNumber(build.getCardNumber()));
 
         assertThat(startDateAndIssueNumberValidation.isShowIssueNumberAndStartDate(), is(false));
     }
@@ -111,7 +111,7 @@ public class StartDateAndIssueNumberValidationTest {
                 .setMaestroSupported(true)
                 .build();
         StartDateAndIssueNumberValidation startDateAndIssueNumberValidation = new StartDateAndIssueNumberValidation(
-                build, CardType.fromCardNumber(build.getCardNumber()));
+                build, CardNetwork.fromCardNumber(build.getCardNumber()));
 
         assertThat(startDateAndIssueNumberValidation.isShowIssueNumberAndStartDate(), is(true));
     }

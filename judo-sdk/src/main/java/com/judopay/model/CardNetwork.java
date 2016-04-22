@@ -2,9 +2,9 @@ package com.judopay.model;
 
 /**
  * The type of a payment card (e.g. Visa, Mastercard, American Express)
- * Can be detected from the card number digits using the {@link CardType#fromCardNumber(String)} method.
+ * Can be detected from the card number digits using the {@link CardNetwork#fromCardNumber(String)} method.
  */
-public class CardType {
+public class CardNetwork {
 
     private static final String REGEX_VISA = "^4[0-9]{3}.*?";
     private static final String REGEX_MASTERCARD = "^5[1-5][0-9]{2}.*?";
@@ -47,6 +47,31 @@ public class CardType {
         return UNKNOWN;
     }
 
+    public static String securityCodeHint(int cardType) {
+        if (CardNetwork.AMEX == cardType) {
+            return "0000";
+        } else {
+            return "000";
+        }
+    }
+
+    public static String securityCode(int cardType) {
+        switch (cardType) {
+            case CardNetwork.AMEX:
+                return "CID";
+            case CardNetwork.VISA:
+                return "CVV2";
+            case CardNetwork.MASTERCARD:
+                return "CVC2";
+            case CardNetwork.CHINA_UNION_PAY:
+                return "CVN2";
+            case CardNetwork.JCB:
+                return "CAV2";
+            default:
+                return "CVV";
+        }
+    }
+
     private static boolean startsWith(String[] prefixes, String cardNumber) {
         for (String prefix : prefixes) {
             if (cardNumber.startsWith(prefix)) {
@@ -56,4 +81,11 @@ public class CardType {
         return false;
     }
 
+    public static int securityCodeLength(int cardType) {
+        if(cardType == CardNetwork.AMEX) {
+            return 4;
+        } else {
+            return 3;
+        }
+    }
 }

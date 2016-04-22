@@ -44,7 +44,7 @@ public class IssueNumberEntryView extends LinearLayout {
 
         issueNumberEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
                 new EmptyTextHintOnFocusChangeListener(issueNumberHelperText),
-                new HintFocusListener(issueNumberEditText, R.string.issue_number_hint)
+                new HintFocusListener(issueNumberEditText, getResources().getString(R.string.issue_number_hint))
         ));
 
         issueNumberEditText.addTextChangedListener(new HidingViewTextWatcher(issueNumberHelperText));

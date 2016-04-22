@@ -1,7 +1,6 @@
 package com.judopay.view;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputFilter;
 import android.util.AttributeSet;
@@ -12,10 +11,10 @@ import android.widget.TextView;
 
 import com.judopay.R;
 import com.judopay.model.CardToken;
-import com.judopay.model.CardType;
+import com.judopay.model.CardNetwork;
 import com.judopay.validation.Validation;
 
-import static com.judopay.model.CardType.AMEX;
+import static com.judopay.model.CardNetwork.AMEX;
 
 /**
  * A view that allows for card number data to be input by the user and the detected card type
@@ -62,7 +61,7 @@ public class CardNumberEntryView extends RelativeLayout {
         editText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
                 new EmptyTextHintOnFocusChangeListener(cardNumberHelperText),
                 new ViewAlphaChangingTextWatcher(editText, cardTypeImageView),
-                new HintFocusListener(editText, R.string.card_number_format)
+                new HintFocusListener(editText, getResources().getString(R.string.card_number_format))
         ));
 
         numberFormatTextWatcher = new NumberFormatTextWatcher(editText, getResources().getString(R.string.card_number_format));
@@ -74,7 +73,7 @@ public class CardNumberEntryView extends RelativeLayout {
         cardTypeImageView.setCardType(type, animate);
 
         switch (type) {
-            case CardType.AMEX:
+            case CardNetwork.AMEX:
                 setMaxLength(17);
                 numberFormatTextWatcher.setFormat(getResources().getString(R.string.amex_card_number_format));
                 break;
@@ -94,7 +93,7 @@ public class CardNumberEntryView extends RelativeLayout {
     }
 
     public int getCardType() {
-        return CardType.fromCardNumber(editText.getText().toString());
+        return CardNetwork.fromCardNumber(editText.getText().toString());
     }
 
     public String getText() {

@@ -38,7 +38,7 @@ public class Card {
     }
 
     public boolean startDateAndIssueNumberRequired() {
-        return CardType.MAESTRO == CardType.fromCardNumber(cardNumber);
+        return CardNetwork.MAESTRO == CardNetwork.fromCardNumber(cardNumber);
     }
 
     public static class Builder {
@@ -51,7 +51,7 @@ public class Card {
         private String securityCode;
 
         public Builder setCardNumber(String cardNumber) {
-            this.cardNumber = cardNumber;
+            this.cardNumber = cardNumber.replaceAll("\\s+", "");
             return this;
         }
 

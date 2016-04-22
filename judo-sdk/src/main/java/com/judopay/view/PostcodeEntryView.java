@@ -45,7 +45,7 @@ public class PostcodeEntryView extends FrameLayout {
 
         if (editText != null) {
             onFocusChangeListener = new CompositeOnFocusChangeListener(
-                    new HintFocusListener(editText, R.string.empty));
+                    new HintFocusListener(editText, getResources().getString(R.string.empty)));
 
             editText.setOnFocusChangeListener(onFocusChangeListener);
         }
