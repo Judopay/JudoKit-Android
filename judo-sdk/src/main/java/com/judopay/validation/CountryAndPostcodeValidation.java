@@ -6,6 +6,7 @@ import com.judopay.model.Country;
 
 import java.util.regex.Pattern;
 
+@Deprecated
 public class CountryAndPostcodeValidation {
 
     private static final Pattern ukPostcodePattern = Pattern.compile("\\b(GIR ?0AA|SAN ?TA1|(?:[A-PR-UWYZ](?:\\d{0,2}|[A-HK-Y]\\d|[A-HK-Y]\\d\\d|\\d[A-HJKSTUW]|[A-HK-Y]\\d[ABEHMNPRV-Y])) ?\\d[ABD-HJLNP-UW-Z]{2})\\b");
