@@ -3,7 +3,7 @@ package com.judopay.validation;
 import android.widget.EditText;
 
 import com.judopay.R;
-import com.judopay.model.CardType;
+import com.judopay.model.CardNetwork;
 import com.judopay.view.SimpleTextWatcher;
 
 import rx.Observable;
@@ -37,7 +37,7 @@ public class SecurityCodeValidator implements Validator {
     }
 
     private boolean isValid(CharSequence text) {
-        if (cardType == CardType.AMEX) {
+        if (cardType == CardNetwork.AMEX) {
             return text.length() == 4;
         }
         return text.length() == 3;
