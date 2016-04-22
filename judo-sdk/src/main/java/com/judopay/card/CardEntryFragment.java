@@ -7,15 +7,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
-import com.judopay.PaymentForm;
 import com.judopay.R;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
-import com.judopay.model.CardType;
+import com.judopay.model.CardNetwork;
 import com.judopay.model.Country;
 import com.judopay.validation.CardNumberValidator;
 import com.judopay.validation.CountryAndPostcodeValidation;
@@ -29,7 +29,6 @@ import com.judopay.validation.Validation;
 import com.judopay.validation.ValidationManager;
 import com.judopay.validation.Validator;
 import com.judopay.view.CardNumberEntryView;
-import com.judopay.view.CountrySpinner;
 import com.judopay.view.ExpiryDateEntryView;
 import com.judopay.view.IssueNumberEntryView;
 import com.judopay.view.PostcodeEntryView;
@@ -65,7 +64,7 @@ import static com.judopay.Judo.isAvsEnabled;
 public final class CardEntryFragment extends AbstractCardEntryFragment {
 
     private Button paymentButton;
-    private CountrySpinner countrySpinner;
+    private Spinner countrySpinner;
     private SecurityCodeEntryView securityCodeEntryView;
     private CardNumberEntryView cardNumberEntryView;
 
@@ -94,7 +93,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
         postcodeEntryView = (PostcodeEntryView) view.findViewById(R.id.postcode_entry_view);
 
-        countrySpinner = (CountrySpinner) view.findViewById(R.id.country_spinner);
+        countrySpinner = (Spinner) view.findViewById(R.id.country_spinner);
         startDateEntryView = (StartDateEntryView) view.findViewById(R.id.start_date_entry_view);
 
         issueNumberEntryView = (IssueNumberEntryView) view.findViewById(R.id.issue_number_entry_view);
@@ -122,7 +121,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             securityCodeEntryView.requestFocus();
         } else {
             if (judoOptions.getCardNumber() != null) {
-                int cardType = CardType.fromCardNumber(judoOptions.getCardNumber());
+                int cardType = CardNetwork.fromCardNumber(judoOptions.getCardNumber());
                 cardNumberEntryView.setCardType(cardType, false);
                 cardNumberEntryView.setText(judoOptions.getCardNumber());
                 expiryDateEntryView.requestFocus();
@@ -139,8 +138,8 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         cardNumberEntryView.getEditText().addTextChangedListener(new SimpleTextWatcher() {
             @Override
             protected void onTextChanged(CharSequence text) {
-                int cardType = CardType.fromCardNumber(text.toString());
-                if (cardType == CardType.MAESTRO) {
+                int cardType = CardNetwork.fromCardNumber(text.toString());
+                if (cardType == CardNetwork.MAESTRO) {
                     addMaestroValidators();
                 } else {
                     validationManager.removeValidator(startDateValidator);
@@ -181,8 +180,8 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             secureServerText.setVisibility(View.GONE);
         }
 
-        initialiseCountry();
-        initialisePayButton();
+        initializeCountry();
+        initializePayButton();
     }
 
     private void addMaestroValidators() {
@@ -199,7 +198,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         validationManager.addValidator(issueNumberValidator);
     }
 
-    private void initialisePayButton() {
+    private void initializePayButton() {
         paymentButton.setOnClickListener(new SingleClickOnClickListener() {
             @Override
             public void doClick() {
@@ -209,25 +208,42 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         });
     }
 
-    private void initialiseCountry() {
+    private void initializeCountry() {
         countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                updateFormView();
+                String country = (String) countrySpinner.getSelectedItem();
+                postcodeEntryView.setHint(getPostcodeLabel(country));
+                boolean postcodeNumeric = Country.UNITED_STATES.equals(country);
+                postcodeEntryView.setNumericInput(postcodeNumeric);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }
 
-//    private void initialisePostcode(SimpleTextWatcher formValidator) {
+    private int getPostcodeLabel(String country) {
+        switch (country) {
+            case Country.UNITED_STATES:
+                return R.string.billing_zip_code;
+
+            case Country.CANADA:
+                return R.string.billing_postal_code;
+
+            default:
+                return R.string.billing_postcode;
+        }
+    }
+
+//    private void initializePostcode(SimpleTextWatcher formValidator) {
 //        postcodeEntryView.addTextChangedListener(formValidator);
 //        postcodeEntryView.addOnFocusChangeListener(new ScrollOnFocusChangeListener(scrollView));
 //    }
 //
-//    private void initialiseExpiryDate(SimpleTextWatcher formValidator) {
+//    private void initializeExpiryDate(SimpleTextWatcher formValidator) {
 //        if (judoOptions.getCardToken() == null) {
 //            expiryDateEntryView.addTextChangedListener(formValidator);
 //        } else {
@@ -236,7 +252,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 //        }
 //    }
 //
-//    private void initialiseCardNumber(SimpleTextWatcher formValidator) {
+//    private void initializeCardNumber(SimpleTextWatcher formValidator) {
 //        if (judoOptions.getCardToken() == null) {
 //            cardNumberEntryView.addTextChangedListener(formValidator);
 //        } else {
@@ -244,35 +260,35 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 //        }
 //    }
 
-    private void updateFormView() {
-        PaymentForm.Builder builder = new PaymentForm.Builder()
-                .setCardNumber(cardNumberEntryView.getText())
-                .setSecurityCode(securityCodeEntryView.getText())
-                .setCountry(getCountry())
-                .setPostcode(postcodeEntryView.getText())
-                .setIssueNumber(issueNumberEntryView.getText())
-                .setExpiryDate(expiryDateEntryView.getText())
-                .setStartDate(startDateEntryView.getText())
-                .setAddressRequired(Judo.isAvsEnabled())
-                .setAmexSupported(Judo.isAmexEnabled())
-                .setMaestroSupported(Judo.isMaestroEnabled());
-
-        CardToken cardToken = judoOptions.getCardToken();
-        if (cardToken != null) {
-            builder.setTokenCard(true)
-                    .setCardType(cardToken.getType());
-        }
-
-        PaymentFormValidation formView = new PaymentFormValidation.Builder()
-                .build(builder.build());
-
-        if (cardToken == null) {
-            cardNumberEntryView.setCardType(formView.getCardType(), true);
-        }
-
-        updateFormErrors(formView);
-        moveFieldFocus(formView);
-    }
+//    private void updateFormView() {
+//        PaymentForm.Builder builder = new PaymentForm.Builder()
+//                .setCardNumber(cardNumberEntryView.getText())
+//                .setSecurityCode(securityCodeEntryView.getText())
+//                .setCountry(null)
+//                .setPostcode(postcodeEntryView.getText())
+//                .setIssueNumber(issueNumberEntryView.getText())
+//                .setExpiryDate(expiryDateEntryView.getText())
+//                .setStartDate(startDateEntryView.getText())
+//                .setAddressRequired(Judo.isAvsEnabled())
+//                .setAmexSupported(Judo.isAmexEnabled())
+//                .setMaestroSupported(Judo.isMaestroEnabled());
+//
+//        CardToken cardToken = judoOptions.getCardToken();
+//        if (cardToken != null) {
+//            builder.setTokenCard(true)
+//                    .setCardType(cardToken.getType());
+//        }
+//
+//        PaymentFormValidation formView = new PaymentFormValidation.Builder()
+//                .build(builder.build());
+//
+//        if (cardToken == null) {
+//            cardNumberEntryView.setCardType(formView.getCardType(), true);
+//        }
+//
+//        updateFormErrors(formView);
+//        moveFieldFocus(formView);
+//    }
 
     private void updateFormErrors(PaymentFormValidation formView) {
         showStartDateAndIssueNumberErrors(formView.getStartDateAndIssueNumberState());
@@ -285,7 +301,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     private void updateCvvErrors(PaymentFormValidation formView) {
-        securityCodeEntryView.setAlternateHint(formView.getSecurityCodeHint());
+//        securityCodeEntryView.setAlternateHint(formView.getSecurityCodeHint());
 
         securityCodeEntryView.setMaxLength(formView.getSecurityCodeLength());
         securityCodeEntryView.setCardType(formView.getCardType(), true);
@@ -328,10 +344,6 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         }
     }
 
-    private Country getCountry() {
-        return countrySpinner.getSelectedCountry();
-    }
-
     private void submitForm() {
         Card.Builder cardBuilder = new Card.Builder()
                 .setCardNumber(cardNumberEntryView.getText())
@@ -342,12 +354,12 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
                 .setPostCode(postcodeEntryView.getText());
 
         if (isAvsEnabled()) {
-            addressBuilder.setCountryCode(countrySpinner.getSelectedCountry().getCode());
+            addressBuilder.setCountryCode(Country.codeFromCountry((String) countrySpinner.getSelectedItem()));
         }
 
         cardBuilder.setCardAddress(addressBuilder.build());
 
-        if (cardNumberEntryView.getCardType() == CardType.MAESTRO) {
+        if (cardNumberEntryView.getCardType() == CardNetwork.MAESTRO) {
             cardBuilder.setIssueNumber(issueNumberEntryView.getText())
                     .setStartDate(startDateEntryView.getText());
         }
