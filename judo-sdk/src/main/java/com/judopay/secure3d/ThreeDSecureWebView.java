@@ -36,21 +36,21 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
 
     public ThreeDSecureWebView(Context context) {
         super(context);
-        initialise();
+        initialize();
     }
 
     public ThreeDSecureWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initialise();
+        initialize();
     }
 
     public ThreeDSecureWebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initialise();
+        initialize();
     }
 
     @SuppressLint("AddJavascriptInterface")
-    private void initialise() {
+    private void initialize() {
         configureSettings();
 
         if (BuildConfig.DEBUG && SDK_INT >= KITKAT) {
