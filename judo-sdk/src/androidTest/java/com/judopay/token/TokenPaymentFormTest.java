@@ -11,7 +11,7 @@ import com.judopay.JudoOptions;
 import com.judopay.R;
 import com.judopay.TokenPaymentActivity;
 import com.judopay.model.CardToken;
-import com.judopay.model.CardType;
+import com.judopay.model.CardNetwork;
 import com.judopay.model.Currency;
 
 import org.junit.Before;
@@ -31,9 +31,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.judopay.model.CardType.AMEX;
-import static com.judopay.model.CardType.MAESTRO;
-import static com.judopay.model.CardType.VISA;
+import static com.judopay.model.CardNetwork.AMEX;
+import static com.judopay.model.CardNetwork.MAESTRO;
+import static com.judopay.model.CardNetwork.VISA;
 import static com.judopay.util.ViewMatchers.isDisabled;
 import static com.judopay.util.ViewMatchers.isNotDisplayed;
 import static com.judopay.util.ViewMatchers.isOpaque;
@@ -187,7 +187,7 @@ public class TokenPaymentFormTest {
     public void shouldNotEnablePayButtonWhenCv2Deleted() {
         Judo.setAvsEnabled(false);
 
-        Intent intent = getIntent(CardType.VISA);
+        Intent intent = getIntent(CardNetwork.VISA);
         activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.security_code_edit_text))
