@@ -3,7 +3,7 @@ package com.judopay.validation;
 import android.widget.EditText;
 
 import com.judopay.R;
-import com.judopay.model.CardType;
+import com.judopay.model.CardNetwork;
 import com.judopay.model.LuhnCheck;
 import com.judopay.view.SimpleTextWatcher;
 
@@ -40,7 +40,7 @@ public class CardNumberValidator implements Validator {
     }
 
     public Validation getValidation(String cardNumber) {
-        int cardType = CardType.fromCardNumber(cardNumber);
+        int cardType = CardNetwork.fromCardNumber(cardNumber);
 
         boolean cardNumberLengthValid = isCardNumberLengthValid(cardNumber, cardType);
         boolean maestroAndNotSupported = isMaestroAndNotSupported(cardType, maestroSupported);
@@ -62,22 +62,22 @@ public class CardNumberValidator implements Validator {
     }
 
     private boolean isAmexAndNotSupported(int cardType, boolean amexSupported) {
-        return cardType == CardType.AMEX && !amexSupported;
+        return cardType == CardNetwork.AMEX && !amexSupported;
     }
 
     private boolean isMaestroAndNotSupported(int cardType, boolean maestroSupported) {
-        return cardType == CardType.MAESTRO && !maestroSupported;
+        return cardType == CardNetwork.MAESTRO && !maestroSupported;
     }
 
     private boolean isCardNumberValid(String cardNumber, int cardType) {
         return LuhnCheck.isValid(cardNumber)
-                && (((cardType != CardType.MAESTRO || maestroSupported))
-                && (cardType != CardType.AMEX || amexSupported));
+                && (((cardType != CardNetwork.MAESTRO || maestroSupported))
+                && (cardType != CardNetwork.AMEX || amexSupported));
     }
 
     private boolean isCardNumberLengthValid(String cardNumber, int cardType) {
         switch (cardType) {
-            case CardType.AMEX:
+            case CardNetwork.AMEX:
                 return cardNumber.length() == 15;
 
             default:
