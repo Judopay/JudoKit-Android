@@ -2,9 +2,12 @@ package com.judopay.card;
 
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -13,8 +16,10 @@ import com.judopay.CustomLayout;
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
 import com.judopay.R;
+import com.judopay.model.Address;
 import com.judopay.model.Card;
-import com.judopay.model.CardType;
+import com.judopay.model.CardNetwork;
+import com.judopay.model.Country;
 import com.judopay.validation.CardNumberValidator;
 import com.judopay.validation.CountryAndPostcodeValidator;
 import com.judopay.validation.ExpiryDateValidator;
@@ -24,6 +29,7 @@ import com.judopay.validation.StartDateValidator;
 import com.judopay.validation.Validation;
 import com.judopay.validation.ValidationManager;
 import com.judopay.validation.Validator;
+import com.judopay.view.CountrySpinnerAdapter;
 import com.judopay.view.HintFocusListener;
 import com.judopay.view.NumberFormatTextWatcher;
 import com.judopay.view.SimpleTextWatcher;
@@ -35,6 +41,7 @@ import java.util.List;
 import rx.functions.Action1;
 
 import static com.judopay.Judo.JUDO_OPTIONS;
+import static com.judopay.Judo.isAvsEnabled;
 
 public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragment {
 
@@ -50,8 +57,11 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
     private Spinner countrySpinner;
 
     private ValidationManager validationManager;
+    private ValidationManager avsValidationManager;
+
     private StartDateValidator startDateValidator;
     private IssueNumberValidator issueNumberValidator;
+    private HintFocusListener securityCodeHintFocusChangeListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,6 +89,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         }
 
         initializeInputTexts();
+        initializeCountry();
         initializeValidators();
         initializePayButton();
     }
@@ -87,7 +98,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         EditText cardNumberTextInputEditText = cardNumberTextInput.getEditText();
 
         if (cardNumberTextInputEditText != null) {
-            cardNumberTextInputEditText.setOnFocusChangeListener(new HintFocusListener(cardNumberTextInputEditText, R.string.card_number_format));
+            cardNumberTextInputEditText.setOnFocusChangeListener(new HintFocusListener(cardNumberTextInputEditText, getResources().getString(R.string.card_number_format)));
             NumberFormatTextWatcher numberFormatTextWatcher = new NumberFormatTextWatcher(cardNumberTextInputEditText, getResources().getString(R.string.card_number_format));
             cardNumberTextInputEditText.addTextChangedListener(numberFormatTextWatcher);
         }
@@ -97,14 +108,26 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
             initializeDateEditText(expiryDateEditText);
         }
 
+        startDateTextInput.setVisibility(View.GONE);
         EditText startDateEditText = startDateTextInput.getEditText();
         if (startDateEditText != null) {
             initializeDateEditText(startDateEditText);
         }
+
+        issueNumberTextInput.setVisibility(View.GONE);
+
+        EditText securityCodeEditText = securityCodeTextInput.getEditText();
+        if (securityCodeEditText != null) {
+            securityCodeHintFocusChangeListener = new HintFocusListener(securityCodeEditText, "000");
+            securityCodeEditText.setOnFocusChangeListener(securityCodeHintFocusChangeListener);
+        }
+
+        countrySpinner.setVisibility(View.GONE);
+        postcodeTextInput.setVisibility(View.GONE);
     }
 
     private void initializeDateEditText(EditText editText) {
-        HintFocusListener hintFocusListener = new HintFocusListener(editText, R.string.date_hint);
+        HintFocusListener hintFocusListener = new HintFocusListener(editText, getString(R.string.date_hint));
         editText.setOnFocusChangeListener(hintFocusListener);
 
         String dateFormat = getResources().getString(R.string.date_format);
@@ -120,13 +143,41 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
             editText.addTextChangedListener(new SimpleTextWatcher() {
                 @Override
                 protected void onTextChanged(CharSequence text) {
-                    int cardType = CardType.fromCardNumber(text.toString());
-                    if (Judo.isMaestroEnabled() && cardType == CardType.MAESTRO) {
+                    int cardType = CardNetwork.fromCardNumber(text.toString());
+
+                    String securityCode = CardNetwork.securityCode(cardType);
+                    securityCodeTextInput.setHint(securityCode);
+
+                    String securityCodeHint = CardNetwork.securityCodeHint(cardType);
+                    securityCodeHintFocusChangeListener.setHint(securityCodeHint);
+
+                    EditText securityCodeTextInputEditText = securityCodeTextInput.getEditText();
+                    if (securityCodeTextInputEditText != null) {
+                        securityCodeTextInputEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(CardNetwork.securityCodeLength(cardType))});
+                    }
+
+                    if (Judo.isMaestroEnabled() && cardType == CardNetwork.MAESTRO) {
                         validationManager.addValidator(issueNumberValidator);
                         validationManager.addValidator(startDateValidator);
+
+                        if (isAvsEnabled()) {
+                            avsValidationManager.addValidator(startDateValidator);
+                            avsValidationManager.addValidator(issueNumberValidator);
+                        }
+
+                        startDateTextInput.setVisibility(View.VISIBLE);
+                        issueNumberTextInput.setVisibility(View.VISIBLE);
                     } else {
                         validationManager.removeValidator(startDateValidator);
                         validationManager.removeValidator(issueNumberValidator);
+
+                        if (isAvsEnabled()) {
+                            avsValidationManager.removeValidator(startDateValidator);
+                            avsValidationManager.removeValidator(issueNumberValidator);
+                        }
+
+                        startDateTextInput.setVisibility(View.GONE);
+                        issueNumberTextInput.setVisibility(View.GONE);
                     }
                 }
             });
@@ -135,7 +186,8 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         CardNumberValidator cardNumberValidator = getCardNumberValidator();
         validators.add(cardNumberValidator);
 
-        validators.add(new SecurityCodeValidator(securityCodeTextInput.getEditText()));
+        SecurityCodeValidator securityCodeValidator = new SecurityCodeValidator(securityCodeTextInput.getEditText());
+        validators.add(securityCodeValidator);
 
         ExpiryDateValidator expiryDateValidator = getExpiryDateValidator();
         validators.add(expiryDateValidator);
@@ -143,7 +195,19 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         issueNumberValidator = getIssueNumberValidator();
         startDateValidator = getStartDateValidator();
 
-        if (Judo.isAvsEnabled()) {
+        if (isAvsEnabled()) {
+            ArrayList<Validator> avsValidators = new ArrayList<>();
+            avsValidators.add(cardNumberValidator);
+            avsValidators.add(expiryDateValidator);
+            avsValidators.add(securityCodeValidator);
+
+            avsValidationManager = new ValidationManager(avsValidators, new ValidationManager.OnChangeListener() {
+                @Override
+                public void onValidate(boolean valid) {
+                    countrySpinner.setVisibility(valid ? View.VISIBLE : View.GONE);
+                    postcodeTextInput.setVisibility(valid ? View.VISIBLE : View.GONE);
+                }
+            });
             CountryAndPostcodeValidator countryAndPostcodeValidator = getCountryAndPostcodeValidator();
             validators.add(countryAndPostcodeValidator);
         }
@@ -167,6 +231,51 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
                     }
                 });
         return cardNumberValidator;
+    }
+
+    private void initializeCountry() {
+        countrySpinner.setAdapter(new CountrySpinnerAdapter(getActivity(), Country.avsCountries()));
+
+        countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String country = (String) countrySpinner.getSelectedItem();
+                postcodeTextInput.setHint(getResources().getString(getPostcodeLabel(country)));
+                boolean postcodeNumeric = Country.UNITED_STATES.equals(country);
+
+                EditText editText = postcodeTextInput.getEditText();
+                if (editText != null) {
+                    if (postcodeNumeric && editText.getInputType() != InputType.TYPE_CLASS_NUMBER) {
+                        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    } else {
+                        int alphanumericInputTypes = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
+
+                        if (!postcodeNumeric && editText.getInputType() != alphanumericInputTypes) {
+                            editText.setInputType(alphanumericInputTypes);
+                        }
+                    }
+                    editText.setPrivateImeOptions("nm"); // prevent text suggestions in keyboard
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private int getPostcodeLabel(String country) {
+        switch (country) {
+            case Country.UNITED_STATES:
+                return R.string.billing_zip_code;
+
+            case Country.CANADA:
+                return R.string.billing_postal_code;
+
+            default:
+                return R.string.billing_postcode;
+        }
     }
 
     private ExpiryDateValidator getExpiryDateValidator() {
@@ -242,19 +351,21 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
                 .setExpiryDate(getText(expiryDateTextInput))
                 .setSecurityCode(getText(securityCodeTextInput));
 
-//        Address.Builder addressBuilder = new Address.Builder()
-//                .setPostCode(postcodeEntryView.getText());
-//
-//        if (isAvsEnabled()) {
-//            addressBuilder.setCountryCode(countrySpinner.getSelectedCountry().getCode());
-//        }
+        if (postcodeTextInput != null) {
+            Address.Builder addressBuilder = new Address.Builder();
 
-//        cardBuilder.setCardAddress(addressBuilder.build());
+            if (isAvsEnabled()) {
+                addressBuilder.setPostCode(getText(postcodeTextInput))
+                        .setCountryCode(Country.codeFromCountry((String) countrySpinner.getSelectedItem()));
+            }
+            cardBuilder.setCardAddress(addressBuilder.build());
+        }
 
-//        if (cardNumberEntryView.getCardType() == CardType.MAESTRO) {
-//            cardBuilder.setIssueNumber(issueNumberEntryView.getText())
-//                    .setStartDate(startDateEntryView.getText());
-//        }
+        EditText cardNumberEditText = cardNumberTextInput.getEditText();
+        if (cardNumberEditText != null && CardNetwork.fromCardNumber(getText(cardNumberTextInput)) == CardNetwork.MAESTRO) {
+            cardBuilder.setIssueNumber(getText(issueNumberTextInput))
+                    .setStartDate(getText(startDateTextInput));
+        }
 
         if (cardEntryListener != null) {
             cardEntryListener.onSubmit(cardBuilder.build());
@@ -262,7 +373,8 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
     }
 
     private String getText(TextInputLayout inputLayout) {
-        return inputLayout.getEditText().getText().toString();
+        EditText editText = inputLayout.getEditText();
+        return editText != null ? editText.getText().toString() : "";
     }
 
     public static CustomLayoutCardEntryFragment newInstance(JudoOptions judoOptions, CardEntryListener listener) {
