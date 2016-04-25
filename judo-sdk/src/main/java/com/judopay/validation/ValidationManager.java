@@ -51,6 +51,10 @@ public class ValidationManager {
         }
     }
 
+    public Map<Validator, Boolean> getValidationResults() {
+        return validationResults;
+    }
+
     public void removeValidator(final Validator validator) {
         if (subscriptions.containsKey(validator)) {
             Subscription subscription = subscriptions.get(validator);
