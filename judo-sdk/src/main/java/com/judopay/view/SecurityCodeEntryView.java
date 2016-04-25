@@ -85,8 +85,8 @@ public class SecurityCodeEntryView extends RelativeLayout {
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(length)});
     }
 
-    public void setHint(@StringRes int hintResId) {
-        inputLayout.setHint(getResources().getString(hintResId));
+    public void setHint(String hint) {
+        inputLayout.setHint(hint);
     }
 
     public void setAlternateHint(String hint) {
