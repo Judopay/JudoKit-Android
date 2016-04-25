@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
 
@@ -28,26 +29,30 @@ public class ValidationManager {
     }
 
     public void addValidator(final Validator validator) {
-        if(!validationResults.containsKey(validator)) {
+        addValidator(validator, validator.onValidate());
+    }
+
+    public void addValidator(final Validator validator, Observable<Validation> observable) {
+        if (!validationResults.containsKey(validator)) {
             validationResults.put(validator, false);
 
-            Subscription subscription = validator.onValidate().subscribe(new Action1<Validation>() {
-                @Override
-                public void call(Validation validation) {
-                    if(validationResults.containsKey(validator)) {
-                        validationResults.remove(validator);
-                    }
-                    validationResults.put(validator, validation.isValid());
-                    notifyListener();
-                }
-            });
+            Subscription subscription = observable.subscribe(new Action1<Validation>() {
+                        @Override
+                        public void call(Validation validation) {
+                            if (validationResults.containsKey(validator)) {
+                                validationResults.remove(validator);
+                            }
+                            validationResults.put(validator, validation.isValid());
+                            notifyListener();
+                        }
+                    });
 
             subscriptions.put(validator, subscription);
         }
     }
 
     public void removeValidator(final Validator validator) {
-        if(subscriptions.containsKey(validator)) {
+        if (subscriptions.containsKey(validator)) {
             Subscription subscription = subscriptions.get(validator);
             subscription.unsubscribe();
 

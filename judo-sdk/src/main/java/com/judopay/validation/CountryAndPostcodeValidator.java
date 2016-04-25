@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.observables.ConnectableObservable;
 
 import static java.util.regex.Pattern.compile;
 
@@ -32,7 +33,7 @@ public class CountryAndPostcodeValidator implements Validator {
     }
 
     @Override
-    public Observable<Validation> onValidate() {
+    public ConnectableObservable<Validation> onValidate() {
         return Observable.create(new Observable.OnSubscribe<Validation>() {
             @Override
             public void call(final Subscriber<? super Validation> subscriber) {
@@ -45,20 +46,16 @@ public class CountryAndPostcodeValidator implements Validator {
                     }
                 });
 
-                countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                countrySpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         if (!subscriber.isUnsubscribed()) {
                             subscriber.onNext(getValidation(postcodeEditText.getText().toString()));
                         }
                     }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                    }
                 });
             }
-        });
+        }).publish();
     }
 
     private Validation getValidation(String text) {
