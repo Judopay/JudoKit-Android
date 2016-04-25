@@ -64,7 +64,6 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
     private StartDateValidator startDateValidator;
     private IssueNumberValidator issueNumberValidator;
     private HintFocusListener securityCodeHintFocusChangeListener;
-    private FormAutoAdvanceManager formAutoAdvanceManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -95,6 +94,16 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         initializeCountry();
         initializeValidators();
         initializePayButton();
+
+        if (judoOptions.getCardNumber() != null) {
+            cardNumberTextInput.getEditText().setText(judoOptions.getCardNumber());
+            expiryDateTextInput.getEditText().requestFocus();
+        }
+
+        if (judoOptions.getExpiryYear() != null && judoOptions.getExpiryMonth() != null) {
+            expiryDateTextInput.getEditText().setText(getString(R.string.expiry_date_format, judoOptions.getExpiryMonth(), judoOptions.getExpiryYear()));
+            securityCodeTextInput.getEditText().requestFocus();
+        }
     }
 
     @Override
@@ -228,7 +237,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
             initializeAvsValidators(validatorViews);
         }
 
-        formAutoAdvanceManager = new FormAutoAdvanceManager(validationManager, validatorViews);
+        new FormAutoAdvanceManager(validationManager, validatorViews);
     }
 
     private void initializeAvsValidators(List<Pair<Validator, View>> validatorViews) {
