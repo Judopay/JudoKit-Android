@@ -46,13 +46,16 @@ public class CountryAndPostcodeValidator implements Validator {
                     }
                 });
 
-                countrySpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         if (!subscriber.isUnsubscribed()) {
                             subscriber.onNext(getValidation(postcodeEditText.getText().toString()));
                         }
                     }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) { }
                 });
             }
         }).publish();
@@ -106,5 +109,4 @@ public class CountryAndPostcodeValidator implements Validator {
                 return true;
         }
     }
-
 }
