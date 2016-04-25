@@ -1,5 +1,9 @@
 package com.judopay.model;
 
+import android.support.annotation.StringRes;
+
+import com.judopay.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +55,20 @@ public class Country {
                 return 124;
             default:
                 return 0;
+        }
+    }
+
+    @StringRes
+    public static int postcodeName(String country) {
+        switch (country) {
+            case Country.UNITED_STATES:
+                return R.string.billing_zip_code;
+
+            case Country.CANADA:
+                return R.string.billing_postal_code;
+
+            default:
+                return R.string.billing_postcode;
         }
     }
 
