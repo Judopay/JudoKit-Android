@@ -96,13 +96,27 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         initializePayButton();
 
         if (judoOptions.getCardNumber() != null) {
-            cardNumberTextInput.getEditText().setText(judoOptions.getCardNumber());
-            expiryDateTextInput.getEditText().requestFocus();
+            EditText cardNumberEditText = cardNumberTextInput.getEditText();
+            if (cardNumberEditText != null) {
+                cardNumberEditText.setText(judoOptions.getCardNumber());
+            }
+
+            EditText expiryDateEditText = expiryDateTextInput.getEditText();
+            if (expiryDateEditText != null) {
+                expiryDateEditText.requestFocus();
+            }
         }
 
         if (judoOptions.getExpiryYear() != null && judoOptions.getExpiryMonth() != null) {
-            expiryDateTextInput.getEditText().setText(getString(R.string.expiry_date_format, judoOptions.getExpiryMonth(), judoOptions.getExpiryYear()));
-            securityCodeTextInput.getEditText().requestFocus();
+            EditText expiryDateEditText = expiryDateTextInput.getEditText();
+            if (expiryDateEditText != null) {
+                expiryDateEditText.setText(getString(R.string.expiry_date_format, judoOptions.getExpiryMonth(), judoOptions.getExpiryYear()));
+            }
+
+            EditText securityCodeEditText = securityCodeTextInput.getEditText();
+            if (securityCodeEditText != null) {
+                securityCodeEditText.requestFocus();
+            }
         }
     }
 
