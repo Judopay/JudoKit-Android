@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import com.judopay.validation.Validation;
 import com.judopay.validation.ValidationManager;
 import com.judopay.validation.Validator;
 import com.judopay.view.CountrySpinnerAdapter;
+import com.judopay.view.FormAutoAdvanceManager;
 import com.judopay.view.HintFocusListener;
 import com.judopay.view.NumberFormatTextWatcher;
 import com.judopay.view.SimpleTextWatcher;
@@ -62,6 +64,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
     private StartDateValidator startDateValidator;
     private IssueNumberValidator issueNumberValidator;
     private HintFocusListener securityCodeHintFocusChangeListener;
+    private FormAutoAdvanceManager formAutoAdvanceManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -92,6 +95,11 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         initializeCountry();
         initializeValidators();
         initializePayButton();
+    }
+
+    @Override
+    public void onValidate(boolean valid) {
+        paymentButton.setVisibility(valid ? View.VISIBLE : View.GONE);
     }
 
     private void initializeInputTexts() {
@@ -137,6 +145,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
 
     private void initializeValidators() {
         List<Validator> validators = new ArrayList<>();
+        ArrayList<Pair<Validator, View>> validatorViews = new ArrayList<>();
 
         EditText editText = cardNumberTextInput.getEditText();
         if (editText != null) {
@@ -185,15 +194,22 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
 
         CardNumberValidator cardNumberValidator = getCardNumberValidator();
         validators.add(cardNumberValidator);
+        validatorViews.add(new Pair<Validator, View>(cardNumberValidator, cardNumberTextInput.getEditText()));
 
-        SecurityCodeValidator securityCodeValidator = new SecurityCodeValidator(securityCodeTextInput.getEditText());
-        validators.add(securityCodeValidator);
+        startDateValidator = getStartDateValidator();
+        validatorViews.add(new Pair<Validator, View>(startDateValidator, startDateTextInput.getEditText()));
+
+        issueNumberValidator = getIssueNumberValidator();
+        validatorViews.add(new Pair<Validator, View>(issueNumberValidator, issueNumberTextInput.getEditText()));
 
         ExpiryDateValidator expiryDateValidator = getExpiryDateValidator();
         validators.add(expiryDateValidator);
+        validatorViews.add(new Pair<Validator, View>(expiryDateValidator, expiryDateTextInput.getEditText()));
 
-        issueNumberValidator = getIssueNumberValidator();
-        startDateValidator = getStartDateValidator();
+        SecurityCodeValidator securityCodeValidator = new SecurityCodeValidator(securityCodeTextInput.getEditText());
+        validators.add(securityCodeValidator);
+        validatorViews.add(new Pair<Validator, View>(securityCodeValidator, securityCodeTextInput.getEditText()));
+
         validationManager = new ValidationManager(validators, this);
 
         if (isAvsEnabled()) {
@@ -209,48 +225,56 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
                     postcodeTextInput.setVisibility(valid ? View.VISIBLE : View.GONE);
                 }
             });
-
-            CountryAndPostcodeValidator countryAndPostcodeValidator  = new CountryAndPostcodeValidator(countrySpinner, postcodeTextInput.getEditText());
-            ConnectableObservable<Validation> observable = countryAndPostcodeValidator.onValidate();
-
-            observable.subscribe(new Action1<Validation>() {
-                @Override
-                public void call(Validation validation) {
-                    postcodeTextInput.setErrorEnabled(validation.isShowError());
-
-                    if (validation.isShowError()) {
-                        postcodeTextInput.setError(getResources().getString(validation.getError()));
-                    } else {
-                        postcodeTextInput.setError("");
-                    }
-                }
-            });
-
-            observable.subscribe(new Action1<Validation>() {
-                        @Override
-                        public void call(Validation validation) {
-                            String country = (String) countrySpinner.getSelectedItem();
-                            postcodeTextInput.setHint(getResources().getString(getPostcodeLabel(country)));
-                            boolean postcodeNumeric = Country.UNITED_STATES.equals(country);
-
-                            EditText editText = postcodeTextInput.getEditText();
-                            if (editText != null) {
-                                if (postcodeNumeric && editText.getInputType() != InputType.TYPE_CLASS_NUMBER) {
-                                    editText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
-                                } else {
-                                    int alphanumericInputTypes = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
-                                    if (!postcodeNumeric && editText.getInputType() != alphanumericInputTypes) {
-                                        editText.setRawInputType(alphanumericInputTypes);
-                                    }
-                                }
-                                // prevent text suggestions in keyboard
-                                editText.setPrivateImeOptions("nm");
-                            }
-                        }
-                    });
-            validationManager.addValidator(countryAndPostcodeValidator, observable);
-            observable.connect();
+            initializeAvsValidators(validatorViews);
         }
+
+        formAutoAdvanceManager = new FormAutoAdvanceManager(validationManager, validatorViews);
+    }
+
+    private void initializeAvsValidators(List<Pair<Validator, View>> validatorViews) {
+        CountryAndPostcodeValidator countryAndPostcodeValidator = new CountryAndPostcodeValidator(countrySpinner, postcodeTextInput.getEditText());
+        ConnectableObservable<Validation> observable = countryAndPostcodeValidator.onValidate();
+
+        observable.subscribe(new Action1<Validation>() {
+            @Override
+            public void call(Validation validation) {
+                postcodeTextInput.setErrorEnabled(validation.isShowError());
+
+                if (validation.isShowError()) {
+                    postcodeTextInput.setError(getResources().getString(validation.getError()));
+                } else {
+                    postcodeTextInput.setError("");
+                }
+            }
+        });
+
+        observable.subscribe(new Action1<Validation>() {
+            @Override
+            public void call(Validation validation) {
+                String country = (String) countrySpinner.getSelectedItem();
+                postcodeTextInput.setHint(getResources().getString(Country.postcodeName(country)));
+                boolean postcodeNumeric = Country.UNITED_STATES.equals(country);
+
+                EditText editText = postcodeTextInput.getEditText();
+                if (editText != null) {
+                    if (postcodeNumeric && editText.getInputType() != InputType.TYPE_CLASS_NUMBER) {
+                        editText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                    } else {
+                        int alphanumericInputTypes = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
+                        if (!postcodeNumeric && editText.getInputType() != alphanumericInputTypes) {
+                            editText.setRawInputType(alphanumericInputTypes);
+                        }
+                    }
+                    // prevent text suggestions in keyboard
+                    editText.setPrivateImeOptions("nm");
+                }
+            }
+        });
+
+        validationManager.addValidator(countryAndPostcodeValidator, observable);
+        validatorViews.add(new Pair<Validator, View>(countryAndPostcodeValidator, postcodeTextInput.getEditText()));
+
+        observable.connect();
     }
 
     private CardNumberValidator getCardNumberValidator() {
@@ -273,19 +297,6 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
 
     private void initializeCountry() {
         countrySpinner.setAdapter(new CountrySpinnerAdapter(getActivity(), Country.avsCountries()));
-    }
-
-    private int getPostcodeLabel(String country) {
-        switch (country) {
-            case Country.UNITED_STATES:
-                return R.string.billing_zip_code;
-
-            case Country.CANADA:
-                return R.string.billing_postal_code;
-
-            default:
-                return R.string.billing_postcode;
-        }
     }
 
     private ExpiryDateValidator getExpiryDateValidator() {
@@ -380,8 +391,4 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         return cardEntryFragment;
     }
 
-    @Override
-    public void onValidate(boolean valid) {
-        paymentButton.setVisibility(valid ? View.VISIBLE : View.GONE);
-    }
 }
