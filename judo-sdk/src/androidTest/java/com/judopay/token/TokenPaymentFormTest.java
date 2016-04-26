@@ -164,26 +164,6 @@ public class TokenPaymentFormTest {
     }
 
     @Test
-    public void shouldNotShowMaestroFieldsWhenMaestroTokenPayment() {
-        Judo.setAvsEnabled(false);
-
-        activityTestRule.launchActivity(getIntent(MAESTRO));
-
-        onView(withId(R.id.security_code_edit_text))
-                .check(matches(hasFocus()))
-                .perform(typeText("123"));
-
-        onView(withId(R.id.start_date_entry_view))
-                .check(matches(isNotDisplayed()));
-
-        onView(withId(R.id.issue_number_entry_view))
-                .check(matches(isNotDisplayed()));
-
-        onView(withId(R.id.payment_button))
-                .check(matches(isDisplayed()));
-    }
-
-    @Test
     public void shouldNotEnablePayButtonWhenCv2Deleted() {
         Judo.setAvsEnabled(false);
 
@@ -246,6 +226,9 @@ public class TokenPaymentFormTest {
 
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("1234"));
+
+        onView(withId(R.id.post_code_edit_text))
+                .perform(typeText("NW6 7BB"));
 
         onView(withId(R.id.payment_button))
                 .check(matches(isDisplayed()));
