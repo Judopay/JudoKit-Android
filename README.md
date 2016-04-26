@@ -49,7 +49,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 ```
 
 ## Next Steps
-The judo Android library supports a range of customization options, for more information on using judo for Android please see our [wiki documentation](https://github.com/JudoPay/Judo-Android/wiki). 
+The judo Android library supports a range of customization options. For more information on using judo for Android see our [wiki documentation](https://github.com/JudoPay/Judo-Android/wiki). 
 
 ## License
 See the [LICENSE](https://github.com/JudoPay/Judo-Android/blob/master/LICENSE) file for license rights and limitations (MIT).
