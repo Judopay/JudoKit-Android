@@ -1,5 +1,6 @@
 package com.judopay.card;
 
+
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -21,13 +22,10 @@ import com.judopay.model.CardNetwork;
 import com.judopay.model.CardToken;
 import com.judopay.model.Country;
 import com.judopay.validation.CardNumberValidator;
-import com.judopay.validation.CountryAndPostcodeValidation;
 import com.judopay.validation.CountryAndPostcodeValidator;
 import com.judopay.validation.ExpiryDateValidator;
 import com.judopay.validation.IssueNumberValidator;
-import com.judopay.validation.PaymentFormValidation;
 import com.judopay.validation.SecurityCodeValidator;
-import com.judopay.validation.StartDateAndIssueNumberValidation;
 import com.judopay.validation.StartDateValidator;
 import com.judopay.validation.Validation;
 import com.judopay.validation.ValidationManager;
@@ -35,7 +33,7 @@ import com.judopay.validation.Validator;
 import com.judopay.view.CardNumberEntryView;
 import com.judopay.view.CountrySpinnerAdapter;
 import com.judopay.view.ExpiryDateEntryView;
-import com.judopay.view.FormAutoAdvanceManager;
+import com.judopay.validation.ValidationAutoAdvanceManager;
 import com.judopay.view.IssueNumberEntryView;
 import com.judopay.view.PostcodeEntryView;
 import com.judopay.view.SecurityCodeEntryView;
@@ -89,6 +87,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
     private StartDateValidator startDateValidator;
     private IssueNumberValidator issueNumberValidator;
+    private SecurityCodeValidator securityCodeValidator;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -159,11 +158,9 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             protected void onTextChanged(CharSequence text) {
                 int cardType = CardNetwork.fromCardNumber(text.toString());
 
-                String securityCode = CardNetwork.securityCode(cardType);
-                securityCodeEntryView.setHint(securityCode);
-
-                String securityCodeHint = CardNetwork.securityCodeHint(cardType);
-                securityCodeEntryView.setAlternateHint(securityCodeHint);
+                cardNumberEntryView.setCardType(cardType, true);
+                securityCodeEntryView.setCardType(cardType, true);
+                securityCodeValidator.setCardType(cardType);
 
                 EditText securityCodeTextInputEditText = securityCodeEntryView.getEditText();
                 if (securityCodeTextInputEditText != null) {
@@ -214,7 +211,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         validators.add(expiryDateValidator);
         validatorViews.add(new Pair<Validator, View>(expiryDateValidator, expiryDateEntryView.getEditText()));
 
-        SecurityCodeValidator securityCodeValidator = new SecurityCodeValidator(securityCodeEntryView.getEditText());
+        securityCodeValidator = new SecurityCodeValidator(securityCodeEntryView.getEditText());
         validators.add(securityCodeValidator);
         validatorViews.add(new Pair<Validator, View>(securityCodeValidator, securityCodeEntryView.getEditText()));
 
@@ -235,7 +232,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             initializeAvsValidators(validatorViews);
         }
 
-        new FormAutoAdvanceManager(validationManager, validatorViews);
+        new ValidationAutoAdvanceManager(validationManager, validatorViews);
     }
 
     private void initializeAvsValidators(List<Pair<Validator, View>> validatorViews) {
@@ -259,6 +256,8 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
                 EditText editText = postcodeEntryView.getEditText();
                 if (editText != null) {
+                    editText.setEnabled(!Country.OTHER.equals(country));
+
                     if (postcodeNumeric && editText.getInputType() != InputType.TYPE_CLASS_NUMBER) {
                         editText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
                     } else {
@@ -323,101 +322,14 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String country = (String) countrySpinner.getSelectedItem();
-                postcodeEntryView.setHint(getPostcodeLabel(country));
+                postcodeEntryView.setHint(Country.postcodeName(country));
                 boolean postcodeNumeric = Country.UNITED_STATES.equals(country);
                 postcodeEntryView.setNumericInput(postcodeNumeric);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) { }
         });
-    }
-
-    private int getPostcodeLabel(String country) {
-        switch (country) {
-            case Country.UNITED_STATES:
-                return R.string.billing_zip_code;
-
-            case Country.CANADA:
-                return R.string.billing_postal_code;
-
-            default:
-                return R.string.billing_postcode;
-        }
-    }
-
-//    private void initializePostcode(SimpleTextWatcher formValidator) {
-//        postcodeEntryView.addTextChangedListener(formValidator);
-//        postcodeEntryView.addOnFocusChangeListener(new ScrollOnFocusChangeListener(scrollView));
-//    }
-//
-//    private void initializeExpiryDate(SimpleTextWatcher formValidator) {
-//        if (judoOptions.getCardToken() == null) {
-//            expiryDateEntryView.addTextChangedListener(formValidator);
-//        } else {
-//            expiryDateEntryView.setExpiryDate(judoOptions.getCardToken().getFormattedEndDate());
-//            expiryDateEntryView.setEnabled(false);
-//        }
-//    }
-//
-//    private void initializeCardNumber(SimpleTextWatcher formValidator) {
-//        if (judoOptions.getCardToken() == null) {
-//            cardNumberEntryView.addTextChangedListener(formValidator);
-//        } else {
-//            cardNumberEntryView.setTokenCard(judoOptions.getCardToken());
-//        }
-//    }
-
-//    private void updateFormView() {
-//        PaymentForm.Builder builder = new PaymentForm.Builder()
-//                .setCardNumber(cardNumberEntryView.getText())
-//                .setSecurityCode(securityCodeEntryView.getText())
-//                .setCountry(null)
-//                .setPostcode(postcodeEntryView.getText())
-//                .setIssueNumber(issueNumberEntryView.getText())
-//                .setExpiryDate(expiryDateEntryView.getText())
-//                .setStartDate(startDateEntryView.getText())
-//                .setAddressRequired(Judo.isAvsEnabled())
-//                .setAmexSupported(Judo.isAmexEnabled())
-//                .setMaestroSupported(Judo.isMaestroEnabled());
-//
-//        CardToken cardToken = judoOptions.getCardToken();
-//        if (cardToken != null) {
-//            builder.setTokenCard(true)
-//                    .setCardType(cardToken.getType());
-//        }
-//
-//        PaymentFormValidation formView = new PaymentFormValidation.Builder()
-//                .build(builder.build());
-//
-//        if (cardToken == null) {
-//            cardNumberEntryView.setCardType(formView.getCardType(), true);
-//        }
-//
-//        updateFormErrors(formView);
-//        moveFieldFocus(formView);
-//    }
-
-    private void moveFieldFocus(PaymentFormValidation formView) {
-        if (cardNumberEntryView.hasFocus() && formView.getCardNumberValidation().isEntryComplete() && !formView.getCardNumberValidation().isShowError()) {
-            if (startDateAndIssueNumberContainer.getVisibility() == View.VISIBLE) {
-                startDateEntryView.requestFocus();
-            } else {
-                expiryDateEntryView.requestFocus();
-            }
-        } else if (expiryDateEntryView.hasFocus() && formView.isExpiryDateEntryComplete() && !formView.isShowExpiryDateError()) {
-            securityCodeEntryView.requestFocus();
-        } else if (securityCodeEntryView.hasFocus() && formView.isSecurityCodeValid()) {
-            if (countryAndPostcodeContainer.getVisibility() == View.VISIBLE) {
-                postcodeEntryView.requestFocus();
-            }
-        } else if (startDateEntryView.hasFocus()
-                && formView.getStartDateAndIssueNumberState().isStartDateEntryComplete()
-                && !formView.getStartDateAndIssueNumberState().isShowStartDateError()) {
-            issueNumberEntryView.requestFocus();
-        }
     }
 
     private void submitForm() {
