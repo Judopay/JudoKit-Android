@@ -72,7 +72,7 @@ public class AddressVerificationTest {
         onView(withId(R.id.country_spinner))
                 .perform(click());
 
-        onView(withText(Country.OTHER))
+        onData(allOf(is(instanceOf(String.class)), is(Country.OTHER)))
                 .perform(click());
 
         onView(withId(R.id.payment_button))
