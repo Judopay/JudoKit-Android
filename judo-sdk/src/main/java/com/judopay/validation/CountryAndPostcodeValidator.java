@@ -63,7 +63,7 @@ public class CountryAndPostcodeValidator implements Validator {
 
     private Validation getValidation(String text) {
         String country = (String) countrySpinner.getSelectedItem();
-        boolean postcodeValid = !TextUtil.isEmpty(text) && isPostcodeValid(text, country);
+        boolean postcodeValid = Country.OTHER.equals(country) || (!TextUtil.isEmpty(text) && isPostcodeValid(text, country));
 
         boolean postcodeEntryComplete = !TextUtil.isEmpty(text) && isPostcodeLengthValid(text.replaceAll("\\s+", ""), country);
         boolean showPostcodeError = !postcodeValid && postcodeEntryComplete;
