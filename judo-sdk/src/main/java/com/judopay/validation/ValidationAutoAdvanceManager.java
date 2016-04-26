@@ -1,24 +1,19 @@
-package com.judopay.view;
+package com.judopay.validation;
 
 import android.util.Pair;
 import android.view.View;
-
-import com.judopay.validation.Validation;
-import com.judopay.validation.ValidationManager;
-import com.judopay.validation.Validator;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import rx.functions.Action1;
 
-public class FormAutoAdvanceManager {
+public class ValidationAutoAdvanceManager {
 
     private final List<Validator> validators;
     private final List<View> views;
 
-    public FormAutoAdvanceManager(final ValidationManager validationManager, List<Pair<Validator, View>> validatorViews) {
+    public ValidationAutoAdvanceManager(final ValidationManager validationManager, List<Pair<Validator, View>> validatorViews) {
         this.validators = new LinkedList<>();
         this.views = new LinkedList<>();
 
@@ -50,6 +45,4 @@ public class FormAutoAdvanceManager {
                     });
         }
     }
-
-
 }
