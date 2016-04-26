@@ -48,6 +48,58 @@ public final class CustomLayout implements Parcelable {
         this.submitButton = submitButton;
     }
 
+    public void validate(Context context) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+
+        ViewGroup parent = (ViewGroup) inflater.inflate(layoutId, null);
+
+        int numChildViews = parent.getChildCount();
+        for (int i = 0; i < numChildViews; i++) {
+            Class viewClass = parent.getChildAt(i).getClass();
+        }
+
+        checkTextInputLayout(parent, cardNumberInput);
+        checkTextInputLayout(parent, expiryDateInput);
+        checkTextInputLayout(parent, securityCodeInput);
+        checkTextInputLayout(parent, startDateInput);
+        checkTextInputLayout(parent, issueNumberInput);
+        checkTextInputLayout(parent, postcodeInput);
+        checkButton(parent, submitButton);
+        checkSpinner(parent, countrySpinner);
+    }
+
+
+    private void checkSpinner(View view, int submitButton) {
+        checkViewType(view, submitButton, Spinner.class, AppCompatSpinner.class);
+    }
+
+    private void checkButton(View view, int submitButton) {
+        checkViewType(view, submitButton, Button.class, AppCompatButton.class);
+    }
+
+    private void checkTextInputLayout(View view, int id) {
+        checkViewType(view, id, TextInputLayout.class);
+    }
+
+    private void checkViewType(View view, int id, Class... classes) {
+        View foundView = view.findViewById(id);
+
+        if (foundView == null) {
+            throw new IllegalArgumentException();
+        }
+
+        boolean allowedViewClass = false;
+        for (Class clazz : classes) {
+            if (foundView.getClass().equals(clazz)) {
+                allowedViewClass = true;
+            }
+        }
+
+        if (!allowedViewClass) {
+            throw new InvalidViewTypeInLayout();
+        }
+    }
+
     @LayoutRes
     public int getLayoutId() {
         return layoutId;
@@ -150,24 +202,6 @@ public final class CustomLayout implements Parcelable {
         }
 
         public CustomLayout build(@LayoutRes int layoutId) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-
-            ViewGroup parent = (ViewGroup) inflater.inflate(layoutId, null);
-
-            int numChildViews = parent.getChildCount();
-            for (int i = 0; i < numChildViews; i++) {
-                Class viewClass = parent.getChildAt(i).getClass();
-            }
-
-            checkTextInputLayout(parent, cardNumberInput);
-            checkTextInputLayout(parent, expiryDateInput);
-            checkTextInputLayout(parent, securityCodeInput);
-            checkTextInputLayout(parent, startDateInput);
-            checkTextInputLayout(parent, issueNumberInput);
-            checkTextInputLayout(parent, postcodeInput);
-            checkButton(parent, submitButton);
-            checkSpinner(parent, countrySpinner);
-
             return new CustomLayout(layoutId,
                     cardNumberInput,
                     expiryDateInput,
@@ -177,37 +211,6 @@ public final class CustomLayout implements Parcelable {
                     countrySpinner,
                     postcodeInput,
                     submitButton);
-        }
-
-        private void checkSpinner(View view, int submitButton) {
-            checkViewType(view, submitButton, Spinner.class, AppCompatSpinner.class);
-        }
-
-        private void checkButton(View view, int submitButton) {
-            checkViewType(view, submitButton, Button.class, AppCompatButton.class);
-        }
-
-        private void checkTextInputLayout(View view, int id) {
-            checkViewType(view, id, TextInputLayout.class);
-        }
-
-        private void checkViewType(View view, int id, Class... classes) {
-            View foundView = view.findViewById(id);
-
-            if(foundView == null) {
-                throw new IllegalArgumentException();
-            }
-
-            boolean allowedViewClass = false;
-            for(Class clazz : classes) {
-                if(foundView.getClass().equals(clazz)) {
-                    allowedViewClass = true;
-                }
-            }
-
-            if(!allowedViewClass) {
-                throw new InvalidViewTypeInLayout();
-            }
         }
 
     }
@@ -253,4 +256,5 @@ public final class CustomLayout implements Parcelable {
             return new CustomLayout[size];
         }
     };
+
 }
