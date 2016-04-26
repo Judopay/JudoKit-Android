@@ -16,8 +16,11 @@ import org.junit.Test;
 import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static com.judopay.util.ViewMatchers.withTextInputHint;
 
@@ -71,6 +74,41 @@ public class SecurityCodeHintTest {
         onView(withId(R.id.security_code_input_layout))
                 .check(matches(withTextInputHint("CVC2")));
     }
+
+    @Test
+    public void shouldDisplayCidvHintWhenAmexCardNumberEntered() {
+        Judo.setAmexEnabled(true);
+
+        rule.launchActivity(getIntent());
+
+        onView(withId(R.id.card_number_edit_text))
+                .perform(typeText("340000432128428"));
+
+        onView(withId(R.id.security_code_edit_text))
+                .perform(click())
+                .check(matches(withHint("0000")));
+    }
+
+    @Test
+    public void shouldDisplayCv2HintWhenVisaCardNumberEntered() {
+        rule.launchActivity(getIntent());
+
+        onView(withId(R.id.card_number_edit_text))
+                .perform(typeText("4976000000003436"));
+
+        onView(withId(R.id.security_code_edit_text))
+                .perform(click())
+                .check(matches(withHint("000")));
+    }
+
+    @Test
+    public void shouldDisplayCvvImageOnLaunch() {
+        rule.launchActivity(getIntent());
+
+        onView(withId(R.id.security_code_image_view))
+                .check(matches(isDisplayed()));
+    }
+
 
     private Intent getIntent() {
         Intent intent = new Intent();

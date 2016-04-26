@@ -1,8 +1,8 @@
 package com.judopay.payment;
 
 import android.content.Intent;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
@@ -32,7 +32,7 @@ import static org.hamcrest.core.Is.is;
 public class SuccessfulPaymentTest {
 
     @Rule
-    public IntentsTestRule<PaymentActivity> activityTestRule = new IntentsTestRule<>(PaymentActivity.class, false, false);
+    public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
     @Before
     public void setupJudoSdk() {
