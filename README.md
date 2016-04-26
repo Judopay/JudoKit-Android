@@ -48,23 +48,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
-#### Integration
-- [Requirements](https://github.com/JudoPay/Judo-Android/wiki/Requirements)
-- [Gradle](https://github.com/JudoPay/Judo-Android/wiki/Gradle-Integration)
-- [Manual Integration](https://github.com/JudoPay/Judo-Android/wiki/Manual-Integration)
-
-#### Setup
-- [Initializing the SDK](https://github.com/JudoPay/Judo-Android/wiki/Initializing-the-SDK)
-- [Configuration](https://github.com/JudoPay/Judo-Android/wiki/Configuration)
-- [Customization Options](https://github.com/JudoPay/Judo-Android/wiki/Customization-Options)
-- [Themes](https://github.com/JudoPay/Judo-Android/wiki/Themes)
-
-#### Making a Transaction
-- [Payment](https://github.com/JudoPay/Judo-Android/wiki/Performing-a-Payment)
-- [Pre-auth](https://github.com/JudoPay/Judo-Android/wiki/Performing-a-Pre-authorization)
-- [Registering a card](https://github.com/JudoPay/Judo-Android/wiki/Registering-a-Card)
-- [Token Payment](https://github.com/JudoPay/Judo-Android/wiki/Performing-a-Token-Payment)
-- [Token Pre-auth](https://github.com/JudoPay/Judo-Android/wiki/Performing-a-Token-Pre-Auth)
+## Next Steps
+The judo Android library supports a range of customization options, for more information on using judo for Android please see our [wiki documentation](https://github.com/JudoPay/Judo-Android/wiki). 
 
 ## License
 See the [LICENSE](https://github.com/JudoPay/Judo-Android/blob/master/LICENSE) file for license rights and limitations (MIT).
