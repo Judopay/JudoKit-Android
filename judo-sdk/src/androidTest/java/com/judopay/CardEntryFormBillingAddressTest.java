@@ -5,10 +5,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import com.judopay.Judo;
-import com.judopay.JudoOptions;
-import com.judopay.PaymentActivity;
-import com.judopay.R;
 import com.judopay.model.Country;
 import com.judopay.model.Currency;
 
@@ -18,14 +14,17 @@ import org.junit.runner.RunWith;
 
 import java.util.UUID;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.judopay.util.ViewMatchers.isDisabled;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.instanceOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -52,7 +51,7 @@ public class CardEntryFormBillingAddressTest {
         onView(withId(R.id.country_spinner))
                 .perform(click());
 
-        onView(withText(Country.OTHER))
+        onData(allOf(is(instanceOf(String.class)), is(Country.OTHER)))
                 .perform(click());
 
         onView(withId(R.id.payment_button))
