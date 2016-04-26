@@ -79,9 +79,10 @@ public class SecurityCodeEntryView extends RelativeLayout {
         setAlternateHint(CardNetwork.securityCodeHint(cardType));
 
         inputLayout.setHint(CardNetwork.securityCode(cardType));
+        setMaxLength(CardNetwork.securityCodeLength(cardType));
     }
 
-    public void setMaxLength(int length) {
+    private void setMaxLength(int length) {
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(length)});
     }
 
