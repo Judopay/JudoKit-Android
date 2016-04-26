@@ -35,7 +35,7 @@ public class CardEntryFormBillingAddressTest {
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
     @Test
-    public void shouldDisablePayButtonWhenOtherBillingCountrySelected() {
+    public void shouldDisableBillingPostcodeWhenOtherCountrySelected() {
         Judo.setAvsEnabled(true);
 
         activityTestRule.launchActivity(getIntent());
