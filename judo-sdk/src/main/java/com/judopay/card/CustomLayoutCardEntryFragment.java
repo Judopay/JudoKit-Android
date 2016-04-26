@@ -30,7 +30,7 @@ import com.judopay.validation.Validation;
 import com.judopay.validation.ValidationManager;
 import com.judopay.validation.Validator;
 import com.judopay.view.CountrySpinnerAdapter;
-import com.judopay.view.FormAutoAdvanceManager;
+import com.judopay.validation.ValidationAutoAdvanceManager;
 import com.judopay.view.HintFocusListener;
 import com.judopay.view.NumberFormatTextWatcher;
 import com.judopay.view.SimpleTextWatcher;
@@ -64,6 +64,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
     private StartDateValidator startDateValidator;
     private IssueNumberValidator issueNumberValidator;
     private HintFocusListener securityCodeHintFocusChangeListener;
+    private SecurityCodeValidator securityCodeValidator;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -178,10 +179,10 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
                     int cardType = CardNetwork.fromCardNumber(text.toString());
 
                     String securityCode = CardNetwork.securityCode(cardType);
-                    securityCodeTextInput.setHint(securityCode);
-
                     String securityCodeHint = CardNetwork.securityCodeHint(cardType);
+                    securityCodeTextInput.setHint(securityCode);
                     securityCodeHintFocusChangeListener.setHint(securityCodeHint);
+                    securityCodeValidator.setCardType(cardType);
 
                     EditText securityCodeTextInputEditText = securityCodeTextInput.getEditText();
                     if (securityCodeTextInputEditText != null) {
@@ -229,7 +230,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         validators.add(expiryDateValidator);
         validatorViews.add(new Pair<Validator, View>(expiryDateValidator, expiryDateTextInput.getEditText()));
 
-        SecurityCodeValidator securityCodeValidator = new SecurityCodeValidator(securityCodeTextInput.getEditText());
+        securityCodeValidator = new SecurityCodeValidator(securityCodeTextInput.getEditText());
         validators.add(securityCodeValidator);
         validatorViews.add(new Pair<Validator, View>(securityCodeValidator, securityCodeTextInput.getEditText()));
 
@@ -251,7 +252,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
             initializeAvsValidators(validatorViews);
         }
 
-        new FormAutoAdvanceManager(validationManager, validatorViews);
+        new ValidationAutoAdvanceManager(validationManager, validatorViews);
     }
 
     private void initializeAvsValidators(List<Pair<Validator, View>> validatorViews) {
@@ -280,6 +281,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
 
                 EditText editText = postcodeTextInput.getEditText();
                 if (editText != null) {
+                    editText.setEnabled(!Country.OTHER.equals(country));
                     if (postcodeNumeric && editText.getInputType() != InputType.TYPE_CLASS_NUMBER) {
                         editText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
                     } else {
