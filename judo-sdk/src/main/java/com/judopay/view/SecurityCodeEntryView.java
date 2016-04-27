@@ -55,7 +55,7 @@ public class SecurityCodeEntryView extends RelativeLayout {
         imageView = (CardSecurityCodeView) findViewById(R.id.security_code_image_view);
         View helperText = findViewById(R.id.security_code_helper_text);
 
-        hintFocusListener = new HintFocusListener(editText, "CVV");
+        hintFocusListener = new HintFocusListener(editText, "000");
 
         editText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
                 new EmptyTextHintOnFocusChangeListener(helperText),
