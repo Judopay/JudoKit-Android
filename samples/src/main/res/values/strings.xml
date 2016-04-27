@@ -27,4 +27,5 @@
     <string name="currency">Currency</string>
     <string name="payment_successful">Payment successful</string>
     <string name="confirm_payment">Confirm payment</string>
+    <string name="enter_your_payment_details_to_confirm_the_purchase">Enter your payment details to confirm the purchase</string>
 </resources>
