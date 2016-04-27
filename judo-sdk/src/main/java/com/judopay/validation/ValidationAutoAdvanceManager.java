@@ -8,6 +8,8 @@ import java.util.Map;
 
 import rx.functions.Action1;
 
+import static java.lang.Boolean.FALSE;
+
 public class ValidationAutoAdvanceManager {
 
     private final List<Validator> validators;
@@ -34,9 +36,9 @@ public class ValidationAutoAdvanceManager {
                                     Validator validator = validators.get(i);
                                     Boolean valid = validationResults.get(validator);
 
-                                    if (Boolean.FALSE.equals(valid)) {
+                                    if (FALSE.equals(valid)) {
                                         View view = views.get(i);
-                                        if (view.getVisibility() == View.VISIBLE && view.isFocusable()) {
+                                        if (view.isShown() && view.isFocusable()) {
                                             view.requestFocus();
                                             break;
                                         }
