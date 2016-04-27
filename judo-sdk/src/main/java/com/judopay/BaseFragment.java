@@ -176,13 +176,14 @@ abstract class BaseFragment extends Fragment implements TransactionCallbacks, Ca
     }
 
     AbstractCardEntryFragment createCardEntryFragment() {
-        JudoOptions judoOptions = getArguments().getParcelable(Judo.JUDO_OPTIONS);
+        JudoOptions options = getArguments().getParcelable(Judo.JUDO_OPTIONS);
 
-        if(judoOptions != null && judoOptions.getCustomLayout() != null) {
-            return CustomLayoutCardEntryFragment.newInstance(judoOptions, this);
+        if(options != null && options.getCustomLayout() != null) {
+            options.getCustomLayout().validate(getActivity());
+            return CustomLayoutCardEntryFragment.newInstance(options, this);
         }
 
-        return CardEntryFragment.newInstance(judoOptions, this);
+        return CardEntryFragment.newInstance(options, this);
     }
 
     JudoOptions getJudoOptions() {
