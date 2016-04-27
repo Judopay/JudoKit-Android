@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.judopay.CustomLayout;
+import com.judopay.model.CustomLayout;
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
 import com.judopay.R;
