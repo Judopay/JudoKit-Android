@@ -25,6 +25,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
+                    android:hint="@string/credit_card_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -45,6 +46,7 @@
                 android:layout_weight="1">
 
                 <EditText
+                    android:hint="@string/start_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:ignore="TextFields" />
@@ -63,6 +65,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
+                        android:hint="@string/issue_no"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
@@ -83,6 +86,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
+                    android:hint="@string/expiry_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -102,6 +106,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
+                    android:hint="@string/security_code"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
