@@ -1,4 +1,4 @@
-package com.judopay;
+package com.judopay.model;
 
 import android.content.Context;
 import android.os.Parcel;
@@ -7,14 +7,27 @@ import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.judopay.error.InvalidViewTypeInLayout;
+
+import java.util.Arrays;
+import java.util.List;
 
 public final class CustomLayout implements Parcelable {
 
@@ -51,12 +64,14 @@ public final class CustomLayout implements Parcelable {
     public void validate(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        ViewGroup parent = (ViewGroup) inflater.inflate(layoutId, null);
+        List<Class<? extends View>> allowedViews = Arrays.asList(EditText.class,
+                AppCompatEditText.class, TextView.class, AppCompatTextView.class, ImageView.class,
+                AppCompatImageView.class, Spinner.class, AppCompatSpinner.class, Button.class,
+                AppCompatButton.class, TextInputLayout.class, LinearLayout.class,
+                RelativeLayout.class, FrameLayout.class, ScrollView.class);
 
-        int numChildViews = parent.getChildCount();
-        for (int i = 0; i < numChildViews; i++) {
-            Class viewClass = parent.getChildAt(i).getClass();
-        }
+        ViewGroup parent = (ViewGroup) inflater.inflate(layoutId, null);
+        validateView(allowedViews, parent);
 
         checkTextInputLayout(parent, cardNumberInput);
         checkTextInputLayout(parent, expiryDateInput);
@@ -66,6 +81,21 @@ public final class CustomLayout implements Parcelable {
         checkTextInputLayout(parent, postcodeInput);
         checkButton(parent, submitButton);
         checkSpinner(parent, countrySpinner);
+    }
+
+    public void validateView(List<Class<? extends View>> allowedViews, ViewGroup parent) {
+        int numChildViews = parent.getChildCount();
+
+        for (int i = 0; i < numChildViews; i++) {
+            View childView = parent.getChildAt(i);
+            Class<? extends View> viewClass = childView.getClass();
+
+            if (childView instanceof ViewGroup) {
+                validateView(allowedViews, (ViewGroup) childView);
+            } else if (!allowedViews.contains(viewClass)) {
+                throw new InvalidViewTypeInLayout(viewClass);
+            }
+        }
     }
 
 
@@ -96,7 +126,7 @@ public final class CustomLayout implements Parcelable {
         }
 
         if (!allowedViewClass) {
-            throw new InvalidViewTypeInLayout();
+            throw new InvalidViewTypeInLayout(view.getClass());
         }
     }
 
@@ -147,7 +177,6 @@ public final class CustomLayout implements Parcelable {
 
     public static class Builder {
 
-        private final Context context;
         private int cardNumberInput;
         private int expiryDateInput;
         private int securityCodeInput;
@@ -157,8 +186,7 @@ public final class CustomLayout implements Parcelable {
         private int postcodeInput;
         private int submitButton;
 
-        public Builder(Context context) {
-            this.context = context;
+        public Builder() {
         }
 
         public Builder cardNumberInput(@IdRes int cardNumberInput) {
@@ -212,7 +240,6 @@ public final class CustomLayout implements Parcelable {
                     postcodeInput,
                     submitButton);
         }
-
     }
 
     @Override
