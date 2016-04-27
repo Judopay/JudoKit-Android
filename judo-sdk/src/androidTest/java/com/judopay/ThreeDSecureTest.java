@@ -16,6 +16,7 @@ import com.judopay.model.Currency;
 import com.judopay.util.WebViewIdlingResource;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +45,7 @@ public class ThreeDSecureTest {
 
     @Before
     public void setEnvironment() {
-        Judo.setEnvironment(Judo.SANDBOX);
+        Judo.setEnvironment(Judo.UAT);
     }
 
     @Test
@@ -97,7 +98,7 @@ public class ThreeDSecureTest {
     private Intent getIntent() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
-                .setJudoId("100407196")
+                .setJudoId("100915867")
                 .setAmount("0.01")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef(UUID.randomUUID().toString())

@@ -6,16 +6,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
-    }
-
-    ext {
-        minSdkVersion = 16
-        compileSdkVersion = 23
-        targetSdkVersion = 23
-        buildToolsVersion = "23.0.2"
-        versionName = "5.2"
-        versionCode = 6
+        classpath 'com.android.tools.build:gradle:2.0.0'
     }
 }
 

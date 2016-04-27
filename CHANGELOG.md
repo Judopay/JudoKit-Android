@@ -1,6 +1,6 @@
 # Judo Android SDK change log
 
-## [5.2](https://github.com/judopay/Judo-Android/tree/5.2) (2016-04-05)
+## [5.2](https://github.com/judopay/Judo-Android/tree/5.2) (2016-04-06)
  
 **Implemented enhancements:**
  - Card helper images now animate when a change in card type is detected.

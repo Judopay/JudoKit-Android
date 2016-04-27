@@ -11,6 +11,8 @@ import com.judopay.card.CardEntryFragment;
 import com.judopay.card.CardEntryListener;
 import com.judopay.model.Card;
 
+import static com.judopay.Judo.JUDO_OPTIONS;
+
 public class RegisterCardFragment extends BaseFragment implements TransactionCallbacks, CardEntryListener {
 
     private RegisterCardPresenter presenter;
@@ -18,6 +20,9 @@ public class RegisterCardFragment extends BaseFragment implements TransactionCal
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        JudoOptions options = getArguments().getParcelable(JUDO_OPTIONS);
+        checkJudoOptionsExtras(options.getConsumerRef(), options.getJudoId());
 
         if (this.presenter == null) {
             JudoApiService apiService = Judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
@@ -62,4 +67,5 @@ public class RegisterCardFragment extends BaseFragment implements TransactionCal
     public boolean isPaymentInProgress() {
         return this.presenter.loading;
     }
+
 }
