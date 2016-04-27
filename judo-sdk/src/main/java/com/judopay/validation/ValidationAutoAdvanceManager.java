@@ -34,10 +34,12 @@ public class ValidationAutoAdvanceManager {
                                     Validator validator = validators.get(i);
                                     Boolean valid = validationResults.get(validator);
 
-                                    if (valid != null && !valid) {
+                                    if (Boolean.FALSE.equals(valid)) {
                                         View view = views.get(i);
-                                        view.requestFocus();
-                                        break;
+                                        if (view.getVisibility() == View.VISIBLE && view.isFocusable()) {
+                                            view.requestFocus();
+                                            break;
+                                        }
                                     }
                                 }
                             }
