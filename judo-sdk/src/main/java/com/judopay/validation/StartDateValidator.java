@@ -1,11 +1,10 @@
 package com.judopay.validation;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.widget.EditText;
 
 import com.judopay.R;
 import com.judopay.model.CardDate;
+import com.judopay.view.SimpleTextWatcher;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -23,19 +22,9 @@ public class StartDateValidator implements Validator {
         return Observable.create(new Observable.OnSubscribe<Validation>() {
             @Override
             public void call(final Subscriber<? super Validation> subscriber) {
-                editText.addTextChangedListener(new TextWatcher() {
+                editText.addTextChangedListener(new SimpleTextWatcher() {
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable text) {
+                    protected void onTextChanged(CharSequence text) {
                         if (!subscriber.isUnsubscribed()) {
                             subscriber.onNext(getValidation(text.toString()));
                         }

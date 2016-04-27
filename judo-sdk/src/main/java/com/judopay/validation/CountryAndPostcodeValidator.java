@@ -6,7 +6,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.judopay.R;
-import com.judopay.arch.TextUtil;
 import com.judopay.model.Country;
 import com.judopay.view.SimpleTextWatcher;
 
@@ -16,6 +15,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.observables.ConnectableObservable;
 
+import static com.judopay.arch.TextUtil.isEmpty;
 import static java.util.regex.Pattern.compile;
 
 public class CountryAndPostcodeValidator implements Validator {
@@ -63,9 +63,9 @@ public class CountryAndPostcodeValidator implements Validator {
 
     private Validation getValidation(String text) {
         String country = (String) countrySpinner.getSelectedItem();
-        boolean postcodeValid = Country.OTHER.equals(country) || (!TextUtil.isEmpty(text) && isPostcodeValid(text, country));
+        boolean postcodeValid = Country.OTHER.equals(country) || (!isEmpty(text) && isPostcodeValid(text, country));
 
-        boolean postcodeEntryComplete = !TextUtil.isEmpty(text) && isPostcodeLengthValid(text.replaceAll("\\s+", ""), country);
+        boolean postcodeEntryComplete = !isEmpty(text) && isPostcodeLengthValid(text.replaceAll("\\s+", ""), country);
         boolean showPostcodeError = !postcodeValid && postcodeEntryComplete;
         int postcodeError = getPostcodeError(country);
 
