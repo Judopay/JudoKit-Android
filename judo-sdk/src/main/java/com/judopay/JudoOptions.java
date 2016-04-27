@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 import com.judopay.error.JudoIdInvalidError;
 import com.judopay.model.CardToken;
+import com.judopay.model.CustomLayout;
 
 import java.util.HashMap;
 import java.util.Map;
