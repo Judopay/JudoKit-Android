@@ -30,7 +30,6 @@ android {
     buildTypes {
         debug {
             testCoverageEnabled = true
-
             Properties properties = new Properties()
             properties.load(project.rootProject.file('local.properties').newDataInputStream())
             def apiToken = properties.getProperty('judo.api.token')
@@ -93,5 +92,4 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.1'
-
 }
