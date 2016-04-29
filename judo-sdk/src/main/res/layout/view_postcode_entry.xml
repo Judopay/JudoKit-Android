@@ -5,8 +5,8 @@
     <com.judopay.view.JudoTextInputLayout
         android:id="@+id/post_code_input_layout"
         style="@style/EntryLayout"
-        android:layout_marginTop="1dp"
         android:layout_width="match_parent"
+        android:layout_marginTop="1dp"
         android:layout_weight="1">
 
         <android.support.v7.widget.AppCompatEditText
@@ -14,6 +14,7 @@
             style="@style/Widget.Judo.Postcode"
             android:layout_gravity="bottom"
             android:hint="@string/billing_postcode"
+            android:maxLength="8"
             tools:ignore="UnusedAttribute" />
 
     </com.judopay.view.JudoTextInputLayout>
