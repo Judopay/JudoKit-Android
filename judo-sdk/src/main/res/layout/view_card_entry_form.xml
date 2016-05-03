@@ -60,7 +60,7 @@
         android:weightSum="2"
         tools:visibility="visible">
 
-        <com.judopay.view.CountrySpinner
+        <Spinner
             android:id="@+id/country_spinner"
             style="@style/Widget.AppCompat.Spinner"
             android:layout_width="match_parent"

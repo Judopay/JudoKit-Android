@@ -16,12 +16,6 @@
     <string name="date_hint">MM/YY</string>
     <string name="date_format">00/00</string>
     <string name="expiry_date_format">%1$s/%2$s</string>
-    <string name="cvv">CVV</string>
-    <string name="cid">CID</string>
-    <string name="cvv2">CVV2</string>
-    <string name="cvc2">CVC2</string>
-    <string name="cvn2">CVN2</string>
-    <string name="cav2">CAV2</string>
     <string name="security_code_hint">000</string>
     <string name="amex_security_code_hint">0000</string>
     <string name="add_card">Add card</string>
