@@ -14,7 +14,6 @@ import com.judopay.R;
 
 public class PostcodeEntryView extends FrameLayout {
 
-    private EditText postcodeEditText;
     private TextInputLayout postcodeInputLayout;
     private CompositeOnFocusChangeListener onFocusChangeListener;
 
@@ -41,13 +40,15 @@ public class PostcodeEntryView extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        postcodeEditText = (EditText) findViewById(R.id.post_code_edit_text);
         postcodeInputLayout = (TextInputLayout) findViewById(R.id.post_code_input_layout);
+        EditText editText = postcodeInputLayout.getEditText();
 
-        onFocusChangeListener = new CompositeOnFocusChangeListener(
-                new HintFocusListener(postcodeEditText, R.string.empty));
+        if (editText != null) {
+            onFocusChangeListener = new CompositeOnFocusChangeListener(
+                    new HintFocusListener(editText, getResources().getString(R.string.empty)));
 
-        postcodeEditText.setOnFocusChangeListener(onFocusChangeListener);
+            editText.setOnFocusChangeListener(onFocusChangeListener);
+        }
     }
 
     public void addOnFocusChangeListener(OnFocusChangeListener listener) {
@@ -55,7 +56,10 @@ public class PostcodeEntryView extends FrameLayout {
     }
 
     public void addTextChangedListener(TextWatcher watcher) {
-        postcodeEditText.addTextChangedListener(watcher);
+        EditText editText = postcodeInputLayout.getEditText();
+        if (editText != null) {
+            editText.addTextChangedListener(watcher);
+        }
     }
 
     public void setHint(@StringRes int hint) {
@@ -73,32 +77,34 @@ public class PostcodeEntryView extends FrameLayout {
     }
 
     public void setNumericInput(boolean numeric) {
-        if (numeric && postcodeEditText.getInputType() != InputType.TYPE_CLASS_NUMBER) {
-            postcodeEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-        } else {
-            int alphanumericInputTypes = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
+        EditText editText = postcodeInputLayout.getEditText();
+        if (editText != null) {
+            if (numeric && editText.getInputType() != InputType.TYPE_CLASS_NUMBER) {
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+            } else {
+                int alphanumericInputTypes = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
 
-            if (!numeric && postcodeEditText.getInputType() != alphanumericInputTypes) {
-                postcodeEditText.setInputType(alphanumericInputTypes);
+                if (!numeric && editText.getInputType() != alphanumericInputTypes) {
+                    editText.setInputType(alphanumericInputTypes);
+                }
             }
+
+            editText.setPrivateImeOptions("nm"); // prevent text suggestions in keyboard
         }
-
-        postcodeEditText.setPrivateImeOptions("nm"); // prevent text suggestions in keyboard
     }
-
-    public void setSelectionEnd() {
-        postcodeEditText.setSelection(postcodeEditText.getText().length());
-    }
-
 
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
-
-        postcodeEditText.setEnabled(enabled);
+        postcodeInputLayout.setEnabled(enabled);
     }
 
     public String getText() {
-        return postcodeEditText.getText().toString().trim();
+        EditText editText = postcodeInputLayout.getEditText();
+        return editText == null ? "" : editText.getText().toString().trim();
+    }
+
+    public EditText getEditText() {
+        return postcodeInputLayout.getEditText();
     }
 }

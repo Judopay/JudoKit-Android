@@ -49,6 +49,7 @@ public class ThreeDSecureTest {
     }
 
     @Test
+    @Ignore
     public void shouldShow3dSecureDialog() {
         final PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
 
