@@ -1,7 +1,6 @@
 package com.judopay.view;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -10,6 +9,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.judopay.R;
+import com.judopay.validation.Validation;
 
 public class StartDateEntryView extends FrameLayout {
 
@@ -42,7 +42,7 @@ public class StartDateEntryView extends FrameLayout {
         startDateEditText = (EditText) findViewById(R.id.start_date_edit_text);
         startDateInputLayout = (TextInputLayout) findViewById(R.id.start_date_input_layout);
 
-        HintFocusListener hintFocusListener = new HintFocusListener(startDateEditText, R.string.date_hint);
+        HintFocusListener hintFocusListener = new HintFocusListener(startDateEditText, getResources().getString(R.string.date_hint));
         startDateEditText.setOnFocusChangeListener(hintFocusListener);
 
         String dateFormat = getResources().getString(R.string.date_format);
@@ -58,14 +58,18 @@ public class StartDateEntryView extends FrameLayout {
         return startDateEditText.getText().toString().trim();
     }
 
-    public void setError(@StringRes int error, boolean show) {
-        startDateInputLayout.setErrorEnabled(show);
 
-        if (show) {
-            startDateInputLayout.setError(getResources().getString(error));
+    public EditText getEditText() {
+        return startDateEditText;
+    }
+
+    public void setValidation(Validation validation) {
+        startDateInputLayout.setErrorEnabled(validation.isShowError());
+
+        if (validation.isShowError()) {
+            startDateInputLayout.setError(getResources().getString(validation.getError()));
         } else {
             startDateInputLayout.setError("");
         }
     }
-
 }

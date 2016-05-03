@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.judopay.arch.AndroidScheduler;
+import com.judopay.card.AbstractCardEntryFragment;
 import com.judopay.card.CardEntryFragment;
 import com.judopay.card.CardEntryListener;
 import com.judopay.model.Card;
@@ -48,12 +49,13 @@ public class RegisterCardFragment extends BaseFragment implements TransactionCal
                 .setExpiryMonth(judoOptions.getExpiryMonth())
                 .setExpiryYear(judoOptions.getExpiryYear())
                 .setSecureServerMessageShown(judoOptions.isSecureServerMessageShown())
+                .setCustomLayout(judoOptions.getCustomLayout())
                 .setButtonLabel(getString(R.string.add_card))
                 .build();
     }
 
     @Override
-    protected CardEntryFragment createPaymentFormFragment() {
+    AbstractCardEntryFragment createCardEntryFragment() {
         return CardEntryFragment.newInstance(getJudoOptions(), this);
     }
 

@@ -12,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.judopay.card.AbstractCardEntryFragment;
 import com.judopay.card.CardEntryFragment;
 import com.judopay.card.CardEntryListener;
+import com.judopay.card.CustomLayoutCardEntryFragment;
 import com.judopay.model.Receipt;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
@@ -70,10 +72,10 @@ abstract class BaseFragment extends Fragment implements TransactionCallbacks, Ca
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        CardEntryFragment cardEntryFragment = (CardEntryFragment) getFragmentManager().findFragmentByTag(TAG_PAYMENT_FORM);
+        AbstractCardEntryFragment cardEntryFragment = (AbstractCardEntryFragment) getFragmentManager().findFragmentByTag(TAG_PAYMENT_FORM);
 
         if (cardEntryFragment == null) {
-            cardEntryFragment = createPaymentFormFragment();
+            cardEntryFragment = createCardEntryFragment();
             cardEntryFragment.setTargetFragment(this, 0);
 
             getFragmentManager()
@@ -173,9 +175,15 @@ abstract class BaseFragment extends Fragment implements TransactionCallbacks, Ca
         }
     }
 
-    CardEntryFragment createPaymentFormFragment() {
-        JudoOptions judoOptions = getArguments().getParcelable(Judo.JUDO_OPTIONS);
-        return CardEntryFragment.newInstance(judoOptions, this);
+    AbstractCardEntryFragment createCardEntryFragment() {
+        JudoOptions options = getArguments().getParcelable(Judo.JUDO_OPTIONS);
+
+        if(options != null && options.getCustomLayout() != null) {
+            options.getCustomLayout().validate(getActivity());
+            return CustomLayoutCardEntryFragment.newInstance(options, this);
+        }
+
+        return CardEntryFragment.newInstance(options, this);
     }
 
     JudoOptions getJudoOptions() {

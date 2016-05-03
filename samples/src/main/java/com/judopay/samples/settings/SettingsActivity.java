@@ -37,7 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_settings);
         binding.setSettingsViewModel(new SettingsViewModel(settingsPrefs.isAvsEnabled(), settingsPrefs.isAmexEnabled(), settingsPrefs.isMaestroEnabled()));
 
-        initialise();
+        initialize();
     }
 
     @Override
@@ -51,7 +51,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    private void initialise() {
+    private void initialize() {
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Currency.currencyNames());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.currencySpinner.setAdapter(adapter);
