@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.judopay.R;
-import com.judopay.model.CardType;
+import com.judopay.model.CardNetwork;
 
 public class CardSecurityCodeView extends FlipImageView {
 
@@ -23,7 +23,7 @@ public class CardSecurityCodeView extends FlipImageView {
     @Override
     protected int getImageResource(int type) {
         switch (type) {
-            case CardType.AMEX:
+            case CardNetwork.AMEX:
                 return R.drawable.ic_card_cid;
             default:
                 return R.drawable.ic_card_security_code;

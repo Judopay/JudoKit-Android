@@ -5,6 +5,8 @@ import android.view.View;
 
 import com.google.gson.Gson;
 import com.judopay.arch.AndroidScheduler;
+import com.judopay.card.AbstractCardEntryFragment;
+import com.judopay.card.TokenCardEntryFragment;
 import com.judopay.model.Card;
 
 import static com.judopay.Judo.JUDO_OPTIONS;
@@ -30,6 +32,11 @@ public class TokenPreAuthFragment extends AbstractTokenFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.presenter.reconnect();
+    }
+
+    @Override
+    AbstractCardEntryFragment createCardEntryFragment() {
+        return TokenCardEntryFragment.newInstance(getJudoOptions(), this);
     }
 
     @Override

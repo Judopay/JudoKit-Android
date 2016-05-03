@@ -26,4 +26,11 @@
     <string name="could_not_perform_transaction_check_settings">Could not perform the transaction, please check your settings</string>
     <string name="currency">Currency</string>
     <string name="payment_successful">Payment successful</string>
+    <string name="confirm_payment">Confirm payment</string>
+    <string name="enter_your_payment_details_to_confirm_the_purchase">Enter your payment details to confirm the purchase</string>
+    <string name="security_code">Security code</string>
+    <string name="expiry_date">Expiry date</string>
+    <string name="issue_no">Issue no.</string>
+    <string name="start_date">Start date</string>
+    <string name="credit_card_number">Card number</string>
 </resources>

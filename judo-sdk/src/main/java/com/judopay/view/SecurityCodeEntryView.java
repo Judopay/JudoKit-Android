@@ -12,7 +12,8 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import com.judopay.R;
-import com.judopay.model.CardType;
+import com.judopay.model.CardNetwork;
+import com.judopay.validation.Validation;
 
 /**
  * A view that allows for the security code of a card (CV2, CID) to be input and an image displayed to
@@ -54,7 +55,7 @@ public class SecurityCodeEntryView extends RelativeLayout {
         imageView = (CardSecurityCodeView) findViewById(R.id.security_code_image_view);
         View helperText = findViewById(R.id.security_code_helper_text);
 
-        hintFocusListener = new HintFocusListener(editText, R.string.security_code_hint);
+        hintFocusListener = new HintFocusListener(editText, "000");
 
         editText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
                 new EmptyTextHintOnFocusChangeListener(helperText),
@@ -75,45 +76,39 @@ public class SecurityCodeEntryView extends RelativeLayout {
     public void setCardType(int cardType, boolean animate) {
         imageView.setCardType(cardType, animate);
 
-        if (CardType.AMEX == cardType) {
-            setAlternateHint(R.string.amex_security_code_hint);
-        } else {
-            setAlternateHint(R.string.security_code_hint);
-        }
-        setHint(getSecurityCodeLabel(cardType));
+        setAlternateHint(CardNetwork.securityCodeHint(cardType));
+
+        inputLayout.setHint(CardNetwork.securityCode(cardType));
+        setMaxLength(CardNetwork.securityCodeLength(cardType));
     }
 
-    private static int getSecurityCodeLabel(int cardType) {
-        switch (cardType) {
-            case CardType.AMEX:
-                return R.string.cid;
-            case CardType.VISA:
-                return R.string.cvv2;
-            case CardType.MASTERCARD:
-                return R.string.cvc2;
-            case CardType.CHINA_UNION_PAY:
-                return R.string.cvn2;
-            case CardType.JCB:
-                return R.string.cav2;
-            default:
-                return R.string.cvv;
-        }
-    }
-
-    public void setMaxLength(int length) {
+    private void setMaxLength(int length) {
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(length)});
     }
 
-    public void setHint(@StringRes int hintResId) {
-        inputLayout.setHint(getResources().getString(hintResId));
+    public void setHint(String hint) {
+        inputLayout.setHint(hint);
     }
 
-    public void setAlternateHint(@StringRes int hintResId) {
-        hintFocusListener.setHintResourceId(hintResId);
+    public void setAlternateHint(String hint) {
+        hintFocusListener.setHint(hint);
     }
 
     public String getText() {
         return editText.getText().toString().trim();
     }
 
+    public EditText getEditText() {
+        return editText;
+    }
+
+    public void setValidation(Validation validation) {
+        inputLayout.setErrorEnabled(validation.isShowError());
+
+        if (validation.isShowError()) {
+            inputLayout.setError(getResources().getString(validation.getError()));
+        } else {
+            inputLayout.setError("");
+        }
+    }
 }

@@ -5,6 +5,8 @@ import android.view.View;
 
 import com.google.gson.Gson;
 import com.judopay.arch.AndroidScheduler;
+import com.judopay.card.AbstractCardEntryFragment;
+import com.judopay.card.TokenCardEntryFragment;
 import com.judopay.model.Card;
 
 import static com.judopay.Judo.JUDO_OPTIONS;
@@ -24,6 +26,11 @@ public final class TokenPaymentFragment extends AbstractTokenFragment {
             JudoApiService apiService = Judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
             this.presenter = new TokenPaymentPresenter(this, apiService, new AndroidScheduler(), new Gson());
         }
+    }
+
+    @Override
+    AbstractCardEntryFragment createCardEntryFragment() {
+        return TokenCardEntryFragment.newInstance(getJudoOptions(), this);
     }
 
     @Override

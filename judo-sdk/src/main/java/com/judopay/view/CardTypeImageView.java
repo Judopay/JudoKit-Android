@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.judopay.R;
-import com.judopay.model.CardType;
+import com.judopay.model.CardNetwork;
 
 /**
  * A view that displays a card type image (Visa, Amex, etc.) to provide the user with feedback
@@ -27,15 +27,15 @@ public class CardTypeImageView extends FlipImageView {
     @Override
     protected int getImageResource(int type) {
         switch (type) {
-            case CardType.AMEX:
+            case CardNetwork.AMEX:
                 return R.drawable.ic_card_amex;
-            case CardType.MASTERCARD:
+            case CardNetwork.MASTERCARD:
                 return R.drawable.ic_card_mastercard;
-            case CardType.MAESTRO:
+            case CardNetwork.MAESTRO:
                 return R.drawable.ic_card_maestro;
-            case CardType.VISA:
-            case CardType.VISA_ELECTRON:
-            case CardType.VISA_DEBIT:
+            case CardNetwork.VISA:
+            case CardNetwork.VISA_ELECTRON:
+            case CardNetwork.VISA_DEBIT:
                 return R.drawable.ic_card_visa;
             default:
                 return R.drawable.ic_card_unknown;
