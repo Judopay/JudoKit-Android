@@ -36,9 +36,6 @@ android {
 
             manifestPlaceholders = [apiToken: apiToken, apiSecret: apiSecret]
         }
-        release {
-            minifyEnabled false
-        }
     }
 
     lintOptions {
