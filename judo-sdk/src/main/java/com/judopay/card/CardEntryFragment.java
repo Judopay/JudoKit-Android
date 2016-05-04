@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
@@ -22,7 +21,6 @@ import com.judopay.R;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardNetwork;
-import com.judopay.model.CardToken;
 import com.judopay.model.Country;
 import com.judopay.validation.CardNumberValidator;
 import com.judopay.validation.CountryAndPostcodeValidator;
@@ -117,32 +115,40 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    protected void onInitialize(JudoOptions options) {
-        if (judoOptions.getButtonLabel() != null) {
-            paymentButton.setText(judoOptions.getButtonLabel());
+    protected void onInitialize(final JudoOptions options) {
+        if (options.getButtonLabel() != null) {
+            paymentButton.setText(options.getButtonLabel());
         }
 
-        CardToken cardToken = judoOptions.getCardToken();
+        if (options.getCardScanningIntent() != null) {
+            cardNumberEntryView.setScanCardListener(new CardNumberEntryView.ScanCardButtonListener() {
+                @Override
+                public void onClick() {
+                    PendingIntent cardScanningIntent = options.getCardScanningIntent();
+                    if (cardScanningIntent != null) {
+                        IntentSender intentSender = cardScanningIntent.getIntentSender();
+                        try {
+                            getActivity().startIntentSenderForResult(intentSender, Judo.CARD_SCANNING_REQUEST, null, 0, 0, 0);
+                        } catch (IntentSender.SendIntentException ignore) {
+                        }
+                    }
+                }
+            });
+        }
 
-        if (cardToken != null) {
-            cardNumberEntryView.setCardType(cardToken.getType(), false);
-            securityCodeEntryView.setCardType(cardToken.getType(), false);
+        if (options.getCardNumber() != null) {
+            int cardType = CardNetwork.fromCardNumber(options.getCardNumber());
+            cardNumberEntryView.setCardType(cardType, false);
+            cardNumberEntryView.setText(options.getCardNumber());
+            expiryDateEntryView.requestFocus();
+        }
+
+        if (options.getExpiryYear() != null && options.getExpiryMonth() != null) {
+            expiryDateEntryView.setText(getString(R.string.expiry_date_format, options.getExpiryMonth(), options.getExpiryYear()));
             securityCodeEntryView.requestFocus();
-        } else {
-            if (judoOptions.getCardNumber() != null) {
-                int cardType = CardNetwork.fromCardNumber(judoOptions.getCardNumber());
-                cardNumberEntryView.setCardType(cardType, false);
-                cardNumberEntryView.setText(judoOptions.getCardNumber());
-                expiryDateEntryView.requestFocus();
-            }
-
-            if (judoOptions.getExpiryYear() != null && judoOptions.getExpiryMonth() != null) {
-                expiryDateEntryView.setText(getString(R.string.expiry_date_format, judoOptions.getExpiryMonth(), judoOptions.getExpiryYear()));
-                securityCodeEntryView.requestFocus();
-            }
         }
 
-        if (judoOptions.isSecureServerMessageShown()) {
+        if (options.isSecureServerMessageShown()) {
             secureServerText.setVisibility(View.VISIBLE);
         } else {
             secureServerText.setVisibility(View.GONE);
@@ -155,7 +161,12 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
     @Override
     public void setCard(Card card) {
-        Toast.makeText(getActivity(), card.getCardNumber(), Toast.LENGTH_SHORT).show();
+        int cardType = CardNetwork.fromCardNumber(card.getCardNumber());
+
+        cardNumberEntryView.setCardType(cardType, false);
+        cardNumberEntryView.setText(card.getCardNumber());
+        cardNumberEntryView.setScanCardListener(null);
+        expiryDateEntryView.requestFocus();
     }
 
     private void initializeValidators() {
@@ -316,25 +327,11 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     private void initializePayButton() {
-//        paymentButton.setOnClickListener(new SingleClickOnClickListener() {
-//            @Override
-//            public void doClick() {
-//                hideKeyboard();
-//                submitForm();
-//            }
-//        });
-        paymentButton.setVisibility(View.VISIBLE);
         paymentButton.setOnClickListener(new SingleClickOnClickListener() {
             @Override
             public void doClick() {
-                PendingIntent intent = judoOptions.getCardScanningIntent();
-                if (intent != null) {
-                    IntentSender intentSender = intent.getIntentSender();
-                    try {
-                        getActivity().startIntentSenderForResult(intentSender, Judo.CARD_SCANNING_REQUEST, null, 0, 0, 0);
-                    } catch (IntentSender.SendIntentException ignore) {
-                    }
-                }
+                hideKeyboard();
+                submitForm();
             }
         });
     }
