@@ -13,7 +13,7 @@ import com.judopay.validation.ValidationManager;
 
 public abstract class AbstractCardEntryFragment extends Fragment implements ValidationManager.OnChangeListener {
 
-    protected JudoOptions judoOptions;
+    private JudoOptions options;
     protected CardEntryListener cardEntryListener;
 
     public void setCardEntryListener(CardEntryListener cardEntryListener) {
@@ -27,9 +27,9 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
         super.onViewCreated(view, savedInstanceState);
 
         if (getArguments() != null && getArguments().containsKey(Judo.JUDO_OPTIONS)) {
-            this.judoOptions = getArguments().getParcelable(Judo.JUDO_OPTIONS);
-            if (judoOptions != null) {
-                onInitialize(judoOptions);
+            this.options = getArguments().getParcelable(Judo.JUDO_OPTIONS);
+            if (options != null) {
+                onInitialize(options);
             }
         }
     }
