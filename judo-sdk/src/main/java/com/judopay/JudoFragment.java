@@ -17,6 +17,7 @@ import com.judopay.card.AbstractCardEntryFragment;
 import com.judopay.card.CardEntryFragment;
 import com.judopay.card.CardEntryListener;
 import com.judopay.card.CustomLayoutCardEntryFragment;
+import com.judopay.card.TokenCardEntryFragment;
 import com.judopay.model.Card;
 import com.judopay.model.Receipt;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
