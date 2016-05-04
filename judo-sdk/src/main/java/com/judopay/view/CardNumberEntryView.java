@@ -5,13 +5,14 @@ import android.support.design.widget.TextInputLayout;
 import android.text.InputFilter;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.judopay.R;
-import com.judopay.model.CardToken;
 import com.judopay.model.CardNetwork;
+import com.judopay.model.CardToken;
 import com.judopay.validation.Validation;
 
 import static com.judopay.model.CardNetwork.AMEX;
@@ -19,15 +20,20 @@ import static com.judopay.model.CardNetwork.AMEX;
 /**
  * A view that allows for card number data to be input by the user and the detected card type
  * to be displayed alongside the card number.
- * Does not perform validation itself, this is done by the {@link com.judopay.CardNumberValidation}
+ * Does not perform validation itself, this is done by the {@link com.judopay.validation.CardNumberValidator}
  * class.
  */
 public class CardNumberEntryView extends RelativeLayout {
 
     private EditText editText;
     private TextInputLayout inputLayout;
+    private View scanCardButton;
     private CardTypeImageView cardTypeImageView;
     private NumberFormatTextWatcher numberFormatTextWatcher;
+
+    public interface ScanCardButtonListener {
+        void onClick();
+    }
 
     public CardNumberEntryView(Context context) {
         super(context);
@@ -57,6 +63,7 @@ public class CardNumberEntryView extends RelativeLayout {
         TextView cardNumberHelperText = (TextView) findViewById(R.id.card_number_helper_text);
         this.editText = (EditText) findViewById(R.id.card_number_edit_text);
         this.inputLayout = (TextInputLayout) findViewById(R.id.card_number_input_layout);
+        this.scanCardButton = findViewById(R.id.scan_card_button);
 
         editText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
                 new EmptyTextHintOnFocusChangeListener(cardNumberHelperText),
@@ -69,8 +76,29 @@ public class CardNumberEntryView extends RelativeLayout {
         editText.addTextChangedListener(new HidingViewTextWatcher(cardNumberHelperText));
     }
 
+    public void setScanCardListener(final ScanCardButtonListener listener) {
+        if (listener != null) {
+            this.scanCardButton.setVisibility(VISIBLE);
+            this.cardTypeImageView.setVisibility(GONE);
+            this.scanCardButton.setOnClickListener(new SingleClickOnClickListener() {
+                @Override
+                public void doClick() {
+                    scanCardButton.setEnabled(false);
+                    listener.onClick();
+                }
+            });
+        } else {
+            this.scanCardButton.setVisibility(GONE);
+            this.cardTypeImageView.setVisibility(VISIBLE);
+            this.scanCardButton.setOnClickListener(null);
+        }
+    }
+
     public void setCardType(int type, boolean animate) {
         cardTypeImageView.setCardType(type, animate);
+        if (type != 0) {
+            setScanCardListener(null);
+        }
 
         switch (type) {
             case CardNetwork.AMEX:
