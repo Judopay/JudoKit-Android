@@ -100,15 +100,15 @@ public final class AndroidPayRequest extends BasePaymentRequest {
             checkNotEmpty(currency);
             checkNotEmpty(consumerReference);
 
-            AndroidPayRequest androidPayRequest = new AndroidPayRequest(wallet);
+            AndroidPayRequest request = new AndroidPayRequest(wallet);
 
-            androidPayRequest.judoId = judoId;
-            androidPayRequest.amount = amount;
-            androidPayRequest.currency = currency;
-            androidPayRequest.yourPaymentMetaData = metaData;
-            androidPayRequest.yourConsumerReference = consumerReference;
+            request.judoId = judoId;
+            request.amount = amount;
+            request.currency = currency;
+            request.yourPaymentMetaData = metaData;
+            request.yourConsumerReference = consumerReference;
 
-            return androidPayRequest;
+            return request;
         }
     }
 
