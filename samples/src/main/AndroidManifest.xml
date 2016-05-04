@@ -24,10 +24,6 @@
 
         <activity android:name=".settings.SettingsActivity" />
 
-        <activity android:name=".CardScanningActivity" />
-        <activity android:name="io.card.payment.CardIOActivity" />
-        <activity android:name="io.card.payment.DataEntryActivity" />
-
     </application>
 
 </manifest>
