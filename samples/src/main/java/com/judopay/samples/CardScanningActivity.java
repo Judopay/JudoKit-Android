@@ -39,8 +39,8 @@ public class CardScanningActivity extends AppCompatActivity {
                         .build());
 
                 setResult(Judo.RESULT_CARD_SCANNED, resultIntent);
-                finish();
             }
+            finish();
         }
     }
 }
