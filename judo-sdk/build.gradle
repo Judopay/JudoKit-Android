@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.1.0'
         classpath 'com.novoda:bintray-release:0.3.4'
     }
 }
@@ -12,19 +12,17 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        minSdkVersion 16
+        targetSdkVersion 23
+        versionCode 7
+        versionName "5.2.1"
 
         consumerProguardFiles 'proguard-rules.pro'
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
-
-        productFlavors {}
     }
 
     buildTypes {
@@ -38,9 +36,6 @@ android {
 
             manifestPlaceholders = [apiToken: apiToken, apiSecret: apiSecret]
         }
-        release {
-            minifyEnabled false
-        }
     }
 
     lintOptions {
@@ -53,17 +48,23 @@ android {
 
 }
 
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    destinationDir = file("build/outputs/javadoc/")
+    failOnError false
+}
+
 publish {
     userOrg = 'judopay'
     groupId = 'com.judopay'
     artifactId = 'android-sdk'
-    publishVersion = rootProject.ext.versionName
+    publishVersion = android.defaultConfig.versionName
     desc = 'Android Mobile Payments SDK'
     website = 'https://github.com/JudoPay/Judo-Android'
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.judopay:shield:1.2'
 
     compile 'com.squareup.retrofit2:retrofit:2.0.0'
@@ -71,21 +72,15 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0'
 
     compile 'io.reactivex:rxandroid:0.23.0'
-
-    compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'com.android.support:design:23.2.0'
-
     compile 'fr.turri:jISO8601:0.2'
+
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:design:23.3.0'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
 
     androidTestCompile 'com.judopay:espresso-web:2.2.1'
-
-    androidTestCompile 'com.android.support.test:runner:0.4.1'
-    androidTestCompile 'com.android.support.test:rules:0.4.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.1'
 
 }

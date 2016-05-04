@@ -12,6 +12,7 @@
 
         <LinearLayout
             android:id="@+id/payment_button"
+            android:onClick="performPayment"
             style="@style/list_button">
 
             <TextView
@@ -26,6 +27,7 @@
 
         <LinearLayout
             android:id="@+id/pre_auth_button"
+            android:onClick="performPreAuth"
             style="@style/list_button">
 
             <TextView
@@ -40,6 +42,7 @@
 
         <LinearLayout
             android:id="@+id/token_payment_button"
+            android:onClick="performTokenPayment"
             style="@style/list_button">
 
             <TextView
@@ -54,6 +57,7 @@
 
         <LinearLayout
             android:id="@+id/token_pre_auth_button"
+            android:onClick="performTokenPreAuth"
             style="@style/list_button">
 
             <TextView
@@ -68,6 +72,7 @@
 
         <LinearLayout
             android:id="@+id/add_card_button"
+            android:onClick="performRegisterCard"
             style="@style/list_button">
 
             <TextView

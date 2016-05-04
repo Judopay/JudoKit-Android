@@ -15,22 +15,22 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class HintFocusListenerTest {
 
-    @Test @SuppressWarnings("ResourceType")
+    @Test
     public void shouldSetHintWhenFocused() {
         EditText editText = mock(EditText.class);
-        int hintResourceId = 123;
 
-        HintFocusListener hintFocusListener = new HintFocusListener(editText, hintResourceId);
+        String hint = "hint";
+        HintFocusListener hintFocusListener =  new HintFocusListener(editText, hint);
         hintFocusListener.onFocusChange(null, true);
 
-        verify(editText).setHint(hintResourceId);
+        verify(editText).setHint(eq(hint));
     }
 
-    @Test @SuppressWarnings("ResourceType")
+    @Test
     public void shouldSetEmptyHintWhenBlurred() {
         EditText editText = mock(EditText.class);
 
-        HintFocusListener hintFocusListener = new HintFocusListener(editText, 123);
+        HintFocusListener hintFocusListener = new HintFocusListener(editText, "hint");
         hintFocusListener.onFocusChange(null, false);
 
         verify(editText).setHint(eq(""));

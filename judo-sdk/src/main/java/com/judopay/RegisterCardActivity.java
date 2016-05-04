@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
-import static com.judopay.Judo.JUDO_OPTIONS;
-
 /**
  * Displays a card entry form to the user, allowing for card to be registered and used for token transactions.
  *
@@ -30,10 +28,6 @@ public final class RegisterCardActivity extends JudoActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        JudoOptions options = getIntent().getParcelableExtra(JUDO_OPTIONS);
-        checkJudoOptionsExtras(options.getConsumerRef(), options.getJudoId());
-
         setTitle(R.string.add_card);
 
         if (savedInstanceState == null) {
@@ -67,4 +61,5 @@ public final class RegisterCardActivity extends JudoActivity {
             super.onBackPressed();
         }
     }
+
 }

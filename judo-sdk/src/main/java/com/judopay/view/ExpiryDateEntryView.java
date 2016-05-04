@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.judopay.R;
+import com.judopay.validation.Validation;
 
 /**
  * A view that allows for a card expiry date to be entered or for a tokenized expiry number to be shown.
@@ -46,7 +47,7 @@ public class ExpiryDateEntryView extends LinearLayout {
         expiryDateEditText = (EditText) findViewById(R.id.expiry_date_edit_text);
         expiryDateInputLayout = (TextInputLayout) findViewById(R.id.expiry_date_input_layout);
 
-        HintFocusListener hintFocusListener = new HintFocusListener(expiryDateEditText, R.string.date_hint);
+        HintFocusListener hintFocusListener = new HintFocusListener(expiryDateEditText, getResources().getString(R.string.date_hint));
         expiryDateEditText.setOnFocusChangeListener(hintFocusListener);
 
         String dateFormat = getResources().getString(R.string.date_format);
@@ -76,14 +77,18 @@ public class ExpiryDateEntryView extends LinearLayout {
         return expiryDateEditText.getText().toString().trim();
     }
 
-    public void setError(int error, boolean show) {
-        expiryDateInputLayout.setErrorEnabled(show);
 
-        if (show) {
-            expiryDateInputLayout.setError(getResources().getString(error));
+    public EditText getEditText() {
+        return expiryDateEditText;
+    }
+
+    public void setValidation(Validation validation) {
+        expiryDateInputLayout.setErrorEnabled(validation.isShowError());
+
+        if (validation.isShowError()) {
+            expiryDateInputLayout.setError(getResources().getString(validation.getError()));
         } else {
             expiryDateInputLayout.setError("");
         }
     }
-
 }
