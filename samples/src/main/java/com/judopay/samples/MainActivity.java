@@ -49,6 +49,9 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
     private static final String CONSUMER_REF = "AndroidSdkSampleConsumerRef";
 
+    private boolean androidPayAvailable;
+    private GoogleApiClient googleApiClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,17 +101,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
         startActivityForResult(intent, REGISTER_CARD_REQUEST);
 
-        androidPayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (androidPayAvailable) {
-                    startActivity(new Intent(MainActivity.this, AndroidPayActivity.class));
-                } else {
-                    Toast.makeText(MainActivity.this, R.string.please_add_android_pay_card, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wallet.API, new Wallet.WalletOptions.Builder()
                         .setEnvironment(WalletConstants.ENVIRONMENT_TEST)
@@ -117,6 +109,14 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                 .build();
 
         checkAndroidPayAvailable();
+    }
+
+    public void performAndroidPayPayment(View view) {
+        if (androidPayAvailable) {
+            startActivity(new Intent(MainActivity.this, AndroidPayActivity.class));
+        } else {
+            Toast.makeText(MainActivity.this, R.string.please_add_android_pay_card, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void checkAndroidPayAvailable() {
@@ -285,9 +285,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
 
     private void setConfiguration() {
         SettingsPrefs settingsPrefs = new SettingsPrefs(this);
