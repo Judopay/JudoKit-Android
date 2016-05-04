@@ -1,6 +1,8 @@
 package com.judopay.card;
 
 
+import android.app.PendingIntent;
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -12,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
@@ -28,12 +31,12 @@ import com.judopay.validation.IssueNumberValidator;
 import com.judopay.validation.SecurityCodeValidator;
 import com.judopay.validation.StartDateValidator;
 import com.judopay.validation.Validation;
+import com.judopay.validation.ValidationAutoAdvanceManager;
 import com.judopay.validation.ValidationManager;
 import com.judopay.validation.Validator;
 import com.judopay.view.CardNumberEntryView;
 import com.judopay.view.CountrySpinnerAdapter;
 import com.judopay.view.ExpiryDateEntryView;
-import com.judopay.validation.ValidationAutoAdvanceManager;
 import com.judopay.view.IssueNumberEntryView;
 import com.judopay.view.PostcodeEntryView;
 import com.judopay.view.SecurityCodeEntryView;
@@ -144,9 +147,15 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         } else {
             secureServerText.setVisibility(View.GONE);
         }
+
         initializeCountry();
         initializeValidators();
         initializePayButton();
+    }
+
+    @Override
+    public void setCard(Card card) {
+        Toast.makeText(getActivity(), card.getCardNumber(), Toast.LENGTH_SHORT).show();
     }
 
     private void initializeValidators() {
@@ -307,11 +316,25 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     private void initializePayButton() {
+//        paymentButton.setOnClickListener(new SingleClickOnClickListener() {
+//            @Override
+//            public void doClick() {
+//                hideKeyboard();
+//                submitForm();
+//            }
+//        });
+        paymentButton.setVisibility(View.VISIBLE);
         paymentButton.setOnClickListener(new SingleClickOnClickListener() {
             @Override
             public void doClick() {
-                hideKeyboard();
-                submitForm();
+                PendingIntent intent = judoOptions.getCardScanningIntent();
+                if (intent != null) {
+                    IntentSender intentSender = intent.getIntentSender();
+                    try {
+                        getActivity().startIntentSenderForResult(intentSender, Judo.CARD_SCANNING_REQUEST, null, 0, 0, 0);
+                    } catch (IntentSender.SendIntentException ignore) {
+                    }
+                }
             }
         });
     }
@@ -328,7 +351,8 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
     }
 

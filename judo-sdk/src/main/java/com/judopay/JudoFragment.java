@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.judopay.card.AbstractCardEntryFragment;
 import com.judopay.card.CardEntryFragment;
 import com.judopay.card.CardEntryListener;
 import com.judopay.card.CustomLayoutCardEntryFragment;
+import com.judopay.model.Card;
 import com.judopay.model.Receipt;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
@@ -24,7 +26,7 @@ import com.judopay.secure3d.ThreeDSecureWebView;
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
 import static com.judopay.Judo.JUDO_OPTIONS;
 
-abstract class BaseFragment extends Fragment implements TransactionCallbacks, CardEntryListener {
+abstract class JudoFragment extends Fragment implements TransactionCallbacks, CardEntryListener {
 
     private static final String TAG_PAYMENT_FORM = "CardEntryFragment";
     private static final String TAG_3DS_DIALOG = "3dSecureDialog";
@@ -34,6 +36,9 @@ abstract class BaseFragment extends Fragment implements TransactionCallbacks, Ca
 
     private ThreeDSecureDialogFragment threeDSecureDialog;
     private ThreeDSecureWebView threeDSecureWebView;
+    private AbstractCardEntryFragment cardEntryFragment;
+
+    abstract boolean isTransactionInProgress();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,7 +77,7 @@ abstract class BaseFragment extends Fragment implements TransactionCallbacks, Ca
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        AbstractCardEntryFragment cardEntryFragment = (AbstractCardEntryFragment) getFragmentManager().findFragmentByTag(TAG_PAYMENT_FORM);
+        cardEntryFragment = (AbstractCardEntryFragment) getFragmentManager().findFragmentByTag(TAG_PAYMENT_FORM);
 
         if (cardEntryFragment == null) {
             cardEntryFragment = createCardEntryFragment();
@@ -119,11 +124,12 @@ abstract class BaseFragment extends Fragment implements TransactionCallbacks, Ca
     private void sendResult(int resultCode, Intent intent) {
         Activity activity = getActivity();
 
-        if(activity != null && !activity.isFinishing()) {
+        if (activity != null && !activity.isFinishing()) {
             try {
                 PendingIntent pendingResult = activity.createPendingResult(Judo.JUDO_REQUEST, intent, FLAG_ONE_SHOT);
                 pendingResult.send(resultCode);
-            } catch (PendingIntent.CanceledException ignore) { }
+            } catch (PendingIntent.CanceledException ignore) {
+            }
         }
     }
 
@@ -178,7 +184,7 @@ abstract class BaseFragment extends Fragment implements TransactionCallbacks, Ca
     AbstractCardEntryFragment createCardEntryFragment() {
         JudoOptions options = getArguments().getParcelable(Judo.JUDO_OPTIONS);
 
-        if(options != null && options.getCustomLayout() != null) {
+        if (options != null && options.getCustomLayout() != null) {
             options.getCustomLayout().validate(getActivity());
             return CustomLayoutCardEntryFragment.newInstance(options, this);
         }
@@ -191,4 +197,9 @@ abstract class BaseFragment extends Fragment implements TransactionCallbacks, Ca
         return args.getParcelable(Judo.JUDO_OPTIONS);
     }
 
+    public void setCard(Card card) {
+        if (cardEntryFragment != null && card != null) {
+            cardEntryFragment.setCard(card);
+        }
+    }
 }

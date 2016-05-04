@@ -3,8 +3,6 @@ package com.judopay;
 import android.content.Intent;
 import android.os.Bundle;
 
-import static com.judopay.Judo.JUDO_OPTIONS;
-
 /**
  * Displays a card entry form to the user, allowing for a pre-auth to be made.
  * To launch the PreAuthActivity, call {@link android.app.Activity#startActivityForResult(Intent, int)}
@@ -25,8 +23,6 @@ import static com.judopay.Judo.JUDO_OPTIONS;
  */
 public final class PreAuthActivity extends JudoActivity {
 
-    private PreAuthFragment preAuthFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,20 +30,13 @@ public final class PreAuthActivity extends JudoActivity {
         setTitle(R.string.payment);
 
         if (savedInstanceState == null) {
-            preAuthFragment = new PreAuthFragment();
-            preAuthFragment.setArguments(getIntent().getExtras());
+            fragment = new PreAuthFragment();
+            fragment.setArguments(getIntent().getExtras());
 
             getFragmentManager()
                     .beginTransaction()
-                    .add(android.R.id.content, preAuthFragment)
+                    .add(android.R.id.content, fragment)
                     .commit();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (preAuthFragment != null && !preAuthFragment.isPaymentInProgress()) {
-            super.onBackPressed();
         }
     }
 

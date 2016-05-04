@@ -25,28 +25,19 @@ import android.os.Bundle;
  */
 public class TokenPreAuthActivity extends JudoActivity {
 
-    private TokenPreAuthFragment tokenPreAuthFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(R.string.payment);
 
         if (savedInstanceState == null) {
-            tokenPreAuthFragment = new TokenPreAuthFragment();
-            tokenPreAuthFragment.setArguments(getIntent().getExtras());
+            fragment = new TokenPreAuthFragment();
+            fragment.setArguments(getIntent().getExtras());
 
             getFragmentManager()
                     .beginTransaction()
-                    .add(android.R.id.content, tokenPreAuthFragment)
+                    .add(android.R.id.content, fragment)
                     .commit();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (tokenPreAuthFragment != null && !tokenPreAuthFragment.isPaymentInProgress()) {
-            super.onBackPressed();
         }
     }
 

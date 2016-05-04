@@ -14,7 +14,7 @@ import com.judopay.model.Card;
 
 import static com.judopay.Judo.JUDO_OPTIONS;
 
-public class RegisterCardFragment extends BaseFragment implements TransactionCallbacks, CardEntryListener {
+public class RegisterCardFragment extends JudoFragment implements TransactionCallbacks, CardEntryListener {
 
     private RegisterCardPresenter presenter;
 
@@ -62,11 +62,11 @@ public class RegisterCardFragment extends BaseFragment implements TransactionCal
     @Override
     public void onSubmit(Card card) {
         JudoOptions options = getJudoOptions();
-
         presenter.performRegisterCard(card, options);
     }
 
-    public boolean isPaymentInProgress() {
+    @Override
+    boolean isTransactionInProgress() {
         return this.presenter.loading;
     }
 

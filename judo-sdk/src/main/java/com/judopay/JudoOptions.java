@@ -1,5 +1,6 @@
 package com.judopay;
 
+import android.app.PendingIntent;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -40,6 +41,7 @@ public class JudoOptions implements Parcelable {
     private String emailAddress;
     private String mobileNumber;
     private boolean secureServerMessageShown;
+    private PendingIntent cardScanningIntent;
     private CustomLayout customLayout;
 
     private JudoOptions() { }
@@ -96,6 +98,10 @@ public class JudoOptions implements Parcelable {
         return mobileNumber;
     }
 
+    public PendingIntent getCardScanningIntent() {
+        return cardScanningIntent;
+    }
+
     public boolean isSecureServerMessageShown() {
         return secureServerMessageShown;
     }
@@ -131,6 +137,7 @@ public class JudoOptions implements Parcelable {
         private String activityTitle;
         private String emailAddress;
         private String mobileNumber;
+        private PendingIntent cardScanningIntent;
         private boolean secureServerMessageShown;
         private CustomLayout customLayout;
 
@@ -209,6 +216,11 @@ public class JudoOptions implements Parcelable {
             return this;
         }
 
+        public Builder setCardScanningIntent(PendingIntent cardScanningIntent) {
+            this.cardScanningIntent = cardScanningIntent;
+            return this;
+        }
+
         public JudoOptions build() {
             if(isEmpty(judoId) || !isValid(judoId)) {
                 throw new JudoIdInvalidError();
@@ -234,10 +246,12 @@ public class JudoOptions implements Parcelable {
             options.mobileNumber = mobileNumber;
 
             options.customLayout = customLayout;
+            options.cardScanningIntent = cardScanningIntent;
 
             return options;
         }
     }
+
 
     @Override
     public int describeContents() {
@@ -260,6 +274,7 @@ public class JudoOptions implements Parcelable {
         dest.writeString(this.emailAddress);
         dest.writeString(this.mobileNumber);
         dest.writeByte(secureServerMessageShown ? (byte) 1 : (byte) 0);
+        dest.writeParcelable(this.cardScanningIntent, flags);
         dest.writeParcelable(this.customLayout, flags);
     }
 
@@ -278,6 +293,7 @@ public class JudoOptions implements Parcelable {
         this.emailAddress = in.readString();
         this.mobileNumber = in.readString();
         this.secureServerMessageShown = in.readByte() != 0;
+        this.cardScanningIntent = in.readParcelable(PendingIntent.class.getClassLoader());
         this.customLayout = in.readParcelable(CustomLayout.class.getClassLoader());
     }
 
@@ -292,5 +308,4 @@ public class JudoOptions implements Parcelable {
             return new JudoOptions[size];
         }
     };
-
 }

@@ -1,5 +1,6 @@
 package com.judopay.samples;
 
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,9 +39,9 @@ public class MainActivity extends BaseActivity {
 
     private static final String AMOUNT = "0.99";
 
-    private static final String JUDO_ID = "<JUDO_ID>";
-    private static final String API_TOKEN = "<API_TOKEN>";
-    private static final String API_SECRET = "<API_SECRET>";
+    private static final String JUDO_ID = "100915867";
+    private static final String API_TOKEN = "Izx9omsBR15LatAl";
+    private static final String API_SECRET = "b5787124845533d8e68d12a586fa3713871b876b528600ebfdc037afec880cd6";
 
     private static final String CONSUMER_REF = "AndroidSdkSampleConsumerRef";
 
@@ -56,11 +57,15 @@ public class MainActivity extends BaseActivity {
     public void performPayment(View view) {
         Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
 
+        Intent cardScanIntent = new Intent(this, CardScanningActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, cardScanIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
         JudoOptions judoOptions = new JudoOptions.Builder()
                 .setJudoId(JUDO_ID)
                 .setAmount(AMOUNT)
                 .setCurrency(getCurrency())
                 .setConsumerRef(CONSUMER_REF)
+                .setCardScanningIntent(pendingIntent)
                 .setSecureServerMessageShown(true)
                 .build();
 

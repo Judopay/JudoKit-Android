@@ -3,8 +3,6 @@ package com.judopay;
 import android.content.Intent;
 import android.os.Bundle;
 
-import static com.judopay.Judo.JUDO_OPTIONS;
-
 /**
  * Displays a card entry form to the user, allowing for a payment to be made.
  * To launch the PaymentActivity, call {@link android.app.Activity#startActivityForResult(Intent, int)}
@@ -24,8 +22,6 @@ import static com.judopay.Judo.JUDO_OPTIONS;
  */
 public final class PaymentActivity extends JudoActivity {
 
-    private PaymentFragment paymentFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,20 +29,13 @@ public final class PaymentActivity extends JudoActivity {
         setTitle(R.string.payment);
 
         if (savedInstanceState == null) {
-            paymentFragment = new PaymentFragment();
-            paymentFragment.setArguments(getIntent().getExtras());
+            fragment = new PaymentFragment();
+            fragment.setArguments(getIntent().getExtras());
 
             getFragmentManager()
                     .beginTransaction()
-                    .add(android.R.id.content, paymentFragment)
+                    .add(android.R.id.content, fragment)
                     .commit();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (paymentFragment != null && !paymentFragment.isPaymentInProgress()) {
-            super.onBackPressed();
         }
     }
 

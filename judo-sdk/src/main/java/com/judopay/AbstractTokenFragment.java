@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-abstract class AbstractTokenFragment extends BaseFragment {
+abstract class AbstractTokenFragment extends JudoFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -21,4 +21,8 @@ abstract class AbstractTokenFragment extends BaseFragment {
         }
     }
 
+    @Override
+    boolean isTransactionInProgress() {
+        return false;
+    }
 }

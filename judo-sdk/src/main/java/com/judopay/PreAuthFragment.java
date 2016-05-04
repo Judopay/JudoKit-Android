@@ -9,7 +9,7 @@ import com.judopay.model.Card;
 
 import static com.judopay.Judo.JUDO_OPTIONS;
 
-public final class PreAuthFragment extends BaseFragment {
+public final class PreAuthFragment extends JudoFragment {
 
     private PreAuthPresenter presenter;
 
@@ -39,7 +39,9 @@ public final class PreAuthFragment extends BaseFragment {
         presenter.performPreAuth(card, options);
     }
 
-    public boolean isPaymentInProgress() {
+    @Override
+    boolean isTransactionInProgress() {
         return this.presenter.loading;
     }
+
 }

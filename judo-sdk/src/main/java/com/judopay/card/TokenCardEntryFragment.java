@@ -90,6 +90,11 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         initializeValidators(cardToken);
     }
 
+    @Override
+    public void setCard(Card card) {
+        // todo - throw error that this is not supported
+    }
+
     private void initializeCountry() {
         countrySpinner.setAdapter(new CountrySpinnerAdapter(getActivity(), Country.avsCountries()));
     }

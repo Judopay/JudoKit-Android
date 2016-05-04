@@ -8,6 +8,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
+import com.judopay.model.Card;
 import com.judopay.validation.ValidationManager;
 
 public abstract class AbstractCardEntryFragment extends Fragment implements ValidationManager.OnChangeListener {
@@ -40,5 +41,7 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
+    public abstract void setCard(Card card);
 
 }
