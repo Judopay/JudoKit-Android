@@ -1,4 +1,4 @@
-package com.judopay.integration;
+package com.judopay.androidpay;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -9,7 +9,9 @@ import com.judopay.Judo;
 import com.judopay.JudoApiService;
 import com.judopay.model.AndroidPayRequest;
 import com.judopay.model.Currency;
+import com.judopay.model.Receipt;
 import com.judopay.model.Wallet;
+import com.judopay.receipts.RxHelpers;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,10 +19,8 @@ import org.junit.runner.RunWith;
 
 import java.math.BigDecimal;
 
-import rx.schedulers.Schedulers;
-
-import static com.judopay.integration.TestSubscribers.assertResponseSuccessful;
-import static com.judopay.integration.TestSubscribers.fail;
+import static com.judopay.TestSubscribers.assertResponseSuccessful;
+import static com.judopay.TestSubscribers.fail;
 
 @MediumTest
 @RunWith(AndroidJUnit4.class)
@@ -39,39 +39,34 @@ public class AndroidPayTest {
 
     @Before
     public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.SANDBOX);
+        Judo.setEnvironment(Judo.UAT);
     }
 
     @Test
     public void shouldReturnSuccessWhenAndroidPayPayment() {
         Context context = InstrumentationRegistry.getContext();
-        final JudoApiService apiService = Judo.getApiService(context);
+        JudoApiService apiService = Judo.getApiService(context);
 
-        AndroidPayRequest androidPayRequest = new AndroidPayRequest.Builder()
-                .setJudoId(JUDO_ID)
-                .setWallet(new Wallet.Builder()
-                        .setEncryptedMessage(ENCRYPTED_MESSAGE)
-                        .setEphemeralPublicKey(EPHEMERAL_PUBLIC_KEY)
-                        .setEnvironment(ENVIRONMENT_TEST)
-                        .setTag(TAG)
-                        .setPublicKey(PUBLIC_KEY)
-                        .build())
-                .setAmount(new BigDecimal("0.10"))
-                .setCurrency(Currency.GBP)
-                .build();
+        AndroidPayRequest androidPayRequest = getAndroidPayRequest();
 
         apiService.androidPayPayment(androidPayRequest)
-                .observeOn(Schedulers.immediate())
-                .subscribeOn(Schedulers.immediate())
+                .compose(RxHelpers.<Receipt>schedulers())
                 .subscribe(assertResponseSuccessful(), fail());
     }
 
     @Test
     public void shouldReturnSuccessWhenAndroidPayPreAuth() {
         Context context = InstrumentationRegistry.getContext();
-        final JudoApiService apiService = Judo.getApiService(context);
+        JudoApiService apiService = Judo.getApiService(context);
 
-        AndroidPayRequest androidPayRequest = new AndroidPayRequest.Builder()
+        AndroidPayRequest androidPayRequest = getAndroidPayRequest();
+        apiService.androidPayPreAuth(androidPayRequest)
+                .compose(RxHelpers.<Receipt>schedulers())
+                .subscribe(assertResponseSuccessful(), fail());
+    }
+
+    private AndroidPayRequest getAndroidPayRequest() {
+        return new AndroidPayRequest.Builder()
                 .setJudoId(JUDO_ID)
                 .setWallet(new Wallet.Builder()
                         .setEncryptedMessage(ENCRYPTED_MESSAGE)
@@ -79,15 +74,14 @@ public class AndroidPayTest {
                         .setEnvironment(ENVIRONMENT_TEST)
                         .setTag(TAG)
                         .setPublicKey(PUBLIC_KEY)
+                        .setInstrumentDetails("1234")
+                        .setInstrumentType("VISA")
+                        .setGoogleTransactionId("123456789")
+                        .setVersion(1)
                         .build())
                 .setAmount(new BigDecimal("0.10"))
+                .setConsumerReference("AndroidPayTest")
                 .setCurrency(Currency.GBP)
                 .build();
-
-        apiService.androidPayPreAuth(androidPayRequest)
-                .observeOn(Schedulers.immediate())
-                .subscribeOn(Schedulers.immediate())
-                .subscribe(assertResponseSuccessful(), fail());
     }
-
 }
