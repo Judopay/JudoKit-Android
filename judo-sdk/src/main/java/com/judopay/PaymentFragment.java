@@ -35,7 +35,11 @@ public final class PaymentFragment extends JudoFragment {
     public void onSubmit(Card card) {
         JudoOptions options = getJudoOptions();
 
-        presenter.performPayment(card, options);
+        if(options.getCardToken() != null) {
+            presenter.performTokenPayment(card, options);
+        } else {
+            presenter.performPayment(card, options);
+        }
     }
 
     @Override
