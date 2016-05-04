@@ -5,9 +5,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import com.judopay.Judo;
-import com.judopay.JudoOptions;
-import com.judopay.TokenPaymentActivity;
 import com.judopay.model.CardToken;
 import com.judopay.model.Currency;
 
@@ -25,7 +22,7 @@ import static org.hamcrest.core.Is.is;
 public class ActivityResultTest {
 
     @Rule
-    public ActivityTestRule<TokenPaymentActivity> activityTestRule = new ActivityTestRule<>(TokenPaymentActivity.class, false, false);
+    public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
     @Before
     public void setupJudoSdk() {
@@ -44,7 +41,7 @@ public class ActivityResultTest {
                 .setConsumerRef("consumerRef")
                 .build());
 
-        TokenPaymentActivity activity = activityTestRule.launchActivity(intent);
+        PaymentActivity activity = activityTestRule.launchActivity(intent);
 
         assertThat(resultCode(activity), is(Judo.RESULT_TOKEN_EXPIRED));
     }

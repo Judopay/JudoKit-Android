@@ -36,7 +36,11 @@ public final class PreAuthFragment extends BaseFragment {
     public void onSubmit(Card card) {
         JudoOptions options = getJudoOptions();
 
-        presenter.performPreAuth(card, options);
+        if(options.getCardToken() != null) {
+            presenter.performTokenPreAuth(card, options);
+        } else {
+            presenter.performPreAuth(card, options);
+        }
     }
 
     public boolean isPaymentInProgress() {
