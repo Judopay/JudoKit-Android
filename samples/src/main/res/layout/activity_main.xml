@@ -12,8 +12,8 @@
 
         <LinearLayout
             android:id="@+id/payment_button"
-            android:onClick="performPayment"
-            style="@style/list_button">
+            style="@style/list_button"
+            android:onClick="performPayment">
 
             <TextView
                 style="@style/list_button_primary_text"
@@ -27,8 +27,8 @@
 
         <LinearLayout
             android:id="@+id/pre_auth_button"
-            android:onClick="performPreAuth"
-            style="@style/list_button">
+            style="@style/list_button"
+            android:onClick="performPreAuth">
 
             <TextView
                 style="@style/list_button_primary_text"
@@ -42,8 +42,8 @@
 
         <LinearLayout
             android:id="@+id/token_payment_button"
-            android:onClick="performTokenPayment"
-            style="@style/list_button">
+            style="@style/list_button"
+            android:onClick="performTokenPayment">
 
             <TextView
                 style="@style/list_button_primary_text"
@@ -57,8 +57,8 @@
 
         <LinearLayout
             android:id="@+id/token_pre_auth_button"
-            android:onClick="performTokenPreAuth"
-            style="@style/list_button">
+            style="@style/list_button"
+            android:onClick="performTokenPreAuth">
 
             <TextView
                 style="@style/list_button_primary_text"
@@ -72,8 +72,8 @@
 
         <LinearLayout
             android:id="@+id/add_card_button"
-            android:onClick="performRegisterCard"
-            style="@style/list_button">
+            style="@style/list_button"
+            android:onClick="performRegisterCard">
 
             <TextView
                 style="@style/list_button_primary_text"
@@ -88,11 +88,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:text="@string/test_card_detail_instructions"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            tools:ignore="RtlHardcoded" />
 
     </LinearLayout>
 

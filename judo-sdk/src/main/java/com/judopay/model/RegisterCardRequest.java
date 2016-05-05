@@ -30,10 +30,6 @@ public final class RegisterCardRequest extends Request {
     private String issueNumber;
     private Map<String, String> yourPaymentMetaData;
 
-    private RegisterCardRequest() {
-        super(true);
-    }
-
     public String getJudoId() {
         return judoId;
     }
@@ -82,6 +78,7 @@ public final class RegisterCardRequest extends Request {
         return mobileNumber;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
 
         private String judoId;

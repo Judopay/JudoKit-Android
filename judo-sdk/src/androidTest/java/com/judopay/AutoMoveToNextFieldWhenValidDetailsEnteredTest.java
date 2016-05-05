@@ -153,7 +153,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
                 .check(matches(hasFocus()));
     }
 
-    protected Intent getIntent() {
+    private Intent getIntent() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
                 .setJudoId("100915867")

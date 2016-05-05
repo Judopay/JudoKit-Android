@@ -6,7 +6,7 @@ import android.widget.EditText;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
-public class ViewAlphaChangingTextWatcher implements View.OnFocusChangeListener {
+class ViewAlphaChangingTextWatcher implements View.OnFocusChangeListener {
 
     private final EditText editText;
     private final View view;

@@ -5,7 +5,6 @@ import com.judopay.error.JudoIdInvalidError;
 
 import java.util.Map;
 
-import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 import static com.judopay.arch.TextUtil.isEmpty;
 import static com.judopay.model.LuhnCheck.isValid;
 
@@ -32,10 +31,6 @@ public final class PaymentRequest extends Request {
     private String emailAddress;
     private String mobileNumber;
     private Map<String, String> yourPaymentMetaData;
-
-    private PaymentRequest() {
-        super(true);
-    }
 
     public String getAmount() {
         return amount;
@@ -93,6 +88,7 @@ public final class PaymentRequest extends Request {
         return yourPaymentMetaData;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
 
         private String amount;

@@ -3,7 +3,7 @@ package com.judopay.view;
 import android.view.View;
 import android.widget.ScrollView;
 
-public class ScrollOnFocusChangeListener implements View.OnFocusChangeListener {
+class ScrollOnFocusChangeListener implements View.OnFocusChangeListener {
 
     private final ScrollView scrollView;
 

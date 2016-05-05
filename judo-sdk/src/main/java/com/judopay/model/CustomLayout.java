@@ -83,7 +83,7 @@ public final class CustomLayout implements Parcelable {
         checkSpinner(parent, countrySpinner);
     }
 
-    public void validateView(List<Class<? extends View>> allowedViews, ViewGroup parent) {
+    private void validateView(List<Class<? extends View>> allowedViews, ViewGroup parent) {
         int numChildViews = parent.getChildCount();
 
         for (int i = 0; i < numChildViews; i++) {

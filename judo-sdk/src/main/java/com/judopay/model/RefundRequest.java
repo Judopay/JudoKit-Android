@@ -13,8 +13,6 @@ public class RefundRequest extends Request {
     private final BigDecimal amount;
 
     public RefundRequest(String receiptId, BigDecimal amount) {
-        super(true);
-
         checkNotNull(receiptId);
         checkNotNull(amount);
 

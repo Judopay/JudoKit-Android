@@ -13,7 +13,7 @@ public class CollectionRequest extends Request {
     private final BigDecimal amount;
 
     public CollectionRequest(String receiptId, BigDecimal amount) {
-        super(true);
+        super();
 
         checkNotNull(receiptId);
         checkNotNull(amount);

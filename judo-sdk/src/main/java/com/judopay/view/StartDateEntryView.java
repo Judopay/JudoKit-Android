@@ -46,7 +46,7 @@ public class StartDateEntryView extends FrameLayout {
         startDateEditText.setOnFocusChangeListener(hintFocusListener);
 
         String dateFormat = getResources().getString(R.string.date_format);
-        NumberFormatTextWatcher numberFormatTextWatcher = new NumberFormatTextWatcher(startDateEditText, dateFormat, true);
+        NumberFormatTextWatcher numberFormatTextWatcher = new NumberFormatTextWatcher(startDateEditText, dateFormat);
         startDateEditText.addTextChangedListener(numberFormatTextWatcher);
     }
 
