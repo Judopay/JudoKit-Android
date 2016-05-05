@@ -1,6 +1,7 @@
 package com.judopay.view;
 
 import android.content.Context;
+import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputFilter;
 import android.text.TextWatcher;
