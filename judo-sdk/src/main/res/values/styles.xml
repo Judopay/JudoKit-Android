@@ -1,5 +1,7 @@
 <resources>
 
+    <attr name="cameraIcon" format="reference"/>
+
     <style name="Widget" />
 
     <style name="Widget.Judo" />
@@ -14,6 +16,7 @@
         <item name="colorButtonNormal">@color/judo_teal</item>
         <item name="loadingOverlayStyle">@style/LoadingOverlay.Light</item>
         <item name="android:textColorSecondary">@color/judo_black_54</item>
+        <item name="cameraIcon">@drawable/ic_photo_camera_black</item>
     </style>
 
     <style name="Theme.Judo.Light" parent="Theme.AppCompat.Light">
@@ -25,6 +28,7 @@
         <item name="colorButtonNormal">@color/judo_teal</item>
         <item name="loadingOverlayStyle">@style/LoadingOverlay.Light</item>
         <item name="android:textColorSecondary">@color/judo_black_54</item>
+        <item name="cameraIcon">@drawable/ic_photo_camera_black</item>
     </style>
 
     <style name="Theme.Judo" parent="Theme.AppCompat">
@@ -33,6 +37,7 @@
         <item name="colorButtonNormal">@color/judo_teal</item>
         <item name="colorAccent">@android:color/white</item>
         <item name="loadingOverlayStyle">@style/LoadingOverlay</item>
+        <item name="cameraIcon">@drawable/ic_photo_camera_white</item>
     </style>
 
     <style name="ThemeOverlay.AppTheme.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
