@@ -32,7 +32,7 @@
             android:layout_marginTop="17dp"
             android:alpha="0.5"
             android:padding="@dimen/small_padding"
-            android:src="@drawable/ic_photo_camera"
+            android:src="?attr/cameraIcon"
             android:visibility="gone"
             tools:ignore="RtlHardcoded"
             android:contentDescription="@string/scan_card" />

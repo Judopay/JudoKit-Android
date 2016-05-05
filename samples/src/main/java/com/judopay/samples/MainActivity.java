@@ -33,6 +33,7 @@ import static com.judopay.Judo.TOKEN_PRE_AUTH_REQUEST;
  * Update the {@link #JUDO_ID} string with the Judo ID from the judo website: http://www.judopay.com,
  * Update the {@link #API_TOKEN} and {@link #API_SECRET} with your credentials and call {@link com.judopay.Judo#setup} to initialize the SDK.
  */
+@SuppressWarnings("UnusedParameters")
 public class MainActivity extends BaseActivity {
 
     private static final String AMOUNT = "0.99";
@@ -69,11 +70,15 @@ public class MainActivity extends BaseActivity {
     public void performPreAuth(View view) {
         Intent intent = new Intent(MainActivity.this, PreAuthActivity.class);
 
+        Intent cardScanIntent = new Intent(this, CardScanningActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, cardScanIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
         JudoOptions options = new JudoOptions.Builder()
                 .setJudoId(JUDO_ID)
                 .setAmount(AMOUNT)
                 .setCurrency(getCurrency())
                 .setConsumerRef(CONSUMER_REF)
+                .setCardScanningIntent(pendingIntent)
                 .setSecureServerMessageShown(true)
                 .build();
 
