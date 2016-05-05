@@ -15,6 +15,7 @@ import static com.judopay.model.LuhnCheck.isValid;
  * When creating a {@link PaymentRequest} the {@link PaymentRequest#judoId},
  * {@link PaymentRequest#amount} and {@link PaymentRequest#currency} must be provided.
  */
+@SuppressWarnings("unused")
 public final class PaymentRequest extends Request {
 
     private String amount;

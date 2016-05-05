@@ -175,6 +175,7 @@ public final class CustomLayout implements Parcelable {
         return securityCodeInput;
     }
 
+    @SuppressWarnings("unused")
     public static class Builder {
 
         private int cardNumberInput;
@@ -214,12 +215,12 @@ public final class CustomLayout implements Parcelable {
             return this;
         }
 
-        public Builder countrySpinner(int countrySpinner) {
+        public Builder countrySpinner(@IdRes int countrySpinner) {
             this.countrySpinner = countrySpinner;
             return this;
         }
 
-        public Builder postcodeInput(int postcodeInput) {
+        public Builder postcodeInput(@IdRes int postcodeInput) {
             this.postcodeInput = postcodeInput;
             return this;
         }

@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 /**
  * A CollectionRequest allows for the funds reserved in a pre-auth transaction to be collected.
  */
+@SuppressWarnings("unused")
 public class CollectionRequest extends Request {
 
     private final String receiptId;

@@ -3,6 +3,7 @@ package com.judopay.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+@SuppressWarnings("unused")
 public class Consumer implements Parcelable {
 
     private String consumerToken;

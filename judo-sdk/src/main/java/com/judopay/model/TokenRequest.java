@@ -16,6 +16,7 @@ import static com.judopay.model.LuhnCheck.isValid;
  * When creating a {@link TokenRequest} the {@link TokenRequest#judoId},
  * {@link TokenRequest#amount} and {@link TokenRequest#currency} must be provided.
  */
+@SuppressWarnings("unused")
 public final class TokenRequest extends Request {
 
     private String endDate;

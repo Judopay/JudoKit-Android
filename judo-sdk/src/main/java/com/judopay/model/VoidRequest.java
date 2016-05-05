@@ -4,6 +4,7 @@ import com.judopay.api.Request;
 
 import java.math.BigDecimal;
 
+@SuppressWarnings("unused")
 public final class VoidRequest extends Request {
 
     private String receiptId;
