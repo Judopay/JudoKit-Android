@@ -6,9 +6,9 @@ import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.judopay.R;
 import com.judopay.model.CardNetwork;
@@ -24,6 +24,7 @@ public class SecurityCodeEntryView extends RelativeLayout {
     private CardSecurityCodeView imageView;
     private TextInputLayout inputLayout;
     private HintFocusListener hintFocusListener;
+    private TextView helperText;
 
     public SecurityCodeEntryView(Context context) {
         super(context);
@@ -42,7 +43,7 @@ public class SecurityCodeEntryView extends RelativeLayout {
 
     private void initialize(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        inflater.inflate(R.layout.view_card_security_code, this);
+        inflater.inflate(R.layout.view_security_code_entry, this);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class SecurityCodeEntryView extends RelativeLayout {
         editText = (EditText) findViewById(R.id.security_code_edit_text);
         inputLayout = (TextInputLayout) findViewById(R.id.security_code_input_layout);
         imageView = (CardSecurityCodeView) findViewById(R.id.security_code_image_view);
-        View helperText = findViewById(R.id.security_code_helper_text);
+        helperText = (TextView) findViewById(R.id.security_code_helper_text);
 
         hintFocusListener = new HintFocusListener(editText, "000");
 
@@ -62,6 +63,10 @@ public class SecurityCodeEntryView extends RelativeLayout {
                 hintFocusListener
         ));
         editText.addTextChangedListener(new HidingViewTextWatcher(helperText));
+    }
+
+    public void setHelperText(@StringRes int resId) {
+        helperText.setText(resId);
     }
 
     public void setText(CharSequence text) {
