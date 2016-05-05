@@ -100,6 +100,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
 
     private void initializeInputs(CardToken cardToken, JudoOptions options) {
         cardNumberEntryView.setCardType(cardToken.getType(), false);
+        securityCodeEntryView.setHelperText(R.string.please_reenter_the_card_security_code);
         securityCodeEntryView.setCardType(cardToken.getType(), false);
         securityCodeEntryView.requestFocus();
 
