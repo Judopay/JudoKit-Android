@@ -4,14 +4,13 @@ import com.judopay.api.Request;
 
 import java.math.BigDecimal;
 
+@SuppressWarnings("unused")
 public final class VoidRequest extends Request {
 
     private String receiptId;
     private BigDecimal amount;
 
     public VoidRequest(String receiptId, BigDecimal amount) {
-        super(true);
-
         checkNotNull(receiptId);
         checkNotNull(amount);
 

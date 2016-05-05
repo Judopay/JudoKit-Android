@@ -58,7 +58,7 @@ public class CardDateFormattingTest {
                 .check(matches(withText("12/25")));
     }
 
-    protected Intent getIntent() {
+    private Intent getIntent() {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()

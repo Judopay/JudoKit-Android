@@ -7,7 +7,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
-public class FlipAnimation extends Animation {
+class FlipAnimation extends Animation {
 
     private Camera camera;
 
@@ -21,16 +21,14 @@ public class FlipAnimation extends Animation {
 
     /**
      * Creates a 3D flip animation between two views.
-     *
-     * @param fromView First view in the transition.
+     *  @param fromView First view in the transition.
      * @param toView   Second view in the transition.
-     * @param durationMillis duration in milliseconds for the animation
      */
-    public FlipAnimation(View fromView, View toView, int durationMillis) {
+    public FlipAnimation(View fromView, View toView) {
         this.fromView = fromView;
         this.toView = toView;
 
-        setDuration(durationMillis);
+        setDuration(200);
         setFillAfter(false);
         setInterpolator(new AccelerateDecelerateInterpolator());
     }

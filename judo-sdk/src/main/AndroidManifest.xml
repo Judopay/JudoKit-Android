@@ -14,12 +14,6 @@
         <activity
             android:name="com.judopay.RegisterCardActivity"
             android:theme="@style/Theme.Judo.Light.DarkActionBar" />
-        <activity
-            android:name="com.judopay.TokenPaymentActivity"
-            android:theme="@style/Theme.Judo.Light.DarkActionBar" />
-        <activity
-            android:name="com.judopay.TokenPreAuthActivity"
-            android:theme="@style/Theme.Judo.Light.DarkActionBar" />
     </application>
 
 </manifest>

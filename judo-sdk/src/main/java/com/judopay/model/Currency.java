@@ -6,6 +6,7 @@ import java.util.List;
 /**
  * Represents all the currencies that can be used when performing transactions with the judo API.
  */
+@SuppressWarnings("WeakerAccess")
 public class Currency {
 
     public static final String AUD = "AUD";

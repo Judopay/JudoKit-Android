@@ -56,7 +56,7 @@ abstract class BaseFragment extends Fragment implements TransactionCallbacks, Ca
         setRetainInstance(true);
     }
 
-    protected void checkJudoOptionsExtras(Object... objects) {
+    void checkJudoOptionsExtras(Object... objects) {
         for (Object object : objects) {
             if (object == null) {
                 throw new IllegalArgumentException("JudoOptions must contain all required fields");

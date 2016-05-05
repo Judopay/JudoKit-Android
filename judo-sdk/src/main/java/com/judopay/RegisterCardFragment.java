@@ -37,7 +37,7 @@ public class RegisterCardFragment extends BaseFragment implements TransactionCal
     }
 
     @Override
-    protected JudoOptions getJudoOptions() {
+    JudoOptions getJudoOptions() {
         Bundle args = getArguments();
 
         JudoOptions judoOptions = args.getParcelable(Judo.JUDO_OPTIONS);

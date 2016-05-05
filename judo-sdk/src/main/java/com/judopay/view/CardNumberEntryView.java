@@ -19,7 +19,7 @@ import static com.judopay.model.CardNetwork.AMEX;
 /**
  * A view that allows for card number data to be input by the user and the detected card type
  * to be displayed alongside the card number.
- * Does not perform validation itself, this is done by the {@link com.judopay.CardNumberValidation}
+ * Does not perform validation itself, this is done by the {@link com.judopay.validation.CardNumberValidator}
  * class.
  */
 public class CardNumberEntryView extends RelativeLayout {

@@ -3,8 +3,6 @@ package com.judopay;
 import android.content.Intent;
 import android.os.Bundle;
 
-import static com.judopay.Judo.JUDO_OPTIONS;
-
 /**
  * Displays a card entry form to the user, allowing for a payment to be made.
  * To launch the PaymentActivity, call {@link android.app.Activity#startActivityForResult(Intent, int)}

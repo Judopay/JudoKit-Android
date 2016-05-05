@@ -18,23 +18,7 @@ public class Country {
     public static final String CANADA = "Canada";
     public static final String OTHER = "Other";
 
-    private final int code;
-    private final String displayName;
-
-    public Country(int code, String displayName) {
-        this.code = code;
-        this.displayName = displayName;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-        public static List<String> avsCountries() {
+    public static List<String> avsCountries() {
         ArrayList<String> countries = new ArrayList<>();
 
         countries.add(Country.UNITED_KINGDOM);

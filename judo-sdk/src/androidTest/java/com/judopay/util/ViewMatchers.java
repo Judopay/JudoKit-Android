@@ -18,7 +18,7 @@ public class ViewMatchers {
         return withTextInputHint(is(hintText));
     }
 
-    public static Matcher<View> withTextInputHint(final Matcher<String> stringMatcher) {
+    private static Matcher<View> withTextInputHint(final Matcher<String> stringMatcher) {
         checkNotNull(stringMatcher);
         return new BoundedMatcher<View, TextInputLayout>(TextInputLayout.class) {
             @Override

@@ -239,6 +239,7 @@ public class JudoOptions implements Parcelable {
         }
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -292,5 +293,4 @@ public class JudoOptions implements Parcelable {
             return new JudoOptions[size];
         }
     };
-
 }

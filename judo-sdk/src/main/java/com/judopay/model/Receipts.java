@@ -5,6 +5,7 @@ import java.util.List;
 /**
  * Represents the list of {@link Receipt} objects returned when querying the judo API for Receipts.
  */
+@SuppressWarnings("unused")
 public class Receipts {
 
     private final Integer resultCount;

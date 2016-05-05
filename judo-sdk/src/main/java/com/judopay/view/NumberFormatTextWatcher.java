@@ -13,18 +13,11 @@ public class NumberFormatTextWatcher implements TextWatcher {
     private boolean deleting;
     private int start;
 
-    private boolean formatAhead;
-
     private String format;
 
     public NumberFormatTextWatcher(EditText editText, String format) {
         this.editText = editText;
         this.format = format;
-    }
-
-    public NumberFormatTextWatcher(EditText editText, String format, boolean formatAhead) {
-        this(editText, format);
-        this.formatAhead = formatAhead;
     }
 
     @Override
@@ -44,7 +37,7 @@ public class NumberFormatTextWatcher implements TextWatcher {
         editText.addTextChangedListener(this);
     }
 
-    public void format(Editable string) {
+    private void format(Editable string) {
         if (string.length() > 0) {
             for (int i = string.length(); i > 0; i--) {
                 if (!isDigit(string.charAt(i - 1)) || ((deleting && i == start) && (isFormatChar(i)))) {
@@ -64,11 +57,8 @@ public class NumberFormatTextWatcher implements TextWatcher {
         return index < format.length() && !isDigit(format.charAt(index));
     }
 
-    public int getStringEnd(Editable string) {
-        if(formatAhead) {
-            return string.length() + 1;
-        }
-        return string.length();
+    private int getStringEnd(Editable string) {
+        return string.length() + 1;
     }
 
     public void setFormat(String format) {
