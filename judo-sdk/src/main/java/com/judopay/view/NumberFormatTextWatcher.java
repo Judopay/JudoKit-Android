@@ -47,17 +47,21 @@ public class NumberFormatTextWatcher implements TextWatcher {
     public void format(Editable string) {
         if (string.length() > 0) {
             for (int i = string.length(); i > 0; i--) {
-                if (!isDigit(string.charAt(i - 1)) || ((deleting && i == start) && !isDigit(format.charAt(i)))) {
+                if (!isDigit(string.charAt(i - 1)) || ((deleting && i == start) && (isFormatChar(i)))) {
                     string.delete(i - 1, i);
                 }
             }
 
             for (int i = 0; i < getStringEnd(string); i++) {
-                if (i < format.length() && !isDigit(format.charAt(i))) {
+                if (isFormatChar(i)) {
                     string.insert(i, String.valueOf(format.charAt(i)));
                 }
             }
         }
+    }
+
+    private boolean isFormatChar(int index) {
+        return index < format.length() && !isDigit(format.charAt(index));
     }
 
     public int getStringEnd(Editable string) {

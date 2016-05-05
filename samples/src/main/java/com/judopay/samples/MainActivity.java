@@ -14,8 +14,6 @@ import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;
 import com.judopay.PreAuthActivity;
 import com.judopay.RegisterCardActivity;
-import com.judopay.TokenPaymentActivity;
-import com.judopay.TokenPreAuthActivity;
 import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
 import com.judopay.samples.settings.SettingsActivity;
@@ -97,7 +95,7 @@ public class MainActivity extends BaseActivity {
     public void performTokenPreAuth(View v) {
         Receipt receipt = getLastReceipt();
         if (receipt != null) {
-            Intent intent = new Intent(MainActivity.this, TokenPreAuthActivity.class);
+            Intent intent = new Intent(MainActivity.this, PreAuthActivity.class);
 
             intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
                     .setJudoId(JUDO_ID)
@@ -118,7 +116,7 @@ public class MainActivity extends BaseActivity {
         Receipt receipt = getLastReceipt();
 
         if (receipt != null) {
-            Intent intent = new Intent(this, TokenPaymentActivity.class);
+            Intent intent = new Intent(this, PaymentActivity.class);
 
             intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
                     .setJudoId(JUDO_ID)
@@ -205,7 +203,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void startTokenPayment(Receipt receipt) {
-        Intent intent = new Intent(MainActivity.this, TokenPaymentActivity.class);
+        Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
                 .setJudoId(JUDO_ID)

@@ -16,6 +16,7 @@ import com.judopay.card.AbstractCardEntryFragment;
 import com.judopay.card.CardEntryFragment;
 import com.judopay.card.CardEntryListener;
 import com.judopay.card.CustomLayoutCardEntryFragment;
+import com.judopay.card.TokenCardEntryFragment;
 import com.judopay.model.Receipt;
 import com.judopay.secure3d.ThreeDSecureDialogFragment;
 import com.judopay.secure3d.ThreeDSecureListener;
@@ -41,6 +42,15 @@ abstract class BaseFragment extends Fragment implements TransactionCallbacks, Ca
 
         if (!getArguments().containsKey(JUDO_OPTIONS)) {
             throw new IllegalArgumentException(String.format("%s argument is required for %s", JUDO_OPTIONS, this.getClass().getSimpleName()));
+        }
+
+        // check if token has expired
+        JudoOptions options = getArguments().getParcelable(JUDO_OPTIONS);
+        if (options != null && options.getCardToken() != null && options.getCardToken().isExpired()) {
+            PendingIntent pendingResult = getActivity().createPendingResult(Judo.JUDO_REQUEST, new Intent(), 0);
+            try {
+                pendingResult.send(Judo.RESULT_TOKEN_EXPIRED);
+            } catch (PendingIntent.CanceledException ignore) { }
         }
 
         setRetainInstance(true);
@@ -119,11 +129,12 @@ abstract class BaseFragment extends Fragment implements TransactionCallbacks, Ca
     private void sendResult(int resultCode, Intent intent) {
         Activity activity = getActivity();
 
-        if(activity != null && !activity.isFinishing()) {
+        if (activity != null && !activity.isFinishing()) {
             try {
                 PendingIntent pendingResult = activity.createPendingResult(Judo.JUDO_REQUEST, intent, FLAG_ONE_SHOT);
                 pendingResult.send(resultCode);
-            } catch (PendingIntent.CanceledException ignore) { }
+            } catch (PendingIntent.CanceledException ignore) {
+            }
         }
     }
 
@@ -178,11 +189,15 @@ abstract class BaseFragment extends Fragment implements TransactionCallbacks, Ca
     AbstractCardEntryFragment createCardEntryFragment() {
         JudoOptions options = getArguments().getParcelable(Judo.JUDO_OPTIONS);
 
-        if(options != null && options.getCustomLayout() != null) {
-            options.getCustomLayout().validate(getActivity());
-            return CustomLayoutCardEntryFragment.newInstance(options, this);
+        if (options != null) {
+            if (options.getCustomLayout() != null) {
+                options.getCustomLayout().validate(getActivity());
+                return CustomLayoutCardEntryFragment.newInstance(options, this);
+            }
+            else if (options.getCardToken() != null) {
+                return TokenCardEntryFragment.newInstance(getJudoOptions(), this);
+            }
         }
-
         return CardEntryFragment.newInstance(options, this);
     }
 

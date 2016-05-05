@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0'
+        classpath 'com.android.tools.build:gradle:2.1.0'
         classpath 'com.novoda:bintray-release:0.3.4'
     }
 }
@@ -36,9 +36,6 @@ android {
 
             manifestPlaceholders = [apiToken: apiToken, apiSecret: apiSecret]
         }
-        release {
-            minifyEnabled false
-        }
     }
 
     lintOptions {
@@ -49,6 +46,13 @@ android {
         exclude 'META-INF/LICENSE.txt'
     }
 
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    destinationDir = file("build/outputs/javadoc/")
+    failOnError false
 }
 
 publish {
