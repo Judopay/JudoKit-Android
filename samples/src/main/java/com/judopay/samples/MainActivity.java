@@ -1,6 +1,5 @@
 package com.judopay.samples;
 
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -70,15 +69,11 @@ public class MainActivity extends BaseActivity {
     public void performPreAuth(View view) {
         Intent intent = new Intent(MainActivity.this, PreAuthActivity.class);
 
-        Intent cardScanIntent = new Intent(this, CardScanningActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, cardScanIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
         JudoOptions options = new JudoOptions.Builder()
                 .setJudoId(JUDO_ID)
                 .setAmount(AMOUNT)
                 .setCurrency(getCurrency())
                 .setConsumerRef(CONSUMER_REF)
-                .setCardScanningIntent(pendingIntent)
                 .setSecureServerMessageShown(true)
                 .build();
 
@@ -97,7 +92,7 @@ public class MainActivity extends BaseActivity {
         startActivityForResult(intent, REGISTER_CARD_REQUEST);
     }
 
-    public void performTokenPreAuth(View v) {
+    public void performTokenPreAuth(View view) {
         Receipt receipt = getLastReceipt();
         if (receipt != null) {
             Intent intent = new Intent(MainActivity.this, PreAuthActivity.class);
