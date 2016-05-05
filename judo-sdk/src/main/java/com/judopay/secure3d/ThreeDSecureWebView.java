@@ -26,7 +26,7 @@ import static java.net.URLEncoder.encode;
 public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScriptInterface.JsonListener {
 
     private static final String JS_NAMESPACE = "JudoPay";
-    private static final String REDIRECT_URL = "https://pay.judopay.com/Android/Parse3DS";
+    static final String REDIRECT_URL = "https://pay.judopay.com/Android/Parse3DS";
     private static final String CHARSET = "UTF-8";
 
     private ThreeDSecureListener threeDSecureListener;
@@ -81,7 +81,7 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
 
             this.receiptId = receiptId;
 
-            this.webViewClient = new ThreeDSecureWebViewClient(REDIRECT_URL, JS_NAMESPACE, threeDSecureListener);
+            this.webViewClient = new ThreeDSecureWebViewClient(JS_NAMESPACE, threeDSecureListener);
             setWebViewClient(webViewClient);
 
             postUrl(acsUrl, postData.getBytes());

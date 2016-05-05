@@ -190,7 +190,7 @@ public class SuccessfulPaymentTest {
         assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
     }
 
-    protected Intent getIntent() {
+    private Intent getIntent() {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()

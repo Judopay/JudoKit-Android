@@ -95,7 +95,7 @@ public class SecurityCodeEntryView extends RelativeLayout {
         inputLayout.setHint(hint);
     }
 
-    public void setAlternateHint(String hint) {
+    private void setAlternateHint(String hint) {
         hintFocusListener.setHint(hint);
     }
 

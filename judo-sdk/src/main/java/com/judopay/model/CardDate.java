@@ -19,7 +19,7 @@ public class CardDate {
     }
 
     private int getYear(String year) {
-        if (!isValidDate(year)) {
+        if (isDateInvalid(year)) {
             return 0;
         }
 
@@ -27,7 +27,7 @@ public class CardDate {
     }
 
     private int getMonth(String month) {
-        if (!isValidDate(month)) {
+        if (isDateInvalid(month)) {
             return 0;
         }
 
@@ -77,8 +77,8 @@ public class CardDate {
         return cardDate.after(minDate) && cardDate.before(maxDate);
     }
 
-    private boolean isValidDate(String date) {
-        return date.matches("(?:0[1-9]|1[0-2])[0-9]{2}");
+    private boolean isDateInvalid(String date) {
+        return !date.matches("(?:0[1-9]|1[0-2])[0-9]{2}");
     }
 
 }

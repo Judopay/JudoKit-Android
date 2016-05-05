@@ -65,7 +65,7 @@ public abstract class FlipImageView extends FrameLayout {
         this.imageResource = cardResourceId;
         backImageView.setImageResource(cardResourceId);
 
-        FlipAnimation flipAnimation = new FlipAnimation(frontImageView, backImageView, 200);
+        FlipAnimation flipAnimation = new FlipAnimation(frontImageView, backImageView);
         startAnimation(flipAnimation);
 
         ImageView temp = frontImageView;

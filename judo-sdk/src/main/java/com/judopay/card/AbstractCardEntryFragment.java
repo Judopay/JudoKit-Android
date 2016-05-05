@@ -12,8 +12,8 @@ import com.judopay.validation.ValidationManager;
 
 public abstract class AbstractCardEntryFragment extends Fragment implements ValidationManager.OnChangeListener {
 
-    protected JudoOptions judoOptions;
-    protected CardEntryListener cardEntryListener;
+    JudoOptions judoOptions;
+    CardEntryListener cardEntryListener;
 
     public void setCardEntryListener(CardEntryListener cardEntryListener) {
         this.cardEntryListener = cardEntryListener;
@@ -33,7 +33,7 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
         }
     }
 
-    protected void hideKeyboard() {
+    void hideKeyboard() {
         View view = this.getActivity().getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);

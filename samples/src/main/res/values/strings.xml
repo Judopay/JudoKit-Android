@@ -1,11 +1,9 @@
 <resources>
     <string name="judopay">judoPay</string>
     <string name="avs_label">Address Verification System (AVS)</string>
-    <string name="ssl_pinning_label">SSL Pinning</string>
     <string name="settings">Settings</string>
     <string name="american_express">American Express</string>
     <string name="maestro">Maestro</string>
-    <string name="three_d_secure">3D-Secure</string>
     <string name="payment">Payment</string>
     <string name="pre_auth">Pre-Auth</string>
     <string name="token_payment">Token payment</string>

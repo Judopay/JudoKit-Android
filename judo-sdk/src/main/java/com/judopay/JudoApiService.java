@@ -26,6 +26,7 @@ import rx.Observable;
  * Use the {@link com.judopay.api.JudoApiServiceFactory#createApiService(Context, int)} method to obtain an
  * instance. See <a href="https://github.com/square/retrofit">GitHub</a> for details.
  */
+@SuppressWarnings("SameParameterValue")
 public interface JudoApiService {
 
     /**

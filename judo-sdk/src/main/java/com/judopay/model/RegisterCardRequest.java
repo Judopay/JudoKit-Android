@@ -15,6 +15,7 @@ import static com.judopay.model.LuhnCheck.isValid;
  * When creating a {@link RegisterCardRequest} the {@link RegisterCardRequest#judoId}
  * must be provided.
  */
+@SuppressWarnings("unused")
 public final class RegisterCardRequest extends Request {
 
     private String judoId;
@@ -29,10 +30,6 @@ public final class RegisterCardRequest extends Request {
     private String mobileNumber;
     private String issueNumber;
     private Map<String, String> yourPaymentMetaData;
-
-    private RegisterCardRequest() {
-        super(true);
-    }
 
     public String getJudoId() {
         return judoId;
@@ -82,6 +79,7 @@ public final class RegisterCardRequest extends Request {
         return mobileNumber;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
 
         private String judoId;

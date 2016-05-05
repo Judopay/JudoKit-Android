@@ -41,6 +41,7 @@ public class Card {
         return CardNetwork.MAESTRO == CardNetwork.fromCardNumber(cardNumber);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
 
         private String cardNumber;
