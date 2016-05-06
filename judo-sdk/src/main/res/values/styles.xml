@@ -1,8 +1,14 @@
 <resources>
 
-    <style name="Widget" />
+    <attr name="overlayBackground" format="reference" />
 
-    <style name="Widget.Judo" />
+    <style name="Theme.Judo" parent="Theme.AppCompat">
+        <item name="buttonStyle">@style/Widget.Judo.Button</item>
+        <item name="colorPrimary">@color/judo_dark_blue</item>
+        <item name="colorButtonNormal">@color/judo_teal</item>
+        <item name="colorAccent">@android:color/white</item>
+        <item name="overlayBackground">@color/judo_black_87</item>
+    </style>
 
     <style name="Theme.Judo.Light.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:textColorHint">@color/judo_black_38</item>
@@ -12,7 +18,7 @@
         <item name="colorPrimaryDark">@color/judo_dark_blue</item>
         <item name="colorPrimary">@color/judo_blue</item>
         <item name="colorButtonNormal">@color/judo_teal</item>
-        <item name="loadingOverlayStyle">@style/LoadingOverlay.Light</item>
+        <item name="overlayBackground">@color/judo_white_90</item>
         <item name="android:textColorSecondary">@color/judo_black_54</item>
     </style>
 
@@ -23,36 +29,23 @@
         <item name="colorPrimaryDark">@color/judo_dark_blue</item>
         <item name="colorPrimary">@color/judo_blue</item>
         <item name="colorButtonNormal">@color/judo_teal</item>
-        <item name="loadingOverlayStyle">@style/LoadingOverlay.Light</item>
+        <item name="overlayBackground">@color/judo_white_90</item>
         <item name="android:textColorSecondary">@color/judo_black_54</item>
-    </style>
-
-    <style name="Theme.Judo" parent="Theme.AppCompat">
-        <item name="buttonStyle">@style/Widget.Judo.Button</item>
-        <item name="colorPrimary">@color/judo_dark_blue</item>
-        <item name="colorButtonNormal">@color/judo_teal</item>
-        <item name="colorAccent">@android:color/white</item>
-        <item name="loadingOverlayStyle">@style/LoadingOverlay</item>
     </style>
 
     <style name="ThemeOverlay.AppTheme.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
-    <style name="LoadingOverlay.Light">
-        <item name="android:background">@color/judo_white_90</item>
-    </style>
-
-    <style name="LoadingOverlay">
-        <item name="android:background">@color/judo_black_87</item>
-    </style>
-
-    <style name="EntryLayout">
+    <style name="Widget.Judo.EntryLayout">
         <item name="android:layout_marginTop">@dimen/medium_padding</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="hintAnimationEnabled">false</item>
     </style>
+
+    <style name="Widget" />
+    <style name="Widget.Judo" />
 
     <style name="Widget.Judo.EditText" parent="Widget.AppCompat.EditText">
         <item name="android:imeOptions">actionNext|flagNoExtractUi</item>
@@ -132,7 +125,9 @@
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="judo_hint_text">
+    <style name="Widget.Judo.Text" />
+
+    <style name="Widget.Judo.Text.Hint">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/judo_small_text_size</item>
@@ -140,7 +135,7 @@
         <item name="android:layout_marginLeft">@dimen/small_padding</item>
     </style>
 
-    <style name="payment_form_container">
+    <style name="Widget.Judo.PaddedLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">vertical</item>
@@ -148,6 +143,43 @@
         <item name="android:paddingLeft">@dimen/medium_padding</item>
         <item name="android:paddingRight">@dimen/medium_padding</item>
         <item name="android:paddingTop">@dimen/medium_padding</item>
+    </style>
+
+    <style name="Overlay">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">?attr/overlayBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="Widget.Judo.SplitHorizontalLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:weightSum">2</item>
+    </style>
+
+    <style name="Widget.Judo.Spinner" parent="Widget.AppCompat.Spinner">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">3.5dp</item>
+        <item name="android:layout_marginTop">6.5dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="Widget.Judo.TextSecondary">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/small_padding</item>
+        <item name="android:layout_marginRight">@dimen/small_padding</item>
+        <item name="android:layout_marginTop">@dimen/large_padding</item>
+        <item name="android:lineSpacingMultiplier">@dimen/spaced_text</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="android:textSize">@dimen/judo_small_text_size</item>
     </style>
 
 </resources>

@@ -4,7 +4,7 @@
 
     <com.judopay.view.JudoTextInputLayout
         android:id="@+id/expiry_date_input_layout"
-        style="@style/EntryLayout">
+        style="@style/Widget.Judo.EntryLayout">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/expiry_date_edit_text"
