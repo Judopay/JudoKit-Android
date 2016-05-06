@@ -2,9 +2,10 @@
 
 ## [5.3](https://github.com/judopay/Judo-Android/tree/5.3) (TBC)
 
-**Implemented enhancements:**
+**Features:**
 - Android Pay support - use the judo SDK to process payments made using Android Pay.
 - Custom layouts - customize and provide your own layout file when performing a payment, pre-auth or register card.
+- Perform card scanning directly from the card input form.
 
 **Changes:**
 - ```TokenPaymentActivity```, ```TokenPreAuthActivity```, ```TokenPaymentFragment``` and ```TokenPreAuthFragment``` have been merged with ```PaymentActivity```, ```PreAuthActivity```, ```PaymentFragment``` and ```PreAuthFragment```. A token transaction will be performed if a ```CardToken``` is provided in the ```JudoOptions```.
