@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 import com.judopay.error.JudoIdInvalidError;
 import com.judopay.model.CardToken;
+import com.judopay.model.Currency;
 import com.judopay.model.CustomLayout;
 
 import java.util.HashMap;
@@ -18,12 +19,13 @@ import static com.judopay.model.LuhnCheck.isValid;
  * The wrapper for providing data to Activity and Fragments classes in the SDK (e.g. PaymentActivity).
  * This is preferable to using the individual Extras names defined in {@link Judo} as it provides
  * type safety.
- *
+ * <p/>
  * Use the {@link JudoOptions.Builder class for constructing} an instance of {@link JudoOptions}.
- *
+ * <p/>
  * When calling an Activity with an Intent extra or a Fragment using an arguments Bundle,
  * use {@link Judo#JUDO_OPTIONS} as the extra or argument name.
  */
+@SuppressWarnings("unused")
 public class JudoOptions implements Parcelable {
 
     private String judoId;
@@ -52,6 +54,7 @@ public class JudoOptions implements Parcelable {
         return judoId;
     }
 
+    @Currency.Type
     public String getCurrency() {
         return currency;
     }
@@ -154,7 +157,7 @@ public class JudoOptions implements Parcelable {
             return this;
         }
 
-        public Builder setCurrency(String currency) {
+        public Builder setCurrency(@Currency.Type String currency) {
             this.currency = currency;
             return this;
         }
@@ -210,7 +213,7 @@ public class JudoOptions implements Parcelable {
         }
 
         public JudoOptions build() {
-            if(isEmpty(judoId) || !isValid(judoId)) {
+            if (isEmpty(judoId) || !isValid(judoId)) {
                 throw new JudoIdInvalidError();
             }
 
