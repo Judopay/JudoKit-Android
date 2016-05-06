@@ -1,14 +1,14 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout style="@style/payment_form_container">
+        <LinearLayout style="@style/Widget.Judo.PaddedLayout">
 
             <com.judopay.view.CardNumberEntryView
                 android:id="@+id/card_number_entry_view"
@@ -16,11 +16,7 @@
                 android:layout_height="wrap_content"
                 android:enabled="false" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
+            <LinearLayout style="@style/Widget.Judo.SplitHorizontalLayout">
 
                 <com.judopay.view.ExpiryDateEntryView
                     android:id="@+id/expiry_date_entry_view"
@@ -39,10 +35,8 @@
 
             <LinearLayout
                 android:id="@+id/country_postcode_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/Widget.Judo.SplitHorizontalLayout"
                 android:visibility="gone"
-                android:weightSum="2"
                 tools:visibility="visible">
 
                 <Spinner
@@ -55,7 +49,7 @@
 
                 <com.judopay.view.PostcodeEntryView
                     android:id="@+id/postcode_entry_view"
-                    style="@style/EntryLayout"
+                    style="@style/Widget.Judo.EntryLayout"
                     android:layout_width="match_parent"
                     android:layout_marginTop="8dp"
                     android:layout_weight="1" />
@@ -64,14 +58,7 @@
 
             <com.judopay.view.SecureServerTextView
                 android:id="@+id/secure_server_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/small_padding"
-                android:layout_marginRight="@dimen/small_padding"
-                android:layout_marginTop="@dimen/large_padding"
-                android:lineSpacingMultiplier="@dimen/spaced_text"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textSize="@dimen/judo_small_text_size"
+                style="@style/Widget.Judo.TextSecondary"
                 android:visibility="gone" />
 
         </LinearLayout>
