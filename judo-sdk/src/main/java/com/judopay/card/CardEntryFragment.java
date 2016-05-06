@@ -132,8 +132,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
                         IntentSender intentSender = cardScanningIntent.getIntentSender();
                         try {
                             getActivity().startIntentSenderForResult(intentSender, Judo.CARD_SCANNING_REQUEST, null, 0, 0, 0);
-                        } catch (IntentSender.SendIntentException ignore) {
-                        }
+                        } catch (IntentSender.SendIntentException ignore) { }
                     }
                 }
             });

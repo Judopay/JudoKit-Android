@@ -81,10 +81,10 @@ public class CardNumberEntryView extends RelativeLayout {
         if (listener != null) {
             this.scanCardButton.setVisibility(VISIBLE);
             this.cardTypeImageView.setVisibility(GONE);
+
             this.scanCardButton.setOnClickListener(new SingleClickOnClickListener() {
                 @Override
                 public void doClick() {
-                    scanCardButton.setEnabled(false);
                     listener.onClick();
                 }
             });
