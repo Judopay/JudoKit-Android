@@ -59,7 +59,7 @@
         <com.judopay.view.PostcodeEntryView
             android:id="@+id/postcode_entry_view"
             style="@style/Widget.Judo.EntryLayout"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_marginTop="8dp"
             android:layout_weight="1" />
 
