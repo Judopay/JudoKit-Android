@@ -36,6 +36,7 @@ public class CardScanningActivity extends AppCompatActivity {
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra(Judo.JUDO_CARD, new Card.Builder()
                         .setCardNumber(scanResult.cardNumber)
+                        .setExpiryDate("03/18")
                         .build());
 
                 setResult(Judo.RESULT_CARD_SCANNED, resultIntent);

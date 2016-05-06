@@ -2,6 +2,7 @@ package com.judopay.card;
 
 
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -10,6 +11,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,6 +51,7 @@ import rx.functions.Action1;
 import rx.observables.ConnectableObservable;
 
 import static com.judopay.Judo.isAvsEnabled;
+import static com.judopay.arch.TextUtil.isEmpty;
 
 /**
  * A Fragment that allows for card details to be entered by the user, with validation checks
@@ -161,12 +164,21 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
     @Override
     public void setCard(Card card) {
-        int cardType = CardNetwork.fromCardNumber(card.getCardNumber());
+        if(!isEmpty(card.getCardNumber())) {
+            int cardType = CardNetwork.fromCardNumber(card.getCardNumber());
 
-        cardNumberEntryView.setCardType(cardType, false);
-        cardNumberEntryView.setText(card.getCardNumber());
-        cardNumberEntryView.setScanCardListener(null);
-        expiryDateEntryView.requestFocus();
+            cardNumberEntryView.setCardType(cardType, false);
+            cardNumberEntryView.setText(card.getCardNumber());
+            cardNumberEntryView.setScanCardListener(null);
+            expiryDateEntryView.requestFocus();
+
+            if(!isEmpty(card.getExpiryDate())) {
+                expiryDateEntryView.setText(card.getExpiryDate());
+                securityCodeEntryView.getEditText().requestFocus();
+            }
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
     }
 
     private void initializeValidators() {

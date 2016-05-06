@@ -1,9 +1,11 @@
 package com.judopay.view;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.support.design.widget.TextInputLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -76,7 +78,6 @@ public class ExpiryDateEntryView extends LinearLayout {
     public String getText() {
         return expiryDateEditText.getText().toString().trim();
     }
-
 
     public EditText getEditText() {
         return expiryDateEditText;
