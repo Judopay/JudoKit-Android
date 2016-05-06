@@ -46,8 +46,8 @@ public class TokenPreAuthFragment extends AbstractTokenFragment {
         presenter.performTokenPreAuth(card, judoOptions);
     }
 
-    public boolean isPaymentInProgress() {
-        return this.presenter.loading;
+    @Override
+    boolean isTransactionInProgress() {
+        return presenter.loading;
     }
-
 }

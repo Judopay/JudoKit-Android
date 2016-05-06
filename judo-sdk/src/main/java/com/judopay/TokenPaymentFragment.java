@@ -46,7 +46,8 @@ public final class TokenPaymentFragment extends AbstractTokenFragment {
         presenter.performTokenPayment(card, options);
     }
 
-    public boolean isPaymentInProgress() {
+    @Override
+    boolean isTransactionInProgress() {
         return this.presenter.loading;
     }
 
