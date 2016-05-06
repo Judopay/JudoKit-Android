@@ -48,7 +48,7 @@ public class Judo {
     public static final String JUDO_OPTIONS = "JudoOptions";
     public static final String JUDO_RECEIPT = "JudoReceipt";
 
-    public static final int UI_CLIENT_MODE_CUSTOM_UI = 0;
+    private static final int UI_CLIENT_MODE_CUSTOM_UI = 0;
     public static final int UI_CLIENT_MODE_JUDO_SDK = 1;
 
     public static final int LIVE = 0;
@@ -82,10 +82,12 @@ public class Judo {
         return JudoApiServiceFactory.createApiService(context, UI_CLIENT_MODE_CUSTOM_UI);
     }
 
+    @SuppressWarnings("SameParameterValue")
     static JudoApiService getApiService(Context context, @UiClientMode int uiClientMode) {
         return JudoApiServiceFactory.createApiService(context, uiClientMode);
     }
 
+    @SuppressWarnings("SameParameterValue")
     public static void setEnvironment(@Environment int environment) {
         Judo.environment = environment;
     }

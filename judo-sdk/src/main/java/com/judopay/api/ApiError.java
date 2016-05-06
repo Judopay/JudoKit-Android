@@ -174,7 +174,7 @@ public class ApiError implements Parcelable {
         dest.writeString(this.detail);
     }
 
-    protected ApiError(Parcel in) {
+    private ApiError(Parcel in) {
         this.code = (Integer) in.readValue(Integer.class.getClassLoader());
         this.fieldName = in.readString();
         this.message = in.readString();

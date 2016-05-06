@@ -61,7 +61,7 @@ public class CardEntryFormBillingAddressTest {
                 .check(matches(isDisabled()));
     }
 
-    protected Intent getIntent() {
+    private Intent getIntent() {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()

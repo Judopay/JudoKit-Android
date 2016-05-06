@@ -67,7 +67,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="3.5dp"
             android:layout_marginTop="6.5dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            tools:ignore="RtlHardcoded" />
 
         <com.judopay.view.PostcodeEntryView
             android:id="@+id/postcode_entry_view"

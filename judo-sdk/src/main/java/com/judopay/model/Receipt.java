@@ -10,6 +10,7 @@ import java.util.Date;
 /**
  * The Receipt of a transaction performed with the judo API.
  */
+@SuppressWarnings("unused")
 public class Receipt extends Response {
 
     private Long judoID;

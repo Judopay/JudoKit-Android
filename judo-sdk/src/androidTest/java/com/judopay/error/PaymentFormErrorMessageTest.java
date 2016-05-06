@@ -123,7 +123,7 @@ public class PaymentFormErrorMessageTest {
                 .check(matches(isDisplayed()));
     }
 
-    protected Intent getIntent() {
+    private Intent getIntent() {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()

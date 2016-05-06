@@ -3,13 +3,9 @@ package com.judopay.api;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
 
 class TlsSslSocketFactory extends SSLSocketFactory {
 

@@ -188,7 +188,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         editText.setOnFocusChangeListener(hintFocusListener);
 
         String dateFormat = getResources().getString(R.string.date_format);
-        NumberFormatTextWatcher numberFormatTextWatcher = new NumberFormatTextWatcher(editText, dateFormat, true);
+        NumberFormatTextWatcher numberFormatTextWatcher = new NumberFormatTextWatcher(editText, dateFormat);
         editText.addTextChangedListener(numberFormatTextWatcher);
     }
 

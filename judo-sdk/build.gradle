@@ -50,6 +50,7 @@ android {
 
 task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
+    //noinspection GroovyAssignabilityCheck
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     destinationDir = file("build/outputs/javadoc/")
     failOnError false

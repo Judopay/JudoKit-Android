@@ -6,6 +6,7 @@ import android.os.Parcelable;
 /**
  * An Address linked to a payment card, used when address verification is performed.
  */
+@SuppressWarnings("unused")
 public class Address implements Parcelable {
 
     private long countryCode;
