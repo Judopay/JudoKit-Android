@@ -13,7 +13,7 @@ import com.judopay.validation.ValidationManager;
 
 public abstract class AbstractCardEntryFragment extends Fragment implements ValidationManager.OnChangeListener {
 
-    JudoOptions judoOptions;
+    JudoOptions options;
     CardEntryListener cardEntryListener;
 
     public void setCardEntryListener(CardEntryListener cardEntryListener) {
