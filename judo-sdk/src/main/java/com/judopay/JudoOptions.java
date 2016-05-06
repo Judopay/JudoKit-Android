@@ -19,9 +19,7 @@ import static com.judopay.model.LuhnCheck.isValid;
  * The wrapper for providing data to Activity and Fragments classes in the SDK (e.g. PaymentActivity).
  * This is preferable to using the individual Extras names defined in {@link Judo} as it provides
  * type safety.
- * <p/>
  * Use the {@link JudoOptions.Builder class for constructing} an instance of {@link JudoOptions}.
- * <p/>
  * When calling an Activity with an Intent extra or a Fragment using an arguments Bundle,
  * use {@link Judo#JUDO_OPTIONS} as the extra or argument name.
  */
