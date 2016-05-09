@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
 import com.judopay.R;
+import com.judopay.arch.ThemeUtil;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
@@ -77,7 +78,8 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
             throw new IllegalArgumentException("CardToken is required in JudoOptions for TokenCardEntryFragment");
         }
 
-        if (judoOptions.isSecureServerMessageShown()) {
+        boolean secureServerMessageShown = ThemeUtil.getBooleanAttr(getActivity(), getClass(), R.attr.secureServerMessageShown);
+        if (secureServerMessageShown) {
             secureServerText.setVisibility(View.VISIBLE);
         } else {
             secureServerText.setVisibility(View.GONE);

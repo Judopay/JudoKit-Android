@@ -39,24 +39,23 @@ public class RegisterCardFragment extends BaseFragment implements TransactionCal
     @Override
     JudoOptions getJudoOptions() {
         Bundle args = getArguments();
-
-        JudoOptions judoOptions = args.getParcelable(Judo.JUDO_OPTIONS);
+        JudoOptions options = args.getParcelable(Judo.JUDO_OPTIONS);
 
         return new JudoOptions.Builder()
-                .setJudoId(judoOptions.getJudoId())
-                .setConsumerRef(judoOptions.getConsumerRef())
-                .setCardNumber(judoOptions.getCardNumber())
-                .setExpiryMonth(judoOptions.getExpiryMonth())
-                .setExpiryYear(judoOptions.getExpiryYear())
-                .setSecureServerMessageShown(judoOptions.isSecureServerMessageShown())
-                .setCustomLayout(judoOptions.getCustomLayout())
-                .setButtonLabel(getString(R.string.add_card))
+                .setJudoId(options.getJudoId())
+                .setConsumerRef(options.getConsumerRef())
+                .setCardNumber(options.getCardNumber())
+                .setExpiryMonth(options.getExpiryMonth())
+                .setExpiryYear(options.getExpiryYear())
+                .setCustomLayout(options.getCustomLayout())
                 .build();
     }
 
     @Override
     AbstractCardEntryFragment createCardEntryFragment() {
-        return CardEntryFragment.newInstance(getJudoOptions(), this);
+        CardEntryFragment cardEntryFragment = CardEntryFragment.newInstance(getJudoOptions(), this);
+        cardEntryFragment.setButtonLabel(getString(R.string.add_card));
+        return cardEntryFragment;
     }
 
     @Override
