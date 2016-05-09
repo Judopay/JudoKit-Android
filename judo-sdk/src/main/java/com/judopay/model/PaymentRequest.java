@@ -11,7 +11,6 @@ import static com.judopay.model.LuhnCheck.isValid;
 /**
  * Represents the data needed to perform a register card transaction with the judo API.
  * Use the {@link PaymentRequest.Builder} for object construction.
- *
  * When creating a {@link PaymentRequest} the {@link PaymentRequest#judoId},
  * {@link PaymentRequest#amount} and {@link PaymentRequest#currency} must be provided.
  */
@@ -112,7 +111,7 @@ public final class PaymentRequest extends Request {
             return this;
         }
 
-        public Builder setCurrency(String currency) {
+        public Builder setCurrency(@Currency.Type String currency) {
             this.currency = currency;
             return this;
         }
@@ -178,7 +177,7 @@ public final class PaymentRequest extends Request {
         }
 
         public PaymentRequest build() {
-            if(isEmpty(judoId) || !isValid(judoId)) {
+            if (isEmpty(judoId) || !isValid(judoId)) {
                 throw new JudoIdInvalidError();
             }
 
