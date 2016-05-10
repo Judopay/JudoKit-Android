@@ -44,10 +44,12 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
     }
 
     protected String getButtonLabel() {
-        if(!isEmpty(buttonLabel)) {
-            return buttonLabel;
+        String label = ThemeUtil.getStringAttr(getActivity(), getClass(), R.attr.buttonLabel);
+
+        if (!isEmpty(label)) {
+            return label;
         }
-        return ThemeUtil.getStringAttr(getActivity(), getClass(), R.attr.buttonLabel);
+        return buttonLabel;
     }
 
     void hideKeyboard() {

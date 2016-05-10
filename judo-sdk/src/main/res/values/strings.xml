@@ -6,6 +6,7 @@
     <string name="billing_postal_code">Billing postal code</string>
     <string name="checking_billing_postcode">Check billing postcode</string>
     <string name="pay">PAY</string>
+    <string name="confirm_payment">Confirm payment</string>
     <string name="payment">Payment</string>
     <string name="token_payment">Token payment</string>
     <string name="card_number_label">Card number</string>
@@ -19,7 +20,9 @@
     <string name="security_code_hint">000</string>
     <string name="amex_security_code_hint">0000</string>
     <string name="add_card">Add card</string>
+    <string name="save_card">Save card</string>
     <string name="empty" />
+    <string name="enter_card_details">Enter card details</string>
     <string name="error_postcode_uk">Check postcode</string>
     <string name="error_postcode_us">Check ZIP code</string>
     <string name="error_postcode_canada">Check postal code</string>
