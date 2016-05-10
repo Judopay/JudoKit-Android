@@ -11,9 +11,12 @@
 - When performing a token payment, the security code helper text has changed to "Please re-enter the card security code".
 - When performing a payment, the currency provided must be a currency listed in the ```Currency``` class.
 - A [ProGuard rules](http://developer.android.com/tools/help/proguard.html) file is now provided in the SDK and will be used if enabled in your gradle configuration, helping you minimize the size of your app.
+- Error messages throughout the SDK have been changed to be more useful.
 
 **Bugs fixed:**
-
+- Alignment issues with billing country dropdown have been resolved.
+- Settings preferences in the sample app now persist across app restarts.
+- Billing postcode has been changed to only accept a max input depending on the billing country selected.
 
 ## [5.2](https://github.com/judopay/Judo-Android/tree/5.2) (2016-04-06)
  
