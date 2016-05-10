@@ -41,6 +41,7 @@ public class CustomLayoutValidationTest {
 
     @Test
     public void shouldDisplaySubmitButtonWhenFormValid() {
+        Judo.setAvsEnabled(false);
         testRule.launchActivity(getIntent());
 
         onView(withId(R.id.payment_button))
