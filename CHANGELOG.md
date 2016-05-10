@@ -3,7 +3,7 @@
 ## [5.3](https://github.com/judopay/Judo-Android/tree/5.3) (TBC)
 
 **Features:**
-- Custom layouts - you can now provide your own customized layout file when displaying the card input form to the user. This allows you greater freedom in how individual views are presented. See the [guide](https://github.com/JudoPay/Judo-Android/wiki/Custom-layouts) for more information.
+- [Custom layouts](https://github.com/JudoPay/Judo-Android/wiki/Custom-layouts) - you can now provide your own customized layout file when displaying the card input form to the user. This allows you greater freedom in how individual views are presented. See the [guide](https://github.com/JudoPay/Judo-Android/wiki/Custom-layouts) for more information.
 
 **Changes:**
 - Activities and fragments in the SDK have been simplified to (```PaymentActivity```, ```PaymentFragment```, ```PreAuthActivity```, ```PreAuthFragment```, ```RegisterCardActivity``` and ```RegisterCardFragment```). When performing a token payment or pre-auth, just provide a card token in the ```JudoOptions``` configuration and the token will be used for the transaction.
