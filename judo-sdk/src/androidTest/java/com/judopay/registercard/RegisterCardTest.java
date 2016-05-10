@@ -52,7 +52,7 @@ public class RegisterCardTest {
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("125"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .perform(click());
 
         onView(withText(R.string.add_card_failed))

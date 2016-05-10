@@ -47,7 +47,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
     private PostcodeEntryView postcodeEntryView;
     private Spinner countrySpinner;
     private View secureServerText;
-    private Button paymentButton;
+    private Button submitButton;
     private View countryAndPostcodeContainer;
 
     private ValidationManager validationManager;
@@ -65,7 +65,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
 
         this.countrySpinner = (Spinner) view.findViewById(R.id.country_spinner);
         this.secureServerText = view.findViewById(R.id.secure_server_text);
-        this.paymentButton = (Button) view.findViewById(R.id.payment_button);
+        this.submitButton = (Button) view.findViewById(R.id.button);
 
         return view;
     }
@@ -180,11 +180,11 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
 
     @Override
     public void onValidate(boolean valid) {
-        paymentButton.setVisibility(valid ? View.VISIBLE : View.GONE);
+        submitButton.setVisibility(valid ? View.VISIBLE : View.GONE);
     }
 
     private void initializePayButton() {
-        paymentButton.setOnClickListener(new SingleClickOnClickListener() {
+        submitButton.setOnClickListener(new SingleClickOnClickListener() {
             @Override
             public void doClick() {
                 hideKeyboard();

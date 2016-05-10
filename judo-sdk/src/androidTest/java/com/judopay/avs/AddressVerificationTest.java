@@ -74,7 +74,7 @@ public class AddressVerificationTest {
         onData(allOf(is(instanceOf(String.class)), is(Country.OTHER)))
                 .perform(click());
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isDisplayed()));
     }
 
@@ -99,7 +99,7 @@ public class AddressVerificationTest {
         onData(allOf(is(instanceOf(String.class)), is(Country.UNITED_KINGDOM)))
                 .perform(click());
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isNotDisplayed()));
     }
 
@@ -124,7 +124,7 @@ public class AddressVerificationTest {
         onData(allOf(is(instanceOf(String.class)), is(Country.UNITED_KINGDOM)))
                 .perform(click());
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isNotDisplayed()));
     }
 
