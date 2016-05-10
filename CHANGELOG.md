@@ -3,12 +3,20 @@
 ## [5.3](https://github.com/judopay/Judo-Android/tree/5.3) (TBC)
 
 **Features:**
-- Android Pay support - use the judo SDK to process payments made using Android Pay.
-- Custom layouts - customize and provide your own layout file when performing a payment, pre-auth or register card.
-- Perform card scanning directly from the card input form.
+- [Custom layouts](https://github.com/JudoPay/Judo-Android/wiki/Custom-layouts) - you can now provide your own customized layout file when displaying the card input form to the user. This allows you greater freedom in how individual views are presented. See the [guide](https://github.com/JudoPay/Judo-Android/wiki/Custom-layouts) for more information.
 
 **Changes:**
-- ```TokenPaymentActivity```, ```TokenPreAuthActivity```, ```TokenPaymentFragment``` and ```TokenPreAuthFragment``` have been merged with ```PaymentActivity```, ```PreAuthActivity```, ```PaymentFragment``` and ```PreAuthFragment```. A token transaction will be performed if a ```CardToken``` is provided in the ```JudoOptions```.
+- Activities and fragments in the SDK have been simplified to (```PaymentActivity```, ```PaymentFragment```, ```PreAuthActivity```, ```PreAuthFragment```, ```RegisterCardActivity``` and ```RegisterCardFragment```). When performing a token payment or pre-auth, just provide a card token in the ```JudoOptions``` configuration and the token will be used for the transaction.
+- Button label text, activity title text and the option to turn the security message on/off are now [configured in the theme](https://github.com/JudoPay/Judo-Android/wiki/Themes) instead of the ```JudoOptions``` configuration object.
+- When performing a token payment, the security code helper text has changed to "Please re-enter the card security code".
+- When performing a payment, the currency provided must be a currency listed in the ```Currency``` class.
+- A [ProGuard rules](http://developer.android.com/tools/help/proguard.html) file is now provided in the SDK and will be used if enabled in your gradle configuration, helping you minimize the size of your app.
+- Error messages throughout the SDK have been changed to be more useful.
+
+**Bugs fixed:**
+- Alignment issues with billing country dropdown have been resolved.
+- Settings preferences in the sample app now persist across app restarts.
+- Billing postcode has been changed to only accept a max input depending on the billing country selected.
 
 ## [5.2](https://github.com/judopay/Judo-Android/tree/5.2) (2016-04-06)
  
