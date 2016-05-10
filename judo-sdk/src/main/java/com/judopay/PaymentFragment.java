@@ -7,6 +7,8 @@ import com.google.gson.Gson;
 import com.judopay.arch.AndroidScheduler;
 import com.judopay.model.Card;
 
+import static com.judopay.Judo.JUDO_OPTIONS;
+
 public final class PaymentFragment extends BaseFragment {
 
     private PaymentPresenter presenter;
@@ -15,8 +17,11 @@ public final class PaymentFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        JudoOptions options = getArguments().getParcelable(JUDO_OPTIONS);
+        checkJudoOptionsExtras(options.getAmount(), options.getJudoId(), options.getCurrency(), options.getConsumerRef());
+
         if (this.presenter == null) {
-            this.presenter = new PaymentPresenter(this, Judo.getApiService(getActivity()), new AndroidScheduler(), new Gson());
+            this.presenter = new PaymentPresenter(this, Judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK), new AndroidScheduler(), new Gson());
         }
     }
 
@@ -30,7 +35,11 @@ public final class PaymentFragment extends BaseFragment {
     public void onSubmit(Card card) {
         JudoOptions options = getJudoOptions();
 
-        presenter.performPayment(card, options);
+        if (options.getCardToken() != null) {
+            presenter.performTokenPayment(card, options);
+        } else {
+            presenter.performPayment(card, options);
+        }
     }
 
     public boolean isPaymentInProgress() {

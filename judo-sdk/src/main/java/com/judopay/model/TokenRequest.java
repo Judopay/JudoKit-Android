@@ -2,8 +2,12 @@ package com.judopay.model;
 
 import com.google.gson.annotations.SerializedName;
 import com.judopay.api.Request;
+import com.judopay.error.JudoIdInvalidError;
 
 import java.util.Map;
+
+import static com.judopay.arch.TextUtil.isEmpty;
+import static com.judopay.model.LuhnCheck.isValid;
 
 /**
  * Represents the data needed to perform a token transaction with the judo API.
@@ -12,6 +16,7 @@ import java.util.Map;
  * When creating a {@link TokenRequest} the {@link TokenRequest#judoId},
  * {@link TokenRequest#amount} and {@link TokenRequest#currency} must be provided.
  */
+@SuppressWarnings("unused")
 public final class TokenRequest extends Request {
 
     private String endDate;
@@ -34,10 +39,6 @@ public final class TokenRequest extends Request {
     private String emailAddress;
     private String mobileNumber;
     private Map<String, String> yourPaymentMetaData;
-
-    public TokenRequest() {
-        super(true);
-    }
 
     public String getEndDate() {
         return endDate;
@@ -177,17 +178,14 @@ public final class TokenRequest extends Request {
         }
 
         public TokenRequest build() {
-            if (currency == null || currency.length() == 0) {
-                throw new IllegalArgumentException("currency must be set for TokenRequest");
+            if(isEmpty(judoId) || !isValid(judoId)) {
+                throw new JudoIdInvalidError();
             }
 
-            if (this.judoId == null) {
-                throw new IllegalArgumentException("judoId must be set");
-            }
-
-            if (this.amount == null || this.amount.length() == 0) {
-                throw new IllegalArgumentException("amount must be set");
-            }
+            checkNotNull(currency);
+            checkNotNull(amount);
+            checkNotNull(yourConsumerReference);
+            checkNotNull(token);
 
             TokenRequest transaction = new TokenRequest();
 

@@ -14,15 +14,21 @@ public abstract class Request {
         this(false, yourPaymentReference);
     }
 
-    protected Request(boolean uniqueRequest) {
-        this(uniqueRequest, UUID.randomUUID().toString());
+    protected Request() {
+        this(true, UUID.randomUUID().toString());
     }
 
-    Request(boolean uniqueRequest, String yourPaymentReference) {
+    private Request(boolean uniqueRequest, String yourPaymentReference) {
         this.uniqueRequest = uniqueRequest;
         this.yourPaymentReference = yourPaymentReference;
     }
 
+    protected static <T> T checkNotNull(T obj) {
+        if (obj == null) {
+            throw new ParameterError();
+        }
+        return obj;
+    }
     public String getYourPaymentReference() {
         return yourPaymentReference;
     }

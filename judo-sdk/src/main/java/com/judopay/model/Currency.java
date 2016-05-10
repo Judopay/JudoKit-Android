@@ -1,12 +1,21 @@
 package com.judopay.model;
 
+import android.support.annotation.StringDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Represents all the currencies that can be used when performing transactions with the judo API.
  */
+@SuppressWarnings("WeakerAccess")
 public class Currency {
+
+    @StringDef({AUD, BRL, CAD, CHF, CZK, DKK, EUR, GBP, HKD, HUF, JPY, NOK, NZD, PLN, SEK, USD, ZAR})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Type { }
 
     public static final String AUD = "AUD";
     public static final String BRL = "BRL";

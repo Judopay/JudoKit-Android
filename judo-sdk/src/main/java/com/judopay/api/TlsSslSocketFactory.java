@@ -3,21 +3,16 @@ package com.judopay.api;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 class TlsSslSocketFactory extends SSLSocketFactory {
 
-    private SSLSocketFactory delegate;
+    private final SSLSocketFactory delegate;
 
-    public TlsSslSocketFactory() throws KeyManagementException, NoSuchAlgorithmException {
-        SSLContext context = SSLContext.getInstance("TLS");
-        context.init(null, null, null);
-        delegate = context.getSocketFactory();
+    TlsSslSocketFactory(SSLSocketFactory delegate) {
+        this.delegate = delegate;
     }
 
     @Override

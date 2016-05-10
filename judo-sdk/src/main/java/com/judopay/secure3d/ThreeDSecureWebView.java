@@ -8,6 +8,7 @@ import android.webkit.WebView;
 
 import com.google.gson.Gson;
 import com.judopay.BuildConfig;
+import com.judopay.error.Show3dSecureWebViewError;
 import com.judopay.model.ThreeDSecureInfo;
 
 import java.io.UnsupportedEncodingException;
@@ -25,7 +26,7 @@ import static java.net.URLEncoder.encode;
 public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScriptInterface.JsonListener {
 
     private static final String JS_NAMESPACE = "JudoPay";
-    private static final String REDIRECT_URL = "https://pay.judopay.com/Android/Parse3DS";
+    static final String REDIRECT_URL = "https://pay.judopay.com/Android/Parse3DS";
     private static final String CHARSET = "UTF-8";
 
     private ThreeDSecureListener threeDSecureListener;
@@ -35,21 +36,21 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
 
     public ThreeDSecureWebView(Context context) {
         super(context);
-        initialise();
+        initialize();
     }
 
     public ThreeDSecureWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initialise();
+        initialize();
     }
 
     public ThreeDSecureWebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initialise();
+        initialize();
     }
 
     @SuppressLint("AddJavascriptInterface")
-    private void initialise() {
+    private void initialize() {
         configureSettings();
 
         if (BuildConfig.DEBUG && SDK_INT >= KITKAT) {
@@ -80,12 +81,12 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
 
             this.receiptId = receiptId;
 
-            this.webViewClient = new ThreeDSecureWebViewClient(REDIRECT_URL, JS_NAMESPACE, threeDSecureListener);
+            this.webViewClient = new ThreeDSecureWebViewClient(JS_NAMESPACE, threeDSecureListener);
             setWebViewClient(webViewClient);
 
             postUrl(acsUrl, postData.getBytes());
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            throw new Show3dSecureWebViewError(e);
         }
     }
 

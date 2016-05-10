@@ -3,6 +3,7 @@ package com.judopay.model;
 /**
  * An Address linked to a payment card, used when address verification is performed.
  */
+@SuppressWarnings("unused")
 public class Address {
 
     private long countryCode;

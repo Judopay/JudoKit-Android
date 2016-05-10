@@ -6,6 +6,7 @@
     <string name="billing_postal_code">Billing postal code</string>
     <string name="checking_billing_postcode">Check billing postcode</string>
     <string name="pay">PAY</string>
+    <string name="confirm_payment">Confirm payment</string>
     <string name="payment">Payment</string>
     <string name="token_payment">Token payment</string>
     <string name="card_number_label">Card number</string>
@@ -16,16 +17,12 @@
     <string name="date_hint">MM/YY</string>
     <string name="date_format">00/00</string>
     <string name="expiry_date_format">%1$s/%2$s</string>
-    <string name="cvv">CVV</string>
-    <string name="cid">CID</string>
-    <string name="cvv2">CVV2</string>
-    <string name="cvc2">CVC2</string>
-    <string name="cvn2">CVN2</string>
-    <string name="cav2">CAV2</string>
     <string name="security_code_hint">000</string>
     <string name="amex_security_code_hint">0000</string>
     <string name="add_card">Add card</string>
+    <string name="save_card">Save card</string>
     <string name="empty" />
+    <string name="enter_card_details">Enter card details</string>
     <string name="error_postcode_uk">Check postcode</string>
     <string name="error_postcode_us">Check ZIP code</string>
     <string name="error_postcode_canada">Check postal code</string>
@@ -55,6 +52,7 @@
     <string name="add_card_failed">Add card failed</string>
     <string name="please_check_details_try_again">Please check your details and try again</string>
     <string name="ok">OK</string>
+    <string name="please_reenter_the_card_security_code">Please re-enter the card security code</string>
     <string name="please_check_your_internet_connection">Please check your Internet connection and try again</string>
     <string name="connection_error">Connection error</string>
     <string name="secure_server_transmission">Secure server: Your card details are encrypted using SSL before transmission to our secure payment service provider. They will not be stored on this device or on our servers.</string>

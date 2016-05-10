@@ -1,8 +1,12 @@
 package com.judopay.model;
 
 import com.judopay.api.Request;
+import com.judopay.error.JudoIdInvalidError;
 
 import java.util.Map;
+
+import static com.judopay.arch.TextUtil.isEmpty;
+import static com.judopay.model.LuhnCheck.isValid;
 
 /**
  * Represents the data needed to perform a register card transaction with the judo API.
@@ -11,6 +15,7 @@ import java.util.Map;
  * When creating a {@link RegisterCardRequest} the {@link RegisterCardRequest#judoId}
  * must be provided.
  */
+@SuppressWarnings("unused")
 public final class RegisterCardRequest extends Request {
 
     private String judoId;
@@ -25,10 +30,6 @@ public final class RegisterCardRequest extends Request {
     private String mobileNumber;
     private String issueNumber;
     private Map<String, String> yourPaymentMetaData;
-
-    private RegisterCardRequest() {
-        super(true);
-    }
 
     public String getJudoId() {
         return judoId;
@@ -78,6 +79,7 @@ public final class RegisterCardRequest extends Request {
         return mobileNumber;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
 
         private String judoId;
@@ -154,9 +156,13 @@ public final class RegisterCardRequest extends Request {
         }
 
         public RegisterCardRequest build() {
-            if (this.judoId == null) {
-                throw new IllegalArgumentException("judoId must be set");
+            if(isEmpty(judoId) || !isValid(judoId)) {
+                throw new JudoIdInvalidError();
             }
+
+            checkNotNull(cardNumber);
+            checkNotNull(cv2);
+            checkNotNull(expiryDate);
 
             RegisterCardRequest transaction = new RegisterCardRequest();
 

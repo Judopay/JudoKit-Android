@@ -11,14 +11,14 @@ import android.support.v7.app.AppCompatActivity;
 import com.google.gson.Gson;
 import com.judopay.model.Receipt;
 
-public class BaseActivity extends AppCompatActivity {
+abstract class BaseActivity extends AppCompatActivity {
 
     private static final int FINE_LOCATION_PERMISSION_REQUEST = 0x0009;
 
-    protected static final String TOKEN_RECEIPT_KEY = "Judo-SampleApp-TokenReceipt";
+    private static final String TOKEN_RECEIPT_KEY = "Judo-SampleApp-TokenReceipt";
 
-    static final String SHARED_PREFS_NAME = "Judo-SampleApp";
-    static final String CURRENCY_KEY = "Judo-SampleApp-Currency";
+    public static final String SHARED_PREFS_NAME = "Judo-SampleApp";
+    public static final String CURRENCY_KEY = "Judo-SampleApp-Currency";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,14 +29,14 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected void saveReceipt(Receipt receipt) {
+    void saveReceipt(Receipt receipt) {
         getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
                 .edit()
                 .putString(TOKEN_RECEIPT_KEY, new Gson().toJson(receipt))
                 .apply();
     }
 
-    protected Receipt getLastReceipt() {
+    Receipt getLastReceipt() {
         String tokenReceiptJson = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
                 .getString(TOKEN_RECEIPT_KEY, null);
 

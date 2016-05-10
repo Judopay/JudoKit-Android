@@ -4,7 +4,7 @@
 
     <com.judopay.view.JudoTextInputLayout
         android:id="@+id/issue_number_input_layout"
-        style="@style/EntryLayout">
+        style="@style/Widget.Judo.EntryLayout">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/issue_number_edit_text"
@@ -14,7 +14,7 @@
 
     <TextView
         android:id="@+id/issue_number_helper_text"
-        style="@style/judo_hint_text"
+        style="@style/Widget.Judo.Text.Hint"
         android:text="@string/issue_number_front_of_card"
         tools:visibility="visible" />
 

@@ -1,27 +1,26 @@
 package com.judopay.view;
 
-import android.support.annotation.StringRes;
 import android.view.View;
 import android.widget.EditText;
 
 public class HintFocusListener implements View.OnFocusChangeListener {
 
     private final EditText editText;
-    private int hintResourceId;
+    private String hint;
 
-    public HintFocusListener(EditText editText, @StringRes int hintResourceId) {
+    public HintFocusListener(EditText editText, String hint) {
         this.editText = editText;
-        this.hintResourceId = hintResourceId;
+        this.hint = hint;
     }
 
-    public void setHintResourceId(@StringRes int hintResourceId) {
-        this.hintResourceId = hintResourceId;
+    public void setHint(String hint) {
+        this.hint = hint;
     }
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         if (hasFocus) {
-            editText.setHint(hintResourceId);
+            editText.setHint(hint);
         } else {
             editText.setHint("");
         }
