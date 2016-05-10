@@ -1,6 +1,6 @@
 # Judo Android SDK change log
 
-## [5.3](https://github.com/judopay/Judo-Android/tree/5.3) (TBC)
+## [5.3](https://github.com/judopay/Judo-Android/tree/5.3) (2016-05-11)
 
 **Features:**
 - [Custom layouts](https://github.com/JudoPay/Judo-Android/wiki/Custom-layouts) - you can now provide your own customized layout file when displaying the card input form to the user. This allows you greater freedom in how individual views are presented. See the [guide](https://github.com/JudoPay/Judo-Android/wiki/Custom-layouts) for more information.
