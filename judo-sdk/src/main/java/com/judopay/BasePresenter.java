@@ -56,7 +56,6 @@ abstract class BasePresenter implements ThreeDSecureListener {
             @Override
             public void call(Throwable throwable) {
                 loading = false;
-                Log.e("Judo", "An error occurred performing the transaction with judo API", throwable);
                 handleErrorCallback(throwable);
                 transactionCallbacks.dismiss3dSecureDialog();
                 transactionCallbacks.hideLoading();
