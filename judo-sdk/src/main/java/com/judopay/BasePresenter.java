@@ -1,5 +1,7 @@
 package com.judopay;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.judopay.arch.Scheduler;
 import com.judopay.model.Receipt;
@@ -54,6 +56,13 @@ abstract class BasePresenter implements ThreeDSecureListener {
             @Override
             public void call(Throwable throwable) {
                 loading = false;
+                Log.e("Judo", "An error occurred performing the transaction with judo API", throwable);
+                handleErrorCallback(throwable);
+                transactionCallbacks.dismiss3dSecureDialog();
+                transactionCallbacks.hideLoading();
+            }
+
+            private void handleErrorCallback(Throwable throwable) {
                 if (throwable instanceof HttpException) {
                     retrofit2.Response<?> response = ((HttpException) throwable).response();
                     if (response.errorBody() != null) {
@@ -64,8 +73,6 @@ abstract class BasePresenter implements ThreeDSecureListener {
                 } else if (throwable instanceof java.net.UnknownHostException) {
                     transactionCallbacks.onConnectionError();
                 }
-                transactionCallbacks.dismiss3dSecureDialog();
-                transactionCallbacks.hideLoading();
             }
         };
     }
