@@ -1,36 +1,54 @@
 <resources>
 
     <attr name="overlayBackground" format="reference" />
+    <attr name="buttonLabel" format="string" />
+    <attr name="activityTitle" format="string" />
+    <attr name="secureServerMessageShown" format="boolean" />
 
     <style name="Theme.Judo" parent="Theme.AppCompat">
+        <item name="buttonLabel">@string/pay</item>
         <item name="buttonStyle">@style/Widget.Judo.Button</item>
         <item name="colorPrimary">@color/judo_dark_blue</item>
         <item name="colorButtonNormal">@color/judo_teal</item>
         <item name="colorAccent">@android:color/white</item>
         <item name="overlayBackground">@color/judo_black_87</item>
+        <item name="secureServerMessageShown">false</item>
     </style>
 
     <style name="Theme.Judo.Light.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:textColorHint">@color/judo_black_38</item>
-        <item name="colorControlNormal">@color/judo_black_16</item>
-        <item name="buttonStyle">@style/Widget.Judo.Button</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppTheme.ActionBar</item>
+        <item name="android:textColorHint">@color/judo_black_38</item>
+        <item name="android:textColorSecondary">@color/judo_black_54</item>
+        <item name="buttonLabel">@string/pay</item>
+        <item name="buttonStyle">@style/Widget.Judo.Button</item>
+        <item name="colorControlNormal">@color/judo_black_16</item>
         <item name="colorPrimaryDark">@color/judo_dark_blue</item>
         <item name="colorPrimary">@color/judo_blue</item>
         <item name="colorButtonNormal">@color/judo_teal</item>
         <item name="overlayBackground">@color/judo_white_90</item>
-        <item name="android:textColorSecondary">@color/judo_black_54</item>
+        <item name="secureServerMessageShown">false</item>
     </style>
 
     <style name="Theme.Judo.Light" parent="Theme.AppCompat.Light">
         <item name="android:textColorHint">@color/judo_black_38</item>
-        <item name="colorControlNormal">@color/judo_black_16</item>
-        <item name="buttonStyle">@style/Widget.Judo.Button</item>
-        <item name="colorPrimaryDark">@color/judo_dark_blue</item>
-        <item name="colorPrimary">@color/judo_blue</item>
-        <item name="colorButtonNormal">@color/judo_teal</item>
-        <item name="overlayBackground">@color/judo_white_90</item>
         <item name="android:textColorSecondary">@color/judo_black_54</item>
+        <item name="buttonLabel">@string/pay</item>
+        <item name="buttonStyle">@style/Widget.Judo.Button</item>
+        <item name="colorButtonNormal">@color/judo_teal</item>
+        <item name="overlayBackground">@color/judo_white_90</item>§
+        <item name="secureServerMessageShown">false</item>
+    </style>
+
+    <style name="Theme.Judo.Light.ShowSecurityMessage" parent="Theme.Judo.Light">
+        <item name="secureServerMessageShown">true</item>
+    </style>
+
+    <style name="Theme.Judo.Light.ConfirmPayment" parent="Theme.Judo.Light">
+        <item name="buttonLabel">@string/confirm_payment</item>
+    </style>
+
+    <style name="Theme.Judo.Light.EnterCardDetails" parent="Theme.Judo.Light">
+        <item name="activityTitle">@string/enter_card_details</item>
     </style>
 
     <style name="ThemeOverlay.AppTheme.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">

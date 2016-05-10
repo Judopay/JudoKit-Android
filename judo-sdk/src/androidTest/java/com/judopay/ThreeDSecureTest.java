@@ -64,7 +64,7 @@ public class ThreeDSecureTest {
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("341"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .perform(click());
 
         onView(withId(R.id.three_d_secure_web_view))
