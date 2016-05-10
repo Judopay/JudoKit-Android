@@ -33,7 +33,7 @@ public class SecurityMessageTest {
     public ActivityTestRule<PaymentActivity> testRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
     @Rule
-    public ActivityTestRule<PreAuthActivity > preAuthActivityActivityTestRule = new ActivityTestRule<>(PreAuthActivity.class, false, false);
+    public ActivityTestRule<PreAuthActivity> preAuthActivityActivityTestRule = new ActivityTestRule<>(PreAuthActivity.class, false, false);
 
     @Before
     public void setupJudoSdk() {
@@ -42,7 +42,7 @@ public class SecurityMessageTest {
 
     @Test
     public void shouldDisplaySecurityMessageWhenSetInTheme() {
-        testRule.launchActivity(getIntent());
+        preAuthActivityActivityTestRule.launchActivity(getIntent());
 
         onView(withId(R.id.secure_server_text))
                 .check(matches(isDisplayed()));
@@ -50,7 +50,7 @@ public class SecurityMessageTest {
 
     @Test
     public void shouldNotDisplaySecurityMessage() {
-        preAuthActivityActivityTestRule.launchActivity(getIntent());
+        testRule.launchActivity(getIntent());
 
         onView(withId(R.id.secure_server_text))
                 .check(matches(isNotDisplayed()));
