@@ -1,6 +1,6 @@
 <resources>
 
-    <attr name="cameraIcon" format="reference"/>
+    <attr name="cameraIcon" format="reference" />
     <attr name="overlayBackground" format="reference" />
     <attr name="buttonLabel" format="string" />
     <attr name="activityTitle" format="string" />
@@ -43,6 +43,8 @@
         <item name="cameraIcon">@drawable/ic_photo_camera_black</item>
     </style>
 
+    <style name="Theme" />
+
     <style name="Theme.Judo.Light.ShowSecurityMessage" parent="Theme.Judo.Light">
         <item name="secureServerMessageShown">true</item>
     </style>
@@ -67,6 +69,7 @@
     </style>
 
     <style name="Widget" />
+
     <style name="Widget.Judo" />
 
     <style name="Widget.Judo.EditText" parent="Widget.AppCompat.EditText">

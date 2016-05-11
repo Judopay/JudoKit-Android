@@ -40,6 +40,7 @@ public class JudoOptions implements Parcelable {
     private String emailAddress;
     private String mobileNumber;
     private CustomLayout customLayout;
+    private PendingIntent cardScanningIntent;
 
     private JudoOptions() { }
 

@@ -10,6 +10,7 @@ import com.judopay.Judo;
 import com.judopay.JudoOptions;
 import com.judopay.R;
 import com.judopay.arch.ThemeUtil;
+import com.judopay.model.Card;
 import com.judopay.validation.ValidationManager;
 
 import static com.judopay.arch.TextUtil.isEmpty;

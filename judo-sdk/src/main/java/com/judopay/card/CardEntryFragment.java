@@ -118,7 +118,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    protected void onInitialize(JudoOptions options) {
+    protected void onInitialize(final JudoOptions options) {
         String buttonLabel = getButtonLabel();
 
         if (!isEmpty(buttonLabel)) {
