@@ -39,7 +39,7 @@ public class CardNumberValidator implements Validator {
         });
     }
 
-    public Validation getValidation(String cardNumber) {
+    private Validation getValidation(String cardNumber) {
         int cardType = CardNetwork.fromCardNumber(cardNumber);
 
         boolean cardNumberLengthValid = isCardNumberLengthValid(cardNumber, cardType);

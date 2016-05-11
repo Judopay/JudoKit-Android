@@ -11,13 +11,13 @@ import android.test.suitebuilder.annotation.LargeTest;
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
 import com.judopay.JudoOptions;
+import com.judopay.PaymentActivity;
 import com.judopay.R;
-import com.judopay.TokenPaymentActivity;
-import com.judopay.receipts.RxHelpers;
 import com.judopay.model.Address;
 import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
 import com.judopay.model.RegisterCardRequest;
+import com.judopay.receipts.RxHelpers;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -43,7 +43,7 @@ import static org.hamcrest.core.Is.is;
 public class SuccessfulTokenPaymentTest {
 
     @Rule
-    public ActivityTestRule<TokenPaymentActivity> tokenPaymentActivityTestRule = new ActivityTestRule<>(TokenPaymentActivity.class, false, false);
+    public ActivityTestRule<PaymentActivity> tokenPaymentActivityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
     @Before
     public void setupJudoSdk() {
@@ -71,15 +71,15 @@ public class SuccessfulTokenPaymentTest {
                 .subscribe(new Action1<Receipt>() {
                     @Override
                     public void call(Receipt receipt) {
-                        TokenPaymentActivity tokenPaymentActivity = tokenPaymentActivityTestRule.launchActivity(getTokenPaymentIntent(receipt));
+                        PaymentActivity paymentActivity = tokenPaymentActivityTestRule.launchActivity(getTokenPaymentIntent(receipt));
 
                         onView(withId(R.id.security_code_edit_text))
                                 .perform(typeText("452"));
 
-                        onView(withId(R.id.payment_button))
+                        onView(withId(R.id.button))
                                 .perform(click());
 
-                        assertThat(resultCode(tokenPaymentActivity), is(Judo.RESULT_SUCCESS));
+                        assertThat(resultCode(paymentActivity), is(Judo.RESULT_SUCCESS));
                     }
                 }, failOnError());
     }
@@ -108,7 +108,7 @@ public class SuccessfulTokenPaymentTest {
                 .subscribe(new Action1<Receipt>() {
                     @Override
                     public void call(Receipt receipt) {
-                        TokenPaymentActivity tokenPaymentActivity = tokenPaymentActivityTestRule.launchActivity(getTokenPaymentIntent(receipt));
+                        PaymentActivity tokenPaymentActivity = tokenPaymentActivityTestRule.launchActivity(getTokenPaymentIntent(receipt));
 
                         onView(withId(R.id.security_code_edit_text))
                                 .perform(typeText("452"));
@@ -116,7 +116,7 @@ public class SuccessfulTokenPaymentTest {
                         onView(withId(R.id.post_code_edit_text))
                                 .perform(typeText("TR148PA"));
 
-                        onView(withId(R.id.payment_button))
+                        onView(withId(R.id.button))
                                 .perform(click());
 
                         assertThat(resultCode(tokenPaymentActivity), is(Judo.RESULT_SUCCESS));

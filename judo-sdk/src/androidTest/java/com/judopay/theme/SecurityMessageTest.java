@@ -1,4 +1,4 @@
-package com.judopay;
+package com.judopay.theme;
 
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
@@ -8,6 +8,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;
+import com.judopay.PreAuthActivity;
 import com.judopay.R;
 import com.judopay.model.Currency;
 
@@ -19,17 +20,20 @@ import org.junit.runner.RunWith;
 import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.judopay.util.ViewMatchers.isNotDisplayed;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class CardDateFormattingTest {
+public class SecurityMessageTest {
 
     @Rule
-    public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
+    public ActivityTestRule<PaymentActivity> testRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
+
+    @Rule
+    public ActivityTestRule<PreAuthActivity> preAuthActivityActivityTestRule = new ActivityTestRule<>(PreAuthActivity.class, false, false);
 
     @Before
     public void setupJudoSdk() {
@@ -37,25 +41,19 @@ public class CardDateFormattingTest {
     }
 
     @Test
-    public void shouldFormatStartDate() {
-        Judo.setMaestroEnabled(true);
-        activityTestRule.launchActivity(getIntent());
+    public void shouldDisplaySecurityMessageWhenSetInTheme() {
+        preAuthActivityActivityTestRule.launchActivity(getIntent());
 
-        onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("6759000000005462"));
-
-        onView(withId(R.id.start_date_edit_text))
-                .perform(typeText("0116"))
-                .check(matches(withText("01/16")));
+        onView(withId(R.id.secure_server_text))
+                .check(matches(isDisplayed()));
     }
 
     @Test
-    public void shouldFormatExpiryDate() {
-        activityTestRule.launchActivity(getIntent());
+    public void shouldNotDisplaySecurityMessage() {
+        testRule.launchActivity(getIntent());
 
-        onView(withId(R.id.expiry_date_edit_text))
-                .perform(typeText("1225"))
-                .check(matches(withText("12/25")));
+        onView(withId(R.id.secure_server_text))
+                .check(matches(isNotDisplayed()));
     }
 
     private Intent getIntent() {
@@ -67,6 +65,7 @@ public class CardDateFormattingTest {
                 .setCurrency(Currency.GBP)
                 .setConsumerRef(UUID.randomUUID().toString())
                 .build());
+
         return intent;
     }
 

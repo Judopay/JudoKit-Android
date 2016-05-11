@@ -14,8 +14,8 @@ class ThreeDSecureWebViewClient extends WebViewClient {
 
     private ThreeDSecureResultPageListener resultPageListener;
 
-    public ThreeDSecureWebViewClient(String redirectUrl, String javaScriptNamespace, ThreeDSecureListener threeDSecureListener) {
-        this.redirectUrl = redirectUrl;
+    public ThreeDSecureWebViewClient(String javaScriptNamespace, ThreeDSecureListener threeDSecureListener) {
+        this.redirectUrl = ThreeDSecureWebView.REDIRECT_URL;
         this.javaScriptNamespace = javaScriptNamespace;
         this.threeDSecureListener = threeDSecureListener;
     }

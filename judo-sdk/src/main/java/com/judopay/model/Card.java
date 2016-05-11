@@ -44,6 +44,7 @@ public class Card implements Parcelable {
         return CardNetwork.MAESTRO == CardNetwork.fromCardNumber(cardNumber);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
 
         private String cardNumber;

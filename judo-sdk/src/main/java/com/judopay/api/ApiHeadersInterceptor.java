@@ -1,7 +1,5 @@
 package com.judopay.api;
 
-import android.os.Build;
-
 import com.judopay.BuildConfig;
 import com.judopay.Judo;
 
@@ -37,8 +35,7 @@ class ApiHeadersInterceptor implements Interceptor {
     public ApiHeadersInterceptor(ApiCredentials apiCredentials, @Judo.UiClientMode int uiClientMode) {
         this.apiCredentials = apiCredentials;
         this.uiClientMode = uiClientMode;
-        this.userAgent = new UserAgent(BuildConfig.VERSION_NAME, Build.VERSION.RELEASE,
-                Build.MANUFACTURER, Build.MODEL, Locale.getDefault().getDisplayName());
+        this.userAgent = new UserAgent(Locale.getDefault().getDisplayName());
     }
 
     @Override

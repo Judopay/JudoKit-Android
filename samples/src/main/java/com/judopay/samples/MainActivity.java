@@ -15,8 +15,6 @@ import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;
 import com.judopay.PreAuthActivity;
 import com.judopay.RegisterCardActivity;
-import com.judopay.TokenPaymentActivity;
-import com.judopay.TokenPreAuthActivity;
 import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
 import com.judopay.samples.settings.SettingsActivity;
@@ -35,7 +33,7 @@ import static com.judopay.Judo.TOKEN_PRE_AUTH_REQUEST;
  * Update the {@link #JUDO_ID} string with the Judo ID from the judo website: http://www.judopay.com,
  * Update the {@link #API_TOKEN} and {@link #API_SECRET} with your credentials and call {@link com.judopay.Judo#setup} to initialize the SDK.
  */
-@SuppressWarnings("UnusedParameters")
+@SuppressWarnings({"UnusedParameters", "WrongConstant"})
 public class MainActivity extends BaseActivity {
 
     private static final String AMOUNT = "0.99";
@@ -67,7 +65,6 @@ public class MainActivity extends BaseActivity {
                 .setCurrency(getCurrency())
                 .setConsumerRef(CONSUMER_REF)
                 .setCardScanningIntent(pendingIntent)
-                .setSecureServerMessageShown(true)
                 .build();
 
         intent.putExtra(Judo.JUDO_OPTIONS, judoOptions);
@@ -86,7 +83,6 @@ public class MainActivity extends BaseActivity {
                 .setCurrency(getCurrency())
                 .setConsumerRef(CONSUMER_REF)
                 .setCardScanningIntent(pendingIntent)
-                .setSecureServerMessageShown(true)
                 .build();
 
         intent.putExtra(Judo.JUDO_OPTIONS, options);
@@ -98,7 +94,6 @@ public class MainActivity extends BaseActivity {
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
                 .setJudoId(JUDO_ID)
                 .setConsumerRef(CONSUMER_REF)
-                .setSecureServerMessageShown(true)
                 .build());
 
         startActivityForResult(intent, REGISTER_CARD_REQUEST);
@@ -107,7 +102,7 @@ public class MainActivity extends BaseActivity {
     public void performTokenPreAuth(View v) {
         Receipt receipt = getLastReceipt();
         if (receipt != null) {
-            Intent intent = new Intent(MainActivity.this, TokenPreAuthActivity.class);
+            Intent intent = new Intent(MainActivity.this, PreAuthActivity.class);
 
             intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
                     .setJudoId(JUDO_ID)
@@ -115,7 +110,6 @@ public class MainActivity extends BaseActivity {
                     .setCurrency(getCurrency())
                     .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
                     .setCardToken(receipt.getCardDetails())
-                    .setSecureServerMessageShown(true)
                     .build());
 
             startActivityForResult(intent, TOKEN_PRE_AUTH_REQUEST);
@@ -128,7 +122,7 @@ public class MainActivity extends BaseActivity {
         Receipt receipt = getLastReceipt();
 
         if (receipt != null) {
-            Intent intent = new Intent(this, TokenPaymentActivity.class);
+            Intent intent = new Intent(this, PaymentActivity.class);
 
             intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
                     .setJudoId(JUDO_ID)
@@ -136,7 +130,6 @@ public class MainActivity extends BaseActivity {
                     .setCurrency(getCurrency())
                     .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
                     .setCardToken(receipt.getCardDetails())
-                    .setSecureServerMessageShown(true)
                     .build());
 
             startActivityForResult(intent, TOKEN_PAYMENT_REQUEST);
@@ -215,7 +208,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void startTokenPayment(Receipt receipt) {
-        Intent intent = new Intent(MainActivity.this, TokenPaymentActivity.class);
+        Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
                 .setJudoId(JUDO_ID)
@@ -223,7 +216,6 @@ public class MainActivity extends BaseActivity {
                 .setCurrency(getCurrency())
                 .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
                 .setCardToken(receipt.getCardDetails())
-                .setSecureServerMessageShown(true)
                 .build());
 
         startActivityForResult(intent, TOKEN_PAYMENT_REQUEST);

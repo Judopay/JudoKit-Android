@@ -8,10 +8,10 @@ import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
+import com.judopay.PaymentActivity;
 import com.judopay.R;
-import com.judopay.TokenPaymentActivity;
-import com.judopay.model.CardToken;
 import com.judopay.model.CardNetwork;
+import com.judopay.model.CardToken;
 import com.judopay.model.Currency;
 
 import org.junit.Before;
@@ -32,7 +32,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.judopay.model.CardNetwork.AMEX;
-import static com.judopay.model.CardNetwork.MAESTRO;
 import static com.judopay.model.CardNetwork.VISA;
 import static com.judopay.util.ViewMatchers.isDisabled;
 import static com.judopay.util.ViewMatchers.isNotDisplayed;
@@ -44,7 +43,7 @@ import static com.judopay.util.ViewMatchers.withTextInputHint;
 public class TokenPaymentFormTest {
 
     @Rule
-    public ActivityTestRule<TokenPaymentActivity> activityTestRule = new ActivityTestRule<>(TokenPaymentActivity.class, false, false);
+    public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
     @Before
     public void setupJudoSdk() {
@@ -174,7 +173,7 @@ public class TokenPaymentFormTest {
                 .perform(typeText("123"))
                 .perform(replaceText(""));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isNotDisplayed()));
     }
 
@@ -187,13 +186,13 @@ public class TokenPaymentFormTest {
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("12"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isNotDisplayed()));
 
         onView(withId(R.id.security_code_edit_text))
                 .perform(replaceText("123"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isDisplayed()));
     }
 
@@ -207,13 +206,13 @@ public class TokenPaymentFormTest {
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("123"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isNotDisplayed()));
 
         onView(withId(R.id.security_code_edit_text))
                 .perform(replaceText("1234"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isDisplayed()));
     }
 
@@ -230,7 +229,7 @@ public class TokenPaymentFormTest {
         onView(withId(R.id.post_code_edit_text))
                 .perform(typeText("NW6 7BB"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isDisplayed()));
     }
 

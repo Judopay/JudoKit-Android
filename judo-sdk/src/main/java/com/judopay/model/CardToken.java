@@ -10,6 +10,7 @@ import com.judopay.arch.TextUtil;
  * The tokenized card data from registering a card, allowing for token payments and token pre-auths
  * to be performed.
  */
+@SuppressWarnings("SameParameterValue")
 public class CardToken implements Parcelable {
 
     private String endDate;

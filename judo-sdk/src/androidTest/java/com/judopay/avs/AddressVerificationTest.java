@@ -25,7 +25,6 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.judopay.util.ViewMatchers.isNotDisplayed;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.allOf;
@@ -75,7 +74,7 @@ public class AddressVerificationTest {
         onData(allOf(is(instanceOf(String.class)), is(Country.OTHER)))
                 .perform(click());
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isDisplayed()));
     }
 
@@ -100,7 +99,7 @@ public class AddressVerificationTest {
         onData(allOf(is(instanceOf(String.class)), is(Country.UNITED_KINGDOM)))
                 .perform(click());
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isNotDisplayed()));
     }
 
@@ -125,11 +124,11 @@ public class AddressVerificationTest {
         onData(allOf(is(instanceOf(String.class)), is(Country.UNITED_KINGDOM)))
                 .perform(click());
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isNotDisplayed()));
     }
 
-    protected Intent getIntent() {
+    private Intent getIntent() {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()

@@ -48,7 +48,7 @@ public class DeclinedPaymentTest {
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("125"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .perform(click());
 
         onView(withText(R.string.payment_failed))
@@ -80,7 +80,7 @@ public class DeclinedPaymentTest {
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("671"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .perform(click());
 
         onView(withText(R.string.payment_failed))
@@ -106,7 +106,7 @@ public class DeclinedPaymentTest {
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("7654"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .perform(click());
 
         onView(withText(R.string.payment_failed))
@@ -134,7 +134,7 @@ public class DeclinedPaymentTest {
         onView(withId(R.id.post_code_edit_text))
                 .perform(typeText("N226JN"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .perform(click());
 
         onView(withText(R.string.payment_failed))
@@ -169,7 +169,7 @@ public class DeclinedPaymentTest {
         onView(withId(R.id.post_code_edit_text))
                 .perform(typeText("OX143AL"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .perform(click());
 
         onView(withText(R.string.payment_failed))
@@ -198,7 +198,7 @@ public class DeclinedPaymentTest {
         onView(withId(R.id.post_code_edit_text))
                 .perform(typeText("TQ11BH"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .perform(click());
 
         onView(withText(R.string.payment_failed))
@@ -208,7 +208,7 @@ public class DeclinedPaymentTest {
                 .check(matches(isDisplayed()));
     }
 
-    protected Intent getIntent() {
+    private Intent getIntent() {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()

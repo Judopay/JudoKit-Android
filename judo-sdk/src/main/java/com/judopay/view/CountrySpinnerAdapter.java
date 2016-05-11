@@ -1,5 +1,6 @@
 package com.judopay.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ public class CountrySpinnerAdapter extends ArrayAdapter<String> {
     public View getView(int position, View convertView, ViewGroup parent) {
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
+        @SuppressLint("ViewHolder")
         View view = inflater.inflate(R.layout.dropdown_item, parent, false);
 
         TextView textView = (TextView) view.findViewById(android.R.id.text1);

@@ -21,7 +21,7 @@ public final class PaymentFragment extends JudoFragment {
         checkJudoOptionsExtras(options.getAmount(), options.getJudoId(), options.getCurrency(), options.getConsumerRef());
 
         if (this.presenter == null) {
-            this.presenter = new PaymentPresenter(this, Judo.getApiService(getActivity()), new AndroidScheduler(), new Gson());
+            this.presenter = new PaymentPresenter(this, Judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK), new AndroidScheduler(), new Gson());
         }
     }
 
@@ -35,7 +35,11 @@ public final class PaymentFragment extends JudoFragment {
     public void onSubmit(Card card) {
         JudoOptions options = getJudoOptions();
 
-        presenter.performPayment(card, options);
+        if (options.getCardToken() != null) {
+            presenter.performTokenPayment(card, options);
+        } else {
+            presenter.performPayment(card, options);
+        }
     }
 
     @Override

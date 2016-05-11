@@ -8,13 +8,18 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
-import com.judopay.model.Card;
+import com.judopay.R;
+import com.judopay.arch.ThemeUtil;
 import com.judopay.validation.ValidationManager;
+
+import static com.judopay.arch.TextUtil.isEmpty;
 
 public abstract class AbstractCardEntryFragment extends Fragment implements ValidationManager.OnChangeListener {
 
-    private JudoOptions options;
-    protected CardEntryListener cardEntryListener;
+    private String buttonLabel;
+
+    JudoOptions options;
+    CardEntryListener cardEntryListener;
 
     public void setCardEntryListener(CardEntryListener cardEntryListener) {
         this.cardEntryListener = cardEntryListener;
@@ -34,7 +39,20 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
         }
     }
 
-    protected void hideKeyboard() {
+    public void setButtonLabel(String buttonLabel) {
+        this.buttonLabel = buttonLabel;
+    }
+
+    protected String getButtonLabel() {
+        String label = ThemeUtil.getStringAttr(getActivity(), getClass(), R.attr.buttonLabel);
+
+        if (!isEmpty(label)) {
+            return label;
+        }
+        return buttonLabel;
+    }
+
+    void hideKeyboard() {
         View view = this.getActivity().getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);

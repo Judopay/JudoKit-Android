@@ -54,7 +54,7 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .perform(click());
 
         assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
@@ -82,7 +82,7 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("789"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .perform(click());
 
         assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
@@ -104,7 +104,7 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("3469"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .perform(click());
 
         assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
@@ -128,7 +128,7 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.post_code_edit_text))
                 .perform(typeText("TR148PA"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .perform(click());
 
         assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
@@ -159,7 +159,7 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.post_code_edit_text))
                 .perform(typeText("RG48NL"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .perform(click());
 
         assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
@@ -184,13 +184,13 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.post_code_edit_text))
                 .perform(typeText("NW67BB"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .perform(click());
 
         assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
     }
 
-    protected Intent getIntent() {
+    private Intent getIntent() {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
