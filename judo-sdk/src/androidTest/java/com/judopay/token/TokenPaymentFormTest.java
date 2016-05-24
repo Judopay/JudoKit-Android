@@ -173,7 +173,7 @@ public class TokenPaymentFormTest {
                 .perform(typeText("123"))
                 .perform(replaceText(""));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isNotDisplayed()));
     }
 
@@ -186,13 +186,13 @@ public class TokenPaymentFormTest {
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("12"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isNotDisplayed()));
 
         onView(withId(R.id.security_code_edit_text))
                 .perform(replaceText("123"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isDisplayed()));
     }
 
@@ -206,13 +206,13 @@ public class TokenPaymentFormTest {
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("123"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isNotDisplayed()));
 
         onView(withId(R.id.security_code_edit_text))
                 .perform(replaceText("1234"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isDisplayed()));
     }
 
@@ -229,7 +229,7 @@ public class TokenPaymentFormTest {
         onView(withId(R.id.post_code_edit_text))
                 .perform(typeText("NW6 7BB"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isDisplayed()));
     }
 

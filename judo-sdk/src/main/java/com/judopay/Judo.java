@@ -18,8 +18,7 @@ public class Judo {
 
     @IntDef({UI_CLIENT_MODE_CUSTOM_UI, UI_CLIENT_MODE_JUDO_SDK})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface UiClientMode {
-    }
+    public @interface UiClientMode { }
 
     @IntDef({LIVE, SANDBOX, CUSTOM, UAT})
     @Retention(RetentionPolicy.SOURCE)

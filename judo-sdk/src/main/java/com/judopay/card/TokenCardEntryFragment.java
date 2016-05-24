@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
 import com.judopay.R;
+import com.judopay.arch.ThemeUtil;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
@@ -46,7 +47,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
     private PostcodeEntryView postcodeEntryView;
     private Spinner countrySpinner;
     private View secureServerText;
-    private Button paymentButton;
+    private Button submitButton;
     private View countryAndPostcodeContainer;
 
     private ValidationManager validationManager;
@@ -64,7 +65,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
 
         this.countrySpinner = (Spinner) view.findViewById(R.id.country_spinner);
         this.secureServerText = view.findViewById(R.id.secure_server_text);
-        this.paymentButton = (Button) view.findViewById(R.id.payment_button);
+        this.submitButton = (Button) view.findViewById(R.id.button);
 
         return view;
     }
@@ -77,7 +78,8 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
             throw new IllegalArgumentException("CardToken is required in JudoOptions for TokenCardEntryFragment");
         }
 
-        if (judoOptions.isSecureServerMessageShown()) {
+        boolean secureServerMessageShown = ThemeUtil.getBooleanAttr(getActivity(), getClass(), R.attr.secureServerMessageShown);
+        if (secureServerMessageShown) {
             secureServerText.setVisibility(View.VISIBLE);
         } else {
             secureServerText.setVisibility(View.GONE);
@@ -178,11 +180,11 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
 
     @Override
     public void onValidate(boolean valid) {
-        paymentButton.setVisibility(valid ? View.VISIBLE : View.GONE);
+        submitButton.setVisibility(valid ? View.VISIBLE : View.GONE);
     }
 
     private void initializePayButton() {
-        paymentButton.setOnClickListener(new SingleClickOnClickListener() {
+        submitButton.setOnClickListener(new SingleClickOnClickListener() {
             @Override
             public void doClick() {
                 hideKeyboard();

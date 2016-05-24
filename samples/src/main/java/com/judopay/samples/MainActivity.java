@@ -39,6 +39,7 @@ import static com.judopay.Judo.TOKEN_PRE_AUTH_REQUEST;
  * Update the {@link #JUDO_ID} string with the Judo ID from the judo website: http://www.judopay.com,
  * Update the {@link #API_TOKEN} and {@link #API_SECRET} with your credentials and call {@link com.judopay.Judo#setup} to initialize the SDK.
  */
+@SuppressWarnings({"UnusedParameters", "WrongConstant"})
 public class MainActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final String AMOUNT = "0.99";
@@ -69,7 +70,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                 .setAmount(AMOUNT)
                 .setCurrency(getCurrency())
                 .setConsumerRef(CONSUMER_REF)
-                .setSecureServerMessageShown(true)
                 .build();
 
         intent.putExtra(Judo.JUDO_OPTIONS, judoOptions);
@@ -84,7 +84,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                 .setAmount(AMOUNT)
                 .setCurrency(getCurrency())
                 .setConsumerRef(CONSUMER_REF)
-                .setSecureServerMessageShown(true)
                 .build();
 
         intent.putExtra(Judo.JUDO_OPTIONS, options);
@@ -96,7 +95,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
                 .setJudoId(JUDO_ID)
                 .setConsumerRef(CONSUMER_REF)
-                .setSecureServerMessageShown(true)
                 .build());
 
         startActivityForResult(intent, REGISTER_CARD_REQUEST);
@@ -139,7 +137,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                     .setCurrency(getCurrency())
                     .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
                     .setCardToken(receipt.getCardDetails())
-                    .setSecureServerMessageShown(true)
                     .build());
 
             startActivityForResult(intent, TOKEN_PRE_AUTH_REQUEST);
@@ -160,7 +157,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                     .setCurrency(getCurrency())
                     .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
                     .setCardToken(receipt.getCardDetails())
-                    .setSecureServerMessageShown(true)
                     .build());
 
             startActivityForResult(intent, TOKEN_PAYMENT_REQUEST);
@@ -245,7 +241,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                 .setCurrency(getCurrency())
                 .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
                 .setCardToken(receipt.getCardDetails())
-                .setSecureServerMessageShown(true)
                 .build());
 
         startActivityForResult(intent, TOKEN_PAYMENT_REQUEST);

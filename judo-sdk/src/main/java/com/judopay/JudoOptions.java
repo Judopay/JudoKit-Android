@@ -1,11 +1,13 @@
 package com.judopay;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.judopay.error.JudoIdInvalidError;
 import com.judopay.model.CardToken;
+import com.judopay.model.Currency;
 import com.judopay.model.CustomLayout;
 
 import java.util.HashMap;
@@ -18,12 +20,11 @@ import static com.judopay.model.LuhnCheck.isValid;
  * The wrapper for providing data to Activity and Fragments classes in the SDK (e.g. PaymentActivity).
  * This is preferable to using the individual Extras names defined in {@link Judo} as it provides
  * type safety.
- *
  * Use the {@link JudoOptions.Builder class for constructing} an instance of {@link JudoOptions}.
- *
  * When calling an Activity with an Intent extra or a Fragment using an arguments Bundle,
  * use {@link Judo#JUDO_OPTIONS} as the extra or argument name.
  */
+@SuppressWarnings("unused")
 public class JudoOptions implements Parcelable {
 
     private String judoId;
@@ -34,12 +35,9 @@ public class JudoOptions implements Parcelable {
     private String cardNumber;
     private String expiryMonth;
     private String expiryYear;
-    private String buttonLabel;
-    private String activityTitle;
     private CardToken cardToken;
     private String emailAddress;
     private String mobileNumber;
-    private boolean secureServerMessageShown;
     private CustomLayout customLayout;
 
     private JudoOptions() { }
@@ -52,6 +50,7 @@ public class JudoOptions implements Parcelable {
         return judoId;
     }
 
+    @Currency.Type
     public String getCurrency() {
         return currency;
     }
@@ -62,10 +61,6 @@ public class JudoOptions implements Parcelable {
 
     public Bundle getMetaData() {
         return metaData;
-    }
-
-    public String getButtonLabel() {
-        return buttonLabel;
     }
 
     public CardToken getCardToken() {
@@ -84,20 +79,12 @@ public class JudoOptions implements Parcelable {
         return expiryYear;
     }
 
-    public String getActivityTitle() {
-        return activityTitle;
-    }
-
     public String getEmailAddress() {
         return emailAddress;
     }
 
     public String getMobileNumber() {
         return mobileNumber;
-    }
-
-    public boolean isSecureServerMessageShown() {
-        return secureServerMessageShown;
     }
 
     public CustomLayout getCustomLayout() {
@@ -116,9 +103,9 @@ public class JudoOptions implements Parcelable {
         return map;
     }
 
+    @SuppressWarnings("unused")
     public static class Builder {
 
-        private String buttonLabel;
         private CardToken cardToken;
         private String cardNumber;
         private String expiryMonth;
@@ -128,21 +115,9 @@ public class JudoOptions implements Parcelable {
         private String currency;
         private String consumerRef;
         private Bundle metaData;
-        private String activityTitle;
         private String emailAddress;
         private String mobileNumber;
-        private boolean secureServerMessageShown;
         private CustomLayout customLayout;
-
-        public Builder setActivityTitle(String activityTitle) {
-            this.activityTitle = activityTitle;
-            return this;
-        }
-
-        public Builder setSecureServerMessageShown(boolean secureServerMessageShown) {
-            this.secureServerMessageShown = secureServerMessageShown;
-            return this;
-        }
 
         public Builder setAmount(String amount) {
             this.amount = amount;
@@ -154,7 +129,7 @@ public class JudoOptions implements Parcelable {
             return this;
         }
 
-        public Builder setCurrency(String currency) {
+        public Builder setCurrency(@Currency.Type String currency) {
             this.currency = currency;
             return this;
         }
@@ -184,11 +159,6 @@ public class JudoOptions implements Parcelable {
             return this;
         }
 
-        public Builder setButtonLabel(String buttonLabel) {
-            this.buttonLabel = buttonLabel;
-            return this;
-        }
-
         public Builder setCardToken(CardToken cardToken) {
             this.cardToken = cardToken;
             return this;
@@ -210,7 +180,7 @@ public class JudoOptions implements Parcelable {
         }
 
         public JudoOptions build() {
-            if(isEmpty(judoId) || !isValid(judoId)) {
+            if (isEmpty(judoId) || !isValid(judoId)) {
                 throw new JudoIdInvalidError();
             }
 
@@ -225,11 +195,6 @@ public class JudoOptions implements Parcelable {
             options.currency = currency;
             options.consumerRef = consumerRef;
             options.metaData = metaData;
-
-            options.buttonLabel = buttonLabel;
-            options.secureServerMessageShown = secureServerMessageShown;
-            options.activityTitle = activityTitle;
-
             options.emailAddress = emailAddress;
             options.mobileNumber = mobileNumber;
 
@@ -255,15 +220,13 @@ public class JudoOptions implements Parcelable {
         dest.writeString(this.cardNumber);
         dest.writeString(this.expiryMonth);
         dest.writeString(this.expiryYear);
-        dest.writeString(this.buttonLabel);
-        dest.writeString(this.activityTitle);
         dest.writeParcelable(this.cardToken, flags);
         dest.writeString(this.emailAddress);
         dest.writeString(this.mobileNumber);
-        dest.writeByte(secureServerMessageShown ? (byte) 1 : (byte) 0);
         dest.writeParcelable(this.customLayout, flags);
     }
 
+    @SuppressLint("ParcelClassLoader")
     protected JudoOptions(Parcel in) {
         this.judoId = in.readString();
         this.amount = in.readString();
@@ -273,12 +236,9 @@ public class JudoOptions implements Parcelable {
         this.cardNumber = in.readString();
         this.expiryMonth = in.readString();
         this.expiryYear = in.readString();
-        this.buttonLabel = in.readString();
-        this.activityTitle = in.readString();
         this.cardToken = in.readParcelable(CardToken.class.getClassLoader());
         this.emailAddress = in.readString();
         this.mobileNumber = in.readString();
-        this.secureServerMessageShown = in.readByte() != 0;
         this.customLayout = in.readParcelable(CustomLayout.class.getClassLoader());
     }
 

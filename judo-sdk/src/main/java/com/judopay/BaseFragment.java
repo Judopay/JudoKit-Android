@@ -35,6 +35,7 @@ abstract class BaseFragment extends Fragment implements TransactionCallbacks, Ca
 
     private ThreeDSecureDialogFragment threeDSecureDialog;
     private ThreeDSecureWebView threeDSecureWebView;
+    AbstractCardEntryFragment cardEntryFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +83,7 @@ abstract class BaseFragment extends Fragment implements TransactionCallbacks, Ca
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        AbstractCardEntryFragment cardEntryFragment = (AbstractCardEntryFragment) getFragmentManager().findFragmentByTag(TAG_PAYMENT_FORM);
+        cardEntryFragment = (AbstractCardEntryFragment) getFragmentManager().findFragmentByTag(TAG_PAYMENT_FORM);
 
         if (cardEntryFragment == null) {
             cardEntryFragment = createCardEntryFragment();
