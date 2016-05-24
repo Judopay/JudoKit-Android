@@ -134,11 +134,11 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     private void sendResult(int resultCode, Intent intent) {
         Activity activity = getActivity();
 
-        if (activity != null && !activity.isFinishing()) {
+        if(activity != null && !activity.isFinishing()) {
             try {
                 PendingIntent pendingResult = activity.createPendingResult(Judo.JUDO_REQUEST, intent, FLAG_ONE_SHOT);
                 pendingResult.send(resultCode);
-            } catch (PendingIntent.CanceledException ignore) {}
+            } catch (PendingIntent.CanceledException ignore) { }
         }
     }
 

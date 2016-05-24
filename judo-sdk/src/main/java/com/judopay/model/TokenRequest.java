@@ -40,10 +40,6 @@ public final class TokenRequest extends Request {
     private String mobileNumber;
     private Map<String, String> yourPaymentMetaData;
 
-    public TokenRequest() {
-        super();
-    }
-
     public String getEndDate() {
         return endDate;
     }

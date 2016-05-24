@@ -45,6 +45,7 @@ import rx.observables.ConnectableObservable;
 
 import static com.judopay.Judo.JUDO_OPTIONS;
 import static com.judopay.Judo.isAvsEnabled;
+import static com.judopay.arch.TextUtil.isEmpty;
 
 public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragment {
 
@@ -87,8 +88,9 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
 
     @Override
     protected void onInitialize(JudoOptions options) {
-        if (options.getButtonLabel() != null) {
-            this.paymentButton.setText(options.getButtonLabel());
+        String buttonLabel = getButtonLabel();
+        if (!isEmpty(buttonLabel)) {
+            this.paymentButton.setText(buttonLabel);
         }
 
         initializeInputTexts();

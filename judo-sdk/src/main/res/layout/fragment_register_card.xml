@@ -15,15 +15,9 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <com.judopay.view.ThemedLinearLayout
+    <LinearLayout
         android:id="@+id/progress_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:clickable="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone"
+        style="@style/Overlay"
         tools:visibility="visible">
 
         <TextView
@@ -43,6 +37,6 @@
             android:layout_gravity="center"
             android:indeterminate="true" />
 
-    </com.judopay.view.ThemedLinearLayout>
+    </LinearLayout>
 
 </FrameLayout>

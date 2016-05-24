@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.Surface;
 import android.view.WindowManager;
 
+import com.judopay.arch.ThemeUtil;
 import com.judopay.error.RootedDeviceNotPermittedError;
 import com.judopay.model.Card;
 
@@ -140,14 +141,9 @@ abstract class JudoActivity extends AppCompatActivity {
 
     @Override
     public void setTitle(@StringRes int titleId) {
-        if (getIntent().hasExtra(Judo.JUDO_OPTIONS)) {
-            JudoOptions options = getIntent().getParcelableExtra(Judo.JUDO_OPTIONS);
-
-            if (options.getActivityTitle() != null) {
-                super.setTitle(options.getActivityTitle());
-            } else {
-                super.setTitle(titleId);
-            }
+        String activityTitle = ThemeUtil.getStringAttr(this, getClass(), R.attr.activityTitle);
+        if (activityTitle != null) {
+            super.setTitle(activityTitle);
         } else {
             super.setTitle(titleId);
         }

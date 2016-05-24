@@ -6,15 +6,6 @@
 
     <LinearLayout style="@style/Widget.Judo.PaddedLayout">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:gravity="center"
-            android:text="@string/enter_your_payment_details_to_confirm_the_purchase"
-            android:textColor="#E9CFA1" />
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -25,9 +16,11 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:hint="@string/credit_card_number"
+                    android:id="@+id/card_number_edit_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:hint="@string/card_number_label"
+                    tools:ignore="TextFields" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -46,9 +39,10 @@
                 android:layout_weight="1">
 
                 <EditText
-                    android:hint="@string/start_date"
+                    android:id="@+id/start_date_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/start_date_label"
                     tools:ignore="TextFields" />
 
             </android.support.design.widget.TextInputLayout>
@@ -65,9 +59,10 @@
                     android:layout_height="wrap_content">
 
                     <EditText
-                        android:hint="@string/issue_no"
+                        android:id="@+id/issue_number_edit_text"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:hint="@string/issue_number_label" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -86,10 +81,11 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:hint="@string/expiry_date"
+                    android:id="@+id/expiry_date_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:hint="@string/expiry_date_label"
                     tools:ignore="TextFields" />
 
             </android.support.design.widget.TextInputLayout>
@@ -106,10 +102,11 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:hint="@string/security_code"
+                    android:id="@+id/security_code_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:hint="@string/security_code" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -137,6 +134,7 @@
                 android:layout_weight="1">
 
                 <EditText
+                    android:id="@+id/post_code_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
