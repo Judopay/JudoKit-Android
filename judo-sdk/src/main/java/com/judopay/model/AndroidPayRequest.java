@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 import static com.judopay.arch.Preconditions.checkNotEmpty;
-import static com.judopay.arch.Preconditions.checkNotNull;
 
 /**
  * A request for performing a payment or pre-auth with the judoNative API. This contains the Android Pay
@@ -16,7 +15,6 @@ public final class AndroidPayRequest extends BasePaymentRequest {
     private final Wallet wallet;
 
     public AndroidPayRequest(Wallet wallet) {
-        super(true);
         this.wallet = wallet;
     }
 

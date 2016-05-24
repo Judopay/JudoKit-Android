@@ -13,14 +13,6 @@ abstract class BasePaymentRequest extends Request {
     String yourConsumerReference;
     Map<String, String> yourPaymentMetaData;
 
-    protected BasePaymentRequest(String yourPaymentReference) {
-        super(yourPaymentReference);
-    }
-
-    protected BasePaymentRequest(boolean uniqueRequest) {
-        super(uniqueRequest);
-    }
-
     public BigDecimal getAmount() {
         return amount;
     }
