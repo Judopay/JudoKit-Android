@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
@@ -7,9 +8,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <com.judopay.view.JudoTextInputLayout
-        android:id="@+id/card_number_input_layout"
-        style="@style/Widget.Judo.EntryLayout">
+        <com.judopay.view.JudoTextInputLayout
+            android:id="@+id/card_number_input_layout"
+            style="@style/Widget.Judo.EntryLayout">
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/card_number_edit_text"
@@ -24,25 +25,26 @@
             android:layout_marginTop="14dp"
             tools:ignore="RtlHardcoded" />
 
-        <ImageView
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/scan_card_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
             android:layout_gravity="right"
-            android:layout_marginTop="17dp"
-            android:alpha="0.5"
-            android:padding="@dimen/small_padding"
-            android:src="?attr/cameraIcon"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="18dp"
+            android:alpha="0.4"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/scan_card"
             android:visibility="gone"
-            tools:ignore="RtlHardcoded"
-            android:contentDescription="@string/scan_card" />
+            app:srcCompat="?attr/cameraIcon"
+            tools:ignore="RtlHardcoded" />
 
     </FrameLayout>
 
     <TextView
         android:id="@+id/card_number_helper_text"
-        android:layout_below="@id/card_number_layout"
         style="@style/Widget.Judo.Text.Hint"
+        android:layout_below="@id/card_number_layout"
         android:text="@string/long_card_number"
         tools:visibility="visible" />
 
