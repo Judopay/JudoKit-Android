@@ -10,7 +10,7 @@
             android:theme="@style/Theme.Judo.Light.DarkActionBar" />
         <activity
             android:name="com.judopay.PreAuthActivity"
-            android:theme="@style/Theme.Judo.Light.DarkActionBar" />
+            android:theme="@style/Theme.Judo" />
         <activity
             android:name="com.judopay.RegisterCardActivity"
             android:theme="@style/Theme.Judo.Light.DarkActionBar" />

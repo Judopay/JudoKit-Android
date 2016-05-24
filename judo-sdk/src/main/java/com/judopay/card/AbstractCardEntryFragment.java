@@ -8,10 +8,16 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
+import com.judopay.R;
+import com.judopay.arch.ThemeUtil;
 import com.judopay.model.Card;
 import com.judopay.validation.ValidationManager;
 
+import static com.judopay.arch.TextUtil.isEmpty;
+
 public abstract class AbstractCardEntryFragment extends Fragment implements ValidationManager.OnChangeListener {
+
+    private String buttonLabel;
 
     JudoOptions options;
     CardEntryListener cardEntryListener;
@@ -32,6 +38,19 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
                 onInitialize(options);
             }
         }
+    }
+
+    public void setButtonLabel(String buttonLabel) {
+        this.buttonLabel = buttonLabel;
+    }
+
+    protected String getButtonLabel() {
+        String label = ThemeUtil.getStringAttr(getActivity(), getClass(), R.attr.buttonLabel);
+
+        if (!isEmpty(label)) {
+            return label;
+        }
+        return buttonLabel;
     }
 
     void hideKeyboard() {

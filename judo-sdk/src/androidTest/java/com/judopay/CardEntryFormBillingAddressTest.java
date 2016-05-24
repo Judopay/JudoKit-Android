@@ -54,7 +54,7 @@ public class CardEntryFormBillingAddressTest {
         onData(allOf(is(instanceOf(String.class)), is(Country.OTHER)))
                 .perform(click());
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.button))
                 .check(matches(isEnabled()));
 
         onView(withId(R.id.post_code_edit_text))

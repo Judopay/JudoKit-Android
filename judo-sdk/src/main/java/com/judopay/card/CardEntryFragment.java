@@ -20,6 +20,7 @@ import android.widget.Spinner;
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
 import com.judopay.R;
+import com.judopay.arch.ThemeUtil;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardNetwork;
@@ -65,7 +66,6 @@ import static com.judopay.arch.TextUtil.isEmpty;
  * .setJudoId("123456")
  * .setAmount("1.99")
  * .setCurrency(Currency.USD)
- * .setButtonLabel("Perform payment")
  * .setSecureServerMessageShown(true)
  * .build())
  * fragment.setArguments(args);
@@ -73,7 +73,7 @@ import static com.judopay.arch.TextUtil.isEmpty;
  */
 public final class CardEntryFragment extends AbstractCardEntryFragment {
 
-    private Button paymentButton;
+    private Button button;
     private Spinner countrySpinner;
     private SecurityCodeEntryView securityCodeEntryView;
     private CardNumberEntryView cardNumberEntryView;
@@ -97,7 +97,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_card_entry, container, false);
 
-        paymentButton = (Button) view.findViewById(R.id.payment_button);
+        button = (Button) view.findViewById(R.id.button);
 
         securityCodeEntryView = (SecurityCodeEntryView) view.findViewById(R.id.security_code_entry_view);
         cardNumberEntryView = (CardNumberEntryView) view.findViewById(R.id.card_number_entry_view);
@@ -119,8 +119,10 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
     @Override
     protected void onInitialize(final JudoOptions options) {
-        if (options.getButtonLabel() != null) {
-            paymentButton.setText(options.getButtonLabel());
+        String buttonLabel = getButtonLabel();
+
+        if (!isEmpty(buttonLabel)) {
+            this.button.setText(buttonLabel);
         }
 
         if (options.getCardScanningIntent() != null) {
@@ -150,7 +152,8 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             securityCodeEntryView.requestFocus();
         }
 
-        if (options.isSecureServerMessageShown()) {
+        boolean secureServerMessageShown = ThemeUtil.getBooleanAttr(getActivity(), getClass(), R.attr.secureServerMessageShown);
+        if (secureServerMessageShown) {
             secureServerText.setVisibility(View.VISIBLE);
         } else {
             secureServerText.setVisibility(View.GONE);
@@ -158,7 +161,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
         initializeCountry();
         initializeValidators();
-        initializePayButton();
+        initializeButton();
     }
 
     @Override
@@ -337,8 +340,8 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         return startDateValidator;
     }
 
-    private void initializePayButton() {
-        paymentButton.setOnClickListener(new SingleClickOnClickListener() {
+    private void initializeButton() {
+        button.setOnClickListener(new SingleClickOnClickListener() {
             @Override
             public void doClick() {
                 hideKeyboard();
@@ -359,8 +362,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+            public void onNothingSelected(AdapterView<?> parent) { }
         });
     }
 
@@ -402,6 +404,6 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
     @Override
     public void onValidate(boolean valid) {
-        paymentButton.setVisibility(valid ? View.VISIBLE : View.GONE);
+        button.setVisibility(valid ? View.VISIBLE : View.GONE);
     }
 }

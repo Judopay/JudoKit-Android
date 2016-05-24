@@ -76,7 +76,7 @@ public class SuccessfulTokenPaymentTest {
                         onView(withId(R.id.security_code_edit_text))
                                 .perform(typeText("452"));
 
-                        onView(withId(R.id.payment_button))
+                        onView(withId(R.id.button))
                                 .perform(click());
 
                         assertThat(resultCode(paymentActivity), is(Judo.RESULT_SUCCESS));
@@ -116,7 +116,7 @@ public class SuccessfulTokenPaymentTest {
                         onView(withId(R.id.post_code_edit_text))
                                 .perform(typeText("TR148PA"));
 
-                        onView(withId(R.id.payment_button))
+                        onView(withId(R.id.button))
                                 .perform(click());
 
                         assertThat(resultCode(tokenPaymentActivity), is(Judo.RESULT_SUCCESS));

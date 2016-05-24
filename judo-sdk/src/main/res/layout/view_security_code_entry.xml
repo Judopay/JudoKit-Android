@@ -11,7 +11,7 @@
 
     <com.judopay.view.JudoTextInputLayout
         android:id="@+id/security_code_input_layout"
-        style="@style/EntryLayout">
+        style="@style/Widget.Judo.EntryLayout">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/security_code_edit_text"
@@ -22,7 +22,7 @@
 
     <TextView
         android:id="@+id/security_code_helper_text"
-        style="@style/judo_hint_text"
+        style="@style/Widget.Judo.Text.Hint"
         android:layout_below="@id/security_code_input_layout"
         android:text="@string/security_code"
         tools:visibility="visible" />
