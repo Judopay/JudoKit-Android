@@ -23,11 +23,6 @@
             </intent-filter>
         </activity>
 
-        <activity xmlns:tools="http://schemas.android.com/tools"
-            android:name="com.judopay.PreAuthActivity"
-            android:theme="@style/Theme.Judo"
-            tools:replace="theme" />
-
         <activity android:name=".settings.SettingsActivity" />
 
     </application>
