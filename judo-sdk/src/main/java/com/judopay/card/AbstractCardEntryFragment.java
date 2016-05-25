@@ -61,6 +61,6 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
         }
     }
 
-    public abstract void setCard(Card card);
+    public void setCard(Card card) { }
 
 }

@@ -124,11 +124,6 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
     }
 
     @Override
-    public void setCard(Card card) {
-        // todo - throw error that not supported
-    }
-
-    @Override
     public void onValidate(boolean valid) {
         paymentButton.setVisibility(valid ? View.VISIBLE : View.GONE);
     }
