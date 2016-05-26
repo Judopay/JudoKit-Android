@@ -22,11 +22,11 @@ public class RegisterCardFragment extends JudoFragment implements TransactionCal
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        JudoOptions options = getArguments().getParcelable(JUDO_OPTIONS);
-        checkJudoOptionsExtras(options.getConsumerRef(), options.getJudoId());
+        Judo judo = getArguments().getParcelable(JUDO_OPTIONS);
+        checkJudoOptionsExtras(judo.getConsumerRef(), judo.getJudoId());
 
         if (this.presenter == null) {
-            JudoApiService apiService = Judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
+            JudoApiService apiService = judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
             this.presenter = new RegisterCardPresenter(this, apiService, new AndroidScheduler(), new Gson());
         }
     }
@@ -34,21 +34,6 @@ public class RegisterCardFragment extends JudoFragment implements TransactionCal
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_register_card, container, false);
-    }
-
-    @Override
-    JudoOptions getJudoOptions() {
-        Bundle args = getArguments();
-        JudoOptions options = args.getParcelable(Judo.JUDO_OPTIONS);
-
-        return new JudoOptions.Builder()
-                .setJudoId(options.getJudoId())
-                .setConsumerRef(options.getConsumerRef())
-                .setCardNumber(options.getCardNumber())
-                .setExpiryMonth(options.getExpiryMonth())
-                .setExpiryYear(options.getExpiryYear())
-                .setCustomLayout(options.getCustomLayout())
-                .build();
     }
 
     @Override
@@ -60,7 +45,7 @@ public class RegisterCardFragment extends JudoFragment implements TransactionCal
 
     @Override
     public void onSubmit(Card card) {
-        JudoOptions options = getJudoOptions();
+        Judo options = getJudoOptions();
         presenter.performRegisterCard(card, options);
     }
 

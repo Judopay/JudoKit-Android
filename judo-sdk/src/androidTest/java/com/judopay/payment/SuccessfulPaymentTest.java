@@ -7,12 +7,10 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
-import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,16 +32,12 @@ public class SuccessfulPaymentTest {
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
-    @Before
-    public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.UAT);
-    }
-
     @Test
     public void shouldBeSuccessfulPaymentWhenValidVisaEntered() {
-        Judo.setAvsEnabled(false);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        PaymentActivity activity = activityTestRule.launchActivity(getIntent());
+        PaymentActivity activity = activityTestRule.launchActivity(intent);
 
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -62,10 +56,10 @@ public class SuccessfulPaymentTest {
 
     @Test
     public void shouldBeSuccessfulPaymentWhenValidMaestroEntered() {
-        Judo.setMaestroEnabled(true);
-        Judo.setAvsEnabled(false);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        PaymentActivity activity = activityTestRule.launchActivity(getIntent());
+        PaymentActivity activity = activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000005462"));
@@ -90,10 +84,12 @@ public class SuccessfulPaymentTest {
 
     @Test
     public void shouldBeSuccessfulPaymentWhenValidAmexEntered() {
-        Judo.setAmexEnabled(true);
-        Judo.setAvsEnabled(false);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .setAmexEnabled(true)
+                .build());
 
-        PaymentActivity activity = activityTestRule.launchActivity(getIntent());
+        PaymentActivity activity = activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"));
@@ -112,9 +108,13 @@ public class SuccessfulPaymentTest {
 
     @Test
     public void shouldBeSuccessfulPaymentWhenValidVisaEnteredAndAvsEnabled() {
-        Judo.setAvsEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .setAmexEnabled(true)
+                .setAvsEnabled(true)
+                .build());
 
-        PaymentActivity activity = activityTestRule.launchActivity(getIntent());
+        PaymentActivity activity = activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -136,10 +136,13 @@ public class SuccessfulPaymentTest {
 
     @Test
     public void shouldBeSuccessfulPaymentWhenValidMaestroEnteredAndAvsEnabled() {
-        Judo.setMaestroEnabled(true);
-        Judo.setAvsEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .setAvsEnabled(true)
+                .setMaestroEnabled(true)
+                .build());
 
-        PaymentActivity activity = activityTestRule.launchActivity(getIntent());
+        PaymentActivity activity = activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000005462"));
@@ -167,10 +170,13 @@ public class SuccessfulPaymentTest {
 
     @Test
     public void shouldBeSuccessfulPaymentWhenValidAmexEnteredAndAvsEnabled() {
-        Judo.setAvsEnabled(true);
-        Judo.setAmexEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .setAvsEnabled(true)
+                .setAmexEnabled(true)
+                .build());
 
-        PaymentActivity activity = activityTestRule.launchActivity(getIntent());
+        PaymentActivity activity = activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"));
@@ -190,17 +196,13 @@ public class SuccessfulPaymentTest {
         assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
     }
 
-    private Intent getIntent() {
-        Intent intent = new Intent();
-
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+    private Judo.Builder getJudo() {
+        return new Judo.Builder()
+                .setEnvironment(Judo.UAT)
                 .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString())
-                .build());
-
-        return intent;
+                .setConsumerRef(UUID.randomUUID().toString());
     }
 
 }

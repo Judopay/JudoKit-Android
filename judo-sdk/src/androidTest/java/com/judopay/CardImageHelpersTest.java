@@ -5,13 +5,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import com.judopay.Judo;
-import com.judopay.JudoOptions;
-import com.judopay.PaymentActivity;
-import com.judopay.R;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,14 +29,12 @@ public class CardImageHelpersTest {
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
-    @Before
-    public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.UAT);
-    }
-
     @Test
     public void shouldShowCardTypeImageAsOpaqueAfterCardNumberEntered() {
-        activityTestRule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976"));
@@ -55,7 +48,10 @@ public class CardImageHelpersTest {
 
     @Test
     public void shouldShowSecurityCodeImageAsTranslucentWhenNotFocused() {
-        activityTestRule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(click());
@@ -66,7 +62,10 @@ public class CardImageHelpersTest {
 
     @Test
     public void shouldShowCardImageAsTranslucentAfterDeletedAndNotFocused() {
-        activityTestRule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976"))
@@ -79,16 +78,13 @@ public class CardImageHelpersTest {
                 .check(matches(isTranslucent()));
     }
 
-    private Intent getIntent() {
-        Intent intent = new Intent();
-
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+    private Judo.Builder getJudo() {
+        return new Judo.Builder()
+                .setEnvironment(Judo.UAT)
                 .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString())
-                .build());
-        return intent;
+                .setConsumerRef(UUID.randomUUID().toString());
     }
 
 }

@@ -7,7 +7,6 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
-import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.model.Currency;
@@ -34,7 +33,10 @@ public class PaymentFormErrorMessageTest {
 
     @Test
     public void shouldDisplayErrorMessageWhenInvalidCardNumberEntered() {
-        activityTestRule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        activityTestRule.launchActivity(intent);
 
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .perform(typeText("1234000000001234"));
@@ -45,7 +47,10 @@ public class PaymentFormErrorMessageTest {
 
     @Test
     public void shouldDisplayErrorMessageWhenPastExpiryDateEntered() {
-        activityTestRule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("0101"));
@@ -56,7 +61,10 @@ public class PaymentFormErrorMessageTest {
 
     @Test
     public void shouldDisplayErrorWhenExpiryDateMoreThanTenYearsInFuture() {
-        activityTestRule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1230"));
@@ -67,9 +75,10 @@ public class PaymentFormErrorMessageTest {
 
     @Test
     public void shouldDisplayErrorMessageWhenFutureStartDateEntered() {
-        Judo.setMaestroEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000005462"));
@@ -83,9 +92,10 @@ public class PaymentFormErrorMessageTest {
 
     @Test
     public void shouldDisplayErrorMessageWhenStartDateOlderThanTenYearsEntered() {
-        Judo.setMaestroEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000005462"));
@@ -99,9 +109,12 @@ public class PaymentFormErrorMessageTest {
 
     @Test
     public void shouldDisplayAmexNotSupportedWhenAmexEnteredAndNotEnabled() {
-        Judo.setAmexEnabled(false);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .setAmexEnabled(false)
+                .build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("3400"));
@@ -112,9 +125,12 @@ public class PaymentFormErrorMessageTest {
 
     @Test
     public void shouldDisplayMaestroNotSupportedWhenMaestroEnteredAndNotEnabled() {
-        Judo.setMaestroEnabled(false);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .setMaestroEnabled(false)
+                .build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759"));
@@ -123,16 +139,14 @@ public class PaymentFormErrorMessageTest {
                 .check(matches(isDisplayed()));
     }
 
-    private Intent getIntent() {
-        Intent intent = new Intent();
-
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+    private Judo.Builder getJudo() {
+        return new Judo.Builder()
+                .setEnvironment(Judo.UAT)
                 .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString())
-                .build());
-        return intent;
+                .setAvsEnabled(true)
+                .setConsumerRef(UUID.randomUUID().toString());
     }
 
 }

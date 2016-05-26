@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.judopay.Judo;
-import com.judopay.JudoOptions;
 import com.judopay.R;
 import com.judopay.arch.ThemeUtil;
 import com.judopay.model.Card;
@@ -19,23 +18,23 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
 
     private String buttonLabel;
 
-    JudoOptions options;
+    Judo judo;
     CardEntryListener cardEntryListener;
 
     public void setCardEntryListener(CardEntryListener cardEntryListener) {
         this.cardEntryListener = cardEntryListener;
     }
 
-    protected abstract void onInitialize(JudoOptions options);
+    protected abstract void onInitialize(Judo options);
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         if (getArguments() != null && getArguments().containsKey(Judo.JUDO_OPTIONS)) {
-            this.options = getArguments().getParcelable(Judo.JUDO_OPTIONS);
-            if (options != null) {
-                onInitialize(options);
+            this.judo = getArguments().getParcelable(Judo.JUDO_OPTIONS);
+            if (judo != null) {
+                onInitialize(judo);
             }
         }
     }

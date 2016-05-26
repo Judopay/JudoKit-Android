@@ -43,15 +43,13 @@ public class ThreeDSecureTest {
 
     private WebViewIdlingResource webViewIdlingResource;
 
-    @Before
-    public void setEnvironment() {
-        Judo.setEnvironment(Judo.UAT);
-    }
-
     @Test
     @Ignore
     public void shouldShow3dSecureDialog() {
-        final PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        PreAuthActivity activity = activityTestRule.launchActivity(intent);
 
         registerWebViewIdlingResource(activity);
 
@@ -96,16 +94,12 @@ public class ThreeDSecureTest {
         Espresso.unregisterIdlingResources(webViewIdlingResource);
     }
 
-    private Intent getIntent() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+    private Judo.Builder getJudo() {
+        return new Judo.Builder()
+                .setEnvironment(Judo.UAT)
                 .setJudoId("100915867")
-                .setAmount("0.01")
-                .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString())
-                .build());
-
-        return intent;
+                .setAmount("0.99")
+                .setCurrency(Currency.GBP);
     }
 
 }

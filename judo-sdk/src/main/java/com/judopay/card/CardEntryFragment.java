@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.judopay.Judo;
-import com.judopay.JudoOptions;
 import com.judopay.R;
 import com.judopay.arch.ThemeUtil;
 import com.judopay.model.Address;
@@ -51,18 +50,17 @@ import java.util.List;
 import rx.functions.Action1;
 import rx.observables.ConnectableObservable;
 
-import static com.judopay.Judo.isAvsEnabled;
 import static com.judopay.arch.TextUtil.isEmpty;
 
 /**
  * A Fragment that allows for card details to be entered by the user, with validation checks
  * on input data.
- * Configuration options can be provided by passing a {@link JudoOptions} instance in the fragment
+ * Configuration options can be provided by passing a {@link Judo} instance in the fragment
  * arguments, identified using the {@link Judo#JUDO_OPTIONS} as a key, e.g.
  * <code>
  * CardEntryFragment fragment = new CardEntryFragment();
  * Bundle args = new Bundle();
- * args.putParcelable(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+ * args.putParcelable(Judo.JUDO_OPTIONS, new Judo.Builder()
  * .setJudoId("123456")
  * .setAmount("1.99")
  * .setCurrency(Currency.USD)
@@ -118,7 +116,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    protected void onInitialize(final JudoOptions options) {
+    protected void onInitialize(final Judo options) {
         String buttonLabel = getButtonLabel();
 
         if (!isEmpty(buttonLabel)) {
@@ -134,7 +132,8 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
                         IntentSender intentSender = cardScanningIntent.getIntentSender();
                         try {
                             getActivity().startIntentSenderForResult(intentSender, Judo.CARD_SCANNING_REQUEST, null, 0, 0, 0);
-                        } catch (IntentSender.SendIntentException ignore) { }
+                        } catch (IntentSender.SendIntentException ignore) {
+                        }
                     }
                 }
             });
@@ -166,7 +165,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
     @Override
     public void setCard(Card card) {
-        if(!isEmpty(card.getCardNumber())) {
+        if (!isEmpty(card.getCardNumber())) {
             int cardType = CardNetwork.fromCardNumber(card.getCardNumber());
 
             cardNumberEntryView.setCardType(cardType, false);
@@ -174,7 +173,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             cardNumberEntryView.setScanCardListener(null);
             expiryDateEntryView.requestFocus();
 
-            if(!isEmpty(card.getExpiryDate())) {
+            if (!isEmpty(card.getExpiryDate())) {
                 expiryDateEntryView.setText(card.getExpiryDate());
                 securityCodeEntryView.getEditText().requestFocus();
             }
@@ -201,11 +200,11 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
                     securityCodeTextInputEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(CardNetwork.securityCodeLength(cardType))});
                 }
 
-                if (Judo.isMaestroEnabled() && cardType == CardNetwork.MAESTRO) {
+                if (judo.isMaestroEnabled() && cardType == CardNetwork.MAESTRO) {
                     validationManager.addValidator(issueNumberValidator);
                     validationManager.addValidator(startDateValidator);
 
-                    if (isAvsEnabled()) {
+                    if (judo.isAvsEnabled()) {
                         avsValidationManager.addValidator(startDateValidator);
                         avsValidationManager.addValidator(issueNumberValidator);
                     }
@@ -214,7 +213,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
                     validationManager.removeValidator(startDateValidator);
                     validationManager.removeValidator(issueNumberValidator);
 
-                    if (isAvsEnabled()) {
+                    if (judo.isAvsEnabled()) {
                         avsValidationManager.removeValidator(startDateValidator);
                         avsValidationManager.removeValidator(issueNumberValidator);
                     }
@@ -223,7 +222,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             }
         });
 
-        CardNumberValidator cardNumberValidator = new CardNumberValidator(cardNumberEntryView.getEditText(), Judo.isMaestroEnabled(), Judo.isAmexEnabled());
+        CardNumberValidator cardNumberValidator = new CardNumberValidator(cardNumberEntryView.getEditText(), judo.isMaestroEnabled(), judo.isAmexEnabled());
         cardNumberValidator.onValidate()
                 .subscribe(new Action1<Validation>() {
                     @Override
@@ -251,7 +250,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
         validationManager = new ValidationManager(validators, this);
 
-        if (isAvsEnabled()) {
+        if (judo.isAvsEnabled()) {
             ArrayList<Validator> avsValidators = new ArrayList<>();
             avsValidators.add(cardNumberValidator);
             avsValidators.add(expiryDateValidator);
@@ -362,7 +361,8 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
     }
 
@@ -375,7 +375,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         Address.Builder addressBuilder = new Address.Builder()
                 .setPostCode(postcodeEntryView.getText());
 
-        if (isAvsEnabled()) {
+        if (judo.isAvsEnabled()) {
             addressBuilder.setCountryCode(Country.codeFromCountry((String) countrySpinner.getSelectedItem()));
         }
 
@@ -391,12 +391,12 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         }
     }
 
-    public static CardEntryFragment newInstance(JudoOptions judoOptions, CardEntryListener listener) {
+    public static CardEntryFragment newInstance(Judo judo, CardEntryListener listener) {
         CardEntryFragment cardEntryFragment = new CardEntryFragment();
         cardEntryFragment.setCardEntryListener(listener);
 
         Bundle arguments = new Bundle();
-        arguments.putParcelable(Judo.JUDO_OPTIONS, judoOptions);
+        arguments.putParcelable(Judo.JUDO_OPTIONS, judo);
         cardEntryFragment.setArguments(arguments);
 
         return cardEntryFragment;

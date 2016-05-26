@@ -12,7 +12,7 @@ class PreAuthPresenter extends BasePresenter {
         super(callbacks, judoApiService, scheduler, gson);
     }
 
-    public void performPreAuth(Card card, JudoOptions options) {
+    public void performPreAuth(Card card, Judo options) {
         this.loading = true;
 
         transactionCallbacks.showLoading();
@@ -42,7 +42,7 @@ class PreAuthPresenter extends BasePresenter {
     }
 
 
-    public void performTokenPreAuth(Card card, JudoOptions options) {
+    public void performTokenPreAuth(Card card, Judo options) {
         this.loading = true;
         transactionCallbacks.showLoading();
 

@@ -35,9 +35,12 @@ public class CardEntryFormBillingAddressTest {
 
     @Test
     public void shouldDisableBillingPostcodeWhenOtherCountrySelected() {
-        Judo.setAvsEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .setAvsEnabled(true)
+                .build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -61,16 +64,13 @@ public class CardEntryFormBillingAddressTest {
                 .check(matches(isDisabled()));
     }
 
-    private Intent getIntent() {
-        Intent intent = new Intent();
-
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+    private Judo.Builder getJudo() {
+        return new Judo.Builder()
+                .setEnvironment(Judo.UAT)
                 .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString())
-                .build());
-        return intent;
+                .setConsumerRef(UUID.randomUUID().toString());
     }
 
 }

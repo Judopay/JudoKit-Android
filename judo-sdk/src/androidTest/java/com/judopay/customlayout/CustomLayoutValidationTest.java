@@ -6,13 +6,11 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
-import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.model.Currency;
 import com.judopay.model.CustomLayout;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,15 +32,12 @@ public class CustomLayoutValidationTest {
     @Rule
     public ActivityTestRule<PaymentActivity> testRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
-    @Before
-    public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.UAT);
-    }
-
     @Test
     public void shouldDisplaySubmitButtonWhenFormValid() {
-        Judo.setAvsEnabled(false);
-        testRule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        testRule.launchActivity(intent);
 
         onView(withId(R.id.payment_button))
                 .check(matches(isNotDisplayed()));
@@ -62,7 +57,10 @@ public class CustomLayoutValidationTest {
 
     @Test
     public void shouldDisplayCardNumberError() {
-        testRule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        testRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("1111111111111111"));
@@ -76,7 +74,10 @@ public class CustomLayoutValidationTest {
 
     @Test
     public void shouldDisplayExpiryDateError() {
-        testRule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        testRule.launchActivity(intent);
 
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1215"));
@@ -88,12 +89,13 @@ public class CustomLayoutValidationTest {
                 .check(matches(isNotDisplayed()));
     }
 
-    private Intent getIntent() {
-        Intent intent = new Intent();
-
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+    private Judo.Builder getJudo() {
+        return new Judo.Builder()
+                .setEnvironment(Judo.UAT)
                 .setJudoId("100915867")
                 .setAmount("0.99")
+                .setCurrency(Currency.GBP)
+                .setConsumerRef(UUID.randomUUID().toString())
                 .setCustomLayout(new CustomLayout.Builder()
                         .cardNumberInput(R.id.card_number_input_layout)
                         .expiryDateInput(R.id.expiry_date_input_layout)
@@ -103,12 +105,7 @@ public class CustomLayoutValidationTest {
                         .countrySpinner(R.id.country_spinner)
                         .postcodeInput(R.id.post_code_input_layout)
                         .submitButton(R.id.payment_button)
-                        .build(R.layout.custom_layout))
-                .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString())
-                .build());
-
-        return intent;
+                        .build(R.layout.custom_layout));
     }
 
 }

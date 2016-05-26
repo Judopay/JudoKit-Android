@@ -1,6 +1,5 @@
 package com.judopay.samples;
 
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.judopay.Judo;
-import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;
 import com.judopay.PreAuthActivity;
 import com.judopay.RegisterCardActivity;
@@ -24,6 +22,7 @@ import static com.judopay.Judo.JUDO_RECEIPT;
 import static com.judopay.Judo.PAYMENT_REQUEST;
 import static com.judopay.Judo.PRE_AUTH_REQUEST;
 import static com.judopay.Judo.REGISTER_CARD_REQUEST;
+import static com.judopay.Judo.SANDBOX;
 import static com.judopay.Judo.TOKEN_PAYMENT_REQUEST;
 import static com.judopay.Judo.TOKEN_PRE_AUTH_REQUEST;
 
@@ -31,7 +30,6 @@ import static com.judopay.Judo.TOKEN_PRE_AUTH_REQUEST;
  * Sample app screen containing buttons to activate the different features of the Judo SDK
  * <br>
  * Update the {@link #JUDO_ID} string with the Judo ID from the judo website: http://www.judopay.com,
- * Update the {@link #API_TOKEN} and {@link #API_SECRET} with your credentials and call {@link com.judopay.Judo#setup} to initialize the SDK.
  */
 @SuppressWarnings({"UnusedParameters", "WrongConstant"})
 public class MainActivity extends BaseActivity {
@@ -49,27 +47,29 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Judo.setup(API_TOKEN, API_SECRET, Judo.SANDBOX);
         setConfiguration();
     }
 
     public void performPayment(View view) {
         Intent intent = new Intent(this, PaymentActivity.class);
-        JudoOptions judoOptions = new JudoOptions.Builder()
+        Judo judo = new Judo.Builder()
+                .setApiToken(API_TOKEN)
+                .setApiSecret(API_SECRET)
+                .setEnvironment(SANDBOX)
                 .setJudoId(JUDO_ID)
                 .setAmount(AMOUNT)
                 .setCurrency(getCurrency())
                 .setConsumerRef(CONSUMER_REF)
                 .build();
 
-        intent.putExtra(Judo.JUDO_OPTIONS, judoOptions);
+        intent.putExtra(Judo.JUDO_OPTIONS, judo);
         startActivityForResult(intent, PAYMENT_REQUEST);
     }
 
     public void performPreAuth(View view) {
         Intent intent = new Intent(this, PreAuthActivity.class);
 
-        JudoOptions options = new JudoOptions.Builder()
+        Judo options = new Judo.Builder()
                 .setJudoId(JUDO_ID)
                 .setAmount(AMOUNT)
                 .setCurrency(getCurrency())
@@ -82,7 +82,7 @@ public class MainActivity extends BaseActivity {
 
     public void performRegisterCard(View view) {
         Intent intent = new Intent(this, RegisterCardActivity.class);
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+        intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
                 .setJudoId(JUDO_ID)
                 .setConsumerRef(CONSUMER_REF)
                 .build());
@@ -95,7 +95,7 @@ public class MainActivity extends BaseActivity {
         if (receipt != null) {
             Intent intent = new Intent(this, PreAuthActivity.class);
 
-            intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+            intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
                     .setJudoId(JUDO_ID)
                     .setAmount(AMOUNT)
                     .setCurrency(getCurrency())
@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity {
         if (receipt != null) {
             Intent intent = new Intent(this, PaymentActivity.class);
 
-            intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+            intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
                     .setJudoId(JUDO_ID)
                     .setAmount(AMOUNT)
                     .setCurrency(getCurrency())
@@ -201,7 +201,7 @@ public class MainActivity extends BaseActivity {
     private void startTokenPayment(Receipt receipt) {
         Intent intent = new Intent(this, PaymentActivity.class);
 
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+        intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
                 .setJudoId(JUDO_ID)
                 .setAmount(AMOUNT)
                 .setCurrency(getCurrency())
@@ -247,9 +247,9 @@ public class MainActivity extends BaseActivity {
 
     private void setConfiguration() {
         SettingsPrefs settingsPrefs = new SettingsPrefs(this);
-        Judo.setAvsEnabled(settingsPrefs.isAvsEnabled());
-        Judo.setMaestroEnabled(settingsPrefs.isMaestroEnabled());
-        Judo.setAmexEnabled(settingsPrefs.isAmexEnabled());
+//        Judo.setAvsEnabled(settingsPrefs.isAvsEnabled());
+//        Judo.setMaestroEnabled(settingsPrefs.isMaestroEnabled());
+//        Judo.setAmexEnabled(settingsPrefs.isAmexEnabled());
     }
 
 }

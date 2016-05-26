@@ -12,7 +12,6 @@ import com.judopay.model.Currency;
 import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -23,15 +22,16 @@ import rx.functions.Func1;
 @RunWith(AndroidJUnit4.class)
 public class PreAuthCollectionTest {
 
-    @Before
-    public void setEnvironment() {
-        Judo.setEnvironment(Judo.UAT);
-    }
-
     @Test
     public void shouldPreAuthAndCollect() {
         Context context = InstrumentationRegistry.getContext();
-        final JudoApiService apiService = Judo.getApiService(context);
+
+        Judo judo = new Judo.Builder()
+                .setJudoId("100915867")
+                .setEnvironment(Judo.UAT)
+                .build();
+
+        final JudoApiService apiService = judo.getApiService(context);
 
         PaymentRequest paymentRequest = new PaymentRequest.Builder()
                 .setJudoId("100915867")

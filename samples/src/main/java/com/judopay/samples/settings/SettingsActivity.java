@@ -96,9 +96,9 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void setupJudo() {
-        Judo.setAmexEnabled(settingsPrefs.isAmexEnabled());
-        Judo.setAvsEnabled(settingsPrefs.isAvsEnabled());
-        Judo.setMaestroEnabled(settingsPrefs.isMaestroEnabled());
+//        Judo.setAmexEnabled(settingsPrefs.isAmexEnabled());
+//        Judo.setAvsEnabled(settingsPrefs.isAvsEnabled());
+//        Judo.setMaestroEnabled(settingsPrefs.isMaestroEnabled());
     }
 
     private void saveCurrency(String currency) {

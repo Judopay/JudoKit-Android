@@ -6,13 +6,11 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
-import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.RegisterCardActivity;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,12 +32,6 @@ public class ActivityTitleTest {
     @Rule
     public ActivityTestRule<RegisterCardActivity> registerCardTestRule = new ActivityTestRule<>(RegisterCardActivity.class, false, false);
 
-
-    @Before
-    public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.UAT);
-    }
-
     @Test
     public void shouldDisplayEnterCardDetailsActivityTitle() {
         activityTestRule.launchActivity(getIntent());
@@ -59,7 +51,8 @@ public class ActivityTitleTest {
     private Intent getIntent() {
         Intent intent = new Intent();
 
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+        intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
+                .setEnvironment(Judo.UAT)
                 .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)

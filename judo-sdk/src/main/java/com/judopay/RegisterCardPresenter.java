@@ -11,7 +11,7 @@ class RegisterCardPresenter extends BasePresenter {
         super(callbacks, apiService, scheduler, gson);
     }
 
-    void performRegisterCard(Card card, JudoOptions options) {
+    void performRegisterCard(Card card, Judo options) {
         this.loading = true;
 
         transactionCallbacks.showLoading();

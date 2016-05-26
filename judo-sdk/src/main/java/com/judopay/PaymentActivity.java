@@ -10,7 +10,7 @@ import android.os.Bundle;
  *
  * <pre class="prettyprint">
  * Intent intent = new Intent(this, PaymentActivity.class);
- * intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+ * intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
  * .setJudoId("1234567")
  * .setCurrency(Currency.GBP)
  * .setAmount("1.99")
@@ -18,7 +18,7 @@ import android.os.Bundle;
  * .build());
  * startActivityForResult(intent, PAYMENT_REQUEST);
  * </pre>
- * See {@link JudoOptions} for the full list of supported options
+ * See {@link Judo} for the full list of supported options
  */
 public final class PaymentActivity extends JudoActivity {
 

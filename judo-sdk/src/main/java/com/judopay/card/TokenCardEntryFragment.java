@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.judopay.Judo;
-import com.judopay.JudoOptions;
 import com.judopay.R;
 import com.judopay.arch.ThemeUtil;
 import com.judopay.model.Address;
@@ -36,8 +35,6 @@ import java.util.List;
 
 import rx.functions.Action1;
 import rx.observables.ConnectableObservable;
-
-import static com.judopay.Judo.isAvsEnabled;
 
 public class TokenCardEntryFragment extends AbstractCardEntryFragment {
 
@@ -70,11 +67,11 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    protected void onInitialize(JudoOptions options) {
+    protected void onInitialize(Judo options) {
         CardToken cardToken = options.getCardToken();
 
         if (cardToken == null) {
-            throw new IllegalArgumentException("CardToken is required in JudoOptions for TokenCardEntryFragment");
+            throw new IllegalArgumentException("CardToken is required in Judo for TokenCardEntryFragment");
         }
 
         boolean secureServerMessageShown = ThemeUtil.getBooleanAttr(getActivity(), getClass(), R.attr.secureServerMessageShown);
@@ -95,7 +92,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         countrySpinner.setAdapter(new CountrySpinnerAdapter(getActivity(), Country.avsCountries()));
     }
 
-    private void initializeInputs(CardToken cardToken, JudoOptions options) {
+    private void initializeInputs(CardToken cardToken, Judo options) {
         cardNumberEntryView.setCardType(cardToken.getType(), false);
         securityCodeEntryView.setHelperText(R.string.please_reenter_the_card_security_code);
         securityCodeEntryView.setCardType(cardToken.getType(), false);
@@ -116,7 +113,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
                 .subscribe(new Action1<Validation>() {
                     @Override
                     public void call(Validation validation) {
-                        if (isAvsEnabled()) {
+                        if (judo.isAvsEnabled()) {
                             countryAndPostcodeContainer.setVisibility(validation.isValid() ? View.VISIBLE : View.GONE);
                         }
                     }
@@ -127,7 +124,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
 
         validationManager = new ValidationManager(validators, this);
 
-        if (isAvsEnabled()) {
+        if (judo.isAvsEnabled()) {
             initializeAvsValidators(validatorViews);
         }
 
@@ -201,7 +198,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         Address.Builder addressBuilder = new Address.Builder()
                 .setPostCode(postcodeEntryView.getText());
 
-        if (isAvsEnabled()) {
+        if (judo.isAvsEnabled()) {
             addressBuilder.setCountryCode(Country.codeFromCountry((String) countrySpinner.getSelectedItem()));
         }
 
@@ -212,12 +209,12 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         }
     }
 
-    public static TokenCardEntryFragment newInstance(JudoOptions judoOptions, CardEntryListener listener) {
+    public static TokenCardEntryFragment newInstance(Judo judo, CardEntryListener listener) {
         TokenCardEntryFragment cardEntryFragment = new TokenCardEntryFragment();
         cardEntryFragment.setCardEntryListener(listener);
 
         Bundle arguments = new Bundle();
-        arguments.putParcelable(Judo.JUDO_OPTIONS, judoOptions);
+        arguments.putParcelable(Judo.JUDO_OPTIONS, judo);
         cardEntryFragment.setArguments(arguments);
 
         return cardEntryFragment;
