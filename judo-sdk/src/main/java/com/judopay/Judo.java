@@ -31,6 +31,7 @@ public class Judo {
     public static final int RESULT_ERROR = 1;
     public static final int RESULT_TOKEN_EXPIRED = 3;
     public static final int RESULT_CONNECTION_ERROR = 5;
+    public static final int RESULT_CARD_SCANNED = 6;
 
     public static final int JUDO_REQUEST = 100;
 
@@ -40,9 +41,11 @@ public class Judo {
     public static final int PRE_AUTH_REQUEST = 201;
     public static final int TOKEN_PRE_AUTH_REQUEST = 202;
     public static final int REGISTER_CARD_REQUEST = 301;
+    public static final int CARD_SCANNING_REQUEST = 801;
 
-    public static final String JUDO_OPTIONS = "JudoPay-options";
-    public static final String JUDO_RECEIPT = "JudoPay-receipt";
+    public static final String JUDO_CARD = "JudoCard";
+    public static final String JUDO_OPTIONS = "JudoOptions";
+    public static final String JUDO_RECEIPT = "JudoReceipt";
 
     private static final int UI_CLIENT_MODE_CUSTOM_UI = 0;
     public static final int UI_CLIENT_MODE_JUDO_SDK = 1;

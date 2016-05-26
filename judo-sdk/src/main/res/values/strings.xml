@@ -60,4 +60,5 @@
     <!-- manifest api configuration meta-data names, do not change -->
     <string name="judo_api_token">judo_api_token</string>
     <string name="judo_api_secret">judo_api_secret</string>
+    <string name="scan_card">scan card</string>
 </resources>
