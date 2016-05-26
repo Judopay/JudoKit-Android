@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
@@ -18,6 +19,7 @@ import static com.judopay.arch.TextUtil.isEmpty;
 public abstract class AbstractCardEntryFragment extends Fragment implements ValidationManager.OnChangeListener {
 
     private String buttonLabel;
+    protected Button submitButton;
 
     JudoOptions options;
     CardEntryListener cardEntryListener;
@@ -34,23 +36,31 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
 
         if (getArguments() != null && getArguments().containsKey(Judo.JUDO_OPTIONS)) {
             this.options = getArguments().getParcelable(Judo.JUDO_OPTIONS);
+
             if (options != null) {
+                setButtonLabelText(getButtonLabel());
                 onInitialize(options);
             }
         }
     }
 
+    private void setButtonLabelText(String buttonLabel) {
+        if (this.submitButton != null && !isEmpty(buttonLabel)) {
+            this.submitButton.setText(buttonLabel);
+        }
+    }
+
     public void setButtonLabel(String buttonLabel) {
         this.buttonLabel = buttonLabel;
+        setButtonLabelText(buttonLabel);
     }
 
     protected String getButtonLabel() {
-        String label = ThemeUtil.getStringAttr(getActivity(), getClass(), R.attr.buttonLabel);
-
-        if (!isEmpty(label)) {
-            return label;
+        if (!isEmpty(buttonLabel)) {
+            return buttonLabel;
         }
-        return buttonLabel;
+
+        return ThemeUtil.getStringAttr(getActivity(), getClass(), R.attr.buttonLabel);
     }
 
     void hideKeyboard() {
