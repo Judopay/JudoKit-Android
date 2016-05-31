@@ -85,7 +85,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
     }
 
     @Override
-    protected void onInitialize(Judo options) {
+    protected void onInitialize(Judo judo) {
         String buttonLabel = getButtonLabel();
         if (!isEmpty(buttonLabel)) {
             this.paymentButton.setText(buttonLabel);
@@ -93,13 +93,13 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
 
         initializeInputTexts();
         initializeCountry();
-        initializeValidators();
-        initializePayButton();
+        initializeValidators(judo);
+        initializePayButton(judo);
 
-        if (options.getCardNumber() != null) {
+        if (judo.getCardNumber() != null) {
             EditText cardNumberEditText = cardNumberTextInput.getEditText();
             if (cardNumberEditText != null) {
-                cardNumberEditText.setText(options.getCardNumber());
+                cardNumberEditText.setText(judo.getCardNumber());
             }
 
             EditText expiryDateEditText = expiryDateTextInput.getEditText();
@@ -108,10 +108,10 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
             }
         }
 
-        if (options.getExpiryYear() != null && options.getExpiryMonth() != null) {
+        if (judo.getExpiryYear() != null && judo.getExpiryMonth() != null) {
             EditText expiryDateEditText = expiryDateTextInput.getEditText();
             if (expiryDateEditText != null) {
-                expiryDateEditText.setText(getString(R.string.expiry_date_format, options.getExpiryMonth(), options.getExpiryYear()));
+                expiryDateEditText.setText(getString(R.string.expiry_date_format, judo.getExpiryMonth(), judo.getExpiryYear()));
             }
 
             EditText securityCodeEditText = securityCodeTextInput.getEditText();
@@ -193,7 +193,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         editText.setKeyListener(DigitsKeyListener.getInstance(acceptedChars));
     }
 
-    private void initializeValidators() {
+    private void initializeValidators(final Judo judo) {
         List<Validator> validators = new ArrayList<>();
         ArrayList<Pair<Validator, View>> validatorViews = new ArrayList<>();
 
@@ -232,7 +232,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
             });
         }
 
-        CardNumberValidator cardNumberValidator = getCardNumberValidator();
+        CardNumberValidator cardNumberValidator = getCardNumberValidator(judo);
         validators.add(cardNumberValidator);
         validatorViews.add(new Pair<Validator, View>(cardNumberValidator, cardNumberTextInput.getEditText()));
 
@@ -316,7 +316,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         observable.connect();
     }
 
-    private CardNumberValidator getCardNumberValidator() {
+    private CardNumberValidator getCardNumberValidator(Judo judo) {
         CardNumberValidator cardNumberValidator = new CardNumberValidator(cardNumberTextInput.getEditText(), judo.isMaestroEnabled(), judo.isAmexEnabled());
         cardNumberValidator.onValidate()
                 .subscribe(new Action1<Validation>() {
@@ -377,17 +377,17 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         return startDateValidator;
     }
 
-    private void initializePayButton() {
+    private void initializePayButton(final Judo judo) {
         paymentButton.setOnClickListener(new SingleClickOnClickListener() {
             @Override
             public void doClick() {
                 hideKeyboard();
-                submitForm();
+                submitForm(judo);
             }
         });
     }
 
-    private void submitForm() {
+    private void submitForm(Judo judo) {
         Card.Builder cardBuilder = new Card.Builder()
                 .setCardNumber(getText(cardNumberTextInput))
                 .setExpiryDate(getText(expiryDateTextInput))

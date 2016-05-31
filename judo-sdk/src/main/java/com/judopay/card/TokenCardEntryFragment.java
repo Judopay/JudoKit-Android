@@ -66,8 +66,8 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    protected void onInitialize(Judo options) {
-        CardToken cardToken = options.getCardToken();
+    protected void onInitialize(Judo judo) {
+        CardToken cardToken = judo.getCardToken();
 
         if (cardToken == null) {
             throw new IllegalArgumentException("CardToken is required in Judo for TokenCardEntryFragment");
@@ -80,11 +80,11 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
             secureServerText.setVisibility(View.GONE);
         }
 
-        initializeInputs(cardToken, options);
-        initializePayButton();
+        initializeInputs(cardToken, judo);
+        initializePayButton(judo);
         initializeCountry();
 
-        initializeValidators(cardToken);
+        initializeValidators(cardToken, judo);
     }
 
     private void initializeCountry() {
@@ -102,7 +102,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         cardNumberEntryView.setTokenCard(options.getCardToken());
     }
 
-    private void initializeValidators(CardToken cardToken) {
+    private void initializeValidators(CardToken cardToken, final Judo judo) {
         List<Validator> validators = new ArrayList<>();
         List<Pair<Validator, View>> validatorViews = new ArrayList<>();
 
@@ -178,17 +178,17 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         submitButton.setVisibility(valid ? View.VISIBLE : View.GONE);
     }
 
-    private void initializePayButton() {
+    private void initializePayButton(final Judo judo) {
         submitButton.setOnClickListener(new SingleClickOnClickListener() {
             @Override
             public void doClick() {
                 hideKeyboard();
-                submitForm();
+                submitForm(judo);
             }
         });
     }
 
-    private void submitForm() {
+    private void submitForm(Judo judo) {
         Card.Builder cardBuilder = new Card.Builder()
                 .setCardNumber(cardNumberEntryView.getText())
                 .setExpiryDate(expiryDateEntryView.getText())

@@ -24,8 +24,7 @@ import static com.judopay.model.LuhnCheck.isValid;
 
 /**
  * The wrapper for providing data to Activity and Fragments classes in the SDK (e.g. PaymentActivity).
- * This is preferable to using the individual Extras names defined in {@link Judo} as it provides
- * type safety.
+
  * Use the {@link Judo.Builder class for constructing} an instance of {@link Judo}.
  * When calling an Activity with an Intent extra or a Fragment using an arguments Bundle,
  * use {@link Judo#JUDO_OPTIONS} as the extra or argument name.
@@ -94,9 +93,7 @@ public class Judo implements Parcelable {
     private String mobileNumber;
     private CustomLayout customLayout;
     private PendingIntent cardScanningIntent;
-    private static String customEnvironmentHost;
-
-    private static boolean avsEnabled;
+    private String customEnvironmentHost;
 
     private Judo() {}
 
@@ -206,31 +203,27 @@ public class Judo implements Parcelable {
     }
 
     @SuppressWarnings("SameParameterValue")
-    public static void setEnvironment(@Environment int environment) {
+    public void setEnvironment(@Environment int environment) {
         if (environment != CUSTOM)
             customEnvironmentHost = null;
 
-        Judo.environment = environment;
+        this.environment = environment;
+    }
+
+    public void setEnvironmentHost(String customEnvironmentHost) {
+        setEnvironment(CUSTOM);
+        this.customEnvironmentHost = customEnvironmentHost;
     }
 
     public String getApiToken() {
         return apiToken;
     }
 
-    public static void setEnvironmentHost(String customEnvironmentHost) {
-        setEnvironment(CUSTOM);
-        Judo.customEnvironmentHost = customEnvironmentHost;
-    }
-
-    public static String getApiToken() {
-        return Judo.apiToken;
-    }
-
-    public static String getApiSecret() {
+    public String getApiSecret() {
         return apiSecret;
     }
 
-    public static boolean isSslPinningEnabled() {
+    public boolean isSslPinningEnabled() {
         return sslPinningEnabled && environment != CUSTOM && environment != UAT;
     }
 

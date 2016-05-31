@@ -20,14 +20,14 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
     private String buttonLabel;
     protected Button submitButton;
 
-    Judo judo;
+    private Judo judo;
     CardEntryListener cardEntryListener;
 
     public void setCardEntryListener(CardEntryListener cardEntryListener) {
         this.cardEntryListener = cardEntryListener;
     }
 
-    protected abstract void onInitialize(Judo options);
+    protected abstract void onInitialize(Judo judo);
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

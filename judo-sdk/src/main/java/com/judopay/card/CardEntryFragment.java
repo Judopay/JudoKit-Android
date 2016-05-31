@@ -115,31 +115,32 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    protected void onInitialize(final JudoOptions options) {
-        if (options.getCardScanningIntent() != null) {
+    protected void onInitialize(final Judo judo) {
+        if (judo.getCardScanningIntent() != null) {
             cardNumberEntryView.setScanCardListener(new CardNumberEntryView.ScanCardButtonListener() {
                 @Override
                 public void onClick() {
-                    PendingIntent cardScanningIntent = options.getCardScanningIntent();
+                    PendingIntent cardScanningIntent = judo.getCardScanningIntent();
                     if (cardScanningIntent != null) {
                         IntentSender intentSender = cardScanningIntent.getIntentSender();
                         try {
                             getActivity().startIntentSenderForResult(intentSender, Judo.CARD_SCANNING_REQUEST, null, 0, 0, 0);
-                        } catch (IntentSender.SendIntentException ignore) { }
+                        } catch (IntentSender.SendIntentException ignore) {
+                        }
                     }
                 }
             });
         }
 
-        if (options.getCardNumber() != null) {
-            int cardType = CardNetwork.fromCardNumber(options.getCardNumber());
+        if (judo.getCardNumber() != null) {
+            int cardType = CardNetwork.fromCardNumber(judo.getCardNumber());
             cardNumberEntryView.setCardType(cardType, false);
-            cardNumberEntryView.setText(options.getCardNumber());
+            cardNumberEntryView.setText(judo.getCardNumber());
             expiryDateEntryView.requestFocus();
         }
 
-        if (options.getExpiryYear() != null && options.getExpiryMonth() != null) {
-            expiryDateEntryView.setText(getString(R.string.expiry_date_format, options.getExpiryMonth(), options.getExpiryYear()));
+        if (judo.getExpiryYear() != null && judo.getExpiryMonth() != null) {
+            expiryDateEntryView.setText(getString(R.string.expiry_date_format, judo.getExpiryMonth(), judo.getExpiryYear()));
             securityCodeEntryView.requestFocus();
         }
 
@@ -151,8 +152,8 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         }
 
         initializeCountry();
-        initializeValidators();
-        initializeButton();
+        initializeValidators(judo);
+        initializeButton(judo);
     }
 
     @Override
@@ -174,7 +175,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         }
     }
 
-    private void initializeValidators() {
+    private void initializeValidators(final Judo judo) {
         List<Validator> validators = new ArrayList<>();
         List<Pair<Validator, View>> validatorViews = new ArrayList<>();
 
@@ -331,12 +332,12 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         return startDateValidator;
     }
 
-    private void initializeButton() {
+    private void initializeButton(final Judo judo) {
         submitButton.setOnClickListener(new SingleClickOnClickListener() {
             @Override
             public void doClick() {
                 hideKeyboard();
-                submitForm();
+                submitForm(judo);
             }
         });
     }
@@ -357,7 +358,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         });
     }
 
-    private void submitForm() {
+    private void submitForm(Judo judo) {
         Card.Builder cardBuilder = new Card.Builder()
                 .setCardNumber(cardNumberEntryView.getText())
                 .setExpiryDate(expiryDateEntryView.getText())

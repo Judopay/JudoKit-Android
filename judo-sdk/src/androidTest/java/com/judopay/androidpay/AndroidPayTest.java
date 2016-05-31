@@ -13,11 +13,11 @@ import com.judopay.model.Receipt;
 import com.judopay.model.Wallet;
 import com.judopay.receipts.RxHelpers;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import static com.judopay.TestSubscribers.assertResponseSuccessful;
 import static com.judopay.TestSubscribers.fail;
@@ -37,15 +37,11 @@ public class AndroidPayTest {
      */
     private static final int ENVIRONMENT_TEST = 3;
 
-    @Before
-    public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.UAT);
-    }
-
     @Test
     public void shouldReturnSuccessWhenAndroidPayPayment() {
+        Judo judo = getJudo().build();
         Context context = InstrumentationRegistry.getContext();
-        JudoApiService apiService = Judo.getApiService(context);
+        JudoApiService apiService = judo.getApiService(context);
 
         AndroidPayRequest androidPayRequest = getAndroidPayRequest();
 
@@ -56,8 +52,9 @@ public class AndroidPayTest {
 
     @Test
     public void shouldReturnSuccessWhenAndroidPayPreAuth() {
+        Judo judo = getJudo().build();
         Context context = InstrumentationRegistry.getContext();
-        JudoApiService apiService = Judo.getApiService(context);
+        JudoApiService apiService = judo.getApiService(context);
 
         AndroidPayRequest androidPayRequest = getAndroidPayRequest();
         apiService.androidPayPreAuth(androidPayRequest)
@@ -84,4 +81,14 @@ public class AndroidPayTest {
                 .setCurrency(Currency.GBP)
                 .build();
     }
+
+    private Judo.Builder getJudo() {
+        return new Judo.Builder()
+                .setEnvironment(Judo.UAT)
+                .setJudoId("100915867")
+                .setAmount("0.99")
+                .setCurrency(Currency.GBP)
+                .setConsumerRef(UUID.randomUUID().toString());
+    }
+
 }
