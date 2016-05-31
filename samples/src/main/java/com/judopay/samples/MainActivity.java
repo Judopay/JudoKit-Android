@@ -78,10 +78,7 @@ public class MainActivity extends BaseActivity {
 
     public void performRegisterCard(View view) {
         Intent intent = new Intent(this, RegisterCardActivity.class);
-        intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
-                .setJudoId(JUDO_ID)
-                .setConsumerRef(CONSUMER_REF)
-                .build());
+        intent.putExtra(Judo.JUDO_OPTIONS, judo);
 
         startActivityForResult(intent, REGISTER_CARD_REQUEST);
     }
