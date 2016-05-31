@@ -13,14 +13,6 @@
         android:theme="@style/Theme.Judo.Light.DarkActionBar"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
-        <meta-data
-            android:name="com.google.android.gms.wallet.api.enabled"
-            android:value="true" />
-
         <activity
             android:name=".MainActivity"
             android:label="@string/judopay"
@@ -32,8 +24,6 @@
         </activity>
 
         <activity android:name=".settings.SettingsActivity" />
-
-        <activity android:name=".AndroidPayActivity" />
 
     </application>
 

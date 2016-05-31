@@ -3,19 +3,12 @@ package com.judopay.samples;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.BooleanResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.wallet.Wallet;
-import com.google.android.gms.wallet.WalletConstants;
 import com.judopay.Judo;
 import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;
@@ -40,7 +33,7 @@ import static com.judopay.Judo.TOKEN_PRE_AUTH_REQUEST;
  * Update the {@link #API_TOKEN} and {@link #API_SECRET} with your credentials and call {@link com.judopay.Judo#setup} to initialize the SDK.
  */
 @SuppressWarnings({"UnusedParameters", "WrongConstant"})
-public class MainActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends BaseActivity {
 
     private static final String AMOUNT = "0.99";
 
@@ -49,9 +42,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     private static final String API_SECRET = "<API_SECRET>";
 
     private static final String CONSUMER_REF = "AndroidSdkSampleConsumerRef";
-
-    private boolean androidPayAvailable;
-    private GoogleApiClient googleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,32 +88,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                 .build());
 
         startActivityForResult(intent, REGISTER_CARD_REQUEST);
-
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Wallet.API, new Wallet.WalletOptions.Builder()
-                        .setEnvironment(WalletConstants.ENVIRONMENT_TEST)
-                        .build())
-                .enableAutoManage(this, this)
-                .build();
-
-        checkAndroidPayAvailable();
-    }
-
-    public void performAndroidPayPayment(View view) {
-        if (androidPayAvailable) {
-            startActivity(new Intent(MainActivity.this, AndroidPayActivity.class));
-        } else {
-            Toast.makeText(MainActivity.this, R.string.please_add_android_pay_card, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void checkAndroidPayAvailable() {
-        Wallet.Payments.isReadyToPay(googleApiClient).setResultCallback(new ResultCallback<BooleanResult>() {
-            @Override
-            public void onResult(@NonNull BooleanResult result) {
-                androidPayAvailable = result.getStatus().isSuccess() && result.getValue();
-            }
-        });
     }
 
     public void performTokenPreAuth(View v) {
@@ -278,9 +242,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                 break;
         }
     }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
 
     private void setConfiguration() {
         SettingsPrefs settingsPrefs = new SettingsPrefs(this);
