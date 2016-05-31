@@ -22,8 +22,6 @@ import android.os.Bundle;
  */
 public final class PaymentActivity extends JudoActivity {
 
-    private PaymentFragment paymentFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,20 +29,13 @@ public final class PaymentActivity extends JudoActivity {
         setTitle(R.string.payment);
 
         if (savedInstanceState == null) {
-            paymentFragment = new PaymentFragment();
-            paymentFragment.setArguments(getIntent().getExtras());
+            fragment = new PaymentFragment();
+            fragment.setArguments(getIntent().getExtras());
 
             getFragmentManager()
                     .beginTransaction()
-                    .add(android.R.id.content, paymentFragment)
+                    .add(android.R.id.content, fragment)
                     .commit();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (paymentFragment != null && !paymentFragment.isPaymentInProgress()) {
-            super.onBackPressed();
         }
     }
 

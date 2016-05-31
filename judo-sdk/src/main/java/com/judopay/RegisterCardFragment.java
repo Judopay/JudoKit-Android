@@ -14,7 +14,7 @@ import com.judopay.model.Card;
 
 import static com.judopay.Judo.JUDO_OPTIONS;
 
-public class RegisterCardFragment extends BaseFragment implements TransactionCallbacks, CardEntryListener {
+public class RegisterCardFragment extends JudoFragment implements TransactionCallbacks, CardEntryListener {
 
     private RegisterCardPresenter presenter;
 
@@ -37,21 +37,6 @@ public class RegisterCardFragment extends BaseFragment implements TransactionCal
     }
 
     @Override
-    JudoOptions getJudoOptions() {
-        Bundle args = getArguments();
-        JudoOptions options = args.getParcelable(Judo.JUDO_OPTIONS);
-
-        return new JudoOptions.Builder()
-                .setJudoId(options.getJudoId())
-                .setConsumerRef(options.getConsumerRef())
-                .setCardNumber(options.getCardNumber())
-                .setExpiryMonth(options.getExpiryMonth())
-                .setExpiryYear(options.getExpiryYear())
-                .setCustomLayout(options.getCustomLayout())
-                .build();
-    }
-
-    @Override
     AbstractCardEntryFragment createCardEntryFragment() {
         CardEntryFragment cardEntryFragment = CardEntryFragment.newInstance(getJudoOptions(), this);
         cardEntryFragment.setButtonLabel(getString(R.string.add_card));
@@ -61,11 +46,11 @@ public class RegisterCardFragment extends BaseFragment implements TransactionCal
     @Override
     public void onSubmit(Card card) {
         JudoOptions options = getJudoOptions();
-
         presenter.performRegisterCard(card, options);
     }
 
-    public boolean isPaymentInProgress() {
+    @Override
+    boolean isTransactionInProgress() {
         return this.presenter.loading;
     }
 

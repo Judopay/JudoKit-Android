@@ -1,4 +1,4 @@
-package com.judopay;
+package com.judopay.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +12,10 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.webkit.WebView;
 
+import com.judopay.Judo;
+import com.judopay.JudoOptions;
+import com.judopay.PreAuthActivity;
+import com.judopay.R;
 import com.judopay.model.Currency;
 import com.judopay.util.WebViewIdlingResource;
 
@@ -64,7 +68,7 @@ public class ThreeDSecureTest {
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("341"));
 
-        onView(withId(R.id.button))
+        onView(withId(R.id.payment_button))
                 .perform(click());
 
         onView(withId(R.id.three_d_secure_web_view))

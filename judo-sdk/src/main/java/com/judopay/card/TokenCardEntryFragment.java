@@ -47,11 +47,9 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
     private PostcodeEntryView postcodeEntryView;
     private Spinner countrySpinner;
     private View secureServerText;
-    private Button submitButton;
     private View countryAndPostcodeContainer;
 
     private ValidationManager validationManager;
-    private SecurityCodeValidator securityCodeValidator;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -72,7 +70,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
 
     @Override
     protected void onInitialize(JudoOptions options) {
-        CardToken cardToken = judoOptions.getCardToken();
+        CardToken cardToken = options.getCardToken();
 
         if (cardToken == null) {
             throw new IllegalArgumentException("CardToken is required in JudoOptions for TokenCardEntryFragment");
@@ -85,7 +83,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
             secureServerText.setVisibility(View.GONE);
         }
 
-        initializeInputs(cardToken);
+        initializeInputs(cardToken, options);
         initializePayButton();
         initializeCountry();
 
@@ -96,22 +94,22 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         countrySpinner.setAdapter(new CountrySpinnerAdapter(getActivity(), Country.avsCountries()));
     }
 
-    private void initializeInputs(CardToken cardToken) {
+    private void initializeInputs(CardToken cardToken, JudoOptions options) {
         cardNumberEntryView.setCardType(cardToken.getType(), false);
         securityCodeEntryView.setHelperText(R.string.please_reenter_the_card_security_code);
         securityCodeEntryView.setCardType(cardToken.getType(), false);
         securityCodeEntryView.requestFocus();
 
-        expiryDateEntryView.setExpiryDate(judoOptions.getCardToken().getFormattedEndDate());
+        expiryDateEntryView.setExpiryDate(options.getCardToken().getFormattedEndDate());
         expiryDateEntryView.setEnabled(false);
-        cardNumberEntryView.setTokenCard(judoOptions.getCardToken());
+        cardNumberEntryView.setTokenCard(options.getCardToken());
     }
 
     private void initializeValidators(CardToken cardToken) {
         List<Validator> validators = new ArrayList<>();
         List<Pair<Validator, View>> validatorViews = new ArrayList<>();
 
-        securityCodeValidator = new SecurityCodeValidator(securityCodeEntryView.getEditText());
+        SecurityCodeValidator securityCodeValidator = new SecurityCodeValidator(securityCodeEntryView.getEditText());
         securityCodeValidator.setCardType(cardToken.getType());
         securityCodeValidator.onValidate()
                 .subscribe(new Action1<Validation>() {

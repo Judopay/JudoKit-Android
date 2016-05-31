@@ -45,7 +45,6 @@ import rx.observables.ConnectableObservable;
 
 import static com.judopay.Judo.JUDO_OPTIONS;
 import static com.judopay.Judo.isAvsEnabled;
-import static com.judopay.arch.TextUtil.isEmpty;
 
 public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragment {
 
@@ -88,20 +87,15 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
 
     @Override
     protected void onInitialize(JudoOptions options) {
-        String buttonLabel = getButtonLabel();
-        if (!isEmpty(buttonLabel)) {
-            this.paymentButton.setText(buttonLabel);
-        }
-
         initializeInputTexts();
         initializeCountry();
         initializeValidators();
         initializePayButton();
 
-        if (judoOptions.getCardNumber() != null) {
+        if (options.getCardNumber() != null) {
             EditText cardNumberEditText = cardNumberTextInput.getEditText();
             if (cardNumberEditText != null) {
-                cardNumberEditText.setText(judoOptions.getCardNumber());
+                cardNumberEditText.setText(options.getCardNumber());
             }
 
             EditText expiryDateEditText = expiryDateTextInput.getEditText();
@@ -110,10 +104,10 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
             }
         }
 
-        if (judoOptions.getExpiryYear() != null && judoOptions.getExpiryMonth() != null) {
+        if (options.getExpiryYear() != null && options.getExpiryMonth() != null) {
             EditText expiryDateEditText = expiryDateTextInput.getEditText();
             if (expiryDateEditText != null) {
-                expiryDateEditText.setText(getString(R.string.expiry_date_format, judoOptions.getExpiryMonth(), judoOptions.getExpiryYear()));
+                expiryDateEditText.setText(getString(R.string.expiry_date_format, options.getExpiryMonth(), options.getExpiryYear()));
             }
 
             EditText securityCodeEditText = securityCodeTextInput.getEditText();

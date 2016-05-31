@@ -9,7 +9,7 @@ import com.judopay.model.Card;
 
 import static com.judopay.Judo.JUDO_OPTIONS;
 
-public final class PaymentFragment extends BaseFragment {
+public final class PaymentFragment extends JudoFragment {
 
     private PaymentPresenter presenter;
 
@@ -42,7 +42,8 @@ public final class PaymentFragment extends BaseFragment {
         }
     }
 
-    public boolean isPaymentInProgress() {
+    @Override
+    boolean isTransactionInProgress() {
         return this.presenter.loading;
     }
 }
