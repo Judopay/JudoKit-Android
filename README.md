@@ -34,7 +34,7 @@ intent.putExtra(Judo.JUDO_OPTIONS, judo);
 startActivityForResult(intent, PAYMENT_REQUEST);
 ```
 ##### 4. Check the payment result
-In the Activity that calls the judo SDK, override the ```onActivityResult``` method to receive the payment Receipt:
+In the Activity that calls the judo SDK, override the ```onActivityResult``` method to receive the payment receipt:
 ```java
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
