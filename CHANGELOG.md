@@ -1,5 +1,14 @@
 # Judo Android SDK change log
 
+## [5.4](https://github.com/judopay/Judo-Android/tree/5.4) (2016-05-31)
+
+**Features:**
+- Android Pay is now supported by Judo - use Judo's SDK to process payments made with Android Pay, simplifying the checkout experience for your users. See our [guide on getting started with Android Pay](https://github.com/JudoPay/Judo-AndroidPay-Sample).
+- Card scanning can now be launched directly from the card entry form - when a card scanning intent is provided a camera icon will appear next to the card number input field, allowing users to easily input their card number using the device's camera.
+
+**Bugs fixed:**
+- Register card now shows the correct 'Add card' text on the submit button when registering a card.
+
 ## [5.3](https://github.com/judopay/Judo-Android/tree/5.3) (2016-05-11)
 
 **Features:**
