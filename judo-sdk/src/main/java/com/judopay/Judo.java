@@ -20,7 +20,7 @@ public class Judo {
     @Retention(RetentionPolicy.SOURCE)
     public @interface UiClientMode { }
 
-    @IntDef({LIVE, SANDBOX, UAT})
+    @IntDef({LIVE, SANDBOX, CUSTOM, UAT})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Environment {
     }
@@ -52,12 +52,15 @@ public class Judo {
 
     public static final int LIVE = 0;
     public static final int SANDBOX = 1;
+    public static final int CUSTOM = 2;
     public static final int UAT = 3;
 
     private static String apiToken;
     private static String apiSecret;
 
     private static int environment;
+
+    private static String customEnvironmentHost;
 
     private static boolean avsEnabled;
 
@@ -88,7 +91,15 @@ public class Judo {
 
     @SuppressWarnings("SameParameterValue")
     public static void setEnvironment(@Environment int environment) {
+        if (environment != CUSTOM)
+            customEnvironmentHost = null;
+
         Judo.environment = environment;
+    }
+
+    public static void setEnvironmentHost(String customEnvironmentHost) {
+        setEnvironment(CUSTOM);
+        Judo.customEnvironmentHost = customEnvironmentHost;
     }
 
     public static String getApiToken() {
@@ -100,7 +111,7 @@ public class Judo {
     }
 
     public static boolean isSslPinningEnabled() {
-        return sslPinningEnabled && environment != UAT;
+        return sslPinningEnabled && environment != CUSTOM && environment != UAT;
     }
 
     public static void setSslPinningEnabled(boolean sslPinningEnabled) {
@@ -143,6 +154,8 @@ public class Judo {
         switch (environment) {
             case SANDBOX:
                 return context.getString(R.string.api_host_sandbox);
+            case CUSTOM:
+                return customEnvironmentHost;
             case UAT:
                 return context.getString(R.string.api_host_uat);
             default:
