@@ -54,7 +54,7 @@ public class PaymentPresenterTest {
         PaymentPresenter presenter = new PaymentPresenter(transactionCallbacks, apiService, scheduler, gson);
         when(apiService.payment(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performPayment(getCard(), new JudoOptions.Builder()
+        presenter.performPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef("consumerRef")
@@ -69,7 +69,7 @@ public class PaymentPresenterTest {
         PaymentPresenter presenter = new PaymentPresenter(transactionCallbacks, apiService, scheduler, gson);
         when(apiService.payment(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>error(new UnknownHostException()));
 
-        presenter.performPayment(getCard(), new JudoOptions.Builder()
+        presenter.performPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef("consumerRef")
@@ -90,7 +90,7 @@ public class PaymentPresenterTest {
 
         when(apiService.payment(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>error(exception));
 
-        presenter.performPayment(getCard(), new JudoOptions.Builder()
+        presenter.performPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef("consumerRef")
@@ -110,7 +110,7 @@ public class PaymentPresenterTest {
 
         when(apiService.payment(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>error(exception));
 
-        presenter.performPayment(getCard(), new JudoOptions.Builder()
+        presenter.performPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef("consumerRef")
@@ -128,7 +128,7 @@ public class PaymentPresenterTest {
         when(cardToken.getToken()).thenReturn("cardToken");
 
         String consumer = "consumerRef";
-        presenter.performTokenPayment(getCard(), new JudoOptions.Builder()
+        presenter.performTokenPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setCardToken(cardToken)
                 .setConsumerRef(consumer)
                 .setAmount("1.99")

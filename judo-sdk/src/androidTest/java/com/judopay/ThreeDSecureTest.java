@@ -1,4 +1,4 @@
-package com.judopay.ui;
+package com.judopay;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,19 +13,15 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.webkit.WebView;
 
 import com.judopay.Judo;
-import com.judopay.JudoOptions;
 import com.judopay.PreAuthActivity;
 import com.judopay.R;
 import com.judopay.model.Currency;
 import com.judopay.util.WebViewIdlingResource;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.unregisterIdlingResources;
@@ -47,15 +43,13 @@ public class ThreeDSecureTest {
 
     private WebViewIdlingResource webViewIdlingResource;
 
-    @Before
-    public void setEnvironment() {
-        Judo.setEnvironment(Judo.UAT);
-    }
-
     @Test
     @Ignore
     public void shouldShow3dSecureDialog() {
-        final PreAuthActivity activity = activityTestRule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        PreAuthActivity activity = activityTestRule.launchActivity(intent);
 
         registerWebViewIdlingResource(activity);
 
@@ -100,16 +94,12 @@ public class ThreeDSecureTest {
         Espresso.unregisterIdlingResources(webViewIdlingResource);
     }
 
-    private Intent getIntent() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+    private Judo.Builder getJudo() {
+        return new Judo.Builder()
+                .setEnvironment(Judo.UAT)
                 .setJudoId("100915867")
-                .setAmount("0.01")
-                .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString())
-                .build());
-
-        return intent;
+                .setAmount("0.99")
+                .setCurrency(Currency.GBP);
     }
 
 }

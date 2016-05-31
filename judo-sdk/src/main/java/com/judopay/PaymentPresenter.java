@@ -12,7 +12,7 @@ class PaymentPresenter extends BasePresenter {
         super(callbacks, judoApiService, scheduler, gson);
     }
 
-    public void performPayment(Card card, JudoOptions options) {
+    public void performPayment(Card card, Judo options) {
         this.loading = true;
 
         transactionCallbacks.showLoading();
@@ -41,7 +41,7 @@ class PaymentPresenter extends BasePresenter {
                 .subscribe(callback(), error());
     }
 
-    public void performTokenPayment(Card card, JudoOptions options) {
+    public void performTokenPayment(Card card, Judo options) {
         this.loading = true;
         transactionCallbacks.showLoading();
 

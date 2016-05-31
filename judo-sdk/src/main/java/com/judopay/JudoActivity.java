@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import com.judopay.arch.ThemeUtil;
 import com.judopay.error.RootedDeviceNotPermittedError;
 import com.judopay.model.Card;
 
+import static com.judopay.Judo.JUDO_OPTIONS;
 import static com.judopay.Judo.RESULT_CARD_SCANNED;
 import static com.judopay.Judo.RESULT_CONNECTION_ERROR;
 import static com.judopay.Judo.RESULT_DECLINED;
@@ -42,7 +44,9 @@ abstract class JudoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (RootDetector.isRooted() && !Judo.isRootedDevicesAllowed()) {
+        Judo judo = getIntent().getParcelableExtra(JUDO_OPTIONS);
+
+        if (RootDetector.isRooted() && !judo.isRootedDevicesAllowed()) {
             throw new RootedDeviceNotPermittedError();
         }
 

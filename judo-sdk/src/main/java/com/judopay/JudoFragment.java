@@ -6,7 +6,6 @@ import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +49,7 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
         }
 
         // check if token has expired
-        JudoOptions options = getArguments().getParcelable(JUDO_OPTIONS);
+        Judo options = getArguments().getParcelable(JUDO_OPTIONS);
         if (options != null && options.getCardToken() != null && options.getCardToken().isExpired()) {
             PendingIntent pendingResult = getActivity().createPendingResult(Judo.JUDO_REQUEST, new Intent(), 0);
             try {
@@ -64,7 +63,7 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     void checkJudoOptionsExtras(Object... objects) {
         for (Object object : objects) {
             if (object == null) {
-                throw new IllegalArgumentException("JudoOptions must contain all required fields");
+                throw new IllegalArgumentException("Judo must contain all required fields");
             }
         }
     }
@@ -191,7 +190,7 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     }
 
     AbstractCardEntryFragment createCardEntryFragment() {
-        JudoOptions options = getArguments().getParcelable(Judo.JUDO_OPTIONS);
+        Judo options = getArguments().getParcelable(Judo.JUDO_OPTIONS);
 
         if (options != null) {
             if (options.getCustomLayout() != null) {
@@ -205,7 +204,7 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
         return CardEntryFragment.newInstance(options, this);
     }
 
-    JudoOptions getJudoOptions() {
+    Judo getJudoOptions() {
         Bundle args = getArguments();
         return args.getParcelable(Judo.JUDO_OPTIONS);
     }

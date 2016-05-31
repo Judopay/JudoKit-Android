@@ -17,11 +17,11 @@ public final class PreAuthFragment extends JudoFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        JudoOptions options = getArguments().getParcelable(JUDO_OPTIONS);
-        checkJudoOptionsExtras(options.getAmount(), options.getJudoId(), options.getCurrency(), options.getConsumerRef());
+        Judo judo = getArguments().getParcelable(JUDO_OPTIONS);
+        checkJudoOptionsExtras(judo.getAmount(), judo.getJudoId(), judo.getCurrency(), judo.getConsumerRef());
 
         if (this.presenter == null) {
-            JudoApiService apiService = Judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
+            JudoApiService apiService = judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
             this.presenter = new PreAuthPresenter(this, apiService, new AndroidScheduler(), new Gson());
         }
     }
@@ -34,7 +34,7 @@ public final class PreAuthFragment extends JudoFragment {
 
     @Override
     public void onSubmit(Card card) {
-        JudoOptions options = getJudoOptions();
+        Judo options = getJudoOptions();
 
         if(options.getCardToken() != null) {
             presenter.performTokenPreAuth(card, options);

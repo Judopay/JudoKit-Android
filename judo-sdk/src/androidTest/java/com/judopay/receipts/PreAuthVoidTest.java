@@ -23,15 +23,16 @@ import rx.functions.Func1;
 @RunWith(AndroidJUnit4.class)
 public class PreAuthVoidTest {
 
-    @Before
-    public void setEnvironment() {
-        Judo.setEnvironment(Judo.UAT);
-    }
-
     @Test
     public void shouldPreAuthAndVoidTransaction() {
         Context context = InstrumentationRegistry.getContext();
-        final JudoApiService apiService = Judo.getApiService(context);
+
+        Judo judo = new Judo.Builder()
+                .setJudoId("100915867")
+                .setEnvironment(Judo.UAT)
+                .build();
+
+        final JudoApiService apiService = judo.getApiService(context);
 
         PaymentRequest paymentRequest = new PaymentRequest.Builder()
                 .setJudoId("100915867")

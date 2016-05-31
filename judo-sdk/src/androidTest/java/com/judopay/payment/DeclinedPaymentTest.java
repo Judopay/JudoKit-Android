@@ -6,7 +6,6 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
-import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.model.Currency;
@@ -34,10 +33,10 @@ public class DeclinedPaymentTest {
 
     @Test
     public void shouldDeclineInvalidVisaCard() {
-        Judo.setAvsEnabled(false);
-        Judo.setMaestroEnabled(false);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4221690000004963"));
@@ -60,10 +59,10 @@ public class DeclinedPaymentTest {
 
     @Test
     public void shouldDeclineInvalidMaestroCard() {
-        Judo.setAvsEnabled(false);
-        Judo.setMaestroEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000009076"));
@@ -92,10 +91,10 @@ public class DeclinedPaymentTest {
 
     @Test
     public void shouldDeclineInvalidAmexCard() {
-        Judo.setAmexEnabled(true);
-        Judo.setAvsEnabled(false);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000150358074"));
@@ -118,9 +117,12 @@ public class DeclinedPaymentTest {
 
     @Test
     public void shouldDeclineInvalidVisaCardWhenAvsEnabled() {
-        Judo.setAvsEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .setAvsEnabled(true)
+                .build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4221690000004963"));
@@ -146,10 +148,12 @@ public class DeclinedPaymentTest {
 
     @Test
     public void shouldDeclineInvalidMaestroWhenAvsEnabled() {
-        Judo.setAvsEnabled(true);
-        Judo.setMaestroEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .setAvsEnabled(true)
+                .build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000009076"));
@@ -181,10 +185,12 @@ public class DeclinedPaymentTest {
 
     @Test
     public void shouldDeclineInvalidAmexWhenAvsEnabled() {
-        Judo.setAmexEnabled(true);
-        Judo.setAvsEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .setAvsEnabled(true)
+                .build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000150358074"));
@@ -208,16 +214,14 @@ public class DeclinedPaymentTest {
                 .check(matches(isDisplayed()));
     }
 
-    private Intent getIntent() {
-        Intent intent = new Intent();
 
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+    private Judo.Builder getJudo() {
+        return new Judo.Builder()
+                .setEnvironment(Judo.UAT)
                 .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString())
-                .build());
-        return intent;
+                .setConsumerRef(UUID.randomUUID().toString());
     }
 
 }

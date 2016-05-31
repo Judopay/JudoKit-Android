@@ -4,10 +4,6 @@ import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import com.judopay.Judo;
-import com.judopay.JudoOptions;
-import com.judopay.PaymentActivity;
-import com.judopay.R;
 import com.judopay.model.Currency;
 
 import org.junit.Rule;
@@ -32,7 +28,10 @@ public class SecurityCodeHintTest {
 
     @Test
     public void shouldDisplayCvvSecurityCodeWhenUnknownCard() {
-        rule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        rule.launchActivity(intent);
 
         onView(withId(R.id.security_code_input_layout))
                 .check(matches(withTextInputHint("CVV")));
@@ -40,7 +39,10 @@ public class SecurityCodeHintTest {
 
     @Test
     public void shouldDisplayVisaSecurityCodeWhenVisaDetected() {
-        rule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        rule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -51,9 +53,10 @@ public class SecurityCodeHintTest {
 
     @Test
     public void shouldDisplayAmexSecurityCodeWhenAmexDetected() {
-        Judo.setAmexEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        rule.launchActivity(getIntent());
+        rule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"));
@@ -64,9 +67,10 @@ public class SecurityCodeHintTest {
 
     @Test
     public void shouldDisplayMastercardSecurityCodeWhenMastercardDetected() {
-        Judo.setAmexEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        rule.launchActivity(getIntent());
+        rule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("5100000000005460"));
@@ -77,9 +81,10 @@ public class SecurityCodeHintTest {
 
     @Test
     public void shouldDisplayCidvHintWhenAmexCardNumberEntered() {
-        Judo.setAmexEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        rule.launchActivity(getIntent());
+        rule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"));
@@ -91,7 +96,10 @@ public class SecurityCodeHintTest {
 
     @Test
     public void shouldDisplayCv2HintWhenVisaCardNumberEntered() {
-        rule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        rule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -103,23 +111,22 @@ public class SecurityCodeHintTest {
 
     @Test
     public void shouldDisplayCvvImageOnLaunch() {
-        rule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        rule.launchActivity(intent);
 
         onView(withId(R.id.security_code_image_view))
                 .check(matches(isDisplayed()));
     }
 
-
-    private Intent getIntent() {
-        Intent intent = new Intent();
-
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+    private Judo.Builder getJudo() {
+        return new Judo.Builder()
+                .setEnvironment(Judo.UAT)
                 .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString())
-                .build());
-        return intent;
+                .setConsumerRef(UUID.randomUUID().toString());
     }
 
 }

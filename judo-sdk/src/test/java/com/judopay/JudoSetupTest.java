@@ -8,24 +8,33 @@ import static org.hamcrest.core.Is.is;
 public class JudoSetupTest {
 
     @Test
-    public void shouldEnabledSslPinningWhenLiveEnvironment() {
-        Judo.setup("apiToken", "apiSecret", Judo.LIVE);
+    public void shouldEnableSslPinningWhenLiveEnvironment() {
+        Judo judo = new Judo.Builder("apiToken", "apiSecret")
+                .setJudoId("100915867")
+                .setEnvironment(Judo.LIVE)
+                .build();
 
-        assertThat(Judo.isSslPinningEnabled(), is(true));
+        assertThat(judo.isSslPinningEnabled(), is(true));
     }
 
     @Test
-    public void shouldEnabledSslPinningWhenSandboxEnvironment() {
-        Judo.setup("apiToken", "apiSecret", Judo.SANDBOX);
+    public void shouldEnableSslPinningWhenSandboxEnvironment() {
+        Judo judo = new Judo.Builder("apiToken", "apiSecret")
+                .setJudoId("100915867")
+                .setEnvironment(Judo.SANDBOX)
+                .build();
 
-        assertThat(Judo.isSslPinningEnabled(), is(true));
+        assertThat(judo.isSslPinningEnabled(), is(true));
     }
 
     @Test
     public void shouldNotEnableSslPinningWhenUatEnvironment() {
-        Judo.setup("apiToken", "apiSecret", Judo.UAT);
+        Judo judo = new Judo.Builder("apiToken", "apiSecret")
+                .setJudoId("100915867")
+                .setEnvironment(Judo.UAT)
+                .build();
 
-        assertThat(Judo.isSslPinningEnabled(), is(false));
+        assertThat(judo.isSslPinningEnabled(), is(false));
     }
 
 }
