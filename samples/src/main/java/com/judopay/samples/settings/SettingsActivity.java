@@ -74,7 +74,6 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 settingsPrefs.setAvsEnabled(isChecked);
-                setupJudo();
             }
         });
 
@@ -82,7 +81,6 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 settingsPrefs.setMaestroEnabled(isChecked);
-                setupJudo();
             }
         });
 
@@ -90,15 +88,8 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 settingsPrefs.setAmexEnabled(isChecked);
-                setupJudo();
             }
         });
-    }
-
-    private void setupJudo() {
-//        Judo.setAmexEnabled(settingsPrefs.isAmexEnabled());
-//        Judo.setAvsEnabled(settingsPrefs.isAvsEnabled());
-//        Judo.setMaestroEnabled(settingsPrefs.isMaestroEnabled());
     }
 
     private void saveCurrency(String currency) {
