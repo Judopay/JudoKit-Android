@@ -22,7 +22,7 @@ Judo judo = new Judo.Builder("<API_TOKEN>", "<API_SECRET>")
     .setJudoId("100915867")
     .setAmount("1.00")
     .setCurrency(Currency.GBP)
-    .setConsumerRef("<YOUR REFERENCE>")
+    .setConsumerRef("<YOUR_REFERENCE>")
     .build();
 ```
 ##### 3. Perform a test payment
