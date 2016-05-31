@@ -31,4 +31,7 @@
     <string name="issue_no">Issue no.</string>
     <string name="start_date">Start date</string>
     <string name="credit_card_number">Card number</string>
+    <string name="please_add_android_pay_card">Please add a card in the Android Pay app</string>
+    <string name="android_pay">Android Pay™</string>
+    <string name="perform_a_payment_with_android_pay">perform a payment with Android Pay</string>
 </resources>

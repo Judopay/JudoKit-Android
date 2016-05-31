@@ -2,6 +2,7 @@ package com.judopay;
 
 import android.content.Context;
 
+import com.judopay.model.AndroidPayRequest;
 import com.judopay.model.CollectionRequest;
 import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
@@ -107,6 +108,12 @@ public interface JudoApiService {
      */
     @POST("transactions/registercard")
     Observable<Receipt> registerCard(@Body RegisterCardRequest registerCardRequest);
+
+    @POST("transactions/payments")
+    Observable<Receipt> androidPayPayment(@Body AndroidPayRequest androidPayRequest);
+
+    @POST("transactions/preauths")
+    Observable<Receipt> androidPayPreAuth(@Body AndroidPayRequest androidPayRequest);
 
     /**
      * List all payment receipts for the account
