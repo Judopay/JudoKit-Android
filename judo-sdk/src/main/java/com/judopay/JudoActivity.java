@@ -16,7 +16,9 @@ import android.view.WindowManager;
 
 import com.judopay.arch.ThemeUtil;
 import com.judopay.error.RootedDeviceNotPermittedError;
+import com.judopay.model.Card;
 
+import static com.judopay.Judo.RESULT_CARD_SCANNED;
 import static com.judopay.Judo.RESULT_CONNECTION_ERROR;
 import static com.judopay.Judo.RESULT_DECLINED;
 import static com.judopay.Judo.RESULT_ERROR;
@@ -34,6 +36,8 @@ import static com.judopay.Judo.RESULT_TOKEN_EXPIRED;
  */
 abstract class JudoActivity extends AppCompatActivity {
 
+    protected JudoFragment fragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +52,14 @@ abstract class JudoActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (fragment != null && !fragment.isTransactionInProgress()) {
+            setResult(Judo.RESULT_CANCELED);
+            super.onBackPressed();
         }
     }
 
@@ -76,31 +88,42 @@ abstract class JudoActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Judo.JUDO_REQUEST) {
-            switch (resultCode) {
-                case RESULT_SUCCESS:
-                case RESULT_ERROR:
-                case RESULT_TOKEN_EXPIRED:
-                    setResult(resultCode, data);
-                    finish();
-                    break;
+        switch (requestCode) {
+            case Judo.JUDO_REQUEST:
+                switch (resultCode) {
+                    case RESULT_SUCCESS:
+                    case RESULT_ERROR:
+                    case RESULT_TOKEN_EXPIRED:
+                        setResult(resultCode, data);
+                        finish();
+                        break;
 
-                case RESULT_CONNECTION_ERROR:
-                    new AlertDialog.Builder(this)
-                            .setTitle(R.string.connection_error)
-                            .setMessage(R.string.please_check_your_internet_connection)
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
-                    break;
+                    case RESULT_CONNECTION_ERROR:
+                        new AlertDialog.Builder(this)
+                                .setTitle(R.string.connection_error)
+                                .setMessage(R.string.please_check_your_internet_connection)
+                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).show();
+                        break;
 
-                case RESULT_DECLINED:
-                    onDeclined();
-                    break;
-            }
+                    case RESULT_DECLINED:
+                        onDeclined();
+                        break;
+                }
+            case Judo.CARD_SCANNING_REQUEST:
+                switch (resultCode) {
+                    case RESULT_CARD_SCANNED:
+                        if (data != null) {
+                            if (data.getExtras().containsKey(Judo.JUDO_CARD)) {
+                                fragment.setCard((Card) data.getParcelableExtra(Judo.JUDO_CARD));
+                            }
+                            // todo - throw error that no card was included in the intent data.
+                        }
+                }
         }
     }
 
@@ -134,12 +157,6 @@ abstract class JudoActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        setResult(Judo.RESULT_CANCELED);
     }
 
 }

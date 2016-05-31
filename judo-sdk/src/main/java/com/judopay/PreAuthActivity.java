@@ -23,8 +23,6 @@ import android.os.Bundle;
  */
 public final class PreAuthActivity extends JudoActivity {
 
-    private PreAuthFragment preAuthFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,20 +30,13 @@ public final class PreAuthActivity extends JudoActivity {
         setTitle(R.string.payment);
 
         if (savedInstanceState == null) {
-            preAuthFragment = new PreAuthFragment();
-            preAuthFragment.setArguments(getIntent().getExtras());
+            fragment = new PreAuthFragment();
+            fragment.setArguments(getIntent().getExtras());
 
             getFragmentManager()
                     .beginTransaction()
-                    .add(android.R.id.content, preAuthFragment)
+                    .add(android.R.id.content, fragment)
                     .commit();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (preAuthFragment != null && !preAuthFragment.isPaymentInProgress()) {
-            super.onBackPressed();
         }
     }
 

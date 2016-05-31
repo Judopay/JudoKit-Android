@@ -23,20 +23,18 @@ import android.os.Bundle;
  */
 public final class RegisterCardActivity extends JudoActivity {
 
-    private RegisterCardFragment registerCardFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(R.string.add_card);
 
         if (savedInstanceState == null) {
-            registerCardFragment = new RegisterCardFragment();
-            registerCardFragment.setArguments(getIntent().getExtras());
+            fragment = new RegisterCardFragment();
+            fragment.setArguments(getIntent().getExtras());
 
             getFragmentManager()
                     .beginTransaction()
-                    .add(android.R.id.content, registerCardFragment)
+                    .add(android.R.id.content, fragment)
                     .commit();
         }
     }
@@ -53,13 +51,6 @@ public final class RegisterCardActivity extends JudoActivity {
                     }
                 }).create()
                 .show();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (registerCardFragment != null && !registerCardFragment.isPaymentInProgress()) {
-            super.onBackPressed();
-        }
     }
 
 }

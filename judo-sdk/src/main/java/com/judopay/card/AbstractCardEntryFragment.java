@@ -10,6 +10,7 @@ import com.judopay.Judo;
 import com.judopay.JudoOptions;
 import com.judopay.R;
 import com.judopay.arch.ThemeUtil;
+import com.judopay.model.Card;
 import com.judopay.validation.ValidationManager;
 
 import static com.judopay.arch.TextUtil.isEmpty;
@@ -18,7 +19,7 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
 
     private String buttonLabel;
 
-    JudoOptions judoOptions;
+    JudoOptions options;
     CardEntryListener cardEntryListener;
 
     public void setCardEntryListener(CardEntryListener cardEntryListener) {
@@ -32,9 +33,9 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
         super.onViewCreated(view, savedInstanceState);
 
         if (getArguments() != null && getArguments().containsKey(Judo.JUDO_OPTIONS)) {
-            this.judoOptions = getArguments().getParcelable(Judo.JUDO_OPTIONS);
-            if (judoOptions != null) {
-                onInitialize(judoOptions);
+            this.options = getArguments().getParcelable(Judo.JUDO_OPTIONS);
+            if (options != null) {
+                onInitialize(options);
             }
         }
     }
@@ -59,5 +60,7 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
+    public void setCard(Card card) { }
 
 }
