@@ -73,7 +73,6 @@ import static com.judopay.arch.TextUtil.isEmpty;
  */
 public final class CardEntryFragment extends AbstractCardEntryFragment {
 
-    private Button button;
     private Spinner countrySpinner;
     private SecurityCodeEntryView securityCodeEntryView;
     private CardNumberEntryView cardNumberEntryView;
@@ -97,7 +96,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_card_entry, container, false);
 
-        button = (Button) view.findViewById(R.id.button);
+        submitButton = (Button) view.findViewById(R.id.button);
 
         securityCodeEntryView = (SecurityCodeEntryView) view.findViewById(R.id.security_code_entry_view);
         cardNumberEntryView = (CardNumberEntryView) view.findViewById(R.id.card_number_entry_view);
@@ -119,12 +118,6 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
     @Override
     protected void onInitialize(final JudoOptions options) {
-        String buttonLabel = getButtonLabel();
-
-        if (!isEmpty(buttonLabel)) {
-            this.button.setText(buttonLabel);
-        }
-
         if (options.getCardScanningIntent() != null) {
             cardNumberEntryView.setScanCardListener(new CardNumberEntryView.ScanCardButtonListener() {
                 @Override
@@ -166,7 +159,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
     @Override
     public void setCard(Card card) {
-        if(!isEmpty(card.getCardNumber())) {
+        if (!isEmpty(card.getCardNumber())) {
             int cardType = CardNetwork.fromCardNumber(card.getCardNumber());
 
             cardNumberEntryView.setCardType(cardType, false);
@@ -174,7 +167,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             cardNumberEntryView.setScanCardListener(null);
             expiryDateEntryView.requestFocus();
 
-            if(!isEmpty(card.getExpiryDate())) {
+            if (!isEmpty(card.getExpiryDate())) {
                 expiryDateEntryView.setText(card.getExpiryDate());
                 securityCodeEntryView.getEditText().requestFocus();
             }
@@ -341,7 +334,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     private void initializeButton() {
-        button.setOnClickListener(new SingleClickOnClickListener() {
+        submitButton.setOnClickListener(new SingleClickOnClickListener() {
             @Override
             public void doClick() {
                 hideKeyboard();
@@ -404,6 +397,6 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
     @Override
     public void onValidate(boolean valid) {
-        button.setVisibility(valid ? View.VISIBLE : View.GONE);
+        submitButton.setVisibility(valid ? View.VISIBLE : View.GONE);
     }
 }

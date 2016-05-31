@@ -37,21 +37,6 @@ public class RegisterCardFragment extends JudoFragment implements TransactionCal
     }
 
     @Override
-    JudoOptions getJudoOptions() {
-        Bundle args = getArguments();
-        JudoOptions options = args.getParcelable(Judo.JUDO_OPTIONS);
-
-        return new JudoOptions.Builder()
-                .setJudoId(options.getJudoId())
-                .setConsumerRef(options.getConsumerRef())
-                .setCardNumber(options.getCardNumber())
-                .setExpiryMonth(options.getExpiryMonth())
-                .setExpiryYear(options.getExpiryYear())
-                .setCustomLayout(options.getCustomLayout())
-                .build();
-    }
-
-    @Override
     AbstractCardEntryFragment createCardEntryFragment() {
         CardEntryFragment cardEntryFragment = CardEntryFragment.newInstance(getJudoOptions(), this);
         cardEntryFragment.setButtonLabel(getString(R.string.add_card));
