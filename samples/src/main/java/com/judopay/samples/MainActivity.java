@@ -1,5 +1,6 @@
 package com.judopay.samples;
 
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -63,8 +64,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     }
 
     public void performPayment(View view) {
-        Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
-
+        Intent intent = new Intent(this, PaymentActivity.class);
         JudoOptions judoOptions = new JudoOptions.Builder()
                 .setJudoId(JUDO_ID)
                 .setAmount(AMOUNT)
@@ -77,7 +77,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     }
 
     public void performPreAuth(View view) {
-        Intent intent = new Intent(MainActivity.this, PreAuthActivity.class);
+        Intent intent = new Intent(this, PreAuthActivity.class);
 
         JudoOptions options = new JudoOptions.Builder()
                 .setJudoId(JUDO_ID)
@@ -91,7 +91,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     }
 
     public void performRegisterCard(View view) {
-        Intent intent = new Intent(MainActivity.this, RegisterCardActivity.class);
+        Intent intent = new Intent(this, RegisterCardActivity.class);
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
                 .setJudoId(JUDO_ID)
                 .setConsumerRef(CONSUMER_REF)
@@ -126,10 +126,10 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         });
     }
 
-    public void performTokenPreAuth(View v) {
+    public void performTokenPreAuth(View view) {
         Receipt receipt = getLastReceipt();
         if (receipt != null) {
-            Intent intent = new Intent(MainActivity.this, PreAuthActivity.class);
+            Intent intent = new Intent(this, PreAuthActivity.class);
 
             intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
                     .setJudoId(JUDO_ID)
@@ -141,7 +141,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
             startActivityForResult(intent, TOKEN_PRE_AUTH_REQUEST);
         } else {
-            Toast.makeText(MainActivity.this, R.string.add_card_to_make_token_transaction, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.add_card_to_make_token_transaction, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -161,7 +161,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
             startActivityForResult(intent, TOKEN_PAYMENT_REQUEST);
         } else {
-            Toast.makeText(MainActivity.this, R.string.add_card_to_make_token_transaction, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.add_card_to_make_token_transaction, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -233,7 +233,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     }
 
     private void startTokenPayment(Receipt receipt) {
-        Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
+        Intent intent = new Intent(this, PaymentActivity.class);
 
         intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
                 .setJudoId(JUDO_ID)

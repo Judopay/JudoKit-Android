@@ -1,6 +1,9 @@
 package com.judopay.card;
 
 
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -8,6 +11,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +24,6 @@ import com.judopay.arch.ThemeUtil;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardNetwork;
-import com.judopay.model.CardToken;
 import com.judopay.model.Country;
 import com.judopay.validation.CardNumberValidator;
 import com.judopay.validation.CountryAndPostcodeValidator;
@@ -29,12 +32,12 @@ import com.judopay.validation.IssueNumberValidator;
 import com.judopay.validation.SecurityCodeValidator;
 import com.judopay.validation.StartDateValidator;
 import com.judopay.validation.Validation;
+import com.judopay.validation.ValidationAutoAdvanceManager;
 import com.judopay.validation.ValidationManager;
 import com.judopay.validation.Validator;
 import com.judopay.view.CardNumberEntryView;
 import com.judopay.view.CountrySpinnerAdapter;
 import com.judopay.view.ExpiryDateEntryView;
-import com.judopay.validation.ValidationAutoAdvanceManager;
 import com.judopay.view.IssueNumberEntryView;
 import com.judopay.view.PostcodeEntryView;
 import com.judopay.view.SecurityCodeEntryView;
@@ -115,31 +118,38 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    protected void onInitialize(JudoOptions options) {
+    protected void onInitialize(final JudoOptions options) {
         String buttonLabel = getButtonLabel();
 
         if (!isEmpty(buttonLabel)) {
             this.button.setText(buttonLabel);
         }
 
-        CardToken cardToken = judoOptions.getCardToken();
+        if (options.getCardScanningIntent() != null) {
+            cardNumberEntryView.setScanCardListener(new CardNumberEntryView.ScanCardButtonListener() {
+                @Override
+                public void onClick() {
+                    PendingIntent cardScanningIntent = options.getCardScanningIntent();
+                    if (cardScanningIntent != null) {
+                        IntentSender intentSender = cardScanningIntent.getIntentSender();
+                        try {
+                            getActivity().startIntentSenderForResult(intentSender, Judo.CARD_SCANNING_REQUEST, null, 0, 0, 0);
+                        } catch (IntentSender.SendIntentException ignore) { }
+                    }
+                }
+            });
+        }
 
-        if (cardToken != null) {
-            cardNumberEntryView.setCardType(cardToken.getType(), false);
-            securityCodeEntryView.setCardType(cardToken.getType(), false);
+        if (options.getCardNumber() != null) {
+            int cardType = CardNetwork.fromCardNumber(options.getCardNumber());
+            cardNumberEntryView.setCardType(cardType, false);
+            cardNumberEntryView.setText(options.getCardNumber());
+            expiryDateEntryView.requestFocus();
+        }
+
+        if (options.getExpiryYear() != null && options.getExpiryMonth() != null) {
+            expiryDateEntryView.setText(getString(R.string.expiry_date_format, options.getExpiryMonth(), options.getExpiryYear()));
             securityCodeEntryView.requestFocus();
-        } else {
-            if (judoOptions.getCardNumber() != null) {
-                int cardType = CardNetwork.fromCardNumber(judoOptions.getCardNumber());
-                cardNumberEntryView.setCardType(cardType, false);
-                cardNumberEntryView.setText(judoOptions.getCardNumber());
-                expiryDateEntryView.requestFocus();
-            }
-
-            if (judoOptions.getExpiryYear() != null && judoOptions.getExpiryMonth() != null) {
-                expiryDateEntryView.setText(getString(R.string.expiry_date_format, judoOptions.getExpiryMonth(), judoOptions.getExpiryYear()));
-                securityCodeEntryView.requestFocus();
-            }
         }
 
         boolean secureServerMessageShown = ThemeUtil.getBooleanAttr(getActivity(), getClass(), R.attr.secureServerMessageShown);
@@ -148,9 +158,29 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         } else {
             secureServerText.setVisibility(View.GONE);
         }
+
         initializeCountry();
         initializeValidators();
         initializeButton();
+    }
+
+    @Override
+    public void setCard(Card card) {
+        if(!isEmpty(card.getCardNumber())) {
+            int cardType = CardNetwork.fromCardNumber(card.getCardNumber());
+
+            cardNumberEntryView.setCardType(cardType, false);
+            cardNumberEntryView.setText(card.getCardNumber());
+            cardNumberEntryView.setScanCardListener(null);
+            expiryDateEntryView.requestFocus();
+
+            if(!isEmpty(card.getExpiryDate())) {
+                expiryDateEntryView.setText(card.getExpiryDate());
+                securityCodeEntryView.getEditText().requestFocus();
+            }
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
     }
 
     private void initializeValidators() {

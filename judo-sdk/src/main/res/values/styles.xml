@@ -1,5 +1,6 @@
 <resources>
 
+    <attr name="cameraIcon" format="reference" />
     <attr name="overlayBackground" format="reference" />
     <attr name="buttonLabel" format="string" />
     <attr name="activityTitle" format="string" />
@@ -8,6 +9,7 @@
     <style name="Theme.Judo" parent="Theme.AppCompat">
         <item name="buttonLabel">@string/pay</item>
         <item name="buttonStyle">@style/Widget.Judo.Button</item>
+        <item name="cameraIcon">@drawable/ic_photo_camera_white</item>
         <item name="colorPrimary">@color/judo_dark_blue</item>
         <item name="colorButtonNormal">@color/judo_teal</item>
         <item name="colorAccent">@android:color/white</item>
@@ -27,6 +29,7 @@
         <item name="colorButtonNormal">@color/judo_teal</item>
         <item name="overlayBackground">@color/judo_white_90</item>
         <item name="secureServerMessageShown">false</item>
+        <item name="cameraIcon">@drawable/ic_photo_camera_black</item>
     </style>
 
     <style name="Theme.Judo.Light" parent="Theme.AppCompat.Light">
@@ -37,7 +40,10 @@
         <item name="colorButtonNormal">@color/judo_teal</item>
         <item name="overlayBackground">@color/judo_white_90</item>§
         <item name="secureServerMessageShown">false</item>
+        <item name="cameraIcon">@drawable/ic_photo_camera_black</item>
     </style>
+
+    <style name="Theme" />
 
     <style name="Theme.Judo.Light.ShowSecurityMessage" parent="Theme.Judo.Light">
         <item name="secureServerMessageShown">true</item>
@@ -63,6 +69,7 @@
     </style>
 
     <style name="Widget" />
+
     <style name="Widget.Judo" />
 
     <style name="Widget.Judo.EditText" parent="Widget.AppCompat.EditText">
