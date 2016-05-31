@@ -1,12 +1,21 @@
 # Judo Android SDK change log
 
-## [5.3](https://github.com/judopay/Judo-Android/tree/5.3) (TBC)
+## [5.4](https://github.com/judopay/Judo-Android/tree/5.4) (2016-05-31)
+
+**Features:**
+- Android Pay is now supported by Judo - use Judo's SDK to process payments made with Android Pay, simplifying the checkout experience for your users. See our [guide](https://github.com/JudoPay/Judo-AndroidPay-Sample) on getting started with Android Pay.
+- Card scanning can now be launched directly from the card entry form - when a card scanning intent is provided a camera icon will appear next to the card number input field, allowing users to easily input their card number using the device's camera.
+
+**Bugs fixed:**
+- Register card now shows the correct 'Add card' text on the submit button when registering a card.
+
+## [5.3](https://github.com/judopay/Judo-Android/tree/5.3) (2016-05-11)
 
 **Features:**
 - [Custom layouts](https://github.com/JudoPay/Judo-Android/wiki/Custom-layouts) - you can now provide your own customized layout file when displaying the card input form to the user. This allows you greater freedom in how individual views are presented. See the [guide](https://github.com/JudoPay/Judo-Android/wiki/Custom-layouts) for more information.
 
 **Changes:**
-- Activities and fragments in the SDK have been simplified to (```PaymentActivity```, ```PaymentFragment```, ```PreAuthActivity```, ```PreAuthFragment```, ```RegisterCardActivity``` and ```RegisterCardFragment```). When performing a token payment or pre-auth, just provide a card token in the ```JudoOptions``` configuration and the token will be used for the transaction.
+- Activities and fragments in the SDK have been simplified to (```PaymentActivity```, ```PaymentFragment```, ```PreAuthActivity```, ```PreAuthFragment```, ```RegisterCardActivity``` and ```RegisterCardFragment```). When performing a token payment or pre-authorization, just provide a card token in the ```JudoOptions``` configuration and the token will be used for the transaction.
 - Button label text, activity title text and the option to turn the security message on/off are now [configured in the theme](https://github.com/JudoPay/Judo-Android/wiki/Themes) instead of the ```JudoOptions``` configuration object.
 - When performing a token payment, the security code helper text has changed to "Please re-enter the card security code".
 - When performing a payment, the currency provided must be a currency listed in the ```Currency``` class.

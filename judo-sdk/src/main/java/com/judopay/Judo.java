@@ -37,7 +37,7 @@ public class Judo implements Parcelable {
     @Retention(RetentionPolicy.SOURCE)
     public @interface UiClientMode {}
 
-    @IntDef({LIVE, SANDBOX, UAT})
+    @IntDef({LIVE, SANDBOX, CUSTOM, UAT})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Environment {}
 
@@ -68,6 +68,7 @@ public class Judo implements Parcelable {
 
     public static final int LIVE = 0;
     public static final int SANDBOX = 1;
+    public static final int CUSTOM = 2;
     public static final int UAT = 3;
 
     private String apiToken;
@@ -93,6 +94,9 @@ public class Judo implements Parcelable {
     private String mobileNumber;
     private CustomLayout customLayout;
     private PendingIntent cardScanningIntent;
+    private static String customEnvironmentHost;
+
+    private static boolean avsEnabled;
 
     private Judo() {}
 
@@ -201,16 +205,33 @@ public class Judo implements Parcelable {
         return JudoApiServiceFactory.createApiService(context, uiClientMode, this);
     }
 
+    @SuppressWarnings("SameParameterValue")
+    public static void setEnvironment(@Environment int environment) {
+        if (environment != CUSTOM)
+            customEnvironmentHost = null;
+
+        Judo.environment = environment;
+    }
+
     public String getApiToken() {
         return apiToken;
     }
 
-    public String getApiSecret() {
+    public static void setEnvironmentHost(String customEnvironmentHost) {
+        setEnvironment(CUSTOM);
+        Judo.customEnvironmentHost = customEnvironmentHost;
+    }
+
+    public static String getApiToken() {
+        return Judo.apiToken;
+    }
+
+    public static String getApiSecret() {
         return apiSecret;
     }
 
-    public boolean isSslPinningEnabled() {
-        return sslPinningEnabled && environment != UAT;
+    public static boolean isSslPinningEnabled() {
+        return sslPinningEnabled && environment != CUSTOM && environment != UAT;
     }
 
     public boolean isAvsEnabled() {
@@ -233,6 +254,8 @@ public class Judo implements Parcelable {
         switch (environment) {
             case SANDBOX:
                 return context.getString(R.string.api_host_sandbox);
+            case CUSTOM:
+                return customEnvironmentHost;
             case UAT:
                 return context.getString(R.string.api_host_uat);
             default:

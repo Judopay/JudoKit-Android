@@ -44,7 +44,6 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
     private PostcodeEntryView postcodeEntryView;
     private Spinner countrySpinner;
     private View secureServerText;
-    private Button submitButton;
     private View countryAndPostcodeContainer;
 
     private ValidationManager validationManager;

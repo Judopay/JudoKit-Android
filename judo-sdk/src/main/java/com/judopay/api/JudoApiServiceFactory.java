@@ -97,7 +97,7 @@ public class JudoApiServiceFactory {
         return GsonConverterFactory.create(getGson());
     }
 
-    private static Gson getGson() {
+    public static Gson getGson() {
         return new GsonBuilder()
                 .registerTypeAdapter(Date.class, new DateJsonDeserializer())
                 .registerTypeAdapter(BigDecimal.class, new FormattedBigDecimalDeserializer())

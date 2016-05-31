@@ -166,9 +166,7 @@ public class MainActivity extends BaseActivity {
         switch (resultCode) {
             case Judo.RESULT_SUCCESS:
                 Receipt receipt = data.getParcelableExtra(JUDO_RECEIPT);
-
                 saveReceipt(receipt);
-
                 showTokenPaymentDialog(receipt);
                 break;
         }

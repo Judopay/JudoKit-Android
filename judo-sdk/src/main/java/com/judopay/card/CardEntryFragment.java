@@ -71,7 +71,6 @@ import static com.judopay.arch.TextUtil.isEmpty;
  */
 public final class CardEntryFragment extends AbstractCardEntryFragment {
 
-    private Button button;
     private Spinner countrySpinner;
     private SecurityCodeEntryView securityCodeEntryView;
     private CardNumberEntryView cardNumberEntryView;
@@ -95,7 +94,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_card_entry, container, false);
 
-        button = (Button) view.findViewById(R.id.button);
+        submitButton = (Button) view.findViewById(R.id.button);
 
         securityCodeEntryView = (SecurityCodeEntryView) view.findViewById(R.id.security_code_entry_view);
         cardNumberEntryView = (CardNumberEntryView) view.findViewById(R.id.card_number_entry_view);
@@ -116,13 +115,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    protected void onInitialize(final Judo options) {
-        String buttonLabel = getButtonLabel();
-
-        if (!isEmpty(buttonLabel)) {
-            this.button.setText(buttonLabel);
-        }
-
+    protected void onInitialize(final JudoOptions options) {
         if (options.getCardScanningIntent() != null) {
             cardNumberEntryView.setScanCardListener(new CardNumberEntryView.ScanCardButtonListener() {
                 @Override
@@ -132,8 +125,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
                         IntentSender intentSender = cardScanningIntent.getIntentSender();
                         try {
                             getActivity().startIntentSenderForResult(intentSender, Judo.CARD_SCANNING_REQUEST, null, 0, 0, 0);
-                        } catch (IntentSender.SendIntentException ignore) {
-                        }
+                        } catch (IntentSender.SendIntentException ignore) { }
                     }
                 }
             });
@@ -340,7 +332,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     private void initializeButton() {
-        button.setOnClickListener(new SingleClickOnClickListener() {
+        submitButton.setOnClickListener(new SingleClickOnClickListener() {
             @Override
             public void doClick() {
                 hideKeyboard();
@@ -361,8 +353,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+            public void onNothingSelected(AdapterView<?> parent) { }
         });
     }
 
@@ -404,6 +395,6 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
     @Override
     public void onValidate(boolean valid) {
-        button.setVisibility(valid ? View.VISIBLE : View.GONE);
+        submitButton.setVisibility(valid ? View.VISIBLE : View.GONE);
     }
 }
