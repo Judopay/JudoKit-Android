@@ -35,13 +35,11 @@ public class Judo implements Parcelable {
 
     @IntDef({UI_CLIENT_MODE_CUSTOM_UI, UI_CLIENT_MODE_JUDO_SDK})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface UiClientMode {
-    }
+    public @interface UiClientMode {}
 
     @IntDef({LIVE, SANDBOX, UAT})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface Environment {
-    }
+    public @interface Environment {}
 
     public static final int RESULT_SUCCESS = Activity.RESULT_OK;
     public static final int RESULT_CANCELED = Activity.RESULT_CANCELED;
@@ -96,7 +94,31 @@ public class Judo implements Parcelable {
     private CustomLayout customLayout;
     private PendingIntent cardScanningIntent;
 
-    private Judo() {
+    private Judo() {}
+
+    public Builder newBuilder() {
+        return new Judo.Builder()
+                .setApiToken(apiToken)
+                .setApiSecret(apiSecret)
+                .setEnvironment(environment)
+                .setJudoId(judoId)
+                .setCardToken(cardToken)
+                .setCardNumber(cardNumber)
+                .setExpiryMonth(expiryMonth)
+                .setExpiryYear(expiryYear)
+                .setAmount(amount)
+                .setCurrency(currency)
+                .setConsumerRef(consumerRef)
+                .setMetaData(metaData)
+                .setEmailAddress(emailAddress)
+                .setMobileNumber(mobileNumber)
+                .setAvsEnabled(avsEnabled)
+                .setAmexEnabled(amexEnabled)
+                .setMaestroEnabled(maestroEnabled)
+                .setSslPinningEnabled(sslPinningEnabled)
+                .setRootedDevicesAllowed(rootedDevicesAllowed)
+                .setCustomLayout(customLayout)
+                .setCardScanningIntent(cardScanningIntent);
     }
 
     public String getAmount() {
@@ -245,8 +267,7 @@ public class Judo implements Parcelable {
         private boolean sslPinningEnabled = true;
         private boolean rootedDevicesAllowed = true;
 
-        public Builder() {
-        }
+        public Builder() {}
 
         public Builder(String apiToken, String apiSecret) {
             this.apiToken = apiToken;

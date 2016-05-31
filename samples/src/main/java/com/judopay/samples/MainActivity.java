@@ -42,17 +42,14 @@ public class MainActivity extends BaseActivity {
 
     private static final String CONSUMER_REF = "AndroidSdkSampleConsumerRef";
 
+    private Judo judo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setConfiguration();
-    }
-
-    public void performPayment(View view) {
-        Intent intent = new Intent(this, PaymentActivity.class);
-        Judo judo = new Judo.Builder()
+        judo = new Judo.Builder()
                 .setApiToken(API_TOKEN)
                 .setApiSecret(API_SECRET)
                 .setEnvironment(SANDBOX)
@@ -62,6 +59,12 @@ public class MainActivity extends BaseActivity {
                 .setConsumerRef(CONSUMER_REF)
                 .build();
 
+        setConfiguration();
+    }
+
+    public void performPayment(View view) {
+        Intent intent = new Intent(this, PaymentActivity.class);
+
         intent.putExtra(Judo.JUDO_OPTIONS, judo);
         startActivityForResult(intent, PAYMENT_REQUEST);
     }
@@ -69,14 +72,7 @@ public class MainActivity extends BaseActivity {
     public void performPreAuth(View view) {
         Intent intent = new Intent(this, PreAuthActivity.class);
 
-        Judo options = new Judo.Builder()
-                .setJudoId(JUDO_ID)
-                .setAmount(AMOUNT)
-                .setCurrency(getCurrency())
-                .setConsumerRef(CONSUMER_REF)
-                .build();
-
-        intent.putExtra(Judo.JUDO_OPTIONS, options);
+        intent.putExtra(Judo.JUDO_OPTIONS, judo);
         startActivityForResult(intent, PRE_AUTH_REQUEST);
     }
 
@@ -95,10 +91,7 @@ public class MainActivity extends BaseActivity {
         if (receipt != null) {
             Intent intent = new Intent(this, PreAuthActivity.class);
 
-            intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
-                    .setJudoId(JUDO_ID)
-                    .setAmount(AMOUNT)
-                    .setCurrency(getCurrency())
+            intent.putExtra(Judo.JUDO_OPTIONS, judo.newBuilder()
                     .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
                     .setCardToken(receipt.getCardDetails())
                     .build());
@@ -115,10 +108,7 @@ public class MainActivity extends BaseActivity {
         if (receipt != null) {
             Intent intent = new Intent(this, PaymentActivity.class);
 
-            intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
-                    .setJudoId(JUDO_ID)
-                    .setAmount(AMOUNT)
-                    .setCurrency(getCurrency())
+            intent.putExtra(Judo.JUDO_OPTIONS, judo.newBuilder()
                     .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
                     .setCardToken(receipt.getCardDetails())
                     .build());
@@ -201,10 +191,7 @@ public class MainActivity extends BaseActivity {
     private void startTokenPayment(Receipt receipt) {
         Intent intent = new Intent(this, PaymentActivity.class);
 
-        intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
-                .setJudoId(JUDO_ID)
-                .setAmount(AMOUNT)
-                .setCurrency(getCurrency())
+        intent.putExtra(Judo.JUDO_OPTIONS, judo.newBuilder()
                 .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
                 .setCardToken(receipt.getCardDetails())
                 .build());
@@ -247,9 +234,11 @@ public class MainActivity extends BaseActivity {
 
     private void setConfiguration() {
         SettingsPrefs settingsPrefs = new SettingsPrefs(this);
-//        Judo.setAvsEnabled(settingsPrefs.isAvsEnabled());
-//        Judo.setMaestroEnabled(settingsPrefs.isMaestroEnabled());
-//        Judo.setAmexEnabled(settingsPrefs.isAmexEnabled());
+        this.judo = judo.newBuilder()
+                .setAvsEnabled(settingsPrefs.isAvsEnabled())
+                .setMaestroEnabled(settingsPrefs.isMaestroEnabled())
+                .setAmexEnabled(settingsPrefs.isAmexEnabled())
+                .build();
     }
 
 }
