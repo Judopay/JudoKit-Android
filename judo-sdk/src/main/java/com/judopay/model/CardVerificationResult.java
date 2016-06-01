@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * The result from a 3D-Secure verification, containing the data required to complete the
  * transaction with the judo API.
  */
-public class ThreeDSecureInfo {
+public class CardVerificationResult {
 
     @SerializedName("MD")
     private final String md;
@@ -14,7 +14,7 @@ public class ThreeDSecureInfo {
     @SerializedName("PaRes")
     private final String paRes;
 
-    public ThreeDSecureInfo(String md, String paRes) {
+    public CardVerificationResult(String md, String paRes) {
         this.md = md;
         this.paRes = paRes;
     }

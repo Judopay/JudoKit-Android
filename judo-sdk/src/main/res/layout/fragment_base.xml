@@ -9,12 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.judopay.secure3d.ThreeDSecureWebView
-        android:id="@+id/three_d_secure_web_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
-
     <LinearLayout
         android:id="@+id/progress_overlay"
         style="@style/Overlay"

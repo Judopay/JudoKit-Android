@@ -19,9 +19,8 @@ import com.judopay.card.CustomLayoutCardEntryFragment;
 import com.judopay.card.TokenCardEntryFragment;
 import com.judopay.model.Card;
 import com.judopay.model.Receipt;
-import com.judopay.secure3d.ThreeDSecureDialogFragment;
-import com.judopay.secure3d.ThreeDSecureListener;
-import com.judopay.secure3d.ThreeDSecureWebView;
+import com.judopay.cardverification.CardVerificationDialogFragment;
+import com.judopay.cardverification.AuthorizationListener;
 
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
 import static com.judopay.Judo.JUDO_OPTIONS;
@@ -34,8 +33,7 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     private View progressBar;
     private TextView progressText;
 
-    private ThreeDSecureDialogFragment threeDSecureDialog;
-    private ThreeDSecureWebView threeDSecureWebView;
+    private CardVerificationDialogFragment threeDSecureDialog;
     private AbstractCardEntryFragment cardEntryFragment;
 
     abstract boolean isTransactionInProgress();
@@ -79,7 +77,6 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
 
         this.progressBar = view.findViewById(R.id.progress_overlay);
         this.progressText = (TextView) view.findViewById(R.id.progress_text);
-        this.threeDSecureWebView = (ThreeDSecureWebView) view.findViewById(R.id.three_d_secure_web_view);
     }
 
     @Override
@@ -133,11 +130,11 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     private void sendResult(int resultCode, Intent intent) {
         Activity activity = getActivity();
 
-        if(activity != null && !activity.isFinishing()) {
+        if (activity != null && !activity.isFinishing()) {
             try {
                 PendingIntent pendingResult = activity.createPendingResult(Judo.JUDO_REQUEST, intent, FLAG_ONE_SHOT);
                 pendingResult.send(resultCode);
-            } catch (PendingIntent.CanceledException ignore) { }
+            } catch (PendingIntent.CanceledException ignore) {}
         }
     }
 
@@ -165,26 +162,18 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     }
 
     @Override
-    public void start3dSecureWebView(Receipt receipt, ThreeDSecureListener listener) {
-        threeDSecureWebView.setThreeDSecureListener(listener);
-
-        threeDSecureWebView.authorize(receipt.getAcsUrl(), receipt.getMd(), receipt.getPaReq(), receipt.getReceiptId());
-    }
-
-    @Override
-    public void show3dSecureWebView() {
+    public void start3dSecureWebView(Receipt receipt, AuthorizationListener listener) {
         if (threeDSecureDialog == null) {
             FragmentManager fm = getFragmentManager();
 
-            threeDSecureDialog = new ThreeDSecureDialogFragment();
+            threeDSecureDialog = new CardVerificationDialogFragment();
 
             Bundle arguments = new Bundle();
-            arguments.putString(ThreeDSecureDialogFragment.KEY_LOADING_TEXT, getString(R.string.verifying_card));
+            arguments.putString(CardVerificationDialogFragment.KEY_LOADING_TEXT, getString(R.string.verifying_card));
+            arguments.putParcelable(Judo.JUDO_RECEIPT, receipt);
 
+            threeDSecureDialog.setListener(listener);
             threeDSecureDialog.setArguments(arguments);
-            threeDSecureDialog.setCancelable(false);
-
-            threeDSecureDialog.setWebView(threeDSecureWebView);
             threeDSecureDialog.show(fm, TAG_3DS_DIALOG);
         }
     }
@@ -196,8 +185,7 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
             if (options.getCustomLayout() != null) {
                 options.getCustomLayout().validate(getActivity());
                 return CustomLayoutCardEntryFragment.newInstance(options, this);
-            }
-            else if (options.getCardToken() != null) {
+            } else if (options.getCardToken() != null) {
                 return TokenCardEntryFragment.newInstance(getJudoOptions(), this);
             }
         }

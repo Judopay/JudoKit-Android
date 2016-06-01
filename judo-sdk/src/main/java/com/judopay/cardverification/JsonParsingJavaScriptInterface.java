@@ -1,4 +1,4 @@
-package com.judopay.secure3d;
+package com.judopay.cardverification;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 

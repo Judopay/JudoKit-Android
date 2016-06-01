@@ -3,29 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/web_view_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-    <LinearLayout
-        android:id="@+id/loading_overlay_3dsecure"
+    <com.judopay.cardverification.CardVerificationWebView
+        android:id="@+id/card_verification_web_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/judo_white_90"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/card_verification_loading_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:background="@color/judo_white_90"
         android:clickable="true"
         android:gravity="center"
-        android:visibility="gone"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/three_d_secure_progress_text"
+            android:id="@+id/card_verification_loading_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/large_padding"
             android:gravity="center"
+            android:text="@string/processing"
             android:textSize="16sp" />
 
         <ProgressBar

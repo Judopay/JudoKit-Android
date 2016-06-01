@@ -12,9 +12,6 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.webkit.WebView;
 
-import com.judopay.Judo;
-import com.judopay.PreAuthActivity;
-import com.judopay.R;
 import com.judopay.model.Currency;
 import com.judopay.util.WebViewIdlingResource;
 
@@ -65,7 +62,7 @@ public class ThreeDSecureTest {
         onView(withId(R.id.payment_button))
                 .perform(click());
 
-        onView(withId(R.id.three_d_secure_web_view))
+        onView(withId(R.id.card_verification_web_view))
                 .check(matches(isDisplayed()));
 
         Atom<ElementReference> submitButton = findElement(Locator.CLASS_NAME, "ACSSubmit");
@@ -81,7 +78,7 @@ public class ThreeDSecureTest {
             uiThreadTestRule.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    webViewIdlingResource = new WebViewIdlingResource((WebView) activity.findViewById(R.id.three_d_secure_web_view));
+                    webViewIdlingResource = new WebViewIdlingResource((WebView) activity.findViewById(R.id.card_verification_web_view));
                     Espresso.registerIdlingResources(webViewIdlingResource);
                 }
             });

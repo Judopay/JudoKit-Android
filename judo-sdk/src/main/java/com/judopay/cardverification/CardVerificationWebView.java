@@ -1,4 +1,4 @@
-package com.judopay.secure3d;
+package com.judopay.cardverification;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.webkit.WebView;
 import com.google.gson.Gson;
 import com.judopay.BuildConfig;
 import com.judopay.error.Show3dSecureWebViewError;
-import com.judopay.model.ThreeDSecureInfo;
+import com.judopay.model.CardVerificationResult;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
@@ -23,28 +23,28 @@ import static java.net.URLEncoder.encode;
  * the payment method used by a customer. This WebView displays the page and then listens for when
  * the redirect URL is reached to obtain the payment data needed to finish the transaction.
  */
-public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScriptInterface.JsonListener {
+public class CardVerificationWebView extends WebView implements JsonParsingJavaScriptInterface.JsonListener {
 
     private static final String JS_NAMESPACE = "JudoPay";
     static final String REDIRECT_URL = "https://pay.judopay.com/Android/Parse3DS";
     private static final String CHARSET = "UTF-8";
 
-    private ThreeDSecureListener threeDSecureListener;
+    private AuthorizationListener authorizationListener;
     private String receiptId;
 
-    private ThreeDSecureWebViewClient webViewClient;
+    private WebViewListener resultPageListener;
 
-    public ThreeDSecureWebView(Context context) {
+    public CardVerificationWebView(Context context) {
         super(context);
         initialize();
     }
 
-    public ThreeDSecureWebView(Context context, AttributeSet attrs) {
+    public CardVerificationWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialize();
     }
 
-    public ThreeDSecureWebView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CardVerificationWebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initialize();
     }
@@ -80,8 +80,9 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
                     encode(md, CHARSET), encode(REDIRECT_URL, CHARSET), encode(paReq, CHARSET));
 
             this.receiptId = receiptId;
+            JsonRedirectWebViewClient webViewClient = new JsonRedirectWebViewClient(JS_NAMESPACE, CardVerificationWebView.REDIRECT_URL);
+            webViewClient.setWebViewListener(resultPageListener);
 
-            this.webViewClient = new ThreeDSecureWebViewClient(JS_NAMESPACE, threeDSecureListener);
             setWebViewClient(webViewClient);
 
             postUrl(acsUrl, postData.getBytes());
@@ -91,10 +92,10 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
     }
 
     /**
-     * @param threeDSecureListener listener that will be notified with authorization events
+     * @param authorizationListener listener that will be notified with authorization events
      */
-    public void setThreeDSecureListener(ThreeDSecureListener threeDSecureListener) {
-        this.threeDSecureListener = threeDSecureListener;
+    public void setAuthorizationListener(AuthorizationListener authorizationListener) {
+        this.authorizationListener = authorizationListener;
     }
 
     /**
@@ -104,13 +105,13 @@ public class ThreeDSecureWebView extends WebView implements JsonParsingJavaScrip
     public void onJsonReceived(String json) {
         Gson gson = new Gson();
 
-        ThreeDSecureInfo threeDSecureResult = gson.fromJson(json, ThreeDSecureInfo.class);
+        CardVerificationResult threeDSecureResult = gson.fromJson(json, CardVerificationResult.class);
 
-        threeDSecureListener.onAuthorizationCompleted(threeDSecureResult, receiptId);
+        authorizationListener.onAuthorizationCompleted(threeDSecureResult, receiptId);
     }
 
-    public void setResultPageListener(ThreeDSecureResultPageListener resultPageListener) {
-        this.webViewClient.setResultPageListener(resultPageListener);
+    public void setResultPageListener(WebViewListener resultPageListener) {
+        this.resultPageListener = resultPageListener;
     }
 
 }
