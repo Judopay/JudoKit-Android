@@ -5,20 +5,17 @@ if [[ $# -eq 0 ]] ; then
     exit 1
 fi
 
-if [[ $(adb devices | grep 'emulator') = *emulator* ]]; then
-    echo "Android device already running, rebooting"
-    adb emu kill
+if ! [[ $(adb devices | grep 'emulator') = *emulator* ]]; then
+	emulator -avd $1 &
+
+	OUT=`adb shell getprop init.svc.bootanim`
+	RES="stopped"
+
+	while [[ ${OUT:0:7}  != 'stopped' ]]; do
+    		OUT=`adb shell getprop init.svc.bootanim`
+    		echo 'Waiting for emulator to fully boot...'
+    		sleep 5
+	done
+
+	adb shell input keyevent 82
 fi
-
-emulator -avd $1 &
-
-OUT=`adb shell getprop init.svc.bootanim`
-RES="stopped"
-
-while [[ ${OUT:0:7}  != 'stopped' ]]; do
-    OUT=`adb shell getprop init.svc.bootanim`
-    echo 'Waiting for emulator to fully boot...'
-    sleep 5
-done
-
-adb shell input keyevent 82
