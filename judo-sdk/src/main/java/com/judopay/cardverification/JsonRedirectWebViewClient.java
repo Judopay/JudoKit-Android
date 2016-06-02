@@ -33,7 +33,7 @@ class JsonRedirectWebViewClient extends WebViewClient {
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
 
-        if (url.equals(CardVerificationWebView.REDIRECT_URL)) {
+        if (url.equals(redirectUrl)) {
             if (webViewListener != null) {
                 webViewListener.onPageStarted();
             }
