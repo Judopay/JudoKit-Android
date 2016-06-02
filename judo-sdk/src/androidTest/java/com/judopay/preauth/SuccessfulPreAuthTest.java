@@ -134,7 +134,9 @@ public class SuccessfulPreAuthTest {
     @Test
     public void shouldBeSuccessfulPreAuthWhenValidMaestroEnteredAndAvsEnabled() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .setAvsEnabled(true)
+                .build());
 
         PreAuthActivity activity = activityTestRule.launchActivity(intent);
 
