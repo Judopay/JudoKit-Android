@@ -58,8 +58,6 @@ public class MainActivity extends BaseActivity {
                 .setCurrency(getCurrency())
                 .setConsumerRef(CONSUMER_REF)
                 .build();
-
-        setConfiguration();
     }
 
     public void performPayment(View view) {
@@ -119,6 +117,12 @@ public class MainActivity extends BaseActivity {
     private String getCurrency() {
         return getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
                 .getString(CURRENCY_KEY, Currency.GBP);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setConfiguration();
     }
 
     @Override
