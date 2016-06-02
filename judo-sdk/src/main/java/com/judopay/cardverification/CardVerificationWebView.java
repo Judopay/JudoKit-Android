@@ -105,9 +105,8 @@ public class CardVerificationWebView extends WebView implements JsonParsingJavaS
     public void onJsonReceived(String json) {
         Gson gson = new Gson();
 
-        CardVerificationResult threeDSecureResult = gson.fromJson(json, CardVerificationResult.class);
-
-        authorizationListener.onAuthorizationCompleted(threeDSecureResult, receiptId);
+        CardVerificationResult cardVerificationResult = gson.fromJson(json, CardVerificationResult.class);
+        authorizationListener.onAuthorizationCompleted(cardVerificationResult, receiptId);
     }
 
     public void setResultPageListener(WebViewListener resultPageListener) {

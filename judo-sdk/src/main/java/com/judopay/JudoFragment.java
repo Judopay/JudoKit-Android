@@ -19,7 +19,7 @@ import com.judopay.card.CustomLayoutCardEntryFragment;
 import com.judopay.card.TokenCardEntryFragment;
 import com.judopay.model.Card;
 import com.judopay.model.Receipt;
-import com.judopay.cardverification.CardVerificationDialogFragment;
+import com.judopay.cardverification.CardholderVerificationDialogFragment;
 import com.judopay.cardverification.AuthorizationListener;
 
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
@@ -33,7 +33,7 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     private View progressBar;
     private TextView progressText;
 
-    private CardVerificationDialogFragment threeDSecureDialog;
+    private CardholderVerificationDialogFragment cardholderVerificationDialogFragment;
     private AbstractCardEntryFragment cardEntryFragment;
 
     abstract boolean isTransactionInProgress();
@@ -150,9 +150,9 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
 
     @Override
     public void dismiss3dSecureDialog() {
-        if (threeDSecureDialog != null && threeDSecureDialog.isVisible()) {
-            threeDSecureDialog.dismiss();
-            threeDSecureDialog = null;
+        if (cardholderVerificationDialogFragment != null && cardholderVerificationDialogFragment.isVisible()) {
+            cardholderVerificationDialogFragment.dismiss();
+            cardholderVerificationDialogFragment = null;
         }
     }
 
@@ -163,18 +163,18 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
 
     @Override
     public void start3dSecureWebView(Receipt receipt, AuthorizationListener listener) {
-        if (threeDSecureDialog == null) {
+        if (cardholderVerificationDialogFragment == null) {
             FragmentManager fm = getFragmentManager();
 
-            threeDSecureDialog = new CardVerificationDialogFragment();
+            cardholderVerificationDialogFragment = new CardholderVerificationDialogFragment();
 
             Bundle arguments = new Bundle();
-            arguments.putString(CardVerificationDialogFragment.KEY_LOADING_TEXT, getString(R.string.verifying_card));
+            arguments.putString(CardholderVerificationDialogFragment.KEY_LOADING_TEXT, getString(R.string.verifying_card));
             arguments.putParcelable(Judo.JUDO_RECEIPT, receipt);
 
-            threeDSecureDialog.setListener(listener);
-            threeDSecureDialog.setArguments(arguments);
-            threeDSecureDialog.show(fm, TAG_3DS_DIALOG);
+            cardholderVerificationDialogFragment.setListener(listener);
+            cardholderVerificationDialogFragment.setArguments(arguments);
+            cardholderVerificationDialogFragment.show(fm, TAG_3DS_DIALOG);
         }
     }
 

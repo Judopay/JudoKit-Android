@@ -18,7 +18,7 @@ import com.judopay.model.Receipt;
 /**
  * A dialog for showing the web page during 3D-Secure verification.
  */
-public class CardVerificationDialogFragment extends DialogFragment implements WebViewListener {
+public class CardholderVerificationDialogFragment extends DialogFragment implements WebViewListener {
 
     public static final String KEY_LOADING_TEXT = "Judo-LoadingText";
 
