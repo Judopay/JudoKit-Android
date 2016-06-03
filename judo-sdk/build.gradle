@@ -34,6 +34,7 @@ android {
 
     buildTypes {
         debug {
+            debuggable true
             testCoverageEnabled = true
 
             Properties properties = new Properties()
@@ -53,6 +54,40 @@ android {
         exclude 'META-INF/LICENSE.txt'
     }
 
+    sourceSets {
+        main { java.srcDirs = ['src/main/java'] }
+    }
+
+}
+
+task androidJavadocs(type: Javadoc) {
+    title "Judo Android SDK Documentation"
+    options {
+        links "https://docs.oracle.com/javase/7/docs/api/"
+        linksOffline "https://developer.android.com/reference", "${android.sdkDirectory}/docs/reference"
+    }
+    options.encoding "utf-8"
+    if (JavaVersion.current().isJava8Compatible()) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+
+    exclude '**/BuildConfig.java'
+    exclude '**/R.java'
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+task javadocJar(type: Jar, dependsOn: androidJavadocs) {
+    classifier = 'javadoc'
+    from androidJavadocs.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
 }
 
 publish {
@@ -83,4 +118,15 @@ dependencies {
     androidTestCompile 'com.judopay:espresso-web:2.2.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
 
+}
+
+android.libraryVariants.all { variant ->
+    if (!variant.buildType.isDebuggable()) {
+        def androidJavadocs = project.tasks['androidJavadocs']
+        androidJavadocs.configure {
+            classpath = variant.javaCompile.classpath + project.files(project.android.bootClasspath)
+            source = variant.sourceSets.collect({ it.javaDirectories }).flatten()
+            dependsOn variant.javaCompile.dependsOn
+        }
+    }
 }
