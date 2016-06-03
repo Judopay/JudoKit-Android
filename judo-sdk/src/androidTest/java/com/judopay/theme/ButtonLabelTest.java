@@ -7,7 +7,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
-import com.judopay.PaymentActivity;
+import com.judopay.PreAuthActivity;
 import com.judopay.R;
 import com.judopay.RegisterCardActivity;
 import com.judopay.model.Currency;
@@ -21,9 +21,12 @@ import java.util.UUID;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.judopay.util.ViewMatchers.withResourceName;
+import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -33,10 +36,10 @@ public class ButtonLabelTest {
     public ActivityTestRule<RegisterCardActivity> testRule = new ActivityTestRule<>(RegisterCardActivity.class, false, false);
 
     @Rule
-    public ActivityTestRule<PaymentActivity> paymentTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
+    public ActivityTestRule<PreAuthActivity> preAuthTestRule = new ActivityTestRule<>(PreAuthActivity.class, false, false);
 
     @Test
-    public void shouldDisplayConfirmPaymentButtonLabel() {
+    public void shouldDisplayAddCardButtonLabel() {
         testRule.launchActivity(getIntent());
 
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
@@ -48,13 +51,14 @@ public class ButtonLabelTest {
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
 
-        onView(withText(R.string.confirm_payment))
+        // multiple views with add card text, so need to be specific
+        onView(allOf(isDescendantOfA(withResourceName("android:id/content")), withText(R.string.add_card)))
                 .check(matches(isDisplayed()));
     }
 
     @Test
     public void shouldDisplayPayButtonLabel() {
-        paymentTestRule.launchActivity(getIntent());
+        preAuthTestRule.launchActivity(getIntent());
 
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));

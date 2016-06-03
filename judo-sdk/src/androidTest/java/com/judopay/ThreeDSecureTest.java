@@ -19,6 +19,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.UUID;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.unregisterIdlingResources;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -29,7 +31,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.web.sugar.Web.onWebView;
 import static android.support.test.espresso.web.webdriver.DriverAtoms.findElement;
 import static android.support.test.espresso.web.webdriver.DriverAtoms.webClick;
-import static java.util.UUID.randomUUID;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -96,7 +97,7 @@ public class ThreeDSecureTest {
                 .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef(randomUUID().toString());
+                .setConsumerRef(UUID.randomUUID().toString());
     }
 
 }
