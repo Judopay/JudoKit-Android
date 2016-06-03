@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.judopay">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -7,15 +8,18 @@
 
         <activity
             android:name=".PaymentActivity"
-            android:theme="@style/Theme.Judo.Light.EnterCardDetails" />
+            android:theme="@style/Theme.Judo.Light.EnterCardDetails"
+            tools:replace="theme" />
 
         <activity
             android:name=".RegisterCardActivity"
-            android:theme="@style/Theme.Judo.Light.DarkActionBar" />
+            android:theme="@style/Theme.Judo.Light.ConfirmPayment"
+            tools:replace="theme" />
 
         <activity
             android:name=".PreAuthActivity"
-            android:theme="@style/Theme.Judo.Light.ShowSecurityMessage" />
+            android:theme="@style/Theme.Judo.Light.ShowSecurityMessage"
+            tools:replace="theme" />
 
         <meta-data
             android:name="@string/judo_api_token"
