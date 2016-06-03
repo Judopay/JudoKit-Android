@@ -13,7 +13,7 @@
 
         <activity
             android:name=".RegisterCardActivity"
-            android:theme="@style/Theme.Judo.Light.ConfirmPayment"
+            android:theme="@style/Theme.Judo.Light.DarkActionBar"
             tools:replace="theme" />
 
         <activity
