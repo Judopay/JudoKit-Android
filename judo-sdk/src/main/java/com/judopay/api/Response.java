@@ -12,6 +12,7 @@ import java.util.List;
  * that are common to all responses, such as the result, message and details of any errors that
  * occurred.
  */
+@SuppressWarnings("unused")
 public class Response implements Parcelable {
 
     private String result;

@@ -50,14 +50,16 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         judo = new Judo.Builder()
+                .setJudoId(JUDO_ID)
                 .setApiToken(API_TOKEN)
                 .setApiSecret(API_SECRET)
                 .setEnvironment(SANDBOX)
-                .setJudoId(JUDO_ID)
                 .setAmount(AMOUNT)
                 .setCurrency(getCurrency())
                 .setConsumerRef(CONSUMER_REF)
                 .build();
+
+        setConfiguration();
     }
 
     public void performPayment(View view) {

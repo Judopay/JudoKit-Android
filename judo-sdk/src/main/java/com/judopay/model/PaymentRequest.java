@@ -188,24 +188,24 @@ public final class PaymentRequest extends Request {
             checkNotNull(cv2);
             checkNotNull(expiryDate);
 
-            PaymentRequest transaction = new PaymentRequest();
+            PaymentRequest request = new PaymentRequest();
 
-            transaction.amount = amount;
-            transaction.currency = currency;
-            transaction.judoId = judoId;
-            transaction.yourConsumerReference = yourConsumerReference;
-            transaction.cardAddress = cardAddress;
-            transaction.cardNumber = cardNumber;
-            transaction.cv2 = cv2;
-            transaction.expiryDate = expiryDate;
-            transaction.startDate = startDate;
-            transaction.issueNumber = issueNumber;
-            transaction.saveCardOnly = saveCardOnly;
-            transaction.emailAddress = emailAddress;
-            transaction.mobileNumber = mobileNumber;
-            transaction.yourPaymentMetaData = yourPaymentMetaData;
+            request.amount = amount;
+            request.currency = currency;
+            request.judoId = judoId;
+            request.yourConsumerReference = yourConsumerReference;
+            request.cardAddress = cardAddress;
+            request.cardNumber = cardNumber;
+            request.cv2 = cv2;
+            request.expiryDate = expiryDate;
+            request.startDate = startDate;
+            request.issueNumber = issueNumber;
+            request.saveCardOnly = saveCardOnly;
+            request.emailAddress = emailAddress;
+            request.mobileNumber = mobileNumber;
+            request.yourPaymentMetaData = yourPaymentMetaData;
 
-            return transaction;
+            return request;
         }
 
     }
