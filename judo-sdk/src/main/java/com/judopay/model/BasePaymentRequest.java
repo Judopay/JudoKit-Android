@@ -5,6 +5,7 @@ import com.judopay.api.Request;
 import java.math.BigDecimal;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 abstract class BasePaymentRequest extends Request {
 
     BigDecimal amount;

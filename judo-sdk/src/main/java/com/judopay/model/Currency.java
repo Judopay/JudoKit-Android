@@ -11,7 +11,7 @@ import java.util.List;
  * Represents all the currencies that can be used when performing transactions with the judo API.
  */
 @SuppressWarnings("WeakerAccess")
-public class Currency {
+public final class Currency {
 
     @StringDef({AUD, BRL, CAD, CHF, CZK, DKK, EUR, GBP, HKD, HUF, JPY, NOK, NZD, PLN, SEK, USD, ZAR})
     @Retention(RetentionPolicy.SOURCE)

@@ -4,7 +4,7 @@ package com.judopay.model;
  * The GPS co-ordinates of a location.
  */
 @SuppressWarnings("unused")
-public class Location {
+public final class Location {
 
     private Double latitude;
     private Double longitude;

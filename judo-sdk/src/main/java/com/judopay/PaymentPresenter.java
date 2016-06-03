@@ -19,7 +19,6 @@ class PaymentPresenter extends BasePresenter {
 
         PaymentRequest.Builder builder = new PaymentRequest.Builder()
                 .setAmount(judo.getAmount())
-                .setCardAddress(card.getCardAddress())
                 .setCardNumber(card.getCardNumber())
                 .setCurrency(judo.getCurrency())
                 .setCv2(card.getSecurityCode())
@@ -29,6 +28,12 @@ class PaymentPresenter extends BasePresenter {
                 .setEmailAddress(judo.getEmailAddress())
                 .setMobileNumber(judo.getMobileNumber())
                 .setMetaData(judo.getMetaDataMap());
+
+        if(card.getAddress() != null) {
+            builder.setCardAddress(card.getAddress());
+        } else {
+            builder.setCardAddress(judo.getAddress());
+        }
 
         if (card.startDateAndIssueNumberRequired()) {
             builder.setIssueNumber(card.getIssueNumber())
@@ -45,9 +50,8 @@ class PaymentPresenter extends BasePresenter {
         this.loading = true;
         transactionCallbacks.showLoading();
 
-        TokenRequest tokenRequest = new TokenRequest.Builder()
+        TokenRequest.Builder builder = new TokenRequest.Builder()
                 .setAmount(judo.getAmount())
-                .setCardAddress(card.getCardAddress())
                 .setCurrency(judo.getCurrency())
                 .setJudoId(judo.getJudoId())
                 .setYourConsumerReference(judo.getConsumerRef())
@@ -55,13 +59,17 @@ class PaymentPresenter extends BasePresenter {
                 .setToken(judo.getCardToken())
                 .setMetaData(judo.getMetaDataMap())
                 .setEmailAddress(judo.getEmailAddress())
-                .setMobileNumber(judo.getMobileNumber())
-                .build();
+                .setMobileNumber(judo.getMobileNumber());
 
-        apiService.tokenPayment(tokenRequest)
+        if(card.getAddress() != null) {
+            builder.setCardAddress(card.getAddress());
+        } else {
+            builder.setCardAddress(judo.getAddress());
+        }
+
+        apiService.tokenPayment(builder.build())
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread())
                 .subscribe(callback(), error());
     }
-
 }

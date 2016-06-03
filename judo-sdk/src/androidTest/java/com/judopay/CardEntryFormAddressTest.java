@@ -28,7 +28,7 @@ import static org.hamcrest.Matchers.instanceOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class CardEntryFormBillingAddressTest {
+public class CardEntryFormAddressTest {
 
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);

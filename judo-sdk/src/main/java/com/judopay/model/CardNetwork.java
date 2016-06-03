@@ -5,7 +5,7 @@ package com.judopay.model;
  * Can be detected from the card number digits using the {@link CardNetwork#fromCardNumber(String)} method.
  */
 @SuppressWarnings("unused")
-public class CardNetwork {
+public final class CardNetwork {
 
     private static final String REGEX_VISA = "^4[0-9]{3}.*?";
     private static final String REGEX_MASTERCARD = "^5[1-5][0-9]{2}.*?";

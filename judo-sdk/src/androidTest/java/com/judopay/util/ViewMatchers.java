@@ -8,7 +8,10 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
 public class ViewMatchers {
@@ -32,6 +35,31 @@ public class ViewMatchers {
                 return stringMatcher.matches(textView.getHint());
             }
         };
+    }
+
+    public static Matcher<View> withResourceName(String resourceName) {
+        return withResourceName(is(resourceName));
+    }
+
+    public static Matcher<View> withResourceName(final Matcher<String> resourceNameMatcher) {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("with resource name: ");
+                resourceNameMatcher.describeTo(description);
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                int id = view.getId();
+                return id != View.NO_ID && id != 0 && view.getResources() != null
+                        && resourceNameMatcher.matches(view.getResources().getResourceName(id));
+            }
+        };
+    }
+
+    public static Matcher<View> withActionBarTitle(int resourceId) {
+        return allOf(isDescendantOfA(withResourceName("com.judopay.test:id/action_bar")), withText(resourceId));
     }
 
     public static Matcher<View> isNotDisplayed() {
