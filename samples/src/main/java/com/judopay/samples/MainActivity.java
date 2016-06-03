@@ -13,6 +13,7 @@ import com.judopay.Judo;
 import com.judopay.PaymentActivity;
 import com.judopay.PreAuthActivity;
 import com.judopay.RegisterCardActivity;
+import com.judopay.model.Address;
 import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
 import com.judopay.samples.settings.SettingsActivity;
@@ -36,9 +37,9 @@ public class MainActivity extends BaseActivity {
 
     private static final String AMOUNT = "0.99";
 
-    private static final String JUDO_ID = "<JUDO_ID>";
-    private static final String API_TOKEN = "<API_TOKEN>";
-    private static final String API_SECRET = "<API_SECRET>";
+    private static final String JUDO_ID = "100407-196";
+    private static final String API_TOKEN = "823Eja2fEM6E9NAE";
+    private static final String API_SECRET = "382df6f458294f49f02f073e8f356f8983e2460631ea1b4c8ed4c3ee502dcbe6";
 
     private static final String CONSUMER_REF = "AndroidSdkSampleConsumerRef";
 
@@ -50,10 +51,16 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         judo = new Judo.Builder()
+                .setJudoId(JUDO_ID)
                 .setApiToken(API_TOKEN)
                 .setApiSecret(API_SECRET)
                 .setEnvironment(SANDBOX)
-                .setJudoId(JUDO_ID)
+                .setAddress(new Address.Builder()
+                        .setLine1("Flat 14 Derry Court")
+                        .setLine2("386 Streatham High Road")
+                        .setTown("London")
+                        .setPostCode("SW16 6AT")
+                        .build())
                 .setAmount(AMOUNT)
                 .setCurrency(getCurrency())
                 .setConsumerRef(CONSUMER_REF)

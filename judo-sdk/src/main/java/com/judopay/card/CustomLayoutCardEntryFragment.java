@@ -393,14 +393,11 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
                 .setExpiryDate(getText(expiryDateTextInput))
                 .setSecurityCode(getText(securityCodeTextInput));
 
-        if (postcodeTextInput != null) {
-            Address.Builder addressBuilder = new Address.Builder();
-
-            if (judo.isAvsEnabled()) {
-                addressBuilder.setPostCode(getText(postcodeTextInput))
-                        .setCountryCode(Country.codeFromCountry((String) countrySpinner.getSelectedItem()));
-            }
-            cardBuilder.setCardAddress(addressBuilder.build());
+        if (judo.isAvsEnabled() && postcodeTextInput != null) {
+            cardBuilder.setCardAddress(new Address.Builder()
+                    .setPostCode(getText(postcodeTextInput))
+                    .setCountryCode(Country.codeFromCountry((String) countrySpinner.getSelectedItem()))
+                    .build());
         }
 
         EditText cardNumberEditText = cardNumberTextInput.getEditText();

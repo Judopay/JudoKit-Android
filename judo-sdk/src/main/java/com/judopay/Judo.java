@@ -10,6 +10,7 @@ import android.support.annotation.IntDef;
 
 import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.error.JudoIdInvalidError;
+import com.judopay.model.Address;
 import com.judopay.model.CardToken;
 import com.judopay.model.Currency;
 import com.judopay.model.CustomLayout;
@@ -88,6 +89,7 @@ public class Judo implements Parcelable {
     private String cardNumber;
     private String expiryMonth;
     private String expiryYear;
+    private Address address;
     private CardToken cardToken;
     private String emailAddress;
     private String mobileNumber;
@@ -111,6 +113,7 @@ public class Judo implements Parcelable {
                 .setCurrency(currency)
                 .setConsumerRef(consumerRef)
                 .setMetaData(metaData)
+                .setAddress(address)
                 .setEmailAddress(emailAddress)
                 .setMobileNumber(mobileNumber)
                 .setAvsEnabled(avsEnabled)
@@ -165,6 +168,10 @@ public class Judo implements Parcelable {
 
     public String getMobileNumber() {
         return mobileNumber;
+    }
+
+    public Address getAddress() {
+        return address;
     }
 
     public PendingIntent getCardScanningIntent() {
@@ -264,6 +271,7 @@ public class Judo implements Parcelable {
         private String judoId;
         private Integer environment;
 
+        private Address address;
         private CardToken cardToken;
         private String cardNumber;
         private String expiryMonth;
@@ -345,6 +353,11 @@ public class Judo implements Parcelable {
             return this;
         }
 
+        public Builder setAddress(Address address) {
+            this.address = address;
+            return this;
+        }
+
         public Builder setCardToken(CardToken cardToken) {
             this.cardToken = cardToken;
             return this;
@@ -416,6 +429,7 @@ public class Judo implements Parcelable {
             judo.metaData = metaData;
             judo.emailAddress = emailAddress;
             judo.mobileNumber = mobileNumber;
+            judo.address = address;
 
             judo.avsEnabled = avsEnabled;
             judo.amexEnabled = amexEnabled;
@@ -453,11 +467,13 @@ public class Judo implements Parcelable {
         dest.writeString(this.cardNumber);
         dest.writeString(this.expiryMonth);
         dest.writeString(this.expiryYear);
+        dest.writeParcelable(this.address, flags);
         dest.writeParcelable(this.cardToken, flags);
         dest.writeString(this.emailAddress);
         dest.writeString(this.mobileNumber);
         dest.writeParcelable(this.customLayout, flags);
         dest.writeParcelable(this.cardScanningIntent, flags);
+        dest.writeString(this.customEnvironmentHost);
     }
 
     protected Judo(Parcel in) {
@@ -477,14 +493,16 @@ public class Judo implements Parcelable {
         this.cardNumber = in.readString();
         this.expiryMonth = in.readString();
         this.expiryYear = in.readString();
+        this.address = in.readParcelable(Address.class.getClassLoader());
         this.cardToken = in.readParcelable(CardToken.class.getClassLoader());
         this.emailAddress = in.readString();
         this.mobileNumber = in.readString();
         this.customLayout = in.readParcelable(CustomLayout.class.getClassLoader());
         this.cardScanningIntent = in.readParcelable(PendingIntent.class.getClassLoader());
+        this.customEnvironmentHost = in.readString();
     }
 
-    public static final Parcelable.Creator<Judo> CREATOR = new Parcelable.Creator<Judo>() {
+    public static final Creator<Judo> CREATOR = new Creator<Judo>() {
         @Override
         public Judo createFromParcel(Parcel source) {
             return new Judo(source);

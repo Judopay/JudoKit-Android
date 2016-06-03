@@ -364,14 +364,12 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
                 .setExpiryDate(expiryDateEntryView.getText())
                 .setSecurityCode(securityCodeEntryView.getText());
 
-        Address.Builder addressBuilder = new Address.Builder()
-                .setPostCode(postcodeEntryView.getText());
-
         if (judo.isAvsEnabled()) {
-            addressBuilder.setCountryCode(Country.codeFromCountry((String) countrySpinner.getSelectedItem()));
+            cardBuilder.setCardAddress(new Address.Builder()
+                    .setPostCode(postcodeEntryView.getText())
+                    .setCountryCode(Country.codeFromCountry((String) countrySpinner.getSelectedItem()))
+                    .build());
         }
-
-        cardBuilder.setCardAddress(addressBuilder.build());
 
         if (cardNumberEntryView.getCardType() == CardNetwork.MAESTRO) {
             cardBuilder.setIssueNumber(issueNumberEntryView.getText())

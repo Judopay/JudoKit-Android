@@ -141,15 +141,6 @@ public class PaymentPresenterTest {
     }
 
     @Test
-    public void shouldShowWebViewWhenAuthWebPageLoaded() {
-        PaymentPresenter presenter = new PaymentPresenter(transactionCallbacks, apiService, scheduler, gson);
-
-        presenter.onAuthorizationWebPageLoaded();
-
-        verify(transactionCallbacks).show3dSecureWebView();
-    }
-
-    @Test
     public void shouldFinishWhenSuccessfulReceipt() {
         PaymentPresenter presenter = new PaymentPresenter(transactionCallbacks, apiService, scheduler, gson);
         String receiptId = "123456";
