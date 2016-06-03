@@ -1,8 +1,6 @@
 package com.judopay.token;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.IdlingPolicies;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -28,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 import rx.functions.Action1;
 
+import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -51,10 +50,8 @@ public class SuccessfulTokenPaymentTest {
 
     @Test
     public void shouldBeSuccessfulTokenPayment() {
-        Context context = InstrumentationRegistry.getContext();
-
         Judo judo = getJudo().build();
-        final JudoApiService apiService = judo.getApiService(context);
+        final JudoApiService apiService = judo.getApiService(getContext());
 
         RegisterCardRequest registerCardRequest = new RegisterCardRequest.Builder()
                 .setJudoId("100915867")
@@ -90,10 +87,10 @@ public class SuccessfulTokenPaymentTest {
 
     @Test
     public void shouldBeSuccessfulTokenPaymentWhenAvsEnabled() {
-        Context context = InstrumentationRegistry.getContext();
-
-        Judo judo = getJudo().setAvsEnabled(true).build();
-        final JudoApiService apiService = judo.getApiService(context);
+        final JudoApiService apiService = getJudo()
+                .setAvsEnabled(true)
+                .build()
+                .getApiService(getContext());
 
         RegisterCardRequest registerCardRequest = new RegisterCardRequest.Builder()
                 .setJudoId("100915867")
@@ -114,6 +111,7 @@ public class SuccessfulTokenPaymentTest {
                     public void call(Receipt receipt) {
                         Intent intent = new Intent();
                         intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                                .setAvsEnabled(true)
                                 .setCardToken(receipt.getCardDetails())
                                 .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
                                 .build());
