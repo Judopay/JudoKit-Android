@@ -8,13 +8,10 @@ import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
 import com.judopay.PaymentActivity;
-import com.judopay.PreAuthActivity;
 import com.judopay.R;
-import com.judopay.model.CardNetwork;
 import com.judopay.model.CardToken;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +28,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.judopay.Judo.UAT;
 import static com.judopay.model.CardNetwork.AMEX;
 import static com.judopay.model.CardNetwork.VISA;
 import static com.judopay.util.ViewMatchers.isDisabled;
@@ -70,16 +68,7 @@ public class TokenPaymentFormTest {
     @Test
     public void shouldIgnoreCardNumberIfProvided() {
         Intent intent = new Intent();
-
-        intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
-                .setJudoId("100915867")
-                .setAmount("0.99")
-                .setCardNumber("9999999999999999")
-                .setCurrency(Currency.GBP)
-                .setCardNumber("6789")
-                .setCardToken(new CardToken("1220", "1234", "cardToken", VISA))
-                .setConsumerRef(UUID.randomUUID().toString())
-                .build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo(VISA).build());
 
         activityTestRule.launchActivity(intent);
 
@@ -243,7 +232,7 @@ public class TokenPaymentFormTest {
 
     private Judo.Builder getJudo(int cardType) {
         return new Judo.Builder()
-                .setEnvironment(Judo.UAT)
+                .setEnvironment(UAT)
                 .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
