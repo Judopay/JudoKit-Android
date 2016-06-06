@@ -1,5 +1,10 @@
 # Judo Android SDK change log
 
+## [5.4.1](https://github.com/judopay/Judo-Android/tree/5.4.1) (2016-06-06)
+
+**Changes:**
+- Address can be provided in ```JudoOptions``` for use with JudoShield fraud detection.
+
 ## [5.4](https://github.com/judopay/Judo-Android/tree/5.4) (2016-05-31)
 
 **Features:**
