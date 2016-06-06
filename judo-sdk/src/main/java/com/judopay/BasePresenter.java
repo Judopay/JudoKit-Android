@@ -1,7 +1,5 @@
 package com.judopay;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.judopay.arch.Scheduler;
 import com.judopay.model.Receipt;
