@@ -120,7 +120,7 @@ public class RegisterCardPresenterTest {
                 .setCardNumber("4976000000003436")
                 .setSecurityCode("452")
                 .setExpiryDate("12/20")
-                .setCardAddress(cardAddress)
+                .setAddress(cardAddress)
                 .build();
 
         when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.<Receipt>empty());

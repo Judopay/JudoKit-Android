@@ -19,7 +19,6 @@ class PreAuthPresenter extends BasePresenter {
 
         PaymentRequest.Builder builder = new PaymentRequest.Builder()
                 .setAmount(options.getAmount())
-                .setCardAddress(card.getCardAddress())
                 .setCardNumber(card.getCardNumber())
                 .setCurrency(options.getCurrency())
                 .setCv2(card.getSecurityCode())
@@ -29,6 +28,12 @@ class PreAuthPresenter extends BasePresenter {
                 .setMobileNumber(options.getMobileNumber())
                 .setMetaData(options.getMetaDataMap())
                 .setExpiryDate(card.getExpiryDate());
+
+        if(card.getAddress() != null) {
+            builder.setCardAddress(card.getAddress());
+        } else {
+            builder.setCardAddress(options.getAddress());
+        }
 
         if (card.startDateAndIssueNumberRequired()) {
             builder.setIssueNumber(card.getIssueNumber())
@@ -46,9 +51,8 @@ class PreAuthPresenter extends BasePresenter {
         this.loading = true;
         transactionCallbacks.showLoading();
 
-        TokenRequest tokenRequest = new TokenRequest.Builder()
+        TokenRequest.Builder builder = new TokenRequest.Builder()
                 .setAmount(options.getAmount())
-                .setCardAddress(card.getCardAddress())
                 .setCurrency(options.getCurrency())
                 .setJudoId(options.getJudoId())
                 .setYourConsumerReference(options.getConsumerRef())
@@ -56,8 +60,15 @@ class PreAuthPresenter extends BasePresenter {
                 .setEmailAddress(options.getEmailAddress())
                 .setMobileNumber(options.getMobileNumber())
                 .setMetaData(options.getMetaDataMap())
-                .setToken(options.getCardToken())
-                .build();
+                .setToken(options.getCardToken());
+
+        if(card.getAddress() != null) {
+            builder.setCardAddress(card.getAddress());
+        } else {
+            builder.setCardAddress(options.getAddress());
+        }
+
+        TokenRequest tokenRequest = builder.build();
 
         apiService.tokenPreAuth(tokenRequest)
                 .subscribeOn(scheduler.backgroundThread())

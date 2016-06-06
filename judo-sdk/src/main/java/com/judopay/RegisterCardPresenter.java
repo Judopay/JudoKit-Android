@@ -18,7 +18,6 @@ class RegisterCardPresenter extends BasePresenter {
 
         RegisterCardRequest.Builder builder = new RegisterCardRequest.Builder()
                 .setJudoId(options.getJudoId())
-                .setCardAddress(card.getCardAddress())
                 .setCardNumber(card.getCardNumber())
                 .setCv2(card.getSecurityCode())
                 .setExpiryDate(card.getExpiryDate())
@@ -26,6 +25,12 @@ class RegisterCardPresenter extends BasePresenter {
                 .setEmailAddress(options.getEmailAddress())
                 .setMobileNumber(options.getMobileNumber())
                 .setYourConsumerReference(options.getConsumerRef());
+
+        if(card.getAddress() != null) {
+            builder.setCardAddress(card.getAddress());
+        } else {
+            builder.setCardAddress(options.getAddress());
+        }
 
         if (card.startDateAndIssueNumberRequired()) {
             builder.setIssueNumber(card.getIssueNumber())
