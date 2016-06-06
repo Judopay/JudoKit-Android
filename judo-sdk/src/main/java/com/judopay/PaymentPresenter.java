@@ -19,7 +19,6 @@ class PaymentPresenter extends BasePresenter {
 
         PaymentRequest.Builder builder = new PaymentRequest.Builder()
                 .setAmount(options.getAmount())
-                .setCardAddress(card.getCardAddress())
                 .setCardNumber(card.getCardNumber())
                 .setCurrency(options.getCurrency())
                 .setCv2(card.getSecurityCode())
@@ -29,6 +28,12 @@ class PaymentPresenter extends BasePresenter {
                 .setEmailAddress(options.getEmailAddress())
                 .setMobileNumber(options.getMobileNumber())
                 .setMetaData(options.getMetaDataMap());
+
+        if(card.getAddress() != null) {
+            builder.setCardAddress(card.getAddress());
+        } else {
+            builder.setCardAddress(options.getAddress());
+        }
 
         if (card.startDateAndIssueNumberRequired()) {
             builder.setIssueNumber(card.getIssueNumber())
@@ -45,9 +50,8 @@ class PaymentPresenter extends BasePresenter {
         this.loading = true;
         transactionCallbacks.showLoading();
 
-        TokenRequest tokenRequest = new TokenRequest.Builder()
+        TokenRequest.Builder builder = new TokenRequest.Builder()
                 .setAmount(options.getAmount())
-                .setCardAddress(card.getCardAddress())
                 .setCurrency(options.getCurrency())
                 .setJudoId(options.getJudoId())
                 .setYourConsumerReference(options.getConsumerRef())
@@ -55,13 +59,17 @@ class PaymentPresenter extends BasePresenter {
                 .setToken(options.getCardToken())
                 .setMetaData(options.getMetaDataMap())
                 .setEmailAddress(options.getEmailAddress())
-                .setMobileNumber(options.getMobileNumber())
-                .build();
+                .setMobileNumber(options.getMobileNumber());
 
-        apiService.tokenPayment(tokenRequest)
+        if(card.getAddress() != null) {
+            builder.setCardAddress(card.getAddress());
+        } else {
+            builder.setCardAddress(options.getAddress());
+        }
+
+        apiService.tokenPayment(builder.build())
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread())
                 .subscribe(callback(), error());
     }
-
 }

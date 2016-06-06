@@ -7,10 +7,10 @@ import android.os.Parcelable;
  * Represents the card data entered by the user.
  * Use {@link Card.Builder} to construct an instance.
  */
-public class Card implements Parcelable {
+public final class Card implements Parcelable {
 
     private String cardNumber;
-    private Address cardAddress;
+    private Address address;
     private String expiryDate;
     private String startDate;
     private String issueNumber;
@@ -20,8 +20,8 @@ public class Card implements Parcelable {
         return cardNumber;
     }
 
-    public Address getCardAddress() {
-        return cardAddress;
+    public Address getAddress() {
+        return address;
     }
 
     public String getExpiryDate() {
@@ -48,7 +48,7 @@ public class Card implements Parcelable {
     public static class Builder {
 
         private String cardNumber;
-        private Address cardAddress;
+        private Address address;
         private String expiryDate;
         private String startDate;
         private String issueNumber;
@@ -59,8 +59,8 @@ public class Card implements Parcelable {
             return this;
         }
 
-        public Builder setCardAddress(Address cardAddress) {
-            this.cardAddress = cardAddress;
+        public Builder setAddress(Address address) {
+            this.address = address;
             return this;
         }
 
@@ -88,7 +88,7 @@ public class Card implements Parcelable {
             Card card = new Card();
 
             card.cardNumber = cardNumber;
-            card.cardAddress = cardAddress;
+            card.address = address;
             card.expiryDate = expiryDate;
             card.startDate = startDate;
             card.issueNumber = issueNumber;
@@ -106,7 +106,7 @@ public class Card implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.cardNumber);
-        dest.writeParcelable(this.cardAddress, flags);
+        dest.writeParcelable(this.address, flags);
         dest.writeString(this.expiryDate);
         dest.writeString(this.startDate);
         dest.writeString(this.issueNumber);
@@ -118,7 +118,7 @@ public class Card implements Parcelable {
 
     protected Card(Parcel in) {
         this.cardNumber = in.readString();
-        this.cardAddress = in.readParcelable(Address.class.getClassLoader());
+        this.address = in.readParcelable(Address.class.getClassLoader());
         this.expiryDate = in.readString();
         this.startDate = in.readString();
         this.issueNumber = in.readString();

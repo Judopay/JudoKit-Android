@@ -9,6 +9,7 @@ import com.judopay.Judo;
 import com.judopay.JudoApiService;
 import com.judopay.R;
 import com.judopay.error.SslInitializationError;
+import com.judopay.model.Address;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -98,6 +99,7 @@ public class JudoApiServiceFactory {
 
     public static Gson getGson() {
         return new GsonBuilder()
+                .registerTypeAdapter(Address.class, new Address.Serializer())
                 .registerTypeAdapter(Date.class, new DateJsonDeserializer())
                 .registerTypeAdapter(BigDecimal.class, new FormattedBigDecimalDeserializer())
                 .create();

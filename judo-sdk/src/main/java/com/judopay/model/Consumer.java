@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 @SuppressWarnings("unused")
-public class Consumer implements Parcelable {
+public final class Consumer implements Parcelable {
 
     private String consumerToken;
     private final String yourConsumerReference;
