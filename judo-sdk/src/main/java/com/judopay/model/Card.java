@@ -88,7 +88,7 @@ public final class Card implements Parcelable {
             Card card = new Card();
 
             card.cardNumber = cardNumber;
-            card.address = cardAddress;
+            card.address = address;
             card.expiryDate = expiryDate;
             card.startDate = startDate;
             card.issueNumber = issueNumber;

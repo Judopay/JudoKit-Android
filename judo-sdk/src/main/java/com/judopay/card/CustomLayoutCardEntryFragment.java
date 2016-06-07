@@ -394,7 +394,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
                 .setSecurityCode(getText(securityCodeTextInput));
 
         if (judo.isAvsEnabled() && postcodeTextInput != null) {
-            cardBuilder.setCardAddress(new Address.Builder()
+            cardBuilder.setAddress(new Address.Builder()
                     .setPostCode(getText(postcodeTextInput))
                     .setCountryCode(Country.codeFromCountry((String) countrySpinner.getSelectedItem()))
                     .build());

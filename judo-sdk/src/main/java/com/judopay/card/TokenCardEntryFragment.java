@@ -195,7 +195,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
                 .setSecurityCode(securityCodeEntryView.getText());
 
         if (judo.isAvsEnabled()) {
-           cardBuilder.setCardAddress(new Address.Builder()
+           cardBuilder.setAddress(new Address.Builder()
                    .setPostCode(postcodeEntryView.getText())
                    .setCountryCode(Country.codeFromCountry((String) countrySpinner.getSelectedItem()))
                    .build());
