@@ -1,4 +1,4 @@
-package com.judopay.secure3d;
+package com.judopay.cardverification;
 
 import android.graphics.Bitmap;
 import android.webkit.WebView;
@@ -6,18 +6,16 @@ import android.webkit.WebViewClient;
 
 import static android.view.View.INVISIBLE;
 
-class ThreeDSecureWebViewClient extends WebViewClient {
+class JsonRedirectWebViewClient extends WebViewClient {
 
-    private final String redirectUrl;
     private final String javaScriptNamespace;
-    private final ThreeDSecureListener threeDSecureListener;
 
-    private ThreeDSecureResultPageListener resultPageListener;
+    private WebViewListener webViewListener;
+    private final String redirectUrl;
 
-    public ThreeDSecureWebViewClient(String javaScriptNamespace, ThreeDSecureListener threeDSecureListener) {
-        this.redirectUrl = ThreeDSecureWebView.REDIRECT_URL;
+    public JsonRedirectWebViewClient(String javaScriptNamespace, String redirectUrl) {
         this.javaScriptNamespace = javaScriptNamespace;
-        this.threeDSecureListener = threeDSecureListener;
+        this.redirectUrl = redirectUrl;
     }
 
     @Override
@@ -27,7 +25,7 @@ class ThreeDSecureWebViewClient extends WebViewClient {
         if (url.equals(redirectUrl)) {
             view.loadUrl(String.format("javascript:window.%s.parseJsonFromHtml(document.documentElement.innerHTML);", javaScriptNamespace));
         } else {
-            threeDSecureListener.onAuthorizationWebPageLoaded();
+            webViewListener.onPageLoaded();
         }
     }
 
@@ -36,15 +34,15 @@ class ThreeDSecureWebViewClient extends WebViewClient {
         super.onPageStarted(view, url, favicon);
 
         if (url.equals(redirectUrl)) {
-            if (resultPageListener != null) {
-                resultPageListener.onPageStarted();
+            if (webViewListener != null) {
+                webViewListener.onPageStarted();
             }
             view.setVisibility(INVISIBLE);
         }
     }
 
-    public void setResultPageListener(ThreeDSecureResultPageListener resultPageListener) {
-        this.resultPageListener = resultPageListener;
+    public void setWebViewListener(WebViewListener webViewListener) {
+        this.webViewListener = webViewListener;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.judopay.secure3d;
+package com.judopay.cardverification;
 
 import org.junit.Test;
 
