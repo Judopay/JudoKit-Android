@@ -22,7 +22,7 @@ import java.util.UUID;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.judopay.util.ViewMatchers.withActionBarTitle;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -44,7 +44,7 @@ public class ActivityTitleTest {
     public void shouldDisplayEnterCardDetailsActivityTitle() {
         activityTestRule.launchActivity(getIntent());
 
-        onView(withText(R.string.enter_card_details))
+        onView(withActionBarTitle(R.string.enter_card_details))
                 .check(matches(isDisplayed()));
     }
 
@@ -52,7 +52,7 @@ public class ActivityTitleTest {
     public void shouldDisplayAddCardActivityTitleWhenRegisterCard() {
         registerCardTestRule.launchActivity(getIntent());
 
-        onView(withText(R.string.add_card))
+        onView(withActionBarTitle(R.string.add_card))
                 .check(matches(isDisplayed()));
     }
 
