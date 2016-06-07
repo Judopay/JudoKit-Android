@@ -2,14 +2,14 @@ package com.judopay.view;
 
 import android.content.Context;
 import android.support.annotation.DrawableRes;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 public abstract class FlipImageView extends FrameLayout {
 
-    private ImageView frontImageView;
-    private ImageView backImageView;
+    private AppCompatImageView frontImageView;
+    private AppCompatImageView backImageView;
 
     private int imageResource = 0;
 
@@ -33,14 +33,13 @@ public abstract class FlipImageView extends FrameLayout {
 
     public void setCardType(int cardType, boolean animate) {
         if (this.frontImageView == null) {
-            this.frontImageView = new ImageView(getContext());
-
+            this.frontImageView = new AppCompatImageView(getContext());
             this.frontImageView.setImageResource(getImageResource(cardType));
             addView(this.frontImageView);
         }
 
         if (this.backImageView == null) {
-            this.backImageView = new ImageView(getContext());
+            this.backImageView = new AppCompatImageView(getContext());
             this.backImageView.setVisibility(GONE);
             addView(this.backImageView);
         }
@@ -68,7 +67,7 @@ public abstract class FlipImageView extends FrameLayout {
         FlipAnimation flipAnimation = new FlipAnimation(frontImageView, backImageView);
         startAnimation(flipAnimation);
 
-        ImageView temp = frontImageView;
+        AppCompatImageView temp = frontImageView;
         this.frontImageView = backImageView;
         this.backImageView = temp;
     }

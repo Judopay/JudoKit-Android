@@ -26,7 +26,7 @@ public class CardSecurityCodeView extends FlipImageView {
             case CardNetwork.AMEX:
                 return R.drawable.ic_card_cid;
             default:
-                return R.drawable.ic_card_security_code;
+                return R.drawable.ic_card_cvv;
         }
     }
 }
