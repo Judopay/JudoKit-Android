@@ -48,7 +48,7 @@ public final class Card implements Parcelable {
     public static class Builder {
 
         private String cardNumber;
-        private Address cardAddress;
+        private Address address;
         private String expiryDate;
         private String startDate;
         private String issueNumber;
@@ -59,8 +59,8 @@ public final class Card implements Parcelable {
             return this;
         }
 
-        public Builder setCardAddress(Address cardAddress) {
-            this.cardAddress = cardAddress;
+        public Builder setAddress(Address address) {
+            this.address = address;
             return this;
         }
 

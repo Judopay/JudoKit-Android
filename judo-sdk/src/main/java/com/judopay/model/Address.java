@@ -3,6 +3,13 @@ package com.judopay.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+
+import java.lang.reflect.Type;
+
 /**
  * An Address linked to a payment card, used when address verification is performed.
  */
@@ -13,10 +20,10 @@ public class Address implements Parcelable {
     private String line2;
     private String line3;
     private String town;
-    private Integer countryCode;
+    private int countryCode;
     private String postCode;
 
-    public Address(String line1, String line2, String line3, String town, String postCode, Integer countryCode) {
+    public Address(String line1, String line2, String line3, String town, String postCode, int countryCode) {
         this.line1 = line1;
         this.line2 = line2;
         this.line3 = line3;
@@ -41,12 +48,46 @@ public class Address implements Parcelable {
         return town;
     }
 
-    public Integer getCountryCode() {
+    public int getCountryCode() {
         return countryCode;
     }
 
     public String getPostCode() {
         return postCode;
+    }
+
+    public static class Serializer implements JsonSerializer<Address> {
+
+        @Override
+        public JsonElement serialize(Address src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject object = new JsonObject();
+
+            if(src.line1 != null) {
+                object.addProperty("line1", src.getLine1());
+            }
+
+            if(src.line2 != null) {
+                object.addProperty("line2", src.getLine2());
+            }
+
+            if(src.line3 != null) {
+                object.addProperty("line3", src.getLine3());
+            }
+
+            if(src.town != null) {
+                object.addProperty("town", src.getTown());
+            }
+
+            if(src.postCode != null) {
+                object.addProperty("postCode", src.getPostCode());
+            }
+
+            if (src.countryCode != 0) {
+                object.addProperty("countryCode", src.getCountryCode());
+            }
+
+            return object;
+        }
     }
 
     public static class Builder {
@@ -56,7 +97,7 @@ public class Address implements Parcelable {
         private String line3;
         private String postCode;
         private String town;
-        private Integer countryCode;
+        private int countryCode;
 
         public Builder setLine1(String line1) {
             this.line1 = line1;
@@ -78,7 +119,7 @@ public class Address implements Parcelable {
             return this;
         }
 
-        public Builder setCountryCode(Integer countryCode) {
+        public Builder setCountryCode(int countryCode) {
             this.countryCode = countryCode;
             return this;
         }
@@ -104,7 +145,7 @@ public class Address implements Parcelable {
         dest.writeString(this.line2);
         dest.writeString(this.line3);
         dest.writeString(this.town);
-        dest.writeValue(this.countryCode);
+        dest.writeInt(this.countryCode);
         dest.writeString(this.postCode);
     }
 
