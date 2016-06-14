@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -145,7 +144,7 @@ abstract class JudoActivity extends AppCompatActivity {
 
     @Override
     public void setTitle(@StringRes int titleId) {
-        String activityTitle = ThemeUtil.getStringAttr(this, getClass(), R.attr.activityTitle);
+        String activityTitle = ThemeUtil.getStringAttr(this, R.attr.activityTitle);
         if (activityTitle != null) {
             super.setTitle(activityTitle);
         } else {

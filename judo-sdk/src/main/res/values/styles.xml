@@ -2,9 +2,9 @@
 
     <attr name="cameraIcon" format="reference" />
     <attr name="overlayBackground" format="reference" />
-    <attr name="buttonLabel" format="string" />
-    <attr name="activityTitle" format="string" />
-    <attr name="secureServerMessageShown" format="boolean" />
+    <attr name="buttonLabel" format="reference|string" />
+    <attr name="activityTitle" format="reference|string" />
+    <attr name="secureServerMessageShown" format="reference|boolean" />
 
     <style name="Theme.Judo" parent="Theme.AppCompat">
         <item name="buttonLabel">@string/pay</item>
