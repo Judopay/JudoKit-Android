@@ -143,7 +143,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             securityCodeEntryView.requestFocus();
         }
 
-        boolean secureServerMessageShown = ThemeUtil.getBooleanAttr(getActivity(), getClass(), R.attr.secureServerMessageShown);
+        boolean secureServerMessageShown = ThemeUtil.getBooleanAttr(getActivity(), R.attr.secureServerMessageShown);
         if (secureServerMessageShown) {
             secureServerText.setVisibility(View.VISIBLE);
         } else {

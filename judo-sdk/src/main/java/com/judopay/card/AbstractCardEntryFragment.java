@@ -20,7 +20,6 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
     private String buttonLabel;
     protected Button submitButton;
 
-    private Judo judo;
     CardEntryListener cardEntryListener;
 
     public void setCardEntryListener(CardEntryListener cardEntryListener) {
@@ -34,7 +33,7 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
         super.onViewCreated(view, savedInstanceState);
 
         if (getArguments() != null && getArguments().containsKey(Judo.JUDO_OPTIONS)) {
-            this.judo = getArguments().getParcelable(Judo.JUDO_OPTIONS);
+            Judo judo = getArguments().getParcelable(Judo.JUDO_OPTIONS);
             if (judo != null) {
                 setButtonLabelText(getButtonLabel());
                 onInitialize(judo);
@@ -58,7 +57,7 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
             return buttonLabel;
         }
 
-        return ThemeUtil.getStringAttr(getActivity(), getClass(), R.attr.buttonLabel);
+        return ThemeUtil.getStringAttr(getActivity(), R.attr.buttonLabel);
     }
 
     void hideKeyboard() {

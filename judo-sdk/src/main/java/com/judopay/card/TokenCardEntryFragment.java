@@ -52,6 +52,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_token_card_entry, container, false);
 
+        this.submitButton = (Button) view.findViewById(R.id.button);
         this.cardNumberEntryView = (CardNumberEntryView) view.findViewById(R.id.card_number_entry_view);
         this.expiryDateEntryView = (ExpiryDateEntryView) view.findViewById(R.id.expiry_date_entry_view);
         this.securityCodeEntryView = (SecurityCodeEntryView) view.findViewById(R.id.security_code_entry_view);
@@ -60,7 +61,6 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
 
         this.countrySpinner = (Spinner) view.findViewById(R.id.country_spinner);
         this.secureServerText = view.findViewById(R.id.secure_server_text);
-        this.submitButton = (Button) view.findViewById(R.id.button);
 
         return view;
     }
@@ -73,7 +73,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
             throw new IllegalArgumentException("CardToken is required in Judo for TokenCardEntryFragment");
         }
 
-        boolean secureServerMessageShown = ThemeUtil.getBooleanAttr(getActivity(), getClass(), R.attr.secureServerMessageShown);
+        boolean secureServerMessageShown = ThemeUtil.getBooleanAttr(getActivity(), R.attr.secureServerMessageShown);
         if (secureServerMessageShown) {
             secureServerText.setVisibility(View.VISIBLE);
         } else {

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +14,6 @@ import android.view.MenuItem;
 import android.view.Surface;
 import android.view.WindowManager;
 
-import com.judopay.arch.ThemeUtil;
 import com.judopay.error.RootedDeviceNotPermittedError;
 import com.judopay.model.Card;
 
@@ -26,6 +24,8 @@ import static com.judopay.Judo.RESULT_DECLINED;
 import static com.judopay.Judo.RESULT_ERROR;
 import static com.judopay.Judo.RESULT_SUCCESS;
 import static com.judopay.Judo.RESULT_TOKEN_EXPIRED;
+import static com.judopay.arch.TextUtil.isEmpty;
+import static com.judopay.arch.ThemeUtil.getStringAttr;
 
 /**
  * Base Activity class from which all other Activities should extend from.
@@ -145,8 +145,8 @@ abstract class JudoActivity extends AppCompatActivity {
 
     @Override
     public void setTitle(@StringRes int titleId) {
-        String activityTitle = ThemeUtil.getStringAttr(this, getClass(), R.attr.activityTitle);
-        if (activityTitle != null) {
+        String activityTitle = getStringAttr(this, R.attr.activityTitle);
+        if (!isEmpty(activityTitle)) {
             super.setTitle(activityTitle);
         } else {
             super.setTitle(titleId);
