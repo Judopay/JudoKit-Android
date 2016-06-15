@@ -50,6 +50,9 @@ abstract class JudoActivity extends AppCompatActivity {
             throw new RootedDeviceNotPermittedError();
         }
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE);
+
         //noinspection WrongConstant
         setRequestedOrientation(getLockedOrientation());
 
