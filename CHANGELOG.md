@@ -4,7 +4,7 @@
 
 **Bugs fixed:**
 - Resolved an issue where providing string values for customizable Judo theme attributes resulted in the wrong text being displayed.
-- 
+
 ## [5.4.1](https://github.com/judopay/Judo-Android/tree/5.4.1) (2016-06-06)
 
 **Changes:**
