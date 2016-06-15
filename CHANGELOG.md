@@ -2,6 +2,9 @@
 
 ## [5.5](https://github.com/judopay/Judo-Android/tree/5.5) (TBC)
 
+**Changes:**
+- The SDK is now initialized through a ```Judo``` instance instead of static methods.
+
 **Bugs fixed:**
 - Resolved an issue where providing string values for customizable Judo theme attributes resulted in the wrong text being displayed.
 
