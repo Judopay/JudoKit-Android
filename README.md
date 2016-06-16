@@ -17,7 +17,9 @@ compile 'com.judopay:android-sdk:5.5'
 ##### 2. Initialize the SDK
 From your app's main Activity class, or Application class, initialize the judo SDK with your API token and secret:
 ```java
-Judo judo = new Judo.Builder("<API_TOKEN>", "<API_SECRET>")
+Judo judo = new Judo.Builder()
+    .setApiToken("<API_TOKEN>")
+    .setApiSecret("<API_SECRET>")
     .setEnvironment(Judo.SANDBOX)
     .setJudoId("100915867")
     .setAmount("1.00")
