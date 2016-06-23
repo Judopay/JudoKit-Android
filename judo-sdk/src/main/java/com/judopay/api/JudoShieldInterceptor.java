@@ -18,12 +18,10 @@ import okio.Buffer;
 
 class JudoShieldInterceptor implements Interceptor {
 
-    private final Context context;
     private final JudoShield judoShield;
 
     JudoShieldInterceptor(Context context) {
-        this.context = context.getApplicationContext();
-        this.judoShield = new JudoShield();
+        this.judoShield = new JudoShield(context);
     }
 
     @Override
@@ -37,7 +35,7 @@ class JudoShieldInterceptor implements Interceptor {
             if (parser.parse(body).isJsonObject()) {
                 try {
                     JSONObject json = new JSONObject(body);
-                    judoShield.addRequestShieldData(context, json);
+                    judoShield.deviceSignal(json);
 
                     MediaType mediaType = MediaType.parse("application/json");
                     RequestBody requestBody = RequestBody.create(mediaType, json.toString());
