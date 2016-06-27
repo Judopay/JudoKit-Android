@@ -28,7 +28,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.judopay.util.ViewMatchers.withResourceName;
 import static org.hamcrest.Matchers.allOf;
 
-@LargeTest
+
 @RunWith(AndroidJUnit4.class)
 public class ButtonLabelTest {
 

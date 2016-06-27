@@ -26,7 +26,7 @@ import static android.support.test.espresso.web.sugar.Web.onWebView;
 import static android.support.test.espresso.web.webdriver.DriverAtoms.findElement;
 import static android.support.test.espresso.web.webdriver.DriverAtoms.webClick;
 
-@LargeTest
+
 @RunWith(AndroidJUnit4.class)
 public class ThreeDSecureTest {
 
