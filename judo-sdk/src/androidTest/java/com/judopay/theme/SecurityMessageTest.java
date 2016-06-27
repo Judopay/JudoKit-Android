@@ -23,7 +23,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static com.judopay.util.ViewMatchers.isNotDisplayed;
 
-@LargeTest
+
 @RunWith(AndroidJUnit4.class)
 public class SecurityMessageTest {
 
