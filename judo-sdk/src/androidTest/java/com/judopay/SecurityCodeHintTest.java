@@ -20,7 +20,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static com.judopay.util.ViewMatchers.withTextInputHint;
 
-@LargeTest
+
 public class SecurityCodeHintTest {
 
     @Rule

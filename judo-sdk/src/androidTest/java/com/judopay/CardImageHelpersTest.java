@@ -22,7 +22,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static com.judopay.util.ViewMatchers.isOpaque;
 import static com.judopay.util.ViewMatchers.isTranslucent;
 
-@LargeTest
+
 @RunWith(AndroidJUnit4.class)
 public class CardImageHelpersTest {
 

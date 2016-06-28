@@ -25,7 +25,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.judopay.util.ViewMatchers.isNotDisplayed;
 
-@LargeTest
 @RunWith(AndroidJUnit4.class)
 public class CustomLayoutValidationTest {
 
@@ -39,7 +38,7 @@ public class CustomLayoutValidationTest {
 
         testRule.launchActivity(intent);
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.pay_button))
                 .check(matches(isNotDisplayed()));
 
         onView(withId(R.id.card_number_edit_text))
@@ -51,7 +50,7 @@ public class CustomLayoutValidationTest {
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("452"));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.pay_button))
                 .check(matches(isDisplayed()));
     }
 
@@ -68,7 +67,7 @@ public class CustomLayoutValidationTest {
         onView(withText("Check card number"))
                 .check(matches(isDisplayed()));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.pay_button))
                 .check(matches(isNotDisplayed()));
     }
 
@@ -85,7 +84,7 @@ public class CustomLayoutValidationTest {
         onView(withText("Check expiry date"))
                 .check(matches(isDisplayed()));
 
-        onView(withId(R.id.payment_button))
+        onView(withId(R.id.pay_button))
                 .check(matches(isNotDisplayed()));
     }
 
@@ -97,14 +96,14 @@ public class CustomLayoutValidationTest {
                 .setCurrency(Currency.GBP)
                 .setConsumerRef(UUID.randomUUID().toString())
                 .setCustomLayout(new CustomLayout.Builder()
-                        .cardNumberInput(R.id.card_number_input_layout)
-                        .expiryDateInput(R.id.expiry_date_input_layout)
-                        .securityCodeInput(R.id.security_code_input_layout)
-                        .issueNumberInput(R.id.issue_number_input_layout)
-                        .startDateInput(R.id.start_date_input_layout)
+                        .cardNumberInput(R.id.card_number_input)
+                        .expiryDateInput(R.id.expiry_date_input)
+                        .securityCodeInput(R.id.security_code_input)
+                        .issueNumberInput(R.id.issue_number_input)
+                        .startDateInput(R.id.start_date_input)
                         .countrySpinner(R.id.country_spinner)
-                        .postcodeInput(R.id.post_code_input_layout)
-                        .submitButton(R.id.payment_button)
+                        .postcodeInput(R.id.post_code_input)
+                        .submitButton(R.id.pay_button)
                         .build(R.layout.custom_layout));
     }
 

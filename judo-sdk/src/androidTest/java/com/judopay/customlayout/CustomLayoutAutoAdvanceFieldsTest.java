@@ -23,7 +23,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-@LargeTest
 @RunWith(AndroidJUnit4.class)
 public class CustomLayoutAutoAdvanceFieldsTest {
 
@@ -90,14 +89,14 @@ public class CustomLayoutAutoAdvanceFieldsTest {
                 .setCurrency(Currency.GBP)
                 .setConsumerRef(UUID.randomUUID().toString())
                 .setCustomLayout(new CustomLayout.Builder()
-                        .cardNumberInput(R.id.card_number_input_layout)
-                        .expiryDateInput(R.id.expiry_date_input_layout)
-                        .securityCodeInput(R.id.security_code_input_layout)
-                        .issueNumberInput(R.id.issue_number_input_layout)
-                        .startDateInput(R.id.start_date_input_layout)
+                        .cardNumberInput(R.id.card_number_input)
+                        .expiryDateInput(R.id.expiry_date_input)
+                        .securityCodeInput(R.id.security_code_input)
+                        .issueNumberInput(R.id.issue_number_input)
+                        .startDateInput(R.id.start_date_input)
                         .countrySpinner(R.id.country_spinner)
-                        .postcodeInput(R.id.post_code_input_layout)
-                        .submitButton(R.id.payment_button)
+                        .postcodeInput(R.id.post_code_input)
+                        .submitButton(R.id.pay_button)
                         .build(R.layout.custom_layout));
     }
 }

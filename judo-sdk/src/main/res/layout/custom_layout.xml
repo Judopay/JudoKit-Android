@@ -11,7 +11,7 @@
             android:layout_height="wrap_content">
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/card_number_input_layout"
+                android:id="@+id/card_number_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -33,7 +33,7 @@
             android:weightSum="2">
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/start_date_input_layout"
+                android:id="@+id/start_date_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
@@ -54,7 +54,7 @@
                 android:orientation="vertical">
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/issue_number_input_layout"
+                    android:id="@+id/issue_number_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -76,7 +76,7 @@
             android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/expiry_date_input_layout"
+                android:id="@+id/expiry_date_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -97,7 +97,7 @@
             android:layout_height="wrap_content">
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/security_code_input_layout"
+                android:id="@+id/security_code_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -127,7 +127,7 @@
                 android:layout_weight="1" />
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/post_code_input_layout"
+                android:id="@+id/post_code_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -158,7 +158,7 @@
             android:textSize="@dimen/judo_small_text_size" />
 
         <Button
-            android:id="@+id/payment_button"
+            android:id="@+id/pay_button"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

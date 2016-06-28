@@ -26,7 +26,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 
-@LargeTest
+
 @RunWith(AndroidJUnit4.class)
 public class CardEntryFormAddressTest {
 

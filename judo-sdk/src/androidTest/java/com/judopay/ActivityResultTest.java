@@ -16,7 +16,7 @@ import static com.judopay.util.ActivityUtil.resultCode;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-@LargeTest
+
 @RunWith(AndroidJUnit4.class)
 public class ActivityResultTest {
 
