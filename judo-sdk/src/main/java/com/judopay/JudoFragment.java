@@ -19,9 +19,8 @@ import com.judopay.card.CustomLayoutCardEntryFragment;
 import com.judopay.card.TokenCardEntryFragment;
 import com.judopay.model.Card;
 import com.judopay.model.Receipt;
-import com.judopay.secure3d.ThreeDSecureDialogFragment;
-import com.judopay.secure3d.ThreeDSecureListener;
-import com.judopay.secure3d.ThreeDSecureWebView;
+import com.judopay.cardverification.CardholderVerificationDialogFragment;
+import com.judopay.cardverification.AuthorizationListener;
 
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
 import static com.judopay.Judo.JUDO_OPTIONS;
@@ -34,8 +33,7 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     private View progressBar;
     private TextView progressText;
 
-    private ThreeDSecureDialogFragment threeDSecureDialog;
-    private ThreeDSecureWebView threeDSecureWebView;
+    private CardholderVerificationDialogFragment cardholderVerificationDialogFragment;
     private AbstractCardEntryFragment cardEntryFragment;
 
     abstract boolean isTransactionInProgress();
@@ -49,7 +47,7 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
         }
 
         // check if token has expired
-        JudoOptions options = getArguments().getParcelable(JUDO_OPTIONS);
+        Judo options = getArguments().getParcelable(JUDO_OPTIONS);
         if (options != null && options.getCardToken() != null && options.getCardToken().isExpired()) {
             PendingIntent pendingResult = getActivity().createPendingResult(Judo.JUDO_REQUEST, new Intent(), 0);
             try {
@@ -63,7 +61,7 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     void checkJudoOptionsExtras(Object... objects) {
         for (Object object : objects) {
             if (object == null) {
-                throw new IllegalArgumentException("JudoOptions must contain all required fields");
+                throw new IllegalArgumentException("Judo must contain all required fields");
             }
         }
     }
@@ -79,7 +77,6 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
 
         this.progressBar = view.findViewById(R.id.progress_overlay);
         this.progressText = (TextView) view.findViewById(R.id.progress_text);
-        this.threeDSecureWebView = (ThreeDSecureWebView) view.findViewById(R.id.three_d_secure_web_view);
     }
 
     @Override
@@ -133,11 +130,11 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     private void sendResult(int resultCode, Intent intent) {
         Activity activity = getActivity();
 
-        if(activity != null && !activity.isFinishing()) {
+        if (activity != null && !activity.isFinishing()) {
             try {
                 PendingIntent pendingResult = activity.createPendingResult(Judo.JUDO_REQUEST, intent, FLAG_ONE_SHOT);
                 pendingResult.send(resultCode);
-            } catch (PendingIntent.CanceledException ignore) { }
+            } catch (PendingIntent.CanceledException ignore) {}
         }
     }
 
@@ -153,9 +150,9 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
 
     @Override
     public void dismiss3dSecureDialog() {
-        if (threeDSecureDialog != null && threeDSecureDialog.isVisible()) {
-            threeDSecureDialog.dismiss();
-            threeDSecureDialog = null;
+        if (cardholderVerificationDialogFragment != null && cardholderVerificationDialogFragment.isVisible()) {
+            cardholderVerificationDialogFragment.dismiss();
+            cardholderVerificationDialogFragment = null;
         }
     }
 
@@ -165,46 +162,37 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     }
 
     @Override
-    public void start3dSecureWebView(Receipt receipt, ThreeDSecureListener listener) {
-        threeDSecureWebView.setThreeDSecureListener(listener);
-
-        threeDSecureWebView.authorize(receipt.getAcsUrl(), receipt.getMd(), receipt.getPaReq(), receipt.getReceiptId());
-    }
-
-    @Override
-    public void show3dSecureWebView() {
-        if (threeDSecureDialog == null) {
+    public void start3dSecureWebView(Receipt receipt, AuthorizationListener listener) {
+        if (cardholderVerificationDialogFragment == null) {
             FragmentManager fm = getFragmentManager();
 
-            threeDSecureDialog = new ThreeDSecureDialogFragment();
+            cardholderVerificationDialogFragment = new CardholderVerificationDialogFragment();
 
             Bundle arguments = new Bundle();
-            arguments.putString(ThreeDSecureDialogFragment.KEY_LOADING_TEXT, getString(R.string.verifying_card));
+            arguments.putString(CardholderVerificationDialogFragment.KEY_LOADING_TEXT, getString(R.string.verifying_card));
+            arguments.putParcelable(Judo.JUDO_RECEIPT, receipt);
 
-            threeDSecureDialog.setArguments(arguments);
-            threeDSecureDialog.setCancelable(false);
-
-            threeDSecureDialog.setWebView(threeDSecureWebView);
-            threeDSecureDialog.show(fm, TAG_3DS_DIALOG);
+            cardholderVerificationDialogFragment.setListener(listener);
+            cardholderVerificationDialogFragment.setArguments(arguments);
+            cardholderVerificationDialogFragment.show(fm, TAG_3DS_DIALOG);
         }
     }
 
     AbstractCardEntryFragment createCardEntryFragment() {
-        JudoOptions options = getArguments().getParcelable(Judo.JUDO_OPTIONS);
+        Judo options = getArguments().getParcelable(Judo.JUDO_OPTIONS);
 
         if (options != null) {
             if (options.getCustomLayout() != null) {
                 options.getCustomLayout().validate(getActivity());
                 return CustomLayoutCardEntryFragment.newInstance(options, this);
-            }
-            else if (options.getCardToken() != null) {
+            } else if (options.getCardToken() != null) {
                 return TokenCardEntryFragment.newInstance(getJudoOptions(), this);
             }
         }
         return CardEntryFragment.newInstance(options, this);
     }
 
-    JudoOptions getJudoOptions() {
+    Judo getJudoOptions() {
         Bundle args = getArguments();
         return args.getParcelable(Judo.JUDO_OPTIONS);
     }

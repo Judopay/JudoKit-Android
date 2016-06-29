@@ -3,15 +3,15 @@ package com.judopay;
 import com.google.gson.Gson;
 import com.judopay.arch.Scheduler;
 import com.judopay.model.Receipt;
-import com.judopay.model.ThreeDSecureInfo;
-import com.judopay.secure3d.ThreeDSecureListener;
+import com.judopay.model.CardVerificationResult;
+import com.judopay.cardverification.AuthorizationListener;
 
 import java.io.Reader;
 
 import retrofit2.adapter.rxjava.HttpException;
 import rx.functions.Action1;
 
-abstract class BasePresenter implements ThreeDSecureListener {
+abstract class BasePresenter implements AuthorizationListener {
 
     final JudoApiService apiService;
     final TransactionCallbacks transactionCallbacks;
@@ -83,13 +83,8 @@ abstract class BasePresenter implements ThreeDSecureListener {
     }
 
     @Override
-    public void onAuthorizationWebPageLoaded() {
-        this.transactionCallbacks.show3dSecureWebView();
-    }
-
-    @Override
-    public void onAuthorizationCompleted(ThreeDSecureInfo threeDSecureInfo, String receiptId) {
-        apiService.complete3dSecure(receiptId, threeDSecureInfo)
+    public void onAuthorizationCompleted(CardVerificationResult cardVerificationResult, String receiptId) {
+        apiService.complete3dSecure(receiptId, cardVerificationResult)
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread())
                 .subscribe(new Action1<Receipt>() {

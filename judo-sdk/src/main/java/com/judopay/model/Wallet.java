@@ -6,7 +6,8 @@ import org.json.JSONObject;
 import static com.judopay.arch.Preconditions.checkNotEmpty;
 import static com.judopay.arch.Preconditions.checkNotNull;
 
-public class Wallet {
+@SuppressWarnings("unused")
+public final class Wallet {
 
     private final String encryptedMessage;
     private final String ephemeralPublicKey;
@@ -74,6 +75,7 @@ public class Wallet {
         return version;
     }
 
+    @SuppressWarnings("unused")
     public static class Builder {
 
         private String encryptedMessage;
@@ -169,7 +171,7 @@ public class Wallet {
 
         /**
          * @param googleTransactionId the  ID of the transaction. This can be obtained
-         *                              from the FullWallet.getGoogleTransactionId() method.
+         *                            from the FullWallet.getGoogleTransactionId() method.
          * @return The Builder for creating the {@link AndroidPayRequest} instance
          */
         public Builder setGoogleTransactionId(String googleTransactionId) {

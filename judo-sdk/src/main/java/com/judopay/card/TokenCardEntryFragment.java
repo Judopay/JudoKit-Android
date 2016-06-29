@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.judopay.Judo;
-import com.judopay.JudoOptions;
 import com.judopay.R;
 import com.judopay.arch.ThemeUtil;
 import com.judopay.model.Address;
@@ -37,8 +36,6 @@ import java.util.List;
 import rx.functions.Action1;
 import rx.observables.ConnectableObservable;
 
-import static com.judopay.Judo.isAvsEnabled;
-
 public class TokenCardEntryFragment extends AbstractCardEntryFragment {
 
     private CardNumberEntryView cardNumberEntryView;
@@ -55,6 +52,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_token_card_entry, container, false);
 
+        this.submitButton = (Button) view.findViewById(R.id.button);
         this.cardNumberEntryView = (CardNumberEntryView) view.findViewById(R.id.card_number_entry_view);
         this.expiryDateEntryView = (ExpiryDateEntryView) view.findViewById(R.id.expiry_date_entry_view);
         this.securityCodeEntryView = (SecurityCodeEntryView) view.findViewById(R.id.security_code_entry_view);
@@ -63,38 +61,37 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
 
         this.countrySpinner = (Spinner) view.findViewById(R.id.country_spinner);
         this.secureServerText = view.findViewById(R.id.secure_server_text);
-        this.submitButton = (Button) view.findViewById(R.id.button);
 
         return view;
     }
 
     @Override
-    protected void onInitialize(JudoOptions options) {
-        CardToken cardToken = options.getCardToken();
+    protected void onInitialize(Judo judo) {
+        CardToken cardToken = judo.getCardToken();
 
         if (cardToken == null) {
-            throw new IllegalArgumentException("CardToken is required in JudoOptions for TokenCardEntryFragment");
+            throw new IllegalArgumentException("CardToken is required in Judo for TokenCardEntryFragment");
         }
 
-        boolean secureServerMessageShown = ThemeUtil.getBooleanAttr(getActivity(), getClass(), R.attr.secureServerMessageShown);
+        boolean secureServerMessageShown = ThemeUtil.getBooleanAttr(getActivity(), R.attr.secureServerMessageShown);
         if (secureServerMessageShown) {
             secureServerText.setVisibility(View.VISIBLE);
         } else {
             secureServerText.setVisibility(View.GONE);
         }
 
-        initializeInputs(cardToken, options);
-        initializePayButton();
+        initializeInputs(cardToken, judo);
+        initializePayButton(judo);
         initializeCountry();
 
-        initializeValidators(cardToken);
+        initializeValidators(cardToken, judo);
     }
 
     private void initializeCountry() {
         countrySpinner.setAdapter(new CountrySpinnerAdapter(getActivity(), Country.avsCountries()));
     }
 
-    private void initializeInputs(CardToken cardToken, JudoOptions options) {
+    private void initializeInputs(CardToken cardToken, Judo options) {
         cardNumberEntryView.setCardType(cardToken.getType(), false);
         securityCodeEntryView.setHelperText(R.string.please_reenter_the_card_security_code);
         securityCodeEntryView.setCardType(cardToken.getType(), false);
@@ -105,7 +102,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         cardNumberEntryView.setTokenCard(options.getCardToken());
     }
 
-    private void initializeValidators(CardToken cardToken) {
+    private void initializeValidators(CardToken cardToken, final Judo judo) {
         List<Validator> validators = new ArrayList<>();
         List<Pair<Validator, View>> validatorViews = new ArrayList<>();
 
@@ -115,7 +112,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
                 .subscribe(new Action1<Validation>() {
                     @Override
                     public void call(Validation validation) {
-                        if (isAvsEnabled()) {
+                        if (judo.isAvsEnabled()) {
                             countryAndPostcodeContainer.setVisibility(validation.isValid() ? View.VISIBLE : View.GONE);
                         }
                     }
@@ -126,7 +123,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
 
         validationManager = new ValidationManager(validators, this);
 
-        if (isAvsEnabled()) {
+        if (judo.isAvsEnabled()) {
             initializeAvsValidators(validatorViews);
         }
 
@@ -181,23 +178,23 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         submitButton.setVisibility(valid ? View.VISIBLE : View.GONE);
     }
 
-    private void initializePayButton() {
+    private void initializePayButton(final Judo judo) {
         submitButton.setOnClickListener(new SingleClickOnClickListener() {
             @Override
             public void doClick() {
                 hideKeyboard();
-                submitForm();
+                submitForm(judo);
             }
         });
     }
 
-    private void submitForm() {
+    private void submitForm(Judo judo) {
         Card.Builder cardBuilder = new Card.Builder()
                 .setCardNumber(cardNumberEntryView.getText())
                 .setExpiryDate(expiryDateEntryView.getText())
                 .setSecurityCode(securityCodeEntryView.getText());
 
-        if (Judo.isAvsEnabled()) {
+        if (judo.isAvsEnabled()) {
            cardBuilder.setAddress(new Address.Builder()
                    .setPostCode(postcodeEntryView.getText())
                    .setCountryCode(Country.codeFromCountry((String) countrySpinner.getSelectedItem()))
@@ -209,12 +206,12 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         }
     }
 
-    public static TokenCardEntryFragment newInstance(JudoOptions judoOptions, CardEntryListener listener) {
+    public static TokenCardEntryFragment newInstance(Judo judo, CardEntryListener listener) {
         TokenCardEntryFragment cardEntryFragment = new TokenCardEntryFragment();
         cardEntryFragment.setCardEntryListener(listener);
 
         Bundle arguments = new Bundle();
-        arguments.putParcelable(Judo.JUDO_OPTIONS, judoOptions);
+        arguments.putParcelable(Judo.JUDO_OPTIONS, judo);
         cardEntryFragment.setArguments(arguments);
 
         return cardEntryFragment;

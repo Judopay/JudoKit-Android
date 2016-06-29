@@ -12,14 +12,14 @@ import android.os.Bundle;
  * with an Intent the configuration options:
  * <pre class="prettyprint">
  * Intent intent = new Intent(this, RegisterCardActivity.class);
- * intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+ * intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
  * .setJudoId("1234567")
  * .setConsumerRef("consumerRef")
  * .build());
  *
  * startActivityForResult(intent, REGISTER_CARD_REQUEST);
  * </pre>
- * See {@link JudoOptions} for the full list of supported options
+ * See {@link Judo} for the full list of supported options
  */
 public final class RegisterCardActivity extends JudoActivity {
 

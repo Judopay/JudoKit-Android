@@ -14,16 +14,18 @@ import android.view.MenuItem;
 import android.view.Surface;
 import android.view.WindowManager;
 
-import com.judopay.arch.ThemeUtil;
 import com.judopay.error.RootedDeviceNotPermittedError;
 import com.judopay.model.Card;
 
+import static com.judopay.Judo.JUDO_OPTIONS;
 import static com.judopay.Judo.RESULT_CARD_SCANNED;
 import static com.judopay.Judo.RESULT_CONNECTION_ERROR;
 import static com.judopay.Judo.RESULT_DECLINED;
 import static com.judopay.Judo.RESULT_ERROR;
 import static com.judopay.Judo.RESULT_SUCCESS;
 import static com.judopay.Judo.RESULT_TOKEN_EXPIRED;
+import static com.judopay.arch.TextUtil.isEmpty;
+import static com.judopay.arch.ThemeUtil.getStringAttr;
 
 /**
  * Base Activity class from which all other Activities should extend from.
@@ -42,9 +44,14 @@ abstract class JudoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (RootDetector.isRooted() && !Judo.isRootedDevicesAllowed()) {
+        Judo judo = getIntent().getParcelableExtra(JUDO_OPTIONS);
+
+        if (RootDetector.isRooted() && !judo.isRootedDevicesAllowed()) {
             throw new RootedDeviceNotPermittedError();
         }
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE);
 
         //noinspection WrongConstant
         setRequestedOrientation(getLockedOrientation());
@@ -141,8 +148,8 @@ abstract class JudoActivity extends AppCompatActivity {
 
     @Override
     public void setTitle(@StringRes int titleId) {
-        String activityTitle = ThemeUtil.getStringAttr(this, getClass(), R.attr.activityTitle);
-        if (activityTitle != null) {
+        String activityTitle = getStringAttr(this, R.attr.activityTitle);
+        if (!isEmpty(activityTitle)) {
             super.setTitle(activityTitle);
         } else {
             super.setTitle(titleId);

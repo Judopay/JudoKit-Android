@@ -11,25 +11,24 @@ class RegisterCardPresenter extends BasePresenter {
         super(callbacks, apiService, scheduler, gson);
     }
 
-    void performRegisterCard(Card card, JudoOptions options) {
+    void performRegisterCard(Card card, Judo judo) {
         this.loading = true;
-
         transactionCallbacks.showLoading();
 
         RegisterCardRequest.Builder builder = new RegisterCardRequest.Builder()
-                .setJudoId(options.getJudoId())
+                .setJudoId(judo.getJudoId())
                 .setCardNumber(card.getCardNumber())
                 .setCv2(card.getSecurityCode())
                 .setExpiryDate(card.getExpiryDate())
-                .setMetaData(options.getMetaDataMap())
-                .setEmailAddress(options.getEmailAddress())
-                .setMobileNumber(options.getMobileNumber())
-                .setYourConsumerReference(options.getConsumerRef());
+                .setMetaData(judo.getMetaDataMap())
+                .setEmailAddress(judo.getEmailAddress())
+                .setMobileNumber(judo.getMobileNumber())
+                .setYourConsumerReference(judo.getConsumerRef());
 
-        if(card.getAddress() != null) {
+        if (card.getAddress() != null) {
             builder.setCardAddress(card.getAddress());
         } else {
-            builder.setCardAddress(options.getAddress());
+            builder.setCardAddress(judo.getAddress());
         }
 
         if (card.startDateAndIssueNumberRequired()) {
@@ -42,5 +41,4 @@ class RegisterCardPresenter extends BasePresenter {
                 .observeOn(scheduler.mainThread())
                 .subscribe(callback(), error());
     }
-
 }

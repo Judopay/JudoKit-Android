@@ -7,14 +7,11 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
-import com.judopay.JudoOptions;
-import com.judopay.PaymentActivity;
 import com.judopay.PreAuthActivity;
 import com.judopay.R;
 import com.judopay.RegisterCardActivity;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +28,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.judopay.util.ViewMatchers.withResourceName;
 import static org.hamcrest.Matchers.allOf;
 
-@LargeTest
+
 @RunWith(AndroidJUnit4.class)
 public class ButtonLabelTest {
 
@@ -40,11 +37,6 @@ public class ButtonLabelTest {
 
     @Rule
     public ActivityTestRule<PreAuthActivity> preAuthTestRule = new ActivityTestRule<>(PreAuthActivity.class, false, false);
-
-    @Before
-    public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.UAT);
-    }
 
     @Test
     public void shouldDisplayAddCardButtonLabel() {
@@ -66,8 +58,6 @@ public class ButtonLabelTest {
 
     @Test
     public void shouldDisplayPayButtonLabel() {
-        Judo.setAvsEnabled(false);
-
         preAuthTestRule.launchActivity(getIntent());
 
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
@@ -86,8 +76,9 @@ public class ButtonLabelTest {
     private Intent getIntent() {
         Intent intent = new Intent();
 
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+        intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
                 .setJudoId("100915867")
+                .setEnvironment(Judo.UAT)
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef(UUID.randomUUID().toString())

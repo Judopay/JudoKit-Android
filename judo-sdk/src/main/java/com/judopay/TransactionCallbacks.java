@@ -3,7 +3,7 @@ package com.judopay;
 import android.support.annotation.StringRes;
 
 import com.judopay.model.Receipt;
-import com.judopay.secure3d.ThreeDSecureListener;
+import com.judopay.cardverification.AuthorizationListener;
 
 interface TransactionCallbacks {
 
@@ -21,9 +21,7 @@ interface TransactionCallbacks {
 
     void setLoadingText(@StringRes int text);
 
-    void start3dSecureWebView(Receipt receipt, ThreeDSecureListener threeDSecureListener);
-
-    void show3dSecureWebView();
+    void start3dSecureWebView(Receipt receipt, AuthorizationListener authorizationListener);
 
     void dismiss3dSecureDialog();
 

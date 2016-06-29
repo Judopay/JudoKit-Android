@@ -22,11 +22,11 @@ public class RegisterCardFragment extends JudoFragment implements TransactionCal
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        JudoOptions options = getArguments().getParcelable(JUDO_OPTIONS);
-        checkJudoOptionsExtras(options.getConsumerRef(), options.getJudoId());
+        Judo judo = getArguments().getParcelable(JUDO_OPTIONS);
+        checkJudoOptionsExtras(judo.getConsumerRef(), judo.getJudoId());
 
         if (this.presenter == null) {
-            JudoApiService apiService = Judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
+            JudoApiService apiService = judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
             this.presenter = new RegisterCardPresenter(this, apiService, new AndroidScheduler(), new Gson());
         }
     }
@@ -45,7 +45,7 @@ public class RegisterCardFragment extends JudoFragment implements TransactionCal
 
     @Override
     public void onSubmit(Card card) {
-        JudoOptions options = getJudoOptions();
+        Judo options = getJudoOptions();
         presenter.performRegisterCard(card, options);
     }
 

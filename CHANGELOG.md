@@ -1,5 +1,16 @@
 # Judo Android SDK change log
 
+## [5.5](https://github.com/judopay/Judo-Android/tree/5.5) (2016-06-29)
+
+**Changes:**
+- The SDK is now initialized through a ```Judo``` instance instead of static methods.
+- Android SDK is now compiled using Android N (API version 24).
+- Image assets have been replaced with vector drawables to reduce SDK size.
+- AppCompat and Android Design libraries have been updated to use the latest versions.
+
+**Bugs fixed:**
+- Resolved an issue where providing string values for customizable Judo theme attributes resulted in the wrong text being displayed.
+
 ## [5.4.1](https://github.com/judopay/Judo-Android/tree/5.4.1) (2016-06-06)
 
 **Changes:**

@@ -6,10 +6,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import com.judopay.Judo;
-import com.judopay.JudoOptions;
-import com.judopay.PaymentActivity;
-import com.judopay.R;
 import com.judopay.model.Currency;
 
 import org.junit.Rule;
@@ -23,7 +19,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-@LargeTest
+
 @RunWith(AndroidJUnit4.class)
 public class PrefillCardDataTest {
 
@@ -34,7 +30,8 @@ public class PrefillCardDataTest {
     public void shouldHaveVisaCardNumberEnteredInPaymentForm() {
         Intent intent = new Intent();
 
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+        intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
+                .setEnvironment(Judo.UAT)
                 .setJudoId("00000000")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
@@ -54,7 +51,8 @@ public class PrefillCardDataTest {
     public void shouldHaveAmexCardNumberEnteredInPaymentForm() {
         Intent intent = new Intent();
 
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+        intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
+                .setEnvironment(Judo.UAT)
                 .setJudoId("00000000")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)

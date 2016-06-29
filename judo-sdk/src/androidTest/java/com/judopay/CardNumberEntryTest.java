@@ -5,10 +5,6 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import com.judopay.Judo;
-import com.judopay.JudoOptions;
-import com.judopay.PaymentActivity;
-import com.judopay.R;
 import com.judopay.model.Currency;
 
 import org.junit.Rule;
@@ -22,7 +18,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-@LargeTest
+
 public class CardNumberEntryTest {
 
     @Rule
@@ -30,9 +26,10 @@ public class CardNumberEntryTest {
 
     @Test
     public void shouldHaveAmexCardNumberFormattingWhenAmexCardEntered() {
-        Judo.setAmexEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"))
@@ -41,7 +38,10 @@ public class CardNumberEntryTest {
 
     @Test
     public void shouldHaveNormalCardNumberFormattingWhenVisaCardNumberEntered() {
-        activityTestRule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"))
@@ -50,7 +50,10 @@ public class CardNumberEntryTest {
 
     @Test
     public void shouldRestrictCardNumberLengthToSixteenDigitsWhenVisa() {
-        activityTestRule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("49760000000034360"))
@@ -59,7 +62,10 @@ public class CardNumberEntryTest {
 
     @Test
     public void shouldRestrictCardNumberLengthToFifteenDigitsWhenAmex() {
-        activityTestRule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("3400004321284280"))
@@ -68,23 +74,23 @@ public class CardNumberEntryTest {
 
     @Test
     public void shouldNotAllowSpacesAtStartOfCardNumber() {
-        activityTestRule.launchActivity(getIntent());
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText(" 1234"))
                 .check(matches(withText("1234 ")));
     }
 
-    private Intent getIntent() {
-        Intent intent = new Intent();
-
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+    private Judo.Builder getJudo() {
+        return new Judo.Builder()
+                .setEnvironment(Judo.UAT)
                 .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString())
-                .build());
-        return intent;
+                .setConsumerRef(UUID.randomUUID().toString());
     }
 
 }

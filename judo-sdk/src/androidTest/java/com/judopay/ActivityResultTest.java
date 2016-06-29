@@ -8,7 +8,6 @@ import android.test.suitebuilder.annotation.LargeTest;
 import com.judopay.model.CardToken;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,23 +16,19 @@ import static com.judopay.util.ActivityUtil.resultCode;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-@LargeTest
+
 @RunWith(AndroidJUnit4.class)
 public class ActivityResultTest {
 
     @Rule
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
-    @Before
-    public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.UAT);
-    }
-
     @Test
     public void shouldReturnTokenCardExpiredResult() {
         Intent intent = new Intent();
 
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+        intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
+                .setEnvironment(Judo.UAT)
                 .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)

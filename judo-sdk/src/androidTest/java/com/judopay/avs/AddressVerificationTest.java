@@ -6,7 +6,6 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
-import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.model.Country;
@@ -30,7 +29,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 
-@LargeTest
+
 @RunWith(AndroidJUnit4.class)
 public class AddressVerificationTest {
 
@@ -39,9 +38,10 @@ public class AddressVerificationTest {
 
     @Test
     public void shouldDisablePostcodeFieldWhenOtherCountrySelected() {
-        Judo.setAvsEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -55,9 +55,10 @@ public class AddressVerificationTest {
 
     @Test
     public void shouldShowPaymentButtonWhenAvsEnabledAndOtherCountrySelected() {
-        Judo.setAvsEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -80,9 +81,10 @@ public class AddressVerificationTest {
 
     @Test
     public void shouldNotShowPaymentButtonWhenAvsEnabledAndCountrySelected() {
-        Judo.setAvsEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -105,9 +107,10 @@ public class AddressVerificationTest {
 
     @Test
     public void shouldNotAllowPaymentWhenAvsEnabledAndPostcodeNotEntered() {
-        Judo.setAvsEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -128,17 +131,14 @@ public class AddressVerificationTest {
                 .check(matches(isNotDisplayed()));
     }
 
-    private Intent getIntent() {
-        Intent intent = new Intent();
-
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+    private Judo.Builder getJudo() {
+        return new Judo.Builder()
+                .setEnvironment(Judo.UAT)
                 .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString())
-                .build());
-        return intent;
+                .setAvsEnabled(true)
+                .setConsumerRef(UUID.randomUUID().toString());
     }
-
 
 }

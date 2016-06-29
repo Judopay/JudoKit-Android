@@ -12,28 +12,31 @@ Use our UI components for a seamless user experience for card data capture. Mini
 ##### 1. Add the library to your project
 If you're using Android Studio and Gradle, you can just add the `android-sdk` as a dependency in your app's `build.gradle` file:
 ```groovy
-compile 'com.judopay:android-sdk:5.4.1'
+compile 'com.judopay:android-sdk:5.5'
 ```
 ##### 2. Initialize the SDK
 From your app's main Activity class, or Application class, initialize the judo SDK with your API token and secret:
 ```java
-Judo.setup("<API_TOKEN>", "<API_SECRET>", Judo.SANDBOX);
+Judo judo = new Judo.Builder()
+    .setApiToken("<API_TOKEN>")
+    .setApiSecret("<API_SECRET>")
+    .setEnvironment(Judo.SANDBOX)
+    .setJudoId("100915867")
+    .setAmount("1.00")
+    .setCurrency(Currency.GBP)
+    .setConsumerRef("<YOUR_REFERENCE>")
+    .build();
 ```
 ##### 3. Perform a test payment
 To show the payment screen, create an Intent for the `PaymentActivity` with the required Intent extras:
 ```java
 Intent intent = new Intent(activity, PaymentActivity.class);
-intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
-    .setJudoId("100915867")
-    .setAmount("1.00")
-    .setCurrency(Currency.GBP)
-    .setConsumerRef("consumerRef")
-    .build());
+intent.putExtra(Judo.JUDO_OPTIONS, judo);
 
 startActivityForResult(intent, PAYMENT_REQUEST);
 ```
 ##### 4. Check the payment result
-In the Activity that calls the judo SDK, override the ```Activity.onActivityResult``` method to receive the Receipt from the payment:
+In the Activity that calls the judo SDK, override the ```onActivityResult``` method to receive the payment receipt:
 ```java
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {

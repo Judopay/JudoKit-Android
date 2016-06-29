@@ -12,27 +12,26 @@ class PreAuthPresenter extends BasePresenter {
         super(callbacks, judoApiService, scheduler, gson);
     }
 
-    public void performPreAuth(Card card, JudoOptions options) {
+    public void performPreAuth(Card card, Judo judo) {
         this.loading = true;
-
         transactionCallbacks.showLoading();
 
         PaymentRequest.Builder builder = new PaymentRequest.Builder()
-                .setAmount(options.getAmount())
+                .setAmount(judo.getAmount())
                 .setCardNumber(card.getCardNumber())
-                .setCurrency(options.getCurrency())
+                .setCurrency(judo.getCurrency())
                 .setCv2(card.getSecurityCode())
-                .setJudoId(options.getJudoId())
-                .setYourConsumerReference(options.getConsumerRef())
-                .setEmailAddress(options.getEmailAddress())
-                .setMobileNumber(options.getMobileNumber())
-                .setMetaData(options.getMetaDataMap())
+                .setJudoId(judo.getJudoId())
+                .setYourConsumerReference(judo.getConsumerRef())
+                .setEmailAddress(judo.getEmailAddress())
+                .setMobileNumber(judo.getMobileNumber())
+                .setMetaData(judo.getMetaDataMap())
                 .setExpiryDate(card.getExpiryDate());
 
-        if(card.getAddress() != null) {
+        if (card.getAddress() != null) {
             builder.setCardAddress(card.getAddress());
         } else {
-            builder.setCardAddress(options.getAddress());
+            builder.setCardAddress(judo.getAddress());
         }
 
         if (card.startDateAndIssueNumberRequired()) {
@@ -47,30 +46,28 @@ class PreAuthPresenter extends BasePresenter {
     }
 
 
-    public void performTokenPreAuth(Card card, JudoOptions options) {
+    public void performTokenPreAuth(Card card, Judo judo) {
         this.loading = true;
         transactionCallbacks.showLoading();
 
         TokenRequest.Builder builder = new TokenRequest.Builder()
-                .setAmount(options.getAmount())
-                .setCurrency(options.getCurrency())
-                .setJudoId(options.getJudoId())
-                .setYourConsumerReference(options.getConsumerRef())
+                .setAmount(judo.getAmount())
+                .setCurrency(judo.getCurrency())
+                .setJudoId(judo.getJudoId())
+                .setYourConsumerReference(judo.getConsumerRef())
                 .setCv2(card.getSecurityCode())
-                .setEmailAddress(options.getEmailAddress())
-                .setMobileNumber(options.getMobileNumber())
-                .setMetaData(options.getMetaDataMap())
-                .setToken(options.getCardToken());
+                .setEmailAddress(judo.getEmailAddress())
+                .setMobileNumber(judo.getMobileNumber())
+                .setMetaData(judo.getMetaDataMap())
+                .setToken(judo.getCardToken());
 
-        if(card.getAddress() != null) {
+        if (card.getAddress() != null) {
             builder.setCardAddress(card.getAddress());
         } else {
-            builder.setCardAddress(options.getAddress());
+            builder.setCardAddress(judo.getAddress());
         }
 
-        TokenRequest tokenRequest = builder.build();
-
-        apiService.tokenPreAuth(tokenRequest)
+        apiService.tokenPreAuth(builder.build())
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread())
                 .subscribe(callback(), error());

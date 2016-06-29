@@ -26,8 +26,8 @@ class ApiCredentials {
         this.authorization = getEncodedCredentials();
     }
 
-    public static ApiCredentials fromConfiguration(Context context) {
-        return new ApiCredentials(getApiToken(context), getApiSecret(context));
+    public static ApiCredentials fromConfiguration(Context context, Judo judo) {
+        return new ApiCredentials(getApiToken(context, judo), getApiSecret(context, judo));
     }
 
     private String getEncodedCredentials() {
@@ -47,12 +47,12 @@ class ApiCredentials {
         return String.format("Basic %s", getAuthorization());
     }
 
-    private static String getApiSecret(Context context) {
-        return getManifestMetaData(context, API_SECRET_MANIFEST_NAME, Judo.getApiSecret());
+    private static String getApiSecret(Context context, Judo judo) {
+        return getManifestMetaData(context, API_SECRET_MANIFEST_NAME, judo.getApiSecret());
     }
 
-    private static String getApiToken(Context context) {
-        return getManifestMetaData(context, API_TOKEN_MANIFEST_NAME, Judo.getApiToken());
+    private static String getApiToken(Context context, Judo judo) {
+        return getManifestMetaData(context, API_TOKEN_MANIFEST_NAME, judo.getApiToken());
     }
 
     private static String getManifestMetaData(Context context, String attribute, String defaultValue) {

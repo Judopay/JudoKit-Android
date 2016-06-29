@@ -1,8 +1,6 @@
 package com.judopay.token;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.IdlingPolicies;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -10,7 +8,6 @@ import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
-import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.model.Address;
@@ -29,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 import rx.functions.Action1;
 
+import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -38,7 +36,7 @@ import static com.judopay.util.ActivityUtil.resultCode;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-@LargeTest
+
 @RunWith(AndroidJUnit4.class)
 public class SuccessfulTokenPaymentTest {
 
@@ -47,16 +45,13 @@ public class SuccessfulTokenPaymentTest {
 
     @Before
     public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.UAT);
         IdlingPolicies.setIdlingResourceTimeout(3, TimeUnit.MINUTES);
     }
 
     @Test
     public void shouldBeSuccessfulTokenPayment() {
-        Judo.setAvsEnabled(false);
-
-        Context context = InstrumentationRegistry.getContext();
-        final JudoApiService apiService = Judo.getApiService(context);
+        Judo judo = getJudo().build();
+        final JudoApiService apiService = judo.getApiService(getContext());
 
         RegisterCardRequest registerCardRequest = new RegisterCardRequest.Builder()
                 .setJudoId("100915867")
@@ -71,7 +66,13 @@ public class SuccessfulTokenPaymentTest {
                 .subscribe(new Action1<Receipt>() {
                     @Override
                     public void call(Receipt receipt) {
-                        PaymentActivity paymentActivity = tokenPaymentActivityTestRule.launchActivity(getTokenPaymentIntent(receipt));
+                        Intent intent = new Intent();
+                        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                                .setCardToken(receipt.getCardDetails())
+                                .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
+                                .build());
+
+                        PaymentActivity activity = tokenPaymentActivityTestRule.launchActivity(intent);
 
                         onView(withId(R.id.security_code_edit_text))
                                 .perform(typeText("452"));
@@ -79,17 +80,17 @@ public class SuccessfulTokenPaymentTest {
                         onView(withId(R.id.button))
                                 .perform(click());
 
-                        assertThat(resultCode(paymentActivity), is(Judo.RESULT_SUCCESS));
+                        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
                     }
                 }, failOnError());
     }
 
     @Test
     public void shouldBeSuccessfulTokenPaymentWhenAvsEnabled() {
-        Judo.setAvsEnabled(true);
-
-        Context context = InstrumentationRegistry.getContext();
-        final JudoApiService apiService = Judo.getApiService(context);
+        final JudoApiService apiService = getJudo()
+                .setAvsEnabled(true)
+                .build()
+                .getApiService(getContext());
 
         RegisterCardRequest registerCardRequest = new RegisterCardRequest.Builder()
                 .setJudoId("100915867")
@@ -108,7 +109,14 @@ public class SuccessfulTokenPaymentTest {
                 .subscribe(new Action1<Receipt>() {
                     @Override
                     public void call(Receipt receipt) {
-                        PaymentActivity tokenPaymentActivity = tokenPaymentActivityTestRule.launchActivity(getTokenPaymentIntent(receipt));
+                        Intent intent = new Intent();
+                        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                                .setAvsEnabled(true)
+                                .setCardToken(receipt.getCardDetails())
+                                .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
+                                .build());
+
+                        PaymentActivity activity = tokenPaymentActivityTestRule.launchActivity(intent);
 
                         onView(withId(R.id.security_code_edit_text))
                                 .perform(typeText("452"));
@@ -119,23 +127,17 @@ public class SuccessfulTokenPaymentTest {
                         onView(withId(R.id.button))
                                 .perform(click());
 
-                        assertThat(resultCode(tokenPaymentActivity), is(Judo.RESULT_SUCCESS));
+                        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
                     }
                 }, failOnError());
     }
 
-    private Intent getTokenPaymentIntent(Receipt receipt) {
-        Intent intent = new Intent();
-
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+    private Judo.Builder getJudo() {
+        return new Judo.Builder()
+                .setEnvironment(Judo.UAT)
                 .setJudoId("100915867")
-                .setCardToken(receipt.getCardDetails())
-                .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
-                .setAmount("1.99")
-                .setCurrency(Currency.GBP)
-                .build());
-
-        return intent;
+                .setAmount("0.99")
+                .setCurrency(Currency.GBP);
     }
 
 }

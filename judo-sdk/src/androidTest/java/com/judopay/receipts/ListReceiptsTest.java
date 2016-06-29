@@ -14,7 +14,6 @@ import com.judopay.model.Receipt;
 import com.judopay.model.Receipts;
 import com.judopay.model.RefundRequest;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -26,11 +25,6 @@ import rx.functions.Func1;
 public class ListReceiptsTest {
 
     private static final String CONSUMER_REF = "ListReceiptsTest";
-
-    @Before
-    public void setEnvironment() {
-        Judo.setEnvironment(Judo.UAT);
-    }
 
     @Test
     public void listPaymentReceipts() {
@@ -208,7 +202,13 @@ public class ListReceiptsTest {
 
     private JudoApiService getApiService() {
         Context context = InstrumentationRegistry.getContext();
-        return Judo.getApiService(context);
+
+        Judo judo = new Judo.Builder()
+                .setJudoId("100915867")
+                .setEnvironment(Judo.UAT)
+                .build();
+
+        return judo.getApiService(context);
     }
 
     private PaymentRequest getPaymentRequest() {

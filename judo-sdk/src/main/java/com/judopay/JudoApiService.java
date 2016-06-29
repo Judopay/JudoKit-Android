@@ -9,7 +9,7 @@ import com.judopay.model.Receipt;
 import com.judopay.model.Receipts;
 import com.judopay.model.RefundRequest;
 import com.judopay.model.RegisterCardRequest;
-import com.judopay.model.ThreeDSecureInfo;
+import com.judopay.model.CardVerificationResult;
 import com.judopay.model.TokenRequest;
 import com.judopay.model.VoidRequest;
 
@@ -23,7 +23,7 @@ import rx.Observable;
 
 /**
  * Judo interface with Retrofit annotated list of judo API calls that can be performed.
- * Use the {@link com.judopay.api.JudoApiServiceFactory#createApiService(Context, int)} method to obtain an
+ * Use the {@link com.judopay.Judo#getApiService(Context)}  method to obtain an
  * instance. See <a href="https://github.com/square/retrofit">GitHub</a> for details.
  */
 @SuppressWarnings("SameParameterValue")
@@ -78,11 +78,11 @@ public interface JudoApiService {
      * Complete a transaction that required 3D-Secure verification by providing the 3D-Secure response data.
      *
      * @param receiptId        the receipt ID from the original transaction
-     * @param threeDSecureInfo the 3D-Secure details returned from successfully validating the card with the merchant bank
+     * @param cardVerificationResult the 3D-Secure details returned from successfully validating the card with the merchant bank
      * @return the receipt for the transaction
      */
     @PUT("transactions/{receiptId}")
-    Observable<Receipt> complete3dSecure(@Path("receiptId") String receiptId, @Body ThreeDSecureInfo threeDSecureInfo);
+    Observable<Receipt> complete3dSecure(@Path("receiptId") String receiptId, @Body CardVerificationResult cardVerificationResult);
 
     /**
      * @param collectionRequest the collectionRequest transaction to be performed

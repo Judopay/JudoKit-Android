@@ -7,7 +7,7 @@ import com.judopay.model.CardToken;
 import com.judopay.model.Currency;
 import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
-import com.judopay.model.ThreeDSecureInfo;
+import com.judopay.model.CardVerificationResult;
 import com.judopay.model.TokenRequest;
 
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class PaymentPresenterTest {
     CardToken cardToken;
 
     @Mock
-    ThreeDSecureInfo threeDSecureInfo;
+    CardVerificationResult cardVerificationResult;
 
     @Mock
     Receipt receipt;
@@ -54,7 +54,7 @@ public class PaymentPresenterTest {
         PaymentPresenter presenter = new PaymentPresenter(transactionCallbacks, apiService, scheduler, gson);
         when(apiService.payment(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>empty());
 
-        presenter.performPayment(getCard(), new JudoOptions.Builder()
+        presenter.performPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef("consumerRef")
@@ -69,7 +69,7 @@ public class PaymentPresenterTest {
         PaymentPresenter presenter = new PaymentPresenter(transactionCallbacks, apiService, scheduler, gson);
         when(apiService.payment(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>error(new UnknownHostException()));
 
-        presenter.performPayment(getCard(), new JudoOptions.Builder()
+        presenter.performPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef("consumerRef")
@@ -90,7 +90,7 @@ public class PaymentPresenterTest {
 
         when(apiService.payment(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>error(exception));
 
-        presenter.performPayment(getCard(), new JudoOptions.Builder()
+        presenter.performPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef("consumerRef")
@@ -110,7 +110,7 @@ public class PaymentPresenterTest {
 
         when(apiService.payment(any(PaymentRequest.class))).thenReturn(Observable.<Receipt>error(exception));
 
-        presenter.performPayment(getCard(), new JudoOptions.Builder()
+        presenter.performPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef("consumerRef")
@@ -128,7 +128,7 @@ public class PaymentPresenterTest {
         when(cardToken.getToken()).thenReturn("cardToken");
 
         String consumer = "consumerRef";
-        presenter.performTokenPayment(getCard(), new JudoOptions.Builder()
+        presenter.performTokenPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setCardToken(cardToken)
                 .setConsumerRef(consumer)
                 .setAmount("1.99")
@@ -141,23 +141,14 @@ public class PaymentPresenterTest {
     }
 
     @Test
-    public void shouldShowWebViewWhenAuthWebPageLoaded() {
-        PaymentPresenter presenter = new PaymentPresenter(transactionCallbacks, apiService, scheduler, gson);
-
-        presenter.onAuthorizationWebPageLoaded();
-
-        verify(transactionCallbacks).show3dSecureWebView();
-    }
-
-    @Test
     public void shouldFinishWhenSuccessfulReceipt() {
         PaymentPresenter presenter = new PaymentPresenter(transactionCallbacks, apiService, scheduler, gson);
         String receiptId = "123456";
 
         when(receipt.isSuccess()).thenReturn(true);
-        when(apiService.complete3dSecure(receiptId, threeDSecureInfo)).thenReturn(Observable.just(receipt));
+        when(apiService.complete3dSecure(receiptId, cardVerificationResult)).thenReturn(Observable.just(receipt));
 
-        presenter.onAuthorizationCompleted(threeDSecureInfo, receiptId);
+        presenter.onAuthorizationCompleted(cardVerificationResult, receiptId);
 
         verify(transactionCallbacks).onSuccess(eq(receipt));
         verify(transactionCallbacks).hideLoading();
@@ -169,9 +160,9 @@ public class PaymentPresenterTest {
         String receiptId = "123456";
 
         when(receipt.isSuccess()).thenReturn(false);
-        when(apiService.complete3dSecure(receiptId, threeDSecureInfo)).thenReturn(Observable.just(receipt));
+        when(apiService.complete3dSecure(receiptId, cardVerificationResult)).thenReturn(Observable.just(receipt));
 
-        presenter.onAuthorizationCompleted(threeDSecureInfo, "123456");
+        presenter.onAuthorizationCompleted(cardVerificationResult, "123456");
 
         verify(transactionCallbacks).onDeclined(eq(receipt));
         verify(transactionCallbacks).hideLoading();

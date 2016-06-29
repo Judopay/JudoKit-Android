@@ -6,13 +6,11 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
-import com.judopay.JudoOptions;
 import com.judopay.PaymentActivity;
 import com.judopay.PreAuthActivity;
 import com.judopay.R;
 import com.judopay.model.Currency;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +23,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static com.judopay.util.ViewMatchers.isNotDisplayed;
 
-@LargeTest
+
 @RunWith(AndroidJUnit4.class)
 public class SecurityMessageTest {
 
@@ -34,11 +32,6 @@ public class SecurityMessageTest {
 
     @Rule
     public ActivityTestRule<PreAuthActivity> preAuthActivityActivityTestRule = new ActivityTestRule<>(PreAuthActivity.class, false, false);
-
-    @Before
-    public void setupJudoSdk() {
-        Judo.setEnvironment(Judo.UAT);
-    }
 
     @Test
     public void shouldDisplaySecurityMessageWhenSetInTheme() {
@@ -59,8 +52,9 @@ public class SecurityMessageTest {
     private Intent getIntent() {
         Intent intent = new Intent();
 
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+        intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
                 .setJudoId("100915867")
+                .setEnvironment(Judo.UAT)
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef(UUID.randomUUID().toString())

@@ -6,10 +6,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import com.judopay.Judo;
-import com.judopay.JudoOptions;
-import com.judopay.PaymentActivity;
-import com.judopay.R;
 import com.judopay.model.Currency;
 
 import org.junit.Rule;
@@ -24,7 +20,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-@LargeTest
+
 @RunWith(AndroidJUnit4.class)
 public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
 
@@ -33,10 +29,10 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
 
     @Test
     public void shouldMoveToExpiryDateFieldWhenValidCardNumberEntered() {
-        Judo.setAvsEnabled(false);
-        Judo.setMaestroEnabled(false);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -47,10 +43,10 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
 
     @Test
     public void shouldMoveToCvvFieldWhenValidExpiryDateEntered() {
-        Judo.setAvsEnabled(false);
-        Judo.setMaestroEnabled(false);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.expiry_date_edit_text))
                 .perform(typeText("1220"));
@@ -61,10 +57,12 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
 
     @Test
     public void shouldMoveToPostcodeFieldWhenValidCardDetailsEntered() {
-        Judo.setAvsEnabled(true);
-        Judo.setMaestroEnabled(false);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .setAvsEnabled(true)
+                .build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -81,10 +79,10 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
 
     @Test
     public void shouldMoveToStartDateFieldWhenValidMaestroCardNumberEntered() {
-        Judo.setMaestroEnabled(true);
-        Judo.setAvsEnabled(false);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000005462"));
@@ -95,10 +93,10 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
 
     @Test
     public void shouldMoveToIssueNumberFieldWhenMaestroAndValidStartDateEntered() {
-        Judo.setMaestroEnabled(true);
-        Judo.setAvsEnabled(false);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000005462"));
@@ -112,10 +110,10 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
 
     @Test
     public void shouldMoveToCvvFieldWhenMaestroAndValidExpiryDateEntered() {
-        Judo.setMaestroEnabled(true);
-        Judo.setAvsEnabled(false);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000005462"));
@@ -129,10 +127,12 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
 
     @Test
     public void shouldMoveToPostcodeFieldWhenMaestroAndValidCardDetailsEntered() {
-        Judo.setMaestroEnabled(true);
-        Judo.setAvsEnabled(true);
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .setAvsEnabled(true)
+                .build());
 
-        activityTestRule.launchActivity(getIntent());
+        activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000005462"));
@@ -153,15 +153,12 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
                 .check(matches(hasFocus()));
     }
 
-    private Intent getIntent() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, new JudoOptions.Builder()
+    private Judo.Builder getJudo() {
+        return new Judo.Builder()
+                .setEnvironment(Judo.UAT)
                 .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString())
-                .build());
-
-        return intent;
+                .setConsumerRef(UUID.randomUUID().toString());
     }
 }
