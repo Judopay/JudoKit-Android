@@ -1,6 +1,6 @@
 # Judo Android SDK change log
 
-## [5.5](https://github.com/judopay/Judo-Android/tree/5.5) (TBC)
+## [5.5](https://github.com/judopay/Judo-Android/tree/5.5) (2016-06-29)
 
 **Changes:**
 - The SDK is now initialized through a ```Judo``` instance instead of static methods.
