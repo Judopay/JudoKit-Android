@@ -17,12 +17,12 @@ For the judo Android library to work correctly with your developer setup, please
 - Android Support Repository and Android Support Library have the latest version installed.
 
 ## Getting started
-##### 1. Add the library to your project
+##### 1. Integration
 If you're using Android Studio and Gradle, you can just add the `android-sdk` as a dependency in your app's `build.gradle` file:
 ```groovy
 compile 'com.judopay:android-sdk:5.5'
 ```
-##### 2. Initialize the SDK
+##### 2. Setup
 From your app's main Activity class, or Application class, initialize the judo SDK with your API token and secret:
 ```java
 Judo judo = new Judo.Builder()
@@ -35,7 +35,7 @@ Judo judo = new Judo.Builder()
     .setConsumerRef("<YOUR_REFERENCE>")
     .build();
 ```
-##### 3. Perform a test payment
+##### 3. Make a payment
 To show the payment screen, create an Intent for the `PaymentActivity` with the required Intent extras:
 ```java
 Intent intent = new Intent(activity, PaymentActivity.class);
