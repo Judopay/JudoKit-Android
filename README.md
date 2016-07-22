@@ -8,6 +8,14 @@ Use our UI components for a seamless user experience for card data capture. Mini
 
 ##### **\*\*\*Due to industry-wide security updates, versions below 5.0 of this SDK will no longer be supported after 1st Oct 2016. For more information regarding these updates, please read our blog [here](http://hub.judopay.com/pci31-security-updates/).*****
 
+## Requirements
+For the judo Android library to work correctly with your developer setup, please ensure the following requirements are met:
+
+- Android Studio 2.0 or higher is installed
+- Android SDK Build Tools 24.0.0 is installed
+- The minSdkVersion for your app is set to 16 (Jelly Bean) or higher
+- Android Support Repository and Android Support Library have the latest version installed.
+
 ## Getting started
 ##### 1. Add the library to your project
 If you're using Android Studio and Gradle, you can just add the `android-sdk` as a dependency in your app's `build.gradle` file:
