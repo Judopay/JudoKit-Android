@@ -13,7 +13,7 @@ For the judo Android library to work correctly with your developer setup, please
 
 - Android Studio 2.0 or higher is installed
 - Android SDK Build Tools 24.0.0 is installed
-- The minSdkVersion for your app is set to 16 (Jelly Bean) or higher
+- The ```minSdkVersion``` for your app is set to 16 (Jelly Bean) or higher
 - Android Support Repository and Android Support Library have the latest version installed.
 
 ## Getting started
