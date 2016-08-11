@@ -22,6 +22,26 @@ If you're using Android Studio and Gradle, you can just add the `android-sdk` as
 ```groovy
 compile 'com.judopay:android-sdk:5.5'
 ```
+
+If you're using Android Studio and Gradle, you can just add the `android-sdk` as a dependency in the `build.gradle` file of your app module. However, if you are performing a manual integration, please visit this guide https://github.com/JudoPay/Judo-Android/wiki/Manual-Integration:
+
+```groovy
+compile 'com.judopay:android-sdk:5.5'
+```
+
+Ensure that you are using jCenter as a repository, this will be specified in the ```build.gradle``` file at the root of your project:
+
+```groovy
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.1.2'
+    }
+}
+```
+
 ##### 2. Setup
 From your app's main Activity class, or Application class, initialize the judo SDK with your API token and secret:
 ```java
