@@ -58,6 +58,8 @@ intent.putExtra(Judo.JUDO_OPTIONS, judo);
 
 startActivityForResult(intent, PAYMENT_REQUEST);
 ```
+**Note:** Please make sure that you are using a unique Consumer Reference for each different consumer.
+
 ##### 4. Check the payment result
 In the Activity that calls the judo SDK, override the ```onActivityResult``` method to receive the payment receipt:
 ```java
