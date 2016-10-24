@@ -3,7 +3,6 @@ package com.judopay.api;
 import android.content.Context;
 
 import com.google.gson.JsonParser;
-import com.judopay.shield.JudoShield;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +14,8 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okio.Buffer;
+import com.judopay.shield.JudoShield;
+import com.judopay.shield.DeviceSignal;
 
 class JudoShieldInterceptor implements Interceptor {
 
@@ -35,7 +36,13 @@ class JudoShieldInterceptor implements Interceptor {
             if (parser.parse(body).isJsonObject()) {
                 try {
                     JSONObject json = new JSONObject(body);
-                    judoShield.deviceSignal(json);
+                    DeviceSignal deviceSignal = judoShield.deviceSignal();
+
+                    JSONObject clientDetails = new JSONObject();
+                    clientDetails.put("key", deviceSignal.key);
+                    clientDetails.put("value", deviceSignal.value);
+
+                    json.put("clientDetails", clientDetails);
 
                     MediaType mediaType = MediaType.parse("application/json");
                     RequestBody requestBody = RequestBody.create(mediaType, json.toString());

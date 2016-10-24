@@ -1,5 +1,5 @@
 <resources>
-    <string name="judopay">judoPay</string>
+    <string name="judopay">Judopay</string>
     <string name="avs_label">Address Verification System (AVS)</string>
     <string name="settings">Settings</string>
     <string name="american_express">American Express</string>
