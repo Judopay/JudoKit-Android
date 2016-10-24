@@ -1,6 +1,6 @@
 # Judo Android SDK [ ![Download](https://api.bintray.com/packages/judopay/maven/android-sdk/images/download.svg) ](https://bintray.com/judopay/maven/android-sdk/_latestVersion)
 
-The judo Android library lets you integrate secure in-app card payments into your Android app.
+The Judopay Android SDK lets you integrate secure in-app card payments in your Android app.
 
 Use our UI components for a seamless user experience for card data capture. Minimise your [PCI scope](https://www.pcisecuritystandards.org/pci_security/completing_self_assessment) with a UI that can be themed or customised to match the look and feel of your app.
 
