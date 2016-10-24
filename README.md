@@ -10,7 +10,7 @@ Use our UI components for a seamless user experience for card data capture. Mini
 
 ## Getting started
 ##### 1. Add the library to your project
-If you're using Android Studio and Gradle, add the `android-sdk` to your app's `build.gradle` file:
+If you're using Android Studio and Gradle, add the Judopay Android SDK to your app's `build.gradle` file:
 ```groovy
 compile 'com.judopay:android-sdk:5.5.1'
 ```
@@ -52,7 +52,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 ```
 
 ## Next steps
-The judo Android library supports a range of customization options. For more information on using judo for Android see our [wiki documentation](https://github.com/JudoPay/Judo-Android/wiki). 
+The Judopay Android SDK supports a range of customization options. For more information see our [wiki documentation](https://github.com/JudoPay/Judo-Android/wiki). 
 
 ## License
 See the [LICENSE](https://github.com/JudoPay/Judo-Android/blob/master/LICENSE) file for license rights and limitations (MIT).
