@@ -1,6 +1,6 @@
 # Judo Android SDK [ ![Download](https://api.bintray.com/packages/judopay/maven/android-sdk/images/download.svg) ](https://bintray.com/judopay/maven/android-sdk/_latestVersion)
 
-The judo Android library lets you integrate secure in-app card payments into your Android app.
+The Judopay Android SDK lets you integrate secure in-app card payments in your Android app.
 
 Use our UI components for a seamless user experience for card data capture. Minimise your [PCI scope](https://www.pcisecuritystandards.org/pci_security/completing_self_assessment) with a UI that can be themed or customised to match the look and feel of your app.
 
@@ -10,9 +10,9 @@ Use our UI components for a seamless user experience for card data capture. Mini
 
 ## Getting started
 ##### 1. Add the library to your project
-If you're using Android Studio and Gradle, you can just add the `android-sdk` as a dependency in your app's `build.gradle` file:
+If you're using Android Studio and Gradle, add the Judopay Android SDK to your app's `build.gradle` file:
 ```groovy
-compile 'com.judopay:android-sdk:5.5'
+compile 'com.judopay:android-sdk:5.5.1'
 ```
 ##### 2. Initialize the SDK
 From your app's main Activity class, or Application class, initialize the judo SDK with your API token and secret:
@@ -52,7 +52,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 ```
 
 ## Next steps
-The judo Android library supports a range of customization options. For more information on using judo for Android see our [wiki documentation](https://github.com/JudoPay/Judo-Android/wiki). 
+The Judopay Android SDK supports a range of customization options. For more information see our [wiki documentation](https://github.com/JudoPay/Judo-Android/wiki). 
 
 ## License
 See the [LICENSE](https://github.com/JudoPay/Judo-Android/blob/master/LICENSE) file for license rights and limitations (MIT).
