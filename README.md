@@ -18,10 +18,10 @@ For the judo Android library to work correctly with your developer setup, please
 
 ## Getting started
 ##### 1. Integration
-If you're using Android Studio and Gradle, you can just add the `android-sdk` as a dependency in the `build.gradle` file of your app module. However, if you are performing a manual integration, please visit this guide https://github.com/JudoPay/Judo-Android/wiki/Manual-Integration:
+If using Android Studio and Gradle, add the Judopay Android SDK to your app's `build.gradle` file:
 
 ```groovy
-compile 'com.judopay:android-sdk:5.5'
+compile 'com.judopay:android-sdk:5.5.1'
 ```
 
 Ensure that you are using jCenter as a repository, this will be specified in the ```build.gradle``` file at the root of your project:
@@ -77,7 +77,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 ```
 
 ## Next steps
-The judo Android library supports a range of customization options. For more information on using judo for Android see our [wiki documentation](https://github.com/JudoPay/Judo-Android/wiki). 
+The Judopay Android SDK supports a range of customization options. For more information see our [wiki documentation](https://github.com/JudoPay/Judo-Android/wiki). 
 
 ## License
 See the [LICENSE](https://github.com/JudoPay/Judo-Android/blob/master/LICENSE) file for license rights and limitations (MIT).
