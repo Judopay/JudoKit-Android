@@ -1,6 +1,6 @@
 # Judo Android SDK [ ![Download](https://api.bintray.com/packages/judopay/maven/android-sdk/images/download.svg) ](https://bintray.com/judopay/maven/android-sdk/_latestVersion)
 
-The Judopay Android SDK lets you integrate secure in-app card payments in your Android app.
+The judo Android library lets you integrate secure in-app card payments into your Android app.
 
 Use our UI components for a seamless user experience for card data capture. Minimise your [PCI scope](https://www.pcisecuritystandards.org/pci_security/completing_self_assessment) with a UI that can be themed or customised to match the look and feel of your app.
 
@@ -8,13 +8,36 @@ Use our UI components for a seamless user experience for card data capture. Mini
 
 ##### **\*\*\*Due to industry-wide security updates, versions below 5.0 of this SDK will no longer be supported after 1st Oct 2016. For more information regarding these updates, please read our blog [here](http://hub.judopay.com/pci31-security-updates/).*****
 
+## Requirements
+For the judo Android library to work correctly with your developer setup, please ensure the following requirements are met:
+
+- Android Studio 2.0 or higher is installed
+- Android SDK Build Tools 24.0.0 is installed
+- The ```minSdkVersion``` for your app is set to 16 (Jelly Bean) or higher
+- Android Support Repository and Android Support Library have the latest version installed.
+
 ## Getting started
-##### 1. Add the library to your project
-If you're using Android Studio and Gradle, add the Judopay Android SDK to your app's `build.gradle` file:
+##### 1. Integration
+If using Android Studio and Gradle, add the Judopay Android SDK to your app's `build.gradle` file:
+
 ```groovy
 compile 'com.judopay:android-sdk:5.5.1'
 ```
-##### 2. Initialize the SDK
+
+Ensure that you are using jCenter as a repository, this will be specified in the ```build.gradle``` file at the root of your project:
+
+```groovy
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.1.2'
+    }
+}
+```
+
+##### 2. Setup
 From your app's main Activity class, or Application class, initialize the judo SDK with your API token and secret:
 ```java
 Judo judo = new Judo.Builder()
@@ -27,7 +50,7 @@ Judo judo = new Judo.Builder()
     .setConsumerRef("<YOUR_REFERENCE>")
     .build();
 ```
-##### 3. Perform a test payment
+##### 3. Make a payment
 To show the payment screen, create an Intent for the `PaymentActivity` with the required Intent extras:
 ```java
 Intent intent = new Intent(activity, PaymentActivity.class);
@@ -35,6 +58,8 @@ intent.putExtra(Judo.JUDO_OPTIONS, judo);
 
 startActivityForResult(intent, PAYMENT_REQUEST);
 ```
+**Note:** Please make sure that you are using a unique Consumer Reference for each different consumer.
+
 ##### 4. Check the payment result
 In the Activity that calls the judo SDK, override the ```onActivityResult``` method to receive the payment receipt:
 ```java
