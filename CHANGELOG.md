@@ -1,5 +1,11 @@
 # Judo Android SDK change log
 
+## [5.5.1](https://github.com/judopay/Judo-Android/tree/5.5.1) (2016-10-27)
+
+**Changes:**
+- Use Android API 25 (Android 7.1) SDKs
+- Update JudoShield version and bugfixes
+
 ## [5.5](https://github.com/judopay/Judo-Android/tree/5.5) (2016-06-29)
 
 **Changes:**
