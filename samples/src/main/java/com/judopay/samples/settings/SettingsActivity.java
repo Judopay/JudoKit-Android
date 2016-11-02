@@ -3,8 +3,12 @@ package com.judopay.samples.settings;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.judopay.model.Currency;
 import com.judopay.samples.MainActivity;
@@ -12,11 +16,23 @@ import com.judopay.samples.R;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private SettingsPrefs settingsPrefs;
+    SwitchCompat avsSwitch;
+    SwitchCompat maestroSwitch;
+    SwitchCompat amexSwitch;
+    Spinner currencySpinner;
+
+    private SettingsPrefs prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_settings);
+
+        avsSwitch = (SwitchCompat) findViewById(R.id.avs_switch);
+        maestroSwitch = (SwitchCompat) findViewById(R.id.maestro_switch);
+        amexSwitch = (SwitchCompat) findViewById(R.id.amex_switch);
+        currencySpinner = (Spinner) findViewById(R.id.currency_spinner);
 
         setTitle(R.string.settings);
 
@@ -25,10 +41,7 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        settingsPrefs = new SettingsPrefs(this);
-
-//        binding = DataBindingUtil.setContentView(this, R.layout.activity_settings);
-//        binding.setSettingsViewModel(new SettingsViewModel(settingsPrefs.isAvsEnabled(), settingsPrefs.isAmexEnabled(), settingsPrefs.isMaestroEnabled()));
+        this.prefs = new SettingsPrefs(this);
 
         initialize();
     }
@@ -47,42 +60,31 @@ public class SettingsActivity extends AppCompatActivity {
     private void initialize() {
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Currency.currencyNames());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        binding.currencySpinner.setAdapter(adapter);
-//        binding.currencySpinner.setSelection(getCurrencySelection());
-//
-//        binding.currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                String currency = Currency.currencyCodes().get(position);
-//                saveCurrency(currency);
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
-//
-//        binding.avsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                settingsPrefs.setAvsEnabled(isChecked);
-//            }
-//        });
-//
-//        binding.maestroSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                settingsPrefs.setMaestroEnabled(isChecked);
-//            }
-//        });
-//
-//        binding.amexSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                settingsPrefs.setAmexEnabled(isChecked);
-//            }
-//        });
+
+        currencySpinner.setAdapter(adapter);
+        currencySpinner.setSelection(getCurrencySelection());
+
+        currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String currency = Currency.currencyCodes().get(position);
+                saveCurrency(currency);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        avsSwitch.setChecked(prefs.isAvsEnabled());
+        avsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> prefs.setAvsEnabled(isChecked));
+
+        maestroSwitch.setChecked(prefs.isMaestroEnabled());
+        maestroSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> prefs.setMaestroEnabled(isChecked));
+
+        amexSwitch.setChecked(prefs.isAmexEnabled());
+        amexSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> prefs.setAmexEnabled(isChecked));
     }
 
     private void saveCurrency(String currency) {

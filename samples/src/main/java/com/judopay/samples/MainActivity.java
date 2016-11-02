@@ -30,9 +30,9 @@ import static com.judopay.Judo.TOKEN_PRE_AUTH_REQUEST;
 public class MainActivity extends BaseActivity {
 
     private static final String AMOUNT = "0.02";
-    private static final String JUDO_ID = "100915867";
-    private static final String API_TOKEN = "Izx9omsBR15LatAl";
-    private static final String API_SECRET = "b5787124845533d8e68d12a586fa3713871b876b528600ebfdc037afec880cd6";
+    private static final String JUDO_ID = "<JUDO_ID>";
+    private static final String API_TOKEN = "<API_TOKEN>";
+    private static final String API_SECRET = "<API_SECRET>";
 
     private static final String REFERENCE = "AndroidSdkSampleConsumerRef";
 
