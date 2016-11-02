@@ -18,7 +18,7 @@ public final class PaymentFragment extends JudoFragment {
         super.onCreate(savedInstanceState);
 
         Judo judo = getArguments().getParcelable(JUDO_OPTIONS);
-        checkJudoOptionsExtras(judo.getAmount(), judo.getJudoId(), judo.getCurrency(), judo.getConsumerRef());
+        checkJudoOptionsExtras(judo.getAmount(), judo.getJudoId(), judo.getCurrency(), judo.getReference());
 
         if (this.presenter == null) {
             this.presenter = new PaymentPresenter(this, judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK), new AndroidScheduler(), new Gson());
@@ -46,4 +46,5 @@ public final class PaymentFragment extends JudoFragment {
     boolean isTransactionInProgress() {
         return this.presenter.loading;
     }
+
 }

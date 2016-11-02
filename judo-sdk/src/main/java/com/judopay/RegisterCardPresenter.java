@@ -23,7 +23,7 @@ class RegisterCardPresenter extends BasePresenter {
                 .setMetaData(judo.getMetaDataMap())
                 .setEmailAddress(judo.getEmailAddress())
                 .setMobileNumber(judo.getMobileNumber())
-                .setYourConsumerReference(judo.getConsumerRef());
+                .setYourConsumerReference(judo.getReference());
 
         if (card.getAddress() != null) {
             builder.setCardAddress(card.getAddress());

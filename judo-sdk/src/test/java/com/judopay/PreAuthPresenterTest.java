@@ -50,7 +50,7 @@ public class PreAuthPresenterTest {
         presenter.performPreAuth(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef("consumerRef")
+                .setReference("consumerRef")
                 .setJudoId("100915867")
                 .build());
 
@@ -70,7 +70,7 @@ public class PreAuthPresenterTest {
         presenter.performPreAuth(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef("consumerRef")
+                .setReference("consumerRef")
                 .setJudoId("100915867")
                 .build());
 
@@ -86,7 +86,7 @@ public class PreAuthPresenterTest {
         String consumer = "consumerRef";
         presenter.performTokenPreAuth(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setCardToken(cardToken)
-                .setConsumerRef(consumer)
+                .setReference(consumer)
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setJudoId("100915867")

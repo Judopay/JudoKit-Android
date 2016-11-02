@@ -8,6 +8,7 @@
     <application
         android:allowBackup="false"
         android:fullBackupContent="false"
+        android:name=".Application"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/judopay"
         android:theme="@style/Theme.Judo.Light.DarkActionBar"

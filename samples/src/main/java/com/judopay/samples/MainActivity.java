@@ -26,59 +26,39 @@ import static com.judopay.Judo.SANDBOX;
 import static com.judopay.Judo.TOKEN_PAYMENT_REQUEST;
 import static com.judopay.Judo.TOKEN_PRE_AUTH_REQUEST;
 
-/**
- * Sample app screen containing buttons to activate the different features of the Judo SDK
- * <br>
- * Update the {@link #JUDO_ID} string with the Judo ID from the judo website: http://www.judopay.com,
- */
 @SuppressWarnings({"UnusedParameters", "WrongConstant"})
 public class MainActivity extends BaseActivity {
 
-    private static final String AMOUNT = "0.99";
+    private static final String AMOUNT = "0.02";
+    private static final String JUDO_ID = "100915867";
+    private static final String API_TOKEN = "Izx9omsBR15LatAl";
+    private static final String API_SECRET = "b5787124845533d8e68d12a586fa3713871b876b528600ebfdc037afec880cd6";
 
-    private static final String JUDO_ID = "<JUDO_ID>";
-    private static final String API_TOKEN = "<API_TOKEN>";
-    private static final String API_SECRET = "<API_SECRET>";
-
-    private static final String CONSUMER_REF = "AndroidSdkSampleConsumerRef";
-
-    private Judo judo;
+    private static final String REFERENCE = "AndroidSdkSampleConsumerRef";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        judo = new Judo.Builder()
-                .setJudoId(JUDO_ID)
-                .setApiToken(API_TOKEN)
-                .setApiSecret(API_SECRET)
-                .setEnvironment(SANDBOX)
-                .setAmount(AMOUNT)
-                .setCurrency(getCurrency())
-                .setConsumerRef(CONSUMER_REF)
-                .build();
-
-        setConfiguration();
     }
 
     public void performPayment(View view) {
         Intent intent = new Intent(this, PaymentActivity.class);
 
-        intent.putExtra(Judo.JUDO_OPTIONS, judo);
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
         startActivityForResult(intent, PAYMENT_REQUEST);
     }
 
     public void performPreAuth(View view) {
         Intent intent = new Intent(this, PreAuthActivity.class);
 
-        intent.putExtra(Judo.JUDO_OPTIONS, judo);
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
         startActivityForResult(intent, PRE_AUTH_REQUEST);
     }
 
     public void performRegisterCard(View view) {
         Intent intent = new Intent(this, RegisterCardActivity.class);
-        intent.putExtra(Judo.JUDO_OPTIONS, judo);
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         startActivityForResult(intent, REGISTER_CARD_REQUEST);
     }
@@ -88,8 +68,8 @@ public class MainActivity extends BaseActivity {
         if (receipt != null) {
             Intent intent = new Intent(this, PreAuthActivity.class);
 
-            intent.putExtra(Judo.JUDO_OPTIONS, judo.newBuilder()
-                    .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
+            intent.putExtra(Judo.JUDO_OPTIONS, getJudo().newBuilder()
+                    .setReference(receipt.getConsumer().getYourConsumerReference())
                     .setCardToken(receipt.getCardDetails())
                     .build());
 
@@ -105,8 +85,8 @@ public class MainActivity extends BaseActivity {
         if (receipt != null) {
             Intent intent = new Intent(this, PaymentActivity.class);
 
-            intent.putExtra(Judo.JUDO_OPTIONS, judo.newBuilder()
-                    .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
+            intent.putExtra(Judo.JUDO_OPTIONS, getJudo().newBuilder()
+                    .setReference(receipt.getConsumer().getYourConsumerReference())
                     .setCardToken(receipt.getCardDetails())
                     .build());
 
@@ -116,15 +96,29 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private Judo getJudo() {
+        SettingsPrefs settingsPrefs = new SettingsPrefs(this);
+
+        String deviceId = ((Application) getApplication()).getDeviceId();
+
+        return new Judo.Builder()
+                .setJudoId(JUDO_ID)
+                .setApiToken(API_TOKEN)
+                .setApiSecret(API_SECRET)
+                .setDeviceId(deviceId)
+                .setEnvironment(SANDBOX)
+                .setAmount(AMOUNT)
+                .setCurrency(getCurrency())
+                .setReference(REFERENCE)
+                .setAvsEnabled(settingsPrefs.isAvsEnabled())
+                .setMaestroEnabled(settingsPrefs.isMaestroEnabled())
+                .setAmexEnabled(settingsPrefs.isAmexEnabled())
+                .build();
+    }
+
     private String getCurrency() {
         return getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE)
                 .getString(CURRENCY_KEY, Currency.GBP);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setConfiguration();
     }
 
     @Override
@@ -192,8 +186,8 @@ public class MainActivity extends BaseActivity {
     private void startTokenPayment(Receipt receipt) {
         Intent intent = new Intent(this, PaymentActivity.class);
 
-        intent.putExtra(Judo.JUDO_OPTIONS, judo.newBuilder()
-                .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().newBuilder()
+                .setReference(receipt.getConsumer().getYourConsumerReference())
                 .setCardToken(receipt.getCardDetails())
                 .build());
 
@@ -232,14 +226,4 @@ public class MainActivity extends BaseActivity {
                 break;
         }
     }
-
-    private void setConfiguration() {
-        SettingsPrefs settingsPrefs = new SettingsPrefs(this);
-        this.judo = judo.newBuilder()
-                .setAvsEnabled(settingsPrefs.isAvsEnabled())
-                .setMaestroEnabled(settingsPrefs.isMaestroEnabled())
-                .setAmexEnabled(settingsPrefs.isAmexEnabled())
-                .build();
-    }
-
 }

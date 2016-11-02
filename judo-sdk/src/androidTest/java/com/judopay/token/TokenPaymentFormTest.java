@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
 import com.judopay.PaymentActivity;
@@ -238,7 +237,7 @@ public class TokenPaymentFormTest {
                 .setCurrency(Currency.GBP)
                 .setCardNumber("6789")
                 .setCardToken(new CardToken("1220", "1234", "cardToken", cardType))
-                .setConsumerRef(UUID.randomUUID().toString());
+                .setReference(UUID.randomUUID().toString());
     }
 
 }

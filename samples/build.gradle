@@ -11,11 +11,16 @@ android {
         versionCode 7
         versionName "1.0"
 
+        jackOptions {
+            enabled true
+        }
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-    dataBinding {
-        enabled = true
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {

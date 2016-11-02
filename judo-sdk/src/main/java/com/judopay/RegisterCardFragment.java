@@ -23,7 +23,7 @@ public class RegisterCardFragment extends JudoFragment implements TransactionCal
         super.onCreate(savedInstanceState);
 
         Judo judo = getArguments().getParcelable(JUDO_OPTIONS);
-        checkJudoOptionsExtras(judo.getConsumerRef(), judo.getJudoId());
+        checkJudoOptionsExtras(judo.getReference(), judo.getJudoId());
 
         if (this.presenter == null) {
             JudoApiService apiService = judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);

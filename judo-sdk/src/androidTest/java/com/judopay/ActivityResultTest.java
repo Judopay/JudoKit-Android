@@ -3,7 +3,6 @@ package com.judopay;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.model.CardToken;
 import com.judopay.model.Currency;
@@ -33,7 +32,7 @@ public class ActivityResultTest {
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setCardToken(new CardToken("1215", "1234", "cardToken", 1))
-                .setConsumerRef("consumerRef")
+                .setReference("consumerRef")
                 .build());
 
         PaymentActivity activity = activityTestRule.launchActivity(intent);

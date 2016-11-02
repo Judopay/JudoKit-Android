@@ -21,6 +21,9 @@ import com.judopay.model.Card;
 import com.judopay.model.Receipt;
 import com.judopay.cardverification.CardholderVerificationDialogFragment;
 import com.judopay.cardverification.AuthorizationListener;
+import com.judopay.shield.JudoShield;
+
+import rx.functions.Action1;
 
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
 import static com.judopay.Judo.JUDO_OPTIONS;
@@ -48,6 +51,7 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
 
         // check if token has expired
         Judo options = getArguments().getParcelable(JUDO_OPTIONS);
+
         if (options != null && options.getCardToken() != null && options.getCardToken().isExpired()) {
             PendingIntent pendingResult = getActivity().createPendingResult(Judo.JUDO_REQUEST, new Intent(), 0);
             try {

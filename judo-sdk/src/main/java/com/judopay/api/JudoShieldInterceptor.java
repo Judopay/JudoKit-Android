@@ -2,27 +2,28 @@ package com.judopay.api;
 
 import android.content.Context;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.judopay.shield.JudoShield;
 
 import java.io.IOException;
+import java.util.Map;
 
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okio.Buffer;
-import com.judopay.shield.JudoShield;
-import com.judopay.shield.DeviceSignal;
 
 class JudoShieldInterceptor implements Interceptor {
 
     private final JudoShield judoShield;
+    private final String deviceId;
 
-    JudoShieldInterceptor(Context context) {
+    JudoShieldInterceptor(Context context, String deviceId) {
         this.judoShield = new JudoShield(context);
+        this.deviceId = deviceId;
     }
 
     @Override
@@ -33,24 +34,26 @@ class JudoShieldInterceptor implements Interceptor {
             String body = bodyToString(request.body());
 
             JsonParser parser = new JsonParser();
-            if (parser.parse(body).isJsonObject()) {
-                try {
-                    JSONObject json = new JSONObject(body);
-                    DeviceSignal deviceSignal = judoShield.deviceSignal();
+            JsonElement jsonBody = parser.parse(body);
 
-                    JSONObject clientDetails = new JSONObject();
-                    clientDetails.put("key", deviceSignal.key);
-                    clientDetails.put("value", deviceSignal.value);
+            if (jsonBody.isJsonObject()) {
+                JsonObject json = jsonBody.getAsJsonObject();
 
-                    json.put("clientDetails", clientDetails);
+                Map<String, String> signals = judoShield.deviceSignal(deviceId);
+                JsonObject clientDetailsJson = new JsonObject();
 
-                    MediaType mediaType = MediaType.parse("application/json");
-                    RequestBody requestBody = RequestBody.create(mediaType, json.toString());
+                for (Map.Entry<String, String> entry : signals.entrySet()) {
+                    clientDetailsJson.addProperty(entry.getKey(), entry.getValue());
+                }
 
-                    return chain.proceed(request.newBuilder()
-                            .post(requestBody)
-                            .build());
-                } catch (JSONException ignore) { }
+                json.add("clientDetails", clientDetailsJson);
+
+                MediaType mediaType = MediaType.parse("application/json");
+                RequestBody requestBody = RequestBody.create(mediaType, json.toString());
+
+                return chain.proceed(request.newBuilder()
+                        .post(requestBody)
+                        .build());
             } else {
                 return chain.proceed(request);
             }

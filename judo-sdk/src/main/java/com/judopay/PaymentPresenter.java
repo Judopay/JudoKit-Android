@@ -8,11 +8,11 @@ import com.judopay.model.TokenRequest;
 
 class PaymentPresenter extends BasePresenter {
 
-    public PaymentPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, Scheduler scheduler, Gson gson) {
+    PaymentPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, Scheduler scheduler, Gson gson) {
         super(callbacks, judoApiService, scheduler, gson);
     }
 
-    public void performPayment(Card card, Judo judo) {
+    void performPayment(Card card, Judo judo) {
         this.loading = true;
 
         transactionCallbacks.showLoading();
@@ -23,7 +23,7 @@ class PaymentPresenter extends BasePresenter {
                 .setCurrency(judo.getCurrency())
                 .setCv2(card.getSecurityCode())
                 .setJudoId(judo.getJudoId())
-                .setYourConsumerReference(judo.getConsumerRef())
+                .setYourConsumerReference(judo.getReference())
                 .setExpiryDate(card.getExpiryDate())
                 .setEmailAddress(judo.getEmailAddress())
                 .setMobileNumber(judo.getMobileNumber())
@@ -46,7 +46,7 @@ class PaymentPresenter extends BasePresenter {
                 .subscribe(callback(), error());
     }
 
-    public void performTokenPayment(Card card, Judo judo) {
+    void performTokenPayment(Card card, Judo judo) {
         this.loading = true;
         transactionCallbacks.showLoading();
 
@@ -54,7 +54,7 @@ class PaymentPresenter extends BasePresenter {
                 .setAmount(judo.getAmount())
                 .setCurrency(judo.getCurrency())
                 .setJudoId(judo.getJudoId())
-                .setYourConsumerReference(judo.getConsumerRef())
+                .setYourConsumerReference(judo.getReference())
                 .setCv2(card.getSecurityCode())
                 .setToken(judo.getCardToken())
                 .setMetaData(judo.getMetaDataMap())
