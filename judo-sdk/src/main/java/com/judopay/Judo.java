@@ -38,23 +38,6 @@ import static com.judopay.model.LuhnCheck.isValid;
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class Judo implements Parcelable {
 
-    public static void getDeviceId(final Context context, final DeviceIdListener deviceIdListener) {
-        JudoShield judoShield = new JudoShield(context);
-
-        if(deviceIdListener == null)
-            return;
-
-        judoShield.getDeviceId()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<String>() {
-                    @Override
-                    public void call(String result) {
-                        deviceIdListener.onDeviceIdReceived(result);
-                    }
-                });
-    }
-
     @IntDef({UI_CLIENT_MODE_CUSTOM_UI, UI_CLIENT_MODE_JUDO_SDK})
     @Retention(RetentionPolicy.SOURCE)
     public @interface UiClientMode {}
