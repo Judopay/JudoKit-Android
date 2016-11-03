@@ -1,23 +1,23 @@
 package com.judopay.samples;
 
-import com.judopay.JudoApiClient;
+import com.judopay.JudoDeviceClient;
 
 public class Application extends android.app.Application {
 
-    private JudoApiClient judoApiClient;
+    private JudoDeviceClient judoDeviceClient;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        judoApiClient = new JudoApiClient(this);
+        judoDeviceClient = new JudoDeviceClient(this);
 
-        // connect with device service
-        judoApiClient.connect();
+        // load with device service
+        judoDeviceClient.load();
     }
 
     public String getDeviceId() {
-        return judoApiClient.getDeviceId();
+        return judoDeviceClient.getDeviceId();
     }
 
 }
