@@ -13,11 +13,11 @@ public class Application extends android.app.Application {
         judoDeviceClient = new JudoDeviceClient(this);
 
         // load with device service
-        judoDeviceClient.load();
+        judoDeviceClient.identifyDevice();
     }
 
     public String getDeviceId() {
-        return judoDeviceClient.getDeviceId();
+        return judoDeviceClient.cachedDeviceId();
     }
 
 }

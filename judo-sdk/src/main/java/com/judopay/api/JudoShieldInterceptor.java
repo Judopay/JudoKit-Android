@@ -8,6 +8,7 @@ import com.google.gson.JsonParser;
 import com.judopay.shield.JudoShield;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.Interceptor;
@@ -39,7 +40,7 @@ class JudoShieldInterceptor implements Interceptor {
             if (jsonBody.isJsonObject()) {
                 JsonObject json = jsonBody.getAsJsonObject();
 
-                Map<String, String> signals = judoShield.deviceSignal(deviceId);
+                Map<String, String> signals = judoShield.encryptDeviceId(deviceId);
                 JsonObject clientDetailsJson = new JsonObject();
 
                 for (Map.Entry<String, String> entry : signals.entrySet()) {
