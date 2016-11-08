@@ -17,13 +17,10 @@ import com.judopay.card.CardEntryFragment;
 import com.judopay.card.CardEntryListener;
 import com.judopay.card.CustomLayoutCardEntryFragment;
 import com.judopay.card.TokenCardEntryFragment;
+import com.judopay.cardverification.AuthorizationListener;
+import com.judopay.cardverification.CardholderVerificationDialogFragment;
 import com.judopay.model.Card;
 import com.judopay.model.Receipt;
-import com.judopay.cardverification.CardholderVerificationDialogFragment;
-import com.judopay.cardverification.AuthorizationListener;
-import com.judopay.shield.JudoShield;
-
-import rx.functions.Action1;
 
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
 import static com.judopay.Judo.JUDO_OPTIONS;
@@ -56,7 +53,8 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
             PendingIntent pendingResult = getActivity().createPendingResult(Judo.JUDO_REQUEST, new Intent(), 0);
             try {
                 pendingResult.send(Judo.RESULT_TOKEN_EXPIRED);
-            } catch (PendingIntent.CanceledException ignore) { }
+            } catch (PendingIntent.CanceledException ignore) {
+            }
         }
 
         setRetainInstance(true);
@@ -138,7 +136,8 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
             try {
                 PendingIntent pendingResult = activity.createPendingResult(Judo.JUDO_REQUEST, intent, FLAG_ONE_SHOT);
                 pendingResult.send(resultCode);
-            } catch (PendingIntent.CanceledException ignore) {}
+            } catch (PendingIntent.CanceledException ignore) {
+            }
         }
     }
 

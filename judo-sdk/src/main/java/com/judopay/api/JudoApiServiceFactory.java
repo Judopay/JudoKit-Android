@@ -1,7 +1,6 @@
 package com.judopay.api;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -28,7 +27,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
-import okhttp3.CertificatePinner;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -81,7 +79,7 @@ public class JudoApiServiceFactory {
         List<Interceptor> interceptors = client.interceptors();
 
         interceptors.add(new DeDuplicationInterceptor());
-        interceptors.add(new JudoShieldInterceptor(context, judo.getDeviceId()));
+        interceptors.add(new DeviceDnaInterceptor(context, judo.getDeviceId()));
         interceptors.add(new ApiHeadersInterceptor(ApiCredentials.fromConfiguration(context, judo), uiClientMode));
     }
 

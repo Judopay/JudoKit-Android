@@ -14,16 +14,11 @@ import com.judopay.model.Address;
 import com.judopay.model.CardToken;
 import com.judopay.model.Currency;
 import com.judopay.model.CustomLayout;
-import com.judopay.shield.JudoShield;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.HashMap;
 import java.util.Map;
-
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 import static com.judopay.model.LuhnCheck.isValid;

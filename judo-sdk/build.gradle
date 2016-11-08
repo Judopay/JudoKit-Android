@@ -100,7 +100,7 @@ publish {
 }
 
 dependencies {
-    compile 'com.judopay:shield:2.1'
+    compile 'com.judopay:device-dna:1.0'
 
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
