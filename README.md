@@ -21,7 +21,7 @@ For the judo Android library to work correctly with your developer setup, please
 If using Android Studio and Gradle, add the Judopay Android SDK to your app's `build.gradle` file:
 
 ```groovy
-compile 'com.judopay:android-sdk:5.5.1'
+compile 'com.judopay:android-sdk:5.5.2'
 ```
 
 Ensure that you are using jCenter as a repository, this will be specified in the ```build.gradle``` file at the root of your project:
