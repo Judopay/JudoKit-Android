@@ -19,7 +19,6 @@ import static com.judopay.model.LuhnCheck.isValid;
 public final class RegisterCardRequest extends Request {
 
     private String judoId;
-    private Location consumerLocation;
     private String yourConsumerReference;
     private Address cardAddress;
     private String cardNumber;
@@ -29,14 +28,11 @@ public final class RegisterCardRequest extends Request {
     private String emailAddress;
     private String mobileNumber;
     private String issueNumber;
+    private String currency;
     private Map<String, String> yourPaymentMetaData;
 
     public String getJudoId() {
         return judoId;
-    }
-
-    public Location getConsumerLocation() {
-        return consumerLocation;
     }
 
     public String getYourConsumerReference() {
@@ -79,14 +75,19 @@ public final class RegisterCardRequest extends Request {
         return mobileNumber;
     }
 
+    public String getCurrency() {
+        return currency;
+    }
+
     @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
 
         private String judoId;
-        private Location consumerLocation;
         private String yourConsumerReference;
         private Address cardAddress;
         private String cardNumber;
+        private String amount;
+        private String currency;
         private String cv2;
         private String expiryDate;
         private String startDate;
@@ -97,11 +98,6 @@ public final class RegisterCardRequest extends Request {
 
         public Builder setJudoId(String judoId) {
             this.judoId = judoId;
-            return this;
-        }
-
-        public Builder setConsumerLocation(Location consumerLocation) {
-            this.consumerLocation = consumerLocation;
             return this;
         }
 
@@ -122,6 +118,16 @@ public final class RegisterCardRequest extends Request {
 
         public Builder setCv2(String cv2) {
             this.cv2 = cv2;
+            return this;
+        }
+
+        public Builder setAmount(String amount) {
+            this.amount = amount;
+            return this;
+        }
+
+        public Builder setCurrency(@Currency.Type String currency) {
+            this.currency = currency;
             return this;
         }
 
@@ -167,7 +173,7 @@ public final class RegisterCardRequest extends Request {
             RegisterCardRequest transaction = new RegisterCardRequest();
 
             transaction.judoId = judoId;
-            transaction.consumerLocation = consumerLocation;
+            transaction.currency = currency;
             transaction.yourConsumerReference = yourConsumerReference;
             transaction.cardAddress = cardAddress;
             transaction.cardNumber = cardNumber;
