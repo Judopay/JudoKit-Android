@@ -1,0 +1,132 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.novoda:bintray-release:0.3.4'
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode 12
+        versionName '5.5.2'
+
+        vectorDrawables.useSupportLibrary = true
+
+        consumerProguardFiles 'proguard-rules.pro'
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    }
+
+    // Flag to tell aapt to keep the attribute ids around
+    aaptOptions {
+        additionalParameters "--no-version-vectors"
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            testCoverageEnabled = true
+
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file('local.properties').newDataInputStream())
+            def apiToken = properties.getProperty('judo.api.token')
+            def apiSecret = properties.getProperty('judo.api.secret')
+
+            manifestPlaceholders = [apiToken: apiToken, apiSecret: apiSecret]
+        }
+    }
+
+    lintOptions {
+        warning 'InvalidPackage'
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+    }
+
+    sourceSets {
+        main { java.srcDirs = ['src/main/java'] }
+    }
+
+}
+
+task androidJavadocs(type: Javadoc) {
+    title "Judo Android SDK Documentation"
+    options {
+        links "https://docs.oracle.com/javase/7/docs/api/"
+        linksOffline "https://developer.android.com/reference", "${android.sdkDirectory}/docs/reference"
+    }
+    options.encoding "utf-8"
+    if (JavaVersion.current().isJava8Compatible()) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+
+    exclude '**/BuildConfig.java'
+    exclude '**/R.java'
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+task javadocJar(type: Jar, dependsOn: androidJavadocs) {
+    classifier = 'javadoc'
+    from androidJavadocs.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+publish {
+    userOrg = 'judopay'
+    groupId = 'com.judopay'
+    artifactId = 'android-sdk'
+    publishVersion = android.defaultConfig.versionName
+    desc = 'Android Mobile Payments SDK'
+    website = 'https://github.com/JudoPay/Judo-Android'
+}
+
+dependencies {
+    compile 'com.judopay:shield:2.0'
+
+    compile 'com.squareup.retrofit2:retrofit:2.0.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0'
+
+    compile 'io.reactivex:rxandroid:0.23.0'
+    compile 'fr.turri:jISO8601:0.2'
+
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.android.support:design:25.0.1'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.10.19'
+
+    androidTestCompile 'com.judopay:espresso-web:2.2.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+
+}
+
+android.libraryVariants.all { variant ->
+    if (!variant.buildType.isDebuggable()) {
+        def androidJavadocs = project.tasks['androidJavadocs']
+        androidJavadocs.configure {
+            classpath = variant.javaCompile.classpath + project.files(project.android.bootClasspath)
+            source = variant.sourceSets.collect({ it.javaDirectories }).flatten()
+            dependsOn variant.javaCompile.dependsOn
+        }
+    }
+}

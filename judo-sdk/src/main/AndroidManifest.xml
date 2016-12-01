@@ -1,0 +1,19 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.judopay">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name="com.judopay.PaymentActivity"
+            android:theme="@style/Theme.Judo.Light.DarkActionBar" />
+        <activity
+            android:name="com.judopay.PreAuthActivity"
+            android:theme="@style/Theme.Judo.Light.DarkActionBar" />
+        <activity
+            android:name="com.judopay.RegisterCardActivity"
+            android:theme="@style/Theme.Judo.Light.DarkActionBar" />
+    </application>
+
+</manifest>
