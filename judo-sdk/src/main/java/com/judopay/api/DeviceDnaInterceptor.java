@@ -1,27 +1,28 @@
 package com.judopay.api;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.judopay.JudoDeviceClient;
+import com.judopay.DeviceDna;
 
 import java.io.IOException;
 import java.util.Map;
 
-import okhttp3.*;
+import okhttp3.Interceptor;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okio.Buffer;
 
 class DeviceDnaInterceptor implements Interceptor {
 
-    private final JudoDeviceClient judoDeviceClient;
+    private final DeviceDna deviceDna;
     private final String deviceId;
 
     DeviceDnaInterceptor(Context context, String deviceId) {
-        this.judoDeviceClient = new JudoDeviceClient(context);
+        this.deviceDna = new DeviceDna(context);
         this.deviceId = deviceId;
     }
 
@@ -49,7 +50,7 @@ class DeviceDnaInterceptor implements Interceptor {
     }
 
     private void addClientDetails(JsonObject json) {
-        Map<String, String> signals = judoDeviceClient.deviceSignals();
+        Map<String, String> signals = deviceDna.deviceSignals();
         JsonObject clientDetailsJson = new JsonObject();
 
         for (Map.Entry<String, String> entry : signals.entrySet()) {

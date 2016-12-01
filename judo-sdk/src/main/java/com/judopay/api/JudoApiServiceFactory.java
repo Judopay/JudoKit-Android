@@ -118,10 +118,13 @@ public class JudoApiServiceFactory {
         InputStream cert = context.getResources().openRawResource(R.raw.judo_uat);
         Certificate ca;
 
+        //noinspection TryFinallyCanBeTryWithResources
         try {
             ca = cf.generateCertificate(cert);
         } finally {
-            cert.close();
+            try {
+                cert.close();
+            } catch (IOException ignore) { }
         }
 
         // creating a KeyStore containing our trusted CAs
