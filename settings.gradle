@@ -1,2 +1,1 @@
-include ':judo-sdk'
 include ':samples'
