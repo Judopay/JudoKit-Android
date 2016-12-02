@@ -28,14 +28,14 @@ public class PreAuthVoidTest {
         Context context = InstrumentationRegistry.getContext();
 
         Judo judo = new Judo.Builder()
-                .setJudoId("100915867")
-                .setEnvironment(Judo.UAT)
+                .setJudoId("100407196")
+                .setEnvironment(Judo.SANDBOX)
                 .build();
 
         final JudoApiService apiService = judo.getApiService(context);
 
         PaymentRequest paymentRequest = new PaymentRequest.Builder()
-                .setJudoId("100915867")
+                .setJudoId("100407196")
                 .setAmount("0.01")
                 .setCardNumber("4976000000003436")
                 .setCv2("452")

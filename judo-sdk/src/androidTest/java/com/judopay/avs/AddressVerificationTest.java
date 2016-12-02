@@ -133,8 +133,8 @@ public class AddressVerificationTest {
 
     private Judo.Builder getJudo() {
         return new Judo.Builder()
-                .setEnvironment(Judo.UAT)
-                .setJudoId("100915867")
+                .setEnvironment(Judo.SANDBOX)
+                .setJudoId("100407196")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setAvsEnabled(true)

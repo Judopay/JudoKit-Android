@@ -52,8 +52,8 @@ public class ActivityTitleTest {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
-                .setEnvironment(Judo.UAT)
-                .setJudoId("100915867")
+                .setEnvironment(Judo.SANDBOX)
+                .setJudoId("100407196")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef(UUID.randomUUID().toString())

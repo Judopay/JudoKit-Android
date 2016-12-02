@@ -7,26 +7,17 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
-import com.judopay.R;
 import com.judopay.error.SslInitializationError;
 import com.judopay.model.Address;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.util.Date;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManagerFactory;
 
 import okhttp3.CertificatePinner;
 import okhttp3.Interceptor;
@@ -80,7 +71,7 @@ public class JudoApiServiceFactory {
         }
 
         setTimeouts(builder);
-        setSslSocketFactory(builder, context, judo);
+        setSslSocketFactory(builder);
         setInterceptors(builder, uiClientMode, context, judo);
 
         return builder.build();
@@ -116,46 +107,16 @@ public class JudoApiServiceFactory {
                 .build();
     }
 
-    private static void setSslSocketFactory(OkHttpClient.Builder builder, Context context, Judo judo) {
+    private static void setSslSocketFactory(OkHttpClient.Builder builder) {
         try {
             SSLContext sslContext = SSLContext.getInstance("TLS");
-
-            if (judo.getEnvironment() == Judo.UAT) {
-                initializeUatEnvironmentSslContext(context, sslContext);
-            } else {
-                sslContext.init(null, null, null);
-            }
+            sslContext.init(null, null, null);
 
             SSLSocketFactory socketFactory = sslContext.getSocketFactory();
             builder.sslSocketFactory(new TlsSslSocketFactory(socketFactory));
-        } catch (CertificateException | IOException | KeyStoreException | KeyManagementException | NoSuchAlgorithmException e) {
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
             throw new SslInitializationError(e);
         }
-    }
-
-    private static void initializeUatEnvironmentSslContext(Context context, SSLContext sslContext) throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
-        // loading CAs from an InputStream
-        CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        InputStream cert = context.getResources().openRawResource(R.raw.judo_uat);
-        Certificate ca;
-
-        try {
-            ca = cf.generateCertificate(cert);
-        } finally {
-            cert.close();
-        }
-
-        // creating a KeyStore containing our trusted CAs
-        String keyStoreType = KeyStore.getDefaultType();
-        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-        keyStore.load(null, null);
-        keyStore.setCertificateEntry("ca", ca);
-
-        // creating a TrustManager that trusts the CAs in our KeyStore
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        tmf.init(keyStore);
-
-        sslContext.init(null, tmf.getTrustManagers(), null);
     }
 
     private static void setTimeouts(OkHttpClient.Builder builder) {
@@ -163,5 +124,4 @@ public class JudoApiServiceFactory {
                 .readTimeout(3, MINUTES)
                 .writeTimeout(30, SECONDS);
     }
-
 }

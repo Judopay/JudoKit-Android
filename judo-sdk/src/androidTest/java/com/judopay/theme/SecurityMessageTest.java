@@ -53,8 +53,8 @@ public class SecurityMessageTest {
         Intent intent = new Intent();
 
         intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
-                .setJudoId("100915867")
-                .setEnvironment(Judo.UAT)
+                .setJudoId("100407196")
+                .setEnvironment(Judo.SANDBOX)
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef(UUID.randomUUID().toString())

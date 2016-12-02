@@ -54,7 +54,7 @@ public class SuccessfulTokenPaymentTest {
         final JudoApiService apiService = judo.getApiService(getContext());
 
         RegisterCardRequest registerCardRequest = new RegisterCardRequest.Builder()
-                .setJudoId("100915867")
+                .setJudoId("100407196")
                 .setCardNumber("4976000000003436")
                 .setExpiryDate("12/20")
                 .setCv2("452")
@@ -93,7 +93,7 @@ public class SuccessfulTokenPaymentTest {
                 .getApiService(getContext());
 
         RegisterCardRequest registerCardRequest = new RegisterCardRequest.Builder()
-                .setJudoId("100915867")
+                .setJudoId("100407196")
                 .setCardNumber("4976000000003436")
                 .setExpiryDate("12/20")
                 .setCv2("452")
@@ -134,8 +134,8 @@ public class SuccessfulTokenPaymentTest {
 
     private Judo.Builder getJudo() {
         return new Judo.Builder()
-                .setEnvironment(Judo.UAT)
-                .setJudoId("100915867")
+                .setEnvironment(Judo.SANDBOX)
+                .setJudoId("100407196")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP);
     }

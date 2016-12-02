@@ -22,7 +22,6 @@ import java.util.UUID;
 import static com.judopay.TestSubscribers.assertResponseSuccessful;
 import static com.judopay.TestSubscribers.fail;
 
-@MediumTest
 @RunWith(AndroidJUnit4.class)
 public class AndroidPayTest {
 
@@ -84,8 +83,8 @@ public class AndroidPayTest {
 
     private Judo.Builder getJudo() {
         return new Judo.Builder()
-                .setEnvironment(Judo.UAT)
-                .setJudoId("100915867")
+                .setEnvironment(Judo.SANDBOX)
+                .setJudoId("100407196")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setConsumerRef(UUID.randomUUID().toString());

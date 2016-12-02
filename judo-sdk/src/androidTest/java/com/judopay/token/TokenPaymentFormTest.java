@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
 import com.judopay.PaymentActivity;
@@ -28,14 +27,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.judopay.Judo.UAT;
 import static com.judopay.model.CardNetwork.AMEX;
 import static com.judopay.model.CardNetwork.VISA;
 import static com.judopay.util.ViewMatchers.isDisabled;
 import static com.judopay.util.ViewMatchers.isNotDisplayed;
 import static com.judopay.util.ViewMatchers.isOpaque;
 import static com.judopay.util.ViewMatchers.withTextInputHint;
-
 
 @RunWith(AndroidJUnit4.class)
 public class TokenPaymentFormTest {
@@ -232,8 +229,8 @@ public class TokenPaymentFormTest {
 
     private Judo.Builder getJudo(int cardType) {
         return new Judo.Builder()
-                .setEnvironment(UAT)
-                .setJudoId("100915867")
+                .setEnvironment(Judo.SANDBOX)
+                .setJudoId("100407196")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setCardNumber("6789")

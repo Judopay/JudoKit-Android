@@ -42,7 +42,7 @@ public class RegisterCardPresenterTest {
     TransactionCallbacks transactionCallbacks;
 
     private Gson gson = new Gson();
-    private String judoId = "100915867";
+    private String judoId = "100407196";
     private String consumer = "consumerRef";
     private Scheduler scheduler = new TestScheduler();
 
