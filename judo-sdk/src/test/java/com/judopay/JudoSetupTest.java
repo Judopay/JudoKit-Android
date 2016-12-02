@@ -27,14 +27,4 @@ public class JudoSetupTest {
         assertThat(judo.isSslPinningEnabled(), is(true));
     }
 
-    @Test
-    public void shouldNotEnableSslPinningWhenUatEnvironment() {
-        Judo judo = new Judo.Builder("apiToken", "apiSecret")
-                .setJudoId("100407196")
-                .setEnvironment(Judo.SANDBOX)
-                .build();
-
-        assertThat(judo.isSslPinningEnabled(), is(false));
-    }
-
 }
