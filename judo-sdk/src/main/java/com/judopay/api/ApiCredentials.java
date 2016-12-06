@@ -20,13 +20,13 @@ class ApiCredentials {
     private final String apiSecret;
     private final String authorization;
 
-    public ApiCredentials(String apiToken, String apiSecret) {
+    ApiCredentials(String apiToken, String apiSecret) {
         this.apiToken = apiToken;
         this.apiSecret = apiSecret;
         this.authorization = getEncodedCredentials();
     }
 
-    public static ApiCredentials fromConfiguration(Context context, Judo judo) {
+    static ApiCredentials fromConfiguration(Context context, Judo judo) {
         return new ApiCredentials(getApiToken(context, judo), getApiSecret(context, judo));
     }
 
@@ -43,7 +43,7 @@ class ApiCredentials {
         return authorization;
     }
 
-    public String getBasicAuthorizationHeader() {
+    String getBasicAuthorizationHeader() {
         return String.format("Basic %s", getAuthorization());
     }
 
