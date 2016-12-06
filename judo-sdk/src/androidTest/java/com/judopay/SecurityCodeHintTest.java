@@ -2,7 +2,6 @@ package com.judopay;
 
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.model.Currency;
 
@@ -126,7 +125,7 @@ public class SecurityCodeHintTest {
                 .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString());
+                .setConsumerReference(UUID.randomUUID().toString());
     }
 
 }

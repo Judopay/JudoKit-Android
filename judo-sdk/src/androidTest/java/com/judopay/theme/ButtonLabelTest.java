@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
 import com.judopay.PreAuthActivity;
@@ -81,7 +80,7 @@ public class ButtonLabelTest {
                 .setEnvironment(Judo.UAT)
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString())
+                .setConsumerReference(UUID.randomUUID().toString())
                 .build());
 
         return intent;

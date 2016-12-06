@@ -74,7 +74,7 @@ abstract class BasePresenter implements AuthorizationListener {
         };
     }
 
-    public void reconnect() {
+    void reconnect() {
         if (loading) {
             transactionCallbacks.showLoading();
         } else {
