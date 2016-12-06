@@ -83,7 +83,7 @@ public class CardImageHelpersTest {
                 .setJudoId("100915867")
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setReference(UUID.randomUUID().toString());
+                .setConsumerReference(UUID.randomUUID().toString());
     }
 
 }

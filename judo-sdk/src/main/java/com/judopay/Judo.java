@@ -85,7 +85,7 @@ public class Judo implements Parcelable {
     private String amount;
     private String currency;
     private String deviceId;
-    private String reference;
+    private String consumerReference;
     private Bundle metaData;
     private String cardNumber;
     private String expiryMonth;
@@ -113,7 +113,7 @@ public class Judo implements Parcelable {
                 .setExpiryYear(expiryYear)
                 .setAmount(amount)
                 .setCurrency(currency)
-                .setReference(reference)
+                .setConsumerReference(consumerReference)
                 .setMetaData(metaData)
                 .setAddress(address)
                 .setAvsEnabled(avsEnabled)
@@ -142,8 +142,8 @@ public class Judo implements Parcelable {
         return currency;
     }
 
-    public String getReference() {
-        return reference;
+    public String getConsumerReference() {
+        return consumerReference;
     }
 
     public Bundle getMetaData() {
@@ -283,7 +283,7 @@ public class Judo implements Parcelable {
         private String expiryYear;
         private String amount;
         private String currency;
-        private String reference;
+        private String consumerReference;
         private Bundle metaData;
         private PendingIntent cardScanningIntent;
         private CustomLayout customLayout;
@@ -336,8 +336,8 @@ public class Judo implements Parcelable {
             return this;
         }
 
-        public Builder setReference(String reference) {
-            this.reference = reference;
+        public Builder setConsumerReference(String consumerReference) {
+            this.consumerReference = consumerReference;
             return this;
         }
 
@@ -424,7 +424,7 @@ public class Judo implements Parcelable {
             judo.amount = amount;
             judo.judoId = judoId;
             judo.currency = currency;
-            judo.reference = reference;
+            judo.consumerReference = consumerReference;
             judo.metaData = metaData;
             judo.address = address;
 
@@ -460,7 +460,7 @@ public class Judo implements Parcelable {
         dest.writeString(this.amount);
         dest.writeString(this.currency);
         dest.writeString(this.deviceId);
-        dest.writeString(this.reference);
+        dest.writeString(this.consumerReference);
         dest.writeBundle(this.metaData);
         dest.writeString(this.cardNumber);
         dest.writeString(this.expiryMonth);
@@ -487,7 +487,7 @@ public class Judo implements Parcelable {
         this.amount = in.readString();
         this.currency = in.readString();
         this.deviceId = in.readString();
-        this.reference = in.readString();
+        this.consumerReference = in.readString();
         this.metaData = in.readBundle();
         this.cardNumber = in.readString();
         this.expiryMonth = in.readString();

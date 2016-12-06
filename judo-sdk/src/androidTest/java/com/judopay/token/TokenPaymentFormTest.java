@@ -237,7 +237,7 @@ public class TokenPaymentFormTest {
                 .setCurrency(Currency.GBP)
                 .setCardNumber("6789")
                 .setCardToken(new CardToken("1220", "1234", "cardToken", cardType))
-                .setReference(UUID.randomUUID().toString());
+                .setConsumerReference(UUID.randomUUID().toString());
     }
 
 }

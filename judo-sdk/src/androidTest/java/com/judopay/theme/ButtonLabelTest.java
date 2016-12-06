@@ -80,7 +80,7 @@ public class ButtonLabelTest {
                 .setEnvironment(Judo.UAT)
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
-                .setReference(UUID.randomUUID().toString())
+                .setConsumerReference(UUID.randomUUID().toString())
                 .build());
 
         return intent;

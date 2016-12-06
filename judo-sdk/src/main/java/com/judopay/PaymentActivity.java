@@ -14,7 +14,7 @@ import android.os.Bundle;
  * .setJudoId("1234567")
  * .setCurrency(Currency.GBP)
  * .setAmount("1.99")
- * .setReference("consumerRef")
+ * .setConsumerReference("consumerRef")
  * .build());
  * startActivityForResult(intent, PAYMENT_REQUEST);
  * </pre>

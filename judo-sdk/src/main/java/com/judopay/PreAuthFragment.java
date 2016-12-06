@@ -18,7 +18,7 @@ public final class PreAuthFragment extends JudoFragment {
         super.onCreate(savedInstanceState);
 
         Judo judo = getArguments().getParcelable(JUDO_OPTIONS);
-        checkJudoOptionsExtras(judo.getAmount(), judo.getJudoId(), judo.getCurrency(), judo.getReference());
+        checkJudoOptionsExtras(judo.getAmount(), judo.getJudoId(), judo.getCurrency(), judo.getConsumerReference());
 
         if (this.presenter == null) {
             JudoApiService apiService = judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);

@@ -145,7 +145,7 @@ public class PaymentFormErrorMessageTest {
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setAvsEnabled(true)
-                .setReference(UUID.randomUUID().toString());
+                .setConsumerReference(UUID.randomUUID().toString());
     }
 
 }

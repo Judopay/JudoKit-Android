@@ -32,7 +32,7 @@ public class ActivityResultTest {
                 .setAmount("0.99")
                 .setCurrency(Currency.GBP)
                 .setCardToken(new CardToken("1215", "1234", "cardToken", 1))
-                .setReference("consumerRef")
+                .setConsumerReference("consumerRef")
                 .build());
 
         PaymentActivity activity = activityTestRule.launchActivity(intent);

@@ -68,7 +68,7 @@ public class SuccessfulTokenPaymentTest {
                         Intent intent = new Intent();
                         intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
                                 .setCardToken(receipt.getCardDetails())
-                                .setReference(receipt.getConsumer().getYourConsumerReference())
+                                .setConsumerReference(receipt.getConsumer().getYourConsumerReference())
                                 .build());
 
                         PaymentActivity activity = tokenPaymentActivityTestRule.launchActivity(intent);
@@ -112,7 +112,7 @@ public class SuccessfulTokenPaymentTest {
                         intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
                                 .setAvsEnabled(true)
                                 .setCardToken(receipt.getCardDetails())
-                                .setReference(receipt.getConsumer().getYourConsumerReference())
+                                .setConsumerReference(receipt.getConsumer().getYourConsumerReference())
                                 .build());
 
                         PaymentActivity activity = tokenPaymentActivityTestRule.launchActivity(intent);
