@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.test.espresso.IdlingPolicies;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
@@ -69,7 +68,7 @@ public class SuccessfulTokenPaymentTest {
                         Intent intent = new Intent();
                         intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
                                 .setCardToken(receipt.getCardDetails())
-                                .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
+                                .setConsumerReference(receipt.getConsumer().getYourConsumerReference())
                                 .build());
 
                         PaymentActivity activity = tokenPaymentActivityTestRule.launchActivity(intent);
@@ -113,7 +112,7 @@ public class SuccessfulTokenPaymentTest {
                         intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
                                 .setAvsEnabled(true)
                                 .setCardToken(receipt.getCardDetails())
-                                .setConsumerRef(receipt.getConsumer().getYourConsumerReference())
+                                .setConsumerReference(receipt.getConsumer().getYourConsumerReference())
                                 .build());
 
                         PaymentActivity activity = tokenPaymentActivityTestRule.launchActivity(intent);

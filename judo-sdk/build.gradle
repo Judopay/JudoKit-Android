@@ -13,13 +13,13 @@ apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.1'
 
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 12
-        versionName '5.5.2'
+        versionCode 13
+        versionName '5.5.3'
 
         vectorDrawables.useSupportLibrary = true
 
@@ -43,6 +43,10 @@ android {
             def apiSecret = properties.getProperty('judo.api.secret')
 
             manifestPlaceholders = [apiToken: apiToken, apiSecret: apiSecret]
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -100,11 +104,11 @@ publish {
 }
 
 dependencies {
-    compile 'com.judopay:shield:2.0'
+    compile 'com.judopay:device-dna:1.0'
 
-    compile 'com.squareup.retrofit2:retrofit:2.0.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
 
     compile 'io.reactivex:rxandroid:0.23.0'
     compile 'fr.turri:jISO8601:0.2'
