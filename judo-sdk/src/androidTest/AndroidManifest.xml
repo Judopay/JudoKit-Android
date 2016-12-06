@@ -21,13 +21,6 @@
             android:theme="@style/Theme.Judo.Light.ShowSecurityMessage"
             tools:replace="theme" />
 
-        <meta-data
-            android:name="@string/judo_api_token"
-            android:value="${apiToken}" />
-        <meta-data
-            android:name="@string/judo_api_secret"
-            android:value="${apiSecret}" />
-
     </application>
 
 </manifest>

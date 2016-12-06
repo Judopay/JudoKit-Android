@@ -10,7 +10,7 @@ class UserAgent {
     private final String model;
     private final String locale;
 
-    public UserAgent(String locale) {
+    UserAgent(String locale) {
         this.sdkVersion = com.judopay.BuildConfig.VERSION_NAME;
         this.androidVersion = android.os.Build.VERSION.RELEASE;
         this.manufacturer = android.os.Build.MANUFACTURER;
