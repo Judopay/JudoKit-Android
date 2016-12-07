@@ -14,7 +14,7 @@ import android.os.Bundle;
  * Intent intent = new Intent(this, RegisterCardActivity.class);
  * intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
  * .setJudoId("1234567")
- * .setConsumerRef("consumerRef")
+ * .setConsumerReference("consumerRef")
  * .build());
  *
  * startActivityForResult(intent, REGISTER_CARD_REQUEST);

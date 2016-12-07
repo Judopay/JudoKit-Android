@@ -30,7 +30,7 @@ import static com.judopay.model.LuhnCheck.isValid;
  * When calling an Activity with an Intent extra or a Fragment using an arguments Bundle,
  * use {@link Judo#JUDO_OPTIONS} as the extra or argument name.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class Judo implements Parcelable {
 
     @IntDef({UI_CLIENT_MODE_CUSTOM_UI, UI_CLIENT_MODE_JUDO_SDK})
@@ -85,7 +85,8 @@ public class Judo implements Parcelable {
     private String judoId;
     private String amount;
     private String currency;
-    private String consumerRef;
+    private String deviceId;
+    private String consumerReference;
     private Bundle metaData;
     private String cardNumber;
     private String expiryMonth;
@@ -107,17 +108,16 @@ public class Judo implements Parcelable {
                 .setApiSecret(apiSecret)
                 .setEnvironment(environment)
                 .setJudoId(judoId)
+                .setDeviceId(deviceId)
                 .setCardToken(cardToken)
                 .setCardNumber(cardNumber)
                 .setExpiryMonth(expiryMonth)
                 .setExpiryYear(expiryYear)
                 .setAmount(amount)
                 .setCurrency(currency)
-                .setConsumerRef(consumerRef)
+                .setConsumerReference(consumerReference)
                 .setMetaData(metaData)
                 .setAddress(address)
-                .setEmailAddress(emailAddress)
-                .setMobileNumber(mobileNumber)
                 .setAvsEnabled(avsEnabled)
                 .setAmexEnabled(amexEnabled)
                 .setMaestroEnabled(maestroEnabled)
@@ -135,13 +135,17 @@ public class Judo implements Parcelable {
         return judoId;
     }
 
+    public String getDeviceId() {
+        return deviceId;
+    }
+
     @Currency.Type
     public String getCurrency() {
         return currency;
     }
 
-    public String getConsumerRef() {
-        return consumerRef;
+    public String getConsumerReference() {
+        return consumerReference;
     }
 
     public Bundle getMetaData() {
@@ -271,6 +275,7 @@ public class Judo implements Parcelable {
         private String judoId;
         private Integer environment;
 
+        private String deviceId;
         private Address address;
         private CardToken cardToken;
         private String cardNumber;
@@ -278,10 +283,8 @@ public class Judo implements Parcelable {
         private String expiryYear;
         private String amount;
         private String currency;
-        private String consumerRef;
+        private String consumerReference;
         private Bundle metaData;
-        private String emailAddress;
-        private String mobileNumber;
         private PendingIntent cardScanningIntent;
         private CustomLayout customLayout;
 
@@ -314,6 +317,11 @@ public class Judo implements Parcelable {
             return this;
         }
 
+        public Builder setDeviceId(String deviceId) {
+            this.deviceId = deviceId;
+            return this;
+        }
+
         public Builder setAmount(String amount) {
             this.amount = amount;
             return this;
@@ -329,8 +337,8 @@ public class Judo implements Parcelable {
             return this;
         }
 
-        public Builder setConsumerRef(String consumerRef) {
-            this.consumerRef = consumerRef;
+        public Builder setConsumerReference(String consumerReference) {
+            this.consumerReference = consumerReference;
             return this;
         }
 
@@ -361,16 +369,6 @@ public class Judo implements Parcelable {
 
         public Builder setCardToken(CardToken cardToken) {
             this.cardToken = cardToken;
-            return this;
-        }
-
-        public Builder setEmailAddress(String emailAddress) {
-            this.emailAddress = emailAddress;
-            return this;
-        }
-
-        public Builder setMobileNumber(String mobileNumber) {
-            this.mobileNumber = mobileNumber;
             return this;
         }
 
@@ -419,6 +417,7 @@ public class Judo implements Parcelable {
             judo.apiToken = apiToken;
             judo.apiSecret = apiSecret;
             judo.environment = environment;
+            judo.deviceId = deviceId;
             judo.cardToken = cardToken;
             judo.cardNumber = cardNumber;
             judo.expiryMonth = expiryMonth;
@@ -426,10 +425,8 @@ public class Judo implements Parcelable {
             judo.amount = amount;
             judo.judoId = judoId;
             judo.currency = currency;
-            judo.consumerRef = consumerRef;
+            judo.consumerReference = consumerReference;
             judo.metaData = metaData;
-            judo.emailAddress = emailAddress;
-            judo.mobileNumber = mobileNumber;
             judo.address = address;
 
             judo.avsEnabled = avsEnabled;
@@ -463,7 +460,8 @@ public class Judo implements Parcelable {
         dest.writeString(this.judoId);
         dest.writeString(this.amount);
         dest.writeString(this.currency);
-        dest.writeString(this.consumerRef);
+        dest.writeString(this.deviceId);
+        dest.writeString(this.consumerReference);
         dest.writeBundle(this.metaData);
         dest.writeString(this.cardNumber);
         dest.writeString(this.expiryMonth);
@@ -489,7 +487,8 @@ public class Judo implements Parcelable {
         this.judoId = in.readString();
         this.amount = in.readString();
         this.currency = in.readString();
-        this.consumerRef = in.readString();
+        this.deviceId = in.readString();
+        this.consumerReference = in.readString();
         this.metaData = in.readBundle();
         this.cardNumber = in.readString();
         this.expiryMonth = in.readString();
@@ -503,7 +502,7 @@ public class Judo implements Parcelable {
         this.customEnvironmentHost = in.readString();
     }
 
-    public static final Creator<Judo> CREATOR = new Creator<Judo>() {
+    public static final Parcelable.Creator<Judo> CREATOR = new Parcelable.Creator<Judo>() {
         @Override
         public Judo createFromParcel(Parcel source) {
             return new Judo(source);

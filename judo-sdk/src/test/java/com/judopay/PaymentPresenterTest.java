@@ -57,8 +57,8 @@ public class PaymentPresenterTest {
         presenter.performPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef("consumerRef")
-                .setJudoId("100407196")
+                .setConsumerReference("consumerRef")
+                .setJudoId("100915867")
                 .build());
 
         verify(apiService).payment(any(PaymentRequest.class));
@@ -72,8 +72,8 @@ public class PaymentPresenterTest {
         presenter.performPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef("consumerRef")
-                .setJudoId("100407196")
+                .setConsumerReference("consumerRef")
+                .setJudoId("100915867")
                 .build());
 
         verify(apiService).payment(any(PaymentRequest.class));
@@ -93,8 +93,8 @@ public class PaymentPresenterTest {
         presenter.performPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef("consumerRef")
-                .setJudoId("100407196")
+                .setConsumerReference("consumerRef")
+                .setJudoId("100915867")
                 .build());
 
         verify(transactionCallbacks).onError(any(Receipt.class));
@@ -113,8 +113,8 @@ public class PaymentPresenterTest {
         presenter.performPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
-                .setConsumerRef("consumerRef")
-                .setJudoId("100407196")
+                .setConsumerReference("consumerRef")
+                .setJudoId("100915867")
                 .build());
 
         verify(transactionCallbacks).onError(any(Receipt.class));
@@ -130,10 +130,10 @@ public class PaymentPresenterTest {
         String consumer = "consumerRef";
         presenter.performTokenPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setCardToken(cardToken)
-                .setConsumerRef(consumer)
+                .setConsumerReference(consumer)
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
-                .setJudoId("100407196")
+                .setJudoId("100915867")
                 .build());
 
         verify(transactionCallbacks).showLoading();

@@ -53,7 +53,7 @@ public class RegisterCardPresenterTest {
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setJudoId(judoId)
-                .setConsumerRef(consumer)
+                .setConsumerReference(consumer)
                 .build());
 
         verify(apiService, times(1)).registerCard(any(RegisterCardRequest.class));
@@ -66,7 +66,7 @@ public class RegisterCardPresenterTest {
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setJudoId(judoId)
-                .setConsumerRef(consumer)
+                .setConsumerReference(consumer)
                 .build());
 
         verify(transactionCallbacks).showLoading();
@@ -81,7 +81,7 @@ public class RegisterCardPresenterTest {
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setJudoId(judoId)
-                .setConsumerRef(consumer)
+                .setConsumerReference(consumer)
                 .build());
 
         verify(transactionCallbacks).onSuccess(eq(receipt));
@@ -98,7 +98,7 @@ public class RegisterCardPresenterTest {
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setJudoId(judoId)
-                .setConsumerRef(consumer)
+                .setConsumerReference(consumer)
                 .build());
 
         verify(transactionCallbacks).onDeclined(eq(receipt));
@@ -127,7 +127,7 @@ public class RegisterCardPresenterTest {
 
         presenter.performRegisterCard(card, new Judo.Builder("apiToken", "apiSecret")
                 .setJudoId(judoId)
-                .setConsumerRef(consumer)
+                .setConsumerReference(consumer)
                 .build());
 
         presenter.reconnect();
@@ -145,7 +145,7 @@ public class RegisterCardPresenterTest {
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setJudoId(judoId)
-                .setConsumerRef(consumer)
+                .setConsumerReference(consumer)
                 .build());
 
         verify(transactionCallbacks).setLoadingText(eq(R.string.redirecting));
@@ -164,7 +164,7 @@ public class RegisterCardPresenterTest {
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setJudoId(judoId)
-                .setConsumerRef(consumer)
+                .setConsumerReference(consumer)
                 .build());
 
         verify(transactionCallbacks).onError(any(Receipt.class));
@@ -177,7 +177,7 @@ public class RegisterCardPresenterTest {
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setJudoId(judoId)
-                .setConsumerRef(consumer)
+                .setConsumerReference(consumer)
                 .build());
 
         verify(apiService).registerCard(any(RegisterCardRequest.class));

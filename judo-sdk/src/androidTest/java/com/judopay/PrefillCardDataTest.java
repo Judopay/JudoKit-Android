@@ -31,6 +31,7 @@ public class PrefillCardDataTest {
                 .setCardNumber("4934123412341234")
                 .setExpiryMonth("01")
                 .setExpiryYear("20")
+                .setConsumerReference(UUID.randomUUID().toString())
                 .build());
 
         activityTestRule.launchActivity(intent);
@@ -48,6 +49,7 @@ public class PrefillCardDataTest {
                 .setCardNumber("343412341234123")
                 .setExpiryMonth("01")
                 .setExpiryYear("20")
+                .setConsumerReference(UUID.randomUUID().toString())
                 .build());
 
         activityTestRule.launchActivity(intent);

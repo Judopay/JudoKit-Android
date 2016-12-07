@@ -32,7 +32,7 @@ class ApiHeadersInterceptor implements Interceptor {
     private final int uiClientMode;
     private final ApiCredentials apiCredentials;
 
-    public ApiHeadersInterceptor(ApiCredentials apiCredentials, @Judo.UiClientMode int uiClientMode) {
+    ApiHeadersInterceptor(ApiCredentials apiCredentials, @Judo.UiClientMode int uiClientMode) {
         this.apiCredentials = apiCredentials;
         this.uiClientMode = uiClientMode;
         this.userAgent = new UserAgent(Locale.getDefault().getDisplayName());

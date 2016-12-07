@@ -72,7 +72,15 @@ public class ButtonLabelTest {
 
     private Intent getIntent() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
+
+        intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
+                .setJudoId("100915867")
+                .setEnvironment(Judo.UAT)
+                .setAmount("0.99")
+                .setCurrency(Currency.GBP)
+                .setConsumerReference(UUID.randomUUID().toString())
+                .build());
+
         return intent;
     }
 

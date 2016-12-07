@@ -229,7 +229,8 @@ public class TokenPaymentFormTest {
         return TestUtil.getJudo()
                 .newBuilder()
                 .setCardNumber("6789")
-                .setCardToken(new CardToken("1220", "1234", "cardToken", cardType));
+                .setCardToken(new CardToken("1220", "1234", "cardToken", cardType))
+                .setConsumerReference(UUID.randomUUID().toString());
     }
 
 }

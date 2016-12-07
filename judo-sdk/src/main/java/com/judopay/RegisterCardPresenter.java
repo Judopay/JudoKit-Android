@@ -7,7 +7,7 @@ import com.judopay.model.RegisterCardRequest;
 
 class RegisterCardPresenter extends BasePresenter {
 
-    public RegisterCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, Scheduler scheduler, Gson gson) {
+    RegisterCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, Scheduler scheduler, Gson gson) {
         super(callbacks, apiService, scheduler, gson);
     }
 
@@ -23,7 +23,15 @@ class RegisterCardPresenter extends BasePresenter {
                 .setMetaData(judo.getMetaDataMap())
                 .setEmailAddress(judo.getEmailAddress())
                 .setMobileNumber(judo.getMobileNumber())
-                .setYourConsumerReference(judo.getConsumerRef());
+                .setYourConsumerReference(judo.getConsumerReference());
+
+        if(judo.getCurrency() != null) {
+            builder.setCurrency(judo.getCurrency());
+        }
+
+        if(judo.getAmount() != null) {
+            builder.setAmount(judo.getAmount());
+        }
 
         if (card.getAddress() != null) {
             builder.setCardAddress(card.getAddress());

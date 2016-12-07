@@ -28,8 +28,8 @@ public class ActivityResultTest {
                 .newBuilder()
                 .setAmount("0.99")
                 .setCardToken(new CardToken("1215", "1234", "cardToken", 1))
-                .setConsumerRef("consumerRef")
-                .build();
+                .setConsumerReference("consumerRef")
+                .build());
 
         intent.putExtra(Judo.JUDO_OPTIONS, judo);
 

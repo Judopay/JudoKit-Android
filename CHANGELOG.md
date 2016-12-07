@@ -1,5 +1,16 @@
 # Judo Android SDK change log
 
+## [5.5.2](https://github.com/judopay/Judo-Android/tree/5.5.2) (2016-11-31)
+
+**Changes:**
+- Allow currency to be specified when registering a card, as a default currency of GBP will be used and this can fail if the token payment/pre-auth is made in a different currency.
+
+## [5.5.1](https://github.com/judopay/Judo-Android/tree/5.5.1) (2016-10-27)
+
+**Changes:**
+- Use Android API 25 (Android 7.1) SDKs
+- Update JudoShield version and bugfixes
+
 ## [5.5](https://github.com/judopay/Judo-Android/tree/5.5) (2016-06-29)
 
 **Changes:**

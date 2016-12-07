@@ -49,4 +49,13 @@ public class CardDateFormattingTest {
                 .check(matches(withText("12/25")));
     }
 
+    private Judo.Builder getJudo() {
+        return new Judo.Builder()
+                .setEnvironment(Judo.UAT)
+                .setJudoId("100915867")
+                .setAmount("0.99")
+                .setCurrency(Currency.GBP)
+                .setConsumerReference(UUID.randomUUID().toString());
+    }
+
 }
