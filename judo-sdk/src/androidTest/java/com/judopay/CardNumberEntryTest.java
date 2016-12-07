@@ -78,14 +78,4 @@ public class CardNumberEntryTest {
                 .perform(typeText(" 1234"))
                 .check(matches(withText("1234 ")));
     }
-
-    private Judo.Builder getJudo() {
-        return new Judo.Builder()
-                .setEnvironment(Judo.UAT)
-                .setJudoId("100915867")
-                .setAmount("0.99")
-                .setCurrency(Currency.GBP)
-                .setConsumerReference(UUID.randomUUID().toString());
-    }
-
 }
