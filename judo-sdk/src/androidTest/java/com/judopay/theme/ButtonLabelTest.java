@@ -25,7 +25,6 @@ import static com.judopay.TestUtil.getJudo;
 import static com.judopay.util.ViewMatchers.withResourceName;
 import static org.hamcrest.Matchers.allOf;
 
-
 @RunWith(AndroidJUnit4.class)
 public class ButtonLabelTest {
 
@@ -72,15 +71,7 @@ public class ButtonLabelTest {
 
     private Intent getIntent() {
         Intent intent = new Intent();
-
-        intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
-                .setJudoId("100915867")
-                .setEnvironment(Judo.UAT)
-                .setAmount("0.99")
-                .setCurrency(Currency.GBP)
-                .setConsumerReference(UUID.randomUUID().toString())
-                .build());
-
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
         return intent;
     }
 

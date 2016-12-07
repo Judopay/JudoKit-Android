@@ -19,7 +19,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static com.judopay.TestUtil.getJudo;
 import static com.judopay.util.ViewMatchers.withActionBarTitle;
 
-
 @RunWith(AndroidJUnit4.class)
 public class ActivityTitleTest {
 
@@ -47,15 +46,7 @@ public class ActivityTitleTest {
 
     private Intent getIntent() {
         Intent intent = new Intent();
-
-        intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
-                .setEnvironment(Judo.UAT)
-                .setJudoId("100915867")
-                .setAmount("0.99")
-                .setCurrency(Currency.GBP)
-                .setConsumerReference(UUID.randomUUID().toString())
-                .build());
-
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
         return intent;
     }
 }

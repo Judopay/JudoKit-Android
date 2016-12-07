@@ -3,7 +3,6 @@ package com.judopay.receipts;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.MediumTest;
 
 import com.judopay.JudoApiService;
 import com.judopay.model.Currency;
@@ -20,7 +19,6 @@ import rx.functions.Func1;
 import static com.judopay.TestUtil.JUDO_ID;
 import static com.judopay.TestUtil.getJudo;
 
-@MediumTest
 @RunWith(AndroidJUnit4.class)
 public class PaymentRefundTest {
 

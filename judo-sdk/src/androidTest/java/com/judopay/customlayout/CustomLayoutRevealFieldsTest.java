@@ -83,12 +83,8 @@ public class CustomLayoutRevealFieldsTest {
     }
 
     private Judo.Builder getJudo() {
-        return new Judo.Builder()
-                .setEnvironment(Judo.UAT)
-                .setJudoId("100915867")
-                .setAmount("0.99")
-                .setCurrency(Currency.GBP)
-                .setConsumerReference(UUID.randomUUID().toString())
+        return TestUtil.getJudo()
+                .newBuilder()
                 .setCustomLayout(new CustomLayout.Builder()
                         .cardNumberInput(R.id.card_number_input)
                         .expiryDateInput(R.id.expiry_date_input)
