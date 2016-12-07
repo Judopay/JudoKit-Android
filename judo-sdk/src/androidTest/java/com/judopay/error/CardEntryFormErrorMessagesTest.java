@@ -3,19 +3,16 @@ package com.judopay.error;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
 import com.judopay.PaymentActivity;
 import com.judopay.R;
+import com.judopay.TestUtil;
 import com.judopay.model.Country;
-import com.judopay.model.Currency;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -119,13 +116,9 @@ public class CardEntryFormErrorMessagesTest {
     }
 
     private Judo.Builder getJudo() {
-        return new Judo.Builder()
-                .setEnvironment(Judo.SANDBOX)
-                .setJudoId("100407196")
-                .setAmount("0.99")
-                .setCurrency(Currency.GBP)
-                .setAvsEnabled(true)
-                .setConsumerRef(UUID.randomUUID().toString());
+        return TestUtil.getJudo()
+                .newBuilder()
+                .setAvsEnabled(true);
     }
 
 }

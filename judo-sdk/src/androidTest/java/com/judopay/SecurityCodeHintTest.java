@@ -2,14 +2,9 @@ package com.judopay;
 
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
-import android.test.suitebuilder.annotation.LargeTest;
-
-import com.judopay.model.Currency;
 
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -18,8 +13,8 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static com.judopay.TestUtil.getJudo;
 import static com.judopay.util.ViewMatchers.withTextInputHint;
-
 
 public class SecurityCodeHintTest {
 
@@ -29,7 +24,7 @@ public class SecurityCodeHintTest {
     @Test
     public void shouldDisplayCvvSecurityCodeWhenUnknownCard() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         rule.launchActivity(intent);
 
@@ -40,7 +35,7 @@ public class SecurityCodeHintTest {
     @Test
     public void shouldDisplayVisaSecurityCodeWhenVisaDetected() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         rule.launchActivity(intent);
 
@@ -54,7 +49,7 @@ public class SecurityCodeHintTest {
     @Test
     public void shouldDisplayAmexSecurityCodeWhenAmexDetected() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         rule.launchActivity(intent);
 
@@ -68,7 +63,7 @@ public class SecurityCodeHintTest {
     @Test
     public void shouldDisplayMastercardSecurityCodeWhenMastercardDetected() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         rule.launchActivity(intent);
 
@@ -82,7 +77,7 @@ public class SecurityCodeHintTest {
     @Test
     public void shouldDisplayCidvHintWhenAmexCardNumberEntered() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         rule.launchActivity(intent);
 
@@ -97,7 +92,7 @@ public class SecurityCodeHintTest {
     @Test
     public void shouldDisplayCv2HintWhenVisaCardNumberEntered() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         rule.launchActivity(intent);
 
@@ -112,21 +107,12 @@ public class SecurityCodeHintTest {
     @Test
     public void shouldDisplayCvvImageOnLaunch() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         rule.launchActivity(intent);
 
         onView(withId(R.id.security_code_image_view))
                 .check(matches(isDisplayed()));
-    }
-
-    private Judo.Builder getJudo() {
-        return new Judo.Builder()
-                .setEnvironment(Judo.SANDBOX)
-                .setJudoId("100407196")
-                .setAmount("0.99")
-                .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString());
     }
 
 }

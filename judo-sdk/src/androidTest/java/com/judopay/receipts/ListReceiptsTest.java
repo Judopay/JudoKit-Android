@@ -5,7 +5,6 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.MediumTest;
 
-import com.judopay.Judo;
 import com.judopay.JudoApiService;
 import com.judopay.model.CollectionRequest;
 import com.judopay.model.Currency;
@@ -19,6 +18,9 @@ import org.junit.runner.RunWith;
 
 import rx.Observable;
 import rx.functions.Func1;
+
+import static com.judopay.TestUtil.JUDO_ID;
+import static com.judopay.TestUtil.getJudo;
 
 @MediumTest
 @RunWith(AndroidJUnit4.class)
@@ -203,17 +205,12 @@ public class ListReceiptsTest {
     private JudoApiService getApiService() {
         Context context = InstrumentationRegistry.getContext();
 
-        Judo judo = new Judo.Builder()
-                .setJudoId("100407196")
-                .setEnvironment(Judo.SANDBOX)
-                .build();
-
-        return judo.getApiService(context);
+        return getJudo().getApiService(context);
     }
 
     private PaymentRequest getPaymentRequest() {
         return new PaymentRequest.Builder()
-                .setJudoId("100407196")
+                .setJudoId(JUDO_ID)
                 .setAmount("0.01")
                 .setCardNumber("4976000000003436")
                 .setCv2("452")

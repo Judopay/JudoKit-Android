@@ -4,27 +4,23 @@ import android.content.Intent;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
 import com.judopay.PreAuthActivity;
 import com.judopay.R;
-import com.judopay.model.Currency;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.UUID;
-
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static com.judopay.TestUtil.getJudo;
 import static com.judopay.util.ActivityUtil.resultCode;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-
 
 @RunWith(AndroidJUnit4.class)
 public class SuccessfulPreAuthTest {
@@ -35,7 +31,7 @@ public class SuccessfulPreAuthTest {
     @Test
     public void shouldBeSuccessfulPreAuthWhenValidVisaEntered() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         PreAuthActivity activity = activityTestRule.launchActivity(intent);
 
@@ -57,7 +53,7 @@ public class SuccessfulPreAuthTest {
     @Test
     public void shouldBeSuccessfulPreAuthWhenValidMaestroEntered() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         PreAuthActivity activity = activityTestRule.launchActivity(intent);
 
@@ -85,7 +81,7 @@ public class SuccessfulPreAuthTest {
     @Test
     public void shouldBeSuccessfulPreAuthWhenValidAmexEntered() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         PreAuthActivity activity = activityTestRule.launchActivity(intent);
 
@@ -108,6 +104,7 @@ public class SuccessfulPreAuthTest {
     public void shouldBeSuccessfulPreAuthWhenValidVisaEnteredAndAvsEnabled() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .newBuilder()
                 .setAvsEnabled(true)
                 .build());
 
@@ -135,6 +132,7 @@ public class SuccessfulPreAuthTest {
     public void shouldBeSuccessfulPreAuthWhenValidMaestroEnteredAndAvsEnabled() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .newBuilder()
                 .setAvsEnabled(true)
                 .build());
 
@@ -168,6 +166,7 @@ public class SuccessfulPreAuthTest {
     public void shouldBeSuccessfulPaymentWhenValidAmexEnteredAndAvsEnabled() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .newBuilder()
                 .setAvsEnabled(true)
                 .build());
 
@@ -189,15 +188,6 @@ public class SuccessfulPreAuthTest {
                 .perform(click());
 
         assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
-    }
-
-    private Judo.Builder getJudo() {
-        return new Judo.Builder()
-                .setEnvironment(Judo.SANDBOX)
-                .setJudoId("100407196")
-                .setAmount("0.99")
-                .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString());
     }
 
 }

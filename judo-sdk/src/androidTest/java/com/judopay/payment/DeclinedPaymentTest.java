@@ -3,18 +3,14 @@ package com.judopay.payment;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
 import com.judopay.PaymentActivity;
 import com.judopay.R;
-import com.judopay.model.Currency;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -23,7 +19,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-
+import static com.judopay.TestUtil.getJudo;
 
 @RunWith(AndroidJUnit4.class)
 public class DeclinedPaymentTest {
@@ -34,7 +30,7 @@ public class DeclinedPaymentTest {
     @Test
     public void shouldDeclineInvalidVisaCard() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         activityTestRule.launchActivity(intent);
 
@@ -60,7 +56,7 @@ public class DeclinedPaymentTest {
     @Test
     public void shouldDeclineInvalidMaestroCard() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         activityTestRule.launchActivity(intent);
 
@@ -92,7 +88,7 @@ public class DeclinedPaymentTest {
     @Test
     public void shouldDeclineInvalidAmexCard() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         activityTestRule.launchActivity(intent);
 
@@ -119,6 +115,7 @@ public class DeclinedPaymentTest {
     public void shouldDeclineInvalidVisaCardWhenAvsEnabled() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .newBuilder()
                 .setAvsEnabled(true)
                 .build());
 
@@ -150,6 +147,7 @@ public class DeclinedPaymentTest {
     public void shouldDeclineInvalidMaestroWhenAvsEnabled() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .newBuilder()
                 .setAvsEnabled(true)
                 .build());
 
@@ -187,6 +185,7 @@ public class DeclinedPaymentTest {
     public void shouldDeclineInvalidAmexWhenAvsEnabled() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .newBuilder()
                 .setAvsEnabled(true)
                 .build());
 
@@ -212,16 +211,6 @@ public class DeclinedPaymentTest {
 
         onView(withText(R.string.please_check_details_try_again))
                 .check(matches(isDisplayed()));
-    }
-
-
-    private Judo.Builder getJudo() {
-        return new Judo.Builder()
-                .setEnvironment(Judo.SANDBOX)
-                .setJudoId("100407196")
-                .setAmount("0.99")
-                .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString());
     }
 
 }
