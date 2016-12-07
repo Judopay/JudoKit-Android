@@ -19,7 +19,7 @@ public class TestUtil {
                 .setJudoId(JUDO_ID)
                 .setCurrency(Currency.GBP)
                 .setAmount("0.10")
-                .setConsumerRef(UUID.randomUUID().toString())
+                .setConsumerReference(UUID.randomUUID().toString())
                 .build();
     }
 }
