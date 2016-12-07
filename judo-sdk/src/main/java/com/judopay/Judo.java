@@ -25,7 +25,7 @@ import static com.judopay.model.LuhnCheck.isValid;
 
 /**
  * The wrapper for providing data to Activity and Fragments classes in the SDK (e.g. PaymentActivity).
-
+ * <p>
  * Use the {@link Judo.Builder class for constructing} an instance of {@link Judo}.
  * When calling an Activity with an Intent extra or a Fragment using an arguments Bundle,
  * use {@link Judo#JUDO_OPTIONS} as the extra or argument name.
@@ -35,11 +35,13 @@ public class Judo implements Parcelable {
 
     @IntDef({UI_CLIENT_MODE_CUSTOM_UI, UI_CLIENT_MODE_JUDO_SDK})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface UiClientMode {}
+    public @interface UiClientMode {
+    }
 
-    @IntDef({LIVE, SANDBOX, CUSTOM, UAT})
+    @IntDef({LIVE, SANDBOX, CUSTOM})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface Environment {}
+    public @interface Environment {
+    }
 
     public static final int RESULT_SUCCESS = Activity.RESULT_OK;
     public static final int RESULT_CANCELED = Activity.RESULT_CANCELED;
@@ -69,7 +71,6 @@ public class Judo implements Parcelable {
     public static final int LIVE = 0;
     public static final int SANDBOX = 1;
     public static final int CUSTOM = 2;
-    public static final int UAT = 3;
 
     private String apiToken;
     private String apiSecret;
@@ -98,7 +99,8 @@ public class Judo implements Parcelable {
     private PendingIntent cardScanningIntent;
     private String customEnvironmentHost;
 
-    private Judo() {}
+    private Judo() {
+    }
 
     public Builder newBuilder() {
         return new Judo.Builder()
@@ -235,7 +237,7 @@ public class Judo implements Parcelable {
     }
 
     public boolean isSslPinningEnabled() {
-        return sslPinningEnabled && environment != CUSTOM && environment != UAT;
+        return sslPinningEnabled && environment != CUSTOM;
     }
 
     public boolean isAvsEnabled() {
@@ -260,8 +262,6 @@ public class Judo implements Parcelable {
                 return context.getString(R.string.api_host_sandbox);
             case CUSTOM:
                 return customEnvironmentHost;
-            case UAT:
-                return context.getString(R.string.api_host_uat);
             default:
                 return context.getString(R.string.api_host_live);
         }
@@ -294,7 +294,8 @@ public class Judo implements Parcelable {
         private boolean sslPinningEnabled = true;
         private boolean rootedDevicesAllowed = true;
 
-        public Builder() {}
+        public Builder() {
+        }
 
         public Builder(String apiToken, String apiSecret) {
             this.apiToken = apiToken;

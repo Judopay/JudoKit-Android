@@ -8,13 +8,10 @@ import android.support.test.runner.AndroidJUnit4;
 import com.judopay.Judo;
 import com.judopay.R;
 import com.judopay.RegisterCardActivity;
-import com.judopay.model.Currency;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -23,7 +20,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-
+import static com.judopay.TestUtil.getJudo;
 
 @RunWith(AndroidJUnit4.class)
 public class RegisterCardTest {
@@ -34,7 +31,7 @@ public class RegisterCardTest {
     @Test
     public void shouldBeSuccessfulPaymentWhenValidVisaEntered() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         activityTestRule.launchActivity(intent);
 
@@ -55,15 +52,6 @@ public class RegisterCardTest {
 
         onView(withText(R.string.please_check_details_try_again))
                 .check(matches(isDisplayed()));
-    }
-
-    private Judo.Builder getJudo() {
-        return new Judo.Builder()
-                .setEnvironment(Judo.UAT)
-                .setJudoId("100915867")
-                .setAmount("0.99")
-                .setCurrency(Currency.GBP)
-                .setConsumerReference(UUID.randomUUID().toString());
     }
 
 }

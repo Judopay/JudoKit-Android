@@ -8,13 +8,10 @@ import android.support.test.runner.AndroidJUnit4;
 import com.judopay.Judo;
 import com.judopay.PaymentActivity;
 import com.judopay.R;
-import com.judopay.model.Currency;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -22,7 +19,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-
+import static com.judopay.TestUtil.getJudo;
 
 @RunWith(AndroidJUnit4.class)
 public class PaymentFormErrorMessageTest {
@@ -33,7 +30,7 @@ public class PaymentFormErrorMessageTest {
     @Test
     public void shouldDisplayErrorMessageWhenInvalidCardNumberEntered() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         activityTestRule.launchActivity(intent);
 
@@ -47,7 +44,7 @@ public class PaymentFormErrorMessageTest {
     @Test
     public void shouldDisplayErrorMessageWhenPastExpiryDateEntered() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         activityTestRule.launchActivity(intent);
 
@@ -61,7 +58,7 @@ public class PaymentFormErrorMessageTest {
     @Test
     public void shouldDisplayErrorWhenExpiryDateMoreThanTenYearsInFuture() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         activityTestRule.launchActivity(intent);
 
@@ -75,7 +72,7 @@ public class PaymentFormErrorMessageTest {
     @Test
     public void shouldDisplayErrorMessageWhenFutureStartDateEntered() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         activityTestRule.launchActivity(intent);
 
@@ -92,7 +89,7 @@ public class PaymentFormErrorMessageTest {
     @Test
     public void shouldDisplayErrorMessageWhenStartDateOlderThanTenYearsEntered() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         activityTestRule.launchActivity(intent);
 
@@ -110,6 +107,7 @@ public class PaymentFormErrorMessageTest {
     public void shouldDisplayAmexNotSupportedWhenAmexEnteredAndNotEnabled() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .newBuilder()
                 .setAmexEnabled(false)
                 .build());
 
@@ -126,6 +124,7 @@ public class PaymentFormErrorMessageTest {
     public void shouldDisplayMaestroNotSupportedWhenMaestroEnteredAndNotEnabled() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .newBuilder()
                 .setMaestroEnabled(false)
                 .build());
 
@@ -136,16 +135,6 @@ public class PaymentFormErrorMessageTest {
 
         onView(withText(R.string.error_maestro_not_supported))
                 .check(matches(isDisplayed()));
-    }
-
-    private Judo.Builder getJudo() {
-        return new Judo.Builder()
-                .setEnvironment(Judo.UAT)
-                .setJudoId("100915867")
-                .setAmount("0.99")
-                .setCurrency(Currency.GBP)
-                .setAvsEnabled(true)
-                .setConsumerReference(UUID.randomUUID().toString());
     }
 
 }
