@@ -55,5 +55,6 @@
 -keep class com.judopay.RegisterCardActivity {public *;}
 -keep class com.judopay.RegisterCardFragment {public *;}
 -keep class com.judopay.api.ApiError { *; }
+-keep class com.judopay.DeviceDna { *; }
 -keep public class com.judopay.error.* { *; }
 -keep public class com.judopay.model.* { *; }

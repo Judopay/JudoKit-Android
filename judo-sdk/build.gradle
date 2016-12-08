@@ -65,6 +65,11 @@ android {
 
 }
 
+task cleanMavenArtifact << {
+    def binDir = new File("${System.getProperty('user.home')}/.m2/repository/com/judopay/${artifactId}/${publish.publishVersion}")
+    binDir.deleteDir()
+}
+
 task androidJavadocs(type: Javadoc) {
     title "Judo Android SDK Documentation"
     options {
