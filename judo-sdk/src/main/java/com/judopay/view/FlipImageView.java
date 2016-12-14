@@ -1,6 +1,8 @@
 package com.judopay.view;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
@@ -30,6 +32,25 @@ public abstract class FlipImageView extends FrameLayout {
 
     @DrawableRes
     protected abstract int getImageResource(int type);
+
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("superState", super.onSaveInstanceState());
+        bundle.putFloat("alpha", getAlpha());
+        return bundle;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            state = bundle.getParcelable("superState");
+
+            setAlpha(bundle.getFloat("alpha"));
+        }
+        super.onRestoreInstanceState(state);
+    }
 
     public void setCardType(int cardType, boolean animate) {
         if (this.frontImageView == null) {
