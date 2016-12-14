@@ -1,6 +1,8 @@
 package com.judopay.view;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputFilter;
@@ -21,11 +23,16 @@ import com.judopay.validation.Validation;
  */
 public class SecurityCodeEntryView extends RelativeLayout {
 
+    private static final String KEY_SUPER_STATE = "superState";
+    private static final String KEY_CARD_TYPE = "cardType";
+
     private EditText editText;
     private CardSecurityCodeView imageView;
     private TextInputLayout inputLayout;
     private HintFocusListener hintFocusListener;
     private TextView helperText;
+
+    private int cardType;
 
     public SecurityCodeEntryView(Context context) {
         super(context);
@@ -66,6 +73,27 @@ public class SecurityCodeEntryView extends RelativeLayout {
         editText.addTextChangedListener(new HidingViewTextWatcher(helperText));
     }
 
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+
+        bundle.putParcelable(KEY_SUPER_STATE, super.onSaveInstanceState());
+        bundle.putInt(KEY_CARD_TYPE, cardType);
+
+        return bundle;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            state = bundle.getParcelable(KEY_SUPER_STATE);
+
+            setCardType(bundle.getInt(KEY_CARD_TYPE), false);
+        }
+        super.onRestoreInstanceState(state);
+    }
+
     public void setHelperText(@StringRes int resId) {
         helperText.setText(resId);
     }
@@ -79,11 +107,14 @@ public class SecurityCodeEntryView extends RelativeLayout {
     }
 
     public void setCardType(int cardType, boolean animate) {
-        imageView.setCardType(cardType, animate);
+        this.cardType = cardType;
+
+        imageView.setImageType(cardType, animate);
+
+        setHint(CardNetwork.securityCode(cardType));
 
         setAlternateHint(CardNetwork.securityCodeHint(cardType));
 
-        inputLayout.setHint(CardNetwork.securityCode(cardType));
         setMaxLength(CardNetwork.securityCodeLength(cardType));
     }
 
@@ -91,7 +122,7 @@ public class SecurityCodeEntryView extends RelativeLayout {
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(length)});
     }
 
-    public void setHint(String hint) {
+    private void setHint(String hint) {
         inputLayout.setHint(hint);
     }
 

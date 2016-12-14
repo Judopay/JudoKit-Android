@@ -10,24 +10,29 @@ import android.widget.FrameLayout;
 
 public abstract class FlipImageView extends FrameLayout {
 
+    private static final String KEY_SUPER_STATE = "superState";
+    private static final String KEY_ALPHA = "alpha";
+    private static final String KEY_IMAGE_TYPE = "imageType";
+
     private AppCompatImageView frontImageView;
     private AppCompatImageView backImageView;
 
-    private int imageResource = 0;
+    private int imageType;
+    private int imageResId;
 
     public FlipImageView(Context context) {
         super(context);
-        setCardType(0, false);
+        setImageType(0, false);
     }
 
     public FlipImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setCardType(0, false);
+        setImageType(0, false);
     }
 
     public FlipImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setCardType(0, false);
+        setImageType(0, false);
     }
 
     @DrawableRes
@@ -36,8 +41,11 @@ public abstract class FlipImageView extends FrameLayout {
     @Override
     public Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
-        bundle.putParcelable("superState", super.onSaveInstanceState());
-        bundle.putFloat("alpha", getAlpha());
+
+        bundle.putParcelable(KEY_SUPER_STATE, super.onSaveInstanceState());
+        bundle.putFloat(KEY_ALPHA, getAlpha());
+        bundle.putInt(KEY_IMAGE_TYPE, imageType);
+
         return bundle;
     }
 
@@ -45,17 +53,22 @@ public abstract class FlipImageView extends FrameLayout {
     public void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
-            state = bundle.getParcelable("superState");
 
-            setAlpha(bundle.getFloat("alpha"));
+            state = bundle.getParcelable(KEY_SUPER_STATE);
+            setAlpha(bundle.getFloat(KEY_ALPHA));
+
+            imageType = bundle.getInt(KEY_IMAGE_TYPE);
+            setImageType(imageType, false);
         }
         super.onRestoreInstanceState(state);
     }
 
-    public void setCardType(int cardType, boolean animate) {
+    public void setImageType(int imageType, boolean animate) {
+        this.imageType = imageType;
+
         if (this.frontImageView == null) {
             this.frontImageView = new AppCompatImageView(getContext());
-            this.frontImageView.setImageResource(getImageResource(cardType));
+            this.frontImageView.setImageResource(getImageResource(imageType));
             addView(this.frontImageView);
         }
 
@@ -65,25 +78,25 @@ public abstract class FlipImageView extends FrameLayout {
             addView(this.backImageView);
         }
 
-        int cardResourceId = getImageResource(cardType);
+        int imageResId = getImageResource(imageType);
 
-        if (this.imageResource != cardResourceId) {
+        if (this.imageResId != imageResId) {
             if (animate) {
-                flipImages(cardResourceId);
+                flipImages(imageResId);
             } else {
-                showImage(cardResourceId);
+                showImage(imageResId);
             }
         }
     }
 
-    private void showImage(int cardResourceId) {
-        this.imageResource = cardResourceId;
-        frontImageView.setImageResource(cardResourceId);
+    private void showImage(int imageResId) {
+        this.imageResId = imageResId;
+        frontImageView.setImageResource(imageResId);
     }
 
-    private void flipImages(int cardResourceId) {
-        this.imageResource = cardResourceId;
-        backImageView.setImageResource(cardResourceId);
+    private void flipImages(int imageResId) {
+        this.imageResId = imageResId;
+        backImageView.setImageResource(imageResId);
 
         FlipAnimation flipAnimation = new FlipAnimation(frontImageView, backImageView);
         startAnimation(flipAnimation);
