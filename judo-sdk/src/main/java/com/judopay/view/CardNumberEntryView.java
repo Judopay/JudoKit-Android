@@ -84,7 +84,6 @@ public class CardNumberEntryView extends RelativeLayout {
         editText.addTextChangedListener(new HidingViewTextWatcher(cardNumberHelperText));
     }
 
-
     @Override
     public Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
