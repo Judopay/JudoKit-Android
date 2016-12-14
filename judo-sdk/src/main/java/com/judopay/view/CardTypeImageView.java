@@ -41,5 +41,4 @@ public class CardTypeImageView extends FlipImageView {
                 return R.drawable.ic_card_unknown;
         }
     }
-
 }

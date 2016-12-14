@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.judopay.R;
+import com.judopay.model.Country;
 
 public class PostcodeEntryView extends FrameLayout {
 
@@ -62,7 +63,7 @@ public class PostcodeEntryView extends FrameLayout {
         }
     }
 
-    public void setHint(@StringRes int hint) {
+    private void setHint(@StringRes int hint) {
         postcodeInputLayout.setHint(getResources().getString(hint));
     }
 
@@ -76,7 +77,7 @@ public class PostcodeEntryView extends FrameLayout {
         }
     }
 
-    public void setNumericInput(boolean numeric) {
+    private void setNumericInput(boolean numeric) {
         EditText editText = postcodeInputLayout.getEditText();
         if (editText != null) {
             if (numeric && editText.getInputType() != InputType.TYPE_CLASS_NUMBER) {
@@ -106,5 +107,11 @@ public class PostcodeEntryView extends FrameLayout {
 
     public EditText getEditText() {
         return postcodeInputLayout.getEditText();
+    }
+
+    public void setCountry(String country) {
+        setHint(Country.postcodeName(country));
+        boolean postcodeNumeric = Country.UNITED_STATES.equals(country);
+        setNumericInput(postcodeNumeric);
     }
 }

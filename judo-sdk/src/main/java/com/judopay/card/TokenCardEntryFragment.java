@@ -1,13 +1,11 @@
 package com.judopay.card;
 
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.judopay.Judo;
@@ -145,25 +143,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
             @Override
             public void call(Validation validation) {
                 String country = (String) countrySpinner.getSelectedItem();
-                postcodeEntryView.setHint(Country.postcodeName(country));
-
-                boolean postcodeNumeric = Country.UNITED_STATES.equals(country);
-
-                EditText editText = postcodeEntryView.getEditText();
-                if (editText != null) {
-                    editText.setEnabled(!Country.OTHER.equals(country));
-
-                    if (postcodeNumeric && editText.getInputType() != InputType.TYPE_CLASS_NUMBER) {
-                        editText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
-                    } else {
-                        int alphanumericInputTypes = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
-                        if (!postcodeNumeric && editText.getInputType() != alphanumericInputTypes) {
-                            editText.setRawInputType(alphanumericInputTypes);
-                        }
-                    }
-                    // prevent text suggestions in keyboard
-                    editText.setPrivateImeOptions("nm");
-                }
+                postcodeEntryView.setCountry(country);
             }
         });
 
@@ -216,5 +196,4 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
 
         return cardEntryFragment;
     }
-
 }

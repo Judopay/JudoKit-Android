@@ -1,12 +1,10 @@
 package com.judopay.card;
 
-
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -275,25 +273,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             @Override
             public void call(Validation validation) {
                 String country = (String) countrySpinner.getSelectedItem();
-                postcodeEntryView.setHint(Country.postcodeName(country));
-
-                boolean postcodeNumeric = Country.UNITED_STATES.equals(country);
-
-                EditText editText = postcodeEntryView.getEditText();
-                if (editText != null) {
-                    editText.setEnabled(!Country.OTHER.equals(country));
-
-                    if (postcodeNumeric && editText.getInputType() != InputType.TYPE_CLASS_NUMBER) {
-                        editText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
-                    } else {
-                        int alphanumericInputTypes = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
-                        if (!postcodeNumeric && editText.getInputType() != alphanumericInputTypes) {
-                            editText.setRawInputType(alphanumericInputTypes);
-                        }
-                    }
-                    // prevent text suggestions in keyboard
-                    editText.setPrivateImeOptions("nm");
-                }
+                postcodeEntryView.setCountry(country);
             }
         });
 
@@ -347,9 +327,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String country = (String) countrySpinner.getSelectedItem();
-                postcodeEntryView.setHint(Country.postcodeName(country));
-                boolean postcodeNumeric = Country.UNITED_STATES.equals(country);
-                postcodeEntryView.setNumericInput(postcodeNumeric);
+                postcodeEntryView.setCountry(country);
             }
 
             @Override

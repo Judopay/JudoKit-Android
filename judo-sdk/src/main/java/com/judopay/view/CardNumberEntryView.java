@@ -1,6 +1,8 @@
 package com.judopay.view;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputFilter;
 import android.util.AttributeSet;
@@ -25,11 +27,16 @@ import static com.judopay.model.CardNetwork.AMEX;
  */
 public class CardNumberEntryView extends RelativeLayout {
 
+    private static final String KEY_SUPER_STATE = "superState";
+    private static final String KEY_CARD_TYPE = "cardType";
+
     private EditText editText;
     private TextInputLayout inputLayout;
     private View scanCardButton;
     private CardTypeImageView cardTypeImageView;
     private NumberFormatTextWatcher numberFormatTextWatcher;
+
+    private int cardType;
 
     public interface ScanCardButtonListener {
         void onClick();
@@ -59,8 +66,9 @@ public class CardNumberEntryView extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        this.cardTypeImageView = (CardTypeImageView) findViewById(R.id.card_type_view);
         TextView cardNumberHelperText = (TextView) findViewById(R.id.card_number_helper_text);
+
+        this.cardTypeImageView = (CardTypeImageView) findViewById(R.id.card_type_view);
         this.editText = (EditText) findViewById(R.id.card_number_edit_text);
         this.inputLayout = (TextInputLayout) findViewById(R.id.card_number_input_layout);
         this.scanCardButton = findViewById(R.id.scan_card_button);
@@ -74,6 +82,28 @@ public class CardNumberEntryView extends RelativeLayout {
         numberFormatTextWatcher = new NumberFormatTextWatcher(editText, getResources().getString(R.string.card_number_format));
         editText.addTextChangedListener(numberFormatTextWatcher);
         editText.addTextChangedListener(new HidingViewTextWatcher(cardNumberHelperText));
+    }
+
+
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+
+        bundle.putParcelable(KEY_SUPER_STATE, super.onSaveInstanceState());
+        bundle.putInt(KEY_CARD_TYPE, cardType);
+
+        return bundle;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            state = bundle.getParcelable(KEY_SUPER_STATE);
+
+            setCardType(bundle.getInt(KEY_CARD_TYPE), false);
+        }
+        super.onRestoreInstanceState(state);
     }
 
     public void setScanCardListener(final ScanCardButtonListener listener) {
@@ -95,7 +125,9 @@ public class CardNumberEntryView extends RelativeLayout {
     }
 
     public void setCardType(int type, boolean animate) {
-        cardTypeImageView.setCardType(type, animate);
+        this.cardType = type;
+
+        cardTypeImageView.setImageType(type, animate);
         if (type != 0) {
             setScanCardListener(null);
         }
