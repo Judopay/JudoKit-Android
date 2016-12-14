@@ -35,7 +35,6 @@ public class CardNumberEntryView extends RelativeLayout {
     private View scanCardButton;
     private CardTypeImageView cardTypeImageView;
     private NumberFormatTextWatcher numberFormatTextWatcher;
-
     private int cardType;
 
     public interface ScanCardButtonListener {
