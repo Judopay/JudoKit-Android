@@ -85,7 +85,6 @@ public class Judo implements Parcelable {
     private String judoId;
     private String amount;
     private String currency;
-    private String deviceId;
     private String consumerReference;
     private Bundle metaData;
     private String cardNumber;
@@ -108,7 +107,6 @@ public class Judo implements Parcelable {
                 .setApiSecret(apiSecret)
                 .setEnvironment(environment)
                 .setJudoId(judoId)
-                .setDeviceId(deviceId)
                 .setCardToken(cardToken)
                 .setCardNumber(cardNumber)
                 .setExpiryMonth(expiryMonth)
@@ -133,10 +131,6 @@ public class Judo implements Parcelable {
 
     public String getJudoId() {
         return judoId;
-    }
-
-    public String getDeviceId() {
-        return deviceId;
     }
 
     @Currency.Type
@@ -417,7 +411,6 @@ public class Judo implements Parcelable {
             judo.apiToken = apiToken;
             judo.apiSecret = apiSecret;
             judo.environment = environment;
-            judo.deviceId = deviceId;
             judo.cardToken = cardToken;
             judo.cardNumber = cardNumber;
             judo.expiryMonth = expiryMonth;
@@ -460,7 +453,6 @@ public class Judo implements Parcelable {
         dest.writeString(this.judoId);
         dest.writeString(this.amount);
         dest.writeString(this.currency);
-        dest.writeString(this.deviceId);
         dest.writeString(this.consumerReference);
         dest.writeBundle(this.metaData);
         dest.writeString(this.cardNumber);
@@ -487,7 +479,6 @@ public class Judo implements Parcelable {
         this.judoId = in.readString();
         this.amount = in.readString();
         this.currency = in.readString();
-        this.deviceId = in.readString();
         this.consumerReference = in.readString();
         this.metaData = in.readBundle();
         this.cardNumber = in.readString();

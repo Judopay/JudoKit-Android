@@ -189,13 +189,13 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
                 options.getCustomLayout().validate(getActivity());
                 return CustomLayoutCardEntryFragment.newInstance(options, this);
             } else if (options.getCardToken() != null) {
-                return TokenCardEntryFragment.newInstance(getJudoOptions(), this);
+                return TokenCardEntryFragment.newInstance(getJudo(), this);
             }
         }
         return CardEntryFragment.newInstance(options, this);
     }
 
-    Judo getJudoOptions() {
+    Judo getJudo() {
         Bundle args = getArguments();
         return args.getParcelable(Judo.JUDO_OPTIONS);
     }

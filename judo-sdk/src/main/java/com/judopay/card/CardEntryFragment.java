@@ -4,7 +4,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.IntentSender;
 import android.os.Bundle;
-import android.text.InputFilter;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +11,17 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.judopay.Judo;
 import com.judopay.R;
 import com.judopay.arch.ThemeUtil;
+import com.judopay.detection.UserAnalytics;
+import com.judopay.detection.CompletedField;
+import com.judopay.detection.CompletedFieldsDetector;
+import com.judopay.detection.FieldState;
+import com.judopay.detection.PastedFieldsDetector;
+import com.judopay.detection.TotalKeystrokesDetector;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardNetwork;
@@ -43,6 +47,7 @@ import com.judopay.view.SingleClickOnClickListener;
 import com.judopay.view.StartDateEntryView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import rx.functions.Action1;
@@ -69,17 +74,19 @@ import static com.judopay.arch.TextUtil.isEmpty;
  */
 public final class CardEntryFragment extends AbstractCardEntryFragment {
 
-    private Spinner countrySpinner;
-    private SecurityCodeEntryView securityCodeEntryView;
     private CardNumberEntryView cardNumberEntryView;
+    private ExpiryDateEntryView expiryDateEntryView;
+    private SecurityCodeEntryView securityCodeEntryView;
+
+    private PostcodeEntryView postcodeEntryView;
+    private View secureServerText;
+    private View countryAndPostcodeContainer;
+    private Spinner countrySpinner;
 
     private View startDateAndIssueNumberContainer;
-    private View countryAndPostcodeContainer;
+
     private IssueNumberEntryView issueNumberEntryView;
-    private PostcodeEntryView postcodeEntryView;
     private StartDateEntryView startDateEntryView;
-    private ExpiryDateEntryView expiryDateEntryView;
-    private View secureServerText;
 
     private ValidationManager validationManager;
     private ValidationManager avsValidationManager;
@@ -113,7 +120,38 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    protected void onInitialize(final Judo judo) {
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        pastedFieldsDetector = new PastedFieldsDetector.Builder()
+                .add("cardNumber", cardNumberEntryView.getEditText())
+                .add("expiryDate", expiryDateEntryView.getEditText())
+                .add("securityCode", securityCodeEntryView.getEditText())
+                .add("startDate", startDateEntryView.getEditText())
+                .add("issueNumber", issueNumberEntryView.getEditText())
+                .add("postcode", postcodeEntryView.getEditText())
+                .build();
+
+        keystrokesDetector = new TotalKeystrokesDetector.Builder()
+                .add("cardNumber", cardNumberEntryView.getEditText())
+                .add("expiryDate", expiryDateEntryView.getEditText())
+                .add("securityCode", securityCodeEntryView.getEditText())
+                .add("startDate", startDateEntryView.getEditText())
+                .add("issueNumber", issueNumberEntryView.getEditText())
+                .add("postcode", postcodeEntryView.getEditText())
+                .build();
+
+        if (savedInstanceState != null) {
+            keystrokesDetector.setTotalKeystrokes(savedInstanceState.getInt(KEY_KEYSTROKES));
+            //noinspection unchecked
+            HashMap<String, ArrayList<Long>> pastedFields = (HashMap<String, ArrayList<Long>>) savedInstanceState.getSerializable(KEY_PASTED_FIELDS);
+
+            pastedFieldsDetector.setPasteTimings(pastedFields);
+        }
+    }
+
+    @Override
+    protected void onInitialize(Bundle savedInstanceState, final Judo judo) {
         if (judo.getCardScanningIntent() != null) {
             cardNumberEntryView.setScanCardListener(new CardNumberEntryView.ScanCardButtonListener() {
                 @Override
@@ -149,7 +187,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         }
 
         initializeCountry();
-        initializeValidators(judo);
+        initializeValidators(savedInstanceState, judo);
         initializeButton(judo);
     }
 
@@ -172,7 +210,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         }
     }
 
-    private void initializeValidators(final Judo judo) {
+    private void initializeValidators(Bundle savedInstanceState, final Judo judo) {
         List<Validator> validators = new ArrayList<>();
         List<Pair<Validator, View>> validatorViews = new ArrayList<>();
 
@@ -184,11 +222,6 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
                 cardNumberEntryView.setCardType(cardType, true);
                 securityCodeEntryView.setCardType(cardType, true);
                 securityCodeValidator.setCardType(cardType);
-
-                EditText securityCodeTextInputEditText = securityCodeEntryView.getEditText();
-                if (securityCodeTextInputEditText != null) {
-                    securityCodeTextInputEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(CardNetwork.securityCodeLength(cardType))});
-                }
 
                 if (judo.isMaestroEnabled() && cardType == CardNetwork.MAESTRO) {
                     validationManager.addValidator(issueNumberValidator);
@@ -240,6 +273,13 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
         validationManager = new ValidationManager(validators, this);
 
+        CompletedFieldsDetector.Builder builder = new CompletedFieldsDetector.Builder()
+                .add("cardNumber", cardNumberValidator.onValidate(), cardNumberEntryView.getEditText())
+                .add("expiryDate", expiryDateValidator.onValidate(), expiryDateEntryView.getEditText())
+                .add("securityCode", securityCodeValidator.onValidate(), securityCodeEntryView.getEditText())
+                .add("issueNumber", issueNumberValidator.onValidate(), issueNumberEntryView.getEditText())
+                .add("startDate", startDateValidator.onValidate(), startDateEntryView.getEditText());
+
         if (judo.isAvsEnabled()) {
             ArrayList<Validator> avsValidators = new ArrayList<>();
             avsValidators.add(cardNumberValidator);
@@ -252,13 +292,22 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
                     countryAndPostcodeContainer.setVisibility(valid ? View.VISIBLE : View.GONE);
                 }
             });
-            initializeAvsValidators(validatorViews);
+            initializeAvsValidators(validatorViews, builder);
         }
 
-        new ValidationAutoAdvanceManager(validationManager, validatorViews);
+        completedFieldsDetector = builder.build();
+
+        if (savedInstanceState != null) {
+            ArrayList<CompletedField> completedFields = savedInstanceState.getParcelableArrayList(KEY_COMPLETED_FIELDS);
+            completedFieldsDetector.setCompletedFields(completedFields);
+            //noinspection unchecked
+            completedFieldsDetector.setFieldStateMap((HashMap<String, FieldState>) savedInstanceState.getSerializable(KEY_FIELD_STATES));
+        }
+
+        ValidationAutoAdvanceManager.bind(validationManager, validatorViews);
     }
 
-    private void initializeAvsValidators(List<Pair<Validator, View>> validatorViews) {
+    private void initializeAvsValidators(List<Pair<Validator, View>> validatorViews, CompletedFieldsDetector.Builder builder) {
         CountryAndPostcodeValidator countryAndPostcodeValidator = new CountryAndPostcodeValidator(countrySpinner, postcodeEntryView.getEditText());
         ConnectableObservable<Validation> observable = countryAndPostcodeValidator.onValidate();
 
@@ -276,6 +325,8 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
                 postcodeEntryView.setCountry(country);
             }
         });
+
+        builder.add("postcode", observable, postcodeEntryView.getEditText());
 
         validationManager.addValidator(countryAndPostcodeValidator, observable);
         validatorViews.add(new Pair<Validator, View>(countryAndPostcodeValidator, postcodeEntryView.getEditText()));
@@ -315,6 +366,11 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         submitButton.setOnClickListener(new SingleClickOnClickListener() {
             @Override
             public void doClick() {
+                View view = getActivity().getCurrentFocus();
+                if (view != null) {
+                    view.clearFocus();
+                }
+
                 hideKeyboard();
                 submitForm(judo);
             }
@@ -354,7 +410,14 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         }
 
         if (cardEntryListener != null) {
-            cardEntryListener.onSubmit(cardBuilder.build());
+            UserAnalytics identifiers = new UserAnalytics.Builder()
+                    .setAppResumed(appResumeDetector.getResumedTimings())
+                    .setCompletedFields(completedFieldsDetector.getFieldsOrderedByCompletion())
+                    .setPastedFields(pastedFieldsDetector.getPasteTimings())
+                    .setTotalKeystrokes(keystrokesDetector.getTotalKeystrokes())
+                    .build();
+
+            cardEntryListener.onSubmit(cardBuilder.build(), identifiers.toMap());
         }
     }
 
@@ -373,4 +436,5 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     public void onValidate(boolean valid) {
         submitButton.setVisibility(valid ? View.VISIBLE : View.GONE);
     }
+
 }

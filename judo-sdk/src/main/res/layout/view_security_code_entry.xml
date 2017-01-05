@@ -13,7 +13,7 @@
         android:id="@+id/security_code_input_layout"
         style="@style/Widget.Judo.EntryLayout">
 
-        <android.support.v7.widget.AppCompatEditText
+        <com.judopay.view.JudoEditText
             android:id="@+id/security_code_edit_text"
             style="@style/Widget.Judo.SecurityCode"
             android:layout_weight="1" />

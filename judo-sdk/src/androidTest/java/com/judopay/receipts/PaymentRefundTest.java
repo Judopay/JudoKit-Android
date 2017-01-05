@@ -13,7 +13,7 @@ import com.judopay.model.RefundRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import rx.Observable;
+import rx.Single;
 import rx.functions.Func1;
 
 import static com.judopay.TestUtil.JUDO_ID;
@@ -39,9 +39,9 @@ public class PaymentRefundTest {
 
         apiService.payment(paymentRequest)
                 .compose(RxHelpers.<Receipt>schedulers())
-                .flatMap(new Func1<Receipt, Observable<Receipt>>() {
+                .flatMap(new Func1<Receipt, Single<Receipt>>() {
                     @Override
-                    public Observable<Receipt> call(Receipt receipt) {
+                    public Single<Receipt> call(Receipt receipt) {
                         return apiService.refund(new RefundRequest(receipt.getReceiptId(), receipt.getAmount()));
                     }
                 })

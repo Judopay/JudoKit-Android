@@ -11,6 +11,10 @@ import android.widget.Spinner;
 import com.judopay.Judo;
 import com.judopay.R;
 import com.judopay.arch.ThemeUtil;
+import com.judopay.detection.UserAnalytics;
+import com.judopay.detection.CompletedFieldsDetector;
+import com.judopay.detection.PastedFieldsDetector;
+import com.judopay.detection.TotalKeystrokesDetector;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
@@ -29,6 +33,7 @@ import com.judopay.view.SecurityCodeEntryView;
 import com.judopay.view.SingleClickOnClickListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import rx.functions.Action1;
@@ -43,6 +48,10 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
     private Spinner countrySpinner;
     private View secureServerText;
     private View countryAndPostcodeContainer;
+
+    private PastedFieldsDetector pastedFieldsDetector;
+    private TotalKeystrokesDetector keystrokesDetector;
+    private CompletedFieldsDetector completedFieldsDetector;
 
     private ValidationManager validationManager;
 
@@ -64,7 +73,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    protected void onInitialize(Judo judo) {
+    protected void onInitialize(Bundle savedInstanceState, Judo judo) {
         CardToken cardToken = judo.getCardToken();
 
         if (cardToken == null) {
@@ -83,6 +92,28 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         initializeCountry();
 
         initializeValidators(cardToken, judo);
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        pastedFieldsDetector = new PastedFieldsDetector.Builder()
+                .add("securityCode", securityCodeEntryView.getEditText())
+                .add("postcode", postcodeEntryView.getEditText())
+                .build();
+
+        keystrokesDetector = new TotalKeystrokesDetector.Builder()
+                .add("securityCode", securityCodeEntryView.getEditText())
+                .add("postcode", postcodeEntryView.getEditText())
+                .build();
+
+        if (savedInstanceState != null) {
+            keystrokesDetector.setTotalKeystrokes(savedInstanceState.getInt(KEY_KEYSTROKES));
+            //noinspection unchecked
+            HashMap<String, ArrayList<Long>> pastedFields = (HashMap<String, ArrayList<Long>>) savedInstanceState.getSerializable(KEY_PASTED_FIELDS);
+            pastedFieldsDetector.setPasteTimings(pastedFields);
+        }
     }
 
     private void initializeCountry() {
@@ -121,16 +152,23 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
 
         validationManager = new ValidationManager(validators, this);
 
+        CompletedFieldsDetector.Builder builder = new CompletedFieldsDetector.Builder()
+                .add("securityCode", securityCodeValidator.onValidate(), securityCodeEntryView.getEditText());
+
         if (judo.isAvsEnabled()) {
-            initializeAvsValidators(validatorViews);
+            initializeAvsValidators(validatorViews, builder);
         }
 
-        new ValidationAutoAdvanceManager(validationManager, validatorViews);
+        completedFieldsDetector = builder.build();
+
+        ValidationAutoAdvanceManager.bind(validationManager, validatorViews);
     }
 
-    private void initializeAvsValidators(List<Pair<Validator, View>> validatorViews) {
+    private void initializeAvsValidators(List<Pair<Validator, View>> validatorViews, CompletedFieldsDetector.Builder builder) {
         CountryAndPostcodeValidator countryAndPostcodeValidator = new CountryAndPostcodeValidator(countrySpinner, postcodeEntryView.getEditText());
         ConnectableObservable<Validation> observable = countryAndPostcodeValidator.onValidate();
+
+        builder.add("postcode", observable, postcodeEntryView.getEditText());
 
         observable.subscribe(new Action1<Validation>() {
             @Override
@@ -162,6 +200,10 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         submitButton.setOnClickListener(new SingleClickOnClickListener() {
             @Override
             public void doClick() {
+                View view = getActivity().getCurrentFocus();
+                if (view != null) {
+                    view.clearFocus();
+                }
                 hideKeyboard();
                 submitForm(judo);
             }
@@ -175,14 +217,21 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
                 .setSecurityCode(securityCodeEntryView.getText());
 
         if (judo.isAvsEnabled()) {
-           cardBuilder.setAddress(new Address.Builder()
-                   .setPostCode(postcodeEntryView.getText())
-                   .setCountryCode(Country.codeFromCountry((String) countrySpinner.getSelectedItem()))
-                   .build());
+            cardBuilder.setAddress(new Address.Builder()
+                    .setPostCode(postcodeEntryView.getText())
+                    .setCountryCode(Country.codeFromCountry((String) countrySpinner.getSelectedItem()))
+                    .build());
         }
 
         if (cardEntryListener != null) {
-            cardEntryListener.onSubmit(cardBuilder.build());
+            UserAnalytics identifiers = new UserAnalytics.Builder()
+                    .setAppResumed(appResumeDetector.getResumedTimings())
+                    .setCompletedFields(completedFieldsDetector.getFieldsOrderedByCompletion())
+                    .setPastedFields(pastedFieldsDetector.getPasteTimings())
+                    .setTotalKeystrokes(keystrokesDetector.getTotalKeystrokes())
+                    .build();
+
+            cardEntryListener.onSubmit(cardBuilder.build(), identifiers.toMap());
         }
     }
 

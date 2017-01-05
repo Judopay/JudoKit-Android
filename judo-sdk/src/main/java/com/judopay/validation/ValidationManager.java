@@ -51,7 +51,7 @@ public class ValidationManager {
         }
     }
 
-    public Map<Validator, Boolean> getValidationResults() {
+    Map<Validator, Boolean> getValidationResults() {
         return validationResults;
     }
 

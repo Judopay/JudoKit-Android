@@ -26,7 +26,7 @@ public class SecurityCodeEntryView extends RelativeLayout {
     private static final String KEY_SUPER_STATE = "superState";
     private static final String KEY_CARD_TYPE = "cardType";
 
-    private EditText editText;
+    private JudoEditText editText;
     private CardSecurityCodeView imageView;
     private TextInputLayout inputLayout;
     private HintFocusListener hintFocusListener;
@@ -58,14 +58,14 @@ public class SecurityCodeEntryView extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        editText = (EditText) findViewById(R.id.security_code_edit_text);
+        editText = (JudoEditText) findViewById(R.id.security_code_edit_text);
         inputLayout = (TextInputLayout) findViewById(R.id.security_code_input_layout);
         imageView = (CardSecurityCodeView) findViewById(R.id.security_code_image_view);
         helperText = (TextView) findViewById(R.id.security_code_helper_text);
 
         hintFocusListener = new HintFocusListener(editText, "000");
 
-        editText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+        editText.setOnFocusChangeListener(new MultiOnFocusChangeListener(
                 new EmptyTextHintOnFocusChangeListener(helperText),
                 new ViewAlphaChangingTextWatcher(editText, imageView),
                 hintFocusListener
@@ -134,7 +134,7 @@ public class SecurityCodeEntryView extends RelativeLayout {
         return editText.getText().toString().trim();
     }
 
-    public EditText getEditText() {
+    public JudoEditText getEditText() {
         return editText;
     }
 

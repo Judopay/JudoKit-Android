@@ -5,6 +5,7 @@ import java.util.UUID;
 /**
  * A Request to be requested with the judo API
  */
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public abstract class Request {
 
     private final boolean uniqueRequest;
@@ -28,13 +29,6 @@ public abstract class Request {
             throw new ParameterError();
         }
         return obj;
-    }
-    public String getYourPaymentReference() {
-        return yourPaymentReference;
-    }
-
-    public boolean isUniqueRequest() {
-        return uniqueRequest;
     }
 
 }

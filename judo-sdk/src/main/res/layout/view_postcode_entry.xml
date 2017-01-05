@@ -9,7 +9,7 @@
         android:layout_marginTop="1dp"
         android:layout_weight="1">
 
-        <android.support.v7.widget.AppCompatEditText
+        <com.judopay.view.JudoEditText
             android:id="@+id/post_code_edit_text"
             style="@style/Widget.Judo.Postcode"
             android:layout_gravity="bottom"

@@ -13,7 +13,7 @@ import com.judopay.model.VoidRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import rx.Observable;
+import rx.Single;
 import rx.functions.Func1;
 
 import static com.judopay.TestUtil.JUDO_ID;
@@ -40,9 +40,9 @@ public class PreAuthVoidTest {
 
         apiService.preAuth(paymentRequest)
                 .compose(RxHelpers.<Receipt>schedulers())
-                .flatMap(new Func1<Receipt, Observable<Receipt>>() {
+                .flatMap(new Func1<Receipt, Single<Receipt>>() {
                     @Override
-                    public Observable<Receipt> call(Receipt receipt) {
+                    public Single<Receipt> call(Receipt receipt) {
                         VoidRequest voidTransaction = new VoidRequest(
                                 receipt.getReceiptId(),
                                 receipt.getAmount());

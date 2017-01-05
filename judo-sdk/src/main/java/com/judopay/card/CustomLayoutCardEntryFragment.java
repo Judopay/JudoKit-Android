@@ -85,7 +85,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
     }
 
     @Override
-    protected void onInitialize(Judo judo) {
+    protected void onInitialize(Bundle savedInstanceState, Judo judo) {
         String buttonLabel = getButtonLabel();
         if (!isEmpty(buttonLabel)) {
             this.paymentButton.setText(buttonLabel);
@@ -256,7 +256,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
             initializeAvsValidators(validatorViews, cardNumberValidator, expiryDateValidator);
         }
 
-        new ValidationAutoAdvanceManager(validationManager, validatorViews);
+        ValidationAutoAdvanceManager.bind(validationManager, validatorViews);
     }
 
     private void initializeAvsValidators(List<Pair<Validator, View>> validatorViews,
@@ -407,7 +407,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         }
 
         if (cardEntryListener != null) {
-            cardEntryListener.onSubmit(cardBuilder.build());
+            cardEntryListener.onSubmit(cardBuilder.build(), null);
         }
     }
 

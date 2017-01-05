@@ -15,7 +15,7 @@ import com.judopay.validation.Validation;
  */
 public class ExpiryDateEntryView extends LinearLayout {
 
-    private EditText expiryDateEditText;
+    private JudoEditText expiryDateEditText;
     private TextInputLayout expiryDateInputLayout;
 
     public ExpiryDateEntryView(Context context) {
@@ -44,7 +44,7 @@ public class ExpiryDateEntryView extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        expiryDateEditText = (EditText) findViewById(R.id.expiry_date_edit_text);
+        expiryDateEditText = (JudoEditText) findViewById(R.id.expiry_date_edit_text);
         expiryDateInputLayout = (TextInputLayout) findViewById(R.id.expiry_date_input_layout);
 
         HintFocusListener hintFocusListener = new HintFocusListener(expiryDateEditText, getResources().getString(R.string.date_hint));
@@ -77,7 +77,7 @@ public class ExpiryDateEntryView extends LinearLayout {
         return expiryDateEditText.getText().toString().trim();
     }
 
-    public EditText getEditText() {
+    public JudoEditText getEditText() {
         return expiryDateEditText;
     }
 

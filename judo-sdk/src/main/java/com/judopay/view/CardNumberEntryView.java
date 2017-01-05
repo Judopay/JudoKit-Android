@@ -8,7 +8,6 @@ import android.text.InputFilter;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,7 +29,7 @@ public class CardNumberEntryView extends RelativeLayout {
     private static final String KEY_SUPER_STATE = "superState";
     private static final String KEY_CARD_TYPE = "cardType";
 
-    private EditText editText;
+    private JudoEditText editText;
     private TextInputLayout inputLayout;
     private View scanCardButton;
     private CardTypeImageView cardTypeImageView;
@@ -68,15 +67,13 @@ public class CardNumberEntryView extends RelativeLayout {
         TextView cardNumberHelperText = (TextView) findViewById(R.id.card_number_helper_text);
 
         this.cardTypeImageView = (CardTypeImageView) findViewById(R.id.card_type_view);
-        this.editText = (EditText) findViewById(R.id.card_number_edit_text);
+        this.editText = (JudoEditText) findViewById(R.id.card_number_edit_text);
         this.inputLayout = (TextInputLayout) findViewById(R.id.card_number_input_layout);
         this.scanCardButton = findViewById(R.id.scan_card_button);
 
-        editText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
-                new EmptyTextHintOnFocusChangeListener(cardNumberHelperText),
-                new ViewAlphaChangingTextWatcher(editText, cardTypeImageView),
-                new HintFocusListener(editText, getResources().getString(R.string.card_number_format))
-        ));
+        editText.setOnFocusChangeListener(new EmptyTextHintOnFocusChangeListener(cardNumberHelperText));
+        editText.setOnFocusChangeListener(new ViewAlphaChangingTextWatcher(editText, cardTypeImageView));
+        editText.setOnFocusChangeListener(new HintFocusListener(editText, getResources().getString(R.string.card_number_format)));
 
         numberFormatTextWatcher = new NumberFormatTextWatcher(editText, getResources().getString(R.string.card_number_format));
         editText.addTextChangedListener(numberFormatTextWatcher);
@@ -183,7 +180,7 @@ public class CardNumberEntryView extends RelativeLayout {
         }
     }
 
-    public EditText getEditText() {
+    public JudoEditText getEditText() {
         return editText;
     }
 

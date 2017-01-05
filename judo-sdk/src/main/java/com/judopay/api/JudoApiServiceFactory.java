@@ -70,7 +70,7 @@ public class JudoApiServiceFactory {
         List<Interceptor> interceptors = client.interceptors();
 
         interceptors.add(new DeDuplicationInterceptor());
-        interceptors.add(new DeviceDnaInterceptor(context, judo.getDeviceId()));
+        interceptors.add(new DeviceDnaInterceptor(context));
         interceptors.add(new ApiHeadersInterceptor(ApiCredentials.fromConfiguration(context, judo), uiClientMode));
     }
 

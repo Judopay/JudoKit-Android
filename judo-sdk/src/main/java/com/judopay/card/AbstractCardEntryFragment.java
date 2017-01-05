@@ -10,34 +10,103 @@ import android.widget.Button;
 import com.judopay.Judo;
 import com.judopay.R;
 import com.judopay.arch.ThemeUtil;
+import com.judopay.detection.AppResumeDetector;
+import com.judopay.detection.CompletedFieldsDetector;
+import com.judopay.detection.PastedFieldsDetector;
+import com.judopay.detection.TotalKeystrokesDetector;
 import com.judopay.model.Card;
 import com.judopay.validation.ValidationManager;
+
+import java.util.ArrayList;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
 public abstract class AbstractCardEntryFragment extends Fragment implements ValidationManager.OnChangeListener {
+
+    private static final String KEY_APP_RESUMED_TIMINGS = "AppResumedTimings";
+    private static final String KEY_APP_PAUSE_COUNT = "AppPauseCount";
+
+    protected static final String KEY_PASTED_FIELDS = "PastedFields";
+    protected static final String KEY_KEYSTROKES = "Keystrokes";
+    protected static final String KEY_COMPLETED_FIELDS = "CompletedFields";
+    protected static final String KEY_FIELD_STATES = "FieldStates";
 
     private String buttonLabel;
     protected Button submitButton;
 
     CardEntryListener cardEntryListener;
 
+    protected AppResumeDetector appResumeDetector;
+    protected PastedFieldsDetector pastedFieldsDetector;
+    protected TotalKeystrokesDetector keystrokesDetector;
+    protected CompletedFieldsDetector completedFieldsDetector;
+
     public void setCardEntryListener(CardEntryListener cardEntryListener) {
         this.cardEntryListener = cardEntryListener;
     }
 
-    protected abstract void onInitialize(Judo judo);
+    protected abstract void onInitialize(Bundle savedInstanceState, Judo judo);
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
 
         if (getArguments() != null && getArguments().containsKey(Judo.JUDO_OPTIONS)) {
             Judo judo = getArguments().getParcelable(Judo.JUDO_OPTIONS);
+
             if (judo != null) {
                 setButtonLabelText(getButtonLabel());
-                onInitialize(judo);
+
+                onInitialize(savedInstanceState, judo);
             }
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        appResumeDetector = new AppResumeDetector();
+
+        if (savedInstanceState != null) {
+            //noinspection unchecked
+            appResumeDetector.setResumedTimings((ArrayList<Long>) savedInstanceState.getSerializable(KEY_APP_RESUMED_TIMINGS));
+            appResumeDetector.setPauseCount(savedInstanceState.getInt(KEY_APP_PAUSE_COUNT));
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        appResumeDetector.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        appResumeDetector.onPause();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (keystrokesDetector != null) {
+            outState.putInt(KEY_KEYSTROKES, keystrokesDetector.getTotalKeystrokes());
+        }
+
+        if (pastedFieldsDetector != null) {
+            outState.putSerializable(KEY_PASTED_FIELDS, pastedFieldsDetector.getPasteTimings());
+        }
+
+        if (completedFieldsDetector != null) {
+            outState.putParcelableArrayList(KEY_COMPLETED_FIELDS, completedFieldsDetector.getCompletedFields());
+            outState.putSerializable(KEY_FIELD_STATES, completedFieldsDetector.getFieldStateMap());
+        }
+
+        if (appResumeDetector != null) {
+            outState.putSerializable(KEY_APP_RESUMED_TIMINGS, appResumeDetector.getResumedTimings());
+            outState.putInt(KEY_APP_PAUSE_COUNT, appResumeDetector.getPauseCount());
         }
     }
 

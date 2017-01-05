@@ -5,7 +5,6 @@ import android.support.design.widget.TextInputLayout;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.judopay.R;
@@ -13,7 +12,7 @@ import com.judopay.validation.Validation;
 
 public class StartDateEntryView extends FrameLayout {
 
-    private EditText startDateEditText;
+    private JudoEditText startDateEditText;
     private TextInputLayout startDateInputLayout;
 
     public StartDateEntryView(Context context) {
@@ -39,7 +38,7 @@ public class StartDateEntryView extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        startDateEditText = (EditText) findViewById(R.id.start_date_edit_text);
+        startDateEditText = (JudoEditText) findViewById(R.id.start_date_edit_text);
         startDateInputLayout = (TextInputLayout) findViewById(R.id.start_date_input_layout);
 
         HintFocusListener hintFocusListener = new HintFocusListener(startDateEditText, getResources().getString(R.string.date_hint));
@@ -59,7 +58,7 @@ public class StartDateEntryView extends FrameLayout {
     }
 
 
-    public EditText getEditText() {
+    public JudoEditText getEditText() {
         return startDateEditText;
     }
 

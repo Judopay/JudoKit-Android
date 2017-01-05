@@ -15,7 +15,7 @@ import com.judopay.model.RefundRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import rx.Observable;
+import rx.Single;
 import rx.functions.Func1;
 
 import static com.judopay.TestUtil.JUDO_ID;
@@ -32,9 +32,9 @@ public class ListReceiptsTest {
 
         apiService.payment(getPaymentRequest())
                 .compose(RxHelpers.<Receipt>schedulers())
-                .flatMap(new Func1<Receipt, Observable<Receipts>>() {
+                .flatMap(new Func1<Receipt, Single<Receipts>>() {
                     @Override
-                    public Observable<Receipts> call(Receipt receipt) {
+                    public Single<Receipts> call(Receipt receipt) {
                         return apiService.paymentReceipts(null, null, "time-descending");
                     }
                 })
@@ -47,9 +47,9 @@ public class ListReceiptsTest {
 
         apiService.preAuth(getPaymentRequest())
                 .compose(RxHelpers.<Receipt>schedulers())
-                .flatMap(new Func1<Receipt, Observable<Receipts>>() {
+                .flatMap(new Func1<Receipt, Single<Receipts>>() {
                     @Override
-                    public Observable<Receipts> call(Receipt receipt) {
+                    public Single<Receipts> call(Receipt receipt) {
                         return apiService.preAuthReceipts(null, null, "time-descending");
                     }
                 })
@@ -62,15 +62,15 @@ public class ListReceiptsTest {
 
         apiService.payment(getPaymentRequest())
                 .compose(RxHelpers.<Receipt>schedulers())
-                .flatMap(new Func1<Receipt, Observable<Receipt>>() {
+                .flatMap(new Func1<Receipt, Single<Receipt>>() {
                     @Override
-                    public Observable<Receipt> call(Receipt receipt) {
+                    public Single<Receipt> call(Receipt receipt) {
                         return apiService.refund(new RefundRequest(receipt.getReceiptId(), receipt.getAmount()));
                     }
                 })
-                .flatMap(new Func1<Receipt, Observable<Receipts>>() {
+                .flatMap(new Func1<Receipt, Single<Receipts>>() {
                     @Override
-                    public Observable<Receipts> call(Receipt receipt) {
+                    public Single<Receipts> call(Receipt receipt) {
                         return apiService.refundReceipts(null, null, "time-descending");
                     }
                 })
@@ -83,15 +83,15 @@ public class ListReceiptsTest {
 
         apiService.preAuth(getPaymentRequest())
                 .compose(RxHelpers.<Receipt>schedulers())
-                .flatMap(new Func1<Receipt, Observable<Receipt>>() {
+                .flatMap(new Func1<Receipt, Single<Receipt>>() {
                     @Override
-                    public Observable<Receipt> call(Receipt receipt) {
+                    public Single<Receipt> call(Receipt receipt) {
                         return apiService.collection(new CollectionRequest(receipt.getReceiptId(), receipt.getAmount()));
                     }
                 })
-                .flatMap(new Func1<Receipt, Observable<Receipts>>() {
+                .flatMap(new Func1<Receipt, Single<Receipts>>() {
                     @Override
-                    public Observable<Receipts> call(Receipt receipt) {
+                    public Single<Receipts> call(Receipt receipt) {
                         return apiService.collectionReceipts(null, null, "time-descending");
                     }
                 })
@@ -104,9 +104,9 @@ public class ListReceiptsTest {
 
         apiService.payment(getPaymentRequest())
                 .compose(RxHelpers.<Receipt>schedulers())
-                .flatMap(new Func1<Receipt, Observable<Receipts>>() {
+                .flatMap(new Func1<Receipt, Single<Receipts>>() {
                     @Override
-                    public Observable<Receipts> call(Receipt receipt) {
+                    public Single<Receipts> call(Receipt receipt) {
                         return apiService.consumerReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending");
                     }
                 })
@@ -119,9 +119,9 @@ public class ListReceiptsTest {
 
         apiService.payment(getPaymentRequest())
                 .compose(RxHelpers.<Receipt>schedulers())
-                .flatMap(new Func1<Receipt, Observable<Receipt>>() {
+                .flatMap(new Func1<Receipt, Single<Receipt>>() {
                     @Override
-                    public Observable<Receipt> call(Receipt receipt) {
+                    public Single<Receipt> call(Receipt receipt) {
                         return apiService.findReceipt(receipt.getReceiptId(), null, null, "time-descending");
                     }
                 })
@@ -134,9 +134,9 @@ public class ListReceiptsTest {
 
         apiService.payment(getPaymentRequest())
                 .compose(RxHelpers.<Receipt>schedulers())
-                .flatMap(new Func1<Receipt, Observable<Receipts>>() {
+                .flatMap(new Func1<Receipt, Single<Receipts>>() {
                     @Override
-                    public Observable<Receipts> call(Receipt receipt) {
+                    public Single<Receipts> call(Receipt receipt) {
                         return apiService.consumerPaymentReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending");
                     }
                 })
@@ -149,9 +149,9 @@ public class ListReceiptsTest {
 
         apiService.preAuth(getPaymentRequest())
                 .compose(RxHelpers.<Receipt>schedulers())
-                .flatMap(new Func1<Receipt, Observable<Receipts>>() {
+                .flatMap(new Func1<Receipt, Single<Receipts>>() {
                     @Override
-                    public Observable<Receipts> call(Receipt receipt) {
+                    public Single<Receipts> call(Receipt receipt) {
                         return apiService.consumerPreAuthReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending");
                     }
                 })
@@ -164,15 +164,15 @@ public class ListReceiptsTest {
 
         apiService.preAuth(getPaymentRequest())
                 .compose(RxHelpers.<Receipt>schedulers())
-                .flatMap(new Func1<Receipt, Observable<Receipt>>() {
+                .flatMap(new Func1<Receipt, Single<Receipt>>() {
                     @Override
-                    public Observable<Receipt> call(Receipt receipt) {
+                    public Single<Receipt> call(Receipt receipt) {
                         return apiService.collection(new CollectionRequest(receipt.getReceiptId(), receipt.getAmount()));
                     }
                 })
-                .flatMap(new Func1<Receipt, Observable<Receipts>>() {
+                .flatMap(new Func1<Receipt, Single<Receipts>>() {
                     @Override
-                    public Observable<Receipts> call(Receipt receipt) {
+                    public Single<Receipts> call(Receipt receipt) {
                         return apiService.consumerCollectionReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending");
                     }
                 })
@@ -185,15 +185,15 @@ public class ListReceiptsTest {
 
         apiService.payment(getPaymentRequest())
                 .compose(RxHelpers.<Receipt>schedulers())
-                .flatMap(new Func1<Receipt, Observable<Receipt>>() {
+                .flatMap(new Func1<Receipt, Single<Receipt>>() {
                     @Override
-                    public Observable<Receipt> call(Receipt receipt) {
+                    public Single<Receipt> call(Receipt receipt) {
                         return apiService.refund(new RefundRequest(receipt.getReceiptId(), receipt.getAmount()));
                     }
                 })
-                .flatMap(new Func1<Receipt, Observable<Receipts>>() {
+                .flatMap(new Func1<Receipt, Single<Receipts>>() {
                     @Override
-                    public Observable<Receipts> call(Receipt receipt) {
+                    public Single<Receipts> call(Receipt receipt) {
                         return apiService.consumerRefundReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending");
                     }
                 })

@@ -6,7 +6,7 @@
         android:id="@+id/issue_number_input_layout"
         style="@style/Widget.Judo.EntryLayout">
 
-        <android.support.v7.widget.AppCompatEditText
+        <com.judopay.view.JudoEditText
             android:id="@+id/issue_number_edit_text"
             style="@style/Widget.Judo.IssueNumber" />
 

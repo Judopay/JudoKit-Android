@@ -19,11 +19,9 @@ import okio.Buffer;
 class DeviceDnaInterceptor implements Interceptor {
 
     private final DeviceDna deviceDna;
-    private final String deviceId;
 
-    DeviceDnaInterceptor(Context context, String deviceId) {
+    DeviceDnaInterceptor(Context context) {
         this.deviceDna = new DeviceDna(context);
-        this.deviceId = deviceId;
     }
 
     @Override
@@ -37,10 +35,9 @@ class DeviceDnaInterceptor implements Interceptor {
                 JsonObject json = body.getAsJsonObject();
 
                 addClientDetails(json);
-                RequestBody requestBody = getJsonRequestBody(json);
 
                 return chain.proceed(request.newBuilder()
-                        .post(requestBody)
+                        .post(getJsonRequestBody(json))
                         .build());
             } else {
                 return chain.proceed(request);
@@ -57,8 +54,18 @@ class DeviceDnaInterceptor implements Interceptor {
             clientDetailsJson.addProperty(entry.getKey(), entry.getValue());
         }
 
-        clientDetailsJson.addProperty("deviceIdentifier", deviceId);
+        clientDetailsJson.addProperty("deviceIdentifier", getDeviceId());
         json.add("clientDetails", clientDetailsJson);
+    }
+
+    private String getDeviceId() {
+        if (deviceDna.cachedDeviceId() != null) {
+            return deviceDna.cachedDeviceId();
+        } else {
+            return deviceDna.identifyDevice()
+                    .toBlocking()
+                    .value();
+        }
     }
 
     private boolean isPost(okhttp3.Request request) {

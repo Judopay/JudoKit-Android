@@ -3,13 +3,13 @@ package com.judopay;
 import android.content.Context;
 
 import com.judopay.model.AndroidPayRequest;
+import com.judopay.model.CardVerificationResult;
 import com.judopay.model.CollectionRequest;
 import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
 import com.judopay.model.Receipts;
 import com.judopay.model.RefundRequest;
 import com.judopay.model.RegisterCardRequest;
-import com.judopay.model.CardVerificationResult;
 import com.judopay.model.TokenRequest;
 import com.judopay.model.VoidRequest;
 
@@ -19,7 +19,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import rx.Observable;
+import rx.Single;
 
 /**
  * Judo interface with Retrofit annotated list of judo API calls that can be performed.
@@ -36,7 +36,7 @@ public interface JudoApiService {
      * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/payments")
-    Observable<Receipt> payment(@Body PaymentRequest paymentRequest);
+    Single<Receipt> payment(@Body PaymentRequest paymentRequest);
 
     /**
      * Perform a pre-auth transaction
@@ -45,7 +45,7 @@ public interface JudoApiService {
      * @return the receipt for the pre-auth with the status of the transaction
      */
     @POST("transactions/preauths")
-    Observable<Receipt> preAuth(@Body PaymentRequest paymentRequest);
+    Single<Receipt> preAuth(@Body PaymentRequest paymentRequest);
 
     /**
      * Perform a token payment using a tokenised card
@@ -54,7 +54,7 @@ public interface JudoApiService {
      * @return the receipt for the token payment with the status of the transaction
      */
     @POST("transactions/payments")
-    Observable<Receipt> tokenPayment(@Body TokenRequest tokenRequest);
+    Single<Receipt> tokenPayment(@Body TokenRequest tokenRequest);
 
     /**
      * Perform a token pre-auth using a tokenised card
@@ -63,7 +63,7 @@ public interface JudoApiService {
      * @return the receipt for the pre-auth with the status of the transaction
      */
     @POST("transactions/preauths")
-    Observable<Receipt> tokenPreAuth(@Body TokenRequest tokenRequest);
+    Single<Receipt> tokenPreAuth(@Body TokenRequest tokenRequest);
 
     /**
      * Void a pre-auth transaction, releasing funds back to the card holder.
@@ -72,7 +72,7 @@ public interface JudoApiService {
      * @return the receipt for the pre-auth with the status of the transaction
      */
     @POST("transactions/voids")
-    Observable<Receipt> voidPreAuth(@Body VoidRequest voidRequest);
+    Single<Receipt> voidPreAuth(@Body VoidRequest voidRequest);
 
     /**
      * Complete a transaction that required 3D-Secure verification by providing the 3D-Secure response data.
@@ -82,14 +82,14 @@ public interface JudoApiService {
      * @return the receipt for the transaction
      */
     @PUT("transactions/{receiptId}")
-    Observable<Receipt> complete3dSecure(@Path("receiptId") String receiptId, @Body CardVerificationResult cardVerificationResult);
+    Single<Receipt> complete3dSecure(@Path("receiptId") String receiptId, @Body CardVerificationResult cardVerificationResult);
 
     /**
      * @param collectionRequest the collectionRequest transaction to be performed
      * @return the receipt for the collectionRequest with the status of the transaction
      */
     @POST("transactions/collections")
-    Observable<Receipt> collection(@Body CollectionRequest collectionRequest);
+    Single<Receipt> collection(@Body CollectionRequest collectionRequest);
 
     /**
      * Perform a refundRequest for a transaction
@@ -98,7 +98,7 @@ public interface JudoApiService {
      * @return the receipt for the refundRequest with the status of the transaction
      */
     @POST("transactions/refunds")
-    Observable<Receipt> refund(@Body RefundRequest refundRequest);
+    Single<Receipt> refund(@Body RefundRequest refundRequest);
 
     /**
      * Register a card to be used for making future tokenised payments
@@ -107,13 +107,13 @@ public interface JudoApiService {
      * @return the receipt for the card registration with the status of the transaction
      */
     @POST("transactions/registercard")
-    Observable<Receipt> registerCard(@Body RegisterCardRequest registerCardRequest);
+    Single<Receipt> registerCard(@Body RegisterCardRequest registerCardRequest);
 
     @POST("transactions/payments")
-    Observable<Receipt> androidPayPayment(@Body AndroidPayRequest androidPayRequest);
+    Single<Receipt> androidPayPayment(@Body AndroidPayRequest androidPayRequest);
 
     @POST("transactions/preauths")
-    Observable<Receipt> androidPayPreAuth(@Body AndroidPayRequest androidPayRequest);
+    Single<Receipt> androidPayPreAuth(@Body AndroidPayRequest androidPayRequest);
 
     /**
      * List all payment receipts for the account
@@ -124,7 +124,7 @@ public interface JudoApiService {
      * @return Receipts containing the list of payment receipts
      */
     @GET("transactions/payments")
-    Observable<Receipts> paymentReceipts(@Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+    Single<Receipts> paymentReceipts(@Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
     /**
      * List all pre-auth receipts for the account
@@ -135,7 +135,7 @@ public interface JudoApiService {
      * @return Receipts containing the list of pre-auth receipts
      */
     @GET("transactions/preauths")
-    Observable<Receipts> preAuthReceipts(@Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+    Single<Receipts> preAuthReceipts(@Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
     /**
      * List all refund receipts for the account
@@ -146,7 +146,7 @@ public interface JudoApiService {
      * @return Receipts containing the list of refund receipts
      */
     @GET("transactions/refunds")
-    Observable<Receipts> refundReceipts(@Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+    Single<Receipts> refundReceipts(@Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
     /**
      * List all collection receipts for the account
@@ -157,7 +157,7 @@ public interface JudoApiService {
      * @return Receipts containing the list of collection receipts
      */
     @GET("transactions/collections")
-    Observable<Receipts> collectionReceipts(@Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+    Single<Receipts> collectionReceipts(@Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
     /**
      * @param receiptId the receipt ID to use for finding the receipt
@@ -167,7 +167,7 @@ public interface JudoApiService {
      * @return the receipt matched with the receiptId
      */
     @GET("transactions/{receiptId}")
-    Observable<Receipt> findReceipt(@Path("receiptId") String receiptId, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+    Single<Receipt> findReceipt(@Path("receiptId") String receiptId, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
     /**
      * List all consumer receipts for a consumer token
@@ -179,7 +179,7 @@ public interface JudoApiService {
      * @return Receipts containing the list of consumer receipts for the consumerToken
      */
     @GET("consumers/{consumerToken}")
-    Observable<Receipts> consumerReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+    Single<Receipts> consumerReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
     /**
      * List all payment receipts for a consumer
@@ -191,7 +191,7 @@ public interface JudoApiService {
      * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
      */
     @GET("consumers/{consumerToken}/payments")
-    Observable<Receipts> consumerPaymentReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+    Single<Receipts> consumerPaymentReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
     /**
      * List all pre-auth receipts for a consumer
@@ -203,7 +203,7 @@ public interface JudoApiService {
      * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
      */
     @GET("consumers/{consumerToken}/preauths")
-    Observable<Receipts> consumerPreAuthReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+    Single<Receipts> consumerPreAuthReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
     /**
      * List all collection receipts for a consumer
@@ -215,7 +215,7 @@ public interface JudoApiService {
      * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
      */
     @GET("consumers/{consumerToken}/collections")
-    Observable<Receipts> consumerCollectionReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+    Single<Receipts> consumerCollectionReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
     /**
      * List all refund receipts for a consumer
@@ -227,6 +227,6 @@ public interface JudoApiService {
      * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
      */
     @GET("consumers/{consumerToken}/refunds")
-    Observable<Receipts> consumerRefundReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+    Single<Receipts> consumerRefundReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
 }

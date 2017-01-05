@@ -1,21 +1,24 @@
 package com.judopay;
 
-import com.google.gson.Gson;
-import com.judopay.arch.Scheduler;
 import com.judopay.model.Card;
+import com.judopay.model.Receipt;
 import com.judopay.model.RegisterCardRequest;
+
+import java.util.concurrent.Callable;
+
+import rx.Single;
 
 class RegisterCardPresenter extends BasePresenter {
 
-    RegisterCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, Scheduler scheduler, Gson gson) {
-        super(callbacks, apiService, scheduler, gson);
+    public RegisterCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, DeviceDna deviceDna) {
+        super(callbacks, apiService, deviceDna);
     }
 
-    void performRegisterCard(Card card, Judo judo) {
+    Single<Receipt> performRegisterCard(Card card, Judo judo) {
         this.loading = true;
         transactionCallbacks.showLoading();
 
-        RegisterCardRequest.Builder builder = new RegisterCardRequest.Builder()
+        final RegisterCardRequest.Builder builder = new RegisterCardRequest.Builder()
                 .setJudoId(judo.getJudoId())
                 .setCardNumber(card.getCardNumber())
                 .setCv2(card.getSecurityCode())
@@ -25,11 +28,11 @@ class RegisterCardPresenter extends BasePresenter {
                 .setMobileNumber(judo.getMobileNumber())
                 .setYourConsumerReference(judo.getConsumerReference());
 
-        if(judo.getCurrency() != null) {
+        if (judo.getCurrency() != null) {
             builder.setCurrency(judo.getCurrency());
         }
 
-        if(judo.getAmount() != null) {
+        if (judo.getAmount() != null) {
             builder.setAmount(judo.getAmount());
         }
 
@@ -44,9 +47,11 @@ class RegisterCardPresenter extends BasePresenter {
                     .setStartDate(card.getStartDate());
         }
 
-        apiService.registerCard(builder.build())
-                .subscribeOn(scheduler.backgroundThread())
-                .observeOn(scheduler.mainThread())
-                .subscribe(callback(), error());
+        return Single.defer(new Callable<Single<Receipt>>() {
+            @Override
+            public Single<Receipt> call() throws Exception {
+                return apiService.registerCard(builder.build());
+            }
+        });
     }
 }

@@ -11,11 +11,13 @@ public class Application extends android.app.Application {
         super.onCreate();
 
         deviceDna = new DeviceDna(this);
-        deviceDna.identifyDevice();
+
+        // load with device service
+        deviceDna.identifyDevice()
+                .subscribe();
     }
 
     public String getDeviceId() {
         return deviceDna.cachedDeviceId();
     }
-
 }
