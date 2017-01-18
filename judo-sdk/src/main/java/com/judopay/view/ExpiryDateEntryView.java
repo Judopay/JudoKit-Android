@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.design.widget.TextInputLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.judopay.R;

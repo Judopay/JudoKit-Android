@@ -436,5 +436,4 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     public void onValidate(boolean valid) {
         submitButton.setVisibility(valid ? View.VISIBLE : View.GONE);
     }
-
 }

@@ -57,5 +57,4 @@ public final class PaymentFragment extends JudoFragment {
     boolean isTransactionInProgress() {
         return this.presenter.loading;
     }
-
 }
