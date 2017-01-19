@@ -1,7 +1,12 @@
 package com.judopay.api;
 
+import android.content.Context;
+import android.os.Build;
+import android.util.Log;
+
 import com.judopay.BuildConfig;
 import com.judopay.Judo;
+import com.judopay.arch.AppMetaDataReader;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,14 +33,14 @@ class ApiHeadersInterceptor implements Interceptor {
     private static final String JUDO_SDK_UI_MODE = "Judo-SDK";
     private static final String CUSTOM_UI_MODE = "Custom-UI";
 
-    private final UserAgent userAgent;
     private final int uiClientMode;
     private final ApiCredentials apiCredentials;
+    private final AppMetaDataReader appMetaDataReader;
 
-    ApiHeadersInterceptor(ApiCredentials apiCredentials, @Judo.UiClientMode int uiClientMode) {
+    ApiHeadersInterceptor(ApiCredentials apiCredentials, @Judo.UiClientMode int uiClientMode, Context context) {
         this.apiCredentials = apiCredentials;
         this.uiClientMode = uiClientMode;
-        this.userAgent = new UserAgent(Locale.getDefault().getDisplayName());
+        this.appMetaDataReader = new AppMetaDataReader(context);
     }
 
     @Override
@@ -56,9 +61,19 @@ class ApiHeadersInterceptor implements Interceptor {
         headers.put(API_VERSION_HEADER, API_VERSION);
         headers.put(CACHE_CONTROL_HEADER, CACHE_CONTROL);
         headers.put(SDK_VERSION_HEADER, "Android-" + BuildConfig.VERSION_NAME);
-        headers.put(USER_AGENT_HEADER, userAgent.toString());
+        Log.d("Judo", getUserAgent());
+        headers.put(USER_AGENT_HEADER, getUserAgent());
         headers.put(UI_MODE_HEADER, uiClientMode == Judo.UI_CLIENT_MODE_JUDO_SDK ? JUDO_SDK_UI_MODE : CUSTOM_UI_MODE);
 
         return Headers.of(headers);
+    }
+
+    private String getUserAgent() {
+        return String.format(Locale.ENGLISH, "Android/%1$s %2$s%3$s %4$s/%5$s", BuildConfig.VERSION_NAME,
+                trim(Build.MANUFACTURER), trim(Build.MODEL), trim(appMetaDataReader.getAppName()), trim(appMetaDataReader.getAppVersion()));
+    }
+
+    private String trim(String text) {
+        return text.replaceAll("\\s", "");
     }
 }

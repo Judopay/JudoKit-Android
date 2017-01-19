@@ -60,7 +60,7 @@ public class JudoApiServiceFactory {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
         setTimeouts(builder);
-        setSslSocketFactory(builder, context, judo);
+        setSslSocketFactory(builder);
         setInterceptors(builder, uiClientMode, context, judo);
 
         return builder.build();
@@ -71,7 +71,7 @@ public class JudoApiServiceFactory {
 
         interceptors.add(new DeDuplicationInterceptor());
         interceptors.add(new DeviceDnaInterceptor(context));
-        interceptors.add(new ApiHeadersInterceptor(ApiCredentials.fromConfiguration(context, judo), uiClientMode));
+        interceptors.add(new ApiHeadersInterceptor(ApiCredentials.fromConfiguration(context, judo), uiClientMode, context));
     }
 
     private static GsonConverterFactory getGsonConverterFactory() {
@@ -86,7 +86,7 @@ public class JudoApiServiceFactory {
                 .create();
     }
 
-    private static void setSslSocketFactory(OkHttpClient.Builder builder, Context context, Judo judo) {
+    private static void setSslSocketFactory(OkHttpClient.Builder builder) {
         try {
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, null, null);
