@@ -15,10 +15,8 @@ import android.view.Surface;
 import android.view.WindowManager;
 
 import com.judopay.error.RootedDeviceNotPermittedError;
-import com.judopay.model.Card;
 
 import static com.judopay.Judo.JUDO_OPTIONS;
-import static com.judopay.Judo.RESULT_CARD_SCANNED;
 import static com.judopay.Judo.RESULT_CONNECTION_ERROR;
 import static com.judopay.Judo.RESULT_DECLINED;
 import static com.judopay.Judo.RESULT_ERROR;
@@ -120,16 +118,6 @@ abstract class JudoActivity extends AppCompatActivity {
                     case RESULT_DECLINED:
                         onDeclined();
                         break;
-                }
-            case Judo.CARD_SCANNING_REQUEST:
-                switch (resultCode) {
-                    case RESULT_CARD_SCANNED:
-                        if (data != null) {
-                            if (data.getExtras().containsKey(Judo.JUDO_CARD)) {
-                                fragment.setCard((Card) data.getParcelableExtra(Judo.JUDO_CARD));
-                            }
-                            // todo - throw error that no card was included in the intent data.
-                        }
                 }
         }
     }

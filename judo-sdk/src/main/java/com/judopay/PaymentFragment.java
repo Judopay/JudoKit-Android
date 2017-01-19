@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.judopay.devicedna.Credentials;
 import com.judopay.model.Card;
 
 import java.util.Map;
@@ -26,7 +27,8 @@ public final class PaymentFragment extends JudoFragment {
 
         if (presenter == null) {
             JudoApiService apiService = judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
-            presenter = new PaymentPresenter(this, apiService, new DeviceDna(getActivity()));
+            Credentials credentials = new Credentials(judo.getApiToken(), judo.getApiSecret());
+            presenter = new PaymentPresenter(this, apiService, new DeviceDna(getActivity(), credentials));
         }
     }
 

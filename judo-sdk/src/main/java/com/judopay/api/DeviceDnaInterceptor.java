@@ -60,13 +60,9 @@ class DeviceDnaInterceptor implements Interceptor {
     }
 
     private String getDeviceId() {
-        if (deviceDna.cachedDeviceId() != null) {
-            return deviceDna.cachedDeviceId();
-        } else {
-            return deviceDna.identifyDevice()
-                    .toBlocking()
-                    .value();
-        }
+        return deviceDna.identifyDevice()
+                .toBlocking()
+                .value();
     }
 
     private boolean isPost(okhttp3.Request request) {

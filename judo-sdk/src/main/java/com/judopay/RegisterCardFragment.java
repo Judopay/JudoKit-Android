@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.judopay.card.AbstractCardEntryFragment;
 import com.judopay.card.CardEntryFragment;
 import com.judopay.card.CardEntryListener;
+import com.judopay.devicedna.Credentials;
 import com.judopay.model.Card;
 
 import java.util.Map;
@@ -31,7 +32,9 @@ public class RegisterCardFragment extends JudoFragment implements TransactionCal
 
         if (this.presenter == null) {
             JudoApiService apiService = judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
-            this.presenter = new RegisterCardPresenter(this, apiService, new DeviceDna(getActivity()));
+            Credentials credentials = new Credentials(judo.getApiToken(), judo.getApiSecret());
+
+            this.presenter = new RegisterCardPresenter(this, apiService, new DeviceDna(getActivity(), credentials));
         }
     }
 
