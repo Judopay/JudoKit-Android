@@ -20,6 +20,7 @@ public class CredentialsEncodingTest {
 
         ApiCredentials credentials = new ApiCredentials(token, secret);
         assertThat(credentials.getBasicAuthorizationHeader(), equalTo("Basic eHZUV2NPeVRuMWliNXZ2Ujo3M2E1NzdhOGRmZjI0NTljNTc0NjE1OTgwNDZiZGNlMjJmYzFhYTg5ZGVjNzUyOTI4OTlhNmQzM2YzYWYyNzNj"));
+//
     }
 
 }

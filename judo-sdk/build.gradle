@@ -35,6 +35,7 @@ android {
     buildTypes {
         debug {
             debuggable true
+            minifyEnabled false
 
             Properties properties = new Properties()
             properties.load(project.rootProject.file('local.properties').newDataInputStream())
@@ -46,8 +47,8 @@ android {
 
         }
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            minifyEnabled true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 

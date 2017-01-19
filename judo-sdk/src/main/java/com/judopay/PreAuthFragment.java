@@ -3,6 +3,7 @@ package com.judopay;
 import android.os.Bundle;
 import android.view.View;
 
+import com.judopay.devicedna.Credentials;
 import com.judopay.model.Card;
 
 import java.util.Map;
@@ -25,7 +26,8 @@ public final class PreAuthFragment extends JudoFragment {
 
         if (this.presenter == null) {
             JudoApiService apiService = judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
-            this.presenter = new PreAuthPresenter(this, apiService, new DeviceDna(getActivity()));
+            Credentials credentials = new Credentials(judo.getApiToken(), judo.getApiSecret());
+            this.presenter = new PreAuthPresenter(this, apiService, new DeviceDna(getActivity(), credentials));
         }
     }
 
