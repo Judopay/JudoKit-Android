@@ -11,7 +11,7 @@ import com.judopay.error.TokenSecretError;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
-class ApiCredentials {
+public class ApiCredentials {
 
     private static final String API_SECRET_MANIFEST_NAME = "judo_api_secret";
     private static final String API_TOKEN_MANIFEST_NAME = "judo_api_token";
@@ -20,7 +20,7 @@ class ApiCredentials {
     private final String apiSecret;
     private final String authorization;
 
-    ApiCredentials(String apiToken, String apiSecret) {
+    public ApiCredentials(String apiToken, String apiSecret) {
         this.apiToken = apiToken;
         this.apiSecret = apiSecret;
         this.authorization = getEncodedCredentials();
@@ -43,7 +43,7 @@ class ApiCredentials {
         return authorization;
     }
 
-    String getBasicAuthorizationHeader() {
+    public String getBasicAuthorizationHeader() {
         return String.format("Basic %s", getAuthorization());
     }
 
