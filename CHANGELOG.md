@@ -10,7 +10,7 @@
 - The embedded Retrofit and Android libraries have been updated to the latest version.
 - The ```Judo.setConsumerRef method``` has been renamed to ```setConsumerReference```
 - UAT environment has been removed from the SDK.
-- ```Single<Receipt>``` replaces the RxJava ``Observable<Receipt>``` type in ```JudoApiService``` as only one result is returned.
+- ```Single<Receipt>``` replaces the RxJava ```Observable<Receipt>``` type in ```JudoApiService``` as only one result is returned.
 - The UserAgent header sent by the SDK has been updated to include the name and version of the app.
 
 **Bugs fixed:**
