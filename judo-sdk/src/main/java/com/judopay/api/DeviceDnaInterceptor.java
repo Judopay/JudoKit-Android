@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.judopay.DeviceDna;
+import com.judopay.devicedna.Credentials;
 
 import java.io.IOException;
 import java.util.Map;
@@ -20,8 +21,8 @@ class DeviceDnaInterceptor implements Interceptor {
 
     private final DeviceDna deviceDna;
 
-    DeviceDnaInterceptor(Context context) {
-        this.deviceDna = new DeviceDna(context);
+    DeviceDnaInterceptor(Context context, Credentials credentials) {
+        this.deviceDna = new DeviceDna(context, credentials);
     }
 
     @Override

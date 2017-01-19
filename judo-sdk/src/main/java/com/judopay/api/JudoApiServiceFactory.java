@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
+import com.judopay.devicedna.Credentials;
 import com.judopay.error.SslInitializationError;
 import com.judopay.model.Address;
 
@@ -70,7 +71,7 @@ public class JudoApiServiceFactory {
         List<Interceptor> interceptors = client.interceptors();
 
         interceptors.add(new DeDuplicationInterceptor());
-        interceptors.add(new DeviceDnaInterceptor(context));
+        interceptors.add(new DeviceDnaInterceptor(context, new Credentials(judo.getApiToken(), judo.getApiSecret())));
         interceptors.add(new ApiHeadersInterceptor(ApiCredentials.fromConfiguration(context, judo), uiClientMode, context));
     }
 
