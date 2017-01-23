@@ -64,7 +64,7 @@ public class CustomLayoutAutoAdvanceFieldsTest {
 
         onView(withId(R.id.start_date_edit_text))
                 .check(matches(hasFocus()))
-                .perform(typeText("0107"));
+                .perform(typeText("0110"));
 
         onView(withId(R.id.issue_number_edit_text))
                 .check(matches(hasFocus()))

@@ -61,7 +61,7 @@ public class SuccessfulPreAuthTest {
                 .perform(typeText("6759000000005462"));
 
         onView(withId(R.id.start_date_edit_text))
-                .perform(typeText("0107"));
+                .perform(typeText("0110"));
 
         onView(withId(R.id.issue_number_edit_text))
                 .perform(typeText("01"));
@@ -142,7 +142,7 @@ public class SuccessfulPreAuthTest {
                 .perform(typeText("6759000000005462"));
 
         onView(withId(R.id.start_date_edit_text))
-                .perform(typeText("0107"));
+                .perform(typeText("0110"));
 
         onView(withId(R.id.issue_number_edit_text))
                 .perform(typeText("01"));

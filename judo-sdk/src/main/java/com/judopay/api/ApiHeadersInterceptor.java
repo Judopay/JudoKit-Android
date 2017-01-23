@@ -16,6 +16,8 @@ import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.Response;
 
+import static com.judopay.arch.TextUtil.isEmpty;
+
 class ApiHeadersInterceptor implements Interceptor {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
@@ -74,6 +76,9 @@ class ApiHeadersInterceptor implements Interceptor {
     }
 
     private String trim(String text) {
-        return text.replaceAll("\\s", "");
+        if (!isEmpty(text)) {
+            return text.replaceAll("\\s", "");
+        }
+        return "";
     }
 }

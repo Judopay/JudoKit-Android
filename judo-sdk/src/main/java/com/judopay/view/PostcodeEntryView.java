@@ -103,7 +103,10 @@ public class PostcodeEntryView extends FrameLayout {
 
     public void setCountry(String country) {
         setHint(Country.postcodeName(country));
+
         boolean postcodeNumeric = Country.UNITED_STATES.equals(country);
         setNumericInput(postcodeNumeric);
+
+        setEnabled(!Country.OTHER.equals(country));
     }
 }

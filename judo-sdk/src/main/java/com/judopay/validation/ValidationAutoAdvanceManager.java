@@ -36,7 +36,7 @@ public class ValidationAutoAdvanceManager {
 
                                     if (FALSE.equals(valid)) {
                                         View view = views.get(i);
-                                        if (view.isShown() && view.isFocusable()) {
+                                        if (view.isShown() && view.isFocusable() && !view.isFocused()) {
                                             view.requestFocus();
                                             break;
                                         }

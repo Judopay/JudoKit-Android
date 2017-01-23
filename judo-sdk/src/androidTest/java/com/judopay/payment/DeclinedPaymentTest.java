@@ -64,7 +64,7 @@ public class DeclinedPaymentTest {
                 .perform(typeText("6759000000009076"));
 
         onView(withId(R.id.start_date_edit_text))
-                .perform(typeText("0107"));
+                .perform(typeText("0110"));
 
         onView(withId(R.id.issue_number_edit_text))
                 .perform(typeText("01"));
@@ -157,7 +157,7 @@ public class DeclinedPaymentTest {
                 .perform(typeText("6759000000009076"));
 
         onView(withId(R.id.start_date_edit_text))
-                .perform(typeText("0107"));
+                .perform(typeText("0110"));
 
         onView(withId(R.id.issue_number_edit_text))
                 .perform(typeText("01"));
