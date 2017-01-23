@@ -11,7 +11,7 @@ import com.judopay.error.TokenSecretError;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
-class ApiCredentials {
+public class ApiCredentials {
 
     private static final String API_SECRET_MANIFEST_NAME = "judo_api_secret";
     private static final String API_TOKEN_MANIFEST_NAME = "judo_api_token";
@@ -26,7 +26,7 @@ class ApiCredentials {
         this.authorization = getEncodedCredentials();
     }
 
-    public static ApiCredentials fromConfiguration(Context context, Judo judo) {
+    static ApiCredentials fromConfiguration(Context context, Judo judo) {
         return new ApiCredentials(getApiToken(context, judo), getApiSecret(context, judo));
     }
 

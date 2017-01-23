@@ -6,7 +6,7 @@
         android:id="@+id/start_date_input_layout"
         style="@style/Widget.Judo.EntryLayout">
 
-        <android.support.v7.widget.AppCompatEditText
+        <com.judopay.view.JudoEditText
             android:id="@+id/start_date_edit_text"
             style="@style/Widget.Judo.StartDate"
             tools:ignore="TextFields" />

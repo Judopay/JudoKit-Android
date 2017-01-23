@@ -1,7 +1,5 @@
 package com.judopay;
 
-import com.google.gson.Gson;
-import com.judopay.arch.Scheduler;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.Receipt;
@@ -9,6 +7,7 @@ import com.judopay.model.RegisterCardRequest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -19,6 +18,7 @@ import okhttp3.internal.http.RealResponseBody;
 import okio.Buffer;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
+import rx.Single;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -36,53 +36,61 @@ public class RegisterCardPresenterTest {
     Address cardAddress;
 
     @Mock
+    DeviceDna deviceDna;
+
+    @Mock
     JudoApiService apiService;
 
     @Mock
     TransactionCallbacks transactionCallbacks;
 
-    private Gson gson = new Gson();
-    private String judoId = "100915867";
+    @InjectMocks
+    RegisterCardPresenter presenter;
+
+    private String judoId = "100407196";
     private String consumer = "consumerRef";
-    private Scheduler scheduler = new TestScheduler();
 
     @Test
     public void shouldRegisterCard() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
-        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.<Receipt>empty());
+        when(apiService.registerCard(any(RegisterCardRequest.class)))
+                .thenReturn(Single.<Receipt>just(null));
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setJudoId(judoId)
-                .setConsumerRef(consumer)
-                .build());
+                .setConsumerReference(consumer)
+                .build())
+                .subscribe();
 
         verify(apiService, times(1)).registerCard(any(RegisterCardRequest.class));
     }
 
     @Test
     public void showShowLoadingWhenSubmittingCard() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
-        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.<Receipt>empty());
+        when(apiService.registerCard(any(RegisterCardRequest.class)))
+                .thenReturn(Single.<Receipt>just(null));
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setJudoId(judoId)
-                .setConsumerRef(consumer)
-                .build());
+                .setConsumerReference(consumer)
+                .build())
+                .subscribe();
 
         verify(transactionCallbacks).showLoading();
     }
 
     @Test
     public void shouldFinishPaymentFormViewOnSuccess() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
+        when(receipt.isSuccess())
+                .thenReturn(true);
 
-        when(receipt.isSuccess()).thenReturn(true);
-        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.just(receipt));
+        when(apiService.registerCard(any(RegisterCardRequest.class)))
+                .thenReturn(Single.just(receipt));
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setJudoId(judoId)
-                .setConsumerRef(consumer)
-                .build());
+                .setConsumerReference(consumer)
+                .build())
+                .subscribe(presenter.callback(), presenter.error());
 
         verify(transactionCallbacks).onSuccess(eq(receipt));
         verify(transactionCallbacks).hideLoading();
@@ -90,16 +98,15 @@ public class RegisterCardPresenterTest {
 
     @Test
     public void shouldShowDeclinedMessageWhenDeclined() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
-
         when(receipt.isSuccess()).thenReturn(false);
 
-        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.just(receipt));
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Single.just(receipt));
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setJudoId(judoId)
-                .setConsumerRef(consumer)
-                .build());
+                .setConsumerReference(consumer)
+                .build())
+                .subscribe(presenter.callback(), presenter.error());
 
         verify(transactionCallbacks).onDeclined(eq(receipt));
         verify(transactionCallbacks).hideLoading();
@@ -107,15 +114,12 @@ public class RegisterCardPresenterTest {
 
     @Test
     public void shouldHideLoadingIfReconnectAndPaymentNotInProgress() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
         presenter.reconnect();
-
         verify(transactionCallbacks).hideLoading();
     }
 
     @Test
     public void shouldShowLoadingIfReconnectAndPaymentInProgress() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
         Card card = new Card.Builder()
                 .setCardNumber("4976000000003436")
                 .setSecurityCode("452")
@@ -123,30 +127,35 @@ public class RegisterCardPresenterTest {
                 .setAddress(cardAddress)
                 .build();
 
-        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.<Receipt>empty());
+        // create a Receipt response that won't complete before we attempt to reconnect to the presenter;
+        Single<Receipt> response = Observable.<Receipt>never().toSingle();
+
+        when(apiService.registerCard(any(RegisterCardRequest.class)))
+                .thenReturn(response);
 
         presenter.performRegisterCard(card, new Judo.Builder("apiToken", "apiSecret")
                 .setJudoId(judoId)
-                .setConsumerRef(consumer)
-                .build());
+                .setConsumerReference(consumer)
+                .build())
+                .subscribe();
 
         presenter.reconnect();
+
         verify(transactionCallbacks, times(2)).showLoading();
     }
 
     @Test
     public void shouldStart3dSecureWebViewIfRequired() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
-
         when(receipt.isSuccess()).thenReturn(false);
         when(receipt.is3dSecureRequired()).thenReturn(true);
 
-        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.just(receipt));
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Single.just(receipt));
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setJudoId(judoId)
-                .setConsumerRef(consumer)
-                .build());
+                .setConsumerReference(consumer)
+                .build())
+                .subscribe(presenter.callback(), presenter.error());
 
         verify(transactionCallbacks).setLoadingText(eq(R.string.redirecting));
         verify(transactionCallbacks).start3dSecureWebView(eq(receipt), eq(presenter));
@@ -154,31 +163,30 @@ public class RegisterCardPresenterTest {
 
     @Test
     public void shouldReturnReceiptWhenBadRequest() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
-
         RealResponseBody responseBody = new RealResponseBody(Headers.of("SdkVersion", "5.0"), new Buffer());
 
         HttpException exception = new HttpException(retrofit2.Response.error(400, responseBody));
 
-        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.<Receipt>error(exception));
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Single.<Receipt>error(exception));
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setJudoId(judoId)
-                .setConsumerRef(consumer)
-                .build());
+                .setConsumerReference(consumer)
+                .build())
+                .subscribe(presenter.callback(), presenter.error());
 
         verify(transactionCallbacks).onError(any(Receipt.class));
     }
 
     @Test
     public void shouldShowConnectionErrorDialog() {
-        RegisterCardPresenter presenter = new RegisterCardPresenter(transactionCallbacks, apiService, scheduler, gson);
-        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Observable.<Receipt>error(new UnknownHostException()));
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Single.<Receipt>error(new UnknownHostException()));
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setJudoId(judoId)
-                .setConsumerRef(consumer)
-                .build());
+                .setConsumerReference(consumer)
+                .build())
+                .subscribe(presenter.callback(), presenter.error());
 
         verify(apiService).registerCard(any(RegisterCardRequest.class));
         verify(transactionCallbacks).onConnectionError();

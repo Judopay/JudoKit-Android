@@ -11,11 +11,11 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.judopay.R;
+import com.judopay.model.Country;
 
 public class PostcodeEntryView extends FrameLayout {
 
     private TextInputLayout postcodeInputLayout;
-    private CompositeOnFocusChangeListener onFocusChangeListener;
 
     public PostcodeEntryView(Context context) {
         super(context);
@@ -41,18 +41,11 @@ public class PostcodeEntryView extends FrameLayout {
         super.onFinishInflate();
 
         postcodeInputLayout = (TextInputLayout) findViewById(R.id.post_code_input_layout);
-        EditText editText = postcodeInputLayout.getEditText();
+        JudoEditText editText = (JudoEditText) findViewById(R.id.post_code_edit_text);
 
         if (editText != null) {
-            onFocusChangeListener = new CompositeOnFocusChangeListener(
-                    new HintFocusListener(editText, getResources().getString(R.string.empty)));
-
-            editText.setOnFocusChangeListener(onFocusChangeListener);
+            editText.setOnFocusChangeListener(new HintFocusListener(editText, getResources().getString(R.string.empty)));
         }
-    }
-
-    public void addOnFocusChangeListener(OnFocusChangeListener listener) {
-        onFocusChangeListener.add(listener);
     }
 
     public void addTextChangedListener(TextWatcher watcher) {
@@ -62,7 +55,7 @@ public class PostcodeEntryView extends FrameLayout {
         }
     }
 
-    public void setHint(@StringRes int hint) {
+    private void setHint(@StringRes int hint) {
         postcodeInputLayout.setHint(getResources().getString(hint));
     }
 
@@ -76,7 +69,7 @@ public class PostcodeEntryView extends FrameLayout {
         }
     }
 
-    public void setNumericInput(boolean numeric) {
+    private void setNumericInput(boolean numeric) {
         EditText editText = postcodeInputLayout.getEditText();
         if (editText != null) {
             if (numeric && editText.getInputType() != InputType.TYPE_CLASS_NUMBER) {
@@ -104,7 +97,16 @@ public class PostcodeEntryView extends FrameLayout {
         return editText == null ? "" : editText.getText().toString().trim();
     }
 
-    public EditText getEditText() {
-        return postcodeInputLayout.getEditText();
+    public JudoEditText getEditText() {
+        return (JudoEditText) postcodeInputLayout.getEditText();
+    }
+
+    public void setCountry(String country) {
+        setHint(Country.postcodeName(country));
+
+        boolean postcodeNumeric = Country.UNITED_STATES.equals(country);
+        setNumericInput(postcodeNumeric);
+
+        setEnabled(!Country.OTHER.equals(country));
     }
 }

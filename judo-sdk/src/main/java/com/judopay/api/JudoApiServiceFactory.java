@@ -1,34 +1,24 @@
 package com.judopay.api;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
-import com.judopay.R;
+import com.judopay.devicedna.Credentials;
 import com.judopay.error.SslInitializationError;
 import com.judopay.model.Address;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.util.Date;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManagerFactory;
 
-import okhttp3.CertificatePinner;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -46,21 +36,16 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  */
 public class JudoApiServiceFactory {
 
-    private static final String PARTNER_API_SANDBOX_HOST = "partnerapi.judopay-sandbox.com";
-    private static final String PARTNER_API_LIVE_HOST = "partnerapi.judopay.com";
-
-    private static final String CERTIFICATE_1 = "sha1/SSAG1hz7m8LI/eapL/SSpd5o564=";
-    private static final String CERTIFICATE_2 = "sha1/o5OZxATDsgmwgcIfIWIneMJ0jkw=";
-
     /**
      * @param context      the calling Context
      * @param uiClientMode the UI Client Mode that is being used, either Custom UI or the provided Judo SDK UI
-     * @param judo
+     * @param judo         the judo instance
      * @return the Retrofit API service implementation containing the methods used
      * for interacting with the judoPay REST API.
      */
     public static JudoApiService createApiService(Context context, @Judo.UiClientMode int uiClientMode, Judo judo) {
-        return createRetrofit(context.getApplicationContext(), uiClientMode, judo).create(JudoApiService.class);
+        return createRetrofit(context.getApplicationContext(), uiClientMode, judo)
+                .create(JudoApiService.class);
     }
 
     private static Retrofit createRetrofit(Context context, @Judo.UiClientMode int uiClientMode, Judo judo) {
@@ -75,12 +60,8 @@ public class JudoApiServiceFactory {
     private static OkHttpClient getOkHttpClient(@Judo.UiClientMode int uiClientMode, Context context, Judo judo) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-        if (judo.isSslPinningEnabled()) {
-            builder.certificatePinner(getCertificatePinner());
-        }
-
         setTimeouts(builder);
-        setSslSocketFactory(builder, context, judo);
+        setSslSocketFactory(builder);
         setInterceptors(builder, uiClientMode, context, judo);
 
         return builder.build();
@@ -90,8 +71,8 @@ public class JudoApiServiceFactory {
         List<Interceptor> interceptors = client.interceptors();
 
         interceptors.add(new DeDuplicationInterceptor());
-        interceptors.add(new JudoShieldInterceptor(context));
-        interceptors.add(new ApiHeadersInterceptor(ApiCredentials.fromConfiguration(context, judo), uiClientMode));
+        interceptors.add(new DeviceDnaInterceptor(context, new Credentials(judo.getApiToken(), judo.getApiSecret())));
+        interceptors.add(new ApiHeadersInterceptor(ApiCredentials.fromConfiguration(context, judo), uiClientMode, context));
     }
 
     private static GsonConverterFactory getGsonConverterFactory() {
@@ -106,56 +87,16 @@ public class JudoApiServiceFactory {
                 .create();
     }
 
-    @NonNull
-    private static CertificatePinner getCertificatePinner() {
-        return new CertificatePinner.Builder()
-                .add(PARTNER_API_SANDBOX_HOST, CERTIFICATE_1)
-                .add(PARTNER_API_SANDBOX_HOST, CERTIFICATE_2)
-                .add(PARTNER_API_LIVE_HOST, CERTIFICATE_1)
-                .add(PARTNER_API_LIVE_HOST, CERTIFICATE_2)
-                .build();
-    }
-
-    private static void setSslSocketFactory(OkHttpClient.Builder builder, Context context, Judo judo) {
+    private static void setSslSocketFactory(OkHttpClient.Builder builder) {
         try {
             SSLContext sslContext = SSLContext.getInstance("TLS");
-
-            if (judo.getEnvironment() == Judo.UAT) {
-                initializeUatEnvironmentSslContext(context, sslContext);
-            } else {
-                sslContext.init(null, null, null);
-            }
+            sslContext.init(null, null, null);
 
             SSLSocketFactory socketFactory = sslContext.getSocketFactory();
             builder.sslSocketFactory(new TlsSslSocketFactory(socketFactory));
-        } catch (CertificateException | IOException | KeyStoreException | KeyManagementException | NoSuchAlgorithmException e) {
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
             throw new SslInitializationError(e);
         }
-    }
-
-    private static void initializeUatEnvironmentSslContext(Context context, SSLContext sslContext) throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
-        // loading CAs from an InputStream
-        CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        InputStream cert = context.getResources().openRawResource(R.raw.judo_uat);
-        Certificate ca;
-
-        try {
-            ca = cf.generateCertificate(cert);
-        } finally {
-            cert.close();
-        }
-
-        // creating a KeyStore containing our trusted CAs
-        String keyStoreType = KeyStore.getDefaultType();
-        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-        keyStore.load(null, null);
-        keyStore.setCertificateEntry("ca", ca);
-
-        // creating a TrustManager that trusts the CAs in our KeyStore
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        tmf.init(keyStore);
-
-        sslContext.init(null, tmf.getTrustManagers(), null);
     }
 
     private static void setTimeouts(OkHttpClient.Builder builder) {
@@ -163,5 +104,4 @@ public class JudoApiServiceFactory {
                 .readTimeout(3, MINUTES)
                 .writeTimeout(30, SECONDS);
     }
-
 }

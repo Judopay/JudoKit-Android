@@ -4,19 +4,15 @@ import android.content.Intent;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
 import com.judopay.PreAuthActivity;
 import com.judopay.R;
 import com.judopay.RegisterCardActivity;
-import com.judopay.model.Currency;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -25,9 +21,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.judopay.TestUtil.getJudo;
 import static com.judopay.util.ViewMatchers.withResourceName;
 import static org.hamcrest.Matchers.allOf;
-
 
 @RunWith(AndroidJUnit4.class)
 public class ButtonLabelTest {
@@ -75,15 +71,7 @@ public class ButtonLabelTest {
 
     private Intent getIntent() {
         Intent intent = new Intent();
-
-        intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
-                .setJudoId("100915867")
-                .setEnvironment(Judo.UAT)
-                .setAmount("0.99")
-                .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString())
-                .build());
-
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
         return intent;
     }
 

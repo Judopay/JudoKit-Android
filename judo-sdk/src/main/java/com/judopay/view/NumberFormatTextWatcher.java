@@ -5,17 +5,30 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.widget.EditText;
 
+import java.util.Collection;
+
 import static java.lang.Character.isDigit;
 
 public class NumberFormatTextWatcher implements TextWatcher {
 
     private final EditText editText;
+
     private boolean deleting;
     private int start;
 
     private String format;
 
+    /**
+     * @deprecated use {@link NumberFormatTextWatcher#NumberFormatTextWatcher(JudoEditText, String)}
+     * instead as fraud identifiers are only reported correctly when {@link JudoEditText} is used
+     */
+    @Deprecated
     public NumberFormatTextWatcher(EditText editText, String format) {
+        this.editText = editText;
+        this.format = format;
+    }
+
+    public NumberFormatTextWatcher(JudoEditText editText, String format) {
         this.editText = editText;
         this.format = format;
     }
@@ -32,9 +45,27 @@ public class NumberFormatTextWatcher implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable string) {
+        if (editText instanceof JudoEditText) {
+            formatJudoEditText(string);
+        } else {
+            formatEditText(string);
+        }
+    }
+
+    private void formatEditText(Editable string) {
         editText.removeTextChangedListener(this);
         format(string);
         editText.addTextChangedListener(this);
+    }
+
+    private void formatJudoEditText(Editable string) {
+        JudoEditText judoEditText = (JudoEditText) this.editText;
+
+        Collection<TextWatcher> textWatchers = judoEditText.getTextWatchers();
+        judoEditText.removeTextChangedListeners();
+
+        format(string);
+        judoEditText.addTextChangedListeners(textWatchers);
     }
 
     private void format(Editable string) {

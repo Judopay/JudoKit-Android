@@ -1,33 +1,35 @@
 package com.judopay;
 
 import com.google.gson.Gson;
-import com.judopay.arch.Scheduler;
-import com.judopay.model.Receipt;
-import com.judopay.model.CardVerificationResult;
 import com.judopay.cardverification.AuthorizationListener;
+import com.judopay.model.CardVerificationResult;
+import com.judopay.model.Receipt;
 
 import java.io.Reader;
+import java.util.concurrent.Callable;
 
 import retrofit2.adapter.rxjava.HttpException;
+import rx.Single;
 import rx.functions.Action1;
 
 abstract class BasePresenter implements AuthorizationListener {
 
     final JudoApiService apiService;
     final TransactionCallbacks transactionCallbacks;
-    final Scheduler scheduler;
+
     private final Gson gson;
+    final DeviceDna deviceDna;
 
     boolean loading;
 
-    BasePresenter(TransactionCallbacks transactionCallbacks, JudoApiService apiService, Scheduler scheduler, Gson gson) {
+    BasePresenter(TransactionCallbacks transactionCallbacks, JudoApiService apiService, DeviceDna deviceDna) {
         this.transactionCallbacks = transactionCallbacks;
         this.apiService = apiService;
-        this.scheduler = scheduler;
-        this.gson = gson;
+        this.deviceDna = deviceDna;
+        this.gson = new Gson();
     }
 
-    Action1<Receipt> callback() {
+    public Action1<Receipt> callback() {
         return new Action1<Receipt>() {
             @Override
             public void call(Receipt receipt) {
@@ -74,7 +76,7 @@ abstract class BasePresenter implements AuthorizationListener {
         };
     }
 
-    public void reconnect() {
+    void reconnect() {
         if (loading) {
             transactionCallbacks.showLoading();
         } else {
@@ -83,23 +85,31 @@ abstract class BasePresenter implements AuthorizationListener {
     }
 
     @Override
-    public void onAuthorizationCompleted(CardVerificationResult cardVerificationResult, String receiptId) {
-        apiService.complete3dSecure(receiptId, cardVerificationResult)
-                .subscribeOn(scheduler.backgroundThread())
-                .observeOn(scheduler.mainThread())
-                .subscribe(new Action1<Receipt>() {
-                    @Override
-                    public void call(Receipt receipt) {
-                        if (receipt.isSuccess()) {
-                            loading = false;
-                            transactionCallbacks.onSuccess(receipt);
-                        } else {
-                            transactionCallbacks.onDeclined(receipt);
-                        }
-                        transactionCallbacks.dismiss3dSecureDialog();
-                        transactionCallbacks.hideLoading();
-                    }
-                }, error());
+    public Single<Receipt> onAuthorizationCompleted(final CardVerificationResult cardVerificationResult, final String receiptId) {
+        return Single.defer(new Callable<Single<Receipt>>() {
+            @Override
+            public Single<Receipt> call() throws Exception {
+                return apiService.complete3dSecure(receiptId, cardVerificationResult)
+                        .doOnSuccess(on3dSecureCompleted())
+                        .doOnError(error());
+            }
+        });
+    }
+
+    private Action1<Receipt> on3dSecureCompleted() {
+        return new Action1<Receipt>() {
+            @Override
+            public void call(Receipt receipt) {
+                if (receipt.isSuccess()) {
+                    loading = false;
+                    transactionCallbacks.onSuccess(receipt);
+                } else {
+                    transactionCallbacks.onDeclined(receipt);
+                }
+                transactionCallbacks.dismiss3dSecureDialog();
+                transactionCallbacks.hideLoading();
+            }
+        };
     }
 
 }

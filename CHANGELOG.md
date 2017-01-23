@@ -1,4 +1,20 @@
-# Judo Android SDK change log
+# Judopay Android SDK change log
+
+## [5.6](https://github.com/judopay/Judo-Android/tree/5.6) (2017-01-20)
+
+**Changes:**
+- Card network images have an updated design and include new logos for Mastercard and Maestro card types.
+- DeviceDNA replaces JudoShield as the library used to detect fraud in the SDK.
+- New device signals for identifying fraudulent user behavior on the card entry screen.
+- Code obfuscation is now run during the build phase to prevent the source code from being easily readable by the developer.
+- The embedded Retrofit and Android libraries have been updated to the latest version.
+- The ```Judo.setConsumerRef method``` has been renamed to ```setConsumerReference```
+- UAT environment has been removed from the SDK.
+- ```Single<Receipt>``` replaces the RxJava ```Observable<Receipt>``` type in ```JudoApiService``` as only one result is returned.
+- The UserAgent header sent by the SDK has been updated to include the name and version of the app.
+
+**Bugs fixed:**
+- Fixed an issue where views do no correctly restore their state when the app is restarted (e.g. card type, CVV length)
 
 ## [5.5.2](https://github.com/judopay/Judo-Android/tree/5.5.2) (2016-11-31)
 

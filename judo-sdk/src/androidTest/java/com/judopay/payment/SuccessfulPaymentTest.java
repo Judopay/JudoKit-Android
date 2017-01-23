@@ -4,27 +4,23 @@ import android.content.Intent;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
 import com.judopay.PaymentActivity;
 import com.judopay.R;
-import com.judopay.model.Currency;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.UUID;
-
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static com.judopay.TestUtil.getJudo;
 import static com.judopay.util.ActivityUtil.resultCode;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-
 
 @RunWith(AndroidJUnit4.class)
 public class SuccessfulPaymentTest {
@@ -35,7 +31,7 @@ public class SuccessfulPaymentTest {
     @Test
     public void shouldBeSuccessfulPaymentWhenValidVisaEntered() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         PaymentActivity activity = activityTestRule.launchActivity(intent);
 
@@ -57,7 +53,7 @@ public class SuccessfulPaymentTest {
     @Test
     public void shouldBeSuccessfulPaymentWhenValidMaestroEntered() {
         Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo().build());
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         PaymentActivity activity = activityTestRule.launchActivity(intent);
 
@@ -65,7 +61,7 @@ public class SuccessfulPaymentTest {
                 .perform(typeText("6759000000005462"));
 
         onView(withId(R.id.start_date_edit_text))
-                .perform(typeText("0107"));
+                .perform(typeText("0110"));
 
         onView(withId(R.id.issue_number_edit_text))
                 .perform(typeText("01"));
@@ -86,6 +82,7 @@ public class SuccessfulPaymentTest {
     public void shouldBeSuccessfulPaymentWhenValidAmexEntered() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .newBuilder()
                 .setAmexEnabled(true)
                 .build());
 
@@ -110,6 +107,7 @@ public class SuccessfulPaymentTest {
     public void shouldBeSuccessfulPaymentWhenValidVisaEnteredAndAvsEnabled() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .newBuilder()
                 .setAmexEnabled(true)
                 .setAvsEnabled(true)
                 .build());
@@ -138,6 +136,7 @@ public class SuccessfulPaymentTest {
     public void shouldBeSuccessfulPaymentWhenValidMaestroEnteredAndAvsEnabled() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .newBuilder()
                 .setAvsEnabled(true)
                 .setMaestroEnabled(true)
                 .build());
@@ -148,7 +147,7 @@ public class SuccessfulPaymentTest {
                 .perform(typeText("6759000000005462"));
 
         onView(withId(R.id.start_date_edit_text))
-                .perform(typeText("0107"));
+                .perform(typeText("0110"));
 
         onView(withId(R.id.issue_number_edit_text))
                 .perform(typeText("01"));
@@ -172,6 +171,7 @@ public class SuccessfulPaymentTest {
     public void shouldBeSuccessfulPaymentWhenValidAmexEnteredAndAvsEnabled() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .newBuilder()
                 .setAvsEnabled(true)
                 .setAmexEnabled(true)
                 .build());
@@ -193,16 +193,8 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
-    }
 
-    private Judo.Builder getJudo() {
-        return new Judo.Builder()
-                .setEnvironment(Judo.UAT)
-                .setJudoId("100915867")
-                .setAmount("0.99")
-                .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString());
+        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
     }
 
 }

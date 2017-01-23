@@ -3,7 +3,7 @@ package com.judopay.receipts;
 import com.judopay.model.Receipt;
 import com.judopay.model.Receipts;
 
-import rx.Observable;
+import rx.Single;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
@@ -22,7 +22,7 @@ public class RxHelpers {
         };
     }
 
-    public static Action1<Receipts> assertHasReceipts() {
+    static Action1<Receipts> assertHasReceipts() {
         return new Action1<Receipts>() {
             @Override
             public void call(Receipts receipts) {
@@ -31,7 +31,7 @@ public class RxHelpers {
         };
     }
 
-    public static Action1<Receipt> assertTransactionSuccessful() {
+    static Action1<Receipt> assertTransactionSuccessful() {
         return new Action1<Receipt>() {
             @Override
             public void call(Receipt receipt) {
@@ -40,11 +40,11 @@ public class RxHelpers {
         };
     }
 
-    public static <T> Observable.Transformer<T, T> schedulers() {
-        return new Observable.Transformer<T, T>() {
+    public static <T> Single.Transformer<T, T> schedulers() {
+        return new Single.Transformer<T, T>() {
             @Override
-            public Observable<T> call(Observable<T> observable) {
-                return observable.observeOn(Schedulers.immediate())
+            public Single<T> call(Single<T> Single) {
+                return Single.observeOn(Schedulers.immediate())
                         .subscribeOn(Schedulers.immediate());
             }
         };

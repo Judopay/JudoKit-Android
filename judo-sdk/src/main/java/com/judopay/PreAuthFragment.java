@@ -3,9 +3,13 @@ package com.judopay;
 import android.os.Bundle;
 import android.view.View;
 
-import com.google.gson.Gson;
-import com.judopay.arch.AndroidScheduler;
+import com.judopay.devicedna.Credentials;
 import com.judopay.model.Card;
+
+import java.util.Map;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static com.judopay.Judo.JUDO_OPTIONS;
 
@@ -18,11 +22,12 @@ public final class PreAuthFragment extends JudoFragment {
         super.onCreate(savedInstanceState);
 
         Judo judo = getArguments().getParcelable(JUDO_OPTIONS);
-        checkJudoOptionsExtras(judo.getAmount(), judo.getJudoId(), judo.getCurrency(), judo.getConsumerRef());
+        checkJudoOptionsExtras(judo.getAmount(), judo.getJudoId(), judo.getCurrency(), judo.getConsumerReference());
 
         if (this.presenter == null) {
             JudoApiService apiService = judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
-            this.presenter = new PreAuthPresenter(this, apiService, new AndroidScheduler(), new Gson());
+            Credentials credentials = new Credentials(judo.getApiToken(), judo.getApiSecret());
+            this.presenter = new PreAuthPresenter(this, apiService, new DeviceDna(getActivity(), credentials));
         }
     }
 
@@ -33,14 +38,21 @@ public final class PreAuthFragment extends JudoFragment {
     }
 
     @Override
-    public void onSubmit(Card card) {
-        Judo options = getJudoOptions();
+    public void onSubmit(Card card, Map<String, Object> deviceIdentifiers) {
+        Judo judo = getJudo();
 
-        if(options.getCardToken() != null) {
-            presenter.performTokenPreAuth(card, options);
+        if (judo.getCardToken() != null) {
+            presenter.performTokenPreAuth(card, judo, deviceIdentifiers)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(presenter.callback(), presenter.error());
         } else {
-            presenter.performPreAuth(card, options);
+            presenter.performPreAuth(card, judo, deviceIdentifiers)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(presenter.callback(), presenter.error());
         }
+
     }
 
     @Override

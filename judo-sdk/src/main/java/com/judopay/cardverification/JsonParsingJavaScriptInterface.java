@@ -11,7 +11,7 @@ class JsonParsingJavaScriptInterface {
     }
 
     @android.webkit.JavascriptInterface
-    public void parseJsonFromHtml(final String content) {
+    void parseJsonFromHtml(final String content) {
         if (!isEmpty(content)) {
             try {
                 String json = content.substring(content.indexOf("{"), content.lastIndexOf("}") + 1);

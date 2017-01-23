@@ -1,6 +1,8 @@
 package com.judopay.view;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputFilter;
@@ -21,11 +23,16 @@ import com.judopay.validation.Validation;
  */
 public class SecurityCodeEntryView extends RelativeLayout {
 
-    private EditText editText;
+    private static final String KEY_SUPER_STATE = "superState";
+    private static final String KEY_CARD_TYPE = "cardType";
+
+    private JudoEditText editText;
     private CardSecurityCodeView imageView;
     private TextInputLayout inputLayout;
     private HintFocusListener hintFocusListener;
     private TextView helperText;
+
+    private int cardType;
 
     public SecurityCodeEntryView(Context context) {
         super(context);
@@ -51,19 +58,40 @@ public class SecurityCodeEntryView extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        editText = (EditText) findViewById(R.id.security_code_edit_text);
+        editText = (JudoEditText) findViewById(R.id.security_code_edit_text);
         inputLayout = (TextInputLayout) findViewById(R.id.security_code_input_layout);
         imageView = (CardSecurityCodeView) findViewById(R.id.security_code_image_view);
         helperText = (TextView) findViewById(R.id.security_code_helper_text);
 
         hintFocusListener = new HintFocusListener(editText, "000");
 
-        editText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+        editText.setOnFocusChangeListener(new MultiOnFocusChangeListener(
                 new EmptyTextHintOnFocusChangeListener(helperText),
                 new ViewAlphaChangingTextWatcher(editText, imageView),
                 hintFocusListener
         ));
         editText.addTextChangedListener(new HidingViewTextWatcher(helperText));
+    }
+
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+
+        bundle.putParcelable(KEY_SUPER_STATE, super.onSaveInstanceState());
+        bundle.putInt(KEY_CARD_TYPE, cardType);
+
+        return bundle;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            state = bundle.getParcelable(KEY_SUPER_STATE);
+
+            setCardType(bundle.getInt(KEY_CARD_TYPE), false);
+        }
+        super.onRestoreInstanceState(state);
     }
 
     public void setHelperText(@StringRes int resId) {
@@ -79,11 +107,14 @@ public class SecurityCodeEntryView extends RelativeLayout {
     }
 
     public void setCardType(int cardType, boolean animate) {
-        imageView.setCardType(cardType, animate);
+        this.cardType = cardType;
+
+        imageView.setImageType(cardType, animate);
+
+        setHint(CardNetwork.securityCode(cardType));
 
         setAlternateHint(CardNetwork.securityCodeHint(cardType));
 
-        inputLayout.setHint(CardNetwork.securityCode(cardType));
         setMaxLength(CardNetwork.securityCodeLength(cardType));
     }
 
@@ -91,7 +122,7 @@ public class SecurityCodeEntryView extends RelativeLayout {
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(length)});
     }
 
-    public void setHint(String hint) {
+    private void setHint(String hint) {
         inputLayout.setHint(hint);
     }
 
@@ -103,7 +134,7 @@ public class SecurityCodeEntryView extends RelativeLayout {
         return editText.getText().toString().trim();
     }
 
-    public EditText getEditText() {
+    public JudoEditText getEditText() {
         return editText;
     }
 

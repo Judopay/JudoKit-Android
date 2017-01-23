@@ -3,19 +3,16 @@ package com.judopay.customlayout;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import com.judopay.Judo;
 import com.judopay.PaymentActivity;
 import com.judopay.R;
-import com.judopay.model.Currency;
+import com.judopay.TestUtil;
 import com.judopay.model.CustomLayout;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -67,7 +64,7 @@ public class CustomLayoutAutoAdvanceFieldsTest {
 
         onView(withId(R.id.start_date_edit_text))
                 .check(matches(hasFocus()))
-                .perform(typeText("0107"));
+                .perform(typeText("0110"));
 
         onView(withId(R.id.issue_number_edit_text))
                 .check(matches(hasFocus()))
@@ -82,12 +79,8 @@ public class CustomLayoutAutoAdvanceFieldsTest {
     }
 
     private Judo.Builder getJudo() {
-        return new Judo.Builder()
-                .setEnvironment(Judo.UAT)
-                .setJudoId("100915867")
-                .setAmount("0.99")
-                .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString())
+        return TestUtil.getJudo()
+                .newBuilder()
                 .setCustomLayout(new CustomLayout.Builder()
                         .cardNumberInput(R.id.card_number_input)
                         .expiryDateInput(R.id.expiry_date_input)

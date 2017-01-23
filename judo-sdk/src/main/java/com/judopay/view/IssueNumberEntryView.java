@@ -4,14 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.judopay.R;
 
 public class IssueNumberEntryView extends LinearLayout {
 
-    private EditText issueNumberEditText;
+    private JudoEditText issueNumberEditText;
 
     public IssueNumberEntryView(Context context) {
         super(context);
@@ -39,10 +38,10 @@ public class IssueNumberEntryView extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        issueNumberEditText = (EditText) findViewById(R.id.issue_number_edit_text);
+        issueNumberEditText = (JudoEditText) findViewById(R.id.issue_number_edit_text);
         View issueNumberHelperText = findViewById(R.id.issue_number_helper_text);
 
-        issueNumberEditText.setOnFocusChangeListener(new CompositeOnFocusChangeListener(
+        issueNumberEditText.setOnFocusChangeListener(new MultiOnFocusChangeListener(
                 new EmptyTextHintOnFocusChangeListener(issueNumberHelperText),
                 new HintFocusListener(issueNumberEditText, getResources().getString(R.string.issue_number_hint))
         ));
@@ -58,7 +57,7 @@ public class IssueNumberEntryView extends LinearLayout {
         return issueNumberEditText.getText().toString().trim();
     }
 
-    public EditText getEditText() {
+    public JudoEditText getEditText() {
         return issueNumberEditText;
     }
 }

@@ -2,6 +2,7 @@ package com.judopay.validation;
 
 import android.util.Pair;
 import android.view.View;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -12,16 +13,13 @@ import static java.lang.Boolean.FALSE;
 
 public class ValidationAutoAdvanceManager {
 
-    private final List<Validator> validators;
-    private final List<View> views;
-
-    public ValidationAutoAdvanceManager(final ValidationManager validationManager, List<Pair<Validator, View>> validatorViews) {
-        this.validators = new LinkedList<>();
-        this.views = new LinkedList<>();
+    public static void bind(final ValidationManager validationManager, List<Pair<Validator, View>> validatorViews) {
+        final List<Validator> validators = new LinkedList<>();
+        final List<View> views = new LinkedList<>();
 
         for (final Pair<Validator, View> validatorViewPair : validatorViews) {
-            this.validators.add(validatorViewPair.first);
-            this.views.add(validatorViewPair.second);
+            validators.add(validatorViewPair.first);
+            views.add(validatorViewPair.second);
 
             validatorViewPair.first.onValidate()
                     .subscribe(new Action1<Validation>() {
@@ -38,7 +36,7 @@ public class ValidationAutoAdvanceManager {
 
                                     if (FALSE.equals(valid)) {
                                         View view = views.get(i);
-                                        if (view.isShown() && view.isFocusable()) {
+                                        if (view.isShown() && view.isFocusable() && !view.isFocused()) {
                                             view.requestFocus();
                                             break;
                                         }

@@ -8,8 +8,6 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 import java.util.Date;
 
-import fr.turri.jiso8601.Iso8601Deserializer;
-
 import static com.judopay.arch.TextUtil.isEmpty;
 
 class DateJsonDeserializer implements JsonDeserializer<Date> {
@@ -24,5 +22,4 @@ class DateJsonDeserializer implements JsonDeserializer<Date> {
             return null;
         }
     }
-
 }

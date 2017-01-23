@@ -3,9 +3,7 @@ package com.judopay.androidpay;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.MediumTest;
 
-import com.judopay.Judo;
 import com.judopay.JudoApiService;
 import com.judopay.model.AndroidPayRequest;
 import com.judopay.model.Currency;
@@ -17,12 +15,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import static com.judopay.TestSubscribers.assertResponseSuccessful;
 import static com.judopay.TestSubscribers.fail;
+import static com.judopay.TestUtil.getJudo;
 
-@MediumTest
 @RunWith(AndroidJUnit4.class)
 public class AndroidPayTest {
 
@@ -39,9 +36,8 @@ public class AndroidPayTest {
 
     @Test
     public void shouldReturnSuccessWhenAndroidPayPayment() {
-        Judo judo = getJudo().build();
         Context context = InstrumentationRegistry.getContext();
-        JudoApiService apiService = judo.getApiService(context);
+        JudoApiService apiService = getJudo().getApiService(context);
 
         AndroidPayRequest androidPayRequest = getAndroidPayRequest();
 
@@ -52,9 +48,8 @@ public class AndroidPayTest {
 
     @Test
     public void shouldReturnSuccessWhenAndroidPayPreAuth() {
-        Judo judo = getJudo().build();
         Context context = InstrumentationRegistry.getContext();
-        JudoApiService apiService = judo.getApiService(context);
+        JudoApiService apiService = getJudo().getApiService(context);
 
         AndroidPayRequest androidPayRequest = getAndroidPayRequest();
         apiService.androidPayPreAuth(androidPayRequest)
@@ -80,15 +75,6 @@ public class AndroidPayTest {
                 .setConsumerReference("AndroidPayTest")
                 .setCurrency(Currency.GBP)
                 .build();
-    }
-
-    private Judo.Builder getJudo() {
-        return new Judo.Builder()
-                .setEnvironment(Judo.UAT)
-                .setJudoId("100915867")
-                .setAmount("0.99")
-                .setCurrency(Currency.GBP)
-                .setConsumerRef(UUID.randomUUID().toString());
     }
 
 }

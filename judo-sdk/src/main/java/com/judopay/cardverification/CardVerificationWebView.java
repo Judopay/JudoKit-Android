@@ -14,6 +14,9 @@ import com.judopay.model.CardVerificationResult;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.KITKAT;
 import static java.net.URLEncoder.encode;
@@ -26,7 +29,7 @@ import static java.net.URLEncoder.encode;
 public class CardVerificationWebView extends WebView implements JsonParsingJavaScriptInterface.JsonListener {
 
     private static final String JS_NAMESPACE = "JudoPay";
-    static final String REDIRECT_URL = "https://pay.judopay.com/Android/Parse3DS";
+    private static final String REDIRECT_URL = "https://pay.judopay.com/Android/Parse3DS";
     private static final String CHARSET = "UTF-8";
 
     private AuthorizationListener authorizationListener;
@@ -106,7 +109,10 @@ public class CardVerificationWebView extends WebView implements JsonParsingJavaS
         Gson gson = new Gson();
 
         CardVerificationResult cardVerificationResult = gson.fromJson(json, CardVerificationResult.class);
-        authorizationListener.onAuthorizationCompleted(cardVerificationResult, receiptId);
+        authorizationListener.onAuthorizationCompleted(cardVerificationResult, receiptId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 
     public void setResultPageListener(WebViewListener resultPageListener) {
