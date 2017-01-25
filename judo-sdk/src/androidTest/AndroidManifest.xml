@@ -21,6 +21,10 @@
             android:theme="@style/Theme.Judo.Light.ShowSecurityMessage"
             tools:replace="theme" />
 
+        <activity
+            android:name=".ResultTestActivity"
+            android:theme="@style/Theme.Judo.Light.DarkActionBar" />
+
         <meta-data
             android:name="@string/judo_api_token"
             android:value="${apiToken}" />

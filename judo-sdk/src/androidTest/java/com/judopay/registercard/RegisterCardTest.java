@@ -1,11 +1,13 @@
 package com.judopay.registercard;
 
 import android.content.Intent;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.judopay.Judo;
+import com.judopay.JudoTransactionIdlingResource;
 import com.judopay.R;
 import com.judopay.RegisterCardActivity;
 
@@ -33,7 +35,9 @@ public class RegisterCardTest {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
-        activityTestRule.launchActivity(intent);
+        RegisterCardActivity activity = activityTestRule.launchActivity(intent);
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(activity);
+        Espresso.registerIdlingResources(idlingResource);
 
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .perform(typeText("4221690000004963"));
@@ -52,6 +56,8 @@ public class RegisterCardTest {
 
         onView(withText(R.string.please_check_details_try_again))
                 .check(matches(isDisplayed()));
+
+        Espresso.unregisterIdlingResources(idlingResource);
     }
 
 }

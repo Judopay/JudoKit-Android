@@ -33,6 +33,8 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     private View progressBar;
     private TextView progressText;
 
+    private ProgressListener listener;
+
     private CardholderVerificationDialogFragment cardholderVerificationDialogFragment;
     private AbstractCardEntryFragment cardEntryFragment;
 
@@ -58,6 +60,21 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
         }
 
         setRetainInstance(true);
+    }
+
+    public void setProgressListener(ProgressListener progressListener) {
+        listener = progressListener;
+    }
+
+    private void notifyListener(ProgressListener listener) {
+        if (listener == null) {
+            return;
+        }
+        if (isTransactionInProgress()) {
+            listener.onProgressShown();
+        } else {
+            listener.onProgressDismissed();
+        }
     }
 
     void checkJudoOptionsExtras(Object... objects) {
@@ -106,6 +123,7 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
         intent.putExtra(Judo.JUDO_RECEIPT, receipt);
 
         sendResult(Judo.RESULT_SUCCESS, intent);
+        notifyListener(listener);
     }
 
     @Override
@@ -114,6 +132,7 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
         intent.putExtra(Judo.JUDO_RECEIPT, receipt);
 
         sendResult(Judo.RESULT_DECLINED, intent);
+        notifyListener(listener);
     }
 
     @Override
@@ -144,11 +163,13 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     @Override
     public void showLoading() {
         progressBar.setVisibility(View.VISIBLE);
+        notifyListener(listener);
     }
 
     @Override
     public void hideLoading() {
         progressBar.setVisibility(View.GONE);
+        notifyListener(listener);
     }
 
     @Override
