@@ -4,8 +4,6 @@ import android.support.annotation.StringDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Represents all the currencies that can be used when performing transactions with the judo API.
@@ -13,7 +11,7 @@ import java.util.List;
 @SuppressWarnings("WeakerAccess")
 public final class Currency {
 
-    @StringDef({AUD, BRL, CAD, CHF, CZK, DKK, EUR, GBP, HKD, HUF, JPY, NOK, NZD, PLN, SEK, USD, ZAR})
+    @StringDef({AUD, BRL, CAD, CHF, CZK, DKK, EUR, GBP, HKD, HUF, JPY, NOK, NZD, PLN, SEK, SGD, USD, ZAR})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Type { }
 
@@ -32,6 +30,7 @@ public final class Currency {
     public static final String NZD = "NZD";
     public static final String PLN = "PLN";
     public static final String SEK = "SEK";
+    public static final String SGD = "SGD";
     public static final String USD = "USD";
     public static final String ZAR = "ZAR";
 
@@ -50,35 +49,8 @@ public final class Currency {
     public static final String NEW_ZEALAND_DOLLAR = "New Zealand Dollar";
     public static final String POLISH_XLOTY = "Polish Xloty";
     public static final String SWEDISH_KRONA = "Swedish Krona";
+    public static final String SINGAPORE_DOLLAR = "Singapore Dollar";
     public static final String UNITED_STATES_DOLLAR = "United States Dollar";
     public static final String SOUTH_AFRICAN_RAND = "South African Rand";
-
-    public static List<String> currencyCodes() {
-        String[] codes = new String[]{AUD, BRL, CAD, CHF, CZK, DKK, EUR, GBP, HKD, HUF, JPY, NOK, NZD, PLN, SEK, USD, ZAR};
-        return Arrays.asList(codes);
-    }
-
-    public static List<String> currencyNames() {
-        String[] names = new String[]{
-                AUSTRALIAN_DOLLAR,
-                BRAZILIAN_REAL,
-                CANADIAN_DOLLAR,
-                SWISS_FRANC,
-                CZECH_REPUBLIC_KRONA,
-                DANISH_KRONE,
-                EUROS,
-                POUNDS_STERLING,
-                HONG_KONG_DOLLAR,
-                HUNGARIAN_FORINT,
-                JAPANESE_YEN,
-                NORWEGIAN_KRONE,
-                NEW_ZEALAND_DOLLAR,
-                POLISH_XLOTY,
-                SWEDISH_KRONA,
-                UNITED_STATES_DOLLAR,
-                SOUTH_AFRICAN_RAND
-        };
-        return Arrays.asList(names);
-    }
 
 }

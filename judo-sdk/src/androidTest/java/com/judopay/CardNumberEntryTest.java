@@ -1,7 +1,6 @@
 package com.judopay;
 
 import android.content.Intent;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 
 import org.junit.Ignore;
@@ -28,7 +27,7 @@ public class CardNumberEntryTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(ViewMatchers.withId(R.id.card_number_edit_text))
+        onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"))
                 .check(matches(withText("3400 004321 28428")));
     }
