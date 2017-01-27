@@ -2,19 +2,18 @@ package com.judopay.model;
 
 import com.judopay.api.Request;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 @SuppressWarnings("unused")
 abstract class BasePaymentRequest extends Request {
 
-    BigDecimal amount;
+    String amount;
     String currency;
     String judoId;
     String yourConsumerReference;
     Map<String, String> yourPaymentMetaData;
 
-    public BigDecimal getAmount() {
+    public String getAmount() {
         return amount;
     }
 

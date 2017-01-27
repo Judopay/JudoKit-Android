@@ -1,6 +1,5 @@
 package com.judopay.model;
 
-import com.judopay.api.Request;
 import com.judopay.error.JudoIdInvalidError;
 
 import java.util.Map;
@@ -15,12 +14,8 @@ import static com.judopay.model.LuhnCheck.isValid;
  * {@link PaymentRequest#amount} and {@link PaymentRequest#currency} must be provided.
  */
 @SuppressWarnings("unused")
-public final class PaymentRequest extends Request {
+public final class PaymentRequest extends BasePaymentRequest {
 
-    private String amount;
-    private String currency;
-    private String judoId;
-    private String yourConsumerReference;
     private Address cardAddress;
     private String cardNumber;
     private String cv2;
@@ -30,23 +25,6 @@ public final class PaymentRequest extends Request {
     private Boolean saveCardOnly;
     private String emailAddress;
     private String mobileNumber;
-    private Map<String, String> yourPaymentMetaData;
-
-    public String getAmount() {
-        return amount;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getJudoId() {
-        return judoId;
-    }
-
-    public String getYourConsumerReference() {
-        return yourConsumerReference;
-    }
 
     public Address getCardAddress() {
         return cardAddress;
@@ -94,7 +72,8 @@ public final class PaymentRequest extends Request {
         private String amount;
         private String currency;
         private String judoId;
-        private String yourConsumerReference;
+        private String consumerReference;
+        private String paymentReference;
         private Address cardAddress;
         private String cardNumber;
         private String cv2;
@@ -121,8 +100,13 @@ public final class PaymentRequest extends Request {
             return this;
         }
 
-        public Builder setYourConsumerReference(String yourConsumerReference) {
-            this.yourConsumerReference = yourConsumerReference;
+        public Builder setConsumerReference(String consumerReference) {
+            this.consumerReference = consumerReference;
+            return this;
+        }
+
+        public Builder setPaymentReference(String paymentReference) {
+            this.paymentReference = paymentReference;
             return this;
         }
 
@@ -183,7 +167,7 @@ public final class PaymentRequest extends Request {
 
             checkNotNull(amount);
             checkNotNull(currency);
-            checkNotNull(yourConsumerReference);
+            checkNotNull(consumerReference);
             checkNotNull(cardNumber);
             checkNotNull(cv2);
             checkNotNull(expiryDate);
@@ -193,7 +177,12 @@ public final class PaymentRequest extends Request {
             request.amount = amount;
             request.currency = currency;
             request.judoId = judoId;
-            request.yourConsumerReference = yourConsumerReference;
+            request.yourConsumerReference = consumerReference;
+
+            if(!isEmpty(paymentReference)) {
+                request.yourPaymentReference = paymentReference;
+            }
+
             request.cardAddress = cardAddress;
             request.cardNumber = cardNumber;
             request.cv2 = cv2;

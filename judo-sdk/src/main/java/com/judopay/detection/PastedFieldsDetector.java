@@ -31,7 +31,7 @@ public class PastedFieldsDetector implements Parcelable {
         }
     }
 
-    public void setPasteTimings(HashMap<String, ArrayList<Long>> pasteTimings) {
+    public void setPasteTimings(ConcurrentHashMap<String, ArrayList<Long>> pasteTimings) {
         this.pasteTimings = new ConcurrentHashMap<>(pasteTimings);
     }
 

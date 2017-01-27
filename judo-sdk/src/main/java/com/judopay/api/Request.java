@@ -1,6 +1,6 @@
 package com.judopay.api;
 
-import java.util.UUID;
+import static java.util.UUID.randomUUID;
 
 /**
  * A Request to be requested with the judo API
@@ -9,19 +9,23 @@ import java.util.UUID;
 public abstract class Request {
 
     private final boolean uniqueRequest;
-    private final String yourPaymentReference;
+    protected String yourPaymentReference;
 
     protected Request(String yourPaymentReference) {
         this(false, yourPaymentReference);
     }
 
     protected Request() {
-        this(true, UUID.randomUUID().toString());
+        this(true, randomUUID().toString());
     }
 
     private Request(boolean uniqueRequest, String yourPaymentReference) {
         this.uniqueRequest = uniqueRequest;
         this.yourPaymentReference = yourPaymentReference;
+    }
+
+    public String getYourPaymentReference() {
+        return yourPaymentReference;
     }
 
     protected static <T> T checkNotNull(T obj) {

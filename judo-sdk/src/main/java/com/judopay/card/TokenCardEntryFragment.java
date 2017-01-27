@@ -11,10 +11,10 @@ import android.widget.Spinner;
 import com.judopay.Judo;
 import com.judopay.R;
 import com.judopay.arch.ThemeUtil;
-import com.judopay.detection.UserAnalytics;
 import com.judopay.detection.CompletedFieldsDetector;
 import com.judopay.detection.PastedFieldsDetector;
 import com.judopay.detection.TotalKeystrokesDetector;
+import com.judopay.detection.UserAnalytics;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
@@ -33,8 +33,8 @@ import com.judopay.view.SecurityCodeEntryView;
 import com.judopay.view.SingleClickOnClickListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import rx.functions.Action1;
 import rx.observables.ConnectableObservable;
@@ -111,7 +111,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         if (savedInstanceState != null) {
             keystrokesDetector.setTotalKeystrokes(savedInstanceState.getInt(KEY_KEYSTROKES));
             //noinspection unchecked
-            HashMap<String, ArrayList<Long>> pastedFields = (HashMap<String, ArrayList<Long>>) savedInstanceState.getSerializable(KEY_PASTED_FIELDS);
+            ConcurrentHashMap<String, ArrayList<Long>> pastedFields = (ConcurrentHashMap<String, ArrayList<Long>>) savedInstanceState.getSerializable(KEY_PASTED_FIELDS);
             pastedFieldsDetector.setPasteTimings(pastedFields);
         }
     }

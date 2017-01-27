@@ -11,6 +11,8 @@ import java.util.concurrent.Callable;
 import rx.Single;
 import rx.functions.Func1;
 
+import static com.judopay.arch.TextUtil.isEmpty;
+
 class PreAuthPresenter extends BasePresenter {
 
     PreAuthPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, DeviceDna deviceDna) {
@@ -62,12 +64,16 @@ class PreAuthPresenter extends BasePresenter {
                 .setAmount(judo.getAmount())
                 .setCurrency(judo.getCurrency())
                 .setJudoId(judo.getJudoId())
-                .setYourConsumerReference(judo.getConsumerReference())
+                .setConsumerReference(judo.getConsumerReference())
                 .setCv2(card.getSecurityCode())
                 .setEmailAddress(judo.getEmailAddress())
                 .setMobileNumber(judo.getMobileNumber())
                 .setMetaData(judo.getMetaDataMap())
                 .setToken(judo.getCardToken());
+
+        if(!isEmpty(judo.getPaymentReference())) {
+            builder.setPaymentReference(judo.getPaymentReference());
+        }
 
         if (card.getAddress() != null) {
             builder.setCardAddress(card.getAddress());
@@ -85,11 +91,15 @@ class PreAuthPresenter extends BasePresenter {
                 .setCurrency(judo.getCurrency())
                 .setCv2(card.getSecurityCode())
                 .setJudoId(judo.getJudoId())
-                .setYourConsumerReference(judo.getConsumerReference())
+                .setConsumerReference(judo.getConsumerReference())
                 .setEmailAddress(judo.getEmailAddress())
                 .setMobileNumber(judo.getMobileNumber())
                 .setMetaData(judo.getMetaDataMap())
                 .setExpiryDate(card.getExpiryDate());
+
+        if(!isEmpty(judo.getPaymentReference())) {
+            builder.setPaymentReference(judo.getPaymentReference());
+        }
 
         if (card.getAddress() != null) {
             builder.setCardAddress(card.getAddress());
