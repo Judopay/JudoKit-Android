@@ -1,6 +1,6 @@
 # Judopay Android SDK change log
 
-## [5.6](https://github.com/judopay/Judo-Android/tree/5.6) (2017-01-20)
+## [5.6](https://github.com/judopay/Judo-Android/tree/5.6) (2017-01-23)
 
 **Changes:**
 - Card network images have an updated design and include new logos for Mastercard and Maestro card types.
