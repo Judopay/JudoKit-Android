@@ -1,6 +1,5 @@
 package com.judopay.model;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 import static com.judopay.arch.Preconditions.checkNotEmpty;
@@ -10,6 +9,7 @@ import static com.judopay.arch.Preconditions.checkNotEmpty;
  * encrypted payload, received when requesting the FullWallet with Google Play Services and the common
  * request fields used when performing a transaction with judo.
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public final class AndroidPayRequest extends BasePaymentRequest {
 
     private final Wallet wallet;
@@ -25,7 +25,7 @@ public final class AndroidPayRequest extends BasePaymentRequest {
     public static class Builder {
 
         private String judoId;
-        private BigDecimal amount;
+        private String amount;
         private String currency;
         private String consumerReference;
         private Map<String, String> metaData;
@@ -45,7 +45,7 @@ public final class AndroidPayRequest extends BasePaymentRequest {
          * @param amount the amount for the transaction
          * @return The Builder for creating the {@link AndroidPayRequest} instance
          */
-        public Builder setAmount(BigDecimal amount) {
+        public Builder setAmount(String amount) {
             this.amount = amount;
             return this;
         }
@@ -92,8 +92,8 @@ public final class AndroidPayRequest extends BasePaymentRequest {
          * @return the built {@link AndroidPayRequest} instance
          */
         public AndroidPayRequest build() {
-            checkNotNull(amount);
             checkNotNull(wallet);
+            checkNotEmpty(amount);
             checkNotEmpty(judoId);
             checkNotEmpty(currency);
             checkNotEmpty(consumerReference);

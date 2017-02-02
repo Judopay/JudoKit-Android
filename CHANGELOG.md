@@ -1,6 +1,12 @@
-# Judopay Android SDK change log
+# Judopay Android SDK changelog
 
-## [5.6](https://github.com/judopay/Judo-Android/tree/5.6) (2017-01-20)
+## [5.6.1](https://github.com/judopay/Judo-Android/tree/5.6.1) (2017-02-02)
+**Changes:**
+- Singapore dollar currency support.
+- The payment reference can now be set on ```*Request``` objects, if a unique reference to identify the request is required by the developer.
+- Espresso UI tests made to be more reliable
+
+## [5.6](https://github.com/judopay/Judo-Android/tree/5.6) (2017-01-23)
 
 **Changes:**
 - Card network images have an updated design and include new logos for Mastercard and Maestro card types.

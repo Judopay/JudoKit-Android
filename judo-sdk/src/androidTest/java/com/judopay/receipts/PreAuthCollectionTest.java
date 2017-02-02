@@ -15,9 +15,12 @@ import org.junit.runner.RunWith;
 
 import rx.Single;
 import rx.functions.Func1;
+import rx.observers.TestSubscriber;
 
 import static com.judopay.TestUtil.JUDO_ID;
 import static com.judopay.TestUtil.getJudo;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 public class PreAuthCollectionTest {
@@ -35,18 +38,21 @@ public class PreAuthCollectionTest {
                 .setCv2("452")
                 .setExpiryDate("12/20")
                 .setCurrency(Currency.GBP)
-                .setYourConsumerReference("PreAuthCollectionTest")
+                .setConsumerReference("PreAuthCollectionTest")
                 .build();
 
+        TestSubscriber<Receipt> subscriber = new TestSubscriber<>();
         apiService.preAuth(paymentRequest)
-                .compose(RxHelpers.<Receipt>schedulers())
                 .flatMap(new Func1<Receipt, Single<Receipt>>() {
                     @Override
                     public Single<Receipt> call(Receipt receipt) {
-                        return apiService.collection(new CollectionRequest(receipt.getReceiptId(), receipt.getAmount()));
+                        return apiService.collection(new CollectionRequest(receipt.getReceiptId(), receipt.getAmount().toString()));
                     }
                 })
-                .subscribe(RxHelpers.assertTransactionSuccessful(), RxHelpers.failOnError());
+                .subscribe(subscriber);
+
+        subscriber.assertNoErrors();
+        assertThat(subscriber.getOnNextEvents().get(0).isSuccess(), is(true));
     }
 
 }

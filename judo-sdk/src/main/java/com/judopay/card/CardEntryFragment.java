@@ -48,7 +48,9 @@ import com.judopay.view.StartDateEntryView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import rx.functions.Action1;
 import rx.observables.ConnectableObservable;
@@ -144,7 +146,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         if (savedInstanceState != null) {
             keystrokesDetector.setTotalKeystrokes(savedInstanceState.getInt(KEY_KEYSTROKES));
             //noinspection unchecked
-            HashMap<String, ArrayList<Long>> pastedFields = (HashMap<String, ArrayList<Long>>) savedInstanceState.getSerializable(KEY_PASTED_FIELDS);
+            ConcurrentHashMap<String, ArrayList<Long>> pastedFields = (ConcurrentHashMap<String, ArrayList<Long>>) savedInstanceState.getSerializable(KEY_PASTED_FIELDS);
 
             pastedFieldsDetector.setPasteTimings(pastedFields);
         }

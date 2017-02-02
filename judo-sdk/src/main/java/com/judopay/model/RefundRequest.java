@@ -2,7 +2,7 @@ package com.judopay.model;
 
 import com.judopay.api.Request;
 
-import java.math.BigDecimal;
+import static com.judopay.arch.TextUtil.isEmpty;
 
 /**
  * Represents a refund to be made for a payment transaction.
@@ -10,10 +10,10 @@ import java.math.BigDecimal;
 @SuppressWarnings("unused")
 public final class RefundRequest extends Request {
 
-    private final String receiptId;
-    private final BigDecimal amount;
+    private String receiptId;
+    private String amount;
 
-    public RefundRequest(String receiptId, BigDecimal amount) {
+    public RefundRequest(String receiptId, String amount) {
         checkNotNull(receiptId);
         checkNotNull(amount);
 
@@ -21,12 +21,51 @@ public final class RefundRequest extends Request {
         this.amount = amount;
     }
 
+    private RefundRequest() { }
+
     public String getReceiptId() {
         return receiptId;
     }
 
-    public BigDecimal getAmount() {
+    public String getAmount() {
         return amount;
     }
 
+    public static class Builder {
+
+        private String receiptId;
+        private String amount;
+        private String paymentReference;
+
+        public Builder setReceiptId(String receiptId) {
+            this.receiptId = receiptId;
+            return this;
+        }
+
+        public Builder setAmount(String amount) {
+            this.amount = amount;
+            return this;
+        }
+
+        public Builder setPaymentReference(String paymentReference) {
+            this.paymentReference = paymentReference;
+            return this;
+        }
+
+        public RefundRequest build() {
+            checkNotNull(receiptId);
+            checkNotNull(amount);
+
+            RefundRequest refundRequest = new RefundRequest();
+
+            refundRequest.receiptId = receiptId;
+            refundRequest.amount = amount;
+
+            if (!isEmpty(paymentReference)) {
+                refundRequest.yourPaymentReference = paymentReference;
+            }
+
+            return refundRequest;
+        }
+    }
 }

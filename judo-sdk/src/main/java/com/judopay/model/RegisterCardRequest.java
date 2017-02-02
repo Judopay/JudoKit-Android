@@ -83,7 +83,8 @@ public final class RegisterCardRequest extends Request {
     public static class Builder {
 
         private String judoId;
-        private String yourConsumerReference;
+        private String consumerReference;
+        private String paymentReference;
         private Address cardAddress;
         private String cardNumber;
         private String amount;
@@ -101,8 +102,13 @@ public final class RegisterCardRequest extends Request {
             return this;
         }
 
-        public Builder setYourConsumerReference(String yourConsumerReference) {
-            this.yourConsumerReference = yourConsumerReference;
+        public Builder setConsumerReference(String consumerReference) {
+            this.consumerReference = consumerReference;
+            return this;
+        }
+
+        public Builder setPaymentReference(String paymentReference) {
+            this.paymentReference = paymentReference;
             return this;
         }
 
@@ -170,23 +176,25 @@ public final class RegisterCardRequest extends Request {
             checkNotNull(cv2);
             checkNotNull(expiryDate);
 
-            RegisterCardRequest transaction = new RegisterCardRequest();
+            RegisterCardRequest request = new RegisterCardRequest();
 
-            transaction.judoId = judoId;
-            transaction.currency = currency;
-            transaction.yourConsumerReference = yourConsumerReference;
-            transaction.cardAddress = cardAddress;
-            transaction.cardNumber = cardNumber;
-            transaction.cv2 = cv2;
-            transaction.expiryDate = expiryDate;
-            transaction.startDate = startDate;
-            transaction.issueNumber = issueNumber;
-            transaction.emailAddress = emailAddress;
-            transaction.mobileNumber = mobileNumber;
-            transaction.yourPaymentMetaData = yourPaymentMetaData;
+            request.judoId = judoId;
+            request.currency = currency;
+            request.yourConsumerReference = consumerReference;
+            request.cardAddress = cardAddress;
+            request.cardNumber = cardNumber;
+            request.cv2 = cv2;
+            request.expiryDate = expiryDate;
+            request.startDate = startDate;
+            request.issueNumber = issueNumber;
+            request.emailAddress = emailAddress;
+            request.mobileNumber = mobileNumber;
+            request.yourPaymentMetaData = yourPaymentMetaData;
 
-            return transaction;
+            if (!isEmpty(paymentReference)) {
+                request.yourPaymentReference = paymentReference;
+            }
+            return request;
         }
-
     }
 }

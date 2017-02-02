@@ -9,16 +9,18 @@ import com.judopay.model.AndroidPayRequest;
 import com.judopay.model.Currency;
 import com.judopay.model.Receipt;
 import com.judopay.model.Wallet;
-import com.judopay.receipts.RxHelpers;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.math.BigDecimal;
+import java.util.List;
 
-import static com.judopay.TestSubscribers.assertResponseSuccessful;
-import static com.judopay.TestSubscribers.fail;
+import rx.observers.TestSubscriber;
+
 import static com.judopay.TestUtil.getJudo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class AndroidPayTest {
@@ -35,26 +37,38 @@ public class AndroidPayTest {
     private static final int ENVIRONMENT_TEST = 3;
 
     @Test
+    @Ignore
     public void shouldReturnSuccessWhenAndroidPayPayment() {
         Context context = InstrumentationRegistry.getContext();
+        
         JudoApiService apiService = getJudo().getApiService(context);
+        TestSubscriber<Receipt> subscriber = new TestSubscriber<>();
 
-        AndroidPayRequest androidPayRequest = getAndroidPayRequest();
+        apiService.androidPayPayment(getAndroidPayRequest())
+                .subscribe(subscriber);
 
-        apiService.androidPayPayment(androidPayRequest)
-                .compose(RxHelpers.<Receipt>schedulers())
-                .subscribe(assertResponseSuccessful(), fail());
+        subscriber.assertNoErrors();
+        List<Receipt> receipts = subscriber.getOnNextEvents();
+
+        assertThat(receipts.get(0).isSuccess(), is(true));
     }
 
     @Test
+    @Ignore
     public void shouldReturnSuccessWhenAndroidPayPreAuth() {
         Context context = InstrumentationRegistry.getContext();
+
         JudoApiService apiService = getJudo().getApiService(context);
+        TestSubscriber<Receipt> subscriber = new TestSubscriber<>();
 
         AndroidPayRequest androidPayRequest = getAndroidPayRequest();
         apiService.androidPayPreAuth(androidPayRequest)
-                .compose(RxHelpers.<Receipt>schedulers())
-                .subscribe(assertResponseSuccessful(), fail());
+                .subscribe(subscriber);
+
+        subscriber.assertNoErrors();
+        List<Receipt> receipts = subscriber.getOnNextEvents();
+
+        assertThat(receipts.get(0).isSuccess(), is(true));
     }
 
     private AndroidPayRequest getAndroidPayRequest() {
@@ -71,10 +85,9 @@ public class AndroidPayTest {
                         .setGoogleTransactionId("123456789")
                         .setVersion(1)
                         .build())
-                .setAmount(new BigDecimal("0.10"))
+                .setAmount("0.10")
                 .setConsumerReference("AndroidPayTest")
                 .setCurrency(Currency.GBP)
                 .build();
     }
-
 }

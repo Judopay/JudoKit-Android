@@ -1,7 +1,6 @@
 package com.judopay.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.judopay.api.Request;
 import com.judopay.error.JudoIdInvalidError;
 
 import java.util.Map;
@@ -12,12 +11,12 @@ import static com.judopay.model.LuhnCheck.isValid;
 /**
  * Represents the data needed to perform a token transaction with the judo API.
  * Use the {@link TokenRequest.Builder} for object construction.
- *
+ * <p>
  * When creating a {@link TokenRequest} the {@link TokenRequest#judoId},
  * {@link TokenRequest#amount} and {@link TokenRequest#currency} must be provided.
  */
 @SuppressWarnings("unused")
-public final class TokenRequest extends Request {
+public final class TokenRequest extends BasePaymentRequest {
 
     private String endDate;
 
@@ -30,12 +29,8 @@ public final class TokenRequest extends Request {
     @SerializedName("cardType")
     private int type;
 
-    private String judoId;
-    private String amount;
-    private String currency;
-    private String yourConsumerReference;
-    private Address cardAddress;
     private String cv2;
+    private Address cardAddress;
     private String emailAddress;
     private String mobileNumber;
     private Map<String, String> yourPaymentMetaData;
@@ -56,28 +51,12 @@ public final class TokenRequest extends Request {
         return type;
     }
 
-    public String getAmount() {
-        return amount;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getJudoId() {
-        return judoId;
-    }
-
-    public String getYourConsumerReference() {
-        return yourConsumerReference;
+    public String getCv2() {
+        return cv2;
     }
 
     public Address getCardAddress() {
         return cardAddress;
-    }
-
-    public String getCv2() {
-        return cv2;
     }
 
     public String getEmailAddress() {
@@ -101,7 +80,8 @@ public final class TokenRequest extends Request {
         private String amount;
         private String currency;
         private String judoId;
-        private String yourConsumerReference;
+        private String consumerReference;
+        private String paymentReference;
         private Address cardAddress;
         private String cv2;
         private String emailAddress;
@@ -147,8 +127,13 @@ public final class TokenRequest extends Request {
             return this;
         }
 
-        public Builder setYourConsumerReference(String yourConsumerReference) {
-            this.yourConsumerReference = yourConsumerReference;
+        public Builder setConsumerReference(String consumerReference) {
+            this.consumerReference = consumerReference;
+            return this;
+        }
+
+        public Builder setPaymentReference(String paymentReference) {
+            this.paymentReference = paymentReference;
             return this;
         }
 
@@ -178,32 +163,36 @@ public final class TokenRequest extends Request {
         }
 
         public TokenRequest build() {
-            if(isEmpty(judoId) || !isValid(judoId)) {
+            if (isEmpty(judoId) || !isValid(judoId)) {
                 throw new JudoIdInvalidError();
             }
 
             checkNotNull(currency);
             checkNotNull(amount);
-            checkNotNull(yourConsumerReference);
+            checkNotNull(consumerReference);
             checkNotNull(token);
 
-            TokenRequest transaction = new TokenRequest();
+            TokenRequest request = new TokenRequest();
 
-            transaction.judoId = judoId;
-            transaction.amount = amount;
-            transaction.currency = currency;
-            transaction.cardAddress = cardAddress;
-            transaction.cv2 = cv2;
-            transaction.token = token;
-            transaction.lastFour = lastFour;
-            transaction.type = type;
-            transaction.endDate = endDate;
-            transaction.emailAddress = emailAddress;
-            transaction.mobileNumber = mobileNumber;
-            transaction.yourPaymentMetaData = yourPaymentMetaData;
-            transaction.yourConsumerReference = yourConsumerReference;
+            request.judoId = judoId;
+            request.amount = amount;
+            request.currency = currency;
+            request.cardAddress = cardAddress;
+            request.cv2 = cv2;
+            request.token = token;
+            request.lastFour = lastFour;
+            request.type = type;
+            request.endDate = endDate;
+            request.emailAddress = emailAddress;
+            request.mobileNumber = mobileNumber;
+            request.yourPaymentMetaData = yourPaymentMetaData;
+            request.yourConsumerReference = consumerReference;
 
-            return transaction;
+            if (!isEmpty(paymentReference)) {
+                request.yourPaymentReference = paymentReference;
+            }
+
+            return request;
         }
     }
 

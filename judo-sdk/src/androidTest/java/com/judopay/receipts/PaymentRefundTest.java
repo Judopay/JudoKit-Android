@@ -13,11 +13,16 @@ import com.judopay.model.RefundRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
+
 import rx.Single;
 import rx.functions.Func1;
+import rx.observers.TestSubscriber;
 
 import static com.judopay.TestUtil.JUDO_ID;
 import static com.judopay.TestUtil.getJudo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 @RunWith(AndroidJUnit4.class)
 public class PaymentRefundTest {
@@ -34,18 +39,23 @@ public class PaymentRefundTest {
                 .setCv2("452")
                 .setExpiryDate("12/20")
                 .setCurrency(Currency.GBP)
-                .setYourConsumerReference("PreAuthCollectionTest")
+                .setConsumerReference("PreAuthCollectionTest")
                 .build();
 
+        TestSubscriber<Receipt> testSubscriber = new TestSubscriber<>();
+
         apiService.payment(paymentRequest)
-                .compose(RxHelpers.<Receipt>schedulers())
                 .flatMap(new Func1<Receipt, Single<Receipt>>() {
                     @Override
                     public Single<Receipt> call(Receipt receipt) {
-                        return apiService.refund(new RefundRequest(receipt.getReceiptId(), receipt.getAmount()));
+                        return apiService.refund(new RefundRequest(receipt.getReceiptId(), receipt.getAmount().toString()));
                     }
                 })
-                .subscribe(RxHelpers.assertTransactionSuccessful(), RxHelpers.failOnError());
-    }
+                .subscribe(testSubscriber);
 
+        testSubscriber.assertNoErrors();
+        List<Receipt> receipts = testSubscriber.getOnNextEvents();
+
+        assertThat(receipts.get(0).isSuccess(), is(true));
+    }
 }

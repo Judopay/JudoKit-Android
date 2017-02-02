@@ -13,11 +13,16 @@ import com.judopay.model.VoidRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
+
 import rx.Single;
 import rx.functions.Func1;
+import rx.observers.TestSubscriber;
 
 import static com.judopay.TestUtil.JUDO_ID;
 import static com.judopay.TestUtil.getJudo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class PreAuthVoidTest {
@@ -35,11 +40,11 @@ public class PreAuthVoidTest {
                 .setCv2("452")
                 .setExpiryDate("12/20")
                 .setCurrency(Currency.GBP)
-                .setYourConsumerReference("PreAuthVoidTest")
+                .setConsumerReference("PreAuthVoidTest")
                 .build();
 
+        TestSubscriber<Receipt> subscriber = new TestSubscriber<>();
         apiService.preAuth(paymentRequest)
-                .compose(RxHelpers.<Receipt>schedulers())
                 .flatMap(new Func1<Receipt, Single<Receipt>>() {
                     @Override
                     public Single<Receipt> call(Receipt receipt) {
@@ -50,7 +55,12 @@ public class PreAuthVoidTest {
                         return apiService.voidPreAuth(voidTransaction);
                     }
                 })
-                .subscribe(RxHelpers.assertTransactionSuccessful(), RxHelpers.failOnError());
+                .subscribe(subscriber);
+
+        subscriber.assertNoErrors();
+        List<Receipt> receipts = subscriber.getOnNextEvents();
+
+        assertThat(receipts.get(0).isSuccess(), is(true));
     }
 
 }

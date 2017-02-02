@@ -8,9 +8,11 @@ import java.util.concurrent.Callable;
 
 import rx.Single;
 
+import static com.judopay.arch.TextUtil.isEmpty;
+
 class RegisterCardPresenter extends BasePresenter {
 
-    public RegisterCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, DeviceDna deviceDna) {
+    RegisterCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, DeviceDna deviceDna) {
         super(callbacks, apiService, deviceDna);
     }
 
@@ -26,7 +28,16 @@ class RegisterCardPresenter extends BasePresenter {
                 .setMetaData(judo.getMetaDataMap())
                 .setEmailAddress(judo.getEmailAddress())
                 .setMobileNumber(judo.getMobileNumber())
-                .setYourConsumerReference(judo.getConsumerReference());
+                .setConsumerReference(judo.getConsumerReference());
+
+        if (card.startDateAndIssueNumberRequired()) {
+            builder.setIssueNumber(card.getIssueNumber())
+                    .setStartDate(card.getStartDate());
+        }
+
+        if (!isEmpty(judo.getPaymentReference())) {
+            builder.setPaymentReference(judo.getPaymentReference());
+        }
 
         if (judo.getCurrency() != null) {
             builder.setCurrency(judo.getCurrency());
@@ -40,11 +51,6 @@ class RegisterCardPresenter extends BasePresenter {
             builder.setCardAddress(card.getAddress());
         } else {
             builder.setCardAddress(judo.getAddress());
-        }
-
-        if (card.startDateAndIssueNumberRequired()) {
-            builder.setIssueNumber(card.getIssueNumber())
-                    .setStartDate(card.getStartDate());
         }
 
         return Single.defer(new Callable<Single<Receipt>>() {
