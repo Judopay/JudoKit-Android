@@ -3,7 +3,7 @@
 ## [5.6.1](https://github.com/judopay/Judo-Android/tree/5.6.1) (2017-02-02)
 **Changes:**
 - Singapore dollar currency support.
-- The payment reference can now be set on *Request objects, if a unique reference to identify the request is required by the developer.
+- The payment reference can now be set on ```*Request``` objects, if a unique reference to identify the request is required by the developer.
 - Espresso UI tests made to be more reliable
 
 ## [5.6](https://github.com/judopay/Judo-Android/tree/5.6) (2017-01-23)
