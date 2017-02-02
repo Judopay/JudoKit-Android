@@ -33,7 +33,6 @@ public final class TokenRequest extends BasePaymentRequest {
     private Address cardAddress;
     private String emailAddress;
     private String mobileNumber;
-    private Map<String, String> yourPaymentMetaData;
 
     public String getEndDate() {
         return endDate;
@@ -65,10 +64,6 @@ public final class TokenRequest extends BasePaymentRequest {
 
     public String getMobileNumber() {
         return mobileNumber;
-    }
-
-    public Map<String, String> getYourPaymentMetaData() {
-        return yourPaymentMetaData;
     }
 
     public static class Builder {
