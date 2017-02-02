@@ -1,8 +1,6 @@
 package com.judopay.token;
 
 import android.content.Intent;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.IdlingPolicies;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -12,7 +10,6 @@ import com.judopay.JudoTransactionIdlingResource;
 import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.ResultTestActivity;
-import com.judopay.TestActivityUtil;
 import com.judopay.model.Address;
 import com.judopay.model.Receipt;
 import com.judopay.model.RegisterCardRequest;
@@ -24,7 +21,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import rx.functions.Action1;
@@ -32,12 +28,18 @@ import rx.functions.Action1;
 import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.registerIdlingResources;
+import static android.support.test.espresso.Espresso.unregisterIdlingResources;
+import static android.support.test.espresso.IdlingPolicies.setIdlingResourceTimeout;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static com.judopay.ResultTestActivity.receivedExpectedResult;
+import static com.judopay.TestActivityUtil.getCurrentActivity;
 import static com.judopay.TestUtil.JUDO_ID;
 import static com.judopay.TestUtil.getJudo;
 import static com.judopay.receipts.RxHelpers.failOnError;
+import static java.util.UUID.randomUUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -49,7 +51,7 @@ public class SuccessfulTokenPaymentTest {
 
     @Before
     public void setupJudoSdk() {
-        IdlingPolicies.setIdlingResourceTimeout(3, TimeUnit.MINUTES);
+        setIdlingResourceTimeout(3, TimeUnit.MINUTES);
     }
 
     @Test
@@ -58,10 +60,10 @@ public class SuccessfulTokenPaymentTest {
 
         RegisterCardRequest registerCardRequest = new RegisterCardRequest.Builder()
                 .setJudoId(JUDO_ID)
-                .setCardNumber("4976000000003436")
+                .setCardNumber("4921810000005462")
                 .setExpiryDate("12/20")
-                .setCv2("452")
-                .setYourConsumerReference(UUID.randomUUID().toString())
+                .setCv2("441")
+                .setYourConsumerReference(randomUUID().toString())
                 .build();
 
         apiService.registerCard(registerCardRequest)
@@ -80,20 +82,20 @@ public class SuccessfulTokenPaymentTest {
 
                         ResultTestActivity activity = activityTestRule.launchActivity(intent);
 
-                        PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
+                        PaymentActivity paymentActivity = (PaymentActivity) getCurrentActivity();
                         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
-                        Espresso.registerIdlingResources(idlingResource);
+                        registerIdlingResources(idlingResource);
 
                         onView(withId(R.id.security_code_edit_text))
-                                .perform(typeText("452"));
+                                .perform(typeText("441"));
 
                         onView(withId(R.id.button))
                                 .perform(click());
 
-                        Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
+                        Matcher<ResultTestActivity> matcher = receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
                         assertThat(activity, matcher);
 
-                        Espresso.unregisterIdlingResources(idlingResource);
+                        unregisterIdlingResources(idlingResource);
                     }
                 }, failOnError());
     }
@@ -108,12 +110,12 @@ public class SuccessfulTokenPaymentTest {
 
         RegisterCardRequest registerCardRequest = new RegisterCardRequest.Builder()
                 .setJudoId(JUDO_ID)
-                .setYourConsumerReference(UUID.randomUUID().toString())
-                .setCardNumber("4976000000003436")
+                .setYourConsumerReference(randomUUID().toString())
+                .setCardNumber("4921810000005462")
                 .setExpiryDate("12/20")
-                .setCv2("452")
+                .setCv2("441")
                 .setCardAddress(new Address.Builder()
-                        .setPostCode("TR148PA")
+                        .setPostCode("TQ27DQ")
                         .setCountryCode(826)
                         .build())
                 .build();
@@ -135,23 +137,23 @@ public class SuccessfulTokenPaymentTest {
 
                         ResultTestActivity activity = activityTestRule.launchActivity(intent);
 
-                        PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
+                        PaymentActivity paymentActivity = (PaymentActivity) getCurrentActivity();
                         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
-                        Espresso.registerIdlingResources(idlingResource);
+                        registerIdlingResources(idlingResource);
 
                         onView(withId(R.id.security_code_edit_text))
-                                .perform(typeText("452"));
+                                .perform(typeText("441"));
 
                         onView(withId(R.id.post_code_edit_text))
-                                .perform(typeText("TR148PA"));
+                                .perform(typeText("TQ27DQ"));
 
                         onView(withId(R.id.button))
                                 .perform(click());
 
-                        Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
+                        Matcher<ResultTestActivity> matcher = receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
                         assertThat(activity, matcher);
 
-                        Espresso.unregisterIdlingResources(idlingResource);
+                        unregisterIdlingResources(idlingResource);
                     }
                 }, failOnError());
     }
