@@ -1,9 +1,9 @@
 package com.judopay;
 
 import android.content.Intent;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -20,18 +20,20 @@ public class CardNumberEntryTest {
     public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
 
     @Test
+    @Ignore
     public void shouldHaveAmexCardNumberFormattingWhenAmexCardEntered() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
         activityTestRule.launchActivity(intent);
 
-        onView(ViewMatchers.withId(R.id.card_number_edit_text))
+        onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"))
                 .check(matches(withText("3400 004321 28428")));
     }
 
     @Test
+    @Ignore
     public void shouldHaveNormalCardNumberFormattingWhenVisaCardNumberEntered() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
@@ -44,6 +46,7 @@ public class CardNumberEntryTest {
     }
 
     @Test
+    @Ignore
     public void shouldRestrictCardNumberLengthToSixteenDigitsWhenVisa() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
@@ -56,6 +59,7 @@ public class CardNumberEntryTest {
     }
 
     @Test
+    @Ignore
     public void shouldRestrictCardNumberLengthToFifteenDigitsWhenAmex() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
@@ -68,6 +72,7 @@ public class CardNumberEntryTest {
     }
 
     @Test
+    @Ignore
     public void shouldNotAllowSpacesAtStartOfCardNumber() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo());

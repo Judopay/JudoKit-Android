@@ -2,18 +2,18 @@ package com.judopay.model;
 
 import com.judopay.api.Request;
 
-import java.math.BigDecimal;
+import static com.judopay.arch.TextUtil.isEmpty;
 
 /**
- * A CollectionRequest allows for the funds reserved in a pre-auth transaction to be collected.
+ * A request for the funds reserved in a pre-auth transaction to be collected.
  */
 @SuppressWarnings("unused")
 public class CollectionRequest extends Request {
 
-    private final String receiptId;
-    private final BigDecimal amount;
+    private String receiptId;
+    private String amount;
 
-    public CollectionRequest(String receiptId, BigDecimal amount) {
+    public CollectionRequest(String receiptId, String amount) {
         checkNotNull(receiptId);
         checkNotNull(amount);
 
@@ -21,12 +21,52 @@ public class CollectionRequest extends Request {
         this.amount = amount;
     }
 
+    private CollectionRequest() { }
+
     public String getReceiptId() {
         return receiptId;
     }
 
-    public BigDecimal getAmount() {
+    public String getAmount() {
         return amount;
+    }
+
+    public static class Builder {
+
+        private String receiptId;
+        private String amount;
+        private String paymentReference;
+
+        public Builder setReceiptId(String receiptId) {
+            this.receiptId = receiptId;
+            return this;
+        }
+
+        public Builder setAmount(String amount) {
+            this.amount = amount;
+            return this;
+        }
+
+        public Builder setPaymentReference(String paymentReference) {
+            this.paymentReference = paymentReference;
+            return this;
+        }
+
+        public CollectionRequest build() {
+            checkNotNull(receiptId);
+            checkNotNull(amount);
+
+            CollectionRequest collectionRequest = new CollectionRequest();
+
+            collectionRequest.receiptId = receiptId;
+            collectionRequest.amount = amount;
+
+            if (!isEmpty(paymentReference)) {
+                collectionRequest.yourPaymentReference = paymentReference;
+            }
+
+            return collectionRequest;
+        }
     }
 
 }

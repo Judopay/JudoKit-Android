@@ -6,24 +6,24 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.judopay.model.CardToken;
 
+import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static com.judopay.TestUtil.getJudo;
-import static com.judopay.util.ActivityUtil.resultCode;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(AndroidJUnit4.class)
 public class ActivityResultTest {
 
     @Rule
-    public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
+    public ActivityTestRule<ResultTestActivity> activityTestRule = new ActivityTestRule<>(ResultTestActivity.class, false, false);
 
     @Test
     public void shouldReturnTokenCardExpiredResult() {
-        Intent intent = new Intent();
         Judo judo = getJudo()
                 .newBuilder()
                 .setAmount("0.99")
@@ -31,11 +31,14 @@ public class ActivityResultTest {
                 .setConsumerReference("consumerRef")
                 .build();
 
-        intent.putExtra(Judo.JUDO_OPTIONS, judo);
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PaymentActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, judo);
 
-        PaymentActivity activity = activityTestRule.launchActivity(intent);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
 
-        assertThat(resultCode(activity), is(Judo.RESULT_TOKEN_EXPIRED));
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_TOKEN_EXPIRED));
+        assertThat(activity, matcher);
     }
-
 }

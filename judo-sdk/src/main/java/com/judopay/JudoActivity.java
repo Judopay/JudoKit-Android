@@ -60,6 +60,14 @@ abstract class JudoActivity extends AppCompatActivity {
         }
     }
 
+    public void setProgressListener(ProgressListener progressListener) {
+        fragment.setProgressListener(progressListener);
+    }
+
+    public boolean isTransactionInProgress() {
+        return fragment.isTransactionInProgress();
+    }
+
     @Override
     public void onBackPressed() {
         if (fragment != null && !fragment.isTransactionInProgress()) {

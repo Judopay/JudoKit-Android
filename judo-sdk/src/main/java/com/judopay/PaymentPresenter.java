@@ -13,6 +13,8 @@ import java.util.concurrent.Callable;
 import rx.Single;
 import rx.functions.Func1;
 
+import static com.judopay.arch.TextUtil.isEmpty;
+
 class PaymentPresenter extends BasePresenter {
 
     PaymentPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, DeviceDna deviceDna) {
@@ -46,11 +48,20 @@ class PaymentPresenter extends BasePresenter {
                 .setCurrency(judo.getCurrency())
                 .setCv2(card.getSecurityCode())
                 .setJudoId(judo.getJudoId())
-                .setYourConsumerReference(judo.getConsumerReference())
+                .setConsumerReference(judo.getConsumerReference())
                 .setExpiryDate(card.getExpiryDate())
                 .setEmailAddress(judo.getEmailAddress())
                 .setMobileNumber(judo.getMobileNumber())
                 .setMetaData(judo.getMetaDataMap());
+
+        if (card.startDateAndIssueNumberRequired()) {
+            builder.setIssueNumber(card.getIssueNumber())
+                    .setStartDate(card.getStartDate());
+        }
+
+        if(!isEmpty(judo.getPaymentReference())) {
+            builder.setPaymentReference(judo.getPaymentReference());
+        }
 
         if (card.getAddress() != null) {
             builder.setCardAddress(card.getAddress());
@@ -58,10 +69,6 @@ class PaymentPresenter extends BasePresenter {
             builder.setCardAddress(judo.getAddress());
         }
 
-        if (card.startDateAndIssueNumberRequired()) {
-            builder.setIssueNumber(card.getIssueNumber())
-                    .setStartDate(card.getStartDate());
-        }
         return builder.build();
     }
 
@@ -90,12 +97,16 @@ class PaymentPresenter extends BasePresenter {
                 .setAmount(judo.getAmount())
                 .setCurrency(judo.getCurrency())
                 .setJudoId(judo.getJudoId())
-                .setYourConsumerReference(judo.getConsumerReference())
+                .setConsumerReference(judo.getConsumerReference())
                 .setCv2(card.getSecurityCode())
-                .setToken(judo.getCardToken())
-                .setMetaData(judo.getMetaDataMap())
                 .setEmailAddress(judo.getEmailAddress())
-                .setMobileNumber(judo.getMobileNumber());
+                .setMobileNumber(judo.getMobileNumber())
+                .setMetaData(judo.getMetaDataMap())
+                .setToken(judo.getCardToken());
+
+        if(!isEmpty(judo.getPaymentReference())) {
+            builder.setPaymentReference(judo.getPaymentReference());
+        }
 
         if (card.getAddress() != null) {
             builder.setCardAddress(card.getAddress());

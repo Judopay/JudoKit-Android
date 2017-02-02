@@ -1,39 +1,49 @@
 package com.judopay.preauth;
 
 import android.content.Intent;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.judopay.Judo;
+import com.judopay.JudoTransactionIdlingResource;
 import com.judopay.PreAuthActivity;
 import com.judopay.R;
+import com.judopay.ResultTestActivity;
+import com.judopay.TestActivityUtil;
 
+import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static com.judopay.TestUtil.getJudo;
-import static com.judopay.util.ActivityUtil.resultCode;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(AndroidJUnit4.class)
 public class SuccessfulPreAuthTest {
 
     @Rule
-    public ActivityTestRule<PreAuthActivity> activityTestRule = new ActivityTestRule<>(PreAuthActivity.class, false, false);
+    public ActivityTestRule<ResultTestActivity> activityTestRule = new ActivityTestRule<>(ResultTestActivity.class, false, false);
 
     @Test
     public void shouldBeSuccessfulPreAuthWhenValidVisaEntered() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PreAuthActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
-        PreAuthActivity activity = activityTestRule.launchActivity(intent);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PreAuthActivity preAuthActivity = (PreAuthActivity) TestActivityUtil.getCurrentActivity();
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(preAuthActivity);
+        Espresso.registerIdlingResources(idlingResource);
 
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -47,15 +57,23 @@ public class SuccessfulPreAuthTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
+        Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
+        assertThat(activity, matcher);
+
+        Espresso.unregisterIdlingResources(idlingResource);
     }
 
     @Test
     public void shouldBeSuccessfulPreAuthWhenValidMaestroEntered() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PreAuthActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
-        PreAuthActivity activity = activityTestRule.launchActivity(intent);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PreAuthActivity preAuthActivity = (PreAuthActivity) TestActivityUtil.getCurrentActivity();
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(preAuthActivity);
+        Espresso.registerIdlingResources(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000005462"));
@@ -75,15 +93,23 @@ public class SuccessfulPreAuthTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
+        Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
+        assertThat(activity, matcher);
+
+        Espresso.unregisterIdlingResources(idlingResource);
     }
 
     @Test
     public void shouldBeSuccessfulPreAuthWhenValidAmexEntered() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PreAuthActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
-        PreAuthActivity activity = activityTestRule.launchActivity(intent);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PreAuthActivity preAuthActivity = (PreAuthActivity) TestActivityUtil.getCurrentActivity();
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(preAuthActivity);
+        Espresso.registerIdlingResources(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"));
@@ -97,18 +123,26 @@ public class SuccessfulPreAuthTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
+        Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
+        assertThat(activity, matcher);
+
+        Espresso.unregisterIdlingResources(idlingResource);
     }
 
     @Test
     public void shouldBeSuccessfulPreAuthWhenValidVisaEnteredAndAvsEnabled() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PreAuthActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo()
                 .newBuilder()
                 .setAvsEnabled(true)
                 .build());
 
-        PreAuthActivity activity = activityTestRule.launchActivity(intent);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PreAuthActivity preAuthActivity = (PreAuthActivity) TestActivityUtil.getCurrentActivity();
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(preAuthActivity);
+        Espresso.registerIdlingResources(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -125,18 +159,26 @@ public class SuccessfulPreAuthTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
+        Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
+        assertThat(activity, matcher);
+
+        Espresso.unregisterIdlingResources(idlingResource);
     }
 
     @Test
     public void shouldBeSuccessfulPreAuthWhenValidMaestroEnteredAndAvsEnabled() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PreAuthActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo()
                 .newBuilder()
                 .setAvsEnabled(true)
                 .build());
 
-        PreAuthActivity activity = activityTestRule.launchActivity(intent);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PreAuthActivity preAuthActivity = (PreAuthActivity) TestActivityUtil.getCurrentActivity();
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(preAuthActivity);
+        Espresso.registerIdlingResources(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000005462"));
@@ -159,18 +201,26 @@ public class SuccessfulPreAuthTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
+        Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
+        assertThat(activity, matcher);
+
+        Espresso.unregisterIdlingResources(idlingResource);
     }
 
     @Test
     public void shouldBeSuccessfulPaymentWhenValidAmexEnteredAndAvsEnabled() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PreAuthActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo()
                 .newBuilder()
                 .setAvsEnabled(true)
                 .build());
 
-        PreAuthActivity activity = activityTestRule.launchActivity(intent);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PreAuthActivity preAuthActivity = (PreAuthActivity) TestActivityUtil.getCurrentActivity();
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(preAuthActivity);
+        Espresso.registerIdlingResources(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"));
@@ -187,7 +237,10 @@ public class SuccessfulPreAuthTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
+        Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
+        assertThat(activity, matcher);
+
+        Espresso.unregisterIdlingResources(idlingResource);
     }
 
 }

@@ -1,39 +1,50 @@
 package com.judopay.payment;
 
 import android.content.Intent;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.judopay.Judo;
+import com.judopay.JudoTransactionIdlingResource;
 import com.judopay.PaymentActivity;
 import com.judopay.R;
+import com.judopay.ResultTestActivity;
+import com.judopay.TestActivityUtil;
 
+import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static com.judopay.TestUtil.getJudo;
-import static com.judopay.util.ActivityUtil.resultCode;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(AndroidJUnit4.class)
 public class SuccessfulPaymentTest {
 
     @Rule
-    public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
+    public ActivityTestRule<ResultTestActivity> activityTestRule = new ActivityTestRule<>(ResultTestActivity.class, false, false);
 
     @Test
     public void shouldBeSuccessfulPaymentWhenValidVisaEntered() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PaymentActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
-        PaymentActivity activity = activityTestRule.launchActivity(intent);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
+        Espresso.registerIdlingResources(idlingResource);
 
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -47,15 +58,24 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
+        Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
+        assertThat(activity, matcher);
+
+        Espresso.unregisterIdlingResources(idlingResource);
     }
 
     @Test
     public void shouldBeSuccessfulPaymentWhenValidMaestroEntered() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PaymentActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
-        PaymentActivity activity = activityTestRule.launchActivity(intent);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
+        Espresso.registerIdlingResources(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000005462"));
@@ -75,18 +95,27 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
+        Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
+        assertThat(activity, matcher);
+
+        Espresso.unregisterIdlingResources(idlingResource);
     }
 
     @Test
     public void shouldBeSuccessfulPaymentWhenValidAmexEntered() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PaymentActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo()
                 .newBuilder()
                 .setAmexEnabled(true)
                 .build());
 
-        PaymentActivity activity = activityTestRule.launchActivity(intent);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
+        Espresso.registerIdlingResources(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"));
@@ -100,19 +129,27 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
+        Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
+        assertThat(activity, matcher);
+
+        Espresso.unregisterIdlingResources(idlingResource);
     }
 
     @Test
     public void shouldBeSuccessfulPaymentWhenValidVisaEnteredAndAvsEnabled() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PaymentActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo()
                 .newBuilder()
                 .setAmexEnabled(true)
                 .setAvsEnabled(true)
                 .build());
 
-        PaymentActivity activity = activityTestRule.launchActivity(intent);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
+        Espresso.registerIdlingResources(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -129,19 +166,27 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
+        Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
+        assertThat(activity, matcher);
+
+        Espresso.unregisterIdlingResources(idlingResource);
     }
 
     @Test
     public void shouldBeSuccessfulPaymentWhenValidMaestroEnteredAndAvsEnabled() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PaymentActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo()
                 .newBuilder()
                 .setAvsEnabled(true)
                 .setMaestroEnabled(true)
                 .build());
 
-        PaymentActivity activity = activityTestRule.launchActivity(intent);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
+        Espresso.registerIdlingResources(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000005462"));
@@ -164,19 +209,27 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
+        Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
+        assertThat(activity, matcher);
+
+        Espresso.unregisterIdlingResources(idlingResource);
     }
 
     @Test
     public void shouldBeSuccessfulPaymentWhenValidAmexEnteredAndAvsEnabled() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PaymentActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo()
                 .newBuilder()
                 .setAvsEnabled(true)
                 .setAmexEnabled(true)
                 .build());
 
-        PaymentActivity activity = activityTestRule.launchActivity(intent);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
+        Espresso.registerIdlingResources(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"));
@@ -193,8 +246,9 @@ public class SuccessfulPaymentTest {
         onView(withId(R.id.button))
                 .perform(click());
 
+        Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
+        assertThat(activity, matcher);
 
-        assertThat(resultCode(activity), is(Judo.RESULT_SUCCESS));
+        Espresso.unregisterIdlingResources(idlingResource);
     }
-
 }
