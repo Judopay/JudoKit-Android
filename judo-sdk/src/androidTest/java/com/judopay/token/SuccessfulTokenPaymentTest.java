@@ -37,7 +37,6 @@ import static com.judopay.ResultTestActivity.receivedExpectedResult;
 import static com.judopay.TestActivityUtil.getCurrentActivity;
 import static com.judopay.TestUtil.JUDO_ID;
 import static com.judopay.TestUtil.getJudo;
-import static com.judopay.receipts.RxHelpers.failOnError;
 import static java.util.UUID.randomUUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -80,26 +79,24 @@ public class SuccessfulTokenPaymentTest {
                 .setConsumerReference(receipt.getConsumer().getYourConsumerReference())
                 .build());
 
-                        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
 
-                        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
 
-                        PaymentActivity paymentActivity = (PaymentActivity) getCurrentActivity();
-                        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
-                        registerIdlingResources(idlingResource);
+        PaymentActivity paymentActivity = (PaymentActivity) getCurrentActivity();
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
+        registerIdlingResources(idlingResource);
 
-                        onView(withId(R.id.security_code_edit_text))
-                                .perform(typeText("441"));
+        onView(withId(R.id.security_code_edit_text))
+                .perform(typeText("441"));
 
-                        onView(withId(R.id.button))
-                                .perform(click());
+        onView(withId(R.id.button))
+                .perform(click());
 
-                        Matcher<ResultTestActivity> matcher = receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
-                        assertThat(activity, matcher);
+        Matcher<ResultTestActivity> matcher = receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
+        assertThat(activity, matcher);
 
-                        unregisterIdlingResources(idlingResource);
-                    }
-                }, failOnError());
+        unregisterIdlingResources(idlingResource);
     }
 
     @Test
@@ -112,7 +109,7 @@ public class SuccessfulTokenPaymentTest {
 
         RegisterCardRequest registerCardRequest = new RegisterCardRequest.Builder()
                 .setJudoId(JUDO_ID)
-        .setConsumerReference(randomUUID().toString())
+                .setConsumerReference(randomUUID().toString())
                 .setCardNumber("4921810000005462")
                 .setExpiryDate("12/20")
                 .setCv2("441")
@@ -143,15 +140,15 @@ public class SuccessfulTokenPaymentTest {
 
         ResultTestActivity activity = activityTestRule.launchActivity(intent);
 
-        PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
+        PaymentActivity paymentActivity = (PaymentActivity) getCurrentActivity();
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
-        Espresso.registerIdlingResources(idlingResource);
+        registerIdlingResources(idlingResource);
 
         onView(withId(R.id.security_code_edit_text))
-        .perform(typeText("441"));
+                .perform(typeText("441"));
 
         onView(withId(R.id.post_code_edit_text))
-        .perform(typeText("TQ27DQ"));
+                .perform(typeText("TQ27DQ"));
 
         onView(withId(R.id.button))
                 .perform(click());
@@ -159,7 +156,6 @@ public class SuccessfulTokenPaymentTest {
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
         assertThat(activity, matcher);
 
-        Espresso.unregisterIdlingResources(idlingResource);
+        unregisterIdlingResources(idlingResource);
     }
-
 }
