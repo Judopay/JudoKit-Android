@@ -2,16 +2,16 @@ package com.judopay.cardverification;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
-class JsonParsingJavaScriptInterface {
+public class JsonParsingJavaScriptInterface {
 
     private final JsonListener jsonListener;
 
-    JsonParsingJavaScriptInterface(JsonListener jsonListener) {
+    public JsonParsingJavaScriptInterface(JsonListener jsonListener) {
         this.jsonListener = jsonListener;
     }
 
     @android.webkit.JavascriptInterface
-    void parseJsonFromHtml(final String content) {
+    public void parseJsonFromHtml(final String content) {
         if (!isEmpty(content)) {
             try {
                 String json = content.substring(content.indexOf("{"), content.lastIndexOf("}") + 1);
