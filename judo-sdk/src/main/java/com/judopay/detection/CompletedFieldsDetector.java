@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 import rx.Observable;
@@ -20,7 +21,7 @@ import rx.functions.Action1;
 public class CompletedFieldsDetector implements Parcelable {
 
     private ConcurrentSkipListSet<CompletedField> completedFields;
-    private HashMap<String, FieldState> fieldStateMap;
+    private ConcurrentHashMap<String, FieldState> fieldStateMap;
 
     private CompletedFieldsDetector(Map<String, Pair<Observable<Validation>, View>> map) {
         this.completedFields = new ConcurrentSkipListSet<>(new Comparator<CompletedField>() {
@@ -30,7 +31,7 @@ public class CompletedFieldsDetector implements Parcelable {
             }
         });
 
-        this.fieldStateMap = new HashMap<>();
+        this.fieldStateMap = new ConcurrentHashMap<>();
 
         for (final Map.Entry<String, Pair<Observable<Validation>, View>> entry : map.entrySet()) {
             final String fieldName = entry.getKey();
@@ -89,11 +90,11 @@ public class CompletedFieldsDetector implements Parcelable {
         this.completedFields = new ConcurrentSkipListSet<>(completedFields);
     }
 
-    public HashMap<String, FieldState> getFieldStateMap() {
+    public ConcurrentHashMap<String, FieldState> getFieldStateMap() {
         return fieldStateMap;
     }
 
-    public void setFieldStateMap(HashMap<String, FieldState> fieldStateMap) {
+    public void setFieldStateMap(ConcurrentHashMap<String, FieldState> fieldStateMap) {
         this.fieldStateMap = fieldStateMap;
     }
 
@@ -153,7 +154,7 @@ public class CompletedFieldsDetector implements Parcelable {
     protected CompletedFieldsDetector(Parcel in) {
         this.completedFields = (ConcurrentSkipListSet<CompletedField>) in.readSerializable();
         int fieldStateMapSize = in.readInt();
-        this.fieldStateMap = new HashMap<>(fieldStateMapSize);
+        this.fieldStateMap = new ConcurrentHashMap<>(fieldStateMapSize);
         for (int i = 0; i < fieldStateMapSize; i++) {
             String key = in.readString();
             FieldState value = in.readParcelable(FieldState.class.getClassLoader());

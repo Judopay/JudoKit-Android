@@ -27,7 +27,6 @@ import static com.judopay.Judo.JUDO_OPTIONS;
 
 abstract class JudoFragment extends Fragment implements TransactionCallbacks, CardEntryListener {
 
-    private static final String TAG_PAYMENT_FORM = "CardEntryFragment";
     private static final String TAG_3DS_DIALOG = "3dSecureDialog";
 
     private View progressBar;
@@ -55,8 +54,7 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
             PendingIntent pendingResult = getActivity().createPendingResult(Judo.JUDO_REQUEST, new Intent(), 0);
             try {
                 pendingResult.send(Judo.RESULT_TOKEN_EXPIRED);
-            } catch (PendingIntent.CanceledException ignore) {
-            }
+            } catch (PendingIntent.CanceledException ignore) { }
         }
 
         setRetainInstance(true);
@@ -102,15 +100,13 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        cardEntryFragment = (AbstractCardEntryFragment) getFragmentManager().findFragmentByTag(TAG_PAYMENT_FORM);
-
         if (cardEntryFragment == null) {
             cardEntryFragment = createCardEntryFragment();
             cardEntryFragment.setTargetFragment(this, 0);
 
             getFragmentManager()
                     .beginTransaction()
-                    .add(R.id.container, cardEntryFragment, TAG_PAYMENT_FORM)
+                    .replace(R.id.container, cardEntryFragment)
                     .commit();
         } else {
             cardEntryFragment.setCardEntryListener(this);
