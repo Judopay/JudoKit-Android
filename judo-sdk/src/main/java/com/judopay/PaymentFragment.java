@@ -2,6 +2,7 @@ package com.judopay;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 
 import com.judopay.devicedna.Credentials;
@@ -25,6 +26,8 @@ public final class PaymentFragment extends JudoFragment {
         Judo judo = getArguments().getParcelable(JUDO_OPTIONS);
         checkJudoOptionsExtras(judo.getAmount(), judo.getJudoId(), judo.getCurrency(), judo.getConsumerReference());
 
+        Log.d("PaymentFragment", "Instance: " + toString());
+
         if (presenter == null) {
             JudoApiService apiService = judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
             Credentials credentials = new Credentials(judo.getApiToken(), judo.getApiSecret());
@@ -35,6 +38,8 @@ public final class PaymentFragment extends JudoFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        Log.d("PaymentFragment", "onViewCreated: presenter{" + presenter.toString() + "}");
         this.presenter.reconnect();
     }
 

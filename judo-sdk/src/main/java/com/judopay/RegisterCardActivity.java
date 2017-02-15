@@ -34,7 +34,7 @@ public final class RegisterCardActivity extends JudoActivity {
 
             getFragmentManager()
                     .beginTransaction()
-                    .add(android.R.id.content, fragment)
+                    .add(android.R.id.content, fragment, TAG_JUDO_FRAGMENT)
                     .commit();
         }
     }

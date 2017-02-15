@@ -33,6 +33,7 @@ import com.judopay.view.SecurityCodeEntryView;
 import com.judopay.view.SingleClickOnClickListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -111,7 +112,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         if (savedInstanceState != null) {
             keystrokesDetector.setTotalKeystrokes(savedInstanceState.getInt(KEY_KEYSTROKES));
             //noinspection unchecked
-            ConcurrentHashMap<String, ArrayList<Long>> pastedFields = (ConcurrentHashMap<String, ArrayList<Long>>) savedInstanceState.getSerializable(KEY_PASTED_FIELDS);
+            ConcurrentHashMap<String, ArrayList<Long>> pastedFields = new ConcurrentHashMap<>((HashMap<String, ArrayList<Long>>) savedInstanceState.getSerializable(KEY_PASTED_FIELDS));
             pastedFieldsDetector.setPasteTimings(pastedFields);
         }
     }
