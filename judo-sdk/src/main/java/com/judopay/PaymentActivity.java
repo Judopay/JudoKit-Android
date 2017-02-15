@@ -2,7 +2,6 @@ package com.judopay;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 /**
  * Displays a card entry form to the user, allowing for a payment to be made.
@@ -23,17 +22,11 @@ import android.util.Log;
  */
 public final class PaymentActivity extends JudoActivity {
 
-    private static final String TAG_JUDO_FRAGMENT = "JudoFragment";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setTitle(R.string.payment);
-
-        fragment = (JudoFragment) getFragmentManager().findFragmentByTag(TAG_JUDO_FRAGMENT);
-
-        Log.d("PaymentFragment", String.format("Fragment is null? %b", fragment == null));
 
         if (fragment == null) {
             fragment = new PaymentFragment();
@@ -44,8 +37,5 @@ public final class PaymentActivity extends JudoActivity {
                     .add(android.R.id.content, fragment, TAG_JUDO_FRAGMENT)
                     .commit();
         }
-
-        Log.d("PaymentFragment", "Instance: " + fragment.toString());
     }
-
 }

@@ -56,7 +56,6 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
 
             if (judo != null) {
                 setButtonLabelText(getButtonLabel());
-
                 onInitialize(savedInstanceState, judo);
             }
         }

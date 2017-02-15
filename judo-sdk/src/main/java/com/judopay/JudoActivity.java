@@ -36,12 +36,15 @@ import static com.judopay.arch.ThemeUtil.getStringAttr;
  */
 abstract class JudoActivity extends AppCompatActivity {
 
+    protected static final String TAG_JUDO_FRAGMENT = "JudoFragment";
+
     protected JudoFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        this.fragment = (JudoFragment) getFragmentManager().findFragmentByTag(TAG_JUDO_FRAGMENT);
         Judo judo = getIntent().getParcelableExtra(JUDO_OPTIONS);
 
         if (RootDetector.isRooted() && !judo.isRootedDevicesAllowed()) {
