@@ -28,15 +28,14 @@ public final class PaymentActivity extends JudoActivity {
 
         setTitle(R.string.payment);
 
-        if (savedInstanceState == null) {
+        if (fragment == null) {
             fragment = new PaymentFragment();
             fragment.setArguments(getIntent().getExtras());
 
             getFragmentManager()
                     .beginTransaction()
-                    .add(android.R.id.content, fragment)
+                    .add(android.R.id.content, fragment, TAG_JUDO_FRAGMENT)
                     .commit();
         }
     }
-
 }

@@ -16,12 +16,12 @@ import android.widget.Spinner;
 import com.judopay.Judo;
 import com.judopay.R;
 import com.judopay.arch.ThemeUtil;
-import com.judopay.detection.UserAnalytics;
 import com.judopay.detection.CompletedField;
 import com.judopay.detection.CompletedFieldsDetector;
 import com.judopay.detection.FieldState;
 import com.judopay.detection.PastedFieldsDetector;
 import com.judopay.detection.TotalKeystrokesDetector;
+import com.judopay.detection.UserAnalytics;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardNetwork;
@@ -48,7 +48,6 @@ import com.judopay.view.StartDateEntryView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -146,7 +145,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         if (savedInstanceState != null) {
             keystrokesDetector.setTotalKeystrokes(savedInstanceState.getInt(KEY_KEYSTROKES));
             //noinspection unchecked
-            ConcurrentHashMap<String, ArrayList<Long>> pastedFields = (ConcurrentHashMap<String, ArrayList<Long>>) savedInstanceState.getSerializable(KEY_PASTED_FIELDS);
+            ConcurrentHashMap<String, ArrayList<Long>> pastedFields = new ConcurrentHashMap<>((HashMap<String, ArrayList<Long>>) savedInstanceState.getSerializable(KEY_PASTED_FIELDS));
 
             pastedFieldsDetector.setPasteTimings(pastedFields);
         }
@@ -303,7 +302,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             ArrayList<CompletedField> completedFields = savedInstanceState.getParcelableArrayList(KEY_COMPLETED_FIELDS);
             completedFieldsDetector.setCompletedFields(completedFields);
             //noinspection unchecked
-            completedFieldsDetector.setFieldStateMap((HashMap<String, FieldState>) savedInstanceState.getSerializable(KEY_FIELD_STATES));
+            completedFieldsDetector.setFieldStateMap(new ConcurrentHashMap<>((HashMap<String, FieldState>) savedInstanceState.getSerializable(KEY_FIELD_STATES)));
         }
 
         ValidationAutoAdvanceManager.bind(validationManager, validatorViews);
