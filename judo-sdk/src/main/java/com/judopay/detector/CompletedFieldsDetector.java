@@ -1,10 +1,13 @@
-package com.judopay.detection;
+package com.judopay.detector;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Pair;
 import android.view.View;
 
+import com.judopay.devicedna.signal.user.CompletedField;
+import com.judopay.devicedna.signal.user.FieldSession;
+import com.judopay.devicedna.signal.user.FieldState;
 import com.judopay.validation.Validation;
 
 import java.util.ArrayList;

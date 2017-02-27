@@ -19,6 +19,9 @@ import okio.Buffer;
 
 class DeviceDnaInterceptor implements Interceptor {
 
+    private static final String CLIENT_DETAILS = "clientDetails";
+    private static final String DEVICE_IDENTIFIER = "deviceIdentifier";
+
     private final DeviceDna deviceDna;
 
     DeviceDnaInterceptor(Context context, Credentials credentials) {
@@ -35,7 +38,9 @@ class DeviceDnaInterceptor implements Interceptor {
             if (body.isJsonObject()) {
                 JsonObject json = body.getAsJsonObject();
 
-                addClientDetails(json);
+                if(json.get(CLIENT_DETAILS) == null) {
+                    addClientDetails(json);
+                }
 
                 return chain.proceed(request.newBuilder()
                         .post(getJsonRequestBody(json))
@@ -48,15 +53,17 @@ class DeviceDnaInterceptor implements Interceptor {
     }
 
     private void addClientDetails(JsonObject json) {
-        Map<String, String> signals = deviceDna.deviceSignals();
+        Map<String, String> signals = deviceDna.deviceSignals()
+                .toBlocking().value();
+
         JsonObject clientDetailsJson = new JsonObject();
 
         for (Map.Entry<String, String> entry : signals.entrySet()) {
             clientDetailsJson.addProperty(entry.getKey(), entry.getValue());
         }
 
-        clientDetailsJson.addProperty("deviceIdentifier", getDeviceId());
-        json.add("clientDetails", clientDetailsJson);
+        clientDetailsJson.addProperty(DEVICE_IDENTIFIER, getDeviceId());
+        json.add(CLIENT_DETAILS, clientDetailsJson);
     }
 
     private String getDeviceId() {

@@ -1,4 +1,4 @@
-package com.judopay.detection;
+package com.judopay.detector;
 
 import java.util.ArrayList;
 
