@@ -1,4 +1,4 @@
-package com.judopay.detection;
+package com.judopay.detector;
 
 import android.os.Parcel;
 import android.os.Parcelable;

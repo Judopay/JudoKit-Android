@@ -1,5 +1,6 @@
 package com.judopay;
 
+import com.google.gson.JsonElement;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
 import com.judopay.model.CardVerificationResult;
@@ -22,6 +23,7 @@ import okhttp3.internal.http.RealResponseBody;
 import okio.Buffer;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Single;
+import rx.observers.TestSubscriber;
 
 import static java.util.UUID.randomUUID;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -64,7 +66,7 @@ public class PaymentPresenterTest {
         when(apiService.payment(any(PaymentRequest.class)))
                 .thenReturn(Single.just(receipt));
 
-        when(deviceDna.send(anyMapOf(String.class, Object.class)))
+        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         Receipt result = presenter.performPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
@@ -85,7 +87,7 @@ public class PaymentPresenterTest {
         when(apiService.payment(any(PaymentRequest.class)))
                 .thenReturn(Single.<Receipt>error(new UnknownHostException()));
 
-        when(deviceDna.send(anyMapOf(String.class, Object.class)))
+        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         presenter.performPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
@@ -107,7 +109,7 @@ public class PaymentPresenterTest {
         RealResponseBody responseBody = new RealResponseBody(Headers.of("SdkVersion", "5.0"), buffer);
         HttpException exception = new HttpException(retrofit2.Response.error(404, responseBody));
 
-        when(deviceDna.send(anyMapOf(String.class, Object.class)))
+        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         when(apiService.payment(any(PaymentRequest.class)))
@@ -129,7 +131,7 @@ public class PaymentPresenterTest {
         RealResponseBody responseBody = new RealResponseBody(Headers.of("SdkVersion", "5.0"), new Buffer());
         HttpException exception = new HttpException(retrofit2.Response.error(400, responseBody));
 
-        when(deviceDna.send(anyMapOf(String.class, Object.class)))
+        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         when(apiService.payment(any(PaymentRequest.class)))
@@ -151,20 +153,23 @@ public class PaymentPresenterTest {
         when(apiService.tokenPayment(any(TokenRequest.class)))
                 .thenReturn(Single.<Receipt>just(null));
 
-        when(deviceDna.send(anyMapOf(String.class, Object.class)))
+        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         when(cardToken.getToken()).thenReturn("cardToken");
 
-        String consumer = "consumerRef";
+        TestSubscriber<Receipt> subscriber = new TestSubscriber<>();
+
         presenter.performTokenPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
                 .setCardToken(cardToken)
-                .setConsumerReference(consumer)
+                .setConsumerReference("consumerRef")
                 .setAmount("1.99")
                 .setCurrency(Currency.GBP)
                 .setJudoId("100915867")
                 .build(), null)
-                .subscribe(presenter.callback(), presenter.error());
+                .subscribe(subscriber);
+
+        subscriber.assertNoErrors();
 
         verify(transactionCallbacks).showLoading();
         verify(apiService).tokenPayment(any(TokenRequest.class));
@@ -177,8 +182,7 @@ public class PaymentPresenterTest {
         when(receipt.isSuccess()).thenReturn(true);
         when(apiService.complete3dSecure(receiptId, cardVerificationResult)).thenReturn(Single.just(receipt));
 
-        presenter.onAuthorizationCompleted(cardVerificationResult, receiptId)
-                .subscribe();
+        presenter.onAuthorizationCompleted(cardVerificationResult, receiptId).subscribe();
 
         verify(transactionCallbacks).onSuccess(eq(receipt));
         verify(transactionCallbacks).hideLoading();

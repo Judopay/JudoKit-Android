@@ -21,7 +21,7 @@ class PaymentPresenter extends BasePresenter {
         super(callbacks, judoApiService, deviceDna);
     }
 
-    Single<Receipt> performPayment(Card card, Judo judo, @Nullable final Map<String, Object> signals) {
+    Single<Receipt> performPayment(Card card, Judo judo, final Map<String, Object> signals) {
         loading = true;
         transactionCallbacks.showLoading();
 
@@ -30,7 +30,7 @@ class PaymentPresenter extends BasePresenter {
         return Single.defer(new Callable<Single<Receipt>>() {
             @Override
             public Single<Receipt> call() throws Exception {
-                return deviceDna.send(signals)
+                return deviceDna.send(getJsonElements(signals))
                         .flatMap(new Func1<String, Single<Receipt>>() {
                             @Override
                             public Single<Receipt> call(String deviceId) {
@@ -59,7 +59,7 @@ class PaymentPresenter extends BasePresenter {
                     .setStartDate(card.getStartDate());
         }
 
-        if(!isEmpty(judo.getPaymentReference())) {
+        if (!isEmpty(judo.getPaymentReference())) {
             builder.setPaymentReference(judo.getPaymentReference());
         }
 
@@ -81,10 +81,10 @@ class PaymentPresenter extends BasePresenter {
         return Single.defer(new Callable<Single<Receipt>>() {
             @Override
             public Single<Receipt> call() throws Exception {
-                return deviceDna.send(signals)
+                return deviceDna.send(getJsonElements(signals))
                         .flatMap(new Func1<String, Single<Receipt>>() {
                             @Override
-                            public Single<Receipt> call(String deviceId) {
+                            public Single<Receipt> call(String s) {
                                 return apiService.tokenPayment(request);
                             }
                         });
@@ -104,7 +104,7 @@ class PaymentPresenter extends BasePresenter {
                 .setMetaData(judo.getMetaDataMap())
                 .setToken(judo.getCardToken());
 
-        if(!isEmpty(judo.getPaymentReference())) {
+        if (!isEmpty(judo.getPaymentReference())) {
             builder.setPaymentReference(judo.getPaymentReference());
         }
 

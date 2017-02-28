@@ -1,11 +1,14 @@
 package com.judopay;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.judopay.cardverification.AuthorizationListener;
 import com.judopay.model.CardVerificationResult;
 import com.judopay.model.Receipt;
 
 import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import retrofit2.adapter.rxjava.HttpException;
@@ -74,6 +77,19 @@ abstract class BasePresenter implements AuthorizationListener {
                 }
             }
         };
+    }
+
+    HashMap<String, JsonElement> getJsonElements(Map<String, Object> signals) {
+        Gson gson = new Gson();
+        HashMap<String, JsonElement> jsonElements = new HashMap<>();
+
+        if (signals != null) {
+            for (Map.Entry<String, Object> signal : signals.entrySet()) {
+                jsonElements.put(signal.getKey(), gson.toJsonTree(signal));
+            }
+        }
+
+        return jsonElements;
     }
 
     void reconnect() {

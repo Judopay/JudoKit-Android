@@ -16,16 +16,16 @@ import android.widget.Spinner;
 import com.judopay.Judo;
 import com.judopay.R;
 import com.judopay.arch.ThemeUtil;
-import com.judopay.detection.CompletedField;
-import com.judopay.detection.CompletedFieldsDetector;
-import com.judopay.detection.FieldState;
-import com.judopay.detection.PastedFieldsDetector;
-import com.judopay.detection.TotalKeystrokesDetector;
-import com.judopay.detection.UserAnalytics;
+import com.judopay.devicedna.signal.user.CompletedField;
+import com.judopay.devicedna.signal.user.FieldState;
+import com.judopay.devicedna.signal.user.UserSignals;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardNetwork;
 import com.judopay.model.Country;
+import com.judopay.detector.CompletedFieldsDetector;
+import com.judopay.detector.PastedFieldsDetector;
+import com.judopay.detector.TotalKeystrokesDetector;
 import com.judopay.validation.CardNumberValidator;
 import com.judopay.validation.CountryAndPostcodeValidator;
 import com.judopay.validation.ExpiryDateValidator;
@@ -411,14 +411,14 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         }
 
         if (cardEntryListener != null) {
-            UserAnalytics identifiers = new UserAnalytics.Builder()
+            UserSignals userSignals = new UserSignals.Builder()
                     .setAppResumed(appResumeDetector.getResumedTimings())
                     .setCompletedFields(completedFieldsDetector.getFieldsOrderedByCompletion())
                     .setPastedFields(pastedFieldsDetector.getPasteTimings())
                     .setTotalKeystrokes(keystrokesDetector.getTotalKeystrokes())
                     .build();
 
-            cardEntryListener.onSubmit(cardBuilder.build(), identifiers.toMap());
+            cardEntryListener.onSubmit(cardBuilder.build(), userSignals.toMap());
         }
     }
 

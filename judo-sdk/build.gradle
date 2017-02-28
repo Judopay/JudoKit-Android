@@ -21,8 +21,8 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 16
-        versionName '5.6.3'
+        versionCode 17
+        versionName '5.6.4'
 
         vectorDrawables.useSupportLibrary = true
 
@@ -113,7 +113,7 @@ publish {
 }
 
 dependencies {
-    compile 'com.judopay:device-dna:0.3'
+    compile 'com.judopay:device-dna:0.5'
 
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'

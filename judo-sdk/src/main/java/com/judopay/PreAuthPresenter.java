@@ -28,7 +28,7 @@ class PreAuthPresenter extends BasePresenter {
         return Single.defer(new Callable<Single<Receipt>>() {
             @Override
             public Single<Receipt> call() throws Exception {
-                return deviceDna.send(signals)
+                return deviceDna.send(getJsonElements(signals))
                         .flatMap(new Func1<String, Single<Receipt>>() {
                             @Override
                             public Single<Receipt> call(String deviceId) {
@@ -48,7 +48,7 @@ class PreAuthPresenter extends BasePresenter {
         return Single.defer(new Callable<Single<Receipt>>() {
             @Override
             public Single<Receipt> call() throws Exception {
-                return deviceDna.send(signals)
+                return deviceDna.send(getJsonElements(signals))
                         .flatMap(new Func1<String, Single<Receipt>>() {
                             @Override
                             public Single<Receipt> call(String deviceId) {

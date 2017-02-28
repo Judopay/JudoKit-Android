@@ -1,5 +1,6 @@
 package com.judopay;
 
+import com.google.gson.JsonElement;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
 import com.judopay.model.Currency;
@@ -51,7 +52,7 @@ public class PreAuthPresenterTest {
         when(apiService.preAuth(any(PaymentRequest.class)))
                 .thenReturn(Single.<Receipt>just(null));
 
-        when(deviceDna.send(anyMapOf(String.class, Object.class)))
+        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         presenter.performPreAuth(getCard(), new Judo.Builder("apiToken", "apiSecret")
@@ -74,7 +75,7 @@ public class PreAuthPresenterTest {
         when(apiService.preAuth(any(PaymentRequest.class)))
                 .thenReturn(Single.<Receipt>error(exception));
 
-        when(deviceDna.send(anyMapOf(String.class, Object.class)))
+        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         presenter.performPreAuth(getCard(), new Judo.Builder("apiToken", "apiSecret")
@@ -93,7 +94,7 @@ public class PreAuthPresenterTest {
         when(apiService.tokenPreAuth(any(TokenRequest.class)))
                 .thenReturn(Single.<Receipt>just(null));
 
-        when(deviceDna.send(anyMapOf(String.class, Object.class)))
+        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         when(cardToken.getToken()).thenReturn("cardToken");

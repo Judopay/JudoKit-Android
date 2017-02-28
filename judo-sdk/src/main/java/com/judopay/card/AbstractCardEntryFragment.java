@@ -10,10 +10,10 @@ import android.widget.Button;
 import com.judopay.Judo;
 import com.judopay.R;
 import com.judopay.arch.ThemeUtil;
-import com.judopay.detection.AppResumeDetector;
-import com.judopay.detection.CompletedFieldsDetector;
-import com.judopay.detection.PastedFieldsDetector;
-import com.judopay.detection.TotalKeystrokesDetector;
+import com.judopay.detector.AppResumeDetector;
+import com.judopay.detector.CompletedFieldsDetector;
+import com.judopay.detector.PastedFieldsDetector;
+import com.judopay.detector.TotalKeystrokesDetector;
 import com.judopay.model.Card;
 import com.judopay.validation.ValidationManager;
 
