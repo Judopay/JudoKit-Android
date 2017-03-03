@@ -17,17 +17,15 @@ public final class Wallet {
     private final String instrumentType;
     private final String googleTransactionId;
     private final Integer environment;
-    private final Integer version;
 
-    public Wallet(String encryptedMessage,
-                  String ephemeralPublicKey,
-                  String tag,
-                  String publicKey,
-                  String instrumentDetails,
-                  String instrumentType,
-                  String googleTransactionId,
-                  Integer environment,
-                  Integer version) {
+    private Wallet(String encryptedMessage,
+                   String ephemeralPublicKey,
+                   String tag,
+                   String publicKey,
+                   String instrumentDetails,
+                   String instrumentType,
+                   String googleTransactionId,
+                   Integer environment) {
         this.encryptedMessage = encryptedMessage;
         this.ephemeralPublicKey = ephemeralPublicKey;
         this.tag = tag;
@@ -36,7 +34,6 @@ public final class Wallet {
         this.instrumentType = instrumentType;
         this.googleTransactionId = googleTransactionId;
         this.environment = environment;
-        this.version = version;
     }
 
     public String getEncryptedMessage() {
@@ -71,10 +68,6 @@ public final class Wallet {
         return googleTransactionId;
     }
 
-    public Integer getVersion() {
-        return version;
-    }
-
     @SuppressWarnings("unused")
     public static class Builder {
 
@@ -86,7 +79,6 @@ public final class Wallet {
         private String instrumentType;
         private String googleTransactionId;
         private Integer environment;
-        private Integer version;
 
         /**
          * Sets the encrypted payload JSON on the {@link AndroidPayRequest} instance, this is
@@ -191,16 +183,6 @@ public final class Wallet {
             return this;
         }
 
-        /**
-         * @param version the version of the wallet, this can be obtained from the
-         *                FullWallet.getVersionCode() method.
-         * @return The Builder for creating the {@link AndroidPayRequest} instance
-         */
-        public Builder setVersion(Integer version) {
-            this.version = version;
-            return this;
-        }
-
         public Wallet build() {
             checkNotEmpty(encryptedMessage);
             checkNotEmpty(ephemeralPublicKey);
@@ -210,9 +192,8 @@ public final class Wallet {
             checkNotEmpty(instrumentType);
             checkNotEmpty(googleTransactionId);
             checkNotNull(environment);
-            checkNotNull(version);
 
-            return new Wallet(encryptedMessage, ephemeralPublicKey, tag, publicKey, instrumentDetails, instrumentType, googleTransactionId, environment, version);
+            return new Wallet(encryptedMessage, ephemeralPublicKey, tag, publicKey, instrumentDetails, instrumentType, googleTransactionId, environment);
         }
     }
 

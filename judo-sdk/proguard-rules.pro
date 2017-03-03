@@ -48,6 +48,7 @@
 -keep class com.judopay.model.** { *; }
 -keep class com.judopay.Judo { *; }
 -keep class com.judopay.Judo$* { *; }
+-keep class com.judopay.JudoApiService { *; }
 -keep class com.judopay.PaymentActivity {public *;}
 -keep class com.judopay.PaymentFragment {public *;}
 -keep class com.judopay.PreAuthActivity {public *;}
