@@ -83,7 +83,6 @@ public class AndroidPayTest {
                         .setInstrumentDetails("1234")
                         .setInstrumentType("VISA")
                         .setGoogleTransactionId("123456789")
-                        .setVersion(1)
                         .build())
                 .setAmount("0.10")
                 .setConsumerReference("AndroidPayTest")
