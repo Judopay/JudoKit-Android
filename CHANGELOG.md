@@ -8,7 +8,7 @@
 - Internal updates for improved device fraud prevention
 
 ## [5.6.2](https://github.com/Judopay/Judo-Android/tree/5.6.2) (2017-02-15)
-- Fix 3D Secure callback not called after web view finished.
+- Bugfix for 3D Secure JavaScript callback not firing correctly.
 
 ## [5.6.1](https://github.com/Judopay/Judo-Android/tree/5.6.1) (2017-02-02)
 **Changes:**
