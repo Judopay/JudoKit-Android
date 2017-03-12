@@ -1,12 +1,22 @@
 # Judopay Android SDK changelog
 
-## [5.6.1](https://github.com/judopay/Judo-Android/tree/5.6.1) (2017-02-02)
+## [5.6.5](https://github.com/Judopay/Judo-Android/tree/5.6.5) (2017-03-03)
+- Bugfix to prevent ```JudoApiService``` from being renamed by Proguard
+- Remove versionCode for Android Pay API requests, since the field is no longer available in the Android Pay ```FullWallet``` object
+
+## [5.6.4](https://github.com/Judopay/Judo-Android/tree/5.6.4) (2017-02-28)
+- Internal updates for improved device fraud prevention
+
+## [5.6.2](https://github.com/Judopay/Judo-Android/tree/5.6.2) (2017-02-15)
+- Fix 3D Secure callback not called after web view finished.
+
+## [5.6.1](https://github.com/Judopay/Judo-Android/tree/5.6.1) (2017-02-02)
 **Changes:**
 - Singapore dollar currency support.
 - The payment reference can now be set on ```*Request``` objects, if a unique reference to identify the request is required by the developer.
 - Espresso UI tests made to be more reliable
 
-## [5.6](https://github.com/judopay/Judo-Android/tree/5.6) (2017-01-23)
+## [5.6](https://github.com/Judopay/Judo-Android/tree/5.6) (2017-01-23)
 
 **Changes:**
 - Card network images have an updated design and include new logos for Mastercard and Maestro card types.
