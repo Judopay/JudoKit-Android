@@ -2,15 +2,15 @@ package com.judopay.view;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import com.judopay.R;
 
-public class SecureServerTextView extends TextView {
+public class SecureServerTextView extends AppCompatTextView {
 
     public SecureServerTextView(Context context) {
         super(context);

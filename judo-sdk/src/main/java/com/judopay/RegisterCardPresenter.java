@@ -1,5 +1,6 @@
 package com.judopay;
 
+import com.judopay.arch.Logger;
 import com.judopay.model.Card;
 import com.judopay.model.Receipt;
 import com.judopay.model.RegisterCardRequest;
@@ -12,8 +13,8 @@ import static com.judopay.arch.TextUtil.isEmpty;
 
 class RegisterCardPresenter extends BasePresenter {
 
-    RegisterCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, DeviceDna deviceDna) {
-        super(callbacks, apiService, deviceDna);
+    RegisterCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, DeviceDna deviceDna, Logger logger) {
+        super(callbacks, apiService, deviceDna, logger);
     }
 
     Single<Receipt> performRegisterCard(Card card, Judo judo) {

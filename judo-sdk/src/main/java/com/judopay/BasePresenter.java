@@ -2,6 +2,7 @@ package com.judopay;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.judopay.arch.Logger;
 import com.judopay.cardverification.AuthorizationListener;
 import com.judopay.model.CardVerificationResult;
 import com.judopay.model.Receipt;
@@ -22,17 +23,19 @@ abstract class BasePresenter implements AuthorizationListener {
 
     private final Gson gson;
     final DeviceDna deviceDna;
+    private final Logger logger;
 
     boolean loading;
 
-    BasePresenter(TransactionCallbacks transactionCallbacks, JudoApiService apiService, DeviceDna deviceDna) {
+    BasePresenter(TransactionCallbacks transactionCallbacks, JudoApiService apiService, DeviceDna deviceDna, Logger logger) {
         this.transactionCallbacks = transactionCallbacks;
         this.apiService = apiService;
         this.deviceDna = deviceDna;
         this.gson = new Gson();
+        this.logger = logger;
     }
 
-    public Action1<Receipt> callback() {
+    Action1<Receipt> callback() {
         return new Action1<Receipt>() {
             @Override
             public void call(Receipt receipt) {
@@ -58,6 +61,8 @@ abstract class BasePresenter implements AuthorizationListener {
         return new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
+                logger.error("Error calling Judopay API", throwable);
+
                 loading = false;
                 handleErrorCallback(throwable);
                 transactionCallbacks.dismiss3dSecureDialog();
