@@ -1,5 +1,6 @@
 package com.judopay;
 
+import com.judopay.arch.Logger;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.Receipt;
@@ -37,6 +38,9 @@ public class RegisterCardPresenterTest {
 
     @Mock
     DeviceDna deviceDna;
+
+    @Mock
+    Logger logger;
 
     @Mock
     JudoApiService apiService;

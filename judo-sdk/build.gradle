@@ -6,7 +6,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.0'
         classpath 'com.novoda:bintray-release:0.3.4'
     }
 }
@@ -21,8 +21,8 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 18
-        versionName '5.6.5'
+        versionCode 19
+        versionName '5.6.6'
 
         vectorDrawables.useSupportLibrary = true
 
@@ -112,7 +112,8 @@ publish {
 }
 
 dependencies {
-    compile 'com.judopay:device-dna:0.5'
+    //noinspection GradleDynamicVersion
+    compile 'com.judopay:device-dna:0.+'
 
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'

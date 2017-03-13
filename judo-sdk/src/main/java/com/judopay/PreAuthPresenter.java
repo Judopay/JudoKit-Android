@@ -1,5 +1,6 @@
 package com.judopay;
 
+import com.judopay.arch.Logger;
 import com.judopay.model.Card;
 import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
@@ -15,8 +16,8 @@ import static com.judopay.arch.TextUtil.isEmpty;
 
 class PreAuthPresenter extends BasePresenter {
 
-    PreAuthPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, DeviceDna deviceDna) {
-        super(callbacks, judoApiService, deviceDna);
+    PreAuthPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, DeviceDna deviceDna, Logger logger) {
+        super(callbacks, judoApiService, deviceDna, logger);
     }
 
     Single<Receipt> performPreAuth(Card card, Judo judo, final Map<String, Object> signals) {

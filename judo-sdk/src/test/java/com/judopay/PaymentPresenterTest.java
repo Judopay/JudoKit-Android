@@ -1,6 +1,7 @@
 package com.judopay;
 
 import com.google.gson.JsonElement;
+import com.judopay.arch.Logger;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
 import com.judopay.model.CardVerificationResult;
@@ -51,6 +52,9 @@ public class PaymentPresenterTest {
 
     @Mock
     DeviceDna deviceDna;
+
+    @Mock
+    Logger logger;
 
     @Mock
     JudoApiService apiService;

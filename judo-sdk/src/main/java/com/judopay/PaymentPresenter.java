@@ -2,6 +2,7 @@ package com.judopay;
 
 import android.support.annotation.Nullable;
 
+import com.judopay.arch.Logger;
 import com.judopay.model.Card;
 import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
@@ -17,8 +18,8 @@ import static com.judopay.arch.TextUtil.isEmpty;
 
 class PaymentPresenter extends BasePresenter {
 
-    PaymentPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, DeviceDna deviceDna) {
-        super(callbacks, judoApiService, deviceDna);
+    PaymentPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, DeviceDna deviceDna, Logger logger) {
+        super(callbacks, judoApiService, deviceDna, logger);
     }
 
     Single<Receipt> performPayment(Card card, Judo judo, final Map<String, Object> signals) {
