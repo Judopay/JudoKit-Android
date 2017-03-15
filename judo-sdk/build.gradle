@@ -21,8 +21,8 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 19
-        versionName '5.6.6'
+        versionCode 20
+        versionName '5.6.7'
 
         vectorDrawables.useSupportLibrary = true
 
@@ -38,14 +38,6 @@ android {
     buildTypes {
         debug {
             debuggable true
-
-            Properties properties = new Properties()
-            properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-            def apiToken = properties.getProperty('judo.api.token', '')
-            def apiSecret = properties.getProperty('judo.api.secret', '')
-
-            manifestPlaceholders = [apiToken: apiToken, apiSecret: apiSecret]
         }
         release {
             minifyEnabled true

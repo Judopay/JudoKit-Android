@@ -45,10 +45,12 @@
 -keep public class android.support.design.R$* { *; }
 
 # Judopay classes
+-keep interface com.judopay.JudoApiService { *; }
 -keep class com.judopay.model.** { *; }
+-keep public class com.judopay.model.* { *; }
 -keep class com.judopay.Judo { *; }
 -keep class com.judopay.Judo$* { *; }
--keep class com.judopay.JudoApiService { *; }
+-keep class com.judopay.api.JudoApiServiceFactory { *; }
 -keep class com.judopay.PaymentActivity {public *;}
 -keep class com.judopay.PaymentFragment {public *;}
 -keep class com.judopay.PreAuthActivity {public *;}
@@ -64,4 +66,3 @@
 
 -keep class com.judopay.DeviceDna { *; }
 -keep public class com.judopay.error.* { *; }
--keep public class com.judopay.model.* { *; }
