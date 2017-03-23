@@ -58,7 +58,6 @@
 -keep class com.judopay.RegisterCardActivity {public *;}
 -keep class com.judopay.RegisterCardFragment {public *;}
 -keep class com.judopay.api.ApiError { *; }
--keep class com.judopay.api.TlsSslSocketFactory { *; }
 -keep class com.judopay.signals.FieldMetaData { *; }
 -keep class com.judopay.signals.FieldSession { *; }
 -keep class com.judopay.signals.FieldState { *; }

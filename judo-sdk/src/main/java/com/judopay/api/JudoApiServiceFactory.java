@@ -7,26 +7,26 @@ import com.google.gson.GsonBuilder;
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
 import com.judopay.devicedna.Credentials;
-import com.judopay.error.SslInitializationError;
 import com.judopay.model.Address;
 
 import java.math.BigDecimal;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-
+import okhttp3.CertificatePinner;
+import okhttp3.CipherSuite;
+import okhttp3.ConnectionSpec;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.TlsVersion;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static okhttp3.ConnectionSpec.MODERN_TLS;
 
 /**
  * Factory that provides the {@link JudoApiService} used for performing all HTTP requests to the
@@ -35,6 +35,9 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  * used in the application.
  */
 public class JudoApiServiceFactory {
+
+    private static final String HOSTNAME_LIVE = "gw1.judopay.com";
+    private static final String HOSTNAME_SANDBOX = "*.judopay-sandbox.com";
 
     /**
      * @param context      the calling Context
@@ -58,10 +61,17 @@ public class JudoApiServiceFactory {
     }
 
     private static OkHttpClient getOkHttpClient(@Judo.UiClientMode int uiClientMode, Context context, Judo judo) {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .connectionSpecs(singletonList(new ConnectionSpec.Builder(MODERN_TLS)
+                        .tlsVersions(TlsVersion.TLS_1_2)
+                        .cipherSuites(CipherSuite.values())
+                        .build()))
+                .certificatePinner(new CertificatePinner.Builder()
+                        .add(HOSTNAME_LIVE, "sha256/SuY75QgkSNBlMtHNPeW9AayE7KNDAypMBHlJH9GEhXs=")
+                        .add(HOSTNAME_SANDBOX, "sha256/mpCgFwbYmjH0jpQ3EruXVo+/S73NOAtPeqtGJE8OdZ0=")
+                        .build());
 
         setTimeouts(builder);
-        setSslSocketFactory(builder);
         setInterceptors(builder, uiClientMode, context, judo);
 
         return builder.build();
@@ -85,18 +95,6 @@ public class JudoApiServiceFactory {
                 .registerTypeAdapter(Date.class, new DateJsonDeserializer())
                 .registerTypeAdapter(BigDecimal.class, new FormattedBigDecimalDeserializer())
                 .create();
-    }
-
-    private static void setSslSocketFactory(OkHttpClient.Builder builder) {
-        try {
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, null, null);
-
-            SSLSocketFactory socketFactory = sslContext.getSocketFactory();
-            builder.sslSocketFactory(new TlsSslSocketFactory(socketFactory));
-        } catch (KeyManagementException | NoSuchAlgorithmException e) {
-            throw new SslInitializationError(e);
-        }
     }
 
     private static void setTimeouts(OkHttpClient.Builder builder) {
