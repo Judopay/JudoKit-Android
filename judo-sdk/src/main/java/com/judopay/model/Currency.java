@@ -11,10 +11,11 @@ import java.lang.annotation.RetentionPolicy;
 @SuppressWarnings("WeakerAccess")
 public final class Currency {
 
-    @StringDef({AUD, BRL, CAD, CHF, CZK, DKK, EUR, GBP, HKD, HUF, JPY, NOK, NZD, PLN, SEK, SGD, USD, ZAR})
+    @StringDef({AED, AUD, BRL, CAD, CHF, CZK, DKK, EUR, GBP, HKD, HUF, JPY, NOK, NZD, PLN, QAR, SAR, SEK, SGD, USD, ZAR})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Type { }
 
+    public static final String AED = "AED";
     public static final String AUD = "AUD";
     public static final String BRL = "BRL";
     public static final String CAD = "CAD";
@@ -31,26 +32,9 @@ public final class Currency {
     public static final String PLN = "PLN";
     public static final String SEK = "SEK";
     public static final String SGD = "SGD";
+    public static final String QAR = "QAR";
+    public static final String SAR = "SAR";
     public static final String USD = "USD";
     public static final String ZAR = "ZAR";
-
-    public static final String AUSTRALIAN_DOLLAR = "Australian Dollar";
-    public static final String BRAZILIAN_REAL = "Brazilian Real";
-    public static final String CANADIAN_DOLLAR = "Canadian Dollar";
-    public static final String SWISS_FRANC = "Swiss Franc";
-    public static final String CZECH_REPUBLIC_KRONA = "Czech Republic Krona";
-    public static final String DANISH_KRONE = "Danish Krone";
-    public static final String EUROS = "Euros";
-    public static final String POUNDS_STERLING = "Pounds Sterling";
-    public static final String HONG_KONG_DOLLAR = "Hong Kong Dollar";
-    public static final String HUNGARIAN_FORINT = "Hungarian Forint";
-    public static final String JAPANESE_YEN = "Japanese Yen";
-    public static final String NORWEGIAN_KRONE = "Norwegian Krone";
-    public static final String NEW_ZEALAND_DOLLAR = "New Zealand Dollar";
-    public static final String POLISH_XLOTY = "Polish Xloty";
-    public static final String SWEDISH_KRONA = "Swedish Krona";
-    public static final String SINGAPORE_DOLLAR = "Singapore Dollar";
-    public static final String UNITED_STATES_DOLLAR = "United States Dollar";
-    public static final String SOUTH_AFRICAN_RAND = "South African Rand";
 
 }
