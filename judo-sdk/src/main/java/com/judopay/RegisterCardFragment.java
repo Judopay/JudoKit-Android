@@ -53,10 +53,10 @@ public class RegisterCardFragment extends JudoFragment implements TransactionCal
     }
 
     @Override
-    public void onSubmit(Card card, Map<String, Object> deviceIdentifiers) {
+    public void onSubmit(Card card, Map<String, Object> userSignals) {
         Judo options = getJudo();
 
-        presenter.performRegisterCard(card, options)
+        presenter.performRegisterCard(card, options, userSignals)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(presenter.callback(), presenter.error());

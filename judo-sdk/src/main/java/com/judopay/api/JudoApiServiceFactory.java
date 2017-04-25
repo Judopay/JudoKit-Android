@@ -10,11 +10,13 @@ import com.judopay.devicedna.Credentials;
 import com.judopay.model.Address;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.net.ssl.SSLContext;
+
 import okhttp3.CertificatePinner;
-import okhttp3.CipherSuite;
 import okhttp3.ConnectionSpec;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -23,10 +25,8 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static okhttp3.ConnectionSpec.MODERN_TLS;
 
 /**
  * Factory that provides the {@link JudoApiService} used for performing all HTTP requests to the
@@ -61,20 +61,30 @@ public class JudoApiServiceFactory {
     }
 
     private static OkHttpClient getOkHttpClient(@Judo.UiClientMode int uiClientMode, Context context, Judo judo) {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                .connectionSpecs(singletonList(new ConnectionSpec.Builder(MODERN_TLS)
-                        .tlsVersions(TlsVersion.TLS_1_2)
-                        .cipherSuites(CipherSuite.values())
-                        .build()))
-                .certificatePinner(new CertificatePinner.Builder()
-                        .add(HOSTNAME_LIVE, "sha256/SuY75QgkSNBlMtHNPeW9AayE7KNDAypMBHlJH9GEhXs=")
-                        .add(HOSTNAME_SANDBOX, "sha256/mpCgFwbYmjH0jpQ3EruXVo+/S73NOAtPeqtGJE8OdZ0=")
-                        .build());
+        try {
+            SSLContext sc = SSLContext.getInstance("TLSv1.2");
+            sc.init(null, null, null);
 
-        setTimeouts(builder);
-        setInterceptors(builder, uiClientMode, context, judo);
+            List<ConnectionSpec> specs = new ArrayList<>();
+            specs.add(new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+                    .tlsVersions(TlsVersion.TLS_1_2)
+                    .build());
 
-        return builder.build();
+            OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                    .sslSocketFactory(new Tls12SslSocketFactory(sc.getSocketFactory()))
+                    .connectionSpecs(specs)
+                    .certificatePinner(new CertificatePinner.Builder()
+                            .add(HOSTNAME_LIVE, "sha256/SuY75QgkSNBlMtHNPeW9AayE7KNDAypMBHlJH9GEhXs=")
+                            .add(HOSTNAME_SANDBOX, "sha256/mpCgFwbYmjH0jpQ3EruXVo+/S73NOAtPeqtGJE8OdZ0=")
+                            .build());
+
+            setTimeouts(builder);
+            setInterceptors(builder, uiClientMode, context, judo);
+
+            return builder.build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void setInterceptors(OkHttpClient.Builder client, @Judo.UiClientMode int uiClientMode, Context context, Judo judo) {

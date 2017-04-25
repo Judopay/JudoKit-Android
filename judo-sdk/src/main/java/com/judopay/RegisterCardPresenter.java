@@ -5,9 +5,11 @@ import com.judopay.model.Card;
 import com.judopay.model.Receipt;
 import com.judopay.model.RegisterCardRequest;
 
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import rx.Single;
+import rx.functions.Func1;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
@@ -17,7 +19,7 @@ class RegisterCardPresenter extends BasePresenter {
         super(callbacks, apiService, deviceDna, logger);
     }
 
-    Single<Receipt> performRegisterCard(Card card, Judo judo) {
+    Single<Receipt> performRegisterCard(Card card, Judo judo, final Map<String, Object> userSignals) {
         this.loading = true;
         transactionCallbacks.showLoading();
 
@@ -57,7 +59,13 @@ class RegisterCardPresenter extends BasePresenter {
         return Single.defer(new Callable<Single<Receipt>>() {
             @Override
             public Single<Receipt> call() throws Exception {
-                return apiService.registerCard(builder.build());
+                return deviceDna.send(getJsonElements(userSignals))
+                        .flatMap(new Func1<String, Single<Receipt>>() {
+                            @Override
+                            public Single<Receipt> call(String s) {
+                                return apiService.registerCard(builder.build());
+                            }
+                        });
             }
         });
     }

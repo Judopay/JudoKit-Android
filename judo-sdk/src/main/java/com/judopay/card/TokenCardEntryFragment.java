@@ -96,8 +96,8 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         pastedFieldsDetector = new PastedFieldsDetector.Builder()
                 .add("securityCode", securityCodeEntryView.getEditText())
