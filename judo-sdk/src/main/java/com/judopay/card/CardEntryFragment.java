@@ -121,8 +121,8 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         pastedFieldsDetector = new PastedFieldsDetector.Builder()
                 .add("cardNumber", cardNumberEntryView.getEditText())
@@ -215,7 +215,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         List<Validator> validators = new ArrayList<>();
         List<Pair<Validator, View>> validatorViews = new ArrayList<>();
 
-        cardNumberEntryView.getEditText().addTextChangedListener(new SimpleTextWatcher() {
+        cardNumberEntryView.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             protected void onTextChanged(CharSequence text) {
                 int cardType = CardNetwork.fromCardNumber(text.toString());

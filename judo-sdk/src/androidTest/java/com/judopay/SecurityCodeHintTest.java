@@ -40,7 +40,7 @@ public class SecurityCodeHintTest {
         rule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("4976000000003436"));
+                .perform(typeText("4976"));
 
         onView(withId(R.id.security_code_input_layout))
                 .check(matches(withTextInputHint("CVV2")));
@@ -54,7 +54,7 @@ public class SecurityCodeHintTest {
         rule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("340000432128428"));
+                .perform(typeText("3400"));
 
         onView(withId(R.id.security_code_input_layout))
                 .check(matches(withTextInputHint("CID")));
@@ -68,7 +68,7 @@ public class SecurityCodeHintTest {
         rule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("5100000000005460"));
+                .perform(typeText("5100"));
 
         onView(withId(R.id.security_code_input_layout))
                 .check(matches(withTextInputHint("CVC2")));
@@ -82,7 +82,7 @@ public class SecurityCodeHintTest {
         rule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("340000432128428"));
+                .perform(typeText("3400"));
 
         onView(withId(R.id.security_code_edit_text))
                 .perform(click())
@@ -97,7 +97,7 @@ public class SecurityCodeHintTest {
         rule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("4976000000003436"));
+                .perform(typeText("4976"));
 
         onView(withId(R.id.security_code_edit_text))
                 .perform(click())

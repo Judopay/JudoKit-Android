@@ -50,6 +50,7 @@
 -keep public class com.judopay.model.* { *; }
 -keep class com.judopay.Judo { *; }
 -keep class com.judopay.Judo$* { *; }
+-keep class com.judopay.api.Tls12SslSocketFactory { *; }
 -keep class com.judopay.api.JudoApiServiceFactory { *; }
 -keep class com.judopay.PaymentActivity {public *;}
 -keep class com.judopay.PaymentFragment {public *;}

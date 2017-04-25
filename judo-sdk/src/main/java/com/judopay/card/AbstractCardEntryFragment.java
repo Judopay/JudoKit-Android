@@ -48,8 +48,8 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
     protected abstract void onInitialize(Bundle savedInstanceState, Judo judo);
 
     @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         if (getArguments() != null && getArguments().containsKey(Judo.JUDO_OPTIONS)) {
             Judo judo = getArguments().getParcelable(Judo.JUDO_OPTIONS);
