@@ -130,7 +130,7 @@ public class Address implements Parcelable {
         }
 
         public Address build() {
-            return new Address(line1, line2, line3, postCode, town, countryCode);
+            return new Address(line1, line2, line3, town, postCode, countryCode);
         }
     }
 
