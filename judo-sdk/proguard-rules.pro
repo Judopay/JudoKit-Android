@@ -48,6 +48,7 @@
 -keep interface com.judopay.JudoApiService { *; }
 -keep class com.judopay.model.** { *; }
 -keep public class com.judopay.model.* { *; }
+-keep public final class com.judopay.model.* { *; }
 -keep class com.judopay.Judo { *; }
 -keep class com.judopay.Judo$* { *; }
 -keep class com.judopay.api.Tls12SslSocketFactory { *; }
