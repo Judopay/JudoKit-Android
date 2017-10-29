@@ -11,6 +11,7 @@ import com.judopay.model.Receipts;
 import com.judopay.model.RefundRequest;
 import com.judopay.model.RegisterCardRequest;
 import com.judopay.model.TokenRequest;
+import com.judopay.model.VCOPaymentRequest;
 import com.judopay.model.VoidRequest;
 
 import retrofit2.http.Body;
@@ -114,6 +115,12 @@ public interface JudoApiService {
 
     @POST("transactions/preauths")
     Single<Receipt> androidPayPreAuth(@Body AndroidPayRequest androidPayRequest);
+
+    @POST("transactions/payments")
+    Single<Receipt> vcoPayment(@Body VCOPaymentRequest vcoPaymentRequest);
+
+    @POST("transactions/preauths")
+    Single<Receipt> vcoPreAuth(@Body VCOPaymentRequest vcoPaymentRequest);
 
     /**
      * List all payment receipts for the account

@@ -1,6 +1,7 @@
 package com.judopay;
 
 import com.google.gson.JsonElement;
+import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.arch.Logger;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
@@ -11,19 +12,21 @@ import com.judopay.model.TokenRequest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Map;
 
 import okhttp3.Headers;
 import okhttp3.internal.http.RealResponseBody;
 import okio.Buffer;
-import retrofit2.adapter.rxjava.HttpException;
+import retrofit2.HttpException;
 import rx.Single;
 
 import static java.util.UUID.randomUUID;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyMapOf;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,32 +34,30 @@ import static org.mockito.Mockito.when;
 public class PreAuthPresenterTest {
 
     @Mock
-    Receipt receipt;
+    private CardToken cardToken;
 
     @Mock
-    CardToken cardToken;
+    private DeviceDna deviceDna;
+
+    @SuppressWarnings("unused")
+    @Mock
+    private Logger logger;
 
     @Mock
-    DeviceDna deviceDna;
+    private JudoApiService apiService;
 
     @Mock
-    Logger logger;
-
-    @Mock
-    JudoApiService apiService;
-
-    @Mock
-    TransactionCallbacks transactionCallbacks;
+    private TransactionCallbacks transactionCallbacks;
 
     @InjectMocks
-    PreAuthPresenter presenter;
+    private PreAuthPresenter presenter;
 
     @Test
     public void shouldPerformPreAuth() {
         when(apiService.preAuth(any(PaymentRequest.class)))
                 .thenReturn(Single.<Receipt>just(null));
 
-        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
+        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         presenter.performPreAuth(getCard(), new Judo.Builder("apiToken", "apiSecret")
@@ -72,14 +73,17 @@ public class PreAuthPresenterTest {
 
     @Test
     public void shouldReturnReceiptWhenBadRequest() {
-        RealResponseBody responseBody = new RealResponseBody(Headers.of("SdkVersion", "5.0"), new Buffer());
+        Buffer buffer = new Buffer();
+        buffer.writeUtf8(JudoApiServiceFactory.getGson().toJson(new Receipt()));
+
+        RealResponseBody responseBody = new RealResponseBody(Headers.of("SdkVersion", "5.0"), buffer);
 
         HttpException exception = new HttpException(retrofit2.Response.error(400, responseBody));
 
         when(apiService.preAuth(any(PaymentRequest.class)))
                 .thenReturn(Single.<Receipt>error(exception));
 
-        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
+        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         presenter.performPreAuth(getCard(), new Judo.Builder("apiToken", "apiSecret")
@@ -98,7 +102,7 @@ public class PreAuthPresenterTest {
         when(apiService.tokenPreAuth(any(TokenRequest.class)))
                 .thenReturn(Single.<Receipt>just(null));
 
-        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
+        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         when(cardToken.getToken()).thenReturn("cardToken");
@@ -124,5 +128,4 @@ public class PreAuthPresenterTest {
                 .setExpiryDate("12/21")
                 .build();
     }
-
 }

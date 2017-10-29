@@ -36,7 +36,6 @@ public class CustomLayoutAutoAdvanceFieldsTest {
         testRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
-                .check(matches(hasFocus()))
                 .perform(typeText("4976000000003436"));
 
         onView(withId(R.id.expiry_date_edit_text))
@@ -59,7 +58,6 @@ public class CustomLayoutAutoAdvanceFieldsTest {
         testRule.launchActivity(intent);
 
         onView(withId(R.id.card_number_edit_text))
-                .check(matches(hasFocus()))
                 .perform(typeText("6759000000005462"));
 
         onView(withId(R.id.start_date_edit_text))
