@@ -4,7 +4,7 @@ import com.judopay.error.DuplicateTransactionError;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 
@@ -44,6 +44,7 @@ public class DeDuplicationInterceptorTest {
                 .request(request)
                 .body(responseBody)
                 .code(200)
+                .message("")
                 .protocol(Protocol.HTTP_1_1)
                 .build();
 
@@ -75,6 +76,7 @@ public class DeDuplicationInterceptorTest {
                 .request(request)
                 .body(responseBody)
                 .code(200)
+                .message("")
                 .protocol(Protocol.HTTP_1_1)
                 .build();
 
@@ -92,8 +94,6 @@ public class DeDuplicationInterceptorTest {
 
     @Test
     public void shouldProceedWhenRequestBodyNull() throws IOException {
-        DeDuplicationInterceptor interceptor = new DeDuplicationInterceptor();
-
         Request request = new Request.Builder()
                 .url("http://www.judopay.com")
                 .build();
@@ -104,9 +104,9 @@ public class DeDuplicationInterceptorTest {
                 .request(request)
                 .body(responseBody)
                 .code(200)
+                .message("")
                 .protocol(Protocol.HTTP_1_1)
                 .build();
-
 
         Interceptor.Chain chain = mock(Interceptor.Chain.class);
 
@@ -115,9 +115,9 @@ public class DeDuplicationInterceptorTest {
         when(chain.proceed(eq(request)))
                 .thenReturn(response);
 
+        DeDuplicationInterceptor interceptor = new DeDuplicationInterceptor();
         interceptor.intercept(chain);
 
         verify(chain, times(1)).proceed(eq(request));
     }
-
 }

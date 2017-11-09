@@ -1,6 +1,7 @@
 package com.judopay;
 
 import com.google.gson.JsonElement;
+import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.arch.Logger;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
@@ -12,9 +13,10 @@ import com.judopay.model.TokenRequest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.net.UnknownHostException;
 import java.util.Map;
@@ -22,7 +24,7 @@ import java.util.Map;
 import okhttp3.Headers;
 import okhttp3.internal.http.RealResponseBody;
 import okio.Buffer;
-import retrofit2.adapter.rxjava.HttpException;
+import retrofit2.HttpException;
 import rx.Single;
 import rx.observers.TestSubscriber;
 
@@ -30,7 +32,6 @@ import static java.util.UUID.randomUUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyMapOf;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -39,38 +40,39 @@ import static org.mockito.Mockito.when;
 public class PaymentPresenterTest {
 
     @Mock
-    CardToken cardToken;
+    private CardToken cardToken;
 
     @Mock
-    CardVerificationResult cardVerificationResult;
+    private CardVerificationResult cardVerificationResult;
 
     @Mock
-    Receipt receipt;
+    private Receipt receipt;
 
     @Mock
-    Map<String, Object> fieldMetaData;
+    private Map<String, Object> fieldMetaData;
 
     @Mock
-    DeviceDna deviceDna;
+    private DeviceDna deviceDna;
+
+    @SuppressWarnings("unused")
+    @Mock
+    private Logger logger;
 
     @Mock
-    Logger logger;
+    private JudoApiService apiService;
 
     @Mock
-    JudoApiService apiService;
-
-    @Mock
-    TransactionCallbacks transactionCallbacks;
+    private TransactionCallbacks transactionCallbacks;
 
     @InjectMocks
-    PaymentPresenter presenter;
+    private PaymentPresenter presenter;
 
     @Test
     public void shouldPerformPayment() {
         when(apiService.payment(any(PaymentRequest.class)))
                 .thenReturn(Single.just(receipt));
 
-        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
+        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         Receipt result = presenter.performPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
@@ -91,7 +93,7 @@ public class PaymentPresenterTest {
         when(apiService.payment(any(PaymentRequest.class)))
                 .thenReturn(Single.<Receipt>error(new UnknownHostException()));
 
-        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
+        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         presenter.performPayment(getCard(), new Judo.Builder("apiToken", "apiSecret")
@@ -109,11 +111,12 @@ public class PaymentPresenterTest {
     @Test
     public void shouldReturnReceiptWhenHttpException() {
         Buffer buffer = new Buffer();
+        buffer.writeUtf8(JudoApiServiceFactory.getGson().toJson(new Receipt()));
 
         RealResponseBody responseBody = new RealResponseBody(Headers.of("SdkVersion", "5.0"), buffer);
         HttpException exception = new HttpException(retrofit2.Response.error(404, responseBody));
 
-        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
+        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         when(apiService.payment(any(PaymentRequest.class)))
@@ -132,10 +135,13 @@ public class PaymentPresenterTest {
 
     @Test
     public void shouldReturnReceiptWhenBadRequest() {
-        RealResponseBody responseBody = new RealResponseBody(Headers.of("SdkVersion", "5.0"), new Buffer());
+        Buffer buffer = new Buffer();
+        buffer.writeUtf8(JudoApiServiceFactory.getGson().toJson(new Receipt()));
+
+        RealResponseBody responseBody = new RealResponseBody(Headers.of("SdkVersion", "5.0"), buffer);
         HttpException exception = new HttpException(retrofit2.Response.error(400, responseBody));
 
-        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
+        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         when(apiService.payment(any(PaymentRequest.class)))
@@ -157,7 +163,7 @@ public class PaymentPresenterTest {
         when(apiService.tokenPayment(any(TokenRequest.class)))
                 .thenReturn(Single.<Receipt>just(null));
 
-        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
+        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         when(cardToken.getToken()).thenReturn("cardToken");
@@ -213,5 +219,4 @@ public class PaymentPresenterTest {
                 .setExpiryDate("12/21")
                 .build();
     }
-
 }
