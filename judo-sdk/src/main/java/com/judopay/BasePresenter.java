@@ -12,7 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import retrofit2.adapter.rxjava.HttpException;
+import okhttp3.ResponseBody;
+import retrofit2.HttpException;
 import rx.Single;
 import rx.functions.Action1;
 
@@ -20,9 +21,8 @@ abstract class BasePresenter implements AuthorizationListener {
 
     final JudoApiService apiService;
     final TransactionCallbacks transactionCallbacks;
-
-    private final Gson gson;
     final DeviceDna deviceDna;
+    private final Gson gson;
     private final Logger logger;
 
     boolean loading;
@@ -72,8 +72,9 @@ abstract class BasePresenter implements AuthorizationListener {
             private void handleErrorCallback(Throwable throwable) {
                 if (throwable instanceof HttpException) {
                     retrofit2.Response<?> response = ((HttpException) throwable).response();
-                    if (response.errorBody() != null) {
-                        Reader reader = response.errorBody().charStream();
+                    ResponseBody errorBody = response.errorBody();
+                    if (errorBody != null) {
+                        Reader reader = errorBody.charStream();
                         Receipt receipt = gson.fromJson(reader, Receipt.class);
                         transactionCallbacks.onError(receipt);
                     }

@@ -103,7 +103,7 @@ public final class Wallet {
 
         /**
          * @param encryptedMessage the encrypted message
-         * @return The Builder for creating the {@link AndroidPayRequest} instance
+         * @return The Builder for creating the {@link Wallet} instance
          */
         public Builder setEncryptedMessage(String encryptedMessage) {
             this.encryptedMessage = encryptedMessage;
@@ -113,7 +113,7 @@ public final class Wallet {
         /**
          * @param ephemeralPublicKey the Android Pay ephemeral public key associated with the
          *                           private key to encrypt the message.
-         * @return The Builder for creating the {@link AndroidPayRequest} instance
+         * @return The Builder for creating the {@link Wallet} instance
          */
         public Builder setEphemeralPublicKey(String ephemeralPublicKey) {
             this.ephemeralPublicKey = ephemeralPublicKey;
@@ -122,7 +122,7 @@ public final class Wallet {
 
         /**
          * @param tag the MAC of the {@link #encryptedMessage}
-         * @return The Builder for creating the {@link AndroidPayRequest} instance
+         * @return The Builder for creating the {@link Wallet} instance
          */
         public Builder setTag(String tag) {
             this.tag = tag;
@@ -131,7 +131,7 @@ public final class Wallet {
 
         /**
          * @param publicKey the public key used for encrypting the Android Pay payment token.
-         * @return The Builder for creating the {@link AndroidPayRequest} instance
+         * @return The Builder for creating the {@link Wallet} instance
          */
         public Builder setPublicKey(String publicKey) {
             this.publicKey = publicKey;
@@ -143,7 +143,7 @@ public final class Wallet {
          *                          last four digits of a customer's card. This can be obtained from
          *                          by calling getInstrumentInfo().getInstrumentDetails() on the
          *                          FullWallet.
-         * @return The Builder for creating the {@link AndroidPayRequest} instance
+         * @return The Builder for creating the {@link Wallet} instance
          */
         public Builder setInstrumentDetails(String instrumentDetails) {
             this.instrumentDetails = instrumentDetails;
@@ -154,7 +154,7 @@ public final class Wallet {
          * @param instrumentType the type of the payment method used (i.e. VISA, MASTERCARD, AMEX).
          *                       This can be obtained from by calling
          *                       getInstrumentInfo().getInstrumentType() on the FullWallet
-         * @return The Builder for creating the {@link AndroidPayRequest} instance
+         * @return The Builder for creating the {@link Wallet} instance
          */
         public Builder setInstrumentType(String instrumentType) {
             this.instrumentType = instrumentType;
@@ -164,7 +164,7 @@ public final class Wallet {
         /**
          * @param googleTransactionId the  ID of the transaction. This can be obtained
          *                            from the FullWallet.getGoogleTransactionId() method.
-         * @return The Builder for creating the {@link AndroidPayRequest} instance
+         * @return The Builder for creating the {@link Wallet} instance
          */
         public Builder setGoogleTransactionId(String googleTransactionId) {
             this.googleTransactionId = googleTransactionId;
@@ -176,7 +176,7 @@ public final class Wallet {
          *                    see ENVIRONMENT_TEST and ENVIRONMENT_PRODUCTION in Google Play
          *                    Services Wallet class com.google.android.gms.wallet.WalletConstants,
          *                    this is required for an Android Pay transaction.
-         * @return The Builder for creating the {@link AndroidPayRequest} instance
+         * @return The Builder for creating the {@link Wallet} instance
          */
         public Builder setEnvironment(Integer environment) {
             this.environment = environment;

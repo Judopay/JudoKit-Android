@@ -1,6 +1,7 @@
 package com.judopay;
 
 import com.google.gson.JsonElement;
+import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.arch.Logger;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
@@ -9,23 +10,24 @@ import com.judopay.model.RegisterCardRequest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.Headers;
 import okhttp3.internal.http.RealResponseBody;
 import okio.Buffer;
-import retrofit2.adapter.rxjava.HttpException;
+import retrofit2.HttpException;
 import rx.Observable;
 import rx.Single;
 
 import static java.util.UUID.randomUUID;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyMapOf;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -36,25 +38,26 @@ import static rx.Single.just;
 public class RegisterCardPresenterTest {
 
     @Mock
-    Receipt receipt;
+    private Receipt receipt;
 
     @Mock
-    Address cardAddress;
+    private Address cardAddress;
 
     @Mock
-    DeviceDna deviceDna;
+    private DeviceDna deviceDna;
+
+    @SuppressWarnings("unused")
+    @Mock
+    private Logger logger;
 
     @Mock
-    Logger logger;
+    private JudoApiService apiService;
 
     @Mock
-    JudoApiService apiService;
-
-    @Mock
-    TransactionCallbacks transactionCallbacks;
+    private TransactionCallbacks transactionCallbacks;
 
     @InjectMocks
-    RegisterCardPresenter presenter;
+    private RegisterCardPresenter presenter;
 
     private String judoId = "100407196";
     private String consumer = "consumerRef";
@@ -64,7 +67,7 @@ public class RegisterCardPresenterTest {
         when(apiService.registerCard(any(RegisterCardRequest.class)))
                 .thenReturn(Single.<Receipt>just(null));
 
-        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
+        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
                 .thenReturn(just(randomUUID().toString()));
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
@@ -81,7 +84,7 @@ public class RegisterCardPresenterTest {
         when(apiService.registerCard(any(RegisterCardRequest.class)))
                 .thenReturn(Single.<Receipt>just(null));
 
-        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
+        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
                 .thenReturn(just(randomUUID().toString()));
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
@@ -101,7 +104,7 @@ public class RegisterCardPresenterTest {
         when(apiService.registerCard(any(RegisterCardRequest.class)))
                 .thenReturn(just(receipt));
 
-        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
+        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
                 .thenReturn(just(randomUUID().toString()));
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
@@ -120,7 +123,7 @@ public class RegisterCardPresenterTest {
 
         when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(just(receipt));
 
-        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
+        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
                 .thenReturn(just(randomUUID().toString()));
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
@@ -154,7 +157,7 @@ public class RegisterCardPresenterTest {
         when(apiService.registerCard(any(RegisterCardRequest.class)))
                 .thenReturn(response);
 
-        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
+        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
                 .thenReturn(just(randomUUID().toString()));
 
         presenter.performRegisterCard(card, new Judo.Builder("apiToken", "apiSecret")
@@ -175,7 +178,7 @@ public class RegisterCardPresenterTest {
 
         when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(just(receipt));
 
-        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
+        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
                 .thenReturn(just(randomUUID().toString()));
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
@@ -190,13 +193,16 @@ public class RegisterCardPresenterTest {
 
     @Test
     public void shouldReturnReceiptWhenBadRequest() {
-        RealResponseBody responseBody = new RealResponseBody(Headers.of("SdkVersion", "5.0"), new Buffer());
+        Buffer buffer = new Buffer();
+        buffer.writeUtf8(JudoApiServiceFactory.getGson().toJson(new Receipt()));
+
+        RealResponseBody responseBody = new RealResponseBody(Headers.of("SdkVersion", "5.0"), buffer);
 
         HttpException exception = new HttpException(retrofit2.Response.error(400, responseBody));
 
         when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Single.<Receipt>error(exception));
 
-        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
+        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
                 .thenReturn(just(randomUUID().toString()));
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
@@ -212,7 +218,7 @@ public class RegisterCardPresenterTest {
     public void shouldShowConnectionErrorDialog() {
         when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Single.<Receipt>error(new UnknownHostException()));
 
-        when(deviceDna.send(anyMapOf(String.class, JsonElement.class)))
+        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
                 .thenReturn(just(randomUUID().toString()));
 
         presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
@@ -232,5 +238,4 @@ public class RegisterCardPresenterTest {
                 .setExpiryDate("12/21")
                 .build();
     }
-
 }
