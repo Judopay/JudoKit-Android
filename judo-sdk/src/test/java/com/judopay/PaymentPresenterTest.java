@@ -21,7 +21,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.net.UnknownHostException;
 import java.util.Map;
 
-import okhttp3.Headers;
 import okhttp3.internal.http.RealResponseBody;
 import okio.Buffer;
 import retrofit2.HttpException;
@@ -113,7 +112,7 @@ public class PaymentPresenterTest {
         Buffer buffer = new Buffer();
         buffer.writeUtf8(JudoApiServiceFactory.getGson().toJson(new Receipt()));
 
-        RealResponseBody responseBody = new RealResponseBody(Headers.of("SdkVersion", "5.0"), buffer);
+        RealResponseBody responseBody = new RealResponseBody("application/json", buffer.size(), buffer);
         HttpException exception = new HttpException(retrofit2.Response.error(404, responseBody));
 
         when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
@@ -138,7 +137,7 @@ public class PaymentPresenterTest {
         Buffer buffer = new Buffer();
         buffer.writeUtf8(JudoApiServiceFactory.getGson().toJson(new Receipt()));
 
-        RealResponseBody responseBody = new RealResponseBody(Headers.of("SdkVersion", "5.0"), buffer);
+        RealResponseBody responseBody = new RealResponseBody("application/json", buffer.size(), buffer);
         HttpException exception = new HttpException(retrofit2.Response.error(400, responseBody));
 
         when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))

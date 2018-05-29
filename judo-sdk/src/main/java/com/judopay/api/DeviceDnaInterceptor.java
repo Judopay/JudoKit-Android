@@ -1,6 +1,7 @@
 package com.judopay.api;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -20,7 +21,6 @@ import okio.Buffer;
 class DeviceDnaInterceptor implements Interceptor {
 
     private static final String CLIENT_DETAILS = "clientDetails";
-    private static final String DEVICE_IDENTIFIER = "deviceIdentifier";
 
     private final DeviceDna deviceDna;
 
@@ -29,7 +29,7 @@ class DeviceDnaInterceptor implements Interceptor {
     }
 
     @Override
-    public Response intercept(Chain chain) throws IOException {
+    public Response intercept(@NonNull Chain chain) throws IOException {
         okhttp3.Request request = chain.request();
 
         if (isPost(request)) {
@@ -38,7 +38,7 @@ class DeviceDnaInterceptor implements Interceptor {
             if (body.isJsonObject()) {
                 JsonObject json = body.getAsJsonObject();
 
-                if(json.get(CLIENT_DETAILS) == null) {
+                if (json.get(CLIENT_DETAILS) == null) {
                     addClientDetails(json);
                 }
 
@@ -62,14 +62,7 @@ class DeviceDnaInterceptor implements Interceptor {
             clientDetailsJson.addProperty(entry.getKey(), entry.getValue());
         }
 
-        clientDetailsJson.addProperty(DEVICE_IDENTIFIER, getDeviceId());
         json.add(CLIENT_DETAILS, clientDetailsJson);
-    }
-
-    private String getDeviceId() {
-        return deviceDna.identifyDevice()
-                .toBlocking()
-                .value();
     }
 
     private boolean isPost(okhttp3.Request request) {
