@@ -7,9 +7,9 @@ import java.util.UUID;
 @SuppressWarnings("WeakerAccess")
 public class TestUtil {
 
-   public static final String API_TOKEN = "<API TOKEN>";
-   public static final String API_SECRET = "<API SECRET>";
-   public static final String JUDO_ID = "<JUDO ID>";
+   public static final String API_TOKEN = "Izx9omsBR15LatAl";
+   public static final String API_SECRET = "b5787124845533d8e68d12a586fa3713871b876b528600ebfdc037afec880cd6";
+   public static final String JUDO_ID = "100915867";
 
     public static Judo getJudo() {
         return new Judo.Builder()
