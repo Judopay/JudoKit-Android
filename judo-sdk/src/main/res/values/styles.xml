@@ -6,6 +6,8 @@
     <attr name="activityTitle" format="reference|string" />
     <attr name="secureServerMessageShown" format="reference|boolean" />
 
+    <style name="Theme" />
+
     <style name="Theme.Judo" parent="Theme.AppCompat">
         <item name="buttonLabel">@string/pay</item>
         <item name="buttonStyle">@style/Widget.Judo.Button</item>
@@ -38,12 +40,10 @@
         <item name="buttonLabel">@string/pay</item>
         <item name="buttonStyle">@style/Widget.Judo.Button</item>
         <item name="colorButtonNormal">@color/judo_teal</item>
-        <item name="overlayBackground">@color/judo_white_90</item>§
+        <item name="overlayBackground">@color/judo_white_90</item>
         <item name="secureServerMessageShown">false</item>
         <item name="cameraIcon">@drawable/ic_photo_camera_black</item>
     </style>
-
-    <style name="Theme" />
 
     <style name="Theme.Judo.Light.ShowSecurityMessage" parent="Theme.Judo.Light">
         <item name="secureServerMessageShown">true</item>
@@ -174,6 +174,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">center</item>
+        <!-- TODO: this crashes Android-Fragments-Sample when not using the Judo theme as base theme for the app and not setting overlayBackground in the application theme -->
         <item name="android:background">?attr/overlayBackground</item>
         <item name="android:clickable">true</item>
         <item name="android:gravity">center</item>
@@ -189,7 +190,7 @@
     </style>
 
     <style name="Widget.Judo.Spinner" parent="Widget.AppCompat.Spinner">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">3.5dp</item>
         <item name="android:layout_marginTop">6.5dp</item>
