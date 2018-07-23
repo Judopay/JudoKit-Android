@@ -30,23 +30,34 @@ android {
         }
     }
 
-    lintOptions {
-        warning 'InvalidPackage'
-    }
-
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
     }
 
-    sourceSets {
-        main { java.srcDirs = ['src/main/java'] }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
-
 }
 
-task cleanMavenArtifact << {
-    def binDir = new File("${System.getProperty('user.home')}/.m2/repository/com/judopay/${publish.artifactId}/${publish.publishVersion}")
-    binDir.deleteDir()
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+
+publish {
+    userOrg = 'judopay'
+    groupId = 'com.judopay'
+    artifactId = 'android-sdk'
+    publishVersion = android.defaultConfig.versionName
+    desc = 'Android Mobile Payments SDK'
+    website = 'https://github.com/JudoPay/Judo-Android'
+}
+
+task(cleanMavenArtifact) {
+    doLast {
+        def binDir = new File("${System.getProperty('user.home')}/.m2/repository/com/judopay/${publish.artifactId}/${publish.publishVersion}")
+        binDir.deleteDir()
+    }
 }
 
 task androidJavadocs(type: Javadoc) {
@@ -79,30 +90,25 @@ artifacts {
     archives sourcesJar
 }
 
-publish {
-    userOrg = 'judopay'
-    groupId = 'com.judopay'
-    artifactId = 'android-sdk'
-    publishVersion = android.defaultConfig.versionName
-    desc = 'Android Mobile Payments SDK'
-    website = 'https://github.com/JudoPay/Judo-Android'
-}
-
 dependencies {
-    //noinspection GradleDynamicVersion
-    implementation 'com.judopay:device-dna:0.9+'
+    implementation 'com.judopay:device-dna:0.10'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava:2.4.0'
     implementation 'io.reactivex:rxandroid:1.2.1'
     implementation 'io.reactivex:rxjava:1.3.8'
-    implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:support-compat:27.1.1'
+    implementation 'com.android.support:support-vector-drawable:27.1.1'
     implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:support-annotations:27.1.1'
 
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.8.47'
+    testImplementation 'org.mockito:mockito-core:2.19.0'
+    testImplementation 'org.hamcrest:hamcrest-all:1.3'
 
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.2'
 }

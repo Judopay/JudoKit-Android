@@ -10,12 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.Spinner;
 
 import com.judopay.Judo;
 import com.judopay.R;
 import com.judopay.arch.ThemeUtil;
+import com.judopay.detector.CompletedFieldsDetector;
+import com.judopay.detector.PastedFieldsDetector;
+import com.judopay.detector.TotalKeystrokesDetector;
 import com.judopay.devicedna.signal.user.CompletedField;
 import com.judopay.devicedna.signal.user.FieldState;
 import com.judopay.devicedna.signal.user.UserSignals;
@@ -23,9 +25,6 @@ import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.CardNetwork;
 import com.judopay.model.Country;
-import com.judopay.detector.CompletedFieldsDetector;
-import com.judopay.detector.PastedFieldsDetector;
-import com.judopay.detector.TotalKeystrokesDetector;
 import com.judopay.validation.CardNumberValidator;
 import com.judopay.validation.CountryAndPostcodeValidator;
 import com.judopay.validation.ExpiryDateValidator;
@@ -96,22 +95,33 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     private IssueNumberValidator issueNumberValidator;
     private SecurityCodeValidator securityCodeValidator;
 
+    public static CardEntryFragment newInstance(Judo judo, CardEntryListener listener) {
+        CardEntryFragment cardEntryFragment = new CardEntryFragment();
+        cardEntryFragment.setCardEntryListener(listener);
+
+        Bundle arguments = new Bundle();
+        arguments.putParcelable(Judo.JUDO_OPTIONS, judo);
+        cardEntryFragment.setArguments(arguments);
+
+        return cardEntryFragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_card_entry, container, false);
 
-        submitButton = (Button) view.findViewById(R.id.button);
+        submitButton = view.findViewById(R.id.button);
 
-        securityCodeEntryView = (SecurityCodeEntryView) view.findViewById(R.id.security_code_entry_view);
-        cardNumberEntryView = (CardNumberEntryView) view.findViewById(R.id.card_number_entry_view);
-        expiryDateEntryView = (ExpiryDateEntryView) view.findViewById(R.id.expiry_date_entry_view);
+        securityCodeEntryView = view.findViewById(R.id.security_code_entry_view);
+        cardNumberEntryView = view.findViewById(R.id.card_number_entry_view);
+        expiryDateEntryView = view.findViewById(R.id.expiry_date_entry_view);
 
-        postcodeEntryView = (PostcodeEntryView) view.findViewById(R.id.postcode_entry_view);
+        postcodeEntryView = view.findViewById(R.id.postcode_entry_view);
 
-        countrySpinner = (Spinner) view.findViewById(R.id.country_spinner);
-        startDateEntryView = (StartDateEntryView) view.findViewById(R.id.start_date_entry_view);
+        countrySpinner = view.findViewById(R.id.country_spinner);
+        startDateEntryView = view.findViewById(R.id.start_date_entry_view);
 
-        issueNumberEntryView = (IssueNumberEntryView) view.findViewById(R.id.issue_number_entry_view);
+        issueNumberEntryView = view.findViewById(R.id.issue_number_entry_view);
 
         startDateAndIssueNumberContainer = view.findViewById(R.id.start_date_issue_number_container);
         countryAndPostcodeContainer = view.findViewById(R.id.country_postcode_container);
@@ -162,7 +172,8 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
                         IntentSender intentSender = cardScanningIntent.getIntentSender();
                         try {
                             getActivity().startIntentSenderForResult(intentSender, Judo.CARD_SCANNING_REQUEST, null, 0, 0, 0);
-                        } catch (IntentSender.SendIntentException ignore) { }
+                        } catch (IntentSender.SendIntentException ignore) {
+                        }
                     }
                 }
             });
@@ -388,7 +399,8 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
     }
 
@@ -420,17 +432,6 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
             cardEntryListener.onSubmit(cardBuilder.build(), userSignals.toMap());
         }
-    }
-
-    public static CardEntryFragment newInstance(Judo judo, CardEntryListener listener) {
-        CardEntryFragment cardEntryFragment = new CardEntryFragment();
-        cardEntryFragment.setCardEntryListener(listener);
-
-        Bundle arguments = new Bundle();
-        arguments.putParcelable(Judo.JUDO_OPTIONS, judo);
-        cardEntryFragment.setArguments(arguments);
-
-        return cardEntryFragment;
     }
 
     @Override

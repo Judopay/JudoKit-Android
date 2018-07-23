@@ -1,23 +1,23 @@
 # Retrofit
 -dontwarn okio.**
 -dontwarn retrofit2.**
--keep class retrofit2.** { *; }
--dontwarn sun.misc.Unsafe
+-dontwarn sun.misc.**
 -keepattributes Signature
 -keepattributes Exceptions
+-keepattributes *Annotation*
 -keepclasseswithmembers class * {
     @retrofit.http.* <methods>;
 }
--keep class com.google.gson.** { *; }
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
 -keep class com.google.inject.** { *; }
 -keep class org.apache.http.** { *; }
 -keep class org.apache.james.mime4j.** { *; }
 -keep class javax.inject.** { *; }
 -dontwarn org.apache.http.**
 -dontwarn android.net.http.AndroidHttpClient
--dontwarn retrofit2.**
 
--dontwarn sun.misc.**
 
 # RxJava
 -keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
@@ -46,24 +46,25 @@
 
 # Judopay classes
 -keep interface com.judopay.JudoApiService { *; }
+-keep interface com.judopay.cardverification.WebViewListener { *; }
+-keep interface com.judopay.view.CardNumberEntryView$ScanCardButtonListener { *; }
+-keep public interface com.judopay.ProgressListener { *; }
+-keep public interface com.judopay.cardverification.AuthorizationListener { *; }
+-keep public interface com.judopay.view.PasteListener { *; }
 -keep class com.judopay.model.** { *; }
 -keep public class com.judopay.model.* { *; }
+-keep public class com.judopay.error.* { *; }
 -keep public final class com.judopay.model.* { *; }
 -keep class com.judopay.Judo { *; }
 -keep class com.judopay.Judo$* { *; }
 -keep class com.judopay.api.Tls12SslSocketFactory { *; }
 -keep class com.judopay.api.JudoApiServiceFactory { *; }
--keep class com.judopay.PaymentActivity {public *;}
--keep class com.judopay.PaymentFragment {public *;}
--keep class com.judopay.PreAuthActivity {public *;}
--keep class com.judopay.PreAuthFragment {public *;}
--keep class com.judopay.RegisterCardActivity {public *;}
--keep class com.judopay.RegisterCardFragment {public *;}
+-keep class com.judopay.PaymentActivity { public *; }
+-keep class com.judopay.PaymentFragment { public *; }
+-keep class com.judopay.PreAuthActivity { public *; }
+-keep class com.judopay.PreAuthFragment { public *; }
+-keep class com.judopay.RegisterCardActivity { public *; }
+-keep class com.judopay.RegisterCardFragment { public *; }
 -keep class com.judopay.api.ApiError { *; }
--keep class com.judopay.signals.FieldMetaData { *; }
--keep class com.judopay.signals.FieldSession { *; }
--keep class com.judopay.signals.FieldState { *; }
--keep class com.judopay.signals.UserSignals { *; }
-
--keep class com.judopay.DeviceDna { *; }
--keep public class com.judopay.error.* { *; }
+-keep class com.judopay.api.ApiError$* { *; }
+-keep class com.judopay.validation.Validation { *; }
