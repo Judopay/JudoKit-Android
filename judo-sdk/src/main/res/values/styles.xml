@@ -1,11 +1,5 @@
 <resources>
 
-    <attr name="cameraIcon" format="reference" />
-    <attr name="overlayBackground" format="reference" />
-    <attr name="buttonLabel" format="reference|string" />
-    <attr name="activityTitle" format="reference|string" />
-    <attr name="secureServerMessageShown" format="reference|boolean" />
-
     <style name="Theme" />
 
     <style name="Theme.Judo" parent="Theme.AppCompat">
@@ -61,16 +55,16 @@
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
+    <style name="Widget" />
+
+    <style name="Widget.Judo" />
+
     <style name="Widget.Judo.EntryLayout">
         <item name="android:layout_marginTop">@dimen/medium_padding</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="hintAnimationEnabled">false</item>
     </style>
-
-    <style name="Widget" />
-
-    <style name="Widget.Judo" />
 
     <style name="Widget.Judo.EditText" parent="Widget.AppCompat.EditText">
         <item name="android:imeOptions">actionNext|flagNoExtractUi</item>
@@ -170,12 +164,10 @@
         <item name="android:paddingTop">@dimen/medium_padding</item>
     </style>
 
-    <style name="Overlay">
+    <style name="Widget.Judo.Overlay">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">center</item>
-        <!-- TODO: this crashes Android-Fragments-Sample when not using the Judo theme as base theme for the app and not setting overlayBackground in the application theme -->
-        <item name="android:background">?attr/overlayBackground</item>
         <item name="android:clickable">true</item>
         <item name="android:gravity">center</item>
         <item name="android:orientation">vertical</item>

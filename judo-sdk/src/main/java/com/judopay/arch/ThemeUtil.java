@@ -1,7 +1,10 @@
 package com.judopay.arch;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
+
+import com.judopay.R;
 
 public class ThemeUtil {
 
@@ -19,4 +22,12 @@ public class ThemeUtil {
         return value.data != 0;
     }
 
+    public static int getColorAttr(Context context, int attribute) {
+        TypedValue value = new TypedValue();
+        if (context.getTheme().resolveAttribute(attribute, value, true)) {
+            return value.data;
+        }
+
+        return ContextCompat.getColor(context, R.color.judo_white_90);
+    }
 }
