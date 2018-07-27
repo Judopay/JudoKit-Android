@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.judopay.arch.ThemeUtil;
 import com.judopay.card.AbstractCardEntryFragment;
 import com.judopay.card.CardEntryFragment;
 import com.judopay.card.CardEntryListener;
@@ -54,7 +55,8 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
             PendingIntent pendingResult = getActivity().createPendingResult(Judo.JUDO_REQUEST, new Intent(), 0);
             try {
                 pendingResult.send(Judo.RESULT_TOKEN_EXPIRED);
-            } catch (PendingIntent.CanceledException ignore) { }
+            } catch (PendingIntent.CanceledException ignore) {
+            }
         }
 
         setRetainInstance(true);
@@ -93,7 +95,10 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
         super.onViewCreated(view, savedInstanceState);
 
         this.progressBar = view.findViewById(R.id.progress_overlay);
-        this.progressText = (TextView) view.findViewById(R.id.progress_text);
+        this.progressText = view.findViewById(R.id.progress_text);
+
+        int backgroundColor = ThemeUtil.getColorAttr(getActivity(), R.attr.overlayBackground);
+        progressBar.setBackgroundColor(backgroundColor);
     }
 
     @Override
