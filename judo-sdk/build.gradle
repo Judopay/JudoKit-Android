@@ -118,6 +118,8 @@ android.libraryVariants.all { variant ->
         def androidJavaDocs = project.tasks['androidJavadocs']
         androidJavaDocs.configure {
             classpath = variant.getCompileClasspath(null) + project.files(project.android.bootClasspath)
+            classpath += files("build/generated/source/r/${variant.flavorName}/release")
+            classpath += files("build/generated/source/buildConfig/${variant.flavorName}/release")
             source = variant.sourceSets.collect({ it.javaDirectories }).flatten()
             dependsOn variant.javaCompiler.dependsOn
         }

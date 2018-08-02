@@ -21,6 +21,9 @@ public class NumberFormatTextWatcher implements TextWatcher {
     /**
      * @deprecated use {@link NumberFormatTextWatcher#NumberFormatTextWatcher(JudoEditText, String)}
      * instead as fraud identifiers are only reported correctly when {@link JudoEditText} is used
+     *
+     * @param editText The EditText to watch
+     * @param format   Format string
      */
     @Deprecated
     public NumberFormatTextWatcher(EditText editText, String format) {
