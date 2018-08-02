@@ -10,6 +10,7 @@ import com.judopay.model.Receipt;
 import com.judopay.model.Receipts;
 import com.judopay.model.RefundRequest;
 import com.judopay.model.RegisterCardRequest;
+import com.judopay.model.SaveCardRequest;
 import com.judopay.model.TokenRequest;
 import com.judopay.model.VCOPaymentRequest;
 import com.judopay.model.VoidRequest;
@@ -109,6 +110,15 @@ public interface JudoApiService {
      */
     @POST("transactions/registercard")
     Single<Receipt> registerCard(@Body RegisterCardRequest registerCardRequest);
+
+    /**
+     * Save a card to be used for making future tokenised payments
+     *
+     * @param saveCardRequest the details of the card to be saved
+     * @return the receipt for the card save with the status of the transaction
+     */
+    @POST("transactions/savecard")
+    Single<Receipt> saveCard(@Body SaveCardRequest saveCardRequest);
 
     @POST("transactions/payments")
     Single<Receipt> androidPayPayment(@Body AndroidPayRequest androidPayRequest);

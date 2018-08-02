@@ -1,7 +1,7 @@
 package com.judopay.payment;
 
 import android.content.Intent;
-import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -44,7 +44,7 @@ public class SuccessfulPaymentTest {
 
         PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
-        Espresso.registerIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().register(idlingResource);
 
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -61,7 +61,7 @@ public class SuccessfulPaymentTest {
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
         assertThat(activity, matcher);
 
-        Espresso.unregisterIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class SuccessfulPaymentTest {
 
         PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
-        Espresso.registerIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000005462"));
@@ -98,7 +98,7 @@ public class SuccessfulPaymentTest {
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
         assertThat(activity, matcher);
 
-        Espresso.unregisterIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
@@ -115,7 +115,7 @@ public class SuccessfulPaymentTest {
 
         PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
-        Espresso.registerIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"));
@@ -132,7 +132,7 @@ public class SuccessfulPaymentTest {
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
         assertThat(activity, matcher);
 
-        Espresso.unregisterIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
@@ -149,7 +149,7 @@ public class SuccessfulPaymentTest {
 
         PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
-        Espresso.registerIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4976000000003436"));
@@ -169,7 +169,7 @@ public class SuccessfulPaymentTest {
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
         assertThat(activity, matcher);
 
-        Espresso.unregisterIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
@@ -186,7 +186,7 @@ public class SuccessfulPaymentTest {
 
         PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
-        Espresso.registerIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000005462"));
@@ -212,7 +212,7 @@ public class SuccessfulPaymentTest {
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
         assertThat(activity, matcher);
 
-        Espresso.unregisterIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
@@ -229,7 +229,7 @@ public class SuccessfulPaymentTest {
 
         PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
-        Espresso.registerIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000432128428"));
@@ -249,6 +249,6 @@ public class SuccessfulPaymentTest {
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
         assertThat(activity, matcher);
 
-        Espresso.unregisterIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 }

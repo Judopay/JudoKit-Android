@@ -1,6 +1,5 @@
 package com.judopay;
 
-import com.google.gson.JsonElement;
 import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.arch.Logger;
 import com.judopay.model.Card;
@@ -12,12 +11,9 @@ import com.judopay.model.TokenRequest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.Map;
 
 import okhttp3.internal.http.RealResponseBody;
 import okio.Buffer;
@@ -25,7 +21,7 @@ import retrofit2.HttpException;
 import rx.Single;
 
 import static java.util.UUID.randomUUID;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -54,9 +50,9 @@ public class PreAuthPresenterTest {
     @Test
     public void shouldPerformPreAuth() {
         when(apiService.preAuth(any(PaymentRequest.class)))
-                .thenReturn(Single.<Receipt>just(null));
+                .thenReturn(Single.just(null));
 
-        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
+        when(deviceDna.send(any()))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         presenter.performPreAuth(getCard(), new Judo.Builder("apiToken", "apiSecret")
@@ -79,9 +75,9 @@ public class PreAuthPresenterTest {
         HttpException exception = new HttpException(retrofit2.Response.error(400, responseBody));
 
         when(apiService.preAuth(any(PaymentRequest.class)))
-                .thenReturn(Single.<Receipt>error(exception));
+                .thenReturn(Single.error(exception));
 
-        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
+        when(deviceDna.send(any()))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         presenter.performPreAuth(getCard(), new Judo.Builder("apiToken", "apiSecret")
@@ -98,9 +94,9 @@ public class PreAuthPresenterTest {
     @Test
     public void shouldPerformTokenPreAuth() {
         when(apiService.tokenPreAuth(any(TokenRequest.class)))
-                .thenReturn(Single.<Receipt>just(null));
+                .thenReturn(Single.just(null));
 
-        when(deviceDna.send(ArgumentMatchers.<Map<String, JsonElement>>any()))
+        when(deviceDna.send(any()))
                 .thenReturn(Single.just(randomUUID().toString()));
 
         when(cardToken.getToken()).thenReturn("cardToken");

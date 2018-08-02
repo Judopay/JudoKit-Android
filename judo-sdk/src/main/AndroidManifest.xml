@@ -14,6 +14,9 @@
         <activity
             android:name=".RegisterCardActivity"
             android:theme="@style/Theme.Judo.Light.DarkActionBar" />
+        <activity
+            android:name=".SaveCardActivity"
+            android:theme="@style/Theme.Judo.Light.DarkActionBar" />
     </application>
 
 </manifest>

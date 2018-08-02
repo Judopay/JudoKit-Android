@@ -9,14 +9,14 @@ import static com.judopay.arch.TextUtil.isEmpty;
 import static com.judopay.model.LuhnCheck.isValid;
 
 /**
- * Represents the data needed to perform a register card transaction with the judo API.
- * Use the {@link RegisterCardRequest.Builder} for object construction.
+ * Represents the data needed to perform a save card transaction with the judo API.
+ * Use the {@link SaveCardRequest.Builder} for object construction.
  * <p>
- * When creating a {@link RegisterCardRequest} the {@link RegisterCardRequest#judoId}
+ * When creating a {@link SaveCardRequest} the {@link SaveCardRequest#judoId}
  * must be provided.
  */
 @SuppressWarnings("unused")
-public final class RegisterCardRequest extends Request {
+public final class SaveCardRequest extends Request {
 
     private String judoId;
     private String yourConsumerReference;
@@ -161,7 +161,7 @@ public final class RegisterCardRequest extends Request {
             return this;
         }
 
-        public RegisterCardRequest build() {
+        public SaveCardRequest build() {
             if (isEmpty(judoId) || !isValid(judoId)) {
                 throw new JudoIdInvalidError();
             }
@@ -170,7 +170,7 @@ public final class RegisterCardRequest extends Request {
             checkNotNull(cv2);
             checkNotNull(expiryDate);
 
-            RegisterCardRequest request = new RegisterCardRequest();
+            SaveCardRequest request = new SaveCardRequest();
 
             request.judoId = judoId;
             request.currency = currency;

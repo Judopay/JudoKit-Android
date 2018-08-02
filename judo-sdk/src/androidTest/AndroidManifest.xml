@@ -17,6 +17,11 @@
             tools:replace="theme" />
 
         <activity
+            android:name=".SaveCardActivity"
+            android:theme="@style/Theme.Judo.Light.ConfirmPayment"
+            tools:replace="theme" />
+
+        <activity
             android:name=".PreAuthActivity"
             android:theme="@style/Theme.Judo.Light.ShowSecurityMessage"
             tools:replace="theme" />

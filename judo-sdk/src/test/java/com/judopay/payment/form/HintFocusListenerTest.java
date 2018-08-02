@@ -6,9 +6,9 @@ import com.judopay.view.HintFocusListener;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -20,7 +20,7 @@ public class HintFocusListenerTest {
         EditText editText = mock(EditText.class);
 
         String hint = "hint";
-        HintFocusListener hintFocusListener =  new HintFocusListener(editText, hint);
+        HintFocusListener hintFocusListener = new HintFocusListener(editText, hint);
         hintFocusListener.onFocusChange(null, true);
 
         verify(editText).setHint(eq(hint));
@@ -35,5 +35,4 @@ public class HintFocusListenerTest {
 
         verify(editText).setHint(eq(""));
     }
-
 }
