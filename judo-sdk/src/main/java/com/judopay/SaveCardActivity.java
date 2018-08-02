@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 /**
  * Displays a card entry form to the user, allowing for card to be saved and used for token transactions.
- * <p>
+ *
  * To launch the SaveCardActivity, call {@link android.app.Activity#startActivityForResult(Intent, int)}
  * with an Intent the configuration options:
  * <pre class="prettyprint">
@@ -15,8 +15,8 @@ import android.os.Bundle;
  * .setJudoId("1234567")
  * .setConsumerReference("consumerRef")
  * .build());
- * <p>
- * startActivityForResult(intent, SAVE_CARD_REQUEST);
+ *
+ *  startActivityForResult(intent, SAVE_CARD_REQUEST);
  * </pre>
  * See {@link Judo} for the full list of supported options
  */
