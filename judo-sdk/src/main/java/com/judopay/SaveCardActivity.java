@@ -16,7 +16,7 @@ import android.os.Bundle;
  * .setConsumerReference("consumerRef")
  * .build());
  *
- *  startActivityForResult(intent, SAVE_CARD_REQUEST);
+ * startActivityForResult(intent, SAVE_CARD_REQUEST);
  * </pre>
  * See {@link Judo} for the full list of supported options
  */
