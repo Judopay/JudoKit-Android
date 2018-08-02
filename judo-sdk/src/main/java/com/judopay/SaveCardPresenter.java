@@ -3,7 +3,7 @@ package com.judopay;
 import com.judopay.arch.Logger;
 import com.judopay.model.Card;
 import com.judopay.model.Receipt;
-import com.judopay.model.RegisterCardRequest;
+import com.judopay.model.SaveCardRequest;
 
 import java.util.Map;
 
@@ -12,17 +12,17 @@ import rx.functions.Func1;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
-class RegisterCardPresenter extends BasePresenter {
+class SaveCardPresenter extends BasePresenter {
 
-    RegisterCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, DeviceDna deviceDna, Logger logger) {
+    SaveCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, DeviceDna deviceDna, Logger logger) {
         super(callbacks, apiService, deviceDna, logger);
     }
 
-    Single<Receipt> performRegisterCard(Card card, Judo judo, final Map<String, Object> userSignals) {
+    Single<Receipt> performSaveCard(Card card, Judo judo, final Map<String, Object> userSignals) {
         this.loading = true;
         transactionCallbacks.showLoading();
 
-        final RegisterCardRequest.Builder builder = new RegisterCardRequest.Builder()
+        final SaveCardRequest.Builder builder = new SaveCardRequest.Builder()
                 .setJudoId(judo.getJudoId())
                 .setCardNumber(card.getCardNumber())
                 .setCv2(card.getSecurityCode())
@@ -52,6 +52,6 @@ class RegisterCardPresenter extends BasePresenter {
         }
 
         return Single.defer(() -> deviceDna.send(getJsonElements(userSignals))
-                .flatMap((Func1<String, Single<Receipt>>) s -> apiService.registerCard(builder.build())));
+                .flatMap((Func1<String, Single<Receipt>>) s -> apiService.saveCard(builder.build())));
     }
 }

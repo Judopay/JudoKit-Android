@@ -19,9 +19,9 @@ import rx.schedulers.Schedulers;
 
 import static com.judopay.Judo.JUDO_OPTIONS;
 
-public class RegisterCardFragment extends JudoFragment implements TransactionCallbacks, CardEntryListener {
+public class SaveCardFragment extends JudoFragment implements TransactionCallbacks, CardEntryListener {
 
-    private RegisterCardPresenter presenter;
+    private SaveCardPresenter presenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class RegisterCardFragment extends JudoFragment implements TransactionCal
             Credentials credentials = new Credentials(judo.getApiToken(), judo.getApiSecret());
 
             DeviceDna deviceDna = new DeviceDna(getActivity(), credentials);
-            this.presenter = new RegisterCardPresenter(this, apiService, deviceDna, new Logger());
+            this.presenter = new SaveCardPresenter(this, apiService, deviceDna, new Logger());
         }
     }
 
@@ -59,7 +59,7 @@ public class RegisterCardFragment extends JudoFragment implements TransactionCal
     public void onSubmit(Card card, Map<String, Object> userSignals) {
         Judo options = getJudo();
 
-        presenter.performRegisterCard(card, options, userSignals)
+        presenter.performSaveCard(card, options, userSignals)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(presenter.callback(), presenter.error());
@@ -69,5 +69,4 @@ public class RegisterCardFragment extends JudoFragment implements TransactionCal
     boolean isTransactionInProgress() {
         return this.presenter.loading;
     }
-
 }

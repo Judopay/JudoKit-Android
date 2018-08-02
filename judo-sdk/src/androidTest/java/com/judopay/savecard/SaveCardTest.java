@@ -1,4 +1,4 @@
-package com.judopay.registercard;
+package com.judopay.savecard;
 
 import android.content.Intent;
 import android.support.test.espresso.IdlingRegistry;
@@ -9,34 +9,42 @@ import android.support.test.runner.AndroidJUnit4;
 import com.judopay.Judo;
 import com.judopay.JudoTransactionIdlingResource;
 import com.judopay.R;
-import com.judopay.RegisterCardActivity;
+import com.judopay.ResultTestActivity;
+import com.judopay.SaveCardActivity;
+import com.judopay.TestActivityUtil;
 
+import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.judopay.TestUtil.getJudo;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
-public class RegisterCardTest {
+public class SaveCardTest {
 
     @Rule
-    public ActivityTestRule<RegisterCardActivity> activityTestRule = new ActivityTestRule<>(RegisterCardActivity.class, false, false);
+    public ActivityTestRule<ResultTestActivity> activityTestRule = new ActivityTestRule<>(ResultTestActivity.class, false, false);
 
     @Test
-    public void shouldShowAlertWhenCardDeclined() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
+    public void shouldSaveAnOtherwiseDeclinedCard() {
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), SaveCardActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
-        RegisterCardActivity activity = activityTestRule.launchActivity(intent);
-        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(activity);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        SaveCardActivity saveCardActivity = (SaveCardActivity) TestActivityUtil.getCurrentActivity();
+
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(saveCardActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
         onView(ViewMatchers.withId(R.id.card_number_edit_text))
@@ -51,11 +59,8 @@ public class RegisterCardTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        onView(withText(R.string.add_card_failed))
-                .check(matches(isDisplayed()));
-
-        onView(withText(R.string.please_check_details_try_again))
-                .check(matches(isDisplayed()));
+        Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
+        assertThat(activity, matcher);
 
         IdlingRegistry.getInstance().unregister(idlingResource);
     }

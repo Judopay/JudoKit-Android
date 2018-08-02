@@ -1,8 +1,8 @@
 package com.judopay.token;
 
 import android.content.Intent;
-import android.support.test.espresso.Espresso;
 import android.support.test.espresso.IdlingPolicies;
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -83,7 +83,7 @@ public class SuccessfulTokenPaymentTest {
 
         PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
-        Espresso.registerIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("524"));
@@ -94,7 +94,7 @@ public class SuccessfulTokenPaymentTest {
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
         assertThat(activity, matcher);
 
-        Espresso.unregisterIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
@@ -140,7 +140,7 @@ public class SuccessfulTokenPaymentTest {
 
         PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
-        Espresso.registerIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("524"));
@@ -154,7 +154,6 @@ public class SuccessfulTokenPaymentTest {
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
         assertThat(activity, matcher);
 
-        Espresso.unregisterIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
-
 }

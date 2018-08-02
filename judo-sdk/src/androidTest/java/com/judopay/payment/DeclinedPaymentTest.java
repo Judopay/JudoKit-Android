@@ -1,7 +1,7 @@
 package com.judopay.payment;
 
 import android.content.Intent;
-import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -36,7 +36,7 @@ public class DeclinedPaymentTest {
 
         PaymentActivity activity = activityTestRule.launchActivity(intent);
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(activity);
-        Espresso.registerIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4221690000004963"));
@@ -56,7 +56,7 @@ public class DeclinedPaymentTest {
         onView(withText(R.string.please_check_details_try_again))
                 .check(matches(isDisplayed()));
 
-        Espresso.unregisterIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class DeclinedPaymentTest {
 
         PaymentActivity activity = activityTestRule.launchActivity(intent);
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(activity);
-        Espresso.registerIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000009076"));
@@ -92,7 +92,7 @@ public class DeclinedPaymentTest {
         onView(withText(R.string.please_check_details_try_again))
                 .check(matches(isDisplayed()));
 
-        Espresso.unregisterIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
@@ -102,7 +102,7 @@ public class DeclinedPaymentTest {
 
         PaymentActivity activity = activityTestRule.launchActivity(intent);
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(activity);
-        Espresso.registerIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000150358074"));
@@ -122,7 +122,7 @@ public class DeclinedPaymentTest {
         onView(withText(R.string.please_check_details_try_again))
                 .check(matches(isDisplayed()));
 
-        Espresso.unregisterIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
@@ -135,7 +135,7 @@ public class DeclinedPaymentTest {
 
         PaymentActivity activity = activityTestRule.launchActivity(intent);
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(activity);
-        Espresso.registerIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("4221690000004963"));
@@ -158,7 +158,7 @@ public class DeclinedPaymentTest {
         onView(withText(R.string.please_check_details_try_again))
                 .check(matches(isDisplayed()));
 
-        Espresso.unregisterIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
@@ -171,7 +171,7 @@ public class DeclinedPaymentTest {
 
         PaymentActivity activity = activityTestRule.launchActivity(intent);
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(activity);
-        Espresso.registerIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("6759000000009076"));
@@ -200,7 +200,7 @@ public class DeclinedPaymentTest {
         onView(withText(R.string.please_check_details_try_again))
                 .check(matches(isDisplayed()));
 
-        Espresso.unregisterIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
@@ -213,7 +213,7 @@ public class DeclinedPaymentTest {
 
         PaymentActivity activity = activityTestRule.launchActivity(intent);
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(activity);
-        Espresso.registerIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
                 .perform(typeText("340000150358074"));
@@ -236,6 +236,6 @@ public class DeclinedPaymentTest {
         onView(withText(R.string.please_check_details_try_again))
                 .check(matches(isDisplayed()));
 
-        Espresso.unregisterIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 }

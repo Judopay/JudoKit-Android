@@ -46,14 +46,8 @@ public class PaymentTest {
         TestSubscriber<Receipt> subscriber = new TestSubscriber<>();
 
         deviceDna.send(null)
-                .flatMap(new Func1<String, Single<Receipt>>() {
-                    @Override
-                    public Single<Receipt> call(String deviceId) {
-                        return apiService.payment(paymentRequest);
-                    }
-                }).subscribe(subscriber);
+                .flatMap((Func1<String, Single<Receipt>>) deviceId -> apiService.payment(paymentRequest)).subscribe(subscriber);
 
         subscriber.assertNoErrors();
     }
-
 }

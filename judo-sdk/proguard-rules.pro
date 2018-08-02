@@ -65,6 +65,8 @@
 -keep class com.judopay.PreAuthFragment { public *; }
 -keep class com.judopay.RegisterCardActivity { public *; }
 -keep class com.judopay.RegisterCardFragment { public *; }
+-keep class com.judopay.SaveCardActivity { public *; }
+-keep class com.judopay.SaveCardFragment { public *; }
 -keep class com.judopay.api.ApiError { *; }
 -keep class com.judopay.api.ApiError$* { *; }
 -keep class com.judopay.validation.Validation { *; }
