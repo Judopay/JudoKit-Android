@@ -1,9 +1,8 @@
 package com.judopay.validation;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 public interface Validator {
 
     Observable<Validation> onValidate();
-
 }

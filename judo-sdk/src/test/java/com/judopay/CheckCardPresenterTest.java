@@ -2,8 +2,8 @@ package com.judopay;
 
 import com.judopay.api.JudoApiServiceFactory;
 import com.judopay.model.Card;
+import com.judopay.model.CheckCardRequest;
 import com.judopay.model.Receipt;
-import com.judopay.model.SaveCardRequest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SaveCardPresenterTest {
+public class CheckCardPresenterTest {
 
     @Mock
     private Receipt receipt;
@@ -38,22 +38,22 @@ public class SaveCardPresenterTest {
     private TransactionCallbacks transactionCallbacks;
 
     @InjectMocks
-    private SaveCardPresenter presenter;
+    private CheckCardPresenter presenter;
 
     @Test
     public void shouldCallAPI() {
-        when(apiService.saveCard(any(SaveCardRequest.class))).thenReturn(Single.just(new Receipt()));
+        when(apiService.checkCard(any(CheckCardRequest.class))).thenReturn(Single.just(new Receipt()));
 
-        presenter.performSaveCard(getCard(), getJudo()).subscribe();
+        presenter.performCheckCard(getCard(), getJudo()).subscribe();
 
-        verify(apiService, times(1)).saveCard(any(SaveCardRequest.class));
+        verify(apiService, times(1)).checkCard(any(CheckCardRequest.class));
     }
 
     @Test
     public void showShowLoadingWhenSubmittingCard() {
-        when(apiService.saveCard(any(SaveCardRequest.class))).thenReturn(Single.just(new Receipt()));
+        when(apiService.checkCard(any(CheckCardRequest.class))).thenReturn(Single.just(new Receipt()));
 
-        presenter.performSaveCard(getCard(), getJudo()).subscribe();
+        presenter.performCheckCard(getCard(), getJudo()).subscribe();
 
         verify(transactionCallbacks).showLoading();
     }
@@ -62,9 +62,9 @@ public class SaveCardPresenterTest {
     public void shouldFinishPaymentFormViewOnSuccess() {
         when(receipt.isSuccess()).thenReturn(true);
 
-        when(apiService.saveCard(any(SaveCardRequest.class))).thenReturn(Single.just(receipt));
+        when(apiService.checkCard(any(CheckCardRequest.class))).thenReturn(Single.just(receipt));
 
-        presenter.performSaveCard(getCard(), getJudo()).subscribe(presenter.callback(), presenter.error());
+        presenter.performCheckCard(getCard(), getJudo()).subscribe(presenter.callback(), presenter.error());
 
         verify(transactionCallbacks).onSuccess(eq(receipt));
         verify(transactionCallbacks).hideLoading();
@@ -74,9 +74,9 @@ public class SaveCardPresenterTest {
     public void shouldShowDeclinedMessageWhenDeclined() {
         when(receipt.isSuccess()).thenReturn(false);
 
-        when(apiService.saveCard(any(SaveCardRequest.class))).thenReturn(Single.just(receipt));
+        when(apiService.checkCard(any(CheckCardRequest.class))).thenReturn(Single.just(receipt));
 
-        presenter.performSaveCard(getCard(), getJudo()).subscribe(presenter.callback(), presenter.error());
+        presenter.performCheckCard(getCard(), getJudo()).subscribe(presenter.callback(), presenter.error());
 
         verify(transactionCallbacks).onDeclined(eq(receipt));
         verify(transactionCallbacks).hideLoading();
@@ -93,10 +93,9 @@ public class SaveCardPresenterTest {
         // create a Receipt response that won't complete before we attempt to reconnect to the presenter;
         Single<Receipt> response = Observable.<Receipt>never().singleOrError();
 
-        when(apiService.saveCard(any(SaveCardRequest.class)))
-                .thenReturn(response);
+        when(apiService.checkCard(any(CheckCardRequest.class))).thenReturn(response);
 
-        presenter.performSaveCard(getCard(), getJudo()).subscribe();
+        presenter.performCheckCard(getCard(), getJudo()).subscribe();
 
         presenter.reconnect();
 
@@ -108,9 +107,9 @@ public class SaveCardPresenterTest {
         when(receipt.isSuccess()).thenReturn(false);
         when(receipt.is3dSecureRequired()).thenReturn(true);
 
-        when(apiService.saveCard(any(SaveCardRequest.class))).thenReturn(Single.just(receipt));
+        when(apiService.checkCard(any(CheckCardRequest.class))).thenReturn(Single.just(receipt));
 
-        presenter.performSaveCard(getCard(), getJudo()).subscribe(presenter.callback(), presenter.error());
+        presenter.performCheckCard(getCard(), getJudo()).subscribe(presenter.callback(), presenter.error());
 
         verify(transactionCallbacks).setLoadingText(eq(R.string.redirecting));
         verify(transactionCallbacks).start3dSecureWebView(eq(receipt), eq(presenter));
@@ -124,21 +123,29 @@ public class SaveCardPresenterTest {
         RealResponseBody responseBody = new RealResponseBody("application/json", buffer.size(), buffer);
         HttpException exception = new HttpException(retrofit2.Response.error(400, responseBody));
 
-        when(apiService.saveCard(any(SaveCardRequest.class))).thenReturn(Single.error(exception));
+        when(apiService.checkCard(any(CheckCardRequest.class))).thenReturn(Single.error(exception));
 
-        presenter.performSaveCard(getCard(), getJudo()).subscribe(presenter.callback(), presenter.error());
+        presenter.performCheckCard(getCard(), getJudo()).subscribe(presenter.callback(), presenter.error());
 
         verify(transactionCallbacks).onError(any(Receipt.class));
     }
 
     @Test
     public void shouldShowConnectionErrorDialog() {
-        when(apiService.saveCard(any(SaveCardRequest.class))).thenReturn(Single.error(new UnknownHostException()));
+        when(apiService.checkCard(any(CheckCardRequest.class))).thenReturn(Single.error(new UnknownHostException()));
 
-        presenter.performSaveCard(getCard(), getJudo()).subscribe(presenter.callback(), presenter.error());
+        presenter.performCheckCard(getCard(), getJudo()).subscribe(presenter.callback(), presenter.error());
 
-        verify(apiService).saveCard(any(SaveCardRequest.class));
+        verify(apiService).checkCard(any(CheckCardRequest.class));
         verify(transactionCallbacks).onConnectionError();
+    }
+
+    private Card getCard() {
+        return new Card.Builder()
+                .setCardNumber("4976000000003436")
+                .setSecurityCode("456")
+                .setExpiryDate("12/21")
+                .build();
     }
 
     private Judo getJudo() {
@@ -147,14 +154,6 @@ public class SaveCardPresenterTest {
         return new Judo.Builder("apiToken", "apiSecret")
                 .setJudoId(judoId)
                 .setConsumerReference(consumer)
-                .build();
-    }
-
-    private Card getCard() {
-        return new Card.Builder()
-                .setCardNumber("4976000000003436")
-                .setSecurityCode("456")
-                .setExpiryDate("12/21")
                 .build();
     }
 }

@@ -13,13 +13,9 @@ import com.judopay.model.RefundRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.List;
+import io.reactivex.observers.TestObserver;
 
-import rx.Single;
-import rx.functions.Func1;
-import rx.observers.TestSubscriber;
-
-import static com.judopay.TestUtil.JUDO_ID;
+import static com.judopay.TestUtil.JUDO_ID_IRIDIUM;
 import static com.judopay.TestUtil.getJudo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -33,7 +29,7 @@ public class PaymentRefundTest {
         final JudoApiService apiService = getJudo().getApiService(context);
 
         PaymentRequest paymentRequest = new PaymentRequest.Builder()
-                .setJudoId(JUDO_ID)
+                .setJudoId(JUDO_ID_IRIDIUM)
                 .setAmount("0.01")
                 .setCardNumber("4976000000003436")
                 .setCv2("452")
@@ -42,20 +38,13 @@ public class PaymentRefundTest {
                 .setConsumerReference("PreAuthCollectionTest")
                 .build();
 
-        TestSubscriber<Receipt> testSubscriber = new TestSubscriber<>();
+        TestObserver<Receipt> testObserver = new TestObserver<>();
 
         apiService.payment(paymentRequest)
-                .flatMap(new Func1<Receipt, Single<Receipt>>() {
-                    @Override
-                    public Single<Receipt> call(Receipt receipt) {
-                        return apiService.refund(new RefundRequest(receipt.getReceiptId(), receipt.getAmount().toString()));
-                    }
-                })
-                .subscribe(testSubscriber);
+                .flatMap(receipt -> apiService.refund(new RefundRequest(receipt.getReceiptId(), receipt.getAmount().toString())))
+                .subscribe(testObserver);
 
-        testSubscriber.assertNoErrors();
-        List<Receipt> receipts = testSubscriber.getOnNextEvents();
-
-        assertThat(receipts.get(0).isSuccess(), is(true));
+        testObserver.assertNoErrors();
+        assertThat(testObserver.values().get(0).isSuccess(), is(true));
     }
 }

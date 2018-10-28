@@ -7,7 +7,6 @@ import static java.util.UUID.randomUUID;
  */
 @SuppressWarnings({"unused", "FieldCanBeLocal"})
 public abstract class Request {
-
     private final boolean uniqueRequest;
     protected String yourPaymentReference;
 
@@ -24,10 +23,6 @@ public abstract class Request {
         this.yourPaymentReference = yourPaymentReference;
     }
 
-    public String getYourPaymentReference() {
-        return yourPaymentReference;
-    }
-
     protected static <T> T checkNotNull(T obj) {
         if (obj == null) {
             throw new ParameterError();
@@ -35,4 +30,7 @@ public abstract class Request {
         return obj;
     }
 
+    public String getYourPaymentReference() {
+        return yourPaymentReference;
+    }
 }

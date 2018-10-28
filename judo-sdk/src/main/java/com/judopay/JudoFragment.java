@@ -1,12 +1,13 @@
 package com.judopay;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,18 +24,18 @@ import com.judopay.cardverification.CardholderVerificationDialogFragment;
 import com.judopay.model.Card;
 import com.judopay.model.Receipt;
 
+import io.reactivex.disposables.CompositeDisposable;
+
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
 import static com.judopay.Judo.JUDO_OPTIONS;
 
 abstract class JudoFragment extends Fragment implements TransactionCallbacks, CardEntryListener {
-
     private static final String TAG_3DS_DIALOG = "3dSecureDialog";
 
+    protected CompositeDisposable disposables = new CompositeDisposable();
     private View progressBar;
     private TextView progressText;
-
     private ProgressListener listener;
-
     private CardholderVerificationDialogFragment cardholderVerificationDialogFragment;
     private AbstractCardEntryFragment cardEntryFragment;
 
@@ -44,14 +45,15 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!getArguments().containsKey(JUDO_OPTIONS)) {
+        Judo judo = getJudo();
+        if (judo == null) {
             throw new IllegalArgumentException(String.format("%s argument is required for %s", JUDO_OPTIONS, this.getClass().getSimpleName()));
         }
 
-        // check if token has expired
-        Judo options = getArguments().getParcelable(JUDO_OPTIONS);
+        checkJudoOptionsExtras(judo.getJudoId(), judo.getConsumerReference());
 
-        if (options != null && options.getCardToken() != null && options.getCardToken().isExpired()) {
+        // Check if token has expired
+        if (judo.getCardToken() != null && judo.getCardToken().isExpired() && getActivity() != null) {
             PendingIntent pendingResult = getActivity().createPendingResult(Judo.JUDO_REQUEST, new Intent(), 0);
             try {
                 pendingResult.send(Judo.RESULT_TOKEN_EXPIRED);
@@ -62,11 +64,17 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
         setRetainInstance(true);
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        disposables.clear();
+    }
+
     public void setProgressListener(ProgressListener progressListener) {
         listener = progressListener;
     }
 
-    private void notifyListener(ProgressListener listener) {
+    private void notifyListener() {
         if (listener == null) {
             return;
         }
@@ -86,19 +94,17 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_base, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        this.progressBar = view.findViewById(R.id.progress_overlay);
-        this.progressText = view.findViewById(R.id.progress_text);
-
-        int backgroundColor = ThemeUtil.getColorAttr(getActivity(), R.attr.overlayBackground);
-        progressBar.setBackgroundColor(backgroundColor);
+        progressText = view.findViewById(R.id.progress_text);
+        progressBar = view.findViewById(R.id.progress_overlay);
+        progressBar.setBackgroundColor(ThemeUtil.getColorAttr(getActivity(), R.attr.overlayBackground));
     }
 
     @Override
@@ -109,10 +115,12 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
             cardEntryFragment = createCardEntryFragment();
             cardEntryFragment.setTargetFragment(this, 0);
 
-            getFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.container, cardEntryFragment)
-                    .commit();
+            if (getFragmentManager() != null) {
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.container, cardEntryFragment)
+                        .commit();
+            }
         } else {
             cardEntryFragment.setCardEntryListener(this);
         }
@@ -124,7 +132,7 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
         intent.putExtra(Judo.JUDO_RECEIPT, receipt);
 
         sendResult(Judo.RESULT_SUCCESS, intent);
-        notifyListener(listener);
+        notifyListener();
     }
 
     @Override
@@ -133,7 +141,7 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
         intent.putExtra(Judo.JUDO_RECEIPT, receipt);
 
         sendResult(Judo.RESULT_DECLINED, intent);
-        notifyListener(listener);
+        notifyListener();
     }
 
     @Override
@@ -142,11 +150,13 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
         intent.putExtra(Judo.JUDO_RECEIPT, receipt);
 
         sendResult(Judo.RESULT_ERROR, intent);
+        notifyListener();
     }
 
     @Override
     public void onConnectionError() {
         sendResult(Judo.RESULT_CONNECTION_ERROR, new Intent());
+        notifyListener();
     }
 
     private void sendResult(int resultCode, Intent intent) {
@@ -164,13 +174,13 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     @Override
     public void showLoading() {
         progressBar.setVisibility(View.VISIBLE);
-        notifyListener(listener);
+        notifyListener();
     }
 
     @Override
     public void hideLoading() {
         progressBar.setVisibility(View.GONE);
-        notifyListener(listener);
+        notifyListener();
     }
 
     @Override
@@ -188,8 +198,8 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
 
     @Override
     public void start3dSecureWebView(Receipt receipt, AuthorizationListener listener) {
-        if (cardholderVerificationDialogFragment == null) {
-            FragmentManager fm = getFragmentManager();
+        if (cardholderVerificationDialogFragment == null && getActivity() != null) {
+            FragmentManager fm = getActivity().getSupportFragmentManager();
 
             cardholderVerificationDialogFragment = new CardholderVerificationDialogFragment();
 
@@ -204,22 +214,22 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     }
 
     AbstractCardEntryFragment createCardEntryFragment() {
-        Judo options = getArguments().getParcelable(Judo.JUDO_OPTIONS);
+        Judo judo = getJudo();
 
-        if (options != null) {
-            if (options.getCustomLayout() != null) {
-                options.getCustomLayout().validate(getActivity());
-                return CustomLayoutCardEntryFragment.newInstance(options, this);
-            } else if (options.getCardToken() != null) {
-                return TokenCardEntryFragment.newInstance(getJudo(), this);
+        if (judo != null) {
+            if (judo.getCustomLayout() != null) {
+                judo.getCustomLayout().validate(getActivity());
+                return CustomLayoutCardEntryFragment.newInstance(judo, this);
+            } else if (judo.getCardToken() != null) {
+                return TokenCardEntryFragment.newInstance(judo, this);
             }
         }
-        return CardEntryFragment.newInstance(options, this);
+        return CardEntryFragment.newInstance(judo, this);
     }
 
-    Judo getJudo() {
+    protected Judo getJudo() {
         Bundle args = getArguments();
-        return args.getParcelable(Judo.JUDO_OPTIONS);
+        return args != null ? args.getParcelable(Judo.JUDO_OPTIONS) : null;
     }
 
     public void setCard(Card card) {

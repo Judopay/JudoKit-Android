@@ -22,6 +22,11 @@
             tools:replace="theme" />
 
         <activity
+            android:name=".CheckCardActivity"
+            android:theme="@style/Theme.Judo.Light.ConfirmPayment"
+            tools:replace="theme" />
+
+        <activity
             android:name=".PreAuthActivity"
             android:theme="@style/Theme.Judo.Light.ShowSecurityMessage"
             tools:replace="theme" />

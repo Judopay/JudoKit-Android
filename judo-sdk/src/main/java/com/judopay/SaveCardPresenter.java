@@ -5,21 +5,18 @@ import com.judopay.model.Card;
 import com.judopay.model.Receipt;
 import com.judopay.model.SaveCardRequest;
 
-import java.util.Map;
-
-import rx.Single;
-import rx.functions.Func1;
+import io.reactivex.Single;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
 class SaveCardPresenter extends BasePresenter {
 
-    SaveCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, DeviceDna deviceDna, Logger logger) {
-        super(callbacks, apiService, deviceDna, logger);
+    SaveCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, Logger logger) {
+        super(callbacks, apiService, logger);
     }
 
-    Single<Receipt> performSaveCard(Card card, Judo judo, final Map<String, Object> userSignals) {
-        this.loading = true;
+    Single<Receipt> performSaveCard(Card card, Judo judo) {
+        loading = true;
         transactionCallbacks.showLoading();
 
         final SaveCardRequest.Builder builder = new SaveCardRequest.Builder()
@@ -51,7 +48,6 @@ class SaveCardPresenter extends BasePresenter {
             builder.setCardAddress(judo.getAddress());
         }
 
-        return Single.defer(() -> deviceDna.send(getJsonElements(userSignals))
-                .flatMap((Func1<String, Single<Receipt>>) s -> apiService.saveCard(builder.build())));
+        return apiService.saveCard(builder.build());
     }
 }

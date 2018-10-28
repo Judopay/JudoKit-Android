@@ -15,8 +15,8 @@ import com.judopay.model.Card;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class RegisterCardFragment extends JudoFragment implements TransactionCallbacks, CardEntryListener {
-    private RegisterCardPresenter presenter;
+public class CheckCardFragment extends JudoFragment implements TransactionCallbacks, CardEntryListener {
+    private CheckCardPresenter presenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,7 +24,7 @@ public class RegisterCardFragment extends JudoFragment implements TransactionCal
 
         if (this.presenter == null) {
             JudoApiService apiService = getJudo().getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
-            this.presenter = new RegisterCardPresenter(this, apiService, new Logger());
+            this.presenter = new CheckCardPresenter(this, apiService, new Logger());
         }
     }
 
@@ -36,19 +36,20 @@ public class RegisterCardFragment extends JudoFragment implements TransactionCal
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setLoadingText(R.string.checking_card);
         presenter.reconnect();
     }
 
     @Override
     AbstractCardEntryFragment createCardEntryFragment() {
         CardEntryFragment cardEntryFragment = CardEntryFragment.newInstance(getJudo(), this);
-        cardEntryFragment.setButtonLabel(getString(R.string.add_card));
+        cardEntryFragment.setButtonLabel(getString(R.string.check_card));
         return cardEntryFragment;
     }
 
     @Override
     public void onSubmit(Card card) {
-        disposables.add(presenter.performRegisterCard(card, getJudo())
+        disposables.add(presenter.performCheckCard(card, getJudo())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(presenter.callback(), presenter.error()));

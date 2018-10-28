@@ -2,24 +2,24 @@ package com.judopay;
 
 import com.judopay.arch.Logger;
 import com.judopay.model.Card;
+import com.judopay.model.CheckCardRequest;
 import com.judopay.model.Receipt;
-import com.judopay.model.RegisterCardRequest;
 
 import io.reactivex.Single;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
-class RegisterCardPresenter extends BasePresenter {
+class CheckCardPresenter extends BasePresenter {
 
-    RegisterCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, Logger logger) {
+    CheckCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, Logger logger) {
         super(callbacks, apiService, logger);
     }
 
-    Single<Receipt> performRegisterCard(Card card, Judo judo) {
+    Single<Receipt> performCheckCard(Card card, Judo judo) {
         loading = true;
         transactionCallbacks.showLoading();
 
-        final RegisterCardRequest.Builder builder = new RegisterCardRequest.Builder()
+        final CheckCardRequest.Builder builder = new CheckCardRequest.Builder()
                 .setJudoId(judo.getJudoId())
                 .setCardNumber(card.getCardNumber())
                 .setCv2(card.getSecurityCode())
@@ -48,6 +48,6 @@ class RegisterCardPresenter extends BasePresenter {
             builder.setCardAddress(judo.getAddress());
         }
 
-        return apiService.registerCard(builder.build());
+        return apiService.checkCard(builder.build());
     }
 }

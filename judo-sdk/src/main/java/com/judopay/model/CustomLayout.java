@@ -25,11 +25,24 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.judopay.error.InvalidViewTypeInLayout;
+import com.judopay.view.JudoEditText;
 
 import java.util.Arrays;
 import java.util.List;
 
 public final class CustomLayout implements Parcelable {
+
+    public static final Parcelable.Creator<CustomLayout> CREATOR = new Parcelable.Creator<CustomLayout>() {
+        @Override
+        public CustomLayout createFromParcel(Parcel source) {
+            return new CustomLayout(source);
+        }
+
+        @Override
+        public CustomLayout[] newArray(int size) {
+            return new CustomLayout[size];
+        }
+    };
 
     private final int layoutId;
     private final int cardNumberInput;
@@ -61,10 +74,22 @@ public final class CustomLayout implements Parcelable {
         this.submitButton = submitButton;
     }
 
+    private CustomLayout(Parcel in) {
+        this.layoutId = in.readInt();
+        this.cardNumberInput = in.readInt();
+        this.expiryDateInput = in.readInt();
+        this.securityCodeInput = in.readInt();
+        this.startDateInput = in.readInt();
+        this.issueNumberInput = in.readInt();
+        this.countrySpinner = in.readInt();
+        this.postcodeInput = in.readInt();
+        this.submitButton = in.readInt();
+    }
+
     public void validate(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        List<Class<? extends View>> allowedViews = Arrays.asList(EditText.class,
+        List<Class<? extends View>> allowedViews = Arrays.asList(EditText.class, JudoEditText.class,
                 AppCompatEditText.class, TextView.class, AppCompatTextView.class, ImageView.class,
                 AppCompatImageView.class, Spinner.class, AppCompatSpinner.class, Button.class,
                 AppCompatButton.class, TextInputLayout.class, LinearLayout.class,
@@ -97,7 +122,6 @@ public final class CustomLayout implements Parcelable {
             }
         }
     }
-
 
     private void checkSpinner(View view, int submitButton) {
         checkViewType(view, submitButton, Spinner.class, AppCompatSpinner.class);
@@ -175,9 +199,25 @@ public final class CustomLayout implements Parcelable {
         return securityCodeInput;
     }
 
-    @SuppressWarnings("unused")
-    public static class Builder {
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.layoutId);
+        dest.writeInt(this.cardNumberInput);
+        dest.writeInt(this.expiryDateInput);
+        dest.writeInt(this.securityCodeInput);
+        dest.writeInt(this.startDateInput);
+        dest.writeInt(this.issueNumberInput);
+        dest.writeInt(this.countrySpinner);
+        dest.writeInt(this.postcodeInput);
+        dest.writeInt(this.submitButton);
+    }
+
+    public static class Builder {
         private int cardNumberInput;
         private int expiryDateInput;
         private int securityCodeInput;
@@ -242,47 +282,4 @@ public final class CustomLayout implements Parcelable {
                     submitButton);
         }
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.layoutId);
-        dest.writeInt(this.cardNumberInput);
-        dest.writeInt(this.expiryDateInput);
-        dest.writeInt(this.securityCodeInput);
-        dest.writeInt(this.startDateInput);
-        dest.writeInt(this.issueNumberInput);
-        dest.writeInt(this.countrySpinner);
-        dest.writeInt(this.postcodeInput);
-        dest.writeInt(this.submitButton);
-    }
-
-    protected CustomLayout(Parcel in) {
-        this.layoutId = in.readInt();
-        this.cardNumberInput = in.readInt();
-        this.expiryDateInput = in.readInt();
-        this.securityCodeInput = in.readInt();
-        this.startDateInput = in.readInt();
-        this.issueNumberInput = in.readInt();
-        this.countrySpinner = in.readInt();
-        this.postcodeInput = in.readInt();
-        this.submitButton = in.readInt();
-    }
-
-    public static final Parcelable.Creator<CustomLayout> CREATOR = new Parcelable.Creator<CustomLayout>() {
-        @Override
-        public CustomLayout createFromParcel(Parcel source) {
-            return new CustomLayout(source);
-        }
-
-        @Override
-        public CustomLayout[] newArray(int size) {
-            return new CustomLayout[size];
-        }
-    };
-
 }

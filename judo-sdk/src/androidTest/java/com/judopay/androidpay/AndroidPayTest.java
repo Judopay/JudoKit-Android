@@ -14,9 +14,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.List;
-
-import rx.observers.TestSubscriber;
+import io.reactivex.observers.TestObserver;
 
 import static com.judopay.TestUtil.getJudo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -40,17 +38,14 @@ public class AndroidPayTest {
     @Ignore
     public void shouldReturnSuccessWhenAndroidPayPayment() {
         Context context = InstrumentationRegistry.getContext();
-        
+
         JudoApiService apiService = getJudo().getApiService(context);
-        TestSubscriber<Receipt> subscriber = new TestSubscriber<>();
+        TestObserver<Receipt> testObserver = new TestObserver<>();
 
-        apiService.androidPayPayment(getAndroidPayRequest())
-                .subscribe(subscriber);
+        apiService.androidPayPayment(getAndroidPayRequest()).subscribe(testObserver);
 
-        subscriber.assertNoErrors();
-        List<Receipt> receipts = subscriber.getOnNextEvents();
-
-        assertThat(receipts.get(0).isSuccess(), is(true));
+        testObserver.assertNoErrors();
+        assertThat(testObserver.values().get(0).isSuccess(), is(true));
     }
 
     @Test
@@ -59,16 +54,13 @@ public class AndroidPayTest {
         Context context = InstrumentationRegistry.getContext();
 
         JudoApiService apiService = getJudo().getApiService(context);
-        TestSubscriber<Receipt> subscriber = new TestSubscriber<>();
+        TestObserver<Receipt> testObserver = new TestObserver<>();
 
         AndroidPayRequest androidPayRequest = getAndroidPayRequest();
-        apiService.androidPayPreAuth(androidPayRequest)
-                .subscribe(subscriber);
+        apiService.androidPayPreAuth(androidPayRequest).subscribe(testObserver);
 
-        subscriber.assertNoErrors();
-        List<Receipt> receipts = subscriber.getOnNextEvents();
-
-        assertThat(receipts.get(0).isSuccess(), is(true));
+        testObserver.assertNoErrors();
+        assertThat(testObserver.values().get(0).isSuccess(), is(true));
     }
 
     private AndroidPayRequest getAndroidPayRequest() {

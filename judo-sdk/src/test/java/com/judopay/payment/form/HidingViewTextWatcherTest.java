@@ -20,5 +20,4 @@ public class HidingViewTextWatcherTest {
 
         verify(view).setVisibility(View.GONE);
     }
-
 }

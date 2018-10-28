@@ -4,35 +4,32 @@ import android.content.Intent;
 import android.os.Bundle;
 
 /**
- * Displays a card entry form to the user, allowing for a payment to be made.
+ * Displays a card entry form to the user, allowing for card to be checked and used for token transactions.
  *
- * To launch the PaymentActivity, call {@link android.app.Activity#startActivityForResult(Intent, int)}
+ * To launch the CheckCardActivity, call {@link android.app.Activity#startActivityForResult(Intent, int)}
  * with an Intent containing the configuration options:
  *
  * <pre class="prettyprint">
- * Intent intent = new Intent(this, PaymentActivity.class);
+ * Intent intent = new Intent(this, CheckCardActivity.class);
  * intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
  * .setJudoId("1234567")
- * .setCurrency(Currency.GBP)
- * .setAmount("1.99")
  * .setConsumerReference("consumerRef")
  * .build());
  *
- * startActivityForResult(intent, PAYMENT_REQUEST);
+ * startActivityForResult(intent, CHECK_CARD_REQUEST);
  * </pre>
  *
  * See {@link Judo} for the full list of supported options
  */
-public final class PaymentActivity extends JudoActivity {
+public final class CheckCardActivity extends JudoActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(R.string.check_card);
 
-        setTitle(R.string.payment);
-
-        if (fragment == null) {
-            fragment = new PaymentFragment();
+        if (savedInstanceState == null) {
+            fragment = new CheckCardFragment();
             fragment.setArguments(getIntent().getExtras());
 
             getSupportFragmentManager()

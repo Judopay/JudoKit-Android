@@ -5,8 +5,9 @@ import android.os.Bundle;
 
 /**
  * Displays a card entry form to the user, allowing for a pre-auth to be made.
+ *
  * To launch the PreAuthActivity, call {@link android.app.Activity#startActivityForResult(Intent, int)}
- * with an Intent the configuration options:
+ * with an Intent containing the configuration options:
  *
  * <pre class="prettyprint">
  * Intent intent = new Intent(this, PreAuthActivity.class);
@@ -16,6 +17,7 @@ import android.os.Bundle;
  * .setAmount("1.99")
  * .setConsumerReference("consumerRef")
  * .build());
+ *
  * startActivityForResult(intent, PRE_AUTH_REQUEST);
  * </pre>
  *
@@ -33,11 +35,10 @@ public final class PreAuthActivity extends JudoActivity {
             fragment = new PreAuthFragment();
             fragment.setArguments(getIntent().getExtras());
 
-            getFragmentManager()
+            getSupportFragmentManager()
                     .beginTransaction()
                     .add(android.R.id.content, fragment, TAG_JUDO_FRAGMENT)
                     .commit();
         }
     }
-
 }

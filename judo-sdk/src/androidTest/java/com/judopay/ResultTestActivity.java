@@ -1,8 +1,8 @@
 package com.judopay;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -15,33 +15,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * A test-specific activity that immediately starts another activity and listens for that subject's
  * results
  */
-public class ResultTestActivity extends AppCompatActivity {
-
-    /**
-     * An interface that defines all of the variables involved in testing that an activity's
-     * results are as expected
-     */
-    public interface ActivityResultTest {
-        /**
-         * @return the intent with the appropriate extras that will start your subject activity
-         */
-        Intent getSubjectIntent();
-
-        /**
-         * Perform the necessary UI actions necessary to trigger the target activity finishing with
-         * a result.
-         */
-        void triggerActivityResult();
-
-        /**
-         * @return a matcher for the result test activity to match the target activity's result
-         */
-        Matcher<ResultTestActivity> getActivityResultMatcher();
-    }
+public class ResultTestActivity extends Activity {
 
     private final static String EXTRA_START_ACTIVITY_INTENT = "extraStartActivityIntent";
     private final static int REQUEST_CODE = 9999;
-
     private int mResultCode;
     private Intent mResultData;
 
@@ -55,24 +32,6 @@ public class ResultTestActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_START_ACTIVITY_INTENT, subjectIntent);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE) {
-            mResultCode = resultCode;
-            mResultData = data;
-        }
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState == null) {
-            Intent subjectIntent = getIntent().getParcelableExtra(EXTRA_START_ACTIVITY_INTENT);
-            startActivityForResult(subjectIntent, REQUEST_CODE);
-        }
     }
 
     /**
@@ -148,7 +107,47 @@ public class ResultTestActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            mResultCode = resultCode;
+            mResultData = data;
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState == null) {
+            Intent subjectIntent = getIntent().getParcelableExtra(EXTRA_START_ACTIVITY_INTENT);
+            startActivityForResult(subjectIntent, REQUEST_CODE);
+        }
+    }
+
+    @Override
     public String toString() {
         return "Result Activity with result code=" + mResultCode + " and request data=" + mResultData;
+    }
+
+    /**
+     * An interface that defines all of the variables involved in testing that an activity's
+     * results are as expected
+     */
+    public interface ActivityResultTest {
+        /**
+         * @return the intent with the appropriate extras that will start your subject activity
+         */
+        Intent getSubjectIntent();
+
+        /**
+         * Perform the necessary UI actions necessary to trigger the target activity finishing with
+         * a result.
+         */
+        void triggerActivityResult();
+
+        /**
+         * @return a matcher for the result test activity to match the target activity's result
+         */
+        Matcher<ResultTestActivity> getActivityResultMatcher();
     }
 }

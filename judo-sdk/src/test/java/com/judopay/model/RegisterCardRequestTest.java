@@ -25,5 +25,4 @@ public class RegisterCardRequestTest {
                 .setJudoId("123456")
                 .build();
     }
-
 }
