@@ -6,8 +6,7 @@ import android.support.annotation.NonNull;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.judopay.DeviceDna;
-import com.judopay.devicedna.Credentials;
+import com.judopay.devicedna.DeviceDNA;
 
 import java.io.IOException;
 import java.util.Map;
@@ -19,20 +18,18 @@ import okhttp3.Response;
 import okio.Buffer;
 
 class DeviceDnaInterceptor implements Interceptor {
-
     private static final String CLIENT_DETAILS = "clientDetails";
+    private final DeviceDNA deviceDna;
 
-    private final DeviceDna deviceDna;
-
-    DeviceDnaInterceptor(Context context, Credentials credentials) {
-        this.deviceDna = new DeviceDna(context, credentials);
+    DeviceDnaInterceptor(Context context) {
+        this.deviceDna = new DeviceDNA(context);
     }
 
     @Override
     public Response intercept(@NonNull Chain chain) throws IOException {
         okhttp3.Request request = chain.request();
 
-        if (isPost(request)) {
+        if (isPost(request) && request.body() != null) {
             JsonElement body = getJsonRequestBody(request.body());
 
             if (body.isJsonObject()) {
@@ -45,17 +42,13 @@ class DeviceDnaInterceptor implements Interceptor {
                 return chain.proceed(request.newBuilder()
                         .post(getJsonRequestBody(json))
                         .build());
-            } else {
-                return chain.proceed(request);
             }
         }
         return chain.proceed(request);
     }
 
     private void addClientDetails(JsonObject json) {
-        Map<String, String> signals = deviceDna.deviceSignals()
-                .toBlocking().value();
-
+        Map<String, String> signals = deviceDna.getDeviceDNA();
         JsonObject clientDetailsJson = new JsonObject();
 
         for (Map.Entry<String, String> entry : signals.entrySet()) {

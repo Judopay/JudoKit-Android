@@ -16,6 +16,7 @@
         android:layout_gravity="center"
         android:background="@color/judo_white_90"
         android:clickable="true"
+        android:focusable="true"
         android:gravity="center"
         android:orientation="vertical">
 

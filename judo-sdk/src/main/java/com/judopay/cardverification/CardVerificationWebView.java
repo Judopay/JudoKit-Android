@@ -14,8 +14,8 @@ import com.judopay.model.CardVerificationResult;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.KITKAT;
@@ -27,14 +27,12 @@ import static java.net.URLEncoder.encode;
  * the redirect URL is reached to obtain the payment data needed to finish the transaction.
  */
 public class CardVerificationWebView extends WebView implements JsonParsingJavaScriptInterface.JsonListener {
-
     private static final String JS_NAMESPACE = "JudoPay";
     private static final String REDIRECT_URL = "https://pay.judopay.com/Android/Parse3DS";
     private static final String CHARSET = "UTF-8";
 
     private AuthorizationListener authorizationListener;
     private String receiptId;
-
     private WebViewListener resultPageListener;
 
     public CardVerificationWebView(Context context) {
@@ -118,5 +116,4 @@ public class CardVerificationWebView extends WebView implements JsonParsingJavaS
     public void setResultPageListener(WebViewListener resultPageListener) {
         this.resultPageListener = resultPageListener;
     }
-
 }

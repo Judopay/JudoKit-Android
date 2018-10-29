@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import static junit.framework.TestCase.assertNotNull;
 
-public class SaveCardRequestTest {
+public class CheckCardRequestTest {
 
     @Test
     public void shouldBuildWithValidData() {

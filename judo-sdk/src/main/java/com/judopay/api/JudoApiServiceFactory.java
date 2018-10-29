@@ -4,9 +4,9 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.judopay.BuildConfig;
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
-import com.judopay.devicedna.Credentials;
 import com.judopay.model.Address;
 
 import java.math.BigDecimal;
@@ -26,8 +26,9 @@ import okhttp3.ConnectionSpec;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.TlsVersion;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
@@ -40,7 +41,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  * used in the application.
  */
 public class JudoApiServiceFactory {
-
     private static final String HOSTNAME_LIVE = "gw1.judopay.com";
     private static final String HOSTNAME_SANDBOX = "gw1.judopay-sandbox.com";
 
@@ -59,7 +59,7 @@ public class JudoApiServiceFactory {
     private static Retrofit createRetrofit(Context context, @Judo.UiClientMode int uiClientMode, Judo judo) {
         return new Retrofit.Builder()
                 .addConverterFactory(getGsonConverterFactory())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(judo.getApiEnvironmentHost(context))
                 .client(getOkHttpClient(uiClientMode, context, judo))
                 .build();
@@ -133,7 +133,11 @@ public class JudoApiServiceFactory {
         List<Interceptor> interceptors = client.interceptors();
 
         interceptors.add(new DeDuplicationInterceptor());
-        interceptors.add(new DeviceDnaInterceptor(context, new Credentials(judo.getApiToken(), judo.getApiSecret())));
+        interceptors.add(new DeviceDnaInterceptor(context));
         interceptors.add(new ApiHeadersInterceptor(ApiCredentials.fromConfiguration(context, judo), uiClientMode, context));
+
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
+        interceptors.add(loggingInterceptor);
     }
 }

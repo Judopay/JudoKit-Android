@@ -1,6 +1,5 @@
 package com.judopay;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -8,7 +7,8 @@ import android.os.Bundle;
  * Displays a card entry form to the user, allowing for card to be saved and used for token transactions.
  *
  * To launch the SaveCardActivity, call {@link android.app.Activity#startActivityForResult(Intent, int)}
- * with an Intent the configuration options:
+ * with an Intent containing the configuration options:
+ *
  * <pre class="prettyprint">
  * Intent intent = new Intent(this, SaveCardActivity.class);
  * intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
@@ -18,6 +18,7 @@ import android.os.Bundle;
  *
  * startActivityForResult(intent, SAVE_CARD_REQUEST);
  * </pre>
+ *
  * See {@link Judo} for the full list of supported options
  */
 public final class SaveCardActivity extends JudoActivity {
@@ -31,19 +32,10 @@ public final class SaveCardActivity extends JudoActivity {
             fragment = new SaveCardFragment();
             fragment.setArguments(getIntent().getExtras());
 
-            getFragmentManager()
+            getSupportFragmentManager()
                     .beginTransaction()
                     .add(android.R.id.content, fragment, TAG_JUDO_FRAGMENT)
                     .commit();
         }
-    }
-
-    @Override
-    public void onDeclined() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.add_card_failed)
-                .setMessage(R.string.please_check_details_try_again)
-                .setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss())
-                .show();
     }
 }

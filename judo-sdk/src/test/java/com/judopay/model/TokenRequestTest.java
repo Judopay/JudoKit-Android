@@ -25,5 +25,4 @@ public class TokenRequestTest {
                 .setJudoId("123456")
                 .build();
     }
-
 }

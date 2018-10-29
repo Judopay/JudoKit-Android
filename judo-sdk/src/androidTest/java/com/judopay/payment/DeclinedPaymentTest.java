@@ -9,33 +9,40 @@ import com.judopay.Judo;
 import com.judopay.JudoTransactionIdlingResource;
 import com.judopay.PaymentActivity;
 import com.judopay.R;
+import com.judopay.ResultTestActivity;
+import com.judopay.TestActivityUtil;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.judopay.TestUtil.getJudo;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 public class DeclinedPaymentTest {
 
     @Rule
-    public ActivityTestRule<PaymentActivity> activityTestRule = new ActivityTestRule<>(PaymentActivity.class, false, false);
+    public ActivityTestRule<ResultTestActivity> activityTestRule = new ActivityTestRule<>(ResultTestActivity.class, false, false);
 
     @Test
     public void shouldDeclineInvalidVisaCard() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PaymentActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
-        PaymentActivity activity = activityTestRule.launchActivity(intent);
-        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(activity);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
+
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
@@ -50,22 +57,23 @@ public class DeclinedPaymentTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        onView(withText(R.string.payment_failed))
-                .check(matches(isDisplayed()));
-
-        onView(withText(R.string.please_check_details_try_again))
-                .check(matches(isDisplayed()));
+        assertThat(activity, ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_DECLINED)));
 
         IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
     public void shouldDeclineInvalidMaestroCard() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PaymentActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
-        PaymentActivity activity = activityTestRule.launchActivity(intent);
-        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(activity);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
+
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
@@ -86,22 +94,23 @@ public class DeclinedPaymentTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        onView(withText(R.string.payment_failed))
-                .check(matches(isDisplayed()));
-
-        onView(withText(R.string.please_check_details_try_again))
-                .check(matches(isDisplayed()));
+        assertThat(activity, ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_DECLINED)));
 
         IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
     public void shouldDeclineInvalidAmexCard() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PaymentActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo());
 
-        PaymentActivity activity = activityTestRule.launchActivity(intent);
-        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(activity);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
+
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
@@ -116,25 +125,26 @@ public class DeclinedPaymentTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        onView(withText(R.string.payment_failed))
-                .check(matches(isDisplayed()));
-
-        onView(withText(R.string.please_check_details_try_again))
-                .check(matches(isDisplayed()));
+        assertThat(activity, ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_DECLINED)));
 
         IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
     public void shouldDeclineInvalidVisaCardWhenAvsEnabled() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PaymentActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo()
                 .newBuilder()
                 .setAvsEnabled(true)
                 .build());
 
-        PaymentActivity activity = activityTestRule.launchActivity(intent);
-        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(activity);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
+
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
@@ -152,25 +162,26 @@ public class DeclinedPaymentTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        onView(withText(R.string.payment_failed))
-                .check(matches(isDisplayed()));
-
-        onView(withText(R.string.please_check_details_try_again))
-                .check(matches(isDisplayed()));
+        assertThat(activity, ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_DECLINED)));
 
         IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
     public void shouldDeclineInvalidMaestroWhenAvsEnabled() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PaymentActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo()
                 .newBuilder()
                 .setAvsEnabled(true)
                 .build());
 
-        PaymentActivity activity = activityTestRule.launchActivity(intent);
-        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(activity);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
+
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
@@ -194,25 +205,26 @@ public class DeclinedPaymentTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        onView(withText(R.string.payment_failed))
-                .check(matches(isDisplayed()));
-
-        onView(withText(R.string.please_check_details_try_again))
-                .check(matches(isDisplayed()));
+        assertThat(activity, ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_DECLINED)));
 
         IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
     public void shouldDeclineInvalidAmexWhenAvsEnabled() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PaymentActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo()
                 .newBuilder()
                 .setAvsEnabled(true)
                 .build());
 
-        PaymentActivity activity = activityTestRule.launchActivity(intent);
-        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(activity);
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
+
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.card_number_edit_text))
@@ -230,11 +242,7 @@ public class DeclinedPaymentTest {
         onView(withId(R.id.button))
                 .perform(click());
 
-        onView(withText(R.string.payment_failed))
-                .check(matches(isDisplayed()));
-
-        onView(withText(R.string.please_check_details_try_again))
-                .check(matches(isDisplayed()));
+        assertThat(activity, ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_DECLINED)));
 
         IdlingRegistry.getInstance().unregister(idlingResource);
     }

@@ -15,236 +15,149 @@ import com.judopay.model.RefundRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.List;
+import io.reactivex.observers.TestObserver;
 
-import rx.Single;
-import rx.functions.Func1;
-import rx.observers.TestSubscriber;
-
-import static com.judopay.TestUtil.JUDO_ID;
+import static com.judopay.TestUtil.JUDO_ID_IRIDIUM;
 import static com.judopay.TestUtil.getJudo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 @RunWith(AndroidJUnit4.class)
 public class ListReceiptsTest {
-
     private static final String CONSUMER_REF = "ListReceiptsTest";
 
     @Test
     public void listPaymentReceipts() {
         final JudoApiService apiService = getApiService();
-
-        TestSubscriber<Receipts> subscriber = new TestSubscriber<>();
+        TestObserver<Receipts> testObserver = new TestObserver<>();
 
         apiService.payment(getPaymentRequest())
-                .flatMap(new Func1<Receipt, Single<Receipts>>() {
-                    @Override
-                    public Single<Receipts> call(Receipt receipt) {
-                        return apiService.paymentReceipts(null, null, "time-descending");
-                    }
-                })
-                .subscribe(subscriber);
+                .flatMap(receipt -> apiService.paymentReceipts(null, null, "time-descending"))
+                .subscribe(testObserver);
 
-        subscriber.assertNoErrors();
-        List<Receipts> receipts = subscriber.getOnNextEvents();
-
-        assertThat(receipts.isEmpty(), is(false));
+        testObserver.assertNoErrors();
+        assertThat(testObserver.values().isEmpty(), is(false));
     }
 
     @Test
     public void listPreAuthReceipts() {
         final JudoApiService apiService = getApiService();
-        TestSubscriber<Receipts> subscriber = new TestSubscriber<>();
+        TestObserver<Receipts> testObserver = new TestObserver<>();
 
         apiService.preAuth(getPaymentRequest())
-                .flatMap(new Func1<Receipt, Single<Receipts>>() {
-                    @Override
-                    public Single<Receipts> call(Receipt receipt) {
-                        return apiService.preAuthReceipts(null, null, "time-descending");
-                    }
-                }).subscribe(subscriber);
+                .flatMap(receipt -> apiService.preAuthReceipts(null, null, "time-descending"))
+                .subscribe(testObserver);
 
-        subscriber.assertNoErrors();
-        List<Receipts> receipts = subscriber.getOnNextEvents();
-
-        assertThat(receipts.isEmpty(), is(false));
+        testObserver.assertNoErrors();
+        assertThat(testObserver.values().isEmpty(), is(false));
     }
 
     @Test
     public void listRefundReceipts() {
         final JudoApiService apiService = getApiService();
-        TestSubscriber<Receipts> subscriber = new TestSubscriber<>();
+        TestObserver<Receipts> testObserver = new TestObserver<>();
 
         apiService.payment(getPaymentRequest())
-                .flatMap(new Func1<Receipt, Single<Receipt>>() {
-                    @Override
-                    public Single<Receipt> call(Receipt receipt) {
-                        return apiService.refund(new RefundRequest(receipt.getReceiptId(), receipt.getAmount().toString()));
-                    }
-                })
-                .flatMap(new Func1<Receipt, Single<Receipts>>() {
-                    @Override
-                    public Single<Receipts> call(Receipt receipt) {
-                        return apiService.refundReceipts(null, null, "time-descending");
-                    }
-                }).subscribe(subscriber);
+                .flatMap(receipt -> apiService.refund(new RefundRequest(receipt.getReceiptId(), receipt.getAmount().toString())))
+                .flatMap(receipt -> apiService.refundReceipts(null, null, "time-descending"))
+                .subscribe(testObserver);
 
-        subscriber.assertNoErrors();
-        List<Receipts> receipts = subscriber.getOnNextEvents();
-
-        assertThat(receipts.isEmpty(), is(false));
+        testObserver.assertNoErrors();
+        assertThat(testObserver.values().isEmpty(), is(false));
     }
 
     @Test
     public void listCollectionReceipts() {
         final JudoApiService apiService = getApiService();
-        TestSubscriber<Receipts> subscriber = new TestSubscriber<>();
+        TestObserver<Receipts> testObserver = new TestObserver<>();
 
         apiService.preAuth(getPaymentRequest())
-                .flatMap(new Func1<Receipt, Single<Receipt>>() {
-                    @Override
-                    public Single<Receipt> call(Receipt receipt) {
-                        return apiService.collection(new CollectionRequest(receipt.getReceiptId(), receipt.getAmount().toString()));
-                    }
-                })
-                .flatMap(new Func1<Receipt, Single<Receipts>>() {
-                    @Override
-                    public Single<Receipts> call(Receipt receipt) {
-                        return apiService.collectionReceipts(null, null, "time-descending");
-                    }
-                }).subscribe(subscriber);
+                .flatMap(receipt -> apiService.collection(new CollectionRequest(receipt.getReceiptId(), receipt.getAmount().toString())))
+                .flatMap(receipt -> apiService.collectionReceipts(null, null, "time-descending"))
+                .subscribe(testObserver);
 
-        subscriber.assertNoErrors();
-        List<Receipts> receipts = subscriber.getOnNextEvents();
-
-        assertThat(receipts.isEmpty(), is(false));
+        testObserver.assertNoErrors();
+        assertThat(testObserver.values().isEmpty(), is(false));
     }
 
     @Test
     public void listConsumerReceipts() {
         final JudoApiService apiService = getApiService();
-        TestSubscriber<Receipts> subscriber = new TestSubscriber<>();
+        TestObserver<Receipts> testObserver = new TestObserver<>();
 
         apiService.payment(getPaymentRequest())
-                .flatMap(new Func1<Receipt, Single<Receipts>>() {
-                    @Override
-                    public Single<Receipts> call(Receipt receipt) {
-                        return apiService.consumerReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending");
-                    }
-                }).subscribe(subscriber);
+                .flatMap(receipt -> apiService.consumerReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending"))
+                .subscribe(testObserver);
 
-        subscriber.assertNoErrors();
-        List<Receipts> receipts = subscriber.getOnNextEvents();
-
-        assertThat(receipts.isEmpty(), is(false));
+        testObserver.assertNoErrors();
+        assertThat(testObserver.values().isEmpty(), is(false));
     }
 
     @Test
     public void listReceiptsByReceiptId() {
         final JudoApiService apiService = getApiService();
-        TestSubscriber<Receipt> subscriber = new TestSubscriber<>();
+        TestObserver<Receipt> testObserver = new TestObserver<>();
 
         apiService.payment(getPaymentRequest())
-                .flatMap(new Func1<Receipt, Single<Receipt>>() {
-                    @Override
-                    public Single<Receipt> call(Receipt receipt) {
-                        return apiService.findReceipt(receipt.getReceiptId(), null, null, "time-descending");
-                    }
-                }).subscribe(subscriber);
+                .flatMap(receipt -> apiService.findReceipt(receipt.getReceiptId(), null, null, "time-descending"))
+                .subscribe(testObserver);
 
-        subscriber.assertNoErrors();
-        List<Receipt> receipts = subscriber.getOnNextEvents();
-
-        assertThat(receipts.get(0).isSuccess(), is(true));
+        testObserver.assertNoErrors();
+        assertThat(testObserver.values().get(0).isSuccess(), is(true));
     }
 
     @Test
     public void listConsumerPaymentReceipts() {
         final JudoApiService apiService = getApiService();
-        TestSubscriber<Receipts> subscriber = new TestSubscriber<>();
+        TestObserver<Receipts> testObserver = new TestObserver<>();
 
         apiService.payment(getPaymentRequest())
-                .flatMap(new Func1<Receipt, Single<Receipts>>() {
-                    @Override
-                    public Single<Receipts> call(Receipt receipt) {
-                        return apiService.consumerPaymentReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending");
-                    }
-                }).subscribe(subscriber);
+                .flatMap(receipt -> apiService.consumerPaymentReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending"))
+                .subscribe(testObserver);
 
-        subscriber.assertNoErrors();
-        List<Receipts> receipts = subscriber.getOnNextEvents();
-
-        assertThat(receipts.isEmpty(), is(false));
+        testObserver.assertNoErrors();
+        assertThat(testObserver.values().isEmpty(), is(false));
     }
 
     @Test
     public void listConsumerPreAuthReceipts() {
         final JudoApiService apiService = getApiService();
-        TestSubscriber<Receipts> subscriber = new TestSubscriber<>();
+        TestObserver<Receipts> testObserver = new TestObserver<>();
 
         apiService.preAuth(getPaymentRequest())
-                .flatMap(new Func1<Receipt, Single<Receipts>>() {
-                    @Override
-                    public Single<Receipts> call(Receipt receipt) {
-                        return apiService.consumerPreAuthReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending");
-                    }
-                }).subscribe(subscriber);
+                .flatMap(receipt -> apiService.consumerPreAuthReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending"))
+                .subscribe(testObserver);
 
-        subscriber.assertNoErrors();
-        List<Receipts> receipts = subscriber.getOnNextEvents();
-
-        assertThat(receipts.isEmpty(), is(false));
+        testObserver.assertNoErrors();
+        assertThat(testObserver.values().isEmpty(), is(false));
     }
 
     @Test
     public void listConsumerCollectionReceipts() {
         final JudoApiService apiService = getApiService();
-        TestSubscriber<Receipts> subscriber = new TestSubscriber<>();
+        TestObserver<Receipts> testObserver = new TestObserver<>();
 
         apiService.preAuth(getPaymentRequest())
-                .flatMap(new Func1<Receipt, Single<Receipt>>() {
-                    @Override
-                    public Single<Receipt> call(Receipt receipt) {
-                        return apiService.collection(new CollectionRequest(receipt.getReceiptId(), receipt.getAmount().toString()));
-                    }
-                })
-                .flatMap(new Func1<Receipt, Single<Receipts>>() {
-                    @Override
-                    public Single<Receipts> call(Receipt receipt) {
-                        return apiService.consumerCollectionReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending");
-                    }
-                }).subscribe(subscriber);
+                .flatMap(receipt -> apiService.collection(new CollectionRequest(receipt.getReceiptId(), receipt.getAmount().toString())))
+                .flatMap(receipt -> apiService.consumerCollectionReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending"))
+                .subscribe(testObserver);
 
-        subscriber.assertNoErrors();
-        List<Receipts> receipts = subscriber.getOnNextEvents();
-
-        assertThat(receipts.isEmpty(), is(false));
+        testObserver.assertNoErrors();
+        assertThat(testObserver.values().isEmpty(), is(false));
     }
 
     @Test
     public void listConsumerRefundReceipts() {
         final JudoApiService apiService = getApiService();
-        TestSubscriber<Receipts> subscriber = new TestSubscriber<>();
+        TestObserver<Receipts> testObserver = new TestObserver<>();
 
         apiService.payment(getPaymentRequest())
-                .flatMap(new Func1<Receipt, Single<Receipt>>() {
-                    @Override
-                    public Single<Receipt> call(Receipt receipt) {
-                        return apiService.refund(new RefundRequest(receipt.getReceiptId(), receipt.getAmount().toString()));
-                    }
-                })
-                .flatMap(new Func1<Receipt, Single<Receipts>>() {
-                    @Override
-                    public Single<Receipts> call(Receipt receipt) {
-                        return apiService.consumerRefundReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending");
-                    }
-                }).subscribe(subscriber);
+                .flatMap(receipt -> apiService.refund(new RefundRequest(receipt.getReceiptId(), receipt.getAmount().toString())))
+                .flatMap(receipt -> apiService.consumerRefundReceipts(receipt.getConsumer().getConsumerToken(), null, null, "time-descending"))
+                .subscribe(testObserver);
 
-        subscriber.assertNoErrors();
-        List<Receipts> receipts = subscriber.getOnNextEvents();
-
-        assertThat(receipts.isEmpty(), is(false));
+        testObserver.assertNoErrors();
+        assertThat(testObserver.values().isEmpty(), is(false));
     }
 
     private JudoApiService getApiService() {
@@ -255,7 +168,7 @@ public class ListReceiptsTest {
 
     private PaymentRequest getPaymentRequest() {
         return new PaymentRequest.Builder()
-                .setJudoId(JUDO_ID)
+                .setJudoId(JUDO_ID_IRIDIUM)
                 .setAmount("0.01")
                 .setCardNumber("4976000000003436")
                 .setCv2("452")
@@ -264,5 +177,4 @@ public class ListReceiptsTest {
                 .setConsumerReference(CONSUMER_REF)
                 .build();
     }
-
 }

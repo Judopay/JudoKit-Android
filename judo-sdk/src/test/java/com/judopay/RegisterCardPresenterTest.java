@@ -1,7 +1,6 @@
 package com.judopay;
 
 import com.judopay.api.JudoApiServiceFactory;
-import com.judopay.arch.Logger;
 import com.judopay.model.Address;
 import com.judopay.model.Card;
 import com.judopay.model.Receipt;
@@ -14,21 +13,18 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.net.UnknownHostException;
-import java.util.HashMap;
 
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import okhttp3.internal.http.RealResponseBody;
 import okio.Buffer;
 import retrofit2.HttpException;
-import rx.Observable;
-import rx.Single;
 
-import static java.util.UUID.randomUUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static rx.Single.just;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RegisterCardPresenterTest {
@@ -38,13 +34,6 @@ public class RegisterCardPresenterTest {
 
     @Mock
     private Address cardAddress;
-
-    @Mock
-    private DeviceDna deviceDna;
-
-    @SuppressWarnings("unused")
-    @Mock
-    private Logger logger;
 
     @Mock
     private JudoApiService apiService;
@@ -60,54 +49,29 @@ public class RegisterCardPresenterTest {
 
     @Test
     public void shouldRegisterCard() {
-        when(apiService.registerCard(any(RegisterCardRequest.class)))
-                .thenReturn(Single.just(null));
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Single.just(new Receipt()));
 
-        when(deviceDna.send(any()))
-                .thenReturn(just(randomUUID().toString()));
-
-        presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
-                .setJudoId(judoId)
-                .setConsumerReference(consumer)
-                .build(), new HashMap<>())
-                .subscribe();
+        presenter.performRegisterCard(getCard(), getJudo()).subscribe();
 
         verify(apiService, times(1)).registerCard(any(RegisterCardRequest.class));
     }
 
     @Test
     public void showShowLoadingWhenSubmittingCard() {
-        when(apiService.registerCard(any(RegisterCardRequest.class)))
-                .thenReturn(Single.just(null));
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Single.just(new Receipt()));
 
-        when(deviceDna.send(any()))
-                .thenReturn(just(randomUUID().toString()));
-
-        presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
-                .setJudoId(judoId)
-                .setConsumerReference(consumer)
-                .build(), new HashMap<>())
-                .subscribe();
+        presenter.performRegisterCard(getCard(), getJudo()).subscribe();
 
         verify(transactionCallbacks).showLoading();
     }
 
     @Test
     public void shouldFinishPaymentFormViewOnSuccess() {
-        when(receipt.isSuccess())
-                .thenReturn(true);
+        when(receipt.isSuccess()).thenReturn(true);
 
-        when(apiService.registerCard(any(RegisterCardRequest.class)))
-                .thenReturn(just(receipt));
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Single.just(receipt));
 
-        when(deviceDna.send(any()))
-                .thenReturn(just(randomUUID().toString()));
-
-        presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
-                .setJudoId(judoId)
-                .setConsumerReference(consumer)
-                .build(), new HashMap<>())
-                .subscribe(presenter.callback(), presenter.error());
+        presenter.performRegisterCard(getCard(), getJudo()).subscribe(presenter.callback(), presenter.error());
 
         verify(transactionCallbacks).onSuccess(eq(receipt));
         verify(transactionCallbacks).hideLoading();
@@ -117,16 +81,9 @@ public class RegisterCardPresenterTest {
     public void shouldShowDeclinedMessageWhenDeclined() {
         when(receipt.isSuccess()).thenReturn(false);
 
-        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(just(receipt));
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Single.just(receipt));
 
-        when(deviceDna.send(any()))
-                .thenReturn(just(randomUUID().toString()));
-
-        presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
-                .setJudoId(judoId)
-                .setConsumerReference(consumer)
-                .build(), new HashMap<>())
-                .subscribe(presenter.callback(), presenter.error());
+        presenter.performRegisterCard(getCard(), getJudo()).subscribe(presenter.callback(), presenter.error());
 
         verify(transactionCallbacks).onDeclined(eq(receipt));
         verify(transactionCallbacks).hideLoading();
@@ -140,27 +97,12 @@ public class RegisterCardPresenterTest {
 
     @Test
     public void shouldShowLoadingIfReconnectAndPaymentInProgress() {
-        Card card = new Card.Builder()
-                .setCardNumber("4976000000003436")
-                .setSecurityCode("452")
-                .setExpiryDate("12/20")
-                .setAddress(cardAddress)
-                .build();
-
         // create a Receipt response that won't complete before we attempt to reconnect to the presenter;
-        Single<Receipt> response = Observable.<Receipt>never().toSingle();
+        Single<Receipt> response = Observable.<Receipt>never().singleOrError();
 
-        when(apiService.registerCard(any(RegisterCardRequest.class)))
-                .thenReturn(response);
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(response);
 
-        when(deviceDna.send(any()))
-                .thenReturn(just(randomUUID().toString()));
-
-        presenter.performRegisterCard(card, new Judo.Builder("apiToken", "apiSecret")
-                .setJudoId(judoId)
-                .setConsumerReference(consumer)
-                .build(), new HashMap<>())
-                .subscribe();
+        presenter.performRegisterCard(getCard(), getJudo()).subscribe();
 
         presenter.reconnect();
 
@@ -172,16 +114,9 @@ public class RegisterCardPresenterTest {
         when(receipt.isSuccess()).thenReturn(false);
         when(receipt.is3dSecureRequired()).thenReturn(true);
 
-        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(just(receipt));
+        when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Single.just(receipt));
 
-        when(deviceDna.send(any()))
-                .thenReturn(just(randomUUID().toString()));
-
-        presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
-                .setJudoId(judoId)
-                .setConsumerReference(consumer)
-                .build(), new HashMap<>())
-                .subscribe(presenter.callback(), presenter.error());
+        presenter.performRegisterCard(getCard(), getJudo()).subscribe(presenter.callback(), presenter.error());
 
         verify(transactionCallbacks).setLoadingText(eq(R.string.redirecting));
         verify(transactionCallbacks).start3dSecureWebView(eq(receipt), eq(presenter));
@@ -197,14 +132,7 @@ public class RegisterCardPresenterTest {
 
         when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Single.error(exception));
 
-        when(deviceDna.send(any()))
-                .thenReturn(just(randomUUID().toString()));
-
-        presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
-                .setJudoId(judoId)
-                .setConsumerReference(consumer)
-                .build(), new HashMap<>())
-                .subscribe(presenter.callback(), presenter.error());
+        presenter.performRegisterCard(getCard(), getJudo()).subscribe(presenter.callback(), presenter.error());
 
         verify(transactionCallbacks).onError(any(Receipt.class));
     }
@@ -213,17 +141,17 @@ public class RegisterCardPresenterTest {
     public void shouldShowConnectionErrorDialog() {
         when(apiService.registerCard(any(RegisterCardRequest.class))).thenReturn(Single.error(new UnknownHostException()));
 
-        when(deviceDna.send(any()))
-                .thenReturn(just(randomUUID().toString()));
-
-        presenter.performRegisterCard(getCard(), new Judo.Builder("apiToken", "apiSecret")
-                .setJudoId(judoId)
-                .setConsumerReference(consumer)
-                .build(), new HashMap<>())
-                .subscribe(presenter.callback(), presenter.error());
+        presenter.performRegisterCard(getCard(), getJudo()).subscribe(presenter.callback(), presenter.error());
 
         verify(apiService).registerCard(any(RegisterCardRequest.class));
         verify(transactionCallbacks).onConnectionError();
+    }
+
+    private Judo getJudo() {
+        return new Judo.Builder("apiToken", "apiSecret")
+                .setJudoId(judoId)
+                .setConsumerReference(consumer)
+                .build();
     }
 
     private Card getCard() {

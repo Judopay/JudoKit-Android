@@ -23,6 +23,10 @@ public class ThemeUtil {
     }
 
     public static int getColorAttr(Context context, int attribute) {
+        if (context == null) {
+            return 0;
+        }
+
         TypedValue value = new TypedValue();
         if (context.getTheme().resolveAttribute(attribute, value, true)) {
             return value.data;

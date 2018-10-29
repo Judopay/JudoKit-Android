@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.judopay.model.AndroidPayRequest;
 import com.judopay.model.CardVerificationResult;
+import com.judopay.model.CheckCardRequest;
 import com.judopay.model.CollectionRequest;
 import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
@@ -15,13 +16,13 @@ import com.judopay.model.TokenRequest;
 import com.judopay.model.VCOPaymentRequest;
 import com.judopay.model.VoidRequest;
 
+import io.reactivex.Single;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import rx.Single;
 
 /**
  * Judo interface with Retrofit annotated list of judo API calls that can be performed.
@@ -79,7 +80,7 @@ public interface JudoApiService {
     /**
      * Complete a transaction that required 3D-Secure verification by providing the 3D-Secure response data.
      *
-     * @param receiptId        the receipt ID from the original transaction
+     * @param receiptId              the receipt ID from the original transaction
      * @param cardVerificationResult the 3D-Secure details returned from successfully validating the card with the merchant bank
      * @return the receipt for the transaction
      */
@@ -119,6 +120,15 @@ public interface JudoApiService {
      */
     @POST("transactions/savecard")
     Single<Receipt> saveCard(@Body SaveCardRequest saveCardRequest);
+
+    /**
+     * Performs a card check against the card. This doesn't do an authorisation, it just checks whether or not the card is valid
+     *
+     * @param checkCardRequest the details of the card to be checked
+     * @return the receipt for the card check with the status of the transaction
+     */
+    @POST("transactions/checkcard")
+    Single<Receipt> checkCard(@Body CheckCardRequest checkCardRequest);
 
     @POST("transactions/payments")
     Single<Receipt> androidPayPayment(@Body AndroidPayRequest androidPayRequest);
@@ -245,5 +255,4 @@ public interface JudoApiService {
      */
     @GET("consumers/{consumerToken}/refunds")
     Single<Receipts> consumerRefundReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
-
 }

@@ -1,6 +1,7 @@
 package com.judopay;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,43 +10,34 @@ import com.judopay.arch.Logger;
 import com.judopay.card.AbstractCardEntryFragment;
 import com.judopay.card.CardEntryFragment;
 import com.judopay.card.CardEntryListener;
-import com.judopay.devicedna.Credentials;
 import com.judopay.model.Card;
 
-import java.util.Map;
-
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-
-import static com.judopay.Judo.JUDO_OPTIONS;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class SaveCardFragment extends JudoFragment implements TransactionCallbacks, CardEntryListener {
-
     private SaveCardPresenter presenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Judo judo = getArguments().getParcelable(JUDO_OPTIONS);
-        if (judo == null) {
-            throw new IllegalArgumentException("Judo argument missing");
-        }
-
-        checkJudoOptionsExtras(judo.getConsumerReference(), judo.getJudoId());
-
         if (this.presenter == null) {
-            JudoApiService apiService = judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
-            Credentials credentials = new Credentials(judo.getApiToken(), judo.getApiSecret());
-
-            DeviceDna deviceDna = new DeviceDna(getActivity(), credentials);
-            this.presenter = new SaveCardPresenter(this, apiService, deviceDna, new Logger());
+            JudoApiService apiService = getJudo().getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
+            this.presenter = new SaveCardPresenter(this, apiService, new Logger());
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_register_card, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setLoadingText(R.string.saving_card);
+        presenter.reconnect();
     }
 
     @Override
@@ -56,13 +48,11 @@ public class SaveCardFragment extends JudoFragment implements TransactionCallbac
     }
 
     @Override
-    public void onSubmit(Card card, Map<String, Object> userSignals) {
-        Judo options = getJudo();
-
-        presenter.performSaveCard(card, options, userSignals)
+    public void onSubmit(Card card) {
+        disposables.add(presenter.performSaveCard(card, getJudo())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(presenter.callback(), presenter.error());
+                .subscribe(presenter.callback(), presenter.error()));
     }
 
     @Override

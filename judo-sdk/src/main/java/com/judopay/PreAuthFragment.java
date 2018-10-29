@@ -1,18 +1,14 @@
 package com.judopay;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.judopay.arch.Logger;
-import com.judopay.devicedna.Credentials;
 import com.judopay.model.Card;
 
-import java.util.Map;
-
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-
-import static com.judopay.Judo.JUDO_OPTIONS;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public final class PreAuthFragment extends JudoFragment {
 
@@ -22,43 +18,40 @@ public final class PreAuthFragment extends JudoFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Judo judo = getArguments().getParcelable(JUDO_OPTIONS);
-        checkJudoOptionsExtras(judo.getAmount(), judo.getJudoId(), judo.getCurrency(), judo.getConsumerReference());
+        Judo judo = getJudo();
+        checkJudoOptionsExtras(judo.getAmount(), judo.getCurrency());
 
         if (this.presenter == null) {
             JudoApiService apiService = judo.getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
-            Credentials credentials = new Credentials(judo.getApiToken(), judo.getApiSecret());
-            this.presenter = new PreAuthPresenter(this, apiService, new DeviceDna(getActivity(), credentials), new Logger());
+            this.presenter = new PreAuthPresenter(this, apiService, new Logger());
         }
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.presenter.reconnect();
+        presenter.reconnect();
     }
 
     @Override
-    public void onSubmit(Card card, Map<String, Object> deviceIdentifiers) {
+    public void onSubmit(Card card) {
         Judo judo = getJudo();
 
         if (judo.getCardToken() != null) {
-            presenter.performTokenPreAuth(card, judo, deviceIdentifiers)
+            disposables.add(presenter.performTokenPreAuth(card, judo)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(presenter.callback(), presenter.error());
+                    .subscribe(presenter.callback(), presenter.error()));
         } else {
-            presenter.performPreAuth(card, judo, deviceIdentifiers)
+            disposables.add(presenter.performPreAuth(card, judo)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(presenter.callback(), presenter.error());
+                    .subscribe(presenter.callback(), presenter.error()));
         }
-
     }
 
     @Override
     boolean isTransactionInProgress() {
         return this.presenter.loading;
     }
-
 }

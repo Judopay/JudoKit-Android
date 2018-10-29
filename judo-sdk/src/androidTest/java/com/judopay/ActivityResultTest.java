@@ -27,7 +27,7 @@ public class ActivityResultTest {
         Judo judo = getJudo()
                 .newBuilder()
                 .setAmount("0.99")
-                .setCardToken(new CardToken("1215", "1234", "cardToken", 1))
+                .setCardToken(new CardToken("1215", "1234", "cardToken", 1, "scheme", "funding", "category", "country", "bank"))
                 .setConsumerReference("consumerRef")
                 .build();
 

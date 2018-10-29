@@ -7,11 +7,9 @@ import com.judopay.model.CardNetwork;
 import com.judopay.model.LuhnCheck;
 import com.judopay.view.SimpleTextWatcher;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Observable;
 
 public class CardNumberValidator implements Validator {
-
     private final EditText editText;
     private final boolean maestroSupported;
     private final boolean amexSupported;
@@ -24,19 +22,12 @@ public class CardNumberValidator implements Validator {
 
     @Override
     public Observable<Validation> onValidate() {
-        return Observable.create(new Observable.OnSubscribe<Validation>() {
+        return Observable.create(emitter -> editText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
-            public void call(final Subscriber<? super Validation> subscriber) {
-                editText.addTextChangedListener(new SimpleTextWatcher() {
-                    @Override
-                    protected void onTextChanged(CharSequence text) {
-                        if (!subscriber.isUnsubscribed()) {
-                            subscriber.onNext(getValidation(text.toString().replaceAll("\\s+", "")));
-                        }
-                    }
-                });
+            protected void onTextChanged(CharSequence text) {
+                emitter.onNext(getValidation(text.toString().replaceAll("\\s+", "")));
             }
-        });
+        }));
     }
 
     private Validation getValidation(String cardNumber) {
@@ -84,5 +75,4 @@ public class CardNumberValidator implements Validator {
                 return cardNumber.length() == 16;
         }
     }
-
 }

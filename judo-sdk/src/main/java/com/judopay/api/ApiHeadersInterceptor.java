@@ -2,6 +2,7 @@ package com.judopay.api;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.judopay.BuildConfig;
@@ -19,7 +20,6 @@ import okhttp3.Response;
 import static com.judopay.arch.TextUtil.isEmpty;
 
 class ApiHeadersInterceptor implements Interceptor {
-
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String CONTENT_TYPE_HEADER = "Content-Type";
     private static final String ACCEPT_HEADER = "Accept";
@@ -30,7 +30,7 @@ class ApiHeadersInterceptor implements Interceptor {
     private static final String USER_AGENT_HEADER = "User-Agent";
 
     private static final String JSON_MIME_TYPE = "application/json";
-    private static final String API_VERSION = "5.2.0.0";
+    private static final String API_VERSION = "5.6.0.0";
     private static final String CACHE_CONTROL = "no-cache";
     private static final String JUDO_SDK_UI_MODE = "Judo-SDK";
     private static final String CUSTOM_UI_MODE = "Custom-UI";
@@ -46,7 +46,7 @@ class ApiHeadersInterceptor implements Interceptor {
     }
 
     @Override
-    public Response intercept(Chain chain) throws IOException {
+    public Response intercept(@NonNull Chain chain) throws IOException {
         okhttp3.Request.Builder builder = chain.request()
                 .newBuilder()
                 .headers(getHeaders());

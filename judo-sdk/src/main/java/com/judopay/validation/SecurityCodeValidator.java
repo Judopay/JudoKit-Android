@@ -6,13 +6,11 @@ import com.judopay.R;
 import com.judopay.model.CardNetwork;
 import com.judopay.view.SimpleTextWatcher;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Observable;
 
 public class SecurityCodeValidator implements Validator {
-
-    private int cardType;
     private final EditText editText;
+    private int cardType;
 
     public SecurityCodeValidator(EditText editText) {
         this.editText = editText;
@@ -20,20 +18,13 @@ public class SecurityCodeValidator implements Validator {
 
     @Override
     public Observable<Validation> onValidate() {
-        return Observable.create(new Observable.OnSubscribe<Validation>() {
+        return Observable.create(emitter -> editText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
-            public void call(final Subscriber<? super Validation> subscriber) {
-                editText.addTextChangedListener(new SimpleTextWatcher() {
-                    @Override
-                    protected void onTextChanged(CharSequence text) {
-                        if (!subscriber.isUnsubscribed()) {
-                            Validation validation = new Validation(isValid(text), R.string.check_cvv, true);
-                            subscriber.onNext(validation);
-                        }
-                    }
-                });
+            protected void onTextChanged(CharSequence text) {
+                Validation validation = new Validation(isValid(text), R.string.check_cvv, true);
+                emitter.onNext(validation);
             }
-        });
+        }));
     }
 
     private boolean isValid(CharSequence text) {

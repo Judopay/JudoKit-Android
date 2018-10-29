@@ -25,5 +25,4 @@ public class PaymentRequestTest {
                 .setJudoId("123456")
                 .build();
     }
-
 }

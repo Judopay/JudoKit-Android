@@ -9,16 +9,15 @@ public class CardTokenTest {
 
     @Test
     public void shouldFormatEndDate() {
-        CardToken token = new CardToken("1220", "1234", "abcdef", 1);
+        CardToken token = new CardToken("1220", "1234", "abcdef", 1, "scheme", "funding", "category", "country", "bank");
 
         assertThat(token.getFormattedEndDate(), equalTo("12/20"));
     }
 
     @Test
     public void shouldReturnEmptyEndDateIfNoEndDate() {
-        CardToken token = new CardToken("", "1234", "abcdef", 1);
+        CardToken token = new CardToken("", "1234", "abcdef", 1, "scheme", "funding", "category", "country", "bank");
 
         assertThat(token.getFormattedEndDate(), equalTo(""));
     }
-
 }
