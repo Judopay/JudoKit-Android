@@ -40,8 +40,8 @@ public class PostcodeEntryView extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        postcodeInputLayout = (TextInputLayout) findViewById(R.id.post_code_input_layout);
-        JudoEditText editText = (JudoEditText) findViewById(R.id.post_code_edit_text);
+        postcodeInputLayout = findViewById(R.id.post_code_input_layout);
+        JudoEditText editText = findViewById(R.id.post_code_edit_text);
 
         if (editText != null) {
             editText.setOnFocusChangeListener(new HintFocusListener(editText, getResources().getString(R.string.empty)));

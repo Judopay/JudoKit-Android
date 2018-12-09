@@ -173,6 +173,43 @@ public class SuccessfulPaymentTest {
     }
 
     @Test
+    public void shouldBeSuccessfulPaymentWhenValidVisaEnteredAndAvsEnabledWithLowercasePostcode() {
+        Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PaymentActivity.class);
+        subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .newBuilder()
+                .setAmexEnabled(true)
+                .setAvsEnabled(true)
+                .build());
+
+        Intent intent = ResultTestActivity.createIntent(subjectIntent);
+        ResultTestActivity activity = activityTestRule.launchActivity(intent);
+
+        PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
+        JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
+        IdlingRegistry.getInstance().register(idlingResource);
+
+        onView(withId(R.id.card_number_edit_text))
+                .perform(typeText("4976000000003436"));
+
+        onView(withId(R.id.expiry_date_edit_text))
+                .perform(typeText("1220"));
+
+        onView(withId(R.id.security_code_edit_text))
+                .perform(typeText("452"));
+
+        onView(withId(R.id.post_code_edit_text))
+                .perform(typeText("tr14 8pa"));
+
+        onView(withId(R.id.button))
+                .perform(click());
+
+        Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
+        assertThat(activity, matcher);
+
+        IdlingRegistry.getInstance().unregister(idlingResource);
+    }
+
+    @Test
     public void shouldBeSuccessfulPaymentWhenValidMaestroEnteredAndAvsEnabled() {
         Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PaymentActivity.class);
         subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo()

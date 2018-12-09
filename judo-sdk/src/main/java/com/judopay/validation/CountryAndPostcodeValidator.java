@@ -37,14 +37,14 @@ public class CountryAndPostcodeValidator implements Validator {
             postcodeEditText.addTextChangedListener(new SimpleTextWatcher() {
                 @Override
                 protected void onTextChanged(CharSequence text) {
-                    emitter.onNext(getValidation(text.toString()));
+                    emitter.onNext(getValidation(text.toString().toUpperCase()));
                 }
             });
 
             countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    emitter.onNext(getValidation(postcodeEditText.getText().toString()));
+                    emitter.onNext(getValidation(postcodeEditText.getText().toString().toUpperCase()));
                 }
 
                 @Override
