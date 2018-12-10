@@ -267,11 +267,10 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         CountryAndPostcodeValidator countryAndPostcodeValidator = new CountryAndPostcodeValidator(countrySpinner, postcodeEntryView.getEditText());
         ConnectableObservable<Validation> observable = countryAndPostcodeValidator.onValidate();
 
-        disposables.add(observable.subscribe(validation -> postcodeEntryView.setError(validation.getError(), validation.isShowError())));
-
         disposables.add(observable.subscribe(validation -> {
             String country = (String) countrySpinner.getSelectedItem();
             postcodeEntryView.setCountry(country);
+            postcodeEntryView.setError(validation.getError(), validation.isShowError());
         }));
 
         validationManager.addValidator(countryAndPostcodeValidator, observable);
