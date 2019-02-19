@@ -2,7 +2,7 @@ package com.judopay;
 
 import android.content.Context;
 
-import com.judopay.model.AndroidPayRequest;
+import com.judopay.model.GooglePayRequest;
 import com.judopay.model.CardVerificationResult;
 import com.judopay.model.CheckCardRequest;
 import com.judopay.model.CollectionRequest;
@@ -131,10 +131,10 @@ public interface JudoApiService {
     Single<Receipt> checkCard(@Body CheckCardRequest checkCardRequest);
 
     @POST("transactions/payments")
-    Single<Receipt> androidPayPayment(@Body AndroidPayRequest androidPayRequest);
+    Single<Receipt> googlePayPayment(@Body GooglePayRequest googlePayRequest);
 
     @POST("transactions/preauths")
-    Single<Receipt> androidPayPreAuth(@Body AndroidPayRequest androidPayRequest);
+    Single<Receipt> googlePayPreAuth(@Body GooglePayRequest googlePayRequest);
 
     @POST("transactions/payments")
     Single<Receipt> vcoPayment(@Body VCOPaymentRequest vcoPaymentRequest);
