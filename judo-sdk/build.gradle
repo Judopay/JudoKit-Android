@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'guru.stefma.bintrayrelease'
+apply from: '../code_analysis/code_analysis.gradle'
 
 android {
     compileSdkVersion 28
@@ -22,6 +23,7 @@ android {
     buildTypes {
         debug {
             debuggable true
+            testCoverageEnabled true
         }
         release {
             minifyEnabled true
