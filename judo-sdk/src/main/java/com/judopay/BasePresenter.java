@@ -1,101 +1,77 @@
 package com.judopay;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.judopay.arch.Logger;
 import com.judopay.cardverification.AuthorizationListener;
 import com.judopay.model.CardVerificationResult;
 import com.judopay.model.Receipt;
 
 import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Callable;
 
+import io.reactivex.Single;
+import io.reactivex.functions.Consumer;
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;
-import rx.Single;
-import rx.functions.Action1;
 
 abstract class BasePresenter implements AuthorizationListener {
-
-    final JudoApiService apiService;
-    final TransactionCallbacks transactionCallbacks;
-    final DeviceDna deviceDna;
+    protected final JudoApiService apiService;
+    protected final TransactionCallbacks transactionCallbacks;
     private final Gson gson;
     private final Logger logger;
 
     boolean loading;
 
-    BasePresenter(TransactionCallbacks transactionCallbacks, JudoApiService apiService, DeviceDna deviceDna, Logger logger) {
+    BasePresenter(TransactionCallbacks transactionCallbacks, JudoApiService apiService, Logger logger) {
         this.transactionCallbacks = transactionCallbacks;
         this.apiService = apiService;
-        this.deviceDna = deviceDna;
         this.gson = new Gson();
         this.logger = logger;
     }
 
-    Action1<Receipt> callback() {
-        return new Action1<Receipt>() {
-            @Override
-            public void call(Receipt receipt) {
-                transactionCallbacks.hideLoading();
-                loading = false;
+    Consumer<Receipt> callback() {
+        return receipt -> {
+            transactionCallbacks.hideLoading();
+            loading = false;
 
-                if (receipt.isSuccess()) {
-                    transactionCallbacks.dismiss3dSecureDialog();
-                    transactionCallbacks.onSuccess(receipt);
-                } else {
-                    if (receipt.is3dSecureRequired()) {
-                        transactionCallbacks.setLoadingText(R.string.redirecting);
-                        transactionCallbacks.start3dSecureWebView(receipt, BasePresenter.this);
-                    } else {
-                        transactionCallbacks.onDeclined(receipt);
-                    }
-                }
-            }
-        };
-    }
-
-    Action1<Throwable> error() {
-        return new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-                logger.error("Error calling Judopay API", throwable);
-
-                loading = false;
-                handleErrorCallback(throwable);
+            if (receipt.isSuccess()) {
                 transactionCallbacks.dismiss3dSecureDialog();
-                transactionCallbacks.hideLoading();
-            }
-
-            private void handleErrorCallback(Throwable throwable) {
-                if (throwable instanceof HttpException) {
-                    retrofit2.Response<?> response = ((HttpException) throwable).response();
-                    ResponseBody errorBody = response.errorBody();
-                    if (errorBody != null) {
-                        Reader reader = errorBody.charStream();
-                        Receipt receipt = gson.fromJson(reader, Receipt.class);
-                        transactionCallbacks.onError(receipt);
-                    }
-                } else if (throwable instanceof java.net.UnknownHostException) {
-                    transactionCallbacks.onConnectionError();
+                transactionCallbacks.onSuccess(receipt);
+            } else {
+                if (receipt.is3dSecureRequired()) {
+                    transactionCallbacks.setLoadingText(R.string.redirecting);
+                    transactionCallbacks.start3dSecureWebView(receipt, BasePresenter.this);
+                } else {
+                    transactionCallbacks.onDeclined(receipt);
                 }
             }
         };
     }
 
-    HashMap<String, JsonElement> getJsonElements(Map<String, Object> signals) {
-        Gson gson = new Gson();
-        HashMap<String, JsonElement> jsonElements = new HashMap<>();
-
-        if (signals != null) {
-            for (Map.Entry<String, Object> signal : signals.entrySet()) {
-                jsonElements.put(signal.getKey(), gson.toJsonTree(signal));
+    Consumer<Throwable> error() {
+        return throwable -> {
+            if (logger != null) {
+                logger.error("Error calling Judopay API", throwable);
             }
-        }
 
-        return jsonElements;
+            loading = false;
+            handleErrorCallback(throwable);
+            transactionCallbacks.dismiss3dSecureDialog();
+            transactionCallbacks.hideLoading();
+        };
+    }
+
+    private void handleErrorCallback(Throwable throwable) {
+        if (throwable instanceof HttpException) {
+            retrofit2.Response<?> response = ((HttpException) throwable).response();
+            ResponseBody errorBody = response.errorBody();
+            if (errorBody != null) {
+                Reader reader = errorBody.charStream();
+                Receipt receipt = gson.fromJson(reader, Receipt.class);
+                transactionCallbacks.onError(receipt);
+            }
+        } else if (throwable instanceof java.net.UnknownHostException) {
+            transactionCallbacks.onConnectionError();
+        }
     }
 
     void reconnect() {
@@ -108,30 +84,21 @@ abstract class BasePresenter implements AuthorizationListener {
 
     @Override
     public Single<Receipt> onAuthorizationCompleted(final CardVerificationResult cardVerificationResult, final String receiptId) {
-        return Single.defer(new Callable<Single<Receipt>>() {
-            @Override
-            public Single<Receipt> call() throws Exception {
-                return apiService.complete3dSecure(receiptId, cardVerificationResult)
-                        .doOnSuccess(on3dSecureCompleted())
-                        .doOnError(error());
-            }
-        });
+        return Single.defer(() -> apiService.complete3dSecure(receiptId, cardVerificationResult)
+                .doOnSuccess(on3dSecureCompleted())
+                .doOnError(error()));
     }
 
-    private Action1<Receipt> on3dSecureCompleted() {
-        return new Action1<Receipt>() {
-            @Override
-            public void call(Receipt receipt) {
-                if (receipt.isSuccess()) {
-                    loading = false;
-                    transactionCallbacks.onSuccess(receipt);
-                } else {
-                    transactionCallbacks.onDeclined(receipt);
-                }
-                transactionCallbacks.dismiss3dSecureDialog();
-                transactionCallbacks.hideLoading();
+    private Consumer<Receipt> on3dSecureCompleted() {
+        return receipt -> {
+            if (receipt.isSuccess()) {
+                loading = false;
+                transactionCallbacks.onSuccess(receipt);
+            } else {
+                transactionCallbacks.onDeclined(receipt);
             }
+            transactionCallbacks.dismiss3dSecureDialog();
+            transactionCallbacks.hideLoading();
         };
     }
-
 }

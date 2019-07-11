@@ -17,12 +17,7 @@ public class TestActivityUtil {
             return getCurrentActivityOnMainThread();
         } else {
             final Activity[] topActivity = new Activity[1];
-            getInstrumentation().runOnMainSync(new Runnable() {
-                @Override
-                public void run() {
-                    topActivity[0] = getCurrentActivityOnMainThread();
-                }
-            });
+            getInstrumentation().runOnMainSync(() -> topActivity[0] = getCurrentActivityOnMainThread());
             return topActivity[0];
         }
     }

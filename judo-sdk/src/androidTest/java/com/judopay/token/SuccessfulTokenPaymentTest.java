@@ -1,8 +1,8 @@
 package com.judopay.token;
 
 import android.content.Intent;
-import android.support.test.espresso.Espresso;
 import android.support.test.espresso.IdlingPolicies;
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -26,7 +26,7 @@ import org.junit.runner.RunWith;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import rx.observers.TestSubscriber;
+import io.reactivex.observers.TestObserver;
 
 import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -34,7 +34,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static com.judopay.TestUtil.JUDO_ID;
+import static com.judopay.TestUtil.JUDO_ID_IRIDIUM;
 import static com.judopay.TestUtil.getJudo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -55,21 +55,21 @@ public class SuccessfulTokenPaymentTest {
         final JudoApiService apiService = getJudo().getApiService(getContext());
 
         RegisterCardRequest registerCardRequest = new RegisterCardRequest.Builder()
-                .setJudoId(JUDO_ID)
+                .setJudoId(JUDO_ID_IRIDIUM)
                 .setCardNumber("5100000000005460")
                 .setExpiryDate("12/20")
                 .setCv2("524")
                 .setConsumerReference(UUID.randomUUID().toString())
                 .build();
 
-        TestSubscriber<Receipt> subscriber = new TestSubscriber<>();
+        TestObserver<Receipt> testObserver = new TestObserver<>();
 
         apiService.registerCard(registerCardRequest)
-                .subscribe(subscriber);
+                .subscribe(testObserver);
 
-        subscriber.assertNoErrors();
+        testObserver.assertNoErrors();
 
-        Receipt receipt = subscriber.getOnNextEvents().get(0);
+        Receipt receipt = testObserver.values().get(0);
         Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PaymentActivity.class);
         subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo()
                 .newBuilder()
@@ -83,7 +83,7 @@ public class SuccessfulTokenPaymentTest {
 
         PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
-        Espresso.registerIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("524"));
@@ -94,7 +94,7 @@ public class SuccessfulTokenPaymentTest {
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
         assertThat(activity, matcher);
 
-        Espresso.unregisterIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
@@ -106,7 +106,7 @@ public class SuccessfulTokenPaymentTest {
                 .getApiService(getContext());
 
         RegisterCardRequest registerCardRequest = new RegisterCardRequest.Builder()
-                .setJudoId(JUDO_ID)
+                .setJudoId(JUDO_ID_IRIDIUM)
                 .setConsumerReference(UUID.randomUUID().toString())
                 .setCardNumber("5100000000005460")
                 .setExpiryDate("12/20")
@@ -117,14 +117,14 @@ public class SuccessfulTokenPaymentTest {
                         .build())
                 .build();
 
-        TestSubscriber<Receipt> subscriber = new TestSubscriber<>();
+        TestObserver<Receipt> testObserver = new TestObserver<>();
 
         apiService.registerCard(registerCardRequest)
-                .subscribe(subscriber);
+                .subscribe(testObserver);
 
-        subscriber.assertNoErrors();
+        testObserver.assertNoErrors();
 
-        Receipt receipt = subscriber.getOnNextEvents().get(0);
+        Receipt receipt = testObserver.values().get(0);
 
         Intent subjectIntent = new Intent(getInstrumentation().getTargetContext(), PaymentActivity.class);
         subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo()
@@ -140,7 +140,7 @@ public class SuccessfulTokenPaymentTest {
 
         PaymentActivity paymentActivity = (PaymentActivity) TestActivityUtil.getCurrentActivity();
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
-        Espresso.registerIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().register(idlingResource);
 
         onView(withId(R.id.security_code_edit_text))
                 .perform(typeText("524"));
@@ -154,7 +154,6 @@ public class SuccessfulTokenPaymentTest {
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
         assertThat(activity, matcher);
 
-        Espresso.unregisterIdlingResources(idlingResource);
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
-
 }

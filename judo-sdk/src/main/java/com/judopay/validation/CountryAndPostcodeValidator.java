@@ -11,15 +11,14 @@ import com.judopay.view.SimpleTextWatcher;
 
 import java.util.regex.Pattern;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.observables.ConnectableObservable;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.observables.ConnectableObservable;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 import static java.util.regex.Pattern.compile;
 
 public class CountryAndPostcodeValidator implements Validator {
-
     private static final Pattern UK_POSTCODE_PATTERN = compile("\\b(GIR ?0AA|SAN ?TA1|(?:[A-PR-UWYZ](?:\\d{0,2}|[A-HK-Y]\\d|[A-HK-Y]\\d\\d|\\d[A-HJKSTUW]|[A-HK-Y]\\d[ABEHMNPRV-Y])) ?\\d[ABD-HJLNP-UW-Z]{2})\\b");
     private static final Pattern US_ZIPCODE_PATTERN = compile("^\\d{5}(?:[-\\s]\\d{4})?$");
     private static final Pattern CANADA_POSTAL_CODE_PATTERN = compile("[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ][0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]");
@@ -34,30 +33,24 @@ public class CountryAndPostcodeValidator implements Validator {
 
     @Override
     public ConnectableObservable<Validation> onValidate() {
-        return Observable.create(new Observable.OnSubscribe<Validation>() {
-            @Override
-            public void call(final Subscriber<? super Validation> subscriber) {
-                postcodeEditText.addTextChangedListener(new SimpleTextWatcher() {
-                    @Override
-                    protected void onTextChanged(CharSequence text) {
-                        if (!subscriber.isUnsubscribed()) {
-                            subscriber.onNext(getValidation(text.toString()));
-                        }
-                    }
-                });
+        return Observable.create((ObservableEmitter<Validation> emitter) -> {
+            postcodeEditText.addTextChangedListener(new SimpleTextWatcher() {
+                @Override
+                protected void onTextChanged(CharSequence text) {
+                    emitter.onNext(getValidation(text.toString().toUpperCase()));
+                }
+            });
 
-                countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        if (!subscriber.isUnsubscribed()) {
-                            subscriber.onNext(getValidation(postcodeEditText.getText().toString()));
-                        }
-                    }
+            countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    emitter.onNext(getValidation(postcodeEditText.getText().toString().toUpperCase()));
+                }
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) { }
-                });
-            }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
         }).publish();
     }
 

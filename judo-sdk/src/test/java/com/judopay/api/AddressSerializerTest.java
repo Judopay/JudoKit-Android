@@ -8,7 +8,7 @@ import com.judopay.model.Address;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.lang.reflect.Type;
 
@@ -19,13 +19,10 @@ import static org.hamcrest.core.IsEqual.equalTo;
 public class AddressSerializerTest {
 
     @Mock
-    JsonElement jsonElement;
+    private Type type;
 
     @Mock
-    Type type;
-
-    @Mock
-    JsonSerializationContext jsonSerializationContext;
+    private JsonSerializationContext jsonSerializationContext;
 
     @Test
     public void shouldSerializeAllFields() {
@@ -54,5 +51,4 @@ public class AddressSerializerTest {
 
         assertThat(jsonObject.get("countryCode"), equalTo(null));
     }
-
 }

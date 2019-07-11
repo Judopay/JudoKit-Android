@@ -3,7 +3,7 @@ package com.judopay.model;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class CardDateTest {
 
@@ -42,5 +42,4 @@ public class CardDateTest {
         CardDate cardDate = new CardDate("12/30");
         assertThat(cardDate.isInsideAllowedDateRange(), is(false));
     }
-
 }

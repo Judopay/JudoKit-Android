@@ -3,7 +3,6 @@ package com.judopay;
 import android.support.test.espresso.IdlingResource;
 
 public class JudoTransactionIdlingResource implements IdlingResource {
-
     private IdlingResource.ResourceCallback resourceCallback;
     private JudoActivity activity;
     private ProgressListener progressListener;
@@ -34,7 +33,7 @@ public class JudoTransactionIdlingResource implements IdlingResource {
 
     @Override
     public String getName() {
-        return "My idling resource";
+        return "Judo transaction idling resource";
     }
 
     @Override

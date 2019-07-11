@@ -26,5 +26,4 @@ public class JudoSetupTest {
 
         assertThat(judo.isSslPinningEnabled(), is(true));
     }
-
 }

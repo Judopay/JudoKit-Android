@@ -6,13 +6,19 @@
 
     <application tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name="com.judopay.PaymentActivity"
+            android:name=".PaymentActivity"
             android:theme="@style/Theme.Judo.Light.DarkActionBar" />
         <activity
-            android:name="com.judopay.PreAuthActivity"
+            android:name=".PreAuthActivity"
             android:theme="@style/Theme.Judo.Light.DarkActionBar" />
         <activity
-            android:name="com.judopay.RegisterCardActivity"
+            android:name=".RegisterCardActivity"
+            android:theme="@style/Theme.Judo.Light.DarkActionBar" />
+        <activity
+            android:name=".SaveCardActivity"
+            android:theme="@style/Theme.Judo.Light.DarkActionBar" />
+        <activity
+            android:name=".CheckCardActivity"
             android:theme="@style/Theme.Judo.Light.DarkActionBar" />
     </application>
 

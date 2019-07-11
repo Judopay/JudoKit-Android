@@ -5,8 +5,9 @@ import android.os.Bundle;
 
 /**
  * Displays a card entry form to the user, allowing for a payment to be made.
+ *
  * To launch the PaymentActivity, call {@link android.app.Activity#startActivityForResult(Intent, int)}
- * with an Intent the configuration options:
+ * with an Intent containing the configuration options:
  *
  * <pre class="prettyprint">
  * Intent intent = new Intent(this, PaymentActivity.class);
@@ -16,8 +17,10 @@ import android.os.Bundle;
  * .setAmount("1.99")
  * .setConsumerReference("consumerRef")
  * .build());
+ *
  * startActivityForResult(intent, PAYMENT_REQUEST);
  * </pre>
+ *
  * See {@link Judo} for the full list of supported options
  */
 public final class PaymentActivity extends JudoActivity {
@@ -32,7 +35,7 @@ public final class PaymentActivity extends JudoActivity {
             fragment = new PaymentFragment();
             fragment.setArguments(getIntent().getExtras());
 
-            getFragmentManager()
+            getSupportFragmentManager()
                     .beginTransaction()
                     .add(android.R.id.content, fragment, TAG_JUDO_FRAGMENT)
                     .commit();

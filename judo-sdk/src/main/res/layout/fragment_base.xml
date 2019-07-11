@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:id="@+id/progress_overlay"
-        style="@style/Overlay"
+        style="@style/Widget.Judo.Overlay"
         tools:visibility="visible">
 
         <TextView

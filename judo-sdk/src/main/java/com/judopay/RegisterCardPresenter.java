@@ -5,22 +5,18 @@ import com.judopay.model.Card;
 import com.judopay.model.Receipt;
 import com.judopay.model.RegisterCardRequest;
 
-import java.util.Map;
-import java.util.concurrent.Callable;
-
-import rx.Single;
-import rx.functions.Func1;
+import io.reactivex.Single;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
 class RegisterCardPresenter extends BasePresenter {
 
-    RegisterCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, DeviceDna deviceDna, Logger logger) {
-        super(callbacks, apiService, deviceDna, logger);
+    RegisterCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, Logger logger) {
+        super(callbacks, apiService, logger);
     }
 
-    Single<Receipt> performRegisterCard(Card card, Judo judo, final Map<String, Object> userSignals) {
-        this.loading = true;
+    Single<Receipt> performRegisterCard(Card card, Judo judo) {
+        loading = true;
         transactionCallbacks.showLoading();
 
         final RegisterCardRequest.Builder builder = new RegisterCardRequest.Builder()
@@ -46,27 +42,12 @@ class RegisterCardPresenter extends BasePresenter {
             builder.setCurrency(judo.getCurrency());
         }
 
-        if (judo.getAmount() != null) {
-            builder.setAmount(judo.getAmount());
-        }
-
         if (card.getAddress() != null) {
             builder.setCardAddress(card.getAddress());
         } else {
             builder.setCardAddress(judo.getAddress());
         }
 
-        return Single.defer(new Callable<Single<Receipt>>() {
-            @Override
-            public Single<Receipt> call() throws Exception {
-                return deviceDna.send(getJsonElements(userSignals))
-                        .flatMap(new Func1<String, Single<Receipt>>() {
-                            @Override
-                            public Single<Receipt> call(String s) {
-                                return apiService.registerCard(builder.build());
-                            }
-                        });
-            }
-        });
+        return apiService.registerCard(builder.build());
     }
 }

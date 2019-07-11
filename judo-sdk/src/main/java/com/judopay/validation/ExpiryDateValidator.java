@@ -6,11 +6,9 @@ import com.judopay.R;
 import com.judopay.model.CardDate;
 import com.judopay.view.SimpleTextWatcher;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Observable;
 
 public class ExpiryDateValidator implements Validator {
-
     private final EditText editText;
 
     public ExpiryDateValidator(EditText editText) {
@@ -19,19 +17,12 @@ public class ExpiryDateValidator implements Validator {
 
     @Override
     public Observable<Validation> onValidate() {
-        return Observable.create(new Observable.OnSubscribe<Validation>() {
+        return Observable.create(emitter -> editText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
-            public void call(final Subscriber<? super Validation> subscriber) {
-                editText.addTextChangedListener(new SimpleTextWatcher() {
-                    @Override
-                    protected void onTextChanged(CharSequence text) {
-                        if (!subscriber.isUnsubscribed()) {
-                            subscriber.onNext(getValidation(text.toString()));
-                        }
-                    }
-                });
+            protected void onTextChanged(CharSequence text) {
+                emitter.onNext(getValidation(text.toString()));
             }
-        });
+        }));
     }
 
     private Validation getValidation(String text) {
@@ -45,5 +36,4 @@ public class ExpiryDateValidator implements Validator {
         CardDate cardDate = new CardDate(expiryDate);
         return cardDate.isAfterToday() && cardDate.isInsideAllowedDateRange();
     }
-
 }

@@ -25,5 +25,4 @@ public class JudoTest {
                 .setJudoId("123456")
                 .build();
     }
-
 }

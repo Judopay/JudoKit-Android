@@ -6,7 +6,7 @@ import com.google.gson.JsonElement;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.lang.reflect.Type;
 import java.util.Date;
@@ -19,13 +19,13 @@ import static org.mockito.Mockito.when;
 public class DateJsonDeserializerTest {
 
     @Mock
-    JsonElement jsonElement;
+    private JsonElement jsonElement;
 
     @Mock
-    Type type;
+    private Type type;
 
     @Mock
-    JsonDeserializationContext jsonDeserializationContext;
+    private JsonDeserializationContext jsonDeserializationContext;
 
     @Test
     public void shouldDeserializeDate() {
@@ -66,5 +66,4 @@ public class DateJsonDeserializerTest {
 
         assertThat(date.getTime(), is(1458820528329L));
     }
-
 }

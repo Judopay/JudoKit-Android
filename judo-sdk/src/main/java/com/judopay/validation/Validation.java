@@ -3,7 +3,6 @@ package com.judopay.validation;
 import android.support.annotation.StringRes;
 
 public class Validation {
-
     private final Integer error;
     private final boolean valid;
     private final boolean showError;
@@ -27,4 +26,3 @@ public class Validation {
         return showError;
     }
 }
-

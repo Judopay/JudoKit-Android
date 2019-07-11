@@ -4,24 +4,18 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.functions.Action1;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 
 public class ValidationManager {
-
     private final Map<Validator, Boolean> validationResults;
-    private final Map<Validator, Subscription> subscriptions;
+    private final Map<Validator, Disposable> disposables;
     private final OnChangeListener onValidationChangeListener;
-
-    public interface OnChangeListener {
-        void onValidate(boolean valid);
-    }
 
     public ValidationManager(List<Validator> validators, OnChangeListener onValidationChangeListener) {
         this.onValidationChangeListener = onValidationChangeListener;
         this.validationResults = new LinkedHashMap<>();
-        this.subscriptions = new LinkedHashMap<>();
+        this.disposables = new LinkedHashMap<>();
 
         for (final Validator validator : validators) {
             addValidator(validator);
@@ -36,18 +30,13 @@ public class ValidationManager {
         if (!validationResults.containsKey(validator)) {
             validationResults.put(validator, false);
 
-            Subscription subscription = observable.subscribe(new Action1<Validation>() {
-                        @Override
-                        public void call(Validation validation) {
-                            if (validationResults.containsKey(validator)) {
-                                validationResults.remove(validator);
-                            }
-                            validationResults.put(validator, validation.isValid());
-                            notifyListener();
-                        }
-                    });
+            Disposable subscription = observable.subscribe(validation -> {
+                validationResults.remove(validator);
+                validationResults.put(validator, validation.isValid());
+                notifyListener();
+            });
 
-            subscriptions.put(validator, subscription);
+            disposables.put(validator, subscription);
         }
     }
 
@@ -56,11 +45,11 @@ public class ValidationManager {
     }
 
     public void removeValidator(final Validator validator) {
-        if (subscriptions.containsKey(validator)) {
-            Subscription subscription = subscriptions.get(validator);
-            subscription.unsubscribe();
+        if (disposables.containsKey(validator)) {
+            Disposable subscription = disposables.get(validator);
+            subscription.dispose();
 
-            subscriptions.remove(validator);
+            disposables.remove(validator);
             validationResults.remove(validator);
         }
     }
@@ -80,4 +69,7 @@ public class ValidationManager {
         }
     }
 
+    public interface OnChangeListener {
+        void onValidate(boolean valid);
+    }
 }

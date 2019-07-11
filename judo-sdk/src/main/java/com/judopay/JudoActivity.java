@@ -1,27 +1,17 @@
 package com.judopay;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Display;
 import android.view.MenuItem;
-import android.view.Surface;
 import android.view.WindowManager;
 
 import com.judopay.error.RootedDeviceNotPermittedError;
 
 import static com.judopay.Judo.JUDO_OPTIONS;
-import static com.judopay.Judo.RESULT_CONNECTION_ERROR;
-import static com.judopay.Judo.RESULT_DECLINED;
-import static com.judopay.Judo.RESULT_ERROR;
-import static com.judopay.Judo.RESULT_SUCCESS;
-import static com.judopay.Judo.RESULT_TOKEN_EXPIRED;
 import static com.judopay.arch.TextUtil.isEmpty;
 import static com.judopay.arch.ThemeUtil.getStringAttr;
 
@@ -35,7 +25,6 @@ import static com.judopay.arch.ThemeUtil.getStringAttr;
  * </ol>
  */
 abstract class JudoActivity extends AppCompatActivity {
-
     protected static final String TAG_JUDO_FRAGMENT = "JudoFragment";
 
     protected JudoFragment fragment;
@@ -44,18 +33,16 @@ abstract class JudoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.fragment = (JudoFragment) getFragmentManager().findFragmentByTag(TAG_JUDO_FRAGMENT);
+        this.fragment = (JudoFragment) getSupportFragmentManager().findFragmentByTag(TAG_JUDO_FRAGMENT);
         Judo judo = getIntent().getParcelableExtra(JUDO_OPTIONS);
 
         if (RootDetector.isRooted() && !judo.isRootedDevicesAllowed()) {
             throw new RootedDeviceNotPermittedError();
         }
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
-        //noinspection WrongConstant
-        setRequestedOrientation(getLockedOrientation());
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -79,70 +66,14 @@ abstract class JudoActivity extends AppCompatActivity {
         }
     }
 
-    private int getLockedOrientation() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            return ActivityInfo.SCREEN_ORIENTATION_LOCKED;
-        } else {
-            Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
-            int rotation = display.getRotation();
-
-            switch (rotation) {
-                case Surface.ROTATION_90:
-                    return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-                case Surface.ROTATION_180:
-                    return ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
-                case Surface.ROTATION_270:
-                    return ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
-                case Surface.ROTATION_0:
-                default:
-                    return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-            }
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode) {
-            case Judo.JUDO_REQUEST:
-                switch (resultCode) {
-                    case RESULT_SUCCESS:
-                    case RESULT_ERROR:
-                    case RESULT_TOKEN_EXPIRED:
-                        setResult(resultCode, data);
-                        finish();
-                        break;
-
-                    case RESULT_CONNECTION_ERROR:
-                        new AlertDialog.Builder(this)
-                                .setTitle(R.string.connection_error)
-                                .setMessage(R.string.please_check_your_internet_connection)
-                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                }).show();
-                        break;
-
-                    case RESULT_DECLINED:
-                        onDeclined();
-                        break;
-                }
+        if (requestCode == Judo.JUDO_REQUEST) {
+            setResult(resultCode, data);
+            finish();
         }
-    }
-
-    protected void onDeclined() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.payment_failed)
-                .setMessage(R.string.please_check_details_try_again)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
     }
 
     @Override
@@ -164,5 +95,4 @@ abstract class JudoActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

@@ -6,83 +6,21 @@ import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
 import com.judopay.model.TokenRequest;
 
-import java.util.Map;
-import java.util.concurrent.Callable;
-
-import rx.Single;
-import rx.functions.Func1;
+import io.reactivex.Single;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
 class PreAuthPresenter extends BasePresenter {
 
-    PreAuthPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, DeviceDna deviceDna, Logger logger) {
-        super(callbacks, judoApiService, deviceDna, logger);
+    PreAuthPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, Logger logger) {
+        super(callbacks, judoApiService, logger);
     }
 
-    Single<Receipt> performPreAuth(Card card, Judo judo, final Map<String, Object> signals) {
+    Single<Receipt> performPreAuth(Card card, Judo judo) {
         this.loading = true;
         transactionCallbacks.showLoading();
 
-        final PaymentRequest request = buildPayment(card, judo);
-
-        return Single.defer(new Callable<Single<Receipt>>() {
-            @Override
-            public Single<Receipt> call() throws Exception {
-                return deviceDna.send(getJsonElements(signals))
-                        .flatMap(new Func1<String, Single<Receipt>>() {
-                            @Override
-                            public Single<Receipt> call(String deviceId) {
-                                return apiService.preAuth(request);
-                            }
-                        });
-            }
-        });
-    }
-
-    Single<Receipt> performTokenPreAuth(Card card, Judo judo, final Map<String, Object> signals) {
-        this.loading = true;
-        transactionCallbacks.showLoading();
-
-        final TokenRequest request = buildTokenRequest(card, judo);
-
-        return Single.defer(new Callable<Single<Receipt>>() {
-            @Override
-            public Single<Receipt> call() throws Exception {
-                return deviceDna.send(getJsonElements(signals))
-                        .flatMap(new Func1<String, Single<Receipt>>() {
-                            @Override
-                            public Single<Receipt> call(String deviceId) {
-                                return apiService.tokenPreAuth(request);
-                            }
-                        });
-            }
-        });
-    }
-
-    private TokenRequest buildTokenRequest(Card card, Judo judo) {
-        TokenRequest.Builder builder = new TokenRequest.Builder()
-                .setAmount(judo.getAmount())
-                .setCurrency(judo.getCurrency())
-                .setJudoId(judo.getJudoId())
-                .setConsumerReference(judo.getConsumerReference())
-                .setCv2(card.getSecurityCode())
-                .setEmailAddress(judo.getEmailAddress())
-                .setMobileNumber(judo.getMobileNumber())
-                .setMetaData(judo.getMetaDataMap())
-                .setToken(judo.getCardToken());
-
-        if(!isEmpty(judo.getPaymentReference())) {
-            builder.setPaymentReference(judo.getPaymentReference());
-        }
-
-        if (card.getAddress() != null) {
-            builder.setCardAddress(card.getAddress());
-        } else {
-            builder.setCardAddress(judo.getAddress());
-        }
-
-        return builder.build();
+        return apiService.preAuth(buildPayment(card, judo));
     }
 
     private PaymentRequest buildPayment(Card card, Judo judo) {
@@ -98,7 +36,7 @@ class PreAuthPresenter extends BasePresenter {
                 .setMetaData(judo.getMetaDataMap())
                 .setExpiryDate(card.getExpiryDate());
 
-        if(!isEmpty(judo.getPaymentReference())) {
+        if (!isEmpty(judo.getPaymentReference())) {
             builder.setPaymentReference(judo.getPaymentReference());
         }
 
@@ -116,4 +54,35 @@ class PreAuthPresenter extends BasePresenter {
         return builder.build();
     }
 
+    Single<Receipt> performTokenPreAuth(Card card, Judo judo) {
+        this.loading = true;
+        transactionCallbacks.showLoading();
+
+        return apiService.tokenPreAuth(buildTokenRequest(card, judo));
+    }
+
+    private TokenRequest buildTokenRequest(Card card, Judo judo) {
+        TokenRequest.Builder builder = new TokenRequest.Builder()
+                .setAmount(judo.getAmount())
+                .setCurrency(judo.getCurrency())
+                .setJudoId(judo.getJudoId())
+                .setConsumerReference(judo.getConsumerReference())
+                .setCv2(card.getSecurityCode())
+                .setEmailAddress(judo.getEmailAddress())
+                .setMobileNumber(judo.getMobileNumber())
+                .setMetaData(judo.getMetaDataMap())
+                .setToken(judo.getCardToken());
+
+        if (!isEmpty(judo.getPaymentReference())) {
+            builder.setPaymentReference(judo.getPaymentReference());
+        }
+
+        if (card.getAddress() != null) {
+            builder.setCardAddress(card.getAddress());
+        } else {
+            builder.setCardAddress(judo.getAddress());
+        }
+
+        return builder.build();
+    }
 }

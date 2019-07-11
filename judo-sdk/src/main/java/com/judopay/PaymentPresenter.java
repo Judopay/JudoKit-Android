@@ -1,45 +1,26 @@
 package com.judopay;
 
-import android.support.annotation.Nullable;
-
 import com.judopay.arch.Logger;
 import com.judopay.model.Card;
 import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
 import com.judopay.model.TokenRequest;
 
-import java.util.Map;
-import java.util.concurrent.Callable;
-
-import rx.Single;
-import rx.functions.Func1;
+import io.reactivex.Single;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
 class PaymentPresenter extends BasePresenter {
 
-    PaymentPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, DeviceDna deviceDna, Logger logger) {
-        super(callbacks, judoApiService, deviceDna, logger);
+    PaymentPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, Logger logger) {
+        super(callbacks, judoApiService, logger);
     }
 
-    Single<Receipt> performPayment(Card card, Judo judo, final Map<String, Object> signals) {
+    Single<Receipt> performPayment(Card card, Judo judo) {
         loading = true;
         transactionCallbacks.showLoading();
 
-        final PaymentRequest paymentRequest = buildPayment(card, judo);
-
-        return Single.defer(new Callable<Single<Receipt>>() {
-            @Override
-            public Single<Receipt> call() throws Exception {
-                return deviceDna.send(getJsonElements(signals))
-                        .flatMap(new Func1<String, Single<Receipt>>() {
-                            @Override
-                            public Single<Receipt> call(String deviceId) {
-                                return apiService.payment(paymentRequest);
-                            }
-                        });
-            }
-        });
+        return apiService.payment(buildPayment(card, judo));
     }
 
     private PaymentRequest buildPayment(Card card, Judo judo) {
@@ -73,24 +54,11 @@ class PaymentPresenter extends BasePresenter {
         return builder.build();
     }
 
-    Single<Receipt> performTokenPayment(final Card card, Judo judo, @Nullable final Map<String, Object> signals) {
-        this.loading = true;
+    Single<Receipt> performTokenPayment(final Card card, Judo judo) {
+        loading = true;
         transactionCallbacks.showLoading();
 
-        final TokenRequest request = buildTokenPayment(card, judo);
-
-        return Single.defer(new Callable<Single<Receipt>>() {
-            @Override
-            public Single<Receipt> call() throws Exception {
-                return deviceDna.send(getJsonElements(signals))
-                        .flatMap(new Func1<String, Single<Receipt>>() {
-                            @Override
-                            public Single<Receipt> call(String s) {
-                                return apiService.tokenPayment(request);
-                            }
-                        });
-            }
-        });
+        return apiService.tokenPayment(buildTokenPayment(card, judo));
     }
 
     private TokenRequest buildTokenPayment(Card card, Judo judo) {

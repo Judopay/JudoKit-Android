@@ -1,12 +1,9 @@
 package com.judopay.model;
 
-import com.judopay.error.JudoIdInvalidError;
-
 import org.junit.Test;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
-
 
 public class AddressTest {
 
@@ -54,5 +51,4 @@ public class AddressTest {
         assertThat(address.getPostCode(), equalTo("postcode"));
         assertThat(address.getCountryCode(), equalTo(0));
     }
-
 }

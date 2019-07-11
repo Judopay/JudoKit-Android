@@ -15,7 +15,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <EditText
+                <com.judopay.view.JudoEditText
                     android:id="@+id/card_number_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -29,6 +29,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:baselineAligned="false"
             android:orientation="horizontal"
             android:weightSum="2">
 
@@ -38,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-                <EditText
+                <com.judopay.view.JudoEditText
                     android:id="@+id/start_date_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -58,7 +59,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <EditText
+                    <com.judopay.view.JudoEditText
                         android:id="@+id/issue_number_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -80,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <EditText
+                <com.judopay.view.JudoEditText
                     android:id="@+id/expiry_date_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -101,7 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <EditText
+                <com.judopay.view.JudoEditText
                     android:id="@+id/security_code_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -133,7 +134,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1">
 
-                <EditText
+                <com.judopay.view.JudoEditText
                     android:id="@+id/post_code_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -151,8 +152,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/small_padding"
-            android:layout_marginRight="@dimen/small_padding"
             android:layout_marginTop="@dimen/large_padding"
+            android:layout_marginRight="@dimen/small_padding"
             android:lineSpacingMultiplier="@dimen/spaced_text"
             android:textColor="?android:attr/textColorSecondary"
             android:textSize="@dimen/judo_small_text_size" />
