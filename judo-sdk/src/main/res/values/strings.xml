@@ -49,4 +49,8 @@
     <string name="judo_api_secret">judo_api_secret</string>
     <string name="scan_card">scan card</string>
     <string name="processing">Processing…</string>
+    <string name="judo_payment_method">Payment Method</string>
+    <string name="judo_card_payment">Card Payment</string>
+    <string name="judo_payment_method_header_title">Please select from one of the payment methods listed below:</string>
+    <string name="googlepay_button_content_description">Google Pay</string>
 </resources>

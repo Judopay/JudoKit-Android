@@ -8,6 +8,13 @@
     <dimen name="small_padding">4dp</dimen>
     <dimen name="medium_padding">8dp</dimen>
     <dimen name="large_padding">16dp</dimen>
+    <dimen name="judo_pbba_btn_height">48dp</dimen>
+    <dimen name="judo_gpay_btn_height">48dp</dimen>
+    <dimen name="judo_carg_payment_btn_margin">24dp</dimen>
+    <dimen name="judo_pbba_button_margin">24dp</dimen>
+    <dimen name="judo_gpay_btn_margin">24dp</dimen>
+    <dimen name="judo_payment_method_header_margin">24dp</dimen>
+    <dimen name="judo_payment_method_header_text_size">16sp</dimen>
 
     <item name="spaced_text" format="float" type="dimen">1.4</item>
 

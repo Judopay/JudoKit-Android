@@ -91,7 +91,14 @@ artifacts {
     archives sourcesJar
 }
 
+ext {
+    supportLibVersion = '28.0.0'
+}
+
 dependencies {
+    implementation ('com.zapp.library:merchant:1.1.0') {
+        exclude group: 'com.android.support', module: 'support-v4'
+    }
     implementation 'com.judopay:device-dna:1.0.0'
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
@@ -99,11 +106,11 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.10'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:support-compat:28.0.0'
-    implementation 'com.android.support:support-vector-drawable:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation "com.android.support:appcompat-v7:${supportLibVersion}"
+    implementation "com.android.support:support-compat:${supportLibVersion}"
+    implementation "com.android.support:support-vector-drawable:${supportLibVersion}"
+    implementation "com.android.support:design:${supportLibVersion}"
+    implementation "com.android.support:support-annotations:${supportLibVersion}"
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.28.2'

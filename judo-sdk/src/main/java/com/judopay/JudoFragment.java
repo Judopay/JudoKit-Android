@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,15 +23,11 @@ import com.judopay.cardverification.CardholderVerificationDialogFragment;
 import com.judopay.model.Card;
 import com.judopay.model.Receipt;
 
-import io.reactivex.disposables.CompositeDisposable;
-
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
-import static com.judopay.Judo.JUDO_OPTIONS;
 
-abstract class JudoFragment extends Fragment implements TransactionCallbacks, CardEntryListener {
+abstract class JudoFragment extends BaseFragment implements TransactionCallbacks, CardEntryListener {
     private static final String TAG_3DS_DIALOG = "3dSecureDialog";
 
-    protected CompositeDisposable disposables = new CompositeDisposable();
     private View progressBar;
     private TextView progressText;
     private ProgressListener listener;
@@ -40,35 +35,6 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
     private AbstractCardEntryFragment cardEntryFragment;
 
     abstract boolean isTransactionInProgress();
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Judo judo = getJudo();
-        if (judo == null) {
-            throw new IllegalArgumentException(String.format("%s argument is required for %s", JUDO_OPTIONS, this.getClass().getSimpleName()));
-        }
-
-        checkJudoOptionsExtras(judo.getJudoId(), judo.getConsumerReference());
-
-        // Check if token has expired
-        if (judo.getCardToken() != null && judo.getCardToken().isExpired() && getActivity() != null) {
-            PendingIntent pendingResult = getActivity().createPendingResult(Judo.JUDO_REQUEST, new Intent(), 0);
-            try {
-                pendingResult.send(Judo.RESULT_TOKEN_EXPIRED);
-            } catch (PendingIntent.CanceledException ignore) {
-            }
-        }
-
-        setRetainInstance(true);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        disposables.clear();
-    }
 
     public void setProgressListener(ProgressListener progressListener) {
         listener = progressListener;
@@ -82,14 +48,6 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
             listener.onProgressShown();
         } else {
             listener.onProgressDismissed();
-        }
-    }
-
-    void checkJudoOptionsExtras(Object... objects) {
-        for (Object object : objects) {
-            if (object == null) {
-                throw new IllegalArgumentException("Judo must contain all required fields");
-            }
         }
     }
 
@@ -225,11 +183,6 @@ abstract class JudoFragment extends Fragment implements TransactionCallbacks, Ca
             }
         }
         return CardEntryFragment.newInstance(judo, this);
-    }
-
-    protected Judo getJudo() {
-        Bundle args = getArguments();
-        return args != null ? args.getParcelable(Judo.JUDO_OPTIONS) : null;
     }
 
     public void setCard(Card card) {

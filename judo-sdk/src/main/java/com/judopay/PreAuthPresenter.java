@@ -10,7 +10,7 @@ import io.reactivex.Single;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
-class PreAuthPresenter extends BasePresenter {
+class PreAuthPresenter extends JudoPresenter {
 
     PreAuthPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, Logger logger) {
         super(callbacks, judoApiService, logger);
@@ -18,7 +18,7 @@ class PreAuthPresenter extends BasePresenter {
 
     Single<Receipt> performPreAuth(Card card, Judo judo) {
         this.loading = true;
-        transactionCallbacks.showLoading();
+        getView().showLoading();
 
         return apiService.preAuth(buildPayment(card, judo));
     }
@@ -56,7 +56,7 @@ class PreAuthPresenter extends BasePresenter {
 
     Single<Receipt> performTokenPreAuth(Card card, Judo judo) {
         this.loading = true;
-        transactionCallbacks.showLoading();
+        getView().showLoading();
 
         return apiService.tokenPreAuth(buildTokenRequest(card, judo));
     }

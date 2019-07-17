@@ -20,6 +20,9 @@
         <activity
             android:name=".CheckCardActivity"
             android:theme="@style/Theme.Judo.Light.DarkActionBar" />
+        <activity
+            android:name=".PaymentMethodActivity"
+            android:theme="@style/Theme.Judo.Light.DarkActionBar" />
     </application>
 
 </manifest>

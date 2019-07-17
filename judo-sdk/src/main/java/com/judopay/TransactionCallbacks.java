@@ -5,7 +5,7 @@ import android.support.annotation.StringRes;
 import com.judopay.cardverification.AuthorizationListener;
 import com.judopay.model.Receipt;
 
-interface TransactionCallbacks {
+interface TransactionCallbacks extends BaseView {
 
     void onSuccess(Receipt receipt);
 

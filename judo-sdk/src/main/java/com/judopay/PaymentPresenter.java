@@ -10,7 +10,7 @@ import io.reactivex.Single;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
-class PaymentPresenter extends BasePresenter {
+class PaymentPresenter extends JudoPresenter {
 
     PaymentPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, Logger logger) {
         super(callbacks, judoApiService, logger);
@@ -18,7 +18,7 @@ class PaymentPresenter extends BasePresenter {
 
     Single<Receipt> performPayment(Card card, Judo judo) {
         loading = true;
-        transactionCallbacks.showLoading();
+        getView().showLoading();
 
         return apiService.payment(buildPayment(card, judo));
     }
@@ -56,7 +56,7 @@ class PaymentPresenter extends BasePresenter {
 
     Single<Receipt> performTokenPayment(final Card card, Judo judo) {
         loading = true;
-        transactionCallbacks.showLoading();
+        getView().showLoading();
 
         return apiService.tokenPayment(buildTokenPayment(card, judo));
     }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/judo_payment_method_header_margin"
+        android:gravity="center"
+        android:text="@string/judo_payment_method_header_title"
+        android:textSize="@dimen/judo_payment_method_header_text_size" />
+
+    <Button
+        android:id="@+id/btnCardPayment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/judo_carg_payment_btn_margin"
+        android:layout_marginRight="@dimen/judo_carg_payment_btn_margin"
+        android:text="@string/judo_card_payment" />
+
+    <com.zapp.library.merchant.ui.view.PBBAButton
+        android:id="@+id/btnPBBA"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/judo_pbba_btn_height"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/judo_pbba_button_margin"
+        android:layout_marginRight="@dimen/judo_pbba_button_margin"
+        android:layout_marginTop="@dimen/judo_pbba_button_margin"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/btnGPAY"
+        layout="@layout/googlepay_button_no_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/judo_gpay_btn_height"
+        android:layout_marginLeft="@dimen/judo_gpay_btn_margin"
+        android:layout_marginRight="@dimen/judo_gpay_btn_margin"
+        android:layout_marginTop="@dimen/judo_gpay_btn_margin"
+        android:visibility="gone" />
+
+</LinearLayout>

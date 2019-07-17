@@ -9,7 +9,7 @@ import io.reactivex.Single;
 
 import static com.judopay.arch.TextUtil.isEmpty;
 
-class RegisterCardPresenter extends BasePresenter {
+class RegisterCardPresenter extends JudoPresenter {
 
     RegisterCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, Logger logger) {
         super(callbacks, apiService, logger);
@@ -17,7 +17,7 @@ class RegisterCardPresenter extends BasePresenter {
 
     Single<Receipt> performRegisterCard(Card card, Judo judo) {
         loading = true;
-        transactionCallbacks.showLoading();
+        getView().showLoading();
 
         final RegisterCardRequest.Builder builder = new RegisterCardRequest.Builder()
                 .setJudoId(judo.getJudoId())

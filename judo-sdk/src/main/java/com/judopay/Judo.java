@@ -14,9 +14,11 @@ import com.judopay.model.Address;
 import com.judopay.model.CardToken;
 import com.judopay.model.Currency;
 import com.judopay.model.CustomLayout;
+import com.judopay.model.PaymentMethod;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,6 +53,7 @@ public class Judo implements Parcelable {
     public static final int SAVE_CARD_REQUEST = 302;
     public static final int CHECK_CARD_REQUEST = 303;
     public static final int CARD_SCANNING_REQUEST = 801;
+    public static final int PAYMENT_METHOD = 400;
 
     public static final String JUDO_CARD = "JudoCard";
     public static final String JUDO_OPTIONS = "Judo";
@@ -101,6 +104,7 @@ public class Judo implements Parcelable {
     private CustomLayout customLayout;
     private PendingIntent cardScanningIntent;
     private String customEnvironmentHost;
+    private EnumSet<PaymentMethod> paymentMethod;
 
     private Judo() {
     }
@@ -130,6 +134,7 @@ public class Judo implements Parcelable {
         this.customLayout = in.readParcelable(CustomLayout.class.getClassLoader());
         this.cardScanningIntent = in.readParcelable(PendingIntent.class.getClassLoader());
         this.customEnvironmentHost = in.readString();
+        this.paymentMethod = (EnumSet<PaymentMethod>) in.readSerializable();
     }
 
     public Builder newBuilder() {
@@ -154,7 +159,8 @@ public class Judo implements Parcelable {
                 .setSslPinningEnabled(sslPinningEnabled)
                 .setRootedDevicesAllowed(rootedDevicesAllowed)
                 .setCustomLayout(customLayout)
-                .setCardScanningIntent(cardScanningIntent);
+                .setCardScanningIntent(cardScanningIntent)
+                .setPaymentMethod(paymentMethod);
     }
 
     public String getAmount() {
@@ -285,6 +291,10 @@ public class Judo implements Parcelable {
         return rootedDevicesAllowed;
     }
 
+    public EnumSet<PaymentMethod> getPaymentMethod() {
+        return paymentMethod;
+    }
+
     public String getApiEnvironmentHost(Context context) {
         switch (environment) {
             case SANDBOX:
@@ -327,6 +337,7 @@ public class Judo implements Parcelable {
         dest.writeParcelable(this.customLayout, flags);
         dest.writeParcelable(this.cardScanningIntent, flags);
         dest.writeString(this.customEnvironmentHost);
+        dest.writeSerializable(this.paymentMethod);
     }
 
     @IntDef({UI_CLIENT_MODE_CUSTOM_UI, UI_CLIENT_MODE_JUDO_SDK})
@@ -364,6 +375,7 @@ public class Judo implements Parcelable {
         private boolean maestroEnabled = true;
         private boolean sslPinningEnabled = true;
         private boolean rootedDevicesAllowed = true;
+        private EnumSet<PaymentMethod> paymentMethod;
 
         public Builder() {
         }
@@ -513,8 +525,14 @@ public class Judo implements Parcelable {
 
             judo.customLayout = customLayout;
             judo.cardScanningIntent = cardScanningIntent;
+            judo.paymentMethod = paymentMethod;
 
             return judo;
+        }
+
+        public Builder setPaymentMethod(EnumSet<PaymentMethod> paymentMethod) {
+            this.paymentMethod = paymentMethod;
+            return this;
         }
     }
 }
