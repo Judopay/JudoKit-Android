@@ -7,7 +7,7 @@ public class Validation {
     private final boolean valid;
     private final boolean showError;
 
-    public Validation(boolean valid, @StringRes Integer error, boolean showError) {
+    public Validation(final boolean valid, final @StringRes Integer error, final boolean showError) {
         this.valid = valid;
         this.error = error;
         this.showError = showError;

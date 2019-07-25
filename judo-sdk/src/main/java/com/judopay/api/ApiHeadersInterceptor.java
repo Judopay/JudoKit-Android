@@ -39,14 +39,14 @@ class ApiHeadersInterceptor implements Interceptor {
     private final ApiCredentials apiCredentials;
     private final AppMetaDataReader appMetaDataReader;
 
-    ApiHeadersInterceptor(ApiCredentials apiCredentials, @Judo.UiClientMode int uiClientMode, Context context) {
+    ApiHeadersInterceptor(final ApiCredentials apiCredentials, @Judo.UiClientMode final int uiClientMode, final Context context) {
         this.apiCredentials = apiCredentials;
         this.uiClientMode = uiClientMode;
         this.appMetaDataReader = new AppMetaDataReader(context);
     }
 
     @Override
-    public Response intercept(@NonNull Chain chain) throws IOException {
+    public Response intercept(final @NonNull Chain chain) throws IOException {
         okhttp3.Request.Builder builder = chain.request()
                 .newBuilder()
                 .headers(getHeaders());
@@ -75,7 +75,7 @@ class ApiHeadersInterceptor implements Interceptor {
                 trim(Build.MANUFACTURER), trim(Build.MODEL), trim(appMetaDataReader.getAppName()), trim(appMetaDataReader.getAppVersion()));
     }
 
-    private String trim(String text) {
+    private String trim(final String text) {
         if (!isEmpty(text)) {
             return text.replaceAll("\\s", "");
         }

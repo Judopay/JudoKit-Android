@@ -40,22 +40,22 @@ public class CardNumberEntryView extends RelativeLayout {
         void onClick();
     }
 
-    public CardNumberEntryView(Context context) {
+    public CardNumberEntryView(final Context context) {
         super(context);
         initialize(context);
     }
 
-    public CardNumberEntryView(Context context, AttributeSet attrs) {
+    public CardNumberEntryView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         initialize(context);
     }
 
-    public CardNumberEntryView(Context context, AttributeSet attrs, int defStyle) {
+    public CardNumberEntryView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         initialize(context);
     }
 
-    private void initialize(Context context) {
+    private void initialize(final Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.view_card_number_entry, this);
     }
@@ -64,7 +64,7 @@ public class CardNumberEntryView extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        TextView cardNumberHelperText = (TextView) findViewById(R.id.card_number_helper_text);
+        final TextView cardNumberHelperText = (TextView) findViewById(R.id.card_number_helper_text);
 
         this.cardTypeImageView = (CardTypeImageView) findViewById(R.id.card_type_view);
         this.editText = (JudoEditText) findViewById(R.id.card_number_edit_text);
@@ -91,14 +91,15 @@ public class CardNumberEntryView extends RelativeLayout {
     }
 
     @Override
-    public void onRestoreInstanceState(Parcelable state) {
+    public void onRestoreInstanceState(final Parcelable state) {
         if (state instanceof Bundle) {
-            Bundle bundle = (Bundle) state;
-            state = bundle.getParcelable(KEY_SUPER_STATE);
-
+            final Bundle bundle = (Bundle) state;
+            final Parcelable superState = bundle.getParcelable(KEY_SUPER_STATE);
             setCardType(bundle.getInt(KEY_CARD_TYPE), false);
+            super.onRestoreInstanceState(superState);
+        } else {
+            super.onRestoreInstanceState(state);
         }
-        super.onRestoreInstanceState(state);
     }
 
     public void setScanCardListener(final ScanCardButtonListener listener) {
@@ -119,7 +120,7 @@ public class CardNumberEntryView extends RelativeLayout {
         }
     }
 
-    public void setCardType(int type, boolean animate) {
+    public void setCardType(final int type, final boolean animate) {
         this.cardType = type;
 
         cardTypeImageView.setImageType(type, animate);
@@ -127,23 +128,20 @@ public class CardNumberEntryView extends RelativeLayout {
             setScanCardListener(null);
         }
 
-        switch (type) {
-            case CardNetwork.AMEX:
-                setMaxLength(17);
-                numberFormatTextWatcher.setFormat(getResources().getString(R.string.amex_card_number_format));
-                break;
-
-            default:
-                setMaxLength(19);
-                numberFormatTextWatcher.setFormat(getResources().getString(R.string.card_number_format));
+        if (type == AMEX) {
+            setMaxLength(17);
+            numberFormatTextWatcher.setFormat(getResources().getString(R.string.amex_card_number_format));
+        } else {
+            setMaxLength(19);
+            numberFormatTextWatcher.setFormat(getResources().getString(R.string.card_number_format));
         }
     }
 
-    public void setText(String text) {
+    public void setText(final String text) {
         editText.setText(text);
     }
 
-    private void setMaxLength(int maxLength) {
+    private void setMaxLength(final int maxLength) {
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
     }
 
@@ -155,11 +153,11 @@ public class CardNumberEntryView extends RelativeLayout {
         return editText.getText().toString().replaceAll(" ", "");
     }
 
-    public void addTextChangedListener(SimpleTextWatcher watcher) {
+    public void addTextChangedListener(final SimpleTextWatcher watcher) {
         editText.addTextChangedListener(watcher);
     }
 
-    public void setTokenCard(CardToken cardToken) {
+    public void setTokenCard(final CardToken cardToken) {
         editText.setEnabled(false);
         boolean amex = cardToken.getType() == AMEX;
 
@@ -170,7 +168,7 @@ public class CardNumberEntryView extends RelativeLayout {
         cardTypeImageView.setAlpha(1.0f);
     }
 
-    public void setValidation(Validation validation) {
+    public void setValidation(final Validation validation) {
         inputLayout.setErrorEnabled(validation.isShowError());
 
         if (validation.isShowError()) {

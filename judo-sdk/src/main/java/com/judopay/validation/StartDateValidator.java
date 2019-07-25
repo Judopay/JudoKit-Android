@@ -11,7 +11,7 @@ import io.reactivex.Observable;
 public class StartDateValidator implements Validator {
     private final EditText editText;
 
-    public StartDateValidator(EditText editText) {
+    public StartDateValidator(final EditText editText) {
         this.editText = editText;
     }
 
@@ -19,13 +19,13 @@ public class StartDateValidator implements Validator {
     public Observable<Validation> onValidate() {
         return Observable.create(emitter -> editText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
-            protected void onTextChanged(CharSequence text) {
+            protected void onTextChanged(final CharSequence text) {
                 emitter.onNext(getValidation(text.toString()));
             }
         }));
     }
 
-    private Validation getValidation(String text) {
+    private Validation getValidation(final String text) {
         boolean startDateEntryComplete = text.length() == 5;
         boolean startDateValid = isStartDateValid(text);
         boolean showStartDateError = !startDateValid && startDateEntryComplete;
@@ -38,7 +38,7 @@ public class StartDateValidator implements Validator {
         return new Validation(startDateValid, startDateError, !startDateValid && showStartDateError);
     }
 
-    private boolean isStartDateValid(String startDate) {
+    private boolean isStartDateValid(final String startDate) {
         CardDate cardDate = new CardDate(startDate);
         return cardDate.isBeforeToday() && cardDate.isInsideAllowedDateRange();
     }

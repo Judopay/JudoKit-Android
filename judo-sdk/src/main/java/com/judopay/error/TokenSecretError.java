@@ -5,7 +5,7 @@ package com.judopay.error;
  */
 public class TokenSecretError extends Error {
 
-    public TokenSecretError(String detailMessage) {
+    public TokenSecretError(final String detailMessage) {
         super(detailMessage);
     }
 }

@@ -34,12 +34,12 @@ public final class CustomLayout implements Parcelable {
 
     public static final Parcelable.Creator<CustomLayout> CREATOR = new Parcelable.Creator<CustomLayout>() {
         @Override
-        public CustomLayout createFromParcel(Parcel source) {
+        public CustomLayout createFromParcel(final Parcel source) {
             return new CustomLayout(source);
         }
 
         @Override
-        public CustomLayout[] newArray(int size) {
+        public CustomLayout[] newArray(final int size) {
             return new CustomLayout[size];
         }
     };
@@ -54,15 +54,15 @@ public final class CustomLayout implements Parcelable {
     private final int postcodeInput;
     private final int submitButton;
 
-    private CustomLayout(int layoutId,
-                         int cardNumberInput,
-                         int expiryDateInput,
-                         int securityCodeInput,
-                         int startDateInput,
-                         int issueNumberInput,
-                         int countrySpinner,
-                         int postcodeInput,
-                         int submitButton) {
+    private CustomLayout(final int layoutId,
+                         final int cardNumberInput,
+                         final int expiryDateInput,
+                         final int securityCodeInput,
+                         final int startDateInput,
+                         final int issueNumberInput,
+                         final int countrySpinner,
+                         final int postcodeInput,
+                         final int submitButton) {
         this.layoutId = layoutId;
         this.cardNumberInput = cardNumberInput;
         this.expiryDateInput = expiryDateInput;
@@ -74,7 +74,7 @@ public final class CustomLayout implements Parcelable {
         this.submitButton = submitButton;
     }
 
-    private CustomLayout(Parcel in) {
+    private CustomLayout(final Parcel in) {
         this.layoutId = in.readInt();
         this.cardNumberInput = in.readInt();
         this.expiryDateInput = in.readInt();
@@ -86,16 +86,16 @@ public final class CustomLayout implements Parcelable {
         this.submitButton = in.readInt();
     }
 
-    public void validate(Context context) {
-        LayoutInflater inflater = LayoutInflater.from(context);
+    public void validate(final Context context) {
+        final LayoutInflater inflater = LayoutInflater.from(context);
 
-        List<Class<? extends View>> allowedViews = Arrays.asList(EditText.class, JudoEditText.class,
+        final List<Class<? extends View>> allowedViews = Arrays.asList(EditText.class, JudoEditText.class,
                 AppCompatEditText.class, TextView.class, AppCompatTextView.class, ImageView.class,
                 AppCompatImageView.class, Spinner.class, AppCompatSpinner.class, Button.class,
                 AppCompatButton.class, TextInputLayout.class, LinearLayout.class,
                 RelativeLayout.class, FrameLayout.class, ScrollView.class);
 
-        ViewGroup parent = (ViewGroup) inflater.inflate(layoutId, null);
+        final ViewGroup parent = (ViewGroup) inflater.inflate(layoutId, null);
         validateView(allowedViews, parent);
 
         checkTextInputLayout(parent, cardNumberInput);
@@ -108,12 +108,12 @@ public final class CustomLayout implements Parcelable {
         checkSpinner(parent, countrySpinner);
     }
 
-    private void validateView(List<Class<? extends View>> allowedViews, ViewGroup parent) {
-        int numChildViews = parent.getChildCount();
+    private void validateView(final List<Class<? extends View>> allowedViews, final ViewGroup parent) {
+        final int numChildViews = parent.getChildCount();
 
         for (int i = 0; i < numChildViews; i++) {
-            View childView = parent.getChildAt(i);
-            Class<? extends View> viewClass = childView.getClass();
+            final View childView = parent.getChildAt(i);
+            final Class<? extends View> viewClass = childView.getClass();
 
             if (childView instanceof ViewGroup) {
                 validateView(allowedViews, (ViewGroup) childView);
@@ -123,20 +123,20 @@ public final class CustomLayout implements Parcelable {
         }
     }
 
-    private void checkSpinner(View view, int submitButton) {
+    private void checkSpinner(final View view, final int submitButton) {
         checkViewType(view, submitButton, Spinner.class, AppCompatSpinner.class);
     }
 
-    private void checkButton(View view, int submitButton) {
+    private void checkButton(final View view, final int submitButton) {
         checkViewType(view, submitButton, Button.class, AppCompatButton.class);
     }
 
-    private void checkTextInputLayout(View view, int id) {
+    private void checkTextInputLayout(final View view, final int id) {
         checkViewType(view, id, TextInputLayout.class);
     }
 
-    private void checkViewType(View view, int id, Class... classes) {
-        View foundView = view.findViewById(id);
+    private void checkViewType(final View view, final int id, final Class... classes) {
+        final View foundView = view.findViewById(id);
 
         if (foundView == null) {
             throw new IllegalArgumentException();
@@ -205,7 +205,7 @@ public final class CustomLayout implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeInt(this.layoutId);
         dest.writeInt(this.cardNumberInput);
         dest.writeInt(this.expiryDateInput);
@@ -227,50 +227,47 @@ public final class CustomLayout implements Parcelable {
         private int postcodeInput;
         private int submitButton;
 
-        public Builder() {
-        }
-
-        public Builder cardNumberInput(@IdRes int cardNumberInput) {
+        public Builder cardNumberInput(@IdRes final int cardNumberInput) {
             this.cardNumberInput = cardNumberInput;
             return this;
         }
 
-        public Builder expiryDateInput(@IdRes int expiryDateInput) {
+        public Builder expiryDateInput(@IdRes final int expiryDateInput) {
             this.expiryDateInput = expiryDateInput;
             return this;
         }
 
-        public Builder securityCodeInput(@IdRes int securityCodeInput) {
+        public Builder securityCodeInput(@IdRes final int securityCodeInput) {
             this.securityCodeInput = securityCodeInput;
             return this;
         }
 
-        public Builder startDateInput(@IdRes int startDateInput) {
+        public Builder startDateInput(@IdRes final int startDateInput) {
             this.startDateInput = startDateInput;
             return this;
         }
 
-        public Builder issueNumberInput(@IdRes int issueNumberInput) {
+        public Builder issueNumberInput(@IdRes final int issueNumberInput) {
             this.issueNumberInput = issueNumberInput;
             return this;
         }
 
-        public Builder countrySpinner(@IdRes int countrySpinner) {
+        public Builder countrySpinner(@IdRes final int countrySpinner) {
             this.countrySpinner = countrySpinner;
             return this;
         }
 
-        public Builder postcodeInput(@IdRes int postcodeInput) {
+        public Builder postcodeInput(@IdRes final int postcodeInput) {
             this.postcodeInput = postcodeInput;
             return this;
         }
 
-        public Builder submitButton(@IdRes int submitButton) {
+        public Builder submitButton(@IdRes final int submitButton) {
             this.submitButton = submitButton;
             return this;
         }
 
-        public CustomLayout build(@LayoutRes int layoutId) {
+        public CustomLayout build(@LayoutRes final int layoutId) {
             return new CustomLayout(layoutId,
                     cardNumberInput,
                     expiryDateInput,

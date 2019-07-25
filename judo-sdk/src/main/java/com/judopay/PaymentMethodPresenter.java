@@ -6,11 +6,11 @@ import java.util.EnumSet;
 
 class PaymentMethodPresenter extends BasePresenter<PaymentMethodView> {
 
-    PaymentMethodPresenter(PaymentMethodView paymentMethodView) {
+    PaymentMethodPresenter(final PaymentMethodView paymentMethodView) {
         super(paymentMethodView);
     }
 
-    void setPaymentMethod(EnumSet<PaymentMethod> paymentMethodEnumSet) {
+    void setPaymentMethod(final EnumSet<PaymentMethod> paymentMethodEnumSet) {
 
         if (paymentMethodEnumSet == null || paymentMethodEnumSet.isEmpty()) {
             getView().displayAllPaymentMethods();

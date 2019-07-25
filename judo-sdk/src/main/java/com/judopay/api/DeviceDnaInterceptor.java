@@ -21,12 +21,12 @@ class DeviceDnaInterceptor implements Interceptor {
     private static final String CLIENT_DETAILS = "clientDetails";
     private final DeviceDNA deviceDna;
 
-    DeviceDnaInterceptor(Context context) {
+    DeviceDnaInterceptor(final Context context) {
         this.deviceDna = new DeviceDNA(context);
     }
 
     @Override
-    public Response intercept(@NonNull Chain chain) throws IOException {
+    public Response intercept(@NonNull final Chain chain) throws IOException {
         okhttp3.Request request = chain.request();
 
         if (isPost(request) && request.body() != null) {
@@ -47,7 +47,7 @@ class DeviceDnaInterceptor implements Interceptor {
         return chain.proceed(request);
     }
 
-    private void addClientDetails(JsonObject json) {
+    private void addClientDetails(final JsonObject json) {
         Map<String, String> signals = deviceDna.getDeviceDNA();
         JsonObject clientDetailsJson = new JsonObject();
 
@@ -58,17 +58,17 @@ class DeviceDnaInterceptor implements Interceptor {
         json.add(CLIENT_DETAILS, clientDetailsJson);
     }
 
-    private boolean isPost(okhttp3.Request request) {
+    private boolean isPost(final okhttp3.Request request) {
         return request.body() != null && "POST".equals(request.method());
     }
 
-    private RequestBody getJsonRequestBody(JsonObject json) {
+    private RequestBody getJsonRequestBody(final JsonObject json) {
         MediaType mediaType = MediaType.parse("application/json");
 
         return RequestBody.create(mediaType, json.toString());
     }
 
-    private JsonElement getJsonRequestBody(final okhttp3.RequestBody request) throws IOException {
+    private JsonElement getJsonRequestBody(final RequestBody request) throws IOException {
         final Buffer buffer = new Buffer();
 
         request.writeTo(buffer);

@@ -12,12 +12,20 @@
     <rule ref="category/java/codestyle.xml">
         <exclude name="LongVariable" />
         <exclude name="LocalVariableCouldBeFinal" />
-        <exclude name="MethodArgumentCouldBeFinal" />
         <exclude name="CommentDefaultAccessModifier" />
         <exclude name="UselessQualifiedThis" />
         <exclude name="DefaultPackage" />
         <exclude name="LinguisticNaming" />
         <exclude name="AtLeastOneConstructor" />
         <exclude name="FieldDeclarationsShouldBeAtStartOfClass" />
+        <exclude name="OnlyOneReturn" />
+        <exclude name="ShortVariable" />
+        <exclude name="ConfusingTernary" />
+        <exclude name="ShortClassName" />
+        <exclude name="CallSuperInConstructor" />
+        <exclude name="UnnecessaryLocalBeforeReturn" />
+        <exclude name="ClassNamingConventions" />
+        <exclude name="UselessParentheses" />
+        <exclude name="EmptyMethodInAbstractClassShouldBeAbstract" />
     </rule>
 </ruleset>

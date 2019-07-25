@@ -13,7 +13,7 @@ public class Receipts {
     private final Integer offset;
     private final List<Receipt> results;
 
-    public Receipts(Integer resultCount, Integer pageSize, Integer offset, List<Receipt> results) {
+    public Receipts(final Integer resultCount, final Integer pageSize, final Integer offset, final List<Receipt> results) {
         this.resultCount = resultCount;
         this.pageSize = pageSize;
         this.offset = offset;

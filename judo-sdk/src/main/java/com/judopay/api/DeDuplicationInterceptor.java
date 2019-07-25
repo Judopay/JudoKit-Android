@@ -14,10 +14,10 @@ import okio.Buffer;
 
 class DeDuplicationInterceptor implements Interceptor {
 
-    private static final List<String> uniqueResponses = new ArrayList<>();
+    private static final List<String> UNIQUE_RESPONSES = new ArrayList<>();
 
     @Override
-    public okhttp3.Response intercept(Interceptor.Chain chain) throws IOException {
+    public okhttp3.Response intercept(final Interceptor.Chain chain) throws IOException {
         okhttp3.Request request = chain.request();
 
         if (request.body() != null) {
@@ -30,13 +30,13 @@ class DeDuplicationInterceptor implements Interceptor {
                 JsonElement uniqueReference = jsonObject.get("yourPaymentReference");
                 JsonElement uniqueRequest = jsonObject.get("uniqueRequest");
 
-                if (uniqueRequest != null && uniqueRequest.getAsBoolean() && uniqueReference != null && uniqueResponses.contains(uniqueReference.getAsString())) {
+                if (uniqueRequest != null && uniqueRequest.getAsBoolean() && uniqueReference != null && UNIQUE_RESPONSES.contains(uniqueReference.getAsString())) {
                     throw new DuplicateTransactionError(uniqueReference.getAsString());
                 } else {
                     okhttp3.Response response = chain.proceed(request);
 
                     if (uniqueReference != null) {
-                        uniqueResponses.add(uniqueReference.getAsString());
+                        UNIQUE_RESPONSES.add(uniqueReference.getAsString());
                     }
                     return response;
                 }

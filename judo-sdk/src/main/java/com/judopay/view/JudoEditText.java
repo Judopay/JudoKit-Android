@@ -14,17 +14,17 @@ public class JudoEditText extends AppCompatEditText implements MultiFocusable, P
     private PasteListener pasteListener;
     private MultiOnFocusChangeListener multiOnFocusChangeListener;
 
-    public JudoEditText(Context context) {
+    public JudoEditText(final Context context) {
         super(context);
         initialize();
     }
 
-    public JudoEditText(Context context, AttributeSet attrs) {
+    public JudoEditText(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         initialize();
     }
 
-    public JudoEditText(Context context, AttributeSet attrs, int defStyleAttr) {
+    public JudoEditText(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initialize();
     }
@@ -36,7 +36,7 @@ public class JudoEditText extends AppCompatEditText implements MultiFocusable, P
     }
 
     @Override
-    public void setPasteListener(PasteListener pasteListener) {
+    public void setPasteListener(final PasteListener pasteListener) {
         this.pasteListener = pasteListener;
     }
 
@@ -45,11 +45,11 @@ public class JudoEditText extends AppCompatEditText implements MultiFocusable, P
     }
 
     @Override
-    public void setOnFocusChangeListener(OnFocusChangeListener l) {
-        multiOnFocusChangeListener.add(l);
+    public void setOnFocusChangeListener(final OnFocusChangeListener listener) {
+        multiOnFocusChangeListener.add(listener);
     }
 
-    public void addTextChangedListeners(Collection<TextWatcher> watchers) {
+    public void addTextChangedListeners(final Collection<TextWatcher> watchers) {
         for (TextWatcher watcher : watchers) {
             addTextChangedListener(watcher);
         }
@@ -63,7 +63,7 @@ public class JudoEditText extends AppCompatEditText implements MultiFocusable, P
     }
 
     @Override
-    public boolean onTextContextMenuItem(int id) {
+    public boolean onTextContextMenuItem(final int id) {
         boolean result = super.onTextContextMenuItem(id);
 
         if (id == android.R.id.paste && pasteListener != null) {
@@ -74,13 +74,13 @@ public class JudoEditText extends AppCompatEditText implements MultiFocusable, P
     }
 
     @Override
-    public void addTextChangedListener(TextWatcher watcher) {
+    public void addTextChangedListener(final TextWatcher watcher) {
         super.addTextChangedListener(watcher);
         this.textWatchers.add(watcher);
     }
 
     @Override
-    public void removeTextChangedListener(TextWatcher watcher) {
+    public void removeTextChangedListener(final TextWatcher watcher) {
         super.removeTextChangedListener(watcher);
         this.textWatchers.remove(watcher);
     }

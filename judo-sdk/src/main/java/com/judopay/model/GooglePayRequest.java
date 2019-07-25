@@ -13,7 +13,7 @@ import static com.judopay.arch.Preconditions.checkNotEmpty;
 public final class GooglePayRequest extends BasePaymentRequest {
     private final GooglePayWallet googlePayWallet;
 
-    private GooglePayRequest(GooglePayWallet googlePayWallet) {
+    private GooglePayRequest(final GooglePayWallet googlePayWallet) {
         this.googlePayWallet = googlePayWallet;
     }
 
@@ -33,7 +33,7 @@ public final class GooglePayRequest extends BasePaymentRequest {
          * @param amount the amount for the transaction
          * @return The Builder for creating the {@link GooglePayRequest} instance
          */
-        public Builder setAmount(String amount) {
+        public Builder setAmount(final String amount) {
             this.amount = amount;
             return this;
         }
@@ -42,7 +42,7 @@ public final class GooglePayRequest extends BasePaymentRequest {
          * @param currency a currency code string as defined in the list of supported currencies in {@link Currency}
          * @return The Builder for creating the {@link GooglePayRequest} instance
          */
-        public Builder setCurrency(String currency) {
+        public Builder setCurrency(final String currency) {
             this.currency = currency;
             return this;
         }
@@ -51,7 +51,7 @@ public final class GooglePayRequest extends BasePaymentRequest {
          * @param judoId the judo ID of the Judo account
          * @return The Builder for creating the {@link GooglePayRequest} instance
          */
-        public Builder setJudoId(String judoId) {
+        public Builder setJudoId(final String judoId) {
             this.judoId = judoId;
             return this;
         }
@@ -60,7 +60,7 @@ public final class GooglePayRequest extends BasePaymentRequest {
          * @param consumerReference your reference to identify the transaction
          * @return The Builder for creating the {@link GooglePayRequest} instance
          */
-        public Builder setConsumerReference(String consumerReference) {
+        public Builder setConsumerReference(final String consumerReference) {
             this.consumerReference = consumerReference;
             return this;
         }
@@ -69,7 +69,7 @@ public final class GooglePayRequest extends BasePaymentRequest {
          * @param metaData data to be passed with the transaction that will be returned in the response
          * @return The Builder for creating the {@link GooglePayRequest} instance
          */
-        public Builder setMetaData(Map<String, String> metaData) {
+        public Builder setMetaData(final Map<String, String> metaData) {
             this.metaData = metaData;
             return this;
         }
@@ -78,7 +78,7 @@ public final class GooglePayRequest extends BasePaymentRequest {
          * @param googlePayWallet the GooglePayWallet information from Google Pay
          * @return The Builder for creating the {@link GooglePayRequest} instance
          */
-        public Builder setGooglePayWallet(GooglePayWallet googlePayWallet) {
+        public Builder setGooglePayWallet(final GooglePayWallet googlePayWallet) {
             this.googlePayWallet = googlePayWallet;
             return this;
         }

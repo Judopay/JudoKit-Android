@@ -15,17 +15,17 @@ public class StartDateEntryView extends FrameLayout {
     private JudoEditText startDateEditText;
     private TextInputLayout startDateInputLayout;
 
-    public StartDateEntryView(Context context) {
+    public StartDateEntryView(final Context context) {
         super(context);
         initialize();
     }
 
-    public StartDateEntryView(Context context, AttributeSet attrs) {
+    public StartDateEntryView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         initialize();
     }
 
-    public StartDateEntryView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public StartDateEntryView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initialize();
     }
@@ -41,15 +41,15 @@ public class StartDateEntryView extends FrameLayout {
         startDateEditText = (JudoEditText) findViewById(R.id.start_date_edit_text);
         startDateInputLayout = (TextInputLayout) findViewById(R.id.start_date_input_layout);
 
-        HintFocusListener hintFocusListener = new HintFocusListener(startDateEditText, getResources().getString(R.string.date_hint));
+        final HintFocusListener hintFocusListener = new HintFocusListener(startDateEditText, getResources().getString(R.string.date_hint));
         startDateEditText.setOnFocusChangeListener(hintFocusListener);
 
-        String dateFormat = getResources().getString(R.string.date_format);
-        NumberFormatTextWatcher numberFormatTextWatcher = new NumberFormatTextWatcher(startDateEditText, dateFormat);
+        final String dateFormat = getResources().getString(R.string.date_format);
+        final NumberFormatTextWatcher numberFormatTextWatcher = new NumberFormatTextWatcher(startDateEditText, dateFormat);
         startDateEditText.addTextChangedListener(numberFormatTextWatcher);
     }
 
-    public void addTextChangedListener(TextWatcher watcher) {
+    public void addTextChangedListener(final TextWatcher watcher) {
         startDateEditText.addTextChangedListener(watcher);
     }
 
@@ -62,7 +62,7 @@ public class StartDateEntryView extends FrameLayout {
         return startDateEditText;
     }
 
-    public void setValidation(Validation validation) {
+    public void setValidation(final Validation validation) {
         startDateInputLayout.setErrorEnabled(validation.isShowError());
 
         if (validation.isShowError()) {

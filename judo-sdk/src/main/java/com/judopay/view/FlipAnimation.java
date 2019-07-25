@@ -21,10 +21,11 @@ class FlipAnimation extends Animation {
 
     /**
      * Creates a 3D flip animation between two views.
-     *  @param fromView First view in the transition.
+     *
+     * @param fromView First view in the transition.
      * @param toView   Second view in the transition.
      */
-    public FlipAnimation(View fromView, View toView) {
+    public FlipAnimation(final View fromView, final View toView) {
         this.fromView = fromView;
         this.toView = toView;
 
@@ -41,15 +42,15 @@ class FlipAnimation extends Animation {
     }
 
     @Override
-    public void initialize(int width, int height, int parentWidth, int parentHeight) {
+    public void initialize(final int width, final int height, final int parentWidth, final int parentHeight) {
         super.initialize(width, height, parentWidth, parentHeight);
-        centerX = width / 2;
-        centerY = height / 2;
+        centerX = (float) width / 2;
+        centerY = (float) height / 2;
         camera = new Camera();
     }
 
     @Override
-    protected void applyTransformation(float interpolatedTime, Transformation t) {
+    protected void applyTransformation(final float interpolatedTime, final Transformation t) {
         // Angle around the y-axis of the rotation at the given time
         // calculated both in radians and degrees.
         final double radians = Math.PI * interpolatedTime;
@@ -65,8 +66,9 @@ class FlipAnimation extends Animation {
             toView.setVisibility(View.VISIBLE);
         }
 
-        if (forward)
+        if (forward) {
             degrees = -degrees; //determines direction of rotation when flip begins
+        }
 
         final Matrix matrix = t.getMatrix();
         camera.save();

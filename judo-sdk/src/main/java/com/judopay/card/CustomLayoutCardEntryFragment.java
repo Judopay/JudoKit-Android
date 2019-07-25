@@ -2,6 +2,7 @@ package com.judopay.card;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -65,19 +66,19 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    public static CustomLayoutCardEntryFragment newInstance(Judo judo, CardEntryListener listener) {
+    public static CustomLayoutCardEntryFragment newInstance(final Judo judo, final CardEntryListener listener) {
         CustomLayoutCardEntryFragment cardEntryFragment = new CustomLayoutCardEntryFragment();
         cardEntryFragment.setCardEntryListener(listener);
 
         Bundle arguments = new Bundle();
-        arguments.putParcelable(Judo.JUDO_OPTIONS, judo);
+        arguments.putParcelable(JUDO_OPTIONS, judo);
         cardEntryFragment.setArguments(arguments);
 
         return cardEntryFragment;
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         if (getArguments() == null) {
             throw new IllegalArgumentException("arguments missing");
         }
@@ -103,7 +104,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
     }
 
     @Override
-    protected void onInitialize(Bundle savedInstanceState, Judo judo) {
+    protected void onInitialize(@Nullable final Bundle savedInstanceState, final Judo judo) {
         String buttonLabel = getButtonLabel();
         if (!isEmpty(buttonLabel)) {
             this.paymentButton.setText(buttonLabel);
@@ -146,7 +147,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
     }
 
     @Override
-    public void onValidate(boolean valid) {
+    public void onValidate(final boolean valid) {
         paymentButton.setVisibility(valid ? View.VISIBLE : View.GONE);
     }
 
@@ -200,7 +201,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         }
     }
 
-    private void initializeDateEditText(JudoEditText editText) {
+    private void initializeDateEditText(final JudoEditText editText) {
         initNumericEditText(editText, 5, "0123456789/");
 
         HintFocusListener hintFocusListener = new HintFocusListener(editText, getString(R.string.date_hint));
@@ -211,7 +212,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         editText.addTextChangedListener(numberFormatTextWatcher);
     }
 
-    private void initNumericEditText(EditText editText, int maxLength, String acceptedChars) {
+    private void initNumericEditText(final EditText editText, final int maxLength, final String acceptedChars) {
         editText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
         editText.setKeyListener(DigitsKeyListener.getInstance(acceptedChars));
@@ -225,7 +226,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         if (editText != null) {
             editText.addTextChangedListener(new SimpleTextWatcher() {
                 @Override
-                protected void onTextChanged(CharSequence text) {
+                protected void onTextChanged(final CharSequence text) {
                     int cardType = CardNetwork.fromCardNumber(text.toString());
 
                     String securityCode = CardNetwork.securityCode(cardType);
@@ -283,9 +284,9 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         ValidationAutoAdvanceManager.bind(validationManager, validatorViews);
     }
 
-    private void initializeAvsValidators(List<Pair<Validator, View>> validatorViews,
-                                         CardNumberValidator cardNumberValidator,
-                                         ExpiryDateValidator expiryDateValidator) {
+    private void initializeAvsValidators(final List<Pair<Validator, View>> validatorViews,
+                                         final CardNumberValidator cardNumberValidator,
+                                         final ExpiryDateValidator expiryDateValidator) {
         ArrayList<Validator> avsValidators = new ArrayList<>();
         avsValidators.add(cardNumberValidator);
         avsValidators.add(expiryDateValidator);
@@ -334,7 +335,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         observable.connect();
     }
 
-    private CardNumberValidator getCardNumberValidator(Judo judo) {
+    private CardNumberValidator getCardNumberValidator(final Judo judo) {
         CardNumberValidator cardNumberValidator = new CardNumberValidator(cardNumberTextInput.getEditText(), judo.isMaestroEnabled(), judo.isAmexEnabled());
         disposables.add(cardNumberValidator.onValidate()
                 .subscribe(validation -> {
@@ -396,7 +397,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         });
     }
 
-    private void submitForm(Judo judo) {
+    private void submitForm(final Judo judo) {
         Card.Builder cardBuilder = new Card.Builder()
                 .setCardNumber(getText(cardNumberTextInput))
                 .setExpiryDate(getText(expiryDateTextInput))
@@ -420,7 +421,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         }
     }
 
-    private String getText(TextInputLayout inputLayout) {
+    private String getText(final TextInputLayout inputLayout) {
         EditText editText = inputLayout.getEditText();
         return editText != null ? editText.getText().toString() : "";
     }

@@ -8,25 +8,24 @@ import com.judopay.model.CardNetwork;
 
 public class CardSecurityCodeView extends FlipImageView {
 
-    public CardSecurityCodeView(Context context) {
+    public CardSecurityCodeView(final Context context) {
         super(context);
     }
 
-    public CardSecurityCodeView(Context context, AttributeSet attrs) {
+    public CardSecurityCodeView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public CardSecurityCodeView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CardSecurityCodeView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @Override
-    protected int getImageResource(int type) {
-        switch (type) {
-            case CardNetwork.AMEX:
-                return R.drawable.ic_card_cid;
-            default:
-                return R.drawable.ic_card_cvv;
+    protected int getImageResource(final int type) {
+        if (type == CardNetwork.AMEX) {
+            return R.drawable.ic_card_cid;
+        } else {
+            return R.drawable.ic_card_cvv;
         }
     }
 }

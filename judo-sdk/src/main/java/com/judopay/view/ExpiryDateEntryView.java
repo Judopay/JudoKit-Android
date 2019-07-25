@@ -17,25 +17,25 @@ public class ExpiryDateEntryView extends LinearLayout {
     private JudoEditText expiryDateEditText;
     private TextInputLayout expiryDateInputLayout;
 
-    public ExpiryDateEntryView(Context context) {
+    public ExpiryDateEntryView(final Context context) {
         super(context);
         initialize(context);
     }
 
-    public ExpiryDateEntryView(Context context, AttributeSet attrs) {
+    public ExpiryDateEntryView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         initialize(context);
     }
 
-    public ExpiryDateEntryView(Context context, AttributeSet attrs, int defStyle) {
+    public ExpiryDateEntryView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         initialize(context);
     }
 
-    private void initialize(Context context) {
+    private void initialize(final Context context) {
         setOrientation(LinearLayout.VERTICAL);
 
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.view_expiry_date_entry, this);
     }
 
@@ -54,20 +54,20 @@ public class ExpiryDateEntryView extends LinearLayout {
         expiryDateEditText.addTextChangedListener(numberFormatTextWatcher);
     }
 
-    public void setText(CharSequence text) {
+    public void setText(final CharSequence text) {
         expiryDateEditText.setText(text);
     }
 
-    public void addTextChangedListener(SimpleTextWatcher watcher) {
+    public void addTextChangedListener(final SimpleTextWatcher watcher) {
         expiryDateEditText.addTextChangedListener(watcher);
     }
 
-    public void setExpiryDate(String expiryDate) {
+    public void setExpiryDate(final String expiryDate) {
         expiryDateEditText.setText(expiryDate);
     }
 
     @Override
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(final boolean enabled) {
         super.setEnabled(enabled);
         expiryDateEditText.setEnabled(false);
     }
@@ -80,7 +80,7 @@ public class ExpiryDateEntryView extends LinearLayout {
         return expiryDateEditText;
     }
 
-    public void setValidation(Validation validation) {
+    public void setValidation(final Validation validation) {
         expiryDateInputLayout.setErrorEnabled(validation.isShowError());
 
         if (validation.isShowError()) {

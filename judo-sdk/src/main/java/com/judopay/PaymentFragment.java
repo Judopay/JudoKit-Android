@@ -2,6 +2,7 @@ package com.judopay;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.judopay.arch.Logger;
@@ -14,7 +15,7 @@ public final class PaymentFragment extends JudoFragment {
     private PaymentPresenter presenter;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Judo judo = getJudo();
@@ -27,22 +28,22 @@ public final class PaymentFragment extends JudoFragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter.reconnect();
     }
 
     @Override
-    public void onSubmit(Card card) {
+    public void onSubmit(final Card card) {
         Judo judo = getJudo();
 
-        if (judo.getCardToken() != null) {
-            disposables.add(presenter.performTokenPayment(card, judo)
+        if (judo.getCardToken() == null) {
+            disposables.add(presenter.performPayment(card, judo)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(presenter.callback(), presenter.error()));
         } else {
-            disposables.add(presenter.performPayment(card, judo)
+            disposables.add(presenter.performTokenPayment(card, judo)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(presenter.callback(), presenter.error()));

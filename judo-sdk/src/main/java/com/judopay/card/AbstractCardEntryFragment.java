@@ -2,6 +2,7 @@ package com.judopay.card;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -20,14 +21,14 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
     CardEntryListener cardEntryListener;
     private String buttonLabel;
 
-    public void setCardEntryListener(CardEntryListener cardEntryListener) {
+    public void setCardEntryListener(final CardEntryListener cardEntryListener) {
         this.cardEntryListener = cardEntryListener;
     }
 
-    protected abstract void onInitialize(Bundle savedInstanceState, Judo judo);
+    protected abstract void onInitialize(@Nullable final Bundle savedInstanceState, final Judo judo);
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         if (getArguments() != null && getArguments().containsKey(Judo.JUDO_OPTIONS)) {
@@ -40,7 +41,7 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
         }
     }
 
-    private void setButtonLabelText(String buttonLabel) {
+    private void setButtonLabelText(final String buttonLabel) {
         if (this.submitButton != null && !isEmpty(buttonLabel)) {
             this.submitButton.setText(buttonLabel);
         }
@@ -57,7 +58,7 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
         return "";
     }
 
-    public void setButtonLabel(String buttonLabel) {
+    public void setButtonLabel(final String buttonLabel) {
         this.buttonLabel = buttonLabel;
         setButtonLabelText(buttonLabel);
     }
@@ -74,6 +75,6 @@ public abstract class AbstractCardEntryFragment extends Fragment implements Vali
         }
     }
 
-    public void setCard(Card card) {
+    public void setCard(final Card card) {
     }
 }

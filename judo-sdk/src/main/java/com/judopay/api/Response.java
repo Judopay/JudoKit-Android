@@ -180,7 +180,7 @@ public class Response implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(this.result);
         dest.writeValue(this.errorCategory);
         dest.writeString(this.errorExplanation);
@@ -192,22 +192,22 @@ public class Response implements Parcelable {
 
     protected Response() { }
 
-    protected Response(Parcel in) {
-        this.result = in.readString();
-        this.errorCategory = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.errorExplanation = in.readString();
-        this.errorResolution = in.readString();
-        this.message = in.readString();
-        this.errorCode = in.readString();
-        this.errorDetails = in.createTypedArrayList(ApiError.CREATOR);
+    protected Response(final Parcel parcel) {
+        this.result = parcel.readString();
+        this.errorCategory = (Integer) parcel.readValue(Integer.class.getClassLoader());
+        this.errorExplanation = parcel.readString();
+        this.errorResolution = parcel.readString();
+        this.message = parcel.readString();
+        this.errorCode = parcel.readString();
+        this.errorDetails = parcel.createTypedArrayList(ApiError.CREATOR);
     }
 
     public static final Parcelable.Creator<Response> CREATOR = new Parcelable.Creator<Response>() {
-        public Response createFromParcel(Parcel source) {
+        public Response createFromParcel(final Parcel source) {
             return new Response(source);
         }
 
-        public Response[] newArray(int size) {
+        public Response[] newArray(final int size) {
             return new Response[size];
         }
     };

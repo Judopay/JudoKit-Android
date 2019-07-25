@@ -6,7 +6,7 @@ public class JsonParsingJavaScriptInterface {
 
     private final JsonListener jsonListener;
 
-    public JsonParsingJavaScriptInterface(JsonListener jsonListener) {
+    public JsonParsingJavaScriptInterface(final JsonListener jsonListener) {
         this.jsonListener = jsonListener;
     }
 

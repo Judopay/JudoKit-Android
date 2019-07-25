@@ -12,18 +12,18 @@ import static com.judopay.arch.TextUtil.isEmpty;
 
 class PreAuthPresenter extends JudoPresenter {
 
-    PreAuthPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, Logger logger) {
+    PreAuthPresenter(final TransactionCallbacks callbacks, final JudoApiService judoApiService, final Logger logger) {
         super(callbacks, judoApiService, logger);
     }
 
-    Single<Receipt> performPreAuth(Card card, Judo judo) {
+    Single<Receipt> performPreAuth(final Card card, final Judo judo) {
         this.loading = true;
         getView().showLoading();
 
         return apiService.preAuth(buildPayment(card, judo));
     }
 
-    private PaymentRequest buildPayment(Card card, Judo judo) {
+    private PaymentRequest buildPayment(final Card card, final Judo judo) {
         PaymentRequest.Builder builder = new PaymentRequest.Builder()
                 .setAmount(judo.getAmount())
                 .setCardNumber(card.getCardNumber())
@@ -40,10 +40,10 @@ class PreAuthPresenter extends JudoPresenter {
             builder.setPaymentReference(judo.getPaymentReference());
         }
 
-        if (card.getAddress() != null) {
-            builder.setCardAddress(card.getAddress());
-        } else {
+        if (card.getAddress() == null) {
             builder.setCardAddress(judo.getAddress());
+        } else {
+            builder.setCardAddress(card.getAddress());
         }
 
         if (card.startDateAndIssueNumberRequired()) {
@@ -54,14 +54,14 @@ class PreAuthPresenter extends JudoPresenter {
         return builder.build();
     }
 
-    Single<Receipt> performTokenPreAuth(Card card, Judo judo) {
+    Single<Receipt> performTokenPreAuth(final Card card, final Judo judo) {
         this.loading = true;
         getView().showLoading();
 
         return apiService.tokenPreAuth(buildTokenRequest(card, judo));
     }
 
-    private TokenRequest buildTokenRequest(Card card, Judo judo) {
+    private TokenRequest buildTokenRequest(final Card card, final Judo judo) {
         TokenRequest.Builder builder = new TokenRequest.Builder()
                 .setAmount(judo.getAmount())
                 .setCurrency(judo.getCurrency())
@@ -77,10 +77,10 @@ class PreAuthPresenter extends JudoPresenter {
             builder.setPaymentReference(judo.getPaymentReference());
         }
 
-        if (card.getAddress() != null) {
-            builder.setCardAddress(card.getAddress());
-        } else {
+        if (card.getAddress() == null) {
             builder.setCardAddress(judo.getAddress());
+        } else {
+            builder.setCardAddress(card.getAddress());
         }
 
         return builder.build();

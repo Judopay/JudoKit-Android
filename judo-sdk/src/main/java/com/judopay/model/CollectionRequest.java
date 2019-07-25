@@ -13,7 +13,7 @@ public class CollectionRequest extends Request {
     private String receiptId;
     private String amount;
 
-    public CollectionRequest(String receiptId, String amount) {
+    public CollectionRequest(final String receiptId, final String amount) {
         checkNotNull(receiptId);
         checkNotNull(amount);
 
@@ -37,17 +37,17 @@ public class CollectionRequest extends Request {
         private String amount;
         private String paymentReference;
 
-        public Builder setReceiptId(String receiptId) {
+        public Builder setReceiptId(final String receiptId) {
             this.receiptId = receiptId;
             return this;
         }
 
-        public Builder setAmount(String amount) {
+        public Builder setAmount(final String amount) {
             this.amount = amount;
             return this;
         }
 
-        public Builder setPaymentReference(String paymentReference) {
+        public Builder setPaymentReference(final String paymentReference) {
             this.paymentReference = paymentReference;
             return this;
         }

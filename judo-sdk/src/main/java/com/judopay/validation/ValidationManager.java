@@ -12,7 +12,7 @@ public class ValidationManager {
     private final Map<Validator, Disposable> disposables;
     private final OnChangeListener onValidationChangeListener;
 
-    public ValidationManager(List<Validator> validators, OnChangeListener onValidationChangeListener) {
+    public ValidationManager(final List<Validator> validators, final OnChangeListener onValidationChangeListener) {
         this.onValidationChangeListener = onValidationChangeListener;
         this.validationResults = new LinkedHashMap<>();
         this.disposables = new LinkedHashMap<>();
@@ -26,7 +26,7 @@ public class ValidationManager {
         addValidator(validator, validator.onValidate());
     }
 
-    public void addValidator(final Validator validator, Observable<Validation> observable) {
+    public void addValidator(final Validator validator, final Observable<Validation> observable) {
         if (!validationResults.containsKey(validator)) {
             validationResults.put(validator, false);
 

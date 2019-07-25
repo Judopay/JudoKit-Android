@@ -4,6 +4,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,7 +90,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    public static CardEntryFragment newInstance(Judo judo, CardEntryListener listener) {
+    public static CardEntryFragment newInstance(final Judo judo, final CardEntryListener listener) {
         CardEntryFragment cardEntryFragment = new CardEntryFragment();
         cardEntryFragment.setCardEntryListener(listener);
 
@@ -100,7 +102,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_card_entry, container, false);
 
         submitButton = view.findViewById(R.id.button);
@@ -124,7 +126,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    protected void onInitialize(Bundle savedInstanceState, final Judo judo) {
+    protected void onInitialize(@Nullable final Bundle savedInstanceState, final Judo judo) {
         if (judo.getCardScanningIntent() != null) {
             cardNumberEntryView.setScanCardListener(() -> {
                 PendingIntent cardScanningIntent = judo.getCardScanningIntent();
@@ -171,7 +173,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    public void setCard(Card card) {
+    public void setCard(final Card card) {
         if (!isEmpty(card.getCardNumber())) {
             int cardType = CardNetwork.fromCardNumber(card.getCardNumber());
 
@@ -199,7 +201,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
 
         cardNumberEntryView.addTextChangedListener(new SimpleTextWatcher() {
             @Override
-            protected void onTextChanged(CharSequence text) {
+            protected void onTextChanged(final CharSequence text) {
                 int cardType = CardNetwork.fromCardNumber(text.toString());
 
                 cardNumberEntryView.setCardType(cardType, true);
@@ -263,7 +265,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         ValidationAutoAdvanceManager.bind(validationManager, validatorViews);
     }
 
-    private void initializeAvsValidators(List<Pair<Validator, View>> validatorViews) {
+    private void initializeAvsValidators(final List<Pair<Validator, View>> validatorViews) {
         CountryAndPostcodeValidator countryAndPostcodeValidator = new CountryAndPostcodeValidator(countrySpinner, postcodeEntryView.getEditText());
         ConnectableObservable<Validation> observable = countryAndPostcodeValidator.onValidate();
 
@@ -316,18 +318,18 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         countrySpinner.setAdapter(new CountrySpinnerAdapter(getActivity(), Country.avsCountries()));
         countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 String country = (String) countrySpinner.getSelectedItem();
                 postcodeEntryView.setCountry(country);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onNothingSelected(final AdapterView<?> parent) {
             }
         });
     }
 
-    private void submitForm(Judo judo) {
+    private void submitForm(final Judo judo) {
         Card.Builder cardBuilder = new Card.Builder()
                 .setCardNumber(cardNumberEntryView.getText())
                 .setExpiryDate(expiryDateEntryView.getText())
@@ -351,7 +353,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    public void onValidate(boolean valid) {
+    public void onValidate(final boolean valid) {
         submitButton.setVisibility(valid ? View.VISIBLE : View.GONE);
     }
 }

@@ -8,21 +8,21 @@ import com.judopay.R;
 
 public class ThemeUtil {
 
-    public static String getStringAttr(Context context, int attributeName) {
+    public static String getStringAttr(final Context context, final int attributeName) {
         TypedValue value = new TypedValue();
         context.getTheme().resolveAttribute(attributeName, value, true);
 
         return value.string != null ? value.string.toString() : "";
     }
 
-    public static boolean getBooleanAttr(Context context, int attributeName) {
+    public static boolean getBooleanAttr(final Context context, final int attributeName) {
         TypedValue value = new TypedValue();
         context.getTheme().resolveAttribute(attributeName, value, true);
 
         return value.data != 0;
     }
 
-    public static int getColorAttr(Context context, int attribute) {
+    public static int getColorAttr(final Context context, final int attribute) {
         if (context == null) {
             return 0;
         }

@@ -13,11 +13,11 @@ import com.judopay.arch.TextUtil;
 public class CardToken implements Parcelable {
 
     public static final Creator<CardToken> CREATOR = new Creator<CardToken>() {
-        public CardToken createFromParcel(Parcel source) {
+        public CardToken createFromParcel(final Parcel source) {
             return new CardToken(source);
         }
 
-        public CardToken[] newArray(int size) {
+        public CardToken[] newArray(final int size) {
             return new CardToken[size];
         }
     };
@@ -42,7 +42,8 @@ public class CardToken implements Parcelable {
     public CardToken() {
     }
 
-    public CardToken(String endDate, String lastFour, String token, int type, String scheme, String funding, String category, String country, String bank) {
+    public CardToken(final String endDate, final String lastFour, final String token, final int type, final String scheme, final String funding,
+                     final String category, final String country, final String bank) {
         this.endDate = endDate;
         this.lastFour = lastFour;
         this.token = token;
@@ -54,7 +55,7 @@ public class CardToken implements Parcelable {
         this.bank = bank;
     }
 
-    private CardToken(Parcel in) {
+    private CardToken(final Parcel in) {
         endDate = in.readString();
         lastFour = in.readString();
         token = in.readString();
@@ -131,7 +132,7 @@ public class CardToken implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(endDate);
         dest.writeString(lastFour);
         dest.writeString(token);

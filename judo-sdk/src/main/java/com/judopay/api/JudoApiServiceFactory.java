@@ -51,12 +51,12 @@ public class JudoApiServiceFactory {
      * @return the Retrofit API service implementation containing the methods used
      * for interacting with the judoPay REST API.
      */
-    public static JudoApiService createApiService(Context context, @Judo.UiClientMode int uiClientMode, Judo judo) {
+    public static JudoApiService createApiService(final Context context, @Judo.UiClientMode final int uiClientMode, final Judo judo) {
         return createRetrofit(context.getApplicationContext(), uiClientMode, judo)
                 .create(JudoApiService.class);
     }
 
-    private static Retrofit createRetrofit(Context context, @Judo.UiClientMode int uiClientMode, Judo judo) {
+    private static Retrofit createRetrofit(final Context context, @Judo.UiClientMode final int uiClientMode, final Judo judo) {
         return new Retrofit.Builder()
                 .addConverterFactory(getGsonConverterFactory())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -77,10 +77,10 @@ public class JudoApiServiceFactory {
                 .create();
     }
 
-    private static OkHttpClient getOkHttpClient(@Judo.UiClientMode int uiClientMode, Context context, Judo judo) {
+    private static OkHttpClient getOkHttpClient(@Judo.UiClientMode final int uiClientMode, final Context context, final Judo judo) {
         try {
-            SSLContext sc = SSLContext.getInstance("TLSv1.2");
-            sc.init(null, null, null);
+            SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+            sslContext.init(null, null, null);
 
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             trustManagerFactory.init((KeyStore) null);
@@ -96,7 +96,7 @@ public class JudoApiServiceFactory {
                     .build());
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                    .sslSocketFactory(new Tls12SslSocketFactory(sc.getSocketFactory()), trustManager)
+                    .sslSocketFactory(new Tls12SslSocketFactory(sslContext.getSocketFactory()), trustManager)
                     .connectionSpecs(specs);
 
             switch (judo.getEnvironment()) {
@@ -123,13 +123,13 @@ public class JudoApiServiceFactory {
         }
     }
 
-    private static void setTimeouts(OkHttpClient.Builder builder) {
+    private static void setTimeouts(final OkHttpClient.Builder builder) {
         builder.connectTimeout(5, SECONDS)
                 .readTimeout(3, MINUTES)
                 .writeTimeout(30, SECONDS);
     }
 
-    private static void setInterceptors(OkHttpClient.Builder client, @Judo.UiClientMode int uiClientMode, Context context, Judo judo) {
+    private static void setInterceptors(final OkHttpClient.Builder client, @Judo.UiClientMode final int uiClientMode, final Context context, final Judo judo) {
         List<Interceptor> interceptors = client.interceptors();
 
         interceptors.add(new DeDuplicationInterceptor());

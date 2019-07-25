@@ -12,6 +12,7 @@ import com.judopay.error.Show3dSecureWebViewError;
 import com.judopay.model.CardVerificationResult;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -35,17 +36,17 @@ public class CardVerificationWebView extends WebView implements JsonParsingJavaS
     private String receiptId;
     private WebViewListener resultPageListener;
 
-    public CardVerificationWebView(Context context) {
+    public CardVerificationWebView(final Context context) {
         super(context);
         initialize();
     }
 
-    public CardVerificationWebView(Context context, AttributeSet attrs) {
+    public CardVerificationWebView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         initialize();
     }
 
-    public CardVerificationWebView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CardVerificationWebView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initialize();
     }
@@ -75,7 +76,7 @@ public class CardVerificationWebView extends WebView implements JsonParsingJavaS
      * @param paReq     parameter submitted to the acsUrl
      * @param receiptId the receipt ID of the transaction
      */
-    public void authorize(final String acsUrl, final String md, final String paReq, String receiptId) {
+    public void authorize(final String acsUrl, final String md, final String paReq, final String receiptId) {
         try {
             String postData = String.format(Locale.ENGLISH, "MD=%s&TermUrl=%s&PaReq=%s",
                     encode(md, CHARSET), encode(REDIRECT_URL, CHARSET), encode(paReq, CHARSET));
@@ -86,7 +87,7 @@ public class CardVerificationWebView extends WebView implements JsonParsingJavaS
 
             setWebViewClient(webViewClient);
 
-            postUrl(acsUrl, postData.getBytes());
+            postUrl(acsUrl, postData.getBytes(StandardCharsets.UTF_8));
         } catch (UnsupportedEncodingException e) {
             throw new Show3dSecureWebViewError(e);
         }
@@ -95,7 +96,7 @@ public class CardVerificationWebView extends WebView implements JsonParsingJavaS
     /**
      * @param authorizationListener listener that will be notified with authorization events
      */
-    public void setAuthorizationListener(AuthorizationListener authorizationListener) {
+    public void setAuthorizationListener(final AuthorizationListener authorizationListener) {
         this.authorizationListener = authorizationListener;
     }
 
@@ -103,7 +104,7 @@ public class CardVerificationWebView extends WebView implements JsonParsingJavaS
      * @param json data returned from the redirected page containing JSON with the 3D-Secure result
      */
     @Override
-    public void onJsonReceived(String json) {
+    public void onJsonReceived(final String json) {
         Gson gson = new Gson();
 
         CardVerificationResult cardVerificationResult = gson.fromJson(json, CardVerificationResult.class);
@@ -113,7 +114,7 @@ public class CardVerificationWebView extends WebView implements JsonParsingJavaS
                 .subscribe();
     }
 
-    public void setResultPageListener(WebViewListener resultPageListener) {
+    public void setResultPageListener(final WebViewListener resultPageListener) {
         this.resultPageListener = resultPageListener;
     }
 }

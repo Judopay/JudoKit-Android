@@ -11,7 +11,7 @@ public final class VCOWallet {
     private final String encryptedKey;
     private final String encryptedPaymentData;
 
-    private VCOWallet(String callId, String encryptedKey, String encryptedPaymentData) {
+    private VCOWallet(final String callId, final String encryptedKey, final String encryptedPaymentData) {
         this.callId = callId;
         this.encryptedKey = encryptedKey;
         this.encryptedPaymentData = encryptedPaymentData;
@@ -42,7 +42,7 @@ public final class VCOWallet {
          * @param callId the callId from Visa Checkout's VisaPaymentSummary
          * @return The Builder for creating the {@link VCOWallet} instance
          */
-        public Builder setCallId(String callId) {
+        public Builder setCallId(final String callId) {
             this.callId = callId;
             return this;
         }
@@ -51,7 +51,7 @@ public final class VCOWallet {
          * @param encKey the encKey from Visa Checkout's VisaPaymentSummary
          * @return The Builder for creating the {@link VCOWallet} instance
          */
-        public Builder setEncryptedKey(String encKey) {
+        public Builder setEncryptedKey(final String encKey) {
             this.encryptedKey = encKey;
             return this;
         }
@@ -60,7 +60,7 @@ public final class VCOWallet {
          * @param encPaymentData the encPaymentData from Visa Checkout's VisaPaymentSummary
          * @return The Builder for creating the {@link VCOWallet} instance
          */
-        public Builder setEncryptedPaymentData(String encPaymentData) {
+        public Builder setEncryptedPaymentData(final String encPaymentData) {
             this.encryptedPaymentData = encPaymentData;
             return this;
         }

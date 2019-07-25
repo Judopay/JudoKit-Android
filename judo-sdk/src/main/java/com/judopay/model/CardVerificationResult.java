@@ -14,7 +14,7 @@ public class CardVerificationResult {
     @SerializedName("PaRes")
     private final String paRes;
 
-    public CardVerificationResult(String md, String paRes) {
+    public CardVerificationResult(final String md, final String paRes) {
         this.md = md;
         this.paRes = paRes;
     }

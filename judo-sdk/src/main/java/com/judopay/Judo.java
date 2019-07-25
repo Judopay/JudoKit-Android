@@ -67,12 +67,12 @@ public class Judo implements Parcelable {
 
     public static final Parcelable.Creator<Judo> CREATOR = new Parcelable.Creator<Judo>() {
         @Override
-        public Judo createFromParcel(Parcel source) {
+        public Judo createFromParcel(final Parcel source) {
             return new Judo(source);
         }
 
         @Override
-        public Judo[] newArray(int size) {
+        public Judo[] newArray(final int size) {
             return new Judo[size];
         }
     };
@@ -109,32 +109,33 @@ public class Judo implements Parcelable {
     private Judo() {
     }
 
-    protected Judo(Parcel in) {
-        this.apiToken = in.readString();
-        this.apiSecret = in.readString();
-        this.environment = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.avsEnabled = in.readByte() != 0;
-        this.amexEnabled = in.readByte() != 0;
-        this.maestroEnabled = in.readByte() != 0;
-        this.sslPinningEnabled = in.readByte() != 0;
-        this.rootedDevicesAllowed = in.readByte() != 0;
-        this.judoId = in.readString();
-        this.amount = in.readString();
-        this.currency = in.readString();
-        this.consumerReference = in.readString();
-        this.paymentReference = in.readString();
-        this.metaData = in.readBundle(getClass().getClassLoader());
-        this.cardNumber = in.readString();
-        this.expiryMonth = in.readString();
-        this.expiryYear = in.readString();
-        this.address = in.readParcelable(Address.class.getClassLoader());
-        this.cardToken = in.readParcelable(CardToken.class.getClassLoader());
-        this.emailAddress = in.readString();
-        this.mobileNumber = in.readString();
-        this.customLayout = in.readParcelable(CustomLayout.class.getClassLoader());
-        this.cardScanningIntent = in.readParcelable(PendingIntent.class.getClassLoader());
-        this.customEnvironmentHost = in.readString();
-        this.paymentMethod = (EnumSet<PaymentMethod>) in.readSerializable();
+    @SuppressWarnings("unchecked")
+    protected Judo(final Parcel judoIn) {
+        this.apiToken = judoIn.readString();
+        this.apiSecret = judoIn.readString();
+        this.environment = (Integer) judoIn.readValue(Integer.class.getClassLoader());
+        this.avsEnabled = judoIn.readByte() != 0;
+        this.amexEnabled = judoIn.readByte() != 0;
+        this.maestroEnabled = judoIn.readByte() != 0;
+        this.sslPinningEnabled = judoIn.readByte() != 0;
+        this.rootedDevicesAllowed = judoIn.readByte() != 0;
+        this.judoId = judoIn.readString();
+        this.amount = judoIn.readString();
+        this.currency = judoIn.readString();
+        this.consumerReference = judoIn.readString();
+        this.paymentReference = judoIn.readString();
+        this.metaData = judoIn.readBundle(getClass().getClassLoader());
+        this.cardNumber = judoIn.readString();
+        this.expiryMonth = judoIn.readString();
+        this.expiryYear = judoIn.readString();
+        this.address = judoIn.readParcelable(Address.class.getClassLoader());
+        this.cardToken = judoIn.readParcelable(CardToken.class.getClassLoader());
+        this.emailAddress = judoIn.readString();
+        this.mobileNumber = judoIn.readString();
+        this.customLayout = judoIn.readParcelable(CustomLayout.class.getClassLoader());
+        this.cardScanningIntent = judoIn.readParcelable(PendingIntent.class.getClassLoader());
+        this.customEnvironmentHost = judoIn.readString();
+        this.paymentMethod = (EnumSet<PaymentMethod>) judoIn.readSerializable();
     }
 
     public Builder newBuilder() {
@@ -242,23 +243,24 @@ public class Judo implements Parcelable {
     }
 
     @SuppressWarnings("SameParameterValue")
-    public void setEnvironment(@Environment int environment) {
-        if (environment != CUSTOM)
+    public void setEnvironment(@Environment final int environment) {
+        if (environment != CUSTOM) {
             customEnvironmentHost = null;
+        }
 
         this.environment = environment;
     }
 
-    public JudoApiService getApiService(Context context) {
+    public JudoApiService getApiService(final Context context) {
         return JudoApiServiceFactory.createApiService(context, Judo.UI_CLIENT_MODE_CUSTOM_UI, this);
     }
 
     @SuppressWarnings("SameParameterValue")
-    JudoApiService getApiService(Context context, @UiClientMode int uiClientMode) {
+    JudoApiService getApiService(final Context context, @UiClientMode final int uiClientMode) {
         return JudoApiServiceFactory.createApiService(context, uiClientMode, this);
     }
 
-    public void setEnvironmentHost(String customEnvironmentHost) {
+    public void setEnvironmentHost(final String customEnvironmentHost) {
         setEnvironment(CUSTOM);
         this.customEnvironmentHost = customEnvironmentHost;
     }
@@ -295,15 +297,19 @@ public class Judo implements Parcelable {
         return paymentMethod;
     }
 
-    public String getApiEnvironmentHost(Context context) {
+    public String getApiEnvironmentHost(final Context context) {
+        String endPoint;
         switch (environment) {
             case SANDBOX:
-                return context.getString(R.string.api_host_sandbox);
+                endPoint = context.getString(R.string.api_host_sandbox);
+                break;
             case CUSTOM:
-                return customEnvironmentHost;
+                endPoint = customEnvironmentHost;
+                break;
             default:
-                return context.getString(R.string.api_host_live);
+                endPoint = context.getString(R.string.api_host_live);
         }
+        return endPoint;
     }
 
     @Override
@@ -312,7 +318,7 @@ public class Judo implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(this.apiToken);
         dest.writeString(this.apiSecret);
         dest.writeValue(this.environment);
@@ -380,117 +386,117 @@ public class Judo implements Parcelable {
         public Builder() {
         }
 
-        public Builder(String apiToken, String apiSecret) {
+        public Builder(final String apiToken, final String apiSecret) {
             this.apiToken = apiToken;
             this.apiSecret = apiSecret;
         }
 
-        public Builder setApiToken(String apiToken) {
+        public Builder setApiToken(final String apiToken) {
             this.apiToken = apiToken;
             return this;
         }
 
-        public Builder setApiSecret(String apiSecret) {
+        public Builder setApiSecret(final String apiSecret) {
             this.apiSecret = apiSecret;
             return this;
         }
 
-        public Builder setEnvironment(Integer environment) {
+        public Builder setEnvironment(final Integer environment) {
             this.environment = environment;
             return this;
         }
 
-        public Builder setDeviceId(String deviceId) {
+        public Builder setDeviceId(final String deviceId) {
             this.deviceId = deviceId;
             return this;
         }
 
-        public Builder setAmount(String amount) {
+        public Builder setAmount(final String amount) {
             this.amount = amount;
             return this;
         }
 
-        public Builder setJudoId(String judoId) {
+        public Builder setJudoId(final String judoId) {
             this.judoId = judoId.replaceAll("-", "");
             return this;
         }
 
-        public Builder setCurrency(@Currency.Type String currency) {
+        public Builder setCurrency(@Currency.Type final String currency) {
             this.currency = currency;
             return this;
         }
 
-        public Builder setConsumerReference(String consumerReference) {
+        public Builder setConsumerReference(final String consumerReference) {
             this.consumerReference = consumerReference;
             return this;
         }
 
-        public Builder setPaymentReference(String paymentReference) {
+        public Builder setPaymentReference(final String paymentReference) {
             this.paymentReference = paymentReference;
             return this;
         }
 
-        public Builder setMetaData(Bundle metaData) {
+        public Builder setMetaData(final Bundle metaData) {
             this.metaData = metaData;
             return this;
         }
 
-        public Builder setCardNumber(String cardNumber) {
+        public Builder setCardNumber(final String cardNumber) {
             this.cardNumber = cardNumber;
             return this;
         }
 
-        public Builder setExpiryMonth(String expiryMonth) {
+        public Builder setExpiryMonth(final String expiryMonth) {
             this.expiryMonth = expiryMonth;
             return this;
         }
 
-        public Builder setExpiryYear(String expiryYear) {
+        public Builder setExpiryYear(final String expiryYear) {
             this.expiryYear = expiryYear;
             return this;
         }
 
-        public Builder setAddress(Address address) {
+        public Builder setAddress(final Address address) {
             this.address = address;
             return this;
         }
 
-        public Builder setCardToken(CardToken cardToken) {
+        public Builder setCardToken(final CardToken cardToken) {
             this.cardToken = cardToken;
             return this;
         }
 
-        public Builder setCustomLayout(CustomLayout customLayout) {
+        public Builder setCustomLayout(final CustomLayout customLayout) {
             this.customLayout = customLayout;
             return this;
         }
 
-        public Builder setCardScanningIntent(PendingIntent cardScanningIntent) {
+        public Builder setCardScanningIntent(final PendingIntent cardScanningIntent) {
             this.cardScanningIntent = cardScanningIntent;
             return this;
         }
 
-        public Builder setAvsEnabled(boolean avsEnabled) {
+        public Builder setAvsEnabled(final boolean avsEnabled) {
             this.avsEnabled = avsEnabled;
             return this;
         }
 
-        public Builder setAmexEnabled(boolean amexEnabled) {
+        public Builder setAmexEnabled(final boolean amexEnabled) {
             this.amexEnabled = amexEnabled;
             return this;
         }
 
-        public Builder setMaestroEnabled(boolean maestroEnabled) {
+        public Builder setMaestroEnabled(final boolean maestroEnabled) {
             this.maestroEnabled = maestroEnabled;
             return this;
         }
 
-        public Builder setSslPinningEnabled(boolean sslPinningEnabled) {
+        public Builder setSslPinningEnabled(final boolean sslPinningEnabled) {
             this.sslPinningEnabled = sslPinningEnabled;
             return this;
         }
 
-        public Builder setRootedDevicesAllowed(boolean rootedDevicesAllowed) {
+        public Builder setRootedDevicesAllowed(final boolean rootedDevicesAllowed) {
             this.rootedDevicesAllowed = rootedDevicesAllowed;
             return this;
         }
@@ -530,7 +536,7 @@ public class Judo implements Parcelable {
             return judo;
         }
 
-        public Builder setPaymentMethod(EnumSet<PaymentMethod> paymentMethod) {
+        public Builder setPaymentMethod(final EnumSet<PaymentMethod> paymentMethod) {
             this.paymentMethod = paymentMethod;
             return this;
         }

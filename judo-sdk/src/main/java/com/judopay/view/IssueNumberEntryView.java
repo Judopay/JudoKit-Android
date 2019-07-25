@@ -12,17 +12,17 @@ public class IssueNumberEntryView extends LinearLayout {
 
     private JudoEditText issueNumberEditText;
 
-    public IssueNumberEntryView(Context context) {
+    public IssueNumberEntryView(final Context context) {
         super(context);
         initialize();
     }
 
-    public IssueNumberEntryView(Context context, AttributeSet attrs) {
+    public IssueNumberEntryView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         initialize();
     }
 
-    public IssueNumberEntryView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public IssueNumberEntryView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initialize();
     }
@@ -39,7 +39,7 @@ public class IssueNumberEntryView extends LinearLayout {
         super.onFinishInflate();
 
         issueNumberEditText = (JudoEditText) findViewById(R.id.issue_number_edit_text);
-        View issueNumberHelperText = findViewById(R.id.issue_number_helper_text);
+        final View issueNumberHelperText = findViewById(R.id.issue_number_helper_text);
 
         issueNumberEditText.setOnFocusChangeListener(new MultiOnFocusChangeListener(
                 new EmptyTextHintOnFocusChangeListener(issueNumberHelperText),
@@ -49,7 +49,7 @@ public class IssueNumberEntryView extends LinearLayout {
         issueNumberEditText.addTextChangedListener(new HidingViewTextWatcher(issueNumberHelperText));
     }
 
-    public void addTextChangedListener(SimpleTextWatcher watcher) {
+    public void addTextChangedListener(final SimpleTextWatcher watcher) {
         issueNumberEditText.addTextChangedListener(watcher);
     }
 

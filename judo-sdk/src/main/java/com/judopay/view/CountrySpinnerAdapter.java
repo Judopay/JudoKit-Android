@@ -14,36 +14,36 @@ import java.util.List;
 
 public class CountrySpinnerAdapter extends ArrayAdapter<String> {
 
-    public CountrySpinnerAdapter(Context context, List<String> countries) {
+    public CountrySpinnerAdapter(final Context context, final List<String> countries) {
         super(context, android.R.layout.simple_list_item_1, countries);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         @SuppressLint("ViewHolder")
-        View view = inflater.inflate(R.layout.dropdown_item, parent, false);
+        final View view = inflater.inflate(R.layout.dropdown_item, parent, false);
 
-        TextView textView = (TextView) view.findViewById(android.R.id.text1);
+        final TextView textView = (TextView) view.findViewById(android.R.id.text1);
         textView.setText(R.string.billing_country);
 
-        TextView textView2 = (TextView) view.findViewById(android.R.id.text2);
+        final TextView textView2 = (TextView) view.findViewById(android.R.id.text2);
         textView2.setText(getItem(position));
 
         return view;
     }
 
     @Override
-    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+    public View getDropDownView(final int position, final View convertView, final ViewGroup parent) {
         return getViewWithCountry(position, parent, R.layout.support_simple_spinner_dropdown_item);
     }
 
-    private View getViewWithCountry(int position, ViewGroup parent, int layout) {
+    private View getViewWithCountry(final int position, final ViewGroup parent, final int layout) {
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
-        View view = inflater.inflate(layout, parent, false);
-        TextView textView = (TextView) view.findViewById(android.R.id.text1);
+        final View view = inflater.inflate(layout, parent, false);
+        final TextView textView = (TextView) view.findViewById(android.R.id.text1);
 
         textView.setText(getItem(position));
 

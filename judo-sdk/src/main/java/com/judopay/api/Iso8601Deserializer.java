@@ -8,11 +8,11 @@ import java.util.TimeZone;
 public class Iso8601Deserializer {
     private Iso8601Deserializer(){}
 
-    public static Date toDate(String toParse){
+    public static Date toDate(final String toParse) {
         return toCalendar(toParse).getTime();
     }
 
-    public static Calendar toCalendar(String toParse){
+    public static Calendar toCalendar(final String toParse) {
         if ( toParse.indexOf('T') == -1 ){
             return buildCalendarWithDateOnly(toParse, toParse);
         }
@@ -21,7 +21,7 @@ public class Iso8601Deserializer {
         return parseHour(result, toParse.substring(indexOfT+1));
     }
 
-    private static Calendar parseHour(Calendar result, String hourStr){
+    private static Calendar parseHour(final Calendar result, final String hourStr) {
         String basicFormatHour = hourStr.replace(":", "");
 
         int indexOfZ = basicFormatHour.indexOf('Z');
@@ -40,12 +40,12 @@ public class Iso8601Deserializer {
         return result;
     }
 
-    private static int getIndexOfSign(String str){
+    private static int getIndexOfSign(final String str) {
         int index = str.indexOf('+');
         return index != -1 ? index : str.indexOf('-');
     }
 
-    private static void parseHourWithoutHandlingTimeZone(Calendar calendar, String basicFormatHour){
+    private static void parseHourWithoutHandlingTimeZone(final Calendar calendar, String basicFormatHour) {
         basicFormatHour = basicFormatHour.replace(',', '.');
         int indexOfDot = basicFormatHour.indexOf('.');
         double fractionalPart = 0;
@@ -73,7 +73,7 @@ public class Iso8601Deserializer {
         calendar.set(Calendar.MILLISECOND, (int) (fractionalPart * 1000));
     }
 
-    private static Calendar buildCalendarWithDateOnly(String dateStr, String originalDate){
+    private static Calendar buildCalendarWithDateOnly(final String dateStr, final String originalDate) {
         Calendar result = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
         result.setMinimalDaysInFirstWeek(4);
         result.setFirstDayOfWeek(Calendar.MONDAY);
@@ -92,7 +92,7 @@ public class Iso8601Deserializer {
         }
     }
 
-    private static Calendar parseCalendarDate(Calendar result, String basicFormatDate, String originalDate){
+    private static Calendar parseCalendarDate(final Calendar result, final String basicFormatDate, final String originalDate) {
         if ( basicFormatDate.length() == 2 ){
             return parseCalendarDateWithCenturyOnly(result, basicFormatDate);
         } else if ( basicFormatDate.length() == 4){
@@ -102,17 +102,17 @@ public class Iso8601Deserializer {
         }
     }
 
-    private static Calendar parseCalendarDateWithCenturyOnly(Calendar result, String basicFormatDate){
+    private static Calendar parseCalendarDateWithCenturyOnly(final Calendar result, final String basicFormatDate) {
         result.set(Integer.parseInt(basicFormatDate) * 100, 0, 1);
         return result;
     }
 
-    private static Calendar parseCalendarDateWithYearOnly(Calendar result, String basicFormatDate){
+    private static Calendar parseCalendarDateWithYearOnly(final Calendar result, final String basicFormatDate) {
         result.set(Integer.parseInt(basicFormatDate), 0, 1);
         return result;
     }
 
-    private static Calendar parseCalendarDateWithPrecisionGreaterThanYear(Calendar result, String basicFormatDate, String originalDate){
+    private static Calendar parseCalendarDateWithPrecisionGreaterThanYear(final Calendar result, final String basicFormatDate, final String originalDate) {
         int year = Integer.parseInt(basicFormatDate.substring(0, 4));
         int month = Integer.parseInt(basicFormatDate.substring(4, 6)) - 1;
         if ( basicFormatDate.length() == 6 ){
@@ -127,7 +127,7 @@ public class Iso8601Deserializer {
         throw new RuntimeException("Can't parse " + originalDate);
     }
 
-    private static Calendar parseWeekDate(Calendar result, String basicFormatDate) {
+    private static Calendar parseWeekDate(final Calendar result, final String basicFormatDate) {
         result.set(Calendar.YEAR, Integer.parseInt(basicFormatDate.substring(0, 4)));
         result.set(Calendar.WEEK_OF_YEAR, Integer.parseInt(basicFormatDate.substring(5, 7)));
         result.set(Calendar.DAY_OF_WEEK, basicFormatDate.length() == 7
@@ -136,7 +136,7 @@ public class Iso8601Deserializer {
         return result;
     }
 
-    private static Calendar parseOrdinalDate(Calendar calendar, String basicFormatOrdinalDate) {
+    private static Calendar parseOrdinalDate(final Calendar calendar, final String basicFormatOrdinalDate) {
         calendar.set(Calendar.YEAR, Integer.parseInt(basicFormatOrdinalDate.substring(0, 4)));
         calendar.set(Calendar.DAY_OF_YEAR, Integer.parseInt(basicFormatOrdinalDate.substring(4)));
         return calendar;

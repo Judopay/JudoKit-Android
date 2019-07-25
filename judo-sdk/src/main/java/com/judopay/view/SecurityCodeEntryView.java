@@ -9,7 +9,6 @@ import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,22 +33,22 @@ public class SecurityCodeEntryView extends RelativeLayout {
 
     private int cardType;
 
-    public SecurityCodeEntryView(Context context) {
+    public SecurityCodeEntryView(final Context context) {
         super(context);
         initialize(context);
     }
 
-    public SecurityCodeEntryView(Context context, AttributeSet attrs) {
+    public SecurityCodeEntryView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         initialize(context);
     }
 
-    public SecurityCodeEntryView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SecurityCodeEntryView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initialize(context);
     }
 
-    private void initialize(Context context) {
+    private void initialize(final Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.view_security_code_entry, this);
     }
@@ -84,29 +83,30 @@ public class SecurityCodeEntryView extends RelativeLayout {
     }
 
     @Override
-    public void onRestoreInstanceState(Parcelable state) {
+    public void onRestoreInstanceState(final Parcelable state) {
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
-            state = bundle.getParcelable(KEY_SUPER_STATE);
-
+            final Parcelable superState = bundle.getParcelable(KEY_SUPER_STATE);
             setCardType(bundle.getInt(KEY_CARD_TYPE), false);
+            super.onRestoreInstanceState(superState);
+        } else {
+            super.onRestoreInstanceState(state);
         }
-        super.onRestoreInstanceState(state);
     }
 
-    public void setHelperText(@StringRes int resId) {
+    public void setHelperText(final @StringRes int resId) {
         helperText.setText(resId);
     }
 
-    public void setText(CharSequence text) {
+    public void setText(final CharSequence text) {
         editText.setText(text);
     }
 
-    public void addTextChangedListener(TextWatcher watcher) {
+    public void addTextChangedListener(final TextWatcher watcher) {
         editText.addTextChangedListener(watcher);
     }
 
-    public void setCardType(int cardType, boolean animate) {
+    public void setCardType(final int cardType, final boolean animate) {
         this.cardType = cardType;
 
         imageView.setImageType(cardType, animate);
@@ -118,15 +118,15 @@ public class SecurityCodeEntryView extends RelativeLayout {
         setMaxLength(CardNetwork.securityCodeLength(cardType));
     }
 
-    private void setMaxLength(int length) {
+    private void setMaxLength(final int length) {
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(length)});
     }
 
-    private void setHint(String hint) {
+    private void setHint(final String hint) {
         inputLayout.setHint(hint);
     }
 
-    private void setAlternateHint(String hint) {
+    private void setAlternateHint(final String hint) {
         hintFocusListener.setHint(hint);
     }
 
@@ -138,7 +138,7 @@ public class SecurityCodeEntryView extends RelativeLayout {
         return editText;
     }
 
-    public void setValidation(Validation validation) {
+    public void setValidation(final Validation validation) {
         inputLayout.setErrorEnabled(validation.isShowError());
 
         if (validation.isShowError()) {

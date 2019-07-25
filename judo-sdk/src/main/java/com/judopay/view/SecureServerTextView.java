@@ -12,23 +12,23 @@ import com.judopay.R;
 
 public class SecureServerTextView extends AppCompatTextView {
 
-    public SecureServerTextView(Context context) {
+    public SecureServerTextView(final Context context) {
         super(context);
         initialize();
     }
 
-    public SecureServerTextView(Context context, AttributeSet attrs) {
+    public SecureServerTextView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         initialize();
     }
 
-    public SecureServerTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SecureServerTextView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initialize();
     }
 
     private void initialize() {
-        SpannableString spannable = new SpannableString(getResources().getString(R.string.secure_server_transmission));
+        final SpannableString spannable = new SpannableString(getResources().getString(R.string.secure_server_transmission));
 
         spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, 13, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 

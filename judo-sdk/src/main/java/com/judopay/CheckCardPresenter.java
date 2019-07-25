@@ -11,11 +11,11 @@ import static com.judopay.arch.TextUtil.isEmpty;
 
 class CheckCardPresenter extends JudoPresenter {
 
-    CheckCardPresenter(TransactionCallbacks callbacks, JudoApiService apiService, Logger logger) {
+    CheckCardPresenter(final TransactionCallbacks callbacks, final JudoApiService apiService, final Logger logger) {
         super(callbacks, apiService, logger);
     }
 
-    Single<Receipt> performCheckCard(Card card, Judo judo) {
+    Single<Receipt> performCheckCard(final Card card, final Judo judo) {
         loading = true;
         getView().showLoading();
 
@@ -42,10 +42,10 @@ class CheckCardPresenter extends JudoPresenter {
             builder.setCurrency(judo.getCurrency());
         }
 
-        if (card.getAddress() != null) {
-            builder.setCardAddress(card.getAddress());
-        } else {
+        if (card.getAddress() == null) {
             builder.setCardAddress(judo.getAddress());
+        } else {
+            builder.setCardAddress(card.getAddress());
         }
 
         return apiService.checkCard(builder.build());

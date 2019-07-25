@@ -26,7 +26,7 @@ public class CountryAndPostcodeValidator implements Validator {
     private final Spinner countrySpinner;
     private final EditText postcodeEditText;
 
-    public CountryAndPostcodeValidator(Spinner countrySpinner, EditText postcodeEditText) {
+    public CountryAndPostcodeValidator(final Spinner countrySpinner, final EditText postcodeEditText) {
         this.countrySpinner = countrySpinner;
         this.postcodeEditText = postcodeEditText;
     }
@@ -36,36 +36,36 @@ public class CountryAndPostcodeValidator implements Validator {
         return Observable.create((ObservableEmitter<Validation> emitter) -> {
             postcodeEditText.addTextChangedListener(new SimpleTextWatcher() {
                 @Override
-                protected void onTextChanged(CharSequence text) {
+                protected void onTextChanged(final CharSequence text) {
                     emitter.onNext(getValidation(text.toString().toUpperCase()));
                 }
             });
 
             countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                     emitter.onNext(getValidation(postcodeEditText.getText().toString().toUpperCase()));
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {
+                public void onNothingSelected(final AdapterView<?> parent) {
                 }
             });
         }).publish();
     }
 
-    private Validation getValidation(String text) {
-        String country = (String) countrySpinner.getSelectedItem();
-        boolean postcodeValid = Country.OTHER.equals(country) || (!isEmpty(text) && isPostcodeValid(text, country));
+    private Validation getValidation(final String text) {
+        final String country = (String) countrySpinner.getSelectedItem();
+        final boolean postcodeValid = Country.OTHER.equals(country) || (!isEmpty(text) && isPostcodeValid(text, country));
 
-        boolean postcodeEntryComplete = !isEmpty(text) && isPostcodeLengthValid(text.replaceAll("\\s+", ""), country);
-        boolean showPostcodeError = !postcodeValid && postcodeEntryComplete;
-        int postcodeError = getPostcodeError(country);
+        final boolean postcodeEntryComplete = !isEmpty(text) && isPostcodeLengthValid(text.replaceAll("\\s+", ""), country);
+        final boolean showPostcodeError = !postcodeValid && postcodeEntryComplete;
+        final int postcodeError = getPostcodeError(country);
 
         return new Validation(postcodeValid, postcodeError, showPostcodeError);
     }
 
-    private int getPostcodeError(String country) {
+    private int getPostcodeError(final String country) {
         switch (country) {
             case Country.CANADA:
                 return R.string.error_postcode_canada;
@@ -79,7 +79,7 @@ public class CountryAndPostcodeValidator implements Validator {
         }
     }
 
-    private boolean isPostcodeLengthValid(String postcode, String country) {
+    private boolean isPostcodeLengthValid(final String postcode, final String country) {
         switch (country) {
             case Country.UNITED_KINGDOM:
             case Country.CANADA:
@@ -90,7 +90,7 @@ public class CountryAndPostcodeValidator implements Validator {
         return true;
     }
 
-    private boolean isPostcodeValid(String postcode, String country) {
+    private boolean isPostcodeValid(final String postcode, final String country) {
         switch (country) {
             case Country.UNITED_KINGDOM:
                 return UK_POSTCODE_PATTERN.matcher(postcode).matches();

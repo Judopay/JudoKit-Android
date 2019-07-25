@@ -9,26 +9,26 @@ public final class Consumer implements Parcelable {
     private String consumerToken;
     private final String yourConsumerReference;
 
-    public Consumer(String consumerToken, String yourConsumerReference) {
+    public Consumer(final String consumerToken, final String yourConsumerReference) {
         this.consumerToken = consumerToken;
         this.yourConsumerReference = yourConsumerReference;
     }
 
-    public Consumer(String yourConsumerReference) {
+    public Consumer(final String yourConsumerReference) {
         this.yourConsumerReference = yourConsumerReference;
     }
 
-    private Consumer(Parcel in) {
+    private Consumer(final Parcel in) {
         this.consumerToken = in.readString();
         this.yourConsumerReference = in.readString();
     }
 
     public static final Creator<Consumer> CREATOR = new Creator<Consumer>() {
-        public Consumer createFromParcel(Parcel source) {
+        public Consumer createFromParcel(final Parcel source) {
             return new Consumer(source);
         }
 
-        public Consumer[] newArray(int size) {
+        public Consumer[] newArray(final int size) {
             return new Consumer[size];
         }
     };
@@ -47,7 +47,7 @@ public final class Consumer implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(this.consumerToken);
         dest.writeString(this.yourConsumerReference);
     }

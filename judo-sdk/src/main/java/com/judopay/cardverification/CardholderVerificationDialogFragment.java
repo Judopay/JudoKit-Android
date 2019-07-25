@@ -26,26 +26,26 @@ public class CardholderVerificationDialogFragment extends DialogFragment impleme
     private TextView loadingText;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         setCancelable(false);
         return inflater.inflate(R.layout.dialog_card_verification, container, false);
     }
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.setTitle(R.string.authentication);
 
         return dialog;
     }
 
-    public void setListener(AuthorizationListener listener) {
+    public void setListener(final AuthorizationListener listener) {
         this.listener = listener;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         loadingView = view.findViewById(R.id.card_verification_loading_overlay);

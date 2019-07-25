@@ -29,7 +29,7 @@ public class Country {
         return countries;
     }
 
-    public static int codeFromCountry(String country) {
+    public static int codeFromCountry(final String country) {
         switch (country) {
             case Country.UNITED_KINGDOM:
                 return 826;
@@ -43,7 +43,7 @@ public class Country {
     }
 
     @StringRes
-    public static int postcodeName(String country) {
+    public static int postcodeName(final String country) {
         switch (country) {
             case Country.UNITED_STATES:
                 return R.string.billing_zip_code;

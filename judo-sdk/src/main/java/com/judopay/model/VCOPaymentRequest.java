@@ -17,7 +17,7 @@ public final class VCOPaymentRequest extends BasePaymentRequest {
     private final VCOWallet vcoWallet;
 
     @SuppressWarnings("WeakerAccess")
-    public VCOPaymentRequest(VCOWallet vcoWallet) {
+    public VCOPaymentRequest(final VCOWallet vcoWallet) {
         this.vcoWallet = vcoWallet;
     }
 
@@ -39,7 +39,7 @@ public final class VCOPaymentRequest extends BasePaymentRequest {
          * @param vcoWallet the information received from Visa Checkout containing the callId, encrypted key and payload
          * @return The Builder for creating the {@link VCOPaymentRequest} instance
          */
-        public VCOPaymentRequest.Builder setVCOWallet(VCOWallet vcoWallet) {
+        public VCOPaymentRequest.Builder setVCOWallet(final VCOWallet vcoWallet) {
             this.vcoWallet = vcoWallet;
             return this;
         }
@@ -48,7 +48,7 @@ public final class VCOPaymentRequest extends BasePaymentRequest {
          * @param amount the amount for the transaction
          * @return The Builder for creating the {@link VCOPaymentRequest} instance
          */
-        public VCOPaymentRequest.Builder setAmount(String amount) {
+        public VCOPaymentRequest.Builder setAmount(final String amount) {
             this.amount = amount;
             return this;
         }
@@ -57,7 +57,7 @@ public final class VCOPaymentRequest extends BasePaymentRequest {
          * @param currency A currency code string as defined in the list of supported currencies in {@link Currency}
          * @return The Builder for creating the {@link VCOPaymentRequest} instance
          */
-        public VCOPaymentRequest.Builder setCurrency(String currency) {
+        public VCOPaymentRequest.Builder setCurrency(final String currency) {
             this.currency = currency;
             return this;
         }
@@ -66,7 +66,7 @@ public final class VCOPaymentRequest extends BasePaymentRequest {
          * @param judoId the judo ID of the judo account
          * @return The Builder for creating the {@link VCOPaymentRequest} instance
          */
-        public VCOPaymentRequest.Builder setJudoId(String judoId) {
+        public VCOPaymentRequest.Builder setJudoId(final String judoId) {
             this.judoId = judoId;
             return this;
         }
@@ -75,7 +75,7 @@ public final class VCOPaymentRequest extends BasePaymentRequest {
          * @param consumerReference your reference to identify the transaction
          * @return The Builder for creating the {@link VCOPaymentRequest} instance
          */
-        public VCOPaymentRequest.Builder setConsumerReference(String consumerReference) {
+        public VCOPaymentRequest.Builder setConsumerReference(final String consumerReference) {
             this.consumerReference = consumerReference;
             return this;
         }
@@ -84,7 +84,7 @@ public final class VCOPaymentRequest extends BasePaymentRequest {
          * @param metaData metadata to be passed with the transaction that will be returned in the response
          * @return The Builder for creating the {@link VCOPaymentRequest} instance
          */
-        public VCOPaymentRequest.Builder setMetaData(Map<String, String> metaData) {
+        public VCOPaymentRequest.Builder setMetaData(final Map<String, String> metaData) {
             this.metaData = metaData;
             return this;
         }

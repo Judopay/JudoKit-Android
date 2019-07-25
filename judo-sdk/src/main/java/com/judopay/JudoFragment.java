@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -36,7 +37,7 @@ abstract class JudoFragment extends BaseFragment implements TransactionCallbacks
 
     abstract boolean isTransactionInProgress();
 
-    public void setProgressListener(ProgressListener progressListener) {
+    public void setProgressListener(final ProgressListener progressListener) {
         listener = progressListener;
     }
 
@@ -52,12 +53,12 @@ abstract class JudoFragment extends BaseFragment implements TransactionCallbacks
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_base, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         progressText = view.findViewById(R.id.progress_text);
@@ -66,7 +67,7 @@ abstract class JudoFragment extends BaseFragment implements TransactionCallbacks
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         if (cardEntryFragment == null) {
@@ -85,7 +86,7 @@ abstract class JudoFragment extends BaseFragment implements TransactionCallbacks
     }
 
     @Override
-    public void onSuccess(Receipt receipt) {
+    public void onSuccess(final Receipt receipt) {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_RECEIPT, receipt);
 
@@ -94,7 +95,7 @@ abstract class JudoFragment extends BaseFragment implements TransactionCallbacks
     }
 
     @Override
-    public void onDeclined(Receipt receipt) {
+    public void onDeclined(final Receipt receipt) {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_RECEIPT, receipt);
 
@@ -103,7 +104,7 @@ abstract class JudoFragment extends BaseFragment implements TransactionCallbacks
     }
 
     @Override
-    public void onError(Receipt receipt) {
+    public void onError(final Receipt receipt) {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_RECEIPT, receipt);
 
@@ -117,7 +118,7 @@ abstract class JudoFragment extends BaseFragment implements TransactionCallbacks
         notifyListener();
     }
 
-    private void sendResult(int resultCode, Intent intent) {
+    private void sendResult(final int resultCode, final Intent intent) {
         Activity activity = getActivity();
 
         if (activity != null && !activity.isFinishing()) {
@@ -150,14 +151,14 @@ abstract class JudoFragment extends BaseFragment implements TransactionCallbacks
     }
 
     @Override
-    public void setLoadingText(@StringRes int text) {
+    public void setLoadingText(@StringRes final int text) {
         this.progressText.setText(getString(text));
     }
 
     @Override
-    public void start3dSecureWebView(Receipt receipt, AuthorizationListener listener) {
+    public void start3dSecureWebView(final Receipt receipt, final AuthorizationListener listener) {
         if (cardholderVerificationDialogFragment == null && getActivity() != null) {
-            FragmentManager fm = getActivity().getSupportFragmentManager();
+            FragmentManager manager = getActivity().getSupportFragmentManager();
 
             cardholderVerificationDialogFragment = new CardholderVerificationDialogFragment();
 
@@ -167,7 +168,7 @@ abstract class JudoFragment extends BaseFragment implements TransactionCallbacks
 
             cardholderVerificationDialogFragment.setListener(listener);
             cardholderVerificationDialogFragment.setArguments(arguments);
-            cardholderVerificationDialogFragment.show(fm, TAG_3DS_DIALOG);
+            cardholderVerificationDialogFragment.show(manager, TAG_3DS_DIALOG);
         }
     }
 
@@ -185,7 +186,7 @@ abstract class JudoFragment extends BaseFragment implements TransactionCallbacks
         return CardEntryFragment.newInstance(judo, this);
     }
 
-    public void setCard(Card card) {
+    public void setCard(final Card card) {
         if (cardEntryFragment != null && card != null) {
             cardEntryFragment.setCard(card);
         }

@@ -12,20 +12,20 @@ import com.judopay.model.CardNetwork;
  */
 public class CardTypeImageView extends FlipImageView {
 
-    public CardTypeImageView(Context context) {
+    public CardTypeImageView(final Context context) {
         super(context);
     }
 
-    public CardTypeImageView(Context context, AttributeSet attrs) {
+    public CardTypeImageView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public CardTypeImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CardTypeImageView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @Override
-    protected int getImageResource(int type) {
+    protected int getImageResource(final int type) {
         switch (type) {
             case CardNetwork.AMEX:
                 return R.drawable.ic_card_amex;

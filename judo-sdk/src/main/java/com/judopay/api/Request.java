@@ -10,7 +10,7 @@ public abstract class Request {
     private final boolean uniqueRequest;
     protected String yourPaymentReference;
 
-    protected Request(String yourPaymentReference) {
+    protected Request(final String yourPaymentReference) {
         this(false, yourPaymentReference);
     }
 
@@ -18,12 +18,12 @@ public abstract class Request {
         this(true, randomUUID().toString());
     }
 
-    private Request(boolean uniqueRequest, String yourPaymentReference) {
+    private Request(final boolean uniqueRequest, final String yourPaymentReference) {
         this.uniqueRequest = uniqueRequest;
         this.yourPaymentReference = yourPaymentReference;
     }
 
-    protected static <T> T checkNotNull(T obj) {
+    protected static <T> T checkNotNull(final T obj) {
         if (obj == null) {
             throw new ParameterError();
         }

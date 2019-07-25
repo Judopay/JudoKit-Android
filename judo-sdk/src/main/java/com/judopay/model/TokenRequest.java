@@ -83,17 +83,17 @@ public final class TokenRequest extends BasePaymentRequest {
         private String mobileNumber;
         private Map<String, String> yourPaymentMetaData;
 
-        public Builder setEndDate(String endDate) {
+        public Builder setEndDate(final String endDate) {
             this.endDate = endDate;
             return this;
         }
 
-        public Builder setLastFour(String lastFour) {
+        public Builder setLastFour(final String lastFour) {
             this.lastFour = lastFour;
             return this;
         }
 
-        public Builder setToken(CardToken token) {
+        public Builder setToken(final CardToken token) {
             this.token = token.getToken();
             this.endDate = token.getEndDate();
             this.lastFour = token.getLastFour();
@@ -102,57 +102,57 @@ public final class TokenRequest extends BasePaymentRequest {
             return this;
         }
 
-        public Builder setType(int type) {
+        public Builder setType(final int type) {
             this.type = type;
             return this;
         }
 
-        public Builder setAmount(String amount) {
+        public Builder setAmount(final String amount) {
             this.amount = amount;
             return this;
         }
 
-        public Builder setCurrency(String currency) {
+        public Builder setCurrency(final String currency) {
             this.currency = currency;
             return this;
         }
 
-        public Builder setJudoId(String judoId) {
+        public Builder setJudoId(final String judoId) {
             this.judoId = judoId;
             return this;
         }
 
-        public Builder setConsumerReference(String consumerReference) {
+        public Builder setConsumerReference(final String consumerReference) {
             this.consumerReference = consumerReference;
             return this;
         }
 
-        public Builder setPaymentReference(String paymentReference) {
+        public Builder setPaymentReference(final String paymentReference) {
             this.paymentReference = paymentReference;
             return this;
         }
 
-        public Builder setCardAddress(Address cardAddress) {
+        public Builder setCardAddress(final Address cardAddress) {
             this.cardAddress = cardAddress;
             return this;
         }
 
-        public Builder setCv2(String cv2) {
+        public Builder setCv2(final String cv2) {
             this.cv2 = cv2;
             return this;
         }
 
-        public Builder setEmailAddress(String emailAddress) {
+        public Builder setEmailAddress(final String emailAddress) {
             this.emailAddress = emailAddress;
             return this;
         }
 
-        public Builder setMobileNumber(String mobileNumber) {
+        public Builder setMobileNumber(final String mobileNumber) {
             this.mobileNumber = mobileNumber;
             return this;
         }
 
-        public Builder setMetaData(Map<String, String> metaData) {
+        public Builder setMetaData(final Map<String, String> metaData) {
             this.yourPaymentMetaData = metaData;
             return this;
         }

@@ -8,7 +8,7 @@ public final class GooglePayWallet {
     private final String cardDetails; // eg: "1234" paymentData.getCardInfo().getCardDetails()
     private final String token; // paymentData.getPaymentMethodToken().getToken()
 
-    private GooglePayWallet(String cardNetwork, String cardDetails, String token) {
+    private GooglePayWallet(final String cardNetwork, final String cardDetails, final String token) {
         this.cardNetwork = cardNetwork;
         this.cardDetails = cardDetails;
         this.token = token;
@@ -37,7 +37,7 @@ public final class GooglePayWallet {
          *                    paymentData.getCardInfo().getCardNetwork()
          * @return The Builder for creating the {@link GooglePayWallet} instance
          */
-        public Builder setCardNetwork(String cardNetwork) {
+        public Builder setCardNetwork(final String cardNetwork) {
             this.cardNetwork = cardNetwork;
             return this;
         }
@@ -48,7 +48,7 @@ public final class GooglePayWallet {
          *                    paymentData.getCardInfo().getCardDetails()
          * @return The Builder for creating the {@link GooglePayWallet} instance
          */
-        public Builder setCardDetails(String cardDetails) {
+        public Builder setCardDetails(final String cardDetails) {
             this.cardDetails = cardDetails;
             return this;
         }
@@ -59,7 +59,7 @@ public final class GooglePayWallet {
          * @param token the token as Json string received from Google Pay         *
          * @return The Builder for creating the {@link GooglePayWallet} instance
          */
-        public Builder setToken(String token) {
+        public Builder setToken(final String token) {
             this.token = token;
             return this;
         }

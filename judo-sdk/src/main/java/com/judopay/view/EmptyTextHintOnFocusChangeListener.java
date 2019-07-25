@@ -15,12 +15,12 @@ class EmptyTextHintOnFocusChangeListener implements View.OnFocusChangeListener {
     private final View hintView;
     private Runnable action;
 
-    public EmptyTextHintOnFocusChangeListener(View hintView) {
+    public EmptyTextHintOnFocusChangeListener(final View hintView) {
         this.hintView = hintView;
     }
 
     @Override
-    public void onFocusChange(final View view, boolean hasFocus) {
+    public void onFocusChange(final View view, final boolean hasFocus) {
         if (hasFocus) {
             if (((TextView) view).getText().length() == 0) {
                 action = new Runnable() {

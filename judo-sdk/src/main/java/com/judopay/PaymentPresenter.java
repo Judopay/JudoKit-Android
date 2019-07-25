@@ -12,18 +12,18 @@ import static com.judopay.arch.TextUtil.isEmpty;
 
 class PaymentPresenter extends JudoPresenter {
 
-    PaymentPresenter(TransactionCallbacks callbacks, JudoApiService judoApiService, Logger logger) {
+    PaymentPresenter(final TransactionCallbacks callbacks, final JudoApiService judoApiService, final Logger logger) {
         super(callbacks, judoApiService, logger);
     }
 
-    Single<Receipt> performPayment(Card card, Judo judo) {
+    Single<Receipt> performPayment(final Card card, final Judo judo) {
         loading = true;
         getView().showLoading();
 
         return apiService.payment(buildPayment(card, judo));
     }
 
-    private PaymentRequest buildPayment(Card card, Judo judo) {
+    private PaymentRequest buildPayment(final Card card, final Judo judo) {
         PaymentRequest.Builder builder = new PaymentRequest.Builder()
                 .setAmount(judo.getAmount())
                 .setCardNumber(card.getCardNumber())
@@ -45,23 +45,23 @@ class PaymentPresenter extends JudoPresenter {
             builder.setPaymentReference(judo.getPaymentReference());
         }
 
-        if (card.getAddress() != null) {
-            builder.setCardAddress(card.getAddress());
-        } else {
+        if (card.getAddress() == null) {
             builder.setCardAddress(judo.getAddress());
+        } else {
+            builder.setCardAddress(card.getAddress());
         }
 
         return builder.build();
     }
 
-    Single<Receipt> performTokenPayment(final Card card, Judo judo) {
+    Single<Receipt> performTokenPayment(final Card card, final Judo judo) {
         loading = true;
         getView().showLoading();
 
         return apiService.tokenPayment(buildTokenPayment(card, judo));
     }
 
-    private TokenRequest buildTokenPayment(Card card, Judo judo) {
+    private TokenRequest buildTokenPayment(final Card card, final Judo judo) {
         TokenRequest.Builder builder = new TokenRequest.Builder()
                 .setAmount(judo.getAmount())
                 .setCurrency(judo.getCurrency())
@@ -77,10 +77,10 @@ class PaymentPresenter extends JudoPresenter {
             builder.setPaymentReference(judo.getPaymentReference());
         }
 
-        if (card.getAddress() != null) {
-            builder.setCardAddress(card.getAddress());
-        } else {
+        if (card.getAddress() == null) {
             builder.setCardAddress(judo.getAddress());
+        } else {
+            builder.setCardAddress(card.getAddress());
         }
 
         return builder.build();

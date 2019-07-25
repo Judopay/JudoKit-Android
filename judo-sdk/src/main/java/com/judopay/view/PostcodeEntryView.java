@@ -17,17 +17,17 @@ public class PostcodeEntryView extends FrameLayout {
 
     private TextInputLayout postcodeInputLayout;
 
-    public PostcodeEntryView(Context context) {
+    public PostcodeEntryView(final Context context) {
         super(context);
         initialize();
     }
 
-    public PostcodeEntryView(Context context, AttributeSet attrs) {
+    public PostcodeEntryView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         initialize();
     }
 
-    public PostcodeEntryView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PostcodeEntryView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initialize();
     }
@@ -41,25 +41,25 @@ public class PostcodeEntryView extends FrameLayout {
         super.onFinishInflate();
 
         postcodeInputLayout = findViewById(R.id.post_code_input_layout);
-        JudoEditText editText = findViewById(R.id.post_code_edit_text);
+        final JudoEditText editText = findViewById(R.id.post_code_edit_text);
 
         if (editText != null) {
             editText.setOnFocusChangeListener(new HintFocusListener(editText, getResources().getString(R.string.empty)));
         }
     }
 
-    public void addTextChangedListener(TextWatcher watcher) {
+    public void addTextChangedListener(final TextWatcher watcher) {
         EditText editText = postcodeInputLayout.getEditText();
         if (editText != null) {
             editText.addTextChangedListener(watcher);
         }
     }
 
-    private void setHint(@StringRes int hint) {
+    private void setHint(@StringRes final int hint) {
         postcodeInputLayout.setHint(getResources().getString(hint));
     }
 
-    public void setError(@StringRes int error, boolean show) {
+    public void setError(@StringRes final int error, final boolean show) {
         postcodeInputLayout.setErrorEnabled(show);
 
         if (show) {
@@ -69,8 +69,8 @@ public class PostcodeEntryView extends FrameLayout {
         }
     }
 
-    private void setNumericInput(boolean numeric) {
-        EditText editText = postcodeInputLayout.getEditText();
+    private void setNumericInput(final boolean numeric) {
+        final EditText editText = postcodeInputLayout.getEditText();
         if (editText != null) {
             if (numeric && editText.getInputType() != InputType.TYPE_CLASS_NUMBER) {
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -87,7 +87,7 @@ public class PostcodeEntryView extends FrameLayout {
     }
 
     @Override
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(final boolean enabled) {
         super.setEnabled(enabled);
         postcodeInputLayout.setEnabled(enabled);
     }
@@ -101,7 +101,7 @@ public class PostcodeEntryView extends FrameLayout {
         return (JudoEditText) postcodeInputLayout.getEditText();
     }
 
-    public void setCountry(String country) {
+    public void setCountry(final String country) {
         setHint(Country.postcodeName(country));
 
         boolean postcodeNumeric = Country.UNITED_STATES.equals(country);

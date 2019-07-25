@@ -14,7 +14,7 @@ public class CardNumberValidator implements Validator {
     private final boolean maestroSupported;
     private final boolean amexSupported;
 
-    public CardNumberValidator(EditText editText, boolean maestroSupported, boolean amexSupported) {
+    public CardNumberValidator(final EditText editText, final boolean maestroSupported, final boolean amexSupported) {
         this.editText = editText;
         this.maestroSupported = maestroSupported;
         this.amexSupported = amexSupported;
@@ -24,14 +24,14 @@ public class CardNumberValidator implements Validator {
     public Observable<Validation> onValidate() {
         return Observable.create(emitter -> editText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
-            protected void onTextChanged(CharSequence text) {
+            protected void onTextChanged(final CharSequence text) {
                 emitter.onNext(getValidation(text.toString().replaceAll("\\s+", "")));
             }
         }));
     }
 
-    private Validation getValidation(String cardNumber) {
-        int cardType = CardNetwork.fromCardNumber(cardNumber);
+    private Validation getValidation(final String cardNumber) {
+        final int cardType = CardNetwork.fromCardNumber(cardNumber);
 
         boolean cardNumberLengthValid = isCardNumberLengthValid(cardNumber, cardType);
         boolean maestroAndNotSupported = isMaestroAndNotSupported(cardType, maestroSupported);
@@ -52,21 +52,21 @@ public class CardNumberValidator implements Validator {
         return new Validation(valid, error, showError);
     }
 
-    private boolean isAmexAndNotSupported(int cardType, boolean amexSupported) {
+    private boolean isAmexAndNotSupported(final int cardType, final boolean amexSupported) {
         return cardType == CardNetwork.AMEX && !amexSupported;
     }
 
-    private boolean isMaestroAndNotSupported(int cardType, boolean maestroSupported) {
+    private boolean isMaestroAndNotSupported(final int cardType, final boolean maestroSupported) {
         return cardType == CardNetwork.MAESTRO && !maestroSupported;
     }
 
-    private boolean isCardNumberValid(String cardNumber, int cardType) {
+    private boolean isCardNumberValid(final String cardNumber, final int cardType) {
         return LuhnCheck.isValid(cardNumber)
                 && (((cardType != CardNetwork.MAESTRO || maestroSupported))
                 && (cardType != CardNetwork.AMEX || amexSupported));
     }
 
-    private boolean isCardNumberLengthValid(String cardNumber, int cardType) {
+    private boolean isCardNumberLengthValid(final String cardNumber, final int cardType) {
         switch (cardType) {
             case CardNetwork.AMEX:
                 return cardNumber.length() == 15;

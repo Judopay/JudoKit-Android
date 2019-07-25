@@ -9,14 +9,14 @@ public class AppMetaDataReader {
 
     private final Context context;
 
-    public AppMetaDataReader(Context context) {
+    public AppMetaDataReader(final Context context) {
         this.context = context.getApplicationContext();
     }
 
     public String getAppVersion() {
         try {
-            PackageInfo _info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            return _info.versionName;
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             return "";

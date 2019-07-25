@@ -27,20 +27,20 @@ public final class Risks implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(this.postCodeCheck);
     }
 
-    private Risks(Parcel in) {
+    private Risks(final Parcel in) {
         this.postCodeCheck = in.readString();
     }
 
     public static final Creator<Risks> CREATOR = new Creator<Risks>() {
-        public Risks createFromParcel(Parcel source) {
+        public Risks createFromParcel(final Parcel source) {
             return new Risks(source);
         }
 
-        public Risks[] newArray(int size) {
+        public Risks[] newArray(final int size) {
             return new Risks[size];
         }
     };

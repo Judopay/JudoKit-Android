@@ -14,7 +14,7 @@ import static java.lang.Boolean.FALSE;
 public class ValidationAutoAdvanceManager {
     private static CompositeDisposable disposables = new CompositeDisposable();
 
-    public static void bind(final ValidationManager validationManager, List<Pair<Validator, View>> validatorViews) {
+    public static void bind(final ValidationManager validationManager, final List<Pair<Validator, View>> validatorViews) {
         final List<Validator> validators = new LinkedList<>();
         final List<View> views = new LinkedList<>();
 

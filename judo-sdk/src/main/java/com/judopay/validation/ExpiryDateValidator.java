@@ -11,7 +11,7 @@ import io.reactivex.Observable;
 public class ExpiryDateValidator implements Validator {
     private final EditText editText;
 
-    public ExpiryDateValidator(EditText editText) {
+    public ExpiryDateValidator(final EditText editText) {
         this.editText = editText;
     }
 
@@ -19,21 +19,21 @@ public class ExpiryDateValidator implements Validator {
     public Observable<Validation> onValidate() {
         return Observable.create(emitter -> editText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
-            protected void onTextChanged(CharSequence text) {
+            protected void onTextChanged(final CharSequence text) {
                 emitter.onNext(getValidation(text.toString()));
             }
         }));
     }
 
-    private Validation getValidation(String text) {
-        boolean valid = isExpiryDateValid(text);
-        boolean expiryLengthValid = text.length() == 5;
+    private Validation getValidation(final String text) {
+        final boolean valid = isExpiryDateValid(text);
+        final boolean expiryLengthValid = text.length() == 5;
 
         return new Validation(valid, R.string.check_expiry_date, !valid && expiryLengthValid);
     }
 
-    private boolean isExpiryDateValid(String expiryDate) {
-        CardDate cardDate = new CardDate(expiryDate);
+    private boolean isExpiryDateValid(final String expiryDate) {
+        final CardDate cardDate = new CardDate(expiryDate);
         return cardDate.isAfterToday() && cardDate.isInsideAllowedDateRange();
     }
 }

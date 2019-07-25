@@ -23,7 +23,7 @@ public class Address implements Parcelable {
     private int countryCode;
     private String postCode;
 
-    public Address(String line1, String line2, String line3, String town, String postCode, int countryCode) {
+    public Address(final String line1, final String line2, final String line3, final String town, final String postCode, final int countryCode) {
         this.line1 = line1;
         this.line2 = line2;
         this.line3 = line3;
@@ -59,7 +59,7 @@ public class Address implements Parcelable {
     public static class Serializer implements JsonSerializer<Address> {
 
         @Override
-        public JsonElement serialize(Address src, Type typeOfSrc, JsonSerializationContext context) {
+        public JsonElement serialize(final Address src, final Type typeOfSrc, final JsonSerializationContext context) {
             JsonObject object = new JsonObject();
 
             if(src.line1 != null) {
@@ -99,32 +99,32 @@ public class Address implements Parcelable {
         private String town;
         private int countryCode;
 
-        public Builder setLine1(String line1) {
+        public Builder setLine1(final String line1) {
             this.line1 = line1;
             return this;
         }
 
-        public Builder setLine2(String line2) {
+        public Builder setLine2(final String line2) {
             this.line2 = line2;
             return this;
         }
 
-        public Builder setLine3(String line3) {
+        public Builder setLine3(final String line3) {
             this.line3 = line3;
             return this;
         }
 
-        public Builder setTown(String town) {
+        public Builder setTown(final String town) {
             this.town = town;
             return this;
         }
 
-        public Builder setCountryCode(int countryCode) {
+        public Builder setCountryCode(final int countryCode) {
             this.countryCode = countryCode;
             return this;
         }
 
-        public Builder setPostCode(String postCode) {
+        public Builder setPostCode(final String postCode) {
             this.postCode = postCode;
             return this;
         }
@@ -140,7 +140,7 @@ public class Address implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(this.line1);
         dest.writeString(this.line2);
         dest.writeString(this.line3);
@@ -149,7 +149,7 @@ public class Address implements Parcelable {
         dest.writeString(this.postCode);
     }
 
-    protected Address(Parcel in) {
+    protected Address(final Parcel in) {
         this.line1 = in.readString();
         this.line2 = in.readString();
         this.line3 = in.readString();
@@ -160,12 +160,12 @@ public class Address implements Parcelable {
 
     public static final Parcelable.Creator<Address> CREATOR = new Parcelable.Creator<Address>() {
         @Override
-        public Address createFromParcel(Parcel source) {
+        public Address createFromParcel(final Parcel source) {
             return new Address(source);
         }
 
         @Override
-        public Address[] newArray(int size) {
+        public Address[] newArray(final int size) {
             return new Address[size];
         }
     };

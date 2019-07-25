@@ -20,23 +20,23 @@ public abstract class FlipImageView extends FrameLayout {
     private int imageType;
     private int imageResId;
 
-    public FlipImageView(Context context) {
+    public FlipImageView(final Context context) {
         super(context);
         setImageType(0, false);
     }
 
-    public FlipImageView(Context context, AttributeSet attrs) {
+    public FlipImageView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         setImageType(0, false);
     }
 
-    public FlipImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FlipImageView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setImageType(0, false);
     }
 
     @DrawableRes
-    protected abstract int getImageResource(int type);
+    protected abstract int getImageResource(final int type);
 
     @Override
     public Parcelable onSaveInstanceState() {
@@ -50,20 +50,20 @@ public abstract class FlipImageView extends FrameLayout {
     }
 
     @Override
-    public void onRestoreInstanceState(Parcelable state) {
+    public void onRestoreInstanceState(final Parcelable state) {
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
-
-            state = bundle.getParcelable(KEY_SUPER_STATE);
+            final Parcelable superState = bundle.getParcelable(KEY_SUPER_STATE);
             setAlpha(bundle.getFloat(KEY_ALPHA));
-
             imageType = bundle.getInt(KEY_IMAGE_TYPE);
             setImageType(imageType, false);
+            super.onRestoreInstanceState(superState);
+        } else {
+            super.onRestoreInstanceState(state);
         }
-        super.onRestoreInstanceState(state);
     }
 
-    public void setImageType(int imageType, boolean animate) {
+    public void setImageType(final int imageType, final boolean animate) {
         this.imageType = imageType;
 
         if (this.frontImageView == null) {
@@ -89,12 +89,12 @@ public abstract class FlipImageView extends FrameLayout {
         }
     }
 
-    private void showImage(int imageResId) {
+    private void showImage(final int imageResId) {
         this.imageResId = imageResId;
         frontImageView.setImageResource(imageResId);
     }
 
-    private void flipImages(int imageResId) {
+    private void flipImages(final int imageResId) {
         this.imageResId = imageResId;
         backImageView.setImageResource(imageResId);
 

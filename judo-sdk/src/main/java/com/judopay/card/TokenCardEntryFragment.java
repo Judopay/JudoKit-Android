@@ -2,6 +2,7 @@ package com.judopay.card;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +47,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    public static TokenCardEntryFragment newInstance(Judo judo, CardEntryListener listener) {
+    public static TokenCardEntryFragment newInstance(final Judo judo, final CardEntryListener listener) {
         TokenCardEntryFragment cardEntryFragment = new TokenCardEntryFragment();
         cardEntryFragment.setCardEntryListener(listener);
 
@@ -58,7 +59,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_token_card_entry, container, false);
 
         this.submitButton = view.findViewById(R.id.button);
@@ -75,7 +76,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    protected void onInitialize(Bundle savedInstanceState, Judo judo) {
+    protected void onInitialize(@Nullable final Bundle savedInstanceState, final Judo judo) {
         CardToken cardToken = judo.getCardToken();
 
         if (cardToken == null) {
@@ -108,7 +109,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         countrySpinner.setAdapter(new CountrySpinnerAdapter(getActivity(), Country.avsCountries()));
     }
 
-    private void initializeInputs(CardToken cardToken, Judo options) {
+    private void initializeInputs(final CardToken cardToken, final Judo options) {
         cardNumberEntryView.setCardType(cardToken.getType(), false);
         securityCodeEntryView.setHelperText(R.string.please_reenter_the_card_security_code);
         securityCodeEntryView.setCardType(cardToken.getType(), false);
@@ -119,7 +120,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         cardNumberEntryView.setTokenCard(options.getCardToken());
     }
 
-    private void initializeValidators(CardToken cardToken, final Judo judo) {
+    private void initializeValidators(final CardToken cardToken, final Judo judo) {
         List<Validator> validators = new ArrayList<>();
         List<Pair<Validator, View>> validatorViews = new ArrayList<>();
 
@@ -144,7 +145,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         ValidationAutoAdvanceManager.bind(validationManager, validatorViews);
     }
 
-    private void initializeAvsValidators(List<Pair<Validator, View>> validatorViews) {
+    private void initializeAvsValidators(final List<Pair<Validator, View>> validatorViews) {
         CountryAndPostcodeValidator countryAndPostcodeValidator = new CountryAndPostcodeValidator(countrySpinner, postcodeEntryView.getEditText());
         ConnectableObservable<Validation> observable = countryAndPostcodeValidator.onValidate();
 
@@ -162,7 +163,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
     }
 
     @Override
-    public void onValidate(boolean valid) {
+    public void onValidate(final boolean valid) {
         submitButton.setVisibility(valid ? View.VISIBLE : View.GONE);
     }
 
@@ -182,7 +183,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         });
     }
 
-    private void submitForm(Judo judo) {
+    private void submitForm(final Judo judo) {
         Card.Builder cardBuilder = new Card.Builder()
                 .setCardNumber(cardNumberEntryView.getText())
                 .setExpiryDate(expiryDateEntryView.getText())

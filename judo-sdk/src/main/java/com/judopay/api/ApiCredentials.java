@@ -9,6 +9,8 @@ import android.util.Base64;
 import com.judopay.Judo;
 import com.judopay.error.TokenSecretError;
 
+import java.nio.charset.StandardCharsets;
+
 import static com.judopay.arch.TextUtil.isEmpty;
 
 public class ApiCredentials {
@@ -20,13 +22,13 @@ public class ApiCredentials {
     private final String apiSecret;
     private final String authorization;
 
-    public ApiCredentials(String apiToken, String apiSecret) {
+    public ApiCredentials(final String apiToken, final String apiSecret) {
         this.apiToken = apiToken;
         this.apiSecret = apiSecret;
         this.authorization = getEncodedCredentials();
     }
 
-    static ApiCredentials fromConfiguration(Context context, Judo judo) {
+    static ApiCredentials fromConfiguration(final Context context, final Judo judo) {
         return new ApiCredentials(getApiToken(context, judo), getApiSecret(context, judo));
     }
 
@@ -36,7 +38,7 @@ public class ApiCredentials {
                     "\t - Call to Judo.setup(\"token\", \"secret\", Judo.SANDBOX) in your Activity class" +
                     "\t - Add a meta-data attributes \"judo_api_token\" and \"judo_api_secret\" to your AndroidManifest.xml file");
         }
-        return Base64.encodeToString(String.format("%s:%s", apiToken, apiSecret).getBytes(), Base64.NO_WRAP);
+        return Base64.encodeToString(String.format("%s:%s", apiToken, apiSecret).getBytes(StandardCharsets.UTF_8), Base64.NO_WRAP);
     }
 
     private String getAuthorization() {
@@ -47,21 +49,21 @@ public class ApiCredentials {
         return String.format("Basic %s", getAuthorization());
     }
 
-    private static String getApiSecret(Context context, Judo judo) {
+    private static String getApiSecret(final Context context, final Judo judo) {
         return getManifestMetaData(context, API_SECRET_MANIFEST_NAME, judo.getApiSecret());
     }
 
-    private static String getApiToken(Context context, Judo judo) {
+    private static String getApiToken(final Context context, final Judo judo) {
         return getManifestMetaData(context, API_TOKEN_MANIFEST_NAME, judo.getApiToken());
     }
 
-    private static String getManifestMetaData(Context context, String attribute, String defaultValue) {
+    private static String getManifestMetaData(final Context context, final String attribute, final String defaultValue) {
         try {
             PackageManager packageManager = context.getPackageManager();
             String packageName = context.getPackageName();
 
-            ApplicationInfo ai = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
-            Bundle bundle = ai.metaData;
+            ApplicationInfo appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+            Bundle bundle = appInfo.metaData;
 
             String metaData = bundle.getString(attribute);
             if (metaData != null && metaData.length() > 0) {

@@ -14,18 +14,18 @@ class MultiOnFocusChangeListener implements View.OnFocusChangeListener {
 
     private final List<View.OnFocusChangeListener> listeners;
 
-    public MultiOnFocusChangeListener(View.OnFocusChangeListener... listeners) {
+    public MultiOnFocusChangeListener(final View.OnFocusChangeListener... listeners) {
         this.listeners = new ArrayList<>(Arrays.asList(listeners));
     }
 
     @Override
-    public void onFocusChange(View v, boolean hasFocus) {
+    public void onFocusChange(final View v, final boolean hasFocus) {
         for (View.OnFocusChangeListener listener : listeners) {
             listener.onFocusChange(v, hasFocus);
         }
     }
 
-    public void add(View.OnFocusChangeListener listener) {
+    public void add(final View.OnFocusChangeListener listener) {
         this.listeners.add(listener);
     }
 

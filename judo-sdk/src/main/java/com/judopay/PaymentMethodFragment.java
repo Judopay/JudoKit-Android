@@ -27,14 +27,14 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
     private PBBAButton btnPBBA;
     private View btnGPAY;
 
-    public static Fragment newInstance(Bundle extras) {
+    public static Fragment newInstance(final Bundle extras) {
         Fragment fragment = new PaymentMethodFragment();
         fragment.setArguments(extras);
         return fragment;
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         paymentMethod = getJudo().getPaymentMethod();
@@ -46,12 +46,12 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_payment_method, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         btnCardPayment = view.findViewById(R.id.btnCardPayment);
         btnPBBA = view.findViewById(R.id.btnPBBA);
         btnGPAY = view.findViewById(R.id.btnGPAY);
@@ -93,7 +93,7 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
     }
 
     @Override
-    public void displayPaymentMethodView(int viewId) {
+    public void displayPaymentMethodView(final int viewId) {
         View view = getView();
         if (view != null && view.findViewById(viewId) != null) {
             view.findViewById(viewId).setVisibility(View.VISIBLE);

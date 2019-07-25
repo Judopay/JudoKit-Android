@@ -2,6 +2,7 @@ package com.judopay;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 /**
  * Displays a card entry form to the user, allowing for a payment to be made.
@@ -26,7 +27,7 @@ import android.os.Bundle;
 public final class PaymentActivity extends JudoActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setTitle(R.string.payment);

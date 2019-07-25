@@ -20,7 +20,7 @@ abstract class JudoPresenter extends BasePresenter<TransactionCallbacks> impleme
 
     boolean loading;
 
-    JudoPresenter(TransactionCallbacks transactionCallbacks, JudoApiService apiService, Logger logger) {
+    JudoPresenter(final TransactionCallbacks transactionCallbacks, final JudoApiService apiService, final Logger logger) {
         super(transactionCallbacks);
         this.apiService = apiService;
         this.gson = new Gson();
@@ -59,7 +59,7 @@ abstract class JudoPresenter extends BasePresenter<TransactionCallbacks> impleme
         };
     }
 
-    private void handleErrorCallback(Throwable throwable) {
+    private void handleErrorCallback(final Throwable throwable) {
         if (throwable instanceof HttpException) {
             retrofit2.Response<?> response = ((HttpException) throwable).response();
             ResponseBody errorBody = response.errorBody();

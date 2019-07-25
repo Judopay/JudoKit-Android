@@ -11,7 +11,7 @@ public enum PaymentMethod {
 
     private final int viewId;
 
-    PaymentMethod(@IdRes int viewId) {
+    PaymentMethod(@IdRes final int viewId) {
         this.viewId = viewId;
     }
 

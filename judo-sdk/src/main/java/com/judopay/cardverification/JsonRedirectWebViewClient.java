@@ -13,13 +13,13 @@ class JsonRedirectWebViewClient extends WebViewClient {
     private WebViewListener webViewListener;
     private final String redirectUrl;
 
-    public JsonRedirectWebViewClient(String javaScriptNamespace, String redirectUrl) {
+    public JsonRedirectWebViewClient(final String javaScriptNamespace, final String redirectUrl) {
         this.javaScriptNamespace = javaScriptNamespace;
         this.redirectUrl = redirectUrl;
     }
 
     @Override
-    public void onPageFinished(WebView view, String url) {
+    public void onPageFinished(final WebView view, final String url) {
         super.onPageFinished(view, url);
 
         if (url.equals(redirectUrl)) {
@@ -30,7 +30,7 @@ class JsonRedirectWebViewClient extends WebViewClient {
     }
 
     @Override
-    public void onPageStarted(WebView view, String url, Bitmap favicon) {
+    public void onPageStarted(final WebView view, final String url, final Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
 
         if (url.equals(redirectUrl)) {
@@ -41,7 +41,7 @@ class JsonRedirectWebViewClient extends WebViewClient {
         }
     }
 
-    public void setWebViewListener(WebViewListener webViewListener) {
+    public void setWebViewListener(final WebViewListener webViewListener) {
         this.webViewListener = webViewListener;
     }
 

@@ -14,7 +14,7 @@ class Tls12SslSocketFactory extends SSLSocketFactory {
 
     final SSLSocketFactory delegate;
 
-    public Tls12SslSocketFactory(SSLSocketFactory base) {
+    public Tls12SslSocketFactory(final SSLSocketFactory base) {
         this.delegate = base;
     }
 
@@ -29,31 +29,31 @@ class Tls12SslSocketFactory extends SSLSocketFactory {
     }
 
     @Override
-    public Socket createSocket(Socket s, String host, int port, boolean autoClose) throws IOException {
+    public Socket createSocket(final Socket s, final String host, final int port, final boolean autoClose) throws IOException {
         return patch(delegate.createSocket(s, host, port, autoClose));
     }
 
     @Override
-    public Socket createSocket(String host, int port) throws IOException {
+    public Socket createSocket(final String host, final int port) throws IOException {
         return patch(delegate.createSocket(host, port));
     }
 
     @Override
-    public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException {
+    public Socket createSocket(final String host, final int port, final InetAddress localHost, final int localPort) throws IOException {
         return patch(delegate.createSocket(host, port, localHost, localPort));
     }
 
     @Override
-    public Socket createSocket(InetAddress host, int port) throws IOException {
+    public Socket createSocket(final InetAddress host, final int port) throws IOException {
         return patch(delegate.createSocket(host, port));
     }
 
     @Override
-    public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
+    public Socket createSocket(final InetAddress address, final int port, final InetAddress localAddress, final int localPort) throws IOException {
         return patch(delegate.createSocket(address, port, localAddress, localPort));
     }
 
-    private Socket patch(Socket s) {
+    private Socket patch(final Socket s) {
         if (s instanceof SSLSocket) {
             ((SSLSocket) s).setEnabledProtocols(TLS_V12_ONLY);
         }

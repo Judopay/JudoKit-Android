@@ -10,8 +10,6 @@ import android.os.Parcelable;
 @SuppressWarnings("unused")
 public class ApiError implements Parcelable {
 
-    public ApiError() { }
-
     private Integer code;
     private String fieldName;
     private String message;
@@ -146,6 +144,9 @@ public class ApiError implements Parcelable {
     public static final int GENERIC_IS_INVALID = 200;
     public static final int GENERIC_HTML_INVALID = 210;
 
+    public ApiError() {
+    }
+
     public Integer getCode() {
         return code;
     }
@@ -168,26 +169,26 @@ public class ApiError implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeValue(this.code);
         dest.writeString(this.fieldName);
         dest.writeString(this.message);
         dest.writeString(this.detail);
     }
 
-    private ApiError(Parcel in) {
-        this.code = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.fieldName = in.readString();
-        this.message = in.readString();
-        this.detail = in.readString();
+    private ApiError(final Parcel parcel) {
+        this.code = (Integer) parcel.readValue(Integer.class.getClassLoader());
+        this.fieldName = parcel.readString();
+        this.message = parcel.readString();
+        this.detail = parcel.readString();
     }
 
     public static final Parcelable.Creator<ApiError> CREATOR = new Parcelable.Creator<ApiError>() {
-        public ApiError createFromParcel(Parcel source) {
+        public ApiError createFromParcel(final Parcel source) {
             return new ApiError(source);
         }
 
-        public ApiError[] newArray(int size) {
+        public ApiError[] newArray(final int size) {
             return new ApiError[size];
         }
     };

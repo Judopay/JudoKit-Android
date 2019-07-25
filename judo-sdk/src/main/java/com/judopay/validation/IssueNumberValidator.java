@@ -9,7 +9,7 @@ import io.reactivex.Observable;
 public class IssueNumberValidator implements Validator {
     private final EditText editText;
 
-    public IssueNumberValidator(EditText editText) {
+    public IssueNumberValidator(final EditText editText) {
         this.editText = editText;
     }
 
@@ -17,18 +17,18 @@ public class IssueNumberValidator implements Validator {
     public Observable<Validation> onValidate() {
         return Observable.create(emitter -> editText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
-            protected void onTextChanged(CharSequence text) {
+            protected void onTextChanged(final CharSequence text) {
                 emitter.onNext(getValidation(text.toString()));
             }
         }));
     }
 
-    private Validation getValidation(String text) {
+    private Validation getValidation(final String text) {
         boolean valid = isIssueNumberValid(text);
         return new Validation(valid, 0, false);
     }
 
-    private boolean isIssueNumberValid(String issueNumber) {
+    private boolean isIssueNumberValid(final String issueNumber) {
         try {
             int issueNo = Integer.parseInt(issueNumber);
             return issueNo > 0;

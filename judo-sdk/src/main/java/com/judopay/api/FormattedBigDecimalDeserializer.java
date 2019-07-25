@@ -13,12 +13,12 @@ import static com.judopay.arch.TextUtil.isEmpty;
 class FormattedBigDecimalDeserializer implements JsonDeserializer<BigDecimal> {
 
     @Override
-    public BigDecimal deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public BigDecimal deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
         String jsonString = json.getAsString();
-        if (!isEmpty(jsonString)) {
-            return new BigDecimal(jsonString.replaceAll(",", ""));
-        } else {
+        if (isEmpty(jsonString)) {
             return new BigDecimal(0);
+        } else {
+            return new BigDecimal(jsonString.replaceAll(",", ""));
         }
     }
 

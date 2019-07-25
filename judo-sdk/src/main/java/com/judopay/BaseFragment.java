@@ -3,6 +3,7 @@ package com.judopay;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -14,7 +15,7 @@ public abstract class BaseFragment extends Fragment {
     protected CompositeDisposable disposables = new CompositeDisposable();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Judo judo = getJudo();
@@ -36,7 +37,7 @@ public abstract class BaseFragment extends Fragment {
         setRetainInstance(true);
     }
 
-    void checkJudoOptionsExtras(Object... objects) {
+    void checkJudoOptionsExtras(final Object... objects) {
         for (Object object : objects) {
             if (object == null) {
                 throw new IllegalArgumentException("Judo must contain all required fields");
@@ -52,6 +53,6 @@ public abstract class BaseFragment extends Fragment {
 
     protected Judo getJudo() {
         Bundle args = getArguments();
-        return args != null ? args.getParcelable(Judo.JUDO_OPTIONS) : null;
+        return args != null ? args.getParcelable(JUDO_OPTIONS) : null;
     }
 }

@@ -5,7 +5,7 @@ package com.judopay.model;
  */
 public class LuhnCheck {
 
-    public static boolean isValid(String number) {
+    public static boolean isValid(final String number) {
         int sum = 0;
         boolean alternate = false;
         for (int i = number.length() - 1; i >= 0; i--) {

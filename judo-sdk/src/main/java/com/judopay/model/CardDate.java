@@ -12,13 +12,13 @@ public class CardDate {
     private final int month;
     private final int year;
 
-    public CardDate(String cardDate) {
+    public CardDate(final String cardDate) {
         String splitCardDate = cardDate.replaceAll("/", "");
         this.month = getMonth(splitCardDate);
         this.year = getYear(splitCardDate);
     }
 
-    private int getYear(String year) {
+    private int getYear(final String year) {
         if (isDateInvalid(year)) {
             return 0;
         }
@@ -26,7 +26,7 @@ public class CardDate {
         return 2000 + Integer.parseInt(year.substring(2, 4));
     }
 
-    private int getMonth(String month) {
+    private int getMonth(final String month) {
         if (isDateInvalid(month)) {
             return 0;
         }
@@ -77,7 +77,7 @@ public class CardDate {
         return cardDate.after(minDate) && cardDate.before(maxDate);
     }
 
-    private boolean isDateInvalid(String date) {
+    private boolean isDateInvalid(final String date) {
         return !date.matches("(?:0[1-9]|1[0-2])[0-9]{2}");
     }
 

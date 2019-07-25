@@ -12,7 +12,7 @@ public class SecurityCodeValidator implements Validator {
     private final EditText editText;
     private int cardType;
 
-    public SecurityCodeValidator(EditText editText) {
+    public SecurityCodeValidator(final EditText editText) {
         this.editText = editText;
     }
 
@@ -20,21 +20,21 @@ public class SecurityCodeValidator implements Validator {
     public Observable<Validation> onValidate() {
         return Observable.create(emitter -> editText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
-            protected void onTextChanged(CharSequence text) {
+            protected void onTextChanged(final CharSequence text) {
                 Validation validation = new Validation(isValid(text), R.string.check_cvv, true);
                 emitter.onNext(validation);
             }
         }));
     }
 
-    private boolean isValid(CharSequence text) {
+    private boolean isValid(final CharSequence text) {
         if (cardType == CardNetwork.AMEX) {
             return text.length() == 4;
         }
         return text.length() == 3;
     }
 
-    public void setCardType(int cardType) {
+    public void setCardType(final int cardType) {
         this.cardType = cardType;
     }
 }

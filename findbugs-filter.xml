@@ -2,22 +2,30 @@
 <FindBugsFilter>
     <Match>
         <!-- ignore all issues in resource generation -->
-        <Class name="~.*\.R\$.*"/>
+        <Class name="~.*\.R\$.*" />
     </Match>
     <Match>
-        <Class name="~.*\.Manifest\$.*"/>
+        <Class name="~.*\.Manifest\$.*" />
     </Match>
 
     <!-- Do not check for non-initialized fields in tests because usually we initialize them in @Before -->
     <Match>
-        <Class name="~.*Test"/>
-        <Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR"
-            type="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR"/>
+        <Class name="~.*Test" />
+        <Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR" type="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR" />
     </Match>
 
-    <!-- Ignore UPM in lambdas from Retrolambda, FindBugs does not correctly understand them -->
     <Match>
-        <Bug code="UPM"/>
-        <Class name="~.*\$\$Lambda\$.*"/>
+        <Class name="com.judopay.RootDetector"/>
+        <Bug type="RV_DONT_JUST_NULL_CHECK_READLINE" code="RV" />
+    </Match>
+
+    <Match>
+        <Class name="com.judopay.Judo$Builder"/>
+        <Bug type="URF_UNREAD_FIELD" code="UrF"/>
+    </Match>
+
+    <Match>
+        <Class name="com.judopay.view.SingleClickOnClickListener"/>
+        <Bug code="ST"/>
     </Match>
 </FindBugsFilter>

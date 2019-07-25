@@ -1,6 +1,7 @@
 package com.judopay;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.judopay.error.RootedDeviceNotPermittedError;
 
@@ -19,13 +20,13 @@ abstract class JudoActivity extends BaseActivity {
     protected JudoFragment fragment;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         this.fragment = (JudoFragment) getSupportFragmentManager().findFragmentByTag(TAG_JUDO_FRAGMENT);
     }
 
-    public void setProgressListener(ProgressListener progressListener) {
+    public void setProgressListener(final ProgressListener progressListener) {
         fragment.setProgressListener(progressListener);
     }
 

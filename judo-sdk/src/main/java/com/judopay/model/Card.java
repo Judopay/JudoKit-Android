@@ -54,32 +54,32 @@ public final class Card implements Parcelable {
         private String issueNumber;
         private String securityCode;
 
-        public Builder setCardNumber(String cardNumber) {
+        public Builder setCardNumber(final String cardNumber) {
             this.cardNumber = cardNumber.replaceAll("\\s+", "");
             return this;
         }
 
-        public Builder setAddress(Address address) {
+        public Builder setAddress(final Address address) {
             this.address = address;
             return this;
         }
 
-        public Builder setExpiryDate(String expiryDate) {
+        public Builder setExpiryDate(final String expiryDate) {
             this.expiryDate = expiryDate;
             return this;
         }
 
-        public Builder setStartDate(String startDate) {
+        public Builder setStartDate(final String startDate) {
             this.startDate = startDate;
             return this;
         }
 
-        public Builder setIssueNumber(String issueNumber) {
+        public Builder setIssueNumber(final String issueNumber) {
             this.issueNumber = issueNumber;
             return this;
         }
 
-        public Builder setSecurityCode(String securityCOde) {
+        public Builder setSecurityCode(final String securityCOde) {
             this.securityCode = securityCOde;
             return this;
         }
@@ -104,7 +104,7 @@ public final class Card implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(this.cardNumber);
         dest.writeParcelable(this.address, flags);
         dest.writeString(this.expiryDate);
@@ -116,7 +116,7 @@ public final class Card implements Parcelable {
     public Card() {
     }
 
-    protected Card(Parcel in) {
+    protected Card(final Parcel in) {
         this.cardNumber = in.readString();
         this.address = in.readParcelable(Address.class.getClassLoader());
         this.expiryDate = in.readString();
@@ -127,12 +127,12 @@ public final class Card implements Parcelable {
 
     public static final Parcelable.Creator<Card> CREATOR = new Parcelable.Creator<Card>() {
         @Override
-        public Card createFromParcel(Parcel source) {
+        public Card createFromParcel(final Parcel source) {
             return new Card(source);
         }
 
         @Override
-        public Card[] newArray(int size) {
+        public Card[] newArray(final int size) {
             return new Card[size];
         }
     };

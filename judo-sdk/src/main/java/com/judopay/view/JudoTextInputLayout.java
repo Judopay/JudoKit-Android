@@ -8,21 +8,21 @@ import android.util.SparseArray;
 
 public class JudoTextInputLayout extends android.support.design.widget.TextInputLayout {
 
-    public JudoTextInputLayout(Context context) {
+    public JudoTextInputLayout(final Context context) {
         super(context);
     }
 
-    public JudoTextInputLayout(Context context, AttributeSet attrs) {
+    public JudoTextInputLayout(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
 
     @TargetApi(11)
-    public JudoTextInputLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public JudoTextInputLayout(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @Override
-    protected void dispatchRestoreInstanceState(SparseArray<Parcelable> container) {
+    protected void dispatchRestoreInstanceState(final SparseArray<Parcelable> container) {
         try {
             // silently ignores a NullPointerException caused by Android Design TextInputLayout
             super.dispatchRestoreInstanceState(container);

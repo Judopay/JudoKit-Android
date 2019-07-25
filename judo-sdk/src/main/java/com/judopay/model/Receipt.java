@@ -61,7 +61,7 @@ public class Receipt extends Response {
     }
 
     public Date getCreatedAt() {
-        return createdAt;
+        return (Date) createdAt.clone();
     }
 
     public String getMerchantName() {
@@ -147,7 +147,7 @@ public class Receipt extends Response {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         super.writeToParcel(dest, flags);
         dest.writeValue(this.judoID);
         dest.writeString(this.receiptId);
@@ -170,7 +170,7 @@ public class Receipt extends Response {
         dest.writeString(this.acsUrl);
     }
 
-    protected Receipt(Parcel in) {
+    protected Receipt(final Parcel in) {
         super(in);
         this.judoID = (Long) in.readValue(Long.class.getClassLoader());
         this.receiptId = in.readString();
@@ -195,11 +195,11 @@ public class Receipt extends Response {
     }
 
     public static final Creator<Receipt> CREATOR = new Creator<Receipt>() {
-        public Receipt createFromParcel(Parcel source) {
+        public Receipt createFromParcel(final Parcel source) {
             return new Receipt(source);
         }
 
-        public Receipt[] newArray(int size) {
+        public Receipt[] newArray(final int size) {
             return new Receipt[size];
         }
     };

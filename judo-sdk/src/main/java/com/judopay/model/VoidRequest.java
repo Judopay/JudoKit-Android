@@ -10,7 +10,7 @@ public final class VoidRequest extends Request {
     private String receiptId;
     private BigDecimal amount;
 
-    public VoidRequest(String receiptId, BigDecimal amount) {
+    public VoidRequest(final String receiptId, final BigDecimal amount) {
         checkNotNull(receiptId);
         checkNotNull(amount);
 

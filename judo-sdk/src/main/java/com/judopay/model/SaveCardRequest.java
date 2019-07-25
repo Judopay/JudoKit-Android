@@ -96,67 +96,67 @@ public final class SaveCardRequest extends Request {
         private String mobileNumber;
         private Map<String, String> yourPaymentMetaData;
 
-        public Builder setJudoId(String judoId) {
+        public Builder setJudoId(final String judoId) {
             this.judoId = judoId;
             return this;
         }
 
-        public Builder setConsumerReference(String consumerReference) {
+        public Builder setConsumerReference(final String consumerReference) {
             this.consumerReference = consumerReference;
             return this;
         }
 
-        public Builder setPaymentReference(String paymentReference) {
+        public Builder setPaymentReference(final String paymentReference) {
             this.paymentReference = paymentReference;
             return this;
         }
 
-        public Builder setCardAddress(Address cardAddress) {
+        public Builder setCardAddress(final Address cardAddress) {
             this.cardAddress = cardAddress;
             return this;
         }
 
-        public Builder setCardNumber(String cardNumber) {
+        public Builder setCardNumber(final String cardNumber) {
             this.cardNumber = cardNumber;
             return this;
         }
 
-        public Builder setCv2(String cv2) {
+        public Builder setCv2(final String cv2) {
             this.cv2 = cv2;
             return this;
         }
 
-        public Builder setCurrency(@Currency.Type String currency) {
+        public Builder setCurrency(@Currency.Type final String currency) {
             this.currency = currency;
             return this;
         }
 
-        public Builder setExpiryDate(String expiryDate) {
+        public Builder setExpiryDate(final String expiryDate) {
             this.expiryDate = expiryDate;
             return this;
         }
 
-        public Builder setStartDate(String startDate) {
+        public Builder setStartDate(final String startDate) {
             this.startDate = startDate;
             return this;
         }
 
-        public Builder setIssueNumber(String issueNumber) {
+        public Builder setIssueNumber(final String issueNumber) {
             this.issueNumber = issueNumber;
             return this;
         }
 
-        public Builder setEmailAddress(String emailAddress) {
+        public Builder setEmailAddress(final String emailAddress) {
             this.emailAddress = emailAddress;
             return this;
         }
 
-        public Builder setMobileNumber(String mobileNumber) {
+        public Builder setMobileNumber(final String mobileNumber) {
             this.mobileNumber = mobileNumber;
             return this;
         }
 
-        public Builder setMetaData(Map<String, String> metaData) {
+        public Builder setMetaData(final Map<String, String> metaData) {
             this.yourPaymentMetaData = metaData;
             return this;
         }

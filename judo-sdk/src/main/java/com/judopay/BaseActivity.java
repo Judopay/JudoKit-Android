@@ -19,7 +19,7 @@ import static com.judopay.arch.ThemeUtil.getStringAttr;
 public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Judo judo = getIntent().getParcelableExtra(JUDO_OPTIONS);
 
@@ -38,7 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, @Nullable final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Judo.JUDO_REQUEST) {
             setResult(resultCode, data);
@@ -47,17 +47,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
-    public void setTitle(@StringRes int titleId) {
+    public void setTitle(@StringRes final int titleId) {
         String activityTitle = getStringAttr(this, R.attr.activityTitle);
-        if (!isEmpty(activityTitle)) {
-            super.setTitle(activityTitle);
-        } else {
+        if (isEmpty(activityTitle)) {
             super.setTitle(titleId);
+        } else {
+            super.setTitle(activityTitle);
         }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;

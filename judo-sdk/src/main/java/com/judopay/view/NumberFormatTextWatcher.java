@@ -26,28 +26,28 @@ public class NumberFormatTextWatcher implements TextWatcher {
      * @param format   Format string
      */
     @Deprecated
-    public NumberFormatTextWatcher(EditText editText, String format) {
+    public NumberFormatTextWatcher(final EditText editText, final String format) {
         this.editText = editText;
         this.format = format;
     }
 
-    public NumberFormatTextWatcher(JudoEditText editText, String format) {
+    public NumberFormatTextWatcher(final JudoEditText editText, final String format) {
         this.editText = editText;
         this.format = format;
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
     }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
         deleting = before == 1;
         this.start = start;
     }
 
     @Override
-    public void afterTextChanged(Editable string) {
+    public void afterTextChanged(final Editable string) {
         if (editText instanceof JudoEditText) {
             formatJudoEditText(string);
         } else {
@@ -55,23 +55,23 @@ public class NumberFormatTextWatcher implements TextWatcher {
         }
     }
 
-    private void formatEditText(Editable string) {
+    private void formatEditText(final Editable string) {
         editText.removeTextChangedListener(this);
         format(string);
         editText.addTextChangedListener(this);
     }
 
-    private void formatJudoEditText(Editable string) {
-        JudoEditText judoEditText = (JudoEditText) this.editText;
+    private void formatJudoEditText(final Editable string) {
+        final JudoEditText judoEditText = (JudoEditText) this.editText;
 
-        Collection<TextWatcher> textWatchers = judoEditText.getTextWatchers();
+        final Collection<TextWatcher> textWatchers = judoEditText.getTextWatchers();
         judoEditText.removeTextChangedListeners();
 
         format(string);
         judoEditText.addTextChangedListeners(textWatchers);
     }
 
-    private void format(Editable string) {
+    private void format(final Editable string) {
         if (string.length() > 0) {
             for (int i = string.length(); i > 0; i--) {
                 if (!isDigit(string.charAt(i - 1)) || ((deleting && i == start) && (isFormatChar(i)))) {
@@ -87,15 +87,15 @@ public class NumberFormatTextWatcher implements TextWatcher {
         }
     }
 
-    private boolean isFormatChar(int index) {
+    private boolean isFormatChar(final int index) {
         return index < format.length() && !isDigit(format.charAt(index));
     }
 
-    private int getStringEnd(Editable string) {
+    private int getStringEnd(final Editable string) {
         return string.length() + 1;
     }
 
-    public void setFormat(String format) {
+    public void setFormat(final String format) {
         if (!this.format.equals(format)) {
             this.format = format;
             // trigger a key event to reformat the text

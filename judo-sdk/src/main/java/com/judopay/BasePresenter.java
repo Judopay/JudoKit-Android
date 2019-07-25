@@ -1,10 +1,12 @@
 package com.judopay;
 
+import android.support.annotation.NonNull;
+
 public abstract class BasePresenter<V extends BaseView> {
 
     private final V baseView;
 
-    BasePresenter(V baseView) {
+    BasePresenter(@NonNull final V baseView) {
         this.baseView = baseView;
     }
 

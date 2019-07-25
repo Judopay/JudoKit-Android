@@ -29,7 +29,7 @@ public final class CardNetwork {
     public static final int MAESTRO = 10;
     public static final int VISA_DEBIT = 11;
 
-    public static int fromCardNumber(String cardNumber) {
+    public static int fromCardNumber(final String cardNumber) {
         if (startsWith(VISA_PREFIXES, cardNumber) || cardNumber.matches(REGEX_VISA)) {
             return VISA;
         }
@@ -48,7 +48,7 @@ public final class CardNetwork {
         return UNKNOWN;
     }
 
-    public static String securityCodeHint(int cardType) {
+    public static String securityCodeHint(final int cardType) {
         if (CardNetwork.AMEX == cardType) {
             return "0000";
         } else {
@@ -56,7 +56,7 @@ public final class CardNetwork {
         }
     }
 
-    public static String securityCode(int cardType) {
+    public static String securityCode(final int cardType) {
         switch (cardType) {
             case CardNetwork.AMEX:
                 return "CID";
@@ -73,7 +73,7 @@ public final class CardNetwork {
         }
     }
 
-    private static boolean startsWith(String[] prefixes, String cardNumber) {
+    private static boolean startsWith(final String[] prefixes, final String cardNumber) {
         for (String prefix : prefixes) {
             if (cardNumber.startsWith(prefix)) {
                 return true;
@@ -82,7 +82,7 @@ public final class CardNetwork {
         return false;
     }
 
-    public static int securityCodeLength(int cardType) {
+    public static int securityCodeLength(final int cardType) {
         if(cardType == CardNetwork.AMEX) {
             return 4;
         } else {
