@@ -28,4 +28,14 @@
         <Class name="com.judopay.view.SingleClickOnClickListener"/>
         <Bug code="ST"/>
     </Match>
+
+    <Match>
+        <Class name="com.judopay.model.Browser"/>
+        <Bug code="SS"/>
+    </Match>
+
+    <Match>
+        <Class name="com.judopay.model.ConsumerDevice"/>
+        <Bug code="SS"/>
+    </Match>
 </FindBugsFilter>

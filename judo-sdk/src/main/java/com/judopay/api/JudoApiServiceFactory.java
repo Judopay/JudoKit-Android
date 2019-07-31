@@ -8,6 +8,7 @@ import com.judopay.BuildConfig;
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
 import com.judopay.model.Address;
+import com.readystatesoftware.chuck.ChuckInterceptor;
 
 import java.math.BigDecimal;
 import java.security.KeyStore;
@@ -135,6 +136,8 @@ public class JudoApiServiceFactory {
         interceptors.add(new DeDuplicationInterceptor());
         interceptors.add(new DeviceDnaInterceptor(context));
         interceptors.add(new ApiHeadersInterceptor(ApiCredentials.fromConfiguration(context, judo), uiClientMode, context));
+        interceptors.add(new PayLoadInterceptor(context));
+        interceptors.add(new ChuckInterceptor(context));
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
