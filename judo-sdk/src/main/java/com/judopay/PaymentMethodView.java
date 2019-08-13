@@ -6,4 +6,6 @@ interface PaymentMethodView extends BaseView {
     void displayPaymentMethodView(@IdRes int viewId);
 
     void displayAllPaymentMethods();
+
+    void setUpGPayButton();
 }

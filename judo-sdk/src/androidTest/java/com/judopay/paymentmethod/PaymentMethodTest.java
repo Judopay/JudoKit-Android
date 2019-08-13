@@ -76,7 +76,6 @@ public class PaymentMethodTest {
 
         onView(withId(R.id.btnCardPayment)).check(matches(isDisplayed()));
         onView(withId(R.id.btnPBBA)).check(matches(isDisplayed()));
-        onView(withId(R.id.btnGPAY)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -90,7 +89,6 @@ public class PaymentMethodTest {
 
         onView(withId(R.id.btnCardPayment)).check(matches(isDisplayed()));
         onView(withId(R.id.btnPBBA)).check(matches(isDisplayed()));
-        onView(withId(R.id.btnGPAY)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -102,7 +100,6 @@ public class PaymentMethodTest {
 
         onView(withId(R.id.btnCardPayment)).check(matches(isDisplayed()));
         onView(withId(R.id.btnPBBA)).check(matches(isDisplayed()));
-        onView(withId(R.id.btnGPAY)).check(matches(isDisplayed()));
     }
 
     @Test

@@ -10,6 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.wallet.AutoResolveHelper;
+import com.google.android.gms.wallet.PaymentData;
+import com.google.android.gms.wallet.PaymentDataRequest;
+import com.google.android.gms.wallet.PaymentsClient;
+import com.judopay.arch.GooglePaymentUtils;
+import com.judopay.arch.GooglePayIsReadyResult;
 import com.judopay.model.PaymentMethod;
 import com.judopay.view.SingleClickOnClickListener;
 import com.zapp.library.merchant.ui.view.PBBAButton;
@@ -58,7 +65,6 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
 
         initializeCardPaymentButton();
         initializePBBAButton();
-        initializeGPAYButton();
 
         presenter.setPaymentMethod(paymentMethod);
     }
@@ -83,11 +89,11 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
         });
     }
 
-    private void initializeGPAYButton() {
+    private void initializeGPAYButton(final Task<PaymentData> taskDefaultPaymentData) {
         btnGPAY.setOnClickListener(new SingleClickOnClickListener() {
             @Override
             public void doClick() {
-                //TODO start GPAY flow
+                AutoResolveHelper.resolveTask(taskDefaultPaymentData, getActivity(), Judo.GPAY_REQUEST);
             }
         });
     }
@@ -104,6 +110,23 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
     public void displayAllPaymentMethods() {
         btnCardPayment.setVisibility(View.VISIBLE);
         btnPBBA.setVisibility(View.VISIBLE);
-        btnGPAY.setVisibility(View.VISIBLE);
+        setUpGPayButton();
+    }
+
+    @Override
+    public void setUpGPayButton() {
+        final PaymentsClient googlePayClient = GooglePaymentUtils.getGooglePayPaymentsClient(getContext(), getJudo().getEnvironmentModeGPay());
+
+        GooglePaymentUtils.checkIsReadyGooglePay(googlePayClient, new GooglePayIsReadyResult() {
+            @Override
+            public void setResult(final boolean result) {
+                btnGPAY.setVisibility(result ? View.VISIBLE : View.GONE);
+                if (result) {
+                    final PaymentDataRequest defaultPaymentData = GooglePaymentUtils.createDefaultPaymentDataRequest(getJudo());
+                    final Task<PaymentData> taskDefaultPaymentData = googlePayClient.loadPaymentData(defaultPaymentData);
+                    initializeGPAYButton(taskDefaultPaymentData);
+                }
+            }
+        });
     }
 }

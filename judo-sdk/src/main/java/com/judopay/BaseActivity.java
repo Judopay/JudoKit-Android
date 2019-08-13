@@ -21,7 +21,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Judo judo = getIntent().getParcelableExtra(JUDO_OPTIONS);
+        Judo judo = getJudo();
 
         if (RootDetector.isRooted() && !judo.isRootedDevicesAllowed()) {
             throw new RootedDeviceNotPermittedError();
@@ -35,6 +35,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    Judo getJudo() {
+        return getIntent().getParcelableExtra(JUDO_OPTIONS);
     }
 
     @Override

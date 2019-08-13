@@ -38,4 +38,9 @@
         <Class name="com.judopay.model.ConsumerDevice"/>
         <Bug code="SS"/>
     </Match>
+
+    <Match>
+        <Class name="com.judopay.PaymentMethodActivity"/>
+        <Bug code="SF"/>
+    </Match>
 </FindBugsFilter>

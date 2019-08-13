@@ -37,10 +37,11 @@ public class PaymentMethodPresenterTest {
 
     @Test
     public void shouldCallDisplayMethodViewTwice() {
-        EnumSet<PaymentMethod> paymentMethod = EnumSet.of(PaymentMethod.CREATE_PAYMENT, PaymentMethod.PBBA_PAYMENT);
+        EnumSet<PaymentMethod> paymentMethod = EnumSet.of(PaymentMethod.CREATE_PAYMENT, PaymentMethod.PBBA_PAYMENT, PaymentMethod.GPAY_PAYMENT);
 
         presenter.setPaymentMethod(paymentMethod);
         verify(view, times(2)).displayPaymentMethodView(anyInt());
+        verify(view).setUpGPayButton();
     }
 
     @Test

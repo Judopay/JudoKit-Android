@@ -96,7 +96,7 @@ ext {
 }
 
 dependencies {
-    implementation ('com.zapp.library:merchant:1.1.0') {
+    implementation('com.zapp.library:merchant:1.1.0') {
         exclude group: 'com.android.support', module: 'support-v4'
     }
     implementation 'com.judopay:device-dna:1.0.0'
@@ -111,6 +111,10 @@ dependencies {
     implementation "com.android.support:support-vector-drawable:${supportLibVersion}"
     implementation "com.android.support:design:${supportLibVersion}"
     implementation "com.android.support:support-annotations:${supportLibVersion}"
+    implementation('com.google.android.gms:play-services-wallet:16.0.1') {
+        exclude group: 'com.android.support', module: 'support-media-compat'
+        exclude group: 'com.android.support', module: 'support-v4'
+    }
 
     debugImplementation 'com.readystatesoftware.chuck:library:1.1.0'
     releaseImplementation 'com.readystatesoftware.chuck:library-no-op:1.1.0'

@@ -16,7 +16,11 @@ class PaymentMethodPresenter extends BasePresenter<PaymentMethodView> {
             getView().displayAllPaymentMethods();
         } else {
             for (PaymentMethod paymentMethod : paymentMethodEnumSet) {
-                getView().displayPaymentMethodView(paymentMethod.getViewId());
+                if (paymentMethod == PaymentMethod.GPAY_PAYMENT) {
+                    getView().setUpGPayButton();
+                } else {
+                    getView().displayPaymentMethodView(paymentMethod.getViewId());
+                }
             }
         }
     }
