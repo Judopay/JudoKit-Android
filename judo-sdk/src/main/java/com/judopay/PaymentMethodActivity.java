@@ -86,7 +86,7 @@ public class PaymentMethodActivity extends BaseActivity {
 
     private void finishGPayRequest(final GooglePayRequest googlePayRequest) {
         final JudoApiService apiService = getJudo().getApiService(this);
-        final Single<Receipt> apiRequest;
+        Single<Receipt> apiRequest;
         if (isGPayPreAuth) {
             apiRequest = apiService.googlePayPreAuth(googlePayRequest);
         } else {

@@ -47,35 +47,7 @@ public class PaymentMethodTest {
         activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.btnCardPayment)).check(matches(isDisplayed()));
-        onView(withId(R.id.btnPBBA)).check(matches(not(isDisplayed())));
         onView(withId(R.id.btnGPAY)).check(matches(not(isDisplayed())));
-    }
-
-    @Test
-    public void shouldBeVisibleCreatePaymentButtonAndPBBAButton() {
-        Intent intent = new Intent(getInstrumentation().getTargetContext(), PaymentMethodActivity.class);
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
-                .newBuilder()
-                .setPaymentMethod(EnumSet.of(PaymentMethod.CREATE_PAYMENT, PaymentMethod.PBBA_PAYMENT)).build());
-
-        activityTestRule.launchActivity(intent);
-
-        onView(withId(R.id.btnCardPayment)).check(matches(isDisplayed()));
-        onView(withId(R.id.btnPBBA)).check(matches(isDisplayed()));
-        onView(withId(R.id.btnGPAY)).check(matches(not(isDisplayed())));
-    }
-
-    @Test
-    public void shouldBeVisibleAllButtons() {
-        Intent intent = new Intent(getInstrumentation().getTargetContext(), PaymentMethodActivity.class);
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
-                .newBuilder()
-                .setPaymentMethod(EnumSet.of(PaymentMethod.CREATE_PAYMENT, PaymentMethod.PBBA_PAYMENT, PaymentMethod.GPAY_PAYMENT)).build());
-
-        activityTestRule.launchActivity(intent);
-
-        onView(withId(R.id.btnCardPayment)).check(matches(isDisplayed()));
-        onView(withId(R.id.btnPBBA)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -88,7 +60,6 @@ public class PaymentMethodTest {
         activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.btnCardPayment)).check(matches(isDisplayed()));
-        onView(withId(R.id.btnPBBA)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -99,7 +70,6 @@ public class PaymentMethodTest {
         activityTestRule.launchActivity(intent);
 
         onView(withId(R.id.btnCardPayment)).check(matches(isDisplayed()));
-        onView(withId(R.id.btnPBBA)).check(matches(isDisplayed()));
     }
 
     @Test

@@ -6,7 +6,6 @@ import com.judopay.R;
 
 public enum PaymentMethod {
     CREATE_PAYMENT(R.id.btnCardPayment),
-    PBBA_PAYMENT(R.id.btnPBBA),
     GPAY_PAYMENT(R.id.btnGPAY);
 
     private final int viewId;

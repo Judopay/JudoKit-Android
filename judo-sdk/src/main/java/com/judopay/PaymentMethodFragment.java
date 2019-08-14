@@ -19,7 +19,6 @@ import com.judopay.arch.GooglePaymentUtils;
 import com.judopay.arch.GooglePayIsReadyResult;
 import com.judopay.model.PaymentMethod;
 import com.judopay.view.SingleClickOnClickListener;
-import com.zapp.library.merchant.ui.view.PBBAButton;
 
 import java.util.EnumSet;
 
@@ -31,7 +30,6 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
     private PaymentMethodPresenter presenter;
 
     private Button btnCardPayment;
-    private PBBAButton btnPBBA;
     private View btnGPAY;
 
     public static Fragment newInstance(final Bundle extras) {
@@ -60,11 +58,9 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         btnCardPayment = view.findViewById(R.id.btnCardPayment);
-        btnPBBA = view.findViewById(R.id.btnPBBA);
         btnGPAY = view.findViewById(R.id.btnGPAY);
 
         initializeCardPaymentButton();
-        initializePBBAButton();
 
         presenter.setPaymentMethod(paymentMethod);
     }
@@ -76,15 +72,6 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
                 Intent intent = new Intent(getContext(), PaymentActivity.class);
                 intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
                 startActivityForResult(intent, PAYMENT_REQUEST);
-            }
-        });
-    }
-
-    private void initializePBBAButton() {
-        btnPBBA.setOnClickListener(new SingleClickOnClickListener() {
-            @Override
-            public void doClick() {
-                //TODO start PBBA flow
             }
         });
     }
@@ -109,7 +96,6 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
     @Override
     public void displayAllPaymentMethods() {
         btnCardPayment.setVisibility(View.VISIBLE);
-        btnPBBA.setVisibility(View.VISIBLE);
         setUpGPayButton();
     }
 

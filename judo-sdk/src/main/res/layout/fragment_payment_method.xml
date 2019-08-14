@@ -22,16 +22,6 @@
         android:layout_marginRight="@dimen/judo_carg_payment_btn_margin"
         android:text="@string/judo_card_payment" />
 
-    <com.zapp.library.merchant.ui.view.PBBAButton
-        android:id="@+id/btnPBBA"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/judo_pbba_btn_height"
-        android:layout_gravity="center"
-        android:layout_marginLeft="@dimen/judo_pbba_button_margin"
-        android:layout_marginRight="@dimen/judo_pbba_button_margin"
-        android:layout_marginTop="@dimen/judo_pbba_button_margin"
-        android:visibility="gone" />
-
     <include
         android:id="@+id/btnGPAY"
         layout="@layout/googlepay_button_no_shadow"

@@ -96,9 +96,6 @@ ext {
 }
 
 dependencies {
-    implementation('com.zapp.library:merchant:1.1.0') {
-        exclude group: 'com.android.support', module: 'support-v4'
-    }
     implementation 'com.judopay:device-dna:1.0.0'
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
