@@ -26,6 +26,28 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 
+/**
+ * Displays a screen with different payment methods Judopay supports.
+ *
+ * To launch the PaymentMethodActivity, {@link android.app.Activity#startActivityForResult(Intent, int)}
+ * with an Intent containing the configuration options:
+ *
+ * <pre class="prettyprint">
+ * Intent intent = new Intent(this, PaymentMethodActivity.class);
+ * intent.putExtra(Judo.GPAY_PREAUTH, true)
+ * intent.putExtra(Judo.JUDO_OPTIONS, new Judo.Builder()
+ * .setJudoId("1234567")
+ * .setCurrency(Currency.GBP)
+ * .setAmount("1.99")
+ * .setConsumerReference("consumerRef")
+ * .setPaymentMethod(EnumSet.of(PaymentMethod.CREATE_PAYMENT, PaymentMethod.GPAY_PAYMENT))
+ * .build());
+ *
+ * startActivityForResult(intent, PAYMENT_METHOD);
+ * </pre>
+ *
+ * See {@link Judo} for the full list of supported options
+ */
 public class PaymentMethodActivity extends BaseActivity {
 
     private static final String TAG = PaymentMethodActivity.class.getSimpleName();

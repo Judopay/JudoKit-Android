@@ -27,6 +27,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Contains helper static methods for dealing with the Google Payments Api.
+ */
 public class GooglePaymentUtils {
 
     private static final List<Integer> DEFAULT_SUPPORTED_CARDS = Arrays.asList(WalletConstants.CARD_NETWORK_AMEX,
@@ -39,12 +42,25 @@ public class GooglePaymentUtils {
     public @interface EnvironmentMode {
     }
 
+    /**
+     * Create an instance of {@link PaymentsClient}
+     *
+     * @param context The context to use.
+     * @param environmentMode The environment mode it can be {@link WalletConstants#ENVIRONMENT_TEST} or {@link WalletConstants#ENVIRONMENT_PRODUCTION}
+     * @return paymentsClient object
+     */
     public static PaymentsClient getGooglePayPaymentsClient(@NonNull final Context context, @EnvironmentMode final int environmentMode) {
         return Wallet.getPaymentsClient(context, new Wallet.WalletOptions.Builder()
                 .setEnvironment(environmentMode)
                 .build());
     }
 
+    /**
+     * Check if payments client is ready for use.
+     *
+     * @param paymentsClient used to send the request.
+     * @param googlePayIsReadyResult The callback listener for the payments client.
+     */
     public static void checkIsReadyGooglePay(@NonNull final PaymentsClient paymentsClient, @NonNull final GooglePayIsReadyResult googlePayIsReadyResult) {
         final IsReadyToPayRequest isReadyRequest = IsReadyToPayRequest.newBuilder()
                 .addAllowedPaymentMethod(WalletConstants.PAYMENT_METHOD_TOKENIZED_CARD)
@@ -64,6 +80,12 @@ public class GooglePaymentUtils {
         });
     }
 
+    /**
+     * Create payment data request based on judo object.
+     *
+     * @param judo the judo instance
+     * @return payment data request object
+     */
     public static PaymentDataRequest createDefaultPaymentDataRequest(@NonNull final Judo judo) {
 
         final CardRequirements cardRequirements = getCardRequirements(judo);
@@ -114,6 +136,12 @@ public class GooglePaymentUtils {
                 .build();
     }
 
+    /**
+     * Create Google Pay Request object based on {@link Judo} and {@link PaymentData}
+     * @param judo the judo instance
+     * @param paymentData result of payment
+     * @return google pay request for Judopay API using Google Pay
+     */
     public static GooglePayRequest createGooglePayRequest(@NonNull final Judo judo, @NonNull final PaymentData paymentData) {
         PaymentMethodToken token = paymentData.getPaymentMethodToken();
 
