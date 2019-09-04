@@ -309,8 +309,8 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
                 postcodeTextInput.setError("");
             }
 
-            String country = (String) countrySpinner.getSelectedItem();
-            postcodeTextInput.setHint(getResources().getString(Country.postcodeName(country)));
+            Country country = (Country) countrySpinner.getSelectedItem();
+            postcodeTextInput.setHint(getResources().getString(country.getPostcodeNameResourceId()));
             boolean postcodeNumeric = Country.UNITED_STATES.equals(country);
 
             EditText editText = postcodeTextInput.getEditText();
@@ -351,7 +351,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
     }
 
     private void initializeCountry() {
-        countrySpinner.setAdapter(new CountrySpinnerAdapter(getActivity(), Country.avsCountries()));
+        countrySpinner.setAdapter(new CountrySpinnerAdapter(getActivity(), Country.values()));
     }
 
     private ExpiryDateValidator getExpiryDateValidator() {
@@ -406,7 +406,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
         if (judo.isAvsEnabled() && postcodeTextInput != null) {
             cardBuilder.setAddress(new Address.Builder()
                     .setPostCode(getText(postcodeTextInput))
-                    .setCountryCode(Country.codeFromCountry((String) countrySpinner.getSelectedItem()))
+                    .setCountryCode(((Country) countrySpinner.getSelectedItem()).getCountryCode())
                     .build());
         }
 

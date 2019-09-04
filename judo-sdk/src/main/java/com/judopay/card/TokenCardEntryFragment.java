@@ -106,7 +106,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
     }
 
     private void initializeCountry() {
-        countrySpinner.setAdapter(new CountrySpinnerAdapter(getActivity(), Country.avsCountries()));
+        countrySpinner.setAdapter(new CountrySpinnerAdapter(getActivity(), Country.values()));
     }
 
     private void initializeInputs(final CardToken cardToken, final Judo options) {
@@ -152,7 +152,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         disposables.add(observable.subscribe(validation -> postcodeEntryView.setError(validation.getError(), validation.isShowError())));
 
         disposables.add(observable.subscribe(validation -> {
-            String country = (String) countrySpinner.getSelectedItem();
+            Country country = (Country) countrySpinner.getSelectedItem();
             postcodeEntryView.setCountry(country);
         }));
 
@@ -192,7 +192,7 @@ public class TokenCardEntryFragment extends AbstractCardEntryFragment {
         if (judo.isAvsEnabled()) {
             cardBuilder.setAddress(new Address.Builder()
                     .setPostCode(postcodeEntryView.getText())
-                    .setCountryCode(Country.codeFromCountry((String) countrySpinner.getSelectedItem()))
+                    .setCountryCode(((Country) countrySpinner.getSelectedItem()).getCountryCode())
                     .build());
         }
 

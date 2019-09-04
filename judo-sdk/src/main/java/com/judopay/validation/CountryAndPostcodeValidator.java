@@ -55,7 +55,7 @@ public class CountryAndPostcodeValidator implements Validator {
     }
 
     private Validation getValidation(final String text) {
-        final String country = (String) countrySpinner.getSelectedItem();
+        final Country country = (Country) countrySpinner.getSelectedItem();
         final boolean postcodeValid = Country.OTHER.equals(country) || (!isEmpty(text) && isPostcodeValid(text, country));
 
         final boolean postcodeEntryComplete = !isEmpty(text) && isPostcodeLengthValid(text.replaceAll("\\s+", ""), country);
@@ -65,38 +65,38 @@ public class CountryAndPostcodeValidator implements Validator {
         return new Validation(postcodeValid, postcodeError, showPostcodeError);
     }
 
-    private int getPostcodeError(final String country) {
+    private int getPostcodeError(final Country country) {
         switch (country) {
-            case Country.CANADA:
+            case CANADA:
                 return R.string.error_postcode_canada;
 
-            case Country.UNITED_STATES:
+            case UNITED_STATES:
                 return R.string.error_postcode_us;
 
-            case Country.UNITED_KINGDOM:
+            case UNITED_KINGDOM:
             default:
                 return R.string.error_postcode_uk;
         }
     }
 
-    private boolean isPostcodeLengthValid(final String postcode, final String country) {
+    private boolean isPostcodeLengthValid(final String postcode, final Country country) {
         switch (country) {
-            case Country.UNITED_KINGDOM:
-            case Country.CANADA:
+            case UNITED_KINGDOM:
+            case CANADA:
                 return postcode.length() >= 6;
-            case Country.UNITED_STATES:
+            case UNITED_STATES:
                 return postcode.length() >= 5;
         }
         return true;
     }
 
-    private boolean isPostcodeValid(final String postcode, final String country) {
+    private boolean isPostcodeValid(final String postcode, final Country country) {
         switch (country) {
-            case Country.UNITED_KINGDOM:
+            case UNITED_KINGDOM:
                 return UK_POSTCODE_PATTERN.matcher(postcode).matches();
-            case Country.CANADA:
+            case CANADA:
                 return CANADA_POSTAL_CODE_PATTERN.matcher(postcode).matches();
-            case Country.UNITED_STATES:
+            case UNITED_STATES:
                 return US_ZIPCODE_PATTERN.matcher(postcode).matches();
             default:
                 return true;

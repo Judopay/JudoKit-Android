@@ -101,8 +101,8 @@ public class PostcodeEntryView extends FrameLayout {
         return (JudoEditText) postcodeInputLayout.getEditText();
     }
 
-    public void setCountry(final String country) {
-        setHint(Country.postcodeName(country));
+    public void setCountry(final Country country) {
+        setHint(country.getPostcodeNameResourceId());
 
         boolean postcodeNumeric = Country.UNITED_STATES.equals(country);
         setNumericInput(postcodeNumeric);

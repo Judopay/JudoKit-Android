@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="billing_postcode">Código Postal</string>
+    <string name="billing_zip_code">Código Postal</string>
+    <string name="billing_postal_code">Código Postal</string>
+    <string name="pay">Pagar</string>
+    <string name="confirm_payment">Confirmar Pagamento</string>
+    <string name="payment">Pagamento</string>
+    <string name="card_number_label">Número do Cartão</string>
+    <string name="expiry_date_label">Data de Expiração</string>
+    <string name="start_date_label">Data de Validade </string>
+    <string name="issue_number_label">Número de Expedição</string>
+    <string name="add_card">Adicionar Cartão</string>
+    <string name="check_card">Confirmar Cartão</string>
+    <string name="enter_card_details">Entre os dados do cartão</string>
+    <string name="error_postcode_uk">Confirmar Código Postal</string>
+    <string name="error_postcode_us">Confirmar Código Postal</string>
+    <string name="error_postcode_canada">Confirmar Código Postal</string>
+    <string name="check_expiry_date">Confirmar data de expiração</string>
+    <string name="check_start_date">Confirmar data de validade</string>
+    <string name="check_card_number">Confirmar número do cartão</string>
+    <string name="check_cvv">Confirmar CVV</string>
+    <string name="error_maestro_not_supported">Nós não aceitamos Maestro, por favor use outro cartão</string>
+    <string name="error_amex_not_supported">Nós não aceitamos AMEX, por favor use outro cartão</string>
+    <string name="processing_payment">Processando Pagamento</string>
+    <string name="billing_country">País de faturamento</string>
+    <string name="long_card_number">Número grande do cartão</string>
+    <string name="security_code">Código de Segurança</string>
+    <string name="issue_number_front_of_card">Número de Expedição na frente do cartão</string>
+    <string name="adding_card">Adicionando cartão</string>
+    <string name="saving_card">Salvando cartão</string>
+    <string name="checking_card">Confirmando cartão</string>
+    <string name="redirecting">Redirecionando</string>
+    <string name="authentication">Autorizando</string>
+    <string name="verifying_card">Verificando cartão</string>
+    <string name="please_reenter_the_card_security_code">Por favor, insira novamente o código de segurança do cartão</string>
+    <string name="secure_server_transmission">Servidor Seguro: Seu cartão é encriptado usando SSL antes da transmissão ao nosso provedor de serviços de pagamento seguro. Ele não será salvo nesse dispositivo ou em nossos servidores</string>
+    <string name="united_kingdom">Reino Unido</string>
+    <string name="united_states">Estados Unidos</string>
+    <string name="canada">Canadá</string>
+    <string name="other_country">Outros</string>
+    <string name="judo_payment_method">Método de Pagamento</string>
+    <string name="judo_card_payment">Pagamento em cartão</string>
+    <string name="judo_payment_method_header_title">Por favor selecione um dos métodos de pagamento abaixo</string>
+    <string name="googlepay_button_content_description">Google Pay</string>
+    <string name="processing">Processando...</string>
+</resources>

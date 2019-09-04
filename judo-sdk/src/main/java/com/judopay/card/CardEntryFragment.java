@@ -270,7 +270,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         ConnectableObservable<Validation> observable = countryAndPostcodeValidator.onValidate();
 
         disposables.add(observable.subscribe(validation -> {
-            String country = (String) countrySpinner.getSelectedItem();
+            Country country = (Country) countrySpinner.getSelectedItem();
             postcodeEntryView.setCountry(country);
             postcodeEntryView.setError(validation.getError(), validation.isShowError());
         }));
@@ -315,11 +315,11 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
     }
 
     private void initializeCountry() {
-        countrySpinner.setAdapter(new CountrySpinnerAdapter(getActivity(), Country.avsCountries()));
+        countrySpinner.setAdapter(new CountrySpinnerAdapter(getActivity(), Country.values()));
         countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-                String country = (String) countrySpinner.getSelectedItem();
+                Country country = (Country) countrySpinner.getSelectedItem();
                 postcodeEntryView.setCountry(country);
             }
 
@@ -338,7 +338,7 @@ public final class CardEntryFragment extends AbstractCardEntryFragment {
         if (judo.isAvsEnabled()) {
             cardBuilder.setAddress(new Address.Builder()
                     .setPostCode(postcodeEntryView.getText())
-                    .setCountryCode(Country.codeFromCountry((String) countrySpinner.getSelectedItem()))
+                    .setCountryCode(((Country) countrySpinner.getSelectedItem()).getCountryCode())
                     .build());
         }
 

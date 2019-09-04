@@ -50,7 +50,7 @@ public class CardEntryFormErrorMessagesTest {
         onView(withId(R.id.country_spinner))
                 .perform(click());
 
-        onView(withText(Country.UNITED_KINGDOM))
+        onView(withText(Country.UNITED_KINGDOM.getNameResourceId()))
                 .perform(click());
 
         onView(withId(R.id.post_code_edit_text))
@@ -81,7 +81,7 @@ public class CardEntryFormErrorMessagesTest {
         onView(withId(R.id.country_spinner))
                 .perform(click());
 
-        onView(withText(Country.CANADA))
+        onView(withText(Country.CANADA.getNameResourceId()))
                 .perform(click());
 
         onView(withId(R.id.post_code_edit_text))
@@ -113,7 +113,7 @@ public class CardEntryFormErrorMessagesTest {
         onView(withId(R.id.country_spinner))
                 .perform(click());
 
-        onView(withText(Country.UNITED_STATES))
+        onView(withText(Country.UNITED_STATES.getNameResourceId()))
                 .perform(click());
 
         onView(withId(R.id.post_code_edit_text))

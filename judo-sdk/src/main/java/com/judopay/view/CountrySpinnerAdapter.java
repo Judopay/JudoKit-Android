@@ -9,12 +9,11 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.judopay.R;
+import com.judopay.model.Country;
 
-import java.util.List;
+public class CountrySpinnerAdapter extends ArrayAdapter<Country> {
 
-public class CountrySpinnerAdapter extends ArrayAdapter<String> {
-
-    public CountrySpinnerAdapter(final Context context, final List<String> countries) {
+    public CountrySpinnerAdapter(final Context context, final Country[] countries) {
         super(context, android.R.layout.simple_list_item_1, countries);
     }
 
@@ -29,7 +28,7 @@ public class CountrySpinnerAdapter extends ArrayAdapter<String> {
         textView.setText(R.string.billing_country);
 
         final TextView textView2 = (TextView) view.findViewById(android.R.id.text2);
-        textView2.setText(getItem(position));
+        textView2.setText(getItem(position).getNameResourceId());
 
         return view;
     }
@@ -45,7 +44,7 @@ public class CountrySpinnerAdapter extends ArrayAdapter<String> {
         final View view = inflater.inflate(layout, parent, false);
         final TextView textView = (TextView) view.findViewById(android.R.id.text1);
 
-        textView.setText(getItem(position));
+        textView.setText(getItem(position).getNameResourceId());
 
         return view;
     }

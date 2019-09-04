@@ -43,14 +43,18 @@
     <string name="verifying_card">Verifying card</string>
     <string name="please_reenter_the_card_security_code">Please re-enter the card security code</string>
     <string name="secure_server_transmission">Secure server: Your card details are encrypted using SSL before transmission to our secure payment service provider. They will not be stored on this device or on our servers.</string>
+    <string name="united_kingdom">UK</string>
+    <string name="united_states">USA</string>
+    <string name="canada">Canada</string>
+    <string name="other_country">Other</string>
+    <string name="judo_payment_method">Payment Method</string>
+    <string name="judo_card_payment">Card Payment</string>
+    <string name="judo_payment_method_header_title">Please select from one of the payment methods listed below:</string>
+    <string name="googlepay_button_content_description">Google Pay</string>
 
     <!-- manifest api configuration meta-data names, do not change -->
     <string name="judo_api_token">judo_api_token</string>
     <string name="judo_api_secret">judo_api_secret</string>
     <string name="scan_card">scan card</string>
     <string name="processing">Processing…</string>
-    <string name="judo_payment_method">Payment Method</string>
-    <string name="judo_card_payment">Card Payment</string>
-    <string name="judo_payment_method_header_title">Please select from one of the payment methods listed below:</string>
-    <string name="googlepay_button_content_description">Google Pay</string>
 </resources>

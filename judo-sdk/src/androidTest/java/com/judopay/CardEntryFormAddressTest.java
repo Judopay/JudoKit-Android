@@ -51,7 +51,7 @@ public class CardEntryFormAddressTest {
         onView(withId(R.id.country_spinner))
                 .perform(click());
 
-        onData(allOf(is(instanceOf(String.class)), is(Country.OTHER)))
+        onData(allOf(is(instanceOf(Country.class)), is(Country.OTHER)))
                 .perform(click());
 
         onView(withId(R.id.button))
@@ -60,5 +60,4 @@ public class CardEntryFormAddressTest {
         onView(withId(R.id.post_code_edit_text))
                 .check(matches(isDisabled()));
     }
-
 }

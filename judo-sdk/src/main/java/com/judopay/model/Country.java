@@ -4,56 +4,35 @@ import android.support.annotation.StringRes;
 
 import com.judopay.R;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * A Country that can be selected by the user when providing information for
  * address verification (AVS) checks during a transaction.
  */
-public class Country {
+public enum Country {
+    UNITED_KINGDOM(R.string.united_kingdom, R.string.billing_postcode, 826),
+    UNITED_STATES(R.string.united_states, R.string.billing_zip_code, 840),
+    CANADA(R.string.canada, R.string.billing_postal_code, 124),
+    OTHER(R.string.other_country, R.string.billing_postcode, 0);
 
-    public static final String UNITED_KINGDOM = "UK";
-    public static final String UNITED_STATES = "USA";
-    public static final String CANADA = "Canada";
-    public static final String OTHER = "Other";
+    private final int nameResourceId;
+    private final int postcodeNameResourceId;
+    private final int countryCode;
 
-    public static List<String> avsCountries() {
-        ArrayList<String> countries = new ArrayList<>();
-
-        countries.add(Country.UNITED_KINGDOM);
-        countries.add(Country.UNITED_STATES);
-        countries.add(Country.CANADA);
-        countries.add(Country.OTHER);
-
-        return countries;
+    Country(@StringRes final int nameResourceId, @StringRes final int postcodeNameResourceId, final int countryCode) {
+        this.nameResourceId = nameResourceId;
+        this.postcodeNameResourceId = postcodeNameResourceId;
+        this.countryCode = countryCode;
     }
 
-    public static int codeFromCountry(final String country) {
-        switch (country) {
-            case Country.UNITED_KINGDOM:
-                return 826;
-            case Country.UNITED_STATES:
-                return 840;
-            case Country.CANADA:
-                return 124;
-            default:
-                return 0;
-        }
+    public int getNameResourceId() {
+        return nameResourceId;
     }
 
-    @StringRes
-    public static int postcodeName(final String country) {
-        switch (country) {
-            case Country.UNITED_STATES:
-                return R.string.billing_zip_code;
-
-            case Country.CANADA:
-                return R.string.billing_postal_code;
-
-            default:
-                return R.string.billing_postcode;
-        }
+    public int getPostcodeNameResourceId() {
+        return postcodeNameResourceId;
     }
 
+    public int getCountryCode() {
+        return countryCode;
+    }
 }
