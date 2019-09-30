@@ -108,7 +108,7 @@ public class PayLoadUtil {
                     lastKnownLocation = manager.getLastKnownLocation(provider);
                 } else {
                     Location location = manager.getLastKnownLocation(provider);
-                    if (location.getTime() > lastKnownLocation.getTime()) {
+                    if (location != null && location.getTime() > lastKnownLocation.getTime()) { {
                         lastKnownLocation = location;
                     }
                 }
