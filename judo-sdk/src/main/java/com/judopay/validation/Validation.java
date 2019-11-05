@@ -1,6 +1,6 @@
 package com.judopay.validation;
 
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 public class Validation {
     private final Integer error;

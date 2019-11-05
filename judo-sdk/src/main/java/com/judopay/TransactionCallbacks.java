@@ -1,6 +1,6 @@
 package com.judopay;
 
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 import com.judopay.cardverification.AuthorizationListener;
 import com.judopay.model.Receipt;

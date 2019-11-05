@@ -2,7 +2,7 @@ package com.judopay;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * Displays a card entry form to the user, allowing for card to be registered and used for token transactions.

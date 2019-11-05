@@ -1,7 +1,7 @@
 package com.judopay.view;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatEditText;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 

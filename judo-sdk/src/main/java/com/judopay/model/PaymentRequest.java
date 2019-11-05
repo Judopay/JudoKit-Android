@@ -25,6 +25,7 @@ public final class PaymentRequest extends BasePaymentRequest {
     private Boolean saveCardOnly;
     private String emailAddress;
     private String mobileNumber;
+    private PrimaryAccountDetails primaryAccountDetails;
 
     public Address getCardAddress() {
         return cardAddress;
@@ -84,6 +85,7 @@ public final class PaymentRequest extends BasePaymentRequest {
         private String emailAddress;
         private String mobileNumber;
         private Map<String, String> yourPaymentMetaData;
+        private PrimaryAccountDetails primaryAccountDetails;
 
         public Builder setAmount(final String amount) {
             this.amount = amount;
@@ -160,6 +162,11 @@ public final class PaymentRequest extends BasePaymentRequest {
             return this;
         }
 
+        public Builder setPrimaryAccountDetails(final PrimaryAccountDetails primaryAccountDetails) {
+            this.primaryAccountDetails = primaryAccountDetails;
+            return this;
+        }
+
         public PaymentRequest build() {
             if (isEmpty(judoId) || !isValid(judoId)) {
                 throw new JudoIdInvalidError();
@@ -193,6 +200,7 @@ public final class PaymentRequest extends BasePaymentRequest {
             request.emailAddress = emailAddress;
             request.mobileNumber = mobileNumber;
             request.yourPaymentMetaData = yourPaymentMetaData;
+            request.primaryAccountDetails = primaryAccountDetails;
 
             return request;
         }

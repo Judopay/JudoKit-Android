@@ -1,6 +1,6 @@
 package com.judopay.model;
 
-import android.support.annotation.IdRes;
+import androidx.annotation.IdRes;
 
 import com.judopay.R;
 

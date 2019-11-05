@@ -1,8 +1,8 @@
 package com.judopay.arch;
 
 import android.content.Context;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -162,6 +162,7 @@ public class GooglePaymentUtils {
                     .setCurrency(judo.getCurrency())
                     .setJudoId(judo.getJudoId())
                     .setConsumerReference(judo.getConsumerReference())
+                    .setPrimaryAccountDetails(judo.getPrimaryAccountDetails())
                     .build();
         }
     }

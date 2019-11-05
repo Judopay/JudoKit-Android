@@ -67,7 +67,6 @@ public class PayLoadUtil {
     }
 
     private static Browser getBrowserInfo(final Context context) {
-
         final WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         final Display display = wm.getDefaultDisplay();
         final DisplayMetrics metrics = new DisplayMetrics();
@@ -99,7 +98,6 @@ public class PayLoadUtil {
         List<String> providers = manager.getProviders(true);
         Location lastKnownLocation = null;
         for (String provider : providers) {
-
             final boolean accessFineLocation = PermissionUtil.isPermissionGranted(context, Manifest.permission.ACCESS_FINE_LOCATION);
             final boolean accessCoarseLocation = PermissionUtil.isPermissionGranted(context, Manifest.permission.ACCESS_COARSE_LOCATION);
 
@@ -108,7 +106,7 @@ public class PayLoadUtil {
                     lastKnownLocation = manager.getLastKnownLocation(provider);
                 } else {
                     Location location = manager.getLastKnownLocation(provider);
-                    if (location != null && location.getTime() > lastKnownLocation.getTime()) { {
+                    if (location != null && location.getTime() > lastKnownLocation.getTime()) {
                         lastKnownLocation = location;
                     }
                 }

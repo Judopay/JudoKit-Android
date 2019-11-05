@@ -27,7 +27,8 @@ class RegisterCardPresenter extends JudoPresenter {
                 .setMetaData(judo.getMetaDataMap())
                 .setEmailAddress(judo.getEmailAddress())
                 .setMobileNumber(judo.getMobileNumber())
-                .setConsumerReference(judo.getConsumerReference());
+                .setConsumerReference(judo.getConsumerReference())
+                .setPrimaryAccountDetails(judo.getPrimaryAccountDetails());
 
         if (card.startDateAndIssueNumberRequired()) {
             builder.setIssueNumber(card.getIssueNumber())

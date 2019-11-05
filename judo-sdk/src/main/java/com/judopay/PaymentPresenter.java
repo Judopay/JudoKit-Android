@@ -34,7 +34,8 @@ class PaymentPresenter extends JudoPresenter {
                 .setExpiryDate(card.getExpiryDate())
                 .setEmailAddress(judo.getEmailAddress())
                 .setMobileNumber(judo.getMobileNumber())
-                .setMetaData(judo.getMetaDataMap());
+                .setMetaData(judo.getMetaDataMap())
+                .setPrimaryAccountDetails(judo.getPrimaryAccountDetails());
 
         if (card.startDateAndIssueNumberRequired()) {
             builder.setIssueNumber(card.getIssueNumber())
@@ -71,7 +72,8 @@ class PaymentPresenter extends JudoPresenter {
                 .setEmailAddress(judo.getEmailAddress())
                 .setMobileNumber(judo.getMobileNumber())
                 .setMetaData(judo.getMetaDataMap())
-                .setToken(judo.getCardToken());
+                .setToken(judo.getCardToken())
+                .setPrimaryAccountDetails(judo.getPrimaryAccountDetails());
 
         if (!isEmpty(judo.getPaymentReference())) {
             builder.setPaymentReference(judo.getPaymentReference());

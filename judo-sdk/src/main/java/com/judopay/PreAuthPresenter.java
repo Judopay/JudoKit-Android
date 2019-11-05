@@ -34,7 +34,8 @@ class PreAuthPresenter extends JudoPresenter {
                 .setEmailAddress(judo.getEmailAddress())
                 .setMobileNumber(judo.getMobileNumber())
                 .setMetaData(judo.getMetaDataMap())
-                .setExpiryDate(card.getExpiryDate());
+                .setExpiryDate(card.getExpiryDate())
+                .setPrimaryAccountDetails(judo.getPrimaryAccountDetails());
 
         if (!isEmpty(judo.getPaymentReference())) {
             builder.setPaymentReference(judo.getPaymentReference());
@@ -71,7 +72,8 @@ class PreAuthPresenter extends JudoPresenter {
                 .setEmailAddress(judo.getEmailAddress())
                 .setMobileNumber(judo.getMobileNumber())
                 .setMetaData(judo.getMetaDataMap())
-                .setToken(judo.getCardToken());
+                .setToken(judo.getCardToken())
+                .setPrimaryAccountDetails(judo.getPrimaryAccountDetails());
 
         if (!isEmpty(judo.getPaymentReference())) {
             builder.setPaymentReference(judo.getPaymentReference());

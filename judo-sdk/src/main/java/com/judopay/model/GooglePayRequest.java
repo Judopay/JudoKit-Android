@@ -12,6 +12,7 @@ import static com.judopay.arch.Preconditions.checkNotEmpty;
 @SuppressWarnings({"unused"})
 public final class GooglePayRequest extends BasePaymentRequest {
     private final GooglePayWallet googlePayWallet;
+    private PrimaryAccountDetails primaryAccountDetails;
 
     private GooglePayRequest(final GooglePayWallet googlePayWallet) {
         this.googlePayWallet = googlePayWallet;
@@ -21,6 +22,10 @@ public final class GooglePayRequest extends BasePaymentRequest {
         return googlePayWallet;
     }
 
+    public PrimaryAccountDetails getPrimaryAccountDetails() {
+        return primaryAccountDetails;
+    }
+
     public static class Builder {
         private String amount;
         private String currency;
@@ -28,6 +33,7 @@ public final class GooglePayRequest extends BasePaymentRequest {
         private String consumerReference;
         private Map<String, String> metaData;
         private GooglePayWallet googlePayWallet;
+        private PrimaryAccountDetails primaryAccountDetails;
 
         /**
          * @param amount the amount for the transaction
@@ -84,6 +90,15 @@ public final class GooglePayRequest extends BasePaymentRequest {
         }
 
         /**
+         * @param primaryAccountDetails the PrimaryAccountDetails information for acquirer compliance
+         * @return The Builder for creating the {@link GooglePayRequest} instance
+         */
+        public Builder setPrimaryAccountDetails(final PrimaryAccountDetails primaryAccountDetails) {
+            this.primaryAccountDetails = primaryAccountDetails;
+            return this;
+        }
+
+        /**
          * Creates the {@link GooglePayRequest} instance with the fields from the {@link Builder}
          *
          * @return the built {@link GooglePayRequest} instance
@@ -101,6 +116,7 @@ public final class GooglePayRequest extends BasePaymentRequest {
             request.judoId = judoId;
             request.yourConsumerReference = consumerReference;
             request.yourPaymentMetaData = metaData;
+            request.primaryAccountDetails = primaryAccountDetails;
 
             return request;
         }

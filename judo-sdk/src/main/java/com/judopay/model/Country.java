@@ -1,6 +1,6 @@
 package com.judopay.model;
 
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 import com.judopay.R;
 

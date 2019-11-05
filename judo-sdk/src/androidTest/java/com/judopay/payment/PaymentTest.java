@@ -1,6 +1,7 @@
 package com.judopay.payment;
 
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
@@ -13,7 +14,6 @@ import org.junit.runner.RunWith;
 
 import io.reactivex.observers.TestObserver;
 
-import static android.support.test.InstrumentationRegistry.getContext;
 import static com.judopay.TestUtil.JUDO_ID_IRIDIUM;
 import static com.judopay.TestUtil.getJudo;
 import static com.judopay.api.JudoApiServiceFactory.createApiService;
@@ -24,7 +24,7 @@ public class PaymentTest {
 
     @Test
     public void shouldPerformPayment() {
-        final JudoApiService apiService = createApiService(getContext(), Judo.UI_CLIENT_MODE_JUDO_SDK, getJudo());
+        final JudoApiService apiService = createApiService(InstrumentationRegistry.getInstrumentation().getTargetContext(), Judo.UI_CLIENT_MODE_JUDO_SDK, getJudo());
 
         final PaymentRequest paymentRequest = new PaymentRequest.Builder()
                 .setJudoId(JUDO_ID_IRIDIUM)

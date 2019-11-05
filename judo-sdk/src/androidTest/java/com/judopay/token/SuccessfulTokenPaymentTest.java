@@ -1,10 +1,12 @@
 package com.judopay.token;
 
 import android.content.Intent;
-import android.support.test.espresso.IdlingPolicies;
-import android.support.test.espresso.IdlingRegistry;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+
+import androidx.test.espresso.IdlingPolicies;
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
@@ -28,12 +30,11 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.observers.TestObserver;
 
-import static android.support.test.InstrumentationRegistry.getContext;
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static com.judopay.TestUtil.JUDO_ID_IRIDIUM;
 import static com.judopay.TestUtil.getJudo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -52,7 +53,7 @@ public class SuccessfulTokenPaymentTest {
 
     @Test
     public void shouldBeSuccessfulTokenPayment() {
-        final JudoApiService apiService = getJudo().getApiService(getContext());
+        final JudoApiService apiService = getJudo().getApiService(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         RegisterCardRequest registerCardRequest = new RegisterCardRequest.Builder()
                 .setJudoId(JUDO_ID_IRIDIUM)
@@ -103,7 +104,7 @@ public class SuccessfulTokenPaymentTest {
                 .newBuilder()
                 .setAvsEnabled(true)
                 .build()
-                .getApiService(getContext());
+                .getApiService(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         RegisterCardRequest registerCardRequest = new RegisterCardRequest.Builder()
                 .setJudoId(JUDO_ID_IRIDIUM)

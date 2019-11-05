@@ -6,7 +6,9 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 
-public class JudoTextInputLayout extends android.support.design.widget.TextInputLayout {
+import com.google.android.material.textfield.TextInputLayout;
+
+public class JudoTextInputLayout extends TextInputLayout {
 
     public JudoTextInputLayout(final Context context) {
         super(context);

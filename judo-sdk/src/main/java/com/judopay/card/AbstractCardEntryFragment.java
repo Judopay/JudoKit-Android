@@ -2,8 +2,8 @@ package com.judopay.card;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;

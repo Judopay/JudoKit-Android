@@ -1,16 +1,16 @@
 package com.judopay.util;
 
-import android.support.design.widget.TextInputLayout;
-import android.support.test.espresso.matcher.BoundedMatcher;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.test.espresso.matcher.BoundedMatcher;
 import android.view.View;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
-import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
@@ -71,7 +71,7 @@ public class ViewMatchers {
 
             @Override
             public boolean matchesSafely(View view) {
-                return withEffectiveVisibility(android.support.test.espresso.matcher.ViewMatchers.Visibility.GONE).matches(view);
+                return withEffectiveVisibility(androidx.test.espresso.matcher.ViewMatchers.Visibility.GONE).matches(view);
             }
         };
     }

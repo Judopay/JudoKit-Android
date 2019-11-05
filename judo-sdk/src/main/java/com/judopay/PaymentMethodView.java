@@ -1,6 +1,6 @@
 package com.judopay;
 
-import android.support.annotation.IdRes;
+import androidx.annotation.IdRes;
 
 interface PaymentMethodView extends BaseView {
     void displayPaymentMethodView(@IdRes int viewId);

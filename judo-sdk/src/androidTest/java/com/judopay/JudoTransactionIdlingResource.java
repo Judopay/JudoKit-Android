@@ -1,6 +1,6 @@
 package com.judopay;
 
-import android.support.test.espresso.IdlingResource;
+import androidx.test.espresso.IdlingResource;
 
 public class JudoTransactionIdlingResource implements IdlingResource {
     private IdlingResource.ResourceCallback resourceCallback;

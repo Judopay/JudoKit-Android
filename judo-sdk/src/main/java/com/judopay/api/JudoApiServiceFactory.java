@@ -8,6 +8,7 @@ import com.judopay.BuildConfig;
 import com.judopay.Judo;
 import com.judopay.JudoApiService;
 import com.judopay.model.Address;
+import com.judopay.model.PrimaryAccountDetails;
 
 import java.math.BigDecimal;
 import java.security.KeyStore;

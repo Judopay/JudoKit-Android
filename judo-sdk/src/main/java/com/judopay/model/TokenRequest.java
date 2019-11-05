@@ -33,6 +33,7 @@ public final class TokenRequest extends BasePaymentRequest {
     private Address cardAddress;
     private String emailAddress;
     private String mobileNumber;
+    private PrimaryAccountDetails primaryAccountDetails;
 
     public String getEndDate() {
         return endDate;
@@ -82,6 +83,7 @@ public final class TokenRequest extends BasePaymentRequest {
         private String emailAddress;
         private String mobileNumber;
         private Map<String, String> yourPaymentMetaData;
+        private PrimaryAccountDetails primaryAccountDetails;
 
         public Builder setEndDate(final String endDate) {
             this.endDate = endDate;
@@ -157,6 +159,11 @@ public final class TokenRequest extends BasePaymentRequest {
             return this;
         }
 
+        public Builder setPrimaryAccountDetails(final PrimaryAccountDetails primaryAccountDetails) {
+            this.primaryAccountDetails = primaryAccountDetails;
+            return this;
+        }
+
         public TokenRequest build() {
             if (isEmpty(judoId) || !isValid(judoId)) {
                 throw new JudoIdInvalidError();
@@ -182,6 +189,7 @@ public final class TokenRequest extends BasePaymentRequest {
             request.mobileNumber = mobileNumber;
             request.yourPaymentMetaData = yourPaymentMetaData;
             request.yourConsumerReference = consumerReference;
+            request.primaryAccountDetails = primaryAccountDetails;
 
             if (!isEmpty(paymentReference)) {
                 request.yourPaymentReference = paymentReference;

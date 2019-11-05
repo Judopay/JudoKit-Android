@@ -1,7 +1,7 @@
 package com.judopay;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.judopay.error.RootedDeviceNotPermittedError;
 

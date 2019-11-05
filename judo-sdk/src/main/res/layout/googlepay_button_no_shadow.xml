@@ -23,7 +23,8 @@
             android:layout_weight="1"
             android:duplicateParentState="true"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/googlepay_button_content" />
+            app:srcCompat="@drawable/googlepay_button_content"
+            android:contentDescription="@string/google_pay_logo" />
     </LinearLayout>
 
     <ImageView
@@ -31,5 +32,6 @@
         android:layout_height="match_parent"
         android:duplicateParentState="true"
         android:scaleType="fitXY"
-        android:src="@drawable/googlepay_button_overlay" />
+        android:src="@drawable/googlepay_button_overlay"
+        android:contentDescription="@string/google_pay_button_overlay" />
 </RelativeLayout>

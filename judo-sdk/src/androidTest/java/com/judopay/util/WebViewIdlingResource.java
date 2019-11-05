@@ -15,7 +15,7 @@ package com.judopay.util;
  * permissions and limitations under the License.
  */
 
-import android.support.test.espresso.IdlingResource;
+import androidx.test.espresso.IdlingResource;
 import android.util.Log;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;

@@ -29,6 +29,7 @@ public final class CheckCardRequest extends Request {
     private String issueNumber;
     private String currency;
     private Map<String, String> yourPaymentMetaData;
+    private PrimaryAccountDetails primaryAccountDetails;
 
     public String getJudoId() {
         return judoId;
@@ -93,6 +94,7 @@ public final class CheckCardRequest extends Request {
         private String emailAddress;
         private String mobileNumber;
         private Map<String, String> yourPaymentMetaData;
+        private PrimaryAccountDetails primaryAccountDetails;
 
         public Builder setJudoId(final String judoId) {
             this.judoId = judoId;
@@ -159,6 +161,11 @@ public final class CheckCardRequest extends Request {
             return this;
         }
 
+        public Builder setPrimaryAccountDetails(final PrimaryAccountDetails primaryAccountDetails) {
+            this.primaryAccountDetails = primaryAccountDetails;
+            return this;
+        }
+
         public CheckCardRequest build() {
             if (isEmpty(judoId) || !isValid(judoId)) {
                 throw new JudoIdInvalidError();
@@ -182,6 +189,7 @@ public final class CheckCardRequest extends Request {
             request.emailAddress = emailAddress;
             request.mobileNumber = mobileNumber;
             request.yourPaymentMetaData = yourPaymentMetaData;
+            request.primaryAccountDetails = primaryAccountDetails;
 
             if (!isEmpty(paymentReference)) {
                 request.yourPaymentReference = paymentReference;

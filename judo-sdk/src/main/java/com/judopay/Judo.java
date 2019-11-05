@@ -6,7 +6,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.IntDef;
+
+import androidx.annotation.IntDef;
 
 import com.google.android.gms.wallet.WalletConstants;
 import com.judopay.api.JudoApiServiceFactory;
@@ -17,6 +18,7 @@ import com.judopay.model.CardToken;
 import com.judopay.model.Currency;
 import com.judopay.model.CustomLayout;
 import com.judopay.model.PaymentMethod;
+import com.judopay.model.PrimaryAccountDetails;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -118,6 +120,7 @@ public class Judo implements Parcelable {
     private boolean isGPayRequireShippingDetails;
     private List<Integer> supportedGPayCards;
     private int environmentModeGPay;
+    private PrimaryAccountDetails primaryAccountDetails;
 
     private Judo() {
     }
@@ -155,6 +158,7 @@ public class Judo implements Parcelable {
         this.supportedGPayCards = new ArrayList<>();
         judoIn.readList(this.supportedGPayCards, Integer.class.getClassLoader());
         this.environmentModeGPay = judoIn.readInt();
+        this.primaryAccountDetails = judoIn.readParcelable(PrimaryAccountDetails.class.getClassLoader());
     }
 
     public Builder newBuilder() {
@@ -185,7 +189,8 @@ public class Judo implements Parcelable {
                 .setGPayRequireBillingDetails(isGPayRequireBillingDetails)
                 .setGPayRequireShippingDetails(isGPayRequireShippingDetails)
                 .setSupportedGPayCards(supportedGPayCards)
-                .setEnvironmentModeGPay(environmentModeGPay);
+                .setEnvironmentModeGPay(environmentModeGPay)
+                .setPrimaryAccountDetails(primaryAccountDetails);
     }
 
     public String getAmount() {
@@ -259,6 +264,10 @@ public class Judo implements Parcelable {
 
     public int getEnvironmentModeGPay(){
         return environmentModeGPay;
+    }
+
+    public PrimaryAccountDetails getPrimaryAccountDetails() {
+        return primaryAccountDetails;
     }
 
     public PendingIntent getCardScanningIntent() {
@@ -393,6 +402,7 @@ public class Judo implements Parcelable {
         dest.writeByte(this.isGPayRequireShippingDetails ? (byte) 1 : (byte) 0);
         dest.writeList(this.supportedGPayCards);
         dest.writeInt(this.environmentModeGPay);
+        dest.writeParcelable(this.primaryAccountDetails, flags);
     }
 
     @IntDef({UI_CLIENT_MODE_CUSTOM_UI, UI_CLIENT_MODE_JUDO_SDK})
@@ -436,6 +446,8 @@ public class Judo implements Parcelable {
         private boolean isGPayRequireShippingDetails = false;
         private List<Integer> supportedGPayCards;
         private int environmentModeGPay = WalletConstants.ENVIRONMENT_TEST;
+
+        private PrimaryAccountDetails primaryAccountDetails;
 
         public Builder() {
         }
@@ -580,6 +592,11 @@ public class Judo implements Parcelable {
             return this;
         }
 
+        public Builder setPrimaryAccountDetails(final PrimaryAccountDetails primaryAccountDetails) {
+            this.primaryAccountDetails = primaryAccountDetails;
+            return this;
+        }
+
         public Judo build() {
             if (isEmpty(judoId) || !isValid(judoId)) {
                 throw new JudoIdInvalidError();
@@ -618,6 +635,7 @@ public class Judo implements Parcelable {
             judo.supportedGPayCards = supportedGPayCards;
             judo.environmentModeGPay = environmentModeGPay;
 
+            judo.primaryAccountDetails = primaryAccountDetails;
             return judo;
         }
 

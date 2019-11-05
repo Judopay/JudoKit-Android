@@ -1,12 +1,11 @@
 package com.judopay.googlepay;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.judopay.JudoApiService;
-import com.judopay.model.GooglePayRequest;
 import com.judopay.model.Currency;
+import com.judopay.model.GooglePayRequest;
 import com.judopay.model.GooglePayWallet;
 import com.judopay.model.Receipt;
 
@@ -26,9 +25,7 @@ public class GooglePayTest {
     @Test
     @Ignore
     public void shouldReturnSuccessWhenGooglePayPayment() {
-        Context context = InstrumentationRegistry.getContext();
-
-        JudoApiService apiService = getJudo().getApiService(context);
+        JudoApiService apiService = getJudo().getApiService(InstrumentationRegistry.getInstrumentation().getTargetContext());
         TestObserver<Receipt> testObserver = new TestObserver<>();
 
         apiService.googlePayPayment(getAndroidPayRequest()).subscribe(testObserver);
@@ -40,9 +37,7 @@ public class GooglePayTest {
     @Test
     @Ignore
     public void shouldReturnSuccessWhenGooglePayPreAuth() {
-        Context context = InstrumentationRegistry.getContext();
-
-        JudoApiService apiService = getJudo().getApiService(context);
+        JudoApiService apiService = getJudo().getApiService(InstrumentationRegistry.getInstrumentation().getTargetContext());
         TestObserver<Receipt> testObserver = new TestObserver<>();
 
         GooglePayRequest googlePayRequest = getAndroidPayRequest();

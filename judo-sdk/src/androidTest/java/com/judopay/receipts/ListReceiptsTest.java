@@ -1,8 +1,7 @@
 package com.judopay.receipts;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.judopay.JudoApiService;
 import com.judopay.model.CollectionRequest;
@@ -161,9 +160,7 @@ public class ListReceiptsTest {
     }
 
     private JudoApiService getApiService() {
-        Context context = InstrumentationRegistry.getContext();
-
-        return getJudo().getApiService(context);
+        return getJudo().getApiService(InstrumentationRegistry.getInstrumentation().getTargetContext());
     }
 
     private PaymentRequest getPaymentRequest() {

@@ -1,8 +1,8 @@
 package com.judopay.view;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
-import android.support.design.widget.TextInputLayout;
+import androidx.annotation.StringRes;
+import com.google.android.material.textfield.TextInputLayout;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;

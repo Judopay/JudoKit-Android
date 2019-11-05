@@ -1,8 +1,7 @@
 package com.judopay.receipts;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.judopay.JudoApiService;
 import com.judopay.model.Currency;
@@ -25,8 +24,7 @@ public class PaymentRefundTest {
 
     @Test
     public void shouldRefundPayment() {
-        Context context = InstrumentationRegistry.getContext();
-        final JudoApiService apiService = getJudo().getApiService(context);
+        final JudoApiService apiService = getJudo().getApiService(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         PaymentRequest paymentRequest = new PaymentRequest.Builder()
                 .setJudoId(JUDO_ID_IRIDIUM)

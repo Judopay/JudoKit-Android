@@ -10,6 +10,7 @@
     <string name="expiry_date_label">Data de Expiração</string>
     <string name="start_date_label">Data de Validade </string>
     <string name="issue_number_label">Número de Expedição</string>
+    <string name="date_hint">MM/AA</string>
     <string name="add_card">Adicionar Cartão</string>
     <string name="check_card">Confirmar Cartão</string>
     <string name="enter_card_details">Entre os dados do cartão</string>
@@ -43,5 +44,7 @@
     <string name="judo_card_payment">Pagamento em cartão</string>
     <string name="judo_payment_method_header_title">Por favor selecione um dos métodos de pagamento abaixo</string>
     <string name="googlepay_button_content_description">Google Pay</string>
-    <string name="processing">Processando...</string>
+    <string name="processing">Processando…</string>
+    <string name="google_pay_logo">Google Pay logotipo</string>
+    <string name="google_pay_button_overlay">Google Pay botão sobreposição</string>
 </resources>

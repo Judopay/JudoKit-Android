@@ -1,6 +1,6 @@
 package com.judopay;
 
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.judopay.api.ApiCredentials;
 
