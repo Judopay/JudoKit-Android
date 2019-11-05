@@ -47,4 +47,7 @@
     <string name="processing">Processando…</string>
     <string name="google_pay_logo">Google Pay logotipo</string>
     <string name="google_pay_button_overlay">Google Pay botão sobreposição</string>
+
+    <!-- iDEAL-->
+    <string name="ideal_payment">iDEAL pagamento</string>
 </resources>

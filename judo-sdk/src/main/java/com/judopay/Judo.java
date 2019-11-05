@@ -62,6 +62,7 @@ public class Judo implements Parcelable {
     public static final int PAYMENT_METHOD = 400;
     public static final int GPAY_REQUEST = 500;
     public static final int GPAY_ERROR_RESULT = 501;
+    public static final int IDEAL_PAYMENT = 600;
 
     public static final String JUDO_CARD = "JudoCard";
     public static final String JUDO_OPTIONS = "Judo";

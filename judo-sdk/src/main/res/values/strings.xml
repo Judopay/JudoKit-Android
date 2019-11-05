@@ -59,4 +59,7 @@
     <string name="judo_api_secret" translatable="false">judo_api_secret</string>
     <string name="scan_card" translatable="false">scan card</string>
     <string name="processing">Processing…</string>
+
+    <!-- iDEAL-->
+    <string name="ideal_payment">iDEAL payment</string>
 </resources>
