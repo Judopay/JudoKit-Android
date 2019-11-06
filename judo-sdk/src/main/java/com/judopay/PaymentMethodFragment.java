@@ -1,6 +1,6 @@
 package com.judopay;
 
-import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wallet.AutoResolveHelper;
 import com.google.android.gms.wallet.PaymentData;
@@ -19,12 +24,23 @@ import com.google.android.gms.wallet.PaymentDataRequest;
 import com.google.android.gms.wallet.PaymentsClient;
 import com.judopay.arch.GooglePayIsReadyResult;
 import com.judopay.arch.GooglePaymentUtils;
+import com.judopay.arch.GooglePaymentUtils;
+import com.judopay.model.Match;
 import com.judopay.model.PaymentMethod;
 import com.judopay.view.SingleClickOnClickListener;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.EnumSet;
 
-import static com.judopay.Judo.PAYMENT_REQUEST;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class PaymentMethodFragment extends BaseFragment implements PaymentMethodView {
 
@@ -74,13 +90,65 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
         btnCardPayment.setOnClickListener(new SingleClickOnClickListener() {
             @Override
             public void doClick() {
-                Intent intent = new Intent(getContext(), PaymentActivity.class);
-                intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
-                startActivityForResult(intent, PAYMENT_REQUEST);
+//                Intent intent = new Intent(getContext(), PaymentActivity.class);
+//                intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
+//                startActivityForResult(intent, PAYMENT_REQUEST);
+                JudoApiService apiService = getJudo().getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
+                String evurlEncryptionKey = "jpcvSrx314vCWlR84hgdng==";
+                String cipherSalt = "&cipherSalt=BOeg3HVwm9aBacHT";
+
+                String clientAccessKey = "xM8sWMFO";
+                String correlationId = "correlationid=1422740606035IA";
+                String timestamp = "&timestamp=20191106051859";
+                String nonce = "&nonce=10112";
+                Match match = new Match("+14085551234");
+//                String matchJson = "&match=" + new Gson().toJson(match);
+                String dataPlain = correlationId + timestamp + nonce;
+                System.out.println(dataPlain);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    System.out.println("ININ");
+                    String dataEncoded = encrypt(dataPlain, evurlEncryptionKey);
+                    System.out.println(dataEncoded + " dataencoded");
+                    apiService.phoneVerification(clientAccessKey, "data="+dataEncoded + cipherSalt)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(o -> {
+                                System.out.println(o);
+                            }, throwable -> System.out.println(throwable.getMessage()));
+                }
+
             }
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static String encrypt(String strToEncrypt, String secret) {
+        try {
+            Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
+
+            cipher.init(Cipher.ENCRYPT_MODE, setKey(secret));
+            return Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
+        } catch (Exception e) {
+            System.out.println("Error while encrypting: " + e.toString());
+        }
+        return null;
+    }
+
+    public static SecretKeySpec setKey(String myKey) {
+        MessageDigest sha = null;
+        byte[] key = {};
+        try {
+            key = myKey.getBytes("UTF-8");
+            sha = MessageDigest.getInstance("SHA-1");
+            key = sha.digest(key);
+            key = Arrays.copyOf(key, 16);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return new SecretKeySpec(key, "AES");
+    }
     private void initializeGPAYButton(final Task<PaymentData> taskDefaultPaymentData) {
         btnGPAY.setOnClickListener(new SingleClickOnClickListener() {
             @Override

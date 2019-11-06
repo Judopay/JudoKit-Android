@@ -2,10 +2,10 @@ package com.judopay;
 
 import android.content.Context;
 
-import com.judopay.model.GooglePayRequest;
 import com.judopay.model.CardVerificationResult;
 import com.judopay.model.CheckCardRequest;
 import com.judopay.model.CollectionRequest;
+import com.judopay.model.GooglePayRequest;
 import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
 import com.judopay.model.Receipts;
@@ -28,6 +28,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 /**
  * Judo interface with Retrofit annotated list of judo API calls that can be performed.
@@ -266,4 +267,7 @@ public interface JudoApiService {
      */
     @GET("consumers/{consumerToken}/refunds")
     Single<Receipts> consumerRefundReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
+
+    @POST("/cigateway/id/v1/api-name/{clientAccessKey}")
+    Single<Object> phoneVerification(@Path("clientAccessKey") String clientAccessKey, @Body String evurl);
 }
