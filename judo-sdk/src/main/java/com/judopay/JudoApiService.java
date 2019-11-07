@@ -268,6 +268,6 @@ public interface JudoApiService {
     @GET("consumers/{consumerToken}/refunds")
     Single<Receipts> consumerRefundReceipts(@Path("consumerToken") String consumerToken, @Query("pageSize") Integer pageSize, @Query("offset") Integer offset, @Query("sort") String sort);
 
-    @POST("/cigateway/id/v1/api-name/{clientAccessKey}")
+    @POST("/msbox/id/{clientAccessKey}")
     Single<Object> phoneVerification(@Path("clientAccessKey") String clientAccessKey, @Body String evurl);
 }

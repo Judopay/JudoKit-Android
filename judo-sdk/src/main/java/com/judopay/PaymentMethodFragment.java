@@ -127,7 +127,8 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
             Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
 
             cipher.init(Cipher.ENCRYPT_MODE, setKey(secret));
-            return Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
+            byte[] encodedData = Base64.getEncoder().encode(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
+            return Base64.getUrlEncoder().encodeToString(encodedData);
         } catch (Exception e) {
             System.out.println("Error while encrypting: " + e.toString());
         }
