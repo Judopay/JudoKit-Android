@@ -37,6 +37,7 @@ import java.util.Base64;
 import java.util.EnumSet;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -95,7 +96,7 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
 //                startActivityForResult(intent, PAYMENT_REQUEST);
                 JudoApiService apiService = getJudo().getApiService(getActivity(), Judo.UI_CLIENT_MODE_JUDO_SDK);
                 String evurlEncryptionKey = "jpcvSrx314vCWlR84hgdng==";
-                String cipherSalt = "&cipherSalt=BOeg3HVwm9aBacHT";
+                String cipherSalt = "1234567891234567";
 
                 String clientAccessKey = "xM8sWMFO";
                 String correlationId = "correlationid=1422740606035IA";
@@ -107,9 +108,11 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
                 System.out.println(dataPlain);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     System.out.println("ININ");
-                    String dataEncoded = encrypt(dataPlain, evurlEncryptionKey);
+                    String dataEncoded = encrypt(dataPlain, evurlEncryptionKey, cipherSalt);
                     System.out.println(dataEncoded + " dataencoded");
-                    apiService.phoneVerification(clientAccessKey, "data="+dataEncoded + cipherSalt)
+                    System.out.println(decryptPayload(evurlEncryptionKey, dataEncoded, "AES/CTR/NoPadding", cipherSalt));
+
+                    apiService.phoneVerification(clientAccessKey, "data="+dataEncoded + "&cipherSalt="+cipherSalt)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribeOn(Schedulers.io())
                             .subscribe(o -> {
@@ -122,12 +125,11 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static String encrypt(String strToEncrypt, String secret) {
+    public static String encrypt(String strToEncrypt, String secret, String cipherSalt) {
         try {
             Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
-
-            cipher.init(Cipher.ENCRYPT_MODE, setKey(secret));
-            byte[] encodedData = Base64.getEncoder().encode(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
+            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(secret.getBytes(), "AES"), new IvParameterSpec(cipherSalt.getBytes("UTF-8")));
+            byte[] encodedData= Base64.getEncoder().encode(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
             return Base64.getUrlEncoder().encodeToString(encodedData);
         } catch (Exception e) {
             System.out.println("Error while encrypting: " + e.toString());
@@ -135,21 +137,31 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
         return null;
     }
 
-    public static SecretKeySpec setKey(String myKey) {
-        MessageDigest sha = null;
-        byte[] key = {};
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static String decryptPayload(String aesDecryptionKey, String encryptedData, String encryptionType, String cipherSalt) {
+        System.out.println("aesDecryptionKey:" + aesDecryptionKey + ",   encryptedData: " + encryptedData + ", encryptionType: " + encryptionType + ",cipherSalt: " + cipherSalt);
+
         try {
-            key = myKey.getBytes("UTF-8");
-            sha = MessageDigest.getInstance("SHA-1");
-            key = sha.digest(key);
-            key = Arrays.copyOf(key, 16);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            byte[] decodedSecretKey = Base64.getDecoder().decode(aesDecryptionKey);
+            byte[] decodedPayload = Base64.getDecoder().decode(encryptedData.trim());
+            IvParameterSpec iv = null;
+            Cipher cipher = Cipher.getInstance(encryptionType);
+            SecretKeySpec secretKeySpec = new SecretKeySpec(decodedSecretKey, "AES");
+            if (cipherSalt != null) {
+                iv = new IvParameterSpec(cipherSalt.getBytes("UTF-8"));
+            } else {
+                System.out.println(" SALT MISSING. SKIPPING IV creation ENCRYPTION ALGO is: " + encryptionType);
+            }
+            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, iv);
+            byte[] decryptedDataBytes = cipher.doFinal(decodedPayload);
+            String decryptedData = new String(decryptedDataBytes);
+            return decryptedData;
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        return new SecretKeySpec(key, "AES");
+        return null;
     }
+
     private void initializeGPAYButton(final Task<PaymentData> taskDefaultPaymentData) {
         btnGPAY.setOnClickListener(new SingleClickOnClickListener() {
             @Override
