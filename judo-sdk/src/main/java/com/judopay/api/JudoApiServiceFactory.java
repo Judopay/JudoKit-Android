@@ -96,9 +96,9 @@ public class JudoApiServiceFactory {
                     .tlsVersions(TlsVersion.TLS_1_2)
                     .build());
 
-            OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                    .sslSocketFactory(new Tls12SslSocketFactory(sslContext.getSocketFactory()), trustManager)
-                    .connectionSpecs(specs);
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+//                    .sslSocketFactory(new Tls12SslSocketFactory(sslContext.getSocketFactory()), trustManager)
+//                    .connectionSpecs(specs);
 
             switch (judo.getEnvironment()) {
                 case Judo.LIVE:
