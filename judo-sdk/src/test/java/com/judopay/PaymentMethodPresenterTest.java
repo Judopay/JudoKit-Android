@@ -59,4 +59,18 @@ public class PaymentMethodPresenterTest {
         verify(view, never()).displayPaymentMethodView(anyInt());
         verify(view).displayAllPaymentMethods();
     }
+
+    @Test
+    public void shouldShowIdealButtonWithIdealEnabledIsTrue() {
+        presenter.setIdealPaymentMethod(true);
+
+        verify(view).showIdealButton();
+    }
+
+    @Test
+    public void shouldSetIdealPaymentClickListenerWithIdealEnabledIsTrue() {
+        presenter.setIdealPaymentMethod(true);
+
+        verify(view).setIdealPaymentClickListener();
+    }
 }

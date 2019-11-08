@@ -61,5 +61,45 @@
     <string name="processing">Processing…</string>
 
     <!-- iDEAL-->
-    <string name="ideal_payment">iDEAL payment</string>
+    <string name="ideal">iDEAL</string>
+    <string name="enter_name">Enter your name</string>
+    <string name="pay_with_ideal">Pay with iDEAL</string>
+    <string name="select_bank">Select a bank</string>
+    <string name="bank">Bank</string>
+
+    <string name="bank_rabo" translatable="false">Rabobank</string>
+    <string name="bank_abn_amro" translatable="false">ABN-AMRO</string>
+    <string name="bank_van_lanschot_bankiers" translatable="false">Van Lanschot Bankiers</string>
+    <string name="bank_triodos" translatable="false">Triodos Bank</string>
+    <string name="bank_ing" translatable="false">ING Bank</string>
+    <string name="bank_sns" translatable="false">SNS Bank</string>
+    <string name="bank_asn" translatable="false">ASN</string>
+    <string name="bank_regio" translatable="false">RegioBank</string>
+    <string name="bank_knab" translatable="false">Knab</string>
+    <string name="bank_bunq" translatable="false">Bunq</string>
+    <string name="bank_moneyou" translatable="false">Moneyou</string>
+    <string name="bank_handelsbanken" translatable="false">Handelsbanken</string>
+
+    <string name="bank_rabo_bic" translatable="false">RABONL2U</string>
+    <string name="bank_abn_amro_bic" translatable="false">ABNANL2A</string>
+    <string name="bank_van_lanschot_bic" translatable="false">FVLBNL22</string>
+    <string name="bank_triodos_bic" translatable="false">TRIONL2U</string>
+    <string name="bank_ing_bic" translatable="false">INGBNL2A</string>
+    <string name="bank_sns_bic" translatable="false">SNSBNL2A</string>
+    <string name="bank_asn_bic" translatable="false">ASNBNL2A</string>
+    <string name="bank_regio_bic" translatable="false">RBRBNL21</string>
+    <string name="bank_knab_bic" translatable="false">KNABNL2H</string>
+    <string name="bank_bunq_bic" translatable="false">BUNQNL2A</string>
+    <string name="bank_moneyou_bic" translatable="false">MOYONL21</string>
+    <string name="bank_handelsbanken_bic" translatable="false">HANDNL2A</string>
+
+    <string name="order_timeout">Your request has been timed out</string>
+    <string name="order_fail">Order failed</string>
+    <string name="order_success">Order successful</string>
+    <string name="try_again">Try again</string>
+    <string name="close">Close</string>
+    <string name="no_internet">No network connection</string>
+    <string name="there_is_a_delay">There is a delay… Please wait</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="order_pending">Order pending</string>
 </resources>

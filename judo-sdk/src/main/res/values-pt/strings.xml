@@ -49,5 +49,14 @@
     <string name="google_pay_button_overlay">Google Pay botão sobreposição</string>
 
     <!-- iDEAL-->
-    <string name="ideal_payment">iDEAL pagamento</string>
+    <string name="ideal">iDEAL</string>
+    <string name="enter_name">Digite seu nome</string>
+    <string name="pay_with_ideal">Pague com iDEAL</string>
+    <string name="select_bank">Selecione um banco</string>
+    <string name="bank">Banco</string>
+    <string name="close">Fechar</string>
+    <string name="order_fail">Falha no pedido</string>
+    <string name="order_success">Encomenda bem sucedida</string>
+    <string name="order_timeout">O seu pedido foi excedido</string>
+    <string name="try_again">Tente novamente</string>
 </resources>

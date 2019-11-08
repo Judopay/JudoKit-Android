@@ -14,4 +14,7 @@
     <color name="judo_black_54">#89000000</color>
     <color name="judo_black_87">#DE000000</color>
 
+    <color name="ideal_violet">#BC2965</color>
+    <color name="ideal_violet_dark">#9C2E58</color>
+
 </resources>

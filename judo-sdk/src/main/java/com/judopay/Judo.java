@@ -63,12 +63,17 @@ public class Judo implements Parcelable {
     public static final int GPAY_REQUEST = 500;
     public static final int GPAY_ERROR_RESULT = 501;
     public static final int IDEAL_PAYMENT = 600;
+    public static final int IDEAL_ERROR = 601;
+    public static final int IDEAL_SUCCESS = 602;
 
     public static final String JUDO_CARD = "JudoCard";
     public static final String JUDO_OPTIONS = "Judo";
     public static final String JUDO_RECEIPT = "JudoReceipt";
     public static final String GPAY_STATUS = "GPayStatus";
     public static final String GPAY_PREAUTH = "GPayPreAuth";
+    public static final String IDEAL_REDIRECT_URL = "idealRedirectUrl";
+    public static final String IDEAL_ORDER_ID = "idealOrderId";
+    public static final String IDEAL_STATUS = "idealStatus";
 
     public static final int UI_CLIENT_MODE_JUDO_SDK = 1;
 
@@ -94,6 +99,7 @@ public class Judo implements Parcelable {
     private Integer environment;
 
     private boolean avsEnabled;
+    private boolean idealEnabled;
     private boolean amexEnabled;
     private boolean maestroEnabled;
     private boolean sslPinningEnabled;
@@ -132,6 +138,7 @@ public class Judo implements Parcelable {
         this.apiSecret = judoIn.readString();
         this.environment = (Integer) judoIn.readValue(Integer.class.getClassLoader());
         this.avsEnabled = judoIn.readByte() != 0;
+        this.idealEnabled = judoIn.readByte() != 0;
         this.amexEnabled = judoIn.readByte() != 0;
         this.maestroEnabled = judoIn.readByte() != 0;
         this.sslPinningEnabled = judoIn.readByte() != 0;
@@ -179,6 +186,7 @@ public class Judo implements Parcelable {
                 .setMetaData(metaData)
                 .setAddress(address)
                 .setAvsEnabled(avsEnabled)
+                .setIdealEnabled(idealEnabled)
                 .setAmexEnabled(amexEnabled)
                 .setMaestroEnabled(maestroEnabled)
                 .setSslPinningEnabled(sslPinningEnabled)
@@ -335,6 +343,10 @@ public class Judo implements Parcelable {
         return avsEnabled;
     }
 
+    public boolean isIdealEnabled() {
+        return idealEnabled;
+    }
+
     public boolean isMaestroEnabled() {
         return maestroEnabled;
     }
@@ -377,6 +389,7 @@ public class Judo implements Parcelable {
         dest.writeString(this.apiSecret);
         dest.writeValue(this.environment);
         dest.writeByte(this.avsEnabled ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.idealEnabled ? (byte) 1 : (byte) 0);
         dest.writeByte(this.amexEnabled ? (byte) 1 : (byte) 0);
         dest.writeByte(this.maestroEnabled ? (byte) 1 : (byte) 0);
         dest.writeByte(this.sslPinningEnabled ? (byte) 1 : (byte) 0);
@@ -438,6 +451,7 @@ public class Judo implements Parcelable {
 
         private boolean avsEnabled;
         private boolean amexEnabled = true;
+        private boolean idealEnabled = false;
         private boolean maestroEnabled = true;
         private boolean sslPinningEnabled = true;
         private boolean rootedDevicesAllowed = true;
@@ -548,6 +562,11 @@ public class Judo implements Parcelable {
             return this;
         }
 
+        public Builder setIdealEnabled(final boolean idealEnabled) {
+            this.idealEnabled = idealEnabled;
+            return this;
+        }
+
         public Builder setAmexEnabled(final boolean amexEnabled) {
             this.amexEnabled = amexEnabled;
             return this;
@@ -621,6 +640,7 @@ public class Judo implements Parcelable {
             judo.address = address;
 
             judo.avsEnabled = avsEnabled;
+            judo.idealEnabled = idealEnabled;
             judo.amexEnabled = amexEnabled;
             judo.maestroEnabled = maestroEnabled;
             judo.sslPinningEnabled = sslPinningEnabled;

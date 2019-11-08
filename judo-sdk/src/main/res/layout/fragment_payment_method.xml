@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -18,18 +19,50 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="@dimen/judo_carg_payment_btn_margin"
-        android:layout_marginRight="@dimen/judo_carg_payment_btn_margin"
+        android:layout_marginLeft="@dimen/judo_payment_method_button_margin"
+        android:layout_marginRight="@dimen/judo_payment_method_button_margin"
         android:text="@string/judo_card_payment" />
+
+    <LinearLayout
+        android:id="@+id/ideal_payment_button"
+        style="@style/Widget.Judo.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/judo_payment_method_button_margin"
+        android:layout_marginTop="@dimen/judo_payment_method_button_margin"
+        android:layout_marginRight="@dimen/judo_payment_method_button_margin"
+        android:background="@drawable/ideal_button_selector"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/ideal_logo"
+            android:layout_width="@dimen/image_button_height"
+            android:layout_height="@dimen/image_button_width"
+            android:layout_marginEnd="@dimen/small_padding"
+            android:src="@drawable/ic_bank_ideal" />
+
+        <TextView
+            android:id="@+id/ideal_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="@string/ideal"
+            android:textAllCaps="false"
+            android:textColor="@color/judo_white"
+            android:textSize="@dimen/text_size_large"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <include
         android:id="@+id/btnGPAY"
         layout="@layout/googlepay_button_no_shadow"
         android:layout_width="match_parent"
         android:layout_height="@dimen/judo_gpay_btn_height"
-        android:layout_marginLeft="@dimen/judo_gpay_btn_margin"
-        android:layout_marginRight="@dimen/judo_gpay_btn_margin"
-        android:layout_marginTop="@dimen/judo_gpay_btn_margin"
+        android:layout_marginLeft="@dimen/judo_payment_method_button_margin"
+        android:layout_marginTop="@dimen/judo_payment_method_button_margin"
+        android:layout_marginRight="@dimen/judo_payment_method_button_margin"
         android:visibility="gone" />
 
 </LinearLayout>

@@ -24,4 +24,11 @@ class PaymentMethodPresenter extends BasePresenter<PaymentMethodView> {
             }
         }
     }
+
+    void setIdealPaymentMethod(boolean idealEnabled) {
+        if (idealEnabled) {
+            getView().showIdealButton();
+            getView().setIdealPaymentClickListener();
+        }
+    }
 }

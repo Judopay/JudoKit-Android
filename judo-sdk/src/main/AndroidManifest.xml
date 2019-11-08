@@ -23,6 +23,10 @@
         <activity
             android:name=".PaymentMethodActivity"
             android:theme="@style/Theme.Judo.Light.DarkActionBar" />
+        <activity
+            android:name=".IdealPaymentActivity"
+            android:theme="@style/Theme.Judo.Light.DarkActionBar"
+            android:windowSoftInputMode="adjustResize"/>
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
             android:value="true" />

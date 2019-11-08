@@ -8,4 +8,8 @@ interface PaymentMethodView extends BaseView {
     void displayAllPaymentMethods();
 
     void setUpGPayButton();
+
+    void showIdealButton();
+
+    void setIdealPaymentClickListener();
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.judopay.IdealPaymentActivity;
 import com.judopay.Judo;
 import com.judopay.PaymentActivity;
 import com.judopay.PaymentMethodActivity;
@@ -85,6 +86,49 @@ public class PaymentMethodTest {
         onView(withId(R.id.btnCardPayment)).perform(click());
 
         intended(hasComponent(PaymentActivity.class.getName()));
+        release();
+    }
+
+    @Test
+    public void shouldBeVisibleIdealPaymentButtonOnIdealEnabled() {
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .newBuilder()
+                .setIdealEnabled(true)
+                .build());
+
+        activityTestRule.launchActivity(intent);
+
+        onView(withId(R.id.ideal_payment_button)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void shouldNotBeVisibleIdealPaymentButtonOnIdealDisabled() {
+        Intent intent = new Intent();
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .newBuilder()
+                .setIdealEnabled(false)
+                .build());
+
+        activityTestRule.launchActivity(intent);
+
+        onView(withId(R.id.ideal_payment_button)).check(matches(not(isDisplayed())));
+    }
+
+    @Test
+    public void shouldStartIdealPaymentFlowOnIdealButtonClick() {
+        init();
+        Intent intent = new Intent(getInstrumentation().getTargetContext(), PaymentMethodActivity.class);
+        intent.putExtra(Judo.JUDO_OPTIONS, getJudo()
+                .newBuilder()
+                .setIdealEnabled(true)
+                .build());
+
+        activityTestRule.launchActivity(intent);
+
+        onView(withId(R.id.ideal_payment_button)).perform(click());
+
+        intended(hasComponent(IdealPaymentActivity.class.getName()));
         release();
     }
 }

@@ -3,10 +3,11 @@ package com.judopay;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import android.util.Log;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.wallet.AutoResolveHelper;
@@ -14,6 +15,7 @@ import com.google.android.gms.wallet.PaymentData;
 import com.google.gson.Gson;
 import com.judopay.arch.GooglePaymentUtils;
 import com.judopay.model.GooglePayRequest;
+import com.judopay.model.OrderStatus;
 import com.judopay.model.Receipt;
 
 import java.io.Reader;
@@ -26,9 +28,12 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 
+import static com.judopay.Judo.IDEAL_ORDER_ID;
+import static com.judopay.Judo.IDEAL_STATUS;
+
 /**
  * Displays a screen with different payment methods Judopay supports.
- *
+ * <p>
  * To launch the PaymentMethodActivity, {@link android.app.Activity#startActivityForResult(Intent, int)}
  * with an Intent containing the configuration options:
  *
@@ -45,7 +50,7 @@ import retrofit2.HttpException;
  *
  * startActivityForResult(intent, PAYMENT_METHOD);
  * </pre>
- *
+ * <p>
  * See {@link Judo} for the full list of supported options
  */
 public class PaymentMethodActivity extends BaseActivity {
@@ -73,7 +78,6 @@ public class PaymentMethodActivity extends BaseActivity {
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, @Nullable final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == Judo.GPAY_REQUEST) {
             switch (resultCode) {
                 case Activity.RESULT_OK:
@@ -104,6 +108,25 @@ public class PaymentMethodActivity extends BaseActivity {
                 finish();
             }
         }
+        if (requestCode == Judo.IDEAL_PAYMENT && resultCode == Judo.IDEAL_SUCCESS) {
+            Intent intent = new Intent();
+            String orderId = data.getStringExtra(IDEAL_ORDER_ID);
+            OrderStatus status = (OrderStatus) data.getSerializableExtra(IDEAL_STATUS);
+            intent.putExtra(IDEAL_ORDER_ID, orderId);
+            intent.putExtra(IDEAL_STATUS, status);
+            if (status != null) {
+                switch (status) {
+                    case SUCCESS:
+                        setResult(Judo.IDEAL_SUCCESS, intent);
+                        break;
+                    case FAIL:
+                        setResult(Judo.IDEAL_ERROR, intent);
+                        break;
+                }
+            }
+            finish();
+        }
+
     }
 
     private void finishGPayRequest(final GooglePayRequest googlePayRequest) {

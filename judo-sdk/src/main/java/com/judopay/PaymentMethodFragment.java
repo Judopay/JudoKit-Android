@@ -2,21 +2,23 @@ package com.judopay;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wallet.AutoResolveHelper;
 import com.google.android.gms.wallet.PaymentData;
 import com.google.android.gms.wallet.PaymentDataRequest;
 import com.google.android.gms.wallet.PaymentsClient;
-import com.judopay.arch.GooglePaymentUtils;
 import com.judopay.arch.GooglePayIsReadyResult;
+import com.judopay.arch.GooglePaymentUtils;
 import com.judopay.model.PaymentMethod;
 import com.judopay.view.SingleClickOnClickListener;
 
@@ -30,6 +32,7 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
     private PaymentMethodPresenter presenter;
 
     private Button btnCardPayment;
+    private LinearLayout btnIdealPayment;
     private View btnGPAY;
 
     public static Fragment newInstance(final Bundle extras) {
@@ -59,10 +62,12 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         btnCardPayment = view.findViewById(R.id.btnCardPayment);
         btnGPAY = view.findViewById(R.id.btnGPAY);
+        btnIdealPayment = view.findViewById(R.id.ideal_payment_button);
 
         initializeCardPaymentButton();
 
         presenter.setPaymentMethod(paymentMethod);
+        presenter.setIdealPaymentMethod(getJudo().isIdealEnabled());
     }
 
     private void initializeCardPaymentButton() {
@@ -112,6 +117,21 @@ public class PaymentMethodFragment extends BaseFragment implements PaymentMethod
                     final Task<PaymentData> taskDefaultPaymentData = googlePayClient.loadPaymentData(defaultPaymentData);
                     initializeGPAYButton(taskDefaultPaymentData);
                 }
+            }
+        });
+    }
+
+    @Override
+    public void showIdealButton() {
+        btnIdealPayment.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setIdealPaymentClickListener() {
+        btnIdealPayment.setOnClickListener(new SingleClickOnClickListener() {
+            @Override
+            public void doClick() {
+                IdealPaymentActivity.openIdealScreen(getActivity(), getJudo());
             }
         });
     }

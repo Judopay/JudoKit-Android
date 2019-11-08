@@ -11,11 +11,16 @@ import com.judopay.model.Receipt;
 import com.judopay.model.Receipts;
 import com.judopay.model.RefundRequest;
 import com.judopay.model.RegisterCardRequest;
+import com.judopay.model.SaleRequest;
+import com.judopay.model.SaleResponse;
+import com.judopay.model.SaleStatusRequest;
+import com.judopay.model.SaleStatusResponse;
 import com.judopay.model.SaveCardRequest;
 import com.judopay.model.TokenRequest;
 import com.judopay.model.VCOPaymentRequest;
 import com.judopay.model.VoidRequest;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -141,6 +146,12 @@ public interface JudoApiService {
 
     @POST("transactions/preauths")
     Single<Receipt> vcoPreAuth(@Body VCOPaymentRequest vcoPaymentRequest);
+
+    @POST("order/bank/sale")
+    Single<SaleResponse> sale(@Body SaleRequest saleRequest);
+
+    @POST("order/statusrequest")
+    Observable<SaleStatusResponse> status(@Body SaleStatusRequest saleStatusRequest);
 
     /**
      * List all payment receipts for the account

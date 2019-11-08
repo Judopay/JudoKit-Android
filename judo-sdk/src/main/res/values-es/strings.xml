@@ -49,5 +49,14 @@
     <string name="google_pay_button_overlay">Google Pay botón cubrir</string>
 
     <!-- iDEAL-->
-    <string name="ideal_payment">iDEAL pago</string>
+    <string name="ideal">iDEAL</string>
+    <string name="enter_name">ingresa tu nombre</string>
+    <string name="pay_with_ideal">Pagar con iDEAL</string>
+    <string name="select_bank">Selecciona un banco</string>
+    <string name="bank">Banco</string>
+    <string name="close">Cerrar</string>
+    <string name="order_fail">Orden fallida</string>
+    <string name="order_success">Pedido exitoso</string>
+    <string name="order_timeout">Su solicitud ha expirado</string>
+    <string name="try_again">Inténtalo de nuevo</string>
 </resources>
