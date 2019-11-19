@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static android.os.Build.VERSION.SDK_INT;
@@ -35,6 +36,7 @@ public class CardVerificationWebView extends WebView implements JsonParsingJavaS
     private AuthorizationListener authorizationListener;
     private String receiptId;
     private WebViewListener resultPageListener;
+    private Disposable disposable;
 
     public CardVerificationWebView(final Context context) {
         super(context);
@@ -108,7 +110,7 @@ public class CardVerificationWebView extends WebView implements JsonParsingJavaS
         Gson gson = new Gson();
 
         CardVerificationResult cardVerificationResult = gson.fromJson(json, CardVerificationResult.class);
-        authorizationListener.onAuthorizationCompleted(cardVerificationResult, receiptId)
+        disposable = authorizationListener.onAuthorizationCompleted(cardVerificationResult, receiptId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
@@ -116,5 +118,13 @@ public class CardVerificationWebView extends WebView implements JsonParsingJavaS
 
     public void setResultPageListener(final WebViewListener resultPageListener) {
         this.resultPageListener = resultPageListener;
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        if (disposable != null) {
+            disposable.dispose();
+        }
+        super.onDetachedFromWindow();
     }
 }
