@@ -22,12 +22,16 @@ public class CardNumberValidator implements Validator {
 
     @Override
     public Observable<Validation> onValidate() {
-        return Observable.create(emitter -> editText.addTextChangedListener(new SimpleTextWatcher() {
+
+        return Observable.create(emitter -> {
+            emitter.onNext(getValidation(editText.getText().toString().replaceAll("\\s+", "")));
+            editText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             protected void onTextChanged(final CharSequence text) {
                 emitter.onNext(getValidation(text.toString().replaceAll("\\s+", "")));
             }
-        }));
+            });
+        });
     }
 
     private Validation getValidation(final String cardNumber) {

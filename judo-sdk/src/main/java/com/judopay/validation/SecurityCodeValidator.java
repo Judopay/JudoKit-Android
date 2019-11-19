@@ -18,13 +18,17 @@ public class SecurityCodeValidator implements Validator {
 
     @Override
     public Observable<Validation> onValidate() {
-        return Observable.create(emitter -> editText.addTextChangedListener(new SimpleTextWatcher() {
+        return Observable.create(emitter -> {
+            Validation validation = new Validation(isValid(editText.getText()), R.string.check_cvv, true);
+            emitter.onNext(validation);
+            editText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             protected void onTextChanged(final CharSequence text) {
                 Validation validation = new Validation(isValid(text), R.string.check_cvv, true);
                 emitter.onNext(validation);
             }
-        }));
+            });
+        });
     }
 
     private boolean isValid(final CharSequence text) {
