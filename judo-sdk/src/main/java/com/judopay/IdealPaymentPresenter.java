@@ -3,9 +3,11 @@ package com.judopay;
 import com.judopay.model.OrderDetails;
 import com.judopay.model.OrderStatus;
 import com.judopay.model.SaleRequest;
+import com.judopay.model.SaleResponse;
 import com.judopay.model.SaleStatusRequest;
 import com.judopay.util.DateUtil;
 
+import java.math.BigDecimal;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.Calendar;
@@ -21,11 +23,13 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
     private final static int SPINNER_ITEM_PLACEHOLDER_POSITION = 0;
     private final static int STATUS_FIRST_REQUEST = 1;
     private final static int DELAY = 5;
-    private final static int INTERVAL = 30;
+    private final static String IDEAL_PAYMENT_METHOD = "IDEAL";
+    private final static String COUNTRY = "NL";
 
+    private SaleResponse saleResponse;
     private int statusRequestCounter = STATUS_FIRST_REQUEST;
-    private Long thirtySecondsFromNow;
-    private Long oneMinuteFromNow;
+    private Long halfIntervalFromNow;
+    private Long fullIntervalFromNow;
 
     private JudoApiService apiService;
     private DateUtil dateUtil;
@@ -50,12 +54,15 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
         }
     }
 
-    void onPayClicked(SaleRequest saleRequest) {
+    void onPayClicked() {
         disposables.add(
-                apiService.sale(saleRequest)
+                apiService.sale(buildSaleRequest(getView().getJudo(), getView().getName(), getView().getBank()))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(saleResponse -> getView().configureWebView(saleResponse.getRedirectUrl()),
+                        .subscribe(saleResponse -> {
+                                    this.saleResponse = saleResponse;
+                                    getView().configureWebView(saleResponse.getRedirectUrl());
+                                },
                                 throwable -> getView().showGeneralError()));
     }
 
@@ -91,15 +98,10 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
         );
     }
 
-    void retryStatusRequest() {
-        this.statusRequestCounter = STATUS_FIRST_REQUEST;
-        getView().hideStatusButton();
-        getView().hideDelayLabel();
-    }
-
     @Override
-    public void onPageStarted(SaleStatusRequest saleStatusRequest) {
+    public void onPageStarted(String checksum) {
         getView().hideWebView();
+        SaleStatusRequest saleStatusRequest = buildSaleStatusRequest(getView().getJudo(), checksum);
         getTransactionStatus(saleStatusRequest);
     }
 
@@ -109,13 +111,11 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
 
     private ObservableSource<? extends Long> handlePollingState() {
         long now = dateUtil.getDate().getTime();
-        if (now >= thirtySecondsFromNow) {
+        if (now >= halfIntervalFromNow) {
             getView().showDelayLabel();
-            getView().showStatusButton();
-            getView().setRetryClickListener();
         }
-        if (now >= oneMinuteFromNow) {
-            throw new RuntimeException();
+        if (now >= fullIntervalFromNow) {
+            throw new PollingTimeoutException();
         }
         statusRequestCounter++;
         return Observable.timer(DELAY, TimeUnit.SECONDS);
@@ -123,11 +123,15 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
 
     private void handleStatusError(SaleStatusRequest saleStatusRequest, Throwable throwable) {
         getView().hideLoading();
-        getView().setStatusClickListener(saleStatusRequest);
         if (throwable instanceof SocketTimeoutException || throwable instanceof UnknownHostException) {
             getView().showStatus(OrderStatus.NETWORK_ERROR);
-        } else {
+            getView().setStatusClickListener(saleStatusRequest);
+        } else if (throwable instanceof PollingTimeoutException) {
             getView().showStatus(OrderStatus.TIMEOUT);
+            getView().setCloseClickListener(saleStatusRequest.getOrderId(), OrderStatus.TIMEOUT);
+        } else {
+            getView().showStatus(OrderStatus.FAIL);
+            getView().setCloseClickListener(saleStatusRequest.getOrderId(), OrderStatus.FAIL);
         }
         statusRequestCounter = STATUS_FIRST_REQUEST;
     }
@@ -139,8 +143,35 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
     private void setDateInterval() {
         if (statusRequestCounter == STATUS_FIRST_REQUEST) {
             Calendar calendar = dateUtil.getCalendar();
-            thirtySecondsFromNow = dateUtil.getTimeWithInterval(calendar, INTERVAL, Calendar.SECOND);
-            oneMinuteFromNow = dateUtil.getTimeWithInterval(calendar, INTERVAL, Calendar.SECOND);
+            halfIntervalFromNow = dateUtil.getTimeWithInterval(calendar, getView().getJudo().getIdealTimeout() / 2, Calendar.SECOND);
+            fullIntervalFromNow = dateUtil.getTimeWithInterval(calendar, getView().getJudo().getIdealTimeout() / 2, Calendar.SECOND);
         }
+    }
+
+    SaleRequest buildSaleRequest(Judo judo, String name, String bic) {
+        return new SaleRequest(
+                COUNTRY,
+                new BigDecimal(judo.getAmount()),
+                judo.getPaymentReference(),
+                judo.getMetaDataMap(),
+                judo.getConsumerReference(),
+                name,
+                IDEAL_PAYMENT_METHOD,
+                judo.getJudoId(),
+                judo.getCurrency(),
+                bic
+        );
+    }
+
+    SaleStatusRequest buildSaleStatusRequest(Judo judo, String checksum) {
+        return new SaleStatusRequest(
+                saleResponse.getOrderId(),
+                saleResponse.getMerchantPaymentReference(),
+                checksum,
+                IDEAL_PAYMENT_METHOD,
+                judo.getJudoId(),
+                judo.getMetaDataMap(),
+                judo.getConsumerReference()
+        );
     }
 }

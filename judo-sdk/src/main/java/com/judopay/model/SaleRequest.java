@@ -1,10 +1,11 @@
 package com.judopay.model;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 public class SaleRequest {
     private String country;
-    private String amount;
+    private BigDecimal amount;
     private String merchantPaymentReference;
     private Map<String, String> paymentMetadata;
     private String merchantConsumerReference;
@@ -14,11 +15,24 @@ public class SaleRequest {
     private String currency;
     private String bic;
 
+    public SaleRequest(String country, BigDecimal amount, String merchantPaymentReference, Map<String, String> paymentMetadata, String merchantConsumerReference, String accountHolderName, String paymentMethod, String siteId, String currency, String bic) {
+        this.country = country;
+        this.amount = amount;
+        this.merchantPaymentReference = merchantPaymentReference;
+        this.paymentMetadata = paymentMetadata;
+        this.merchantConsumerReference = merchantConsumerReference;
+        this.accountHolderName = accountHolderName;
+        this.paymentMethod = paymentMethod;
+        this.siteId = siteId;
+        this.currency = currency;
+        this.bic = bic;
+    }
+
     public String getCountry() {
         return country;
     }
 
-    public String getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 

@@ -1,6 +1,8 @@
 package com.judopay;
 
 import com.judopay.model.OrderStatus;
+import com.judopay.model.SaleRequest;
+import com.judopay.model.SaleResponse;
 import com.judopay.model.SaleStatusRequest;
 
 interface IdealPaymentView extends BaseView {
@@ -32,13 +34,11 @@ interface IdealPaymentView extends BaseView {
 
     void showGeneralError();
 
-    void showStatusButton();
-
-    void setRetryClickListener();
-
-    void hideStatusButton();
-
-    void hideDelayLabel();
-
     void hideWebView();
+
+    Judo getJudo();
+
+    String getName();
+
+    String getBank();
 }

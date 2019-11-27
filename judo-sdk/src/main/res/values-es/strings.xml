@@ -59,4 +59,9 @@
     <string name="order_success">Pedido exitoso</string>
     <string name="order_timeout">Su solicitud ha expirado</string>
     <string name="try_again">Inténtalo de nuevo</string>
+    <string name="no_internet">No hay conexion de red</string>
+    <string name="order_pending">Orden pendiente</string>
+    <string name="something_went_wrong">Algo salió mal</string>
+    <string name="there_is_a_delay">Hay un retraso ... por favor espere</string>
+    <string name="payment_status">Estado de pago</string>
 </resources>

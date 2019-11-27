@@ -17,11 +17,9 @@ public class IdealWebViewClient extends WebViewClient {
     @Override
     public void onPageStarted(final WebView view, final String url, final Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
-        if(url.contains("txid=")){
+        if(url.contains("https://judopay.com/")){
             String checksum = url.split("cs=")[1];
-            SaleStatusRequest saleStatusRequest = new SaleStatusRequest();
-            saleStatusRequest.setChecksum(checksum);
-            callback.onPageStarted(saleStatusRequest);
+            callback.onPageStarted(checksum);
         }
     }
 }

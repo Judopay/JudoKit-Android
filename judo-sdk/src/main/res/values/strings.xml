@@ -102,4 +102,5 @@
     <string name="there_is_a_delay">There is a delay… Please wait</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="order_pending">Order pending</string>
+    <string name="payment_status">Payment status</string>
 </resources>

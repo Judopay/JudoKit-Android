@@ -1,5 +1,6 @@
 package com.judopay;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +22,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.material.textfield.TextInputEditText;
 import com.judopay.model.Bank;
 import com.judopay.model.OrderStatus;
-import com.judopay.model.SaleRequest;
 import com.judopay.model.SaleStatusRequest;
 import com.judopay.util.DefaultDateUtil;
 
@@ -30,6 +30,8 @@ import static com.judopay.Judo.IDEAL_PAYMENT;
 import static com.judopay.Judo.IDEAL_STATUS;
 
 public class IdealPaymentActivity extends BaseActivity implements IdealPaymentView {
+    private final static String IDEAL_HOST = "https://api.judopay.com/";
+
     private IdealPaymentPresenter presenter;
 
     TextInputEditText nameEditText;
@@ -60,6 +62,7 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
         statusButton = findViewById(R.id.status_button);
         idealWebView = findViewById(R.id.ideal_web_view);
 
+        getJudo().setEnvironmentHost(IDEAL_HOST);
         JudoApiService apiService = getJudo().getApiService(this, Judo.UI_CLIENT_MODE_JUDO_SDK);
         presenter = new IdealPaymentPresenter(this, apiService, new DefaultDateUtil());
         presenter.onCreate();
@@ -68,11 +71,12 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
     @Override
     public void registerPayClickListener() {
         payWithIdealButton.setOnClickListener(view -> {
-            presenter.onPayClicked(new SaleRequest());
+            presenter.onPayClicked();
             closeKeyboard(view);
         });
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void configureWebView(String url) {
         idealWebView.setVisibility(View.VISIBLE);
@@ -168,29 +172,24 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
     }
 
     @Override
-    public void showStatusButton() {
-        statusButton.setText(R.string.try_again);
-        statusButton.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void setRetryClickListener() {
-        statusButton.setOnClickListener(view -> presenter.retryStatusRequest());
-    }
-
-    @Override
-    public void hideStatusButton() {
-        statusButton.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void hideDelayLabel() {
-        statusTextView.setText(R.string.processing_payment);
-    }
-
-    @Override
     public void hideWebView() {
         idealWebView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public Judo getJudo() {
+        return super.getJudo();
+    }
+
+    @Override
+    public String getName() {
+        return nameEditText.getText().toString();
+    }
+
+    @Override
+    public String getBank() {
+        Bank bank = (Bank) bankSpinner.getSelectedItem();
+        return getString(bank.getBicId());
     }
 
     @Override

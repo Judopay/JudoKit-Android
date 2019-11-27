@@ -37,6 +37,7 @@
         tools:visibility="visible">
 
         <ImageView
+            android:contentDescription="@string/ideal"
             android:id="@+id/ideal_logo"
             android:layout_width="@dimen/image_button_height"
             android:layout_height="@dimen/image_button_width"

@@ -150,7 +150,7 @@ public interface JudoApiService {
     @POST("order/bank/sale")
     Single<SaleResponse> sale(@Body SaleRequest saleRequest);
 
-    @POST("order/statusrequest")
+    @POST("order/bank/statusrequest")
     Observable<SaleStatusResponse> status(@Body SaleStatusRequest saleStatusRequest);
 
     /**

@@ -59,4 +59,9 @@
     <string name="order_success">Encomenda bem sucedida</string>
     <string name="order_timeout">O seu pedido foi excedido</string>
     <string name="try_again">Tente novamente</string>
+    <string name="no_internet">Nenhuma conexão de rede</string>
+    <string name="order_pending">Pedido pendente</string>
+    <string name="something_went_wrong">Algo deu errado</string>
+    <string name="there_is_a_delay">Há um atraso… Por favor, aguarde</string>
+    <string name="payment_status">Status do pagamento</string>
 </resources>

@@ -11,6 +11,16 @@ public class SaleStatusRequest {
     private Map<String, String> paymentMetadata;
     private String merchantConsumerReference;
 
+    public SaleStatusRequest(String orderId, String merchantPaymentReference, String checksum, String paymentMethod, String siteId, Map<String, String> paymentMetadata, String merchantConsumerReference) {
+        this.orderId = orderId;
+        this.merchantPaymentReference = merchantPaymentReference;
+        this.checksum = checksum;
+        this.paymentMethod = paymentMethod;
+        this.siteId = siteId;
+        this.paymentMetadata = paymentMetadata;
+        this.merchantConsumerReference = merchantConsumerReference;
+    }
+
     public String getOrderId() {
         return orderId;
     }

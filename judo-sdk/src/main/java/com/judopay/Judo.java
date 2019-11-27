@@ -92,10 +92,12 @@ public class Judo implements Parcelable {
         }
     };
     private static final int UI_CLIENT_MODE_CUSTOM_UI = 0;
+    private static final int DEFAULT_IDEAL_POLLING_TIMEOUT = 130;
 
     private String apiToken;
     private String apiSecret;
     private Integer environment;
+    private int idealTimeout = DEFAULT_IDEAL_POLLING_TIMEOUT;
 
     private boolean avsEnabled;
     private boolean idealEnabled;
@@ -136,6 +138,7 @@ public class Judo implements Parcelable {
         this.apiToken = judoIn.readString();
         this.apiSecret = judoIn.readString();
         this.environment = (Integer) judoIn.readValue(Integer.class.getClassLoader());
+        this.idealTimeout = judoIn.readInt();
         this.avsEnabled = judoIn.readByte() != 0;
         this.idealEnabled = judoIn.readByte() != 0;
         this.amexEnabled = judoIn.readByte() != 0;
@@ -186,6 +189,7 @@ public class Judo implements Parcelable {
                 .setAddress(address)
                 .setAvsEnabled(avsEnabled)
                 .setIdealEnabled(idealEnabled)
+                .setIdealTimeout(idealTimeout)
                 .setAmexEnabled(amexEnabled)
                 .setMaestroEnabled(maestroEnabled)
                 .setSslPinningEnabled(sslPinningEnabled)
@@ -346,6 +350,10 @@ public class Judo implements Parcelable {
         return idealEnabled;
     }
 
+    public int getIdealTimeout() {
+        return idealTimeout;
+    }
+
     public boolean isMaestroEnabled() {
         return maestroEnabled;
     }
@@ -387,6 +395,7 @@ public class Judo implements Parcelable {
         dest.writeString(this.apiToken);
         dest.writeString(this.apiSecret);
         dest.writeValue(this.environment);
+        dest.writeInt(this.idealTimeout);
         dest.writeByte(this.avsEnabled ? (byte) 1 : (byte) 0);
         dest.writeByte(this.idealEnabled ? (byte) 1 : (byte) 0);
         dest.writeByte(this.amexEnabled ? (byte) 1 : (byte) 0);
@@ -447,6 +456,7 @@ public class Judo implements Parcelable {
         private Bundle metaData;
         private PendingIntent cardScanningIntent;
         private CustomLayout customLayout;
+        private int idealTimeout = DEFAULT_IDEAL_POLLING_TIMEOUT;
 
         private boolean avsEnabled;
         private boolean amexEnabled = true;
@@ -566,6 +576,11 @@ public class Judo implements Parcelable {
             return this;
         }
 
+        public Builder setIdealTimeout(final int idealTimeout) {
+            this.idealTimeout = idealTimeout;
+            return this;
+        }
+
         public Builder setAmexEnabled(final boolean amexEnabled) {
             this.amexEnabled = amexEnabled;
             return this;
@@ -640,6 +655,7 @@ public class Judo implements Parcelable {
 
             judo.avsEnabled = avsEnabled;
             judo.idealEnabled = idealEnabled;
+            judo.idealTimeout = idealTimeout;
             judo.amexEnabled = amexEnabled;
             judo.maestroEnabled = maestroEnabled;
             judo.sslPinningEnabled = sslPinningEnabled;
