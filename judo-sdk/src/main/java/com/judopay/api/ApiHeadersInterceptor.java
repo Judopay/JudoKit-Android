@@ -2,15 +2,14 @@ package com.judopay.api;
 
 import android.content.Context;
 import android.os.Build;
+
 import androidx.annotation.NonNull;
-import android.util.Log;
 
 import com.judopay.BuildConfig;
 import com.judopay.Judo;
 import com.judopay.arch.AppMetaDataReader;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Locale;
 
 import okhttp3.Headers;
@@ -55,19 +54,16 @@ class ApiHeadersInterceptor implements Interceptor {
     }
 
     private Headers getHeaders() {
-        HashMap<String, String> headers = new HashMap<>();
-
-        headers.put(AUTHORIZATION_HEADER, apiCredentials.getBasicAuthorizationHeader());
-        headers.put(CONTENT_TYPE_HEADER, JSON_MIME_TYPE);
-        headers.put(ACCEPT_HEADER, JSON_MIME_TYPE);
-        headers.put(API_VERSION_HEADER, API_VERSION);
-        headers.put(CACHE_CONTROL_HEADER, CACHE_CONTROL);
-        headers.put(SDK_VERSION_HEADER, "Android-" + BuildConfig.VERSION_NAME);
-        Log.d("Judo", getUserAgent());
-        headers.put(USER_AGENT_HEADER, getUserAgent());
-        headers.put(UI_MODE_HEADER, uiClientMode == Judo.UI_CLIENT_MODE_JUDO_SDK ? JUDO_SDK_UI_MODE : CUSTOM_UI_MODE);
-
-        return Headers.of(headers);
+        return new Headers.Builder()
+                .add(AUTHORIZATION_HEADER, apiCredentials.getBasicAuthorizationHeader())
+                .add(CONTENT_TYPE_HEADER, JSON_MIME_TYPE)
+                .add(ACCEPT_HEADER, JSON_MIME_TYPE)
+                .add(API_VERSION_HEADER, API_VERSION)
+                .add(CACHE_CONTROL_HEADER, CACHE_CONTROL)
+                .add(SDK_VERSION_HEADER, "Android-" + BuildConfig.VERSION_NAME)
+                .addUnsafeNonAscii(USER_AGENT_HEADER, getUserAgent())
+                .add(UI_MODE_HEADER, uiClientMode == Judo.UI_CLIENT_MODE_JUDO_SDK ? JUDO_SDK_UI_MODE : CUSTOM_UI_MODE)
+                .build();
     }
 
     private String getUserAgent() {
