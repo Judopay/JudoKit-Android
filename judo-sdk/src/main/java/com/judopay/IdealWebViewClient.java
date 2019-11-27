@@ -9,15 +9,17 @@ import com.judopay.model.SaleStatusRequest;
 
 public class IdealWebViewClient extends WebViewClient {
     private IdealWebViewCallback callback;
+    private String merchantRedirectUrl;
 
-    IdealWebViewClient(final IdealWebViewCallback callback) {
+    IdealWebViewClient(final IdealWebViewCallback callback, String merchantRedirectUrl) {
         this.callback = callback;
+        this.merchantRedirectUrl = merchantRedirectUrl;
     }
 
     @Override
     public void onPageStarted(final WebView view, final String url, final Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
-        if(url.contains("https://judopay.com/")){
+        if(url.contains(merchantRedirectUrl)){
             String checksum = url.split("cs=")[1];
             callback.onPageStarted(checksum);
         }

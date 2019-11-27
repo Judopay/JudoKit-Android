@@ -8,7 +8,7 @@ import com.judopay.model.SaleStatusRequest;
 interface IdealPaymentView extends BaseView {
     void registerPayClickListener();
 
-    void configureWebView(String url);
+    void configureWebView(String url, String merchantRedirectUrl);
 
     void configureSpinner();
 

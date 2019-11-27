@@ -78,9 +78,9 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
-    public void configureWebView(String url) {
+    public void configureWebView(String url, String merchantRedirectUrl) {
         idealWebView.setVisibility(View.VISIBLE);
-        idealWebView.setWebViewClient(new IdealWebViewClient(presenter));
+        idealWebView.setWebViewClient(new IdealWebViewClient(presenter, merchantRedirectUrl));
         idealWebView.getSettings().setJavaScriptEnabled(true);
         idealWebView.loadUrl(url);
     }

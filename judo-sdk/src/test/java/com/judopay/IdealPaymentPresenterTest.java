@@ -14,7 +14,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.math.BigDecimal;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.Calendar;
@@ -26,7 +25,6 @@ import io.reactivex.android.plugins.RxAndroidPlugins;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -107,7 +105,7 @@ public class IdealPaymentPresenterTest {
     public void shouldConfigureWebViewOnSaleRequestSuccessful() {
         presenter.onPayClicked();
 
-        verify(view).configureWebView(URL);
+        verify(view).configureWebView(URL, saleResponse.getMerchantRedirectUrl());
     }
 
     @Test
