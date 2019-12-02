@@ -12,7 +12,7 @@ public class SaleResponse {
     private String paymentMethod;
     private String siteId;
     private String currency;
-    private Consumer consumer;
+    private SaleConsumer consumer;
     private String status;
 
     public String getAmount() {
@@ -55,15 +55,11 @@ public class SaleResponse {
         return currency;
     }
 
-    public Consumer getConsumer() {
+    public SaleConsumer getConsumer() {
         return consumer;
     }
 
     public String getStatus() {
         return status;
-    }
-
-    public void setRedirectUrl(String redirectUrl) {
-        this.redirectUrl = redirectUrl;
     }
 }

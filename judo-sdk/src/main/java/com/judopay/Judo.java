@@ -73,6 +73,7 @@ public class Judo implements Parcelable {
     public static final String IDEAL_REDIRECT_URL = "idealRedirectUrl";
     public static final String IDEAL_ORDER_ID = "idealOrderId";
     public static final String IDEAL_STATUS = "idealStatus";
+    public static final String BR_SALE_CALLBACK = "com.judopay.SALE_RESPONSE";
 
     public static final int UI_CLIENT_MODE_JUDO_SDK = 1;
 

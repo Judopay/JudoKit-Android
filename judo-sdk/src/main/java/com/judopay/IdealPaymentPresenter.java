@@ -61,6 +61,7 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(saleResponse -> {
                                     this.saleResponse = saleResponse;
+                                    getView().notifySaleResponse(saleResponse);
                                     getView().configureWebView(saleResponse.getRedirectUrl(), saleResponse.getMerchantRedirectUrl());
                                 },
                                 throwable -> getView().showGeneralError()));

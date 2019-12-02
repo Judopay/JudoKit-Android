@@ -1,7 +1,6 @@
 package com.judopay;
 
 import com.judopay.model.OrderStatus;
-import com.judopay.model.SaleRequest;
 import com.judopay.model.SaleResponse;
 import com.judopay.model.SaleStatusRequest;
 
@@ -41,4 +40,6 @@ interface IdealPaymentView extends BaseView {
     String getName();
 
     String getBank();
+
+    void notifySaleResponse(SaleResponse saleResponse);
 }

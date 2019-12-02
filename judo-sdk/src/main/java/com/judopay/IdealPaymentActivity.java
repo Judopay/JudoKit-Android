@@ -18,13 +18,17 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.judopay.model.Bank;
 import com.judopay.model.OrderStatus;
+import com.judopay.model.SaleCallback;
+import com.judopay.model.SaleResponse;
 import com.judopay.model.SaleStatusRequest;
 import com.judopay.util.DefaultDateUtil;
 
+import static com.judopay.Judo.BR_SALE_CALLBACK;
 import static com.judopay.Judo.IDEAL_ORDER_ID;
 import static com.judopay.Judo.IDEAL_PAYMENT;
 import static com.judopay.Judo.IDEAL_STATUS;
@@ -190,6 +194,13 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
     public String getBank() {
         Bank bank = (Bank) bankSpinner.getSelectedItem();
         return getString(bank.getBicId());
+    }
+
+    @Override
+    public void notifySaleResponse(SaleResponse saleResponse) {
+        Intent intent = new Intent(BR_SALE_CALLBACK);
+        intent.putExtra(BR_SALE_CALLBACK, new SaleCallback(saleResponse, getJudo().getPaymentReference()));
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     @Override
