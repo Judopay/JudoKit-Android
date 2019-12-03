@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.judopay.model.Bank;
+import com.judopay.view.custom.DefaultCustomTextView;
 
 public class BankAdapter extends ArrayAdapter<Bank> {
     private final static int FIRST_ELEMENT = 0;
@@ -40,7 +41,11 @@ public class BankAdapter extends ArrayAdapter<Bank> {
     @Override
     public View getView(final int position, @Nullable final View convertView, @NonNull final ViewGroup parent) {
         if (position == FIRST_ELEMENT) {
-            return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_blank_spinner, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_blank_spinner, parent, false);
+            DefaultCustomTextView bankText = view.findViewById(R.id.bank_text);
+            IdealCustomTheme theme = IdealCustomTheme.getInstance();
+            bankText.setCustomText(theme.getBankHint(), theme.getFontSize(), theme.getTextColor());
+            return view;
         } else {
             return getBankItemView(position, parent);
         }

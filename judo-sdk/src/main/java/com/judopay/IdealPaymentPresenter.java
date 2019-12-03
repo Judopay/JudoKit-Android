@@ -19,6 +19,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.judopay.arch.TextUtil.isEmpty;
+
 class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements IdealWebViewCallback {
     private final static int SPINNER_ITEM_PLACEHOLDER_POSITION = 0;
     private final static int STATUS_FIRST_REQUEST = 1;
@@ -30,6 +32,8 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
     private int statusRequestCounter = STATUS_FIRST_REQUEST;
     private Long halfIntervalFromNow;
     private Long fullIntervalFromNow;
+    private String consumerName;
+    private int selectedBank;
 
     private JudoApiService apiService;
     private DateUtil dateUtil;
@@ -42,16 +46,20 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
     }
 
     void onCreate() {
+        getView().setNameTextListener();
         getView().configureSpinner();
         getView().registerPayClickListener();
+        getView().setMerchantTheme();
     }
 
-    void handlePaymentButton(final int position) {
-        if (position == SPINNER_ITEM_PLACEHOLDER_POSITION) {
-            getView().disablePayButton();
-        } else {
-            getView().enablePayButton();
-        }
+    void setSelectedBank(int selectedBank) {
+        this.selectedBank = selectedBank;
+        handlePaymentButton();
+    }
+
+    void setConsumerName(String consumerName) {
+        this.consumerName = consumerName;
+        handlePaymentButton();
     }
 
     void onPayClicked() {
@@ -164,5 +172,13 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
                 judo.getMetaDataMap(),
                 judo.getConsumerReference()
         );
+    }
+
+    private void handlePaymentButton() {
+        if (selectedBank == SPINNER_ITEM_PLACEHOLDER_POSITION || isEmpty(consumerName)) {
+            getView().disablePayButton();
+        } else {
+            getView().enablePayButton();
+        }
     }
 }

@@ -43,4 +43,8 @@ interface IdealPaymentView extends BaseView {
     String getBank();
 
     void notifySaleResponse(SaleResponse saleResponse);
+
+    void setMerchantTheme();
+
+    void setNameTextListener();
 }

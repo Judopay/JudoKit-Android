@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.judopay.view.custom.DefaultCustomConstraintLayout
         android:id="@+id/ideal_payment_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.textfield.TextInputLayout
+        <com.judopay.view.custom.DefaultCustomTextInputLayout
             android:id="@+id/name_layout"
             style="@style/Widget.Judo.EntryLayout"
             android:layout_width="match_parent"
@@ -31,9 +31,9 @@
                 android:id="@+id/name_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
+        </com.judopay.view.custom.DefaultCustomTextInputLayout>
 
-        <TextView
+        <com.judopay.view.custom.DefaultCustomTextView
             android:id="@+id/bank_spinner_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,9 +41,10 @@
             android:layout_marginTop="@dimen/medium_padding"
             android:text="@string/bank"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/name_layout" />
+            app:layout_constraintTop_toBottomOf="@id/name_layout"
+            />
 
-        <Spinner
+        <com.judopay.view.custom.DefaultCustomSpinner
             android:id="@+id/bank_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,7 +64,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <Button
+            <com.judopay.view.custom.DefaultCustomButton
                 android:id="@+id/ideal_payment_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -80,7 +81,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.judopay.view.custom.DefaultCustomConstraintLayout>
 
     <include
         android:id="@+id/status_view_layout"

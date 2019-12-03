@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.judopay.view.custom.DefaultCustomConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/status_view_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <com.judopay.view.custom.DefaultCustomTextView
         android:id="@+id/status_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/ic_success" />
 
-    <ProgressBar
+    <com.judopay.view.custom.DefaultCustomProgressBar
         android:id="@+id/status_progress_bar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="@dimen/progress_bar_height"
@@ -39,7 +39,7 @@
         app:layout_constraintStart_toStartOf="@id/status_text_view"
         app:layout_constraintTop_toBottomOf="@+id/status_text_view" />
 
-    <Button
+    <com.judopay.view.custom.DefaultCustomButton
         android:id="@+id/status_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:text="Close" />
 
-    <Button
+    <com.judopay.view.custom.DefaultCustomButton
         android:id="@+id/retry_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -57,4 +57,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</com.judopay.view.custom.DefaultCustomConstraintLayout>

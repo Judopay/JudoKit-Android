@@ -4,19 +4,17 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -28,6 +26,13 @@ import com.judopay.model.SaleResponse;
 import com.judopay.model.SaleStatusRequest;
 import com.judopay.model.SaleStatusResponse;
 import com.judopay.util.DefaultDateUtil;
+import com.judopay.view.SimpleTextWatcher;
+import com.judopay.view.custom.DefaultCustomButton;
+import com.judopay.view.custom.DefaultCustomConstraintLayout;
+import com.judopay.view.custom.DefaultCustomProgressBar;
+import com.judopay.view.custom.DefaultCustomSpinner;
+import com.judopay.view.custom.DefaultCustomTextInputLayout;
+import com.judopay.view.custom.DefaultCustomTextView;
 
 import static com.judopay.Judo.BR_SALE_CALLBACK;
 import static com.judopay.Judo.IDEAL_PAYMENT;
@@ -38,15 +43,17 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
 
     private IdealPaymentPresenter presenter;
 
-    TextInputEditText nameEditText;
-    Button payWithIdealButton;
-    Button statusButton;
-    Spinner bankSpinner;
-    ConstraintLayout statusViewLayout;
-    ConstraintLayout idealPaymentLayout;
-    TextView statusTextView;
+    TextInputEditText nameTextInput;
+    DefaultCustomTextInputLayout nameTextInputLayout;
+    DefaultCustomButton payWithIdealButton;
+    DefaultCustomButton statusButton;
+    DefaultCustomSpinner bankSpinner;
+    DefaultCustomConstraintLayout statusViewLayout;
+    DefaultCustomConstraintLayout idealPaymentLayout;
+    DefaultCustomTextView statusTextView;
+    DefaultCustomTextView bankTextView;
     ImageView statusImageView;
-    ProgressBar statusProgressBar;
+    DefaultCustomProgressBar statusProgressBar;
     private WebView idealWebView;
 
     @Override
@@ -55,12 +62,14 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
         setTitle(R.string.ideal);
         setContentView(R.layout.activity_ideal_payment);
 
-        nameEditText = findViewById(R.id.name_edit_text);
+        nameTextInput = findViewById(R.id.name_edit_text);
+        nameTextInputLayout = findViewById(R.id.name_layout);
         payWithIdealButton = findViewById(R.id.ideal_payment_button);
         bankSpinner = findViewById(R.id.bank_spinner);
         idealPaymentLayout = findViewById(R.id.ideal_payment_layout);
         statusViewLayout = findViewById(R.id.status_view_layout);
         statusTextView = findViewById(R.id.status_text_view);
+        bankTextView = findViewById(R.id.bank_spinner_label);
         statusImageView = findViewById(R.id.status_image_view);
         statusProgressBar = findViewById(R.id.status_progress_bar);
         statusButton = findViewById(R.id.status_button);
@@ -96,7 +105,7 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
         bankSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(final AdapterView<?> adapterView, final View view, final int position, final long id) {
-                presenter.handlePaymentButton(position);
+                presenter.setSelectedBank(position);
             }
 
             @Override
@@ -104,7 +113,7 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
             }
         });
         bankSpinner.setOnTouchListener((view, motionEvent) -> {
-            nameEditText.clearFocus();
+            nameTextInput.clearFocus();
             closeKeyboard(view);
             return view.performClick();
         });
@@ -122,16 +131,30 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
 
     @Override
     public void showStatus(OrderStatus orderStatus) {
+        IdealCustomTheme theme = IdealCustomTheme.getInstance();
+        String labelText = IdealCustomTheme.getInstance().getFailLabelText();
+        String buttonText = IdealCustomTheme.getInstance().getFailButtonText();
+        int buttonColor = IdealCustomTheme.getInstance().getButtonBackground();
+        int buttonDarkColor = IdealCustomTheme.getInstance().getButtonDarkBackground();
+        if (orderStatus == OrderStatus.SUCCESS) {
+            labelText = IdealCustomTheme.getInstance().getSuccessLabelText();
+            buttonText = IdealCustomTheme.getInstance().getSuccessButtonText();
+            buttonColor = IdealCustomTheme.getInstance().getButtonBackground();
+            buttonDarkColor = IdealCustomTheme.getInstance().getButtonDarkBackground();
+        }
+        statusButton.setCustomBackgroundTintList(buttonColor, buttonDarkColor);
+        statusButton.setCustomTextWithFallback(buttonText, orderStatus.getOrderStatusButtonTextId(), theme.getButtonFontSize(), theme.getButtonTextColor());
+        statusTextView.setCustomTextWithFallback(labelText, orderStatus.getOrderStatusTextId(), theme.getFontSize(), theme.getTextColor());
+
         statusButton.setVisibility(View.VISIBLE);
         statusImageView.setVisibility(View.VISIBLE);
-        statusTextView.setText(orderStatus.getOrderStatusTextId());
-        statusButton.setText(orderStatus.getOrderStatusButtonTextId());
         statusImageView.setImageResource(orderStatus.getOrderStatusImageId());
     }
 
     @Override
     public void showLoading() {
-        statusTextView.setText(R.string.processing_payment);
+        IdealCustomTheme theme = IdealCustomTheme.getInstance();
+        statusTextView.setCustomTextWithFallback(theme.getPendingLabelText(), R.string.processing, theme.getFontSize(), theme.getTextColor());
         statusViewLayout.setVisibility(View.VISIBLE);
         statusProgressBar.setVisibility(View.VISIBLE);
     }
@@ -166,7 +189,8 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
 
     @Override
     public void showDelayLabel() {
-        statusTextView.setText(R.string.there_is_a_delay);
+        IdealCustomTheme theme = IdealCustomTheme.getInstance();
+        statusTextView.setCustomTextWithFallback(theme.getPendingLabelText(), R.string.there_is_a_delay, theme.getFontSize(), theme.getTextColor());
     }
 
     @Override
@@ -187,7 +211,7 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
 
     @Override
     public String getName() {
-        return nameEditText.getText().toString();
+        return nameTextInput.getText().toString();
     }
 
     @Override
@@ -212,6 +236,34 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
     @Override
     public void hideIdealPayment() {
         idealPaymentLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setMerchantTheme() {
+        IdealCustomTheme theme = IdealCustomTheme.getInstance();
+        idealPaymentLayout.setCustomBackgroundColor(theme.getBackground());
+        statusViewLayout.setCustomBackgroundColor(theme.getBackground());
+        nameTextInputLayout.setCustomHint(theme.getNameHint(), theme.getFontSize(), theme.getButtonBackground());
+        bankTextView.setCustomText(theme.getBankLabel(), theme.getFontSize(), theme.getTextColor());
+        bankSpinner.setCustomBackgroundColor(theme.getSpinnerBackgroundColor());
+        payWithIdealButton.setCustomText(theme.getPayButtonText(), theme.getButtonFontSize(), theme.getButtonTextColor());
+        payWithIdealButton.setCustomBackgroundTintList(theme.getButtonBackground(), theme.getButtonDarkBackground());
+        statusProgressBar.setCustomColor(theme.getProgressBarColor());
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null && theme.getActionBarColor() != 0) {
+            actionBar.setBackgroundDrawable(new ColorDrawable(theme.getActionBarColor()));
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    public void setNameTextListener() {
+        nameTextInput.addTextChangedListener(new SimpleTextWatcher() {
+            @Override
+            protected void onTextChanged(CharSequence name) {
+                presenter.setConsumerName(name.toString());
+            }
+        });
     }
 
     @Override
