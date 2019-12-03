@@ -3,6 +3,7 @@ package com.judopay;
 import com.judopay.model.OrderStatus;
 import com.judopay.model.SaleResponse;
 import com.judopay.model.SaleStatusRequest;
+import com.judopay.model.SaleStatusResponse;
 
 interface IdealPaymentView extends BaseView {
     void registerPayClickListener();
@@ -27,7 +28,7 @@ interface IdealPaymentView extends BaseView {
 
     void setStatusClickListener(SaleStatusRequest saleStatusRequest);
 
-    void setCloseClickListener(String orderId, OrderStatus orderStatus);
+    void setCloseClickListener(SaleStatusResponse saleStatusResponse);
 
     void showDelayLabel();
 

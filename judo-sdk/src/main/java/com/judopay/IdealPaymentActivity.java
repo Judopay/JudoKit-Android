@@ -26,12 +26,12 @@ import com.judopay.model.OrderStatus;
 import com.judopay.model.SaleCallback;
 import com.judopay.model.SaleResponse;
 import com.judopay.model.SaleStatusRequest;
+import com.judopay.model.SaleStatusResponse;
 import com.judopay.util.DefaultDateUtil;
 
 import static com.judopay.Judo.BR_SALE_CALLBACK;
-import static com.judopay.Judo.IDEAL_ORDER_ID;
 import static com.judopay.Judo.IDEAL_PAYMENT;
-import static com.judopay.Judo.IDEAL_STATUS;
+import static com.judopay.Judo.IDEAL_SALE_STATUS;
 
 public class IdealPaymentActivity extends BaseActivity implements IdealPaymentView {
     private final static String IDEAL_HOST = "https://api.judopay.com/";
@@ -147,18 +147,18 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
     }
 
     @Override
-    public void setCloseClickListener(String orderId, OrderStatus orderStatus) {
+    public void setCloseClickListener(SaleStatusResponse saleStatusResponse) {
         statusButton.setOnClickListener(view -> {
             Intent intent = new Intent();
-            intent.putExtra(IDEAL_ORDER_ID, orderId);
-            intent.putExtra(IDEAL_STATUS, orderStatus);
-            switch (orderStatus) {
+            intent.putExtra(IDEAL_SALE_STATUS, saleStatusResponse);
+            switch (saleStatusResponse.getOrderDetails().getOrderStatus()) {
                 case SUCCESS:
                     setResult(Judo.IDEAL_SUCCESS, intent);
+                    break;
                 case FAIL:
+                case PENDING:
                     setResult(Judo.IDEAL_ERROR, intent);
-                default:
-                    //noop
+                    break;
             }
             finish();
         });

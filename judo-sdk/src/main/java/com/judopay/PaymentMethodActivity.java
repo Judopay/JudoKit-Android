@@ -15,8 +15,8 @@ import com.google.android.gms.wallet.PaymentData;
 import com.google.gson.Gson;
 import com.judopay.arch.GooglePaymentUtils;
 import com.judopay.model.GooglePayRequest;
-import com.judopay.model.OrderStatus;
 import com.judopay.model.Receipt;
+import com.judopay.model.SaleStatusResponse;
 
 import java.io.Reader;
 
@@ -28,8 +28,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 
-import static com.judopay.Judo.IDEAL_ORDER_ID;
-import static com.judopay.Judo.IDEAL_STATUS;
+import static com.judopay.Judo.IDEAL_SALE_STATUS;
 
 /**
  * Displays a screen with different payment methods Judopay supports.
@@ -110,12 +109,10 @@ public class PaymentMethodActivity extends BaseActivity {
         }
         if (requestCode == Judo.IDEAL_PAYMENT && resultCode == Judo.IDEAL_SUCCESS) {
             Intent intent = new Intent();
-            String orderId = data.getStringExtra(IDEAL_ORDER_ID);
-            OrderStatus status = (OrderStatus) data.getSerializableExtra(IDEAL_STATUS);
-            intent.putExtra(IDEAL_ORDER_ID, orderId);
-            intent.putExtra(IDEAL_STATUS, status);
-            if (status != null) {
-                switch (status) {
+            SaleStatusResponse saleStatusResponse = data.getParcelableExtra(IDEAL_SALE_STATUS);
+            intent.putExtra(IDEAL_SALE_STATUS, saleStatusResponse);
+            if (saleStatusResponse != null) {
+                switch (saleStatusResponse.getOrderDetails().getOrderStatus()) {
                     case SUCCESS:
                         setResult(Judo.IDEAL_SUCCESS, intent);
                         break;

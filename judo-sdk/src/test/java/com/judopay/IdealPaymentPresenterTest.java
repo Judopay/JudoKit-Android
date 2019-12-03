@@ -49,19 +49,22 @@ public class IdealPaymentPresenterTest {
     OrderDetails orderDetails;
     @Mock
     private SaleStatusResponse saleStatusResponse;
-    private Calendar calendar = Calendar.getInstance();
+    @Mock
+    private Calendar calendar;
     private final static String URL = "url";
     private final static String CHECKSUM = "checksum";
     private final static String NAME = "name";
     private final static String BIC = "bic";
     private final static int PLACEHOLDER_SELECTED = 0;
     private final static int FIRST_ITEM_SELECTED = 1;
-    private final static Long HALF_INTERVAL = 1573139806467L;
+    private final static int INTERVAL = 1;
+    private final static Long HALF_INTERVAL = 1584948186919L;
     private final static Long FULL_INTERVAL = 1573139828474L;
     @Mock
     Date date;
     @Mock
     Judo judo;
+
     @Before
     public void setUp() {
         presenter = spy(new IdealPaymentPresenter(view, apiService, dateUtil));
@@ -147,7 +150,9 @@ public class IdealPaymentPresenterTest {
     @Test
     public void shouldShowDelayLabelOnTransactionStatusAfterHalfOfInterval() {
         when(saleStatusResponse.getOrderDetails()).thenReturn(orderDetails);
-        when(date.getTime()).thenReturn(HALF_INTERVAL);
+        when(judo.getIdealTimeout()).thenReturn(INTERVAL);
+        when(dateUtil.getDate().getTime()).thenReturn(HALF_INTERVAL);
+        when(dateUtil.getTimeWithInterval(calendar, INTERVAL / 2, Calendar.SECOND)).thenReturn(HALF_INTERVAL);
         presenter.getTransactionStatus(saleStatusRequest);
 
         verify(view).showDelayLabel();
@@ -165,6 +170,7 @@ public class IdealPaymentPresenterTest {
     @Test
     public void shouldShowTimeoutStatusOnTransactionStatusAfterFullInterval() {
         when(saleStatusResponse.getOrderDetails()).thenReturn(orderDetails);
+        when(orderDetails.getOrderStatus()).thenReturn(OrderStatus.TIMEOUT);
         when(date.getTime()).thenReturn(FULL_INTERVAL);
         presenter.getTransactionStatus(saleStatusRequest);
 

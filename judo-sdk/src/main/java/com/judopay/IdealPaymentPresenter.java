@@ -87,14 +87,10 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
                         })
                         .subscribe(response -> {
                             OrderDetails orderDetails = response.getOrderDetails();
-                            switch (orderDetails.getOrderStatus()) {
-                                case SUCCESS:
-                                case FAIL:
-                                    getView().hideLoading();
-                                    getView().showStatus(orderDetails.getOrderStatus());
-                                    getView().setCloseClickListener(orderDetails.getOrderId(), orderDetails.getOrderStatus());
-                                    break;
-                            }
+                            getView().hideLoading();
+                            getView().showStatus(orderDetails.getOrderStatus());
+                            getView().setCloseClickListener(response);
+
                         }, throwable -> handleStatusError(saleStatusRequest, throwable))
         );
     }
@@ -115,9 +111,6 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
         if (now >= halfIntervalFromNow) {
             getView().showDelayLabel();
         }
-        if (now >= fullIntervalFromNow) {
-            throw new PollingTimeoutException();
-        }
         statusRequestCounter++;
         return Observable.timer(DELAY, TimeUnit.SECONDS);
     }
@@ -127,18 +120,15 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
         if (throwable instanceof SocketTimeoutException || throwable instanceof UnknownHostException) {
             getView().showStatus(OrderStatus.NETWORK_ERROR);
             getView().setStatusClickListener(saleStatusRequest);
-        } else if (throwable instanceof PollingTimeoutException) {
-            getView().showStatus(OrderStatus.TIMEOUT);
-            getView().setCloseClickListener(saleStatusRequest.getOrderId(), OrderStatus.TIMEOUT);
         } else {
             getView().showStatus(OrderStatus.FAIL);
-            getView().setCloseClickListener(saleStatusRequest.getOrderId(), OrderStatus.FAIL);
+            getView().setStatusClickListener(saleStatusRequest);
         }
         statusRequestCounter = STATUS_FIRST_REQUEST;
     }
 
     private Boolean isTransactionCompleted(OrderStatus orderStatus) {
-        return orderStatus == OrderStatus.SUCCESS || orderStatus == OrderStatus.FAIL;
+        return orderStatus == OrderStatus.SUCCESS || orderStatus == OrderStatus.FAIL || dateUtil.getDate().getTime() > fullIntervalFromNow;
     }
 
     private void setDateInterval() {
