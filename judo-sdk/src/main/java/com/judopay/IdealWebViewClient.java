@@ -1,11 +1,11 @@
 package com.judopay;
 
 import android.graphics.Bitmap;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.judopay.model.SaleStatusRequest;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class IdealWebViewClient extends WebViewClient {
     private IdealWebViewCallback callback;
@@ -19,9 +19,15 @@ public class IdealWebViewClient extends WebViewClient {
     @Override
     public void onPageStarted(final WebView view, final String url, final Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
-        if(url.contains(merchantRedirectUrl)){
-            String checksum = url.split("cs=")[1];
-            callback.onPageStarted(checksum);
+        try {
+            String host = new URL(url).getHost();
+            String merchantRedirectHost = new URL(merchantRedirectUrl).getHost();
+            if (host.contains(merchantRedirectHost)) {
+                String checksum = url.split("cs=")[1];
+                callback.onPageStarted(checksum);
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
     }
 }

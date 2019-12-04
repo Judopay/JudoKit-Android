@@ -1,5 +1,6 @@
 package com.judopay;
 
+import com.judopay.model.Currency;
 import com.judopay.model.OrderDetails;
 import com.judopay.model.OrderStatus;
 import com.judopay.model.SaleRequest;
@@ -157,7 +158,7 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
                 name,
                 IDEAL_PAYMENT_METHOD,
                 judo.getJudoId(),
-                judo.getCurrency(),
+                Currency.EUR,
                 bic
         );
     }
