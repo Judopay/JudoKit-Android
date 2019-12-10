@@ -15,6 +15,7 @@ public class SaleStatusResponse implements Parcelable {
         paymentMethod = in.readString();
         siteId = in.readString();
         merchantConsumerReference = in.readString();
+        orderDetails = in.readParcelable(OrderDetails.class.getClassLoader());
     }
 
     @Override
@@ -23,6 +24,7 @@ public class SaleStatusResponse implements Parcelable {
         dest.writeString(paymentMethod);
         dest.writeString(siteId);
         dest.writeString(merchantConsumerReference);
+        dest.writeParcelable(orderDetails, flags);
     }
 
     @Override

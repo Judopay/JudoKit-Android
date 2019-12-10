@@ -5,7 +5,9 @@ import androidx.annotation.StringRes;
 
 import com.judopay.R;
 
-public enum OrderStatus {
+import java.io.Serializable;
+
+public enum OrderStatus implements Serializable {
     TIMEOUT(R.string.order_timeout, R.string.close, R.drawable.ic_timeout),
     FAIL(R.string.order_fail, R.string.close, R.drawable.ic_fail),
     SUCCESS(R.string.order_success, R.string.close, R.drawable.ic_success),
