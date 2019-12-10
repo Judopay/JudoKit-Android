@@ -68,7 +68,7 @@
                 android:id="@+id/ideal_payment_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/pay_with_ideal"
+                android:text="@string/pay"
                 android:textAllCaps="false" />
         </FrameLayout>
 
