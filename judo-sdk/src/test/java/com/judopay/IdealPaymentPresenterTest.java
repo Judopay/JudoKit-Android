@@ -98,13 +98,6 @@ public class IdealPaymentPresenterTest {
     }
 
     @Test
-    public void shouldDisablePaymentButtonOnFirstItemSelected() {
-        presenter.handlePaymentButton(PLACEHOLDER_SELECTED);
-
-        verify(view).disablePayButton();
-    }
-
-    @Test
     public void shouldConfigureWebViewOnSaleRequestSuccessful() {
         presenter.onPayClicked();
 
@@ -117,13 +110,6 @@ public class IdealPaymentPresenterTest {
         presenter.onPayClicked();
 
         verify(view).showGeneralError();
-    }
-
-    @Test
-    public void shouldEnablePaymentButtonOnSecondOrGreaterItemSelected() {
-        presenter.handlePaymentButton(FIRST_ITEM_SELECTED);
-
-        verify(view).enablePayButton();
     }
 
     @Test
