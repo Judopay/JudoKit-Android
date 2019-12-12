@@ -2,6 +2,7 @@ package com.judopay.view.custom;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 
 import androidx.appcompat.widget.AppCompatButton;
@@ -14,7 +15,7 @@ public class DefaultCustomButton extends AppCompatButton implements CustomButton
     }
 
     @Override
-    public void setCustomTextWithFallback(String text, int fallbackText, int fontSize, int textColor) {
+    public void setCustomTextWithFallback(String text, int fallbackText, int fontSize, int textColor, Typeface typeface) {
         if (text != null) {
             setText(text);
         } else {
@@ -26,10 +27,13 @@ public class DefaultCustomButton extends AppCompatButton implements CustomButton
         if (textColor != 0) {
             setTextColor(textColor);
         }
+        if(typeface!=null){
+            setTypeface(typeface);
+        }
     }
 
     @Override
-    public void setCustomText(String text, int fontSize, int textColor) {
+    public void setCustomText(String text, int fontSize, int textColor, Typeface typeface) {
         if (text != null) {
             setText(text);
         }
@@ -38,6 +42,9 @@ public class DefaultCustomButton extends AppCompatButton implements CustomButton
         }
         if (textColor != 0) {
             setTextColor(textColor);
+        }
+        if(typeface!=null){
+            setTypeface(typeface);
         }
     }
 

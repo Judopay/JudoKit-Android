@@ -44,7 +44,7 @@ public class BankAdapter extends ArrayAdapter<Bank> {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_blank_spinner, parent, false);
             DefaultCustomTextView bankText = view.findViewById(R.id.bank_text);
             IdealCustomTheme theme = IdealCustomTheme.getInstance();
-            bankText.setCustomText(theme.getBankHint(), theme.getFontSize(), theme.getTextColor());
+            bankText.setCustomText(theme.getBankHint(), theme.getFontSize(), theme.getTextColor(), theme.getTypeface());
             return view;
         } else {
             return getBankItemView(position, parent);

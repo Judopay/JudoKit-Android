@@ -2,6 +2,7 @@ package com.judopay.view.custom;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
@@ -18,12 +19,15 @@ public class DefaultCustomTextInputLayout extends TextInputLayout implements Cus
     }
 
     @Override
-    public void setCustomHint(String text, int fontSize, int color) {
+    public void setCustomHint(String text, int fontSize, int color, Typeface typeface) {
         if (text != null) {
             super.setHint(text);
         }
         if (fontSize != 0) {
             getEditText().setTextSize(fontSize);
+        }
+        if (typeface != null) {
+            setTypeface(typeface);
         }
         if (color != 0) {
             Drawable background = getEditText().getBackground();

@@ -143,8 +143,8 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
             buttonDarkColor = IdealCustomTheme.getInstance().getButtonDarkBackground();
         }
         statusButton.setCustomBackgroundTintList(buttonColor, buttonDarkColor);
-        statusButton.setCustomTextWithFallback(buttonText, orderStatus.getOrderStatusButtonTextId(), theme.getButtonFontSize(), theme.getButtonTextColor());
-        statusTextView.setCustomTextWithFallback(labelText, orderStatus.getOrderStatusTextId(), theme.getFontSize(), theme.getTextColor());
+        statusButton.setCustomTextWithFallback(buttonText, orderStatus.getOrderStatusButtonTextId(), theme.getButtonFontSize(), theme.getButtonTextColor(), theme.getTypeface());
+        statusTextView.setCustomTextWithFallback(labelText, orderStatus.getOrderStatusTextId(), theme.getFontSize(), theme.getTextColor(), theme.getTypeface());
 
         statusButton.setVisibility(View.VISIBLE);
         statusImageView.setVisibility(View.VISIBLE);
@@ -154,7 +154,7 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
     @Override
     public void showLoading() {
         IdealCustomTheme theme = IdealCustomTheme.getInstance();
-        statusTextView.setCustomTextWithFallback(theme.getPendingLabelText(), R.string.processing, theme.getFontSize(), theme.getTextColor());
+        statusTextView.setCustomTextWithFallback(theme.getPendingLabelText(), R.string.processing, theme.getFontSize(), theme.getTextColor(), theme.getTypeface());
         statusViewLayout.setVisibility(View.VISIBLE);
         statusProgressBar.setVisibility(View.VISIBLE);
     }
@@ -190,7 +190,7 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
     @Override
     public void showDelayLabel() {
         IdealCustomTheme theme = IdealCustomTheme.getInstance();
-        statusTextView.setCustomTextWithFallback(theme.getPendingLabelText(), R.string.there_is_a_delay, theme.getFontSize(), theme.getTextColor());
+        statusTextView.setCustomTextWithFallback(theme.getPendingLabelText(), R.string.there_is_a_delay, theme.getFontSize(), theme.getTextColor(), theme.getTypeface());
     }
 
     @Override
@@ -243,10 +243,10 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
         IdealCustomTheme theme = IdealCustomTheme.getInstance();
         idealPaymentLayout.setCustomBackgroundColor(theme.getBackground());
         statusViewLayout.setCustomBackgroundColor(theme.getBackground());
-        nameTextInputLayout.setCustomHint(theme.getNameHint(), theme.getFontSize(), theme.getButtonBackground());
-        bankTextView.setCustomText(theme.getBankLabel(), theme.getFontSize(), theme.getTextColor());
+        nameTextInputLayout.setCustomHint(theme.getNameHint(), theme.getFontSize(), theme.getButtonBackground(), theme.getTypeface());
+        bankTextView.setCustomText(theme.getBankLabel(), theme.getFontSize(), theme.getTextColor(), theme.getTypeface());
         bankSpinner.setCustomBackgroundColor(theme.getSpinnerBackgroundColor());
-        payWithIdealButton.setCustomText(theme.getPayButtonText(), theme.getButtonFontSize(), theme.getButtonTextColor());
+        payWithIdealButton.setCustomText(theme.getPayButtonText(), theme.getButtonFontSize(), theme.getButtonTextColor(), theme.getTypeface());
         payWithIdealButton.setCustomBackgroundTintList(theme.getButtonBackground(), theme.getButtonDarkBackground());
         statusProgressBar.setCustomColor(theme.getProgressBarColor());
         ActionBar actionBar = getSupportActionBar();

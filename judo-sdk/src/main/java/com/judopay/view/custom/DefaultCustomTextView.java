@@ -1,6 +1,7 @@
 package com.judopay.view.custom;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 
 import androidx.appcompat.widget.AppCompatTextView;
@@ -16,7 +17,7 @@ public class DefaultCustomTextView extends AppCompatTextView implements CustomTe
     }
 
     @Override
-    public void setCustomTextWithFallback(String text, int fallbackText, int fontSize, int textColor) {
+    public void setCustomTextWithFallback(String text, int fallbackText, int fontSize, int textColor, Typeface typeface) {
         if (text != null) {
             setText(text);
         } else {
@@ -28,10 +29,13 @@ public class DefaultCustomTextView extends AppCompatTextView implements CustomTe
         if (textColor != 0) {
             setTextColor(textColor);
         }
+        if (typeface != null) {
+            setTypeface(typeface);
+        }
     }
 
     @Override
-    public void setCustomText(String text, int fontSize, int textColor) {
+    public void setCustomText(String text, int fontSize, int textColor, Typeface typeface) {
         if (text != null) {
             setText(text);
         }
@@ -40,6 +44,9 @@ public class DefaultCustomTextView extends AppCompatTextView implements CustomTe
         }
         if (textColor != 0) {
             setTextColor(textColor);
+        }
+        if (typeface != null) {
+            setTypeface(typeface);
         }
     }
 }
