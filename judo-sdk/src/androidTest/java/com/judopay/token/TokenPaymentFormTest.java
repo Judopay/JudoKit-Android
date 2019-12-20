@@ -22,6 +22,8 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasFocus;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -45,7 +47,7 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(ViewMatchers.withId(R.id.card_number_edit_text))
+        onView(ViewMatchers.withId(R.id.cardNumberEditText))
                 .check(matches(withText("**** **** **** 1234")));
     }
 
@@ -56,7 +58,7 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(ViewMatchers.withId(R.id.card_number_edit_text))
+        onView(ViewMatchers.withId(R.id.cardNumberEditText))
                 .check(matches(withText("**** ****** *1234")));
     }
 
@@ -67,7 +69,7 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(ViewMatchers.withId(R.id.card_number_edit_text))
+        onView(ViewMatchers.withId(R.id.cardNumberEditText))
                 .check(matches(withText("**** **** **** 1234")));
     }
 
@@ -78,7 +80,7 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .check(matches(withText("12/20")))
                 .check(matches(isDisabled()));
     }
@@ -90,7 +92,7 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .check(matches(withText("")));
     }
 
@@ -101,12 +103,8 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.security_code_input_layout))
-                .check(matches(withTextInputHint("CVV2")));
-
-        onView(withId(R.id.security_code_edit_text))
-                .perform(click())
-                .check(matches(withHint("000")));
+        onView(withId(R.id.securityCodeEditText))
+                .check(matches(withHint("CVV2")));
     }
 
     @Test
@@ -116,12 +114,8 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.security_code_input_layout))
-                .check(matches(withTextInputHint("CID")));
-
-        onView(withId(R.id.security_code_edit_text))
-                .perform(click())
-                .check(matches(withHint("0000")));
+        onView(withId(R.id.securityCodeEditText))
+                .check(matches(withHint("CID")));
     }
 
     @Test
@@ -133,22 +127,22 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("452"));
 
-        onView(withId(R.id.post_code_edit_text))
+        onView(withId(R.id.postCodeEditText))
                 .check(matches(hasFocus()));
     }
 
     @Test
-    public void shouldShowCardTypeImageAsOpaque() {
+    public void shouldShowCardTypeImage() {
         Intent intent = new Intent();
         intent.putExtra(Judo.JUDO_OPTIONS, getJudo(VISA).build());
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_type_view))
-                .check(matches(isOpaque()));
+        onView(withId(R.id.cardNumberImageView))
+                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     @Test
@@ -158,12 +152,12 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("123"))
                 .perform(replaceText(""));
 
-        onView(withId(R.id.button))
-                .check(matches(isNotDisplayed()));
+        onView(withId(R.id.entryButton))
+                .check(matches(isDisabled()));
     }
 
     @Test
@@ -173,17 +167,17 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("12"));
 
-        onView(withId(R.id.button))
-                .check(matches(isNotDisplayed()));
+        onView(withId(R.id.entryButton))
+                .check(matches(isDisabled()));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(replaceText("123"));
 
-        onView(withId(R.id.button))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.entryButton))
+                .check(matches(isEnabled()));
     }
 
     @Test
@@ -193,17 +187,17 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("123"));
 
-        onView(withId(R.id.button))
-                .check(matches(isNotDisplayed()));
+        onView(withId(R.id.entryButton))
+                .check(matches(isDisabled()));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(replaceText("1234"));
 
-        onView(withId(R.id.button))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.entryButton))
+                .check(matches(isEnabled()));
     }
 
     @Test
@@ -215,14 +209,14 @@ public class TokenPaymentFormTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("1234"));
 
-        onView(withId(R.id.post_code_edit_text))
+        onView(withId(R.id.postCodeEditText))
                 .perform(typeText("NW6 7BB"));
 
-        onView(withId(R.id.button))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.entryButton))
+                .check(matches(isEnabled()));
     }
 
     private Judo.Builder getJudo(int cardType) {

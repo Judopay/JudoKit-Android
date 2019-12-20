@@ -33,7 +33,7 @@ public class SecurityMessageTest {
     public void shouldDisplaySecurityMessageWhenSetInTheme() {
         preAuthActivityActivityTestRule.launchActivity(getIntent());
 
-        onView(withId(R.id.secure_server_text))
+        onView(withId(R.id.secureServerText))
                 .check(matches(isDisplayed()));
     }
 
@@ -41,7 +41,7 @@ public class SecurityMessageTest {
     public void shouldNotDisplaySecurityMessage() {
         testRule.launchActivity(getIntent());
 
-        onView(withId(R.id.secure_server_text))
+        onView(withId(R.id.secureServerText))
                 .check(matches(isNotDisplayed()));
     }
 

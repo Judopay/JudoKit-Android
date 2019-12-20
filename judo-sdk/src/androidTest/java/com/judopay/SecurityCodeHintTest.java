@@ -28,8 +28,8 @@ public class SecurityCodeHintTest {
 
         rule.launchActivity(intent);
 
-        onView(withId(R.id.security_code_input_layout))
-                .check(matches(withTextInputHint("CVV")));
+        onView(withId(R.id.securityCodeEditText))
+                .check(matches(withHint("CVV")));
     }
 
     @Test
@@ -39,11 +39,11 @@ public class SecurityCodeHintTest {
 
         rule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("4976"));
 
-        onView(withId(R.id.security_code_input_layout))
-                .check(matches(withTextInputHint("CVV2")));
+        onView(withId(R.id.securityCodeEditText))
+                .check(matches(withHint("CVV2")));
     }
 
     @Test
@@ -53,11 +53,11 @@ public class SecurityCodeHintTest {
 
         rule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("3400"));
 
-        onView(withId(R.id.security_code_input_layout))
-                .check(matches(withTextInputHint("CID")));
+        onView(withId(R.id.securityCodeEditText))
+                .check(matches(withHint("CID")));
     }
 
     @Test
@@ -67,52 +67,10 @@ public class SecurityCodeHintTest {
 
         rule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("5100"));
 
-        onView(withId(R.id.security_code_input_layout))
-                .check(matches(withTextInputHint("CVC2")));
+        onView(withId(R.id.securityCodeEditText))
+                .check(matches(withHint("CVC2")));
     }
-
-    @Test
-    public void shouldDisplayCidvHintWhenAmexCardNumberEntered() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
-
-        rule.launchActivity(intent);
-
-        onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("3400"));
-
-        onView(withId(R.id.security_code_edit_text))
-                .perform(click())
-                .check(matches(withHint("0000")));
-    }
-
-    @Test
-    public void shouldDisplayCv2HintWhenVisaCardNumberEntered() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
-
-        rule.launchActivity(intent);
-
-        onView(withId(R.id.card_number_edit_text))
-                .perform(typeText("4976"));
-
-        onView(withId(R.id.security_code_edit_text))
-                .perform(click())
-                .check(matches(withHint("000")));
-    }
-
-    @Test
-    public void shouldDisplayCvvImageOnLaunch() {
-        Intent intent = new Intent();
-        intent.putExtra(Judo.JUDO_OPTIONS, getJudo());
-
-        rule.launchActivity(intent);
-
-        onView(withId(R.id.security_code_image_view))
-                .check(matches(isDisplayed()));
-    }
-
 }

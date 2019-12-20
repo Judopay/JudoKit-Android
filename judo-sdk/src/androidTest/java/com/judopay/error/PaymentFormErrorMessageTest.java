@@ -34,7 +34,7 @@ public class PaymentFormErrorMessageTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(ViewMatchers.withId(R.id.card_number_edit_text))
+        onView(ViewMatchers.withId(R.id.cardNumberEditText))
                 .perform(typeText("1234000000001234"));
 
         onView(withText(R.string.check_card_number))
@@ -48,7 +48,7 @@ public class PaymentFormErrorMessageTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("0101"));
 
         onView(withText(R.string.check_expiry_date))
@@ -62,7 +62,7 @@ public class PaymentFormErrorMessageTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1230"));
 
         onView(withText(R.string.check_expiry_date))
@@ -76,7 +76,7 @@ public class PaymentFormErrorMessageTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("6759000000005462"));
 
         onView(withId(R.id.start_date_edit_text))
@@ -93,7 +93,7 @@ public class PaymentFormErrorMessageTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("6759000000005462"));
 
         onView(withId(R.id.start_date_edit_text))
@@ -113,7 +113,7 @@ public class PaymentFormErrorMessageTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("3400"));
 
         onView(withText(R.string.error_amex_not_supported))
@@ -130,7 +130,7 @@ public class PaymentFormErrorMessageTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("6759"));
 
         onView(withText(R.string.error_maestro_not_supported))

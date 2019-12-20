@@ -37,7 +37,7 @@ public class PrefillCardDataTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(ViewMatchers.withId(R.id.card_number_edit_text))
+        onView(ViewMatchers.withId(R.id.cardNumberEditText))
                 .check(matches(withText("4934 1234 1234 1234")));
     }
 
@@ -55,7 +55,7 @@ public class PrefillCardDataTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .check(matches(withText("3434 123412 34123")));
     }
 

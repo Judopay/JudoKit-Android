@@ -18,6 +18,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -45,16 +46,16 @@ public class SuccessfulPreAuthTest {
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(preAuthActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
-        onView(ViewMatchers.withId(R.id.card_number_edit_text))
+        onView(ViewMatchers.withId(R.id.cardNumberEditText))
                 .perform(typeText("4976000000003436"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("452"));
 
-        onView(withId(R.id.button))
+        onView(withId(R.id.entryButton))
                 .perform(click());
 
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
@@ -75,7 +76,7 @@ public class SuccessfulPreAuthTest {
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(preAuthActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("6759000000005462"));
 
         onView(withId(R.id.start_date_edit_text))
@@ -84,13 +85,13 @@ public class SuccessfulPreAuthTest {
         onView(withId(R.id.issue_number_edit_text))
                 .perform(typeText("01"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("789"));
 
-        onView(withId(R.id.button))
+        onView(withId(R.id.entryButton))
                 .perform(click());
 
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
@@ -111,16 +112,16 @@ public class SuccessfulPreAuthTest {
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(preAuthActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("340000432128428"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("3469"));
 
-        onView(withId(R.id.button))
+        onView(withId(R.id.entryButton))
                 .perform(click());
 
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
@@ -144,19 +145,19 @@ public class SuccessfulPreAuthTest {
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(preAuthActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("4976000000003436"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("452"));
 
-        onView(withId(R.id.post_code_edit_text))
+        onView(withId(R.id.postCodeEditText))
                 .perform(typeText("TR148PA"));
 
-        onView(withId(R.id.button))
+        onView(withId(R.id.entryButton))
                 .perform(click());
 
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
@@ -180,7 +181,7 @@ public class SuccessfulPreAuthTest {
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(preAuthActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("6759000000005462"));
 
         onView(withId(R.id.start_date_edit_text))
@@ -189,17 +190,17 @@ public class SuccessfulPreAuthTest {
         onView(withId(R.id.issue_number_edit_text))
                 .perform(typeText("01"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("789"));
 
-        onView(withId(R.id.post_code_edit_text))
+        onView(withId(R.id.postCodeEditText))
                 .perform(typeText("RG48NL"));
 
-        onView(withId(R.id.button))
-                .perform(click());
+        onView(withId(R.id.entryButton))
+                .perform(closeSoftKeyboard(), click());
 
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
         assertThat(activity, matcher);
@@ -222,19 +223,19 @@ public class SuccessfulPreAuthTest {
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(preAuthActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("340000432128428"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("3469"));
 
-        onView(withId(R.id.post_code_edit_text))
+        onView(withId(R.id.postCodeEditText))
                 .perform(typeText("NW67BB"));
 
-        onView(withId(R.id.button))
+        onView(withId(R.id.entryButton))
                 .perform(click());
 
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));

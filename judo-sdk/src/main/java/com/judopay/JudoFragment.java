@@ -4,14 +4,15 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.fragment.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.FragmentManager;
 
 import com.judopay.arch.ThemeUtil;
 import com.judopay.card.AbstractCardEntryFragment;
@@ -72,13 +73,8 @@ abstract class JudoFragment extends BaseFragment implements TransactionCallbacks
 
         if (cardEntryFragment == null) {
             cardEntryFragment = createCardEntryFragment();
-            cardEntryFragment.setTargetFragment(this, 0);
-
             if (getFragmentManager() != null) {
-                getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.container, cardEntryFragment)
-                        .commit();
+                cardEntryFragment.show(getFragmentManager(), CardEntryFragment.class.getSimpleName());
             }
         } else {
             cardEntryFragment.setCardEntryListener(this);
@@ -180,10 +176,10 @@ abstract class JudoFragment extends BaseFragment implements TransactionCallbacks
                 judo.getCustomLayout().validate(getActivity());
                 return CustomLayoutCardEntryFragment.newInstance(judo, this);
             } else if (judo.getCardToken() != null) {
-                return TokenCardEntryFragment.newInstance(judo, this);
+                return TokenCardEntryFragment.Companion.newInstance(judo, this);
             }
         }
-        return CardEntryFragment.newInstance(judo, this);
+        return CardEntryFragment.Companion.newInstance(judo, this);
     }
 
     public void setCard(final Card card) {

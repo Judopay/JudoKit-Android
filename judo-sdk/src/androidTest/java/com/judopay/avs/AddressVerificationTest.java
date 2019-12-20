@@ -1,8 +1,9 @@
 package com.judopay.avs;
 
 import android.content.Intent;
-import androidx.test.rule.ActivityTestRule;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import com.judopay.Judo;
 import com.judopay.PaymentActivity;
@@ -18,10 +19,11 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
+import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static com.judopay.TestUtil.getJudo;
-import static com.judopay.util.ViewMatchers.isNotDisplayed;
+import static com.judopay.util.ViewMatchers.isDisabled;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
@@ -42,13 +44,13 @@ public class AddressVerificationTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("4976000000003436"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("452"));
     }
 
@@ -62,24 +64,25 @@ public class AddressVerificationTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("4976000000003436"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("452"));
 
-        onView(withId(R.id.country_spinner))
+        onView(withId(R.id.countrySpinner))
                 .perform(click());
 
         onData(allOf(is(instanceOf(Country.class)), is(Country.OTHER)))
+                .inRoot(isPlatformPopup())
                 .perform(click());
 
 
-        onView(withId(R.id.button))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.entryButton))
+                .check(matches(isEnabled()));
     }
 
     @Test
@@ -92,24 +95,25 @@ public class AddressVerificationTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("4976000000003436"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("452"));
 
-        onView(withId(R.id.country_spinner))
+        onView(withId(R.id.countrySpinner))
                 .perform(click());
 
         onData(allOf(is(instanceOf(Country.class)), is(Country.UNITED_KINGDOM)))
+                .inRoot(isPlatformPopup())
                 .perform(click());
 
 
-        onView(withId(R.id.button))
-                .check(matches(isNotDisplayed()));
+        onView(withId(R.id.entryButton))
+                .check(matches(isDisabled()));
     }
 
     @Test
@@ -122,23 +126,24 @@ public class AddressVerificationTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("4976000000003436"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("452"));
 
-        onView(withId(R.id.country_spinner))
+        onView(withId(R.id.countrySpinner))
                 .perform(click());
 
         onData(allOf(is(instanceOf(Country.class)), is(Country.UNITED_KINGDOM)))
+                .inRoot(isPlatformPopup())
                 .perform(click());
 
-        onView(withId(R.id.button))
-                .check(matches(isNotDisplayed()));
+        onView(withId(R.id.entryButton))
+                .check(matches(isDisabled()));
     }
 
 }

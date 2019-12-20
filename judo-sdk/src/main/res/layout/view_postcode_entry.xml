@@ -1,22 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/postCodeContainer"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/height_44"
+    android:background="@drawable/edit_text_background"
+    android:paddingStart="@dimen/padding_14"
+    android:paddingEnd="@dimen/padding_14">
 
-    <com.judopay.view.JudoTextInputLayout
-        android:id="@+id/post_code_input_layout"
-        style="@style/Widget.Judo.EntryLayout"
-        android:layout_width="match_parent"
-        android:layout_marginTop="1dp"
-        android:layout_weight="1">
+    <TextView
+        android:id="@+id/postCodeError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_6"
+        android:textColor="@color/error"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintBottom_toTopOf="@+id/postCodeEditText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/error_postcode_uk" />
 
-        <com.judopay.view.JudoEditText
-            android:id="@+id/post_code_edit_text"
-            style="@style/Widget.Judo.Postcode"
-            android:layout_gravity="bottom"
-            android:hint="@string/billing_postcode"
-            android:maxLength="8"
-            tools:ignore="UnusedAttribute" />
+    <com.judopay.view.JudoEditText
 
-    </com.judopay.view.JudoTextInputLayout>
+        android:id="@+id/postCodeEditText"
+        style="@style/Widget.Judo.Postcode"
+        android:background="@null"
+        android:hint="@string/billing_postcode"
+        android:maxLength="8"
+        android:textSize="@dimen/text_size_medium"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</merge>
+</androidx.constraintlayout.widget.ConstraintLayout>

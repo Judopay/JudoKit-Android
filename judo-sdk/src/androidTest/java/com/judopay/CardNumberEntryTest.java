@@ -25,7 +25,7 @@ public class CardNumberEntryTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("340000432128428"))
                 .check(matches(withText("3400 004321 28428")));
     }
@@ -37,7 +37,7 @@ public class CardNumberEntryTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("4976000000003436"))
                 .check(matches(withText("4976 0000 0000 3436")));
     }
@@ -49,7 +49,7 @@ public class CardNumberEntryTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("49760000000034360"))
                 .check(matches(withText("4976 0000 0000 3436")));
     }
@@ -61,7 +61,7 @@ public class CardNumberEntryTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("3400004321284280"))
                 .check(matches(withText("3400 004321 28428")));
     }
@@ -73,7 +73,7 @@ public class CardNumberEntryTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText(" 1234"))
                 .check(matches(withText("1234 ")));
     }

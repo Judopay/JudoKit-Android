@@ -21,8 +21,6 @@ public class HintFocusListener implements View.OnFocusChangeListener {
     public void onFocusChange(final View v, final boolean hasFocus) {
         if (hasFocus) {
             editText.setHint(hint);
-        } else {
-            editText.setHint("");
         }
     }
 }

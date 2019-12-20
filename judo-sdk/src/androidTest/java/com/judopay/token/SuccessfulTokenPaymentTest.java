@@ -86,10 +86,10 @@ public class SuccessfulTokenPaymentTest {
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("524"));
 
-        onView(withId(R.id.button))
+        onView(withId(R.id.entryButton))
                 .perform(click());
 
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));
@@ -143,13 +143,13 @@ public class SuccessfulTokenPaymentTest {
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("524"));
 
-        onView(withId(R.id.post_code_edit_text))
+        onView(withId(R.id.postCodeEditText))
                 .perform(typeText("S20 5EJ"));
 
-        onView(withId(R.id.button))
+        onView(withId(R.id.entryButton))
                 .perform(click());
 
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));

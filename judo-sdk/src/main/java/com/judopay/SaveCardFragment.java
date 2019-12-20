@@ -43,7 +43,7 @@ public class SaveCardFragment extends JudoFragment implements TransactionCallbac
 
     @Override
     AbstractCardEntryFragment createCardEntryFragment() {
-        CardEntryFragment cardEntryFragment = CardEntryFragment.newInstance(getJudo(), this);
+        CardEntryFragment cardEntryFragment = CardEntryFragment.Companion.newInstance(getJudo(), this);
         cardEntryFragment.setButtonLabel(getString(R.string.add_card));
         return cardEntryFragment;
     }

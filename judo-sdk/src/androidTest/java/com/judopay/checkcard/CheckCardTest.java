@@ -47,16 +47,16 @@ public class CheckCardTest {
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(checkCardActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
-        onView(ViewMatchers.withId(R.id.card_number_edit_text))
+        onView(ViewMatchers.withId(R.id.cardNumberEditText))
                 .perform(typeText("4111111111111111"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("452"));
 
-        onView(withId(R.id.button))
+        onView(withId(R.id.entryButton))
                 .perform(click());
 
         Matcher<ResultTestActivity> matcher = ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_SUCCESS));

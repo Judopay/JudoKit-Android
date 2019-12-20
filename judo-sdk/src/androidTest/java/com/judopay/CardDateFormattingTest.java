@@ -28,7 +28,7 @@ public class CardDateFormattingTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("6759000000005462"));
 
         onView(withId(R.id.start_date_edit_text))
@@ -43,7 +43,7 @@ public class CardDateFormattingTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1225"))
                 .check(matches(withText("12/25")));
     }

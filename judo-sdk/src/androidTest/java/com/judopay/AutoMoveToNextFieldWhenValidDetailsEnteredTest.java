@@ -29,10 +29,10 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(ViewMatchers.withId(R.id.card_number_edit_text))
+        onView(ViewMatchers.withId(R.id.cardNumberEditText))
                 .perform(typeText("4976000000003436"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .check(matches(hasFocus()));
     }
 
@@ -43,10 +43,10 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .check(matches(hasFocus()));
     }
 
@@ -60,16 +60,16 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("4976000000003436"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("452"));
 
-        onView(withId(R.id.post_code_edit_text))
+        onView(withId(R.id.postcodeEntryView))
                 .check(matches(hasFocus()));
     }
 
@@ -80,7 +80,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("6759000000005462"));
 
         onView(withId(R.id.start_date_edit_text))
@@ -94,7 +94,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("6759000000005462"));
 
         onView(withId(R.id.start_date_edit_text))
@@ -111,13 +111,13 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("6759000000005462"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .check(matches(hasFocus()));
     }
 
@@ -131,7 +131,7 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("6759000000005462"));
 
         onView(withId(R.id.start_date_edit_text))
@@ -140,13 +140,13 @@ public class AutoMoveToNextFieldWhenValidDetailsEnteredTest {
         onView(withId(R.id.issue_number_edit_text))
                 .perform(typeText("01"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("789"));
 
-        onView(withId(R.id.post_code_edit_text))
+        onView(withId(R.id.postCodeEditText))
                 .check(matches(hasFocus()));
     }
 }

@@ -38,13 +38,13 @@ public class ButtonLabelTest {
     public void shouldDisplayAddCardButtonLabel() {
         testRule.launchActivity(getIntent());
 
-        onView(ViewMatchers.withId(R.id.card_number_edit_text))
+        onView(ViewMatchers.withId(R.id.cardNumberEditText))
                 .perform(typeText("4976000000003436"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("452"));
 
         // multiple views with add card text, so need to be specific
@@ -56,13 +56,13 @@ public class ButtonLabelTest {
     public void shouldDisplayPayButtonLabel() {
         preAuthTestRule.launchActivity(getIntent());
 
-        onView(ViewMatchers.withId(R.id.card_number_edit_text))
+        onView(ViewMatchers.withId(R.id.cardNumberEditText))
                 .perform(typeText("4976000000003436"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("452"));
 
         onView(withText(R.string.pay))

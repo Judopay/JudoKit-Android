@@ -3,10 +3,12 @@ package com.judopay.view;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.FrameLayout;
+
 import androidx.annotation.DrawableRes;
 import androidx.appcompat.widget.AppCompatImageView;
-import android.util.AttributeSet;
-import android.widget.FrameLayout;
 
 public abstract class FlipImageView extends FrameLayout {
 
@@ -65,6 +67,7 @@ public abstract class FlipImageView extends FrameLayout {
 
     public void setImageType(final int imageType, final boolean animate) {
         this.imageType = imageType;
+        this.setVisibility(this.imageType != 0 ? View.VISIBLE : View.GONE);
 
         if (this.frontImageView == null) {
             this.frontImageView = new AppCompatImageView(getContext());

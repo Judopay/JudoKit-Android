@@ -24,9 +24,6 @@ public class CountrySpinnerAdapter extends ArrayAdapter<Country> {
         @SuppressLint("ViewHolder")
         final View view = inflater.inflate(R.layout.dropdown_item, parent, false);
 
-        final TextView textView = (TextView) view.findViewById(android.R.id.text1);
-        textView.setText(R.string.billing_country);
-
         final TextView textView2 = (TextView) view.findViewById(android.R.id.text2);
         textView2.setText(getItem(position).getNameResourceId());
 

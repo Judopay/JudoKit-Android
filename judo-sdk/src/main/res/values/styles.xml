@@ -39,6 +39,32 @@
         <item name="cameraIcon">@drawable/ic_photo_camera_black</item>
     </style>
 
+    <style name="Theme.Transparent" parent="Theme.AppCompat">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_sheet_dialog_fragment_background</item>
+    </style>
+
+    <style name="BaseBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
+        <item name="bottomSheetStyle">@style/BottomSheet</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/dialog_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/dialog_exit_anim</item>
+    </style>
+
     <style name="Theme.Judo.Light.ShowSecurityMessage" parent="Theme.Judo.Light">
         <item name="secureServerMessageShown">true</item>
     </style>
@@ -120,10 +146,8 @@
     </style>
 
     <style name="Widget.Judo.CardImage">
-        <item name="android:alpha">0.5</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_marginRight">@dimen/small_padding</item>
     </style>
 
@@ -183,8 +207,6 @@
     <style name="Widget.Judo.Spinner" parent="Widget.AppCompat.Spinner">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">3.5dp</item>
-        <item name="android:layout_marginTop">6.5dp</item>
         <item name="android:layout_weight">1</item>
     </style>
 

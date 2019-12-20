@@ -1,9 +1,11 @@
 package com.judopay.payment;
 
 import android.content.Intent;
+
 import androidx.test.espresso.IdlingRegistry;
-import androidx.test.rule.ActivityTestRule;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import com.judopay.Judo;
 import com.judopay.JudoTransactionIdlingResource;
@@ -16,11 +18,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static com.judopay.TestUtil.getJudo;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -45,16 +48,16 @@ public class DeclinedPaymentTest {
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("4221690000004963"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("125"));
 
-        onView(withId(R.id.button))
+        onView(withId(R.id.entryButton))
                 .perform(click());
 
         assertThat(activity, ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_DECLINED)));
@@ -76,7 +79,7 @@ public class DeclinedPaymentTest {
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("6759000000009076"));
 
         onView(withId(R.id.start_date_edit_text))
@@ -85,13 +88,13 @@ public class DeclinedPaymentTest {
         onView(withId(R.id.issue_number_edit_text))
                 .perform(typeText("01"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("671"));
 
-        onView(withId(R.id.button))
+        onView(withId(R.id.entryButton))
                 .perform(click());
 
         assertThat(activity, ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_DECLINED)));
@@ -113,16 +116,16 @@ public class DeclinedPaymentTest {
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("340000150358074"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("7654"));
 
-        onView(withId(R.id.button))
+        onView(withId(R.id.entryButton))
                 .perform(click());
 
         assertThat(activity, ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_DECLINED)));
@@ -147,19 +150,19 @@ public class DeclinedPaymentTest {
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("4221690000004963"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("125"));
 
-        onView(withId(R.id.post_code_edit_text))
+        onView(withId(R.id.postCodeEditText))
                 .perform(typeText("N226JN"));
 
-        onView(withId(R.id.button))
+        onView(withId(R.id.entryButton))
                 .perform(click());
 
         assertThat(activity, ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_DECLINED)));
@@ -184,7 +187,7 @@ public class DeclinedPaymentTest {
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("6759000000009076"));
 
         onView(withId(R.id.start_date_edit_text))
@@ -193,17 +196,16 @@ public class DeclinedPaymentTest {
         onView(withId(R.id.issue_number_edit_text))
                 .perform(typeText("01"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("671"));
 
-        onView(withId(R.id.post_code_edit_text))
+        onView(withId(R.id.postCodeEditText))
                 .perform(typeText("OX143AL"));
 
-        onView(withId(R.id.button))
-                .perform(click());
+        onView(withId(R.id.entryButton)).perform(closeSoftKeyboard(), click());
 
         assertThat(activity, ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_DECLINED)));
 
@@ -227,19 +229,19 @@ public class DeclinedPaymentTest {
         JudoTransactionIdlingResource idlingResource = new JudoTransactionIdlingResource(paymentActivity);
         IdlingRegistry.getInstance().register(idlingResource);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("340000150358074"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("7654"));
 
-        onView(withId(R.id.post_code_edit_text))
+        onView(withId(R.id.postCodeEditText))
                 .perform(typeText("TQ11BH"));
 
-        onView(withId(R.id.button))
+        onView(withId(R.id.entryButton))
                 .perform(click());
 
         assertThat(activity, ResultTestActivity.receivedExpectedResult(equalTo(Judo.RESULT_DECLINED)));

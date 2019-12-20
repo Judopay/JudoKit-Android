@@ -17,4 +17,8 @@
     <color name="ideal_violet">#BC2965</color>
     <color name="ideal_violet_dark">#9C2E58</color>
 
+    <color name="black">#262626</color>
+    <color name="error">#E21900</color>
+    <color name="grey">#999999</color>
+
 </resources>

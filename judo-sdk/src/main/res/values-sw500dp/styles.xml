@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Widget.Judo.PaddedLayout">
-        <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:layout_width">500dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:paddingBottom">70dp</item>
-        <item name="android:paddingLeft">@dimen/medium_padding</item>
-        <item name="android:paddingRight">@dimen/medium_padding</item>
-        <item name="android:paddingTop">@dimen/medium_padding</item>
-    </style>
-
     <style name="Widget.Judo.Button" parent="Widget.AppCompat.Button.Colored">
         <item name="android:text">@string/pay</item>
         <item name="android:layout_width">wrap_content</item>

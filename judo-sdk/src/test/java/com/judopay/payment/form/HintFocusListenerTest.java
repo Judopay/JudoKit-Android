@@ -25,14 +25,4 @@ public class HintFocusListenerTest {
 
         verify(editText).setHint(eq(hint));
     }
-
-    @Test
-    public void shouldSetEmptyHintWhenBlurred() {
-        EditText editText = mock(EditText.class);
-
-        HintFocusListener hintFocusListener = new HintFocusListener(editText, "hint");
-        hintFocusListener.onFocusChange(null, false);
-
-        verify(editText).setHint(eq(""));
-    }
 }

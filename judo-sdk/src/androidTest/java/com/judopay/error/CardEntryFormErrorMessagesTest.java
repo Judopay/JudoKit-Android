@@ -17,6 +17,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -38,22 +39,23 @@ public class CardEntryFormErrorMessagesTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("4976000000003436"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("452"));
 
-        onView(withId(R.id.country_spinner))
+        onView(withId(R.id.countrySpinner))
                 .perform(click());
 
         onView(withText(Country.UNITED_KINGDOM.getNameResourceId()))
+                .inRoot(isPlatformPopup())
                 .perform(click());
 
-        onView(withId(R.id.post_code_edit_text))
+        onView(withId(R.id.postCodeEditText))
                 .perform(typeText("123456"));
 
         onView(withText(R.string.error_postcode_uk))
@@ -69,22 +71,23 @@ public class CardEntryFormErrorMessagesTest {
                 .build());
 
         activityTestRule.launchActivity(intent);
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("4976000000003436"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("452"));
 
-        onView(withId(R.id.country_spinner))
+        onView(withId(R.id.countrySpinner))
                 .perform(click());
 
         onView(withText(Country.CANADA.getNameResourceId()))
+                .inRoot(isPlatformPopup())
                 .perform(click());
 
-        onView(withId(R.id.post_code_edit_text))
+        onView(withId(R.id.postCodeEditText))
                 .perform(typeText("123456"));
 
         onView(withText(R.string.error_postcode_canada))
@@ -101,22 +104,23 @@ public class CardEntryFormErrorMessagesTest {
 
         activityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.card_number_edit_text))
+        onView(withId(R.id.cardNumberEditText))
                 .perform(typeText("4976000000003436"));
 
-        onView(withId(R.id.expiry_date_edit_text))
+        onView(withId(R.id.expiryDateEditText))
                 .perform(typeText("1220"));
 
-        onView(withId(R.id.security_code_edit_text))
+        onView(withId(R.id.securityCodeEditText))
                 .perform(typeText("452"));
 
-        onView(withId(R.id.country_spinner))
+        onView(withId(R.id.countrySpinner))
                 .perform(click());
 
         onView(withText(Country.UNITED_STATES.getNameResourceId()))
+                .inRoot(isPlatformPopup())
                 .perform(click());
 
-        onView(withId(R.id.post_code_edit_text))
+        onView(withId(R.id.postCodeEditText))
                 .perform(typeText("123456"));
 
         onView(withText(R.string.error_postcode_us))

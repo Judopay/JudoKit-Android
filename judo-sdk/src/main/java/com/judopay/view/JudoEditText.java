@@ -2,8 +2,12 @@ package com.judopay.view;
 
 import android.content.Context;
 import androidx.appcompat.widget.AppCompatEditText;
+
+import android.graphics.drawable.Drawable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+
+import com.judopay.R;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -17,10 +17,23 @@
     <dimen name="progress_bar_height">150dp</dimen>
     <dimen name="image_button_height">40dp</dimen>
     <dimen name="image_button_width">40dp</dimen>
+    <dimen name="card_entry_height">46dp</dimen>
 
+    <dimen name="text_size_small">10sp</dimen>
     <dimen name="text_size_medium">16sp</dimen>
     <dimen name="text_size_large">18sp</dimen>
-
+    <dimen name="height_44">44dp</dimen>
+    <dimen name="padding_14">14dp</dimen>
+    <dimen name="margin_6">6dp</dimen>
+    <dimen name="width_24">24dp</dimen>
+    <dimen name="height_24">24dp</dimen>
+    <dimen name="height_36">36dp</dimen>
+    <dimen name="padding_10">10dp</dimen>
+    <dimen name="corner_radius_6">6dp</dimen>
+    <dimen name="width_1">1dp</dimen>
+    <dimen name="corner_radius_4">4dp</dimen>
+    <dimen name="corner_radius_16">16dp</dimen>
+    <dimen name="height_500">500dp</dimen>
     <item name="spaced_text" format="float" type="dimen">1.4</item>
 
 </resources>
