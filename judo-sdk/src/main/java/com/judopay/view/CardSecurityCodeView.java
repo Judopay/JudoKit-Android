@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import com.judopay.R;
 import com.judopay.model.CardNetwork;
 
-public class CardSecurityCodeView extends FlipImageView {
+public class CardSecurityCodeView extends FadeImageView {
 
     public CardSecurityCodeView(final Context context) {
         super(context);

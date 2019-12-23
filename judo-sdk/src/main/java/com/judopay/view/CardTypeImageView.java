@@ -10,7 +10,7 @@ import com.judopay.model.CardNetwork;
  * A view that displays a card type image (Visa, Amex, etc.) to provide the user with feedback
  * that their card type has been recognised.
  */
-public class CardTypeImageView extends FlipImageView {
+public class CardTypeImageView extends FadeImageView {
 
     public CardTypeImageView(final Context context) {
         super(context);
@@ -38,7 +38,7 @@ public class CardTypeImageView extends FlipImageView {
             case CardNetwork.VISA_DEBIT:
                 return R.drawable.ic_card_visa;
             default:
-                return R.drawable.ic_card_unknown;
+                return 0;
         }
     }
 }
