@@ -114,7 +114,7 @@ class CardEntryFragment : AbstractCardEntryFragment() {
         if (judo.cardNumber != null) {
             val cardType = CardNetwork.fromCardNumber(judo.cardNumber)
             cardNumberEntryView.apply {
-                setCardType(cardType, false)
+                setCardType(cardType, true)
                 setText(judo.cardNumber)
             }
             requestFocus(expiryDateEntryView)
@@ -152,7 +152,7 @@ class CardEntryFragment : AbstractCardEntryFragment() {
         if (!TextUtil.isEmpty(card.cardNumber)) {
             val cardType = CardNetwork.fromCardNumber(card.cardNumber)
             cardNumberEntryView.apply {
-                setCardType(cardType, false)
+                setCardType(cardType, true)
                 setText(card.cardNumber)
             }
             requestFocus(expiryDateEntryView)
@@ -169,7 +169,7 @@ class CardEntryFragment : AbstractCardEntryFragment() {
         cardNumberEntryView.addTextChangedListener(object : SimpleTextWatcher() {
             override fun onTextChanged(text: CharSequence) {
                 val cardType = CardNetwork.fromCardNumber(text.toString())
-                cardNumberEntryView.setCardType(cardType, false)
+                cardNumberEntryView.setCardType(cardType, true)
                 securityCodeEntryView.setCardType(cardType, true)
                 securityCodeValidator.setCardType(cardType)
                 if (judo.isMaestroEnabled && cardType == CardNetwork.MAESTRO) {
