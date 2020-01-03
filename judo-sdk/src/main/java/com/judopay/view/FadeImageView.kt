@@ -14,14 +14,13 @@ private const val KEY_ALPHA = "alpha"
 private const val KEY_IMAGE_TYPE = "imageType"
 
 abstract class FadeImageView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyle: Int = 0
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyle: Int = 0
 ) : FrameLayout(context, attrs, defStyle) {
+
     private var imageView: AppCompatImageView? = null
     private var imageType = 0
-    private var imageResId = 0
-    private var isFadedIn = false
 
     init {
         setImageType(0, false)
@@ -31,63 +30,58 @@ abstract class FadeImageView @JvmOverloads constructor(
     protected abstract fun getImageResource(type: Int): Int
 
     public override fun onSaveInstanceState(): Parcelable? {
-        val bundle = Bundle()
-        bundle.putParcelable(KEY_SUPER_STATE, super.onSaveInstanceState())
-        bundle.putFloat(KEY_ALPHA, alpha)
-        bundle.putInt(KEY_IMAGE_TYPE, imageType)
-        return bundle
+        return Bundle().apply {
+            putParcelable(KEY_SUPER_STATE, super.onSaveInstanceState())
+            putFloat(KEY_ALPHA, alpha)
+            putInt(KEY_IMAGE_TYPE, imageType)
+        }
     }
 
     public override fun onRestoreInstanceState(bundle: Parcelable) {
         if (bundle is Bundle) {
-            val superState =
-                bundle.getParcelable<Parcelable>(KEY_SUPER_STATE)
+            val superState = bundle.getParcelable<Parcelable>(KEY_SUPER_STATE)
+
             alpha = bundle.getFloat(KEY_ALPHA)
             imageType = bundle.getInt(KEY_IMAGE_TYPE)
+
             setImageType(imageType, false)
+
             super.onRestoreInstanceState(superState)
         } else {
             super.onRestoreInstanceState(bundle)
         }
     }
 
-    fun setImageType(imageType: Int, animate: Boolean) {
+    fun setImageType(imageType: Int, animated: Boolean) {
         this.imageType = imageType
         this.visibility = View.VISIBLE
+        val imageResId = getImageResource(imageType)
 
         if (imageView == null) {
-            this.imageView = AppCompatImageView(context)
-            this.imageView?.setImageResource(getImageResource(imageType))
-            addView(this.imageView)
+            imageView = AppCompatImageView(context)
+            addView(imageView)
         }
-        val imageResId = getImageResource(imageType)
-        if (this.imageResId != imageResId) {
-            if (animate) {
-                flipImages(imageResId)
-            } else {
-                showImage(imageResId)
+
+        imageView?.apply {
+            if (tag != imageResId) {
+                toggleImageVisibility(imageResId, animated)
+            }
+            tag = imageResId
+        }
+    }
+
+    private fun toggleImageVisibility(@DrawableRes imageResId: Int, animated: Boolean) {
+        imageView?.let {
+            val hasImage = imageResId != 0
+            val to = if (hasImage) 1f else 0f
+            val from = if (hasImage) 0f else 1f
+
+            it.alpha = if (animated) from else to
+            it.setImageResource(imageResId)
+
+            if (animated) {
+                ObjectAnimator.ofFloat(it, View.ALPHA, from, to).apply { duration = 300 }.start()
             }
         }
-    }
-
-    private fun showImage(imageResId: Int) {
-        this.imageResId = imageResId
-        imageView?.setImageResource(imageResId)
-    }
-
-    private fun flipImages(imageResId: Int) {
-        if (isFadedIn) {
-            val fadeOut = ObjectAnimator.ofFloat(imageView, View.ALPHA, 1f, 0f)
-            fadeOut.duration = 300
-            fadeOut.start()
-            this.imageResId = imageResId
-        } else {
-            this.imageResId = imageResId
-            imageView?.setImageResource(imageResId)
-            val fadeOut = ObjectAnimator.ofFloat(imageView, View.ALPHA, 0f, 1f)
-            fadeOut.duration = 300
-            fadeOut.start()
-        }
-        isFadedIn = !isFadedIn
     }
 }
