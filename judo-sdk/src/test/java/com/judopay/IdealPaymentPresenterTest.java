@@ -4,7 +4,6 @@ import com.judopay.model.OrderDetails;
 import com.judopay.model.OrderStatus;
 import com.judopay.model.SaleRequest;
 import com.judopay.model.SaleResponse;
-import com.judopay.model.SaleStatusRequest;
 import com.judopay.model.SaleStatusResponse;
 import com.judopay.util.DateUtil;
 
@@ -42,8 +41,6 @@ public class IdealPaymentPresenterTest {
     @Mock
     private SaleRequest saleRequest;
     @Mock
-    private SaleStatusRequest saleStatusRequest;
-    @Mock
     private SaleResponse saleResponse;
     @Mock
     OrderDetails orderDetails;
@@ -69,10 +66,9 @@ public class IdealPaymentPresenterTest {
     public void setUp() {
         presenter = spy(new IdealPaymentPresenter(view, apiService, dateUtil));
         doReturn(saleRequest).when(presenter).buildSaleRequest(judo, NAME, BIC);
-        doReturn(saleStatusRequest).when(presenter).buildSaleStatusRequest(judo, CHECKSUM);
         RxAndroidPlugins.setInitMainThreadSchedulerHandler(scheduler -> Schedulers.trampoline());
         RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
-        when(apiService.status(saleStatusRequest)).thenReturn(Observable.just(saleStatusResponse));
+        when(apiService.status(saleResponse.getOrderId())).thenReturn(Observable.just(saleStatusResponse));
         when(apiService.sale(saleRequest)).thenReturn(Single.just(saleResponse));
         when(dateUtil.getCalendar()).thenReturn(calendar);
         when(dateUtil.getDate()).thenReturn(date);
@@ -81,6 +77,7 @@ public class IdealPaymentPresenterTest {
         when(view.getBank()).thenReturn(BIC);
         when(saleStatusResponse.getOrderDetails()).thenReturn(orderDetails);
         when(saleResponse.getRedirectUrl()).thenReturn(URL);
+        when(saleResponse.getOrderId()).thenReturn(null);
     }
 
     @Test
@@ -95,6 +92,28 @@ public class IdealPaymentPresenterTest {
         presenter.onCreate();
 
         verify(view).registerPayClickListener();
+    }
+
+    @Test
+    public void shouldDisablePaymentButtonOnFirstItemSelected() {
+        presenter.setSelectedBank(PLACEHOLDER_SELECTED);
+
+        verify(view).disablePayButton();
+    }
+
+    @Test
+    public void shouldDisablePaymentButtonOnNameIsEmpty() {
+        presenter.setConsumerName("");
+
+        verify(view).disablePayButton();
+    }
+
+    @Test
+    public void shouldEnablePaymentButtonOnBankSelectedAndNameNotEmpty() {
+        presenter.setSelectedBank(FIRST_ITEM_SELECTED);
+        presenter.setConsumerName("Name");
+
+        verify(view).disablePayButton();
     }
 
     @Test
@@ -114,21 +133,24 @@ public class IdealPaymentPresenterTest {
 
     @Test
     public void shouldShowLoadingScreenOnTransactionStatusRequest() {
-        presenter.getTransactionStatus(saleStatusRequest);
+        presenter.onPayClicked();
+        presenter.getTransactionStatus();
 
         verify(view).showLoading();
     }
 
     @Test
     public void shouldHideStatusScreenOnTransactionStatusRequest() {
-        presenter.getTransactionStatus(saleStatusRequest);
+        presenter.onPayClicked();
+        presenter.getTransactionStatus();
 
         verify(view).hideStatus();
     }
 
     @Test
     public void shouldHideIdealPaymentScreenOnTransactionStatusRequest() {
-        presenter.getTransactionStatus(saleStatusRequest);
+        presenter.onPayClicked();
+        presenter.getTransactionStatus();
 
         verify(view).hideIdealPayment();
     }
@@ -139,7 +161,8 @@ public class IdealPaymentPresenterTest {
         when(judo.getIdealTimeout()).thenReturn(INTERVAL);
         when(dateUtil.getDate().getTime()).thenReturn(HALF_INTERVAL);
         when(dateUtil.getTimeWithInterval(calendar, INTERVAL / 2, Calendar.SECOND)).thenReturn(HALF_INTERVAL);
-        presenter.getTransactionStatus(saleStatusRequest);
+        presenter.onPayClicked();
+        presenter.getTransactionStatus();
 
         verify(view).showDelayLabel();
     }
@@ -148,7 +171,8 @@ public class IdealPaymentPresenterTest {
     public void shouldHideLoadingOnTransactionStatusAfterFullInterval() {
         when(saleStatusResponse.getOrderDetails()).thenReturn(orderDetails);
         when(date.getTime()).thenReturn(FULL_INTERVAL);
-        presenter.getTransactionStatus(saleStatusRequest);
+        presenter.onPayClicked();
+        presenter.getTransactionStatus();
 
         verify(view).hideLoading();
     }
@@ -158,41 +182,55 @@ public class IdealPaymentPresenterTest {
         when(saleStatusResponse.getOrderDetails()).thenReturn(orderDetails);
         when(orderDetails.getOrderStatus()).thenReturn(OrderStatus.TIMEOUT);
         when(date.getTime()).thenReturn(FULL_INTERVAL);
-        presenter.getTransactionStatus(saleStatusRequest);
+        presenter.onPayClicked();
+        presenter.getTransactionStatus();
 
         verify(view).showStatus(OrderStatus.TIMEOUT);
     }
 
     @Test
     public void shouldShowNetworkStatusOnTransactionStatusSocketTimeoutException() {
-        when(apiService.status(saleStatusRequest)).thenReturn(Observable.error(new SocketTimeoutException()));
-        presenter.getTransactionStatus(saleStatusRequest);
+        when(apiService.status(saleResponse.getOrderId())).thenReturn(Observable.error(new SocketTimeoutException()));
+        presenter.onPayClicked();
+        presenter.getTransactionStatus();
 
         verify(view).showStatus(OrderStatus.NETWORK_ERROR);
     }
 
     @Test
     public void shouldShowNetworkStatusOnTransactionStatusUnknownHostException() {
-        when(apiService.status(saleStatusRequest)).thenReturn(Observable.error(new UnknownHostException()));
-        presenter.getTransactionStatus(saleStatusRequest);
+        when(apiService.status(saleResponse.getOrderId())).thenReturn(Observable.error(new UnknownHostException()));
+        presenter.onPayClicked();
+        presenter.getTransactionStatus();
 
         verify(view).showStatus(OrderStatus.NETWORK_ERROR);
     }
 
     @Test
+    public void shouldShowFailStatusOnTransactionStatusException() {
+        when(apiService.status(saleResponse.getOrderId())).thenReturn(Observable.error(new Exception()));
+        presenter.onPayClicked();
+        presenter.getTransactionStatus();
+
+        verify(view).showStatus(OrderStatus.FAILED);
+    }
+
+    @Test
     public void shouldShowFailStatusOnTransactionStatusRequestFail() {
         when(saleStatusResponse.getOrderDetails()).thenReturn(orderDetails);
-        when(orderDetails.getOrderStatus()).thenReturn(OrderStatus.FAIL);
-        presenter.getTransactionStatus(saleStatusRequest);
+        when(orderDetails.getOrderStatus()).thenReturn(OrderStatus.FAILED);
+        presenter.onPayClicked();
+        presenter.getTransactionStatus();
 
-        verify(view).showStatus(OrderStatus.FAIL);
+        verify(view).showStatus(OrderStatus.FAILED);
     }
 
     @Test
     public void shouldHideLoadingOnTransactionStatusSuccess() {
         when(saleStatusResponse.getOrderDetails()).thenReturn(orderDetails);
-        when(orderDetails.getOrderStatus()).thenReturn(OrderStatus.SUCCESS);
-        presenter.getTransactionStatus(saleStatusRequest);
+        when(orderDetails.getOrderStatus()).thenReturn(OrderStatus.SUCCEEDED);
+        presenter.onPayClicked();
+        presenter.getTransactionStatus();
 
         verify(view).hideLoading();
     }
@@ -200,19 +238,21 @@ public class IdealPaymentPresenterTest {
     @Test
     public void shouldShowSuccessStatusScreenOnTransactionStatusSuccess() {
         when(saleStatusResponse.getOrderDetails()).thenReturn(orderDetails);
-        when(orderDetails.getOrderStatus()).thenReturn(OrderStatus.SUCCESS);
-        presenter.getTransactionStatus(saleStatusRequest);
+        when(orderDetails.getOrderStatus()).thenReturn(OrderStatus.SUCCEEDED);
+        presenter.onPayClicked();
+        presenter.getTransactionStatus();
 
-        verify(view).showStatus(OrderStatus.SUCCESS);
+        verify(view).showStatus(OrderStatus.SUCCEEDED);
     }
 
     @Test
     public void shouldSetCloseClickListenerOnTransactionStatusSuccess() {
         when(saleStatusResponse.getOrderDetails()).thenReturn(orderDetails);
-        when(orderDetails.getOrderStatus()).thenReturn(OrderStatus.SUCCESS);
-        presenter.getTransactionStatus(saleStatusRequest);
+        when(orderDetails.getOrderStatus()).thenReturn(OrderStatus.SUCCEEDED);
+        presenter.onPayClicked();
+        presenter.getTransactionStatus();
 
-        verify(view).showStatus(OrderStatus.SUCCESS);
+        verify(view).showStatus(OrderStatus.SUCCEEDED);
     }
 
     @Test

@@ -26,9 +26,11 @@ interface IdealPaymentView extends BaseView {
 
     void hideLoading();
 
-    void setStatusClickListener(SaleStatusRequest saleStatusRequest);
+    void setStatusClickListener();
 
     void setCloseClickListener(SaleStatusResponse saleStatusResponse);
+
+    void setOnFailClickListener(String orderId);
 
     void showDelayLabel();
 

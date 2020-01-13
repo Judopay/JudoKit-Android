@@ -42,7 +42,8 @@
     <string name="authentication">Authentication</string>
     <string name="verifying_card">Verifying card</string>
     <string name="please_reenter_the_card_security_code">Please re-enter the card security code</string>
-    <string name="secure_server_transmission">Your card details are encrypted using SSL before transmission to our secure payment service provider.</string>
+    <string name="secure_server">Secure server:</string>
+    <string name="secure_server_transmission">Your card details are encrypted using SSL before transmission to our secure payment service provider. They will not be stored on this device or on our servers.</string>
     <string name="united_kingdom">UK</string>
     <string name="united_states">USA</string>
     <string name="canada">Canada</string>
@@ -50,22 +51,30 @@
     <string name="judo_payment_method">Payment Method</string>
     <string name="judo_card_payment">Card Payment</string>
     <string name="judo_payment_method_header_title">Please select from one of the payment methods listed below:</string>
-    <string name="googlepay_button_content_description">Google Pay</string>
-    <string name="google_pay_logo">Google Pay logo</string>
+    <string name="googlepay_button_content_description" translatable="false">Google Pay</string>
+    <string name="google_pay_logo" translatable="false">Google Pay logo</string>
     <string name="google_pay_button_overlay">Google Pay button overlay</string>
-
-    <!-- manifest api configuration meta-data names, do not change -->
-    <string name="judo_api_token" translatable="false">judo_api_token</string>
-    <string name="judo_api_secret" translatable="false">judo_api_secret</string>
     <string name="scan_card" translatable="false">scan card</string>
     <string name="processing">Processing…</string>
-
-    <!-- iDEAL-->
     <string name="ideal">iDEAL transaction</string>
     <string name="enter_name">Enter name</string>
     <string name="pay_with_ideal">Pay with iDEAL</string>
     <string name="select_bank">Select iDEAL bank</string>
     <string name="bank">Bank</string>
+    <string name="order_timeout">The transaction has timed out!</string>
+    <string name="order_fail">Transaction failed!</string>
+    <string name="order_success">Transaction success!</string>
+    <string name="try_again">Retry</string>
+    <string name="close">Close</string>
+    <string name="no_internet">Please check your internet connection and try again</string>
+    <string name="there_is_a_delay">This is taking longer than expected. Please wait…</string>
+    <string name="something_went_wrong">Oops! Something went wrong.</string>
+    <string name="order_pending">Transaction pending…</string>
+    <string name="payment_status">Payment status</string>
+
+    <!-- manifest api configuration meta-data names, do not change -->
+    <string name="judo_api_token" translatable="false">judo_api_token</string>
+    <string name="judo_api_secret" translatable="false">judo_api_secret</string>
 
     <string name="bank_rabo" translatable="false">Rabobank</string>
     <string name="bank_abn_amro" translatable="false">ABN-AMRO</string>
@@ -93,16 +102,6 @@
     <string name="bank_moneyou_bic" translatable="false">MOYONL21</string>
     <string name="bank_handelsbanken_bic" translatable="false">HANDNL2A</string>
 
-    <string name="order_timeout">The transaction has timed out!</string>
-    <string name="order_fail">Transaction failed!</string>
-    <string name="order_success">Transaction success!</string>
-    <string name="try_again">Retry</string>
-    <string name="close">Close</string>
-    <string name="no_internet">Please check your internet connection and try again</string>
-    <string name="there_is_a_delay">This is taking longer than expected. Please wait…</string>
-    <string name="something_went_wrong">Oops! Something went wrong.</string>
-    <string name="order_pending">Transaction pending…</string>
-    <string name="payment_status">Payment status</string>
     <string name="card_holder_label">Cardholder Name</string>
     <string name="cancel">Cancel</string>
 </resources>

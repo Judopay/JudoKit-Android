@@ -113,10 +113,10 @@ public class PaymentMethodActivity extends BaseActivity {
             intent.putExtra(IDEAL_SALE_STATUS, saleStatusResponse);
             if (saleStatusResponse != null) {
                 switch (saleStatusResponse.getOrderDetails().getOrderStatus()) {
-                    case SUCCESS:
+                    case SUCCEEDED:
                         setResult(Judo.IDEAL_SUCCESS, intent);
                         break;
-                    case FAIL:
+                    case FAILED:
                         setResult(Judo.IDEAL_ERROR, intent);
                         break;
                 }

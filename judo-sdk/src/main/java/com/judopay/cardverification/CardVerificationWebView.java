@@ -70,6 +70,8 @@ public class CardVerificationWebView extends WebView implements JsonParsingJavaS
 
         settings.setJavaScriptEnabled(true);
         settings.setBuiltInZoomControls(true);
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
     }
 
     /**

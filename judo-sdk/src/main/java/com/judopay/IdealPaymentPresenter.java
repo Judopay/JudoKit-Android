@@ -5,7 +5,6 @@ import com.judopay.model.OrderDetails;
 import com.judopay.model.OrderStatus;
 import com.judopay.model.SaleRequest;
 import com.judopay.model.SaleResponse;
-import com.judopay.model.SaleStatusRequest;
 import com.judopay.util.DateUtil;
 
 import java.math.BigDecimal;
@@ -76,12 +75,12 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
                                 throwable -> getView().showGeneralError()));
     }
 
-    void getTransactionStatus(SaleStatusRequest saleStatusRequest) {
+    void getTransactionStatus() {
         getView().showLoading();
         getView().hideStatus();
         getView().hideIdealPayment();
         disposables.add(
-                apiService.status(saleStatusRequest)
+                apiService.status(saleResponse.getOrderId())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .repeatWhen(observable -> observable.flatMap(aVoid -> handlePollingState()))
@@ -100,15 +99,14 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
                             getView().showStatus(orderDetails.getOrderStatus());
                             getView().setCloseClickListener(response);
 
-                        }, throwable -> handleStatusError(saleStatusRequest, throwable))
+                        }, this::handleStatusError)
         );
     }
 
     @Override
     public void onPageStarted(String checksum) {
         getView().hideWebView();
-        SaleStatusRequest saleStatusRequest = buildSaleStatusRequest(getView().getJudo(), checksum);
-        getTransactionStatus(saleStatusRequest);
+        getTransactionStatus();
     }
 
     void dispose() {
@@ -124,20 +122,20 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
         return Observable.timer(DELAY, TimeUnit.SECONDS);
     }
 
-    private void handleStatusError(SaleStatusRequest saleStatusRequest, Throwable throwable) {
+    private void handleStatusError(Throwable throwable) {
         getView().hideLoading();
         if (throwable instanceof SocketTimeoutException || throwable instanceof UnknownHostException) {
             getView().showStatus(OrderStatus.NETWORK_ERROR);
-            getView().setStatusClickListener(saleStatusRequest);
+            getView().setStatusClickListener();
         } else {
-            getView().showStatus(OrderStatus.FAIL);
-            getView().setStatusClickListener(saleStatusRequest);
+            getView().showStatus(OrderStatus.FAILED);
+            getView().setOnFailClickListener(saleResponse.getOrderId());
         }
         statusRequestCounter = STATUS_FIRST_REQUEST;
     }
 
     private Boolean isTransactionCompleted(OrderStatus orderStatus) {
-        return orderStatus == OrderStatus.SUCCESS || orderStatus == OrderStatus.FAIL || dateUtil.getDate().getTime() > fullIntervalFromNow;
+        return orderStatus == OrderStatus.SUCCEEDED || orderStatus == OrderStatus.FAILED || dateUtil.getDate().getTime() > fullIntervalFromNow;
     }
 
     private void setDateInterval() {
@@ -160,18 +158,6 @@ class IdealPaymentPresenter extends BasePresenter<IdealPaymentView> implements I
                 judo.getJudoId(),
                 Currency.EUR,
                 bic
-        );
-    }
-
-    SaleStatusRequest buildSaleStatusRequest(Judo judo, String checksum) {
-        return new SaleStatusRequest(
-                saleResponse.getOrderId(),
-                saleResponse.getMerchantPaymentReference(),
-                checksum,
-                IDEAL_PAYMENT_METHOD,
-                judo.getJudoId(),
-                judo.getMetaDataMap(),
-                judo.getConsumerReference()
         );
     }
 

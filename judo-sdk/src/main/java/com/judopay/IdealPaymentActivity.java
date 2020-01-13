@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -23,7 +22,6 @@ import com.judopay.model.Bank;
 import com.judopay.model.OrderStatus;
 import com.judopay.model.SaleCallback;
 import com.judopay.model.SaleResponse;
-import com.judopay.model.SaleStatusRequest;
 import com.judopay.model.SaleStatusResponse;
 import com.judopay.util.DefaultDateUtil;
 import com.judopay.view.SimpleTextWatcher;
@@ -35,6 +33,7 @@ import com.judopay.view.custom.DefaultCustomTextInputLayout;
 import com.judopay.view.custom.DefaultCustomTextView;
 
 import static com.judopay.Judo.BR_SALE_CALLBACK;
+import static com.judopay.Judo.IDEAL_ORDER_ID;
 import static com.judopay.Judo.IDEAL_PAYMENT;
 import static com.judopay.Judo.IDEAL_SALE_STATUS;
 
@@ -136,7 +135,7 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
         String buttonText = IdealCustomTheme.getInstance().getFailButtonText();
         int buttonColor = IdealCustomTheme.getInstance().getButtonBackground();
         int buttonDarkColor = IdealCustomTheme.getInstance().getButtonDarkBackground();
-        if (orderStatus == OrderStatus.SUCCESS) {
+        if (orderStatus == OrderStatus.SUCCEEDED) {
             labelText = IdealCustomTheme.getInstance().getSuccessLabelText();
             buttonText = IdealCustomTheme.getInstance().getSuccessButtonText();
             buttonColor = IdealCustomTheme.getInstance().getButtonBackground();
@@ -165,24 +164,35 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
     }
 
     @Override
-    public void setStatusClickListener(SaleStatusRequest saleStatusRequest) {
-        statusButton.setOnClickListener(view -> presenter.getTransactionStatus(saleStatusRequest));
+    public void setStatusClickListener() {
+        statusButton.setOnClickListener(view -> presenter.getTransactionStatus());
     }
 
     @Override
     public void setCloseClickListener(SaleStatusResponse saleStatusResponse) {
         statusButton.setOnClickListener(view -> {
             Intent intent = new Intent();
+            intent.putExtra(IDEAL_ORDER_ID, saleStatusResponse.getOrderDetails().getOrderId());
             intent.putExtra(IDEAL_SALE_STATUS, saleStatusResponse);
             switch (saleStatusResponse.getOrderDetails().getOrderStatus()) {
-                case SUCCESS:
+                case SUCCEEDED:
                     setResult(Judo.IDEAL_SUCCESS, intent);
                     break;
-                case FAIL:
+                case FAILED:
                 case PENDING:
                     setResult(Judo.IDEAL_ERROR, intent);
                     break;
             }
+            finish();
+        });
+    }
+
+    @Override
+    public void setOnFailClickListener(String orderId) {
+        statusButton.setOnClickListener(view -> {
+            Intent intent = new Intent();
+            intent.putExtra(IDEAL_ORDER_ID, orderId);
+            setResult(Judo.IDEAL_ERROR, intent);
             finish();
         });
     }
@@ -201,6 +211,7 @@ public class IdealPaymentActivity extends BaseActivity implements IdealPaymentVi
 
     @Override
     public void hideWebView() {
+        idealWebView.destroy();
         idealWebView.setVisibility(View.GONE);
     }
 

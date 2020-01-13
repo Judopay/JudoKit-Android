@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="billing_postcode">Postleitzahl der Rechnungsaddresse </string>
+    <string name="billing_zip_code">Postleitzahl der Rechnungsaddresse </string>
+    <string name="billing_postal_code">Postleitzahl der Rechnungsaddresse </string>
+    <string name="pay">Zahlen</string>
+    <string name="confirm_payment">Zahlung bestätigen</string>
+    <string name="payment">Zahlung</string>
+    <string name="card_number_label">Kartennummer</string>
+    <string name="expiry_date_label">Ablaufdatum</string>
+    <string name="start_date_label">Startdatum</string>
+    <string name="issue_number_label">Ausgabenummer</string>
+    <string name="add_card">Karte hinzufügen </string>
+    <string name="enter_card_details">Kartendetails eingeben</string>
+    <string name="error_postcode_uk">Postleitzahl prüfen</string>
+    <string name="error_postcode_us">Postleitzahl prüfen</string>
+    <string name="error_postcode_canada">Postleitzahl prüfen</string>
+    <string name="check_expiry_date">Ablaufdatum prüfen</string>
+    <string name="check_start_date">Startdatum prüfen</string>
+    <string name="check_card_number">Kartennummer prüfen </string>
+    <string name="check_cvv">Kreditkartenprüfnummer</string>
+    <string name="error_maestro_not_supported">Wir akzeptieren kein Maestro - bitte verwenden sie eine andere Karte</string>
+    <string name="error_amex_not_supported">Wir akzeptieren kein Amex - bitte verwenden sie eine andere Karte</string>
+    <string name="processing_payment">Zahlung wird bearbeitet</string>
+    <string name="billing_country">Land der Rechnungsaddresse </string>
+    <string name="long_card_number">(Lange) Kartennummer</string>
+    <string name="security_code">Prüfnummer</string>
+    <string name="issue_number_front_of_card">Ausgabenummer auf der Vorderseite der Karte</string>
+    <string name="adding_card">Karte wird hinzugefügt …</string>
+    <string name="saving_card">Karte wird gespeichert …</string>
+    <string name="checking_card">Karte wird überprüft …</string>
+    <string name="redirecting">Seite wird umgeleitet …</string>
+    <string name="authentication">Authentisierung</string>
+    <string name="verifying_card">Karte wird überprüft …</string>
+    <string name="please_reenter_the_card_security_code">Bitte geben sie die Prüfnummer neu ein</string>
+    <string name="secure_server">Sicherer Server:</string>
+    <string name="secure_server_transmission">Die Details ihrer Kreditkarte werden verschlüsselt per SSL vor Übertragung an unseren Zahlungsanbieter. Ihrer Details werden nicht auf diesem Gerät und nicht auf unseren Servern gespeichert.</string>
+    <string name="united_kingdom">Vereinigtes Königreich (no one really says this)</string>
+    <string name="united_states">Vereinigte Staaten </string>
+    <string name="canada">Kanada </string>
+    <string name="judo_payment_method">Zahlungsmethode</string>
+    <string name="judo_card_payment">Kartenzahlung</string>
+    <string name="judo_payment_method_header_title">Bitte wählen sie eins der angegebenen Zahlungsmethoden:</string>
+    <string name="processing">Zahlung wird verarbeitet…</string>
+</resources>

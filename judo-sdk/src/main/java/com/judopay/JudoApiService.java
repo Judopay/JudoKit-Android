@@ -2,10 +2,10 @@ package com.judopay;
 
 import android.content.Context;
 
-import com.judopay.model.GooglePayRequest;
 import com.judopay.model.CardVerificationResult;
 import com.judopay.model.CheckCardRequest;
 import com.judopay.model.CollectionRequest;
+import com.judopay.model.GooglePayRequest;
 import com.judopay.model.PaymentRequest;
 import com.judopay.model.Receipt;
 import com.judopay.model.Receipts;
@@ -150,8 +150,8 @@ public interface JudoApiService {
     @POST("order/bank/sale")
     Single<SaleResponse> sale(@Body SaleRequest saleRequest);
 
-    @POST("order/bank/statusrequest")
-    Observable<SaleStatusResponse> status(@Body SaleStatusRequest saleStatusRequest);
+    @GET("order/bank/statusrequest/{orderID}")
+    Observable<SaleStatusResponse> status(@Path("orderID") String orderId);
 
     /**
      * List all payment receipts for the account

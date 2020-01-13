@@ -2,11 +2,12 @@ package com.judopay.view;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import androidx.appcompat.widget.AppCompatTextView;
-import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.judopay.R;
 
@@ -28,10 +29,9 @@ public class SecureServerTextView extends AppCompatTextView {
     }
 
     private void initialize() {
-        final SpannableString spannable = new SpannableString(getResources().getString(R.string.secure_server_transmission));
-
-        spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, 13, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
+        final SpannableStringBuilder spannable = new SpannableStringBuilder(getResources().getString(R.string.secure_server));
+        spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.append(" ").append(getResources().getString(R.string.secure_server_transmission));
         setText(spannable);
     }
 
