@@ -17,10 +17,10 @@
             android:theme="@style/Theme.Transparent" />
         <activity
             android:name=".SaveCardActivity"
-            android:theme="@style/Theme.Judo.Light.DarkActionBar" />
+            android:theme="@style/Theme.Transparent" />
         <activity
             android:name=".CheckCardActivity"
-            android:theme="@style/Theme.Judo.Light.DarkActionBar" />
+            android:theme="@style/Theme.Transparent" />
         <activity
             android:name=".PaymentMethodActivity"
             android:theme="@style/Theme.Judo.Light.DarkActionBar" />

@@ -1,6 +1,7 @@
 <resources>
     <string name="card_number_format" translatable="false">0000 0000 0000 0000</string>
     <string name="amex_card_number_format" translatable="false">0000 000000 00000</string>
+    <string name="diners_club_international_card_number_format" translatable="false">0000 000000 0000</string>
     <string name="billing_postcode">Billing postcode</string>
     <string name="billing_zip_code">Billing ZIP code</string>
     <string name="billing_postal_code">Billing postal code</string>

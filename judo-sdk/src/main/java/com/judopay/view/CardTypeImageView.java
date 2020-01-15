@@ -29,6 +29,12 @@ public class CardTypeImageView extends FadeImageView {
         switch (type) {
             case CardNetwork.AMEX:
                 return R.drawable.ic_card_amex;
+            case CardNetwork.DISCOVER:
+                return R.drawable.ic_discover;
+            case CardNetwork.DINERS_CLUB_INTERNATIONAL:
+                return R.drawable.ic_diners;
+            case CardNetwork.JCB:
+                return R.drawable.ic_jcb;
             case CardNetwork.MASTERCARD:
                 return R.drawable.ic_card_mastercard;
             case CardNetwork.MAESTRO:

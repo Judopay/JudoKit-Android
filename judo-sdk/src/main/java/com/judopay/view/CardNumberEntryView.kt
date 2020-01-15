@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
-import android.text.InputType
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -72,6 +71,10 @@ class CardNumberEntryView @JvmOverloads constructor(
             CardNetwork.AMEX -> {
                 setMaxLength(17)
                 numberFormatTextWatcher.setFormat(resources.getString(R.string.amex_card_number_format))
+            }
+            CardNetwork.DINERS_CLUB_INTERNATIONAL -> {
+                setMaxLength(16)
+                numberFormatTextWatcher.setFormat(resources.getString(R.string.diners_club_international_card_number_format))
             }
             else -> {
                 setMaxLength(19)

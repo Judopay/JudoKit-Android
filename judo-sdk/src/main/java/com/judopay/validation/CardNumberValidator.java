@@ -26,10 +26,10 @@ public class CardNumberValidator implements Validator {
         return Observable.create(emitter -> {
             emitter.onNext(getValidation(editText.getText().toString().replaceAll("\\s+", "")));
             editText.addTextChangedListener(new SimpleTextWatcher() {
-            @Override
-            protected void onTextChanged(final CharSequence text) {
-                emitter.onNext(getValidation(text.toString().replaceAll("\\s+", "")));
-            }
+                @Override
+                protected void onTextChanged(final CharSequence text) {
+                    emitter.onNext(getValidation(text.toString().replaceAll("\\s+", "")));
+                }
             });
         });
     }
@@ -74,7 +74,8 @@ public class CardNumberValidator implements Validator {
         switch (cardType) {
             case CardNetwork.AMEX:
                 return cardNumber.length() == 15;
-
+            case CardNetwork.DINERS_CLUB_INTERNATIONAL:
+                return cardNumber.length() == 14;
             default:
                 return cardNumber.length() == 16;
         }
