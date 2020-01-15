@@ -90,7 +90,6 @@ class TokenCardEntryFragment : AbstractCardEntryFragment() {
     private fun initializeInputs(cardToken: CardToken, options: Judo) {
         cardNumberEntryView.setCardType(cardToken.type, false)
         securityCodeEntryView.setCardType(cardToken.type, false)
-        requestFocus(securityCodeEntryView)
         expiryDateEntryView.setExpiryDate(options.cardToken.formattedEndDate)
         expiryDateEntryView.isEnabled = false
         cardNumberEntryView.setTokenCard(options.cardToken)
@@ -99,7 +98,7 @@ class TokenCardEntryFragment : AbstractCardEntryFragment() {
     private fun initializeValidators(cardToken: CardToken, judo: Judo) {
         val validators: MutableList<Validator> = ArrayList()
         val validatorViews: MutableList<Pair<Validator, View?>> = ArrayList()
-        val securityCodeValidator = SecurityCodeValidator(securityCodeEntryView.getEditText())
+        val securityCodeValidator = SecurityCodeValidator(securityCodeEntryView.editText)
         securityCodeValidator.setCardType(cardToken.type)
         disposables.add(securityCodeValidator.onValidate()
             .subscribe {
@@ -110,7 +109,7 @@ class TokenCardEntryFragment : AbstractCardEntryFragment() {
             }
         )
         validators.add(securityCodeValidator)
-        validatorViews.add(Pair(securityCodeValidator, securityCodeEntryView.getEditText()))
+        validatorViews.add(Pair(securityCodeValidator, securityCodeEntryView.editText))
         validationManager = ValidationManager(validators, this)
         if (judo.isAvsEnabled) {
             initializeAvsValidators(validatorViews)
@@ -120,17 +119,17 @@ class TokenCardEntryFragment : AbstractCardEntryFragment() {
 
     private fun initializeAvsValidators(validatorViews: MutableList<Pair<Validator, View?>>) {
         val countryAndPostcodeValidator =
-            CountryAndPostcodeValidator(countrySpinner, postcodeEntryView.getEditText())
+            CountryAndPostcodeValidator(countrySpinner, postcodeEntryView.editText)
         val observable = countryAndPostcodeValidator.onValidate()
         disposables.add(observable.subscribe {
-            postcodeEntryView.setError(it.error, it.isShowError)
+            postcodeEntryView.setValidation(it)
         })
         disposables.add(observable.subscribe {
             val country = countrySpinner.selectedItem as Country
             postcodeEntryView.setCountry(country)
         })
         validationManager?.addValidator(countryAndPostcodeValidator, observable)
-        validatorViews.add(Pair(countryAndPostcodeValidator, postcodeEntryView.getEditText()))
+        validatorViews.add(Pair(countryAndPostcodeValidator, postcodeEntryView.editText))
         observable.connect()
     }
 
@@ -166,18 +165,6 @@ class TokenCardEntryFragment : AbstractCardEntryFragment() {
             )
         }
         cardEntryListener.onSubmit(cardBuilder.build())
-    }
-
-    private fun requestFocus(view: View) {
-        Handler().postDelayed({
-            view.requestFocus()
-            val imm =
-                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.toggleSoftInput(
-                InputMethodManager.SHOW_IMPLICIT,
-                InputMethodManager.HIDE_IMPLICIT_ONLY
-            )
-        }, 1100)
     }
 
     companion object {

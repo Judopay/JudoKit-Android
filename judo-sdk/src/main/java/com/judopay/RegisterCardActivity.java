@@ -39,4 +39,10 @@ public final class RegisterCardActivity extends JudoActivity {
                     .commit();
         }
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, R.anim.slide_down);
+    }
 }

@@ -117,9 +117,6 @@ class CardEntryFragment : AbstractCardEntryFragment() {
                 setCardType(cardType, true)
                 setText(judo.cardNumber)
             }
-            requestFocus(expiryDateEntryView)
-        } else {
-            requestFocus(cardNumberEntryView)
         }
         if (judo.expiryYear != null && judo.expiryMonth != null) {
             expiryDateEntryView.setText(
@@ -129,7 +126,6 @@ class CardEntryFragment : AbstractCardEntryFragment() {
                     judo.expiryYear
                 )
             )
-            requestFocus(securityCodeEntryView)
         }
         val secureServerMessageShown =
             ThemeUtil.getBooleanAttr(requireActivity(), R.attr.secureServerMessageShown)
@@ -155,10 +151,8 @@ class CardEntryFragment : AbstractCardEntryFragment() {
                 setCardType(cardType, true)
                 setText(card.cardNumber)
             }
-            requestFocus(expiryDateEntryView)
             if (!TextUtil.isEmpty(card.expiryDate)) {
                 expiryDateEntryView.setText(card.expiryDate)
-                requestFocus(securityCodeEntryView)
             }
         }
     }
@@ -192,7 +186,7 @@ class CardEntryFragment : AbstractCardEntryFragment() {
             }
         })
         val cardNumberValidator = CardNumberValidator(
-            cardNumberEntryView.getEditText(),
+            cardNumberEntryView.editText,
             judo.isMaestroEnabled,
             judo.isAmexEnabled
         )
@@ -200,17 +194,17 @@ class CardEntryFragment : AbstractCardEntryFragment() {
             cardNumberEntryView.setValidation(validation)
         })
         validators.add(cardNumberValidator)
-        validatorViews.add(Pair(cardNumberValidator, cardNumberEntryView!!.getEditText()))
+        validatorViews.add(Pair(cardNumberValidator, cardNumberEntryView.editText))
         startDateValidator = getStartDateValidator()
         validatorViews.add(Pair(startDateValidator, startDateEntryView.editText))
         issueNumberValidator = getIssueNumberValidator()
         validatorViews.add(Pair(issueNumberValidator, issueNumberEntryView.editText))
         val expiryDateValidator = expiryDateValidator
         validators.add(expiryDateValidator)
-        validatorViews.add(Pair(expiryDateValidator, expiryDateEntryView.getEditText()))
-        securityCodeValidator = SecurityCodeValidator(securityCodeEntryView.getEditText())
+        validatorViews.add(Pair(expiryDateValidator, expiryDateEntryView.editText))
+        securityCodeValidator = SecurityCodeValidator(securityCodeEntryView.editText)
         validators.add(securityCodeValidator)
-        validatorViews.add(Pair(securityCodeValidator, securityCodeEntryView.getEditText()))
+        validatorViews.add(Pair(securityCodeValidator, securityCodeEntryView.editText))
         validationManager = ValidationManager(validators, this)
         if (judo.isAvsEnabled) {
             val avsValidators = ArrayList<Validator>()
@@ -230,21 +224,21 @@ class CardEntryFragment : AbstractCardEntryFragment() {
 
     private fun initializeAvsValidators(validatorViews: MutableList<Pair<Validator, View>>) {
         val countryAndPostcodeValidator =
-            CountryAndPostcodeValidator(countrySpinner, postcodeEntryView.getEditText())
+            CountryAndPostcodeValidator(countrySpinner, postcodeEntryView.editText)
         val observable = countryAndPostcodeValidator.onValidate()
         disposables.add(observable.subscribe {
             val country = countrySpinner.selectedItem as Country
             postcodeEntryView.setCountry(country)
-            postcodeEntryView.setError(it.error, it.isShowError)
+            postcodeEntryView.setValidation(it)
         })
         validationManager.addValidator(countryAndPostcodeValidator, observable)
-        validatorViews.add(Pair(countryAndPostcodeValidator, postcodeEntryView.getEditText()))
+        validatorViews.add(Pair(countryAndPostcodeValidator, postcodeEntryView.editText))
         observable.connect()
     }
 
     private val expiryDateValidator: ExpiryDateValidator
         get() {
-            val expiryDateValidator = ExpiryDateValidator(expiryDateEntryView.getEditText())
+            val expiryDateValidator = ExpiryDateValidator(expiryDateEntryView.editText)
             disposables.add(expiryDateValidator.onValidate().subscribe {
                 expiryDateEntryView.setValidation(it)
             })
@@ -311,18 +305,6 @@ class CardEntryFragment : AbstractCardEntryFragment() {
 
     override fun onValidate(valid: Boolean) {
         button.getButton().isEnabled = valid
-    }
-
-    private fun requestFocus(view: View) {
-        Handler().postDelayed({
-            view.requestFocus()
-            val imm =
-                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.toggleSoftInput(
-                InputMethodManager.SHOW_IMPLICIT,
-                InputMethodManager.HIDE_IMPLICIT_ONLY
-            )
-        }, 1100)
     }
 
     companion object {

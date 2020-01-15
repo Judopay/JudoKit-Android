@@ -39,7 +39,7 @@
         <item name="cameraIcon">@drawable/ic_photo_camera_black</item>
     </style>
 
-    <style name="Theme.Transparent" parent="Theme.AppCompat">
+    <style name="Theme.Transparent" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -61,8 +61,8 @@
     <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
 
     <style name="DialogAnimation">
-        <item name="android:windowEnterAnimation">@anim/dialog_enter_anim</item>
-        <item name="android:windowExitAnimation">@anim/dialog_exit_anim</item>
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
     <style name="Theme.Judo.Light.ShowSecurityMessage" parent="Theme.Judo.Light">

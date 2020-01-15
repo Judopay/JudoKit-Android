@@ -5,16 +5,10 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
-import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
-import android.widget.FrameLayout
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.content.ContextCompat
 import com.judopay.R
 import com.judopay.model.CardNetwork
-import com.judopay.validation.Validation
 import kotlinx.android.synthetic.main.view_security_code_entry.view.securityCodeContainer
 import kotlinx.android.synthetic.main.view_security_code_entry.view.securityCodeEditText
 import kotlinx.android.synthetic.main.view_security_code_entry.view.securityCodeError
@@ -30,13 +24,16 @@ class SecurityCodeEntryView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
-) : FrameLayout(context, attrs, defStyle) {
+) : CardEntryView(context, attrs, defStyle) {
 
     private var hintFocusListener: HintFocusListener? = null
     private var cardType = 0
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_security_code_entry, this)
+        container = securityCodeContainer
+        editText = securityCodeEditText
+        error = securityCodeError
     }
 
     override fun onFinishInflate() {
@@ -50,7 +47,7 @@ class SecurityCodeEntryView @JvmOverloads constructor(
         putParcelable(KEY_SUPER_STATE, super.onSaveInstanceState())
         putInt(KEY_CARD_TYPE, cardType)
     }
-    
+
     override fun onRestoreInstanceState(state: Parcelable?) {
         if (state is Bundle) {
             val superState =
@@ -64,10 +61,6 @@ class SecurityCodeEntryView @JvmOverloads constructor(
 
     fun setText(text: CharSequence?) {
         securityCodeEditText.setText(text)
-    }
-
-    fun addTextChangedListener(watcher: TextWatcher?) {
-        securityCodeEditText.addTextChangedListener(watcher)
     }
 
     fun setCardType(cardType: Int, animate: Boolean) {
@@ -87,33 +80,5 @@ class SecurityCodeEntryView @JvmOverloads constructor(
 
     private fun setAlternateHint(hint: String) {
         hintFocusListener?.setHint(hint)
-    }
-
-    fun getText(): String? = securityCodeEditText.text.toString().trim { it <= ' ' }
-
-    fun getEditText(): JudoEditText = securityCodeEditText
-
-    fun setValidation(validation: Validation) {
-        val set = ConstraintSet()
-        set.clone(securityCodeContainer)
-        if (validation.isShowError) {
-            set.clear(securityCodeEditText.id, ConstraintSet.TOP)
-            set.setMargin(securityCodeEditText.id, ConstraintSet.BOTTOM, 6)
-            securityCodeError.visibility = View.VISIBLE
-            securityCodeError.setText(validation.error)
-            securityCodeEditText.setTextColor(ContextCompat.getColor(context, R.color.error))
-        } else {
-            set.connect(
-                securityCodeEditText.id,
-                ConstraintSet.TOP,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.TOP
-            )
-            set.setMargin(securityCodeEditText.id, ConstraintSet.BOTTOM, 0)
-            securityCodeEditText.setTextColor(ContextCompat.getColor(context, R.color.black))
-            securityCodeError.visibility = View.GONE
-            securityCodeError.text = ""
-        }
-        set.applyTo(securityCodeContainer)
     }
 }
