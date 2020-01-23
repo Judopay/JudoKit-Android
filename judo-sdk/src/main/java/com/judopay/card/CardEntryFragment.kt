@@ -1,15 +1,12 @@
 package com.judopay.card
 
 import android.app.Dialog
-import android.content.Context
 import android.content.IntentSender.SendIntentException
 import android.os.Bundle
-import android.os.Handler
 import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -21,6 +18,7 @@ import com.judopay.model.Address
 import com.judopay.model.Card
 import com.judopay.model.CardNetwork
 import com.judopay.model.Country
+import com.judopay.util.SimpleKeyboardAnimator
 import com.judopay.validation.CardNumberValidator
 import com.judopay.validation.CountryAndPostcodeValidator
 import com.judopay.validation.ExpiryDateValidator
@@ -73,6 +71,7 @@ class CardEntryFragment : AbstractCardEntryFragment() {
     private lateinit var startDateValidator: StartDateValidator
     private lateinit var issueNumberValidator: IssueNumberValidator
     private lateinit var securityCodeValidator: SecurityCodeValidator
+    private lateinit var simpleKeyboardAnimator: SimpleKeyboardAnimator
     private val disposables = CompositeDisposable()
 
     override fun onCreateView(
@@ -88,6 +87,17 @@ class CardEntryFragment : AbstractCardEntryFragment() {
             BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED)
         }
         return dialog
+    }
+
+    override fun onStart() {
+        super.onStart()
+        simpleKeyboardAnimator = SimpleKeyboardAnimator(requireDialog().window)
+            .apply { setListener() }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        simpleKeyboardAnimator.removeListener()
     }
 
     override fun onInitialize(savedInstanceState: Bundle?, judo: Judo) {
