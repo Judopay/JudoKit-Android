@@ -1,6 +1,9 @@
 package com.judopay.view
 
 import android.content.Context
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
@@ -15,6 +18,8 @@ import com.judopay.util.animateText
 import com.judopay.validation.Validation
 
 private const val ANIMATION_DURATION = 100L
+private const val VIBRATION_DURATION = 150L
+
 abstract class CardEntryView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -41,7 +46,7 @@ abstract class CardEntryView @JvmOverloads constructor(
                 setMargin(
                     editText.id,
                     ConstraintSet.BOTTOM,
-                    context.resources.getDimension(R.dimen.large_padding).toInt()
+                    context.resources.getDimension(R.dimen.medium_padding).toInt()
                 )
             }
             TransitionManager.beginDelayedTransition(container, transition)
@@ -49,7 +54,7 @@ abstract class CardEntryView @JvmOverloads constructor(
             error.setText(validation.error)
             error.visibility = View.VISIBLE
             editText.setTextColor(ContextCompat.getColor(context, R.color.error))
-
+            vibrate()
         } else if (validation.isShowError != isValidated) {
             error.visibility = View.INVISIBLE
             editText.animateText(transition, validation.isShowError)
@@ -79,4 +84,18 @@ abstract class CardEntryView @JvmOverloads constructor(
     }
 
     open fun getText(): String? = editText.text.toString().trim { it <= ' ' }
+
+    private fun vibrate() {
+        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(
+                VibrationEffect.createOneShot(
+                    VIBRATION_DURATION,
+                    VibrationEffect.DEFAULT_AMPLITUDE
+                )
+            )
+        } else {
+            vibrator.vibrate(VIBRATION_DURATION)
+        }
+    }
 }

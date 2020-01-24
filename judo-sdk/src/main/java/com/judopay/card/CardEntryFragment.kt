@@ -245,7 +245,10 @@ class CardEntryFragment : AbstractCardEntryFragment() {
         val cardNumberValidator = CardNumberValidator(
             cardNumberEntryView.editText,
             judo.isMaestroEnabled,
-            judo.isAmexEnabled
+            judo.isAmexEnabled,
+            judo.isDiscoverEnabled,
+            judo.isUnionPayEnabled,
+            judo.isJcbEnabled
         )
         disposables.add(cardNumberValidator.onValidate().subscribe { validation: Validation ->
             cardNumberEntryView.setValidation(validation)

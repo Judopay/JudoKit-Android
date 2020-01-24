@@ -336,7 +336,7 @@ public final class CustomLayoutCardEntryFragment extends AbstractCardEntryFragme
     }
 
     private CardNumberValidator getCardNumberValidator(final Judo judo) {
-        CardNumberValidator cardNumberValidator = new CardNumberValidator(cardNumberTextInput.getEditText(), judo.isMaestroEnabled(), judo.isAmexEnabled());
+        CardNumberValidator cardNumberValidator = new CardNumberValidator(cardNumberTextInput.getEditText(), judo.isMaestroEnabled(), judo.isAmexEnabled(), judo.isDiscoverEnabled(), judo.isUnionPayEnabled(), judo.isJcbEnabled());
         disposables.add(cardNumberValidator.onValidate()
                 .subscribe(validation -> {
                     cardNumberTextInput.setErrorEnabled(validation.isShowError());

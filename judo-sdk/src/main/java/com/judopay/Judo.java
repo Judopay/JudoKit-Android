@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.IntDef;
 
 import com.google.android.gms.wallet.WalletConstants;
@@ -105,6 +106,9 @@ public class Judo implements Parcelable {
     private boolean idealEnabled;
     private boolean amexEnabled;
     private boolean maestroEnabled;
+    private boolean discoverEnabled;
+    private boolean unionPayEnabled;
+    private boolean jcbEnabled;
     private boolean sslPinningEnabled;
     private boolean rootedDevicesAllowed;
 
@@ -145,6 +149,9 @@ public class Judo implements Parcelable {
         this.idealEnabled = judoIn.readByte() != 0;
         this.amexEnabled = judoIn.readByte() != 0;
         this.maestroEnabled = judoIn.readByte() != 0;
+        this.discoverEnabled = judoIn.readByte() != 0;
+        this.unionPayEnabled = judoIn.readByte() != 0;
+        this.jcbEnabled = judoIn.readByte() != 0;
         this.sslPinningEnabled = judoIn.readByte() != 0;
         this.rootedDevicesAllowed = judoIn.readByte() != 0;
         this.judoId = judoIn.readString();
@@ -194,6 +201,9 @@ public class Judo implements Parcelable {
                 .setIdealTimeout(idealTimeout)
                 .setAmexEnabled(amexEnabled)
                 .setMaestroEnabled(maestroEnabled)
+                .setDiscoverEnabled(discoverEnabled)
+                .setUnionPayEnabled(unionPayEnabled)
+                .setJcbEnabled(jcbEnabled)
                 .setSslPinningEnabled(sslPinningEnabled)
                 .setRootedDevicesAllowed(rootedDevicesAllowed)
                 .setCustomLayout(customLayout)
@@ -276,7 +286,7 @@ public class Judo implements Parcelable {
         return supportedGPayCards;
     }
 
-    public int getEnvironmentModeGPay(){
+    public int getEnvironmentModeGPay() {
         return environmentModeGPay;
     }
 
@@ -360,6 +370,18 @@ public class Judo implements Parcelable {
         return maestroEnabled;
     }
 
+    public boolean isDiscoverEnabled() {
+        return discoverEnabled;
+    }
+
+    public boolean isUnionPayEnabled() {
+        return unionPayEnabled;
+    }
+
+    public boolean isJcbEnabled() {
+        return jcbEnabled;
+    }
+
     public boolean isAmexEnabled() {
         return amexEnabled;
     }
@@ -402,6 +424,9 @@ public class Judo implements Parcelable {
         dest.writeByte(this.idealEnabled ? (byte) 1 : (byte) 0);
         dest.writeByte(this.amexEnabled ? (byte) 1 : (byte) 0);
         dest.writeByte(this.maestroEnabled ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.discoverEnabled ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.unionPayEnabled ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.jcbEnabled ? (byte) 1 : (byte) 0);
         dest.writeByte(this.sslPinningEnabled ? (byte) 1 : (byte) 0);
         dest.writeByte(this.rootedDevicesAllowed ? (byte) 1 : (byte) 0);
         dest.writeString(this.judoId);
@@ -464,6 +489,9 @@ public class Judo implements Parcelable {
         private boolean amexEnabled = true;
         private boolean idealEnabled = false;
         private boolean maestroEnabled = true;
+        private boolean discoverEnabled = false;
+        private boolean unionPayEnabled = false;
+        private boolean jcbEnabled = false;
         private boolean sslPinningEnabled = true;
         private boolean rootedDevicesAllowed = true;
         private EnumSet<PaymentMethod> paymentMethod;
@@ -593,6 +621,21 @@ public class Judo implements Parcelable {
             return this;
         }
 
+        public Builder setDiscoverEnabled(final boolean discoverEnabled) {
+            this.discoverEnabled = discoverEnabled;
+            return this;
+        }
+
+        public Builder setUnionPayEnabled(final boolean unionPayEnabled) {
+            this.unionPayEnabled = unionPayEnabled;
+            return this;
+        }
+
+        public Builder setJcbEnabled(final boolean jcbEnabled) {
+            this.jcbEnabled = jcbEnabled;
+            return this;
+        }
+
         public Builder setSslPinningEnabled(final boolean sslPinningEnabled) {
             this.sslPinningEnabled = sslPinningEnabled;
             return this;
@@ -623,7 +666,7 @@ public class Judo implements Parcelable {
             return this;
         }
 
-        public Builder setEnvironmentModeGPay(@GooglePaymentUtils.EnvironmentMode final int environmentModeGPay){
+        public Builder setEnvironmentModeGPay(@GooglePaymentUtils.EnvironmentMode final int environmentModeGPay) {
             this.environmentModeGPay = environmentModeGPay;
             return this;
         }
@@ -660,6 +703,9 @@ public class Judo implements Parcelable {
             judo.idealTimeout = idealTimeout;
             judo.amexEnabled = amexEnabled;
             judo.maestroEnabled = maestroEnabled;
+            judo.discoverEnabled = discoverEnabled;
+            judo.unionPayEnabled = unionPayEnabled;
+            judo.jcbEnabled = jcbEnabled;
             judo.sslPinningEnabled = sslPinningEnabled;
             judo.rootedDevicesAllowed = rootedDevicesAllowed;
 
