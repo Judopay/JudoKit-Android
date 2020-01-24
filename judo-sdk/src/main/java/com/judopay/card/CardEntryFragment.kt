@@ -1,14 +1,24 @@
 package com.judopay.card
 
+import android.Manifest
+import android.app.Activity
 import android.app.Dialog
-import android.content.IntentSender.SendIntentException
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import cards.pay.paycardsrecognizer.sdk.ScanCardIntent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.judopay.Judo
 import com.judopay.R
@@ -36,7 +46,9 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_card_entry.button
 import kotlinx.android.synthetic.main.fragment_card_entry.cancelButton
 import kotlinx.android.synthetic.main.fragment_card_entry.scanCardButton
+import kotlinx.android.synthetic.main.fragment_card_entry.scanCardLoader
 import kotlinx.android.synthetic.main.fragment_card_entry.secureServerText
+import kotlinx.android.synthetic.main.view_card_entry_form.cardHolderEntryView
 import kotlinx.android.synthetic.main.view_card_entry_form.cardNumberEntryView
 import kotlinx.android.synthetic.main.view_card_entry_form.countryPostcodeContainer
 import kotlinx.android.synthetic.main.view_card_entry_form.countrySpinner
@@ -47,6 +59,7 @@ import kotlinx.android.synthetic.main.view_card_entry_form.securityCodeEntryView
 import kotlinx.android.synthetic.main.view_card_entry_form.startDateEntryView
 import kotlinx.android.synthetic.main.view_card_entry_form.startDateIssueNumberContainer
 import java.util.*
+import cards.pay.paycardsrecognizer.sdk.Card as ScanCard
 
 /**
  * A Fragment that allows for card details to be entered by the user, with validation checks
@@ -65,6 +78,9 @@ import java.util.*
  * fragment.setArguments(args);
 ` *
  */
+
+private const val REQUEST_CODE_SCAN_CARD = 1
+
 class CardEntryFragment : AbstractCardEntryFragment() {
     private lateinit var validationManager: ValidationManager
     private lateinit var avsValidationManager: ValidationManager
@@ -89,6 +105,41 @@ class CardEntryFragment : AbstractCardEntryFragment() {
         return dialog
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_SCAN_CARD && resultCode == Activity.RESULT_OK) {
+            val card = data?.getParcelableExtra<ScanCard>(ScanCardIntent.RESULT_PAYCARDS_CARD)
+            cardNumberEntryView.setText(card?.cardNumber)
+            cardHolderEntryView.setText(card?.cardHolderName)
+            expiryDateEntryView.setText(card?.expirationDate)
+            securityCodeEntryView.requestFocus()
+            val imm =
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.toggleSoftInput(
+                InputMethodManager.SHOW_IMPLICIT,
+                InputMethodManager.HIDE_IMPLICIT_ONLY
+            )
+            scanCardButton.visibility = View.INVISIBLE
+            scanCardLoader.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CODE_SCAN_CARD) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                val intent = ScanCardIntent.Builder(requireActivity()).build()
+                startActivityForResult(intent, REQUEST_CODE_SCAN_CARD)
+            } else if (!shouldShowRequestPermissionRationale(permissions[0])) {
+                showPermissionDialog()
+            }
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         simpleKeyboardAnimator = SimpleKeyboardAnimator(requireDialog().window)
@@ -101,21 +152,17 @@ class CardEntryFragment : AbstractCardEntryFragment() {
     }
 
     override fun onInitialize(savedInstanceState: Bundle?, judo: Judo) {
-        if (judo.cardScanningIntent != null) {
-            scanCardButton.setOnClickListener {
-                val cardScanningIntent = judo.cardScanningIntent
-                val intentSender = cardScanningIntent.intentSender
-                try {
-                    requireActivity().startIntentSenderForResult(
-                        intentSender,
-                        Judo.CARD_SCANNING_REQUEST,
-                        null,
-                        0,
-                        0,
-                        0
-                    )
-                } catch (ignore: SendIntentException) {
-                }
+        scanCardButton.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissions(
+                    arrayOf(Manifest.permission.CAMERA),
+                    REQUEST_CODE_SCAN_CARD
+                )
+            } else {
+                val intent = ScanCardIntent.Builder(requireActivity()).build()
+                startActivityForResult(intent, REQUEST_CODE_SCAN_CARD)
             }
         }
         cancelButton.setOnClickListener {
@@ -311,6 +358,22 @@ class CardEntryFragment : AbstractCardEntryFragment() {
                 .setStartDate(startDateEntryView.text)
         }
         cardEntryListener.onSubmit(cardBuilder.build())
+    }
+
+    private fun showPermissionDialog() {
+        AlertDialog.Builder(requireActivity())
+            .setTitle(R.string.scan_card_no_permission_title)
+            .setMessage(R.string.scan_card_no_permission_message)
+            .setPositiveButton(R.string.scan_card_confirm) { dialog, _ -> dialog.dismiss() }
+            .setNegativeButton(R.string.scan_card_go_to_settings) { _, _ ->
+                val intent = Intent().apply {
+                    action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                    data = Uri.fromParts("package", requireActivity().packageName, null)
+                }
+                requireActivity().startActivity(intent)
+            }
+            .create()
+            .show()
     }
 
     override fun onValidate(valid: Boolean) {

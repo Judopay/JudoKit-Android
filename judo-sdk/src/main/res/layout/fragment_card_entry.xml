@@ -14,9 +14,9 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:focusableInTouchMode="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true">
 
             <Button
                 android:id="@+id/cancelButton"
@@ -28,14 +28,25 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/scanCardButton" />
 
+            <ImageView
+                android:id="@+id/scanCardLoader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/cancelButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/cancelButton"
+                app:srcCompat="@drawable/ic_judo_loader" />
+
             <Button
                 android:id="@+id/scanCardButton"
+                style="?android:borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/height_36"
                 android:background="@drawable/button_small_background"
-                android:drawableStart="@drawable/ic_scan_card"
                 android:drawablePadding="@dimen/small_padding"
                 android:text="@string/scan_card"
+                app:drawableStartCompat="@drawable/ic_scan_card"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

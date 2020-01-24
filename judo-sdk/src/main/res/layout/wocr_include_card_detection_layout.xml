@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<cards.pay.paycardsrecognizer.sdk.camera.widget.CameraPreviewLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/wocr_card_recognition_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    tools:showIn="@layout/wocr_fragment_scan_card">
+
+    <SurfaceView
+        android:id="@+id/surface_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <cards.pay.paycardsrecognizer.sdk.camera.widget.CardDetectionStateView
+        android:id="@+id/wocr_card_detection_state"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/position_card_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/large_padding"
+        android:text="@string/wocr_hint_position_card_in_frame"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_size_large"
+        android:textStyle="bold"
+        app:wocr_layout_cardAlignGravity="center"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/padding_50"
+        android:text="@string/wocr_automatically_scan"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/scan_card_text_size_small"
+        app:wocr_layout_cardAlignGravity="center" />
+
+    <TextView
+        android:id="@+id/wocr_powered_by_paycards_link"
+        style="@style/wocr_PaycardsButton"
+        android:text="@string/wocr_powered_by_pay_cards"
+        android:visibility="invisible"
+        app:wocr_layout_cardAlignGravity="bottom|left"
+        tools:ignore="SpUsage" />
+
+</cards.pay.paycardsrecognizer.sdk.camera.widget.CameraPreviewLayout>

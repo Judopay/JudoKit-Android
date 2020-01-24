@@ -1,9 +1,7 @@
 buildscript {
     repositories {
         mavenLocal()
-        maven {
-            url "http://dl.bintray.com/judopay/maven"
-        }
+        maven { url "http://dl.bintray.com/judopay/maven" }
         jcenter()
         google()
     }
@@ -17,10 +15,9 @@ buildscript {
 allprojects {
     repositories {
         mavenLocal()
-        maven {
-            url "http://dl.bintray.com/judopay/maven"
-        }
+        maven { url "http://dl.bintray.com/judopay/maven" }
         jcenter()
         google()
+        maven { url "http://pay.cards/maven" }
     }
 }

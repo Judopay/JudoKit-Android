@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <color name="judo_red">#FFEB372D</color>
     <color name="judo_white">#FFFAFAFA</color>
@@ -20,5 +20,5 @@
     <color name="black">#262626</color>
     <color name="error">#E21900</color>
     <color name="grey">#999999</color>
-
+    <color name="wocr_card_shadow_color" tools:override="true">@android:color/transparent</color>
 </resources>

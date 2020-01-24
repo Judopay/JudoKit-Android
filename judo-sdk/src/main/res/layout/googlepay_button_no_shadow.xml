@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="48sp"
-    android:background="@drawable/googlepay_button_no_shadow_background"
+    app:background="@drawable/googlepay_button_no_shadow_background"
     android:clickable="true"
     android:contentDescription="@string/googlepay_button_content_description"
     android:focusable="true"
@@ -32,6 +32,6 @@
         android:layout_height="match_parent"
         android:duplicateParentState="true"
         android:scaleType="fitXY"
-        android:src="@drawable/googlepay_button_overlay"
+        app:srcCompat="@drawable/googlepay_button_overlay"
         android:contentDescription="@string/google_pay_button_overlay" />
 </RelativeLayout>

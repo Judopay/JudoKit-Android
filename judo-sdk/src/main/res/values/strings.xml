@@ -105,4 +105,10 @@
 
     <string name="card_holder_label">Cardholder Name</string>
     <string name="cancel">Cancel</string>
+    <string name="scan_card_no_permission_title">Camera permissions not granted</string>
+    <string name="scan_card_no_permission_message">Permissions must be granted in order to use the scan card functionality. Please go to Settings and toggle Camera on</string>
+    <string name="scan_card_confirm">Got it</string>
+    <string name="scan_card_go_to_settings">Go to Settings</string>
+    <string name="wocr_hint_position_card_in_frame">Position card in this frame</string>
+    <string name="wocr_automatically_scan">We will automatically scan it</string>
 </resources>

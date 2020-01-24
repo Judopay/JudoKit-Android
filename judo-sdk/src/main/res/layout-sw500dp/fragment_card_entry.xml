@@ -14,10 +14,10 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_gravity="center_horizontal"
+            style="@style/Widget.Judo.PaddedLayout"
             android:layout_width="@dimen/height_500"
             android:layout_height="wrap_content"
-            style="@style/Widget.Judo.PaddedLayout">
+            android:layout_gravity="center_horizontal">
 
             <Button
                 android:id="@+id/cancelButton"
@@ -29,8 +29,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/scanCardButton" />
 
+            <ImageView
+                android:id="@+id/scanCardLoader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/cancelButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/cancelButton"
+                app:srcCompat="@drawable/ic_judo_loader" />
+
             <Button
                 android:id="@+id/scanCardButton"
+                style="?android:borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/height_36"
                 android:background="@drawable/button_small_background"

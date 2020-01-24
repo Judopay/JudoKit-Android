@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:keepScreenOn="true"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.ScanCardActivity">
+
+    <RelativeLayout
+        android:id="@+id/wocr_main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        tools:visibility="visible">
+
+        <include layout="@layout/wocr_include_card_detection_layout" />
+
+        <ImageView
+            android:padding="@dimen/medium_padding"
+            android:background="@android:color/transparent"
+            android:id="@+id/wocr_tv_enter_card_number_id"
+            android:layout_marginTop="@dimen/margin_56"
+            android:layout_marginStart="@dimen/margin_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_back_light"
+            />
+
+    </RelativeLayout>
+
+    <cards.pay.paycardsrecognizer.sdk.ui.views.ProgressBarIndeterminate
+        android:id="@+id/wocr_progress_bar"
+        android:layout_gravity="center"
+        android:layout_width="@dimen/width_120"
+        android:layout_height="@dimen/height_120"
+        android:visibility="invisible"/>
+
+</FrameLayout>
