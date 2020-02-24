@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.judopay.R
 import com.judopay.inflate
-import com.judopay.model.PaymentMethodEnum
+import com.judopay.model.PaymentMethods
 import com.judopay.ui.paymentmethods.model.PaymentMethodItem
 import com.judopay.ui.paymentmethods.model.PaymentMethodItemAction
 import com.judopay.ui.paymentmethods.model.PaymentMethodItemType
@@ -13,15 +13,15 @@ internal interface BindableRecyclerViewHolder<V, A> {
     fun bind(model: V, listener: ((V, A) -> Unit)? = null)
 }
 
-typealias PaymentMethodSelectedListener = (PaymentMethodEnum) -> Unit
+typealias PaymentMethodSelectedListener = (PaymentMethods) -> Unit
 typealias PaymentMethodsAdapterListener = (PaymentMethodItem, PaymentMethodItemAction) -> Unit
 
 class PaymentMethodsAdapter(
     items: List<PaymentMethodItem> = emptyList(),
-    private val paymentMethods: List<PaymentMethodEnum>,
-    private val lastUsed: PaymentMethodEnum,
-    private val paymentMethodListener: PaymentMethodSelectedListener,
-    private val listener: PaymentMethodsAdapterListener
+    private val paymentMethods: List<PaymentMethods>,
+    private val paymentMethodsListener: PaymentMethodSelectedListener,
+    private val listener: PaymentMethodsAdapterListener,
+    private val lastUsed: PaymentMethods? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var items: List<PaymentMethodItem> = items
@@ -46,7 +46,7 @@ class PaymentMethodsAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is MethodSelectorViewHolder) {
-            holder.bind(paymentMethods, lastUsed) { paymentMethodListener.invoke(it) }
+            holder.bind(paymentMethods, paymentMethodsListener, lastUsed)
         } else {
             val viewHolder =
                 holder as? BindableRecyclerViewHolder<PaymentMethodItem, PaymentMethodItemAction>

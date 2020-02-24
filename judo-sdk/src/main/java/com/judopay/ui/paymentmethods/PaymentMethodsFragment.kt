@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.judopay.R
-import com.judopay.model.PaymentMethodEnum
+import com.judopay.model.PaymentMethods
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judopay.ui.paymentmethods.model.PaymentMethodItem
 import com.judopay.ui.paymentmethods.model.PaymentMethodItemAction
@@ -39,13 +39,12 @@ class PaymentMethodsFragment : Fragment() {
         )
 
         val paymentMethods = listOf(
-            PaymentMethodEnum.CARD,
-            PaymentMethodEnum.IDEAL,
-            PaymentMethodEnum.GOOGLE_PAY
+            PaymentMethods.CARD,
+            PaymentMethods.IDEAL,
+            PaymentMethods.GOOGLE_PAY
         )
 
         recyclerView.adapter = PaymentMethodsAdapter(data, paymentMethods,
-            PaymentMethodEnum.IDEAL,
             {
                 Snackbar.make(coordinatorLayout, "$it selected", Snackbar.LENGTH_SHORT).show()
             },

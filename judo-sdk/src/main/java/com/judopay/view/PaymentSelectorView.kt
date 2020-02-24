@@ -12,7 +12,7 @@ import android.widget.HorizontalScrollView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.transition.TransitionManager
 import com.judopay.R
-import com.judopay.model.PaymentMethodEnum
+import com.judopay.model.PaymentMethods
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodSelectedListener
 import kotlinx.android.synthetic.main.view_payment_selector.view.container
 import kotlinx.android.synthetic.main.view_payment_selector.view.selector
@@ -29,12 +29,12 @@ class PaymentSelectorView @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.view_payment_selector, this)
     }
 
-    private var lastUsedPaymentMethod: PaymentMethodEnum? = null
+    private var lastUsedPaymentMethod: PaymentMethods? = null
 
     fun setPaymentTypes(
-        paymentMethods: List<PaymentMethodEnum>,
-        lastUsedPaymentMethod: PaymentMethodEnum?,
-        onClick: PaymentMethodSelectedListener?
+        paymentMethods: List<PaymentMethods>,
+        onClick: PaymentMethodSelectedListener?,
+        lastUsedPaymentMethod: PaymentMethods?
     ) {
         this.lastUsedPaymentMethod = lastUsedPaymentMethod
         val itemViews: MutableList<PaymentSelectorItemView> = mutableListOf()

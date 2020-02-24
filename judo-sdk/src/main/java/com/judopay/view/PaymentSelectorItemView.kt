@@ -9,7 +9,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatImageView
 import com.judopay.R
-import com.judopay.model.PaymentMethodEnum
+import com.judopay.model.PaymentMethods
 import kotlinx.android.synthetic.main.item_payment_selector.view.paymentImageView
 import kotlinx.android.synthetic.main.item_payment_selector.view.paymentTextView
 
@@ -23,10 +23,10 @@ class PaymentSelectorItemView @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.item_payment_selector, this)
     }
 
-    private lateinit var paymentMethod: PaymentMethodEnum
+    private lateinit var paymentMethod: PaymentMethods
 
-    fun setPaymentMethod(paymentMethodEnum: PaymentMethodEnum) {
-        this.paymentMethod = paymentMethodEnum
+    fun setPaymentMethod(paymentMethod: PaymentMethods) {
+        this.paymentMethod = paymentMethod
     }
 
     fun getPaymentMethod() = paymentMethod
@@ -47,5 +47,5 @@ class PaymentSelectorItemView @JvmOverloads constructor(
 
     fun getTextView(): TextView = paymentTextView
 
-    fun getImageView(): AppCompatImageView= paymentImageView
+    fun getImageView(): AppCompatImageView = paymentImageView
 }
