@@ -1,12 +1,13 @@
 package com.judopay;
 
-import com.judopay.api.JudoApiServiceFactory;
+import com.judopay.api.JudoApiService;
+import com.judopay.api.factory.JudoApiServiceFactory;
 import com.judopay.model.Card;
 import com.judopay.model.CardToken;
-import com.judopay.model.CardVerificationResult;
+import com.judopay.api.model.response.CardVerificationResult;
 import com.judopay.model.Currency;
-import com.judopay.model.PaymentRequest;
-import com.judopay.model.Receipt;
+import com.judopay.api.model.request.PaymentRequest;
+import com.judopay.api.model.response.Receipt;
 import com.judopay.model.TokenRequest;
 
 import org.junit.Test;

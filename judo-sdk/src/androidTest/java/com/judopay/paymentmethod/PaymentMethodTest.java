@@ -6,9 +6,6 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.judopay.IdealPaymentActivity;
-import com.judopay.Judo;
-import com.judopay.PaymentActivity;
-import com.judopay.PaymentMethodActivity;
 import com.judopay.R;
 import com.judopay.model.PaymentMethod;
 

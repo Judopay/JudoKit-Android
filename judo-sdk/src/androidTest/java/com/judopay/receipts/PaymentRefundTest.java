@@ -3,11 +3,11 @@ package com.judopay.receipts;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.judopay.JudoApiService;
+import com.judopay.api.JudoApiService;
 import com.judopay.model.Currency;
-import com.judopay.model.PaymentRequest;
-import com.judopay.model.Receipt;
-import com.judopay.model.RefundRequest;
+import com.judopay.api.model.request.PaymentRequest;
+import com.judopay.api.model.response.Receipt;
+import com.judopay.api.model.request.RefundRequest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

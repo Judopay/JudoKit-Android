@@ -1,6 +1,7 @@
 package com.judopay.model;
 
-import com.judopay.error.JudoIdInvalidError;
+import com.judopay.api.model.request.PaymentRequest;
+import com.judopay.api.error.JudoIdInvalidError;
 
 import org.junit.Test;
 

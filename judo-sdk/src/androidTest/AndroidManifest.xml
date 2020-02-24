@@ -6,35 +6,6 @@
 
     <application>
 
-        <activity
-            android:name=".PaymentActivity"
-            android:theme="@style/Theme.Judo.Light.EnterCardDetails"
-            tools:replace="theme" />
-
-        <activity
-            android:name=".RegisterCardActivity"
-            android:theme="@style/Theme.Judo.Light.ConfirmPayment"
-            tools:replace="theme" />
-
-        <activity
-            android:name=".SaveCardActivity"
-            android:theme="@style/Theme.Judo.Light.ConfirmPayment"
-            tools:replace="theme" />
-
-        <activity
-            android:name=".CheckCardActivity"
-            android:theme="@style/Theme.Judo.Light.ConfirmPayment"
-            tools:replace="theme" />
-
-        <activity
-            android:name=".PreAuthActivity"
-            android:theme="@style/Theme.Judo.Light.ShowSecurityMessage"
-            tools:replace="theme" />
-
-        <activity
-            android:name=".ResultTestActivity"
-            android:theme="@style/Theme.Judo.Light.DarkActionBar" />
-
     </application>
 
 </manifest>

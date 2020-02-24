@@ -5,8 +5,6 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.judopay.Judo;
-import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.TestUtil;
 import com.judopay.model.CardToken;
@@ -21,7 +19,6 @@ import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasFocus;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
@@ -30,9 +27,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.judopay.model.CardNetwork.AMEX;
 import static com.judopay.model.CardNetwork.VISA;
 import static com.judopay.util.ViewMatchers.isDisabled;
-import static com.judopay.util.ViewMatchers.isNotDisplayed;
-import static com.judopay.util.ViewMatchers.isOpaque;
-import static com.judopay.util.ViewMatchers.withTextInputHint;
 
 @RunWith(AndroidJUnit4.class)
 public class TokenPaymentFormTest {

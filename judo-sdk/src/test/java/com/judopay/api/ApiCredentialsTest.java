@@ -1,6 +1,7 @@
 package com.judopay.api;
 
-import com.judopay.error.TokenSecretError;
+import com.judopay.api.model.Credentials;
+import com.judopay.api.error.TokenSecretError;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,11 +12,11 @@ public class ApiCredentialsTest {
 
     @Test(expected = TokenSecretError.class)
     public void shouldThrowTokenSecretErrorIfTokenEmpty() {
-        new ApiCredentials("", "apiSecret");
+        new Credentials("", "apiSecret");
     }
 
     @Test(expected = TokenSecretError.class)
     public void shouldThrowTokenSecretErrorIfSecretEmpty() {
-        new ApiCredentials("apiToken", "");
+        new Credentials("apiToken", "");
     }
 }

@@ -1,5 +1,6 @@
 package com.judopay;
 
+import com.judopay.api.JudoApiService;
 import com.judopay.model.OrderDetails;
 import com.judopay.model.OrderStatus;
 import com.judopay.model.SaleRequest;
@@ -68,7 +69,7 @@ public class IdealPaymentPresenterTest {
         doReturn(saleRequest).when(presenter).buildSaleRequest(judo, NAME, BIC);
         RxAndroidPlugins.setInitMainThreadSchedulerHandler(scheduler -> Schedulers.trampoline());
         RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
-        when(apiService.status(saleResponse.getOrderId())).thenReturn(Observable.just(saleStatusResponse));
+        when(apiService.status(saleResponse.orderId)).thenReturn(Observable.just(saleStatusResponse));
         when(apiService.sale(saleRequest)).thenReturn(Single.just(saleResponse));
         when(dateUtil.getCalendar()).thenReturn(calendar);
         when(dateUtil.getDate()).thenReturn(date);
@@ -76,8 +77,8 @@ public class IdealPaymentPresenterTest {
         when(view.getName()).thenReturn(NAME);
         when(view.getBank()).thenReturn(BIC);
         when(saleStatusResponse.getOrderDetails()).thenReturn(orderDetails);
-        when(saleResponse.getRedirectUrl()).thenReturn(URL);
-        when(saleResponse.getOrderId()).thenReturn(null);
+        when(saleResponse.redirectUrl).thenReturn(URL);
+        when(saleResponse.orderId).thenReturn(null);
     }
 
     @Test
@@ -120,7 +121,7 @@ public class IdealPaymentPresenterTest {
     public void shouldConfigureWebViewOnSaleRequestSuccessful() {
         presenter.onPayClicked();
 
-        verify(view).configureWebView(URL, saleResponse.getMerchantRedirectUrl());
+        verify(view).configureWebView(URL, saleResponse.merchantRedirectUrl);
     }
 
     @Test
@@ -180,7 +181,7 @@ public class IdealPaymentPresenterTest {
     @Test
     public void shouldShowTimeoutStatusOnTransactionStatusAfterFullInterval() {
         when(saleStatusResponse.getOrderDetails()).thenReturn(orderDetails);
-        when(orderDetails.getOrderStatus()).thenReturn(OrderStatus.TIMEOUT);
+        when(orderDetails.orderStatus).thenReturn(OrderStatus.TIMEOUT);
         when(date.getTime()).thenReturn(FULL_INTERVAL);
         presenter.onPayClicked();
         presenter.getTransactionStatus();
@@ -190,7 +191,7 @@ public class IdealPaymentPresenterTest {
 
     @Test
     public void shouldShowNetworkStatusOnTransactionStatusSocketTimeoutException() {
-        when(apiService.status(saleResponse.getOrderId())).thenReturn(Observable.error(new SocketTimeoutException()));
+        when(apiService.status(saleResponse.orderId)).thenReturn(Observable.error(new SocketTimeoutException()));
         presenter.onPayClicked();
         presenter.getTransactionStatus();
 
@@ -199,7 +200,7 @@ public class IdealPaymentPresenterTest {
 
     @Test
     public void shouldShowNetworkStatusOnTransactionStatusUnknownHostException() {
-        when(apiService.status(saleResponse.getOrderId())).thenReturn(Observable.error(new UnknownHostException()));
+        when(apiService.status(saleResponse.orderId)).thenReturn(Observable.error(new UnknownHostException()));
         presenter.onPayClicked();
         presenter.getTransactionStatus();
 
@@ -208,7 +209,7 @@ public class IdealPaymentPresenterTest {
 
     @Test
     public void shouldShowFailStatusOnTransactionStatusException() {
-        when(apiService.status(saleResponse.getOrderId())).thenReturn(Observable.error(new Exception()));
+        when(apiService.status(saleResponse.orderId)).thenReturn(Observable.error(new Exception()));
         presenter.onPayClicked();
         presenter.getTransactionStatus();
 
@@ -218,7 +219,7 @@ public class IdealPaymentPresenterTest {
     @Test
     public void shouldShowFailStatusOnTransactionStatusRequestFail() {
         when(saleStatusResponse.getOrderDetails()).thenReturn(orderDetails);
-        when(orderDetails.getOrderStatus()).thenReturn(OrderStatus.FAILED);
+        when(orderDetails.orderStatus).thenReturn(OrderStatus.FAILED);
         presenter.onPayClicked();
         presenter.getTransactionStatus();
 
@@ -228,7 +229,7 @@ public class IdealPaymentPresenterTest {
     @Test
     public void shouldHideLoadingOnTransactionStatusSuccess() {
         when(saleStatusResponse.getOrderDetails()).thenReturn(orderDetails);
-        when(orderDetails.getOrderStatus()).thenReturn(OrderStatus.SUCCEEDED);
+        when(orderDetails.orderStatus).thenReturn(OrderStatus.SUCCEEDED);
         presenter.onPayClicked();
         presenter.getTransactionStatus();
 
@@ -238,7 +239,7 @@ public class IdealPaymentPresenterTest {
     @Test
     public void shouldShowSuccessStatusScreenOnTransactionStatusSuccess() {
         when(saleStatusResponse.getOrderDetails()).thenReturn(orderDetails);
-        when(orderDetails.getOrderStatus()).thenReturn(OrderStatus.SUCCEEDED);
+        when(orderDetails.orderStatus).thenReturn(OrderStatus.SUCCEEDED);
         presenter.onPayClicked();
         presenter.getTransactionStatus();
 
@@ -248,7 +249,7 @@ public class IdealPaymentPresenterTest {
     @Test
     public void shouldSetCloseClickListenerOnTransactionStatusSuccess() {
         when(saleStatusResponse.getOrderDetails()).thenReturn(orderDetails);
-        when(orderDetails.getOrderStatus()).thenReturn(OrderStatus.SUCCEEDED);
+        when(orderDetails.orderStatus).thenReturn(OrderStatus.SUCCEEDED);
         presenter.onPayClicked();
         presenter.getTransactionStatus();
 

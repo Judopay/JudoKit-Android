@@ -4,7 +4,6 @@ import android.content.Intent;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.judopay.Judo;
 import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.TestUtil;

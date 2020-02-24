@@ -6,8 +6,6 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.judopay.CheckCardActivity;
-import com.judopay.Judo;
 import com.judopay.JudoTransactionIdlingResource;
 import com.judopay.R;
 import com.judopay.ResultTestActivity;

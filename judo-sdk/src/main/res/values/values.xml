@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="api_host_live" translatable="false">https://gw1.judopay.com</string>
-    <string name="api_host_sandbox" translatable="false">https://gw1.judopay-sandbox.com</string>
+    <string name="api_host_live" translatable="false">https://api.judopay.com</string>
+    <string name="api_host_sandbox" translatable="false">https://api-sandbox.judopay.com</string>
 </resources>

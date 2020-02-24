@@ -8,16 +8,14 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
-import com.judopay.Judo;
-import com.judopay.JudoApiService;
+import com.judopay.api.JudoApiService;
 import com.judopay.JudoTransactionIdlingResource;
-import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.ResultTestActivity;
 import com.judopay.TestActivityUtil;
 import com.judopay.model.Address;
-import com.judopay.model.Receipt;
-import com.judopay.model.RegisterCardRequest;
+import com.judopay.api.model.response.Receipt;
+import com.judopay.api.model.request.RegisterCardRequest;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -75,7 +73,7 @@ public class SuccessfulTokenPaymentTest {
         subjectIntent.putExtra(Judo.JUDO_OPTIONS, getJudo()
                 .newBuilder()
                 .setCardToken(receipt.getCardDetails())
-                .setConsumerReference(receipt.getConsumer().getYourConsumerReference())
+                .setConsumerReference(receipt.getConsumer().yourConsumerReference)
                 .build());
 
         Intent intent = ResultTestActivity.createIntent(subjectIntent);
@@ -132,7 +130,7 @@ public class SuccessfulTokenPaymentTest {
                 .newBuilder()
                 .setAvsEnabled(true)
                 .setCardToken(receipt.getCardDetails())
-                .setConsumerReference(receipt.getConsumer().getYourConsumerReference())
+                .setConsumerReference(receipt.getConsumer().yourConsumerReference)
                 .build());
 
         Intent intent = ResultTestActivity.createIntent(subjectIntent);

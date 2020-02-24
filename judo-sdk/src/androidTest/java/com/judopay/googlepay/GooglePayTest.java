@@ -3,11 +3,11 @@ package com.judopay.googlepay;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.judopay.JudoApiService;
+import com.judopay.api.JudoApiService;
 import com.judopay.model.Currency;
 import com.judopay.model.GooglePayRequest;
 import com.judopay.model.GooglePayWallet;
-import com.judopay.model.Receipt;
+import com.judopay.api.model.response.Receipt;
 
 import org.junit.Ignore;
 import org.junit.Test;

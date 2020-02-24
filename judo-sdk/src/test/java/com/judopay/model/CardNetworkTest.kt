@@ -11,7 +11,7 @@ class CardNetworkTest {
     @Test
     fun shouldDetectJCB() {
         for (i in 3520..3589) {
-            cardType = CardNetwork.fromCardNumber(i.toString())
+            cardType = CardNetwork.ofCardNumber(i.toString())
             Assert.assertEquals(CardNetwork.JCB, cardType)
         }
     }
@@ -20,7 +20,7 @@ class CardNetworkTest {
     fun shouldDetectDinersClub() {
         val dinersClubPrefixes = "300,301,302,303,304,305,36,38,39,309".split(",")
         for (i in dinersClubPrefixes) {
-            cardType = CardNetwork.fromCardNumber(i)
+            cardType = CardNetwork.ofCardNumber(i)
             Assert.assertEquals(CardNetwork.DINERS_CLUB_INTERNATIONAL, cardType)
         }
     }
@@ -32,7 +32,7 @@ class CardNetworkTest {
                 ","
             )
         for (i in discoverPrefixes) {
-            cardType = CardNetwork.fromCardNumber(i)
+            cardType = CardNetwork.ofCardNumber(i)
             Assert.assertEquals(CardNetwork.DISCOVER, cardType)
         }
     }
@@ -44,7 +44,7 @@ class CardNetworkTest {
                 ","
             )
         for (i in maestroPrefixes) {
-            cardType = CardNetwork.fromCardNumber(i)
+            cardType = CardNetwork.ofCardNumber(i)
             Assert.assertEquals(CardNetwork.MAESTRO, cardType)
         }
     }
@@ -53,7 +53,7 @@ class CardNetworkTest {
     fun shouldDetectMastercard() {
         val mastercardPrefixes = "50,51,52,53,54,55".split(",")
         for (i in mastercardPrefixes) {
-            cardType = CardNetwork.fromCardNumber(i)
+            cardType = CardNetwork.ofCardNumber(i)
             Assert.assertEquals(CardNetwork.MASTERCARD, cardType)
         }
     }
@@ -62,14 +62,14 @@ class CardNetworkTest {
     fun shouldDetectAmex() {
         val amexPrefixes = "34,37".split(",")
         for (i in amexPrefixes) {
-            cardType = CardNetwork.fromCardNumber(i)
+            cardType = CardNetwork.ofCardNumber(i)
             Assert.assertEquals(CardNetwork.AMEX, cardType)
         }
     }
 
     @Test
     fun shouldDetectVisa() {
-        cardType = CardNetwork.fromCardNumber("4")
+        cardType = CardNetwork.ofCardNumber("4")
         Assert.assertEquals(CardNetwork.VISA, cardType)
     }
 }

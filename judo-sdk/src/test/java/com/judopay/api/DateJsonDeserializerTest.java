@@ -2,6 +2,7 @@ package com.judopay.api;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
+import com.judopay.api.deserializer.DateJsonDeserializer;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

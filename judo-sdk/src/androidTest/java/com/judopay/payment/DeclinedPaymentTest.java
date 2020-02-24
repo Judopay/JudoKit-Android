@@ -3,13 +3,10 @@ package com.judopay.payment;
 import android.content.Intent;
 
 import androidx.test.espresso.IdlingRegistry;
-import androidx.test.espresso.action.ViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import com.judopay.Judo;
 import com.judopay.JudoTransactionIdlingResource;
-import com.judopay.PaymentActivity;
 import com.judopay.R;
 import com.judopay.ResultTestActivity;
 import com.judopay.TestActivityUtil;

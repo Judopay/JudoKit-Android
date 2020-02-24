@@ -1,6 +1,7 @@
 package com.judopay.api;
 
-import com.judopay.error.DuplicateTransactionError;
+import com.judopay.api.interceptor.DeDuplicationInterceptor;
+import com.judopay.api.error.DuplicateTransactionError;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

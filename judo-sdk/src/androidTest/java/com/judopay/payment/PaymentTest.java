@@ -3,11 +3,10 @@ package com.judopay.payment;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.judopay.Judo;
-import com.judopay.JudoApiService;
+import com.judopay.api.JudoApiService;
 import com.judopay.model.Currency;
-import com.judopay.model.PaymentRequest;
-import com.judopay.model.Receipt;
+import com.judopay.api.model.request.PaymentRequest;
+import com.judopay.api.model.response.Receipt;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +15,7 @@ import io.reactivex.observers.TestObserver;
 
 import static com.judopay.TestUtil.JUDO_ID_IRIDIUM;
 import static com.judopay.TestUtil.getJudo;
-import static com.judopay.api.JudoApiServiceFactory.createApiService;
+import static com.judopay.api.factory.JudoApiServiceFactory.createApiService;
 import static java.util.UUID.randomUUID;
 
 @RunWith(AndroidJUnit4.class)
