@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.judopay.R
 import com.judopay.inflate
+import com.judopay.model.PaymentMethodEnum
 import com.judopay.ui.paymentmethods.model.PaymentMethodItem
 import com.judopay.ui.paymentmethods.model.PaymentMethodItemAction
 import com.judopay.ui.paymentmethods.model.PaymentMethodItemType
@@ -12,10 +13,16 @@ internal interface BindableRecyclerViewHolder<V, A> {
     fun bind(model: V, listener: ((V, A) -> Unit)? = null)
 }
 
+typealias PaymentMethodSelectedListener = (PaymentMethodEnum) -> Unit
 typealias PaymentMethodsAdapterListener = (PaymentMethodItem, PaymentMethodItemAction) -> Unit
 
-class PaymentMethodsAdapter(items: List<PaymentMethodItem> = emptyList(),
-                            private val listener: PaymentMethodsAdapterListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class PaymentMethodsAdapter(
+    items: List<PaymentMethodItem> = emptyList(),
+    private val paymentMethods: List<PaymentMethodEnum>,
+    private val lastUsed: PaymentMethodEnum,
+    private val paymentMethodListener: PaymentMethodSelectedListener,
+    private val listener: PaymentMethodsAdapterListener
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var items: List<PaymentMethodItem> = items
         set(value) {
@@ -38,8 +45,13 @@ class PaymentMethodsAdapter(items: List<PaymentMethodItem> = emptyList(),
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val viewHolder = holder as? BindableRecyclerViewHolder<PaymentMethodItem, PaymentMethodItemAction>
-        viewHolder?.bind(items[position], listener)
+        if (holder is MethodSelectorViewHolder) {
+            holder.bind(paymentMethods, lastUsed) { paymentMethodListener.invoke(it) }
+        } else {
+            val viewHolder =
+                holder as? BindableRecyclerViewHolder<PaymentMethodItem, PaymentMethodItemAction>
+            viewHolder?.bind(items[position], listener)
+        }
     }
 
     override fun getItemViewType(position: Int): Int = items[position].type.ordinal
