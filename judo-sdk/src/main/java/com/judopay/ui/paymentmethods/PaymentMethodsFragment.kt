@@ -29,20 +29,23 @@ class PaymentMethodsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(PaymentMethodsViewModel::class.java)
 
-        val data = arrayListOf(
-                PaymentMethodItem(PaymentMethodItemType.SELECTOR),
-                PaymentMethodItem(PaymentMethodItemType.SAVED_CARDS_HEADER),
-                PaymentMethodItem(PaymentMethodItemType.SAVED_CARDS_ITEM),
-                PaymentMethodItem(PaymentMethodItemType.SAVED_CARDS_ITEM),
-                PaymentMethodItem(PaymentMethodItemType.SAVED_CARDS_ITEM),
-                PaymentMethodItem(PaymentMethodItemType.SAVED_CARDS_FOOTER)
-        )
-
         val paymentMethods = listOf(
             PaymentMethods.CARD,
             PaymentMethods.IDEAL,
             PaymentMethods.GOOGLE_PAY
         )
+
+        val data = arrayListOf(
+            PaymentMethodItem(PaymentMethodItemType.SAVED_CARDS_HEADER),
+            PaymentMethodItem(PaymentMethodItemType.SAVED_CARDS_ITEM),
+            PaymentMethodItem(PaymentMethodItemType.SAVED_CARDS_ITEM),
+            PaymentMethodItem(PaymentMethodItemType.SAVED_CARDS_ITEM),
+            PaymentMethodItem(PaymentMethodItemType.SAVED_CARDS_FOOTER)
+        )
+
+        if (paymentMethods.size > 1) {
+            data.add(0, PaymentMethodItem(PaymentMethodItemType.SELECTOR))
+        }
 
         recyclerView.adapter = PaymentMethodsAdapter(data, paymentMethods,
             {

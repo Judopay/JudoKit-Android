@@ -11,6 +11,6 @@ class MethodSelectorViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         listener: PaymentMethodSelectedListener?,
         lastUsed: PaymentMethods?
     ) = with(itemView) {
-        slider.setPaymentTypes(list, listener,lastUsed)
+        slider.setPaymentTypes(list, listener, lastUsed)
     }
 }
