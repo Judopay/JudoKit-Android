@@ -10,6 +10,7 @@ class Reference internal constructor(val consumerReference: String,
                                      val paymentReference: String,
                                      val metaData: Bundle? = null) : Parcelable {
 
+
     class Builder {
         private var consumerReference: String? = null
         private var paymentReference: String? = null
@@ -25,5 +26,9 @@ class Reference internal constructor(val consumerReference: String,
 
             return Reference(myConsumerReference, myPaymentReference, metaData)
         }
+    }
+
+    override fun toString(): String {
+        return "Reference(consumerReference='$consumerReference', paymentReference='$paymentReference', metaData=$metaData)"
     }
 }

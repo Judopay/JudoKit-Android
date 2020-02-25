@@ -6,19 +6,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.judopay.parentOfType
 
-class PaymentMethodsHeaderView : ConstraintLayout, AppBarLayout.OnOffsetChangedListener {
-
-    constructor(context: Context) : super(context) {
-        init(null, 0)
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(attrs, 0)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
-        init(attrs, defStyle)
-    }
+class PaymentMethodsHeaderView @JvmOverloads constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyle: Int = 0
+) : ConstraintLayout(context, attrs, defStyle), AppBarLayout.OnOffsetChangedListener {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -29,11 +21,7 @@ class PaymentMethodsHeaderView : ConstraintLayout, AppBarLayout.OnOffsetChangedL
         super.onDetachedFromWindow()
         parentOfType(AppBarLayout::class.java)?.removeOnOffsetChangedListener(this)
     }
-
-    private fun init(attrs: AttributeSet?, defStyle: Int) {
-
-    }
-
+    
     override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
         val newHeight = appBarLayout.layoutParams.height + verticalOffset
 

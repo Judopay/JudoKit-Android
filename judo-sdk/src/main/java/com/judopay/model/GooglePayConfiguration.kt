@@ -12,4 +12,5 @@ class GooglePayConfiguration internal constructor() : Parcelable {
         }
     }
 
+
 }

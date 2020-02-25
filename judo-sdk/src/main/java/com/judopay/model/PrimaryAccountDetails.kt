@@ -28,4 +28,9 @@ class PrimaryAccountDetails internal constructor(
         fun build() = PrimaryAccountDetails(name, accountNumber, dateOfBirth, postCode)
     }
 
+    override fun toString(): String {
+        return "PrimaryAccountDetails(name=$name, accountNumber=$accountNumber, dateOfBirth=$dateOfBirth, postCode=$postCode)"
+    }
+
+
 }

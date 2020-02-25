@@ -8,6 +8,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 class Amount internal constructor(val amount: String, val currency: Currency) : Parcelable {
 
+
     class Builder {
         private var amount: String? = null
         private var currency: Currency? = null
@@ -23,5 +24,9 @@ class Amount internal constructor(val amount: String, val currency: Currency) : 
 
             return Amount(myAmount, myCurrency)
         }
+    }
+
+    override fun toString(): String {
+        return "Amount(amount='$amount', currency=$currency)"
     }
 }

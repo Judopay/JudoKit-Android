@@ -3,7 +3,6 @@ package com.judopay
 import android.os.Parcelable
 import com.judopay.model.*
 import kotlinx.android.parcel.Parcelize
-import java.io.IOException
 
 /**
  * The wrapper for providing data to Activity and Fragments classes in the SDK (e.g. JudopayActivity).
@@ -31,11 +30,12 @@ class Judo internal constructor(val judoId: String,
                                 val amount: Amount,
                                 val reference: Reference,
                                 val uiConfiguration: UiConfiguration,
-                                val paymentMethods: Array<PaymentMethods>,
+                                val paymentMethods: Array<PaymentMethod>,
                                 val supportedCardNetworks: Array<CardNetwork>,
                                 val primaryAccountDetails: PrimaryAccountDetails?,
                                 val googlePayConfiguration: GooglePayConfiguration?
 ) : Parcelable {
+
 
     class Builder {
         private var judoId: String? = null
@@ -46,7 +46,7 @@ class Judo internal constructor(val judoId: String,
         private var amount: Amount? = null
         private var reference: Reference? = null
         private var uiConfiguration: UiConfiguration? = null
-        private var paymentMethods: Array<PaymentMethods>? = null
+        private var paymentMethods: Array<PaymentMethod>? = null
         private var supportedCardNetworks: Array<CardNetwork>? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
         private var googlePayConfiguration: GooglePayConfiguration? = null
@@ -59,7 +59,7 @@ class Judo internal constructor(val judoId: String,
         fun setAmount(amount: Amount?) = apply { this.amount = amount }
         fun setReference(reference: Reference?) = apply { this.reference = reference }
         fun setUiConfiguration(configuration: UiConfiguration?) = apply { this.uiConfiguration = configuration }
-        fun setPaymentMethods(methods: Array<PaymentMethods>?) = apply { this.paymentMethods = methods }
+        fun setPaymentMethods(methods: Array<PaymentMethod>?) = apply { this.paymentMethods = methods }
         fun setSupportedCardNetworks(networks: Array<CardNetwork>?) = apply { this.supportedCardNetworks = networks }
         fun setPrimaryAccountDetails(details: PrimaryAccountDetails?) = apply { this.primaryAccountDetails = details }
         fun setGooglePayConfiguration(configuration: GooglePayConfiguration?) = apply { this.googlePayConfiguration = configuration }
@@ -76,7 +76,7 @@ class Judo internal constructor(val judoId: String,
                     ?: UiConfiguration.Builder().setAvsEnabled(false).build()
             val mySandboxed = isSandboxed ?: false
 
-            val defaultPaymentMethods = arrayOf(PaymentMethods.CARD)
+            val defaultPaymentMethods = arrayOf(PaymentMethod.CARD)
             val defaultSupportedCardNetworks = arrayOf(CardNetwork.VISA)
 
             val myPaymentMethods = if (paymentMethods.isNullOrEmpty()) defaultPaymentMethods else checkNotNull(paymentMethods)
@@ -95,5 +95,9 @@ class Judo internal constructor(val judoId: String,
                     primaryAccountDetails,
                     googlePayConfiguration)
         }
+    }
+
+    override fun toString(): String {
+        return "Judo(judoId='$judoId', siteId=$siteId, apiToken='$apiToken', apiSecret='$apiSecret', isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration)"
     }
 }

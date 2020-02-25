@@ -1,0 +1,9 @@
+<resources>
+
+    <!-- Bottom Sheets -->
+    <style name="JudoTheme.BottomSheetDialogTheme" parent="JudoTheme.BottomSheetDialog">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/color_primary</item>
+    </style>
+
+</resources>

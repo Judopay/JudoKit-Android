@@ -3,24 +3,28 @@
     <style name="JudoTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:fontFamily">@font/sf_pro_display</item>
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimary">@color/color_primary</item>
     </style>
 
+    <!-- App bar related stuff -->
     <style name="JudoTheme.AppBarLayout" parent="">
         <item name="android:textColorPrimary">?attr/colorOnPrimarySurface</item>
         <item name="colorControlNormal">?attr/colorOnPrimarySurface</item>
     </style>
 
+    <!-- Buttons -->
     <style name="JudoTheme.ImageButton" parent="Widget.AppCompat.ImageButton">
         <item name="android:layout_width">@dimen/min_touch_target_size</item>
         <item name="android:layout_height">@dimen/min_touch_target_size</item>
         <item name="android:background">?attr/actionBarItemBackground</item>
     </style>
 
+    <!-- Black toolbar back button -->
     <style name="JudoTheme.BackButton" parent="JudoTheme.ImageButton">
         <item name="srcCompat">@drawable/ic_back_20dp</item>
     </style>
 
+    <!-- Text like buttons eg.: ADD CARD, EDIT ... -->
     <style name="JudoTheme.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:fontFamily">@font/sf_pro_display_semibold</item>
         <item name="android:textSize">@dimen/body</item>
@@ -32,6 +36,7 @@
         <item name="android:minWidth">@dimen/min_touch_target_size</item>
     </style>
 
+    <!-- Black rounded button, usually used for PAY NOW -->
     <style name="JudoTheme.BlackRoundedButton" parent="Widget.MaterialComponents.Button">
         <item name="cornerRadius">@dimen/button_corner_radius</item>
         <item name="elevation">0dp</item>
@@ -44,9 +49,23 @@
         <item name="backgroundTint">@color/black_button_background_selector</item>
     </style>
 
-    <style name="JudoTheme.BottomSheet" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+    <!-- Bottom Sheets -->
+    <style name="JudoTheme.BottomSheetDialogTheme" parent="JudoTheme.BottomSheetDialog"/>
+    <style name="JudoTheme.BottomSheetDialog" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
         <item name="android:colorBackground">@color/white</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="android:windowAnimationStyle">@style/JudoTheme.BottomSheetDialogAnimation</item>
+        <item name="bottomSheetStyle">@style/JudoTheme.BottomSheet.Modal</item>
+    </style>
+
+    <style name="JudoTheme.BottomSheetDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+
+    <style name="JudoTheme.BottomSheet.Modal" parent="@style/Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_sheet_modal_background</item>
     </style>
 
 </resources>

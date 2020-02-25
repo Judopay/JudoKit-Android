@@ -19,4 +19,9 @@ class UiConfiguration internal constructor(val avsEnabled: Boolean) : Parcelable
         }
     }
 
+    override fun toString(): String {
+        return "UiConfiguration(avsEnabled=$avsEnabled)"
+    }
+
+
 }

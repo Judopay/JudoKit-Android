@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="color_primary">@color/black</color>
+
     <color name="black">#262626</color>
     <color name="brown_grey">#999999</color>
     <color name="very_light_pink_two">#eeeeee</color>

@@ -1,6 +1,5 @@
 package com.judopay.api
 
-import com.judopay.api.model.request.*
 import com.judopay.api.model.response.CardVerificationResult
 import com.judopay.api.model.response.Receipt
 import com.judopay.api.model.response.Receipts
@@ -209,7 +208,6 @@ interface JudoApiService {
                          @Query("pageSize") pageSize: Int,
                          @Query("offset") offset: Int,
                          @Query("sort") sort: String): Single<Receipts>
-
     /**
      * List all payment receipts for a consumer
      *

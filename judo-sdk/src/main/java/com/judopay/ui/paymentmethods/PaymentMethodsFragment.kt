@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.judopay.R
+import com.judopay.ui.cardentry.CardEntryFragment
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judopay.ui.paymentmethods.model.PaymentMethodItem
 import com.judopay.ui.paymentmethods.model.PaymentMethodItemAction
@@ -48,6 +49,8 @@ class PaymentMethodsFragment : Fragment() {
 
     private fun onAddCard() {
         // TBI - Add card
+
+        CardEntryFragment().show(parentFragmentManager, "TES")
     }
 
 }

@@ -13,7 +13,16 @@ data class PaymentCardViewModel(
         val expireDate: String
 )
 
-class PaymentCardView : CardView {
+class PaymentCardView @JvmOverloads constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyle: Int = 0
+) : CardView(context, attrs, defStyle) {
+
+    init {
+        inflate(R.layout.payment_card_view, true)
+        update()
+    }
 
     var model = PaymentCardViewModel("Card for online shopping",
             "••••    ••••    ••••    1122",
@@ -22,23 +31,6 @@ class PaymentCardView : CardView {
             field = value
             update()
         }
-
-    constructor(context: Context) : super(context) {
-        init(null, 0)
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(attrs, 0)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
-        init(attrs, defStyle)
-    }
-
-    private fun init(attrs: AttributeSet?, defStyle: Int) {
-        inflate(R.layout.payment_card_view, true)
-        update()
-    }
 
     private fun update() {
         cardNameTextView.text = model.name

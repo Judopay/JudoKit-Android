@@ -28,4 +28,7 @@
     <!-- Payment methods screen-->
     <dimen name="network_icon_container_height">36dp</dimen>
     <dimen name="network_icon_container_width">52dp</dimen>
+
+    <!-- Bottom sheet modals -->
+    <dimen name="background_shape_corner_radius">16dp</dimen>
 </resources>

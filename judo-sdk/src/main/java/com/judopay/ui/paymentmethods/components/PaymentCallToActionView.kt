@@ -18,32 +18,24 @@ data class PaymentCallToActionViewModel(
         val isButtonEnabled: Boolean
 )
 
-class PaymentCallToActionView : FrameLayout {
+class PaymentCallToActionView @JvmOverloads constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyle: Int = 0
+) : FrameLayout(context, attrs, defStyle) {
+
+    init {
+        inflate(R.layout.payment_call_to_action_view, true)
+        update()
+    }
 
     var model = PaymentCallToActionViewModel("$15.33",
             PaymentButtonType.PLAIN,
-            false)
+            true)
         set(value) {
             field = value
             update()
         }
-
-    constructor(context: Context) : super(context) {
-        init(null, 0)
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(attrs, 0)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
-        init(attrs, defStyle)
-    }
-
-    private fun init(attrs: AttributeSet?, defStyle: Int) {
-        inflate(R.layout.payment_call_to_action_view, true)
-        update()
-    }
 
     private fun update() {
         amountTextView.text = model.amount
