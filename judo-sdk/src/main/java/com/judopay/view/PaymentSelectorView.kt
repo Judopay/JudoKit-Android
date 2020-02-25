@@ -5,8 +5,10 @@ import android.graphics.Rect
 import android.os.Build
 import android.os.Handler
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.HorizontalScrollView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.transition.TransitionManager
@@ -17,15 +19,16 @@ import com.judopay.model.text
 import kotlinx.android.synthetic.main.view_payment_selector.view.container
 import kotlinx.android.synthetic.main.view_payment_selector.view.selector
 
+
 private const val MARGIN_10 = 10
 private const val MARGIN_54 = 54
 
 typealias PaymentSelectorViewSelectionListener = (selected: PaymentMethod) -> Unit
 
 class PaymentSelectorView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyle: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
 ) : HorizontalScrollView(context, attrs, defStyle) {
 
     init {
@@ -35,24 +38,33 @@ class PaymentSelectorView @JvmOverloads constructor(
     private var currentSelected: PaymentMethod? = null
 
     fun setPaymentMethods(
-            paymentMethods: List<PaymentMethod>,
-            currentSelected: PaymentMethod?,
-            onClick: PaymentSelectorViewSelectionListener
+        paymentMethods: List<PaymentMethod>,
+        currentSelected: PaymentMethod?,
+        onClick: PaymentSelectorViewSelectionListener
     ) {
         this.currentSelected = currentSelected
         val itemViews: MutableList<PaymentSelectorItemView> = mutableListOf()
         val ids: MutableList<Int> = mutableListOf()
         var prevClicked: PaymentSelectorItemView? = null
+        overScrollMode = View.OVER_SCROLL_NEVER
 
         paymentMethods.forEach { paymentMethod ->
             val itemView = PaymentSelectorItemView(context).apply {
+                if (paymentMethods.size < 3) {
+                    layoutParams = ViewGroup.LayoutParams(
+                        0,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                    setTextViewConstraints()
+                    gravity = Gravity.CENTER
+                }
                 id = View.generateViewId()
                 setImage(paymentMethod.icon)
                 setText(paymentMethod.text)
                 setPaymentMethod(paymentMethod)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    elevation = 16f
-                    translationZ = 16f
+                    elevation = 10f
+                    translationZ = 10f
                 }
             }
             container.addView(itemView)
@@ -70,6 +82,7 @@ class PaymentSelectorView @JvmOverloads constructor(
                 }
                 if (currentSelected == itemView.getPaymentMethod()) {
                     prevClicked = itemView
+                    selectItem(set, itemView)
                 }
             } else if (index == 0) {
                 prevClicked = itemView
@@ -83,17 +96,22 @@ class PaymentSelectorView @JvmOverloads constructor(
             }
             set.centerVertically(itemView.id, ConstraintSet.PARENT_ID)
             itemView.setOnClickListener {
-                prevClicked?.setTextVisibility(View.GONE)
-                selectItem(set, itemView)
-                set.applyTo(container)
-                prevClicked = itemView
-                TransitionManager.beginDelayedTransition(container)
-                scrollToView(itemView)
-                onClick.invoke(itemView.getPaymentMethod())
+                if (prevClicked != itemView) {
+                    prevClicked?.setTextVisibility(View.GONE)
+                    selectItem(set, itemView)
+                    set.applyTo(container)
+                    prevClicked = itemView
+                    TransitionManager.beginDelayedTransition(container)
+                    scrollToView(itemView)
+                    onClick.invoke(itemView.getPaymentMethod())
+                }
             }
         }
         chainViews(ids, set)
         set.applyTo(container)
+        Handler().postDelayed({
+            prevClicked?.callOnClick()
+        }, 700)
     }
 
     private fun selectItem(set: ConstraintSet, itemView: PaymentSelectorItemView) {
@@ -111,23 +129,23 @@ class PaymentSelectorView @JvmOverloads constructor(
     private fun chainViews(itemViews: MutableList<Int>, set: ConstraintSet) {
         if (itemViews.size > 2) {
             set.createHorizontalChain(
-                    ConstraintSet.PARENT_ID,
-                    ConstraintSet.LEFT,
-                    ConstraintSet.PARENT_ID,
-                    ConstraintSet.RIGHT,
-                    itemViews.toIntArray(),
-                    null,
-                    ConstraintSet.CHAIN_SPREAD_INSIDE
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.LEFT,
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.RIGHT,
+                itemViews.toIntArray(),
+                null,
+                ConstraintSet.CHAIN_SPREAD_INSIDE
             )
         } else {
             set.createHorizontalChain(
-                    ConstraintSet.PARENT_ID,
-                    ConstraintSet.LEFT,
-                    ConstraintSet.PARENT_ID,
-                    ConstraintSet.RIGHT,
-                    itemViews.toIntArray(),
-                    null,
-                    ConstraintSet.CHAIN_PACKED
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.LEFT,
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.RIGHT,
+                itemViews.toIntArray(),
+                null,
+                ConstraintSet.CHAIN_SPREAD
             )
         }
     }
@@ -141,13 +159,13 @@ class PaymentSelectorView @JvmOverloads constructor(
                 lastUsedSelected = true
             } else if (scrollX < itemView.x.toInt()) {
                 smoothScrollTo(
-                        scrollX + (itemView.getImageView().width + itemView.getTextView().width),
-                        0
+                    scrollX + (itemView.getImageView().width + itemView.getTextView().width),
+                    0
                 )
             } else {
                 smoothScrollTo(
-                        scrollX - (itemView.getImageView().width + itemView.getTextView().width),
-                        0
+                    scrollX - (itemView.getImageView().width + itemView.getTextView().width),
+                    0
                 )
             }
         }

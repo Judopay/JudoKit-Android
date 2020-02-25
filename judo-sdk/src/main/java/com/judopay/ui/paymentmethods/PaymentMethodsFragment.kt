@@ -7,14 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.snackbar.Snackbar
 import com.judopay.R
 import com.judopay.judo
 import com.judopay.model.PaymentMethod
 import com.judopay.ui.cardentry.CardEntryFragment
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapter
-import com.judopay.ui.paymentmethods.model.*
-import kotlinx.android.synthetic.main.payment_methods_fragment.*
+import com.judopay.ui.paymentmethods.model.PaymentMethodGenericItem
+import com.judopay.ui.paymentmethods.model.PaymentMethodItemAction
+import com.judopay.ui.paymentmethods.model.PaymentMethodItemType
+import com.judopay.ui.paymentmethods.model.PaymentMethodSavedCardsItem
+import com.judopay.ui.paymentmethods.model.PaymentMethodSelectorItem
+import kotlinx.android.synthetic.main.payment_methods_fragment.recyclerView
 
 class PaymentMethodsFragment : Fragment() {
 
@@ -42,7 +45,16 @@ class PaymentMethodsFragment : Fragment() {
         with(judo) {
             if (paymentMethods.size > 1) {
                 data.add(0, PaymentMethodSelectorItem(PaymentMethodItemType.SELECTOR,
-                        paymentMethods.toList(),
+                    paymentMethods.toMutableList()
+                        .apply
+                        {
+                            add(PaymentMethod.AMAZON_PAY)
+                            add(PaymentMethod.AMAZON_PAY)
+                            add(PaymentMethod.AMAZON_PAY)
+                            add(PaymentMethod.AMAZON_PAY)
+                            add(PaymentMethod.AMAZON_PAY)
+                        }
+                    ,
                         paymentMethods.first()))
             }
         }

@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fillViewport="true"
-    android:overScrollMode="never"
     android:scrollbars="none"
     android:clipToPadding="false"
     >
@@ -23,7 +22,7 @@
             android:background="@drawable/slider_background">
 
             <androidx.cardview.widget.CardView
-                app:cardElevation="10dp"
+                app:cardElevation="4dp"
                 app:cardCornerRadius="10dp"
                 android:id="@+id/selector"
                 android:layout_width="0dp"
