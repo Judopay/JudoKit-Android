@@ -3,7 +3,11 @@ package com.judopay
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.judopay.model.ApiEnvironment
+import com.judopay.ui.error.JudoConfigObjectNotProvidedError
 
 internal val Judo.apiBaseUrl: String
     get() = if (isSandboxed) ApiEnvironment.SANDBOX.host else ApiEnvironment.LIVE.host
@@ -31,3 +35,10 @@ fun <T : View> View.parentOfType(parentType: Class<T>): T? {
 fun ViewGroup.inflate(resource: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(context).inflate(resource, this, attachToRoot)
 }
+
+val FragmentActivity.judo: Judo
+    get() = intent.getParcelableExtra(JUDO_OPTIONS)
+            ?: throw JudoConfigObjectNotProvidedError()
+
+val Fragment.judo: Judo
+    get() = requireActivity().judo

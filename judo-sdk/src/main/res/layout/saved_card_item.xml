@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@null"
-            tools:background="@color/pale_grey" />
+            app:srcCompat="@drawable/ic_paypal" />
 
     </FrameLayout>
 

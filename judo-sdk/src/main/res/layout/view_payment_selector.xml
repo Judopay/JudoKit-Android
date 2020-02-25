@@ -6,7 +6,9 @@
     android:layout_height="wrap_content"
     android:fillViewport="true"
     android:overScrollMode="never"
-    android:scrollbars="none">
+    android:scrollbars="none"
+    android:clipToPadding="false"
+    >
 
     <FrameLayout
         android:layout_width="wrap_content"

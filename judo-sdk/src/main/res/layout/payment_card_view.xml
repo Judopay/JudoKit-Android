@@ -6,12 +6,15 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:layout_width="40dp"
-        android:layout_height="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_24"
         android:layout_marginTop="@dimen/space_24"
-        android:background="@drawable/card_network_decoration_shape"
+        android:background="@drawable/ic_paypal"
         android:contentDescription="@null"
+        android:maxWidth="40dp"
+        android:maxHeight="24dp"
+        android:scaleType="centerInside"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,11 +25,11 @@
         android:layout_marginStart="@dimen/space_24"
         android:layout_marginBottom="@dimen/space_16"
         android:fontFamily="@font/sf_pro_display_semibold"
+        android:text="Card for online shopping"
         android:textColor="@color/black"
         android:textSize="@dimen/title"
         app:layout_constraintBottom_toTopOf="@+id/cardNumberMaskTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="Card for online shopping" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/cardNumberMaskTextView"
@@ -35,11 +38,11 @@
         android:layout_marginStart="@dimen/space_24"
         android:layout_marginBottom="@dimen/space_24"
         android:fontFamily="@font/sf_pro_display_semibold"
+        android:text="••••    ••••    ••••    1122"
         android:textColor="@color/brown_grey"
         android:textSize="@dimen/headline"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="••••    ••••    ••••    1122" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/expireDateTextView"
@@ -48,10 +51,10 @@
         android:layout_marginEnd="@dimen/space_24"
         android:layout_marginBottom="@dimen/space_24"
         android:fontFamily="@font/sf_pro_display_semibold"
+        android:text="11/22"
         android:textColor="@color/brown_grey"
         android:textSize="@dimen/headline"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="11/22" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

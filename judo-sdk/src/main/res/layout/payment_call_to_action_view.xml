@@ -37,7 +37,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/payButton"
         app:layout_constraintEnd_toStartOf="@+id/payButton"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="$15.33" />
+        android:text="$15.33" />
 
     <Button
         android:id="@+id/payButton"

@@ -1,17 +1,29 @@
 package com.judopay.model
 
 import android.os.Parcelable
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import com.judopay.R
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-enum class PaymentMethods(@DrawableRes val icon: Int, @StringRes val text:Int) : Parcelable {
-    CARD(R.drawable.ic_cards, R.string.cards),
-    AMAZON_PAY(R.drawable.ic_amazonpay, R.string.amazon_pay),
-    PAYPAL(R.drawable.ic_paypal, R.string.empty),
-    IDEAL(R.drawable.ic_bank_ideal, R.string.ideal_payment),
-    GOOGLE_PAY(R.drawable.ic_google_pay, R.string.empty)
-
+enum class PaymentMethod : Parcelable {
+    CARD,
+    AMAZON_PAY,
+    IDEAL,
+    GOOGLE_PAY
 }
+
+internal val PaymentMethod.icon
+    get() = when (this) {
+        PaymentMethod.CARD -> R.drawable.ic_cards
+        PaymentMethod.AMAZON_PAY -> R.drawable.ic_amazonpay
+        PaymentMethod.GOOGLE_PAY -> R.drawable.ic_google_pay
+        PaymentMethod.IDEAL -> R.drawable.ic_ideal
+    }
+
+internal val PaymentMethod.text
+    get() = when (this) {
+        PaymentMethod.CARD -> R.string.cards
+        PaymentMethod.AMAZON_PAY -> R.string.amazon_pay
+        PaymentMethod.GOOGLE_PAY -> R.string.empty
+        PaymentMethod.IDEAL -> R.string.ideal_payment
+    }

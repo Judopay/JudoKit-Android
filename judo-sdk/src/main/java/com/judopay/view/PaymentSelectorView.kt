@@ -1,6 +1,5 @@
 package com.judopay.view
 
-
 import android.content.Context
 import android.graphics.Rect
 import android.os.Build
@@ -12,31 +11,35 @@ import android.widget.HorizontalScrollView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.transition.TransitionManager
 import com.judopay.R
-import com.judopay.model.PaymentMethods
-import com.judopay.ui.paymentmethods.adapter.PaymentMethodSelectedListener
+import com.judopay.model.PaymentMethod
+import com.judopay.model.icon
+import com.judopay.model.text
 import kotlinx.android.synthetic.main.view_payment_selector.view.container
 import kotlinx.android.synthetic.main.view_payment_selector.view.selector
 
 private const val MARGIN_10 = 10
 private const val MARGIN_54 = 54
 
+typealias PaymentSelectorViewSelectionListener = (selected: PaymentMethod) -> Unit
+
 class PaymentSelectorView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyle: Int = 0
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyle: Int = 0
 ) : HorizontalScrollView(context, attrs, defStyle) {
+
     init {
         LayoutInflater.from(context).inflate(R.layout.view_payment_selector, this)
     }
 
-    private var lastUsedPaymentMethod: PaymentMethods? = null
+    private var currentSelected: PaymentMethod? = null
 
-    fun setPaymentTypes(
-        paymentMethods: List<PaymentMethods>,
-        onClick: PaymentMethodSelectedListener?,
-        lastUsedPaymentMethod: PaymentMethods?
+    fun setPaymentMethods(
+            paymentMethods: List<PaymentMethod>,
+            currentSelected: PaymentMethod?,
+            onClick: PaymentSelectorViewSelectionListener
     ) {
-        this.lastUsedPaymentMethod = lastUsedPaymentMethod
+        this.currentSelected = currentSelected
         val itemViews: MutableList<PaymentSelectorItemView> = mutableListOf()
         val ids: MutableList<Int> = mutableListOf()
         var prevClicked: PaymentSelectorItemView? = null
@@ -61,11 +64,11 @@ class PaymentSelectorView @JvmOverloads constructor(
         set.clone(container)
 
         itemViews.forEachIndexed { index, itemView ->
-            if (lastUsedPaymentMethod != null && paymentMethods.contains(lastUsedPaymentMethod)) {
+            if (currentSelected != null && paymentMethods.contains(currentSelected)) {
                 if (index == 0) {
                     set.setMargin(itemView.id, ConstraintSet.START, MARGIN_10)
                 }
-                if (lastUsedPaymentMethod == itemView.getPaymentMethod()) {
+                if (currentSelected == itemView.getPaymentMethod()) {
                     prevClicked = itemView
                 }
             } else if (index == 0) {
@@ -86,14 +89,11 @@ class PaymentSelectorView @JvmOverloads constructor(
                 prevClicked = itemView
                 TransitionManager.beginDelayedTransition(container)
                 scrollToView(itemView)
-                onClick?.invoke(itemView.getPaymentMethod())
+                onClick.invoke(itemView.getPaymentMethod())
             }
         }
         chainViews(ids, set)
         set.applyTo(container)
-        Handler().postDelayed({
-            prevClicked?.callOnClick()
-        }, 700)
     }
 
     private fun selectItem(set: ConstraintSet, itemView: PaymentSelectorItemView) {
@@ -111,23 +111,23 @@ class PaymentSelectorView @JvmOverloads constructor(
     private fun chainViews(itemViews: MutableList<Int>, set: ConstraintSet) {
         if (itemViews.size > 2) {
             set.createHorizontalChain(
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.LEFT,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.RIGHT,
-                itemViews.toIntArray(),
-                null,
-                ConstraintSet.CHAIN_SPREAD_INSIDE
+                    ConstraintSet.PARENT_ID,
+                    ConstraintSet.LEFT,
+                    ConstraintSet.PARENT_ID,
+                    ConstraintSet.RIGHT,
+                    itemViews.toIntArray(),
+                    null,
+                    ConstraintSet.CHAIN_SPREAD_INSIDE
             )
         } else {
             set.createHorizontalChain(
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.LEFT,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.RIGHT,
-                itemViews.toIntArray(),
-                null,
-                ConstraintSet.CHAIN_PACKED
+                    ConstraintSet.PARENT_ID,
+                    ConstraintSet.LEFT,
+                    ConstraintSet.PARENT_ID,
+                    ConstraintSet.RIGHT,
+                    itemViews.toIntArray(),
+                    null,
+                    ConstraintSet.CHAIN_PACKED
             )
         }
     }
@@ -136,18 +136,18 @@ class PaymentSelectorView @JvmOverloads constructor(
     private fun scrollToView(itemView: PaymentSelectorItemView) {
         val rect = Rect()
         if (!(itemView.getGlobalVisibleRect(rect) && itemView.height == rect.height() && itemView.width == rect.width())) {
-            if (lastUsedPaymentMethod != null && !lastUsedSelected) {
+            if (currentSelected != null && !lastUsedSelected) {
                 smoothScrollTo(itemView.right, 0)
                 lastUsedSelected = true
             } else if (scrollX < itemView.x.toInt()) {
                 smoothScrollTo(
-                    scrollX + (itemView.getImageView().width + itemView.getTextView().width),
-                    0
+                        scrollX + (itemView.getImageView().width + itemView.getTextView().width),
+                        0
                 )
             } else {
                 smoothScrollTo(
-                    scrollX - (itemView.getImageView().width + itemView.getTextView().width),
-                    0
+                        scrollX - (itemView.getImageView().width + itemView.getTextView().width),
+                        0
                 )
             }
         }

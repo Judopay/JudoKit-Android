@@ -6,7 +6,8 @@
     android:gravity="center"
     android:orientation="horizontal"
     android:paddingStart="12dp"
-    android:paddingEnd="12dp">
+    android:paddingEnd="12dp"
+    android:minWidth="90dp">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/paymentImageView"

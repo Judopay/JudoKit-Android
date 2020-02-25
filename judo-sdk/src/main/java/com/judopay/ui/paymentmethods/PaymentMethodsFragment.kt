@@ -1,6 +1,7 @@
 package com.judopay.ui.paymentmethods
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.judopay.R
+import com.judopay.judo
+import com.judopay.model.PaymentMethod
 import com.judopay.ui.cardentry.CardEntryFragment
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapter
-import com.judopay.ui.paymentmethods.model.PaymentMethodItem
-import com.judopay.ui.paymentmethods.model.PaymentMethodItemAction
-import com.judopay.ui.paymentmethods.model.PaymentMethodItemType
+import com.judopay.ui.paymentmethods.model.*
 import kotlinx.android.synthetic.main.payment_methods_fragment.*
 
 class PaymentMethodsFragment : Fragment() {
@@ -28,36 +29,35 @@ class PaymentMethodsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(PaymentMethodsViewModel::class.java)
 
+
+        // TODO: Extract this logic
         val data = arrayListOf(
-                PaymentMethodItem(PaymentMethodItemType.SELECTOR),
-                PaymentMethodItem(PaymentMethodItemType.SAVED_CARDS_HEADER),
-                PaymentMethodItem(PaymentMethodItemType.SAVED_CARDS_ITEM),
-                PaymentMethodItem(PaymentMethodItemType.SAVED_CARDS_ITEM),
-                PaymentMethodItem(PaymentMethodItemType.SAVED_CARDS_ITEM),
-                PaymentMethodItem(PaymentMethodItemType.SAVED_CARDS_FOOTER)
+                PaymentMethodGenericItem(PaymentMethodItemType.SAVED_CARDS_HEADER),
+                PaymentMethodSavedCardsItem(),
+                PaymentMethodSavedCardsItem(),
+                PaymentMethodSavedCardsItem(),
+                PaymentMethodGenericItem(PaymentMethodItemType.SAVED_CARDS_FOOTER)
         )
 
-        if (paymentMethods.size > 1) {
-            data.add(0, PaymentMethodItem(PaymentMethodItemType.SELECTOR))
+        with(judo) {
+            if (paymentMethods.size > 1) {
+                data.add(0, PaymentMethodSelectorItem(PaymentMethodItemType.SELECTOR,
+                        paymentMethods.toList(),
+                        paymentMethods.first()))
+            }
         }
 
-        recyclerView.adapter = PaymentMethodsAdapter(data, paymentMethods,
-            {
-                Snackbar.make(coordinatorLayout, "$it selected", Snackbar.LENGTH_SHORT).show()
-            },
-            { item, action ->
+        recyclerView.adapter = PaymentMethodsAdapter(data) { item, action ->
             when (action) {
                 PaymentMethodItemAction.ADD_CARD -> onAddCard()
                 else -> {
-                    Snackbar.make(coordinatorLayout, "$action is unimplemented", Snackbar.LENGTH_SHORT).show()
+                    Log.d("PaymentMethodsFragment", item.toString())
                 }
             }
-            })
+        }
     }
 
     private fun onAddCard() {
-        // TBI - Add card
-
         CardEntryFragment().show(parentFragmentManager, "TES")
     }
 

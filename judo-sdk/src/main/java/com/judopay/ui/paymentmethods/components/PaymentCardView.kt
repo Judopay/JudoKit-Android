@@ -21,7 +21,6 @@ class PaymentCardView @JvmOverloads constructor(
 
     init {
         inflate(R.layout.payment_card_view, true)
-        update()
     }
 
     var model = PaymentCardViewModel("Card for online shopping",

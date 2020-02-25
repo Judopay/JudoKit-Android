@@ -26,7 +26,6 @@ class PaymentCallToActionView @JvmOverloads constructor(
 
     init {
         inflate(R.layout.payment_call_to_action_view, true)
-        update()
     }
 
     var model = PaymentCallToActionViewModel("$15.33",
