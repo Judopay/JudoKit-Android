@@ -4,5 +4,8 @@
     <string name="button_edit">Edit</string>
     <string name="button_add_card">Add card</string>
     <string name="you_will_pay">You will pay</string>
-
+    <string name="cards">Cards</string>
+    <string name="amazon_pay">Amazon Pay</string>
+    <string name="ideal_payment">iDeal</string>
+    <string name="empty" />
 </resources>

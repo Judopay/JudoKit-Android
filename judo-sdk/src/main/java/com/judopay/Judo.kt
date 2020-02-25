@@ -76,7 +76,7 @@ class Judo internal constructor(val judoId: String,
                     ?: UiConfiguration.Builder().setAvsEnabled(false).build()
             val mySandboxed = isSandboxed ?: false
 
-            val defaultPaymentMethods = arrayOf(PaymentMethods.CARD)
+            val defaultPaymentMethods = arrayOf(PaymentMethods.CARD, PaymentMethods.GOOGLE_PAY)
             val defaultSupportedCardNetworks = arrayOf(CardNetwork.VISA)
 
             val myPaymentMethods = if (paymentMethods.isNullOrEmpty()) defaultPaymentMethods else checkNotNull(paymentMethods)
