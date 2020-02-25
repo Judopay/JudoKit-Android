@@ -37,14 +37,22 @@ class PaymentMethodsFragment : Fragment() {
                 PaymentMethodItem(PaymentMethodItemType.SAVED_CARDS_FOOTER)
         )
 
-        recyclerView.adapter = PaymentMethodsAdapter(data) { item, action ->
+        if (paymentMethods.size > 1) {
+            data.add(0, PaymentMethodItem(PaymentMethodItemType.SELECTOR))
+        }
+
+        recyclerView.adapter = PaymentMethodsAdapter(data, paymentMethods,
+            {
+                Snackbar.make(coordinatorLayout, "$it selected", Snackbar.LENGTH_SHORT).show()
+            },
+            { item, action ->
             when (action) {
                 PaymentMethodItemAction.ADD_CARD -> onAddCard()
                 else -> {
                     Snackbar.make(coordinatorLayout, "$action is unimplemented", Snackbar.LENGTH_SHORT).show()
                 }
             }
-        }
+            })
     }
 
     private fun onAddCard() {
