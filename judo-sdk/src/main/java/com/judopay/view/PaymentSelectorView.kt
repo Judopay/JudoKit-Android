@@ -3,7 +3,6 @@ package com.judopay.view
 import android.content.Context
 import android.graphics.Rect
 import android.os.Build
-import android.os.Handler
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -55,7 +54,6 @@ class PaymentSelectorView @JvmOverloads constructor(
                         0,
                         ViewGroup.LayoutParams.WRAP_CONTENT
                     )
-                    setTextViewConstraints()
                     gravity = Gravity.CENTER
                 }
                 id = View.generateViewId()
@@ -109,9 +107,6 @@ class PaymentSelectorView @JvmOverloads constructor(
         }
         chainViews(ids, set)
         set.applyTo(container)
-        Handler().postDelayed({
-            prevClicked?.callOnClick()
-        }, 700)
     }
 
     private fun selectItem(set: ConstraintSet, itemView: PaymentSelectorItemView) {
@@ -169,7 +164,6 @@ class PaymentSelectorView @JvmOverloads constructor(
                 )
             }
         }
-
     }
 }
 

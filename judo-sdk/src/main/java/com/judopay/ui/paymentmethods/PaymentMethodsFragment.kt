@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.judopay.R
 import com.judopay.judo
-import com.judopay.model.PaymentMethod
 import com.judopay.ui.cardentry.CardEntryFragment
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judopay.ui.paymentmethods.model.PaymentMethodGenericItem
@@ -44,18 +43,13 @@ class PaymentMethodsFragment : Fragment() {
 
         with(judo) {
             if (paymentMethods.size > 1) {
-                data.add(0, PaymentMethodSelectorItem(PaymentMethodItemType.SELECTOR,
-                    paymentMethods.toMutableList()
-                        .apply
-                        {
-                            add(PaymentMethod.AMAZON_PAY)
-                            add(PaymentMethod.AMAZON_PAY)
-                            add(PaymentMethod.AMAZON_PAY)
-                            add(PaymentMethod.AMAZON_PAY)
-                            add(PaymentMethod.AMAZON_PAY)
-                        }
-                    ,
-                        paymentMethods.first()))
+                data.add(
+                    0, PaymentMethodSelectorItem(
+                        PaymentMethodItemType.SELECTOR,
+                        paymentMethods.toList(),
+                        paymentMethods.first()
+                    )
+                )
             }
         }
 

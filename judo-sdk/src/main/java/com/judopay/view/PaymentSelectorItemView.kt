@@ -48,7 +48,4 @@ class PaymentSelectorItemView @JvmOverloads constructor(
     fun getTextView(): TextView = paymentTextView
 
     fun getImageView(): AppCompatImageView = paymentImageView
-    fun setTextViewConstraints() {
-//        paymentTextView.
-    }
 }
