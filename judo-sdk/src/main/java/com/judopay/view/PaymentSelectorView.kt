@@ -1,6 +1,7 @@
 package com.judopay.view
 
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Rect
 import android.os.Build
 import android.util.AttributeSet
@@ -35,6 +36,8 @@ class PaymentSelectorView @JvmOverloads constructor(
     }
 
     private var currentSelected: PaymentMethod? = null
+    private var prevClicked: PaymentSelectorItemView? = null
+    private var lastUsedSelected = false
 
     fun setPaymentMethods(
         paymentMethods: List<PaymentMethod>,
@@ -44,7 +47,6 @@ class PaymentSelectorView @JvmOverloads constructor(
         this.currentSelected = currentSelected
         val itemViews: MutableList<PaymentSelectorItemView> = mutableListOf()
         val ids: MutableList<Int> = mutableListOf()
-        var prevClicked: PaymentSelectorItemView? = null
         overScrollMode = View.OVER_SCROLL_NEVER
 
         paymentMethods.forEach { paymentMethod ->
@@ -94,7 +96,7 @@ class PaymentSelectorView @JvmOverloads constructor(
             }
             set.centerVertically(itemView.id, ConstraintSet.PARENT_ID)
             itemView.setOnClickListener {
-                if (prevClicked != itemView) {
+                if (prevClicked != itemView || !lastUsedSelected) {
                     prevClicked?.setTextVisibility(View.GONE)
                     selectItem(set, itemView)
                     set.applyTo(container)
@@ -107,6 +109,14 @@ class PaymentSelectorView @JvmOverloads constructor(
         }
         chainViews(ids, set)
         set.applyTo(container)
+    }
+
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
+        while (width != 0 && !lastUsedSelected) {
+            prevClicked?.callOnClick()
+            lastUsedSelected = true
+        }
     }
 
     private fun selectItem(set: ConstraintSet, itemView: PaymentSelectorItemView) {
@@ -145,23 +155,22 @@ class PaymentSelectorView @JvmOverloads constructor(
         }
     }
 
-    private var lastUsedSelected = false
     private fun scrollToView(itemView: PaymentSelectorItemView) {
         val rect = Rect()
-        if (!(itemView.getGlobalVisibleRect(rect) && itemView.height == rect.height() && itemView.width == rect.width())) {
+        itemView.getTextView()
+            .measure(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        val itemViewWidth = itemView.getImageView().width + itemView.getTextView().measuredWidth
+        if (!(itemView.getGlobalVisibleRect(rect) && itemView.height == rect.height() && itemViewWidth == rect.width())) {
             if (currentSelected != null && !lastUsedSelected) {
                 smoothScrollTo(itemView.right, 0)
                 lastUsedSelected = true
             } else if (scrollX < itemView.x.toInt()) {
-                smoothScrollTo(
-                    scrollX + (itemView.getImageView().width + itemView.getTextView().width),
-                    0
-                )
+                smoothScrollTo(scrollX + itemViewWidth, 0)
             } else {
-                smoothScrollTo(
-                    scrollX - (itemView.getImageView().width + itemView.getTextView().width),
-                    0
-                )
+                smoothScrollTo(scrollX - itemViewWidth, 0)
             }
         }
     }
