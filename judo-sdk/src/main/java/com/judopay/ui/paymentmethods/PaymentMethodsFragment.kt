@@ -7,28 +7,36 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.snackbar.Snackbar
 import com.judopay.R
+import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.judo
-import com.judopay.model.PaymentMethod
 import com.judopay.ui.cardentry.CardEntryFragment
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapter
-import com.judopay.ui.paymentmethods.model.*
-import kotlinx.android.synthetic.main.payment_methods_fragment.*
+import com.judopay.ui.paymentmethods.model.PaymentMethodGenericItem
+import com.judopay.ui.paymentmethods.model.PaymentMethodItemAction
+import com.judopay.ui.paymentmethods.model.PaymentMethodItemType
+import com.judopay.ui.paymentmethods.model.PaymentMethodSavedCardsItem
+import com.judopay.ui.paymentmethods.model.PaymentMethodSelectorItem
+import kotlinx.android.synthetic.main.payment_call_to_action_view.payButton
+import kotlinx.android.synthetic.main.payment_methods_fragment.recyclerView
 
 class PaymentMethodsFragment : Fragment() {
 
     private lateinit var viewModel: PaymentMethodsViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         return inflater.inflate(R.layout.payment_methods_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(PaymentMethodsViewModel::class.java)
-
+        val api = JudoApiServiceFactory.createApiService(requireContext(), judo);
+        val factory = PaymentMethodsViewModel.PaymentMethodsViewModelFactory(api)
+        viewModel = ViewModelProvider(this, factory).get(PaymentMethodsViewModel::class.java)
+        payButton.setOnClickListener { viewModel.pay(judo) }
 
         // TODO: Extract this logic
         val data = arrayListOf(
@@ -41,9 +49,13 @@ class PaymentMethodsFragment : Fragment() {
 
         with(judo) {
             if (paymentMethods.size > 1) {
-                data.add(0, PaymentMethodSelectorItem(PaymentMethodItemType.SELECTOR,
+                data.add(
+                    0, PaymentMethodSelectorItem(
+                        PaymentMethodItemType.SELECTOR,
                         paymentMethods.toList(),
-                        paymentMethods.first()))
+                        paymentMethods.first()
+                    )
+                )
             }
         }
 

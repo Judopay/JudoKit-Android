@@ -137,8 +137,19 @@ const val GENERIC_HTML_INVALID = 210
  * a request, most likely for a type of transaction such as a payment, pre-auth or token payment.
  */
 @Parcelize
-class ApiError(val code: Int,
-               val fieldName: String?,
-               val message: String,
-               val detail: String
+class ApiError(
+    val code: Int,
+    val fieldName: String?,
+    val message: String,
+    val detail: String
 ) : Parcelable
+
+
+private const val HTTP_UNAUTHORIZED = 401
+
+object ExceptionHandler {
+    fun handleException(throwable: Throwable) {
+        throwable.printStackTrace()
+    }
+}
+

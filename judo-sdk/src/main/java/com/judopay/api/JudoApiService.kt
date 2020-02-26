@@ -1,10 +1,16 @@
 package com.judopay.api
 
+import com.judopay.api.model.request.PaymentRequest
 import com.judopay.api.model.response.CardVerificationResult
 import com.judopay.api.model.response.Receipt
 import com.judopay.api.model.response.Receipts
 import io.reactivex.Single
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
  * Judo interface with Retrofit annotated list of judo API calls that can be performed.
@@ -18,8 +24,8 @@ interface JudoApiService {
      * @param paymentRequest the details for the payment, including the payment method, amount and Judo ID
      * @return the receipt for the payment with the status of the transaction
      */
-//    @POST("transactions/payments")
-//    fun payment(@Body paymentRequest: PaymentRequest): Single<Receipt>
+    @POST("transactions/payments")
+    suspend fun payment(@Body paymentRequest: PaymentRequest): Receipt
 
     /**
      * Perform a pre-auth transaction
