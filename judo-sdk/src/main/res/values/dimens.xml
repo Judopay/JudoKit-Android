@@ -6,6 +6,9 @@
     <dimen name="space_8">8dp</dimen>
     <dimen name="space_16">16dp</dimen>
     <dimen name="space_12">12dp</dimen>
+    <dimen name="space_10">10dp</dimen>
+    <dimen name="space_14">14dp</dimen>
+    <dimen name="space_20">20dp</dimen>
     <dimen name="space_24">24dp</dimen>
     <dimen name="space_32">32dp</dimen>
     <dimen name="space_40">40dp</dimen>
@@ -31,4 +34,7 @@
 
     <!-- Bottom sheet modals -->
     <dimen name="background_shape_corner_radius">16dp</dimen>
+
+    <!-- Text input layouts -->
+    <dimen name="input_layout_corner_radius">6dp</dimen>
 </resources>

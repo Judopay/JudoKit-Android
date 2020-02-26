@@ -2,10 +2,14 @@
     <string name="pay_now">Pay Now</string>
     <string name="connected_cards">Connected Cards</string>
     <string name="button_edit">Edit</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_scan_card">Scan card</string>
     <string name="button_add_card">Add card</string>
     <string name="you_will_pay">You will pay</string>
     <string name="cards">Cards</string>
     <string name="amazon_pay">Amazon Pay</string>
     <string name="ideal_payment">iDeal</string>
     <string name="empty" />
+    <string name="secure_server_transmission">Your card details are encrypted using SSL before transmission to our secure payment service provider.</string>
+
 </resources>

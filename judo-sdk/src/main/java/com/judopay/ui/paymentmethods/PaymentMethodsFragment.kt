@@ -7,10 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.snackbar.Snackbar
 import com.judopay.R
 import com.judopay.judo
-import com.judopay.model.PaymentMethod
 import com.judopay.ui.cardentry.CardEntryFragment
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judopay.ui.paymentmethods.model.*
@@ -29,11 +27,9 @@ class PaymentMethodsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(PaymentMethodsViewModel::class.java)
 
-
         // TODO: Extract this logic
         val data = arrayListOf(
                 PaymentMethodGenericItem(PaymentMethodItemType.SAVED_CARDS_HEADER),
-                PaymentMethodSavedCardsItem(),
                 PaymentMethodSavedCardsItem(),
                 PaymentMethodSavedCardsItem(),
                 PaymentMethodGenericItem(PaymentMethodItemType.SAVED_CARDS_FOOTER)
