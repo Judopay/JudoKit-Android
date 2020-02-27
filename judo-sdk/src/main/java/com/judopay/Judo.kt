@@ -7,7 +7,6 @@ import com.judopay.model.GooglePayConfiguration
 import com.judopay.model.PaymentMethod
 import com.judopay.model.PrimaryAccountDetails
 import com.judopay.model.Reference
-import com.judopay.model.Transaction
 import com.judopay.model.UiConfiguration
 import kotlinx.android.parcel.Parcelize
 
@@ -22,7 +21,7 @@ import kotlinx.android.parcel.Parcelize
 // Bundle keys
 const val JUDO_OPTIONS = "com.judopay.judo-options"
 const val JUDO_RECEIPT = "JudoReceipt"
-
+const val JUDO_PRE_AUTH = "JudoPreAuth"
 // Request codes
 const val PAYMENT_METHODS = 1
 
@@ -35,7 +34,6 @@ class Judo internal constructor(val judoId: String,
                                 val apiToken: String,
                                 val apiSecret: String,
                                 val isSandboxed: Boolean,
-                                val transactionType: Transaction,
                                 val isTokenPayment: Boolean,
                                 val amount: Amount,
                                 val reference: Reference,
@@ -53,7 +51,6 @@ class Judo internal constructor(val judoId: String,
         private var apiToken: String? = null
         private var apiSecret: String? = null
         private var isSandboxed: Boolean? = null
-        private var transactionType: Transaction? = null
         private var isTokenPayment: Boolean? = null
         private var amount: Amount? = null
         private var reference: Reference? = null
@@ -68,7 +65,6 @@ class Judo internal constructor(val judoId: String,
         fun setApiToken(token: String?) = apply { this.apiToken = token }
         fun setApiSecret(secret: String?) = apply { this.apiSecret = secret }
         fun setIsSandboxed(sandboxed: Boolean?) = apply { this.isSandboxed = sandboxed }
-        fun setTransactionType(type: Transaction?) = apply { this.transactionType = type }
         fun setIsTokenPayment(tokenPayment: Boolean?) = apply { this.isTokenPayment = tokenPayment }
         fun setAmount(amount: Amount?) = apply { this.amount = amount }
         fun setReference(reference: Reference?) = apply { this.reference = reference }
@@ -85,7 +81,6 @@ class Judo internal constructor(val judoId: String,
             val secret = requireNotNullOrEmpty(apiSecret, "apiSecret")
             val myAmount = requireNotNull(amount, "amount")
             val myReference = requireNotNull(reference, "reference")
-            val myTransactionType = requireNotNull(transactionType, "transactionType")
             val myTokenPayment = requireNotNull(isTokenPayment, "isTokenPayment")
 
             val myUiConfiguration = uiConfiguration
@@ -103,7 +98,6 @@ class Judo internal constructor(val judoId: String,
                     token,
                     secret,
                     mySandboxed,
-                    myTransactionType,
                     myTokenPayment,
                     myAmount,
                     myReference,
@@ -116,6 +110,6 @@ class Judo internal constructor(val judoId: String,
     }
 
     override fun toString(): String {
-        return "Judo(judoId='$judoId', siteId=$siteId, apiToken='$apiToken', apiSecret='$apiSecret', isSandboxed=$isSandboxed, transactionType=$transactionType, isTokenPayment=$isTokenPayment, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration)"
+        return "Judo(judoId='$judoId', siteId=$siteId, apiToken='$apiToken', apiSecret='$apiSecret', isSandboxed=$isSandboxed, isTokenPayment=$isTokenPayment, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration)"
     }
 }

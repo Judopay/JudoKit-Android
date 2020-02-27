@@ -30,6 +30,8 @@ class JudoActivity : AppCompatActivity() {
         if (resultCode == RESULT_ERROR) {
             vibrate(this)
             showAlertDialog()
+        } else {
+            finish()
         }
     }
 

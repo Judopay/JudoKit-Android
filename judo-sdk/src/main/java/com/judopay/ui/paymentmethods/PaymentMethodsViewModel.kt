@@ -13,7 +13,7 @@ import com.judopay.api.model.request.Address
 import com.judopay.api.model.request.PaymentRequest
 import com.judopay.api.model.request.TokenRequest
 import com.judopay.api.model.response.Receipt
-import com.judopay.model.Transaction
+import com.judopay.isPreAuthEnabled
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +45,7 @@ class PaymentMethodsViewModel constructor(
                         when (isTokenPayment) {
                             true -> {
                                 val tokenRequest = buildTokenRequest(judo)
-                                if (transactionType == Transaction.PRE_AUTH) {
+                                if (fragment.isPreAuthEnabled) {
                                     service.tokenPreAuth(tokenRequest)
                                 } else {
                                     service.tokenPayment(tokenRequest)
@@ -53,7 +53,7 @@ class PaymentMethodsViewModel constructor(
                             }
                             false -> {
                                 val paymentRequest = buildPaymentRequest(judo)
-                                if (transactionType == Transaction.PRE_AUTH) {
+                                if (fragment.isPreAuthEnabled) {
                                     service.preAuth(paymentRequest)
                                 } else {
                                     service.payment(paymentRequest)
