@@ -22,7 +22,7 @@
             android:background="@drawable/slider_background">
 
             <androidx.cardview.widget.CardView
-                app:cardElevation="4dp"
+                app:cardElevation="2dp"
                 app:cardCornerRadius="10dp"
                 android:id="@+id/selector"
                 android:layout_width="0dp"

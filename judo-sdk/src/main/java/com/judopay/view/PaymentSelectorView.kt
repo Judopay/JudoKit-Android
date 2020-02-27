@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.view_payment_selector.view.container
 import kotlinx.android.synthetic.main.view_payment_selector.view.selector
 
 
-private const val MARGIN_10 = 10
+private const val MARGIN_12 = 12
 private const val MARGIN_54 = 54
 
 typealias PaymentSelectorViewSelectionListener = (selected: PaymentMethod) -> Unit
@@ -78,7 +78,7 @@ class PaymentSelectorView @JvmOverloads constructor(
         itemViews.forEachIndexed { index, itemView ->
             if (currentSelected != null && paymentMethods.contains(currentSelected)) {
                 if (index == 0) {
-                    set.setMargin(itemView.id, ConstraintSet.START, MARGIN_10)
+                    set.setMargin(itemView.id, ConstraintSet.START, MARGIN_12)
                 }
                 if (currentSelected == itemView.getPaymentMethod()) {
                     prevClicked = itemView
@@ -87,10 +87,10 @@ class PaymentSelectorView @JvmOverloads constructor(
             } else if (index == 0) {
                 prevClicked = itemView
                 selectItem(set, itemView)
-                set.setMargin(itemView.id, ConstraintSet.START, MARGIN_10)
+                set.setMargin(itemView.id, ConstraintSet.START, MARGIN_12)
             }
             if (index == itemViews.size - 1) {
-                set.setMargin(itemView.id, ConstraintSet.END, MARGIN_10)
+                set.setMargin(itemView.id, ConstraintSet.END, MARGIN_12)
             } else {
                 set.setMargin(itemView.id, ConstraintSet.END, MARGIN_54)
             }
