@@ -37,7 +37,7 @@ class PaymentMethodsViewModel constructor(
 
     val receipt: LiveData<Receipt> = _receipt
 
-    fun pay(judo: Judo) {
+    fun pay(judo: Judo, isPreAuthEnabled: Boolean) {
         _receipt.apply {
             launch {
                 value = withContext(Dispatchers.IO) {
@@ -45,7 +45,7 @@ class PaymentMethodsViewModel constructor(
                         when (isTokenPayment) {
                             true -> {
                                 val tokenRequest = buildTokenRequest(judo)
-                                if (fragment.isPreAuthEnabled) {
+                                if (isPreAuthEnabled) {
                                     service.tokenPreAuth(tokenRequest)
                                 } else {
                                     service.tokenPayment(tokenRequest)
@@ -53,7 +53,7 @@ class PaymentMethodsViewModel constructor(
                             }
                             false -> {
                                 val paymentRequest = buildPaymentRequest(judo)
-                                if (fragment.isPreAuthEnabled) {
+                                if (isPreAuthEnabled) {
                                     service.preAuth(paymentRequest)
                                 } else {
                                     service.payment(paymentRequest)

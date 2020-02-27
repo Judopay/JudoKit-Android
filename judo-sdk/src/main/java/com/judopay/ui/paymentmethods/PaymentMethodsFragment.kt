@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.judopay.JudoActivity
 import com.judopay.R
 import com.judopay.api.factory.JudoApiServiceFactory
+import com.judopay.isPreAuthEnabled
 import com.judopay.judo
 import com.judopay.ui.cardentry.CardEntryFragment
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapter
@@ -73,7 +74,7 @@ class PaymentMethodsFragment : Fragment() {
                 is PaymentMethodSavedCardsItem -> {
                     if (action == PaymentMethodItemAction.PICK_CARD) {
                         payButton.setOnClickListener {
-                            viewModel.pay(judo)
+                            viewModel.pay(judo, isPreAuthEnabled)
                         }
                     }
                 }
