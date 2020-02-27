@@ -1,7 +1,12 @@
 package com.judopay.api.error
 
 import android.os.Parcelable
+import com.judopay.JudoActivity
+import com.judopay.RESULT_ERROR
+import com.judopay.api.factory.JudoApiServiceFactory
+import com.judopay.api.model.response.Receipt
 import kotlinx.android.parcel.Parcelize
+import retrofit2.HttpException
 
 const val JUDO_ID_NOT_SUPPLIED = 0
 const val JUDO_ID_NOT_SUPPLIED_1 = 1
@@ -137,8 +142,26 @@ const val GENERIC_HTML_INVALID = 210
  * a request, most likely for a type of transaction such as a payment, pre-auth or token payment.
  */
 @Parcelize
-class ApiError(val code: Int,
-               val fieldName: String?,
-               val message: String,
-               val detail: String
+class ApiError(
+    val code: Int,
+    val fieldName: String?,
+    val message: String,
+    val detail: String
 ) : Parcelable
+
+object ExceptionHandler {
+    fun handleException(throwable: Throwable, activity: JudoActivity) {
+        when (throwable) {
+            is HttpException -> {
+                with(activity) {
+                    val receipt = JudoApiServiceFactory.gson.fromJson(
+                        throwable.response()?.errorBody()?.charStream(),
+                        Receipt::class.java
+                    )
+                    sendResult(RESULT_ERROR, receipt)
+                }
+            }
+        }
+        throwable.printStackTrace()
+    }
+}

@@ -5,7 +5,11 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.judopay.devicedna.DeviceDNA
-import okhttp3.*
+import okhttp3.Interceptor
+import okhttp3.MediaType
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.Response
 import okio.Buffer
 import java.io.IOException
 
@@ -27,14 +31,16 @@ internal class DeviceDnaInterceptor(context: Context) : Interceptor {
             if (bodyJson.isJsonObject) {
                 val json = bodyJson.asJsonObject
 
-                if (json.get(CLIENT_DETAILS) != null) {
+                if (json.get(CLIENT_DETAILS) == null) {
                     addClientDetails(json)
                 }
 
                 val postJson = RequestBody.create(MEDIA_TYPE_APPLICATION_JSON, json.toString())
-                return chain.proceed(request.newBuilder()
+                return chain.proceed(
+                    request.newBuilder()
                         .post(postJson)
-                        .build())
+                        .build()
+                )
             }
         }
         return chain.proceed(request)

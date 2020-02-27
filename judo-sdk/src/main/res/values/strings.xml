@@ -8,4 +8,6 @@
     <string name="amazon_pay">Amazon Pay</string>
     <string name="ideal_payment">iDeal</string>
     <string name="empty" />
+    <string name="transaction_unsuccessful">Transaction unsuccessful, please try again</string>
+    <string name="close">Close</string>
 </resources>

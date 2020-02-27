@@ -42,3 +42,9 @@ val FragmentActivity.judo: Judo
 
 val Fragment.judo: Judo
     get() = requireActivity().judo
+
+val FragmentActivity.isPreAuthEnabled: Boolean
+    get() = intent.getBooleanExtra(JUDO_PRE_AUTH, false)
+
+val Fragment.isPreAuthEnabled : Boolean
+    get() = requireActivity().isPreAuthEnabled
