@@ -11,7 +11,7 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/paymentImageView"
-        android:layout_width="34dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:src="@drawable/ic_cards" />
 
@@ -24,5 +24,6 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:visibility="gone"
-        tools:text="Cards" />
+        tools:text="Cards"
+        tools:visibility="visible" />
 </LinearLayout>

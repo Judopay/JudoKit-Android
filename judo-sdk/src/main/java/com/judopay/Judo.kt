@@ -1,7 +1,13 @@
 package com.judopay
 
 import android.os.Parcelable
-import com.judopay.model.*
+import com.judopay.model.Amount
+import com.judopay.model.CardNetwork
+import com.judopay.model.GooglePayConfiguration
+import com.judopay.model.PaymentMethod
+import com.judopay.model.PrimaryAccountDetails
+import com.judopay.model.Reference
+import com.judopay.model.UiConfiguration
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -14,12 +20,13 @@ import kotlinx.android.parcel.Parcelize
 
 // Bundle keys
 const val JUDO_OPTIONS = "com.judopay.judo-options"
-
+const val JUDO_RECEIPT = "JudoReceipt"
+const val JUDO_PRE_AUTH = "JudoPreAuth"
 // Request codes
 const val PAYMENT_METHODS = 1
 
 // Response codes
-
+const val RESULT_ERROR = 1
 
 @Parcelize
 class Judo internal constructor(val judoId: String,
@@ -27,6 +34,7 @@ class Judo internal constructor(val judoId: String,
                                 val apiToken: String,
                                 val apiSecret: String,
                                 val isSandboxed: Boolean,
+                                val isTokenPayment: Boolean,
                                 val amount: Amount,
                                 val reference: Reference,
                                 val uiConfiguration: UiConfiguration,
@@ -43,6 +51,7 @@ class Judo internal constructor(val judoId: String,
         private var apiToken: String? = null
         private var apiSecret: String? = null
         private var isSandboxed: Boolean? = null
+        private var isTokenPayment: Boolean? = null
         private var amount: Amount? = null
         private var reference: Reference? = null
         private var uiConfiguration: UiConfiguration? = null
@@ -56,6 +65,7 @@ class Judo internal constructor(val judoId: String,
         fun setApiToken(token: String?) = apply { this.apiToken = token }
         fun setApiSecret(secret: String?) = apply { this.apiSecret = secret }
         fun setIsSandboxed(sandboxed: Boolean?) = apply { this.isSandboxed = sandboxed }
+        fun setIsTokenPayment(tokenPayment: Boolean?) = apply { this.isTokenPayment = tokenPayment }
         fun setAmount(amount: Amount?) = apply { this.amount = amount }
         fun setReference(reference: Reference?) = apply { this.reference = reference }
         fun setUiConfiguration(configuration: UiConfiguration?) = apply { this.uiConfiguration = configuration }
@@ -71,6 +81,7 @@ class Judo internal constructor(val judoId: String,
             val secret = requireNotNullOrEmpty(apiSecret, "apiSecret")
             val myAmount = requireNotNull(amount, "amount")
             val myReference = requireNotNull(reference, "reference")
+            val myTokenPayment = requireNotNull(isTokenPayment, "isTokenPayment")
 
             val myUiConfiguration = uiConfiguration
                     ?: UiConfiguration.Builder().setAvsEnabled(false).build()
@@ -87,6 +98,7 @@ class Judo internal constructor(val judoId: String,
                     token,
                     secret,
                     mySandboxed,
+                    myTokenPayment,
                     myAmount,
                     myReference,
                     myUiConfiguration,
@@ -98,6 +110,6 @@ class Judo internal constructor(val judoId: String,
     }
 
     override fun toString(): String {
-        return "Judo(judoId='$judoId', siteId=$siteId, apiToken='$apiToken', apiSecret='$apiSecret', isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration)"
+        return "Judo(judoId='$judoId', siteId=$siteId, apiToken='$apiToken', apiSecret='$apiSecret', isSandboxed=$isSandboxed, isTokenPayment=$isTokenPayment, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration)"
     }
 }

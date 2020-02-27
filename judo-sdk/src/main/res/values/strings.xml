@@ -16,4 +16,6 @@
     <string name="card_number_hint">Card number</string>
     <string name="card_holder_hint">Cardholder Name</string>
 
+    <string name="transaction_unsuccessful">Transaction unsuccessful, please try again</string>
+    <string name="close">Close</string>
 </resources>
