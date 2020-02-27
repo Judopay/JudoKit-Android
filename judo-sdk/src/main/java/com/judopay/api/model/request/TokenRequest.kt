@@ -4,7 +4,7 @@ import com.judopay.model.PrimaryAccountDetails
 import com.judopay.requireNotNull
 import com.judopay.requireNotNullOrEmpty
 
-class PaymentRequest private constructor(
+class TokenRequest private constructor(
     private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String?,
     private var amount: String?,
@@ -12,13 +12,12 @@ class PaymentRequest private constructor(
     private var judoId: String?,
     private var yourConsumerReference: String?,
     private var yourPaymentMetaData: Map<String, String>?,
-    private var cardAddress: Address,
-    private var cardNumber: String?,
+    private var endDate: String?,
+    private var cardLastFour: String?,
+    private var cardToken: String,
+    private var cardType: Int,
     private var cv2: String?,
-    private var expiryDate: String?,
-    private var startDate: String?,
-    private var issueNumber: String?,
-    private var saveCardOnly: String?,
+    private var cardAddress: Address,
     private var emailAddress: String?,
     private var mobileNumber: String?,
     private var primaryAccountDetails: PrimaryAccountDetails?
@@ -31,13 +30,12 @@ class PaymentRequest private constructor(
         private var judoId: String? = null
         private var yourConsumerReference: String? = null
         private var yourPaymentMetaData: Map<String, String>? = null
-        private var address: Address? = null
-        private var cardNumber: String? = null
+        private var endDate: String? = null
+        private var cardLastFour: String? = null
+        private var cardToken: String? = null
+        private var cardType: Int = 0
         private var cv2: String? = null
-        private var expiryDate: String? = null
-        private var startDate: String? = null
-        private var issueNumber: String? = null
-        private var saveCardOnly: String? = null
+        private var address: Address? = null
         private var emailAddress: String? = null
         private var mobileNumber: String? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
@@ -60,19 +58,17 @@ class PaymentRequest private constructor(
         fun setYourPaymentMetaData(yourPaymentMetaData: Map<String, String>?) =
             apply { this.yourPaymentMetaData = yourPaymentMetaData }
 
-        fun setAddress(address: Address) = apply { this.address = address }
+        fun setEndDate(endDate: String?) = apply { this.endDate = endDate }
 
-        fun setCardNumber(cardNumber: String?) = apply { this.cardNumber = cardNumber }
+        fun setCardLastFour(cardLastFour: String?) = apply { this.cardLastFour = cardLastFour }
+
+        fun setCardToken(cardToken: String) = apply { this.cardToken = cardToken }
+
+        fun setCardType(cardType: Int) = apply { this.cardType = cardType }
 
         fun setCv2(cv2: String?) = apply { this.cv2 = cv2 }
 
-        fun setExpiryDate(expiryDate: String?) = apply { this.expiryDate = expiryDate }
-
-        fun setStartDate(startDate: String?) = apply { this.startDate = startDate }
-
-        fun setIssueNumber(issueNumber: String?) = apply { this.issueNumber = issueNumber }
-
-        fun setSaveCardOnly(saveCardOnly: String?) = apply { this.saveCardOnly = saveCardOnly }
+        fun setAddress(address: Address) = apply { this.address = address }
 
         fun setEmailAddress(emailAddress: String?) = apply { this.emailAddress = emailAddress }
 
@@ -81,20 +77,18 @@ class PaymentRequest private constructor(
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
             apply { this.primaryAccountDetails = primaryAccountDetails }
 
-        fun build(): PaymentRequest {
+        fun build(): TokenRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myAmount = requireNotNullOrEmpty(amount, "amount")
             val myCurrency = requireNotNullOrEmpty(currency, "currency")
             val consumerReference =
                 requireNotNullOrEmpty(yourConsumerReference, "yourConsumerReference")
-            val myCardNumber = requireNotNullOrEmpty(cardNumber, "cardNumber")
-            val myCv2 = requireNotNullOrEmpty(cv2, "cv2")
-            val myExpiryDate = requireNotNullOrEmpty(expiryDate, "expiryDate")
             val paymentReference =
                 requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
+            val myCardToken = requireNotNullOrEmpty(cardToken, "cardToken")
             val myAddress = requireNotNull(address, "address")
 
-            return PaymentRequest(
+            return TokenRequest(
                 uniqueRequest,
                 paymentReference,
                 myAmount,
@@ -102,13 +96,12 @@ class PaymentRequest private constructor(
                 id,
                 consumerReference,
                 yourPaymentMetaData,
+                endDate,
+                cardLastFour,
+                myCardToken,
+                cardType,
+                cv2,
                 myAddress,
-                myCardNumber,
-                myCv2,
-                myExpiryDate,
-                startDate,
-                issueNumber,
-                saveCardOnly,
                 emailAddress,
                 mobileNumber,
                 primaryAccountDetails

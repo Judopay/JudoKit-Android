@@ -1,6 +1,7 @@
 package com.judopay.api
 
 import com.judopay.api.model.request.PaymentRequest
+import com.judopay.api.model.request.TokenRequest
 import com.judopay.api.model.response.CardVerificationResult
 import com.judopay.api.model.response.Receipt
 import com.judopay.api.model.response.Receipts
@@ -33,8 +34,8 @@ interface JudoApiService {
      * @param paymentRequest the details for the pre-auth, including the payment method, amount and Judo ID
      * @return the receipt for the pre-auth with the status of the transaction
      */
-//    @POST("transactions/preauths")
-//    fun preAuth(@Body paymentRequest: PaymentRequest): Single<Receipt>
+    @POST("transactions/preauths")
+    suspend fun preAuth(@Body paymentRequest: PaymentRequest): Receipt
 
     /**
      * Perform a token payment using a tokenised card
@@ -42,8 +43,8 @@ interface JudoApiService {
      * @param tokenRequest the payment details for making the transaction
      * @return the receipt for the token payment with the status of the transaction
      */
-//    @POST("transactions/payments")
-//    fun tokenPayment(@Body tokenRequest: TokenRequest): Single<Receipt>
+    @POST("transactions/payments")
+    suspend fun tokenPayment(@Body tokenRequest: TokenRequest): Receipt
 
     /**
      * Perform a token pre-auth using a tokenised card
@@ -51,8 +52,8 @@ interface JudoApiService {
      * @param tokenRequest the token card details
      * @return the receipt for the pre-auth with the status of the transaction
      */
-//    @POST("transactions/preauths")
-//    fun tokenPreAuth(@Body tokenRequest: TokenRequest): Single<Receipt>
+    @POST("transactions/preauths")
+    suspend fun tokenPreAuth(@Body tokenRequest: TokenRequest): Receipt
 
     /**
      * Void a pre-auth transaction, releasing funds back to the card holder.
