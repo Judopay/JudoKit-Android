@@ -1,4 +1,4 @@
-package com.judopay.view
+package com.judopay.ui.paymentmethods.components
 
 import android.content.Context
 import android.util.AttributeSet

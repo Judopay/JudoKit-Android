@@ -17,8 +17,8 @@ import com.judopay.ui.paymentmethods.model.PaymentMethodItemAction
 import com.judopay.ui.paymentmethods.model.PaymentMethodItemType
 import com.judopay.ui.paymentmethods.model.PaymentMethodSavedCardsItem
 import com.judopay.ui.paymentmethods.model.PaymentMethodSelectorItem
-import kotlinx.android.synthetic.main.payment_call_to_action_view.payButton
 import kotlinx.android.synthetic.main.payment_methods_fragment.recyclerView
+kotlinx.android.synthetic.main.payment_call_to_action_view.payButton
 
 class PaymentMethodsFragment : Fragment() {
 
