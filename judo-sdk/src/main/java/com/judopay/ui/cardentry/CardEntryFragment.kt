@@ -2,6 +2,7 @@ package com.judopay.ui.cardentry
 
 import android.app.Dialog
 import android.content.DialogInterface
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -14,7 +15,11 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.judopay.R
-import com.judopay.ui.cardentry.components.*
+import com.judopay.ui.cardentry.components.FormViewModel
+import com.judopay.ui.cardentry.model.FormFieldType
+import com.judopay.ui.cardentry.model.FormModel
+import com.judopay.ui.cardentry.model.InputFieldConfiguration
+import com.judopay.ui.cardentry.model.SubmitFieldConfiguration
 import kotlinx.android.synthetic.main.card_entry_fragment.*
 
 class SimpleKeyboardAnimator(private val window: Window?) {
@@ -112,19 +117,15 @@ class CardEntryFragment : BottomSheetDialogFragment() {
 
     private fun buildFormViewModel(): FormViewModel {
         return FormViewModel(
-                FormModel(
-                        "1234   5678   9012   3456",
-                        "Endava Recruit",
-                        "11/20",
-                        "123",
-                        "Country",
-                        "Postcode"
-                ),
+                // Model to pre fil the form
+                FormModel(),
+                // Fields to show in form
                 listOf(FormFieldType.NUMBER, FormFieldType.HOLDER_NAME, FormFieldType.EXPIRATION_DATE, FormFieldType.SECURITY_NUMBER),
+                // Fields id's to map to
                 mapOf(
-                        Pair(R.id.numberTextInputEditText, InputFieldConfiguration(FormFieldType.NUMBER)),
-                        Pair(R.id.nameTextInputEditText, InputFieldConfiguration(FormFieldType.HOLDER_NAME)),
-                        Pair(R.id.expirationDateTextInputEditText, InputFieldConfiguration(FormFieldType.EXPIRATION_DATE)),
+                        Pair(R.id.numberTextInputEditText, InputFieldConfiguration(FormFieldType.NUMBER, R.string.card_number_hint)),
+                        Pair(R.id.nameTextInputEditText, InputFieldConfiguration(FormFieldType.HOLDER_NAME, R.string.card_holder_hint)),
+                        Pair(R.id.expirationDateTextInputEditText, InputFieldConfiguration(FormFieldType.EXPIRATION_DATE, R.string.date_hint)),
                         Pair(R.id.securityNumberTextInputEditText, InputFieldConfiguration(FormFieldType.SECURITY_NUMBER)),
                         Pair(R.id.countryTextInputEditText, InputFieldConfiguration(FormFieldType.COUNTRY)),
                         Pair(R.id.postcodeTextInputEditText, InputFieldConfiguration(FormFieldType.POST_CODE)),

@@ -1,5 +1,6 @@
 package com.judopay.ui.paymentmethods.model
 
+import com.judopay.model.CardNetwork
 import com.judopay.model.PaymentMethod
 
 data class PaymentMethodSelectorItem(
@@ -13,7 +14,12 @@ data class PaymentMethodSelectorItem(
 }
 
 data class PaymentMethodSavedCardsItem(
-        override val type: PaymentMethodItemType = PaymentMethodItemType.SAVED_CARDS_ITEM) : PaymentMethodItem
+        override val type: PaymentMethodItemType = PaymentMethodItemType.SAVED_CARDS_ITEM,
+        val id: Int,
+        val title: String,
+        val network: CardNetwork,
+        val ending: String
+) : PaymentMethodItem
 
 data class PaymentMethodGenericItem(override val type: PaymentMethodItemType) : PaymentMethodItem
 

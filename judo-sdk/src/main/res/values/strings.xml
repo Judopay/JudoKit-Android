@@ -12,4 +12,8 @@
     <string name="empty" />
     <string name="secure_server_transmission">Your card details are encrypted using SSL before transmission to our secure payment service provider.</string>
 
+    <string name="date_hint">MM/YY</string>
+    <string name="card_number_hint">Card number</string>
+    <string name="card_holder_hint">Cardholder Name</string>
+
 </resources>

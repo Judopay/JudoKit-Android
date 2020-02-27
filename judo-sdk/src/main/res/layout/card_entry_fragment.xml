@@ -46,7 +46,7 @@
             style="@style/JudoTheme.TextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="1234   5678   9012   3456" />
+            tools:text="1234 5678 9012 3456" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

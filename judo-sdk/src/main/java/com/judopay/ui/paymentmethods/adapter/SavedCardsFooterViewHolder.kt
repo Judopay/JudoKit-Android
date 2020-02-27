@@ -8,6 +8,6 @@ import kotlinx.android.synthetic.main.saved_card_footer_item.view.*
 
 class SavedCardsFooterViewHolder(view: View) : RecyclerView.ViewHolder(view), BindableRecyclerViewHolder<PaymentMethodItem, PaymentMethodItemAction> {
     override fun bind(model: PaymentMethodItem, listener: PaymentMethodsAdapterListener?) = with(itemView) {
-        addCardButton.setOnClickListener { listener?.invoke(model, PaymentMethodItemAction.ADD_CARD) }
+        addCardButton.setOnClickListener { listener?.invoke(PaymentMethodItemAction.ADD_CARD, model) }
     }
 }

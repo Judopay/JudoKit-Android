@@ -7,6 +7,6 @@ import com.judopay.ui.paymentmethods.model.PaymentMethodItemAction
 
 class SavedCardsItemViewHolder(view: View) : RecyclerView.ViewHolder(view), BindableRecyclerViewHolder<PaymentMethodItem, PaymentMethodItemAction> {
     override fun bind(model: PaymentMethodItem, listener: PaymentMethodsAdapterListener?) = with(itemView) {
-        setOnClickListener { listener?.invoke(model, PaymentMethodItemAction.PICK_CARD) }
+        setOnClickListener { listener?.invoke(PaymentMethodItemAction.PICK_CARD, model) }
     }
 }

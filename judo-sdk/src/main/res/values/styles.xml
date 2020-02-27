@@ -115,6 +115,8 @@
         <item name="fontFamily">@font/sf_pro_display_regular</item>
         <item name="android:textSize">@dimen/headline</item>
         <item name="android:textColor">@color/black</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="JudoTheme.ErrorText" parent="TextAppearance.AppCompat">

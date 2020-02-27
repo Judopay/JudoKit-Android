@@ -10,10 +10,10 @@ import com.judopay.ui.paymentmethods.model.PaymentMethodItemAction
 import com.judopay.ui.paymentmethods.model.PaymentMethodItemType
 
 internal interface BindableRecyclerViewHolder<V, A> {
-    fun bind(model: V, listener: ((V, A) -> Unit)? = null)
+    fun bind(model: V, listener: PaymentMethodsAdapterListener? = null)
 }
 
-typealias PaymentMethodsAdapterListener = (PaymentMethodItem, PaymentMethodItemAction) -> Unit
+typealias PaymentMethodsAdapterListener = (action: PaymentMethodItemAction, item: PaymentMethodItem) -> Unit
 
 class PaymentMethodsAdapter(
         items: List<PaymentMethodItem> = emptyList(),

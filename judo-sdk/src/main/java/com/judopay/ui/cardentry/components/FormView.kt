@@ -2,7 +2,6 @@ package com.judopay.ui.cardentry.components
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -11,43 +10,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.judopay.parentOfType
 import com.judopay.subViewsWithType
-
-enum class FormFieldType {
-    NUMBER,
-    HOLDER_NAME,
-    EXPIRATION_DATE,
-    SECURITY_NUMBER,
-    COUNTRY,
-    POST_CODE,
-    SUBMIT
-}
-
-data class FormModel(
-        val cardNumber: String = "",
-        val cardHolderName: String = "",
-        val expirationDate: String = "",
-        val securityNumber: String = "",
-        val country: String = "",
-        val postCode: String = ""
-)
-
-internal fun FormModel.getValueForFieldType(type: FormFieldType): String = when (type) {
-    FormFieldType.NUMBER -> cardNumber
-    FormFieldType.HOLDER_NAME -> cardHolderName
-    FormFieldType.EXPIRATION_DATE -> expirationDate
-    FormFieldType.SECURITY_NUMBER -> securityNumber
-    FormFieldType.COUNTRY -> country
-    FormFieldType.POST_CODE -> postCode
-    else -> ""
-}
-
-data class InputFieldConfiguration(override val type: FormFieldType) : FieldConfiguration
-
-data class SubmitFieldConfiguration(override val type: FormFieldType = FormFieldType.SUBMIT, val text: String) : FieldConfiguration
-
-interface FieldConfiguration {
-    val type: FormFieldType
-}
+import com.judopay.ui.cardentry.model.*
 
 data class FormViewModel(
         val formModel: FormModel,
@@ -68,6 +31,7 @@ class FormView @JvmOverloads constructor(
         }
 
     private val formFieldMapping = mutableMapOf<FormFieldType, TextInputEditText>()
+    private val inputMasks = mutableMapOf<FormFieldType, InputMaskTextWatcher>()
     private var submitButton: Button? = null
 
     override fun onFinishInflate() {
@@ -82,7 +46,7 @@ class FormView @JvmOverloads constructor(
         inputEditText.forEach { editText ->
             // configure the filed only if we know about it
             model.fieldMappings[editText.id]?.let { config ->
-                configureEditText(editText, config)
+                configureEditText(editText, config as InputFieldConfiguration)
             }
         }
 
@@ -103,7 +67,7 @@ class FormView @JvmOverloads constructor(
         button.text = config.text
     }
 
-    private fun configureEditText(editText: TextInputEditText, config: FieldConfiguration) {
+    private fun configureEditText(editText: TextInputEditText, config: InputFieldConfiguration) {
         // keep a reference to the editText for later to extract the input data
         formFieldMapping[config.type] = editText
 
@@ -113,7 +77,15 @@ class FormView @JvmOverloads constructor(
 
         // setup field properties
         editText.setText(model.formModel.getValueForFieldType(config.type))
-        editText.hint = "My hint"
+
+        val mask = CardNumberInputMaskTextWatcher(editText)
+
+        inputMasks[config.type]?.let {
+            editText.removeTextChangedListener(it)
+        }
+        editText.addTextChangedListener(mask)
+        editText.setHint(config.hint)
+        inputMasks[config.type] = mask
     }
 
 }

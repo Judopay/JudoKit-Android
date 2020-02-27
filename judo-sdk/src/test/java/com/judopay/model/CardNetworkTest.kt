@@ -11,7 +11,8 @@ class CardNetworkTest {
     @Test
     fun shouldDetectJCB() {
         for (i in 3520..3589) {
-            cardType = CardNetwork.ofCardNumber(i.toString())
+            cardType = CardNetwork.clear
+            ofCardNumber(i.toString())
             Assert.assertEquals(CardNetwork.JCB, cardType)
         }
     }
