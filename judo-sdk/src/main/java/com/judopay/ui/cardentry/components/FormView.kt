@@ -24,6 +24,10 @@ class FormView @JvmOverloads constructor(
         defStyle: Int = 0
 ) : ConstraintLayout(context, attrs, defStyle) {
 
+    interface OnSubmitListener {
+        fun onSubmitForm(form: FormView, model: FormModel)
+    }
+
     var model = FormViewModel(FormModel(), emptyList(), emptyMap())
         set(value) {
             field = value
@@ -33,6 +37,8 @@ class FormView @JvmOverloads constructor(
     private val formFieldMapping = mutableMapOf<FormFieldType, TextInputEditText>()
     private val inputMasks = mutableMapOf<FormFieldType, InputMaskTextWatcher>()
     private var submitButton: Button? = null
+
+    internal var onSubmitListener: OnSubmitListener? = null
 
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -65,6 +71,16 @@ class FormView @JvmOverloads constructor(
     private fun configureSubmitButton(button: Button, config: SubmitFieldConfiguration) {
         submitButton = button
         button.text = config.text
+        button.setOnClickListener {
+            onSubmitListener?.onSubmitForm(this, FormModel(
+                    getFormValueForFieldType(FormFieldType.NUMBER) ?: "",
+                    getFormValueForFieldType(FormFieldType.HOLDER_NAME) ?: "",
+                    getFormValueForFieldType(FormFieldType.EXPIRATION_DATE) ?: "",
+                    getFormValueForFieldType(FormFieldType.SECURITY_NUMBER) ?: "",
+                    getFormValueForFieldType(FormFieldType.COUNTRY) ?: "",
+                    getFormValueForFieldType(FormFieldType.POST_CODE) ?: ""
+            ))
+        }
     }
 
     private fun configureEditText(editText: TextInputEditText, config: InputFieldConfiguration) {
@@ -78,14 +94,26 @@ class FormView @JvmOverloads constructor(
         // setup field properties
         editText.setText(model.formModel.getValueForFieldType(config.type))
 
-        val mask = CardNumberInputMaskTextWatcher(editText)
+        val mask = when (config.type) {
+            FormFieldType.NUMBER -> CardNumberInputMaskTextWatcher(editText)
+            FormFieldType.EXPIRATION_DATE -> InputMaskTextWatcher(editText, "##/##")
+            FormFieldType.SECURITY_NUMBER -> InputMaskTextWatcher(editText, "###")
+            else -> null
+        }
 
         inputMasks[config.type]?.let {
             editText.removeTextChangedListener(it)
         }
-        editText.addTextChangedListener(mask)
         editText.setHint(config.hint)
-        inputMasks[config.type] = mask
+        mask?.let {
+            editText.addTextChangedListener(it)
+            inputMasks[config.type] = it
+        }
+    }
+
+
+    private fun getFormValueForFieldType(type: FormFieldType): String? {
+        return formFieldMapping[type]?.text.toString()
     }
 
 }

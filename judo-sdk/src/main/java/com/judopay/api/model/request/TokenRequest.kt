@@ -23,7 +23,7 @@ class TokenRequest private constructor(
     private var primaryAccountDetails: PrimaryAccountDetails?
 ) {
     class Builder {
-        private var uniqueRequest: Boolean? = null
+        private var uniqueRequest: Boolean? = false
         private var yourPaymentReference: String? = null
         private var amount: String? = null
         private var currency: String? = null

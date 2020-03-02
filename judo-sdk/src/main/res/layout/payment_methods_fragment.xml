@@ -21,40 +21,19 @@
             app:scrimVisibleHeightTrigger="1dp"
             app:titleEnabled="false">
 
-            <com.judopay.ui.paymentmethods.components.PaymentMethodsHeaderView
-                android:id="@+id/headerView"
+            <com.judopay.ui.paymentmethods.components.AppBarLayoutHeightAwareContainerView
+                android:id="@+id/heightAwareView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/light_pink_gradient_background"
                 app:layout_collapseMode="pin">
 
-                <com.judopay.ui.paymentmethods.components.PaymentCardView
-                    android:id="@+id/paymentCardView"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_16"
-                    android:layout_marginTop="48dp"
-                    android:layout_marginEnd="@dimen/space_16"
-                    android:layout_marginBottom="@dimen/space_8"
-                    app:cardCornerRadius="10dp"
-                    app:cardElevation="8dp"
-                    app:layout_constraintBottom_toTopOf="@+id/paymentCallToActionView"
-                    app:layout_constraintDimensionRatio="W,3.4:2"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHeight_percent="1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.3" />
-
-                <com.judopay.ui.paymentmethods.components.PaymentCallToActionView
-                    android:id="@+id/paymentCallToActionView"
+                <com.judopay.ui.paymentmethods.components.PaymentMethodsHeaderView
+                    android:id="@+id/headerView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:layout_height="wrap_content" />
 
-            </com.judopay.ui.paymentmethods.components.PaymentMethodsHeaderView>
+            </com.judopay.ui.paymentmethods.components.AppBarLayoutHeightAwareContainerView>
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"

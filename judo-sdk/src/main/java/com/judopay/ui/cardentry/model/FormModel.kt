@@ -7,7 +7,11 @@ data class FormModel(
         val securityNumber: String = "",
         val country: String = "",
         val postCode: String = ""
-)
+) {
+    override fun toString(): String {
+        return "FormModel(cardNumber='$cardNumber', cardHolderName='$cardHolderName', expirationDate='$expirationDate', securityNumber='$securityNumber', country='$country', postCode='$postCode')"
+    }
+}
 
 internal fun FormModel.getValueForFieldType(type: FormFieldType): String = when (type) {
     FormFieldType.NUMBER -> cardNumber

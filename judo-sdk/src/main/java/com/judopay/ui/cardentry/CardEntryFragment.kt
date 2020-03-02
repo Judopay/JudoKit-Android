@@ -2,19 +2,25 @@ package com.judopay.ui.cardentry
 
 import android.app.Dialog
 import android.content.DialogInterface
-import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.judopay.R
+import com.judopay.api.model.request.Address
+import com.judopay.api.model.request.SaveCardRequest
+import com.judopay.api.model.response.Receipt
+import com.judopay.judo
+import com.judopay.ui.cardentry.components.FormView
 import com.judopay.ui.cardentry.components.FormViewModel
 import com.judopay.ui.cardentry.model.FormFieldType
 import com.judopay.ui.cardentry.model.FormModel
@@ -55,9 +61,22 @@ class SimpleKeyboardAnimator(private val window: Window?) {
     }
 }
 
-class CardEntryFragment : BottomSheetDialogFragment() {
+class CardEntryFragment(
+        internal val callback: OnResultListener
+) : BottomSheetDialogFragment(), FormView.OnSubmitListener {
+
+    private lateinit var viewModel: CardEntryViewModel
+
+    interface OnResultListener {
+        fun onResult(fragment: CardEntryFragment, response: Receipt)
+    }
 
     private lateinit var simpleKeyboardAnimator: SimpleKeyboardAnimator
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(CardEntryViewModel::class.java)
+    }
 
     override fun getTheme(): Int = R.style.JudoTheme_BottomSheetDialogTheme
 
@@ -83,6 +102,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         scanCardButton.setOnClickListener(this::handleScanCardButtonClicks)
 
         formView.model = buildFormViewModel()
+        formView.onSubmitListener = this
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -115,6 +135,28 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         simpleKeyboardAnimator.removeListener()
     }
 
+    override fun onSubmitForm(form: FormView, model: FormModel) {
+        val request = SaveCardRequest.Builder()
+                .setUniqueRequest(false)
+                .setYourPaymentReference(judo.reference.paymentReference)
+                .setAmount(judo.amount.amount)
+                .setCurrency(judo.amount.currency.name)
+                .setJudoId(judo.judoId)
+                .setYourConsumerReference(judo.reference.consumerReference)
+                .setYourPaymentMetaData(emptyMap())
+                .setAddress(Address.Builder().build())
+                .setCardNumber(model.cardNumber)
+                .setExpiryDate(model.expirationDate)
+                .setCv2(model.securityNumber)
+                .build()
+
+        viewModel.send(judo, request).observe(this, Observer {
+            it?.let {
+                callback.onResult(this, it)
+            }
+        })
+    }
+
     private fun buildFormViewModel(): FormViewModel {
         return FormViewModel(
                 // Model to pre fil the form
@@ -126,7 +168,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
                         Pair(R.id.numberTextInputEditText, InputFieldConfiguration(FormFieldType.NUMBER, R.string.card_number_hint)),
                         Pair(R.id.nameTextInputEditText, InputFieldConfiguration(FormFieldType.HOLDER_NAME, R.string.card_holder_hint)),
                         Pair(R.id.expirationDateTextInputEditText, InputFieldConfiguration(FormFieldType.EXPIRATION_DATE, R.string.date_hint)),
-                        Pair(R.id.securityNumberTextInputEditText, InputFieldConfiguration(FormFieldType.SECURITY_NUMBER)),
+                        Pair(R.id.securityNumberTextInputEditText, InputFieldConfiguration(FormFieldType.SECURITY_NUMBER, R.string.cvv_hint)),
                         Pair(R.id.countryTextInputEditText, InputFieldConfiguration(FormFieldType.COUNTRY)),
                         Pair(R.id.postcodeTextInputEditText, InputFieldConfiguration(FormFieldType.POST_CODE)),
                         Pair(R.id.submitButton, SubmitFieldConfiguration(FormFieldType.SUBMIT, "Add card"))

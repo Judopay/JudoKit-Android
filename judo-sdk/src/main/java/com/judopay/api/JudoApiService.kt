@@ -1,17 +1,12 @@
 package com.judopay.api
 
 import com.judopay.api.model.request.PaymentRequest
+import com.judopay.api.model.request.SaveCardRequest
 import com.judopay.api.model.request.TokenRequest
-import com.judopay.api.model.response.CardVerificationResult
+import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
-import com.judopay.api.model.response.Receipts
-import io.reactivex.Single
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
-import retrofit2.http.Query
 
 /**
  * Judo interface with Retrofit annotated list of judo API calls that can be performed.
@@ -26,7 +21,7 @@ interface JudoApiService {
      * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/payments")
-    suspend fun payment(@Body paymentRequest: PaymentRequest): Receipt
+    suspend fun payment(@Body paymentRequest: PaymentRequest): JudoApiCallResult<Receipt>
 
     /**
      * Perform a pre-auth transaction
@@ -35,7 +30,7 @@ interface JudoApiService {
      * @return the receipt for the pre-auth with the status of the transaction
      */
     @POST("transactions/preauths")
-    suspend fun preAuth(@Body paymentRequest: PaymentRequest): Receipt
+    suspend fun preAuth(@Body paymentRequest: PaymentRequest): JudoApiCallResult<Receipt>
 
     /**
      * Perform a token payment using a tokenised card
@@ -44,7 +39,7 @@ interface JudoApiService {
      * @return the receipt for the token payment with the status of the transaction
      */
     @POST("transactions/payments")
-    suspend fun tokenPayment(@Body tokenRequest: TokenRequest): Receipt
+    suspend fun tokenPayment(@Body tokenRequest: TokenRequest): JudoApiCallResult<Receipt>
 
     /**
      * Perform a token pre-auth using a tokenised card
@@ -53,7 +48,7 @@ interface JudoApiService {
      * @return the receipt for the pre-auth with the status of the transaction
      */
     @POST("transactions/preauths")
-    suspend fun tokenPreAuth(@Body tokenRequest: TokenRequest): Receipt
+    suspend fun tokenPreAuth(@Body tokenRequest: TokenRequest): JudoApiCallResult<Receipt>
 
     /**
      * Void a pre-auth transaction, releasing funds back to the card holder.
@@ -71,9 +66,9 @@ interface JudoApiService {
      * @param cardVerificationResult the 3D-Secure details returned from successfully validating the card with the merchant bank
      * @return the receipt for the transaction
      */
-    @PUT("transactions/{receiptId}")
-    fun complete3dSecure(@Path("receiptId") receiptId: String,
-                         @Body cardVerificationResult: CardVerificationResult): Single<Receipt>
+//    @PUT("transactions/{receiptId}")
+//    fun complete3dSecure(@Path("receiptId") receiptId: String,
+//                         @Body cardVerificationResult: CardVerificationResult): Single<Receipt>
 
     /**
      * @param collectionRequest the collectionRequest transaction to be performed
@@ -106,8 +101,8 @@ interface JudoApiService {
      * @param saveCardRequest the details of the card to be saved
      * @return the receipt for the card save with the status of the transaction
      */
-//    @POST("transactions/savecard")
-//    fun saveCard(@Body saveCardRequest: SaveCardRequest): Single<Receipt>
+    @POST("transactions/savecard")
+    suspend fun saveCard(@Body saveCardRequest: SaveCardRequest): JudoApiCallResult<Receipt>
 
     /**
      * Performs a card check against the card. This doesn't do an authorisation, it just checks whether or not the card is valid
@@ -144,10 +139,10 @@ interface JudoApiService {
      * @param sort     the sort type to be used, can be either `time-ascending` or `time-descending`
      * @return Receipts containing the list of payment receipts
      */
-    @GET("transactions/payments")
-    fun paymentReceipts(@Query("pageSize") pageSize: Int,
-                        @Query("offset") offset: Int,
-                        @Query("sort") sort: String): Single<Receipts>
+//    @GET("transactions/payments")
+//    fun paymentReceipts(@Query("pageSize") pageSize: Int,
+//                        @Query("offset") offset: Int,
+//                        @Query("sort") sort: String): Single<Receipts>
 
     /**
      * List all pre-auth receipts for the account
@@ -157,10 +152,10 @@ interface JudoApiService {
      * @param sort     the sort type to be used, can be either `time-ascending` or `time-descending`
      * @return Receipts containing the list of pre-auth receipts
      */
-    @GET("transactions/preauths")
-    fun preAuthReceipts(@Query("pageSize") pageSize: Int,
-                        @Query("offset") offset: Int,
-                        @Query("sort") sort: String): Single<Receipts>
+//    @GET("transactions/preauths")
+//    fun preAuthReceipts(@Query("pageSize") pageSize: Int,
+//                        @Query("offset") offset: Int,
+//                        @Query("sort") sort: String): Single<Receipts>
 
     /**
      * List all refund receipts for the account
@@ -170,10 +165,10 @@ interface JudoApiService {
      * @param sort     the sort type to be used, can be either `time-ascending` or `time-descending`
      * @return Receipts containing the list of refund receipts
      */
-    @GET("transactions/refunds")
-    fun refundReceipts(@Query("pageSize") pageSize: Int,
-                       @Query("offset") offset: Int,
-                       @Query("sort") sort: String): Single<Receipts>
+//    @GET("transactions/refunds")
+//    fun refundReceipts(@Query("pageSize") pageSize: Int,
+//                       @Query("offset") offset: Int,
+//                       @Query("sort") sort: String): Single<Receipts>
 
     /**
      * List all collection receipts for the account
@@ -183,10 +178,10 @@ interface JudoApiService {
      * @param sort     the sort type to be used, can be either `time-ascending` or `time-descending`
      * @return Receipts containing the list of collection receipts
      */
-    @GET("transactions/collections")
-    fun collectionReceipts(@Query("pageSize") pageSize: Int,
-                           @Query("offset") offset: Int,
-                           @Query("sort") sort: String): Single<Receipts>
+//    @GET("transactions/collections")
+//    fun collectionReceipts(@Query("pageSize") pageSize: Int,
+//                           @Query("offset") offset: Int,
+//                           @Query("sort") sort: String): Single<Receipts>
 
     /**
      * @param receiptId the receipt ID to use for finding the receipt
@@ -195,11 +190,11 @@ interface JudoApiService {
      * @param sort      the sort type to be used, can be either `time-ascending` or `time-descending`
      * @return the receipt matched with the receiptId
      */
-    @GET("transactions/{receiptId}")
-    fun findReceipt(@Path("receiptId") receiptId: String,
-                    @Query("pageSize") pageSize: Int,
-                    @Query("offset") offset: Int,
-                    @Query("sort") sort: String): Single<Receipt>
+//    @GET("transactions/{receiptId}")
+//    fun findReceipt(@Path("receiptId") receiptId: String,
+//                    @Query("pageSize") pageSize: Int,
+//                    @Query("offset") offset: Int,
+//                    @Query("sort") sort: String): Single<Receipt>
 
     /**
      * List all consumer receipts for a consumer token
@@ -210,11 +205,11 @@ interface JudoApiService {
      * @param sort          the sort type to be used, can be either `time-ascending` or `time-descending`
      * @return Receipts containing the list of consumer receipts for the consumerToken
      */
-    @GET("consumers/{consumerToken}")
-    fun consumerReceipts(@Path("consumerToken") consumerToken: String,
-                         @Query("pageSize") pageSize: Int,
-                         @Query("offset") offset: Int,
-                         @Query("sort") sort: String): Single<Receipts>
+//    @GET("consumers/{consumerToken}")
+//    fun consumerReceipts(@Path("consumerToken") consumerToken: String,
+//                         @Query("pageSize") pageSize: Int,
+//                         @Query("offset") offset: Int,
+//                         @Query("sort") sort: String): Single<Receipts>
     /**
      * List all payment receipts for a consumer
      *
@@ -224,11 +219,11 @@ interface JudoApiService {
      * @param sort          the sort type to be used, can be either `time-ascending` or `time-descending`
      * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
      */
-    @GET("consumers/{consumerToken}/payments")
-    fun consumerPaymentReceipts(@Path("consumerToken") consumerToken: String,
-                                @Query("pageSize") pageSize: Int,
-                                @Query("offset") offset: Int,
-                                @Query("sort") sort: String): Single<Receipts>
+//    @GET("consumers/{consumerToken}/payments")
+//    fun consumerPaymentReceipts(@Path("consumerToken") consumerToken: String,
+//                                @Query("pageSize") pageSize: Int,
+//                                @Query("offset") offset: Int,
+//                                @Query("sort") sort: String): Single<Receipts>
 
     /**
      * List all pre-auth receipts for a consumer
@@ -239,11 +234,11 @@ interface JudoApiService {
      * @param sort          the sort type to be used, can be either `time-ascending` or `time-descending`
      * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
      */
-    @GET("consumers/{consumerToken}/preauths")
-    fun consumerPreAuthReceipts(@Path("consumerToken") consumerToken: String,
-                                @Query("pageSize") pageSize: Int,
-                                @Query("offset") offset: Int,
-                                @Query("sort") sort: String): Single<Receipts>
+//    @GET("consumers/{consumerToken}/preauths")
+//    fun consumerPreAuthReceipts(@Path("consumerToken") consumerToken: String,
+//                                @Query("pageSize") pageSize: Int,
+//                                @Query("offset") offset: Int,
+//                                @Query("sort") sort: String): Single<Receipts>
 
     /**
      * List all collection receipts for a consumer
@@ -254,11 +249,11 @@ interface JudoApiService {
      * @param sort          the sort type to be used, can be either `time-ascending` or `time-descending`
      * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
      */
-    @GET("consumers/{consumerToken}/collections")
-    fun consumerCollectionReceipts(@Path("consumerToken") consumerToken: String,
-                                   @Query("pageSize") pageSize: Int,
-                                   @Query("offset") offset: Int,
-                                   @Query("sort") sort: String): Single<Receipts>
+//    @GET("consumers/{consumerToken}/collections")
+//    fun consumerCollectionReceipts(@Path("consumerToken") consumerToken: String,
+//                                   @Query("pageSize") pageSize: Int,
+//                                   @Query("offset") offset: Int,
+//                                   @Query("sort") sort: String): Single<Receipts>
 
     /**
      * List all refund receipts for a consumer
@@ -269,9 +264,9 @@ interface JudoApiService {
      * @param sort          the sort type to be used, can be either `time-ascending` or `time-descending`
      * @return Receipts containing the list of consumer receipts for the consumerToken and receiptId
      */
-    @GET("consumers/{consumerToken}/refunds")
-    fun consumerRefundReceipts(@Path("consumerToken") consumerToken: String,
-                               @Query("pageSize") pageSize: Int,
-                               @Query("offset") offset: Int,
-                               @Query("sort") sort: String): Single<Receipts>
+//    @GET("consumers/{consumerToken}/refunds")
+//    fun consumerRefundReceipts(@Path("consumerToken") consumerToken: String,
+//                               @Query("pageSize") pageSize: Int,
+//                               @Query("offset") offset: Int,
+//                               @Query("sort") sort: String): Single<Receipts>
 }

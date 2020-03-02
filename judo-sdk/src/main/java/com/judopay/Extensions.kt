@@ -1,13 +1,11 @@
 package com.judopay
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.google.android.material.textfield.TextInputLayout
 import com.judopay.model.ApiEnvironment
 import com.judopay.ui.error.JudoNotProvidedError
 
@@ -25,7 +23,6 @@ internal fun <T : Any> requireNotNull(value: T?, propertyName: String): T {
         throw IllegalArgumentException("$propertyName cannot be null")
     else return value
 }
-
 
 @Suppress("UNCHECKED_CAST")
 fun <T : View> View.parentOfType(parentType: Class<T>): T? {
@@ -62,9 +59,3 @@ val FragmentActivity.judo: Judo
 
 val Fragment.judo: Judo
     get() = requireActivity().judo
-
-val FragmentActivity.isPreAuthEnabled: Boolean
-    get() = intent.getBooleanExtra(JUDO_PRE_AUTH, false)
-
-val Fragment.isPreAuthEnabled : Boolean
-    get() = requireActivity().isPreAuthEnabled

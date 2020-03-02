@@ -12,6 +12,7 @@
     <dimen name="space_24">24dp</dimen>
     <dimen name="space_32">32dp</dimen>
     <dimen name="space_40">40dp</dimen>
+    <dimen name="space_132">132dp</dimen>
 
     <!-- Font sizes -->
     <dimen name="large_title">24sp</dimen>
@@ -37,4 +38,10 @@
 
     <!-- Text input layouts -->
     <dimen name="input_layout_corner_radius">6dp</dimen>
+
+    <!-- Cards -->
+    <dimen name="card_corner_radius">10dp</dimen>
+    <dimen name="card_elevation_8dp">8dp</dimen>
+    <dimen name="card_elevation_2dp">2dp</dimen>
+
 </resources>

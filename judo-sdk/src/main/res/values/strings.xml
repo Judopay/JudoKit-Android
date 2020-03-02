@@ -13,9 +13,16 @@
     <string name="secure_server_transmission">Your card details are encrypted using SSL before transmission to our secure payment service provider.</string>
 
     <string name="date_hint">MM/YY</string>
+    <string name="cvv_hint">CVV</string>
     <string name="card_number_hint">Card number</string>
     <string name="card_holder_hint">Cardholder Name</string>
 
     <string name="transaction_unsuccessful">Transaction unsuccessful, please try again</string>
     <string name="close">Close</string>
+
+    <string name="no_connected_cards">You didn\'t connect any cards yet</string>
+    <string name="choose_payment_method">Choose a Payment Method</string>
+    <string name="no_cards_added">You didn’t add any cards yet.\nAdd one right now or use any of the payment methods below</string>
+    <string name="google_pay">Google Pay</string>
+
 </resources>

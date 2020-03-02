@@ -4,7 +4,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.judopay.R
 import com.judopay.inflate
-import com.judopay.model.PaymentMethod
 import com.judopay.ui.paymentmethods.model.PaymentMethodItem
 import com.judopay.ui.paymentmethods.model.PaymentMethodItemAction
 import com.judopay.ui.paymentmethods.model.PaymentMethodItemType
@@ -34,6 +33,7 @@ class PaymentMethodsAdapter(
             PaymentMethodItemType.SAVED_CARDS_HEADER -> SavedCardsHeaderViewHolder(parent.inflate(R.layout.saved_card_header_item))
             PaymentMethodItemType.SAVED_CARDS_ITEM -> SavedCardsItemViewHolder(parent.inflate(R.layout.saved_card_item))
             PaymentMethodItemType.SAVED_CARDS_FOOTER -> SavedCardsFooterViewHolder(parent.inflate(R.layout.saved_card_footer_item))
+            PaymentMethodItemType.NO_SAVED_CARDS_PLACEHOLDER -> NoSavedCardsPlaceholderViewHolder(parent.inflate(R.layout.no_saved_cards_placeholder_item))
             else -> {
                 throw NotImplementedError()
             }
@@ -48,4 +48,5 @@ class PaymentMethodsAdapter(
     override fun getItemViewType(position: Int): Int = items[position].type.ordinal
 
     override fun getItemCount(): Int = items.size
+
 }

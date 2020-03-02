@@ -46,6 +46,7 @@
             style="@style/JudoTheme.TextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="number"
             tools:text="1234 5678 9012 3456" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -94,6 +95,7 @@
             style="@style/JudoTheme.TextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="number"
             tools:text="11/20" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -114,6 +116,7 @@
             style="@style/JudoTheme.TextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="number"
             tools:text="123" />
     </com.google.android.material.textfield.TextInputLayout>
 

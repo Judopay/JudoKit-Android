@@ -1,117 +1,89 @@
 package com.judopay.ui.paymentmethods
 
-import androidx.fragment.app.Fragment
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.judopay.Judo
-import com.judopay.JudoActivity
-import com.judopay.api.JudoApiService
-import com.judopay.api.error.ExceptionHandler
+import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.api.model.request.Address
-import com.judopay.api.model.request.PaymentRequest
 import com.judopay.api.model.request.TokenRequest
-import com.judopay.api.model.response.Receipt
-import com.judopay.isPreAuthEnabled
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
+import com.judopay.db.JudoRoomDatabase
+import com.judopay.db.entity.TokenizedCardEntity
+import com.judopay.db.repository.TokenizedCardRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlin.coroutines.CoroutineContext
 
+class PaymentMethodsViewModel(application: Application) : AndroidViewModel(application) {
 
-class PaymentMethodsViewModel constructor(
-    private val service: JudoApiService
-) : ViewModel(), CoroutineScope {
-    private val job = SupervisorJob()
-    override val coroutineContext: CoroutineContext = Dispatchers.Main + job
-    private val handler: CoroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        ExceptionHandler.handleException(throwable, fragment.requireActivity() as JudoActivity)
+    private val repository: TokenizedCardRepository
+    val allCards: LiveData<List<TokenizedCardEntity>>
+
+    private val context = application
+
+    init {
+        val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
+        repository = TokenizedCardRepository(tokenizedCardDao)
+        allCards = repository.allCards
     }
 
-    private lateinit var fragment: Fragment
-    private val _receipt = MutableLiveData<Receipt>()
-
-    val receipt: LiveData<Receipt> = _receipt
-
-    fun pay(judo: Judo, isPreAuthEnabled: Boolean) {
-        _receipt.apply {
-            launch {
-                value = withContext(Dispatchers.IO) {
-                    with(judo) {
-                        when (isTokenPayment) {
-                            true -> {
-                                val tokenRequest = buildTokenRequest(judo)
-                                if (isPreAuthEnabled) {
-                                    service.tokenPreAuth(tokenRequest)
-                                } else {
-                                    service.tokenPayment(tokenRequest)
-                                }
-                            }
-                            false -> {
-                                val paymentRequest = buildPaymentRequest(judo)
-                                if (isPreAuthEnabled) {
-                                    service.preAuth(paymentRequest)
-                                } else {
-                                    service.payment(paymentRequest)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    fun insert(card: TokenizedCardEntity) = viewModelScope.launch {
+        repository.insert(card)
     }
 
-    private fun buildPaymentRequest(judo: Judo) = with(judo) {
-        PaymentRequest.Builder()
-            .setUniqueRequest(false)
-            .setYourPaymentReference(reference.paymentReference)
-            .setAmount(amount.amount)
-            .setCurrency(amount.currency.name)
-            .setJudoId(judoId)
-            .setYourConsumerReference(reference.consumerReference)
-            .setYourPaymentMetaData(mapOf())
-            .setAddress(Address.Builder().build())
-            .setCardNumber("4976000000003436")
-            .setCv2("452")
-            .setExpiryDate("12/20")
-            .build()
+    fun deleteCardWithId(id: Int) = viewModelScope.launch {
+        repository.deleteCardWithId(id)
     }
 
-    private fun buildTokenRequest(judo: Judo) = with(judo) {
-        TokenRequest.Builder()
-            .setUniqueRequest(false)
-            .setYourPaymentReference(reference.paymentReference)
-            .setAmount(amount.amount)
-            .setCurrency(amount.currency.name)
-            .setJudoId(judoId)
-            .setYourConsumerReference(reference.consumerReference)
-            .setYourPaymentMetaData(mapOf())
-            .setCardLastFour("3436")
-            .setCardToken("TOKEN")
-            .setCardType(1)
-            .setAddress(Address.Builder().build())
-            .build()
-    }
+    fun payWithToken(judo: Judo, token: String, ending: String) = liveData(Dispatchers.IO) {
+        val service = JudoApiServiceFactory.createApiService(context, judo)
+        val request = TokenRequest.Builder()
+                .setYourPaymentReference(judo.reference.paymentReference)
+                .setAmount(judo.amount.amount)
+                .setCurrency(judo.amount.currency.name)
+                .setJudoId(judo.judoId)
+                .setYourConsumerReference(judo.reference.consumerReference)
+                .setYourPaymentMetaData(mapOf())
+                .setCardLastFour(ending)
+                .setCardToken(token)
+                .setCardType(1)
+                .setAddress(Address.Builder().build())
+                .build()
 
-    private fun launch(block: suspend CoroutineScope.() -> Unit) {
-        launch(handler) {
-            block.invoke(this)
-        }
-    }
-
-    fun takeView(paymentMethodsFragment: Fragment) {
-        fragment = paymentMethodsFragment
-    }
-
-    class PaymentMethodsViewModelFactory constructor(
-        private val service: JudoApiService
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-            PaymentMethodsViewModel(service) as T
+        val response = service.tokenPayment(request)
+        emit(response)
     }
 }
+
+//    private fun buildPaymentRequest(judo: Judo) = with(judo) {
+//        PaymentRequest.Builder()
+//            .setUniqueRequest(false)
+//            .setYourPaymentReference(reference.paymentReference)
+//            .setAmount(amount.amount)
+//            .setCurrency(amount.currency.name)
+//            .setJudoId(judoId)
+//            .setYourConsumerReference(reference.consumerReference)
+//            .setYourPaymentMetaData(mapOf())
+//            .setAddress(Address.Builder().build())
+//            .setCardNumber("4976000000003436")
+//            .setCv2("452")
+//            .setExpiryDate("12/20")
+//            .build()
+//    }
+//
+//    private fun buildTokenRequest(judo: Judo) = with(judo) {
+//        TokenRequest.Builder()
+//            .setUniqueRequest(false)
+//            .setYourPaymentReference(reference.paymentReference)
+//            .setAmount(amount.amount)
+//            .setCurrency(amount.currency.name)
+//            .setJudoId(judoId)
+//            .setYourConsumerReference(reference.consumerReference)
+//            .setYourPaymentMetaData(mapOf())
+//            .setCardLastFour("3436")
+//            .setCardToken("TOKEN")
+//            .setCardType(1)
+//            .setAddress(Address.Builder().build())
+//            .build()
+//    }
