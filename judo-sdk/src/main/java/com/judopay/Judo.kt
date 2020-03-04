@@ -34,11 +34,12 @@ class Judo internal constructor(val judoId: String,
                                 val paymentMethods: Array<PaymentMethod>,
                                 val supportedCardNetworks: Array<CardNetwork>,
                                 val primaryAccountDetails: PrimaryAccountDetails?,
-                                val googlePayConfiguration: GooglePayConfiguration?
+                                val googlePayConfiguration: GooglePayConfiguration?,
+                                val paymentWidgetType: PaymentWidgetType
 ) : Parcelable {
 
 
-    class Builder {
+    class Builder(private val paymentWidgetType: PaymentWidgetType) {
         private var judoId: String? = null
         private var siteId: String? = null
         private var apiToken: String? = null
@@ -94,11 +95,12 @@ class Judo internal constructor(val judoId: String,
                     myPaymentMethods,
                     mySupportedCardNetworks,
                     primaryAccountDetails,
-                    googlePayConfiguration)
+                    googlePayConfiguration,
+                    paymentWidgetType)
         }
     }
 
     override fun toString(): String {
-        return "Judo(judoId='$judoId', siteId=$siteId, apiToken='$apiToken', apiSecret='$apiSecret', isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration)"
+        return "Judo(judoId='$judoId', siteId=$siteId, apiToken='$apiToken', apiSecret='$apiSecret', isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType)"
     }
 }
