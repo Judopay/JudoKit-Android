@@ -2,14 +2,26 @@ package com.judopay.ui.paymentmethods.adapter
 
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
+import androidx.annotation.ColorRes
+import androidx.annotation.DimenRes
+import androidx.annotation.FontRes
+import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.judopay.R
+import java.util.*
 
-abstract class SwipeToDeleteCallback : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+abstract class SwipeToDeleteCallback(
+        @ColorRes val backgroundColor: Int = R.color.tomato_red,
+        @StringRes val text: Int = R.string.delete,
+        @ColorRes val textColor: Int = R.color.white,
+        @FontRes val textFont: Int = R.font.sf_pro_display_regular,
+        @DimenRes val textSize: Int = R.dimen.body
+) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
     private val background = ColorDrawable()
-    private val backgroundColor = Color.parseColor("#f44336")
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
@@ -24,41 +36,46 @@ abstract class SwipeToDeleteCallback : ItemTouchHelper.SimpleCallback(0, ItemTou
             canvas: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
             dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean
     ) {
-
         val itemView = viewHolder.itemView
         val itemHeight = itemView.bottom - itemView.top
         val itemWidth = itemView.right - itemView.left
         val isCanceled = dX == 0f && !isCurrentlyActive
 
         if (isCanceled) {
-            clearCanvas(canvas, itemView.right + dX, itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat())
+            canvas.drawRect(itemView.right + dX, itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat(), clearPaint)
             super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             return
         }
 
         // Draw the red delete background
-        background.color = backgroundColor
+        background.color = ContextCompat.getColor(itemView.context, backgroundColor)
         background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
         background.draw(canvas)
 
         // Draw the delete icon
         val paint = Paint()
-        paint.color = Color.WHITE
+        paint.color = ContextCompat.getColor(itemView.context, textColor)
         paint.style = Paint.Style.FILL
 
-        val valueInPixels = itemView.context.resources.getDimension(R.dimen.body)
-        paint.textSize = valueInPixels
+        val resources = itemView.context.resources
+        val marginEnd = resources.getDimension(R.dimen.space_24)
 
-        val y = itemView.top + itemHeight / 2 + 10
-        val x = itemWidth - 160
+        paint.textSize = resources.getDimension(textSize)
+        paint.typeface = ResourcesCompat.getFont(itemView.context, textFont)
 
-        //TODO: load the string from resources
-        canvas.drawText("DELETE", x.toFloat(), y.toFloat(), paint)
+        val textToDraw = itemView.context.getString(text).toUpperCase(Locale.getDefault())
+
+        val bounds = Rect()
+        paint.getTextBounds(textToDraw, 0, textToDraw.length, bounds)
+        val height = bounds.height()
+        val with = bounds.width()
+
+        val y = itemView.top + itemHeight / 2 + height / 2
+        val x = itemWidth - with - marginEnd
+
+        canvas.drawText(textToDraw, x, y.toFloat(), paint)
 
         super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }
 
-    private fun clearCanvas(c: Canvas?, left: Float, top: Float, right: Float, bottom: Float) {
-        c?.drawRect(left, top, right, bottom, clearPaint)
-    }
 }

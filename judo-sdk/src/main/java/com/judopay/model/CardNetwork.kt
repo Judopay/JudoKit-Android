@@ -30,7 +30,7 @@ enum class CardNetwork : Parcelable {
         private val VISA_PREFIXES = arrayOf("4")
         private val MASTER_CARD_PREFIXES = arrayOf("50", "51", "52", "53", "54", "55")
 
-        fun ofCardNumber(number: String): CardNetwork? {
+        fun ofNumber(number: String): CardNetwork? {
             return when {
                 number.hasOneOfPrefixes(VISA_PREFIXES) || number.matches(REGEX_VISA) -> {
                     VISA
@@ -87,8 +87,8 @@ val CardNetwork.cardNumberMask: String
 val CardNetwork.securityCodeNumberMask: String
     get() = if (this == CardNetwork.AMEX) "####" else "###"
 
-val CardNetwork.securityCodeHint: String
-    get() = if (this == CardNetwork.AMEX) "0000" else "000"
+val CardNetwork.securityCodeLength: Int
+    get() = if (this == CardNetwork.AMEX) 4 else 3
 
 val CardNetwork.securityCodeName: String
     get() = when (this) {
@@ -110,4 +110,21 @@ val CardNetwork.iconImageResId: Int
         CardNetwork.DINERS_CLUB -> R.drawable.ic_diners_club
         CardNetwork.JCB -> R.drawable.ic_jcb
         else -> 0
+    }
+
+
+val CardNetwork.cardNumberMaxLength: Int
+    get() = when (this) {
+        CardNetwork.AMEX -> 15
+        CardNetwork.DINERS_CLUB -> 14
+        else -> 16
+    }
+
+val CardNetwork.notSupportedErrorMessageResId: Int
+    get() = when (this) {
+        CardNetwork.MAESTRO -> R.string.error_maestro_not_supported
+        CardNetwork.AMEX -> R.string.error_amex_not_supported
+        CardNetwork.DISCOVER -> R.string.error_discover_not_supported
+        CardNetwork.CHINA_UNION_PAY -> R.string.error_union_pay_not_supported
+        else -> R.string.empty
     }

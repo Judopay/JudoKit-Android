@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.judopay.requireNotNull
 import com.judopay.requireNotNullOrEmpty
 import kotlinx.android.parcel.Parcelize
+import java.text.NumberFormat
 
 @Parcelize
 class Amount internal constructor(val amount: String, val currency: Currency) : Parcelable {
@@ -30,3 +31,16 @@ class Amount internal constructor(val amount: String, val currency: Currency) : 
         return "Amount(amount='$amount', currency=$currency)"
     }
 }
+
+val Amount.formatted: String
+    get() {
+        return try {
+            val format = NumberFormat.getCurrencyInstance()
+            format.maximumFractionDigits = 2
+            format.currency = java.util.Currency.getInstance(currency.name)
+            format.format(amount.toBigDecimal())
+        } catch (exception: IllegalArgumentException) {
+            exception.printStackTrace()
+            "${currency.name} $amount"
+        }
+    }

@@ -8,5 +8,6 @@ data class PaymentMethodSavedCardsItem(
         val title: String,
         val network: CardNetwork,
         val ending: String,
-        val token: String
+        val token: String,
+        val expireDate: String
 ) : PaymentMethodItem

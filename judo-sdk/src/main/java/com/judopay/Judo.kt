@@ -15,7 +15,6 @@ import kotlinx.android.parcel.Parcelize
 // Bundle keys
 const val JUDO_OPTIONS = "com.judopay.judo-options"
 const val JUDO_RECEIPT = "com.judopay.judo-receipt"
-const val JUDO_PRE_AUTH = "JudoPreAuth"
 
 // Request codes
 const val PAYMENT_METHODS = 1

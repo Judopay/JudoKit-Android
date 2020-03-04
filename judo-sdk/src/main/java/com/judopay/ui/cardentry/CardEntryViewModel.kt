@@ -22,9 +22,6 @@ class CardEntryViewModel(application: Application) : AndroidViewModel(applicatio
                 Log.e("CardEntryViewModel S", response.toString())
                 emit(response.data)
             }
-            is JudoApiCallResult.NetworkError -> {
-                Log.e("CardEntryViewModel NE", response.toString())
-            }
             is JudoApiCallResult.Failure -> {
                 Log.e("CardEntryViewModel F", response.toString())
             }

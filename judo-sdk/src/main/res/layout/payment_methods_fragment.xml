@@ -6,6 +6,28 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/space_40"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_32"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@color/white">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/ic_powered_by_judo" />
+    </FrameLayout>
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -21,6 +43,14 @@
             app:scrimVisibleHeightTrigger="1dp"
             app:titleEnabled="false">
 
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:minHeight="@dimen/app_bar_layout_min_height"
+                app:layout_collapseMode="pin" />
+
             <com.judopay.ui.paymentmethods.components.AppBarLayoutHeightAwareContainerView
                 android:id="@+id/heightAwareView"
                 android:layout_width="match_parent"
@@ -35,21 +65,18 @@
 
             </com.judopay.ui.paymentmethods.components.AppBarLayoutHeightAwareContainerView>
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/app_bar_layout_min_height"
+            <!-- TODO: Should be replaced by Toolbar:app:navigationIcon -->
+            <ImageButton
+                android:id="@+id/backButton"
+                style="@style/JudoTheme.BackButton"
+                android:layout_width="@dimen/min_touch_target_size"
+                android:layout_height="@dimen/min_touch_target_size"
+                android:layout_marginStart="@dimen/space_8"
+                android:layout_marginTop="@dimen/space_4"
+                android:contentDescription="@null"
                 app:layout_collapseMode="pin" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,9 +1,11 @@
 package com.judopay.api.factory
 
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
+import com.judopay.api.error.ApiError
 import com.judopay.api.model.response.JudoApiCallResult
 import okhttp3.Request
 import retrofit2.*
-import java.io.IOException
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
@@ -27,29 +29,35 @@ class ResultCall<T>(proxy: Call<T>) : CallDelegate<T, JudoApiCallResult<T>>(prox
     override fun enqueueImpl(callback: Callback<JudoApiCallResult<T>>) = proxy.enqueue(object : Callback<T> {
 
         override fun onResponse(call: Call<T>, response: Response<T>) {
-            val code = response.code()
-            val result = if (code in 200 until 300) {
+            val result = if (response.isSuccessful) {
                 val body = response.body()
                 JudoApiCallResult.Success(body)
             } else {
-                JudoApiCallResult.Failure(code)
+                val code = response.code()
+                var error: ApiError? = null
+
+                response.errorBody()?.charStream()?.let {
+                    try {
+                        error = Gson().fromJson(it, ApiError::class.java)
+                    } catch (exception: JsonSyntaxException) {
+                        exception.printStackTrace()
+                    }
+                }
+
+                JudoApiCallResult.Failure(code, error)
             }
 
             callback.onResponse(this@ResultCall, Response.success(result))
         }
 
         override fun onFailure(call: Call<T>, throwable: Throwable) {
-            val result = if (throwable is IOException) {
-                JudoApiCallResult.NetworkError(throwable)
-            } else {
-                JudoApiCallResult.Failure(null)
-            }
-
+            val result = JudoApiCallResult.Failure(throwable = throwable)
             callback.onResponse(this@ResultCall, Response.success(result))
         }
     })
 
     override fun cloneImpl() = ResultCall(proxy.clone())
+
 }
 
 class ResultAdapter(private val type: Type) : CallAdapter<Type, Call<JudoApiCallResult<Type>>> {

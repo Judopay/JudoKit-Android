@@ -55,35 +55,3 @@ class PaymentMethodsViewModel(application: Application) : AndroidViewModel(appli
         emit(response)
     }
 }
-
-//    private fun buildPaymentRequest(judo: Judo) = with(judo) {
-//        PaymentRequest.Builder()
-//            .setUniqueRequest(false)
-//            .setYourPaymentReference(reference.paymentReference)
-//            .setAmount(amount.amount)
-//            .setCurrency(amount.currency.name)
-//            .setJudoId(judoId)
-//            .setYourConsumerReference(reference.consumerReference)
-//            .setYourPaymentMetaData(mapOf())
-//            .setAddress(Address.Builder().build())
-//            .setCardNumber("4976000000003436")
-//            .setCv2("452")
-//            .setExpiryDate("12/20")
-//            .build()
-//    }
-//
-//    private fun buildTokenRequest(judo: Judo) = with(judo) {
-//        TokenRequest.Builder()
-//            .setUniqueRequest(false)
-//            .setYourPaymentReference(reference.paymentReference)
-//            .setAmount(amount.amount)
-//            .setCurrency(amount.currency.name)
-//            .setJudoId(judoId)
-//            .setYourConsumerReference(reference.consumerReference)
-//            .setYourPaymentMetaData(mapOf())
-//            .setCardLastFour("3436")
-//            .setCardToken("TOKEN")
-//            .setCardType(1)
-//            .setAddress(Address.Builder().build())
-//            .build()
-//    }

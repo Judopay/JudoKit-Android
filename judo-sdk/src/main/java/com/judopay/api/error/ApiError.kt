@@ -1,12 +1,7 @@
 package com.judopay.api.error
 
 import android.os.Parcelable
-import com.judopay.JudoActivity
-import com.judopay.RESULT_ERROR
-import com.judopay.api.factory.JudoApiServiceFactory
-import com.judopay.api.model.response.Receipt
 import kotlinx.android.parcel.Parcelize
-import retrofit2.HttpException
 
 const val JUDO_ID_NOT_SUPPLIED = 0
 const val JUDO_ID_NOT_SUPPLIED_1 = 1
@@ -137,31 +132,25 @@ const val MCC_CODE_UNKNOWN = 125
 const val GENERIC_IS_INVALID = 200
 const val GENERIC_HTML_INVALID = 210
 
-/**
- * A single error instance that occurred when calling the judo API, in response to performing
- * a request, most likely for a type of transaction such as a payment, pre-auth or token payment.
- */
 @Parcelize
-class ApiError(
-    val code: Int,
-    val fieldName: String?,
-    val message: String,
-    val detail: String
-) : Parcelable
+data class ApiError(
+        val code: Int,
+        val category: Int,
+        val message: String,
+        val details: List<ApiErrorDetail> = emptyList()
+) : Parcelable {
+    override fun toString(): String {
+        return "ApiError(code=$code, category=$category, message='$message', details=$details)"
+    }
+}
 
-object ExceptionHandler {
-    fun handleException(throwable: Throwable, activity: JudoActivity) {
-        when (throwable) {
-            is HttpException -> {
-                with(activity) {
-                    val receipt = JudoApiServiceFactory.gson.fromJson(
-                        throwable.response()?.errorBody()?.charStream(),
-                        Receipt::class.java
-                    )
-                    sendResult(RESULT_ERROR, receipt)
-                }
-            }
-        }
-        throwable.printStackTrace()
+@Parcelize
+data class ApiErrorDetail(
+        val code: Int,
+        val message: String,
+        val fieldName: String
+) : Parcelable {
+    override fun toString(): String {
+        return "ApiErrorDetail(code=$code, message='$message', fieldName='$fieldName')"
     }
 }

@@ -13,25 +13,50 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.judopay.R
 import com.judopay.api.model.response.Receipt
+import com.judopay.db.entity.TokenizedCardEntity
 import com.judopay.judo
 import com.judopay.model.CardNetwork
 import com.judopay.model.PaymentMethod
-import com.judopay.db.entity.TokenizedCardEntity
+import com.judopay.model.formatted
 import com.judopay.ui.cardentry.CardEntryFragment
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapterListener
 import com.judopay.ui.paymentmethods.adapter.SwipeToDeleteCallback
+import com.judopay.ui.paymentmethods.components.PaymentCallToActionViewModel
 import com.judopay.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
 import com.judopay.ui.paymentmethods.model.*
 import kotlinx.android.synthetic.main.payment_call_to_action_view.*
 import kotlinx.android.synthetic.main.payment_methods_fragment.*
 
+interface PaymentMethodModel {
+    val type: PaymentMethod
+    val items: List<PaymentMethodItem>
+}
+
+data class CardPaymentMethodModel(
+        override val type: PaymentMethod = PaymentMethod.CARD,
+        val selectedCard: PaymentMethodSavedCardsItem?,
+        override val items: List<PaymentMethodItem>
+) : PaymentMethodModel
+
+data class GooglePayPaymentMethodModel(
+        override val type: PaymentMethod = PaymentMethod.GOOGLE_PAY,
+        override val items: List<PaymentMethodItem>
+) : PaymentMethodModel
+
+data class IdealPaymentMethodModel(
+        override val type: PaymentMethod = PaymentMethod.IDEAL,
+        override val items: List<PaymentMethodItem>
+) : PaymentMethodModel
+
+data class PaymentMethodsModel(
+        val headerModel: PaymentMethodsHeaderViewModel,
+        val currentPaymentMethod: PaymentMethodModel
+)
+
 class PaymentMethodsFragment : Fragment(), PaymentMethodsAdapterListener, CardEntryFragment.OnResultListener {
 
     private lateinit var viewModel: PaymentMethodsViewModel
-
-
-    private var selectedCard: PaymentMethodSavedCardsItem? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -41,9 +66,27 @@ class PaymentMethodsFragment : Fragment(), PaymentMethodsAdapterListener, CardEn
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        backButton.setOnClickListener { requireActivity().onBackPressed() }
+
         payButton.setOnClickListener {
-            selectedCard?.let { payWith(it) }
+
         }
+
+        val swipeHandler = object : SwipeToDeleteCallback() {
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val adapter = recyclerView.adapter as PaymentMethodsAdapter
+                val item = adapter.items[viewHolder.adapterPosition]
+                (item as? PaymentMethodSavedCardsItem)?.let {
+                    onDeleteCardItem(it)
+                }
+                adapter.notifyItemChanged(viewHolder.adapterPosition)
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(swipeHandler)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+
     }
 
     private fun payWith(card: PaymentMethodSavedCardsItem) {
@@ -57,21 +100,8 @@ class PaymentMethodsFragment : Fragment(), PaymentMethodsAdapterListener, CardEn
         viewModel = ViewModelProvider(this).get(PaymentMethodsViewModel::class.java)
 
         viewModel.allCards.observe(viewLifecycleOwner, Observer { cards ->
-            updateCardsListWith(cards)
+            cardsListDidUpdate(cards)
         })
-
-        val swipeHandler = object : SwipeToDeleteCallback() {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val adapter = recyclerView.adapter as PaymentMethodsAdapter
-                val item = adapter.items[viewHolder.adapterPosition]
-                (item as? PaymentMethodSavedCardsItem)?.let {
-                    onDeleteCardItem(it)
-                }
-                adapter.notifyItemChanged(viewHolder.adapterPosition)
-            }
-        }
-        val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
     // handle callbacks from the recycler view elements
@@ -79,31 +109,10 @@ class PaymentMethodsFragment : Fragment(), PaymentMethodsAdapterListener, CardEn
         when (item) {
             is PaymentMethodSelectorItem -> {
                 // selector logic
-                when (item.currentSelected) {
-                    PaymentMethod.CARD -> {
-                        headerView.model = PaymentMethodsHeaderViewModel(
-                                cardModel = PaymentCardViewModel()
-                        )
-                    }
-
-                    PaymentMethod.GOOGLE_PAY -> {
-                        headerView.model = PaymentMethodsHeaderViewModel(
-                                cardModel = GooglePayCardViewModel()
-                        )
-
-                    }
-
-                    PaymentMethod.IDEAL -> {
-                        headerView.model = PaymentMethodsHeaderViewModel(
-                                cardModel = IdealPaymentCardViewModel()
-                        )
-
-                    }
-                }
-
+//                onPaymentMethodDidChange(item.currentSelected)
             }
             is PaymentMethodSavedCardsItem -> {
-                selectedCard = item
+
             }
             is PaymentMethodGenericItem -> {
                 if (action == PaymentMethodItemAction.ADD_CARD) onAddCard()
@@ -147,38 +156,86 @@ class PaymentMethodsFragment : Fragment(), PaymentMethodsAdapterListener, CardEn
         fragment.show(parentFragmentManager, "CardEntryFragment")
     }
 
-    private fun updateCardsListWith(cards: List<TokenizedCardEntity>) {
-        val data = mutableListOf<PaymentMethodItem>().apply {
+    // TODO: Move the logic from below to the viewModel
+    private fun buildModel(selectedMethod: PaymentMethod): PaymentMethodsModel {
+        val cardModel: CardViewModel
 
-            // header
-            with(judo) {
-                if (paymentMethods.size > 1) {
-                    add(PaymentMethodSelectorItem(PaymentMethodItemType.SELECTOR, paymentMethods.toList(), paymentMethods.first()))
-                }
-            }
+        val recyclerViewData = mutableListOf<PaymentMethodItem>()
+        val allMethods = judo.paymentMethods.toList()
+        val cards = viewModel.allCards.value
 
-            if (cards.isNotEmpty()) {
-                add(PaymentMethodGenericItem(PaymentMethodItemType.SAVED_CARDS_HEADER))
-
-                // cards
-                val cardItems = cards.map { it.toPaymentMethodSavedCardsItem() }
-                addAll(cardItems)
-
-                // footer
-                add(PaymentMethodGenericItem(PaymentMethodItemType.SAVED_CARDS_FOOTER))
-
-                selectedCard = cardItems.first()
-                payButton.isEnabled = true
-            } else {
-                // placeholder
-                add(PaymentMethodGenericItem(PaymentMethodItemType.NO_SAVED_CARDS_PLACEHOLDER))
-                payButton.isEnabled = false
-            }
+        if (allMethods.size > 1) {
+            recyclerViewData.add(PaymentMethodSelectorItem(PaymentMethodItemType.SELECTOR, allMethods, selectedMethod))
         }
+
+        val method: PaymentMethodModel = when (selectedMethod) {
+            PaymentMethod.CARD -> {
+                var selectedCard: PaymentMethodSavedCardsItem? = null
+                if (cards.isNullOrEmpty()) {
+                    // placeholder
+                    recyclerViewData.add(PaymentMethodGenericItem(PaymentMethodItemType.NO_SAVED_CARDS_PLACEHOLDER))
+                    cardModel = NoPaymentMethodSelectedViewModel()
+                } else {
+
+                    recyclerViewData.add(PaymentMethodGenericItem(PaymentMethodItemType.SAVED_CARDS_HEADER))
+
+                    // cards
+                    val cardItems = cards.map { it.toPaymentMethodSavedCardsItem() }
+                    recyclerViewData.addAll(cardItems)
+
+                    // footer
+                    recyclerViewData.add(PaymentMethodGenericItem(PaymentMethodItemType.SAVED_CARDS_FOOTER))
+
+                    selectedCard = cardItems.first()
+                    cardModel = PaymentCardViewModel(
+                            cardNetwork = selectedCard.network,
+                            name = selectedCard.title,
+                            maskedNumber = selectedCard.ending,
+                            expireDate = selectedCard.expireDate
+                    )
+                }
+                CardPaymentMethodModel(selectedCard = selectedCard, items = recyclerViewData)
+            }
+
+            PaymentMethod.GOOGLE_PAY -> {
+                cardModel = GooglePayCardViewModel()
+                GooglePayPaymentMethodModel(items = recyclerViewData)
+            }
+
+            PaymentMethod.IDEAL -> {
+                cardModel = IdealPaymentCardViewModel()
+                IdealPaymentMethodModel(items = recyclerViewData)
+            }
+
+            PaymentMethod.AMAZON_PAY -> TODO()
+        }
+
+        val callToActionModel = PaymentCallToActionViewModel(
+                amount = judo.amount.formatted,
+                isButtonEnabled = cardModel is PaymentCardViewModel // TODO: temporary
+        )
+
+        val headerViewModel = PaymentMethodsHeaderViewModel(cardModel, callToActionModel)
+        return PaymentMethodsModel(headerViewModel, method)
+    }
+
+    private fun onPaymentMethodDidChange(method: PaymentMethod) {
+        val model = buildModel(method)
+        updateWithModel(model)
+    }
+
+    private fun cardsListDidUpdate(cards: List<TokenizedCardEntity>) {
+        onPaymentMethodDidChange(PaymentMethod.CARD)  // TODO: temporary
+    }
+
+    private fun updateWithModel(model: PaymentMethodsModel) {
+        headerView.model = model.headerModel
 
         val adapter = recyclerView.adapter as? PaymentMethodsAdapter
                 ?: PaymentMethodsAdapter(listener = this)
+
         recyclerView.adapter = adapter
-        adapter.items = data
+        adapter.items = model.currentPaymentMethod.items
     }
+
 }
