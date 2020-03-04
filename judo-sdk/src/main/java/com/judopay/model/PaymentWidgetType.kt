@@ -1,6 +1,6 @@
 package com.judopay.model
 
-enum class TransactionType {
+enum class PaymentWidgetType {
     PAYMENT,
     PREAUTH_PAYMENT,
     GOOGLE_PAY_PAYMENT,

@@ -35,11 +35,11 @@ class Judo internal constructor(val judoId: String,
                                 val supportedCardNetworks: Array<CardNetwork>,
                                 val primaryAccountDetails: PrimaryAccountDetails?,
                                 val googlePayConfiguration: GooglePayConfiguration?,
-                                val transactionType: TransactionType
+                                val paymentWidgetType: PaymentWidgetType
 ) : Parcelable {
 
 
-    class Builder(private val transactionType: TransactionType) {
+    class Builder(private val paymentWidgetType: PaymentWidgetType) {
         private var judoId: String? = null
         private var siteId: String? = null
         private var apiToken: String? = null
@@ -96,11 +96,11 @@ class Judo internal constructor(val judoId: String,
                     mySupportedCardNetworks,
                     primaryAccountDetails,
                     googlePayConfiguration,
-                    transactionType)
+                    paymentWidgetType)
         }
     }
 
     override fun toString(): String {
-        return "Judo(judoId='$judoId', siteId=$siteId, apiToken='$apiToken', apiSecret='$apiSecret', isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, transactionType=$transactionType)"
+        return "Judo(judoId='$judoId', siteId=$siteId, apiToken='$apiToken', apiSecret='$apiSecret', isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType)"
     }
 }
