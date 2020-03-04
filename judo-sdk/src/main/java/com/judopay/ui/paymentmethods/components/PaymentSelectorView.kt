@@ -6,19 +6,17 @@ import android.graphics.Rect
 import android.os.Build
 import android.util.AttributeSet
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.HorizontalScrollView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.transition.TransitionManager
 import com.judopay.R
+import com.judopay.inflate
 import com.judopay.model.PaymentMethod
 import com.judopay.model.icon
 import com.judopay.model.text
-import kotlinx.android.synthetic.main.view_payment_selector.view.container
-import kotlinx.android.synthetic.main.view_payment_selector.view.selector
-
+import kotlinx.android.synthetic.main.view_payment_selector.view.*
 
 private const val MARGIN_12 = 12
 private const val MARGIN_54 = 54
@@ -26,13 +24,13 @@ private const val MARGIN_54 = 54
 typealias PaymentSelectorViewSelectionListener = (selected: PaymentMethod) -> Unit
 
 class PaymentSelectorView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyle: Int = 0
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyle: Int = 0
 ) : HorizontalScrollView(context, attrs, defStyle) {
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.view_payment_selector, this)
+        inflate(R.layout.view_payment_selector, true)
     }
 
     private var currentSelected: PaymentMethod? = null
@@ -40,9 +38,9 @@ class PaymentSelectorView @JvmOverloads constructor(
     private var lastUsedSelected = false
 
     fun setPaymentMethods(
-        paymentMethods: List<PaymentMethod>,
-        currentSelected: PaymentMethod?,
-        onClick: PaymentSelectorViewSelectionListener
+            paymentMethods: List<PaymentMethod>,
+            currentSelected: PaymentMethod?,
+            onClick: PaymentSelectorViewSelectionListener
     ) {
         this.currentSelected = currentSelected
         val itemViews: MutableList<PaymentSelectorItemView> = mutableListOf()
@@ -53,8 +51,8 @@ class PaymentSelectorView @JvmOverloads constructor(
             val itemView = PaymentSelectorItemView(context).apply {
                 if (paymentMethods.size < 3) {
                     layoutParams = ViewGroup.LayoutParams(
-                        0,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
+                            0,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
                     )
                     gravity = Gravity.CENTER
                 }
@@ -134,23 +132,23 @@ class PaymentSelectorView @JvmOverloads constructor(
     private fun chainViews(itemViews: MutableList<Int>, set: ConstraintSet) {
         if (itemViews.size > 2) {
             set.createHorizontalChain(
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.LEFT,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.RIGHT,
-                itemViews.toIntArray(),
-                null,
-                ConstraintSet.CHAIN_SPREAD_INSIDE
+                    ConstraintSet.PARENT_ID,
+                    ConstraintSet.LEFT,
+                    ConstraintSet.PARENT_ID,
+                    ConstraintSet.RIGHT,
+                    itemViews.toIntArray(),
+                    null,
+                    ConstraintSet.CHAIN_SPREAD_INSIDE
             )
         } else {
             set.createHorizontalChain(
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.LEFT,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.RIGHT,
-                itemViews.toIntArray(),
-                null,
-                ConstraintSet.CHAIN_SPREAD
+                    ConstraintSet.PARENT_ID,
+                    ConstraintSet.LEFT,
+                    ConstraintSet.PARENT_ID,
+                    ConstraintSet.RIGHT,
+                    itemViews.toIntArray(),
+                    null,
+                    ConstraintSet.CHAIN_SPREAD
             )
         }
     }
@@ -158,10 +156,10 @@ class PaymentSelectorView @JvmOverloads constructor(
     private fun scrollToView(itemView: PaymentSelectorItemView) {
         val rect = Rect()
         itemView.getTextView()
-            .measure(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
+                .measure(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                )
         val itemViewWidth = itemView.getImageView().width + itemView.getTextView().measuredWidth
         if (!(itemView.getGlobalVisibleRect(rect) && itemView.height == rect.height() && itemViewWidth == rect.width())) {
             if (currentSelected != null && !lastUsedSelected) {

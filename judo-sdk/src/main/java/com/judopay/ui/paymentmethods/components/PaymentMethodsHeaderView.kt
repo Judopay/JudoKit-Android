@@ -2,39 +2,73 @@ package com.judopay.ui.paymentmethods.components
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.google.android.material.appbar.AppBarLayout
-import com.judopay.parentOfType
+import com.judopay.R
+import com.judopay.inflate
+import com.judopay.ui.paymentmethods.model.*
+import kotlinx.android.synthetic.main.payment_methods_header_view.view.*
+
+class PaymentMethodsHeaderViewModel(
+        val cardModel: CardViewModel = NoPaymentMethodSelectedViewModel(),
+        val callToActionModel: PaymentCallToActionViewModel = PaymentCallToActionViewModel()
+)
 
 class PaymentMethodsHeaderView @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
         defStyle: Int = 0
-) : ConstraintLayout(context, attrs, defStyle), AppBarLayout.OnOffsetChangedListener {
+) : ConstraintLayout(context, attrs, defStyle) {
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        parentOfType(AppBarLayout::class.java)?.addOnOffsetChangedListener(this)
+    init {
+        inflate(R.layout.payment_methods_header_view, true)
     }
 
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        parentOfType(AppBarLayout::class.java)?.removeOnOffsetChangedListener(this)
-    }
-    
-    override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
-        val newHeight = appBarLayout.layoutParams.height + verticalOffset
-
-        var margins = 0
-
-        (layoutParams as? MarginLayoutParams)?.let {
-            margins = it.topMargin + it.bottomMargin
+    var model = PaymentMethodsHeaderViewModel()
+        set(value) {
+            field = value
+            update()
         }
 
-        layoutParams.height = newHeight - margins
+    private fun update() {
+        updatePreviewHeader()
+        paymentCallToActionView.model = model.callToActionModel
+    }
 
-        if (!isInLayout) {
-            requestLayout()
+    private fun updatePreviewHeader() {
+        val cardModel = model.cardModel
+
+        // TODO: temporary
+
+        viewAnimator.visibility = View.GONE
+        placeholderBackgroundImageView.visibility = View.GONE
+        noPaymentMethodSelectedView.visibility = View.GONE
+
+        when (cardModel) {
+            is NoPaymentMethodSelectedViewModel -> {
+                placeholderBackgroundImageView.visibility = View.VISIBLE
+                noPaymentMethodSelectedView.visibility = View.VISIBLE
+            }
+            is PaymentCardViewModel -> {
+                viewAnimator.visibility = View.VISIBLE
+                paymentCardView.model = cardModel
+                while (viewAnimator.displayedChild != 0) {
+                    viewAnimator.showNext()
+                }
+            }
+            is GooglePayCardViewModel -> {
+                viewAnimator.visibility = View.VISIBLE
+                while (viewAnimator.displayedChild != 1) {
+                    viewAnimator.showNext()
+                }
+            }
+            is IdealPaymentCardViewModel -> {
+                viewAnimator.visibility = View.VISIBLE
+                while (viewAnimator.displayedChild != 2) {
+                    viewAnimator.showNext()
+                }
+            }
         }
     }
+
 }

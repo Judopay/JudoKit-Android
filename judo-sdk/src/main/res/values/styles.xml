@@ -86,37 +86,22 @@
         <item name="android:background">@drawable/bottom_sheet_modal_background</item>
     </style>
 
-    <style name="JudoTheme.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-
-        <!-- Style attributes -->
-        <item name="boxCornerRadiusBottomStart">@dimen/input_layout_corner_radius</item>
-        <item name="boxCornerRadiusTopStart">@dimen/input_layout_corner_radius</item>
-        <item name="boxCornerRadiusTopEnd">@dimen/input_layout_corner_radius</item>
-        <item name="boxCornerRadiusBottomEnd">@dimen/input_layout_corner_radius</item>
-        <item name="boxBackgroundColor">@color/white_two</item>
-        <item name="boxStrokeWidth">0dp</item>
-        <item name="boxStrokeWidthFocused">0dp</item>
-
-        <item name="hintTextAppearance">@style/JudoTheme.ErrorText</item>
-        <item name="errorTextAppearance">@style/JudoTheme.ErrorText</item>
-        <item name="counterTextAppearance">@style/JudoTheme.ErrorText</item>
-
+    <style name="JudoTheme.TextInputEditText" parent="Widget.AppCompat.EditText">
         <!-- Theme attributes -->
-        <item name="android:textColorHint">@color/black</item>
+        <item name="android:textColorHint">@color/brown_grey</item>
         <item name="colorControlNormal">@color/black</item>
         <item name="colorControlActivated">@color/black</item>
-    </style>
-
-    <style name="JudoTheme.TextInputEditText" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense">
-        <item name="android:paddingTop">@dimen/space_10</item>
-        <item name="android:paddingBottom">@dimen/space_10</item>
-        <item name="android:paddingStart">@dimen/space_14</item>
-        <item name="android:paddingEnd">@dimen/space_14</item>
         <item name="fontFamily">@font/sf_pro_display_regular</item>
         <item name="android:textSize">@dimen/headline</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:background">@null</item>
     </style>
 
     <style name="JudoTheme.ErrorText" parent="TextAppearance.AppCompat">

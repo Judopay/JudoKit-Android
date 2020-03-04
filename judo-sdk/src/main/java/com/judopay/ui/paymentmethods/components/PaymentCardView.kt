@@ -5,13 +5,8 @@ import android.util.AttributeSet
 import androidx.cardview.widget.CardView
 import com.judopay.R
 import com.judopay.inflate
+import com.judopay.ui.paymentmethods.model.PaymentCardViewModel
 import kotlinx.android.synthetic.main.payment_card_view.view.*
-
-data class PaymentCardViewModel(
-        val name: String,
-        val maskedNumber: String,
-        val expireDate: String
-)
 
 class PaymentCardView @JvmOverloads constructor(
         context: Context,
@@ -23,9 +18,7 @@ class PaymentCardView @JvmOverloads constructor(
         inflate(R.layout.payment_card_view, true)
     }
 
-    var model = PaymentCardViewModel("Card for online shopping",
-            "••••    ••••    ••••    1122",
-            "11/22")
+    var model = PaymentCardViewModel()
         set(value) {
             field = value
             update()

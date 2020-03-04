@@ -4,16 +4,15 @@
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:fillViewport="true"
-    android:scrollbars="none"
     android:clipToPadding="false"
-    >
+    android:fillViewport="true"
+    android:scrollbars="none">
 
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="24dp"
-        android:paddingEnd="16dp">
+        android:paddingStart="@dimen/space_24"
+        android:paddingEnd="@dimen/space_24">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/container"
@@ -22,12 +21,12 @@
             android:background="@drawable/slider_background">
 
             <androidx.cardview.widget.CardView
-                app:cardElevation="2dp"
-                app:cardCornerRadius="10dp"
                 android:id="@+id/selector"
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:background="@drawable/selected_payment"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

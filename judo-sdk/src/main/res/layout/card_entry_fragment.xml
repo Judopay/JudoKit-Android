@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.judopay.ui.cardentry.components.FormView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/formView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clipToPadding="false"
-    android:paddingStart="@dimen/space_24"
-    android:paddingTop="@dimen/space_20"
-    android:paddingEnd="@dimen/space_24"
-    android:paddingBottom="@dimen/space_12">
+    android:clipToPadding="false">
 
     <Button
         android:id="@+id/cancelButton"
         style="@style/JudoTheme.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_24"
+        android:layout_marginTop="@dimen/space_20"
         android:text="@string/button_cancel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,172 +21,20 @@
         style="@style/JudoTheme.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_20"
+        android:layout_marginEnd="@dimen/space_24"
         android:text="@string/button_scan_card"
         app:icon="@drawable/ic_scan_card_16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/numberTextInputLayout"
-        style="@style/JudoTheme.TextInputLayout"
+    <com.judopay.ui.cardentry.components.FormView
+        android:id="@+id/formView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_8"
-        android:layout_marginBottom="@dimen/space_8"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scanCardButton">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/numberTextInputEditText"
-            style="@style/JudoTheme.TextInputEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="1234 5678 9012 3456" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/nameTextInputLayout"
-        style="@style/JudoTheme.TextInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_8"
-        android:layout_marginBottom="@dimen/space_8"
-        app:layout_constraintBottom_toTopOf="@+id/nameAndNumberBarrier"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/numberTextInputLayout">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/nameTextInputEditText"
-            style="@style/JudoTheme.TextInputEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="Endava Recruit" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/nameAndNumberBarrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="numberTextInputLayout,nameTextInputLayout" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/expirationDateTextInputLayout"
-        style="@style/JudoTheme.TextInputLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_8"
-        android:layout_marginEnd="@dimen/space_6"
-        android:layout_marginBottom="@dimen/space_8"
-        app:layout_constraintEnd_toStartOf="@+id/securityNumberTextInputLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameAndNumberBarrier">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/expirationDateTextInputEditText"
-            style="@style/JudoTheme.TextInputEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="11/20" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/securityNumberTextInputLayout"
-        style="@style/JudoTheme.TextInputLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_6"
-        android:layout_marginTop="@dimen/space_8"
-        android:layout_marginBottom="@dimen/space_8"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/expirationDateTextInputLayout"
-        app:layout_constraintTop_toBottomOf="@+id/nameAndNumberBarrier">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/securityNumberTextInputEditText"
-            style="@style/JudoTheme.TextInputEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="123" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/countryTextInputLayout"
-        style="@style/JudoTheme.TextInputLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_8"
-        android:layout_marginEnd="@dimen/space_6"
-        app:layout_constraintBottom_toTopOf="@+id/submitButton"
-        app:layout_constraintEnd_toStartOf="@+id/postcodeTextInputLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/expirationDateTextInputLayout">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/countryTextInputEditText"
-            style="@style/JudoTheme.TextInputEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            tools:text="Country" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/postcodeTextInputLayout"
-        style="@style/JudoTheme.TextInputLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_6"
-        android:layout_marginTop="@dimen/space_8"
-        app:layout_constraintBottom_toTopOf="@+id/bottomBarrier"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/countryTextInputLayout"
-        app:layout_constraintTop_toBottomOf="@+id/securityNumberTextInputLayout">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/postcodeTextInputEditText"
-            style="@style/JudoTheme.TextInputEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="Postcode" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/bottomBarrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="countryTextInputLayout,postcodeTextInputLayout" />
-
-    <Button
-        android:id="@+id/submitButton"
-        style="@style/JudoTheme.BlackRoundedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_16"
-        android:minWidth="@dimen/min_touch_target_size"
-        android:text="@string/pay_now"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bottomBarrier" />
+        app:layout_constraintTop_toBottomOf="@+id/scanCardButton" />
 
-    <TextView
-        android:id="@+id/secureTransmissionTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_8"
-        android:drawableStart="@drawable/ic_lock_20dp"
-        android:drawablePadding="@dimen/space_8"
-        android:text="@string/secure_server_transmission"
-        android:textColor="@color/brown_grey"
-        android:textSize="@dimen/caption"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submitButton" />
-
-</com.judopay.ui.cardentry.components.FormView>
+</androidx.constraintlayout.widget.ConstraintLayout>

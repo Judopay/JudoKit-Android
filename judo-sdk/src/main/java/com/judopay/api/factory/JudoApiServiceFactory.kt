@@ -14,13 +14,13 @@ import com.judopay.api.interceptor.DeviceDnaInterceptor
 import com.judopay.api.interceptor.PayLoadInterceptor
 import com.judopay.api.model.Credentials.Companion.fromConfiguration
 import com.judopay.apiBaseUrl
+import com.readystatesoftware.chuck.ChuckInterceptor
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import okhttp3.TlsVersion
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.math.BigDecimal
 import java.security.KeyStore
@@ -48,19 +48,14 @@ object JudoApiServiceFactory {
      * for interacting with the judoPay REST API.
      */
     @JvmStatic
-    fun createApiService(context: Context, judo: Judo): JudoApiService {
-        return createRetrofit(context.applicationContext, judo)
-                .create(JudoApiService::class.java)
-    }
+    fun createApiService(context: Context, judo: Judo): JudoApiService = createRetrofit(context.applicationContext, judo).create(JudoApiService::class.java)
 
-    private fun createRetrofit(context: Context, judo: Judo): Retrofit {
-        return Retrofit.Builder()
-                .addConverterFactory(gsonConverterFactory)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(judo.apiBaseUrl)
-                .client(getOkHttpClient(context, judo))
-                .build()
-    }
+    private fun createRetrofit(context: Context, judo: Judo): Retrofit = Retrofit.Builder()
+            .baseUrl(judo.apiBaseUrl)
+            .client(getOkHttpClient(context, judo))
+            .addConverterFactory(gsonConverterFactory)
+            .addCallAdapterFactory(JudoApiCallAdapterFactory())
+            .build()
 
     private val gsonConverterFactory: GsonConverterFactory
         get() = GsonConverterFactory.create(gson)
@@ -110,8 +105,8 @@ object JudoApiServiceFactory {
         }
     }
 
-    private fun setTimeouts(builder: OkHttpClient.Builder) {
-        builder.connectTimeout(5, TimeUnit.SECONDS)
+    private fun setTimeouts(builder: OkHttpClient.Builder) = with(builder) {
+        connectTimeout(5, TimeUnit.SECONDS)
                 .readTimeout(3, TimeUnit.MINUTES)
                 .writeTimeout(30, TimeUnit.SECONDS)
     }
@@ -131,5 +126,7 @@ object JudoApiServiceFactory {
             }
             add(loggingInterceptor)
         }
+
+        add(ChuckInterceptor(context))
     }
 }

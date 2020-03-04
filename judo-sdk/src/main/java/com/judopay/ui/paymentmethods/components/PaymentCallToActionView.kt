@@ -13,9 +13,9 @@ enum class PaymentButtonType {
 }
 
 data class PaymentCallToActionViewModel(
-        val amount: String,
-        val buttonType: PaymentButtonType,
-        val isButtonEnabled: Boolean
+        val amount: String = "",
+        val buttonType: PaymentButtonType = PaymentButtonType.PLAIN,
+        val isButtonEnabled: Boolean = false
 )
 
 class PaymentCallToActionView @JvmOverloads constructor(
@@ -28,9 +28,7 @@ class PaymentCallToActionView @JvmOverloads constructor(
         inflate(R.layout.payment_call_to_action_view, true)
     }
 
-    var model = PaymentCallToActionViewModel("$15.33",
-            PaymentButtonType.PLAIN,
-            true)
+    var model = PaymentCallToActionViewModel()
         set(value) {
             field = value
             update()

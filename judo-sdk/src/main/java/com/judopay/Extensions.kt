@@ -1,9 +1,9 @@
 package com.judopay
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -25,7 +25,6 @@ internal fun <T : Any> requireNotNull(value: T?, propertyName: String): T {
         throw IllegalArgumentException("$propertyName cannot be null")
     else return value
 }
-
 
 @Suppress("UNCHECKED_CAST")
 fun <T : View> View.parentOfType(parentType: Class<T>): T? {
@@ -63,8 +62,11 @@ val FragmentActivity.judo: Judo
 val Fragment.judo: Judo
     get() = requireActivity().judo
 
-val FragmentActivity.isPreAuthEnabled: Boolean
-    get() = intent.getBooleanExtra(JUDO_PRE_AUTH, false)
+val EditText.textValue: String
+    get() = text?.toString() ?: ""
 
-val Fragment.isPreAuthEnabled : Boolean
-    get() = requireActivity().isPreAuthEnabled
+val TextInputLayout.textValue: String
+    get() = editText?.textValue ?: ""
+
+val String.withWhitespacesRemoved: String
+    get() = replace("\\s".toRegex(), "")
