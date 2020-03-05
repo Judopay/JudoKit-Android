@@ -3,117 +3,211 @@ package com.judopay.ui.cardentry.components
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.widget.Button
-import androidx.constraintlayout.widget.ConstraintLayout
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
+import android.widget.EditText
+import android.widget.FrameLayout
+import androidx.annotation.StringRes
+import androidx.core.widget.addTextChangedListener
+import com.judopay.R
+import com.judopay.inflate
+import com.judopay.model.CardNetwork
 import com.judopay.parentOfType
 import com.judopay.subViewsWithType
-import com.judopay.ui.cardentry.model.*
+import com.judopay.ui.cardentry.components.FormFieldType.*
+import com.judopay.ui.cardentry.model.FormModel
+import com.judopay.ui.cardentry.validation.*
+import kotlinx.android.synthetic.main.form_view.view.*
+
+enum class FormFieldType {
+    NUMBER,
+    HOLDER_NAME,
+    EXPIRATION_DATE,
+    SECURITY_NUMBER,
+    COUNTRY,
+    POST_CODE
+}
 
 data class FormViewModel(
         val formModel: FormModel,
         val enabledFields: List<FormFieldType>,
-        val fieldMappings: Map<Int, FieldConfiguration>
+        val supportedNetworks: List<CardNetwork>,
+        @StringRes val submitButtonText: Int = R.string.button_add_card
 )
 
 class FormView @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
         defStyle: Int = 0
-) : ConstraintLayout(context, attrs, defStyle) {
+) : FrameLayout(context, attrs, defStyle) {
+
+    init {
+        inflate(R.layout.form_view, true)
+    }
 
     interface OnSubmitListener {
         fun onSubmitForm(form: FormView, model: FormModel)
     }
 
-    var model = FormViewModel(FormModel(), emptyList(), emptyMap())
+    var model = FormViewModel(FormModel(),
+            listOf(NUMBER, EXPIRATION_DATE, SECURITY_NUMBER),
+            listOf(CardNetwork.VISA))
         set(value) {
             field = value
             update()
         }
 
-    private val formFieldMapping = mutableMapOf<FormFieldType, TextInputEditText>()
-    private val inputMasks = mutableMapOf<FormFieldType, InputMaskTextWatcher>()
-    private var submitButton: Button? = null
-
     internal var onSubmitListener: OnSubmitListener? = null
+    private val validationResultsCache = mutableMapOf<FormFieldType, Boolean>()
+
+    private val validators: List<Validator> = listOf(
+            CardNumberValidator(supportedNetworks = model.supportedNetworks),
+            CardHolderNameValidator(),
+            ExpirationDateValidator(),
+            SecurityCodeValidator()
+    )
 
     override fun onFinishInflate() {
         super.onFinishInflate()
+
+        with(editTextForType(EXPIRATION_DATE)) {
+            val mask = InputMaskTextWatcher(this, "##/##")
+            addTextChangedListener(mask)
+        }
+
+        val securityCode = editTextForType(SECURITY_NUMBER)
+        val securityCodeMask = SecurityCodeInputMaskTextWatcher(securityCode)
+        securityCode.addTextChangedListener(securityCodeMask)
+
+        with(editTextForType(NUMBER)) {
+            val mask = CardNumberInputMaskTextWatcher(this, securityCodeMask)
+            addTextChangedListener(mask)
+        }
+
         setupFields()
     }
 
     private fun setupFields() {
-        val inputEditText = subViewsWithType(TextInputEditText::class.java)
-        val buttons = subViewsWithType(MaterialButton::class.java)
-
-        inputEditText.forEach { editText ->
-            // configure the filed only if we know about it
-            model.fieldMappings[editText.id]?.let { config ->
-                configureEditText(editText, config as InputFieldConfiguration)
-            }
+        submitButton.apply {
+            setOnClickListener(::onSubmit)
+            setText(model.submitButtonText)
+            isEnabled = false
         }
 
-        buttons.forEach { button ->
-            model.fieldMappings[button.id]?.let { config ->
-                configureSubmitButton(button, config as SubmitFieldConfiguration)
+        setupVisibilityOfFields()
+
+        values().forEach { type ->
+            editTextForType(type).apply {
+                setHint(hintForFieldType(type))
+
+                addTextChangedListener {
+                    val text = it.toString()
+                    textDidChange(type, text)
+                }
             }
         }
+    }
+
+    private fun textDidChange(type: FormFieldType, value: String) {
+        val validationResults = validators.mapNotNull {
+            if (it.fieldType == type) {
+                // TODO: to rethink this logic
+                if (it is SecurityCodeValidator) {
+                    val cardNumber = valueOfFieldWithType(NUMBER)
+                    it.cardNetwork = CardNetwork.ofNumber(cardNumber)
+                }
+
+                it.validate(value)
+            } else null
+        }
+
+        val result = validationResults.firstOrNull()
+
+        validationResultsCache[type] = result?.isValid ?: true
+
+        updateSubmitButtonState()
+
+        val layout = textInputLayoutForType(type)
+        val isValidResult = result?.isValid ?: true
+        val message = context.getString(result?.message ?: R.string.empty)
+        val errorEnabled = value.isNotBlank() && !isValidResult && message.isNotEmpty()
+
+        layout?.let {
+            it.isErrorEnabled = errorEnabled
+            it.error = message
+        }
+    }
+
+    private fun updateSubmitButtonState() {
+        submitButton.isEnabled = model.enabledFields.map {
+            validationResultsCache[it] ?: false
+        }.reduce { acc, b -> acc && b }
+    }
+
+    private fun hintForFieldType(type: FormFieldType): Int = when (type) {
+        NUMBER -> R.string.card_number_hint
+        HOLDER_NAME -> R.string.card_holder_hint
+        EXPIRATION_DATE -> R.string.date_hint
+        SECURITY_NUMBER -> R.string.cvv_hint
+        COUNTRY -> R.string.country_hint
+        POST_CODE -> R.string.post_code_hint
+    }
+
+    private fun editTextForType(type: FormFieldType): EditText = when (type) {
+        NUMBER -> {
+            numberTextInputEditText
+        }
+        HOLDER_NAME -> {
+            nameTextInputEditText
+        }
+        EXPIRATION_DATE -> {
+            expirationDateTextInputEditText
+        }
+        SECURITY_NUMBER -> {
+            securityNumberTextInputEditText
+        }
+        COUNTRY -> {
+            countryTextInputEditText
+        }
+        POST_CODE -> {
+            postcodeTextInputEditText
+        }
+    }
+
+    private fun textInputLayoutForType(type: FormFieldType): JudoEditTextInputLayout? {
+        val editText = editTextForType(type)
+        return editText.parentOfType(JudoEditTextInputLayout::class.java)
     }
 
     private fun update() {
-        formFieldMapping.clear()
         setupFields()
     }
 
-    private fun configureSubmitButton(button: Button, config: SubmitFieldConfiguration) {
-        submitButton = button
-        button.text = config.text
-        button.setOnClickListener {
-            onSubmitListener?.onSubmitForm(this, FormModel(
-                    getFormValueForFieldType(FormFieldType.NUMBER) ?: "",
-                    getFormValueForFieldType(FormFieldType.HOLDER_NAME) ?: "",
-                    getFormValueForFieldType(FormFieldType.EXPIRATION_DATE) ?: "",
-                    getFormValueForFieldType(FormFieldType.SECURITY_NUMBER) ?: "",
-                    getFormValueForFieldType(FormFieldType.COUNTRY) ?: "",
-                    getFormValueForFieldType(FormFieldType.POST_CODE) ?: ""
-            ))
+    private fun setupVisibilityOfFields() {
+        val textInputLayouts = subViewsWithType(JudoEditTextInputLayout::class.java)
+        textInputLayouts.forEach {
+            it.visibility = View.GONE
+        }
+
+        model.enabledFields.forEach {
+            val textInputLayout = textInputLayoutForType(it)
+            textInputLayout?.visibility = View.VISIBLE
         }
     }
 
-    private fun configureEditText(editText: TextInputEditText, config: InputFieldConfiguration) {
-        // keep a reference to the editText for later to extract the input data
-        formFieldMapping[config.type] = editText
-
-        // if the field is disabled, hide it from the layout
-        val visibility = if (model.enabledFields.contains(config.type)) View.VISIBLE else View.GONE
-        editText.parentOfType(TextInputLayout::class.java)?.visibility = visibility
-
-        // setup field properties
-        editText.setText(model.formModel.getValueForFieldType(config.type))
-
-        val mask = when (config.type) {
-            FormFieldType.NUMBER -> CardNumberInputMaskTextWatcher(editText)
-            FormFieldType.EXPIRATION_DATE -> InputMaskTextWatcher(editText, "##/##")
-            FormFieldType.SECURITY_NUMBER -> InputMaskTextWatcher(editText, "###")
-            else -> null
-        }
-
-        inputMasks[config.type]?.let {
-            editText.removeTextChangedListener(it)
-        }
-        editText.setHint(config.hint)
-        mask?.let {
-            editText.addTextChangedListener(it)
-            inputMasks[config.type] = it
-        }
+    private fun valueOfFieldWithType(type: FormFieldType): String {
+        val editText = editTextForType(type)
+        return editText.text.toString()
     }
 
-
-    private fun getFormValueForFieldType(type: FormFieldType): String? {
-        return formFieldMapping[type]?.text.toString()
+    private fun onSubmit(view: View) {
+        val model = FormModel(
+                valueOfFieldWithType(NUMBER),
+                valueOfFieldWithType(HOLDER_NAME),
+                valueOfFieldWithType(EXPIRATION_DATE),
+                valueOfFieldWithType(SECURITY_NUMBER),
+                valueOfFieldWithType(COUNTRY),
+                valueOfFieldWithType(POST_CODE)
+        )
+        onSubmitListener?.onSubmitForm(this, model)
     }
 
 }

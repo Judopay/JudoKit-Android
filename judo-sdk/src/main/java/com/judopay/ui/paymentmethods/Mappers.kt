@@ -9,6 +9,7 @@ fun TokenizedCardEntity.toPaymentMethodSavedCardsItem(): PaymentMethodSavedCards
             title = title,
             network = network,
             ending = ending,
-            token = token
+            token = token,
+            expireDate = expireDate
     )
 }

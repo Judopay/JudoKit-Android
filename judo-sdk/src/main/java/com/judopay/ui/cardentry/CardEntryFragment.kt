@@ -20,12 +20,10 @@ import com.judopay.api.model.request.Address
 import com.judopay.api.model.request.SaveCardRequest
 import com.judopay.api.model.response.Receipt
 import com.judopay.judo
+import com.judopay.ui.cardentry.components.FormFieldType
 import com.judopay.ui.cardentry.components.FormView
 import com.judopay.ui.cardentry.components.FormViewModel
-import com.judopay.ui.cardentry.model.FormFieldType
 import com.judopay.ui.cardentry.model.FormModel
-import com.judopay.ui.cardentry.model.InputFieldConfiguration
-import com.judopay.ui.cardentry.model.SubmitFieldConfiguration
 import kotlinx.android.synthetic.main.card_entry_fragment.*
 
 class SimpleKeyboardAnimator(private val window: Window?) {
@@ -161,18 +159,12 @@ class CardEntryFragment(
         return FormViewModel(
                 // Model to pre fil the form
                 FormModel(),
+
                 // Fields to show in form
                 listOf(FormFieldType.NUMBER, FormFieldType.HOLDER_NAME, FormFieldType.EXPIRATION_DATE, FormFieldType.SECURITY_NUMBER),
-                // Fields id's to map to
-                mapOf(
-                        Pair(R.id.numberTextInputEditText, InputFieldConfiguration(FormFieldType.NUMBER, R.string.card_number_hint)),
-                        Pair(R.id.nameTextInputEditText, InputFieldConfiguration(FormFieldType.HOLDER_NAME, R.string.card_holder_hint)),
-                        Pair(R.id.expirationDateTextInputEditText, InputFieldConfiguration(FormFieldType.EXPIRATION_DATE, R.string.date_hint)),
-                        Pair(R.id.securityNumberTextInputEditText, InputFieldConfiguration(FormFieldType.SECURITY_NUMBER, R.string.cvv_hint)),
-                        Pair(R.id.countryTextInputEditText, InputFieldConfiguration(FormFieldType.COUNTRY)),
-                        Pair(R.id.postcodeTextInputEditText, InputFieldConfiguration(FormFieldType.POST_CODE)),
-                        Pair(R.id.submitButton, SubmitFieldConfiguration(FormFieldType.SUBMIT, "Add card"))
-                )
+
+                // Supported networks
+                judo.supportedCardNetworks.toList()
         )
     }
 }

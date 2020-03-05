@@ -8,18 +8,18 @@
         android:id="@+id/viewAnimator"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="80dp"
         android:clipChildren="false"
         android:clipToPadding="false"
+        android:inAnimation="@android:anim/fade_in"
+        android:outAnimation="@android:anim/fade_out"
         app:layout_constraintBottom_toTopOf="@+id/paymentCallToActionView"
-        app:layout_constraintDimensionRatio="W,3.4:2"
+        app:layout_constraintDimensionRatio="W,3.2:2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3"
-        android:inAnimation="@android:anim/fade_in"
-        android:outAnimation="@android:anim/fade_out">
+        app:layout_constraintVertical_bias="0.3">
 
         <com.judopay.ui.paymentmethods.components.PaymentCardView
             android:id="@+id/paymentCardView"
@@ -75,16 +75,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageButton
-        android:id="@+id/backButton"
-        style="@style/JudoTheme.BackButton"
-        android:layout_width="@dimen/min_touch_target_size"
-        android:layout_height="@dimen/min_touch_target_size"
-        android:layout_marginStart="@dimen/space_4"
-        android:layout_marginTop="@dimen/space_24"
-        android:contentDescription="@null"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

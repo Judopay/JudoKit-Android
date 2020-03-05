@@ -15,4 +15,5 @@ class IdealPaymentCardView @JvmOverloads constructor(
     init {
         inflate(R.layout.ideal_payment_card_view, true)
     }
+
 }

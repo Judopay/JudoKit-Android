@@ -11,7 +11,9 @@ class NoPaymentMethodSelectedView @JvmOverloads constructor(
         attrs: AttributeSet? = null,
         defStyle: Int = 0
 ) : FrameLayout(context, attrs, defStyle) {
+
     init {
         inflate(R.layout.no_payment_method_selected_view, true)
     }
+
 }

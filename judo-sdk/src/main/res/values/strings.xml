@@ -16,6 +16,16 @@
     <string name="cvv_hint">CVV</string>
     <string name="card_number_hint">Card number</string>
     <string name="card_holder_hint">Cardholder Name</string>
+    <string name="country_hint">Country</string>
+    <string name="post_code_hint">Postcode</string>
+    <string name="check_card_number">Check card number</string>
+    <string name="error_maestro_not_supported">We don\'t accept Maestro, please use other cards</string>
+    <string name="error_amex_not_supported">We don\'t accept AmEx, please use other cards</string>
+    <string name="error_discover_not_supported">We don\'t accept Discover, please use other cards</string>
+    <string name="error_union_pay_not_supported">We don\'t accept Union Pay, please use other cards</string>
+    <string name="error_jcb_not_supported">We don\'t accept JCB, please use other cards</string>
+    <string name="check_expiry_date">Check expiry date</string>
+    <string name="check_cvv">Check CVV</string>
 
     <string name="transaction_unsuccessful">Transaction unsuccessful, please try again</string>
     <string name="close">Close</string>
@@ -24,5 +34,6 @@
     <string name="choose_payment_method">Choose a Payment Method</string>
     <string name="no_cards_added">You didn’t add any cards yet.\nAdd one right now or use any of the payment methods below</string>
     <string name="google_pay">Google Pay</string>
+    <string name="delete">Delete</string>
 
 </resources>

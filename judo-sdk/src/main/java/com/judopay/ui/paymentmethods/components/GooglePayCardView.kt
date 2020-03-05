@@ -15,4 +15,5 @@ class GooglePayCardView @JvmOverloads constructor(
     init {
         inflate(R.layout.google_pay_card_view, true)
     }
+
 }

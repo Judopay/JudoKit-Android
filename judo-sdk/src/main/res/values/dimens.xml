@@ -12,6 +12,7 @@
     <dimen name="space_24">24dp</dimen>
     <dimen name="space_32">32dp</dimen>
     <dimen name="space_40">40dp</dimen>
+    <dimen name="space_48">48dp</dimen>
     <dimen name="space_132">132dp</dimen>
 
     <!-- Font sizes -->
@@ -26,8 +27,8 @@
     <dimen name="button_corner_radius">4dp</dimen>
 
     <!-- App bar -->
-    <dimen name="app_bar_layout_height">400dp</dimen>
-    <dimen name="app_bar_layout_min_height">290dp</dimen>
+    <dimen name="app_bar_layout_height">430dp</dimen>
+    <dimen name="app_bar_layout_min_height">330dp</dimen>
 
     <!-- Payment methods screen-->
     <dimen name="network_icon_container_height">36dp</dimen>
@@ -38,6 +39,7 @@
 
     <!-- Text input layouts -->
     <dimen name="input_layout_corner_radius">6dp</dimen>
+    <dimen name="judo_text_input_layout_height">44dp</dimen>
 
     <!-- Cards -->
     <dimen name="card_corner_radius">10dp</dimen>

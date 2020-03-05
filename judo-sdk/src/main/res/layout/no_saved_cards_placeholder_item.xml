@@ -25,7 +25,7 @@
         android:layout_marginTop="@dimen/space_8"
         android:layout_marginBottom="@dimen/space_16"
         android:text="@string/button_add_card"
-        app:icon="@drawable/ic_add_14dp"
+        app:icon="@drawable/ic_add_card"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
