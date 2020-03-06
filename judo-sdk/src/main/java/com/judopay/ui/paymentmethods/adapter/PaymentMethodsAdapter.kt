@@ -4,9 +4,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.judopay.R
 import com.judopay.inflate
-import com.judopay.ui.paymentmethods.model.PaymentMethodItem
-import com.judopay.ui.paymentmethods.model.PaymentMethodItemAction
-import com.judopay.ui.paymentmethods.model.PaymentMethodItemType
+import com.judopay.ui.paymentmethods.adapter.viewholder.*
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItem
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItemAction
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItemType
 
 internal interface BindableRecyclerViewHolder<V, A> {
     fun bind(model: V, listener: PaymentMethodsAdapterListener? = null)
@@ -35,7 +36,7 @@ class PaymentMethodsAdapter(
             PaymentMethodItemType.SAVED_CARDS_FOOTER -> SavedCardsFooterViewHolder(parent.inflate(R.layout.saved_card_footer_item))
             PaymentMethodItemType.NO_SAVED_CARDS_PLACEHOLDER -> NoSavedCardsPlaceholderViewHolder(parent.inflate(R.layout.no_saved_cards_placeholder_item))
             else -> {
-                throw NotImplementedError()
+                throw NotImplementedError("Unsupported or null type")
             }
         }
     }

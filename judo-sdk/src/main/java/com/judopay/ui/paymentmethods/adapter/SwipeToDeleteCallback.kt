@@ -11,6 +11,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.judopay.R
+import com.judopay.ui.paymentmethods.adapter.viewholder.SavedCardsItemViewHolder
 import java.util.*
 
 abstract class SwipeToDeleteCallback(

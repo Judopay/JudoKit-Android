@@ -142,11 +142,11 @@
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="countryTextInputLayout,postcodeTextInputLayout" />
 
-    <Button
+    <com.judopay.ui.common.ProgressButton
         android:id="@+id/submitButton"
         style="@style/JudoTheme.BlackRoundedButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/button_height"
         android:layout_marginTop="@dimen/space_16"
         android:minWidth="@dimen/min_touch_target_size"
         android:text="@string/pay_now"

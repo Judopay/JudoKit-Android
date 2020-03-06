@@ -10,12 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.HorizontalScrollView
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.children
 import androidx.transition.TransitionManager
 import com.judopay.R
 import com.judopay.inflate
 import com.judopay.model.PaymentMethod
 import com.judopay.model.icon
 import com.judopay.model.text
+import com.judopay.subViewsWithType
+import kotlinx.android.synthetic.main.payment_methods_selector_item.view.*
 import kotlinx.android.synthetic.main.view_payment_selector.view.*
 
 private const val MARGIN_12 = 12
@@ -42,6 +45,10 @@ class PaymentSelectorView @JvmOverloads constructor(
             currentSelected: PaymentMethod?,
             onClick: PaymentSelectorViewSelectionListener
     ) {
+        container.subViewsWithType(PaymentSelectorItemView::class.java).forEach {
+            container.removeView(it)
+        }
+
         this.currentSelected = currentSelected
         val itemViews: MutableList<PaymentSelectorItemView> = mutableListOf()
         val ids: MutableList<Int> = mutableListOf()
@@ -160,10 +167,10 @@ class PaymentSelectorView @JvmOverloads constructor(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
                 )
-        val itemViewWidth = itemView.getImageView().width + itemView.getTextView().measuredWidth
-        if (!(itemView.getGlobalVisibleRect(rect) && itemView.height == rect.height() && itemViewWidth == rect.width())) {
+        if (!(itemView.getGlobalVisibleRect(rect) && itemView.height == rect.height() && itemView.width == rect.width())) {
+            val itemViewWidth = itemView.getImageView().width + itemView.getTextView().measuredWidth
             if (currentSelected != null && !lastUsedSelected) {
-                smoothScrollTo(itemView.right, 0)
+                smoothScrollTo(itemView.left, 0)
                 lastUsedSelected = true
             } else if (scrollX < itemView.x.toInt()) {
                 smoothScrollTo(scrollX + itemViewWidth, 0)
@@ -173,4 +180,3 @@ class PaymentSelectorView @JvmOverloads constructor(
         }
     }
 }
-

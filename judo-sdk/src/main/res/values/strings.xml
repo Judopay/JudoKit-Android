@@ -2,7 +2,7 @@
     <string name="pay_now">Pay Now</string>
     <string name="connected_cards">Connected Cards</string>
     <string name="button_edit">Edit</string>
-    <string name="button_cancel">Cancel</string>
+    <string name="cancel">Cancel</string>
     <string name="button_scan_card">Scan card</string>
     <string name="button_add_card">Add card</string>
     <string name="you_will_pay">You will pay</string>
@@ -26,6 +26,7 @@
     <string name="error_jcb_not_supported">We don\'t accept JCB, please use other cards</string>
     <string name="check_expiry_date">Check expiry date</string>
     <string name="check_cvv">Check CVV</string>
+    <string name="card_subtitle">%1$s Ending %2$s</string>
 
     <string name="transaction_unsuccessful">Transaction unsuccessful, please try again</string>
     <string name="close">Close</string>
@@ -35,5 +36,16 @@
     <string name="no_cards_added">You didn’t add any cards yet.\nAdd one right now or use any of the payment methods below</string>
     <string name="google_pay">Google Pay</string>
     <string name="delete">Delete</string>
+
+    <string name="delete_card_alert_title">Delete Card ?</string>
+    <string name="delete_card_alert_message">Are you sure you want to delete this card from your wallet?</string>
+    <string name="default_visa_card_title">My VISA Card</string>
+    <string name="default_mastercard_card_title">My MasterCard Card</string>
+    <string name="default_maestro_card_title">My Maestro Card</string>
+    <string name="default_amex_card_title">My American Express Card</string>
+    <string name="default_jcb_card_title">My JCB Card</string>
+    <string name="default_chinaunionpay_card_title">My China Union Pay Card</string>
+    <string name="default_discover_card_title">My Discover Card</string>
+    <string name="default_dinnersclub_card_title">My Dinners Club Card</string>
 
 </resources>

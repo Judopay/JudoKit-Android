@@ -24,7 +24,9 @@ import com.judopay.ui.cardentry.components.FormFieldType
 import com.judopay.ui.cardentry.components.FormView
 import com.judopay.ui.cardentry.components.FormViewModel
 import com.judopay.ui.cardentry.model.FormModel
+import com.judopay.ui.common.ButtonState
 import kotlinx.android.synthetic.main.card_entry_fragment.*
+import kotlinx.android.synthetic.main.payment_call_to_action_view.*
 
 class SimpleKeyboardAnimator(private val window: Window?) {
 
@@ -134,6 +136,7 @@ class CardEntryFragment(
     }
 
     override fun onSubmitForm(form: FormView, model: FormModel) {
+
         val request = SaveCardRequest.Builder()
                 .setUniqueRequest(false)
                 .setYourPaymentReference(judo.reference.paymentReference)

@@ -1,6 +1,6 @@
 package com.judopay.model
 
 enum class ApiEnvironment(val host: String) {
-    LIVE("https://gw1.judopay.com/"),
-    SANDBOX("https://gw1.judopay-sandbox.com/")
+    LIVE("https://api.judopay.com/"),
+    SANDBOX("https://api-sandbox.judopay.com/")
 }

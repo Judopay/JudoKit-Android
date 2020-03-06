@@ -1,10 +1,13 @@
-package com.judopay.ui.paymentmethods.adapter
+package com.judopay.ui.paymentmethods.adapter.viewholder
 
 import android.view.View
+import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
-import com.judopay.ui.paymentmethods.model.PaymentMethodItem
-import com.judopay.ui.paymentmethods.model.PaymentMethodItemAction
-import com.judopay.ui.paymentmethods.model.PaymentMethodSelectorItem
+import com.judopay.ui.paymentmethods.adapter.BindableRecyclerViewHolder
+import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapterListener
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItem
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItemAction
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSelectorItem
 import kotlinx.android.synthetic.main.payment_methods_selector_item.view.*
 
 class MethodSelectorViewHolder(view: View) : RecyclerView.ViewHolder(view),

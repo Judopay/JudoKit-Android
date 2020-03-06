@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
     android:paddingStart="@dimen/space_24"
     android:paddingTop="@dimen/space_12"
     android:paddingEnd="@dimen/space_24"
@@ -33,26 +34,38 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_8"
         android:layout_marginTop="0dp"
+        android:layout_marginEnd="@dimen/space_8"
         android:fontFamily="@font/sf_pro_display_semibold"
-        tools:text="Card for shopping"
         android:textColor="@color/black"
         android:textSize="@dimen/body"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/radioIconImageView"
         app:layout_constraintStart_toEndOf="@+id/networkIconContainer"
-        app:layout_constraintTop_toTopOf="@+id/networkIconContainer" />
+        app:layout_constraintTop_toTopOf="@+id/networkIconContainer"
+        tools:text="Card for shopping" />
 
     <TextView
         android:id="@+id/subTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_8"
+        android:layout_marginEnd="@dimen/space_8"
         android:layout_marginBottom="0dp"
         android:fontFamily="@font/sf_pro_display_regular"
-        tools:text="Visa ending 3424"
         android:textColor="@color/warm_grey"
         android:textSize="@dimen/caption"
         app:layout_constraintBottom_toBottomOf="@+id/networkIconContainer"
+        app:layout_constraintEnd_toStartOf="@+id/radioIconImageView"
+        app:layout_constraintStart_toEndOf="@+id/networkIconContainer"
+        tools:text="Visa ending 3424" />
+
+    <ImageView
+        android:id="@+id/radioIconImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/networkIconContainer" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_radio_off" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

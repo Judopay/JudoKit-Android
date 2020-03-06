@@ -5,6 +5,12 @@ import android.util.AttributeSet
 import androidx.cardview.widget.CardView
 import com.judopay.R
 import com.judopay.inflate
+import com.judopay.ui.paymentmethods.model.CardViewModel
+import com.judopay.ui.paymentmethods.model.CardViewType
+
+open class IdealPaymentCardViewModel(
+        override val type: CardViewType = CardViewType.IDEAL
+) : CardViewModel
 
 class IdealPaymentCardView @JvmOverloads constructor(
         context: Context,
