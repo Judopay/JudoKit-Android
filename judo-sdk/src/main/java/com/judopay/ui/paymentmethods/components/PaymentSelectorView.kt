@@ -45,8 +45,8 @@ class PaymentSelectorView @JvmOverloads constructor(
             currentSelected: PaymentMethod?,
             onClick: PaymentSelectorViewSelectionListener
     ) {
-        container.subViewsWithType(PaymentSelectorItemView::class.java).forEach {
-            container.removeView(it)
+        paymentSelectorContainer.subViewsWithType(PaymentSelectorItemView::class.java).forEach {
+            paymentSelectorContainer.removeView(it)
         }
 
         this.currentSelected = currentSelected
@@ -72,13 +72,13 @@ class PaymentSelectorView @JvmOverloads constructor(
                     translationZ = 10f
                 }
             }
-            container.addView(itemView)
+            paymentSelectorContainer.addView(itemView)
             itemViews.add(itemView)
             ids.add(itemView.id)
         }
 
         val set = ConstraintSet()
-        set.clone(container)
+        set.clone(paymentSelectorContainer)
 
         itemViews.forEachIndexed { index, itemView ->
             if (currentSelected != null && paymentMethods.contains(currentSelected)) {
@@ -104,16 +104,16 @@ class PaymentSelectorView @JvmOverloads constructor(
                 if (prevClicked != itemView || !lastUsedSelected) {
                     prevClicked?.setTextVisibility(View.GONE)
                     selectItem(set, itemView)
-                    set.applyTo(container)
+                    set.applyTo(paymentSelectorContainer)
                     prevClicked = itemView
-                    TransitionManager.beginDelayedTransition(container)
+                    TransitionManager.beginDelayedTransition(paymentSelectorContainer)
                     scrollToView(itemView)
                     onClick.invoke(itemView.getPaymentMethod())
                 }
             }
         }
         chainViews(ids, set)
-        set.applyTo(container)
+        set.applyTo(paymentSelectorContainer)
     }
 
     override fun onDraw(canvas: Canvas?) {

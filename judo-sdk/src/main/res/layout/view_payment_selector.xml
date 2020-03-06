@@ -15,7 +15,7 @@
         android:paddingEnd="@dimen/space_24">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/container"
+            android:id="@+id/paymentSelectorContainer"
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:background="@drawable/slider_background">

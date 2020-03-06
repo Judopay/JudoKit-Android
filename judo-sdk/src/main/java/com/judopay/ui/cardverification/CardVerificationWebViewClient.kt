@@ -4,13 +4,12 @@ import android.graphics.Bitmap
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.judopay.ui.cardverification.model.WebViewAction
 
 
 class CardVerificationWebViewClient(
     private val javaScriptNamespace: String?,
-    private val redirectUrl: String?,
-    private val onPageStarted: (() -> Unit)?,
-    private val onPageLoaded: () -> Unit
+    private val redirectUrl: String?
 ) : WebViewClient() {
 
     override fun onPageFinished(view: WebView, url: String) {
@@ -24,15 +23,15 @@ class CardVerificationWebViewClient(
                 )
             )
         } else {
-            onPageLoaded.invoke()
+            (view as WebViewCallback).send(WebViewAction.OnPageLoaded)
         }
     }
 
     override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         if (url == redirectUrl) {
-            onPageStarted?.invoke()
-            view.visibility = View.INVISIBLE
+            (view as WebViewCallback).send(WebViewAction.OnPageStarted)
+            view.visibility = View.GONE
         }
     }
 

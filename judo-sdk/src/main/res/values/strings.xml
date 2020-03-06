@@ -48,4 +48,6 @@
     <string name="default_discover_card_title">My Discover Card</string>
     <string name="default_dinnersclub_card_title">My Dinners Club Card</string>
 
+    <string name="processing">Processing…</string>
+
 </resources>

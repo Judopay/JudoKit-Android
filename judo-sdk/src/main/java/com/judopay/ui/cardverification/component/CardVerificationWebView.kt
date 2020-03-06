@@ -9,7 +9,9 @@ import android.webkit.WebView
 import com.google.gson.Gson
 import com.judopay.BuildConfig
 import com.judopay.api.model.response.CardVerificationResult
+import com.judopay.ui.cardverification.WebViewCallback
 import com.judopay.ui.cardverification.CardVerificationWebViewClient
+import com.judopay.ui.cardverification.model.WebViewAction
 import com.judopay.ui.error.Show3dSecureWebViewError
 import java.io.UnsupportedEncodingException
 import java.lang.String.format
@@ -26,12 +28,10 @@ class CardVerificationWebView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
-) : WebView(context, attrs, defStyle) {
+) : WebView(context, attrs, defStyle), WebViewCallback {
 
+    lateinit var view: WebViewCallback
     private lateinit var receiptId: String
-    private lateinit var onAuthorizationComplete: (CardVerificationResult, String) -> Unit
-    private lateinit var onPageStarted: () -> Unit
-    private lateinit var onPageLoaded: () -> Unit
 
     init {
         configureSettings()
@@ -70,12 +70,7 @@ class CardVerificationWebView @JvmOverloads constructor(
                 encode(md, CHARSET), encode(REDIRECT_URL, CHARSET), encode(paReq, CHARSET)
             )
             this.receiptId = receiptId ?: ""
-            val webViewClient = CardVerificationWebViewClient(JS_NAMESPACE, REDIRECT_URL, {
-                onPageStarted.invoke()
-            }, {
-                onPageLoaded.invoke()
-            }
-            )
+            val webViewClient = CardVerificationWebViewClient(JS_NAMESPACE, REDIRECT_URL)
             setWebViewClient(webViewClient)
             postUrl(acsUrl, postData.toByteArray(StandardCharsets.UTF_8))
         } catch (throwable: UnsupportedEncodingException) {
@@ -85,16 +80,10 @@ class CardVerificationWebView @JvmOverloads constructor(
 
     private fun onJsonReceived(json: String) {
         val cardVerificationResult = Gson().fromJson(json, CardVerificationResult::class.java)
-        onAuthorizationComplete.invoke(cardVerificationResult, receiptId)
+        view.send(WebViewAction.OnAuthorizationComplete(cardVerificationResult, receiptId))
     }
 
-    fun setListeners(
-        onPageStarted: () -> Unit,
-        onPageLoaded: () -> Unit,
-        onAuthorizationComplete: (CardVerificationResult, String) -> Unit
-    ) {
-        this.onPageStarted = onPageStarted
-        this.onPageLoaded = onPageLoaded
-        this.onAuthorizationComplete = onAuthorizationComplete
+    override fun send(action: WebViewAction) {
+        view.send(action)
     }
 }

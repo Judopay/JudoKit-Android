@@ -2,6 +2,7 @@ package com.judopay.ui.cardverification.component
 
 class JsonParsingJavaScriptInterface(private val onJsonReceived: (String) -> Unit) {
 
+    @android.webkit.JavascriptInterface
     fun parseJsonFromHtml(content: String?) {
         if (!content.isNullOrEmpty()) {
             try {

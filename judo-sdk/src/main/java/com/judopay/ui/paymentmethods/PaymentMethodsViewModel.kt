@@ -12,6 +12,8 @@ import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.api.model.request.Address
 import com.judopay.api.model.request.TokenRequest
 import com.judopay.api.model.response.CardToken
+import com.judopay.api.model.response.JudoApiCallResult
+import com.judopay.api.model.response.Receipt
 import com.judopay.db.JudoRoomDatabase
 import com.judopay.db.entity.TokenizedCardEntity
 import com.judopay.db.repository.TokenizedCardRepository
@@ -19,9 +21,22 @@ import com.judopay.model.PaymentMethod
 import com.judopay.model.formatted
 import com.judopay.toMap
 import com.judopay.ui.common.ButtonState
-import com.judopay.ui.paymentmethods.adapter.model.*
-import com.judopay.ui.paymentmethods.components.*
-import com.judopay.ui.paymentmethods.model.*
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItem
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItemType
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSavedCardItem
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSelectorItem
+import com.judopay.ui.paymentmethods.components.GooglePayCardViewModel
+import com.judopay.ui.paymentmethods.components.IdealPaymentCardViewModel
+import com.judopay.ui.paymentmethods.components.NoPaymentMethodSelectedViewModel
+import com.judopay.ui.paymentmethods.components.PaymentCallToActionViewModel
+import com.judopay.ui.paymentmethods.components.PaymentCardViewModel
+import com.judopay.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
+import com.judopay.ui.paymentmethods.model.CardPaymentMethodModel
+import com.judopay.ui.paymentmethods.model.CardViewModel
+import com.judopay.ui.paymentmethods.model.GooglePayPaymentMethodModel
+import com.judopay.ui.paymentmethods.model.IdealPaymentMethodModel
+import com.judopay.ui.paymentmethods.model.PaymentMethodModel
 import kotlinx.coroutines.launch
 
 sealed class PaymentMethodsAction {
@@ -46,6 +61,7 @@ class PaymentMethodsViewModel(application: Application,
                               private val judo: Judo) : AndroidViewModel(application) {
 
     val model = MutableLiveData<PaymentMethodsModel>()
+    val receipt = MutableLiveData<Receipt>()
 
     private val context = application
     private val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
@@ -104,8 +120,9 @@ class PaymentMethodsViewModel(application: Application,
                             .setAddress(Address.Builder().build())
                             .build()
 
-                    val response = service.tokenPayment(request)
-
+                    when (val response = service.tokenPayment(request)) {
+                        is JudoApiCallResult.Success -> receipt.postValue(response.data)
+                    }
                     // TODO: temporary
                     val paymentMethod = model.value?.currentPaymentMethod?.type
                             ?: PaymentMethod.CARD

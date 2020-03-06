@@ -10,17 +10,25 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.judopay.JUDO_RECEIPT
 import com.judopay.R
 import com.judopay.api.model.response.Receipt
 import com.judopay.judo
 import com.judopay.ui.cardentry.CardEntryFragment
+import com.judopay.ui.cardverification.CardVerificationFragment
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judopay.ui.paymentmethods.adapter.SwipeToDeleteCallback
-import com.judopay.ui.paymentmethods.adapter.model.*
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItem
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItemAction
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSavedCardItem
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSelectorItem
 import com.judopay.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
 import com.judopay.ui.paymentmethods.model.PaymentMethodModel
-import kotlinx.android.synthetic.main.payment_methods_fragment.*
-import kotlinx.android.synthetic.main.payment_methods_header_view.*
+import kotlinx.android.synthetic.main.payment_methods_fragment.backButton
+import kotlinx.android.synthetic.main.payment_methods_fragment.headerView
+import kotlinx.android.synthetic.main.payment_methods_fragment.recyclerView
+import kotlinx.android.synthetic.main.payment_methods_header_view.paymentCallToActionView
 
 data class PaymentMethodsModel(
         val headerModel: PaymentMethodsHeaderViewModel,
@@ -50,6 +58,22 @@ class PaymentMethodsFragment : Fragment(), CardEntryFragment.OnResultListener {
 
         viewModel.model.observe(viewLifecycleOwner, Observer {
             updateWithModel(it)
+        })
+        viewModel.receipt.observe(viewLifecycleOwner, Observer {
+            if (it.is3dSecureRequired) {
+                val bundle = Bundle().apply {
+                    putParcelable(JUDO_RECEIPT, it)
+                }
+                val cardVerificationFragment = CardVerificationFragment().apply {
+                    arguments = bundle
+                }
+                requireActivity().supportFragmentManager.beginTransaction().add(
+                    R.id.container,
+                    cardVerificationFragment
+                ).commitNow()
+            } else {
+                requireActivity().finish()
+            }
         })
     }
 
