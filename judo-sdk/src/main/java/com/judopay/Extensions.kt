@@ -1,5 +1,6 @@
 package com.judopay
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -70,3 +71,8 @@ val TextInputLayout.textValue: String
 
 val String.withWhitespacesRemoved: String
     get() = replace("\\s".toRegex(), "")
+
+fun Bundle.toMap(): Map<String, String> = keySet().mapNotNull {
+    val value = getString(it)
+    if (value != null) Pair(it, value) else null
+}.toMap()

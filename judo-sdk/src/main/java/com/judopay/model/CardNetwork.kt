@@ -14,7 +14,8 @@ enum class CardNetwork : Parcelable {
     CHINA_UNION_PAY,
     JCB,
     DISCOVER,
-    DINERS_CLUB;
+    DINERS_CLUB,
+    UNKNOWN;
 
     companion object {
         const val DEFAULT_CARD_NUMBER_MASK = "#### #### #### ####"
@@ -74,6 +75,20 @@ enum class CardNetwork : Parcelable {
             }
             return false
         }
+
+        fun withIdentifier(id: Int): CardNetwork = when (id) {
+            1 /*VISA*/,
+            3 /*VISA_ELECTRON*/,
+            11 /*VISA_DEBIT*/ -> VISA
+            2 -> MASTER_CARD
+            10 -> MAESTRO
+            8 -> AMEX
+            7 -> CHINA_UNION_PAY
+            9 -> JCB
+            12 -> DISCOVER
+            13 -> DINERS_CLUB
+            else -> UNKNOWN
+        }
     }
 }
 
@@ -100,6 +115,19 @@ val CardNetwork.securityCodeName: String
         else -> "CVV"
     }
 
+val CardNetwork.displayName: String
+    get() = when (this) {
+        CardNetwork.VISA -> "Visa"
+        CardNetwork.MASTER_CARD -> "Master Card"
+        CardNetwork.MAESTRO -> "Maestro"
+        CardNetwork.AMEX -> "AmEx"
+        CardNetwork.CHINA_UNION_PAY -> "China UnionPay"
+        CardNetwork.JCB -> "JCB"
+        CardNetwork.DISCOVER -> "Discover"
+        CardNetwork.DINERS_CLUB -> "Diners Club"
+        CardNetwork.UNKNOWN -> "Unknown Card Network"
+    }
+
 val CardNetwork.iconImageResId: Int
     get() = when (this) {
         CardNetwork.AMEX -> R.drawable.ic_card_amex
@@ -111,7 +139,6 @@ val CardNetwork.iconImageResId: Int
         CardNetwork.JCB -> R.drawable.ic_jcb
         else -> 0
     }
-
 
 val CardNetwork.cardNumberMaxLength: Int
     get() = when (this) {
@@ -126,5 +153,18 @@ val CardNetwork.notSupportedErrorMessageResId: Int
         CardNetwork.AMEX -> R.string.error_amex_not_supported
         CardNetwork.DISCOVER -> R.string.error_discover_not_supported
         CardNetwork.CHINA_UNION_PAY -> R.string.error_union_pay_not_supported
+        else -> R.string.empty
+    }
+
+val CardNetwork.defaultCardNameResId: Int
+    get() = when (this) {
+        CardNetwork.AMEX -> R.string.default_amex_card_title
+        CardNetwork.MASTER_CARD -> R.string.default_mastercard_card_title
+        CardNetwork.MAESTRO -> R.string.default_maestro_card_title
+        CardNetwork.VISA -> R.string.default_visa_card_title
+        CardNetwork.DISCOVER -> R.string.default_discover_card_title
+        CardNetwork.DINERS_CLUB -> R.string.default_dinnersclub_card_title
+        CardNetwork.JCB -> R.string.default_jcb_card_title
+        CardNetwork.CHINA_UNION_PAY -> R.string.default_chinaunionpay_card_title
         else -> R.string.empty
     }

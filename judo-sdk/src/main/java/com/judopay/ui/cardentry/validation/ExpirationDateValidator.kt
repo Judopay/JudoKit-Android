@@ -4,6 +4,9 @@ import com.judopay.R
 import com.judopay.ui.cardentry.components.FormFieldType
 import java.util.*
 
+
+const val MAX_YEARS = 10
+
 class ExpirationDateValidator(override val fieldType: FormFieldType = FormFieldType.EXPIRATION_DATE) : Validator {
 
     private fun isAfterToday(year: Int, month: Int): Boolean {
@@ -27,10 +30,10 @@ class ExpirationDateValidator(override val fieldType: FormFieldType = FormFieldT
 
     private fun isInsideAllowedDateRange(year: Int, month: Int): Boolean {
         val minDate = Calendar.getInstance()
-        minDate[Calendar.YEAR] = minDate[Calendar.YEAR] - 10
+        minDate[Calendar.YEAR] = minDate[Calendar.YEAR] - MAX_YEARS
 
         val maxDate = Calendar.getInstance()
-        maxDate[Calendar.YEAR] = maxDate[Calendar.YEAR] + 10
+        maxDate[Calendar.YEAR] = maxDate[Calendar.YEAR] + MAX_YEARS
 
         val cardDate = Calendar.getInstance()
         cardDate[year, month - 1] = 1

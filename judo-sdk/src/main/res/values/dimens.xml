@@ -25,6 +25,7 @@
     <!-- Buttons -->
     <dimen name="min_touch_target_size">48dp</dimen>
     <dimen name="button_corner_radius">4dp</dimen>
+    <dimen name="button_height">56dp</dimen>
 
     <!-- App bar -->
     <dimen name="app_bar_layout_height">430dp</dimen>

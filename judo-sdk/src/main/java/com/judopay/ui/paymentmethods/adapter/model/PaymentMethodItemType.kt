@@ -1,4 +1,4 @@
-package com.judopay.ui.paymentmethods.model
+package com.judopay.ui.paymentmethods.adapter.model
 
 enum class PaymentMethodItemType {
     SELECTOR,

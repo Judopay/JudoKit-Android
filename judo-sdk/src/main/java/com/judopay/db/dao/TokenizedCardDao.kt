@@ -10,11 +10,14 @@ import com.judopay.db.entity.TokenizedCardEntity
 @Dao
 interface TokenizedCardDao {
     @Query("SELECT * from tokenized_card ORDER BY timestamp ASC")
-    fun getAllSortedByDateAdded(): LiveData<List<TokenizedCardEntity>>
+    suspend fun getAllSortedByDateAdded(): List<TokenizedCardEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(card: TokenizedCardEntity)
 
     @Query("DELETE FROM tokenized_card WHERE id = :id")
     suspend fun deleteWithId(id: Int)
+
+    @Query("SELECT * FROM tokenized_card WHERE id = :id LIMIT 1")
+    suspend fun getWithId(id: Int): TokenizedCardEntity
 }
