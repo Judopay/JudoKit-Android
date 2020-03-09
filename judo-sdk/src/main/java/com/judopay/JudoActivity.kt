@@ -1,58 +1,40 @@
 package com.judopay
 
-import android.app.AlertDialog
-import android.content.Context
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.judopay.api.model.response.Receipt
-import com.judopay.ui.paymentmethods.PaymentMethodsFragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.distinctUntilChanged
+import androidx.navigation.fragment.NavHostFragment
+import com.judopay.api.model.response.JudoApiCallResult
+import com.judopay.model.navigationGraphId
 
 class JudoActivity : AppCompatActivity() {
+
+    private lateinit var viewModel: JudoSharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.judopay_activity)
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, PaymentMethodsFragment())
-                    .commitNow()
-        }
+
+        // setup navigation graph
+        val graphId = judo.paymentWidgetType.navigationGraphId
+        val navigationHost = NavHostFragment.create(graphId)
+
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.container, navigationHost)
+                .setPrimaryNavigationFragment(navigationHost)
+                .commit()
+
+        // setup shared view-model & callbacks
+        viewModel = ViewModelProvider(this).get(JudoSharedViewModel::class.java)
+        viewModel.paymentResult.observe(this, Observer { dispatchPaymentResult(it) })
     }
 
-    fun sendResult(resultCode: Int, receipt: Receipt) {
-        val intent = Intent()
-        intent.putExtra(JUDO_RECEIPT, receipt)
-        setResult(resultCode, intent)
-        if (resultCode == RESULT_ERROR) {
-            vibrate(this)
-            showAlertDialog()
-        } else {
-            finish()
-        }
+    private fun dispatchPaymentResult(result: JudoPaymentResult) {
+        setResult(result.code, result.toIntent())
+        finish()
     }
 
-    private fun showAlertDialog() {
-        AlertDialog.Builder(this)
-            .setMessage(R.string.transaction_unsuccessful)
-            .setNegativeButton(R.string.close) { _, _ -> finish() }
-            .show()
-    }
-
-    private fun vibrate(context: Context) {
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(
-                VibrationEffect.createOneShot(
-                    150L,
-                    VibrationEffect.DEFAULT_AMPLITUDE
-                )
-            )
-        } else {
-            vibrator.vibrate(150L)
-        }
-    }
 }

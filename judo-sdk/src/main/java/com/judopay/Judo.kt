@@ -1,5 +1,6 @@
 package com.judopay
 
+import android.app.Activity
 import android.os.Parcelable
 import com.judopay.model.*
 import kotlinx.android.parcel.Parcelize
@@ -15,12 +16,17 @@ import kotlinx.android.parcel.Parcelize
 // Bundle keys
 const val JUDO_OPTIONS = "com.judopay.judo-options"
 const val JUDO_RECEIPT = "com.judopay.judo-receipt"
+const val JUDO_ERROR = "com.judopay.judo-error"
 
-// Request codes
-const val PAYMENT_METHODS = 1
+// Result codes
+/** Judo activity result: operation succeeded.  */
+const val PAYMENT_SUCCESS = Activity.RESULT_FIRST_USER + 1
 
-// Response codes
-const val RESULT_ERROR = 1
+/** Judo activity result: operation canceled.  */
+const val PAYMENT_CANCELLED = Activity.RESULT_FIRST_USER + 2
+
+/** Judo activity result: operation error  */
+const val PAYMENT_ERROR = Activity.RESULT_FIRST_USER + 3
 
 @Parcelize
 class Judo internal constructor(val judoId: String,
@@ -37,7 +43,6 @@ class Judo internal constructor(val judoId: String,
                                 val googlePayConfiguration: GooglePayConfiguration?,
                                 val paymentWidgetType: PaymentWidgetType
 ) : Parcelable {
-
 
     class Builder(private val paymentWidgetType: PaymentWidgetType) {
         private var judoId: String? = null

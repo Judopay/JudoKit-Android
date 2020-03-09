@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.EditText
 import android.widget.FrameLayout
-import androidx.annotation.StringRes
 import androidx.core.widget.addTextChangedListener
 import com.judopay.R
 import com.judopay.inflate
@@ -13,8 +12,8 @@ import com.judopay.model.CardNetwork
 import com.judopay.parentOfType
 import com.judopay.subViewsWithType
 import com.judopay.ui.cardentry.components.FormFieldType.*
-import com.judopay.ui.cardentry.model.FormModel
 import com.judopay.ui.cardentry.validation.*
+import com.judopay.ui.common.ButtonState
 import kotlinx.android.synthetic.main.form_view.view.*
 
 enum class FormFieldType {
@@ -26,12 +25,34 @@ enum class FormFieldType {
     POST_CODE
 }
 
-data class FormViewModel(
-        val formModel: FormModel,
+private val FormFieldType.fieldHintResId: Int
+    get() = when (this) {
+        NUMBER -> R.string.card_number_hint
+        HOLDER_NAME -> R.string.card_holder_hint
+        EXPIRATION_DATE -> R.string.date_hint
+        SECURITY_NUMBER -> R.string.cvv_hint
+        COUNTRY -> R.string.country_hint
+        POST_CODE -> R.string.post_code_hint
+    }
+
+data class InputModel(
+        val cardNumber: String = "",
+        val cardHolderName: String = "",
+        val expirationDate: String = "",
+        val securityNumber: String = "",
+        val country: String = "",
+        val postCode: String = ""
+)
+
+data class FormModel(
+        val formModel: InputModel,
         val enabledFields: List<FormFieldType>,
         val supportedNetworks: List<CardNetwork>,
-        @StringRes val submitButtonText: Int = R.string.button_add_card
+        val paymentButtonState: ButtonState = ButtonState.Disabled(R.string.add_card)
 )
+
+typealias OnSubmitListener = (model: InputModel) -> Unit
+typealias SubmitButtonClickListener = () -> Unit
 
 class FormView @JvmOverloads constructor(
         context: Context,
@@ -43,21 +64,16 @@ class FormView @JvmOverloads constructor(
         inflate(R.layout.form_view, true)
     }
 
-    interface OnSubmitListener {
-        fun onSubmitForm(form: FormView, model: FormModel)
-    }
-
-    var model = FormViewModel(FormModel(),
-            listOf(NUMBER, EXPIRATION_DATE, SECURITY_NUMBER),
-            listOf(CardNetwork.VISA))
+    var model = FormModel(InputModel(), emptyList(), emptyList())
         set(value) {
             field = value
             update()
         }
 
-    internal var onSubmitListener: OnSubmitListener? = null
-    private val validationResultsCache = mutableMapOf<FormFieldType, Boolean>()
+    internal var onValidationPassedListener: OnSubmitListener? = null
+    internal var onSubmitButtonClickListener: SubmitButtonClickListener? = null
 
+    private val validationResultsCache = mutableMapOf<FormFieldType, Boolean>()
     private val validators: List<Validator> = listOf(
             CardNumberValidator(supportedNetworks = model.supportedNetworks),
             CardHolderNameValidator(),
@@ -86,17 +102,11 @@ class FormView @JvmOverloads constructor(
     }
 
     private fun setupFields() {
-        submitButton.apply {
-            setOnClickListener(::onSubmit)
-            setText(model.submitButtonText)
-            isEnabled = false
-        }
-
-        setupVisibilityOfFields()
+        submitButton.setOnClickListener { onSubmitButtonClickListener?.invoke() }
 
         values().forEach { type ->
             editTextForType(type).apply {
-                setHint(hintForFieldType(type))
+                setHint(type.fieldHintResId)
 
                 addTextChangedListener {
                     val text = it.toString()
@@ -123,8 +133,6 @@ class FormView @JvmOverloads constructor(
 
         validationResultsCache[type] = result?.isValid ?: true
 
-        updateSubmitButtonState()
-
         val layout = textInputLayoutForType(type)
         val isValidResult = result?.isValid ?: true
         val message = context.getString(result?.message ?: R.string.empty)
@@ -134,21 +142,18 @@ class FormView @JvmOverloads constructor(
             it.isErrorEnabled = errorEnabled
             it.error = message
         }
+
+        updateSubmitButtonState()
     }
 
     private fun updateSubmitButtonState() {
-        submitButton.isEnabled = model.enabledFields.map {
+        val isFormValid = model.enabledFields.map {
             validationResultsCache[it] ?: false
         }.reduce { acc, b -> acc && b }
-    }
 
-    private fun hintForFieldType(type: FormFieldType): Int = when (type) {
-        NUMBER -> R.string.card_number_hint
-        HOLDER_NAME -> R.string.card_holder_hint
-        EXPIRATION_DATE -> R.string.date_hint
-        SECURITY_NUMBER -> R.string.cvv_hint
-        COUNTRY -> R.string.country_hint
-        POST_CODE -> R.string.post_code_hint
+        if (isFormValid) {
+            onValidationPassed()
+        }
     }
 
     private fun editTextForType(type: FormFieldType): EditText = when (type) {
@@ -178,7 +183,8 @@ class FormView @JvmOverloads constructor(
     }
 
     private fun update() {
-        setupFields()
+        setupVisibilityOfFields()
+        submitButton.state = model.paymentButtonState
     }
 
     private fun setupVisibilityOfFields() {
@@ -198,8 +204,8 @@ class FormView @JvmOverloads constructor(
         return editText.text.toString()
     }
 
-    private fun onSubmit(view: View) {
-        val model = FormModel(
+    private fun onValidationPassed() {
+        val model = InputModel(
                 valueOfFieldWithType(NUMBER),
                 valueOfFieldWithType(HOLDER_NAME),
                 valueOfFieldWithType(EXPIRATION_DATE),
@@ -207,7 +213,7 @@ class FormView @JvmOverloads constructor(
                 valueOfFieldWithType(COUNTRY),
                 valueOfFieldWithType(POST_CODE)
         )
-        onSubmitListener?.onSubmitForm(this, model)
+        onValidationPassedListener?.invoke(model)
     }
 
 }

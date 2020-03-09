@@ -9,6 +9,10 @@ import com.judopay.db.entity.TokenizedCardEntity
 
 @Dao
 interface TokenizedCardDao {
+
+    @Query("SELECT * from tokenized_card ORDER BY timestamp ASC")
+    fun getAllSortedByDateAddedSync(): LiveData<List<TokenizedCardEntity>>
+
     @Query("SELECT * from tokenized_card ORDER BY timestamp ASC")
     suspend fun getAllSortedByDateAdded(): List<TokenizedCardEntity>
 
