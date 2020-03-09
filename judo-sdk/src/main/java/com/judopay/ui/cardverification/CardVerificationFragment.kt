@@ -1,16 +1,18 @@
 package com.judopay.ui.cardverification
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.judopay.JUDO_RECEIPT
+import com.judopay.JudoPaymentResult
+import com.judopay.JudoSharedViewModel
 import com.judopay.R
+import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
 import com.judopay.judo
 import com.judopay.ui.cardverification.model.WebViewAction
@@ -26,17 +28,20 @@ interface WebViewCallback {
 class CardVerificationFragment : Fragment(), WebViewCallback {
 
     private lateinit var viewModel: CardVerificationViewModel
+    private val sharedViewModel: JudoSharedViewModel by activityViewModels()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(CardVerificationViewModel::class.java)
 
-        viewModel.receipt.observe(viewLifecycleOwner, Observer {
-            with(requireActivity()) {
-                setResult(
-                    Activity.RESULT_OK,
-                    Intent().apply { putExtra(JUDO_RECEIPT, it) })
-                finish()
+        viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is JudoApiCallResult.Success -> if (it.data != null) {
+                    sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(it.data))
+                }
+                is JudoApiCallResult.Failure -> if (it.error != null) {
+                    sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(it.error))
+                }
             }
         })
         viewModel.isLoading.observe(viewLifecycleOwner, Observer {
@@ -59,7 +64,7 @@ class CardVerificationFragment : Fragment(), WebViewCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        backButton.setOnClickListener { requireActivity().onBackPressed() }
+        backButton.setOnClickListener { sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled) }
 
         cardVerificationWebView.view = this
 

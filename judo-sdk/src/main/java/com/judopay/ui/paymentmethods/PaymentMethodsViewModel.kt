@@ -11,11 +11,9 @@ import com.judopay.R
 import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.api.model.request.Address
 import com.judopay.api.model.request.TokenRequest
-import com.judopay.api.model.response.CardToken
 import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
 import com.judopay.db.JudoRoomDatabase
-import com.judopay.db.entity.TokenizedCardEntity
 import com.judopay.db.repository.TokenizedCardRepository
 import com.judopay.model.PaymentMethod
 import com.judopay.model.formatted
@@ -63,7 +61,7 @@ class PaymentMethodsViewModel(application: Application,
                               private val judo: Judo) : AndroidViewModel(application) {
 
     val model = MutableLiveData<PaymentMethodsModel>()
-    val receipt = MutableLiveData<Receipt>()
+    val judoApiCallResult = MutableLiveData<JudoApiCallResult<Receipt>>()
 
     private val context = application
     private val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
@@ -118,9 +116,9 @@ class PaymentMethodsViewModel(application: Application,
                             .setAddress(Address.Builder().build())
                             .build()
 
-                    when (val response = service.tokenPayment(request)) {
-                        is JudoApiCallResult.Success -> receipt.postValue(response.data)
-                    }
+                    val response = service.tokenPayment(request)
+
+                    judoApiCallResult.postValue(response)
                     // TODO: temporary
                     val paymentMethod = model.value?.currentPaymentMethod?.type
                             ?: PaymentMethod.CARD

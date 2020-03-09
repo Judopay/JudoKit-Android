@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class CardVerificationViewModel(application: Application) : AndroidViewModel(application) {
 
-    val receipt = MutableLiveData<Receipt>()
+    val judoApiCallResult = MutableLiveData<JudoApiCallResult<Receipt>>()
     val isLoading = MutableLiveData<Boolean>()
     fun complete3DSecure(
         judo: Judo,
@@ -22,9 +22,8 @@ class CardVerificationViewModel(application: Application) : AndroidViewModel(app
     ) = viewModelScope.launch {
         isLoading.postValue(true)
         val service = JudoApiServiceFactory.createApiService(getApplication(), judo)
-        when (val response = service.complete3dSecure(receiptId, cardVerificationResult)) {
-            is JudoApiCallResult.Success -> receipt.postValue(response.data)
-        }
+        val response = service.complete3dSecure(receiptId, cardVerificationResult)
+        judoApiCallResult.postValue(response)
         isLoading.postValue(false)
     }
 }

@@ -12,7 +12,6 @@
         android:background="@color/very_light_pink"
         android:orientation="horizontal"
         android:paddingStart="@dimen/space_16"
-        android:paddingTop="@dimen/space_24"
         android:paddingEnd="@dimen/space_16"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
