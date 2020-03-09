@@ -14,6 +14,7 @@ import com.judopay.R
 import com.judopay.api.model.response.Receipt
 import com.judopay.judo
 import com.judopay.ui.cardverification.model.WebViewAction
+import kotlinx.android.synthetic.main.card_verification_fragment.backButton
 import kotlinx.android.synthetic.main.card_verification_fragment.cardVerificationWebView
 import kotlinx.android.synthetic.main.card_verification_fragment.threeDSProgressBar
 import kotlinx.android.synthetic.main.card_verification_fragment.threeDSTextView
@@ -57,6 +58,8 @@ class CardVerificationFragment : Fragment(), WebViewCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        backButton.setOnClickListener { requireActivity().onBackPressed() }
 
         cardVerificationWebView.view = this
 
