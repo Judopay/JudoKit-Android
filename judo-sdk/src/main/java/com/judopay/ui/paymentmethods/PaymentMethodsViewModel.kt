@@ -39,14 +39,16 @@ import com.judopay.ui.paymentmethods.model.IdealPaymentMethodModel
 import com.judopay.ui.paymentmethods.model.PaymentMethodModel
 import kotlinx.coroutines.launch
 
+// view-model actions
 sealed class PaymentMethodsAction {
-    data class InsertCard(val tokenizedCard: CardToken) : PaymentMethodsAction()
     data class DeleteCard(val cardId: Int) : PaymentMethodsAction()
     data class SelectPaymentMethod(val method: PaymentMethod) : PaymentMethodsAction()
     data class SelectStoredCard(val id: Int) : PaymentMethodsAction()
     object PayWithSelectedStoredCard : PaymentMethodsAction()
+    object Update : PaymentMethodsAction() // TODO: temporary
 }
 
+// view-model custom factory to inject the `judo` configuration object
 internal class PaymentMethodsViewModelFactory(private val application: Application,
                                               private val judo: Judo) : NewInstanceFactory() {
 
@@ -68,6 +70,8 @@ class PaymentMethodsViewModel(application: Application,
     private val cardRepository = TokenizedCardRepository(tokenizedCardDao)
     private val service = JudoApiServiceFactory.createApiService(context, judo)
 
+    val allCardsSync = cardRepository.allCardsSync
+
     init {
         buildModel(PaymentMethod.CARD, false)
     }
@@ -76,11 +80,6 @@ class PaymentMethodsViewModel(application: Application,
         val paymentMethod = model.value?.currentPaymentMethod?.type ?: PaymentMethod.CARD
 
         when (action) {
-            is PaymentMethodsAction.InsertCard -> {
-                val entity = action.tokenizedCard.toTokenizedCardEntity(context)
-                insert(entity)
-                buildModel(paymentMethod, false) // TODO: temporary
-            }
             is PaymentMethodsAction.DeleteCard -> {
                 deleteCardWithId(action.cardId)
                 buildModel(paymentMethod, false) // TODO: temporary
@@ -89,11 +88,10 @@ class PaymentMethodsViewModel(application: Application,
                 buildModel(paymentMethod, true)
                 payWithSelectedCard()
             }
-
             is PaymentMethodsAction.SelectStoredCard -> {
                 buildModel(paymentMethod, false, action.id)
             }
-
+            is PaymentMethodsAction.Update -> buildModel(paymentMethod, false)
             is PaymentMethodsAction.SelectPaymentMethod -> {
                 if (paymentMethod != action.method) buildModel(action.method, false)
             }
@@ -132,14 +130,11 @@ class PaymentMethodsViewModel(application: Application,
         }
     }
 
-    private fun insert(card: TokenizedCardEntity) = viewModelScope.launch {
-        cardRepository.insert(card)
-    }
-
     private fun deleteCardWithId(id: Int) = viewModelScope.launch {
         cardRepository.deleteCardWithId(id)
     }
 
+    // TODO: too fat, to furious !
     private fun buildModel(selectedMethod: PaymentMethod,
                            isLoading: Boolean,
                            selectedCardId: Int = previouslySelectedCardId()) = viewModelScope.launch {
@@ -178,7 +173,7 @@ class PaymentMethodsViewModel(application: Application,
                     // footer
                     recyclerViewData.add(PaymentMethodGenericItem(PaymentMethodItemType.SAVED_CARDS_FOOTER))
 
-                    selectedCard = cardItems.first { it.isSelected }
+                    selectedCard = cardItems.firstOrNull { it.isSelected } ?: cardItems.first()
                     cardModel = selectedCard.toPaymentCardViewModel()
                 }
                 CardPaymentMethodModel(selectedCard = selectedCard, items = recyclerViewData)

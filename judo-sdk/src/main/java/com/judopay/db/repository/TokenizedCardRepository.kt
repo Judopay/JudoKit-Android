@@ -1,9 +1,12 @@
 package com.judopay.db.repository
 
+import androidx.lifecycle.LiveData
 import com.judopay.db.dao.TokenizedCardDao
 import com.judopay.db.entity.TokenizedCardEntity
 
 class TokenizedCardRepository(private val tokenizedCardDao: TokenizedCardDao) {
+
+    val allCardsSync: LiveData<List<TokenizedCardEntity>> = tokenizedCardDao.getAllSortedByDateAddedSync()
 
     suspend fun findAllCards(): List<TokenizedCardEntity> = tokenizedCardDao.getAllSortedByDateAdded()
 

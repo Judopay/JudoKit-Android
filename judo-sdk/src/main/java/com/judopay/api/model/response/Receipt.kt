@@ -28,14 +28,15 @@ class Receipt(
         var risks: Risks? = null,
         var md: String? = null,
         var paReq: String? = null,
-        var acsUrl: String? = null
-) : Parcelable, Response() {
+        var acsUrl: String? = null,
+        val result: String? = null
+) : Parcelable {
 
     val is3dSecureRequired: Boolean
         get() = !(acsUrl.isNullOrEmpty() && md.isNullOrEmpty() && paReq.isNullOrEmpty())
 
     override fun toString(): String {
-        return "Receipt(judoID=$judoID, receiptId=$receiptId, originalReceiptId=$originalReceiptId, partnerServiceFee=$partnerServiceFee, yourPaymentReference=$yourPaymentReference, type=$type, createdAt=$createdAt, merchantName=$merchantName, appearsOnStatementAs=$appearsOnStatementAs, originalAmount=$originalAmount, netAmount=$netAmount, amount=$amount, currency=$currency, cardDetails=$cardDetails, consumer=$consumer, risks=$risks, md=$md, paReq=$paReq, acsUrl=$acsUrl, Response=${super.toString()})"
+        return "Receipt(judoID=$judoID, receiptId=$receiptId, originalReceiptId=$originalReceiptId, partnerServiceFee=$partnerServiceFee, yourPaymentReference=$yourPaymentReference, type=$type, createdAt=$createdAt, merchantName=$merchantName, appearsOnStatementAs=$appearsOnStatementAs, originalAmount=$originalAmount, netAmount=$netAmount, amount=$amount, currency=$currency, cardDetails=$cardDetails, consumer=$consumer, risks=$risks, md=$md, paReq=$paReq, acsUrl=$acsUrl, result=$result)"
     }
 
 }

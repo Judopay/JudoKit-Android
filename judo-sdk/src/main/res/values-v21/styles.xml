@@ -6,4 +6,12 @@
         <item name="android:navigationBarColor">@color/color_primary</item>
     </style>
 
+    <style name="JudoTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:fontFamily">@font/sf_pro_display</item>
+        <item name="colorPrimary">@color/color_primary</item>
+
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
 </resources>
