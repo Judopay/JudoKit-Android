@@ -16,6 +16,7 @@ import com.judopay.JUDO_RECEIPT
 import com.judopay.JudoPaymentResult
 import com.judopay.JudoSharedViewModel
 import com.judopay.R
+import com.judopay.api.model.response.toJudoPaymentResult
 import com.judopay.api.error.ApiError
 import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
@@ -58,6 +59,9 @@ class PaymentMethodsFragment : Fragment() {
 
         viewModel = ViewModelProvider(this, factory).get(PaymentMethodsViewModel::class.java)
         viewModel.model.observe(viewLifecycleOwner, Observer { updateWithModel(it) })
+        viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer {
+            sharedViewModel.paymentResult.postValue(it.toJudoPaymentResult())
+        })
 
         viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer {
             when (it) {
@@ -169,4 +173,5 @@ class PaymentMethodsFragment : Fragment() {
         // post the event
         sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled)
     }
+
 }

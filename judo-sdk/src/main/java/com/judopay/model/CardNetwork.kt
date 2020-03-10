@@ -168,3 +168,16 @@ val CardNetwork.defaultCardNameResId: Int
         CardNetwork.CHINA_UNION_PAY -> R.string.default_chinaunionpay_card_title
         else -> R.string.empty
     }
+
+val CardNetwork.typeId: Int
+    get() = when (this) {
+        CardNetwork.VISA -> 1
+        CardNetwork.MASTER_CARD -> 2
+        CardNetwork.MAESTRO -> 10
+        CardNetwork.AMEX -> 8
+        CardNetwork.CHINA_UNION_PAY -> 7
+        CardNetwork.JCB -> 9
+        CardNetwork.DISCOVER -> 12
+        CardNetwork.DINERS_CLUB -> 13
+        else -> -1
+    }

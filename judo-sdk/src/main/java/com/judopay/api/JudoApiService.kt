@@ -33,7 +33,7 @@ interface JudoApiService {
      * @return the receipt for the pre-auth with the status of the transaction
      */
     @POST("transactions/preauths")
-    suspend fun preAuth(@Body paymentRequest: PaymentRequest): JudoApiCallResult<Receipt>
+    suspend fun preAuthPayment(@Body paymentRequest: PaymentRequest): JudoApiCallResult<Receipt>
 
     /**
      * Perform a token payment using a tokenised card
@@ -51,7 +51,7 @@ interface JudoApiService {
      * @return the receipt for the pre-auth with the status of the transaction
      */
     @POST("transactions/preauths")
-    suspend fun tokenPreAuth(@Body tokenRequest: TokenRequest): JudoApiCallResult<Receipt>
+    suspend fun preAuthTokenPayment(@Body tokenRequest: TokenRequest): JudoApiCallResult<Receipt>
 
     /**
      * Void a pre-auth transaction, releasing funds back to the card holder.

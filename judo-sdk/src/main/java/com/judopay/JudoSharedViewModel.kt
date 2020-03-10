@@ -13,20 +13,23 @@ sealed class JudoPaymentResult {
 }
 
 fun JudoPaymentResult.toIntent(): Intent {
+    val intent = Intent()
+
     when (this) {
         is JudoPaymentResult.UserCancelled -> {
-
+            // TODO: to rethink this
+            intent.putExtra(JUDO_ERROR, ApiError(-1, -1, "User cancelled"))
         }
 
         is JudoPaymentResult.Error -> {
-
+            intent.putExtra(JUDO_ERROR, error)
         }
 
         is JudoPaymentResult.Success -> {
-
+            intent.putExtra(JUDO_RECEIPT, receipt)
         }
     }
-    return Intent()
+    return intent
 }
 
 val JudoPaymentResult.code: Int
