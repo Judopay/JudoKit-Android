@@ -31,7 +31,7 @@ class ResultCall<T>(proxy: Call<T>) : CallDelegate<T, JudoApiCallResult<T>>(prox
         override fun onResponse(call: Call<T>, response: Response<T>) {
             val result = if (response.isSuccessful) {
                 val body = response.body()
-                JudoApiCallResult.Success(body)
+                JudoApiCallResult.Success<T>(body)
             } else {
                 val code = response.code()
                 var error: ApiError? = null

@@ -4,11 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.google.android.material.textfield.TextInputLayout
 import com.judopay.model.ApiEnvironment
 import com.judopay.ui.error.JudoNotProvidedError
 
@@ -62,12 +60,6 @@ val FragmentActivity.judo: Judo
 
 val Fragment.judo: Judo
     get() = requireActivity().judo
-
-val EditText.textValue: String
-    get() = text?.toString() ?: ""
-
-val TextInputLayout.textValue: String
-    get() = editText?.textValue ?: ""
 
 val String.withWhitespacesRemoved: String
     get() = replace("\\s".toRegex(), "")

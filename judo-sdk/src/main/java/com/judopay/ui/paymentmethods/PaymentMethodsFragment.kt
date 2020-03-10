@@ -15,10 +15,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.judopay.JudoPaymentResult
 import com.judopay.JudoSharedViewModel
 import com.judopay.R
-import com.judopay.api.model.response.Receipt
+import com.judopay.api.model.response.toJudoPaymentResult
 import com.judopay.judo
-import com.judopay.ui.cardentry.CardEntryFragment
-import com.judopay.ui.common.logd
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judopay.ui.paymentmethods.adapter.SwipeToDeleteCallback
 import com.judopay.ui.paymentmethods.adapter.model.*
@@ -56,6 +54,9 @@ class PaymentMethodsFragment : Fragment() {
 
         viewModel = ViewModelProvider(this, factory).get(PaymentMethodsViewModel::class.java)
         viewModel.model.observe(viewLifecycleOwner, Observer { updateWithModel(it) })
+        viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer {
+            sharedViewModel.paymentResult.postValue(it.toJudoPaymentResult())
+        })
 
         // TODO: to be refactored
         viewModel.allCardsSync.observe(viewLifecycleOwner, Observer {
@@ -136,4 +137,5 @@ class PaymentMethodsFragment : Fragment() {
         // post the event
         sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled)
     }
+
 }
