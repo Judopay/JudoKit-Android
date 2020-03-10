@@ -19,11 +19,17 @@ import com.judopay.api.model.response.toJudoPaymentResult
 import com.judopay.judo
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judopay.ui.paymentmethods.adapter.SwipeToDeleteCallback
-import com.judopay.ui.paymentmethods.adapter.model.*
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItem
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItemAction
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSavedCardItem
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSelectorItem
 import com.judopay.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
 import com.judopay.ui.paymentmethods.model.PaymentMethodModel
-import kotlinx.android.synthetic.main.payment_methods_fragment.*
-import kotlinx.android.synthetic.main.payment_methods_header_view.*
+import kotlinx.android.synthetic.main.payment_methods_fragment.backButton
+import kotlinx.android.synthetic.main.payment_methods_fragment.headerView
+import kotlinx.android.synthetic.main.payment_methods_fragment.recyclerView
+import kotlinx.android.synthetic.main.payment_methods_header_view.paymentCallToActionView
 
 data class PaymentMethodsModel(
         val headerModel: PaymentMethodsHeaderViewModel,
@@ -69,7 +75,11 @@ class PaymentMethodsFragment : Fragment() {
                                            item: PaymentMethodItem) {
         when (item) {
             is PaymentMethodSelectorItem -> {
-                // selector logic
+                viewModel.send(
+                    PaymentMethodsAction.SelectPaymentMethod(
+                        item.currentSelected
+                    )
+                )
             }
             is PaymentMethodSavedCardItem -> {
                 viewModel.send(PaymentMethodsAction.SelectStoredCard(item.id))
@@ -97,6 +107,7 @@ class PaymentMethodsFragment : Fragment() {
     private fun onAddCard() = findNavController().navigate(R.id.action_paymentMethodsFragment_to_cardEntryFragment)
 
     private fun updateWithModel(model: PaymentMethodsModel) {
+        headerView.paymentMethods = judo.paymentMethods.toList()
         headerView.model = model.headerModel
 
         val adapter = recyclerView.adapter as? PaymentMethodsAdapter
@@ -104,7 +115,9 @@ class PaymentMethodsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        recyclerView.adapter = PaymentMethodsAdapter(listener = ::dispatchRecyclerViewAction)
+        recyclerView.adapter = PaymentMethodsAdapter(
+            listener = ::dispatchRecyclerViewAction
+        )
 
         val swipeHandler = object : SwipeToDeleteCallback() {
 
