@@ -1,45 +1,50 @@
 <resources>
 
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="judo_small_text_size">12sp</dimen>
+    <!-- Grid spacing -->
+    <dimen name="space_4">4dp</dimen>
+    <dimen name="space_6">6dp</dimen>
+    <dimen name="space_8">8dp</dimen>
+    <dimen name="space_16">16dp</dimen>
+    <dimen name="space_12">12dp</dimen>
+    <dimen name="space_10">10dp</dimen>
+    <dimen name="space_14">14dp</dimen>
+    <dimen name="space_20">20dp</dimen>
+    <dimen name="space_24">24dp</dimen>
+    <dimen name="space_32">32dp</dimen>
+    <dimen name="space_40">40dp</dimen>
+    <dimen name="space_48">48dp</dimen>
+    <dimen name="space_132">132dp</dimen>
 
-    <dimen name="small_padding">4dp</dimen>
-    <dimen name="medium_padding">8dp</dimen>
-    <dimen name="large_padding">16dp</dimen>
-    <dimen name="judo_gpay_btn_height">48dp</dimen>
-    <dimen name="judo_payment_method_header_margin">24dp</dimen>
-    <dimen name="judo_payment_method_header_text_size">16sp</dimen>
-    <dimen name="judo_payment_method_button_margin">24dp</dimen>
-    <dimen name="spinner_height">40dp</dimen>
-    <dimen name="divider_height">1dp</dimen>
-    <dimen name="progress_bar_height">150dp</dimen>
-    <dimen name="image_button_height">40dp</dimen>
-    <dimen name="image_button_width">40dp</dimen>
-    <dimen name="card_entry_height">46dp</dimen>
+    <!-- Font sizes -->
+    <dimen name="large_title">24sp</dimen>
+    <dimen name="title">18sp</dimen>
+    <dimen name="headline">16sp</dimen>
+    <dimen name="body">14sp</dimen>
+    <dimen name="caption">10sp</dimen>
 
-    <dimen name="text_size_small">10sp</dimen>
-    <dimen name="text_size_medium">16sp</dimen>
-    <dimen name="text_size_large">18sp</dimen>
-    <dimen name="padding_10">10dp</dimen>
-    <dimen name="padding_14">14dp</dimen>
-    <dimen name="padding_50">50dp</dimen>
-    <dimen name="margin_6">6dp</dimen>
-    <dimen name="width_1">1dp</dimen>
-    <dimen name="width_24">24dp</dimen>
-    <dimen name="width_120">120dp</dimen>
-    <dimen name="height_24">24dp</dimen>
-    <dimen name="height_36">36dp</dimen>
-    <dimen name="height_44">44dp</dimen>
-    <dimen name="height_120">120dp</dimen>
-    <dimen name="height_500">500dp</dimen>
-    <dimen name="corner_radius_4">4dp</dimen>
-    <dimen name="corner_radius_6">6dp</dimen>
-    <dimen name="corner_radius_16">16dp</dimen>
-    <item name="spaced_text" format="float" type="dimen">1.4</item>
+    <!-- Buttons -->
+    <dimen name="min_touch_target_size">48dp</dimen>
+    <dimen name="button_corner_radius">4dp</dimen>
+    <dimen name="button_height">56dp</dimen>
 
-    <dimen name="scan_card_text_size_small">14sp</dimen>
-    <dimen name="margin_20">20dp</dimen>
-    <dimen name="margin_56">56dp</dimen>
+    <!-- App bar -->
+    <dimen name="app_bar_layout_height">400dp</dimen>
+    <dimen name="app_bar_layout_min_height">330dp</dimen>
+
+    <!-- Payment methods screen-->
+    <dimen name="network_icon_container_height">36dp</dimen>
+    <dimen name="network_icon_container_width">52dp</dimen>
+
+    <!-- Bottom sheet modals -->
+    <dimen name="background_shape_corner_radius">16dp</dimen>
+
+    <!-- Text input layouts -->
+    <dimen name="input_layout_corner_radius">6dp</dimen>
+    <dimen name="judo_text_input_layout_height">44dp</dimen>
+
+    <!-- Cards -->
+    <dimen name="card_corner_radius">10dp</dimen>
+    <dimen name="card_elevation_8dp">8dp</dimen>
+    <dimen name="card_elevation_2dp">2dp</dimen>
+
 </resources>

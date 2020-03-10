@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:paddingStart="@dimen/space_24"
+    android:paddingTop="@dimen/space_12"
+    android:paddingEnd="@dimen/space_24"
+    android:paddingBottom="@dimen/space_12">
+
+    <FrameLayout
+        android:id="@+id/networkIconContainer"
+        android:layout_width="@dimen/network_icon_container_width"
+        android:layout_height="@dimen/network_icon_container_height"
+        android:background="@drawable/card_network_decoration_shape"
+        android:padding="@dimen/space_8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/networkIconImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/ic_visa" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_8"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="@dimen/space_8"
+        android:fontFamily="@font/sf_pro_display_semibold"
+        android:textColor="@color/black"
+        android:textSize="@dimen/body"
+        app:layout_constraintEnd_toStartOf="@+id/radioIconImageView"
+        app:layout_constraintStart_toEndOf="@+id/networkIconContainer"
+        app:layout_constraintTop_toTopOf="@+id/networkIconContainer"
+        tools:text="Card for shopping" />
+
+    <TextView
+        android:id="@+id/subTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_8"
+        android:layout_marginEnd="@dimen/space_8"
+        android:layout_marginBottom="0dp"
+        android:fontFamily="@font/sf_pro_display_regular"
+        android:textColor="@color/warm_grey"
+        android:textSize="@dimen/caption"
+        app:layout_constraintBottom_toBottomOf="@+id/networkIconContainer"
+        app:layout_constraintEnd_toStartOf="@+id/radioIconImageView"
+        app:layout_constraintStart_toEndOf="@+id/networkIconContainer"
+        tools:text="Visa ending 3424" />
+
+    <ImageView
+        android:id="@+id/radioIconImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_radio_off" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

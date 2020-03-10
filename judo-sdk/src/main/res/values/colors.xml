@@ -1,24 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-
-    <color name="judo_red">#FFEB372D</color>
-    <color name="judo_white">#FFFAFAFA</color>
-    <color name="judo_teal">#FF48B6AC</color>
-    <color name="judo_dark_teal">#FF40A098</color>
-    <color name="judo_blue">#FF1E78A0</color>
-    <color name="judo_dark_blue">#186080</color>
-    <color name="judo_white_90">#E6FFFFFF</color>
-
-    <color name="judo_black_16">#28000000</color>
-    <color name="judo_black_38">#60000000</color>
-    <color name="judo_black_54">#89000000</color>
-    <color name="judo_black_87">#DE000000</color>
-
-    <color name="ideal_violet">#BC2965</color>
-    <color name="ideal_violet_dark">#9C2E58</color>
+<resources>
+    <color name="color_primary">@color/black</color>
 
     <color name="black">#262626</color>
-    <color name="error">#E21900</color>
-    <color name="grey">#999999</color>
-    <color name="wocr_card_shadow_color" tools:override="true">@android:color/transparent</color>
+    <color name="brown_grey">#999999</color>
+    <color name="very_light_pink_two">#eeeeee</color>
+    <color name="very_light_pink">#E5E5E5</color>
+    <color name="tomato_red">#E21900</color>
+    <color name="pale_grey">#f5f5f6</color>
+    <color name="warm_grey">#8d8d8d</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="white_two">#f6f6f6</color>
 </resources>

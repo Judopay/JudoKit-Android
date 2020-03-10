@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/judo_text_input_layout_height"
+    android:background="@drawable/edit_text_input_layout_background_shape"
+    android:paddingStart="@dimen/space_8"
+    android:paddingTop="@dimen/space_4"
+    android:paddingEnd="@dimen/space_8"
+    android:paddingBottom="@dimen/space_4">
+
+    <LinearLayout
+        android:id="@+id/containerLayout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="0dp"
+        android:clipChildren="false"
+        android:orientation="vertical"
+        android:padding="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/verticalBarrier"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/errorTextView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/space_14"
+            android:layout_margin="0dp"
+            android:fontFamily="@font/sf_pro_display_medium"
+            android:padding="0dp"
+            android:textColor="@color/tomato_red"
+            android:textSize="@dimen/caption"
+            android:visibility="gone"
+            tools:text="Error in here" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/verticalBarrier"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:barrierDirection="end"
+        app:constraint_referenced_ids="accessoryImageView,containerLayout"
+        tools:layout_editor_absoluteX="411dp"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/accessoryImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@null"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/verticalBarrier"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_amex" />
+</androidx.constraintlayout.widget.ConstraintLayout>
