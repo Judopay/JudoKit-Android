@@ -9,7 +9,8 @@ import com.judopay.ui.paymentmethods.model.CardViewModel
 import com.judopay.ui.paymentmethods.model.CardViewType
 
 open class GooglePayCardViewModel(
-        override val type: CardViewType = CardViewType.GOOGLE_PAY
+    override val type: CardViewType = CardViewType.GOOGLE_PAY,
+    override var layoutId: Int = R.id.googlePayCardView
 ) : CardViewModel
 
 class GooglePayCardView @JvmOverloads constructor(

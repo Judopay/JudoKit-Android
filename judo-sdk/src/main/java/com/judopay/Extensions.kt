@@ -8,6 +8,7 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.judopay.model.ApiEnvironment
+import com.judopay.ui.common.ANIMATION_DURATION_500
 import com.judopay.ui.error.JudoNotProvidedError
 
 internal val Judo.apiBaseUrl: String
@@ -68,3 +69,19 @@ fun Bundle.toMap(): Map<String, String> = keySet().mapNotNull {
     val value = getString(it)
     if (value != null) Pair(it, value) else null
 }.toMap()
+
+fun View.animateWithAlpha(alpha: Float, duration: Long = ANIMATION_DURATION_500) {
+    animate()
+        .alpha(alpha)
+        .duration = duration
+}
+
+fun View.animateWithTranslation(
+    translationY: Float,
+    alpha: Float,
+    duration: Long = ANIMATION_DURATION_500
+) {
+    animate().translationY(translationY)
+        .alpha(alpha)
+        .duration = duration
+}

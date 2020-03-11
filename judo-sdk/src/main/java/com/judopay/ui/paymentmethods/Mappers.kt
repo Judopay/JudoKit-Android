@@ -18,6 +18,7 @@ fun TokenizedCardEntity.toPaymentMethodSavedCardItem() = PaymentMethodSavedCardI
 )
 
 fun PaymentMethodSavedCardItem.toPaymentCardViewModel() = PaymentCardViewModel(
+        id = id,
         cardNetwork = network,
         name = title,
         maskedNumber = ending,

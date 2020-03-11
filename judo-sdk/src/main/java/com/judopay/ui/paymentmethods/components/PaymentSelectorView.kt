@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.HorizontalScrollView
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.view.children
 import androidx.transition.TransitionManager
 import com.judopay.R
 import com.judopay.inflate
@@ -18,8 +17,8 @@ import com.judopay.model.PaymentMethod
 import com.judopay.model.icon
 import com.judopay.model.text
 import com.judopay.subViewsWithType
-import kotlinx.android.synthetic.main.payment_methods_selector_item.view.*
-import kotlinx.android.synthetic.main.view_payment_selector.view.*
+import kotlinx.android.synthetic.main.view_payment_selector.view.container
+import kotlinx.android.synthetic.main.view_payment_selector.view.selector
 
 private const val MARGIN_12 = 12
 private const val MARGIN_54 = 54
@@ -37,7 +36,7 @@ class PaymentSelectorView @JvmOverloads constructor(
     }
 
     private var currentSelected: PaymentMethod? = null
-    private var prevClicked: PaymentSelectorItemView? = null
+    private var previousSelected: PaymentSelectorItemView? = null
     private var lastUsedSelected = false
 
     fun setPaymentMethods(
@@ -86,11 +85,11 @@ class PaymentSelectorView @JvmOverloads constructor(
                     set.setMargin(itemView.id, ConstraintSet.START, MARGIN_12)
                 }
                 if (currentSelected == itemView.getPaymentMethod()) {
-                    prevClicked = itemView
+                    previousSelected = itemView
                     selectItem(set, itemView)
                 }
             } else if (index == 0) {
-                prevClicked = itemView
+                previousSelected = itemView
                 selectItem(set, itemView)
                 set.setMargin(itemView.id, ConstraintSet.START, MARGIN_12)
             }
@@ -101,14 +100,14 @@ class PaymentSelectorView @JvmOverloads constructor(
             }
             set.centerVertically(itemView.id, ConstraintSet.PARENT_ID)
             itemView.setOnClickListener {
-                if (prevClicked != itemView || !lastUsedSelected) {
-                    prevClicked?.setTextVisibility(View.GONE)
+                if (previousSelected != itemView || !lastUsedSelected) {
+                    previousSelected?.setTextVisibility(View.GONE)
                     selectItem(set, itemView)
                     set.applyTo(paymentSelectorContainer)
-                    prevClicked = itemView
                     TransitionManager.beginDelayedTransition(paymentSelectorContainer)
                     scrollToView(itemView)
                     onClick.invoke(itemView.getPaymentMethod())
+                    previousSelected = itemView
                 }
             }
         }
@@ -119,7 +118,7 @@ class PaymentSelectorView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         while (width != 0 && !lastUsedSelected) {
-            prevClicked?.callOnClick()
+            previousSelected?.callOnClick()
             lastUsedSelected = true
         }
     }

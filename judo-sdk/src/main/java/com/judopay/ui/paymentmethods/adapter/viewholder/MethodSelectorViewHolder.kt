@@ -17,7 +17,7 @@ class MethodSelectorViewHolder(view: View) : RecyclerView.ViewHolder(view),
                       listener: PaymentMethodsAdapterListener?) {
 
         (model as? PaymentMethodSelectorItem)?.let { item ->
-            itemView.slider.setPaymentMethods(item.paymentMethods, item.currentSelected) { method ->
+            itemView.slider.setPaymentMethods(item.paymentMethods, item.currentSelected) { method->
                 item.currentSelected = method
                 listener?.invoke(PaymentMethodItemAction.SELECT_PAYMENT_METHOD, item)
             }

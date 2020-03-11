@@ -1,9 +1,12 @@
 package com.judopay.ui.paymentmethods.adapter
 
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.judopay.R
 import com.judopay.inflate
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodDiffUtil
 import com.judopay.ui.paymentmethods.adapter.viewholder.*
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItem
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItemAction
@@ -16,14 +19,16 @@ internal interface BindableRecyclerViewHolder<V, A> {
 typealias PaymentMethodsAdapterListener = (action: PaymentMethodItemAction, item: PaymentMethodItem) -> Unit
 
 class PaymentMethodsAdapter(
-        items: List<PaymentMethodItem> = emptyList(),
-        private val listener: PaymentMethodsAdapterListener
+    items: List<PaymentMethodItem> = emptyList(),
+    private val listener: PaymentMethodsAdapterListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var items: List<PaymentMethodItem> = items
         set(value) {
+            val diffCallback = PaymentMethodDiffUtil(field, value)
+            val diffResult = DiffUtil.calculateDiff(diffCallback)
             field = value
-            notifyDataSetChanged()
+            diffResult.dispatchUpdatesTo(this)
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

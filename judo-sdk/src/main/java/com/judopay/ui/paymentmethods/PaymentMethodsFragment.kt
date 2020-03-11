@@ -102,7 +102,11 @@ class PaymentMethodsFragment : Fragment() {
                                            item: PaymentMethodItem) {
         when (item) {
             is PaymentMethodSelectorItem -> {
-                // selector logic
+                viewModel.send(
+                    PaymentMethodsAction.SelectPaymentMethod(
+                        item.currentSelected
+                    )
+                )
             }
             is PaymentMethodSavedCardItem -> {
                 viewModel.send(PaymentMethodsAction.SelectStoredCard(item.id))
@@ -130,6 +134,7 @@ class PaymentMethodsFragment : Fragment() {
     private fun onAddCard() = findNavController().navigate(R.id.action_paymentMethodsFragment_to_cardEntryFragment)
 
     private fun updateWithModel(model: PaymentMethodsModel) {
+        headerView.paymentMethods = judo.paymentMethods.toList()
         headerView.model = model.headerModel
 
         val adapter = recyclerView.adapter as? PaymentMethodsAdapter
@@ -137,7 +142,9 @@ class PaymentMethodsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        recyclerView.adapter = PaymentMethodsAdapter(listener = ::dispatchRecyclerViewAction)
+        recyclerView.adapter = PaymentMethodsAdapter(
+            listener = ::dispatchRecyclerViewAction
+        )
 
         val swipeHandler = object : SwipeToDeleteCallback() {
 
