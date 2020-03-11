@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -16,19 +17,23 @@ import com.judopay.JUDO_RECEIPT
 import com.judopay.JudoPaymentResult
 import com.judopay.JudoSharedViewModel
 import com.judopay.R
-import com.judopay.api.model.response.toJudoPaymentResult
 import com.judopay.api.error.ApiError
 import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
 import com.judopay.judo
-import com.judopay.ui.cardverification.CardVerificationFragment
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judopay.ui.paymentmethods.adapter.SwipeToDeleteCallback
-import com.judopay.ui.paymentmethods.adapter.model.*
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItem
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItemAction
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSavedCardItem
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSelectorItem
 import com.judopay.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
 import com.judopay.ui.paymentmethods.model.PaymentMethodModel
-import kotlinx.android.synthetic.main.payment_methods_fragment.*
-import kotlinx.android.synthetic.main.payment_methods_header_view.*
+import kotlinx.android.synthetic.main.payment_methods_fragment.backButton
+import kotlinx.android.synthetic.main.payment_methods_fragment.headerView
+import kotlinx.android.synthetic.main.payment_methods_fragment.recyclerView
+import kotlinx.android.synthetic.main.payment_methods_header_view.paymentCallToActionView
 
 data class PaymentMethodsModel(
         val headerModel: PaymentMethodsHeaderViewModel,
@@ -59,9 +64,6 @@ class PaymentMethodsFragment : Fragment() {
 
         viewModel = ViewModelProvider(this, factory).get(PaymentMethodsViewModel::class.java)
         viewModel.model.observe(viewLifecycleOwner, Observer { updateWithModel(it) })
-        viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer {
-            sharedViewModel.paymentResult.postValue(it.toJudoPaymentResult())
-        })
 
         viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer {
             when (it) {
@@ -85,16 +87,11 @@ class PaymentMethodsFragment : Fragment() {
     private fun handleSuccess(receipt: Receipt?) {
         if (receipt != null)
             if (receipt.is3dSecureRequired) {
-                val bundle = Bundle().apply {
-                    putParcelable(JUDO_RECEIPT, receipt)
-                }
-                val cardVerificationFragment = CardVerificationFragment().apply {
-                    arguments = bundle
-                }
-                requireActivity().supportFragmentManager.beginTransaction().add(
-                    R.id.container,
-                    cardVerificationFragment
-                ).commitNow()
+                findNavController().navigate(
+                    R.id.action_paymentMethodsFragment_to_cardVerificationFragment, bundleOf(
+                        JUDO_RECEIPT to receipt
+                    )
+                )
             } else {
                 sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(receipt))
             }

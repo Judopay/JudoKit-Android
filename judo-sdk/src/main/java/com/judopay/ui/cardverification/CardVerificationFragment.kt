@@ -37,10 +37,10 @@ class CardVerificationFragment : Fragment(), WebViewCallback {
         viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is JudoApiCallResult.Success -> if (it.data != null) {
-                    sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(it.data))
+                    sharedViewModel.threeDSecureResult.postValue(JudoPaymentResult.Success(it.data))
                 }
                 is JudoApiCallResult.Failure -> if (it.error != null) {
-                    sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(it.error))
+                    sharedViewModel.threeDSecureResult.postValue(JudoPaymentResult.Error(it.error))
                 }
             }
         })

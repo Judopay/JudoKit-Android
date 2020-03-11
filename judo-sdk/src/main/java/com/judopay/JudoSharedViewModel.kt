@@ -41,4 +41,5 @@ val JudoPaymentResult.code: Int
 
 class JudoSharedViewModel : ViewModel() {
     val paymentResult = MutableLiveData<JudoPaymentResult>()
+    val threeDSecureResult = MutableLiveData<JudoPaymentResult>()
 }

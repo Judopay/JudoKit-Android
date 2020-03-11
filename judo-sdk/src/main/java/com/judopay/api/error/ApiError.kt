@@ -137,7 +137,7 @@ data class ApiError(
         val code: Int,
         val category: Int,
         val message: String,
-        val details: List<ApiErrorDetail> = emptyList()
+        val details: List<ApiErrorDetail>? = emptyList()
 ) : Parcelable {
     override fun toString(): String {
         return "ApiError(code=$code, category=$category, message='$message', details=$details)"

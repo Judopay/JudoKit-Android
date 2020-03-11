@@ -4,8 +4,13 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import android.widget.FrameLayout
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,6 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.judopay.JUDO_RECEIPT
 import com.judopay.JudoPaymentResult
 import com.judopay.JudoSharedViewModel
 import com.judopay.R
@@ -24,8 +30,11 @@ import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
 import com.judopay.api.model.response.toJudoPaymentResult
 import com.judopay.judo
+import com.judopay.model.isCardPaymentWidget
 import com.judopay.model.isPaymentMethodsWidget
-import kotlinx.android.synthetic.main.card_entry_fragment.*
+import kotlinx.android.synthetic.main.card_entry_fragment.cancelButton
+import kotlinx.android.synthetic.main.card_entry_fragment.formView
+import kotlinx.android.synthetic.main.card_entry_fragment.scanCardButton
 
 class CardEntryFragment : BottomSheetDialogFragment() {
 
@@ -109,10 +118,21 @@ class CardEntryFragment : BottomSheetDialogFragment() {
             dispatchPaymentMethodsApiResult(result)
             return
         }
+        if(judo.paymentWidgetType.isCardPaymentWidget) {
+            dispatchCardPaymentApiResult(result)
+            return
+        }
 
         // in any other cases we're the only fragment in the stack,
         // so push the result to the parent activity
         sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult())
+    }
+
+    private fun dispatchCardPaymentApiResult(result: JudoApiCallResult<Receipt>) {
+        when (result) {
+            is JudoApiCallResult.Success -> handleSuccess(result.data)
+            is JudoApiCallResult.Failure -> if(result.error!=null) sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(result.error))
+        }
     }
 
     private fun dispatchPaymentMethodsApiResult(result: JudoApiCallResult<Receipt>) {
@@ -173,4 +193,16 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         }
     }
 
+    private fun handleSuccess(receipt: Receipt?) {
+        if (receipt != null)
+            if (receipt.is3dSecureRequired) {
+                findNavController().navigate(
+                    R.id.action_cardEntryFragment_to_cardVerificationFragment, bundleOf(
+                        JUDO_RECEIPT to receipt
+                    )
+                )
+            } else {
+                sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(receipt))
+            }
+    }
 }
