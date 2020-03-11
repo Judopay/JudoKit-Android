@@ -17,7 +17,7 @@ import com.judopay.model.PaymentMethod
 import com.judopay.model.icon
 import com.judopay.model.text
 import com.judopay.subViewsWithType
-import kotlinx.android.synthetic.main.view_payment_selector.view.container
+import kotlinx.android.synthetic.main.view_payment_selector.view.paymentSelectorContainer
 import kotlinx.android.synthetic.main.view_payment_selector.view.selector
 
 private const val MARGIN_12 = 12
