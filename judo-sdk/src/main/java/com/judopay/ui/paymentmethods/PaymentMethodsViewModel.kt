@@ -208,7 +208,7 @@ class PaymentMethodsViewModel(application: Application,
         if (method == PaymentMethod.CARD) {
             return when {
                 isLoading -> ButtonState.Loading
-                cardModel is PaymentCardViewModel && isExpired(cardModel.expireDate) -> ButtonState.Enabled(R.string.pay_now)
+                cardModel is PaymentCardViewModel && !isExpired(cardModel.expireDate) -> ButtonState.Enabled(R.string.pay_now)
                 else -> ButtonState.Disabled(R.string.pay_now)
             }
         }

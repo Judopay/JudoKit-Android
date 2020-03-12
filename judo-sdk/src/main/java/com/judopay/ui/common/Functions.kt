@@ -40,7 +40,7 @@ internal fun isValidLuhnNumber(cardNumber: String): Boolean {
 
 fun isExpired(expireDate: String, pattern: String = "MM/yy") =
     (SimpleDateFormat(pattern, Locale.UK).parse(expireDate)
-        ?: throw ParseException("Unparseable date: $expireDate", 0)).after(Date())
+        ?: throw ParseException("Unparseable date: $expireDate", 0)).before(Date())
 
 fun isExpiredInTwoMonths(expireDate: String, pattern: String = "MM/yy"): Boolean {
     val twoMonths = Calendar.getInstance().apply { add(Calendar.MONTH, 2) }.time
