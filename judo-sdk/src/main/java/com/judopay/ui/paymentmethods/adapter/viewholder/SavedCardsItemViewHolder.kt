@@ -47,8 +47,14 @@ class SavedCardsItemViewHolder(view: View) : RecyclerView.ViewHolder(view), Bind
                 subTitle.setTextColor(ContextCompat.getColor(context, R.color.tomato_red))
                 boldString.apply {
                     append("${model.ending} ${resources.getString(R.string.is_expired)}")
+                    val expiredIndex =
+                        if (boldString.indexOf(resources.getString(R.string.expired)) == -1) {
+                            0
+                        } else {
+                            boldString.indexOf(resources.getString(R.string.expired))
+                        }
                     setSpan(StyleSpan(Typeface.BOLD), 0, boldString.length - resources.getString(R.string.is_expired).length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-                    setSpan(StyleSpan(Typeface.BOLD), boldString.indexOf(resources.getString(R.string.expired)), boldString.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+                    setSpan(StyleSpan(Typeface.BOLD), expiredIndex, boldString.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
                 }
             }
             expiryDate.after(today) && expiryDate.before(twoMonths) -> {
