@@ -48,10 +48,10 @@ class SavedCardsItemViewHolder(view: View) : RecyclerView.ViewHolder(view), Bind
                 boldString.apply {
                     append("${model.ending} ${resources.getString(R.string.is_expired)}")
                     val expiredIndex =
-                        if (boldString.indexOf(resources.getString(R.string.expired)) == -1) {
+                        if (boldString.indexOf(resources.getString(R.string.expired), ignoreCase = true) == -1) {
                             0
                         } else {
-                            boldString.indexOf(resources.getString(R.string.expired))
+                            boldString.indexOf(resources.getString(R.string.expired), ignoreCase = true)
                         }
                     setSpan(StyleSpan(Typeface.BOLD), 0, boldString.length - resources.getString(R.string.is_expired).length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
                     setSpan(StyleSpan(Typeface.BOLD), expiredIndex, boldString.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
@@ -59,8 +59,15 @@ class SavedCardsItemViewHolder(view: View) : RecyclerView.ViewHolder(view), Bind
             }
             expiryDate.after(today) && expiryDate.before(twoMonths) -> {
                 boldString.apply {
-                    append("${model.ending} ${resources.getString(R.string.expires_soon)}")
-                    setSpan(StyleSpan(Typeface.BOLD), 0, boldString.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+                    append("${model.ending} ${resources.getString(R.string.will_expire_soon)}")
+                    val expireIndex =
+                        if (boldString.indexOf(resources.getString(R.string.expire), ignoreCase = true) == -1) {
+                            0
+                        } else {
+                            boldString.indexOf(resources.getString(R.string.expire), ignoreCase = true)
+                        }
+                    setSpan(StyleSpan(Typeface.BOLD), 0, boldString.length - resources.getString(R.string.will_expire_soon).length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+                    setSpan(StyleSpan(Typeface.BOLD), expireIndex, boldString.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
                 }
             }
             else -> boldString.apply {

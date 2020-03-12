@@ -30,7 +30,8 @@
     <string name="card_subtitle">%1$s Ending</string>
     <string name="is_expired">is Expired</string>
     <string name="expired">Expired</string>
-    <string name="expires_soon">Expires soon</string>
+    <string name="expire">expire</string>
+    <string name="will_expire_soon">will expire soon</string>
 
     <string name="transaction_unsuccessful">Transaction unsuccessful, please try again</string>
     <string name="close">Close</string>
