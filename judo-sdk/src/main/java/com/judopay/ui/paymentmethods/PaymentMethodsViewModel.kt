@@ -25,6 +25,8 @@ import com.judopay.ui.paymentmethods.adapter.model.*
 import com.judopay.ui.paymentmethods.components.*
 import com.judopay.ui.paymentmethods.model.*
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 // view-model actions
 sealed class PaymentMethodsAction {
@@ -191,11 +193,9 @@ class PaymentMethodsViewModel(application: Application,
             }
         }
 
-        val isOptionSelected = cardModel is PaymentCardViewModel
-
         val callToActionModel = PaymentCallToActionViewModel(
                 amount = judo.amount.formatted,
-                paymentButtonState = buildPaymentButtonState(method.type, isLoading, isOptionSelected)
+                paymentButtonState = buildPaymentButtonState(method.type, isLoading, cardModel)
         )
 
         val headerViewModel = PaymentMethodsHeaderViewModel(cardModel, callToActionModel)
@@ -205,11 +205,11 @@ class PaymentMethodsViewModel(application: Application,
 
     private fun buildPaymentButtonState(method: PaymentMethod,
                                         isLoading: Boolean,
-                                        isOptionSelected: Boolean): ButtonState {
+                                        cardModel: CardViewModel): ButtonState {
         if (method == PaymentMethod.CARD) {
             return when {
                 isLoading -> ButtonState.Loading
-                isOptionSelected -> ButtonState.Enabled(R.string.pay_now)
+                cardModel is PaymentCardViewModel && SimpleDateFormat("MM/yy", Locale.UK).parse(cardModel.expireDate).after(Date())-> ButtonState.Enabled(R.string.pay_now)
                 else -> ButtonState.Disabled(R.string.pay_now)
             }
         }
