@@ -21,12 +21,11 @@ import com.judopay.model.formatted
 import com.judopay.model.typeId
 import com.judopay.toMap
 import com.judopay.ui.common.ButtonState
+import com.judopay.ui.common.isExpired
 import com.judopay.ui.paymentmethods.adapter.model.*
 import com.judopay.ui.paymentmethods.components.*
 import com.judopay.ui.paymentmethods.model.*
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 
 // view-model actions
 sealed class PaymentMethodsAction {
@@ -209,7 +208,7 @@ class PaymentMethodsViewModel(application: Application,
         if (method == PaymentMethod.CARD) {
             return when {
                 isLoading -> ButtonState.Loading
-                cardModel is PaymentCardViewModel && SimpleDateFormat("MM/yy", Locale.UK).parse(cardModel.expireDate).after(Date())-> ButtonState.Enabled(R.string.pay_now)
+                cardModel is PaymentCardViewModel && isExpired(cardModel.expireDate) -> ButtonState.Enabled(R.string.pay_now)
                 else -> ButtonState.Disabled(R.string.pay_now)
             }
         }

@@ -1,5 +1,9 @@
 package com.judopay.ui.common
 
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
+
 /**
  * Checks the input string to see whether or not it is a valid Luhn number.
  *
@@ -34,3 +38,13 @@ internal fun isValidLuhnNumber(cardNumber: String): Boolean {
     return sum % 10 == 0
 }
 
+fun isExpired(expireDate: String, pattern: String = "MM/yy") =
+    (SimpleDateFormat(pattern, Locale.UK).parse(expireDate)
+        ?: throw ParseException("Unparseable date: $expireDate", 0)).after(Date())
+
+fun isExpiredInTwoMonths(expireDate: String, pattern: String = "MM/yy"): Boolean {
+    val twoMonths = Calendar.getInstance().apply { add(Calendar.MONTH, 2) }.time
+    val parsedExpireDate = SimpleDateFormat(pattern, Locale.UK).parse(expireDate)
+        ?: throw ParseException("Unparseable date: $expireDate", 0)
+    return parsedExpireDate.after(Date()) && parsedExpireDate.before(twoMonths)
+}

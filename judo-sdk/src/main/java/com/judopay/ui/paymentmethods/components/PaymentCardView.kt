@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import com.judopay.R
 import com.judopay.inflate
 import com.judopay.model.CardNetwork
+import com.judopay.ui.common.isExpired
 import com.judopay.ui.paymentmethods.model.CardViewModel
 import com.judopay.ui.paymentmethods.model.CardViewType
 import kotlinx.android.synthetic.main.payment_card_view.view.cardNameTextView
@@ -15,8 +16,6 @@ import kotlinx.android.synthetic.main.payment_card_view.view.cardNumberMaskTextV
 import kotlinx.android.synthetic.main.payment_card_view.view.expireDateTextView
 import kotlinx.android.synthetic.main.payment_card_view.view.isExpiredTextView
 import kotlinx.android.synthetic.main.payment_card_view.view.paymentCardViewContainer
-import java.text.SimpleDateFormat
-import java.util.*
 
 data class PaymentCardViewModel(
     override val type: CardViewType = CardViewType.CARD,
@@ -74,8 +73,7 @@ class PaymentCardView @JvmOverloads constructor(
         cardNameTextView.text = model.name
         cardNumberMaskTextView.text = resources.getString(R.string.mask, model.maskedNumber)
         expireDateTextView.text = model.expireDate
-        val expiryDate = SimpleDateFormat("MM/yy", Locale.UK).parse(model.expireDate) ?: Date()
-        if (expiryDate.before(Date())) {
+        if (isExpired(model.expireDate)) {
             isExpiredTextView.visibility = View.VISIBLE
             expireDateTextView.setTextColor(ContextCompat.getColor(context, R.color.tomato_red))
             paymentCardViewContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.greyish))

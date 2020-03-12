@@ -9,6 +9,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.judopay.R
 import com.judopay.model.displayName
+import com.judopay.ui.common.isExpired
+import com.judopay.ui.common.isExpiredInTwoMonths
 import com.judopay.ui.paymentmethods.adapter.BindableRecyclerViewHolder
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapterListener
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItemAction
@@ -16,8 +18,6 @@ import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSavedCardItem
 import kotlinx.android.synthetic.main.saved_card_item.view.radioIconImageView
 import kotlinx.android.synthetic.main.saved_card_item.view.subTitle
 import kotlinx.android.synthetic.main.saved_card_item.view.title
-import java.text.SimpleDateFormat
-import java.util.*
 
 class SavedCardsItemViewHolder(view: View) : RecyclerView.ViewHolder(view), BindableRecyclerViewHolder<PaymentMethodSavedCardItem, PaymentMethodItemAction> {
     override fun bind(model: PaymentMethodSavedCardItem, listener: PaymentMethodsAdapterListener?) = with(itemView) {
@@ -31,9 +31,6 @@ class SavedCardsItemViewHolder(view: View) : RecyclerView.ViewHolder(view), Bind
     }
 
     private fun createBoldSubtitle(model: PaymentMethodSavedCardItem): SpannableStringBuilder {
-        val today = Date()
-        val expiryDate = SimpleDateFormat("MM/yy", Locale.UK).parse(model.expireDate) ?: today
-        val twoMonths = Calendar.getInstance().apply { add(Calendar.MONTH, 2) }.time
         val boldString = SpannableStringBuilder()
         with(itemView) {
             val cardSubtitle = SpannableStringBuilder(
@@ -43,7 +40,7 @@ class SavedCardsItemViewHolder(view: View) : RecyclerView.ViewHolder(view), Bind
                 )
             )
             when {
-                expiryDate.before(today) -> {
+                isExpired(model.expireDate) -> {
                     subTitle.setTextColor(ContextCompat.getColor(context, R.color.tomato_red))
                     boldString.apply {
                         append("${model.ending} ${resources.getString(R.string.is_expired)}")
@@ -57,7 +54,7 @@ class SavedCardsItemViewHolder(view: View) : RecyclerView.ViewHolder(view), Bind
                         setSpan(StyleSpan(Typeface.BOLD), expiredIndex, boldString.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
                     }
                 }
-                expiryDate.after(today) && expiryDate.before(twoMonths) -> {
+                isExpiredInTwoMonths(model.expireDate) -> {
                     boldString.apply {
                         append("${model.ending} ${resources.getString(R.string.will_expire_soon)}")
                         val expireIndex =
