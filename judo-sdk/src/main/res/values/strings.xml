@@ -27,11 +27,10 @@
     <string name="error_jcb_not_supported">We don\'t accept JCB, please use other cards</string>
     <string name="check_expiry_date">Check expiry date</string>
     <string name="check_cvv">Check CVV</string>
-    <string name="card_subtitle">%1$s Ending</string>
-    <string name="is_expired">is Expired</string>
+    <string name="card_subtitle">%1$s Ending &lt;b>%2$s&lt;/b></string>
+    <string name="card_subtitle_will_expire_soon">%1$s Ending &lt;b>%2$s&lt;/b> will &lt;b>expire soon&lt;/b></string>
+    <string name="card_subtitle_expired">%1$s Ending &lt;b>%2$s&lt;/b> is &lt;b>Expired&lt;/b></string>
     <string name="expired">Expired</string>
-    <string name="expire">expire</string>
-    <string name="will_expire_soon">will expire soon</string>
 
     <string name="transaction_unsuccessful">Transaction unsuccessful, please try again</string>
     <string name="close">Close</string>
