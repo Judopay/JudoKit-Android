@@ -14,7 +14,7 @@ fun TokenizedCardEntity.toPaymentMethodSavedCardItem() = PaymentMethodSavedCardI
         network = network,
         ending = ending,
         token = token,
-        expireDate = "03/20"
+        expireDate = expireDate
 )
 
 fun PaymentMethodSavedCardItem.toPaymentCardViewModel() = PaymentCardViewModel(
@@ -22,7 +22,7 @@ fun PaymentMethodSavedCardItem.toPaymentCardViewModel() = PaymentCardViewModel(
         cardNetwork = network,
         name = title,
         maskedNumber = ending,
-        expireDate = "03/20"
+        expireDate = expireDate
 )
 
 fun CardToken.toTokenizedCardEntity(context: Context): TokenizedCardEntity {
