@@ -77,6 +77,10 @@ class PaymentCardView @JvmOverloads constructor(
             isExpiredTextView.visibility = View.VISIBLE
             expireDateTextView.setTextColor(ContextCompat.getColor(context, R.color.tomato_red))
             paymentCardViewContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.greyish))
+        } else {
+            isExpiredTextView.visibility = View.GONE
+            expireDateTextView.setTextColor(ContextCompat.getColor(context, R.color.brown_grey))
+            paymentCardViewContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
         }
     }
 
