@@ -66,10 +66,12 @@ class SavedCardsItemViewHolder(view: View) : RecyclerView.ViewHolder(view), Bind
                         setSpan(StyleSpan(Typeface.BOLD), 0, boldString.length - resources.getString(R.string.will_expire_soon).length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
                         setSpan(StyleSpan(Typeface.BOLD), expireIndex, boldString.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
                     }
+                    subTitle.setTextColor(ContextCompat.getColor(context, R.color.warm_grey))
                 }
                 else -> boldString.apply {
                     append(model.ending)
                     setSpan(StyleSpan(Typeface.BOLD), 0, boldString.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+                    subTitle.setTextColor(ContextCompat.getColor(context, R.color.warm_grey))
                 }
             }
 
