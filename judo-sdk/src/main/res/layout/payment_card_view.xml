@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/paymentCardViewContainer">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -45,6 +46,22 @@
         tools:text="•••• •••• •••• 1122" />
 
     <TextView
+        android:includeFontPadding="false"
+        android:id="@+id/isExpiredTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_display_semibold"
+        android:text="@string/expired"
+        android:textColor="@color/tomato_red"
+        android:textSize="@dimen/caption"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/expireDateTextView"
+        app:layout_constraintEnd_toEndOf="@id/expireDateTextView"
+        app:layout_constraintStart_toStartOf="@id/expireDateTextView"
+        tools:visibility="visible" />
+
+    <TextView
+        android:includeFontPadding="false"
         android:id="@+id/expireDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
