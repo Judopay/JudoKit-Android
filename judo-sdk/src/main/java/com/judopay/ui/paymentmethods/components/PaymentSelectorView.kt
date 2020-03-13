@@ -17,7 +17,7 @@ import com.judopay.model.PaymentMethod
 import com.judopay.model.icon
 import com.judopay.model.text
 import com.judopay.subViewsWithType
-import kotlinx.android.synthetic.main.view_payment_selector.view.container
+import kotlinx.android.synthetic.main.view_payment_selector.view.paymentSelectorContainer
 import kotlinx.android.synthetic.main.view_payment_selector.view.selector
 
 private const val MARGIN_12 = 12
@@ -44,8 +44,8 @@ class PaymentSelectorView @JvmOverloads constructor(
             currentSelected: PaymentMethod?,
             onClick: PaymentSelectorViewSelectionListener
     ) {
-        container.subViewsWithType(PaymentSelectorItemView::class.java).forEach {
-            container.removeView(it)
+        paymentSelectorContainer.subViewsWithType(PaymentSelectorItemView::class.java).forEach {
+            paymentSelectorContainer.removeView(it)
         }
 
         this.currentSelected = currentSelected
@@ -71,13 +71,13 @@ class PaymentSelectorView @JvmOverloads constructor(
                     translationZ = 10f
                 }
             }
-            container.addView(itemView)
+            paymentSelectorContainer.addView(itemView)
             itemViews.add(itemView)
             ids.add(itemView.id)
         }
 
         val set = ConstraintSet()
-        set.clone(container)
+        set.clone(paymentSelectorContainer)
 
         itemViews.forEachIndexed { index, itemView ->
             if (currentSelected != null && paymentMethods.contains(currentSelected)) {
@@ -103,8 +103,8 @@ class PaymentSelectorView @JvmOverloads constructor(
                 if (previousSelected != itemView || !lastUsedSelected) {
                     previousSelected?.setTextVisibility(View.GONE)
                     selectItem(set, itemView)
-                    set.applyTo(container)
-                    TransitionManager.beginDelayedTransition(container)
+                    set.applyTo(paymentSelectorContainer)
+                    TransitionManager.beginDelayedTransition(paymentSelectorContainer)
                     scrollToView(itemView)
                     onClick.invoke(itemView.getPaymentMethod())
                     previousSelected = itemView
@@ -112,7 +112,7 @@ class PaymentSelectorView @JvmOverloads constructor(
             }
         }
         chainViews(ids, set)
-        set.applyTo(container)
+        set.applyTo(paymentSelectorContainer)
     }
 
     override fun onDraw(canvas: Canvas?) {

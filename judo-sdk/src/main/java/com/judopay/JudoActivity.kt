@@ -30,6 +30,7 @@ class JudoActivity : AppCompatActivity() {
         // setup shared view-model & callbacks
         viewModel = ViewModelProvider(this).get(JudoSharedViewModel::class.java)
         viewModel.paymentResult.observe(this, Observer { dispatchPaymentResult(it) })
+        viewModel.threeDSecureResult.observe(this, Observer { dispatchPaymentResult(it) })
     }
 
     private fun dispatchPaymentResult(result: JudoPaymentResult) {

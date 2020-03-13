@@ -3,10 +3,13 @@ package com.judopay.api
 import com.judopay.api.model.request.PaymentRequest
 import com.judopay.api.model.request.SaveCardRequest
 import com.judopay.api.model.request.TokenRequest
+import com.judopay.api.model.response.CardVerificationResult
 import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
 import retrofit2.http.Body
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 
 /**
  * Judo interface with Retrofit annotated list of judo API calls that can be performed.
@@ -66,9 +69,10 @@ interface JudoApiService {
      * @param cardVerificationResult the 3D-Secure details returned from successfully validating the card with the merchant bank
      * @return the receipt for the transaction
      */
-//    @PUT("transactions/{receiptId}")
-//    fun complete3dSecure(@Path("receiptId") receiptId: String,
-//                         @Body cardVerificationResult: CardVerificationResult): Single<Receipt>
+    @PUT("transactions/{receiptId}")
+   suspend fun complete3dSecure(@Path("receiptId") receiptId: String,
+                         @Body cardVerificationResult: CardVerificationResult
+    ): JudoApiCallResult<Receipt>
 
     /**
      * @param collectionRequest the collectionRequest transaction to be performed

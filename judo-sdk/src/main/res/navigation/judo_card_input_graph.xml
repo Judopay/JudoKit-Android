@@ -9,6 +9,20 @@
     <dialog
         android:id="@+id/cardEntryFragment"
         android:name="com.judopay.ui.cardentry.CardEntryFragment"
-        android:label="CardEntryFragment" />
+        android:label="CardEntryFragment" >
+        <action
+            android:id="@+id/action_cardEntryFragment_to_cardVerificationFragment"
+            app:destination="@id/cardVerificationFragment">
+            <argument
+                android:name="com.judopay.judo-receipt"
+                app:argType="com.judopay.api.model.response.Receipt" />
+        </action>
+        </dialog>
+    <fragment
+        android:id="@+id/cardVerificationFragment"
+        android:name="com.judopay.ui.cardverification.CardVerificationFragment"
+        android:label="CardVerificationFragment" >
+
+    </fragment>
 
 </navigation>

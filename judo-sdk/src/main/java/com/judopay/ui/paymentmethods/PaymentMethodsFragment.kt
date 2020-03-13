@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -12,10 +13,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.judopay.JUDO_RECEIPT
 import com.judopay.JudoPaymentResult
 import com.judopay.JudoSharedViewModel
 import com.judopay.R
-import com.judopay.api.model.response.toJudoPaymentResult
+import com.judopay.api.error.ApiError
+import com.judopay.api.model.response.JudoApiCallResult
+import com.judopay.api.model.response.Receipt
 import com.judopay.judo
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judopay.ui.paymentmethods.adapter.SwipeToDeleteCallback
@@ -60,14 +64,37 @@ class PaymentMethodsFragment : Fragment() {
 
         viewModel = ViewModelProvider(this, factory).get(PaymentMethodsViewModel::class.java)
         viewModel.model.observe(viewLifecycleOwner, Observer { updateWithModel(it) })
+
         viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer {
-            sharedViewModel.paymentResult.postValue(it.toJudoPaymentResult())
+            when (it) {
+                is JudoApiCallResult.Success -> handleSuccess(it.data)
+                is JudoApiCallResult.Failure -> handleFail(it.error)
+            }
         })
 
         // TODO: to be refactored
         viewModel.allCardsSync.observe(viewLifecycleOwner, Observer {
             viewModel.send(PaymentMethodsAction.Update)
         })
+    }
+
+    private fun handleFail(error: ApiError?) {
+        if (error != null) {
+            sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(error))
+        }
+    }
+
+    private fun handleSuccess(receipt: Receipt?) {
+        if (receipt != null)
+            if (receipt.is3dSecureRequired) {
+                findNavController().navigate(
+                    R.id.action_paymentMethodsFragment_to_cardVerificationFragment, bundleOf(
+                        JUDO_RECEIPT to receipt
+                    )
+                )
+            } else {
+                sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(receipt))
+            }
     }
 
     // handle callbacks from the recycler view elements

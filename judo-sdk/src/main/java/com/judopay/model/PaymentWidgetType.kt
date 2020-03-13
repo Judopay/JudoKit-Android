@@ -29,3 +29,6 @@ val PaymentWidgetType.navigationGraphId: Int
 
 val PaymentWidgetType.isPaymentMethodsWidget: Boolean
     get() = this == PaymentWidgetType.PAYMENT_METHODS || this == PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS
+
+val PaymentWidgetType.isCardPaymentWidget: Boolean
+    get() = this == PaymentWidgetType.CARD_PAYMENT || this == PaymentWidgetType.PRE_AUTH_CARD_PAYMENT
