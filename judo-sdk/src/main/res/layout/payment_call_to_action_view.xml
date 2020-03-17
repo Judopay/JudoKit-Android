@@ -20,9 +20,9 @@
         android:text="@string/you_will_pay"
         android:textColor="@color/black"
         android:textSize="@dimen/body"
-        app:layout_constraintEnd_toStartOf="@+id/payButton"
+        app:layout_constraintEnd_toStartOf="@+id/buttonsAnimator"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/payButton" />
+        app:layout_constraintTop_toTopOf="@+id/buttonsAnimator" />
 
     <TextView
         android:id="@+id/amountTextView"
@@ -33,21 +33,41 @@
         android:padding="0dp"
         android:textColor="@color/black"
         android:textSize="@dimen/large_title"
-        app:layout_constraintBottom_toBottomOf="@+id/payButton"
-        app:layout_constraintEnd_toStartOf="@+id/payButton"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonsAnimator"
+        app:layout_constraintEnd_toStartOf="@+id/buttonsAnimator"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="£0.01" />
 
-    <com.judopay.ui.common.ProgressButton
-        android:id="@+id/payButton"
-        style="@style/JudoTheme.BlackRoundedButton"
+    <ViewAnimator
+        android:id="@+id/buttonsAnimator"
         android:layout_width="200dp"
         android:layout_height="@dimen/button_height"
-        android:enabled="false"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:inAnimation="@anim/fade_in"
         android:minWidth="@dimen/min_touch_target_size"
-        android:text="@string/pay_now"
+        android:outAnimation="@anim/fade_out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.judopay.ui.common.ProgressButton
+            android:id="@+id/payButton"
+            style="@style/JudoTheme.BlackRoundedButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/pay_now" />
+
+        <com.judopay.ui.common.GooglePayButton
+            android:id="@+id/googlePayButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/negative_space_3"
+            android:layout_marginTop="@dimen/space_3"
+            android:layout_marginEnd="@dimen/negative_space_3"
+            android:layout_marginBottom="@dimen/space_3"
+            app:style="black_buy_with" />
+
+    </ViewAnimator>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

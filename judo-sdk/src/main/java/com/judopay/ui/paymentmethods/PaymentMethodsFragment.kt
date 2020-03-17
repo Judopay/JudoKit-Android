@@ -14,13 +14,14 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.judopay.JUDO_RECEIPT
-import com.judopay.JudoPaymentResult
+import com.judopay.JudoSharedAction
 import com.judopay.JudoSharedViewModel
 import com.judopay.R
 import com.judopay.api.error.ApiError
 import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
 import com.judopay.judo
+import com.judopay.model.JudoPaymentResult
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judopay.ui.paymentmethods.adapter.SwipeToDeleteCallback
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
@@ -28,16 +29,15 @@ import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItem
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItemAction
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSavedCardItem
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSelectorItem
+import com.judopay.ui.paymentmethods.components.PaymentCallToActionType
 import com.judopay.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
 import com.judopay.ui.paymentmethods.model.PaymentMethodModel
-import kotlinx.android.synthetic.main.payment_methods_fragment.backButton
-import kotlinx.android.synthetic.main.payment_methods_fragment.headerView
-import kotlinx.android.synthetic.main.payment_methods_fragment.recyclerView
-import kotlinx.android.synthetic.main.payment_methods_header_view.paymentCallToActionView
+import kotlinx.android.synthetic.main.payment_methods_fragment.*
+import kotlinx.android.synthetic.main.payment_methods_header_view.*
 
 data class PaymentMethodsModel(
-        val headerModel: PaymentMethodsHeaderViewModel,
-        val currentPaymentMethod: PaymentMethodModel
+    val headerModel: PaymentMethodsHeaderViewModel,
+    val currentPaymentMethod: PaymentMethodModel
 )
 
 class PaymentMethodsFragment : Fragment() {
@@ -45,8 +45,10 @@ class PaymentMethodsFragment : Fragment() {
     private lateinit var viewModel: PaymentMethodsViewModel
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         return inflater.inflate(R.layout.payment_methods_fragment, container, false)
     }
 
@@ -76,6 +78,17 @@ class PaymentMethodsFragment : Fragment() {
         viewModel.allCardsSync.observe(viewLifecycleOwner, Observer {
             viewModel.send(PaymentMethodsAction.Update)
         })
+
+        sharedViewModel.paymentMethodsGooglePayResult.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is JudoPaymentResult.Success -> sharedViewModel.paymentResult.postValue(it)
+                is JudoPaymentResult.Error -> MaterialAlertDialogBuilder(context)
+                    .setTitle(R.string.transaction_error_title)
+                    .setMessage(R.string.transaction_unsuccessful)
+                    .setNegativeButton(R.string.close, null)
+                    .show()
+            }
+        })
     }
 
     private fun handleFail(error: ApiError?) {
@@ -98,8 +111,10 @@ class PaymentMethodsFragment : Fragment() {
     }
 
     // handle callbacks from the recycler view elements
-    private fun dispatchRecyclerViewAction(action: PaymentMethodItemAction,
-                                           item: PaymentMethodItem) {
+    private fun dispatchRecyclerViewAction(
+        action: PaymentMethodItemAction,
+        item: PaymentMethodItem
+    ) {
         when (item) {
             is PaymentMethodSelectorItem -> {
                 viewModel.send(
@@ -120,18 +135,19 @@ class PaymentMethodsFragment : Fragment() {
 
     private fun onDeleteCardItem(item: PaymentMethodSavedCardItem) {
         MaterialAlertDialogBuilder(context)
-                .setTitle(R.string.delete_card_alert_title)
-                .setMessage(R.string.delete_card_alert_message)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.delete) { _, _ ->
-                    viewModel.send(PaymentMethodsAction.DeleteCard(item.id))
-                }
-                .show()
+            .setTitle(R.string.delete_card_alert_title)
+            .setMessage(R.string.delete_card_alert_message)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.delete) { _, _ ->
+                viewModel.send(PaymentMethodsAction.DeleteCard(item.id))
+            }
+            .show()
     }
 
     private fun onEdit() {}
 
-    private fun onAddCard() = findNavController().navigate(R.id.action_paymentMethodsFragment_to_cardEntryFragment)
+    private fun onAddCard() =
+        findNavController().navigate(R.id.action_paymentMethodsFragment_to_cardEntryFragment)
 
     private fun updateWithModel(model: PaymentMethodsModel) {
         headerView.paymentMethods = judo.paymentMethods.toList()
@@ -166,7 +182,14 @@ class PaymentMethodsFragment : Fragment() {
         backButton.setOnClickListener(::onUserCancelled)
 
         paymentCallToActionView.callbackListener = {
-            viewModel.send(PaymentMethodsAction.PayWithSelectedStoredCard)
+            val action = when (it) {
+                PaymentCallToActionType.PAY_WITH_CARD -> PaymentMethodsAction.PayWithSelectedStoredCard
+                PaymentCallToActionType.PAY_WITH_GOOGLE_PAY -> {
+                    sharedViewModel.send(JudoSharedAction.LoadGPayPaymentData)
+                    PaymentMethodsAction.PayWithGooglePay
+                }
+            }
+            viewModel.send(action)
         }
     }
 
@@ -177,5 +200,4 @@ class PaymentMethodsFragment : Fragment() {
         // post the event
         sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled)
     }
-
 }

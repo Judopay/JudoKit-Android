@@ -2,6 +2,7 @@ package com.judopay.model
 
 import android.os.Parcelable
 import com.judopay.R
+import com.judopay.ui.paymentmethods.components.PaymentButtonType
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -23,4 +24,10 @@ internal val PaymentMethod.text
         PaymentMethod.CARD -> R.string.cards
         PaymentMethod.GOOGLE_PAY -> R.string.empty
         PaymentMethod.IDEAL -> R.string.ideal_payment
+    }
+
+val PaymentMethod.paymentButtonType: PaymentButtonType
+    get() = when (this) {
+        PaymentMethod.GOOGLE_PAY -> PaymentButtonType.GOOGLE_PAY
+        else -> PaymentButtonType.PLAIN
     }

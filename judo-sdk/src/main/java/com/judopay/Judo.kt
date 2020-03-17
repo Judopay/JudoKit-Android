@@ -3,6 +3,7 @@ package com.judopay
 import android.app.Activity
 import android.os.Parcelable
 import com.judopay.model.*
+import com.judopay.model.googlepay.GooglePayConfiguration
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -14,9 +15,9 @@ import kotlinx.android.parcel.Parcelize
  */
 
 // Bundle keys
-const val JUDO_OPTIONS = "com.judopay.judo-options"
-const val JUDO_RECEIPT = "com.judopay.judo-receipt"
-const val JUDO_ERROR = "com.judopay.judo-error"
+const val JUDO_OPTIONS = "com.judopay.options"
+const val JUDO_RECEIPT = "com.judopay.receipt"
+const val JUDO_ERROR = "com.judopay.error"
 
 // Result codes
 /** Judo activity result: operation succeeded.  */

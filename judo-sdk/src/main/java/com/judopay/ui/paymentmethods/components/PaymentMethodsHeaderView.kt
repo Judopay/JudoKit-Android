@@ -10,6 +10,7 @@ import com.judopay.inflate
 import com.judopay.model.PaymentMethod
 import com.judopay.ui.paymentmethods.model.CardAnimationType
 import com.judopay.ui.paymentmethods.model.CardViewModel
+import com.judopay.ui.paymentmethods.model.PaymentCardViewModel
 import com.judopay.ui.paymentmethods.model.inAnimation
 import com.judopay.ui.paymentmethods.model.outAnimation
 import kotlinx.android.synthetic.main.payment_methods_header_view.view.noPaymentMethodSelectedView

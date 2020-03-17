@@ -125,10 +125,7 @@ dependencies {
 
     implementation 'com.readystatesoftware.chuck:library:1.1.0'
 
-    implementation('com.google.android.gms:play-services-wallet:18.0.0') {
-        exclude group: 'com.android.support', module: 'support-media-compat'
-        exclude group: 'com.android.support', module: 'support-v4'
-    }
+    implementation('com.google.android.gms:play-services-wallet:18.0.0')
 
     // Room
     implementation "androidx.room:room-runtime:2.2.4"

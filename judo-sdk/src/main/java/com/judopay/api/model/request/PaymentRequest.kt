@@ -42,7 +42,6 @@ class PaymentRequest private constructor(
         private var mobileNumber: String? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
 
-
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
         fun setYourPaymentReference(yourPaymentReference: String?) =

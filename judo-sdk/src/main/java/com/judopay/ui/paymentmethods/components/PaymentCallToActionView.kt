@@ -15,21 +15,22 @@ enum class PaymentButtonType {
 }
 
 enum class PaymentCallToActionType {
-    PAY
+    PAY_WITH_CARD,
+    PAY_WITH_GOOGLE_PAY
 }
 
 typealias PaymentCallToActionViewListener = (action: PaymentCallToActionType) -> Unit
 
 data class PaymentCallToActionViewModel(
-        val amount: String = "",
-        val buttonType: PaymentButtonType = PaymentButtonType.PLAIN,
-        val paymentButtonState: ButtonState = ButtonState.Disabled(R.string.pay_now)
+    val amount: String = "",
+    val buttonType: PaymentButtonType = PaymentButtonType.PLAIN,
+    val paymentButtonState: ButtonState = ButtonState.Disabled(R.string.pay_now)
 )
 
 class PaymentCallToActionView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyle: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
 ) : FrameLayout(context, attrs, defStyle) {
 
     var callbackListener: PaymentCallToActionViewListener? = null
@@ -37,6 +38,7 @@ class PaymentCallToActionView @JvmOverloads constructor(
     init {
         inflate(R.layout.payment_call_to_action_view, true)
         payButton.setOnClickListener(::onPaymentButtonClick)
+        googlePayButton.setOnClickListener(::onPaymentButtonClick)
     }
 
     var model = PaymentCallToActionViewModel()
@@ -48,11 +50,26 @@ class PaymentCallToActionView @JvmOverloads constructor(
     private fun update() = with(model) {
         amountTextView.text = amount
         payButton.state = paymentButtonState
+
+        val buttonToShow = when (buttonType) {
+            PaymentButtonType.PLAIN -> payButton
+            PaymentButtonType.GOOGLE_PAY -> googlePayButton
+        }
+
+        if (buttonsAnimator.currentView != buttonToShow)
+            buttonsAnimator.showNext()
     }
 
     private fun onPaymentButtonClick(view: View) {
-        if (view == payButton) {
-            callbackListener?.invoke(PaymentCallToActionType.PAY)
+
+        val actionType = when (view) {
+            payButton -> PaymentCallToActionType.PAY_WITH_CARD
+            googlePayButton -> PaymentCallToActionType.PAY_WITH_GOOGLE_PAY
+            else -> null
+        }
+
+        actionType?.let {
+            callbackListener?.invoke(it)
         }
     }
 }

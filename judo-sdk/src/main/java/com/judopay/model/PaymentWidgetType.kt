@@ -32,3 +32,6 @@ val PaymentWidgetType.isPaymentMethodsWidget: Boolean
 
 val PaymentWidgetType.isCardPaymentWidget: Boolean
     get() = this == PaymentWidgetType.CARD_PAYMENT || this == PaymentWidgetType.PRE_AUTH_CARD_PAYMENT
+
+val PaymentWidgetType.isGooglePayWidget: Boolean
+    get() = this == PaymentWidgetType.GOOGLE_PAY || this == PaymentWidgetType.PRE_AUTH_GOOGLE_PAY
