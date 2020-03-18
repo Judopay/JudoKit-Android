@@ -3,7 +3,7 @@ package com.judopay
 import android.app.Activity
 import android.os.Parcelable
 import com.judopay.model.*
-import com.judopay.model.googlepay.GooglePayConfiguration
+import com.judopay.model.GooglePayConfiguration
 import kotlinx.android.parcel.Parcelize
 
 /**

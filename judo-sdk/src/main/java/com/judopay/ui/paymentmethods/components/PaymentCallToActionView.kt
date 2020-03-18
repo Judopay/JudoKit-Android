@@ -49,7 +49,12 @@ class PaymentCallToActionView @JvmOverloads constructor(
 
     private fun update() = with(model) {
         amountTextView.text = amount
-        payButton.state = paymentButtonState
+
+        when (buttonType) {
+            PaymentButtonType.PLAIN -> payButton.state = paymentButtonState
+            PaymentButtonType.GOOGLE_PAY -> googlePayButton.isEnabled =
+                paymentButtonState is ButtonState.Enabled
+        }
 
         val buttonToShow = when (buttonType) {
             PaymentButtonType.PLAIN -> payButton
@@ -58,6 +63,7 @@ class PaymentCallToActionView @JvmOverloads constructor(
 
         if (buttonsAnimator.currentView != buttonToShow)
             buttonsAnimator.showNext()
+
     }
 
     private fun onPaymentButtonClick(view: View) {

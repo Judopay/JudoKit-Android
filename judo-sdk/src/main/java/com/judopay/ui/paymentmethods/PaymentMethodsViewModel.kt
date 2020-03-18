@@ -46,8 +46,10 @@ sealed class PaymentMethodsAction {
     data class DeleteCard(val cardId: Int) : PaymentMethodsAction()
     data class SelectPaymentMethod(val method: PaymentMethod) : PaymentMethodsAction()
     data class SelectStoredCard(val id: Int) : PaymentMethodsAction()
+    data class UpdatePayWithGooglePayButtonState(val buttonEnabled: Boolean) :
+        PaymentMethodsAction()
+
     object PayWithSelectedStoredCard : PaymentMethodsAction()
-    object PayWithGooglePay : PaymentMethodsAction()
     object Update : PaymentMethodsAction() // TODO: temporary
 }
 
@@ -114,9 +116,9 @@ class PaymentMethodsViewModel(
             is PaymentMethodsAction.SelectPaymentMethod -> {
                 if (selectedPaymentMethod != action.method) buildModel(action.method, false)
             }
-            is PaymentMethodsAction.PayWithGooglePay -> {
-
-            }
+            is PaymentMethodsAction.UpdatePayWithGooglePayButtonState -> buildModel(
+                isLoading = !action.buttonEnabled
+            )
         }
     }
 
@@ -231,7 +233,6 @@ class PaymentMethodsViewModel(
         )
 
         val headerViewModel = PaymentMethodsHeaderViewModel(cardModel, callToActionModel)
-
         model.postValue(PaymentMethodsModel(headerViewModel, method))
     }
 
@@ -239,17 +240,22 @@ class PaymentMethodsViewModel(
         method: PaymentMethod,
         isLoading: Boolean,
         cardModel: CardViewModel
-    ): ButtonState {
-        if (method == PaymentMethod.CARD) {
-            return when {
-                isLoading -> ButtonState.Loading
-                cardModel is PaymentCardViewModel && !isExpired(cardModel.expireDate) -> ButtonState.Enabled(
-                    R.string.pay_now
-                )
-                else -> ButtonState.Disabled(R.string.pay_now)
-            }
-        }
+    ): ButtonState = when (method) {
+        PaymentMethod.CARD -> payWithCardButtonState(isLoading, cardModel)
+        PaymentMethod.GOOGLE_PAY -> if (isLoading) ButtonState.Disabled(R.string.empty) else ButtonState.Enabled(
+            R.string.empty
+        )
+        else -> ButtonState.Disabled(R.string.pay_now)
+    }
 
-        return ButtonState.Disabled(R.string.pay_now)
+    private fun payWithCardButtonState(
+        isLoading: Boolean,
+        cardModel: CardViewModel
+    ): ButtonState = when {
+        isLoading -> ButtonState.Loading
+        cardModel is PaymentCardViewModel && !isExpired(cardModel.expireDate) -> ButtonState.Enabled(
+            R.string.pay_now
+        )
+        else -> ButtonState.Disabled(R.string.pay_now)
     }
 }

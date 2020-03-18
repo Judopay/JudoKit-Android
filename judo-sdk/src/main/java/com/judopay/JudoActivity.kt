@@ -10,17 +10,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentData
-import com.google.android.gms.wallet.PaymentsClient
 import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.WalletConstants
+import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.model.JudoPaymentResult
 import com.judopay.model.code
 import com.judopay.model.googlepay.GooglePayEnvironment
 import com.judopay.model.isGooglePayWidget
 import com.judopay.model.navigationGraphId
 import com.judopay.model.toIntent
-
-internal const val LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE = Activity.RESULT_FIRST_USER + 1
+import com.judopay.service.JudoGooglePayService
+import com.judopay.service.LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE
 
 class JudoActivity : AppCompatActivity() {
 
@@ -36,7 +36,8 @@ class JudoActivity : AppCompatActivity() {
         window.setFlags(secureFlag, secureFlag)
 
         // setup shared view-model & response callbacks
-        val factory = JudoSharedViewModelFactory(buildGooglePaymentsClient(), this)
+        val judoApiService = JudoApiServiceFactory.createApiService(applicationContext, judo)
+        val factory = JudoSharedViewModelFactory(judo, buildJudoGooglePayService(), judoApiService)
 
         viewModel = ViewModelProvider(this, factory).get(JudoSharedViewModel::class.java)
         viewModel.paymentResult.observe(this, Observer { dispatchPaymentResult(it) })
@@ -95,14 +96,14 @@ class JudoActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun buildGooglePaymentsClient(): PaymentsClient {
+    private fun buildJudoGooglePayService(): JudoGooglePayService {
         val environment = when (judo.googlePayConfiguration?.environment) {
             GooglePayEnvironment.PRODUCTION -> WalletConstants.ENVIRONMENT_PRODUCTION
             else -> WalletConstants.ENVIRONMENT_TEST
         }
 
         val walletOptions = Wallet.WalletOptions.Builder().setEnvironment(environment).build()
-
-        return Wallet.getPaymentsClient(this, walletOptions)
+        val client = Wallet.getPaymentsClient(this, walletOptions)
+        return JudoGooglePayService(client, this, judo)
     }
 }

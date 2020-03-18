@@ -8,5 +8,6 @@ data class GooglePayIsReadyToPayRequest(
     val apiVersion: Number,
     val apiVersionMinor: Number,
     val allowedPaymentMethods: Array<GooglePayPaymentMethod>,
-    val existingPaymentMethodRequired: Boolean?
+    val existingPaymentMethodRequired: Boolean? = null
 ) : Parcelable
+

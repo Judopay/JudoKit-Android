@@ -1,6 +1,11 @@
-package com.judopay.model.googlepay
+package com.judopay.model
 
 import android.os.Parcelable
+import com.judopay.model.googlepay.GooglePayBillingAddressParameters
+import com.judopay.model.googlepay.GooglePayCheckoutOption
+import com.judopay.model.googlepay.GooglePayEnvironment
+import com.judopay.model.googlepay.GooglePayPriceStatus
+import com.judopay.model.googlepay.GooglePayShippingAddressParameters
 import com.judopay.requireNotNull
 import kotlinx.android.parcel.Parcelize
 import java.util.Locale
@@ -81,7 +86,7 @@ class GooglePayConfiguration internal constructor(
             shippingAddressParameters?.let { parameters ->
                 val countryCodes = Locale.getISOCountries()
                 parameters.allowedCountryCodes?.forEach { allowedCode ->
-                    require(countryCodes.any { allowedCode == it }) {
+                    require(countryCodes.contains(allowedCode)) {
                         "'$allowedCode' is not a valid country code"
                     }
                 }
@@ -92,7 +97,8 @@ class GooglePayConfiguration internal constructor(
                 merchantName = merchantName,
                 transactionCountryCode = countryCode,
                 transactionId = transactionId,
-                totalPriceStatus = totalPriceStatus ?: GooglePayPriceStatus.FINAL,
+                totalPriceStatus = totalPriceStatus
+                    ?: GooglePayPriceStatus.FINAL,
                 totalPriceLabel = totalPriceLabel,
                 checkoutOption = checkoutOption,
                 isEmailRequired = isEmailRequired,

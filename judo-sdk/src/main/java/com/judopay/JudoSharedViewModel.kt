@@ -1,23 +1,21 @@
 package com.judopay
 
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.wallet.AutoResolveHelper
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.wallet.PaymentData
-import com.google.android.gms.wallet.PaymentsClient
+import com.judopay.api.JudoApiService
 import com.judopay.api.error.ApiError
-import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.api.model.request.GooglePayRequest
 import com.judopay.api.model.response.toJudoPaymentResult
 import com.judopay.model.JudoPaymentResult
 import com.judopay.model.PaymentWidgetType
 import com.judopay.model.isGooglePayWidget
 import com.judopay.model.isPaymentMethodsWidget
+import com.judopay.service.JudoGooglePayService
 import com.judopay.ui.common.toGooglePayRequest
-import com.judopay.ui.common.toPaymentDataRequest
 import kotlinx.coroutines.launch
 
 // view-model actions
@@ -30,26 +28,31 @@ sealed class JudoSharedAction {
 
 // view-model custom factory
 internal class JudoSharedViewModelFactory(
-    private var paymentsClient: PaymentsClient,
-    private val activity: AppCompatActivity
+    private val judo: Judo,
+    private val googlePayService: JudoGooglePayService,
+    private val judoApiService: JudoApiService
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == JudoSharedViewModel::class.java) {
-            JudoSharedViewModel(paymentsClient, activity) as T
+            JudoSharedViewModel(judo, googlePayService, judoApiService) as T
         } else super.create(modelClass)
     }
 }
 
 class JudoSharedViewModel(
-    private val paymentsClient: PaymentsClient,
-    private val activity: AppCompatActivity //TODO: this should not be here
+    private val judo: Judo,
+    private val googlePayService: JudoGooglePayService,
+    private val judoApiService: JudoApiService
 ) : ViewModel() {
 
-    private val service = JudoApiServiceFactory.createApiService(activity, activity.judo)
-
+    // used to share a card payment result between fragments (card input / payment methods)
     val paymentResult = MutableLiveData<JudoPaymentResult>()
+
+    // used to share a 3D secure result between fragments (card input / payment methods / card verification)
     val threeDSecureResult = MutableLiveData<JudoPaymentResult>()
+
+    // used to share the GooglePay payment result between this activity and the payment methods fragment
     val paymentMethodsGooglePayResult = MutableLiveData<JudoPaymentResult>()
 
     fun send(action: JudoSharedAction) = when (action) {
@@ -60,16 +63,23 @@ class JudoSharedViewModel(
     }
 
     private fun onLoadGPayPaymentData() {
-        val judo = activity.judo
-        val config = judo.googlePayConfiguration
-
-        config?.let {
-            val request = it.toPaymentDataRequest(judo)
-            AutoResolveHelper.resolveTask(
-                paymentsClient.loadPaymentData(request),
-                activity,
-                LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE
-            )
+        viewModelScope.launch {
+            try {
+                val isAvailable = googlePayService.checkIfGooglePayIsAvailable()
+                if (isAvailable) {
+                    googlePayService.loadGooglePayPaymentData()
+                } else {
+                    onLoadGPayPaymentDataError("GooglePay is not available on this device")
+                }
+            } catch (exception: Exception) {
+                when (exception) {
+                    is IllegalStateException,
+                    is ApiException -> {
+                        onLoadGPayPaymentDataError(exception.message ?: "Unknown error")
+                    }
+                    else -> throw exception
+                }
+            }
         }
     }
 
@@ -79,7 +89,7 @@ class JudoSharedViewModel(
 
     private fun onLoadGPayPaymentDataSuccess(paymentData: PaymentData) {
         try {
-            sendRequest(paymentData.toGooglePayRequest(activity.judo))
+            sendRequest(paymentData.toGooglePayRequest(judo))
         } catch (exception: Throwable) {
             onLoadGPayPaymentDataError(exception.message ?: "Unknown error")
         }
@@ -91,19 +101,23 @@ class JudoSharedViewModel(
 
     @Throws(IllegalStateException::class)
     private fun sendRequest(googlePayRequest: GooglePayRequest) = viewModelScope.launch {
-        val result = when (activity.judo.paymentWidgetType) {
+        val result = when (judo.paymentWidgetType) {
             PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
-            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> service.googlePayPayment(googlePayRequest)
+            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> judoApiService.googlePayPayment(
+                googlePayRequest
+            )
             PaymentWidgetType.GOOGLE_PAY,
-            PaymentWidgetType.PAYMENT_METHODS -> service.preAuthGooglePayPayment(googlePayRequest)
-            else -> throw IllegalStateException("Unexpected payment widget type: ${activity.judo.paymentWidgetType}")
+            PaymentWidgetType.PAYMENT_METHODS -> judoApiService.preAuthGooglePayPayment(
+                googlePayRequest
+            )
+            else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
         }
 
         dispatchResult(result.toJudoPaymentResult())
     }
 
     private fun dispatchResult(result: JudoPaymentResult) {
-        val type = activity.judo.paymentWidgetType
+        val type = judo.paymentWidgetType
 
         val liveData = when {
             type.isGooglePayWidget -> paymentResult

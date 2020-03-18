@@ -80,6 +80,7 @@ class PaymentMethodsFragment : Fragment() {
         })
 
         sharedViewModel.paymentMethodsGooglePayResult.observe(viewLifecycleOwner, Observer {
+            viewModel.send(PaymentMethodsAction.UpdatePayWithGooglePayButtonState(true))
             when (it) {
                 is JudoPaymentResult.Success -> sharedViewModel.paymentResult.postValue(it)
                 is JudoPaymentResult.Error -> MaterialAlertDialogBuilder(context)
@@ -186,7 +187,7 @@ class PaymentMethodsFragment : Fragment() {
                 PaymentCallToActionType.PAY_WITH_CARD -> PaymentMethodsAction.PayWithSelectedStoredCard
                 PaymentCallToActionType.PAY_WITH_GOOGLE_PAY -> {
                     sharedViewModel.send(JudoSharedAction.LoadGPayPaymentData)
-                    PaymentMethodsAction.PayWithGooglePay
+                    PaymentMethodsAction.UpdatePayWithGooglePayButtonState(false)
                 }
             }
             viewModel.send(action)
