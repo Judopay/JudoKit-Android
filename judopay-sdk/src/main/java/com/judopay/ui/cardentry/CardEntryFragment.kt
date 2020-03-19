@@ -32,9 +32,7 @@ import com.judopay.judo
 import com.judopay.model.JudoPaymentResult
 import com.judopay.model.isCardPaymentWidget
 import com.judopay.model.isPaymentMethodsWidget
-import kotlinx.android.synthetic.main.card_entry_fragment.cancelButton
-import kotlinx.android.synthetic.main.card_entry_fragment.formView
-import kotlinx.android.synthetic.main.card_entry_fragment.scanCardButton
+import kotlinx.android.synthetic.main.card_entry_fragment.*
 
 class CardEntryFragment : BottomSheetDialogFragment() {
 

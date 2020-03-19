@@ -26,7 +26,7 @@ internal val PaymentMethod.text
         PaymentMethod.IDEAL -> R.string.ideal_payment
     }
 
-val PaymentMethod.paymentButtonType: PaymentButtonType
+internal val PaymentMethod.paymentButtonType: PaymentButtonType
     get() = when (this) {
         PaymentMethod.GOOGLE_PAY -> PaymentButtonType.GOOGLE_PAY
         else -> PaymentButtonType.PLAIN

@@ -2,7 +2,14 @@ package com.judopay
 
 import android.app.Activity
 import android.os.Parcelable
+import com.judopay.model.Amount
+import com.judopay.model.CardNetwork
 import com.judopay.model.GooglePayConfiguration
+import com.judopay.model.PaymentMethod
+import com.judopay.model.PaymentWidgetType
+import com.judopay.model.PrimaryAccountDetails
+import com.judopay.model.Reference
+import com.judopay.model.UiConfiguration
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -66,11 +73,20 @@ class Judo internal constructor(
         fun setIsSandboxed(sandboxed: Boolean?) = apply { this.isSandboxed = sandboxed }
         fun setAmount(amount: Amount?) = apply { this.amount = amount }
         fun setReference(reference: Reference?) = apply { this.reference = reference }
-        fun setUiConfiguration(configuration: UiConfiguration?) = apply { this.uiConfiguration = configuration }
-        fun setPaymentMethods(methods: Array<PaymentMethod>?) = apply { this.paymentMethods = methods }
-        fun setSupportedCardNetworks(networks: Array<CardNetwork>?) = apply { this.supportedCardNetworks = networks }
-        fun setPrimaryAccountDetails(details: PrimaryAccountDetails?) = apply { this.primaryAccountDetails = details }
-        fun setGooglePayConfiguration(configuration: GooglePayConfiguration?) = apply { this.googlePayConfiguration = configuration }
+        fun setUiConfiguration(configuration: UiConfiguration?) =
+            apply { this.uiConfiguration = configuration }
+
+        fun setPaymentMethods(methods: Array<PaymentMethod>?) =
+            apply { this.paymentMethods = methods }
+
+        fun setSupportedCardNetworks(networks: Array<CardNetwork>?) =
+            apply { this.supportedCardNetworks = networks }
+
+        fun setPrimaryAccountDetails(details: PrimaryAccountDetails?) =
+            apply { this.primaryAccountDetails = details }
+
+        fun setGooglePayConfiguration(configuration: GooglePayConfiguration?) =
+            apply { this.googlePayConfiguration = configuration }
 
         @Throws(IllegalArgumentException::class)
         fun build(): Judo {
@@ -81,28 +97,36 @@ class Judo internal constructor(
             val myReference = requireNotNull(reference, "reference")
 
             val myUiConfiguration = uiConfiguration
-                    ?: UiConfiguration.Builder().setAvsEnabled(false).build()
+                ?: UiConfiguration.Builder().setAvsEnabled(false).build()
             val mySandboxed = isSandboxed ?: false
 
             val defaultPaymentMethods = arrayOf(PaymentMethod.CARD)
             val defaultSupportedCardNetworks = arrayOf(CardNetwork.VISA)
 
-            val myPaymentMethods = if (paymentMethods.isNullOrEmpty()) defaultPaymentMethods else checkNotNull(paymentMethods)
-            val mySupportedCardNetworks = if (supportedCardNetworks.isNullOrEmpty()) defaultSupportedCardNetworks else checkNotNull(supportedCardNetworks)
+            val myPaymentMethods =
+                if (paymentMethods.isNullOrEmpty()) defaultPaymentMethods else checkNotNull(
+                    paymentMethods
+                )
+            val mySupportedCardNetworks =
+                if (supportedCardNetworks.isNullOrEmpty()) defaultSupportedCardNetworks else checkNotNull(
+                    supportedCardNetworks
+                )
 
-            return Judo(id,
-                    siteId,
-                    token,
-                    secret,
-                    mySandboxed,
-                    myAmount,
-                    myReference,
-                    myUiConfiguration,
-                    myPaymentMethods,
-                    mySupportedCardNetworks,
-                    primaryAccountDetails,
-                    googlePayConfiguration,
-                    paymentWidgetType)
+            return Judo(
+                id,
+                siteId,
+                token,
+                secret,
+                mySandboxed,
+                myAmount,
+                myReference,
+                myUiConfiguration,
+                myPaymentMethods,
+                mySupportedCardNetworks,
+                primaryAccountDetails,
+                googlePayConfiguration,
+                paymentWidgetType
+            )
         }
     }
 

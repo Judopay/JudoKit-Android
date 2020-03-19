@@ -124,7 +124,7 @@ class FormView @JvmOverloads constructor(
             if (it.fieldType == type) {
                 // TODO: to rethink this logic
                 if (it is SecurityCodeValidator) {
-                    val cardNumber = valueOfFieldWithType(NUMBER)
+                    val cardNumber = valueOfFieldWithType(FormFieldType.NUMBER)
                     it.cardNetwork = CardNetwork.ofNumber(cardNumber)
                 }
 

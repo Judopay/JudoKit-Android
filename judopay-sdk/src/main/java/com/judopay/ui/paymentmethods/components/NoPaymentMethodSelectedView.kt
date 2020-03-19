@@ -10,7 +10,7 @@ import com.judopay.animateWithTranslation
 import com.judopay.inflate
 import com.judopay.ui.paymentmethods.model.CardViewModel
 import com.judopay.ui.paymentmethods.model.CardViewType
-import kotlinx.android.synthetic.main.payment_methods_header_view.view.noPaymentMethodSelectedView
+import kotlinx.android.synthetic.main.payment_methods_header_view.view.*
 
 private const val TRANSLATE_120 = 120f
 
