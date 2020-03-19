@@ -36,8 +36,8 @@ import com.judopay.samples.R
 import com.judopay.samples.feature.adapter.DemoFeaturesAdapter
 import com.judopay.samples.model.DemoFeature
 import com.judopay.samples.settings.SettingsActivity
-import java.util.UUID
 import kotlinx.android.synthetic.main.activity_demo_feature_list.*
+import java.util.UUID
 
 const val JUDO_PAYMENT_WIDGET_REQUEST_CODE = 1
 
@@ -145,9 +145,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         val dividerItemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        ContextCompat.getDrawable(this, R.drawable.shape_divider)?.let {
-            dividerItemDecoration.setDrawable(it)
-        }
 
         recyclerView.apply {
             addItemDecoration(dividerItemDecoration)
