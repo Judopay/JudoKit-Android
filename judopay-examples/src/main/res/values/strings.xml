@@ -1,0 +1,89 @@
+<resources>
+    <string name="app_name">Judopay demo</string>
+    <string name="title_activity_demo_feature_list">Judo Examples</string>
+
+    <string name="feature_title_payment">Pay with card</string>
+    <string name="feature_surtitle_payment">by entering card details</string>
+
+    <string name="feature_title_preauth">Pre-auth with card</string>
+    <string name="feature_surtitle_preauth">pre-auth by entering card details</string>
+
+    <string name="feature_title_create_card_token">Register card</string>
+    <string name="feature_surtitle_create_card_token">to be stored for future transactions</string>
+
+    <string name="feature_title_save_card">Check card</string>
+    <string name="feature_surtitle_save_card">to validate a card</string>
+
+    <string name="feature_title_check_card">Save card</string>
+    <string name="feature_surtitle_check_card">to be stored for future transactions</string>
+
+    <string name="feature_title_google_pay_payment">Google Pay payment</string>
+    <string name="feature_surtitle_google_pay_payment">with a wallet card</string>
+
+    <string name="feature_title_google_pay_preauth">Google Pay pre-auth</string>
+    <string name="feature_surtitle_google_pay_preauth">pre-auth with a wallet card</string>
+
+    <string name="feature_title_payment_methods">Payment methods</string>
+    <string name="feature_surtitle_payment_methods">with default payment methods</string>
+
+    <string name="feature_title_preauth_payment_methods">Pre-auth payment methods</string>
+    <string name="feature_surtitle_preauth_payment_methods">with default pre-auth payment methods</string>
+    <string name="title_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="api_header">API Configurations</string>
+    <string name="amount_header">Amount</string>
+    <string name="others_header">Others</string>
+
+    <!-- Messages Preferences -->
+    <string name="is_sandboxed_title">Sandboxed</string>
+    <string name="is_sandboxed_summary">Use Judopay API sandbox environment</string>
+
+    <string name="judo_id_title">Judo ID</string>
+    <string name="judo_id_summary">Your Judo ID</string>
+
+    <string name="site_id_title">Site ID</string>
+    <string name="site_id_summary">Your Site ID</string>
+
+    <string name="token_title">Token</string>
+    <string name="token_summary">Your API authorization token</string>
+
+    <string name="secret_title">Secret</string>
+    <string name="secret_summary">Your API authorization secret</string>
+
+    <string name="amount_title">Amount</string>
+    <string name="amount_summary">Your amount</string>
+
+    <string name="currency_title">Currency</string>
+    <string name="currency_summary">Your amount currency</string>
+
+    <string name="card_networks_title">Supported card networks</string>
+    <string name="card_networks_summary">Card networks you want to support</string>
+
+    <string name="payment_methods_title">Payment methods</string>
+    <string name="payment_methods_summary">Payment methods you want to support</string>
+
+    <string name="dialog_error_title">Error</string>
+    <string name="dialog_success_title">Success</string>
+    <string name="dialog_button_ok">Ok</string>
+
+    <string name="google_pay_header">Google Pay</string>
+    <string name="google_pay_is_production_title">Production environment</string>
+    <string name="google_pay_is_production_summary">Use Google Pay production environment.</string>
+
+    <string name="billing_address_title">Billing address</string>
+    <string name="billing_address_summary">Billing address format required to complete the transaction.</string>
+
+    <string name="shipping_address_title">Shipping address</string>
+    <string name="shipping_address_summary">Turn on to request a full shipping address.</string>
+
+    <string name="shipping_address_phone_number_title">Shipping address phone number</string>
+    <string name="shipping_address_phone_number_summary">Turn on to request a shipping address phone number.</string>
+
+    <string name="billing_address_phone_number_title">Billing address phone number</string>
+    <string name="billing_address_phone_number_summary">Turn on to request a billing address phone number.</string>
+
+    <string name="email_address_title">Email address</string>
+    <string name="email_address_summary">Turn on to request a email address.</string>
+
+</resources>
