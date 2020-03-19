@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.judopay.JUDO_RECEIPT
 import com.judopay.JudoSharedAction
-import com.judopay.JudoPaymentResult
 import com.judopay.JudoSharedViewModel
 import com.judopay.R
 import com.judopay.api.error.ApiError
