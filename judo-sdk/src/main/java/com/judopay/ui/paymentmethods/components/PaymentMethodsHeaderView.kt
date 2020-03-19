@@ -13,12 +13,7 @@ import com.judopay.ui.paymentmethods.model.CardViewModel
 import com.judopay.ui.paymentmethods.model.PaymentCardViewModel
 import com.judopay.ui.paymentmethods.model.inAnimation
 import com.judopay.ui.paymentmethods.model.outAnimation
-import kotlinx.android.synthetic.main.payment_methods_header_view.view.noPaymentMethodSelectedView
-import kotlinx.android.synthetic.main.payment_methods_header_view.view.paymentCallToActionView
-import kotlinx.android.synthetic.main.payment_methods_header_view.view.paymentCardView
-import kotlinx.android.synthetic.main.payment_methods_header_view.view.placeholderBackgroundImageView
-import kotlinx.android.synthetic.main.payment_methods_header_view.view.secondaryPaymentCardView
-import kotlinx.android.synthetic.main.payment_methods_header_view.view.viewAnimator
+import kotlinx.android.synthetic.main.payment_methods_header_view.view.*
 
 class PaymentMethodsHeaderViewModel(
     val cardModel: CardViewModel = NoPaymentMethodSelectedViewModel(),
@@ -73,8 +68,8 @@ class PaymentMethodsHeaderView @JvmOverloads constructor(
                     cardModel.layoutId = R.id.secondaryPaymentCardView
                     secondaryPaymentCardView.model = cardModel
                 } else {
-                    cardModel.layoutId = R.id.paymentCardView
-                    paymentCardView.model = cardModel
+                    cardModel.layoutId = R.id.cardView
+                    cardView.model = cardModel
                 }
                 mainDisplayed = !mainDisplayed
                 currentPaymentMethod = PaymentMethod.CARD

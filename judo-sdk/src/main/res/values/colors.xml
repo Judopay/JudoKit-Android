@@ -13,4 +13,13 @@
 
     <color name="white">#FFFFFF</color>
     <color name="white_two">#f6f6f6</color>
+
+    <color name="twilight_blue">#10316b</color>
+    <color name="darkish_green">#216338</color>
+    <color name="rouge">#c2151b</color>
+    <color name="terra_cotta">#e25822</color>
+    <color name="yellowish_orange">#f9a11b</color>
+    <color name="bluish_grey">#719192</color>
+    <color name="moss">#808c5c</color>
+
 </resources>

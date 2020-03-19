@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.judopay.JUDO_RECEIPT
 import com.judopay.JudoSharedAction
+import com.judopay.JudoPaymentResult
 import com.judopay.JudoSharedViewModel
 import com.judopay.R
 import com.judopay.api.error.ApiError
@@ -22,6 +23,7 @@ import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
 import com.judopay.judo
 import com.judopay.model.JudoPaymentResult
+import com.judopay.ui.editcard.JUDO_TOKENIZED_CARD_ID
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judopay.ui.paymentmethods.adapter.SwipeToDeleteCallback
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
@@ -145,7 +147,19 @@ class PaymentMethodsFragment : Fragment() {
             .show()
     }
 
-    private fun onEdit() {}
+    private fun onEdit() {
+        // TODO: Temp implementation
+
+        val myCard = viewModel.allCardsSync.value?.firstOrNull()
+        val myId = myCard?.id ?: -1
+
+        findNavController().navigate(
+            R.id.action_paymentMethodsFragment_to_editCardFragment,
+            bundleOf(
+                JUDO_TOKENIZED_CARD_ID to myId
+            )
+        )
+    }
 
     private fun onAddCard() =
         findNavController().navigate(R.id.action_paymentMethodsFragment_to_cardEntryFragment)

@@ -14,6 +14,7 @@
         <action
             android:id="@+id/action_paymentMethodsFragment_to_cardEntryFragment"
             app:destination="@id/cardEntryFragment" />
+
         <action
             android:id="@+id/action_paymentMethodsFragment_to_cardVerificationFragment"
             app:destination="@id/cardVerificationFragment">
@@ -22,17 +23,25 @@
                 app:argType="com.judopay.api.model.response.Receipt" />
         </action>
 
+        <action
+            android:id="@+id/action_paymentMethodsFragment_to_editCardFragment"
+            app:destination="@id/editCardFragment" />
+
     </fragment>
 
     <dialog
         android:id="@+id/cardEntryFragment"
         android:name="com.judopay.ui.cardentry.CardEntryFragment"
-        android:label="CardEntryFragment" >
-    </dialog>
+        android:label="CardEntryFragment" />
 
     <fragment
         android:id="@+id/cardVerificationFragment"
         android:name="com.judopay.ui.cardverification.CardVerificationFragment"
         android:label="CardVerificationFragment" />
+
+    <fragment
+        android:id="@+id/editCardFragment"
+        android:name="com.judopay.ui.editcard.EditCardFragment"
+        android:label="EditCardFragment" />
 
 </navigation>
