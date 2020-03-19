@@ -1,5 +1,6 @@
 package com.judopay.api
 
+import com.judopay.api.model.request.GooglePayRequest
 import com.judopay.api.model.request.PaymentRequest
 import com.judopay.api.model.request.SaveCardRequest
 import com.judopay.api.model.request.TokenRequest
@@ -70,8 +71,9 @@ interface JudoApiService {
      * @return the receipt for the transaction
      */
     @PUT("transactions/{receiptId}")
-   suspend fun complete3dSecure(@Path("receiptId") receiptId: String,
-                         @Body cardVerificationResult: CardVerificationResult
+    suspend fun complete3dSecure(
+        @Path("receiptId") receiptId: String,
+        @Body cardVerificationResult: CardVerificationResult
     ): JudoApiCallResult<Receipt>
 
     /**
@@ -117,12 +119,12 @@ interface JudoApiService {
 //    @POST("transactions/checkcard")
 //    fun checkCard(@Body checkCardRequest: CheckCardRequest): Single<Receipt>
 
-//    @POST("transactions/payments")
-//    fun googlePayPayment(@Body googlePayRequest: GooglePayRequest): Single<Receipt>
-//
-//    @POST("transactions/preauths")
-//    fun googlePayPreAuth(@Body googlePayRequest: GooglePayRequest): Single<Receipt>
-//
+    @POST("transactions/payments")
+    suspend fun googlePayPayment(@Body googlePayRequest: GooglePayRequest): JudoApiCallResult<Receipt>
+
+    @POST("transactions/preauths")
+    suspend fun preAuthGooglePayPayment(@Body googlePayRequest: GooglePayRequest): JudoApiCallResult<Receipt>
+
 //    @POST("transactions/payments")
 //    fun vcoPayment(@Body vcoPaymentRequest: VCOPaymentRequest): Single<Receipt>
 //

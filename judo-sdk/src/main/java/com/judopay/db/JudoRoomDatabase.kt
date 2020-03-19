@@ -1,13 +1,18 @@
 package com.judopay.db
 
 import android.content.Context
-import androidx.room.*
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.judopay.db.dao.TokenizedCardDao
 import com.judopay.db.entity.TokenizedCardEntity
 
-@Database(entities = [TokenizedCardEntity::class],
-        version = 1,
-        exportSchema = false)
+@Database(
+    entities = [TokenizedCardEntity::class],
+    version = 1,
+    exportSchema = false
+)
 @TypeConverters(JudoTypeConverters::class)
 abstract class JudoRoomDatabase : RoomDatabase() {
 
@@ -26,9 +31,9 @@ abstract class JudoRoomDatabase : RoomDatabase() {
             }
             synchronized(this) {
                 val instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        JudoRoomDatabase::class.java,
-                        "judo_database"
+                    context.applicationContext,
+                    JudoRoomDatabase::class.java,
+                    "judo_database"
                 ).build()
                 INSTANCE = instance
                 return instance

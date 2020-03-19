@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.google.gson.Gson
 import com.judopay.model.ApiEnvironment
 import com.judopay.ui.common.ANIMATION_DURATION_500
 import com.judopay.ui.error.JudoNotProvidedError
@@ -57,7 +58,7 @@ fun ViewGroup.inflate(resource: Int, attachToRoot: Boolean = false): View {
 
 val FragmentActivity.judo: Judo
     get() = intent.getParcelableExtra(JUDO_OPTIONS)
-            ?: throw JudoNotProvidedError()
+        ?: throw JudoNotProvidedError()
 
 val Fragment.judo: Judo
     get() = requireActivity().judo
@@ -85,3 +86,5 @@ fun View.animateWithTranslation(
         .alpha(alpha)
         .duration = duration
 }
+
+fun Any.toJSONString(): String = Gson().toJson(this)

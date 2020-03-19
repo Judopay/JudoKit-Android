@@ -52,11 +52,8 @@
     </style>
 
     <!-- Black rounded button, usually used for PAY NOW -->
-    <style name="JudoTheme.BlackRoundedButton" parent="Widget.MaterialComponents.Button">
+    <style name="JudoTheme.BlackRoundedButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="cornerRadius">@dimen/button_corner_radius</item>
-        <item name="elevation">0dp</item>
-        <item name="android:paddingTop">@dimen/space_8</item>
-        <item name="android:paddingBottom">@dimen/space_8</item>
         <item name="android:fontFamily">@font/sf_pro_display_semibold</item>
         <item name="android:textSize">@dimen/headline</item>
         <item name="android:textColor">@color/white</item>

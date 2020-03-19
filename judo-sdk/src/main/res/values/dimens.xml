@@ -1,6 +1,8 @@
 <resources>
 
     <!-- Grid spacing -->
+    <dimen name="negative_space_3">-3dp</dimen>
+    <dimen name="space_3">3dp</dimen>
     <dimen name="space_4">4dp</dimen>
     <dimen name="space_6">6dp</dimen>
     <dimen name="space_8">8dp</dimen>

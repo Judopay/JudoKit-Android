@@ -2,14 +2,15 @@ package com.judopay.model
 
 import android.os.Bundle
 import android.os.Parcelable
-import com.judopay.requireNotNullOrEmpty
 import kotlinx.android.parcel.Parcelize
+import java.util.UUID
 
 @Parcelize
-class Reference internal constructor(val consumerReference: String,
-                                     val paymentReference: String,
-                                     val metaData: Bundle? = null) : Parcelable {
-
+class Reference internal constructor(
+    val consumerReference: String,
+    val paymentReference: String,
+    val metaData: Bundle? = null
+) : Parcelable {
 
     class Builder {
         private var consumerReference: String? = null
@@ -21,8 +22,10 @@ class Reference internal constructor(val consumerReference: String,
         fun setMetaData(data: Bundle?) = apply { this.metaData = data }
 
         fun build(): Reference {
-            val myConsumerReference = requireNotNullOrEmpty(consumerReference, "consumerReference")
-            val myPaymentReference = requireNotNullOrEmpty(paymentReference, "paymentReference")
+            val myConsumerReference = if (consumerReference.isNullOrBlank()) UUID.randomUUID()
+                .toString() else consumerReference!!
+            val myPaymentReference = if (paymentReference.isNullOrBlank()) UUID.randomUUID()
+                .toString() else paymentReference!!
 
             return Reference(myConsumerReference, myPaymentReference, metaData)
         }

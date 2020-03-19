@@ -18,13 +18,27 @@ import com.judopay.db.repository.TokenizedCardRepository
 import com.judopay.model.PaymentMethod
 import com.judopay.model.PaymentWidgetType
 import com.judopay.model.formatted
+import com.judopay.model.paymentButtonType
 import com.judopay.model.typeId
 import com.judopay.toMap
 import com.judopay.ui.common.ButtonState
 import com.judopay.ui.common.isExpired
-import com.judopay.ui.paymentmethods.adapter.model.*
-import com.judopay.ui.paymentmethods.components.*
-import com.judopay.ui.paymentmethods.model.*
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItem
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItemType
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSavedCardItem
+import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSelectorItem
+import com.judopay.ui.paymentmethods.components.GooglePayCardViewModel
+import com.judopay.ui.paymentmethods.components.IdealPaymentCardViewModel
+import com.judopay.ui.paymentmethods.components.NoPaymentMethodSelectedViewModel
+import com.judopay.ui.paymentmethods.components.PaymentCallToActionViewModel
+import com.judopay.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
+import com.judopay.ui.paymentmethods.model.CardPaymentMethodModel
+import com.judopay.ui.paymentmethods.model.CardViewModel
+import com.judopay.ui.paymentmethods.model.GooglePayPaymentMethodModel
+import com.judopay.ui.paymentmethods.model.IdealPaymentMethodModel
+import com.judopay.ui.paymentmethods.model.PaymentCardViewModel
+import com.judopay.ui.paymentmethods.model.PaymentMethodModel
 import kotlinx.coroutines.launch
 
 // view-model actions
@@ -32,13 +46,18 @@ sealed class PaymentMethodsAction {
     data class DeleteCard(val cardId: Int) : PaymentMethodsAction()
     data class SelectPaymentMethod(val method: PaymentMethod) : PaymentMethodsAction()
     data class SelectStoredCard(val id: Int) : PaymentMethodsAction()
+    data class UpdatePayWithGooglePayButtonState(val buttonEnabled: Boolean) :
+        PaymentMethodsAction()
+
     object PayWithSelectedStoredCard : PaymentMethodsAction()
     object Update : PaymentMethodsAction() // TODO: temporary
 }
 
 // view-model custom factory to inject the `judo` configuration object
-internal class PaymentMethodsViewModelFactory(private val application: Application,
-                                              private val judo: Judo) : NewInstanceFactory() {
+internal class PaymentMethodsViewModelFactory(
+    private val application: Application,
+    private val judo: Judo
+) : NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == PaymentMethodsViewModel::class.java) {
@@ -47,8 +66,10 @@ internal class PaymentMethodsViewModelFactory(private val application: Applicati
     }
 }
 
-class PaymentMethodsViewModel(application: Application,
-                              private val judo: Judo) : AndroidViewModel(application) {
+class PaymentMethodsViewModel(
+    application: Application,
+    private val judo: Judo
+) : AndroidViewModel(application) {
 
     val model = MutableLiveData<PaymentMethodsModel>()
     val judoApiCallResult = MutableLiveData<JudoApiCallResult<Receipt>>()
@@ -95,6 +116,9 @@ class PaymentMethodsViewModel(application: Application,
             is PaymentMethodsAction.SelectPaymentMethod -> {
                 if (selectedPaymentMethod != action.method) buildModel(action.method, false)
             }
+            is PaymentMethodsAction.UpdatePayWithGooglePayButtonState -> buildModel(
+                isLoading = !action.buttonEnabled
+            )
         }
     }
 
@@ -107,21 +131,23 @@ class PaymentMethodsViewModel(application: Application,
                     val entity = cardRepository.findWithId(it.id)
 
                     val request = TokenRequest.Builder()
-                            .setAmount(judo.amount.amount)
-                            .setCurrency(judo.amount.currency.name)
-                            .setJudoId(judo.judoId)
-                            .setYourPaymentReference(judo.reference.paymentReference)
-                            .setYourConsumerReference(judo.reference.consumerReference)
-                            .setYourPaymentMetaData(judo.reference.metaData?.toMap())
-                            .setCardLastFour(entity.ending)
-                            .setCardToken(entity.token)
-                            .setCardType(entity.network.typeId)
-                            .setAddress(Address.Builder().build())
-                            .build()
+                        .setAmount(judo.amount.amount)
+                        .setCurrency(judo.amount.currency.name)
+                        .setJudoId(judo.judoId)
+                        .setYourPaymentReference(judo.reference.paymentReference)
+                        .setYourConsumerReference(judo.reference.consumerReference)
+                        .setYourPaymentMetaData(judo.reference.metaData?.toMap())
+                        .setCardLastFour(entity.ending)
+                        .setCardToken(entity.token)
+                        .setCardType(entity.network.typeId)
+                        .setAddress(Address.Builder().build())
+                        .build()
 
                     val response = when (judo.paymentWidgetType) {
                         PaymentWidgetType.PAYMENT_METHODS -> service.tokenPayment(request)
-                        PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> service.preAuthTokenPayment(request)
+                        PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> service.preAuthTokenPayment(
+                            request
+                        )
                         else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
                     }
 
@@ -136,10 +162,12 @@ class PaymentMethodsViewModel(application: Application,
         cardRepository.deleteCardWithId(id)
     }
 
-    // TODO: too fat, to furious !
-    private fun buildModel(selectedMethod: PaymentMethod = selectedPaymentMethod,
-                           isLoading: Boolean = false,
-                           selectedCardId: Int = selectedCardIdentifier) = viewModelScope.launch {
+    // TODO: needs to be refactored
+    private fun buildModel(
+        selectedMethod: PaymentMethod = selectedPaymentMethod,
+        isLoading: Boolean = false,
+        selectedCardId: Int = selectedCardIdentifier
+    ) = viewModelScope.launch {
         val cardModel: CardViewModel
 
         val recyclerViewData = mutableListOf<PaymentMethodItem>()
@@ -147,7 +175,13 @@ class PaymentMethodsViewModel(application: Application,
         val cards = allCardsSync.value
 
         if (allMethods.size > 1) {
-            recyclerViewData.add(PaymentMethodSelectorItem(PaymentMethodItemType.SELECTOR, allMethods, selectedMethod))
+            recyclerViewData.add(
+                PaymentMethodSelectorItem(
+                    PaymentMethodItemType.SELECTOR,
+                    allMethods,
+                    selectedMethod
+                )
+            )
         }
 
         val method: PaymentMethodModel = when (selectedMethod) {
@@ -193,27 +227,35 @@ class PaymentMethodsViewModel(application: Application,
         }
 
         val callToActionModel = PaymentCallToActionViewModel(
-                amount = judo.amount.formatted,
-                paymentButtonState = buildPaymentButtonState(method.type, isLoading, cardModel)
+            amount = judo.amount.formatted,
+            buttonType = method.type.paymentButtonType,
+            paymentButtonState = buildPaymentButtonState(method.type, isLoading, cardModel)
         )
 
         val headerViewModel = PaymentMethodsHeaderViewModel(cardModel, callToActionModel)
-
         model.postValue(PaymentMethodsModel(headerViewModel, method))
     }
 
-    private fun buildPaymentButtonState(method: PaymentMethod,
-                                        isLoading: Boolean,
-                                        cardModel: CardViewModel): ButtonState {
-        if (method == PaymentMethod.CARD) {
-            return when {
-                isLoading -> ButtonState.Loading
-                cardModel is PaymentCardViewModel && !isExpired(cardModel.expireDate) -> ButtonState.Enabled(R.string.pay_now)
-                else -> ButtonState.Disabled(R.string.pay_now)
-            }
-        }
-
-        return ButtonState.Disabled(R.string.pay_now)
+    private fun buildPaymentButtonState(
+        method: PaymentMethod,
+        isLoading: Boolean,
+        cardModel: CardViewModel
+    ): ButtonState = when (method) {
+        PaymentMethod.CARD -> payWithCardButtonState(isLoading, cardModel)
+        PaymentMethod.GOOGLE_PAY -> if (isLoading) ButtonState.Disabled(R.string.empty) else ButtonState.Enabled(
+            R.string.empty
+        )
+        else -> ButtonState.Disabled(R.string.pay_now)
     }
 
+    private fun payWithCardButtonState(
+        isLoading: Boolean,
+        cardModel: CardViewModel
+    ): ButtonState = when {
+        isLoading -> ButtonState.Loading
+        cardModel is PaymentCardViewModel && !isExpired(cardModel.expireDate) -> ButtonState.Enabled(
+            R.string.pay_now
+        )
+        else -> ButtonState.Disabled(R.string.pay_now)
+    }
 }

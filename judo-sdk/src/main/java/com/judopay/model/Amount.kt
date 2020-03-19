@@ -9,7 +9,6 @@ import java.text.NumberFormat
 @Parcelize
 class Amount internal constructor(val amount: String, val currency: Currency) : Parcelable {
 
-
     class Builder {
         private var amount: String? = null
         private var currency: Currency? = null
@@ -19,7 +18,7 @@ class Amount internal constructor(val amount: String, val currency: Currency) : 
 
         fun build(): Amount {
             val myAmount = requireNotNullOrEmpty(amount, "amount")
-            check(myAmount.matches("-?\\d+(\\.\\d+)?".toRegex())) { "amount should be a number" }
+            check(myAmount.matches("^[0-9]+(\\.[0-9][0-9])?\$".toRegex())) { "amount should be a number" }
 
             val myCurrency = requireNotNull(currency, "currency")
 

@@ -1,3 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <declare-styleable name="GooglePayButton">
+        <attr name="style" format="enum">
+            <enum name="black" value="0" />
+            <enum name="white" value="1" />
+            <enum name="black_buy_with" value="2" />
+            <enum name="white_no_shadow" value="3" />
+            <enum name="white_buy_with" value="4" />
+            <enum name="white_buy_with_no_shadow" value="5" />
+        </attr>
+    </declare-styleable>
+
 </resources>

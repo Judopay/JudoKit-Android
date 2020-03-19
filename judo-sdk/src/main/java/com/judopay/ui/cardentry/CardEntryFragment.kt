@@ -22,7 +22,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.judopay.JUDO_RECEIPT
-import com.judopay.JudoPaymentResult
 import com.judopay.JudoSharedViewModel
 import com.judopay.R
 import com.judopay.api.error.ApiError
@@ -30,6 +29,7 @@ import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
 import com.judopay.api.model.response.toJudoPaymentResult
 import com.judopay.judo
+import com.judopay.model.JudoPaymentResult
 import com.judopay.model.isCardPaymentWidget
 import com.judopay.model.isPaymentMethodsWidget
 import kotlinx.android.synthetic.main.card_entry_fragment.cancelButton
@@ -56,16 +56,21 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     }
 
     // present it always expanded
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = BottomSheetDialog(requireContext(), theme).apply {
-        setOnShowListener {
-            val bottomSheetDialog = dialog as BottomSheetDialog
-            val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout?
-            BottomSheetBehavior.from<FrameLayout?>(bottomSheet!!).setState(BottomSheetBehavior.STATE_EXPANDED)
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        BottomSheetDialog(requireContext(), theme).apply {
+            setOnShowListener {
+                val bottomSheetDialog = dialog as BottomSheetDialog
+                val bottomSheet =
+                    bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout?
+                BottomSheetBehavior.from<FrameLayout?>(bottomSheet!!)
+                    .setState(BottomSheetBehavior.STATE_EXPANDED)
+            }
         }
-    }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         return inflater.inflate(R.layout.card_entry_fragment, container, false)
     }
 
@@ -76,7 +81,8 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         scanCardButton.setOnClickListener(this::handleScanCardButtonClicks)
 
         formView.apply {
-            onValidationPassedListener = { model -> viewModel.send(CardEntryAction.ValidationPassed(model)) }
+            onValidationPassedListener =
+                { model -> viewModel.send(CardEntryAction.ValidationPassed(model)) }
             onSubmitButtonClickListener = { viewModel.send(CardEntryAction.SubmitForm) }
         }
     }
@@ -154,13 +160,13 @@ class CardEntryFragment : BottomSheetDialogFragment() {
 
     private fun presentError(apiError: ApiError? = null) {
         val message = apiError?.message
-                ?: requireContext().getString(R.string.unable_to_process_request_error_desc)
+            ?: requireContext().getString(R.string.unable_to_process_request_error_desc)
 
         MaterialAlertDialogBuilder(context)
-                .setTitle(R.string.unable_to_process_request_error_title)
-                .setMessage(message)
-                .setNegativeButton(R.string.close, null)
-                .show()
+            .setTitle(R.string.unable_to_process_request_error_title)
+            .setMessage(message)
+            .setNegativeButton(R.string.close, null)
+            .show()
     }
 
     private fun handleScanCardButtonClicks(view: View) {
@@ -178,7 +184,8 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val sceneRoot = decorView.findViewById<View>(Window.ID_ANDROID_CONTENT)?.parent as? ViewGroup
+            val sceneRoot =
+                decorView.findViewById<View>(Window.ID_ANDROID_CONTENT)?.parent as? ViewGroup
 
             val insetsListener = View.OnApplyWindowInsetsListener { view, insets ->
                 sceneRoot?.let { TransitionManager.beginDelayedTransition(it, ChangeBounds()) }
