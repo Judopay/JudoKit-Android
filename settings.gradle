@@ -1,1 +1,3 @@
-include ':judo-sdk'
+rootProject.name='Judopay Android SDK'
+include ':judopay-examples'
+include ':judopay-sdk'

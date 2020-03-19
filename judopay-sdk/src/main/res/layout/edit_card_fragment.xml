@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ImageButton
+        android:id="@+id/backButton"
+        style="@style/JudoTheme.BackButton"
+        android:layout_width="@dimen/min_touch_target_size"
+        android:layout_height="@dimen/min_touch_target_size"
+        android:layout_marginStart="@dimen/space_8"
+        android:layout_marginTop="@dimen/space_4"
+        android:contentDescription="@null"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/headingTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_24"
+        android:layout_marginTop="@dimen/space_8"
+        android:layout_marginEnd="@dimen/space_24"
+        android:fontFamily="@font/sf_pro_display_semibold"
+        android:text="@string/customize_card"
+        android:textColor="@color/black"
+        android:textSize="@dimen/large_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/backButton" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headingTextView">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:padding="@dimen/space_24">
+
+            <com.judopay.ui.paymentmethods.components.PaymentCardView
+                android:id="@+id/cardView"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="@dimen/card_elevation_8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/colorPickerRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/space_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+            <com.judopay.ui.cardentry.components.JudoEditTextInputLayout
+                android:id="@+id/titleTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/colorPickerRecyclerView">
+
+                <EditText
+                    android:id="@+id/titleEditText"
+                    style="@style/JudoTheme.TextInputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="text"
+                    tools:text="Card for online shopping" />
+
+            </com.judopay.ui.cardentry.components.JudoEditTextInputLayout>
+
+            <TextView
+                android:id="@+id/saveAsDefaultTextView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/min_touch_target_size"
+                android:layout_marginTop="@dimen/space_24"
+                android:drawableStart="@drawable/ic_radio_off"
+                android:drawablePadding="@dimen/space_8"
+                android:fontFamily="@font/sf_pro_display_regular"
+                android:gravity="start|center_vertical"
+                android:text="@string/save_as_default_payment_method"
+                android:textColor="@color/black"
+                android:textSize="@dimen/body"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/titleTextInputLayout" />
+
+            <Button
+                android:id="@+id/cancelButton"
+                style="@style/JudoTheme.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="60dp"
+                android:layout_marginEnd="@dimen/space_16"
+                android:text="@string/cancel"
+                app:layout_constraintEnd_toStartOf="@+id/saveButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/saveAsDefaultTextView" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/saveButton"
+                style="@style/JudoTheme.BlackRoundedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="60dp"
+                android:minWidth="200dp"
+                android:text="@string/save"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/saveAsDefaultTextView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

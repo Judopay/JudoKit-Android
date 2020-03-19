@@ -1,0 +1,10 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="spacing_16">16dp</dimen>
+    <dimen name="spacing_8">8dp</dimen>
+    <dimen name="app_bar_height">100dp</dimen>
+    <dimen name="divider_size">1dp</dimen>
+
+    <dimen name="min_touch_target_size">48dp</dimen>
+
+</resources>
