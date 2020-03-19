@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="card_colors">
+        <item>@color/black</item>
+        <item>@color/twilight_blue</item>
+        <item>@color/darkish_green</item>
+        <item>@color/rouge</item>
+        <item>@color/terra_cotta</item>
+        <item>@color/yellowish_orange</item>
+        <item>@color/bluish_grey</item>
+        <item>@color/moss</item>
+    </integer-array>
+</resources>

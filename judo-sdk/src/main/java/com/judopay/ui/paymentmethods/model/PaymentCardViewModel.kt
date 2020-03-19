@@ -5,7 +5,7 @@ import com.judopay.model.CardNetwork
 
 data class PaymentCardViewModel(
     override val type: CardViewType = CardViewType.CARD,
-    override var layoutId: Int = R.id.paymentCardView,
+    override var layoutId: Int = R.id.cardView,
     val id: Int = 0,
     val cardNetwork: CardNetwork = CardNetwork.VISA,
     val name: String = "",
