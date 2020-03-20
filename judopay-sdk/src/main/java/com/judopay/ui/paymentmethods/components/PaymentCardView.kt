@@ -9,8 +9,14 @@ import com.judopay.R
 import com.judopay.inflate
 import com.judopay.model.iconImageResId
 import com.judopay.ui.common.isExpired
+import com.judopay.ui.editcard.drawableRes
 import com.judopay.ui.paymentmethods.model.PaymentCardViewModel
-import kotlinx.android.synthetic.main.payment_card_view.view.*
+import kotlinx.android.synthetic.main.payment_card_view.view.cardNameTextView
+import kotlinx.android.synthetic.main.payment_card_view.view.cardNumberMaskTextView
+import kotlinx.android.synthetic.main.payment_card_view.view.expireDateTextView
+import kotlinx.android.synthetic.main.payment_card_view.view.isExpiredTextView
+import kotlinx.android.synthetic.main.payment_card_view.view.networkIconImageView
+import kotlinx.android.synthetic.main.payment_card_view.view.paymentCardViewContainer
 
 class PaymentCardView @JvmOverloads constructor(
     context: Context,
@@ -47,13 +53,8 @@ class PaymentCardView @JvmOverloads constructor(
             )
         } else {
             isExpiredTextView.visibility = View.GONE
-            expireDateTextView.setTextColor(ContextCompat.getColor(context, R.color.brown_grey))
-            paymentCardViewContainer.setBackgroundColor(
-                ContextCompat.getColor(
-                    context,
-                    R.color.white
-                )
-            )
+            expireDateTextView.setTextColor(ContextCompat.getColor(context, R.color.white_opaque))
+            paymentCardViewContainer.background = model.pattern.drawableRes(context)
         }
     }
 }

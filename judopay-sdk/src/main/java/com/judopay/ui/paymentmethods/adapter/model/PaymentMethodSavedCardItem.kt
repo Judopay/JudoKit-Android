@@ -1,6 +1,7 @@
 package com.judopay.ui.paymentmethods.adapter.model
 
 import com.judopay.model.CardNetwork
+import com.judopay.ui.editcard.CardPattern
 
 data class PaymentMethodSavedCardItem(
     override val type: PaymentMethodItemType = PaymentMethodItemType.SAVED_CARDS_ITEM,
@@ -10,7 +11,8 @@ data class PaymentMethodSavedCardItem(
     val ending: String,
     val token: String,
     val expireDate: String,
-    var isSelected: Boolean = false
+    var isSelected: Boolean = false,
+    val pattern: CardPattern = CardPattern.BLACK
 ) : PaymentMethodItem {
         override fun equals(other: Any?): Boolean {
                 if (this === other) return true
@@ -26,6 +28,7 @@ data class PaymentMethodSavedCardItem(
                 if (token != other.token) return false
                 if (expireDate != other.expireDate) return false
                 if (isSelected != other.isSelected) return false
+                if (pattern != other.pattern) return false
 
                 return true
         }
@@ -39,6 +42,7 @@ data class PaymentMethodSavedCardItem(
                 result = 31 * result + token.hashCode()
                 result = 31 * result + expireDate.hashCode()
                 result = 31 * result + isSelected.hashCode()
+                result = 31 * result + pattern.hashCode()
                 return result
         }
 }

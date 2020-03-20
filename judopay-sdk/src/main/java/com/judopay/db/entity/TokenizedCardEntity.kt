@@ -4,6 +4,7 @@ import android.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.judopay.model.CardNetwork
+import com.judopay.ui.editcard.CardPattern
 import java.sql.Date
 import java.util.Calendar
 
@@ -11,7 +12,7 @@ import java.util.Calendar
 data class TokenizedCardEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    var color: Int = Color.WHITE,
+    var pattern: CardPattern = CardPattern.BLACK,
     val token: String,
     var isDefault: Boolean = false,
     var title: String,

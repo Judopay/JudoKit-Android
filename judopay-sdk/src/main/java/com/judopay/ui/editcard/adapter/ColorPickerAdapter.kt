@@ -4,9 +4,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.judopay.R
 import com.judopay.inflate
+import com.judopay.ui.editcard.CardPattern
 
 data class ColorPickerItem(
-    val color: Int,
+    val pattern: CardPattern,
     var isSelected: Boolean = false
 )
 

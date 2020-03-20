@@ -11,19 +11,30 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.judopay.R
+import com.judopay.db.entity.TokenizedCardEntity
 import com.judopay.ui.editcard.adapter.ColorPickerAdapter
 import com.judopay.ui.editcard.adapter.ColorPickerItem
-import kotlinx.android.synthetic.main.edit_card_fragment.*
+import com.judopay.ui.paymentmethods.model.PaymentCardViewModel
+import kotlinx.android.synthetic.main.edit_card_fragment.backButton
+import kotlinx.android.synthetic.main.edit_card_fragment.cancelButton
+import kotlinx.android.synthetic.main.edit_card_fragment.cardView
+import kotlinx.android.synthetic.main.edit_card_fragment.colorPickerRecyclerView
+import kotlinx.android.synthetic.main.edit_card_fragment.saveAsDefaultTextView
+import kotlinx.android.synthetic.main.edit_card_fragment.saveButton
+import kotlinx.android.synthetic.main.edit_card_fragment.titleEditText
+import kotlinx.android.synthetic.main.edit_card_fragment.titleTextInputLayout
 
 const val JUDO_TOKENIZED_CARD_ID = "com.judopay.judo-tokenized-card-id"
 
 data class EditCardModel(
     val colorOptions: List<ColorPickerItem>,
     val isSaveButtonEnabled: Boolean,
-    val title: String,
+    val card: PaymentCardViewModel,
+    var title: String,
     val isDefault: Boolean
 )
 
+private const val CARD_TITLE_MAX_CHARACTERS = 28
 class EditCardFragment : Fragment() {
 
     private lateinit var viewModel: EditCardViewModel
@@ -68,6 +79,8 @@ class EditCardFragment : Fragment() {
 
         val checkMark = if (model.isDefault) R.drawable.ic_radio_on else R.drawable.ic_radio_off
         saveAsDefaultTextView.setCompoundDrawablesWithIntrinsicBounds(checkMark, 0, 0, 0)
+
+        cardView.model = model.card
     }
 
     private fun setupCallbackListeners() {
@@ -85,6 +98,13 @@ class EditCardFragment : Fragment() {
         titleEditText.doOnTextChanged { text, start, count, after ->
             // TODO: temp hack
             if (count != after) {
+                if (text!!.length <= CARD_TITLE_MAX_CHARACTERS) {
+                    titleTextInputLayout.isErrorEnabled = false
+                } else  {
+                    titleTextInputLayout.isErrorEnabled = true
+                    titleTextInputLayout.error =
+                        getString(R.string.error_card_title_too_long, CARD_TITLE_MAX_CHARACTERS)
+                }
                 viewModel.send(EditCardAction.ChangeTitle(text.toString()))
             }
         }
@@ -98,7 +118,7 @@ class EditCardFragment : Fragment() {
     private fun setupColorPicker() {
         val context = requireContext()
         val colorPickerAdapter = ColorPickerAdapter(emptyList()) {
-            viewModel.send(EditCardAction.ChangeColor(it.color))
+            viewModel.send(EditCardAction.ChangePattern(it.pattern))
         }
 
         colorPickerAdapter.setHasStableIds(true)
@@ -111,3 +131,13 @@ class EditCardFragment : Fragment() {
         }
     }
 }
+
+fun TokenizedCardEntity.toPaymentCardViewModel(newTitle: String, selectedPattern: CardPattern) =
+    PaymentCardViewModel(
+        id = id,
+        cardNetwork = network,
+        name = newTitle,
+        maskedNumber = ending,
+        expireDate = expireDate,
+        pattern = selectedPattern
+    )
