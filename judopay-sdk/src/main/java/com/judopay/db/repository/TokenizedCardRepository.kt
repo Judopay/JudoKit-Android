@@ -14,9 +14,22 @@ class TokenizedCardRepository(private val tokenizedCardDao: TokenizedCardDao) {
         tokenizedCardDao.insert(card)
     }
 
+    suspend fun updateDefault(card: TokenizedCardEntity) {
+        if (card.isDefault) {
+            findAllCards().forEach {
+                if (it.isDefault) tokenizedCardDao.insert(it.apply { isDefault = false })
+            }
+        }
+        tokenizedCardDao.insert(card)
+    }
+
     suspend fun deleteCardWithId(id: Int) {
         tokenizedCardDao.deleteWithId(id)
     }
 
     suspend fun findWithId(id: Int): TokenizedCardEntity = tokenizedCardDao.getWithId(id)
+
+    suspend fun updateLastUsed(){
+        tokenizedCardDao.updateLastUsed()
+    }
 }
