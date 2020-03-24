@@ -12,10 +12,11 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.judopay.R
 import com.judopay.ui.editcard.colorRes
-import kotlinx.android.synthetic.main.color_picker_item.view.colorContainer
-import kotlinx.android.synthetic.main.color_picker_item.view.colorPreview
+import kotlinx.android.synthetic.main.color_picker_item.view.*
+
 private const val SCALE_SELECTED = 1.4f
 private const val SCALE_UNSELECTED = 1f
+
 class ColorPickerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun bind(model: ColorPickerItem, listener: ColorPickerAdapterListener?) = with(itemView) {
         val cornerRadius = context.resources.getDimension(R.dimen.corner_radius_2_8dp)
@@ -49,6 +50,7 @@ private fun drawableWith(fillColor: Int, cornerRadius: Float): Drawable {
         arrayOf(intArrayOf(android.R.attr.state_enabled)),
         intArrayOf(fillColor)
     )
+
     val shape = MaterialShapeDrawable(shapeModel)
     shape.fillColor = fillColorStateList
     return shape

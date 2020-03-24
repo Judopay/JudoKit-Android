@@ -4,25 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.doOnTextChanged
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.judopay.R
-import com.judopay.db.entity.TokenizedCardEntity
+import com.judopay.ui.common.LengthFilter
 import com.judopay.ui.editcard.adapter.ColorPickerAdapter
 import com.judopay.ui.editcard.adapter.ColorPickerItem
 import com.judopay.ui.paymentmethods.model.PaymentCardViewModel
-import kotlinx.android.synthetic.main.edit_card_fragment.backButton
-import kotlinx.android.synthetic.main.edit_card_fragment.cancelButton
-import kotlinx.android.synthetic.main.edit_card_fragment.cardView
-import kotlinx.android.synthetic.main.edit_card_fragment.colorPickerRecyclerView
-import kotlinx.android.synthetic.main.edit_card_fragment.saveAsDefaultTextView
-import kotlinx.android.synthetic.main.edit_card_fragment.saveButton
-import kotlinx.android.synthetic.main.edit_card_fragment.titleEditText
-import kotlinx.android.synthetic.main.edit_card_fragment.titleTextInputLayout
+import kotlinx.android.synthetic.main.edit_card_fragment.*
 
 const val JUDO_TOKENIZED_CARD_ID = "com.judopay.judo-tokenized-card-id"
 
@@ -35,6 +28,7 @@ data class EditCardModel(
 )
 
 private const val CARD_TITLE_MAX_CHARACTERS = 28
+
 class EditCardFragment : Fragment() {
 
     private lateinit var viewModel: EditCardViewModel
@@ -71,10 +65,11 @@ class EditCardFragment : Fragment() {
 
         saveButton.isEnabled = model.isSaveButtonEnabled
 
-        // TODO: temp hack
         titleEditText.apply {
-            setText(model.title)
-            setSelection(text.length)
+            if (text.toString() != model.title) {
+                setText(model.title)
+                setSelection(text.length)
+            }
         }
 
         val checkMark = if (model.isDefault) R.drawable.ic_radio_on else R.drawable.ic_radio_off
@@ -95,17 +90,20 @@ class EditCardFragment : Fragment() {
 
         saveAsDefaultTextView.setOnClickListener { viewModel.send(EditCardAction.ToggleDefaultCardState) }
 
-        titleEditText.doOnTextChanged { text, start, count, after ->
-            // TODO: temp hack
-            if (count != after) {
-                if (text!!.length <= CARD_TITLE_MAX_CHARACTERS) {
-                    titleTextInputLayout.isErrorEnabled = false
-                } else  {
-                    titleTextInputLayout.isErrorEnabled = true
-                    titleTextInputLayout.error =
-                        getString(R.string.error_card_title_too_long, CARD_TITLE_MAX_CHARACTERS)
-                }
-                viewModel.send(EditCardAction.ChangeTitle(text.toString()))
+        titleTextInputLayout.error =
+            getString(R.string.error_card_title_too_long, CARD_TITLE_MAX_CHARACTERS)
+
+        titleEditText.doAfterTextChanged {
+            viewModel.send(EditCardAction.ChangeTitle(it.toString()))
+        }
+
+        titleEditText.filters = arrayOf(LengthFilter(CARD_TITLE_MAX_CHARACTERS) {
+            titleTextInputLayout.isErrorEnabled = it
+        })
+
+        titleEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                titleTextInputLayout.isErrorEnabled = false
             }
         }
     }
@@ -131,13 +129,3 @@ class EditCardFragment : Fragment() {
         }
     }
 }
-
-fun TokenizedCardEntity.toPaymentCardViewModel(newTitle: String, selectedPattern: CardPattern) =
-    PaymentCardViewModel(
-        id = id,
-        cardNetwork = network,
-        name = newTitle,
-        maskedNumber = ending,
-        expireDate = expireDate,
-        pattern = selectedPattern
-    )
