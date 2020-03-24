@@ -12,6 +12,7 @@ data class PaymentMethodSavedCardItem(
     val token: String,
     val expireDate: String,
     var isSelected: Boolean = false,
+    var isInEditMode: Boolean = false,
     val pattern: CardPattern = CardPattern.BLACK
 ) : PaymentMethodItem {
         override fun equals(other: Any?): Boolean {
@@ -28,6 +29,7 @@ data class PaymentMethodSavedCardItem(
                 if (token != other.token) return false
                 if (expireDate != other.expireDate) return false
                 if (isSelected != other.isSelected) return false
+                if (isInEditMode != other.isInEditMode) return false
                 if (pattern != other.pattern) return false
 
                 return true
@@ -42,6 +44,7 @@ data class PaymentMethodSavedCardItem(
                 result = 31 * result + token.hashCode()
                 result = 31 * result + expireDate.hashCode()
                 result = 31 * result + isSelected.hashCode()
+                result = 31 * result + isInEditMode.hashCode()
                 result = 31 * result + pattern.hashCode()
                 return result
         }

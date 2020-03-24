@@ -3,6 +3,8 @@ package com.judopay.ui.editcard
 import android.content.Context
 import androidx.core.content.ContextCompat
 import com.judopay.R
+import com.judopay.model.CardNetwork
+import com.judopay.model.iconImageResId
 
 enum class CardPattern {
     BLACK,
@@ -35,4 +37,13 @@ internal fun CardPattern.drawableRes(context: Context) = when (this) {
     CardPattern.YELLOWISH_ORANGE -> ContextCompat.getDrawable(context, R.drawable.card_yellowish_green_background)
     CardPattern.BLUISH_GREY -> ContextCompat.getDrawable(context, R.drawable.card_bluish_grey_background)
     CardPattern.MOSS -> ContextCompat.getDrawable(context, R.drawable.card_moss_background)
+}
+
+internal fun CardPattern.cardIcon(cardNetwork: CardNetwork): Int = when (cardNetwork) {
+    CardNetwork.VISA -> when (this) {
+        CardPattern.BLACK,
+        CardPattern.TWILIGHT_BLUE -> R.drawable.ic_card_visa_light
+        else -> R.drawable.ic_card_visa
+    }
+    else -> cardNetwork.iconImageResId
 }

@@ -142,6 +142,13 @@ val CardNetwork.iconImageResId: Int
         else -> 0
     }
 
+val CardNetwork.lightIconImageResId: Int
+    get() = when (this) {
+        CardNetwork.AMEX -> R.drawable.ic_card_amex_light
+        CardNetwork.VISA -> R.drawable.ic_card_visa_light
+        else -> this.iconImageResId
+    }
+
 val CardNetwork.cardNumberMaxLength: Int
     get() = when (this) {
         CardNetwork.AMEX -> 15

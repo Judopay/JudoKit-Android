@@ -130,11 +130,23 @@ class PaymentMethodsFragment : Fragment() {
                 )
             }
             is PaymentMethodSavedCardItem -> {
-                viewModel.send(PaymentMethodsAction.SelectStoredCard(item.id))
+                if (action == PaymentMethodItemAction.EDIT_CARD) {
+                    onEdit(item.id)
+                    viewModel.send(PaymentMethodsAction.SelectStoredCard(item.id))
+                }
+                if (action == PaymentMethodItemAction.DELETE_CARD)
+                    onDeleteCardItem(item)
+                if (action == PaymentMethodItemAction.PICK_CARD)
+                    viewModel.send(PaymentMethodsAction.SelectStoredCard(item.id))
+
             }
             is PaymentMethodGenericItem -> {
-                if (action == PaymentMethodItemAction.ADD_CARD) onAddCard()
-                if (action == PaymentMethodItemAction.EDIT) onEdit()
+                if (action == PaymentMethodItemAction.ADD_CARD)
+                    onAddCard()
+                if (action == PaymentMethodItemAction.EDIT)
+                    viewModel.send(PaymentMethodsAction.EditMode(true))
+                if (action == PaymentMethodItemAction.DONE)
+                    viewModel.send(PaymentMethodsAction.EditMode(false))
             }
         }
     }
@@ -150,10 +162,10 @@ class PaymentMethodsFragment : Fragment() {
             .show()
     }
 
-    private fun onEdit() {
+    private fun onEdit(cardId: Int) {
         findNavController().navigate(
             R.id.action_paymentMethodsFragment_to_editCardFragment,
-            bundleOf(JUDO_TOKENIZED_CARD_ID to selectedCard)
+            bundleOf(JUDO_TOKENIZED_CARD_ID to cardId)
         )
     }
 
@@ -192,6 +204,7 @@ class PaymentMethodsFragment : Fragment() {
 
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(recyclerView)
+
     }
 
     private fun setupButtonCallbacks() {

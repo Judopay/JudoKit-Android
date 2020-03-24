@@ -10,13 +10,25 @@
     android:paddingEnd="@dimen/space_24"
     android:paddingBottom="@dimen/space_12">
 
+    <ImageView
+        android:id="@+id/removeCardIcon"
+        style="@style/JudoTheme.ImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_remove"
+        android:visibility="gone"/>
+
     <FrameLayout
         android:id="@+id/networkIconContainer"
         android:layout_width="@dimen/network_icon_container_width"
         android:layout_height="@dimen/network_icon_container_height"
         android:background="@drawable/card_network_decoration_shape"
         android:padding="@dimen/space_8"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/removeCardIcon"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -67,5 +79,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_radio_off" />
+
+    <ImageView
+        android:id="@+id/arrowIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_back_20dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
