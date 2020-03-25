@@ -15,11 +15,11 @@
         style="@style/JudoTheme.ImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_remove"
-        android:visibility="gone"/>
+        app:srcCompat="@drawable/ic_remove" />
 
     <FrameLayout
         android:id="@+id/networkIconContainer"
@@ -88,6 +88,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_back_20dp" />
+        app:srcCompat="@drawable/ic_arrow" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,14 +22,18 @@
 
     <TextView
         android:id="@+id/cardNameTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_24"
+        android:layout_marginEnd="@dimen/space_24"
         android:layout_marginBottom="@dimen/space_16"
+        android:ellipsize="end"
         android:fontFamily="@font/sf_pro_display_semibold"
+        android:maxLines="1"
         android:textColor="@color/white"
         android:textSize="@dimen/title"
         app:layout_constraintBottom_toTopOf="@+id/cardNumberMaskTextView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="Card for online shopping" />
 

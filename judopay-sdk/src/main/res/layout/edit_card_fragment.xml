@@ -48,15 +48,15 @@
             android:padding="@dimen/space_24">
 
             <com.judopay.ui.paymentmethods.components.PaymentCardView
-                tools:background="@drawable/card_terra_cotta_background"
                 android:id="@+id/cardView"
                 android:layout_width="match_parent"
-                android:layout_height="190dp"
+                android:layout_height="@dimen/card_height"
                 app:cardCornerRadius="@dimen/card_corner_radius"
                 app:cardElevation="@dimen/card_elevation_8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:background="@drawable/card_terra_cotta_background" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/colorPickerRecyclerView"

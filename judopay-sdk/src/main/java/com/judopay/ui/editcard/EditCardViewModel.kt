@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.judopay.R
 import com.judopay.db.JudoRoomDatabase
 import com.judopay.db.entity.TokenizedCardEntity
 import com.judopay.db.repository.TokenizedCardRepository
@@ -58,7 +57,7 @@ class EditCardViewModel(
         get() {
             return (selectedColor != cardEntity.pattern ||
                     isSelectedAsDefault != cardEntity.isDefault ||
-                    currentCardTitle != cardEntity.title) && currentCardTitle.length<=28
+                    currentCardTitle != cardEntity.title) && currentCardTitle.length <= 28
         }
 
     init {
