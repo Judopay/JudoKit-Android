@@ -70,13 +70,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/space_24"
-        android:layout_marginBottom="@dimen/space_24"
         android:fontFamily="@font/sf_pro_display_semibold"
         android:includeFontPadding="false"
         android:textColor="@color/white_opaque"
         android:textSize="@dimen/headline"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/cardNumberMaskTextView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/cardNumberMaskTextView"
         tools:text="11/22" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
