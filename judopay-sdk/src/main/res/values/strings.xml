@@ -2,6 +2,7 @@
     <string name="pay_now">Pay Now</string>
     <string name="connected_cards">Connected Cards</string>
     <string name="button_edit">Edit</string>
+    <string name="button_done">Done</string>
     <string name="cancel">Cancel</string>
     <string name="ok">Ok</string>
     <string name="button_scan_card">Scan card</string>
@@ -63,4 +64,5 @@
     <string name="save_as_default_payment_method">Save as default payment method</string>
     <string name="save">Save</string>
 
+    <string name="error_card_title_too_long">Card Name cannot be longer than %1$d characters</string>
 </resources>

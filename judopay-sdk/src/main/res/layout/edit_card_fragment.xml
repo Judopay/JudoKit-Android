@@ -50,20 +50,21 @@
             <com.judopay.ui.paymentmethods.components.PaymentCardView
                 android:id="@+id/cardView"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
-                app:cardBackgroundColor="@color/white"
+                android:layout_height="@dimen/card_height"
                 app:cardCornerRadius="@dimen/card_corner_radius"
                 app:cardElevation="@dimen/card_elevation_8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:background="@drawable/card_terra_cotta_background" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/colorPickerRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="58dp"
+                android:layout_height="60dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="@dimen/space_24"
+                android:overScrollMode="never"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardView" />

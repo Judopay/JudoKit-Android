@@ -49,6 +49,8 @@ sealed class PaymentMethodsAction {
     data class UpdatePayWithGooglePayButtonState(val buttonEnabled: Boolean) :
         PaymentMethodsAction()
 
+    data class EditMode(val isInEditMode: Boolean) : PaymentMethodsAction()
+
     object PayWithSelectedStoredCard : PaymentMethodsAction()
     object Update : PaymentMethodsAction() // TODO: temporary
 }
@@ -119,6 +121,7 @@ class PaymentMethodsViewModel(
             is PaymentMethodsAction.UpdatePayWithGooglePayButtonState -> buildModel(
                 isLoading = !action.buttonEnabled
             )
+            is PaymentMethodsAction.EditMode -> buildModel(editMode = action.isInEditMode)
         }
     }
 
@@ -168,7 +171,8 @@ class PaymentMethodsViewModel(
     private fun buildModel(
         selectedMethod: PaymentMethod = selectedPaymentMethod,
         isLoading: Boolean = false,
-        selectedCardId: Int = selectedCardIdentifier
+        selectedCardId: Int = selectedCardIdentifier,
+        editMode: Boolean = false
     ) = viewModelScope.launch {
         val cardModel: CardViewModel
 
@@ -191,10 +195,20 @@ class PaymentMethodsViewModel(
                 var selectedCard: PaymentMethodSavedCardItem? = null
                 if (cards.isNullOrEmpty()) {
                     // placeholder
-                    recyclerViewData.add(PaymentMethodGenericItem(PaymentMethodItemType.NO_SAVED_CARDS_PLACEHOLDER))
+                    recyclerViewData.add(
+                        PaymentMethodGenericItem(
+                            PaymentMethodItemType.NO_SAVED_CARDS_PLACEHOLDER,
+                            editMode
+                        )
+                    )
                     cardModel = NoPaymentMethodSelectedViewModel()
                 } else {
-                    recyclerViewData.add(PaymentMethodGenericItem(PaymentMethodItemType.SAVED_CARDS_HEADER))
+                    recyclerViewData.add(
+                        PaymentMethodGenericItem(
+                            PaymentMethodItemType.SAVED_CARDS_HEADER,
+                            editMode
+                        )
+                    )
 
                     // cards
                     val defaultSelected = cards.map { it.isDefault }.contains(true)
@@ -205,12 +219,18 @@ class PaymentMethodsViewModel(
                             } else {
                                 if (defaultSelected) entity.isDefault else entity.isLastUsed
                             }
+                            isInEditMode = editMode
                         }
                     }
                     recyclerViewData.addAll(cardItems)
 
                     // footer
-                    recyclerViewData.add(PaymentMethodGenericItem(PaymentMethodItemType.SAVED_CARDS_FOOTER))
+                    recyclerViewData.add(
+                        PaymentMethodGenericItem(
+                            PaymentMethodItemType.SAVED_CARDS_FOOTER,
+                            editMode
+                        )
+                    )
 
                     selectedCard = cardItems.firstOrNull { it.isSelected } ?: cardItems.first()
                     cardModel = selectedCard.toPaymentCardViewModel()

@@ -32,9 +32,12 @@ import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSavedCardItem
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSelectorItem
 import com.judopay.ui.paymentmethods.components.PaymentCallToActionType
 import com.judopay.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
+import com.judopay.ui.paymentmethods.model.CardPaymentMethodModel
 import com.judopay.ui.paymentmethods.model.PaymentMethodModel
-import kotlinx.android.synthetic.main.payment_methods_fragment.*
-import kotlinx.android.synthetic.main.payment_methods_header_view.*
+import kotlinx.android.synthetic.main.payment_methods_fragment.backButton
+import kotlinx.android.synthetic.main.payment_methods_fragment.headerView
+import kotlinx.android.synthetic.main.payment_methods_fragment.recyclerView
+import kotlinx.android.synthetic.main.payment_methods_header_view.paymentCallToActionView
 
 data class PaymentMethodsModel(
     val headerModel: PaymentMethodsHeaderViewModel,
@@ -56,6 +59,7 @@ class PaymentMethodsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        headerView.fromEditMode = true
         setupRecyclerView()
         setupButtonCallbacks()
     }
@@ -127,11 +131,23 @@ class PaymentMethodsFragment : Fragment() {
                 )
             }
             is PaymentMethodSavedCardItem -> {
-                viewModel.send(PaymentMethodsAction.SelectStoredCard(item.id))
+                if (action == PaymentMethodItemAction.EDIT_CARD) {
+                    onEdit(item.id)
+                    viewModel.send(PaymentMethodsAction.SelectStoredCard(item.id))
+                }
+                if (action == PaymentMethodItemAction.DELETE_CARD)
+                    onDeleteCardItem(item)
+                if (action == PaymentMethodItemAction.PICK_CARD)
+                    viewModel.send(PaymentMethodsAction.SelectStoredCard(item.id))
+
             }
             is PaymentMethodGenericItem -> {
-                if (action == PaymentMethodItemAction.ADD_CARD) onAddCard()
-                if (action == PaymentMethodItemAction.EDIT) onEdit()
+                if (action == PaymentMethodItemAction.ADD_CARD)
+                    onAddCard()
+                if (action == PaymentMethodItemAction.EDIT)
+                    viewModel.send(PaymentMethodsAction.EditMode(true))
+                if (action == PaymentMethodItemAction.DONE)
+                    viewModel.send(PaymentMethodsAction.EditMode(false))
             }
         }
     }
@@ -147,27 +163,25 @@ class PaymentMethodsFragment : Fragment() {
             .show()
     }
 
-    private fun onEdit() {
-        // TODO: Temp implementation
-
-        val myCard = viewModel.allCardsSync.value?.firstOrNull()
-        val myId = myCard?.id ?: -1
-
+    private fun onEdit(cardId: Int) {
         findNavController().navigate(
             R.id.action_paymentMethodsFragment_to_editCardFragment,
-            bundleOf(
-                JUDO_TOKENIZED_CARD_ID to myId
-            )
+            bundleOf(JUDO_TOKENIZED_CARD_ID to cardId)
         )
     }
 
     private fun onAddCard() =
         findNavController().navigate(R.id.action_paymentMethodsFragment_to_cardEntryFragment)
 
+    var selectedCard: Int? = -1
+
     private fun updateWithModel(model: PaymentMethodsModel) {
         headerView.paymentMethods = judo.paymentMethods.toList()
         headerView.model = model.headerModel
 
+        if (model.currentPaymentMethod is CardPaymentMethodModel) {
+            selectedCard = model.currentPaymentMethod.selectedCard?.id
+        }
         val adapter = recyclerView.adapter as? PaymentMethodsAdapter
         adapter?.items = model.currentPaymentMethod.items
     }
@@ -191,6 +205,7 @@ class PaymentMethodsFragment : Fragment() {
 
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(recyclerView)
+
     }
 
     private fun setupButtonCallbacks() {

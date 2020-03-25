@@ -2,6 +2,7 @@ package com.judopay.ui.paymentmethods.model
 
 import com.judopay.R
 import com.judopay.model.CardNetwork
+import com.judopay.ui.editcard.CardPattern
 
 data class PaymentCardViewModel(
     override val type: CardViewType = CardViewType.CARD,
@@ -10,7 +11,8 @@ data class PaymentCardViewModel(
     val cardNetwork: CardNetwork = CardNetwork.VISA,
     val name: String = "",
     val maskedNumber: String = "",
-    val expireDate: String = ""
+    val expireDate: String = "",
+    val pattern: CardPattern = CardPattern.BLACK
 ) : CardViewModel {
 
     override fun equals(other: Any?): Boolean {
@@ -25,6 +27,7 @@ data class PaymentCardViewModel(
         if (name != other.name) return false
         if (maskedNumber != other.maskedNumber) return false
         if (expireDate != other.expireDate) return false
+        if (pattern != other.pattern) return false
 
         return true
     }
@@ -36,6 +39,7 @@ data class PaymentCardViewModel(
         result = 31 * result + name.hashCode()
         result = 31 * result + maskedNumber.hashCode()
         result = 31 * result + expireDate.hashCode()
+        result = 31 * result + pattern.hashCode()
         return result
     }
 }
