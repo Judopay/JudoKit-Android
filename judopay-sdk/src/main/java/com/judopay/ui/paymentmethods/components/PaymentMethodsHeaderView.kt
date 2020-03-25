@@ -41,6 +41,7 @@ class PaymentMethodsHeaderView @JvmOverloads constructor(
     private var previousSelected: CardViewModel? = null
 
     var paymentMethods: List<PaymentMethod> = listOf(PaymentMethod.CARD, PaymentMethod.GOOGLE_PAY)
+    var fromEditMode = false
     private var previousCard: CardViewModel? = null
     private var previousPaymentMethod: PaymentMethod? = null
     private var currentPaymentMethod: PaymentMethod? = null
@@ -94,7 +95,7 @@ class PaymentMethodsHeaderView @JvmOverloads constructor(
         val indexOfCurrent = paymentMethods.indexOf(currentPaymentMethod)
         val indexOfPrevious = paymentMethods.indexOf(previousPaymentMethod)
         when {
-            previousPaymentMethod == null -> {
+            previousPaymentMethod == null && !fromEditMode -> {
                 viewAnimator.animateFirstView = true
                 viewAnimator.inAnimation = CardAnimationType.BOTTOM_IN.inAnimation(context)
                 viewAnimator.outAnimation = CardAnimationType.BOTTOM_IN.outAnimation(context)
@@ -114,6 +115,7 @@ class PaymentMethodsHeaderView @JvmOverloads constructor(
             indexOfPrevious == indexOfCurrent && previousCard == model.cardModel -> {
                 viewAnimator.inAnimation = CardAnimationType.NONE.inAnimation(context)
                 viewAnimator.outAnimation = CardAnimationType.NONE.outAnimation(context)
+                fromEditMode = false
             }
         }
     }

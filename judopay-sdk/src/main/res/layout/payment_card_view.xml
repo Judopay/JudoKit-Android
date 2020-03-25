@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/paymentCardViewContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:background="@drawable/card_terra_cotta_background"
+    tools:layout_height="@dimen/card_height">
 
     <ImageView
         android:id="@+id/networkIconImageView"
