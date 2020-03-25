@@ -6,7 +6,8 @@ import com.judopay.db.entity.TokenizedCardEntity
 
 class TokenizedCardRepository(private val tokenizedCardDao: TokenizedCardDao) {
 
-    val allCardsSync: LiveData<List<TokenizedCardEntity>> = tokenizedCardDao.getAllSortedByDateAddedSync()
+    val allCardsSync: LiveData<List<TokenizedCardEntity>> =
+        tokenizedCardDao.getAllSortedByIsDefaultSync()
 
     suspend fun findAllCards(): List<TokenizedCardEntity> = tokenizedCardDao.getAllSortedByDateAdded()
 

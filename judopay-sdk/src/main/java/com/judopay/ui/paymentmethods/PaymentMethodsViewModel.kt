@@ -214,10 +214,10 @@ class PaymentMethodsViewModel(
                     val defaultSelected = cards.map { it.isDefault }.contains(true)
                     val cardItems = cards.map { entity ->
                         entity.toPaymentMethodSavedCardItem().apply {
-                            isSelected = if (selectedCardId > -1) {
-                                id == selectedCardId
-                            } else {
-                                if (defaultSelected) entity.isDefault else entity.isLastUsed
+                            isSelected = when {
+                                selectedCardId > -1 -> id == selectedCardId
+                                defaultSelected -> entity.isDefault
+                                else -> entity.isLastUsed
                             }
                             isInEditMode = editMode
                         }

@@ -105,7 +105,7 @@ class EditCardViewModel(
     }
 
     private fun persistChanges() = viewModelScope.launch {
-        cardRepository.insert(cardEntity.apply {
+        cardRepository.updateDefault(cardEntity.apply {
             title = currentCardTitle
             pattern = selectedColor
             isDefault = isSelectedAsDefault
