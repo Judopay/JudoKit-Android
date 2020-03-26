@@ -2,6 +2,7 @@ package com.judopay.db
 
 import androidx.room.TypeConverter
 import com.judopay.model.CardNetwork
+import com.judopay.ui.editcard.CardPattern
 import java.sql.Date
 
 class JudoTypeConverters {
@@ -14,6 +15,16 @@ class JudoTypeConverters {
     @TypeConverter
     fun networkToString(network: CardNetwork?): String? {
         return network?.name
+    }
+
+    @TypeConverter
+    fun fromStringToCardPattern(value: String?): CardPattern? {
+        return if (value != null) CardPattern.valueOf(value) else null
+    }
+
+    @TypeConverter
+    fun fromCardPatternToString(pattern: CardPattern?): String? {
+        return pattern?.name
     }
 
     @TypeConverter

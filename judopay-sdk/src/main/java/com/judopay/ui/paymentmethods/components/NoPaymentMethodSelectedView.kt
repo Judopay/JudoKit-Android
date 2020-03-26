@@ -2,6 +2,7 @@ package com.judopay.ui.paymentmethods.components
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.judopay.R
@@ -30,15 +31,27 @@ class NoPaymentMethodSelectedView @JvmOverloads constructor(
     }
 
     fun show(placeholderImage: ImageView) {
-        placeholderImage.animateWithAlpha(alpha = 1.0f)
-        noPaymentMethodSelectedView.animateWithTranslation(translationY = 0.0f, alpha = 1.0f)
+        placeholderImage.apply {
+            visibility = View.VISIBLE
+            animateWithAlpha(alpha = 1.0f)
+        }
+        noPaymentMethodSelectedView.apply {
+            visibility = View.VISIBLE
+            animateWithTranslation(translationY = 0.0f, alpha = 1.0f)
+        }
     }
 
     fun hide(placeholderImage: ImageView) {
-        placeholderImage.animateWithAlpha(alpha = 0.0f)
-        noPaymentMethodSelectedView.animateWithTranslation(
-            translationY = TRANSLATE_120,
-            alpha = 0.0f
-        )
+        placeholderImage.apply {
+            visibility = View.GONE
+                animateWithAlpha(alpha = 0.0f)
+        }
+        noPaymentMethodSelectedView.apply {
+            visibility = View.GONE
+            animateWithTranslation(
+                translationY = TRANSLATE_120,
+                alpha = 0.0f
+            )
+        }
     }
 }

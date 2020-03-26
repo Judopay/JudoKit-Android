@@ -5,6 +5,7 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.judopay.R
@@ -16,23 +17,48 @@ import com.judopay.ui.paymentmethods.adapter.BindableRecyclerViewHolder
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapterListener
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItemAction
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSavedCardItem
-import kotlinx.android.synthetic.main.saved_card_item.view.*
+import kotlinx.android.synthetic.main.saved_card_item.view.arrowIcon
+import kotlinx.android.synthetic.main.saved_card_item.view.networkIconContainer
+import kotlinx.android.synthetic.main.saved_card_item.view.networkIconImageView
+import kotlinx.android.synthetic.main.saved_card_item.view.radioIconImageView
+import kotlinx.android.synthetic.main.saved_card_item.view.removeCardIcon
+import kotlinx.android.synthetic.main.saved_card_item.view.subTitle
+import kotlinx.android.synthetic.main.saved_card_item.view.title
 
 class SavedCardsItemViewHolder(view: View) : RecyclerView.ViewHolder(view),
     BindableRecyclerViewHolder<PaymentMethodSavedCardItem, PaymentMethodItemAction> {
     override fun bind(model: PaymentMethodSavedCardItem, listener: PaymentMethodsAdapterListener?) =
         with(itemView) {
-
+            val params = networkIconContainer.layoutParams as ViewGroup.MarginLayoutParams
+            if (model.isInEditMode) {
+                removeCardIcon.visibility = View.VISIBLE
+                arrowIcon.visibility = View.VISIBLE
+                radioIconImageView.visibility = View.GONE
+                params.setMargins(resources.getDimension(R.dimen.space_24).toInt(), 0, 0, 0)
+                networkIconContainer.layoutParams = params
+                removeCardIcon.setOnClickListener {
+                    listener?.invoke(
+                        PaymentMethodItemAction.DELETE_CARD,
+                        model
+                    )
+                }
+                setOnClickListener { listener?.invoke(PaymentMethodItemAction.EDIT_CARD, model) }
+            } else {
+                removeCardIcon.visibility = View.GONE
+                arrowIcon.visibility = View.GONE
+                params.setMargins(0, 0, 0, 0)
+                networkIconContainer.layoutParams = params
+                val checkMark =
+                    if (model.isSelected) R.drawable.ic_radio_on else R.drawable.ic_radio_off
+                radioIconImageView.visibility = View.VISIBLE
+                radioIconImageView.setImageResource(checkMark)
+                setOnClickListener { listener?.invoke(PaymentMethodItemAction.PICK_CARD, model) }
+            }
             subTitle.text = createBoldSubtitle(model)
             title.text = model.title
-            val checkMark =
-                if (model.isSelected) R.drawable.ic_radio_on else R.drawable.ic_radio_off
-            radioIconImageView.setImageResource(checkMark)
 
             val image = model.network.iconImageResId
             if (image > 0) networkIconImageView.setImageResource(image)
-
-            setOnClickListener { listener?.invoke(PaymentMethodItemAction.PICK_CARD, model) }
         }
 
     private fun createBoldSubtitle(model: PaymentMethodSavedCardItem): SpannableStringBuilder {

@@ -22,4 +22,6 @@
     <color name="bluish_grey">#719192</color>
     <color name="moss">#808c5c</color>
 
+    <color name="white_opaque">#99FFFFFF</color>
+
 </resources>

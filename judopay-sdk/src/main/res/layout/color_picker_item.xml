@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:padding="@dimen/space_4">
+    android:padding="@dimen/space_4"
+    android:id="@+id/colorContainer">
 
     <View
         android:id="@+id/colorPreview"

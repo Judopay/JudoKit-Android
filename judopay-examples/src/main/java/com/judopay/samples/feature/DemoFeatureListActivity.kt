@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -36,8 +35,8 @@ import com.judopay.samples.R
 import com.judopay.samples.feature.adapter.DemoFeaturesAdapter
 import com.judopay.samples.model.DemoFeature
 import com.judopay.samples.settings.SettingsActivity
-import kotlinx.android.synthetic.main.activity_demo_feature_list.*
 import java.util.UUID
+import kotlinx.android.synthetic.main.activity_demo_feature_list.*
 
 const val JUDO_PAYMENT_WIDGET_REQUEST_CODE = 1
 
