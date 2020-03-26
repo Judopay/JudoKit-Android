@@ -25,7 +25,6 @@ import kotlinx.android.synthetic.main.saved_card_item.view.removeCardIcon
 import kotlinx.android.synthetic.main.saved_card_item.view.subTitle
 import kotlinx.android.synthetic.main.saved_card_item.view.title
 
-
 class SavedCardsItemViewHolder(view: View) : RecyclerView.ViewHolder(view),
     BindableRecyclerViewHolder<PaymentMethodSavedCardItem, PaymentMethodItemAction> {
     override fun bind(model: PaymentMethodSavedCardItem, listener: PaymentMethodsAdapterListener?) =
@@ -58,11 +57,8 @@ class SavedCardsItemViewHolder(view: View) : RecyclerView.ViewHolder(view),
             subTitle.text = createBoldSubtitle(model)
             title.text = model.title
 
-
             val image = model.network.iconImageResId
             if (image > 0) networkIconImageView.setImageResource(image)
-
-
         }
 
     private fun createBoldSubtitle(model: PaymentMethodSavedCardItem): SpannableStringBuilder {

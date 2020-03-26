@@ -7,11 +7,8 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import com.judopay.R
 import com.judopay.inflate
-import com.judopay.model.CardNetwork
-import com.judopay.model.iconImageResId
 import com.judopay.model.lightIconImageResId
 import com.judopay.ui.common.isExpired
-import com.judopay.ui.editcard.CardPattern
 import com.judopay.ui.editcard.drawableRes
 import com.judopay.ui.paymentmethods.model.PaymentCardViewModel
 import kotlinx.android.synthetic.main.payment_card_view.view.cardNameTextView

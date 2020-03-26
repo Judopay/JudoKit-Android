@@ -32,7 +32,6 @@ import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSavedCardItem
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSelectorItem
 import com.judopay.ui.paymentmethods.components.PaymentCallToActionType
 import com.judopay.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
-import com.judopay.ui.paymentmethods.model.CardPaymentMethodModel
 import com.judopay.ui.paymentmethods.model.PaymentMethodModel
 import kotlinx.android.synthetic.main.payment_methods_fragment.backButton
 import kotlinx.android.synthetic.main.payment_methods_fragment.headerView
@@ -139,7 +138,6 @@ class PaymentMethodsFragment : Fragment() {
                     onDeleteCardItem(item)
                 if (action == PaymentMethodItemAction.PICK_CARD)
                     viewModel.send(PaymentMethodsAction.SelectStoredCard(item.id))
-
             }
             is PaymentMethodGenericItem -> {
                 if (action == PaymentMethodItemAction.ADD_CARD)
@@ -173,15 +171,10 @@ class PaymentMethodsFragment : Fragment() {
     private fun onAddCard() =
         findNavController().navigate(R.id.action_paymentMethodsFragment_to_cardEntryFragment)
 
-    var selectedCard: Int? = -1
-
     private fun updateWithModel(model: PaymentMethodsModel) {
         headerView.paymentMethods = judo.paymentMethods.toList()
         headerView.model = model.headerModel
 
-        if (model.currentPaymentMethod is CardPaymentMethodModel) {
-            selectedCard = model.currentPaymentMethod.selectedCard?.id
-        }
         val adapter = recyclerView.adapter as? PaymentMethodsAdapter
         adapter?.items = model.currentPaymentMethod.items
     }
@@ -205,7 +198,6 @@ class PaymentMethodsFragment : Fragment() {
 
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(recyclerView)
-
     }
 
     private fun setupButtonCallbacks() {

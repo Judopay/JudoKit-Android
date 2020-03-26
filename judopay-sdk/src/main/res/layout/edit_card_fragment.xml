@@ -61,7 +61,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/colorPickerRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="@dimen/color_picker_height"
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="@dimen/space_24"
                 android:overScrollMode="never"

@@ -6,35 +6,41 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
+@DisplayName("Testing tokenized card repository")
 class TokenizedCardRepositoryTest {
-    val cardDao: TokenizedCardDao = mockk(relaxed = true)
-    val card: TokenizedCardEntity = mockk(relaxed = true)
+    private val cardDao: TokenizedCardDao = mockk(relaxed = true)
+    private val card: TokenizedCardEntity = mockk(relaxed = true)
 
-    val repository = TokenizedCardRepository(cardDao)
+    private val repository = TokenizedCardRepository(cardDao)
 
     @Test
-    fun `get all cards sorted by date synchronised`() {
+    @DisplayName("getAllSortedByDateAddedSync should return all cards ordered by date ascending synchronised")
+    fun getAllCardsSortedByDateSynchronised() {
         verify { cardDao.getAllSortedByDateAddedSync() }
     }
 
     @Test
-    fun `get all cards sorted by date`() {
+    @DisplayName("getAllSortedByDateAdded should return all cards ordered by date ascending")
+    fun getAllCardsSortedByDate() {
         runBlocking { repository.findAllCards() }
 
         coVerify { cardDao.getAllSortedByDateAdded() }
     }
 
     @Test
-    fun `insert card in database`() {
+    @DisplayName("insert should add a card to the database")
+    fun insertCardInDatabase() {
         runBlocking { repository.insert(card) }
 
         coVerify { cardDao.insert(card) }
     }
 
     @Test
-    fun `delete card by id`() {
+    @DisplayName("deleteWithId should remove a card from the database by the provided id")
+    fun deleteCardById() {
         runBlocking { repository.deleteCardWithId(card.id) }
 
         coVerify { cardDao.deleteWithId(card.id) }

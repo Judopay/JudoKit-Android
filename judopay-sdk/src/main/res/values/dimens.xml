@@ -53,4 +53,6 @@
     <dimen name="corner_radius_2_8dp">2.8dp</dimen>
     <dimen name="size_36dp">36dp</dimen>
     <dimen name="size_50dp">50dp</dimen>
+
+    <dimen name="color_picker_height">60dp</dimen>
 </resources>

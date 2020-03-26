@@ -121,7 +121,7 @@ class PaymentMethodsViewModel(
             is PaymentMethodsAction.UpdatePayWithGooglePayButtonState -> buildModel(
                 isLoading = !action.buttonEnabled
             )
-            is PaymentMethodsAction.EditMode -> buildModel(editMode = action.isInEditMode)
+            is PaymentMethodsAction.EditMode -> buildModel(isInEditMode = action.isInEditMode)
         }
     }
 
@@ -172,7 +172,7 @@ class PaymentMethodsViewModel(
         selectedMethod: PaymentMethod = selectedPaymentMethod,
         isLoading: Boolean = false,
         selectedCardId: Int = selectedCardIdentifier,
-        editMode: Boolean = false
+        isInEditMode: Boolean = false
     ) = viewModelScope.launch {
         val cardModel: CardViewModel
 
@@ -198,7 +198,7 @@ class PaymentMethodsViewModel(
                     recyclerViewData.add(
                         PaymentMethodGenericItem(
                             PaymentMethodItemType.NO_SAVED_CARDS_PLACEHOLDER,
-                            editMode
+                            isInEditMode
                         )
                     )
                     cardModel = NoPaymentMethodSelectedViewModel()
@@ -206,7 +206,7 @@ class PaymentMethodsViewModel(
                     recyclerViewData.add(
                         PaymentMethodGenericItem(
                             PaymentMethodItemType.SAVED_CARDS_HEADER,
-                            editMode
+                            isInEditMode
                         )
                     )
 
@@ -219,7 +219,7 @@ class PaymentMethodsViewModel(
                                 defaultSelected -> entity.isDefault
                                 else -> entity.isLastUsed
                             }
-                            isInEditMode = editMode
+                            this.isInEditMode = isInEditMode
                         }
                     }
                     recyclerViewData.addAll(cardItems)
@@ -228,7 +228,7 @@ class PaymentMethodsViewModel(
                     recyclerViewData.add(
                         PaymentMethodGenericItem(
                             PaymentMethodItemType.SAVED_CARDS_FOOTER,
-                            editMode
+                            isInEditMode
                         )
                     )
 

@@ -1,6 +1,5 @@
 package com.judopay.db.entity
 
-import android.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.judopay.model.CardNetwork
