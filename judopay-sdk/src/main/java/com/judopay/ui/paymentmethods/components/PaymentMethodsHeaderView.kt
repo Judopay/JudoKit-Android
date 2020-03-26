@@ -109,8 +109,13 @@ class PaymentMethodsHeaderView @JvmOverloads constructor(
                 viewAnimator.outAnimation = CardAnimationType.RIGHT.outAnimation(context)
             }
             indexOfPrevious == indexOfCurrent && previousCard != model.cardModel -> {
-                viewAnimator.inAnimation = CardAnimationType.BOTTOM.inAnimation(context)
-                viewAnimator.outAnimation = CardAnimationType.BOTTOM.outAnimation(context)
+                if (currentPaymentMethod == PaymentMethod.CARD || currentPaymentMethod == PaymentMethod.IDEAL) {
+                    viewAnimator.inAnimation = CardAnimationType.BOTTOM.inAnimation(context)
+                    viewAnimator.outAnimation = CardAnimationType.BOTTOM.outAnimation(context)
+                } else {
+                    viewAnimator.inAnimation = CardAnimationType.NONE.inAnimation(context)
+                    viewAnimator.outAnimation = CardAnimationType.NONE.outAnimation(context)
+                }
             }
             indexOfPrevious == indexOfCurrent && previousCard == model.cardModel -> {
                 viewAnimator.inAnimation = CardAnimationType.NONE.inAnimation(context)
