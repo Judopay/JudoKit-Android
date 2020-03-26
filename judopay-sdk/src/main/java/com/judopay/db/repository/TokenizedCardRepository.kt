@@ -12,14 +12,8 @@ class TokenizedCardRepository(private val tokenizedCardDao: TokenizedCardDao) {
     suspend fun findAllCards(): List<TokenizedCardEntity> = tokenizedCardDao.getAllSortedByDateAdded()
 
     suspend fun insert(card: TokenizedCardEntity) {
-        tokenizedCardDao.insert(card)
-    }
-
-    suspend fun updateDefault(card: TokenizedCardEntity) {
         if (card.isDefault) {
-            findAllCards().forEach {
-                if (it.isDefault) tokenizedCardDao.insert(it.apply { isDefault = false })
-            }
+            tokenizedCardDao.updateIsDefaultToFalse()
         }
         tokenizedCardDao.insert(card)
     }
@@ -30,7 +24,7 @@ class TokenizedCardRepository(private val tokenizedCardDao: TokenizedCardDao) {
 
     suspend fun findWithId(id: Int): TokenizedCardEntity = tokenizedCardDao.getWithId(id)
 
-    suspend fun updateLastUsed(){
-        tokenizedCardDao.updateLastUsed()
+    suspend fun updateLastUsedToFalse() {
+        tokenizedCardDao.updateLastUsedToFalse()
     }
 }

@@ -3,6 +3,7 @@ package com.judopay.db.repository
 import com.judopay.db.dao.TokenizedCardDao
 import com.judopay.db.entity.TokenizedCardEntity
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.runBlocking
@@ -17,9 +18,9 @@ class TokenizedCardRepositoryTest {
     private val repository = TokenizedCardRepository(cardDao)
 
     @Test
-    @DisplayName("getAllSortedByDateAddedSync should return all cards ordered by date ascending synchronised")
+    @DisplayName("getAllSortedByIsDefaultSync should return all cards ordered by isDefault descending synchronised")
     fun getAllCardsSortedByDateSynchronised() {
-        verify { cardDao.getAllSortedByDateAddedSync() }
+        verify { cardDao.getAllSortedByIsDefaultSync() }
     }
 
     @Test
@@ -28,6 +29,32 @@ class TokenizedCardRepositoryTest {
         runBlocking { repository.findAllCards() }
 
         coVerify { cardDao.getAllSortedByDateAdded() }
+    }
+
+    @Test
+    @DisplayName("insert should set isDefault to false for all cards if provided card isDefault is true")
+    fun shouldUpdateIsDefaultToFalse() {
+        every { card.isDefault } returns true
+
+        runBlocking { repository.insert(card) }
+
+        coVerify { cardDao.updateIsDefaultToFalse() }
+    }
+
+    @Test
+    @DisplayName("insert should not set isDefault to false for all cards when provided card isDefault is false")
+    fun shouldNotUpdateIsDefaultToFalse() {
+        runBlocking { repository.insert(card) }
+
+        coVerify(exactly = 0) { cardDao.updateIsDefaultToFalse() }
+    }
+
+    @Test
+    @DisplayName("updateLastUsedToFalse should set isLastUsed to false for all cards")
+    fun shouldUpdateLastUsedToFalse() {
+        runBlocking { repository.updateLastUsedToFalse() }
+
+        coVerify { cardDao.updateLastUsedToFalse() }
     }
 
     @Test

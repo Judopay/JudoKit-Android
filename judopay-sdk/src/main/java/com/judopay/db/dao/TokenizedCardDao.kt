@@ -29,5 +29,8 @@ interface TokenizedCardDao {
     suspend fun getWithId(id: Int): TokenizedCardEntity
 
     @Query("UPDATE tokenized_card SET isLastUsed = 0")
-    suspend fun updateLastUsed()
+    suspend fun updateLastUsedToFalse()
+
+    @Query("UPDATE tokenized_card SET isDefault = 0")
+    suspend fun updateIsDefaultToFalse()
 }
