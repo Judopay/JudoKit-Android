@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.judopay.R
+import com.judopay.dismissKeyboard
 import com.judopay.ui.common.LengthFilter
 import com.judopay.ui.editcard.adapter.ColorPickerAdapter
 import com.judopay.ui.editcard.adapter.ColorPickerItem
@@ -110,6 +111,7 @@ class EditCardFragment : Fragment() {
 
     private fun dismiss(view: View) {
         view.isEnabled = false
+        view.dismissKeyboard()
         findNavController().popBackStack()
     }
 

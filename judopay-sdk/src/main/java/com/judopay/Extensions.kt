@@ -1,9 +1,11 @@
 package com.judopay
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -85,6 +87,11 @@ fun View.animateWithTranslation(
     animate().translationY(translationY)
         .alpha(alpha)
         .duration = duration
+}
+
+fun View.dismissKeyboard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(windowToken, 0)
 }
 
 fun Any.toJSONString(): String = Gson().toJson(this)
