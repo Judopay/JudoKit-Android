@@ -10,8 +10,8 @@ import com.judopay.db.entity.TokenizedCardEntity
 @Dao
 interface TokenizedCardDao {
 
-    @Query("SELECT * from tokenized_card ORDER BY timestamp ASC")
-    fun getAllSortedByDateAddedSync(): LiveData<List<TokenizedCardEntity>>
+    @Query("SELECT * from tokenized_card ORDER BY isDefault DESC")
+    fun getAllSortedByIsDefaultSync(): LiveData<List<TokenizedCardEntity>>
 
     @Query("SELECT * from tokenized_card ORDER BY timestamp ASC")
     suspend fun getAllSortedByDateAdded(): List<TokenizedCardEntity>
@@ -24,4 +24,10 @@ interface TokenizedCardDao {
 
     @Query("SELECT * FROM tokenized_card WHERE id = :id LIMIT 1")
     suspend fun getWithId(id: Int): TokenizedCardEntity
+
+    @Query("UPDATE tokenized_card SET isLastUsed = 0")
+    suspend fun updateAllLastUsedToFalse()
+
+    @Query("UPDATE tokenized_card SET isDefault = 0")
+    suspend fun updateAllIsDefaultToFalse()
 }

@@ -18,5 +18,6 @@ data class TokenizedCardEntity(
     val expireDate: String,
     val ending: String,
     val network: CardNetwork,
-    val timestamp: Date = Date(Calendar.getInstance().timeInMillis)
+    val timestamp: Date = Date(Calendar.getInstance().timeInMillis),
+    var isLastUsed: Boolean = true
 )

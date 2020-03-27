@@ -153,6 +153,8 @@ class PaymentMethodsViewModel(
                         )
                         else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
                     }
+                    cardRepository.updateAllLastUsedToFalse()
+                    cardRepository.insert(entity.apply { isLastUsed = true })
 
                     buildModel()
                     judoApiCallResult.postValue(response)
@@ -209,12 +211,13 @@ class PaymentMethodsViewModel(
                     )
 
                     // cards
+                    val defaultSelected = cards.map { it.isDefault }.contains(true)
                     val cardItems = cards.map { entity ->
                         entity.toPaymentMethodSavedCardItem().apply {
-                            isSelected = if (selectedCardId > -1) {
-                                id == selectedCardId
-                            } else {
-                                cards.first() == entity
+                            isSelected = when {
+                                selectedCardId > -1 -> id == selectedCardId
+                                defaultSelected -> entity.isDefault
+                                else -> entity.isLastUsed
                             }
                             this.isInEditMode = isInEditMode
                         }

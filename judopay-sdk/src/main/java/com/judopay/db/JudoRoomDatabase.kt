@@ -10,7 +10,7 @@ import com.judopay.db.entity.TokenizedCardEntity
 
 @Database(
     entities = [TokenizedCardEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(JudoTypeConverters::class)
@@ -34,7 +34,10 @@ abstract class JudoRoomDatabase : RoomDatabase() {
                     context.applicationContext,
                     JudoRoomDatabase::class.java,
                     "judo_database"
-                ).build()
+                )
+                    // TODO: Write proper migrations when going live
+                    .fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = instance
                 return instance
             }

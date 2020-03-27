@@ -3,6 +3,7 @@ package com.judopay.db.repository
 import com.judopay.db.dao.TokenizedCardDao
 import com.judopay.db.entity.TokenizedCardEntity
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.runBlocking
@@ -17,21 +18,39 @@ class TokenizedCardRepositoryTest {
     private val repository = TokenizedCardRepository(cardDao)
 
     @Test
-    @DisplayName("getAllSortedByDateAddedSync should return all cards ordered by date ascending synchronised")
+    @DisplayName("getAllSortedByIsDefaultSync should call tokenizedCardDao.getAllSortedByIsDefaultSync and return all cards ordered by isDefault descending synchronised")
     fun getAllCardsSortedByDateSynchronised() {
-        verify { cardDao.getAllSortedByDateAddedSync() }
+        verify { cardDao.getAllSortedByIsDefaultSync() }
     }
 
     @Test
-    @DisplayName("getAllSortedByDateAdded should return all cards ordered by date ascending")
-    fun getAllCardsSortedByDate() {
-        runBlocking { repository.findAllCards() }
+    @DisplayName("insert should call tokenizedCardDao.updateAllIsDefaultToFalse when provided card isDefault = true")
+    fun shouldUpdateIsDefaultToFalse() {
+        every { card.isDefault } returns true
 
-        coVerify { cardDao.getAllSortedByDateAdded() }
+        runBlocking { repository.insert(card) }
+
+        coVerify { cardDao.updateAllIsDefaultToFalse() }
     }
 
     @Test
-    @DisplayName("insert should add a card to the database")
+    @DisplayName("insert should not call tokenizedCardDao.updateAllIsDefaultToFalse when provided card isDefault = false")
+    fun shouldNotUpdateIsDefaultToFalse() {
+        runBlocking { repository.insert(card) }
+
+        coVerify(exactly = 0) { cardDao.updateAllIsDefaultToFalse() }
+    }
+
+    @Test
+    @DisplayName("updateAllLastUsedToFalse should call tokenizedCardDao.updateAllLastUsedToFalse")
+    fun shouldUpdateLastUsedToFalse() {
+        runBlocking { repository.updateAllLastUsedToFalse() }
+
+        coVerify { cardDao.updateAllLastUsedToFalse() }
+    }
+
+    @Test
+    @DisplayName("insert should call tokenizedCardDao.insert with provided card")
     fun insertCardInDatabase() {
         runBlocking { repository.insert(card) }
 
@@ -39,7 +58,7 @@ class TokenizedCardRepositoryTest {
     }
 
     @Test
-    @DisplayName("deleteWithId should remove a card from the database by the provided id")
+    @DisplayName("deleteWithId should call tokenizedCardDao.deleteWithId with provided id")
     fun deleteCardById() {
         runBlocking { repository.deleteCardWithId(card.id) }
 

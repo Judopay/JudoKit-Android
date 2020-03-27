@@ -151,6 +151,7 @@ class CardEntryViewModel(
     }
 
     private fun insert(card: TokenizedCardEntity) = viewModelScope.launch {
+        cardRepository.updateAllLastUsedToFalse()
         cardRepository.insert(card)
     }
 }
