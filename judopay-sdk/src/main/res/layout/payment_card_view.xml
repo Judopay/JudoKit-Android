@@ -5,8 +5,7 @@
     android:id="@+id/paymentCardViewContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:background="@drawable/card_terra_cotta_background"
-    tools:layout_height="@dimen/card_height">
+    tools:background="@drawable/card_terra_cotta_background">
 
     <ImageView
         android:id="@+id/networkIconImageView"
@@ -20,7 +19,7 @@
         android:scaleType="centerInside"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_visa" />
+        app:srcCompat="@drawable/ic_card_visa_light" />
 
     <TextView
         android:id="@+id/cardNameTextView"
