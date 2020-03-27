@@ -35,6 +35,7 @@ abstract class JudoRoomDatabase : RoomDatabase() {
                     JudoRoomDatabase::class.java,
                     "judo_database"
                 )
+                        // TODO: Write proper migrations when going live
                     .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance

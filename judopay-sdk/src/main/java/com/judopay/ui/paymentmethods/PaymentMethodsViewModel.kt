@@ -153,7 +153,7 @@ class PaymentMethodsViewModel(
                         )
                         else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
                     }
-                    cardRepository.updateLastUsedToFalse()
+                    cardRepository.updateAllLastUsedToFalse()
                     cardRepository.insert(entity.apply { isLastUsed = true })
 
                     buildModel()

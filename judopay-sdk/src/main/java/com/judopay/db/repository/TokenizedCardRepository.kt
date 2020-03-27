@@ -9,11 +9,9 @@ class TokenizedCardRepository(private val tokenizedCardDao: TokenizedCardDao) {
     val allCardsSync: LiveData<List<TokenizedCardEntity>> =
         tokenizedCardDao.getAllSortedByIsDefaultSync()
 
-    suspend fun findAllCards(): List<TokenizedCardEntity> = tokenizedCardDao.getAllSortedByDateAdded()
-
     suspend fun insert(card: TokenizedCardEntity) {
         if (card.isDefault) {
-            tokenizedCardDao.updateIsDefaultToFalse()
+            tokenizedCardDao.updateAllIsDefaultToFalse()
         }
         tokenizedCardDao.insert(card)
     }
@@ -24,7 +22,7 @@ class TokenizedCardRepository(private val tokenizedCardDao: TokenizedCardDao) {
 
     suspend fun findWithId(id: Int): TokenizedCardEntity = tokenizedCardDao.getWithId(id)
 
-    suspend fun updateLastUsedToFalse() {
-        tokenizedCardDao.updateLastUsedToFalse()
+    suspend fun updateAllLastUsedToFalse() {
+        tokenizedCardDao.updateAllLastUsedToFalse()
     }
 }

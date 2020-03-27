@@ -41,6 +41,11 @@ class PaymentMethodsHeaderView @JvmOverloads constructor(
     private var previousSelected: CardViewModel? = null
 
     var paymentMethods: List<PaymentMethod> = listOf(PaymentMethod.CARD, PaymentMethod.GOOGLE_PAY)
+    /**
+     * Variable used to disable animations when navigating from edit screen to payment methods screen
+     * set to true in [com.judopay.ui.paymentmethods.PaymentMethodsFragment.onViewCreated]
+     * set to false in [PaymentMethodsHeaderView.setAnimationType]
+     */
     var fromEditMode = false
     private var previousCard: CardViewModel? = null
     private var previousPaymentMethod: PaymentMethod? = null
