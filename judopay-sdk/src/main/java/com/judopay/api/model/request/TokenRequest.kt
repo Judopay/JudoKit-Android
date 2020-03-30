@@ -17,7 +17,7 @@ class TokenRequest private constructor(
     private var cardToken: String,
     private var cardType: Int,
     private var cv2: String?,
-    private var cardAddress: Address,
+    private var cardAddress: Address?,
     private var emailAddress: String?,
     private var mobileNumber: String?,
     private var primaryAccountDetails: PrimaryAccountDetails?
@@ -61,13 +61,13 @@ class TokenRequest private constructor(
 
         fun setCardLastFour(cardLastFour: String?) = apply { this.cardLastFour = cardLastFour }
 
-        fun setCardToken(cardToken: String) = apply { this.cardToken = cardToken }
+        fun setCardToken(cardToken: String?) = apply { this.cardToken = cardToken }
 
         fun setCardType(cardType: Int) = apply { this.cardType = cardType }
 
         fun setCv2(cv2: String?) = apply { this.cv2 = cv2 }
 
-        fun setAddress(address: Address) = apply { this.address = address }
+        fun setAddress(address: Address?) = apply { this.address = address }
 
         fun setEmailAddress(emailAddress: String?) = apply { this.emailAddress = emailAddress }
 

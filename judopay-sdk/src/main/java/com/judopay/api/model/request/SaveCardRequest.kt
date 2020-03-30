@@ -19,7 +19,7 @@ class SaveCardRequest private constructor(
     private var judoId: String?,
     private var yourConsumerReference: String?,
     private var yourPaymentMetaData: Map<String, String>?,
-    private var cardAddress: Address,
+    private var cardAddress: Address?,
     private var cardNumber: String?,
     private var cv2: String?,
     private var expiryDate: String?,
@@ -64,7 +64,7 @@ class SaveCardRequest private constructor(
         fun setYourPaymentMetaData(yourPaymentMetaData: Map<String, String>?) =
                 apply { this.yourPaymentMetaData = yourPaymentMetaData }
 
-        fun setAddress(address: Address) = apply { this.address = address }
+        fun setAddress(address: Address?) = apply { this.address = address }
 
         fun setCardNumber(cardNumber: String?) = apply { this.cardNumber = cardNumber }
 
