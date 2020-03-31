@@ -1,4 +1,4 @@
-package com.judopay.ui.cardentry.components
+package com.judopay.ui.cardentry.formatting
 
 import android.text.Editable
 import android.text.TextWatcher

@@ -1,4 +1,4 @@
-package com.judopay.ui.cardentry.components
+package com.judopay.ui.cardentry.formatting
 
 import android.text.Editable
 import android.widget.EditText
@@ -9,6 +9,7 @@ import com.judopay.model.iconImageResId
 import com.judopay.model.securityCodeName
 import com.judopay.model.securityCodeNumberMask
 import com.judopay.parentOfType
+import com.judopay.ui.cardentry.components.JudoEditTextInputLayout
 
 internal class CardNumberInputMaskTextWatcher(
     private val editText: EditText,

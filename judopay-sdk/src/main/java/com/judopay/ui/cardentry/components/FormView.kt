@@ -1,19 +1,30 @@
 package com.judopay.ui.cardentry.components
 
 import android.content.Context
+import android.text.InputFilter
 import android.util.AttributeSet
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.core.widget.addTextChangedListener
 import com.judopay.R
 import com.judopay.inflate
 import com.judopay.model.CardNetwork
+import com.judopay.model.Country
+import com.judopay.model.asCountry
+import com.judopay.model.displayName
+import com.judopay.model.postcodeMaxLength
 import com.judopay.parentOfType
 import com.judopay.subViewsWithType
+import com.judopay.ui.cardentry.formatting.CardNumberInputMaskTextWatcher
+import com.judopay.ui.cardentry.formatting.InputMaskTextWatcher
+import com.judopay.ui.cardentry.formatting.SecurityCodeInputMaskTextWatcher
 import com.judopay.ui.cardentry.validation.CardHolderNameValidator
 import com.judopay.ui.cardentry.validation.CardNumberValidator
+import com.judopay.ui.cardentry.validation.CountryValidator
 import com.judopay.ui.cardentry.validation.ExpirationDateValidator
+import com.judopay.ui.cardentry.validation.PostcodeValidator
 import com.judopay.ui.cardentry.validation.SecurityCodeValidator
 import com.judopay.ui.cardentry.validation.Validator
 import com.judopay.ui.common.ButtonState
@@ -43,7 +54,7 @@ data class InputModel(
     val cardHolderName: String = "",
     val expirationDate: String = "",
     val securityNumber: String = "",
-    val country: String = "",
+    val country: String = Country.GB.displayName,
     val postCode: String = ""
 )
 
@@ -77,39 +88,91 @@ class FormView @JvmOverloads constructor(
     internal var onSubmitButtonClickListener: SubmitButtonClickListener? = null
 
     private val validationResultsCache = mutableMapOf<FormFieldType, Boolean>()
+
     private val validators: List<Validator> = listOf(
         CardNumberValidator(supportedNetworks = model.supportedNetworks),
         CardHolderNameValidator(),
         ExpirationDateValidator(),
-        SecurityCodeValidator()
+        SecurityCodeValidator(),
+        CountryValidator(),
+        PostcodeValidator()
     )
 
     override fun onFinishInflate() {
         super.onFinishInflate()
 
-        with(editTextForType(FormFieldType.EXPIRATION_DATE)) {
-            val mask = InputMaskTextWatcher(this, "##/##")
-            addTextChangedListener(mask)
-        }
-
-        val securityCode = editTextForType(FormFieldType.SECURITY_NUMBER)
-        val securityCodeMask = SecurityCodeInputMaskTextWatcher(securityCode)
-        securityCode.addTextChangedListener(securityCodeMask)
-
-        with(editTextForType(FormFieldType.NUMBER)) {
-            val mask = CardNumberInputMaskTextWatcher(this, securityCodeMask)
-            addTextChangedListener(mask)
-        }
-
-        setupFields()
+        setupFieldsFormatting()
+        setupFieldsContent()
     }
 
-    private fun setupFields() {
+    private fun setupFieldsFormatting() {
+        // expiration date field formatting
+        with(editTextForType(FormFieldType.EXPIRATION_DATE)) {
+            val mask = InputMaskTextWatcher(
+                this,
+                "##/##"
+            )
+            addTextChangedListener(mask)
+        }
+
+        // security code field formatting
+        val securityCode = editTextForType(FormFieldType.SECURITY_NUMBER)
+        val securityCodeMask =
+            SecurityCodeInputMaskTextWatcher(
+                securityCode
+            )
+        securityCode.addTextChangedListener(securityCodeMask)
+
+        // card number field formatting
+        with(editTextForType(FormFieldType.NUMBER)) {
+            val mask =
+                CardNumberInputMaskTextWatcher(
+                    this,
+                    securityCodeMask
+                )
+            addTextChangedListener(mask)
+        }
+
+        // Postcode formatting
+        val country =
+            inputModelValueOfFieldWithType(FormFieldType.COUNTRY).asCountry() ?: Country.OTHER
+        onCountryDidSelect(country)
+
+        countryTextInputEditText.setOnItemClickListener { _, _, _, id ->
+            val selected = Country.values()[id.toInt()]
+            onCountryDidSelect(selected)
+        }
+    }
+
+    private fun onCountryDidSelect(country: Country) {
+        val previousSelected = inputModelValueOfFieldWithType(FormFieldType.COUNTRY).asCountry()
+        val postCodeEditText = editTextForType(FormFieldType.POST_CODE)
+
+        postCodeEditText.filters = arrayOf(InputFilter.LengthFilter(country.postcodeMaxLength))
+
+        if (country != previousSelected) {
+            postCodeEditText.setText(R.string.empty)
+        }
+
+        validators.forEach {
+            if (it is PostcodeValidator) {
+                it.country = country
+            }
+        }
+    }
+
+    private fun setupFieldsContent() {
         submitButton.setOnClickListener { onSubmitButtonClickListener?.invoke() }
 
         FormFieldType.values().forEach { type ->
             editTextForType(type).apply {
                 setHint(type.fieldHintResId)
+
+                // setup state, and validate it
+                with(inputModelValueOfFieldWithType(type)) {
+                    setText(this)
+                    textDidChange(type, this)
+                }
 
                 addTextChangedListener {
                     val text = it.toString()
@@ -150,9 +213,14 @@ class FormView @JvmOverloads constructor(
     }
 
     private fun updateSubmitButtonState() {
-        val isFormValid = model.enabledFields.map {
+        val validationResults = model.enabledFields.map {
             validationResultsCache[it] ?: false
-        }.reduce { acc, b -> acc && b }
+        }
+
+        var isFormValid = false
+        if (validationResults.isNotEmpty()) {
+            isFormValid = validationResults.reduce { acc, b -> acc && b }
+        }
 
         if (isFormValid) {
             onValidationPassed()
@@ -191,6 +259,7 @@ class FormView @JvmOverloads constructor(
     }
 
     private fun setupVisibilityOfFields() {
+
         val textInputLayouts = subViewsWithType(JudoEditTextInputLayout::class.java)
         textInputLayouts.forEach {
             it.visibility = View.GONE
@@ -200,6 +269,25 @@ class FormView @JvmOverloads constructor(
             val textInputLayout = textInputLayoutForType(it)
             textInputLayout?.visibility = View.VISIBLE
         }
+
+        if (model.enabledFields.contains(FormFieldType.COUNTRY)) {
+            val countries = Country.values().map { it.displayName }
+            val adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, countries)
+
+            countryTextInputEditText.apply {
+                setAdapter(adapter)
+                setOnClickListener { showDropDown() }
+            }
+        }
+    }
+
+    private fun inputModelValueOfFieldWithType(type: FormFieldType): String = when (type) {
+        FormFieldType.NUMBER -> model.formModel.cardNumber
+        FormFieldType.HOLDER_NAME -> model.formModel.cardHolderName
+        FormFieldType.EXPIRATION_DATE -> model.formModel.expirationDate
+        FormFieldType.SECURITY_NUMBER -> model.formModel.securityNumber
+        FormFieldType.COUNTRY -> model.formModel.country
+        FormFieldType.POST_CODE -> model.formModel.postCode
     }
 
     private fun valueOfFieldWithType(type: FormFieldType): String {

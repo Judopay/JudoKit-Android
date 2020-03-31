@@ -86,4 +86,7 @@
     <string name="email_address_title">Email address</string>
     <string name="email_address_summary">Turn on to request a email address.</string>
 
+    <string name="avs_title">Address Verification Service</string>
+    <string name="avs_summary">Turn on to enable Address Verification Service.</string>
+
 </resources>

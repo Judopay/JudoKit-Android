@@ -63,10 +63,12 @@ class CardEntryViewModel(
 
     private val enabledFormFields: List<FormFieldType>
         get() {
-            val fields = mutableListOf(FormFieldType.NUMBER,
-                    FormFieldType.HOLDER_NAME,
-                    FormFieldType.EXPIRATION_DATE,
-                    FormFieldType.SECURITY_NUMBER)
+            val fields = mutableListOf(
+                FormFieldType.NUMBER,
+                FormFieldType.HOLDER_NAME,
+                FormFieldType.EXPIRATION_DATE,
+                FormFieldType.SECURITY_NUMBER
+            )
 
             if (judo.uiConfiguration.avsEnabled) {
                 fields.add(FormFieldType.COUNTRY)
@@ -111,21 +113,28 @@ class CardEntryViewModel(
 
     private fun sendRequest() = viewModelScope.launch {
         val service = JudoApiServiceFactory.createApiService(context, judo)
+        val addressBuilder = Address.Builder()
+
+        if (judo.uiConfiguration.avsEnabled) {
+            addressBuilder
+                .setBillingCountry(inputModel.country)
+                .setPostCode(inputModel.postCode)
+        }
 
         // TODO: this to be dynamically built
         val request = SaveCardRequest.Builder()
-                .setUniqueRequest(false)
-                .setYourPaymentReference(judo.reference.paymentReference)
-                .setAmount(judo.amount.amount)
-                .setCurrency(judo.amount.currency.name)
-                .setJudoId(judo.judoId)
-                .setYourConsumerReference(judo.reference.consumerReference)
-                .setYourPaymentMetaData(emptyMap())
-                .setAddress(Address.Builder().build())
-                .setCardNumber(inputModel.cardNumber)
-                .setExpiryDate(inputModel.expirationDate)
-                .setCv2(inputModel.securityNumber)
-                .build()
+            .setUniqueRequest(false)
+            .setYourPaymentReference(judo.reference.paymentReference)
+            .setAmount(judo.amount.amount)
+            .setCurrency(judo.amount.currency.name)
+            .setJudoId(judo.judoId)
+            .setYourConsumerReference(judo.reference.consumerReference)
+            .setYourPaymentMetaData(emptyMap())
+            .setAddress(addressBuilder.build())
+            .setCardNumber(inputModel.cardNumber)
+            .setExpiryDate(inputModel.expirationDate)
+            .setCv2(inputModel.securityNumber)
+            .build()
 
         val result = service.saveCard(request)
         judoApiCallResult.postValue(result)
@@ -141,10 +150,10 @@ class CardEntryViewModel(
         }
 
         val formModel = FormModel(
-                inputModel, // Model to pre fill the form
-                enabledFormFields, // Fields enabled
-                judo.supportedCardNetworks.toList(), // Supported networks
-                buttonState
+            inputModel, // Model to pre fill the form
+            enabledFormFields, // Fields enabled
+            judo.supportedCardNetworks.toList(), // Supported networks
+            buttonState
         )
 
         model.postValue(CardEntryFragmentModel(formModel))

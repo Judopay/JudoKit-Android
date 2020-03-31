@@ -12,7 +12,7 @@ class Address private constructor(
     var line2: String?,
     var line3: String?,
     var town: String?,
-    var countryCode: Int,
+    var billingCountry: String?,
     var postCode: String?
 ) : Parcelable {
 
@@ -22,7 +22,7 @@ class Address private constructor(
         private var line3: String? = null
         private var postCode: String? = null
         private var town: String? = null
-        private var countryCode = 0
+        private var billingCountry: String? = null
 
         fun setLine1(line1: String?) = apply { this.line1 = line1 }
 
@@ -32,12 +32,12 @@ class Address private constructor(
 
         fun setTown(town: String?) = apply { this.town = town }
 
-        fun setCountryCode(countryCode: Int) = apply { this.countryCode = countryCode }
+        fun setBillingCountry(country: String?) = apply { this.billingCountry = country }
 
         fun setPostCode(postCode: String?) = apply { this.postCode = postCode }
 
         fun build(): Address {
-            return Address(line1, line2, line3, town, countryCode, postCode)
+            return Address(line1, line2, line3, town, billingCountry, postCode)
         }
     }
 }

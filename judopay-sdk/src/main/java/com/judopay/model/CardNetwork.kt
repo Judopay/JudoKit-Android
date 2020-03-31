@@ -32,6 +32,7 @@ enum class CardNetwork : Parcelable {
         private val AMEX_PREFIXES = arrayOf("34", "37")
         private val VISA_PREFIXES = arrayOf("4")
         private val MASTERCARD_PREFIXES = arrayOf("50", "51", "52", "53", "54", "55")
+        private val CHINA_UNION_PAY_PREFIXES = arrayOf("62")
 
         fun ofNumber(number: String): CardNetwork? {
             return when {
@@ -61,6 +62,10 @@ enum class CardNetwork : Parcelable {
 
                 number.matches(REGEX_JCB) -> {
                     JCB
+                }
+
+                number.hasOneOfPrefixes(CHINA_UNION_PAY_PREFIXES) -> {
+                    CHINA_UNION_PAY
                 }
 
                 else -> {

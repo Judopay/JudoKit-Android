@@ -101,6 +101,12 @@
 
     <PreferenceCategory app:title="@string/others_header">
 
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="is_avs_enabled"
+            app:summary="@string/avs_summary"
+            app:title="@string/avs_title" />
+
         <MultiSelectListPreference
             app:defaultValue="@array/default_card_networks_values"
             app:entries="@array/card_networks_entries"
