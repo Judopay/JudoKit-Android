@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
@@ -57,11 +58,18 @@ class JudoEditTextInputLayout @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        editText = subViewsWithType(AppCompatEditText::class.java).firstOrNull()
+        // TODO: to rethink this
+        editText = subViewsWithType(AppCompatAutoCompleteTextView::class.java).firstOrNull()
+        if (editText == null) {
+            editText = subViewsWithType(AppCompatEditText::class.java).firstOrNull()
+        }
 
         editText?.let {
             removeView(it)
-            val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+            val layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            )
             containerLayout.addView(it, layoutParams)
         }
     }
@@ -72,10 +80,18 @@ class JudoEditTextInputLayout @JvmOverloads constructor(
         }
 
         val textColor = if (isErrorEnabled) R.color.tomato_red else R.color.black
-        val fromToValues = if (isErrorEnabled) Pair(TEXT_SIZE_VALID, TEXT_SIZE_INVALID) else Pair(TEXT_SIZE_INVALID, TEXT_SIZE_VALID)
+        val fromToValues = if (isErrorEnabled) Pair(
+            TEXT_SIZE_VALID,
+            TEXT_SIZE_INVALID
+        ) else Pair(TEXT_SIZE_INVALID, TEXT_SIZE_VALID)
 
         editText?.let { editTextView ->
-            ObjectAnimator.ofFloat(editTextView, "textSize", fromToValues.first, fromToValues.second).apply {
+            ObjectAnimator.ofFloat(
+                editTextView,
+                "textSize",
+                fromToValues.first,
+                fromToValues.second
+            ).apply {
                 doOnEnd {
                     editTextView.textSize = fromToValues.second
                     editTextView.setTextColor(ContextCompat.getColor(context, textColor))

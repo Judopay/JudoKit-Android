@@ -27,6 +27,7 @@ import com.judopay.model.GooglePayConfiguration
 import com.judopay.model.PaymentMethod
 import com.judopay.model.PaymentWidgetType
 import com.judopay.model.Reference
+import com.judopay.model.UiConfiguration
 import com.judopay.model.googlepay.GooglePayAddressFormat
 import com.judopay.model.googlepay.GooglePayBillingAddressParameters
 import com.judopay.model.googlepay.GooglePayEnvironment
@@ -172,9 +173,16 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setIsSandboxed(isSandboxed)
             .setSupportedCardNetworks(networks)
             .setPaymentMethods(paymentMethods)
+            .setUiConfiguration(uiConfiguration)
             .setGooglePayConfiguration(googlePayConfiguration)
             .build()
     }
+
+    private val uiConfiguration: UiConfiguration
+        get() {
+            val isAVSEnabled = sharedPreferences.getBoolean("is_avs_enabled", false)
+            return UiConfiguration.Builder().setAvsEnabled(isAVSEnabled).build()
+        }
 
     private val networks: Array<CardNetwork>?
         get() = sharedPreferences.getStringSet("supported_networks", null)

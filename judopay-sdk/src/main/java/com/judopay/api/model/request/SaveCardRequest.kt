@@ -1,6 +1,7 @@
 package com.judopay.api.model.request
 
 import com.judopay.model.PrimaryAccountDetails
+import com.judopay.requireNotNull
 import com.judopay.requireNotNullOrEmpty
 
 /**
@@ -94,7 +95,7 @@ class SaveCardRequest private constructor(
             val myExpiryDate = requireNotNullOrEmpty(expiryDate, "expiryDate")
             val paymentReference =
                     requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
-            val myAddress = com.judopay.requireNotNull(address, "address")
+            val myAddress = requireNotNull(address, "address")
 
             return SaveCardRequest(
                     uniqueRequest,
