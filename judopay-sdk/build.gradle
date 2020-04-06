@@ -3,6 +3,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "org.jlleitschuh.gradle.ktlint"
+apply plugin: "de.mannodermaus.android-junit5"
+apply from: 'buildscripts/jacoco.gradle'
 
 android {
     compileSdkVersion 29

@@ -1,0 +1,31 @@
+apply plugin: "jacoco"
+
+def jacocoFileFilter = ['**/R.class',
+                        '**/R$*.class',
+                        '**/BuildConfig.*',
+                        '**/*Test*.*',
+                        'android/**/*.*']
+
+task jacocoTestReport(type: JacocoReport) {
+    group 'Reporting'
+    description 'Generate Jacoco coverage report for debug build. Only unit test.'
+
+    dependsOn ":judopay-sdk:testDebugUnitTest"
+
+    classDirectories.from = files([
+            fileTree(dir: "$project.projectDir/build/intermediates/javac/debug", excludes: jacocoFileFilter),
+    ])
+    def coverageSourceDirs = [
+            "$project.projectDir/src/main/java",
+    ]
+    additionalSourceDirs.from = files(coverageSourceDirs)
+    sourceDirectories.from = files(coverageSourceDirs)
+    executionData.from = fileTree(dir: project.projectDir, includes: [
+            '/build/jacoco/testDebugUnitTest.exec',
+    ])
+
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
