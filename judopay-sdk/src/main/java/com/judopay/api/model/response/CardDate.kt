@@ -5,8 +5,8 @@ import java.util.Date
 
 class CardDate(cardDate: String) {
 
-    private val month: Int
-    private val year: Int
+    internal val month: Int
+    internal val year: Int
 
     private fun getYear(year: String): Int {
         return if (isDateInvalid(year)) {
@@ -55,6 +55,21 @@ class CardDate(cardDate: String) {
             val cardDate = Calendar.getInstance()
             cardDate[year, month - 1] = 1
             return cardDate.after(minDate) && cardDate.before(maxDate)
+        }
+
+    val isExpiredInTwoMonths: Boolean
+        get() {
+            val maxDate = Calendar.getInstance()
+            maxDate[Calendar.MONTH] = maxDate[Calendar.MONTH] + 2
+
+            val cardDate = Calendar.getInstance()
+            cardDate[year, month] = 2
+
+            val now = Calendar.getInstance().apply {
+                time = Date()
+            }
+            now[Calendar.MONTH] = now[Calendar.MONTH] - 2
+            return cardDate.after(now) && cardDate.before(maxDate)
         }
 
     private fun isDateInvalid(date: String): Boolean {

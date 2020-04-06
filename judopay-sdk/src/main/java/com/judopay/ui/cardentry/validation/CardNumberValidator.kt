@@ -4,19 +4,21 @@ import com.judopay.R
 import com.judopay.model.CardNetwork
 import com.judopay.model.cardNumberMaxLength
 import com.judopay.model.notSupportedErrorMessageResId
+import com.judopay.ui.cardentry.components.FormFieldEvent
 import com.judopay.ui.cardentry.components.FormFieldType
 import com.judopay.ui.common.isValidLuhnNumber
 import com.judopay.withWhitespacesRemoved
 
 data class CardNumberValidator(
     override val fieldType: FormFieldType = FormFieldType.NUMBER,
-    val supportedNetworks: List<CardNetwork>
+    var supportedNetworks: List<CardNetwork>
 ) : Validator {
-    override fun validate(input: String): ValidationResult {
+
+    override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult {
         val number = input.withWhitespacesRemoved
 
         val network = CardNetwork.ofNumber(number)
-                ?: return ValidationResult(false, R.string.check_card_number)
+            ?: return ValidationResult(false, R.string.check_card_number)
 
         val isSupported = supportedNetworks.contains(network)
         val isValidLength = number.length == network.cardNumberMaxLength
@@ -24,10 +26,12 @@ data class CardNumberValidator(
 
         val message = if (isSupported && !isValid) {
             R.string.check_card_number
-        } else {
+        } else if (!isSupported) {
             network.notSupportedErrorMessageResId
+        } else {
+            R.string.empty
         }
 
-        return ValidationResult(isValid, message)
+        return ValidationResult(isSupported && isValid, message)
     }
 }

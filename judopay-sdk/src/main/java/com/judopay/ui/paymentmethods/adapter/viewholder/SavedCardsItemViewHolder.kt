@@ -9,10 +9,9 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.judopay.R
+import com.judopay.api.model.response.CardDate
 import com.judopay.model.displayName
 import com.judopay.model.iconImageResId
-import com.judopay.ui.common.isExpired
-import com.judopay.ui.common.isExpiredInTwoMonths
 import com.judopay.ui.paymentmethods.adapter.BindableRecyclerViewHolder
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapterListener
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItemAction
@@ -70,8 +69,9 @@ class SavedCardsItemViewHolder(view: View) : RecyclerView.ViewHolder(view),
                     model.network.displayName
                 )
             )
+            val date = CardDate(model.expireDate)
             when {
-                isExpired(model.expireDate) -> {
+                !date.isAfterToday -> {
                     subTitle.setTextColor(ContextCompat.getColor(context, R.color.tomato_red))
                     boldString.apply {
                         append("${model.ending} ${resources.getString(R.string.is_expired)}")
@@ -102,7 +102,7 @@ class SavedCardsItemViewHolder(view: View) : RecyclerView.ViewHolder(view),
                         )
                     }
                 }
-                isExpiredInTwoMonths(model.expireDate) -> {
+                date.isExpiredInTwoMonths -> {
                     boldString.apply {
                         append("${model.ending} ${resources.getString(R.string.will_expire_soon)}")
                         val expireIndex =

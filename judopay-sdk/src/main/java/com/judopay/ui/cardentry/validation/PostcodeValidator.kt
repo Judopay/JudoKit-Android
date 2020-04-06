@@ -2,6 +2,7 @@ package com.judopay.ui.cardentry.validation
 
 import com.judopay.R
 import com.judopay.model.Country
+import com.judopay.ui.cardentry.components.FormFieldEvent
 import com.judopay.ui.cardentry.components.FormFieldType
 
 data class PostcodeValidator(
@@ -15,7 +16,7 @@ data class PostcodeValidator(
     private val regExCAPostcode =
         "[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ][0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]".toRegex()
 
-    override fun validate(input: String): ValidationResult {
+    override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult {
         val isValid = isPostCodeValid(input)
         val message = if (isValid) R.string.empty else errorString()
         return ValidationResult(isValid, message)

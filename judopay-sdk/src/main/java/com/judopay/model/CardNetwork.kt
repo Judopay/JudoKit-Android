@@ -163,10 +163,14 @@ val CardNetwork.cardNumberMaxLength: Int
 
 val CardNetwork.notSupportedErrorMessageResId: Int
     get() = when (this) {
+        CardNetwork.VISA -> R.string.error_visa_not_supported
+        CardNetwork.MASTERCARD -> R.string.error_mastercard_not_supported
         CardNetwork.MAESTRO -> R.string.error_maestro_not_supported
         CardNetwork.AMEX -> R.string.error_amex_not_supported
         CardNetwork.DISCOVER -> R.string.error_discover_not_supported
         CardNetwork.CHINA_UNION_PAY -> R.string.error_union_pay_not_supported
+        CardNetwork.JCB -> R.string.error_jcb_not_supported
+        CardNetwork.DINERS_CLUB -> R.string.error_diners_club_not_supported
         else -> R.string.empty
     }
 

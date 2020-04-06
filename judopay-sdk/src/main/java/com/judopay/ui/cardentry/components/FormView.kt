@@ -5,6 +5,7 @@ import android.text.InputFilter
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.core.widget.addTextChangedListener
@@ -26,7 +27,6 @@ import com.judopay.ui.cardentry.validation.CountryValidator
 import com.judopay.ui.cardentry.validation.ExpirationDateValidator
 import com.judopay.ui.cardentry.validation.PostcodeValidator
 import com.judopay.ui.cardentry.validation.SecurityCodeValidator
-import com.judopay.ui.cardentry.validation.Validator
 import com.judopay.ui.common.ButtonState
 import kotlinx.android.synthetic.main.form_view.view.*
 
@@ -37,6 +37,11 @@ enum class FormFieldType {
     SECURITY_NUMBER,
     COUNTRY,
     POST_CODE
+}
+
+enum class FormFieldEvent {
+    TEXT_CHANGED,
+    FOCUS_CHANGED
 }
 
 private val FormFieldType.fieldHintResId: Int
@@ -81,6 +86,9 @@ class FormView @JvmOverloads constructor(
     var model = FormModel(InputModel(), emptyList(), emptyList())
         set(value) {
             field = value
+            validators.filterIsInstance<CardNumberValidator>()
+                .firstOrNull()
+                ?.supportedNetworks = value.supportedNetworks
             update()
         }
 
@@ -88,8 +96,7 @@ class FormView @JvmOverloads constructor(
     internal var onSubmitButtonClickListener: SubmitButtonClickListener? = null
 
     private val validationResultsCache = mutableMapOf<FormFieldType, Boolean>()
-
-    private val validators: List<Validator> = listOf(
+    private var validators = mutableListOf(
         CardNumberValidator(supportedNetworks = model.supportedNetworks),
         CardHolderNameValidator(),
         ExpirationDateValidator(),
@@ -171,18 +178,24 @@ class FormView @JvmOverloads constructor(
                 // setup state, and validate it
                 with(inputModelValueOfFieldWithType(type)) {
                     setText(this)
-                    textDidChange(type, this)
+                    textDidChange(type, this, FormFieldEvent.TEXT_CHANGED)
                 }
 
+                if (type == FormFieldType.SECURITY_NUMBER) {
+                    setOnFocusChangeListener { v, hasFocus ->
+                        val text = valueOfFieldWithType(type)
+                        if (!hasFocus) textDidChange(type, text, FormFieldEvent.FOCUS_CHANGED)
+                    }
+                }
                 addTextChangedListener {
                     val text = it.toString()
-                    textDidChange(type, text)
+                    textDidChange(type, text, FormFieldEvent.TEXT_CHANGED)
                 }
             }
         }
     }
 
-    private fun textDidChange(type: FormFieldType, value: String) {
+    private fun textDidChange(type: FormFieldType, value: String, event: FormFieldEvent) {
         val validationResults = validators.mapNotNull {
             if (it.fieldType == type) {
                 // TODO: to rethink this logic
@@ -190,8 +203,7 @@ class FormView @JvmOverloads constructor(
                     val cardNumber = valueOfFieldWithType(FormFieldType.NUMBER)
                     it.cardNetwork = CardNetwork.ofNumber(cardNumber)
                 }
-
-                it.validate(value)
+                it.validate(value, event)
             } else null
         }
 
@@ -204,12 +216,30 @@ class FormView @JvmOverloads constructor(
         val message = context.getString(result?.message ?: R.string.empty)
         val errorEnabled = value.isNotBlank() && !isValidResult && message.isNotEmpty()
 
+        if (event == FormFieldEvent.TEXT_CHANGED)
+            autoTab(isValidResult, type)
+
         layout?.let {
             it.isErrorEnabled = errorEnabled
             it.error = message
         }
-
         updateSubmitButtonState()
+    }
+
+    private fun autoTab(isValidResult: Boolean, type: FormFieldType) {
+        if (isValidResult && type != FormFieldType.HOLDER_NAME) {
+            val types = FormFieldType.values().toList()
+            val nextFormFieldType = types.indexOf(type) + 1
+            if (types.size > nextFormFieldType) {
+                when (val field = editTextForType(types[nextFormFieldType])) {
+                    is AutoCompleteTextView -> {
+                        editTextForType(FormFieldType.POST_CODE).requestFocus()
+                        field.showDropDown()
+                    }
+                    else -> field.requestFocus()
+                }
+            }
+        }
     }
 
     private fun updateSubmitButtonState() {

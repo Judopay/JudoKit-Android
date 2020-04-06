@@ -11,6 +11,7 @@ import com.judopay.R
 import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.api.model.request.Address
 import com.judopay.api.model.request.TokenRequest
+import com.judopay.api.model.response.CardDate
 import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
 import com.judopay.db.JudoRoomDatabase
@@ -22,7 +23,6 @@ import com.judopay.model.paymentButtonType
 import com.judopay.model.typeId
 import com.judopay.toMap
 import com.judopay.ui.common.ButtonState
-import com.judopay.ui.common.isExpired
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItem
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItemType
@@ -276,9 +276,8 @@ class PaymentMethodsViewModel(
         cardModel: CardViewModel
     ): ButtonState = when {
         isLoading -> ButtonState.Loading
-        cardModel is PaymentCardViewModel && !isExpired(cardModel.expireDate) -> ButtonState.Enabled(
-            R.string.pay_now
-        )
+        cardModel is PaymentCardViewModel && CardDate(cardModel.expireDate).isAfterToday ->
+            ButtonState.Enabled(R.string.pay_now)
         else -> ButtonState.Disabled(R.string.pay_now)
     }
 }

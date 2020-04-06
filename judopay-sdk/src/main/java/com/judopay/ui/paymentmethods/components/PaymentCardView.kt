@@ -6,9 +6,9 @@ import android.view.View
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import com.judopay.R
+import com.judopay.api.model.response.CardDate
 import com.judopay.inflate
 import com.judopay.model.lightIconImageResId
-import com.judopay.ui.common.isExpired
 import com.judopay.ui.editcard.drawableRes
 import com.judopay.ui.paymentmethods.model.PaymentCardViewModel
 import kotlinx.android.synthetic.main.payment_card_view.view.cardNameTextView
@@ -42,7 +42,12 @@ class PaymentCardView @JvmOverloads constructor(
         val image = model.cardNetwork.lightIconImageResId
         if (image > 0) networkIconImageView.setImageResource(image)
 
-        if (isExpired(model.expireDate)) {
+        val date = CardDate(model.expireDate)
+        if (date.isAfterToday) {
+            isExpiredTextView.visibility = View.GONE
+            expireDateTextView.setTextColor(ContextCompat.getColor(context, R.color.white_opaque))
+            paymentCardViewContainer.background = model.pattern.drawableRes(context)
+        } else {
             isExpiredTextView.visibility = View.VISIBLE
             expireDateTextView.setTextColor(ContextCompat.getColor(context, R.color.tomato_red))
             paymentCardViewContainer.setBackgroundColor(
@@ -51,10 +56,6 @@ class PaymentCardView @JvmOverloads constructor(
                     R.color.greyish
                 )
             )
-        } else {
-            isExpiredTextView.visibility = View.GONE
-            expireDateTextView.setTextColor(ContextCompat.getColor(context, R.color.white_opaque))
-            paymentCardViewContainer.background = model.pattern.drawableRes(context)
         }
     }
 }
