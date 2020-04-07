@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Judopay Android SDK.iml" filepath="$PROJECT_DIR$/../Judopay Android SDK.iml" group="Judopay Android SDK" />
+      <module fileurl="file://$PROJECT_DIR$/../judopay-examples/judopay-examples.iml" filepath="$PROJECT_DIR$/../judopay-examples/judopay-examples.iml" group="Judopay Android SDK/judopay-examples" />
+      <module fileurl="file://$PROJECT_DIR$/judopay-sdk.iml" filepath="$PROJECT_DIR$/judopay-sdk.iml" group="Judopay Android SDK/judopay-sdk" />
+    </modules>
+  </component>
+</project>

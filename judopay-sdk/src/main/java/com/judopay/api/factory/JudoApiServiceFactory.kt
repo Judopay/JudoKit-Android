@@ -49,6 +49,9 @@ object JudoApiServiceFactory {
     @JvmStatic
     fun createApiService(context: Context, judo: Judo): JudoApiService = createRetrofit(context.applicationContext, judo).create(JudoApiService::class.java)
 
+    @JvmStatic
+    var externalChuck: ChuckInterceptor? = null
+
     private fun createRetrofit(context: Context, judo: Judo): Retrofit = Retrofit.Builder()
             .baseUrl(judo.apiBaseUrl)
             .client(getOkHttpClient(context, judo))
@@ -122,5 +125,8 @@ object JudoApiServiceFactory {
         add(PayLoadInterceptor(context))
 
         add(ChuckInterceptor(context))
+        if (externalChuck != null) {
+            add(externalChuck)
+        }
     }
 }
