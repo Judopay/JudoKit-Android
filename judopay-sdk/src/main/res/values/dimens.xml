@@ -17,6 +17,10 @@
     <dimen name="space_48">48dp</dimen>
     <dimen name="space_132">132dp</dimen>
 
+    <dimen name="height_1">1dp</dimen>
+    <dimen name="height_60">60dp</dimen>
+    <dimen name="width_60">60dp</dimen>
+
     <!-- Font sizes -->
     <dimen name="large_title">24sp</dimen>
     <dimen name="title">18sp</dimen>
@@ -53,6 +57,4 @@
     <dimen name="corner_radius_2_8dp">2.8dp</dimen>
     <dimen name="size_36dp">36dp</dimen>
     <dimen name="size_50dp">50dp</dimen>
-
-    <dimen name="color_picker_height">60dp</dimen>
 </resources>

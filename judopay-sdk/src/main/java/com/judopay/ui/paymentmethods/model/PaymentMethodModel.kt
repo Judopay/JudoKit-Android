@@ -1,6 +1,7 @@
 package com.judopay.ui.paymentmethods.model
 
 import com.judopay.model.PaymentMethod
+import com.judopay.ui.paymentmethods.adapter.model.IdealBank
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItem
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSavedCardItem
 
@@ -22,5 +23,6 @@ data class GooglePayPaymentMethodModel(
 
 data class IdealPaymentMethodModel(
     override val type: PaymentMethod = PaymentMethod.IDEAL,
-    override val items: List<PaymentMethodItem>
+    override val items: List<PaymentMethodItem>,
+    val selectedBank: IdealBank
 ) : PaymentMethodModel

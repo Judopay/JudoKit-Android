@@ -9,6 +9,7 @@ import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodDiffUtil
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItem
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItemAction
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItemType
+import com.judopay.ui.paymentmethods.adapter.viewholder.IdealBankItemViewHolder
 import com.judopay.ui.paymentmethods.adapter.viewholder.MethodSelectorViewHolder
 import com.judopay.ui.paymentmethods.adapter.viewholder.NoSavedCardsPlaceholderViewHolder
 import com.judopay.ui.paymentmethods.adapter.viewholder.SavedCardsFooterViewHolder
@@ -43,6 +44,7 @@ class PaymentMethodsAdapter(
             PaymentMethodItemType.SAVED_CARDS_ITEM -> SavedCardsItemViewHolder(parent.inflate(R.layout.saved_card_item))
             PaymentMethodItemType.SAVED_CARDS_FOOTER -> SavedCardsFooterViewHolder(parent.inflate(R.layout.saved_card_footer_item))
             PaymentMethodItemType.NO_SAVED_CARDS_PLACEHOLDER -> NoSavedCardsPlaceholderViewHolder(parent.inflate(R.layout.no_saved_cards_placeholder_item))
+            PaymentMethodItemType.IDEAL_BANK_ITEM -> IdealBankItemViewHolder(parent.inflate(R.layout.ideal_bank_item))
             else -> {
                 throw NotImplementedError("Unsupported or null type")
             }

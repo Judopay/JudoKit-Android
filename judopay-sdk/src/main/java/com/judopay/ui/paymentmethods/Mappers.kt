@@ -6,6 +6,8 @@ import com.judopay.db.entity.TokenizedCardEntity
 import com.judopay.model.CardNetwork
 import com.judopay.model.defaultCardNameResId
 import com.judopay.ui.editcard.CardPattern
+import com.judopay.ui.paymentmethods.adapter.model.IdealBank
+import com.judopay.ui.paymentmethods.adapter.model.IdealBankItem
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSavedCardItem
 import com.judopay.ui.paymentmethods.model.PaymentCardViewModel
 import kotlin.random.Random
@@ -19,6 +21,8 @@ fun TokenizedCardEntity.toPaymentMethodSavedCardItem() = PaymentMethodSavedCardI
     expireDate = expireDate,
     pattern = pattern
 )
+
+fun IdealBank.toIdealBankItem() = IdealBankItem(idealBank = this)
 
 fun PaymentMethodSavedCardItem.toPaymentCardViewModel() = PaymentCardViewModel(
     id = id,

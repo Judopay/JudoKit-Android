@@ -10,6 +10,7 @@ import com.judopay.inflate
 import com.judopay.model.PaymentMethod
 import com.judopay.ui.paymentmethods.model.CardAnimationType
 import com.judopay.ui.paymentmethods.model.CardViewModel
+import com.judopay.ui.paymentmethods.model.IdealPaymentCardViewModel
 import com.judopay.ui.paymentmethods.model.PaymentCardViewModel
 import com.judopay.ui.paymentmethods.model.inAnimation
 import com.judopay.ui.paymentmethods.model.outAnimation
@@ -37,7 +38,7 @@ class PaymentMethodsHeaderView @JvmOverloads constructor(
             update()
         }
 
-    private var mainDisplayed = false
+    private var mainDisplayed = true
     private var previousSelected: CardViewModel? = null
 
     var paymentMethods: List<PaymentMethod> = listOf(PaymentMethod.CARD, PaymentMethod.GOOGLE_PAY)
@@ -79,7 +80,17 @@ class PaymentMethodsHeaderView @JvmOverloads constructor(
                 mainDisplayed = !mainDisplayed
                 currentPaymentMethod = PaymentMethod.CARD
             }
-            is IdealPaymentCardViewModel -> currentPaymentMethod = PaymentMethod.IDEAL
+            is IdealPaymentCardViewModel -> {
+                if (mainDisplayed) {
+                    cardModel.layoutId = R.id.secondaryIdealPaymentCardView
+                    secondaryIdealPaymentCardView.model = cardModel
+                } else {
+                    cardModel.layoutId = R.id.idealPaymentCardView
+                    idealPaymentCardView.model = cardModel
+                }
+                mainDisplayed = !mainDisplayed
+                currentPaymentMethod = PaymentMethod.IDEAL
+            }
             is GooglePayCardViewModel -> currentPaymentMethod = PaymentMethod.GOOGLE_PAY
         }
         show(cardModel)

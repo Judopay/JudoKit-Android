@@ -6,6 +6,7 @@ enum class PaymentMethodItemAction {
     DONE,
     ADD_CARD,
     PICK_CARD,
+    PICK_BANK,
     EDIT_CARD,
     DELETE_CARD,
     SELECT_PAYMENT_METHOD

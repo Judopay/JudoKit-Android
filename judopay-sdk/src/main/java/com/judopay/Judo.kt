@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Parcelable
 import com.judopay.model.Amount
 import com.judopay.model.CardNetwork
+import com.judopay.model.Currency
 import com.judopay.model.GooglePayConfiguration
 import com.judopay.model.PaymentMethod
 import com.judopay.model.PaymentWidgetType
@@ -95,6 +96,12 @@ class Judo internal constructor(
             val secret = requireNotNullOrEmpty(apiSecret, "apiSecret")
             val myAmount = requireNotNull(amount, "amount")
             val myReference = requireNotNull(reference, "reference")
+
+            paymentMethods?.let {
+                if (it.size == 1 && it.first() == PaymentMethod.IDEAL && myAmount?.currency != Currency.EUR) {
+                    throw IllegalArgumentException("iDEAL can't be configured. Currency must be set to EUR.")
+                }
+            }
 
             val myUiConfiguration = uiConfiguration
                 ?: UiConfiguration.Builder().setAvsEnabled(false).build()

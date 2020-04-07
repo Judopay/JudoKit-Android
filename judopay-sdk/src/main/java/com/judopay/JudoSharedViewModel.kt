@@ -52,6 +52,9 @@ class JudoSharedViewModel(
     // used to share a 3D secure result between fragments (card input / payment methods / card verification)
     val threeDSecureResult = MutableLiveData<JudoPaymentResult>()
 
+    // used to share an iDEAL transaction result
+    val idealResult = MutableLiveData<JudoPaymentResult>()
+
     // used to share the GooglePay payment result between this activity and the payment methods fragment
     val paymentMethodsGooglePayResult = MutableLiveData<JudoPaymentResult>()
 

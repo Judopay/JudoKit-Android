@@ -23,8 +23,10 @@ import com.judopay.api.model.response.Receipt
 import com.judopay.judo
 import com.judopay.model.JudoPaymentResult
 import com.judopay.ui.editcard.JUDO_TOKENIZED_CARD_ID
+import com.judopay.ui.ideal.JUDO_IDEAL_BANK
 import com.judopay.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judopay.ui.paymentmethods.adapter.SwipeToDeleteCallback
+import com.judopay.ui.paymentmethods.adapter.model.IdealBankItem
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItem
 import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodItemAction
@@ -33,10 +35,8 @@ import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSelectorItem
 import com.judopay.ui.paymentmethods.components.PaymentCallToActionType
 import com.judopay.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
 import com.judopay.ui.paymentmethods.model.PaymentMethodModel
-import kotlinx.android.synthetic.main.payment_methods_fragment.backButton
-import kotlinx.android.synthetic.main.payment_methods_fragment.headerView
-import kotlinx.android.synthetic.main.payment_methods_fragment.recyclerView
-import kotlinx.android.synthetic.main.payment_methods_header_view.paymentCallToActionView
+import kotlinx.android.synthetic.main.payment_methods_fragment.*
+import kotlinx.android.synthetic.main.payment_methods_header_view.*
 
 data class PaymentMethodsModel(
     val headerModel: PaymentMethodsHeaderViewModel,
@@ -84,17 +84,35 @@ class PaymentMethodsFragment : Fragment() {
             viewModel.send(PaymentMethodsAction.Update)
         })
 
-        sharedViewModel.paymentMethodsGooglePayResult.observe(viewLifecycleOwner, Observer {
-            viewModel.send(PaymentMethodsAction.UpdatePayWithGooglePayButtonState(true))
-            when (it) {
-                is JudoPaymentResult.Success -> sharedViewModel.paymentResult.postValue(it)
-                is JudoPaymentResult.Error -> MaterialAlertDialogBuilder(context)
-                    .setTitle(R.string.transaction_error_title)
-                    .setMessage(R.string.transaction_unsuccessful)
-                    .setNegativeButton(R.string.close, null)
-                    .show()
+        viewModel.payWithIdealObserver.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let { bic ->
+                findNavController().navigate(
+                    R.id.action_paymentMethodsFragment_to_idealFragment, bundleOf(
+                        JUDO_IDEAL_BANK to bic
+                    )
+                )
             }
         })
+
+        sharedViewModel.paymentMethodsGooglePayResult.observe(viewLifecycleOwner, Observer {
+            viewModel.send(PaymentMethodsAction.UpdatePayWithGooglePayButtonState(true))
+            handlePaymentResult(it)
+        })
+
+        sharedViewModel.idealResult.observe(viewLifecycleOwner, Observer {
+            handlePaymentResult(it)
+        })
+    }
+
+    private fun handlePaymentResult(result: JudoPaymentResult?) {
+        when (result) {
+            is JudoPaymentResult.Success -> sharedViewModel.paymentResult.postValue(result)
+            is JudoPaymentResult.Error -> MaterialAlertDialogBuilder(context)
+                .setTitle(R.string.transaction_error_title)
+                .setMessage(R.string.transaction_unsuccessful)
+                .setNegativeButton(R.string.close, null)
+                .show()
+        }
     }
 
     private fun handleFail(error: ApiError?) {
@@ -147,6 +165,7 @@ class PaymentMethodsFragment : Fragment() {
                 if (action == PaymentMethodItemAction.DONE)
                     viewModel.send(PaymentMethodsAction.EditMode(false))
             }
+            is IdealBankItem -> viewModel.send(PaymentMethodsAction.SelectIdealBank(item.idealBank))
         }
     }
 
@@ -204,14 +223,18 @@ class PaymentMethodsFragment : Fragment() {
         backButton.setOnClickListener(::onUserCancelled)
 
         paymentCallToActionView.callbackListener = {
-            val action = when (it) {
-                PaymentCallToActionType.PAY_WITH_CARD -> PaymentMethodsAction.PayWithSelectedStoredCard
+            when (it) {
+                PaymentCallToActionType.PAY_WITH_CARD ->
+                    viewModel.send(PaymentMethodsAction.PayWithSelectedStoredCard)
+
                 PaymentCallToActionType.PAY_WITH_GOOGLE_PAY -> {
                     sharedViewModel.send(JudoSharedAction.LoadGPayPaymentData)
-                    PaymentMethodsAction.UpdatePayWithGooglePayButtonState(false)
+                    viewModel.send(PaymentMethodsAction.UpdatePayWithGooglePayButtonState(false))
                 }
+
+                PaymentCallToActionType.PAY_WITH_IDEAL ->
+                    viewModel.send(PaymentMethodsAction.PayWithSelectedIdealBank)
             }
-            viewModel.send(action)
         }
     }
 

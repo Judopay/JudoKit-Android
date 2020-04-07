@@ -1,13 +1,17 @@
 package com.judopay.api
 
 import com.judopay.api.model.request.GooglePayRequest
+import com.judopay.api.model.request.IdealSaleRequest
 import com.judopay.api.model.request.PaymentRequest
 import com.judopay.api.model.request.SaveCardRequest
 import com.judopay.api.model.request.TokenRequest
 import com.judopay.api.model.response.CardVerificationResult
+import com.judopay.api.model.response.IdealSaleResponse
+import com.judopay.api.model.response.IdealSaleStatusResponse
 import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -125,17 +129,17 @@ interface JudoApiService {
     @POST("transactions/preauths")
     suspend fun preAuthGooglePayPayment(@Body googlePayRequest: GooglePayRequest): JudoApiCallResult<Receipt>
 
-//    @POST("transactions/payments")
+    //    @POST("transactions/payments")
 //    fun vcoPayment(@Body vcoPaymentRequest: VCOPaymentRequest): Single<Receipt>
 //
 //    @POST("transactions/preauths")
 //    fun vcoPreAuth(@Body vcoPaymentRequest: VCOPaymentRequest): Single<Receipt>
 //
-//    @POST("order/bank/sale")
-//    fun sale(@Body saleRequest: SaleRequest): Single<SaleResponse>
-//
-//    @GET("order/bank/statusrequest/{orderID}")
-//    fun status(@Path("orderID") orderId: String): Single<SaleStatusResponse>
+    @POST("order/bank/sale")
+    suspend fun sale(@Body saleRequest: IdealSaleRequest): JudoApiCallResult<IdealSaleResponse>
+
+    @GET("order/bank/statusrequest/{orderID}")
+    suspend fun status(@Path("orderID") orderId: String): JudoApiCallResult<IdealSaleStatusResponse>
 
     /**
      * List all payment receipts for the account

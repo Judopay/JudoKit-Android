@@ -2,7 +2,6 @@ package com.judopay.ui.paymentmethods.components
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import android.widget.FrameLayout
 import com.judopay.R
 import com.judopay.inflate
@@ -11,12 +10,14 @@ import kotlinx.android.synthetic.main.payment_call_to_action_view.view.*
 
 enum class PaymentButtonType {
     PLAIN,
+    IDEAL,
     GOOGLE_PAY
 }
 
 enum class PaymentCallToActionType {
     PAY_WITH_CARD,
-    PAY_WITH_GOOGLE_PAY
+    PAY_WITH_GOOGLE_PAY,
+    PAY_WITH_IDEAL
 }
 
 typealias PaymentCallToActionViewListener = (action: PaymentCallToActionType) -> Unit
@@ -37,8 +38,8 @@ class PaymentCallToActionView @JvmOverloads constructor(
 
     init {
         inflate(R.layout.payment_call_to_action_view, true)
-        payButton.setOnClickListener(::onPaymentButtonClick)
-        googlePayButton.setOnClickListener(::onPaymentButtonClick)
+        payButton.setOnClickListener { onPaymentButtonClick() }
+        googlePayButton.setOnClickListener { onPaymentButtonClick() }
     }
 
     var model = PaymentCallToActionViewModel()
@@ -51,13 +52,15 @@ class PaymentCallToActionView @JvmOverloads constructor(
         amountTextView.text = amount
 
         when (buttonType) {
-            PaymentButtonType.PLAIN -> payButton.state = paymentButtonState
+            PaymentButtonType.PLAIN,
+            PaymentButtonType.IDEAL -> payButton.state = paymentButtonState
             PaymentButtonType.GOOGLE_PAY -> googlePayButton.isEnabled =
                 paymentButtonState is ButtonState.Enabled
         }
 
         val buttonToShow = when (buttonType) {
-            PaymentButtonType.PLAIN -> payButton
+            PaymentButtonType.PLAIN,
+            PaymentButtonType.IDEAL -> payButton
             PaymentButtonType.GOOGLE_PAY -> googlePayButton
         }
 
@@ -65,16 +68,13 @@ class PaymentCallToActionView @JvmOverloads constructor(
             buttonsAnimator.showNext()
     }
 
-    private fun onPaymentButtonClick(view: View) {
-
-        val actionType = when (view) {
-            payButton -> PaymentCallToActionType.PAY_WITH_CARD
-            googlePayButton -> PaymentCallToActionType.PAY_WITH_GOOGLE_PAY
-            else -> null
+    private fun onPaymentButtonClick() {
+        val actionType = when (model.buttonType) {
+            PaymentButtonType.PLAIN -> PaymentCallToActionType.PAY_WITH_CARD
+            PaymentButtonType.GOOGLE_PAY -> PaymentCallToActionType.PAY_WITH_GOOGLE_PAY
+            PaymentButtonType.IDEAL -> PaymentCallToActionType.PAY_WITH_IDEAL
         }
 
-        actionType?.let {
-            callbackListener?.invoke(it)
-        }
+        callbackListener?.invoke(actionType)
     }
 }

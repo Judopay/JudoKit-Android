@@ -1,5 +1,11 @@
 package com.judopay.ui.common
 
+import android.util.Log
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
 /**
  * Checks the input string to see whether or not it is a valid Luhn number.
  *
@@ -32,4 +38,16 @@ internal fun isValidLuhnNumber(cardNumber: String): Boolean {
     }
 
     return sum % 10 == 0
+}
+
+fun toDate(
+    timestamp: String,
+    locale: Locale,
+    pattern: String = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+): Date = try {
+    val sdf = SimpleDateFormat(pattern, locale)
+    sdf.parse(timestamp) ?: Date()
+} catch (exception: ParseException) {
+    Log.e("toDate", exception.toString())
+    Date()
 }

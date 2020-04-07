@@ -71,4 +71,21 @@
     <string name="save">Save</string>
 
     <string name="error_card_title_too_long">Card Name cannot be longer than %1$d characters</string>
+
+    <string name="rabobank">Rabobank</string>
+    <string name="abn_amro">ABN AMRO</string>
+    <string name="van_lanschot_bankiers">Van Lanschot Bankiers</string>
+    <string name="triodos_bank">Triodos Bank</string>
+    <string name="ing_bank">ING Bank</string>
+    <string name="sns_bank">SNS Bank</string>
+    <string name="asn">ASN</string>
+    <string name="regiobank">RegioBank</string>
+    <string name="knab">Knab</string>
+    <string name="bunq">Bunq</string>
+    <string name="moneyou">Moneyou</string>
+    <string name="handelsbanken">Handelsbanken</string>
+
+    <string name="there_is_a_delay">This is taking longer than expected. Please wait…</string>
+    <string name="ideal_transaction">iDEAL transaction</string>
+    <string name="dismiss">Dismiss</string>
 </resources>

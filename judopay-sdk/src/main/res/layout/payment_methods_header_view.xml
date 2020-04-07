@@ -57,6 +57,15 @@
             app:cardCornerRadius="@dimen/card_corner_radius"
             app:cardElevation="@dimen/card_elevation_8dp" />
 
+        <com.judopay.ui.paymentmethods.components.IdealPaymentCardView
+            android:id="@+id/secondaryIdealPaymentCardView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/space_16"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="@dimen/card_elevation_8dp" />
+
     </ViewAnimator>
 
     <ImageView
