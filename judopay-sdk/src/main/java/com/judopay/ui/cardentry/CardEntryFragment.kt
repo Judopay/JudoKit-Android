@@ -51,6 +51,8 @@ class CardEntryFragment : BottomSheetDialogFragment() {
 
         viewModel.model.observe(viewLifecycleOwner, Observer { updateWithModel(it) })
         viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer { dispatchApiResult(it) })
+
+        formView.submitButtonText = viewModel.submitButtonText
     }
 
     // present it always expanded

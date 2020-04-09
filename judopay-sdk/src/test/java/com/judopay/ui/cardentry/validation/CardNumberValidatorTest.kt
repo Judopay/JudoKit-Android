@@ -27,16 +27,16 @@ internal class CardNumberValidatorTest {
     fun unsupportedCardNumber() {
         assertEquals(
             validator.validate("1111 1111 1111 1111"),
-            ValidationResult(false, R.string.check_card_number)
+            ValidationResult(false, R.string.error_unknown_not_supported)
         )
     }
 
     @Test
-    @DisplayName("Given that card number is supported with invalid length and invalid luhn number, then a validation error should return with check card number string")
+    @DisplayName("Given that card number is supported with invalid length and invalid luhn number, then a validation error should return with empty string")
     fun supportedAndInvalidCardNumber() {
         assertEquals(
             validator.validate("4111"),
-            ValidationResult(false, R.string.check_card_number)
+            ValidationResult(false, R.string.empty)
         )
     }
 
@@ -50,11 +50,11 @@ internal class CardNumberValidatorTest {
     }
 
     @Test
-    @DisplayName("Given that card number is unsupported with invalid length and valid luhn number, then a validation error should return with check card number string")
+    @DisplayName("Given that card number is unsupported with invalid length and valid luhn number, then a validation error should return empty string")
     fun unsupportedAndInvalidLuhnCardNumber() {
         assertEquals(
             validator.validate("4111 1111 1111 111"),
-            ValidationResult(false, R.string.check_card_number)
+            ValidationResult(false, R.string.empty)
         )
     }
 

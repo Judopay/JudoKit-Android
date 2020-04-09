@@ -78,7 +78,7 @@ class CardEntryViewModel(
             return fields
         }
 
-    private val submitButtonText: Int
+    val submitButtonText: Int
         get() = when (judo.paymentWidgetType) {
             PaymentWidgetType.CARD_PAYMENT,
             PaymentWidgetType.PRE_AUTH_CARD_PAYMENT,
