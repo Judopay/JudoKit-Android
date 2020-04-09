@@ -220,7 +220,7 @@ class PaymentMethodsViewModel(
         val cards = allCardsSync.value
 
         if (judo.amount.currency != Currency.EUR) {
-            allMethods = judo.paymentMethods.filter { it == PaymentMethod.IDEAL }
+            allMethods = judo.paymentMethods.filter { it != PaymentMethod.IDEAL }
         }
         if (allMethods.size > 1) {
             recyclerViewData.add(
