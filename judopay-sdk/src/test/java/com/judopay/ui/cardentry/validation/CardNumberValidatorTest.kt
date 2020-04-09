@@ -23,7 +23,7 @@ internal class CardNumberValidatorTest {
     }
 
     @Test
-    @DisplayName("Given that card number is unsupported, then a validation error should return with check card number string")
+    @DisplayName("Given that card number is unsupported, then a validation error should return with unknown card network not supported string")
     fun unsupportedCardNumber() {
         assertEquals(
             validator.validate("1111 1111 1111 1111"),
