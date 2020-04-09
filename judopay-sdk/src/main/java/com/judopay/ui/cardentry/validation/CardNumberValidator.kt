@@ -18,13 +18,14 @@ data class CardNumberValidator(
         val number = input.withWhitespacesRemoved
 
         val network = CardNetwork.ofNumber(number)
-            ?: return ValidationResult(false, R.string.check_card_number)
 
         val isSupported = supportedNetworks.contains(network)
         val isValidLength = number.length == network.cardNumberMaxLength
         val isValid = isValidLuhnNumber(number) && isValidLength
 
-        val message = if (isSupported && !isValid) {
+        val message = if (isValidLength && network == CardNetwork.OTHER) {
+            R.string.error_unknown_not_supported
+        } else if (isSupported && !isValid && isValidLength) {
             R.string.check_card_number
         } else if (!isSupported) {
             network.notSupportedErrorMessageResId
