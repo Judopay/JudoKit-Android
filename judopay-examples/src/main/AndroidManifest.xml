@@ -14,23 +14,29 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:name="androidx.multidex.MultiDexApplication"
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.DemoApp"
-        tools:ignore="GoogleAppIndexingWarning"
-        android:name="androidx.multidex.MultiDexApplication">
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <activity android:name=".result.ResultActivity"
+            android:theme="@style/Theme.DemoApp"/>
+
         <activity
-            android:name="com.judopay.samples.settings.SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:label="@string/title_settings"
-            android:parentActivityName="com.judopay.samples.feature.DemoFeatureListActivity">
+            android:parentActivityName=".feature.DemoFeatureListActivity"
+            android:theme="@style/Theme.DemoApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.judopay.samples.feature.DemoFeatureListActivity" />
         </activity>
+
         <activity
-            android:name="com.judopay.samples.feature.DemoFeatureListActivity"
+            android:name=".feature.DemoFeatureListActivity"
             android:label="@string/title_activity_demo_feature_list"
             android:theme="@style/Theme.DemoApp">
             <intent-filter>

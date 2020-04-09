@@ -33,6 +33,8 @@ import com.judopay.model.googlepay.GooglePayBillingAddressParameters
 import com.judopay.model.googlepay.GooglePayEnvironment
 import com.judopay.model.googlepay.GooglePayShippingAddressParameters
 import com.judopay.samples.R
+import com.judopay.samples.common.startResultActivity
+import com.judopay.samples.common.toResult
 import com.judopay.samples.feature.adapter.DemoFeaturesAdapter
 import com.judopay.samples.model.DemoFeature
 import com.judopay.samples.settings.SettingsActivity
@@ -92,17 +94,25 @@ class DemoFeatureListActivity : AppCompatActivity() {
     }
 
     private fun processSuccessfulPayment(receipt: Receipt?) {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.dialog_success_title)
-            .setMessage("Receipt id: ${receipt?.receiptId}")
-            .setNegativeButton(R.string.dialog_button_ok, null)
-            .show()
+        if (receipt != null) {
+            startResultActivity(receipt.toResult())
+        } else {
+            presentError("Unexpected null receipt object")
+        }
     }
 
     private fun processPaymentError(error: ApiError?) {
+        if (error != null) {
+            startResultActivity(error.toResult())
+        } else {
+            presentError("Unexpected null error object")
+        }
+    }
+
+    private fun presentError(message: String) {
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.dialog_error_title)
-            .setMessage(error?.message ?: "Unknown error.")
+            .setMessage(message)
             .setNegativeButton(R.string.dialog_button_ok, null)
             .show()
     }
