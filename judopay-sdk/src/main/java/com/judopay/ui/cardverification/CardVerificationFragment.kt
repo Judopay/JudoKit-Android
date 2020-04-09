@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.judopay.JUDO_RECEIPT
 import com.judopay.JudoSharedViewModel
 import com.judopay.R
+import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
 import com.judopay.judo
@@ -29,7 +30,10 @@ class CardVerificationFragment : Fragment(), WebViewCallback {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(CardVerificationViewModel::class.java)
+        val application = requireActivity().application
+        val service = JudoApiServiceFactory.createApiService(application, judo)
+        val factory = IdealViewModelFactory(service, application)
+        viewModel = ViewModelProvider(this, factory).get(CardVerificationViewModel::class.java)
 
         viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer {
             when (it) {
@@ -88,7 +92,7 @@ class CardVerificationFragment : Fragment(), WebViewCallback {
                 threeDSProgressBar.visibility = View.GONE
             }
             is WebViewAction.OnAuthorizationComplete ->
-                viewModel.complete3DSecure(judo, action.receiptId, action.cardVerificationResult)
+                viewModel.complete3DSecure(action.receiptId, action.cardVerificationResult)
         }
     }
 }
