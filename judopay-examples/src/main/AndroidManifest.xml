@@ -22,8 +22,9 @@
         android:theme="@style/Theme.DemoApp"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".result.ResultActivity"
-            android:theme="@style/Theme.DemoApp"/>
+        <activity
+            android:name=".result.ResultActivity"
+            android:theme="@style/Theme.DemoApp" />
 
         <activity
             android:name=".settings.SettingsActivity"
