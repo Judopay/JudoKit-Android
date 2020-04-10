@@ -3,9 +3,9 @@ package com.judopay.api.model.request
 import com.judopay.requireNotNullOrEmpty
 
 class GooglePayWallet private constructor(
-    private val cardNetwork: String,
+    internal val cardNetwork: String,
     private val cardDetails: String,
-    private val token: String
+    internal val token: String
 ) {
 
     class Builder {

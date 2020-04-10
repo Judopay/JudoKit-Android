@@ -9,6 +9,7 @@ import com.google.android.gms.wallet.PaymentData
 import com.judopay.api.JudoApiService
 import com.judopay.api.error.ApiError
 import com.judopay.api.model.request.GooglePayRequest
+import com.judopay.api.model.request.toReceipt
 import com.judopay.api.model.response.toJudoPaymentResult
 import com.judopay.model.JudoPaymentResult
 import com.judopay.model.PaymentWidgetType
@@ -92,7 +93,12 @@ class JudoSharedViewModel(
 
     private fun onLoadGPayPaymentDataSuccess(paymentData: PaymentData) {
         try {
-            sendRequest(paymentData.toGooglePayRequest(judo))
+            val googlePayRequest = paymentData.toGooglePayRequest(judo)
+            if (judo.paymentWidgetType == PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS) {
+                dispatchResult(JudoPaymentResult.Success(googlePayRequest.toReceipt()))
+            } else {
+                sendRequest(googlePayRequest)
+            }
         } catch (exception: Throwable) {
             onLoadGPayPaymentDataError(exception.message ?: "Unknown error")
         }

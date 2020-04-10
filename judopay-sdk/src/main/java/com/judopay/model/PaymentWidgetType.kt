@@ -11,7 +11,8 @@ enum class PaymentWidgetType {
     GOOGLE_PAY,
     PRE_AUTH_GOOGLE_PAY,
     PAYMENT_METHODS,
-    PRE_AUTH_PAYMENT_METHODS
+    PRE_AUTH_PAYMENT_METHODS,
+    SERVER_TO_SERVER_PAYMENT_METHODS
 }
 
 val PaymentWidgetType.navigationGraphId: Int
@@ -22,13 +23,14 @@ val PaymentWidgetType.navigationGraphId: Int
         PaymentWidgetType.CREATE_CARD_TOKEN,
         PaymentWidgetType.SAVE_CARD,
         PaymentWidgetType.CHECK_CARD -> R.navigation.judo_card_input_graph
+        PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
         PaymentWidgetType.PAYMENT_METHODS,
         PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> R.navigation.judo_payment_methods_graph
         else -> throw UnsupportedOperationException("Payment Widget of Type: $this not supported")
     }
 
 val PaymentWidgetType.isPaymentMethodsWidget: Boolean
-    get() = this == PaymentWidgetType.PAYMENT_METHODS || this == PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS
+    get() = this == PaymentWidgetType.PAYMENT_METHODS || this == PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS || this == PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS
 
 val PaymentWidgetType.isCardPaymentWidget: Boolean
     get() = this == PaymentWidgetType.CARD_PAYMENT || this == PaymentWidgetType.PRE_AUTH_CARD_PAYMENT

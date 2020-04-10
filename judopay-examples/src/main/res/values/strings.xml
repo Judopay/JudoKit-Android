@@ -28,6 +28,9 @@
 
     <string name="feature_title_preauth_payment_methods">Pre-auth payment methods</string>
     <string name="feature_surtitle_preauth_payment_methods">with default pre-auth payment methods</string>
+
+    <string name="feature_title_server_to_server_payment_methods">Server-to-Server payment methods</string>
+    <string name="feature_subtitle_server_to_server_payment_methods">with default Server-to-Server payment methods</string>
     <string name="title_settings">Settings</string>
 
     <!-- Preference Titles -->

@@ -16,6 +16,7 @@ enum class DemoFeature(
     GOOGLE_PAY_PREAUTH(R.string.feature_title_google_pay_preauth, R.string.feature_surtitle_google_pay_preauth),
     PAYMENT_METHODS(R.string.feature_title_payment_methods, R.string.feature_surtitle_payment_methods),
     PREAUTH_PAYMENT_METHODS(R.string.feature_title_preauth_payment_methods, R.string.feature_surtitle_preauth_payment_methods),
+    SERVER_TO_SERVER_PAYMENT_METHODS(R.string.feature_title_server_to_server_payment_methods, R.string.feature_subtitle_server_to_server_payment_methods),
 }
 
 val DemoFeature.isGooglePay: Boolean

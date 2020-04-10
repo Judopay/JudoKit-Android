@@ -1,18 +1,22 @@
 package com.judopay.api.model.request
 
+import com.judopay.api.model.response.CardToken
+import com.judopay.api.model.response.Consumer
+import com.judopay.api.model.response.Receipt
 import com.judopay.model.PrimaryAccountDetails
 import com.judopay.requireNotNull
 import com.judopay.requireNotNullOrEmpty
+import java.util.Date
 
 class GooglePayRequest private constructor(
-    private var judoId: String?,
-    private var amount: String?,
-    private var currency: String?,
-    private var yourPaymentReference: String?,
-    private var yourConsumerReference: String?,
+    internal var judoId: String?,
+    internal var amount: String?,
+    internal var currency: String?,
+    internal var yourPaymentReference: String?,
+    internal var yourConsumerReference: String?,
     private var yourPaymentMetaData: Map<String, String>?,
     private var primaryAccountDetails: PrimaryAccountDetails?,
-    private val googlePayWallet: GooglePayWallet
+    internal val googlePayWallet: GooglePayWallet
 ) {
 
     class Builder {
@@ -69,3 +73,16 @@ class GooglePayRequest private constructor(
         }
     }
 }
+
+fun GooglePayRequest.toReceipt() = Receipt(
+    judoID = judoId?.toLong(),
+    amount = amount?.toBigDecimal(),
+    currency = currency,
+    yourPaymentReference = yourPaymentReference,
+    createdAt = Date(),
+    consumer = Consumer(yourConsumerReference = yourConsumerReference),
+    cardDetails = CardToken(
+        token = googlePayWallet.token,
+        scheme = googlePayWallet.cardNetwork
+    )
+)

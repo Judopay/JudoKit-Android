@@ -85,6 +85,7 @@ class CardEntryViewModel(
             PaymentWidgetType.CREATE_CARD_TOKEN,
             PaymentWidgetType.SAVE_CARD,
             PaymentWidgetType.CHECK_CARD -> R.string.pay_now
+            PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
             PaymentWidgetType.PAYMENT_METHODS,
             PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> R.string.add_card
             else -> R.string.empty
