@@ -22,7 +22,7 @@ enum class CardNetwork : Parcelable {
         const val DEFAULT_CARD_NUMBER_MASK = "#### #### #### ####"
 
         private val REGEX_VISA = "^4\\d{0,15}".toRegex()
-        private val REGEX_MASTERCARD = "^5[1-5][0-9]{2}.*?".toRegex()
+        private val REGEX_MASTERCARD = "^(5[1-5]\\d{0,2}|22[2-9]\\d{0,1}|2[3-7]\\d{0,2})\\d{0,12}".toRegex()
         private val REGEX_MAESTRO = "^(?:5[0678]\\d{0,2}|6304|67\\d{0,2})\\d{0,12}".toRegex()
         private val REGEX_AMEX = "^3[47]\\d{0,13}".toRegex()
         private val REGEX_DISCOVER = "^(?:6011|65\\d{0,2}|64[4-9]\\d?)\\d{0,12}".toRegex()
