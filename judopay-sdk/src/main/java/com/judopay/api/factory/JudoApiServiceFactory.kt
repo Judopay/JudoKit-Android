@@ -13,13 +13,6 @@ import com.judopay.api.interceptor.DeviceDnaInterceptor
 import com.judopay.api.interceptor.PayLoadInterceptor
 import com.judopay.api.model.Credentials.Companion.fromConfiguration
 import com.judopay.apiBaseUrl
-import okhttp3.CertificatePinner
-import okhttp3.ConnectionSpec
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.TlsVersion
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.math.BigDecimal
 import java.security.KeyStore
 import java.util.Arrays
@@ -28,6 +21,13 @@ import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
+import okhttp3.CertificatePinner
+import okhttp3.ConnectionSpec
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.TlsVersion
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 private const val HOSTNAME_WILDCARD_PATTERN = "*.judopay.com"
 
