@@ -3,6 +3,7 @@ package com.judopay.model
 import android.os.Parcelable
 import com.judopay.R
 import com.judopay.model.CardNetwork.Companion.DEFAULT_CARD_NUMBER_MASK
+import com.judopay.withWhitespacesRemoved
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -20,67 +21,28 @@ enum class CardNetwork : Parcelable {
     companion object {
         const val DEFAULT_CARD_NUMBER_MASK = "#### #### #### ####"
 
-        private val REGEX_VISA = "^4[0-9]{3}.*?".toRegex()
-        private val REGEX_MASTERCARD = "^5[1-5][0-9]{2}.*?".toRegex()
-        private val REGEX_MAESTRO =
-            "^(5018|5020|5038|6304|6759|6761|6763|6334|6767|4903|4905|4911|4936|5641 82|6331 10|6333|5600|5602|5603|5610|5611|5656|6700|6706|6775|6709|6771|6773).*?".toRegex()
-        private val REGEX_AMEX = "^3[47][0-9]{2}.*?".toRegex()
-        private val REGEX_DISCOVER =
-            "^65.*?|64[4-9].*?|6011.*?|(622(1 2[6-9].*?|1 [3-9][0-9].*?|[2-8] [0-9][0-9].*?|9 [01][0-9].*?|9 2[0-5].*?).*?)".toRegex()
-        private val REGEX_DINERS_CLUB = "^(30[0-5]|309|36|38|39).*?".toRegex()
-        private val REGEX_JCB = "^(35[2-8][0-9]).*?".toRegex()
-        private val AMEX_PREFIXES = arrayOf("34", "37")
-        private val VISA_PREFIXES = arrayOf("4")
-        private val MASTERCARD_PREFIXES = arrayOf("50", "51", "52", "53", "54", "55")
-        private val CHINA_UNION_PAY_PREFIXES = arrayOf("62")
+        private val REGEX_VISA = "^4\\d{0,15}".toRegex()
+        private val REGEX_MASTERCARD = "^(5[1-5]\\d{0,2}|22[2-9]\\d{0,1}|2[3-7]\\d{0,2})\\d{0,12}".toRegex()
+        private val REGEX_MAESTRO = "^(?:5[0678]\\d{0,2}|6304|67\\d{0,2})\\d{0,12}".toRegex()
+        private val REGEX_AMEX = "^3[47]\\d{0,13}".toRegex()
+        private val REGEX_DISCOVER = "^(?:6011|65\\d{0,2}|64[4-9]\\d?)\\d{0,12}".toRegex()
+        private val REGEX_DINERS_CLUB = "^3(?:0([0-5]|9)|[689]\\d?)\\d{0,11}".toRegex()
+        private val REGEX_JCB = "^(?:35\\d{0,2})\\d{0,12}".toRegex()
+        private val REGEX_CHINA_UNION_PAY = "^(62|81)\\d{0,14}".toRegex()
 
         fun ofNumber(number: String): CardNetwork {
+            val sanitizedNumber = number.withWhitespacesRemoved
             return when {
-                number.hasOneOfPrefixes(VISA_PREFIXES) || number.matches(REGEX_VISA) -> {
-                    VISA
-                }
-
-                number.hasOneOfPrefixes(MASTERCARD_PREFIXES) || number.matches(REGEX_MASTERCARD) -> {
-                    MASTERCARD
-                }
-
-                number.matches(REGEX_MAESTRO) -> {
-                    MAESTRO
-                }
-
-                number.hasOneOfPrefixes(AMEX_PREFIXES) || number.matches(REGEX_AMEX) -> {
-                    AMEX
-                }
-
-                number.matches(REGEX_DISCOVER) -> {
-                    DISCOVER
-                }
-
-                number.matches(REGEX_DINERS_CLUB) -> {
-                    DINERS_CLUB
-                }
-
-                number.matches(REGEX_JCB) -> {
-                    JCB
-                }
-
-                number.hasOneOfPrefixes(CHINA_UNION_PAY_PREFIXES) -> {
-                    CHINA_UNION_PAY
-                }
-
-                else -> {
-                    OTHER
-                }
+                sanitizedNumber.matches(REGEX_VISA) -> VISA
+                sanitizedNumber.matches(REGEX_MASTERCARD) -> MASTERCARD
+                sanitizedNumber.matches(REGEX_MAESTRO) -> MAESTRO
+                sanitizedNumber.matches(REGEX_AMEX) -> AMEX
+                sanitizedNumber.matches(REGEX_DISCOVER) -> DISCOVER
+                sanitizedNumber.matches(REGEX_DINERS_CLUB) -> DINERS_CLUB
+                sanitizedNumber.matches(REGEX_JCB) -> JCB
+                sanitizedNumber.matches(REGEX_CHINA_UNION_PAY) -> CHINA_UNION_PAY
+                else -> OTHER
             }
-        }
-
-        private fun String.hasOneOfPrefixes(prefixes: Array<String>): Boolean {
-            for (prefix in prefixes) {
-                if (startsWith(prefix)) {
-                    return true
-                }
-            }
-            return false
         }
 
         fun withIdentifier(id: Int): CardNetwork = when (id) {
