@@ -13,7 +13,13 @@ import com.judopay.api.interceptor.DeviceDnaInterceptor
 import com.judopay.api.interceptor.PayLoadInterceptor
 import com.judopay.api.model.Credentials.Companion.fromConfiguration
 import com.judopay.apiBaseUrl
-import com.readystatesoftware.chuck.ChuckInterceptor
+import okhttp3.CertificatePinner
+import okhttp3.ConnectionSpec
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.TlsVersion
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.math.BigDecimal
 import java.security.KeyStore
 import java.util.Arrays
@@ -22,12 +28,6 @@ import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
-import okhttp3.CertificatePinner
-import okhttp3.ConnectionSpec
-import okhttp3.OkHttpClient
-import okhttp3.TlsVersion
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 private const val HOSTNAME_WILDCARD_PATTERN = "*.judopay.com"
 
@@ -47,17 +47,18 @@ object JudoApiServiceFactory {
      * for interacting with the judoPay REST API.
      */
     @JvmStatic
-    fun createApiService(context: Context, judo: Judo): JudoApiService = createRetrofit(context.applicationContext, judo).create(JudoApiService::class.java)
+    fun createApiService(context: Context, judo: Judo): JudoApiService =
+        createRetrofit(context.applicationContext, judo).create(JudoApiService::class.java)
 
     @JvmStatic
-    var externalChuck: ChuckInterceptor? = null
+    var externalInterceptors: List<Interceptor>? = null
 
     private fun createRetrofit(context: Context, judo: Judo): Retrofit = Retrofit.Builder()
-            .baseUrl(judo.apiBaseUrl)
-            .client(getOkHttpClient(context, judo))
-            .addConverterFactory(gsonConverterFactory)
-            .addCallAdapterFactory(JudoApiCallAdapterFactory())
-            .build()
+        .baseUrl(judo.apiBaseUrl)
+        .client(getOkHttpClient(context, judo))
+        .addConverterFactory(gsonConverterFactory)
+        .addCallAdapterFactory(JudoApiCallAdapterFactory())
+        .build()
 
     private val gsonConverterFactory: GsonConverterFactory
         get() = GsonConverterFactory.create(gson)
@@ -65,38 +66,48 @@ object JudoApiServiceFactory {
     @JvmStatic
     val gson: Gson
         get() = GsonBuilder()
-                .registerTypeAdapter(Date::class.java, DateJsonDeserializer())
-                .registerTypeAdapter(BigDecimal::class.java, FormattedBigDecimalDeserializer())
-                .create()
+            .registerTypeAdapter(Date::class.java, DateJsonDeserializer())
+            .registerTypeAdapter(BigDecimal::class.java, FormattedBigDecimalDeserializer())
+            .create()
 
     private fun getOkHttpClient(context: Context, judo: Judo): OkHttpClient {
         return try {
             val sslContext = SSLContext.getInstance("TLSv1.2")
             sslContext.init(null, null, null)
 
-            val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
+            val trustManagerFactory =
+                TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
             trustManagerFactory.init(null as KeyStore?)
 
             val trustManagers = trustManagerFactory.trustManagers
-            check(!(trustManagers.size != 1 || trustManagers.first() !is X509TrustManager)) { "Unexpected default trust managers: " + Arrays.toString(trustManagers) }
+            check(!(trustManagers.size != 1 || trustManagers.first() !is X509TrustManager)) {
+                "Unexpected default trust managers: " + Arrays.toString(
+                    trustManagers
+                )
+            }
 
             val trustManager = trustManagers.first() as X509TrustManager
             val specs: MutableList<ConnectionSpec> = ArrayList()
 
-            specs.add(ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+            specs.add(
+                ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
                     .tlsVersions(TlsVersion.TLS_1_2)
-                    .build())
+                    .build()
+            )
 
             val builder = OkHttpClient.Builder()
-                    .sslSocketFactory(Tls12SslSocketFactory(sslContext.socketFactory), trustManager)
-                    .connectionSpecs(specs)
+                .sslSocketFactory(Tls12SslSocketFactory(sslContext.socketFactory), trustManager)
+                .connectionSpecs(specs)
 
-            builder.certificatePinner(CertificatePinner.Builder()
+            builder.certificatePinner(
+                CertificatePinner.Builder()
                     .add(
-                            HOSTNAME_WILDCARD_PATTERN,
-                            "sha256/SuY75QgkSNBlMtHNPeW9AayE7KNDAypMBHlJH9GEhXs=",
-                            "sha256/c4zbAoMygSbepJKqU3322FvFv5unm+TWZROW3FHU1o8=")
-                    .build())
+                        HOSTNAME_WILDCARD_PATTERN,
+                        "sha256/SuY75QgkSNBlMtHNPeW9AayE7KNDAypMBHlJH9GEhXs=",
+                        "sha256/c4zbAoMygSbepJKqU3322FvFv5unm+TWZROW3FHU1o8="
+                    )
+                    .build()
+            )
 
             setTimeouts(builder)
             addInterceptors(builder, context, judo)
@@ -109,8 +120,8 @@ object JudoApiServiceFactory {
 
     private fun setTimeouts(builder: OkHttpClient.Builder) = with(builder) {
         connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(3, TimeUnit.MINUTES)
-                .writeTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(3, TimeUnit.MINUTES)
+            .writeTimeout(30, TimeUnit.SECONDS)
     }
 
     private fun addInterceptors(
@@ -124,9 +135,8 @@ object JudoApiServiceFactory {
         add(ApiHeadersInterceptor(fromConfiguration(context, judo), context))
         add(PayLoadInterceptor(context))
 
-        add(ChuckInterceptor(context))
-        if (externalChuck != null) {
-            add(externalChuck)
+        externalInterceptors?.forEach {
+            add(it)
         }
     }
 }

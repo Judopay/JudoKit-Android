@@ -19,6 +19,7 @@ import com.judopay.PAYMENT_CANCELLED
 import com.judopay.PAYMENT_ERROR
 import com.judopay.PAYMENT_SUCCESS
 import com.judopay.api.error.ApiError
+import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.api.model.response.Receipt
 import com.judopay.model.Amount
 import com.judopay.model.CardNetwork
@@ -36,6 +37,7 @@ import com.judopay.samples.R
 import com.judopay.samples.feature.adapter.DemoFeaturesAdapter
 import com.judopay.samples.model.DemoFeature
 import com.judopay.samples.settings.SettingsActivity
+import com.readystatesoftware.chuck.ChuckInterceptor
 import java.util.UUID
 import kotlinx.android.synthetic.main.activity_demo_feature_list.*
 
@@ -47,6 +49,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        JudoApiServiceFactory.externalInterceptors = listOf(ChuckInterceptor(this))
 
         setContentView(R.layout.activity_demo_feature_list)
         setupRecyclerView()
