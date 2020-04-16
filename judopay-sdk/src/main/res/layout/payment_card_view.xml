@@ -23,16 +23,12 @@
 
     <TextView
         android:id="@+id/cardNameTextView"
+        style="@style/JudoTheme.Title.Light"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_24"
         android:layout_marginEnd="@dimen/space_24"
         android:layout_marginBottom="@dimen/space_16"
-        android:ellipsize="end"
-        android:fontFamily="@font/sf_pro_display_semibold"
-        android:maxLines="1"
-        android:textColor="@color/white"
-        android:textSize="@dimen/title"
         app:layout_constraintBottom_toTopOf="@+id/cardNumberMaskTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,26 +36,22 @@
 
     <TextView
         android:id="@+id/cardNumberMaskTextView"
+        style="@style/JudoTheme.Headline.Light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_24"
         android:layout_marginBottom="@dimen/space_24"
-        android:fontFamily="@font/sf_pro_display_semibold"
-        android:textColor="@color/white_opaque"
-        android:textSize="@dimen/headline"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="•••• •••• •••• 1122" />
 
     <TextView
         android:id="@+id/isExpiredTextView"
+        style="@style/JudoTheme.Caption.Error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_display_semibold"
         android:includeFontPadding="false"
         android:text="@string/expired"
-        android:textColor="@color/tomato_red"
-        android:textSize="@dimen/caption"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/expireDateTextView"
         app:layout_constraintEnd_toEndOf="@id/expireDateTextView"
@@ -68,13 +60,11 @@
 
     <TextView
         android:id="@+id/expireDateTextView"
+        style="@style/JudoTheme.Headline.Light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/space_24"
-        android:fontFamily="@font/sf_pro_display_semibold"
         android:includeFontPadding="false"
-        android:textColor="@color/white_opaque"
-        android:textSize="@dimen/headline"
         app:layout_constraintBottom_toBottomOf="@id/cardNumberMaskTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/cardNumberMaskTextView"

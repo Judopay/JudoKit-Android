@@ -89,4 +89,5 @@
     <string name="there_is_a_delay">This is taking longer than expected. Please wait…</string>
     <string name="ideal_transaction">iDEAL transaction</string>
     <string name="dismiss">Dismiss</string>
+    <string name="three_d_secure_check">3D Secure Check</string>
 </resources>

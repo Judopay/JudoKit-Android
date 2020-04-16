@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground">
+    android:background="?android:attr/selectableItemBackground"
+    tools:background="@color/white">
 
     <ImageView
         android:id="@+id/bankImage"
@@ -21,13 +22,11 @@
 
     <TextView
         android:id="@+id/bankName"
+        style="@style/JudoTheme.Body"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_8"
         android:layout_marginEnd="@dimen/space_8"
-        android:fontFamily="@font/sf_pro_display_semibold"
-        android:textColor="@color/black"
-        android:textSize="@dimen/body"
         app:layout_constraintBottom_toBottomOf="@id/bankImage"
         app:layout_constraintEnd_toStartOf="@id/radioIconImageView"
         app:layout_constraintStart_toEndOf="@id/bankImage"

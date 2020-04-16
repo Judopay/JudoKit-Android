@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="56dp"
+    android:layout_height="@dimen/payment_selector_item_height"
     android:gravity="center"
-    android:minWidth="90dp"
+    android:minWidth="@dimen/payment_selector_item_min_width"
     android:orientation="horizontal"
     android:paddingStart="@dimen/space_12"
     android:paddingEnd="@dimen/space_12">
@@ -17,12 +17,10 @@
 
     <TextView
         android:id="@+id/paymentTextView"
+        style="@style/JudoTheme.Headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:textColor="@color/black"
-        android:textSize="@dimen/headline"
-        android:textStyle="bold"
+        android:layout_marginStart="@dimen/space_8"
         android:visibility="gone"
         tools:text="Cards"
         tools:visibility="visible" />

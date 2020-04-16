@@ -9,25 +9,19 @@
     <ImageButton
         android:id="@+id/backButton"
         style="@style/JudoTheme.BackButton"
-        android:layout_width="@dimen/min_touch_target_size"
-        android:layout_height="@dimen/min_touch_target_size"
-        android:layout_marginStart="@dimen/space_8"
-        android:layout_marginTop="@dimen/space_4"
         android:contentDescription="@null"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/headingTextView"
+        style="@style/JudoTheme.Title.Large"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_24"
         android:layout_marginTop="@dimen/space_8"
         android:layout_marginEnd="@dimen/space_24"
-        android:fontFamily="@font/sf_pro_display_semibold"
         android:text="@string/customize_card"
-        android:textColor="@color/black"
-        android:textSize="@dimen/large_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/backButton" />
@@ -93,16 +87,14 @@
 
             <TextView
                 android:id="@+id/saveAsDefaultTextView"
+                style="@style/JudoTheme.Body.Regular"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/min_touch_target_size"
                 android:layout_marginTop="@dimen/space_24"
                 android:drawableStart="@drawable/ic_radio_off"
                 android:drawablePadding="@dimen/space_8"
-                android:fontFamily="@font/sf_pro_display_regular"
                 android:gravity="start|center_vertical"
                 android:text="@string/save_as_default_payment_method"
-                android:textColor="@color/black"
-                android:textSize="@dimen/body"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/titleTextInputLayout" />

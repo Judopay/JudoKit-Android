@@ -10,13 +10,11 @@
 
     <TextView
         android:id="@+id/title"
+        style="@style/JudoTheme.Headline"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/space_8"
-        android:fontFamily="@font/sf_pro_display_semibold"
         android:text="@string/connected_cards"
-        android:textColor="@color/black"
-        android:textSize="@dimen/headline"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/editButton"
         app:layout_constraintStart_toStartOf="parent"

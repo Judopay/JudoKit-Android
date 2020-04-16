@@ -1,8 +1,7 @@
 <resources>
-
     <style name="JudoTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:fontFamily">@font/sf_pro_display</item>
-        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
 
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -23,6 +22,10 @@
 
     <!-- Black toolbar back button -->
     <style name="JudoTheme.BackButton" parent="JudoTheme.ImageButton">
+        <item name="android:layout_width">@dimen/min_touch_target_size</item>
+        <item name="android:layout_height">@dimen/min_touch_target_size</item>
+        <item name="android:layout_marginStart">@dimen/space_8</item>
+        <item name="android:layout_marginTop">@dimen/space_4</item>
         <item name="srcCompat">@drawable/ic_back_20dp</item>
     </style>
 
@@ -30,7 +33,7 @@
     <style name="JudoTheme.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:fontFamily">@font/sf_pro_display_semibold</item>
         <item name="android:textSize">@dimen/body</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/jpBlackColor</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:paddingLeft">@dimen/space_6</item>
         <item name="android:paddingRight">@dimen/space_6</item>
@@ -42,13 +45,13 @@
     <style name="JudoTheme.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:fontFamily">@font/sf_pro_display_semibold</item>
         <item name="android:textSize">@dimen/body</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/jpBlackColor</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:paddingLeft">@dimen/space_6</item>
         <item name="android:paddingRight">@dimen/space_6</item>
         <item name="android:minHeight">@dimen/min_touch_target_size</item>
         <item name="android:minWidth">@dimen/min_touch_target_size</item>
-        <item name="strokeColor">@color/black</item>
+        <item name="strokeColor">@color/jpBlackColor</item>
     </style>
 
     <!-- Black rounded button, usually used for PAY NOW -->
@@ -56,7 +59,7 @@
         <item name="cornerRadius">@dimen/button_corner_radius</item>
         <item name="android:fontFamily">@font/sf_pro_display_semibold</item>
         <item name="android:textSize">@dimen/headline</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/jpWhiteColor</item>
         <item name="android:textAllCaps">true</item>
         <item name="backgroundTint">@color/black_button_background_selector</item>
     </style>
@@ -65,7 +68,7 @@
     <style name="JudoTheme.BottomSheetDialogTheme" parent="JudoTheme.BottomSheetDialog" />
 
     <style name="JudoTheme.BottomSheetDialog" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
-        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimary">@color/white</item>
         <item name="android:windowIsFloating">false</item>
         <item name="android:colorBackground">@color/white</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
@@ -84,12 +87,12 @@
 
     <style name="JudoTheme.TextInputEditText" parent="Widget.AppCompat.EditText">
         <!-- Theme attributes -->
-        <item name="android:textColorHint">@color/brown_grey</item>
-        <item name="colorControlNormal">@color/black</item>
-        <item name="colorControlActivated">@color/black</item>
+        <item name="android:textColorHint">@color/jpDarkGrayColor</item>
+        <item name="colorControlNormal">@color/jpBlackColor</item>
+        <item name="colorControlActivated">@color/jpBlackColor</item>
         <item name="fontFamily">@font/sf_pro_display_regular</item>
         <item name="android:textSize">@dimen/headline</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/jpBlackColor</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
         <item name="android:paddingStart">0dp</item>
@@ -101,8 +104,68 @@
     </style>
 
     <style name="JudoTheme.ErrorText" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@color/tomato_red</item>
+        <item name="android:textColor">@color/jpRedColor</item>
         <item name="android:textSize">@dimen/caption</item>
     </style>
 
+    <style name="JudoTheme.TextView" parent="Widget.AppCompat.TextView">
+        <item name="fontFamily">@font/sf_pro_display_semibold</item>
+        <item name="android:textColor">@color/jpBlackColor</item>
+    </style>
+
+    <style name="JudoTheme.Title.Large" parent="JudoTheme.TextView">
+        <item name="android:textSize">@dimen/large_title</item>
+    </style>
+
+    <style name="JudoTheme.Title" parent="JudoTheme.TextView">
+        <item name="android:textSize">@dimen/title</item>
+    </style>
+
+    <style name="JudoTheme.Title.Light" parent="JudoTheme.Title">
+        <item name="android:textColor">@color/jpWhiteColor</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="JudoTheme.Headline" parent="JudoTheme.TextView">
+        <item name="android:textSize">@dimen/headline</item>
+    </style>
+
+    <style name="JudoTheme.Headline.Regular" parent="JudoTheme.TextView">
+        <item name="fontFamily">@font/sf_pro_display_regular</item>
+        <item name="android:textSize">@dimen/headline</item>
+    </style>
+
+    <style name="JudoTheme.Headline.Light" parent="JudoTheme.Headline">
+        <item name="android:textColor">@color/jpLightGrayColor</item>
+    </style>
+
+    <style name="JudoTheme.Body" parent="JudoTheme.TextView">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/body</item>
+    </style>
+
+    <style name="JudoTheme.Body.Regular" parent="JudoTheme.TextView">
+        <item name="fontFamily">@font/sf_pro_display_regular</item>
+        <item name="android:textSize">@dimen/body</item>
+    </style>
+
+    <style name="JudoTheme.Caption" parent="JudoTheme.TextView">
+        <item name="fontFamily">@font/sf_pro_display_regular</item>
+        <item name="android:textSize">@dimen/caption</item>
+    </style>
+
+    <style name="JudoTheme.Caption.Light" parent="JudoTheme.Caption">
+        <item name="android:textColor">@color/jpDarkGrayColor</item>
+    </style>
+
+    <style name="JudoTheme.Caption.Error" parent="JudoTheme.Caption">
+        <item name="fontFamily">@font/sf_pro_display_semibold</item>
+        <item name="android:textColor">@color/jpRedColor</item>
+    </style>
+
+    <style name="JudoTheme.Caption.Error.Medium" parent="JudoTheme.Caption.Error">
+        <item name="fontFamily">@font/sf_pro_display_medium</item>
+        <item name="android:textColor">@color/jpRedColor</item>
+    </style>
 </resources>

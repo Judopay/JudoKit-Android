@@ -24,14 +24,12 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            style="@style/JudoTheme.Caption.Error.Medium"
             android:id="@+id/errorTextView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/space_14"
             android:layout_margin="0dp"
-            android:fontFamily="@font/sf_pro_display_medium"
             android:padding="0dp"
-            android:textColor="@color/tomato_red"
-            android:textSize="@dimen/caption"
             android:visibility="gone"
             tools:text="Error in here" />
 

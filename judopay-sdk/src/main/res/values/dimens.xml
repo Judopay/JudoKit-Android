@@ -54,6 +54,10 @@
     <dimen name="card_elevation_2dp">2dp</dimen>
     <dimen name="card_height">190dp</dimen>
 
+    <dimen name="payment_selector_height">64dp</dimen>
+    <dimen name="payment_selector_item_height">56dp</dimen>
+    <dimen name="payment_selector_item_min_width">90dp</dimen>
+
     <dimen name="corner_radius_2_8dp">2.8dp</dimen>
     <dimen name="size_36dp">36dp</dimen>
     <dimen name="size_50dp">50dp</dimen>

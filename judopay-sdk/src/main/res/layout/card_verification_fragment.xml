@@ -7,38 +7,26 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbar"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/very_light_pink"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/space_16"
-        android:paddingEnd="@dimen/space_16"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
+        <ImageButton
             android:id="@+id/backButton"
-            style="@style/JudoTheme.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_8"
-            android:layout_marginBottom="@dimen/space_8"
+            style="@style/JudoTheme.BackButton"
             android:contentDescription="@null"
-            android:fontFamily="@font/sf_pro_display_semibold"
-            android:text="Dismiss"
-            android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            style="@style/JudoTheme.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/sf_pro_display_semibold"
-            android:text="3D Secure Check"
-            android:textColor="@color/black"
-            android:textSize="@dimen/title"
+            android:text="@string/three_d_secure_check"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,6 +45,7 @@
 
     <TextView
         android:id="@+id/threeDSTextView"
+        style="@style/JudoTheme.Body.Regular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/processing"

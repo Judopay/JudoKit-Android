@@ -9,10 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_16"
-        android:fontFamily="@font/sf_pro_display_semibold"
         android:text="@string/no_connected_cards"
-        android:textColor="@color/black"
-        android:textSize="@dimen/headline"
+        style="@style/JudoTheme.Headline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

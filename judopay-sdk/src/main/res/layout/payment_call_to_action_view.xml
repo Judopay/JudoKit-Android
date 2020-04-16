@@ -8,31 +8,28 @@
     android:padding="@dimen/space_24"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent">
+    app:layout_constraintStart_toStartOf="parent"
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/youWillPayTextView"
+        style="@style/JudoTheme.Body.Regular"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/space_8"
-        android:fontFamily="@font/sf_pro_display_regular"
         android:padding="0dp"
         android:text="@string/you_will_pay"
-        android:textColor="@color/black"
-        android:textSize="@dimen/body"
         app:layout_constraintEnd_toStartOf="@+id/buttonsAnimator"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/buttonsAnimator" />
 
     <TextView
         android:id="@+id/amountTextView"
+        style="@style/JudoTheme.Title.Large"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/space_8"
-        android:fontFamily="@font/sf_pro_display_semibold"
         android:padding="0dp"
-        android:textColor="@color/black"
-        android:textSize="@dimen/large_title"
         app:layout_constraintBottom_toBottomOf="@+id/buttonsAnimator"
         app:layout_constraintEnd_toStartOf="@+id/buttonsAnimator"
         app:layout_constraintStart_toStartOf="parent"

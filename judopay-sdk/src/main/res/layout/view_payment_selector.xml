@@ -17,17 +17,17 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/paymentSelectorContainer"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="@dimen/payment_selector_height"
             android:background="@drawable/slider_background">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/selector"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="@dimen/payment_selector_item_height"
                 android:background="@drawable/selected_payment"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/card_corner_radius"
-                app:cardElevation="2dp"
+                app:cardElevation="@dimen/card_elevation_2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

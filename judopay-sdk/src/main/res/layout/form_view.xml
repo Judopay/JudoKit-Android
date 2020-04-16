@@ -161,6 +161,7 @@
         app:layout_constraintTop_toBottomOf="@+id/bottomBarrier" />
 
     <TextView
+        style="@style/JudoTheme.Caption"
         android:id="@+id/secureTransmissionTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -169,7 +170,6 @@
         android:drawablePadding="@dimen/space_8"
         android:text="@string/secure_server_transmission"
         android:textColor="@color/brown_grey"
-        android:textSize="@dimen/caption"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
