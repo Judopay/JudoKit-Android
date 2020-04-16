@@ -1,18 +1,9 @@
 package com.judopay.api.model.request
 
 import com.judopay.model.PrimaryAccountDetails
-import com.judopay.requireNotNull
 import com.judopay.requireNotNullOrEmpty
 
-/**
- * Represents the data needed to perform a save card transaction with the judo API.
- * Use the [SaveCardRequest.Builder] for object construction.
- *
- *
- * When creating a [SaveCardRequest] the [SaveCardRequest.judoId]
- * must be provided.
- */
-class SaveCardRequest private constructor(
+class RegisterCardRequest private constructor(
     private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String,
     private var amount: String,
@@ -51,7 +42,7 @@ class SaveCardRequest private constructor(
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
         fun setYourPaymentReference(yourPaymentReference: String?) =
-                apply { this.yourPaymentReference = yourPaymentReference }
+            apply { this.yourPaymentReference = yourPaymentReference }
 
         fun setAmount(amount: String?) = apply { this.amount = amount }
 
@@ -60,10 +51,10 @@ class SaveCardRequest private constructor(
         fun setJudoId(judoId: String?) = apply { this.judoId = judoId }
 
         fun setYourConsumerReference(yourConsumerReference: String?) =
-                apply { this.yourConsumerReference = yourConsumerReference }
+            apply { this.yourConsumerReference = yourConsumerReference }
 
         fun setYourPaymentMetaData(yourPaymentMetaData: Map<String, String>?) =
-                apply { this.yourPaymentMetaData = yourPaymentMetaData }
+            apply { this.yourPaymentMetaData = yourPaymentMetaData }
 
         fun setAddress(address: Address?) = apply { this.address = address }
 
@@ -82,38 +73,38 @@ class SaveCardRequest private constructor(
         fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = mobileNumber }
 
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
-                apply { this.primaryAccountDetails = primaryAccountDetails }
+            apply { this.primaryAccountDetails = primaryAccountDetails }
 
-        fun build(): SaveCardRequest {
+        fun build(): RegisterCardRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myAmount = requireNotNullOrEmpty(amount, "amount")
             val myCurrency = requireNotNullOrEmpty(currency, "currency")
             val consumerReference =
-                    requireNotNullOrEmpty(yourConsumerReference, "yourConsumerReference")
+                requireNotNullOrEmpty(yourConsumerReference, "yourConsumerReference")
             val myCardNumber = requireNotNullOrEmpty(cardNumber, "cardNumber")
             val myCv2 = requireNotNullOrEmpty(cv2, "cv2")
             val myExpiryDate = requireNotNullOrEmpty(expiryDate, "expiryDate")
             val paymentReference =
-                    requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
-            val myAddress = requireNotNull(address, "address")
+                requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
+            val myAddress = com.judopay.requireNotNull(address, "address")
 
-            return SaveCardRequest(
-                    uniqueRequest,
-                    paymentReference,
-                    myAmount,
-                    myCurrency,
-                    id,
-                    consumerReference,
-                    yourPaymentMetaData,
-                    myAddress,
-                    myCardNumber,
-                    myCv2,
-                    myExpiryDate,
-                    startDate,
-                    issueNumber,
-                    emailAddress,
-                    mobileNumber,
-                    primaryAccountDetails
+            return RegisterCardRequest(
+                uniqueRequest,
+                paymentReference,
+                myAmount,
+                myCurrency,
+                id,
+                consumerReference,
+                yourPaymentMetaData,
+                myAddress,
+                myCardNumber,
+                myCv2,
+                myExpiryDate,
+                startDate,
+                issueNumber,
+                emailAddress,
+                mobileNumber,
+                primaryAccountDetails
             )
         }
     }

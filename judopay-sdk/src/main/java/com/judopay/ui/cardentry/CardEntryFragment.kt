@@ -25,9 +25,12 @@ import com.judopay.JUDO_RECEIPT
 import com.judopay.JudoSharedViewModel
 import com.judopay.R
 import com.judopay.api.error.ApiError
+import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
 import com.judopay.api.model.response.toJudoPaymentResult
+import com.judopay.db.JudoRoomDatabase
+import com.judopay.db.repository.TokenizedCardRepository
 import com.judopay.judo
 import com.judopay.model.JudoPaymentResult
 import com.judopay.model.isCardPaymentWidget
@@ -45,7 +48,10 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         super.onActivityCreated(savedInstanceState)
 
         val application = requireActivity().application
-        val factory = CardEntryViewModelFactory(application, judo)
+        val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
+        val cardRepository = TokenizedCardRepository(tokenizedCardDao)
+        val service = JudoApiServiceFactory.createApiService(application, judo)
+        val factory = CardEntryViewModelFactory(judo, service, cardRepository, application)
 
         viewModel = ViewModelProvider(this, factory).get(CardEntryViewModel::class.java)
 

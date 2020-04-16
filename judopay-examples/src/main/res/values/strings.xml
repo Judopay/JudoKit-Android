@@ -11,11 +11,11 @@
     <string name="feature_title_create_card_token">Register card</string>
     <string name="feature_surtitle_create_card_token">to be stored for future transactions</string>
 
-    <string name="feature_title_save_card">Check card</string>
-    <string name="feature_surtitle_save_card">to validate a card</string>
+    <string name="feature_title_save_card">Save card</string>
+    <string name="feature_surtitle_save_card">to be stored for future transactions</string>
 
-    <string name="feature_title_check_card">Save card</string>
-    <string name="feature_surtitle_check_card">to be stored for future transactions</string>
+    <string name="feature_title_check_card">Check card</string>
+    <string name="feature_surtitle_check_card">to validate a card</string>
 
     <string name="feature_title_google_pay_payment">Google Pay payment</string>
     <string name="feature_surtitle_google_pay_payment">with a wallet card</string>

@@ -42,12 +42,12 @@ internal class CardVerificationViewModelTest {
     private val isLoadingMock = spyk<Observer<Boolean>>()
     private val judoApiCallResultMock = spyk<Observer<JudoApiCallResult<Receipt>>>()
 
-    private val viewModel = CardVerificationViewModel(service, application)
+    private val sut = CardVerificationViewModel(service, application)
 
     @BeforeEach
     internal fun setUp() {
-        viewModel.isLoading.observeForever(isLoadingMock)
-        viewModel.judoApiCallResult.observeForever(judoApiCallResultMock)
+        sut.isLoading.observeForever(isLoadingMock)
+        sut.judoApiCallResult.observeForever(judoApiCallResultMock)
 
         coEvery {
             service.complete3dSecure(receiptId, cardVerificationResult)
@@ -68,7 +68,7 @@ internal class CardVerificationViewModelTest {
     fun loadingTrueOnComplete3DSecure() {
         val slots = mutableListOf<Boolean>()
 
-        viewModel.complete3DSecure(receiptId, cardVerificationResult)
+        sut.complete3DSecure(receiptId, cardVerificationResult)
 
         verify { isLoadingMock.onChanged(capture(slots)) }
 
@@ -79,7 +79,7 @@ internal class CardVerificationViewModelTest {
     @DisplayName("Given complete3DSecure is called, then complete3DSecure request should be made")
     @Test
     fun complete3DSecureRequestShouldBeMade() {
-        viewModel.complete3DSecure(receiptId, cardVerificationResult)
+        sut.complete3DSecure(receiptId, cardVerificationResult)
 
         coVerify { service.complete3dSecure(receiptId, cardVerificationResult) }
     }
@@ -89,7 +89,7 @@ internal class CardVerificationViewModelTest {
     fun postResponseToJudoApiCallResult() {
         val slots = mutableListOf<JudoApiCallResult<Receipt>>()
 
-        viewModel.complete3DSecure(receiptId, cardVerificationResult)
+        sut.complete3DSecure(receiptId, cardVerificationResult)
 
         verify { judoApiCallResultMock.onChanged(capture(slots)) }
 
@@ -102,7 +102,7 @@ internal class CardVerificationViewModelTest {
     fun loadingFalseOnRequestComplete() {
         val slots = mutableListOf<Boolean>()
 
-        viewModel.complete3DSecure(receiptId, cardVerificationResult)
+        sut.complete3DSecure(receiptId, cardVerificationResult)
 
         verify { isLoadingMock.onChanged(capture(slots)) }
 

@@ -48,7 +48,7 @@ class IdealViewModelTest {
     private val saleRequest = buildSaleRequest()
     private val service: JudoApiService = mockk(relaxed = true)
     private val application: Application = mockk(relaxed = true)
-    private val viewModel = IdealViewModel(BIC, judo, service, application)
+    private val sut = IdealViewModel(BIC, judo, service, application)
     private val saleResponse = mockk<IdealSaleResponse>(relaxed = true)
     private val saleCallResult = JudoApiCallResult.Success(saleResponse)
     private val statusResponse = mockk<IdealSaleStatusResponse>(relaxed = true)
@@ -62,10 +62,10 @@ class IdealViewModelTest {
 
     @BeforeEach
     internal fun setUp() {
-        viewModel.isLoading.observeForever(isLoadingMock)
-        viewModel.isRequestDelayed.observeForever(isDelayMock)
-        viewModel.saleCallResult.observeForever(saleCallResultMock)
-        viewModel.saleStatusCallResult.observeForever(saleStatusCallResultMock)
+        sut.isLoading.observeForever(isLoadingMock)
+        sut.isRequestDelayed.observeForever(isDelayMock)
+        sut.saleCallResult.observeForever(saleCallResultMock)
+        sut.saleStatusCallResult.observeForever(saleStatusCallResultMock)
 
         every { saleResponse.orderId } returns ORDER_ID
         every { statusResponse.orderDetails.orderStatus } returns OrderStatus.SUCCEEDED
@@ -89,7 +89,7 @@ class IdealViewModelTest {
     fun loadingTrueOnPayWithSelectedBank() {
         val slots = mutableListOf<Boolean>()
 
-        viewModel.payWithSelectedBank()
+        sut.payWithSelectedBank()
 
         verify { isLoadingMock.onChanged(capture(slots)) }
 
@@ -100,7 +100,7 @@ class IdealViewModelTest {
     @Test
     @DisplayName("Given payWithSelectedBank is called, then sale method should be called")
     fun makeSaleRequestOnPayWithSelectedBank() {
-        viewModel.payWithSelectedBank()
+        sut.payWithSelectedBank()
 
         coVerify { service.sale(saleRequest) }
     }
@@ -110,7 +110,7 @@ class IdealViewModelTest {
     fun postSaleResponseAfterSaleRequestFinished() {
         val slots = mutableListOf<JudoApiCallResult<IdealSaleResponse>>()
 
-        viewModel.payWithSelectedBank()
+        sut.payWithSelectedBank()
 
         verify { saleCallResultMock.onChanged(capture(slots)) }
 
@@ -123,7 +123,7 @@ class IdealViewModelTest {
     fun loadingTrueOnSaleRequestFinished() {
         val slots = mutableListOf<Boolean>()
 
-        viewModel.payWithSelectedBank()
+        sut.payWithSelectedBank()
 
         verify { isLoadingMock.onChanged(capture(slots)) }
 
@@ -136,8 +136,8 @@ class IdealViewModelTest {
     fun setIsLoadingTrueOnCompleteIdealPaymentCall() {
         val slots = mutableListOf<Boolean>()
 
-        viewModel.payWithSelectedBank()
-        viewModel.completeIdealPayment()
+        sut.payWithSelectedBank()
+        sut.completeIdealPayment()
 
         verify { isLoadingMock.onChanged(capture(slots)) }
 
@@ -150,8 +150,8 @@ class IdealViewModelTest {
     fun setIsDelayFalseOnCompleteIdealPaymentCall() {
         val slots = mutableListOf<Boolean>()
 
-        viewModel.payWithSelectedBank()
-        viewModel.completeIdealPayment()
+        sut.payWithSelectedBank()
+        sut.completeIdealPayment()
 
         verify { isDelayMock.onChanged(capture(slots)) }
 
@@ -162,8 +162,8 @@ class IdealViewModelTest {
     @Test
     @DisplayName("Given order id is set on payWithSelectedBank, when completeIdealPayment is called, then make status request")
     fun makeStatusRequestOnCompleteIdealPayment() {
-        viewModel.payWithSelectedBank()
-        viewModel.completeIdealPayment()
+        sut.payWithSelectedBank()
+        sut.completeIdealPayment()
 
         coVerify { service.status(ORDER_ID) }
     }
@@ -173,8 +173,8 @@ class IdealViewModelTest {
     fun postSaleStatusCallRequestOnRequestSuccessAndOrderStatusSucceeded() {
         val slots = mutableListOf<JudoApiCallResult<IdealSaleStatusResponse>>()
 
-        viewModel.payWithSelectedBank()
-        viewModel.completeIdealPayment()
+        sut.payWithSelectedBank()
+        sut.completeIdealPayment()
 
         verify { saleStatusCallResultMock.onChanged(capture(slots)) }
 
@@ -189,8 +189,8 @@ class IdealViewModelTest {
 
         val slots = mutableListOf<JudoApiCallResult<IdealSaleStatusResponse>>()
 
-        viewModel.payWithSelectedBank()
-        viewModel.completeIdealPayment()
+        sut.payWithSelectedBank()
+        sut.completeIdealPayment()
 
         verify { saleStatusCallResultMock.onChanged(capture(slots)) }
 
@@ -207,8 +207,8 @@ class IdealViewModelTest {
 
         val slots = mutableListOf<JudoApiCallResult<IdealSaleStatusResponse>>()
 
-        viewModel.payWithSelectedBank()
-        viewModel.completeIdealPayment()
+        sut.payWithSelectedBank()
+        sut.completeIdealPayment()
 
         verify { saleStatusCallResultMock.onChanged(capture(slots)) }
 
@@ -225,8 +225,8 @@ class IdealViewModelTest {
 
         val slots = mutableListOf<Boolean>()
 
-        viewModel.payWithSelectedBank()
-        viewModel.completeIdealPayment()
+        sut.payWithSelectedBank()
+        sut.completeIdealPayment()
 
         verify { isLoadingMock.onChanged(capture(slots)) }
 
@@ -241,8 +241,8 @@ class IdealViewModelTest {
 
         val slots = mutableListOf<JudoApiCallResult<IdealSaleStatusResponse>>()
 
-        viewModel.payWithSelectedBank()
-        viewModel.completeIdealPayment()
+        sut.payWithSelectedBank()
+        sut.completeIdealPayment()
         testDispatcher.advanceUntilIdle()
 
         verify { saleStatusCallResultMock.onChanged(capture(slots)) }
@@ -258,8 +258,8 @@ class IdealViewModelTest {
 
         val slots = mutableListOf<Boolean>()
 
-        viewModel.payWithSelectedBank()
-        viewModel.completeIdealPayment()
+        sut.payWithSelectedBank()
+        sut.completeIdealPayment()
         testDispatcher.advanceUntilIdle()
 
         verify { isDelayMock.onChanged(capture(slots)) }

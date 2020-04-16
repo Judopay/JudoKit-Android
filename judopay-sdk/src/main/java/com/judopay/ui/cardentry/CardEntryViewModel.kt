@@ -8,16 +8,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.judopay.Judo
 import com.judopay.R
-import com.judopay.api.factory.JudoApiServiceFactory
+import com.judopay.api.JudoApiService
 import com.judopay.api.model.request.Address
+import com.judopay.api.model.request.CheckCardRequest
+import com.judopay.api.model.request.PaymentRequest
+import com.judopay.api.model.request.RegisterCardRequest
 import com.judopay.api.model.request.SaveCardRequest
 import com.judopay.api.model.response.CardToken
 import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
-import com.judopay.db.JudoRoomDatabase
 import com.judopay.db.entity.TokenizedCardEntity
 import com.judopay.db.repository.TokenizedCardRepository
 import com.judopay.model.PaymentWidgetType
+import com.judopay.toMap
 import com.judopay.ui.cardentry.components.FormFieldType
 import com.judopay.ui.cardentry.components.FormModel
 import com.judopay.ui.cardentry.components.InputModel
@@ -34,27 +37,28 @@ sealed class CardEntryAction {
 }
 
 internal class CardEntryViewModelFactory(
-    private val application: Application,
-    private val judo: Judo
+    private val judo: Judo,
+    private val service: JudoApiService,
+    private val cardRepository: TokenizedCardRepository,
+    private val application: Application
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == CardEntryViewModel::class.java) {
-            CardEntryViewModel(application, judo) as T
+            CardEntryViewModel(judo, service, cardRepository, application) as T
         } else super.create(modelClass)
     }
 }
 
 class CardEntryViewModel(
-    application: Application,
-    private val judo: Judo
+    private val judo: Judo,
+    private val service: JudoApiService,
+    private val cardRepository: TokenizedCardRepository,
+    application: Application
 ) : AndroidViewModel(application) {
 
     val model = MutableLiveData<CardEntryFragmentModel>()
     val judoApiCallResult = MutableLiveData<JudoApiCallResult<Receipt>>()
-
-    private val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
-    private val cardRepository = TokenizedCardRepository(tokenizedCardDao)
 
     private val context = application
 
@@ -113,7 +117,6 @@ class CardEntryViewModel(
     }
 
     private fun sendRequest() = viewModelScope.launch {
-        val service = JudoApiServiceFactory.createApiService(context, judo)
         val addressBuilder = Address.Builder()
 
         if (judo.uiConfiguration.avsEnabled) {
@@ -122,7 +125,99 @@ class CardEntryViewModel(
                 .setPostCode(inputModel.postCode)
         }
 
-        // TODO: this to be dynamically built
+        val result = when (judo.paymentWidgetType) {
+            PaymentWidgetType.CARD_PAYMENT -> performPaymentRequest(addressBuilder)
+            PaymentWidgetType.PRE_AUTH_CARD_PAYMENT -> performPreAuthPaymentRequest(addressBuilder)
+            PaymentWidgetType.CREATE_CARD_TOKEN -> performRegisterCardRequest(addressBuilder)
+            PaymentWidgetType.CHECK_CARD -> performCheckCardRequest(addressBuilder)
+            PaymentWidgetType.SAVE_CARD,
+            PaymentWidgetType.PAYMENT_METHODS,
+            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
+            PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS -> performSaveCardRequest(addressBuilder)
+            else -> throw IllegalStateException("Unsupported PaymentWidgetType")
+        }
+
+        judoApiCallResult.postValue(result)
+
+        buildModel(isLoading = false, isFormValid = true)
+    }
+
+    private suspend fun performCheckCardRequest(addressBuilder: Address.Builder): JudoApiCallResult<Receipt> {
+        val request = CheckCardRequest.Builder()
+            .setUniqueRequest(false)
+            .setYourPaymentReference(judo.reference.paymentReference)
+            .setCurrency(judo.amount.currency.name)
+            .setJudoId(judo.judoId)
+            .setYourConsumerReference(judo.reference.consumerReference)
+            .setYourPaymentMetaData(judo.reference.metaData?.toMap())
+            .setAddress(addressBuilder.build())
+            .setCardNumber(inputModel.cardNumber)
+            .setExpiryDate(inputModel.expirationDate)
+            .setCv2(inputModel.securityNumber)
+            .setPrimaryAccountDetails(judo.primaryAccountDetails)
+            .build()
+
+        return service.checkCard(request)
+    }
+
+    private suspend fun performRegisterCardRequest(addressBuilder: Address.Builder): JudoApiCallResult<Receipt> {
+        val request = RegisterCardRequest.Builder()
+            .setUniqueRequest(false)
+            .setYourPaymentReference(judo.reference.paymentReference)
+            .setAmount(judo.amount.amount)
+            .setCurrency(judo.amount.currency.name)
+            .setJudoId(judo.judoId)
+            .setYourConsumerReference(judo.reference.consumerReference)
+            .setYourPaymentMetaData(judo.reference.metaData?.toMap())
+            .setAddress(addressBuilder.build())
+            .setCardNumber(inputModel.cardNumber)
+            .setExpiryDate(inputModel.expirationDate)
+            .setCv2(inputModel.securityNumber)
+            .setPrimaryAccountDetails(judo.primaryAccountDetails)
+            .build()
+
+        return service.registerCard(request)
+    }
+
+    private suspend fun performPreAuthPaymentRequest(addressBuilder: Address.Builder): JudoApiCallResult<Receipt> {
+        val request = PaymentRequest.Builder()
+            .setUniqueRequest(false)
+            .setYourPaymentReference(judo.reference.paymentReference)
+            .setAmount(judo.amount.amount)
+            .setCurrency(judo.amount.currency.name)
+            .setJudoId(judo.judoId)
+            .setYourConsumerReference(judo.reference.consumerReference)
+            .setYourPaymentMetaData(judo.reference.metaData?.toMap())
+            .setAddress(addressBuilder.build())
+            .setCardNumber(inputModel.cardNumber)
+            .setCv2(inputModel.securityNumber)
+            .setExpiryDate(inputModel.expirationDate)
+            .setPrimaryAccountDetails(judo.primaryAccountDetails)
+            .build()
+
+        return service.preAuthPayment(request)
+    }
+
+    private suspend fun performPaymentRequest(addressBuilder: Address.Builder): JudoApiCallResult<Receipt> {
+        val request = PaymentRequest.Builder()
+            .setUniqueRequest(false)
+            .setYourPaymentReference(judo.reference.paymentReference)
+            .setAmount(judo.amount.amount)
+            .setCurrency(judo.amount.currency.name)
+            .setJudoId(judo.judoId)
+            .setYourConsumerReference(judo.reference.consumerReference)
+            .setYourPaymentMetaData(judo.reference.metaData?.toMap())
+            .setAddress(addressBuilder.build())
+            .setCardNumber(inputModel.cardNumber)
+            .setCv2(inputModel.securityNumber)
+            .setExpiryDate(inputModel.expirationDate)
+            .setPrimaryAccountDetails(judo.primaryAccountDetails)
+            .build()
+
+        return service.payment(request)
+    }
+
+    private suspend fun performSaveCardRequest(addressBuilder: Address.Builder): JudoApiCallResult<Receipt> {
         val request = SaveCardRequest.Builder()
             .setUniqueRequest(false)
             .setYourPaymentReference(judo.reference.paymentReference)
@@ -130,17 +225,15 @@ class CardEntryViewModel(
             .setCurrency(judo.amount.currency.name)
             .setJudoId(judo.judoId)
             .setYourConsumerReference(judo.reference.consumerReference)
-            .setYourPaymentMetaData(emptyMap())
+            .setYourPaymentMetaData(judo.reference.metaData?.toMap())
             .setAddress(addressBuilder.build())
             .setCardNumber(inputModel.cardNumber)
             .setExpiryDate(inputModel.expirationDate)
             .setCv2(inputModel.securityNumber)
+            .setPrimaryAccountDetails(judo.primaryAccountDetails)
             .build()
 
-        val result = service.saveCard(request)
-        judoApiCallResult.postValue(result)
-
-        buildModel(isLoading = false, isFormValid = true)
+        return service.saveCard(request)
     }
 
     private fun buildModel(isLoading: Boolean, isFormValid: Boolean) {

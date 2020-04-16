@@ -1,8 +1,10 @@
 package com.judopay.api
 
+import com.judopay.api.model.request.CheckCardRequest
 import com.judopay.api.model.request.GooglePayRequest
 import com.judopay.api.model.request.IdealSaleRequest
 import com.judopay.api.model.request.PaymentRequest
+import com.judopay.api.model.request.RegisterCardRequest
 import com.judopay.api.model.request.SaveCardRequest
 import com.judopay.api.model.request.TokenRequest
 import com.judopay.api.model.response.CardVerificationResult
@@ -102,8 +104,8 @@ interface JudoApiService {
      * @param registerCardRequest the details of the card to be registered
      * @return the receipt for the card registration with the status of the transaction
      */
-//    @POST("transactions/registercard")
-//    fun registerCard(@Body registerCardRequest: RegisterCardRequest): Single<Receipt>
+    @POST("transactions/registercard")
+    suspend fun registerCard(@Body registerCardRequest: RegisterCardRequest): JudoApiCallResult<Receipt>
 
     /**
      * Save a card to be used for making future tokenised payments
@@ -120,8 +122,8 @@ interface JudoApiService {
      * @param checkCardRequest the details of the card to be checked
      * @return the receipt for the card check with the status of the transaction
      */
-//    @POST("transactions/checkcard")
-//    fun checkCard(@Body checkCardRequest: CheckCardRequest): Single<Receipt>
+    @POST("transactions/checkcard")
+    suspend fun checkCard(@Body checkCardRequest: CheckCardRequest): JudoApiCallResult<Receipt>
 
     @POST("transactions/payments")
     suspend fun googlePayPayment(@Body googlePayRequest: GooglePayRequest): JudoApiCallResult<Receipt>
