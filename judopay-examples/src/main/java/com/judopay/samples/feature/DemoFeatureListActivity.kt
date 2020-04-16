@@ -196,7 +196,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
     private val uiConfiguration: UiConfiguration
         get() {
             val isAVSEnabled = sharedPreferences.getBoolean("is_avs_enabled", false)
-            return UiConfiguration.Builder().setAvsEnabled(isAVSEnabled).build()
+            val shouldDisplayAmount = sharedPreferences.getBoolean("should_display_amount", true)
+            return UiConfiguration.Builder()
+                .setAvsEnabled(isAVSEnabled)
+                .setShouldDisplayAmount(shouldDisplayAmount)
+                .build()
         }
 
     private val networks: Array<CardNetwork>?

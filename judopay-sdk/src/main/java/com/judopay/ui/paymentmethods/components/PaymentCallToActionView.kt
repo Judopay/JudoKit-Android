@@ -2,6 +2,7 @@ package com.judopay.ui.paymentmethods.components
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.FrameLayout
 import com.judopay.R
 import com.judopay.inflate
@@ -25,7 +26,8 @@ typealias PaymentCallToActionViewListener = (action: PaymentCallToActionType) ->
 data class PaymentCallToActionViewModel(
     val amount: String = "",
     val buttonType: PaymentButtonType = PaymentButtonType.PLAIN,
-    val paymentButtonState: ButtonState = ButtonState.Disabled(R.string.pay_now)
+    val paymentButtonState: ButtonState = ButtonState.Disabled(R.string.pay_now),
+    val shouldDisplayAmount: Boolean = false
 )
 
 class PaymentCallToActionView @JvmOverloads constructor(
@@ -50,6 +52,9 @@ class PaymentCallToActionView @JvmOverloads constructor(
 
     private fun update() = with(model) {
         amountTextView.text = amount
+        val visibility = if (shouldDisplayAmount) View.VISIBLE else View.GONE
+        youWillPayTextView.visibility = visibility
+        amountTextView.visibility = visibility
 
         when (buttonType) {
             PaymentButtonType.PLAIN,

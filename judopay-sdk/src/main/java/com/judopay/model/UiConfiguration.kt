@@ -5,17 +5,25 @@ import com.judopay.requireNotNull
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class UiConfiguration internal constructor(val avsEnabled: Boolean) : Parcelable {
+class UiConfiguration internal constructor(
+    val avsEnabled: Boolean,
+    val shouldDisplayAmount: Boolean
+) : Parcelable {
 
     class Builder {
         private var avsEnabled: Boolean? = null
+        private var shouldDisplayAmount: Boolean? = null
 
         fun setAvsEnabled(enabled: Boolean?) = apply { this.avsEnabled = enabled }
 
-        fun build(): UiConfiguration {
-            val enabled = requireNotNull(avsEnabled, "avsEnabled")
+        fun setShouldDisplayAmount(shouldDisplay: Boolean?) =
+            apply { this.shouldDisplayAmount = shouldDisplay }
 
-            return UiConfiguration(enabled)
+        fun build(): UiConfiguration {
+            val avsEnabled = requireNotNull(this.avsEnabled, "avsEnabled")
+            val shouldDisplayAmount = requireNotNull(this.shouldDisplayAmount, "shouldDisplayAmount")
+
+            return UiConfiguration(avsEnabled, shouldDisplayAmount)
         }
     }
 

@@ -54,6 +54,9 @@
     <string name="secret_title">Secret</string>
     <string name="secret_summary">Your API authorization secret</string>
 
+    <string name="should_display_amount_title">Display amount label</string>
+    <string name="should_display_amount_summary">Turn off to hide amount label in the payment methods screen.</string>
+
     <string name="amount_title">Amount</string>
     <string name="amount_summary">Your amount</string>
 

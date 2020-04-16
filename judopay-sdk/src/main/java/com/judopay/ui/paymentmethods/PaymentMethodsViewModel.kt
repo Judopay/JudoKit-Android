@@ -309,7 +309,8 @@ class PaymentMethodsViewModel(
         val callToActionModel = PaymentCallToActionViewModel(
             amount = judo.amount.formatted,
             buttonType = method.type.paymentButtonType,
-            paymentButtonState = buildPaymentButtonState(method.type, isLoading, cardModel)
+            paymentButtonState = buildPaymentButtonState(method.type, isLoading, cardModel),
+            shouldDisplayAmount = judo.uiConfiguration.shouldDisplayAmount
         )
 
         val headerViewModel = PaymentMethodsHeaderViewModel(cardModel, callToActionModel)

@@ -21,8 +21,8 @@
         android:background="@color/white">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/powered_by_judo_width"
+            android:layout_height="@dimen/powered_by_judo_height"
             android:layout_gravity="center_horizontal"
             android:contentDescription="@null"
             app:srcCompat="@drawable/ic_powered_by_judo" />
