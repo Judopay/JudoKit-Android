@@ -13,12 +13,12 @@
     <SurfaceView
         android:id="@+id/surface_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
     <cards.pay.paycardsrecognizer.sdk.camera.widget.CardDetectionStateView
         android:id="@+id/wocr_card_detection_state"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
     <TextView
         android:id="@+id/position_card_text_view"
@@ -46,7 +46,7 @@
         android:id="@+id/wocr_powered_by_paycards_link"
         style="@style/wocr_PaycardsButton"
         android:text="@string/wocr_powered_by_pay_cards"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:wocr_layout_cardAlignGravity="bottom|left"
         tools:ignore="MissingPrefix,SpUsage" />
 

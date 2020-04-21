@@ -64,4 +64,8 @@
     <dimen name="size_50dp">50dp</dimen>
     <dimen name="powered_by_judo_width">96dp</dimen>
     <dimen name="powered_by_judo_height">18dp</dimen>
+
+
+    <dimen name="size_120">120dp</dimen>
+
 </resources>

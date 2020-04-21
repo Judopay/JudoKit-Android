@@ -18,22 +18,21 @@
             layout="@layout/wocr_include_card_detection_layout"
             tools:ignore="PrivateResource" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/wocr_tv_enter_card_number_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/JudoTheme.BackButton"
             android:layout_marginStart="@dimen/space_20"
             android:layout_marginTop="@dimen/space_56"
-            android:background="@android:color/transparent"
+            android:contentDescription="@null"
             android:padding="@dimen/space_8"
-            app:srcCompat="@drawable/ic_back_20dp" />
+            app:layout_collapseMode="pin" />
 
     </RelativeLayout>
 
     <cards.pay.paycardsrecognizer.sdk.ui.views.ProgressBarIndeterminate
         android:id="@+id/wocr_progress_bar"
-        android:layout_width="@dimen/width_120"
-        android:layout_height="@dimen/height_120"
+        android:layout_width="@dimen/size_120"
+        android:layout_height="@dimen/size_120"
         android:layout_gravity="center"
         android:visibility="invisible" />
 
