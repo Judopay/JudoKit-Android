@@ -18,9 +18,11 @@ internal val Judo.apiBaseUrl: String
     get() = if (isSandboxed) ApiEnvironment.SANDBOX.host else ApiEnvironment.LIVE.host
 
 internal fun requireNotNullOrEmpty(value: String?, propertyName: String): String {
-    if (value.isNullOrEmpty())
-        throw IllegalArgumentException("$propertyName cannot be null or empty")
-    else return value
+    when {
+        value == null -> throw IllegalArgumentException("$propertyName cannot be null")
+        value.isEmpty() -> throw IllegalArgumentException("$propertyName cannot be empty")
+        else -> return value
+    }
 }
 
 internal fun <T : Any> requireNotNull(value: T?, propertyName: String): T {

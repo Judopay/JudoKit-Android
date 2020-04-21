@@ -2,6 +2,7 @@ package com.judopay.model
 
 import android.os.Bundle
 import android.os.Parcelable
+import com.judopay.requireNotNullOrEmpty
 import java.util.UUID
 import kotlinx.android.parcel.Parcelize
 
@@ -22,9 +23,8 @@ class Reference internal constructor(
         fun setMetaData(data: Bundle?) = apply { this.metaData = data }
 
         fun build(): Reference {
-            val myConsumerReference = if (consumerReference.isNullOrBlank()) UUID.randomUUID()
-                .toString() else consumerReference!!
-            val myPaymentReference = if (paymentReference.isNullOrBlank()) UUID.randomUUID()
+            val myConsumerReference = requireNotNullOrEmpty(consumerReference, "consumerReference")
+            val myPaymentReference = if (paymentReference.isNullOrEmpty()) UUID.randomUUID()
                 .toString() else paymentReference!!
 
             return Reference(myConsumerReference, myPaymentReference, metaData)

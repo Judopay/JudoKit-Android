@@ -73,7 +73,7 @@ class JudoSharedViewModel(
                 if (isAvailable) {
                     googlePayService.loadGooglePayPaymentData()
                 } else {
-                    onLoadGPayPaymentDataError("GooglePay is not available on this device")
+                    onLoadGPayPaymentDataError("GooglePay is not supported on your device")
                 }
             } catch (exception: Exception) {
                 when (exception) {

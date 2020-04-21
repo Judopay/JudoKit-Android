@@ -98,8 +98,8 @@ class Judo internal constructor(
             val myReference = requireNotNull(reference, "reference")
 
             paymentMethods?.let {
-                if (it.size == 1 && it.first() == PaymentMethod.IDEAL && myAmount?.currency != Currency.EUR) {
-                    throw IllegalArgumentException("iDEAL can't be configured. Currency must be set to EUR.")
+                if (it.size == 1 && it.first() == PaymentMethod.IDEAL && myAmount.currency != Currency.EUR) {
+                    throw IllegalArgumentException("Cannot make iDEAL transactions with currencies different than EUR")
                 }
             }
 
@@ -111,7 +111,12 @@ class Judo internal constructor(
             val mySandboxed = isSandboxed ?: false
 
             val defaultPaymentMethods = arrayOf(PaymentMethod.CARD)
-            val defaultSupportedCardNetworks = arrayOf(CardNetwork.VISA)
+            val defaultSupportedCardNetworks = arrayOf(
+                CardNetwork.VISA,
+                CardNetwork.MASTERCARD,
+                CardNetwork.AMEX,
+                CardNetwork.MAESTRO
+            )
 
             val myPaymentMethods =
                 if (paymentMethods.isNullOrEmpty()) defaultPaymentMethods else checkNotNull(

@@ -17,7 +17,7 @@ class CheckCardRequest private constructor(
     private var currency: String?,
     private var primaryAccountDetails: PrimaryAccountDetails?,
     private var yourPaymentMetaData: Map<String, String>?,
-    private var amount: String = "0"
+    private var amount: String = "0.0"
 ) {
     class Builder {
         private var uniqueRequest: Boolean? = null
