@@ -4,16 +4,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import cards.pay.paycardsrecognizer.sdk.Card
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.wallet.PaymentData
 import com.judopay.api.JudoApiService
 import com.judopay.api.model.request.GooglePayRequest
 import com.judopay.api.model.request.toJudoResult
 import com.judopay.api.model.response.toJudoPaymentResult
+import com.judopay.model.CardScanningResult
 import com.judopay.model.INTERNAL_ERROR
 import com.judopay.model.JudoError
-import com.judopay.model.CardScanningResult
 import com.judopay.model.JudoPaymentResult
 import com.judopay.model.PaymentWidgetType
 import com.judopay.model.isGooglePayWidget
