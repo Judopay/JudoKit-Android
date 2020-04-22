@@ -1,5 +1,6 @@
 package com.judopay.api.model.response
 
+import com.judopay.model.JudoResult
 import com.judopay.ui.common.toDate
 import java.util.Locale
 
@@ -11,7 +12,7 @@ data class IdealSaleStatusResponse(
     val merchantConsumerReference: String
 )
 
-fun IdealSaleStatusResponse.toReceipt(locale: Locale) = Receipt(
+fun IdealSaleStatusResponse.toJudoResult(locale: Locale) = JudoResult(
     receiptId = orderDetails.orderId,
     result = orderDetails.orderStatus.name,
     createdAt = toDate(orderDetails.timestamp, locale),

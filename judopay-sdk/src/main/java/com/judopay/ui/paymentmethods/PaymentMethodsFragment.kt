@@ -13,13 +13,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.judopay.JUDO_RECEIPT
 import com.judopay.JudoSharedAction
 import com.judopay.JudoSharedViewModel
 import com.judopay.R
 import com.judopay.api.error.ApiError
+import com.judopay.api.error.toJudoError
 import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
+import com.judopay.api.model.response.toCardVerificationModel
+import com.judopay.api.model.response.toJudoResult
 import com.judopay.judo
 import com.judopay.model.JudoPaymentResult
 import com.judopay.ui.editcard.JUDO_TOKENIZED_CARD_ID
@@ -37,6 +39,8 @@ import com.judopay.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
 import com.judopay.ui.paymentmethods.model.PaymentMethodModel
 import kotlinx.android.synthetic.main.payment_methods_fragment.*
 import kotlinx.android.synthetic.main.payment_methods_header_view.*
+
+internal const val CARD_VERIFICATION = "com.judopay.model.CardVerificationModel"
 
 data class PaymentMethodsModel(
     val headerModel: PaymentMethodsHeaderViewModel,
@@ -117,7 +121,7 @@ class PaymentMethodsFragment : Fragment() {
 
     private fun handleFail(error: ApiError?) {
         if (error != null) {
-            sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(error))
+            sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(error.toJudoError()))
         }
     }
 
@@ -126,11 +130,11 @@ class PaymentMethodsFragment : Fragment() {
             if (receipt.is3dSecureRequired) {
                 findNavController().navigate(
                     R.id.action_paymentMethodsFragment_to_cardVerificationFragment, bundleOf(
-                        JUDO_RECEIPT to receipt
+                        CARD_VERIFICATION to receipt.toCardVerificationModel()
                     )
                 )
             } else {
-                sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(receipt))
+                sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(receipt.toJudoResult()))
             }
     }
 

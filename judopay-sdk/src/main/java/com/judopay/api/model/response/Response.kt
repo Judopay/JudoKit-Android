@@ -1,9 +1,7 @@
 package com.judopay.api.model.response
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import com.judopay.api.error.ApiError
-import kotlinx.android.parcel.Parcelize
 
 /**
  * Base class for all HTTP responses that come back from the Judo API, this contains fields
@@ -104,7 +102,6 @@ const val INVALID_RECEIPT_ID = 20026
 private const val RESPONSE_STATUS_SUCCESS = "Success"
 private const val RESPONSE_STATUS_DECLINED = "Declined"
 
-@Parcelize
 open class Response(
 
     val result: String? = null,
@@ -127,7 +124,7 @@ open class Response(
     @SerializedName("details")
     val errorDetails: List<ApiError>? = null
 
-) : Parcelable {
+) {
 
     val isSuccess: Boolean
         get() = RESPONSE_STATUS_SUCCESS == result

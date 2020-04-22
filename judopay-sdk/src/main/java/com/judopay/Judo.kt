@@ -24,7 +24,7 @@ import kotlinx.android.parcel.Parcelize
 
 // Bundle keys
 const val JUDO_OPTIONS = "com.judopay.options"
-const val JUDO_RECEIPT = "com.judopay.receipt"
+const val JUDO_RESULT = "com.judopay.result"
 const val JUDO_ERROR = "com.judopay.error"
 
 // Result codes
@@ -36,7 +36,6 @@ const val PAYMENT_CANCELLED = Activity.RESULT_FIRST_USER + 2
 
 /** Judo activity result: operation error  */
 const val PAYMENT_ERROR = Activity.RESULT_FIRST_USER + 3
-
 @Parcelize
 class Judo internal constructor(
     val judoId: String,

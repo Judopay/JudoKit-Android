@@ -12,22 +12,22 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.judopay.JUDO_ERROR
 import com.judopay.JUDO_OPTIONS
-import com.judopay.JUDO_RECEIPT
+import com.judopay.JUDO_RESULT
 import com.judopay.Judo
 import com.judopay.JudoActivity
 import com.judopay.PAYMENT_CANCELLED
 import com.judopay.PAYMENT_ERROR
 import com.judopay.PAYMENT_SUCCESS
-import com.judopay.api.error.ApiError
 import com.judopay.api.factory.JudoApiServiceFactory
-import com.judopay.api.model.response.Receipt
 import com.judopay.model.Amount
+import com.judopay.model.JudoError
 import com.judopay.model.CardNetwork
 import com.judopay.model.Currency
 import com.judopay.model.GooglePayConfiguration
 import com.judopay.model.PaymentMethod
 import com.judopay.model.PaymentWidgetType
 import com.judopay.model.Reference
+import com.judopay.model.JudoResult
 import com.judopay.model.UiConfiguration
 import com.judopay.model.googlepay.GooglePayAddressFormat
 import com.judopay.model.googlepay.GooglePayBillingAddressParameters
@@ -85,27 +85,27 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 PAYMENT_CANCELLED -> toast("User cancelled the payment.")
 
                 PAYMENT_SUCCESS -> {
-                    val receipt = data?.getParcelableExtra<Receipt>(JUDO_RECEIPT)
-                    processSuccessfulPayment(receipt)
+                    val result = data?.getParcelableExtra<JudoResult>(JUDO_RESULT)
+                    processSuccessfulPayment(result)
                 }
 
                 PAYMENT_ERROR -> {
-                    val error = data?.getParcelableExtra<ApiError>(JUDO_ERROR)
+                    val error = data?.getParcelableExtra<JudoError>(JUDO_ERROR)
                     processPaymentError(error)
                 }
             }
         }
     }
 
-    private fun processSuccessfulPayment(receipt: Receipt?) {
-        if (receipt != null) {
-            startResultActivity(receipt.toResult())
+    private fun processSuccessfulPayment(result: JudoResult?) {
+        if (result != null) {
+            startResultActivity(result.toResult())
         } else {
-            presentError("Unexpected null receipt object")
+            presentError("Unexpected null result object")
         }
     }
 
-    private fun processPaymentError(error: ApiError?) {
+    private fun processPaymentError(error: JudoError?) {
         if (error != null) {
             startResultActivity(error.toResult())
         } else {
