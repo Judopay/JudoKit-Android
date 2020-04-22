@@ -25,7 +25,8 @@
             android:layout_marginTop="@dimen/space_56"
             android:contentDescription="@null"
             android:padding="@dimen/space_8"
-            app:layout_collapseMode="pin" />
+            app:layout_collapseMode="pin"
+            app:srcCompat="@drawable/ic_back_light_20dp" />
 
     </RelativeLayout>
 
