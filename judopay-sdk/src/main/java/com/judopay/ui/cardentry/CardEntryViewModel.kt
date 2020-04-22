@@ -19,7 +19,6 @@ import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
 import com.judopay.db.entity.TokenizedCardEntity
 import com.judopay.db.repository.TokenizedCardRepository
-import com.judopay.model.CardScanResultType
 import com.judopay.model.CardScanningResult
 import com.judopay.model.PaymentWidgetType
 import com.judopay.model.toInputModel
