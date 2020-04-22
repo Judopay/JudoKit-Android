@@ -20,8 +20,8 @@
             android:id="@+id/action_paymentMethodsFragment_to_cardVerificationFragment"
             app:destination="@id/cardVerificationFragment">
             <argument
-                android:name="com.judopay.receipt"
-                app:argType="com.judopay.api.model.response.Receipt" />
+                android:name="com.judopay.model.CardVerificationModel"
+                app:argType="com.judopay.model.CardVerificationModel" />
         </action>
 
         <action

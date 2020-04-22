@@ -2,7 +2,7 @@ package com.judopay.api.model.request
 
 import com.judopay.api.model.response.CardToken
 import com.judopay.api.model.response.Consumer
-import com.judopay.api.model.response.Receipt
+import com.judopay.model.JudoResult
 import com.judopay.model.PrimaryAccountDetails
 import com.judopay.requireNotNull
 import com.judopay.requireNotNullOrEmpty
@@ -74,8 +74,7 @@ class GooglePayRequest private constructor(
     }
 }
 
-fun GooglePayRequest.toReceipt() = Receipt(
-    judoID = judoId?.toLong(),
+fun GooglePayRequest.toJudoResult() = JudoResult(
     amount = amount?.toBigDecimal(),
     currency = currency,
     yourPaymentReference = yourPaymentReference,

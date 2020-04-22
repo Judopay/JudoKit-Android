@@ -22,18 +22,6 @@ internal class SaveCardRequestTest {
     }
 
     @Test
-    @DisplayName("Should throw an exception on providing null amount")
-    fun exceptionOnNullAmount() {
-        assertThrows<IllegalArgumentException> { request.setAmount(null).build() }
-    }
-
-    @Test
-    @DisplayName("Should throw an exception on providing empty amount")
-    fun exceptionOnEmptyAmount() {
-        assertThrows<IllegalArgumentException> { request.setAmount("").build() }
-    }
-
-    @Test
     @DisplayName("Should throw an exception on providing null currency")
     fun exceptionOnNullCurrency() {
         assertThrows<IllegalArgumentException> { request.setCurrency(null).build() }

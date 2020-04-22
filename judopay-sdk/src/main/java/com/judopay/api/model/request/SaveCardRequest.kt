@@ -15,7 +15,6 @@ import com.judopay.requireNotNullOrEmpty
 class SaveCardRequest private constructor(
     private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String,
-    private var amount: String,
     private var currency: String,
     private var judoId: String,
     private var yourConsumerReference: String,
@@ -28,12 +27,12 @@ class SaveCardRequest private constructor(
     private var issueNumber: String?,
     private var emailAddress: String?,
     private var mobileNumber: String?,
-    private var primaryAccountDetails: PrimaryAccountDetails?
+    private var primaryAccountDetails: PrimaryAccountDetails?,
+    private var amount: String = "0.0"
 ) {
     class Builder {
         private var uniqueRequest: Boolean? = null
         private var yourPaymentReference: String? = null
-        private var amount: String? = null
         private var currency: String? = null
         private var judoId: String? = null
         private var yourConsumerReference: String? = null
@@ -52,8 +51,6 @@ class SaveCardRequest private constructor(
 
         fun setYourPaymentReference(yourPaymentReference: String?) =
                 apply { this.yourPaymentReference = yourPaymentReference }
-
-        fun setAmount(amount: String?) = apply { this.amount = amount }
 
         fun setCurrency(currency: String?) = apply { this.currency = currency }
 
@@ -86,7 +83,6 @@ class SaveCardRequest private constructor(
 
         fun build(): SaveCardRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
-            val myAmount = requireNotNullOrEmpty(amount, "amount")
             val myCurrency = requireNotNullOrEmpty(currency, "currency")
             val consumerReference =
                     requireNotNullOrEmpty(yourConsumerReference, "yourConsumerReference")
@@ -100,7 +96,6 @@ class SaveCardRequest private constructor(
             return SaveCardRequest(
                     uniqueRequest,
                     paymentReference,
-                    myAmount,
                     myCurrency,
                     id,
                     consumerReference,

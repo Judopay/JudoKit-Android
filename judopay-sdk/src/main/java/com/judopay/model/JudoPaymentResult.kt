@@ -2,16 +2,14 @@ package com.judopay.model
 
 import android.content.Intent
 import com.judopay.JUDO_ERROR
-import com.judopay.JUDO_RECEIPT
+import com.judopay.JUDO_RESULT
 import com.judopay.PAYMENT_CANCELLED
 import com.judopay.PAYMENT_ERROR
 import com.judopay.PAYMENT_SUCCESS
-import com.judopay.api.error.ApiError
-import com.judopay.api.model.response.Receipt
-
 sealed class JudoPaymentResult {
-    data class Success(val receipt: Receipt) : JudoPaymentResult()
-    data class Error(val error: ApiError) : JudoPaymentResult()
+    data class Success(val result: JudoResult) : JudoPaymentResult()
+
+    data class Error(val error: JudoError) : JudoPaymentResult()
     object UserCancelled : JudoPaymentResult()
 }
 
@@ -21,7 +19,7 @@ fun JudoPaymentResult.toIntent(): Intent {
     when (this) {
         is JudoPaymentResult.UserCancelled -> {
             // TODO: to rethink this
-            intent.putExtra(JUDO_ERROR, ApiError(-1, -1, "User cancelled"))
+            intent.putExtra(JUDO_ERROR, JudoError.userCancelled())
         }
 
         is JudoPaymentResult.Error -> {
@@ -29,7 +27,7 @@ fun JudoPaymentResult.toIntent(): Intent {
         }
 
         is JudoPaymentResult.Success -> {
-            intent.putExtra(JUDO_RECEIPT, receipt)
+            intent.putExtra(JUDO_RESULT, result)
         }
     }
     return intent

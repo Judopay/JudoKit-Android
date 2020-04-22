@@ -22,21 +22,24 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.judopay.JUDO_RECEIPT
 import com.judopay.JudoSharedViewModel
 import com.judopay.R
 import com.judopay.SCAN_CARD_REQUEST_CODE
 import com.judopay.api.error.ApiError
+import com.judopay.api.error.toJudoError
 import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
+import com.judopay.api.model.response.toCardVerificationModel
 import com.judopay.api.model.response.toJudoPaymentResult
+import com.judopay.api.model.response.toJudoResult
 import com.judopay.db.JudoRoomDatabase
 import com.judopay.db.repository.TokenizedCardRepository
 import com.judopay.judo
 import com.judopay.model.JudoPaymentResult
 import com.judopay.model.isCardPaymentWidget
 import com.judopay.model.isPaymentMethodsWidget
+import com.judopay.ui.paymentmethods.CARD_VERIFICATION
 import kotlinx.android.synthetic.main.card_entry_fragment.*
 
 class CardEntryFragment : BottomSheetDialogFragment() {
@@ -150,7 +153,9 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     private fun dispatchCardPaymentApiResult(result: JudoApiCallResult<Receipt>) {
         when (result) {
             is JudoApiCallResult.Success -> handleSuccess(result.data)
-            is JudoApiCallResult.Failure -> if (result.error != null) sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(result.error))
+            is JudoApiCallResult.Failure -> if (result.error != null) sharedViewModel.paymentResult.postValue(
+                JudoPaymentResult.Error(result.error.toJudoError())
+            )
         }
     }
 
@@ -216,15 +221,16 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     }
 
     private fun handleSuccess(receipt: Receipt?) {
-        if (receipt != null)
+        if (receipt != null) {
             if (receipt.is3dSecureRequired) {
                 findNavController().navigate(
                     R.id.action_cardEntryFragment_to_cardVerificationFragment, bundleOf(
-                        JUDO_RECEIPT to receipt
+                        CARD_VERIFICATION to receipt.toCardVerificationModel()
                     )
                 )
             } else {
-                sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(receipt))
+                sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(receipt.toJudoResult()))
             }
+        }
     }
 }

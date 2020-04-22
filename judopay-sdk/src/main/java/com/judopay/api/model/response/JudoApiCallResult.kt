@@ -1,6 +1,8 @@
 package com.judopay.api.model.response
 
 import com.judopay.api.error.ApiError
+import com.judopay.api.error.toJudoError
+import com.judopay.model.JudoError
 import com.judopay.model.JudoPaymentResult
 
 sealed class JudoApiCallResult<out T> {
@@ -13,12 +15,14 @@ sealed class JudoApiCallResult<out T> {
 }
 
 fun JudoApiCallResult<Receipt>.toJudoPaymentResult(): JudoPaymentResult {
-    val fallbackError = ApiError(-1, -1, "")
+    val fallbackError = JudoError.generic()
 
     return when (this) {
-        is JudoApiCallResult.Success -> if (data != null) JudoPaymentResult.Success(data) else JudoPaymentResult.Error(
-            fallbackError
-        )
-        is JudoApiCallResult.Failure -> JudoPaymentResult.Error(error ?: fallbackError)
+        is JudoApiCallResult.Success -> if (data != null) {
+            JudoPaymentResult.Success(data.toJudoResult())
+        } else {
+            JudoPaymentResult.Error(fallbackError)
+        }
+        is JudoApiCallResult.Failure -> JudoPaymentResult.Error(error?.toJudoError() ?: fallbackError)
     }
 }
