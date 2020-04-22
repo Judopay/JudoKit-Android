@@ -17,12 +17,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
+import cards.pay.paycardsrecognizer.sdk.ScanCardIntent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.judopay.JudoSharedViewModel
 import com.judopay.R
+import com.judopay.SCAN_CARD_REQUEST_CODE
 import com.judopay.api.error.ApiError
 import com.judopay.api.error.toJudoError
 import com.judopay.api.factory.JudoApiServiceFactory
@@ -62,6 +64,10 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer { dispatchApiResult(it) })
 
         formView.submitButtonText = viewModel.submitButtonText
+
+        sharedViewModel.scanCardResult.observe(viewLifecycleOwner, Observer {
+            viewModel.send(CardEntryAction.ScanCard(it))
+        })
     }
 
     // present it always expanded
@@ -182,7 +188,9 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     }
 
     private fun handleScanCardButtonClicks(view: View) {
-        view.isEnabled = false
+        val activity = requireActivity()
+        val intent = ScanCardIntent.Builder(activity).build()
+        activity.startActivityForResult(intent, SCAN_CARD_REQUEST_CODE)
     }
 
     private fun unSubscribeFromInsetsChanges() = requireDialog().window?.apply {

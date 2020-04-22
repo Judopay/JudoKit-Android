@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import cards.pay.paycardsrecognizer.sdk.Card
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.wallet.PaymentData
 import com.judopay.api.JudoApiService
@@ -12,6 +13,7 @@ import com.judopay.api.model.request.toJudoResult
 import com.judopay.api.model.response.toJudoPaymentResult
 import com.judopay.model.INTERNAL_ERROR
 import com.judopay.model.JudoError
+import com.judopay.model.CardScanningResult
 import com.judopay.model.JudoPaymentResult
 import com.judopay.model.PaymentWidgetType
 import com.judopay.model.isGooglePayWidget
@@ -24,6 +26,7 @@ import kotlinx.coroutines.launch
 sealed class JudoSharedAction {
     data class LoadGPayPaymentDataSuccess(val paymentData: PaymentData) : JudoSharedAction()
     data class LoadGPayPaymentDataError(val errorMessage: String) : JudoSharedAction()
+    data class ScanCardResult(val result: CardScanningResult) : JudoSharedAction()
     object LoadGPayPaymentDataUserCancelled : JudoSharedAction()
     object LoadGPayPaymentData : JudoSharedAction()
 }
@@ -60,10 +63,14 @@ class JudoSharedViewModel(
     // used to share the GooglePay payment result between this activity and the payment methods fragment
     val paymentMethodsGooglePayResult = MutableLiveData<JudoPaymentResult>()
 
+    // used to share a scan card result between fragments (card input)
+    val scanCardResult = MutableLiveData<CardScanningResult>()
+
     fun send(action: JudoSharedAction) = when (action) {
         is JudoSharedAction.LoadGPayPaymentData -> onLoadGPayPaymentData()
         is JudoSharedAction.LoadGPayPaymentDataSuccess -> onLoadGPayPaymentDataSuccess(action.paymentData)
         is JudoSharedAction.LoadGPayPaymentDataError -> onLoadGPayPaymentDataError(action.errorMessage)
+        is JudoSharedAction.ScanCardResult -> onScanCardSuccess(action.result)
         is JudoSharedAction.LoadGPayPaymentDataUserCancelled -> onLoadGPayPaymentDataUserCancelled()
     }
 
@@ -90,6 +97,10 @@ class JudoSharedViewModel(
 
     private fun onLoadGPayPaymentDataError(errorMessage: String) {
         dispatchResult(JudoPaymentResult.Error(JudoError(INTERNAL_ERROR, errorMessage)))
+    }
+
+    private fun onScanCardSuccess(result: CardScanningResult) {
+        scanCardResult.postValue(result)
     }
 
     private fun onLoadGPayPaymentDataSuccess(paymentData: PaymentData) {

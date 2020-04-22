@@ -15,6 +15,7 @@
     <dimen name="space_32">32dp</dimen>
     <dimen name="space_40">40dp</dimen>
     <dimen name="space_48">48dp</dimen>
+    <dimen name="space_56">56dp</dimen>
     <dimen name="space_132">132dp</dimen>
 
     <dimen name="height_1">1dp</dimen>
@@ -63,4 +64,8 @@
     <dimen name="size_50dp">50dp</dimen>
     <dimen name="powered_by_judo_width">96dp</dimen>
     <dimen name="powered_by_judo_height">18dp</dimen>
+
+
+    <dimen name="size_120">120dp</dimen>
+
 </resources>

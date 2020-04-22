@@ -3,24 +3,32 @@ package com.judopay
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
+import cards.pay.paycardsrecognizer.sdk.Card
+import cards.pay.paycardsrecognizer.sdk.ScanCardIntent
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.WalletConstants
 import com.judopay.api.factory.JudoApiServiceFactory
+import com.judopay.model.CardScanResultType
+import com.judopay.model.CardScanningResult
 import com.judopay.model.JudoPaymentResult
 import com.judopay.model.code
 import com.judopay.model.googlepay.GooglePayEnvironment
 import com.judopay.model.isGooglePayWidget
 import com.judopay.model.navigationGraphId
+import com.judopay.model.toCardScanningResult
 import com.judopay.model.toIntent
 import com.judopay.service.JudoGooglePayService
-import com.judopay.service.LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE
+
+internal const val LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE = Activity.RESULT_FIRST_USER + 1
+internal const val SCAN_CARD_REQUEST_CODE = Activity.RESULT_FIRST_USER + 2
 
 class JudoActivity : AppCompatActivity() {
 
@@ -59,7 +67,12 @@ class JudoActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE) dispatchGPayResult(resultCode, data)
+        when (requestCode) {
+            LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE -> dispatchGPayResult(resultCode, data)
+            SCAN_CARD_REQUEST_CODE -> dispatchScanCardResult(resultCode, data)
+            else -> Log.i("JudoActivity", "Received unsupported requestCode: $requestCode")
+        }
+
         super.onActivityResult(requestCode, resultCode, data)
     }
 
@@ -71,7 +84,7 @@ class JudoActivity : AppCompatActivity() {
                 if (paymentData != null) {
                     JudoSharedAction.LoadGPayPaymentDataSuccess(paymentData)
                 } else {
-                    JudoSharedAction.LoadGPayPaymentDataError("Null response data")
+                    JudoSharedAction.LoadGPayPaymentDataError("Null response data.")
                 }
             }
 
@@ -89,6 +102,19 @@ class JudoActivity : AppCompatActivity() {
         }
 
         viewModel.send(action)
+    }
+
+    private fun dispatchScanCardResult(resultCode: Int, data: Intent?) {
+        val card = data?.getParcelableExtra<Card>(ScanCardIntent.RESULT_PAYCARDS_CARD)
+
+        val resultType = when (resultCode) {
+            Activity.RESULT_OK -> CardScanResultType.SUCCESS
+            Activity.RESULT_CANCELED -> CardScanResultType.CANCELLED
+            else -> CardScanResultType.ERROR
+        }
+
+        val result = card?.toCardScanningResult() ?: CardScanningResult(resultType)
+        viewModel.send(JudoSharedAction.ScanCardResult(result))
     }
 
     private fun dispatchPaymentResult(result: JudoPaymentResult) {

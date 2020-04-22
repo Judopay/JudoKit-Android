@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true">
+
+    <RelativeLayout
+        android:id="@+id/wocr_main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        tools:visibility="visible">
+
+        <include
+            layout="@layout/wocr_include_card_detection_layout"
+            tools:ignore="PrivateResource" />
+
+        <ImageButton
+            android:id="@+id/wocr_tv_enter_card_number_id"
+            style="@style/JudoTheme.BackButton"
+            android:layout_marginStart="@dimen/space_20"
+            android:layout_marginTop="@dimen/space_56"
+            android:contentDescription="@null"
+            android:padding="@dimen/space_8"
+            app:layout_collapseMode="pin"
+            app:srcCompat="@drawable/ic_back_light_20dp" />
+
+    </RelativeLayout>
+
+    <cards.pay.paycardsrecognizer.sdk.ui.views.ProgressBarIndeterminate
+        android:id="@+id/wocr_progress_bar"
+        android:layout_width="@dimen/size_120"
+        android:layout_height="@dimen/size_120"
+        android:layout_gravity="center"
+        android:visibility="invisible" />
+
+</FrameLayout>
