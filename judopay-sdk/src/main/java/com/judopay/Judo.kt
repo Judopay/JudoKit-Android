@@ -2,6 +2,7 @@ package com.judopay
 
 import android.app.Activity
 import android.os.Parcelable
+import com.judopay.api.model.request.Address
 import com.judopay.model.Amount
 import com.judopay.model.CardNetwork
 import com.judopay.model.Currency
@@ -50,7 +51,8 @@ class Judo internal constructor(
     val supportedCardNetworks: Array<CardNetwork>,
     val primaryAccountDetails: PrimaryAccountDetails?,
     val googlePayConfiguration: GooglePayConfiguration?,
-    val paymentWidgetType: PaymentWidgetType
+    val paymentWidgetType: PaymentWidgetType,
+    val address: Address?
 ) : Parcelable {
 
     class Builder(private val paymentWidgetType: PaymentWidgetType) {
@@ -66,6 +68,7 @@ class Judo internal constructor(
         private var supportedCardNetworks: Array<CardNetwork>? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
         private var googlePayConfiguration: GooglePayConfiguration? = null
+        private var address: Address? = null
 
         fun setJudoId(id: String?) = apply { this.judoId = id }
         fun setSiteId(id: String?) = apply { this.siteId = id }
@@ -88,6 +91,9 @@ class Judo internal constructor(
 
         fun setGooglePayConfiguration(configuration: GooglePayConfiguration?) =
             apply { this.googlePayConfiguration = configuration }
+
+        fun setAddress(address: Address?) =
+            apply { this.address = address }
 
         @Throws(IllegalArgumentException::class)
         fun build(): Judo {
@@ -140,12 +146,13 @@ class Judo internal constructor(
                 mySupportedCardNetworks,
                 primaryAccountDetails,
                 googlePayConfiguration,
-                paymentWidgetType
+                paymentWidgetType,
+                address
             )
         }
     }
 
     override fun toString(): String {
-        return "Judo(judoId='$judoId', siteId=$siteId, apiToken='$apiToken', apiSecret='$apiSecret', isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType)"
+        return "Judo(judoId='$judoId', siteId=$siteId, apiToken='$apiToken', apiSecret='$apiSecret', isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address)"
     }
 }

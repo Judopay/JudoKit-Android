@@ -68,7 +68,7 @@
     <style name="JudoTheme.BottomSheetDialogTheme" parent="JudoTheme.BottomSheetDialog" />
 
     <style name="JudoTheme.BottomSheetDialog" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
-        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimary">@color/black</item>
         <item name="android:windowIsFloating">false</item>
         <item name="android:colorBackground">@color/white</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
