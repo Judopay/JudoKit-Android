@@ -8,7 +8,6 @@ import com.google.gson.JsonSyntaxException
 import com.judopay.Judo
 import com.judopay.api.model.request.GooglePayRequest
 import com.judopay.api.model.request.GooglePayWallet
-import com.judopay.model.Currency
 import com.judopay.model.GooglePayConfiguration
 import com.judopay.model.googlepay.GPayPaymentGatewayParameters
 import com.judopay.model.googlepay.GooglePayAuthMethod
