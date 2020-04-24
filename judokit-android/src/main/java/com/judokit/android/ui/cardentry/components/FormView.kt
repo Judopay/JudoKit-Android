@@ -290,11 +290,11 @@ class FormView @JvmOverloads constructor(
         setupVisibilityOfFields()
         submitButton.state = model.paymentButtonState
 
-//        model.enabledFields.forEach {
-//            val field = editTextForType(it)
-//            val value = inputModelValueOfFieldWithType(it)
-//            field.setText(value)
-//        }
+        model.enabledFields.forEach {
+            val field = editTextForType(it)
+            val value = inputModelValueOfFieldWithType(it)
+            field.setText(value)
+        }
     }
 
     private fun setupVisibilityOfFields() {
