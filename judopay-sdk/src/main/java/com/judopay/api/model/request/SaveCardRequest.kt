@@ -27,8 +27,7 @@ class SaveCardRequest private constructor(
     private var issueNumber: String?,
     private var emailAddress: String?,
     private var mobileNumber: String?,
-    private var primaryAccountDetails: PrimaryAccountDetails?,
-    private var amount: String = "0.0"
+    private var primaryAccountDetails: PrimaryAccountDetails?
 ) {
     class Builder {
         private var uniqueRequest: Boolean? = null
