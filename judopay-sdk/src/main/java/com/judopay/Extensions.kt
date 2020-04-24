@@ -111,5 +111,10 @@ internal fun isAmountRequired(
             PaymentWidgetType.SAVE_CARD,
             PaymentWidgetType.CREATE_CARD_TOKEN
         ).contains(paymentWidgetType)
-    ) defaultAmount.build() else requireNotNull(amount, "amount")
+    ) {
+        defaultAmount.build()
+    } else {
+        requireNotNullOrEmpty(amount?.amount, "amount")
+        requireNotNull(amount, "amount")
+    }
 }
