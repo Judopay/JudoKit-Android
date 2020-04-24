@@ -167,8 +167,8 @@ class PaymentMethodsViewModel(
                         buildReceipt(entity)
                     } else {
                         val request = TokenRequest.Builder()
-                            .setAmount(judo.amount?.amount)
-                            .setCurrency(judo.amount?.currency?.name)
+                            .setAmount(judo.amount.amount)
+                            .setCurrency(judo.amount.currency.name)
                             .setJudoId(judo.judoId)
                             .setYourPaymentReference(judo.reference.paymentReference)
                             .setYourConsumerReference(judo.reference.consumerReference)
@@ -227,7 +227,7 @@ class PaymentMethodsViewModel(
         var allMethods = judo.paymentMethods.toList()
         val cards = allCardsSync.value
 
-        if (judo.amount?.currency != Currency.EUR) {
+        if (judo.amount.currency != Currency.EUR) {
             allMethods = judo.paymentMethods.filter { it != PaymentMethod.IDEAL }
         }
         if (allMethods.size > 1) {
@@ -307,7 +307,7 @@ class PaymentMethodsViewModel(
         }
 
         val callToActionModel = PaymentCallToActionViewModel(
-            amount = judo.amount?.formatted ?: "0",
+            amount = judo.amount.formatted,
             buttonType = method.type.paymentButtonType,
             paymentButtonState = buildPaymentButtonState(method.type, isLoading, cardModel),
             shouldDisplayAmount = judo.uiConfiguration.shouldDisplayAmount
@@ -345,8 +345,8 @@ class PaymentMethodsViewModel(
             judoID = judo.judoId.toLong(),
             yourPaymentReference = judo.reference.paymentReference,
             createdAt = Date(),
-            amount = judo.amount?.amount?.toBigDecimal(),
-            currency = judo.amount?.currency?.name,
+            amount = judo.amount.amount.toBigDecimal(),
+            currency = judo.amount.currency.name,
             consumer = Consumer(yourConsumerReference = judo.reference.consumerReference),
             cardDetails = CardToken(
                 lastFour = ending,
