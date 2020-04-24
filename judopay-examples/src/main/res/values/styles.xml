@@ -12,4 +12,96 @@
         <item name="tint">@color/white</item>
     </style>
 
+    <!-- Black toolbar back button -->
+    <style name="JudoTheme.BackButton" parent="JudoTheme.ImageButton">
+        <item name="android:layout_width">@dimen/min_touch_target_size</item>
+        <item name="android:layout_height">@dimen/min_touch_target_size</item>
+        <item name="android:layout_marginStart">@dimen/space_8</item>
+        <item name="android:layout_marginTop">@dimen/space_4</item>
+        <item name="srcCompat">@drawable/ic_judo_loader</item>
+    </style>
+
+    <style name="JudoTheme.TextInputEditText" parent="Widget.AppCompat.EditText">
+        <!-- Theme attributes -->
+        <item name="android:textColorHint">@color/jpDarkGrayColor</item>
+        <item name="colorControlNormal">@color/jpBlackColor</item>
+        <item name="colorControlActivated">@color/jpBlackColor</item>
+        <item name="fontFamily">cursive</item>
+        <item name="android:textSize">@dimen/headline</item>
+        <item name="android:textColor">@color/jpBlackColor</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="JudoTheme.BlackRoundedButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="cornerRadius">0dp</item>
+        <item name="android:fontFamily">cursive</item>
+        <item name="android:textSize">@dimen/headline</item>
+        <item name="android:textColor">@color/jpWhiteColor</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="backgroundTint">@color/black_button_background_selector</item>
+    </style>
+
+
+    <!-- Outlined text like buttons eg.: SCAN CARD ... -->
+    <style name="JudoTheme.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:fontFamily">cursive</item>
+        <item name="android:textSize">@dimen/body</item>
+        <item name="android:textColor">@color/jpBlackColor</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:paddingLeft">@dimen/space_6</item>
+        <item name="android:paddingRight">@dimen/space_6</item>
+        <item name="android:minHeight">@dimen/min_touch_target_size</item>
+        <item name="android:minWidth">@dimen/min_touch_target_size</item>
+        <item name="strokeColor">@color/jpBlackColor</item>
+    </style>
+
+
+    <!-- Text like buttons eg.: ADD CARD, EDIT ... -->
+    <style name="JudoTheme.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:fontFamily">cursive</item>
+        <item name="android:textSize">@dimen/body</item>
+        <item name="android:textColor">@color/jpBlackColor</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:paddingLeft">@dimen/space_6</item>
+        <item name="android:paddingRight">@dimen/space_6</item>
+        <item name="android:minHeight">@dimen/min_touch_target_size</item>
+        <item name="android:minWidth">@dimen/min_touch_target_size</item>
+    </style>
+
+    <style name="JudoTheme.TextView" parent="Widget.AppCompat.TextView">
+        <item name="fontFamily">cursive</item>
+        <item name="android:textColor">@color/jpBlackColor</item>
+    </style>
+
+    <style name="JudoTheme.Headline.Regular" parent="JudoTheme.TextView">
+        <item name="fontFamily">cursive</item>
+        <item name="android:textSize">@dimen/headline</item>
+    </style>
+
+    <style name="JudoTheme.Body.Regular" parent="JudoTheme.TextView">
+        <item name="fontFamily">cursive</item>
+        <item name="android:textSize">@dimen/body</item>
+    </style>
+
+    <style name="JudoTheme.Caption" parent="JudoTheme.TextView">
+        <item name="fontFamily">cursive</item>
+        <item name="android:textSize">@dimen/caption</item>
+    </style>
+
+    <style name="JudoTheme.Caption.Error" parent="JudoTheme.Caption">
+        <item name="fontFamily">cursive</item>
+        <item name="android:textColor">@color/jpRedColor</item>
+    </style>
+
+    <style name="JudoTheme.Caption.Error.Medium" parent="JudoTheme.Caption.Error">
+        <item name="fontFamily">cursive</item>
+        <item name="android:textColor">@color/jpRedColor</item>
+    </style>
 </resources>

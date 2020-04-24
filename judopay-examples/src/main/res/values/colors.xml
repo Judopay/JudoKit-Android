@@ -1,3 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="jpBlackColor">#5e35b1</color>
+    <color name="jpGrayColor">#9162e4</color>
+    <color name="jpDarkGrayColor">#280680</color>
+    <color name="jpLightGrayColor">#9162e4</color>
+    <color name="jpWhiteColor">@color/white</color>
+    <color name="jpRedColor">@color/tomato_red</color>
 </resources>

@@ -95,4 +95,5 @@
     <string name="avs_title">Address Verification Service</string>
     <string name="avs_summary">Turn on to enable Address Verification Service.</string>
 
+    <string name="pay_now">Purchase</string>
 </resources>
