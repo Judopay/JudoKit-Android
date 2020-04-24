@@ -1,4 +1,4 @@
-package com.judokit.android.ui.cardentry.components
+package com.judopay.ui.cardentry.components
 
 import android.content.Context
 import android.text.InputFilter
@@ -9,25 +9,25 @@ import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.core.widget.addTextChangedListener
-import com.judokit.android.R
-import com.judokit.android.inflate
-import com.judokit.android.model.CardNetwork
-import com.judokit.android.model.Country
-import com.judokit.android.model.asCountry
-import com.judokit.android.model.displayName
-import com.judokit.android.model.postcodeMaxLength
-import com.judokit.android.parentOfType
-import com.judokit.android.subViewsWithType
-import com.judokit.android.ui.cardentry.formatting.CardNumberInputMaskTextWatcher
-import com.judokit.android.ui.cardentry.formatting.InputMaskTextWatcher
-import com.judokit.android.ui.cardentry.formatting.SecurityCodeInputMaskTextWatcher
-import com.judokit.android.ui.cardentry.validation.CardHolderNameValidator
-import com.judokit.android.ui.cardentry.validation.CardNumberValidator
-import com.judokit.android.ui.cardentry.validation.CountryValidator
-import com.judokit.android.ui.cardentry.validation.ExpirationDateValidator
-import com.judokit.android.ui.cardentry.validation.PostcodeValidator
-import com.judokit.android.ui.cardentry.validation.SecurityCodeValidator
-import com.judokit.android.ui.common.ButtonState
+import com.judopay.R
+import com.judopay.inflate
+import com.judopay.model.CardNetwork
+import com.judopay.model.Country
+import com.judopay.model.asCountry
+import com.judopay.model.displayName
+import com.judopay.model.postcodeMaxLength
+import com.judopay.parentOfType
+import com.judopay.subViewsWithType
+import com.judopay.ui.cardentry.formatting.CardNumberInputMaskTextWatcher
+import com.judopay.ui.cardentry.formatting.InputMaskTextWatcher
+import com.judopay.ui.cardentry.formatting.SecurityCodeInputMaskTextWatcher
+import com.judopay.ui.cardentry.validation.CardHolderNameValidator
+import com.judopay.ui.cardentry.validation.CardNumberValidator
+import com.judopay.ui.cardentry.validation.CountryValidator
+import com.judopay.ui.cardentry.validation.ExpirationDateValidator
+import com.judopay.ui.cardentry.validation.PostcodeValidator
+import com.judopay.ui.cardentry.validation.SecurityCodeValidator
+import com.judopay.ui.common.ButtonState
 import kotlinx.android.synthetic.main.form_view.view.*
 
 enum class FormFieldType {
@@ -105,7 +105,6 @@ class FormView @JvmOverloads constructor(
         CountryValidator(),
         PostcodeValidator()
     )
-    private var isFormValid = false
 
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -184,7 +183,7 @@ class FormView @JvmOverloads constructor(
                 }
 
                 if (type == FormFieldType.SECURITY_NUMBER) {
-                    setOnFocusChangeListener { _, hasFocus ->
+                    setOnFocusChangeListener { v, hasFocus ->
                         val text = valueOfFieldWithType(type)
                         if (!hasFocus) textDidChange(type, text, FormFieldEvent.FOCUS_CHANGED)
                     }
@@ -229,17 +228,14 @@ class FormView @JvmOverloads constructor(
     }
 
     private fun autoTab(isValidResult: Boolean, type: FormFieldType) {
-        if (isValidResult && type != FormFieldType.HOLDER_NAME && type != FormFieldType.COUNTRY) {
+        if (isValidResult && type != FormFieldType.HOLDER_NAME) {
             val types = FormFieldType.values().toList()
             val nextFormFieldType = types.indexOf(type) + 1
             if (types.size > nextFormFieldType) {
                 when (val field = editTextForType(types[nextFormFieldType])) {
                     is AutoCompleteTextView -> {
-                        editTextForType(type).clearFocus()
+                        editTextForType(FormFieldType.POST_CODE).requestFocus()
                         field.showDropDown()
-                        field.setOnItemClickListener { _, _, _, _ ->
-                            editTextForType(FormFieldType.POST_CODE).requestFocus()
-                        }
                     }
                     else -> field.requestFocus()
                 }
@@ -294,15 +290,11 @@ class FormView @JvmOverloads constructor(
         setupVisibilityOfFields()
         submitButton.state = model.paymentButtonState
 
-        if (!isFormValid) {
-            val avsFields = listOf(FormFieldType.COUNTRY, FormFieldType.POST_CODE)
-            model.enabledFields.filter { field -> field !in avsFields }
-                .forEach {
-                    val field = editTextForType(it)
-                    val value = inputModelValueOfFieldWithType(it)
-                    field.setText(value)
-                }
-        }
+//        model.enabledFields.forEach {
+//            val field = editTextForType(it)
+//            val value = inputModelValueOfFieldWithType(it)
+//            field.setText(value)
+//        }
     }
 
     private fun setupVisibilityOfFields() {
@@ -343,7 +335,6 @@ class FormView @JvmOverloads constructor(
     }
 
     private fun onValidationPassed() {
-        isFormValid = true
         val model = InputModel(
             valueOfFieldWithType(FormFieldType.NUMBER),
             valueOfFieldWithType(FormFieldType.HOLDER_NAME),

@@ -1,10 +1,8 @@
-package com.judokit.android.api.model.request
+package com.judopay.api.model.request
 
-import com.judokit.android.model.PrimaryAccountDetails
-import com.judokit.android.requireNotNull
-import com.judokit.android.requireNotNullOrEmpty
-
-private const val DEFAULT_AMOUNT = "0.01"
+import com.judopay.model.PrimaryAccountDetails
+import com.judopay.requireNotNull
+import com.judopay.requireNotNullOrEmpty
 
 class RegisterCardRequest private constructor(
     private var uniqueRequest: Boolean?,
@@ -90,7 +88,7 @@ class RegisterCardRequest private constructor(
             val paymentReference =
                 requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
             val myAddress = requireNotNull(address, "address")
-            val myAmount = if (amount.isNullOrEmpty()) DEFAULT_AMOUNT else amount!!
+            val myAmount = if (amount.isNullOrEmpty()) "0.01" else amount!!
 
             return RegisterCardRequest(
                 uniqueRequest,

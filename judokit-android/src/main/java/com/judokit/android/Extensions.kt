@@ -1,4 +1,4 @@
-package com.judokit.android
+package com.judopay
 
 import android.content.Context
 import android.os.Bundle
@@ -10,12 +10,12 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
-import com.judokit.android.model.Amount
-import com.judokit.android.model.ApiEnvironment
-import com.judokit.android.model.Currency
-import com.judokit.android.model.PaymentWidgetType
-import com.judokit.android.ui.common.ANIMATION_DURATION_500
-import com.judokit.android.ui.error.JudoNotProvidedError
+import com.judopay.model.Amount
+import com.judopay.model.ApiEnvironment
+import com.judopay.model.Currency
+import com.judopay.model.PaymentWidgetType
+import com.judopay.ui.common.ANIMATION_DURATION_500
+import com.judopay.ui.error.JudoNotProvidedError
 
 internal val Judo.apiBaseUrl: String
     get() = if (isSandboxed) ApiEnvironment.SANDBOX.host else ApiEnvironment.LIVE.host
@@ -101,17 +101,15 @@ fun View.dismissKeyboard() {
 
 fun Any.toJSONString(): String = Gson().toJson(this)
 
-internal fun requireAmount(paymentWidgetType: PaymentWidgetType, amount: Amount?): Amount {
+internal fun isAmountRequired(
+    paymentWidgetType: PaymentWidgetType,
+    amount: Amount?
+): Amount {
     val defaultAmount = Amount.Builder().setAmount("").setCurrency(Currency.GBP)
     return if (arrayOf(
             PaymentWidgetType.CHECK_CARD,
-            PaymentWidgetType.CREATE_CARD_TOKEN,
-            PaymentWidgetType.REGISTER_CARD
+            PaymentWidgetType.SAVE_CARD,
+            PaymentWidgetType.CREATE_CARD_TOKEN
         ).contains(paymentWidgetType)
-    ) {
-        defaultAmount.build()
-    } else {
-        requireNotNullOrEmpty(amount?.amount, "amount")
-        amount!!
-    }
+    ) defaultAmount.build() else requireNotNull(amount, "amount")
 }
