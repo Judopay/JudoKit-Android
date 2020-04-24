@@ -93,7 +93,7 @@ class IdealViewModel(
     fun payWithSelectedBank() = viewModelScope.launch {
         isLoading.postValue(true)
         val request = IdealSaleRequest.Builder()
-            .setAmount(BigDecimal(judo.amount.amount))
+            .setAmount(BigDecimal(judo.amount?.amount))
             .setMerchantConsumerReference(judo.reference.consumerReference)
             .setMerchantPaymentReference(judo.reference.paymentReference)
             .setPaymentMetadata(judo.reference.metaData?.toMap())
