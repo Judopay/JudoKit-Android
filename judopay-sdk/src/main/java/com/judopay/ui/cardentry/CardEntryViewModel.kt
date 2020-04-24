@@ -183,6 +183,7 @@ class CardEntryViewModel(
             .setExpiryDate(inputModel.expirationDate)
             .setCv2(inputModel.securityNumber)
             .setPrimaryAccountDetails(judo.primaryAccountDetails)
+            .setAmount(judo.amount.amount)
             .build()
 
         return service.registerCard(request)

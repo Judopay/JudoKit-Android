@@ -43,7 +43,7 @@ class Judo internal constructor(
     val apiToken: String,
     val apiSecret: String,
     val isSandboxed: Boolean,
-    val amount: Amount,
+    val amount: Amount?,
     val reference: Reference,
     val uiConfiguration: UiConfiguration,
     val paymentMethods: Array<PaymentMethod>,
@@ -99,11 +99,12 @@ class Judo internal constructor(
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val token = requireNotNullOrEmpty(apiToken, "apiToken")
             val secret = requireNotNullOrEmpty(apiSecret, "apiSecret")
-            val myAmount = requireNotNull(amount, "amount")
+
+            val myAmount = isAmountRequired(paymentWidgetType, amount)
             val myReference = requireNotNull(reference, "reference")
 
             paymentMethods?.let {
-                if (it.size == 1 && it.first() == PaymentMethod.IDEAL && myAmount.currency != Currency.EUR) {
+                if (it.size == 1 && it.first() == PaymentMethod.IDEAL && myAmount?.currency != Currency.EUR) {
                     throw IllegalArgumentException("Cannot make iDEAL transactions with currencies different than EUR")
                 }
             }

@@ -1,6 +1,7 @@
 package com.judopay.api.model.request
 
 import com.judopay.model.PrimaryAccountDetails
+import com.judopay.requireNotNull
 import com.judopay.requireNotNullOrEmpty
 
 class RegisterCardRequest private constructor(
@@ -19,7 +20,7 @@ class RegisterCardRequest private constructor(
     private var emailAddress: String?,
     private var mobileNumber: String?,
     private var primaryAccountDetails: PrimaryAccountDetails?,
-    private var amount: String = "0.0"
+    private var amount: String
 ) {
     class Builder {
         private var uniqueRequest: Boolean? = null
@@ -37,6 +38,7 @@ class RegisterCardRequest private constructor(
         private var emailAddress: String? = null
         private var mobileNumber: String? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
+        private var amount: String? = null
 
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
@@ -72,6 +74,9 @@ class RegisterCardRequest private constructor(
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
             apply { this.primaryAccountDetails = primaryAccountDetails }
 
+        fun setAmount(amount: String?) =
+            apply { this.amount = amount }
+
         fun build(): RegisterCardRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myCurrency = requireNotNullOrEmpty(currency, "currency")
@@ -82,7 +87,7 @@ class RegisterCardRequest private constructor(
             val myExpiryDate = requireNotNullOrEmpty(expiryDate, "expiryDate")
             val paymentReference =
                 requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
-            val myAddress = com.judopay.requireNotNull(address, "address")
+            val myAddress = requireNotNull(address, "address")
 
             return RegisterCardRequest(
                 uniqueRequest,
@@ -99,7 +104,8 @@ class RegisterCardRequest private constructor(
                 issueNumber,
                 emailAddress,
                 mobileNumber,
-                primaryAccountDetails
+                primaryAccountDetails,
+                amount ?: "0.01"
             )
         }
     }
