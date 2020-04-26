@@ -88,6 +88,7 @@ class RegisterCardRequest private constructor(
             val paymentReference =
                 requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
             val myAddress = requireNotNull(address, "address")
+            val myAmount = if (amount.isNullOrEmpty()) "0.01" else amount!!
 
             return RegisterCardRequest(
                 uniqueRequest,
@@ -105,7 +106,7 @@ class RegisterCardRequest private constructor(
                 emailAddress,
                 mobileNumber,
                 primaryAccountDetails,
-                amount ?: "0.01"
+                myAmount
             )
         }
     }

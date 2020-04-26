@@ -17,8 +17,13 @@ class Amount internal constructor(val amount: String, val currency: Currency) : 
         fun setCurrency(currency: Currency?) = apply { this.currency = currency }
 
         fun build(): Amount {
-            val myAmount = requireNotNullOrEmpty(amount, "amount")
-            check(myAmount.matches("^[0-9]+(\\.[0-9][0-9])?\$".toRegex())) { "amount should be a number" }
+            val myAmount: String?
+            if (amount.isNullOrEmpty())
+                myAmount = ""
+            else {
+                myAmount = requireNotNullOrEmpty(amount, "amount")
+                check(myAmount.matches("^[0-9]+(\\.[0-9][0-9])?\$".toRegex())) { "amount should be a number" }
+            }
 
             val myCurrency = requireNotNull(currency, "currency")
 
