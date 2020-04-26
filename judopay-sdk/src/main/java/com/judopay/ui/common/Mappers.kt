@@ -8,7 +8,6 @@ import com.google.gson.JsonSyntaxException
 import com.judopay.Judo
 import com.judopay.api.model.request.GooglePayRequest
 import com.judopay.api.model.request.GooglePayWallet
-import com.judopay.model.Currency
 import com.judopay.model.GooglePayConfiguration
 import com.judopay.model.googlepay.GPayPaymentGatewayParameters
 import com.judopay.model.googlepay.GooglePayAuthMethod
@@ -65,8 +64,8 @@ internal fun GooglePayConfiguration.toIsReadyToPayRequest(judo: Judo): IsReadyTo
 }
 
 internal fun GooglePayConfiguration.toPaymentDataRequest(judo: Judo): PaymentDataRequest {
-    val price = judo.amount?.amount
-    val currency = judo.amount?.currency?.name ?: Currency.GBP.name
+    val price = judo.amount.amount
+    val currency = judo.amount.currency.name
 
     val transactionInfo = GooglePayTransactionInfo(
         currencyCode = currency,
@@ -112,8 +111,8 @@ internal fun PaymentData.toGooglePayRequest(judo: Judo): GooglePayRequest {
 
     return GooglePayRequest.Builder()
         .setJudoId(judo.judoId)
-        .setAmount(amount?.amount)
-        .setCurrency(amount?.currency?.name)
+        .setAmount(amount.amount)
+        .setCurrency(amount.currency.name)
         .setYourPaymentReference(reference.paymentReference)
         .setYourConsumerReference(reference.consumerReference)
         .setYourPaymentMetaData(reference.metaData?.toMap())
