@@ -8,15 +8,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.judopay.JUDO_RECEIPT
 import com.judopay.JudoSharedViewModel
 import com.judopay.R
+import com.judopay.api.error.toJudoError
 import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.api.model.response.JudoApiCallResult
-import com.judopay.api.model.response.Receipt
+import com.judopay.api.model.response.toJudoResult
 import com.judopay.judo
+import com.judopay.model.CardVerificationModel
 import com.judopay.model.JudoPaymentResult
 import com.judopay.ui.cardverification.model.WebViewAction
+import com.judopay.ui.paymentmethods.CARD_VERIFICATION
 import kotlinx.android.synthetic.main.card_verification_fragment.*
 
 interface WebViewCallback {
@@ -38,10 +40,10 @@ class CardVerificationFragment : Fragment(), WebViewCallback {
         viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is JudoApiCallResult.Success -> if (it.data != null) {
-                    sharedViewModel.threeDSecureResult.postValue(JudoPaymentResult.Success(it.data))
+                    sharedViewModel.threeDSecureResult.postValue(JudoPaymentResult.Success(it.data.toJudoResult()))
                 }
                 is JudoApiCallResult.Failure -> if (it.error != null) {
-                    sharedViewModel.threeDSecureResult.postValue(JudoPaymentResult.Error(it.error))
+                    sharedViewModel.threeDSecureResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
                 }
             }
         })
@@ -69,13 +71,14 @@ class CardVerificationFragment : Fragment(), WebViewCallback {
 
         cardVerificationWebView.view = this
 
-        val receipt = arguments?.getParcelable<Receipt>(JUDO_RECEIPT)
-        if (receipt != null) {
+        val cardVerificationModel =
+            arguments?.getParcelable<CardVerificationModel>(CARD_VERIFICATION)
+        cardVerificationModel?.let {
             cardVerificationWebView.authorize(
-                receipt.acsUrl,
-                receipt.md,
-                receipt.paReq,
-                receipt.receiptId
+                it.acsUrl,
+                it.md,
+                it.paReq,
+                it.receiptId
             )
         }
     }

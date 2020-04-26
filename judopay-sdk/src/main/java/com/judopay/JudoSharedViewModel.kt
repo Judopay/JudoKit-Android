@@ -7,10 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.wallet.PaymentData
 import com.judopay.api.JudoApiService
-import com.judopay.api.error.ApiError
 import com.judopay.api.model.request.GooglePayRequest
-import com.judopay.api.model.request.toReceipt
+import com.judopay.api.model.request.toJudoResult
 import com.judopay.api.model.response.toJudoPaymentResult
+import com.judopay.model.CardScanningResult
+import com.judopay.model.INTERNAL_ERROR
+import com.judopay.model.JudoError
 import com.judopay.model.JudoPaymentResult
 import com.judopay.model.PaymentWidgetType
 import com.judopay.model.isGooglePayWidget
@@ -23,6 +25,7 @@ import kotlinx.coroutines.launch
 sealed class JudoSharedAction {
     data class LoadGPayPaymentDataSuccess(val paymentData: PaymentData) : JudoSharedAction()
     data class LoadGPayPaymentDataError(val errorMessage: String) : JudoSharedAction()
+    data class ScanCardResult(val result: CardScanningResult) : JudoSharedAction()
     object LoadGPayPaymentDataUserCancelled : JudoSharedAction()
     object LoadGPayPaymentData : JudoSharedAction()
 }
@@ -59,10 +62,14 @@ class JudoSharedViewModel(
     // used to share the GooglePay payment result between this activity and the payment methods fragment
     val paymentMethodsGooglePayResult = MutableLiveData<JudoPaymentResult>()
 
+    // used to share a scan card result between fragments (card input)
+    val scanCardResult = MutableLiveData<CardScanningResult>()
+
     fun send(action: JudoSharedAction) = when (action) {
         is JudoSharedAction.LoadGPayPaymentData -> onLoadGPayPaymentData()
         is JudoSharedAction.LoadGPayPaymentDataSuccess -> onLoadGPayPaymentDataSuccess(action.paymentData)
         is JudoSharedAction.LoadGPayPaymentDataError -> onLoadGPayPaymentDataError(action.errorMessage)
+        is JudoSharedAction.ScanCardResult -> onScanCardSuccess(action.result)
         is JudoSharedAction.LoadGPayPaymentDataUserCancelled -> onLoadGPayPaymentDataUserCancelled()
     }
 
@@ -73,7 +80,7 @@ class JudoSharedViewModel(
                 if (isAvailable) {
                     googlePayService.loadGooglePayPaymentData()
                 } else {
-                    onLoadGPayPaymentDataError("GooglePay is not available on this device")
+                    onLoadGPayPaymentDataError("GooglePay is not supported on your device")
                 }
             } catch (exception: Exception) {
                 when (exception) {
@@ -88,14 +95,18 @@ class JudoSharedViewModel(
     }
 
     private fun onLoadGPayPaymentDataError(errorMessage: String) {
-        dispatchResult(JudoPaymentResult.Error(ApiError(-1, -1, errorMessage)))
+        dispatchResult(JudoPaymentResult.Error(JudoError(INTERNAL_ERROR, errorMessage)))
+    }
+
+    private fun onScanCardSuccess(result: CardScanningResult) {
+        scanCardResult.postValue(result)
     }
 
     private fun onLoadGPayPaymentDataSuccess(paymentData: PaymentData) {
         try {
             val googlePayRequest = paymentData.toGooglePayRequest(judo)
             if (judo.paymentWidgetType == PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS) {
-                dispatchResult(JudoPaymentResult.Success(googlePayRequest.toReceipt()))
+                dispatchResult(JudoPaymentResult.Success(googlePayRequest.toJudoResult()))
             } else {
                 sendRequest(googlePayRequest)
             }

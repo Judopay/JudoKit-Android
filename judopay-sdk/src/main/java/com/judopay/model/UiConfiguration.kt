@@ -28,6 +28,6 @@ class UiConfiguration internal constructor(
     }
 
     override fun toString(): String {
-        return "UiConfiguration(avsEnabled=$avsEnabled)"
+        return "UiConfiguration(avsEnabled=$avsEnabled, shouldDisplayAmount=$shouldDisplayAmount)"
     }
 }

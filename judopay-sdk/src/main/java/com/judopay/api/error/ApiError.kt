@@ -1,7 +1,6 @@
 package com.judopay.api.error
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import com.judopay.model.JudoError
 
 const val JUDO_ID_NOT_SUPPLIED = 0
 const val JUDO_ID_NOT_SUPPLIED_1 = 1
@@ -132,25 +131,25 @@ const val MCC_CODE_UNKNOWN = 125
 const val GENERIC_IS_INVALID = 200
 const val GENERIC_HTML_INVALID = 210
 
-@Parcelize
 data class ApiError(
     val code: Int,
     val category: Int,
     val message: String,
     val details: List<ApiErrorDetail>? = emptyList()
-) : Parcelable {
+) {
     override fun toString(): String {
         return "ApiError(code=$code, category=$category, message='$message', details=$details)"
     }
 }
 
-@Parcelize
 data class ApiErrorDetail(
     val code: Int,
     val message: String,
     val fieldName: String
-) : Parcelable {
+) {
     override fun toString(): String {
         return "ApiErrorDetail(code=$code, message='$message', fieldName='$fieldName')"
     }
 }
+
+fun ApiError.toJudoError() = JudoError(code, message)

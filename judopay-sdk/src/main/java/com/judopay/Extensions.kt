@@ -10,7 +10,9 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
+import com.judopay.model.Amount
 import com.judopay.model.ApiEnvironment
+import com.judopay.model.PaymentWidgetType
 import com.judopay.ui.common.ANIMATION_DURATION_500
 import com.judopay.ui.error.JudoNotProvidedError
 
@@ -18,9 +20,11 @@ internal val Judo.apiBaseUrl: String
     get() = if (isSandboxed) ApiEnvironment.SANDBOX.host else ApiEnvironment.LIVE.host
 
 internal fun requireNotNullOrEmpty(value: String?, propertyName: String): String {
-    if (value.isNullOrEmpty())
-        throw IllegalArgumentException("$propertyName cannot be null or empty")
-    else return value
+    when {
+        value == null -> throw IllegalArgumentException("$propertyName cannot be null")
+        value.isEmpty() -> throw IllegalArgumentException("$propertyName cannot be empty")
+        else -> return value
+    }
 }
 
 internal fun <T : Any> requireNotNull(value: T?, propertyName: String): T {
@@ -95,3 +99,11 @@ fun View.dismissKeyboard() {
 }
 
 fun Any.toJSONString(): String = Gson().toJson(this)
+
+internal fun isAmountRequired(paymentWidgetType: PaymentWidgetType, amount: Amount?) =
+    if (arrayOf(
+            PaymentWidgetType.CHECK_CARD,
+            PaymentWidgetType.SAVE_CARD,
+            PaymentWidgetType.CREATE_CARD_TOKEN
+        ).contains(paymentWidgetType)
+    ) amount else requireNotNull(amount, "amount")

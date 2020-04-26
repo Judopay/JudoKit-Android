@@ -12,15 +12,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.judopay.JudoSharedViewModel
 import com.judopay.R
+import com.judopay.api.error.toJudoError
 import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.api.model.response.JudoApiCallResult
-import com.judopay.api.model.response.toReceipt
+import com.judopay.api.model.response.toJudoResult
 import com.judopay.judo
 import com.judopay.model.JudoPaymentResult
 import com.judopay.ui.ideal.component.IdealWebViewCallback
 import kotlinx.android.synthetic.main.ideal_fragment.*
 
 const val JUDO_IDEAL_BANK = "com.judopay.idealbankbic"
+const val BIC_NOT_NULL = "BIC must not be null"
 
 class IdealFragment : Fragment(), IdealWebViewCallback {
 
@@ -37,7 +39,7 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
         super.onActivityCreated(savedInstanceState)
 
         val bic = arguments?.getString(JUDO_IDEAL_BANK)
-            ?: throw NullPointerException("BIC must be present")
+            ?: throw NullPointerException(BIC_NOT_NULL)
 
         val application = requireActivity().application
         val service = JudoApiServiceFactory.createApiService(application, judo)
@@ -50,7 +52,7 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
                     idealWebView.authorize(it.data.redirectUrl, it.data.merchantRedirectUrl)
                 }
                 is JudoApiCallResult.Failure -> if (it.error != null) {
-                    sharedViewModel.idealResult.postValue(JudoPaymentResult.Error(it.error))
+                    sharedViewModel.idealResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
                     findNavController().popBackStack()
                 }
             }
@@ -61,11 +63,11 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
                 is JudoApiCallResult.Success -> if (it.data != null) {
                     val locale = ConfigurationCompat.getLocales(resources.configuration)[0]
                     sharedViewModel.idealResult.postValue(
-                        JudoPaymentResult.Success(it.data.toReceipt(locale))
+                        JudoPaymentResult.Success(it.data.toJudoResult(locale))
                     )
                 }
                 is JudoApiCallResult.Failure -> if (it.error != null) {
-                    sharedViewModel.idealResult.postValue(JudoPaymentResult.Error(it.error))
+                    sharedViewModel.idealResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
                 }
             }
             findNavController().popBackStack()

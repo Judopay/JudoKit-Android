@@ -19,7 +19,9 @@ import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
 import com.judopay.db.entity.TokenizedCardEntity
 import com.judopay.db.repository.TokenizedCardRepository
+import com.judopay.model.CardScanningResult
 import com.judopay.model.PaymentWidgetType
+import com.judopay.model.toInputModel
 import com.judopay.toMap
 import com.judopay.ui.cardentry.components.FormFieldType
 import com.judopay.ui.cardentry.components.FormModel
@@ -33,6 +35,7 @@ data class CardEntryFragmentModel(val formModel: FormModel)
 sealed class CardEntryAction {
     data class ValidationPassed(val input: InputModel) : CardEntryAction()
     data class InsertCard(val tokenizedCard: CardToken) : CardEntryAction()
+    data class ScanCard(val result: CardScanningResult) : CardEntryAction()
     object SubmitForm : CardEntryAction()
 }
 
@@ -113,6 +116,11 @@ class CardEntryViewModel(
                 buildModel(isLoading = true, isFormValid = true)
                 sendRequest()
             }
+
+            is CardEntryAction.ScanCard -> {
+                inputModel = action.result.toInputModel()
+                buildModel(isLoading = false, isFormValid = false)
+            }
         }
     }
 
@@ -133,7 +141,9 @@ class CardEntryViewModel(
             PaymentWidgetType.SAVE_CARD,
             PaymentWidgetType.PAYMENT_METHODS,
             PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
-            PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS -> performSaveCardRequest(addressBuilder)
+            PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS -> performSaveCardRequest(
+                addressBuilder
+            )
             else -> throw IllegalStateException("Unsupported PaymentWidgetType")
         }
 
@@ -164,7 +174,6 @@ class CardEntryViewModel(
         val request = RegisterCardRequest.Builder()
             .setUniqueRequest(false)
             .setYourPaymentReference(judo.reference.paymentReference)
-            .setAmount(judo.amount.amount)
             .setCurrency(judo.amount.currency.name)
             .setJudoId(judo.judoId)
             .setYourConsumerReference(judo.reference.consumerReference)
@@ -174,6 +183,7 @@ class CardEntryViewModel(
             .setExpiryDate(inputModel.expirationDate)
             .setCv2(inputModel.securityNumber)
             .setPrimaryAccountDetails(judo.primaryAccountDetails)
+            .setAmount(judo.amount.amount)
             .build()
 
         return service.registerCard(request)
@@ -221,7 +231,6 @@ class CardEntryViewModel(
         val request = SaveCardRequest.Builder()
             .setUniqueRequest(false)
             .setYourPaymentReference(judo.reference.paymentReference)
-            .setAmount(judo.amount.amount)
             .setCurrency(judo.amount.currency.name)
             .setJudoId(judo.judoId)
             .setYourConsumerReference(judo.reference.consumerReference)
