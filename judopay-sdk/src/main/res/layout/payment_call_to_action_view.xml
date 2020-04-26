@@ -64,6 +64,11 @@
             android:layout_marginBottom="@dimen/space_3"
             app:style="black_buy_with" />
 
+        <com.zapp.library.merchant.ui.view.PBBAButton
+            android:id="@+id/payByBankButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </ViewAnimator>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

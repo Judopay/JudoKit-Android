@@ -84,12 +84,14 @@
         <item>Card</item>
         <item>iDeal</item>
         <item>Google Pay</item>
+        <item>Pay by Bank App</item>
     </string-array>
 
     <string-array name="payment_methods_values">
         <item>CARD</item>
         <item>IDEAL</item>
         <item>GOOGLE_PAY</item>
+        <item>PAY_BY_BANK</item>
     </string-array>
 
     <string-array name="default_payment_methods_values">

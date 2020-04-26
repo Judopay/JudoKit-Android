@@ -4,5 +4,6 @@ enum class CardViewType {
     PLACEHOLDER,
     CARD,
     GOOGLE_PAY,
-    IDEAL
+    IDEAL,
+    PAY_BY_BANK
 }
