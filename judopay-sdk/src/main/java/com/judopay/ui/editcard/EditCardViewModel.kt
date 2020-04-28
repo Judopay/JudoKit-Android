@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.judopay.db.JudoRoomDatabase
 import com.judopay.db.entity.TokenizedCardEntity
 import com.judopay.db.repository.TokenizedCardRepository
 import com.judopay.ui.editcard.adapter.ColorPickerItem
@@ -21,27 +20,25 @@ sealed class EditCardAction {
 }
 
 internal class EditCardViewModelFactory(
-    private val application: Application,
-    private val cardId: Int
+    private val cardId: Int,
+    private val cardRepository: TokenizedCardRepository,
+    private val application: Application
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == EditCardViewModel::class.java) {
-            EditCardViewModel(application, cardId) as T
+            EditCardViewModel(cardId, cardRepository, application) as T
         } else super.create(modelClass)
     }
 }
 
 class EditCardViewModel(
-    application: Application,
-    private val cardId: Int
+    private val cardId: Int,
+    private val cardRepository: TokenizedCardRepository,
+    application: Application
 ) : AndroidViewModel(application) {
 
     val model = MutableLiveData<EditCardModel>()
-
-    private val context = application
-    private val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
-    private val cardRepository = TokenizedCardRepository(tokenizedCardDao)
 
     private val patterns = CardPattern.values()
     private val cachedPatternItems = patterns.map { ColorPickerItem(it) }
