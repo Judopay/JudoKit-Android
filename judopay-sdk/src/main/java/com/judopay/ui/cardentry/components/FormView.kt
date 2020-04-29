@@ -235,7 +235,7 @@ class FormView @JvmOverloads constructor(
             if (types.size > nextFormFieldType) {
                 when (val field = editTextForType(types[nextFormFieldType])) {
                     is AutoCompleteTextView -> {
-                        editTextForType(types[nextFormFieldType - 1]).clearFocus()
+                        editTextForType(type).clearFocus()
                         field.showDropDown()
                         field.setOnItemClickListener { _, _, _, _ ->
                             editTextForType(FormFieldType.POST_CODE).requestFocus()
