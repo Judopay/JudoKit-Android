@@ -26,7 +26,7 @@ internal val PaymentMethod.text
         PaymentMethod.CARD -> R.string.cards
         PaymentMethod.GOOGLE_PAY -> R.string.empty
         PaymentMethod.IDEAL -> R.string.ideal_payment
-        PaymentMethod.PAY_BY_BANK -> R.string.empty
+        PaymentMethod.PAY_BY_BANK -> R.string.pay_by_bank
     }
 
 internal val PaymentMethod.paymentButtonType: PaymentButtonType
