@@ -18,7 +18,7 @@ internal val PaymentMethod.icon
         PaymentMethod.CARD -> R.drawable.ic_cards
         PaymentMethod.GOOGLE_PAY -> R.drawable.ic_google_pay
         PaymentMethod.IDEAL -> R.drawable.ic_ideal
-        PaymentMethod.PAY_BY_BANK -> R.drawable.ic_google_pay
+        PaymentMethod.PAY_BY_BANK -> R.drawable.ic_pay_by_bank_logo
     }
 
 internal val PaymentMethod.text

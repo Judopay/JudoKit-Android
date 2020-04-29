@@ -67,7 +67,9 @@
         <com.zapp.library.merchant.ui.view.PBBAButton
             android:id="@+id/payByBankButton"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/space_6"
+            android:layout_marginBottom="@dimen/space_6" />
 
     </ViewAnimator>
 
