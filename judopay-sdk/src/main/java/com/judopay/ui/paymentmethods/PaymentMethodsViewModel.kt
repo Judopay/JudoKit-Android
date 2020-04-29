@@ -50,8 +50,8 @@ import com.judopay.ui.paymentmethods.model.IdealPaymentMethodModel
 import com.judopay.ui.paymentmethods.model.PayByBankPaymentMethodModel
 import com.judopay.ui.paymentmethods.model.PaymentCardViewModel
 import com.judopay.ui.paymentmethods.model.PaymentMethodModel
-import kotlinx.coroutines.launch
 import java.util.Date
+import kotlinx.coroutines.launch
 
 // view-model actions
 sealed class PaymentMethodsAction {
@@ -218,7 +218,7 @@ class PaymentMethodsViewModel(
     }
 
     private fun payWithPayByBank() = viewModelScope.launch {
-        //TODO: Sale request
+        // TODO: Sale request
     }
 
     private fun deleteCardWithId(id: Int) = viewModelScope.launch {
