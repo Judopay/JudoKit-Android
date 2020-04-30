@@ -4,13 +4,15 @@ import com.judopay.api.model.request.CheckCardRequest
 import com.judopay.api.model.request.GooglePayRequest
 import com.judopay.api.model.request.IdealSaleRequest
 import com.judopay.api.model.request.PaymentRequest
+import com.judopay.api.model.request.PbbaSaleRequest
 import com.judopay.api.model.request.RegisterCardRequest
 import com.judopay.api.model.request.SaveCardRequest
 import com.judopay.api.model.request.TokenRequest
+import com.judopay.api.model.response.BankSaleStatusResponse
 import com.judopay.api.model.response.CardVerificationResult
 import com.judopay.api.model.response.IdealSaleResponse
-import com.judopay.api.model.response.IdealSaleStatusResponse
 import com.judopay.api.model.response.JudoApiCallResult
+import com.judopay.api.model.response.PbbaSaleResponse
 import com.judopay.api.model.response.Receipt
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -141,7 +143,10 @@ interface JudoApiService {
     suspend fun sale(@Body saleRequest: IdealSaleRequest): JudoApiCallResult<IdealSaleResponse>
 
     @GET("order/bank/statusrequest/{orderID}")
-    suspend fun status(@Path("orderID") orderId: String): JudoApiCallResult<IdealSaleStatusResponse>
+    suspend fun status(@Path("orderID") orderId: String): JudoApiCallResult<BankSaleStatusResponse>
+
+    @POST("order/bank/sale")
+    suspend fun sale(@Body saleRequest: PbbaSaleRequest): JudoApiCallResult<PbbaSaleResponse>
 
     /**
      * List all payment receipts for the account

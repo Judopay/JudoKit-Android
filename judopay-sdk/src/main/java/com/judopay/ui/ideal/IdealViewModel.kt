@@ -9,8 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.judopay.Judo
 import com.judopay.api.JudoApiService
 import com.judopay.api.model.request.IdealSaleRequest
+import com.judopay.api.model.response.BankSaleStatusResponse
 import com.judopay.api.model.response.IdealSaleResponse
-import com.judopay.api.model.response.IdealSaleStatusResponse
 import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.OrderStatus
 import com.judopay.toMap
@@ -45,7 +45,7 @@ class IdealViewModel(
     application: Application
 ) :
     AndroidViewModel(application) {
-    val saleStatusCallResult = MutableLiveData<JudoApiCallResult<IdealSaleStatusResponse>>()
+    val saleStatusCallResult = MutableLiveData<JudoApiCallResult<BankSaleStatusResponse>>()
     val saleCallResult = MutableLiveData<JudoApiCallResult<IdealSaleResponse>>()
     val isLoading = MutableLiveData<Boolean>()
     val isRequestDelayed = MutableLiveData<Boolean>()

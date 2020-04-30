@@ -19,6 +19,7 @@ import com.judopay.R
 import com.judopay.api.error.ApiError
 import com.judopay.api.error.toJudoError
 import com.judopay.api.model.response.JudoApiCallResult
+import com.judopay.api.model.response.PbbaSaleResponse
 import com.judopay.api.model.response.Receipt
 import com.judopay.api.model.response.toCardVerificationModel
 import com.judopay.api.model.response.toJudoResult
@@ -37,6 +38,8 @@ import com.judopay.ui.paymentmethods.adapter.model.PaymentMethodSelectorItem
 import com.judopay.ui.paymentmethods.components.PaymentCallToActionType
 import com.judopay.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
 import com.judopay.ui.paymentmethods.model.PaymentMethodModel
+import com.zapp.library.merchant.ui.PBBAPopupCallback
+import com.zapp.library.merchant.util.PBBAAppUtils
 import kotlinx.android.synthetic.main.payment_methods_fragment.*
 import kotlinx.android.synthetic.main.payment_methods_header_view.*
 
@@ -98,6 +101,15 @@ class PaymentMethodsFragment : Fragment() {
             }
         })
 
+        viewModel.payByBankObserver.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is JudoApiCallResult.Success ->
+                    handlePbbaSaleResponse(it.data)
+                is JudoApiCallResult.Failure -> {
+                }
+            }
+        })
+
         sharedViewModel.paymentMethodsGooglePayResult.observe(viewLifecycleOwner, Observer {
             viewModel.send(PaymentMethodsAction.UpdatePayWithGooglePayButtonState(true))
             handlePaymentResult(it)
@@ -106,6 +118,24 @@ class PaymentMethodsFragment : Fragment() {
         sharedViewModel.idealResult.observe(viewLifecycleOwner, Observer {
             handlePaymentResult(it)
         })
+    }
+
+    private fun handlePbbaSaleResponse(data: PbbaSaleResponse?) {
+        if (data != null)
+            PBBAAppUtils.showPBBAPopup(
+                requireActivity(),
+                data.secureToken,
+                data.pbbaBrn,
+                object : PBBAPopupCallback {
+                    override fun onRetryPaymentRequest() {
+                        // noop
+                    }
+
+                    override fun onDismissPopup() {
+                        // noop
+                    }
+                }
+            )
     }
 
     private fun handlePaymentResult(result: JudoPaymentResult?) {
