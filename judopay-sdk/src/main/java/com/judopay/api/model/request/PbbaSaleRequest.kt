@@ -13,7 +13,7 @@ data class PbbaSaleRequest(
     val siteId: String,
     val mobileNumber: String?,
     val emailAddress: String?,
-    val appearsOnStatementAs: String?,
+    val appearsOnStatement: String?,
     val paymentMetadata: Map<String, String>?,
     val accountHolderName: String? = "PBBA User",
     val bic: String = "RABONL2U",
@@ -27,7 +27,7 @@ data class PbbaSaleRequest(
         private var merchantConsumerReference: String? = null
         private var siteId: String? = null
         private var mobileNumber: String? = null
-        private var appearsOnStatementAs: String? = null
+        private var appearsOnStatement: String? = null
         private var emailAddress: String? = null
         private var paymentMetadata: Map<String, String>? = null
 
@@ -42,8 +42,8 @@ data class PbbaSaleRequest(
         fun setSiteId(siteId: String?) = apply { this.siteId = siteId }
 
         fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = mobileNumber }
-        fun setAppearsOnStatementAs(appearsOnStatementAs: String?) =
-            apply { this.appearsOnStatementAs = appearsOnStatementAs }
+        fun setAppearsOnStatement(appearsOnStatement: String?) =
+            apply { this.appearsOnStatement = appearsOnStatement }
 
         fun setEmailAddress(emailAddress: String?) = apply { this.emailAddress = emailAddress }
         fun setPaymentMetadata(paymentMetadata: Map<String, String>?) =
@@ -64,7 +64,7 @@ data class PbbaSaleRequest(
                 mySiteId,
                 mobileNumber,
                 emailAddress,
-                appearsOnStatementAs,
+                appearsOnStatement,
                 paymentMetadata
             )
         }
