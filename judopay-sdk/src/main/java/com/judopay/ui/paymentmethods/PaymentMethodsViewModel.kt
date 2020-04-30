@@ -1,6 +1,7 @@
 package com.judopay.ui.paymentmethods
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,6 +19,8 @@ import com.judopay.api.model.response.Consumer
 import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.PbbaSaleResponse
 import com.judopay.api.model.response.Receipt
+import com.judopay.api.polling.PollingResult
+import com.judopay.api.polling.PollingService
 import com.judopay.db.JudoRoomDatabase
 import com.judopay.db.entity.TokenizedCardEntity
 import com.judopay.db.repository.TokenizedCardRepository
@@ -235,6 +238,26 @@ class PaymentMethodsViewModel(
         val response = service.sale(request)
 
         payByBankObserver.postValue(response)
+
+        if (response is JudoApiCallResult.Success && response.data != null) {
+            PollingService(
+                response.data.orderId,
+                service
+            ) {
+                when (it) {
+                    // TODO: handle success/error
+                    is PollingResult.Delay -> {
+                        Log.d("DELAY", "there is a delay")
+                    }
+                    is PollingResult.Failure -> {
+                        Log.d("FAILED", "Polling failed")
+                    }
+                    is PollingResult.Success -> {
+                        Log.d("SUCCESS", "Polling succeeded")
+                    }
+                }
+            }.start()
+        }
     }
 
     private fun deleteCardWithId(id: Int) = viewModelScope.launch {
