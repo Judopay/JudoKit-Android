@@ -226,9 +226,9 @@ class PaymentMethodsViewModel(
             .setMerchantPaymentReference(judo.reference.paymentReference)
             .setMerchantConsumerReference(judo.reference.consumerReference)
             .setSiteId(judo.siteId)
-            .setMobileNumber(judo.mobileNumber)
-            .setEmailAddress(judo.emailAddress)
-            .setAppearsOnStatementAs(judo.appearsOnStatementAs)
+            .setMobileNumber(judo.pbbaConfiguration?.mobileNumber)
+            .setEmailAddress(judo.pbbaConfiguration?.emailAddress)
+            .setAppearsOnStatement(judo.pbbaConfiguration?.appearsOnStatement)
             .setPaymentMetadata(judo.reference.metaData?.toMap())
             .build()
 
