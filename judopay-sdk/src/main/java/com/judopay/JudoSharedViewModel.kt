@@ -53,17 +53,14 @@ class JudoSharedViewModel(
     // used to share a card payment result between fragments (card input / payment methods)
     val paymentResult = MutableLiveData<JudoPaymentResult>()
 
-    // used to share a 3D secure result between fragments (card input / payment methods / card verification)
-    val threeDSecureResult = MutableLiveData<JudoPaymentResult>()
-
-    // used to share an iDEAL transaction result
-    val idealResult = MutableLiveData<JudoPaymentResult>()
-
     // used to share the GooglePay payment result between this activity and the payment methods fragment
     val paymentMethodsGooglePayResult = MutableLiveData<JudoPaymentResult>()
 
     // used to share a scan card result between fragments (card input)
     val scanCardResult = MutableLiveData<CardScanningResult>()
+
+    // used to persist all captured errors and send to merchant on back press
+    val error = JudoError()
 
     fun send(action: JudoSharedAction) = when (action) {
         is JudoSharedAction.LoadGPayPaymentData -> onLoadGPayPaymentData()
@@ -116,7 +113,7 @@ class JudoSharedViewModel(
     }
 
     private fun onLoadGPayPaymentDataUserCancelled() {
-        dispatchResult(JudoPaymentResult.UserCancelled)
+        dispatchResult(JudoPaymentResult.UserCancelled())
     }
 
     @Throws(IllegalStateException::class)

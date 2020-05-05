@@ -20,14 +20,14 @@ import com.judopay.PAYMENT_ERROR
 import com.judopay.PAYMENT_SUCCESS
 import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.model.Amount
-import com.judopay.model.JudoError
 import com.judopay.model.CardNetwork
 import com.judopay.model.Currency
 import com.judopay.model.GooglePayConfiguration
+import com.judopay.model.JudoError
+import com.judopay.model.JudoResult
 import com.judopay.model.PaymentMethod
 import com.judopay.model.PaymentWidgetType
 import com.judopay.model.Reference
-import com.judopay.model.JudoResult
 import com.judopay.model.UiConfiguration
 import com.judopay.model.googlepay.GooglePayAddressFormat
 import com.judopay.model.googlepay.GooglePayBillingAddressParameters
@@ -40,8 +40,8 @@ import com.judopay.samples.feature.adapter.DemoFeaturesAdapter
 import com.judopay.samples.model.DemoFeature
 import com.judopay.samples.settings.SettingsActivity
 import com.readystatesoftware.chuck.ChuckInterceptor
-import java.util.UUID
 import kotlinx.android.synthetic.main.activity_demo_feature_list.*
+import java.util.UUID
 
 const val JUDO_PAYMENT_WIDGET_REQUEST_CODE = 1
 
@@ -81,14 +81,12 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
         if (requestCode == JUDO_PAYMENT_WIDGET_REQUEST_CODE) {
             when (resultCode) {
-
-                PAYMENT_CANCELLED -> toast("User cancelled the payment.")
-
                 PAYMENT_SUCCESS -> {
                     val result = data?.getParcelableExtra<JudoResult>(JUDO_RESULT)
                     processSuccessfulPayment(result)
                 }
 
+                PAYMENT_CANCELLED,
                 PAYMENT_ERROR -> {
                     val error = data?.getParcelableExtra<JudoError>(JUDO_ERROR)
                     processPaymentError(error)
