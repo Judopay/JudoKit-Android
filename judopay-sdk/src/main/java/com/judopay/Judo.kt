@@ -107,7 +107,7 @@ class Judo internal constructor(
             val token = requireNotNullOrEmpty(apiToken, "apiToken")
             val secret = requireNotNullOrEmpty(apiSecret, "apiSecret")
 
-            val myAmount = isAmountRequired(paymentWidgetType, amount)
+            val myAmount = requireAmount(paymentWidgetType, amount)
             val myReference = requireNotNull(reference, "reference")
 
             paymentMethods?.let {
