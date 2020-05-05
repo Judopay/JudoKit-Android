@@ -12,14 +12,15 @@ private const val REQUEST_DELAY = 5000L
 private const val TIMEOUT = DELAY_IN_SECONDS * MILLISECONDS
 
 class PollingService(
-    val data: String,
-    val service: JudoApiService,
-    val result: (PollingResult<JudoApiCallResult<BankSaleStatusResponse>>) -> Unit
+    private val data: String,
+    private val service: JudoApiService,
+    private val result: (PollingResult<BankSaleStatusResponse>) -> Unit
 ) {
 
+    var timeout = TIMEOUT
+
     suspend fun start() {
-        var timeout = TIMEOUT
-        while (timeout != 0L) {
+        while (timeout > 0L) {
             if (timeout != DELAY_IN_SECONDS * MILLISECONDS) {
                 delay(REQUEST_DELAY)
             }
@@ -29,27 +30,43 @@ class PollingService(
                         when (saleStatusResponse.data.orderDetails.orderStatus) {
                             OrderStatus.SUCCEEDED -> {
                                 timeout = 0L
-                                result.invoke(PollingResult.Success(saleStatusResponse))
+                                result.invoke(PollingResult.Success(saleStatusResponse.data))
                             }
                             OrderStatus.PENDING -> {
                                 timeout -= REQUEST_DELAY
-                                if (timeout <= TIMEOUT / 2) {
-                                    result.invoke(PollingResult.Delay(saleStatusResponse))
+                                when {
+                                    timeout <= 0L -> result.invoke(PollingResult.Retry)
+                                    timeout <= TIMEOUT / 2 -> result.invoke(PollingResult.Delay)
+                                    else -> result.invoke(PollingResult.Processing)
                                 }
-                                if (timeout == 0L)
-                                    result.invoke(PollingResult.Failure(saleStatusResponse))
                             }
-                            else -> {
+                            OrderStatus.FAILED -> {
                                 timeout = 0L
-                                result.invoke(PollingResult.Failure(saleStatusResponse))
+                                result.invoke(PollingResult.Success(saleStatusResponse.data))
                             }
                         }
                 }
                 is JudoApiCallResult.Failure -> {
                     timeout = 0L
-                    result.invoke(PollingResult.Failure(saleStatusResponse))
+                    result.invoke(PollingResult.Failure(error = saleStatusResponse.error))
                 }
             }
         }
+    }
+
+    // restarts the polling flow
+    suspend fun retry() {
+        timeout = TIMEOUT
+        start()
+    }
+
+    // resets the timer while polling is in progress
+    fun reset() {
+        timeout = TIMEOUT
+    }
+
+    // Sets the timer to 0 to exit polling
+    fun cancel() {
+        timeout = 0L
     }
 }

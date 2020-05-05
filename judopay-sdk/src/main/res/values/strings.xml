@@ -99,5 +99,8 @@
     <string name="wocr_automatically_scan">We will automatically scan it</string>
 
     <string name="pay_by_bank">Pay by Bank app</string>
+    <string name="retry">Retry</string>
+    <string name="transaction_successful">Transaction successful</string>
+    <string name="pay_by_bank_transaction">Pay by Bank app transaction</string>
 
 </resources>

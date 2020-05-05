@@ -37,6 +37,7 @@ const val PAYMENT_CANCELLED = Activity.RESULT_FIRST_USER + 2
 
 /** Judo activity result: operation error  */
 const val PAYMENT_ERROR = Activity.RESULT_FIRST_USER + 3
+
 @Parcelize
 class Judo internal constructor(
     val judoId: String,
@@ -110,8 +111,10 @@ class Judo internal constructor(
             val myReference = requireNotNull(reference, "reference")
 
             paymentMethods?.let {
-                if (it.size == 1 && it.first() == PaymentMethod.IDEAL && myAmount.currency != Currency.EUR) {
-                    throw IllegalArgumentException("Cannot make iDEAL transactions with currencies different than EUR")
+                if (it.size == 1 && it.first() == PaymentMethod.IDEAL && myAmount.currency != Currency.EUR ||
+                    it.size == 1 && it.first() == PaymentMethod.PAY_BY_BANK && myAmount.currency != Currency.GBP
+                ) {
+                    throw IllegalArgumentException("Cannot make ${it.first().name} transactions with currencies different than ${myAmount.currency.name}")
                 }
             }
 

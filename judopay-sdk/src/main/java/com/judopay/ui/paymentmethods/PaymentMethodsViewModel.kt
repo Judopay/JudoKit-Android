@@ -1,7 +1,6 @@
 package com.judopay.ui.paymentmethods
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,6 +12,7 @@ import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.api.model.request.Address
 import com.judopay.api.model.request.PbbaSaleRequest
 import com.judopay.api.model.request.TokenRequest
+import com.judopay.api.model.response.BankSaleStatusResponse
 import com.judopay.api.model.response.CardDate
 import com.judopay.api.model.response.CardToken
 import com.judopay.api.model.response.Consumer
@@ -97,12 +97,15 @@ class PaymentMethodsViewModel(
     val model = MutableLiveData<PaymentMethodsModel>()
     val judoApiCallResult = MutableLiveData<JudoApiCallResult<Receipt>>()
     val payWithIdealObserver = MutableLiveData<Event<String>>()
-    val payByBankObserver = MutableLiveData<JudoApiCallResult<PbbaSaleResponse>>()
+    val payByBankResult = MutableLiveData<JudoApiCallResult<PbbaSaleResponse>>()
+    val payByBankStatusResult =
+        MutableLiveData<PollingResult<BankSaleStatusResponse>>()
 
     private val context = application
     private val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
     private val cardRepository = TokenizedCardRepository(tokenizedCardDao)
     private val service = JudoApiServiceFactory.createApiService(context, judo)
+    private lateinit var pollingService: PollingService
 
     val allCardsSync = cardRepository.allCardsSync
 
@@ -237,26 +240,15 @@ class PaymentMethodsViewModel(
 
         val response = service.sale(request)
 
-        payByBankObserver.postValue(response)
+        payByBankResult.postValue(response)
 
+        buildModel()
         if (response is JudoApiCallResult.Success && response.data != null) {
-            PollingService(
+            pollingService = PollingService(
                 response.data.orderId,
                 service
-            ) {
-                when (it) {
-                    // TODO: handle success/error
-                    is PollingResult.Delay -> {
-                        Log.d("DELAY", "there is a delay")
-                    }
-                    is PollingResult.Failure -> {
-                        Log.d("FAILED", "Polling failed")
-                    }
-                    is PollingResult.Success -> {
-                        Log.d("SUCCESS", "Polling succeeded")
-                    }
-                }
-            }.start()
+            ) { payByBankStatusResult.postValue(it) }
+            pollingService.start()
         }
     }
 
@@ -281,6 +273,10 @@ class PaymentMethodsViewModel(
         if (judo.amount.currency != Currency.EUR) {
             allMethods = judo.paymentMethods.filter { it != PaymentMethod.IDEAL }
         }
+        if (judo.amount.currency != Currency.GBP) {
+            allMethods = judo.paymentMethods.filter { it != PaymentMethod.PAY_BY_BANK }
+        }
+
         if (allMethods.size > 1) {
             recyclerViewData.add(
                 PaymentMethodSelectorItem(
@@ -413,5 +409,17 @@ class PaymentMethodsViewModel(
             )
         )
         judoApiCallResult.postValue(JudoApiCallResult.Success(receipt))
+    }
+
+    fun retryPbbaPolling() = viewModelScope.launch {
+        pollingService.retry()
+    }
+
+    fun resetPbbaPolling() {
+        pollingService.reset()
+    }
+
+    fun cancelPbbaPayment() {
+        pollingService.cancel()
     }
 }

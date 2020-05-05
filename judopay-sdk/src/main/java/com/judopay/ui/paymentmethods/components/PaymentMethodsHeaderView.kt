@@ -92,6 +92,7 @@ class PaymentMethodsHeaderView @JvmOverloads constructor(
                 currentPaymentMethod = PaymentMethod.IDEAL
             }
             is GooglePayCardViewModel -> currentPaymentMethod = PaymentMethod.GOOGLE_PAY
+            is PayByBankCardViewModel -> currentPaymentMethod = PaymentMethod.PAY_BY_BANK
         }
         show(cardModel)
         previousSelected = cardModel

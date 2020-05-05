@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.ConfigurationCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -23,6 +24,7 @@ import com.judopay.api.model.response.PbbaSaleResponse
 import com.judopay.api.model.response.Receipt
 import com.judopay.api.model.response.toCardVerificationModel
 import com.judopay.api.model.response.toJudoResult
+import com.judopay.api.polling.PollingResult
 import com.judopay.judo
 import com.judopay.model.JudoPaymentResult
 import com.judopay.ui.editcard.JUDO_TOKENIZED_CARD_ID
@@ -101,11 +103,53 @@ class PaymentMethodsFragment : Fragment() {
             }
         })
 
-        viewModel.payByBankObserver.observe(viewLifecycleOwner, Observer {
+        viewModel.payByBankResult.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is JudoApiCallResult.Success ->
                     handlePbbaSaleResponse(it.data)
                 is JudoApiCallResult.Failure -> {
+                    MaterialAlertDialogBuilder(context)
+                        .setTitle(R.string.transaction_error_title)
+                        .setMessage(R.string.transaction_unsuccessful)
+                        .setNegativeButton(R.string.close, null)
+                        .show()
+                }
+            }
+        })
+
+        viewModel.payByBankStatusResult.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is PollingResult.Processing -> {
+                    pollingStatusView.processing { viewModel.cancelPbbaPayment() }
+                }
+                is PollingResult.Delay -> {
+                    pollingStatusView.delay {
+                        viewModel.resetPbbaPolling()
+                        pollingStatusView.processing { viewModel.cancelPbbaPayment() }
+                    }
+                }
+                is PollingResult.Retry -> {
+                    pollingStatusView.retry {
+                        viewModel.retryPbbaPolling()
+                        pollingStatusView.processing { viewModel.cancelPbbaPayment() }
+                    }
+                }
+                is PollingResult.Failure -> {
+                    pollingStatusView.fail { requireActivity().finish() }
+                    if (it.error != null) {
+                        sharedViewModel.paymentResult.postValue(
+                            JudoPaymentResult.Error(it.error.toJudoError())
+                        )
+                    }
+                }
+                is PollingResult.Success -> {
+                    pollingStatusView.success { requireActivity().finish() }
+                    if (it.data != null) {
+                        val locale = ConfigurationCompat.getLocales(resources.configuration)[0]
+                        sharedViewModel.paymentResult.postValue(
+                            JudoPaymentResult.Success(it.data.toJudoResult(locale))
+                        )
+                    }
                 }
             }
         })
@@ -121,7 +165,7 @@ class PaymentMethodsFragment : Fragment() {
     }
 
     private fun handlePbbaSaleResponse(data: PbbaSaleResponse?) {
-        if (data != null)
+        if (data != null) {
             PBBAAppUtils.showPBBAPopup(
                 requireActivity(),
                 data.secureToken,
@@ -136,6 +180,7 @@ class PaymentMethodsFragment : Fragment() {
                     }
                 }
             )
+        }
     }
 
     private fun handlePaymentResult(result: JudoPaymentResult?) {
