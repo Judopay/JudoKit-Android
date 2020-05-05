@@ -4,6 +4,8 @@ import com.judopay.model.PrimaryAccountDetails
 import com.judopay.requireNotNull
 import com.judopay.requireNotNullOrEmpty
 
+private const val DEFAULT_AMOUNT = "0.01"
+
 class RegisterCardRequest private constructor(
     private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String,
@@ -88,7 +90,7 @@ class RegisterCardRequest private constructor(
             val paymentReference =
                 requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
             val myAddress = requireNotNull(address, "address")
-            val myAmount = if (amount.isNullOrEmpty()) "0.01" else amount!!
+            val myAmount = if (amount.isNullOrEmpty()) DEFAULT_AMOUNT else amount!!
 
             return RegisterCardRequest(
                 uniqueRequest,
