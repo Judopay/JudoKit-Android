@@ -101,10 +101,7 @@ fun View.dismissKeyboard() {
 
 fun Any.toJSONString(): String = Gson().toJson(this)
 
-internal fun isAmountRequired(
-    paymentWidgetType: PaymentWidgetType,
-    amount: Amount?
-): Amount {
+internal fun requireAmount(paymentWidgetType: PaymentWidgetType, amount: Amount?): Amount {
     val defaultAmount = Amount.Builder().setAmount("").setCurrency(Currency.GBP)
     return if (arrayOf(
             PaymentWidgetType.CHECK_CARD,
@@ -115,6 +112,6 @@ internal fun isAmountRequired(
         defaultAmount.build()
     } else {
         requireNotNullOrEmpty(amount?.amount, "amount")
-        requireNotNull(amount, "amount")
+        amount!!
     }
 }
