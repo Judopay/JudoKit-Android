@@ -13,7 +13,7 @@ private const val USER_CANCELLED_MSG = "User cancelled"
 data class JudoError(
     var code: Int = USER_CANCELLED,
     var message: String = USER_CANCELLED_MSG,
-    val details: MutableList<JudoError> = mutableListOf()
+    var details: MutableList<JudoError> = mutableListOf()
 ) : Parcelable {
     companion object {
         fun userCancelled(): JudoError {

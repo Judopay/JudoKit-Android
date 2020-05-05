@@ -137,6 +137,10 @@ class JudoActivity : AppCompatActivity() {
                     .show()
             }
             is JudoPaymentResult.UserCancelled -> {
+                with(viewModel.error) {
+                    code = result.error.code
+                    message = result.error.message
+                }
                 setResult(result.code, result.apply { error = viewModel.error }.toIntent())
                 finish()
             }
