@@ -125,9 +125,9 @@ class DemoFeatureListActivity : AppCompatActivity() {
         try {
             val widgetType = when (feature) {
                 DemoFeature.PAYMENT -> PaymentWidgetType.CARD_PAYMENT
-                DemoFeature.PREAUTH -> PaymentWidgetType.PRE_AUTH_CARD_PAYMENT
+                DemoFeature.PREAUTH -> PaymentWidgetType.PRE_AUTH
+                DemoFeature.REGISTER_CARD -> PaymentWidgetType.REGISTER_CARD
                 DemoFeature.CREATE_CARD_TOKEN -> PaymentWidgetType.CREATE_CARD_TOKEN
-                DemoFeature.SAVE_CARD -> PaymentWidgetType.SAVE_CARD
                 DemoFeature.CHECK_CARD -> PaymentWidgetType.CHECK_CARD
                 DemoFeature.PAYMENT_METHODS -> PaymentWidgetType.PAYMENT_METHODS
                 DemoFeature.PREAUTH_PAYMENT_METHODS -> PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS
