@@ -4,9 +4,9 @@ import com.judopay.R
 
 enum class PaymentWidgetType {
     CARD_PAYMENT,
-    PRE_AUTH_CARD_PAYMENT,
+    PRE_AUTH,
+    REGISTER_CARD,
     CREATE_CARD_TOKEN,
-    SAVE_CARD,
     CHECK_CARD,
     GOOGLE_PAY,
     PRE_AUTH_GOOGLE_PAY,
@@ -19,9 +19,9 @@ val PaymentWidgetType.navigationGraphId: Int
     @Throws(UnsupportedOperationException::class)
     get() = when (this) {
         PaymentWidgetType.CARD_PAYMENT,
-        PaymentWidgetType.PRE_AUTH_CARD_PAYMENT,
+        PaymentWidgetType.PRE_AUTH,
+        PaymentWidgetType.REGISTER_CARD,
         PaymentWidgetType.CREATE_CARD_TOKEN,
-        PaymentWidgetType.SAVE_CARD,
         PaymentWidgetType.CHECK_CARD -> R.navigation.judo_card_input_graph
         PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
         PaymentWidgetType.PAYMENT_METHODS,
@@ -33,7 +33,7 @@ val PaymentWidgetType.isPaymentMethodsWidget: Boolean
     get() = this == PaymentWidgetType.PAYMENT_METHODS || this == PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS || this == PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS
 
 val PaymentWidgetType.isCardPaymentWidget: Boolean
-    get() = this == PaymentWidgetType.CARD_PAYMENT || this == PaymentWidgetType.PRE_AUTH_CARD_PAYMENT
+    get() = this == PaymentWidgetType.CARD_PAYMENT || this == PaymentWidgetType.PRE_AUTH
 
 val PaymentWidgetType.isGooglePayWidget: Boolean
     get() = this == PaymentWidgetType.GOOGLE_PAY || this == PaymentWidgetType.PRE_AUTH_GOOGLE_PAY

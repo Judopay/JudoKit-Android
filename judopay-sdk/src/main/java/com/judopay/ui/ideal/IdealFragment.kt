@@ -52,7 +52,7 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
                     idealWebView.authorize(it.data.redirectUrl, it.data.merchantRedirectUrl)
                 }
                 is JudoApiCallResult.Failure -> if (it.error != null) {
-                    sharedViewModel.idealResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
+                    sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
                     findNavController().popBackStack()
                 }
             }
@@ -62,12 +62,12 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
             when (it) {
                 is JudoApiCallResult.Success -> if (it.data != null) {
                     val locale = ConfigurationCompat.getLocales(resources.configuration)[0]
-                    sharedViewModel.idealResult.postValue(
+                    sharedViewModel.paymentResult.postValue(
                         JudoPaymentResult.Success(it.data.toJudoResult(locale))
                     )
                 }
                 is JudoApiCallResult.Failure -> if (it.error != null) {
-                    sharedViewModel.idealResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
+                    sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
                 }
             }
             findNavController().popBackStack()
@@ -95,7 +95,7 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        backButton.setOnClickListener { sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled) }
+        backButton.setOnClickListener { sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled()) }
 
         idealWebView.view = this
     }

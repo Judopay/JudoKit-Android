@@ -6,11 +6,11 @@ import com.judopay.JUDO_RESULT
 import com.judopay.PAYMENT_CANCELLED
 import com.judopay.PAYMENT_ERROR
 import com.judopay.PAYMENT_SUCCESS
+
 sealed class JudoPaymentResult {
     data class Success(val result: JudoResult) : JudoPaymentResult()
-
     data class Error(val error: JudoError) : JudoPaymentResult()
-    object UserCancelled : JudoPaymentResult()
+    data class UserCancelled(var error: JudoError = JudoError.userCancelled()) : JudoPaymentResult()
 }
 
 fun JudoPaymentResult.toIntent(): Intent {
@@ -19,7 +19,7 @@ fun JudoPaymentResult.toIntent(): Intent {
     when (this) {
         is JudoPaymentResult.UserCancelled -> {
             // TODO: to rethink this
-            intent.putExtra(JUDO_ERROR, JudoError.userCancelled())
+            intent.putExtra(JUDO_ERROR, error)
         }
 
         is JudoPaymentResult.Error -> {
