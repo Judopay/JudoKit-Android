@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
 import androidx.lifecycle.viewModelScope
 import com.judopay.Judo
 import com.judopay.R
+import com.judopay.api.JudoApiService
 import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.api.model.request.Address
 import com.judopay.api.model.request.TokenRequest
@@ -69,18 +70,24 @@ sealed class PaymentMethodsAction {
 
 // view-model custom factory to inject the `judo` configuration object
 internal class PaymentMethodsViewModelFactory(
+    private val cardDate: CardDate,
+    private val cardRepository: TokenizedCardRepository,
+    private val service: JudoApiService,
     private val application: Application,
     private val judo: Judo
 ) : NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == PaymentMethodsViewModel::class.java) {
-            PaymentMethodsViewModel(application, judo) as T
+            PaymentMethodsViewModel(cardDate, cardRepository, service, application, judo) as T
         } else super.create(modelClass)
     }
 }
 
 class PaymentMethodsViewModel(
+    private val cardDate: CardDate,
+    private val cardRepository: TokenizedCardRepository,
+    private val service: JudoApiService,
     application: Application,
     private val judo: Judo
 ) : AndroidViewModel(application) {
@@ -88,11 +95,6 @@ class PaymentMethodsViewModel(
     val model = MutableLiveData<PaymentMethodsModel>()
     val judoApiCallResult = MutableLiveData<JudoApiCallResult<Receipt>>()
     val payWithIdealObserver = MutableLiveData<Event<String>>()
-
-    private val context = application
-    private val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
-    private val cardRepository = TokenizedCardRepository(tokenizedCardDao)
-    private val service = JudoApiServiceFactory.createApiService(context, judo)
 
     val allCardsSync = cardRepository.allCardsSync
 
@@ -335,7 +337,7 @@ class PaymentMethodsViewModel(
         cardModel: CardViewModel
     ): ButtonState = when {
         isLoading -> ButtonState.Loading
-        cardModel is PaymentCardViewModel && CardDate(cardModel.expireDate).isAfterToday ->
+        cardModel is PaymentCardViewModel && cardDate.apply { cardDate = cardModel.expireDate }.isAfterToday ->
             ButtonState.Enabled(R.string.pay_now)
         else -> ButtonState.Disabled(R.string.pay_now)
     }

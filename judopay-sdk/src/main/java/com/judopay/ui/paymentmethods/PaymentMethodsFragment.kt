@@ -18,10 +18,14 @@ import com.judopay.JudoSharedViewModel
 import com.judopay.R
 import com.judopay.api.error.ApiError
 import com.judopay.api.error.toJudoError
+import com.judopay.api.factory.JudoApiServiceFactory
+import com.judopay.api.model.response.CardDate
 import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
 import com.judopay.api.model.response.toCardVerificationModel
 import com.judopay.api.model.response.toJudoResult
+import com.judopay.db.JudoRoomDatabase
+import com.judopay.db.repository.TokenizedCardRepository
 import com.judopay.judo
 import com.judopay.model.JudoPaymentResult
 import com.judopay.ui.editcard.JUDO_TOKENIZED_CARD_ID
@@ -71,7 +75,12 @@ class PaymentMethodsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val application = requireActivity().application
-        val factory = PaymentMethodsViewModelFactory(application, judo)
+        val cardDate = CardDate()
+        val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
+        val cardRepository = TokenizedCardRepository(tokenizedCardDao)
+        val service = JudoApiServiceFactory.createApiService(application, judo)
+
+        val factory = PaymentMethodsViewModelFactory(cardDate, cardRepository, service, application, judo)
 
         viewModel = ViewModelProvider(this, factory).get(PaymentMethodsViewModel::class.java)
         viewModel.model.observe(viewLifecycleOwner, Observer { updateWithModel(it) })
