@@ -1,4 +1,4 @@
-package com.judokit.android
+package com.judopay
 
 import android.app.Activity
 import android.content.Intent
@@ -16,17 +16,17 @@ import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.WalletConstants
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.judokit.android.api.factory.JudoApiServiceFactory
-import com.judokit.android.model.CardScanResultType
-import com.judokit.android.model.CardScanningResult
-import com.judokit.android.model.JudoPaymentResult
-import com.judokit.android.model.code
-import com.judokit.android.model.googlepay.GooglePayEnvironment
-import com.judokit.android.model.isGooglePayWidget
-import com.judokit.android.model.navigationGraphId
-import com.judokit.android.model.toCardScanningResult
-import com.judokit.android.model.toIntent
-import com.judokit.android.service.JudoGooglePayService
+import com.judopay.api.factory.JudoApiServiceFactory
+import com.judopay.model.CardScanResultType
+import com.judopay.model.CardScanningResult
+import com.judopay.model.JudoPaymentResult
+import com.judopay.model.code
+import com.judopay.model.googlepay.GooglePayEnvironment
+import com.judopay.model.isGooglePayWidget
+import com.judopay.model.navigationGraphId
+import com.judopay.model.toCardScanningResult
+import com.judopay.model.toIntent
+import com.judopay.service.JudoGooglePayService
 
 internal const val LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE = Activity.RESULT_FIRST_USER + 1
 internal const val SCAN_CARD_REQUEST_CODE = Activity.RESULT_FIRST_USER + 2

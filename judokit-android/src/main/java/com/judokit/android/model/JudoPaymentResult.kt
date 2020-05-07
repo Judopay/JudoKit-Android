@@ -1,11 +1,11 @@
-package com.judokit.android.model
+package com.judopay.model
 
 import android.content.Intent
-import com.judokit.android.JUDO_ERROR
-import com.judokit.android.JUDO_RESULT
-import com.judokit.android.PAYMENT_CANCELLED
-import com.judokit.android.PAYMENT_ERROR
-import com.judokit.android.PAYMENT_SUCCESS
+import com.judopay.JUDO_ERROR
+import com.judopay.JUDO_RESULT
+import com.judopay.PAYMENT_CANCELLED
+import com.judopay.PAYMENT_ERROR
+import com.judopay.PAYMENT_SUCCESS
 
 sealed class JudoPaymentResult {
     data class Success(val result: JudoResult) : JudoPaymentResult()
