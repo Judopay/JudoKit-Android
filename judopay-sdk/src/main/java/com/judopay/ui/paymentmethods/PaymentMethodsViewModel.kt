@@ -55,6 +55,7 @@ import com.judopay.ui.paymentmethods.model.IdealPaymentMethodModel
 import com.judopay.ui.paymentmethods.model.PayByBankPaymentMethodModel
 import com.judopay.ui.paymentmethods.model.PaymentCardViewModel
 import com.judopay.ui.paymentmethods.model.PaymentMethodModel
+import com.zapp.library.merchant.util.PBBAAppUtils
 import java.math.BigDecimal
 import java.util.Date
 import kotlinx.coroutines.launch
@@ -273,7 +274,7 @@ class PaymentMethodsViewModel(
         if (judo.amount.currency != Currency.EUR) {
             allMethods = judo.paymentMethods.filter { it != PaymentMethod.IDEAL }
         }
-        if (judo.amount.currency != Currency.GBP) {
+        if (judo.amount.currency != Currency.GBP && !PBBAAppUtils.isCFIAppAvailable(context)) {
             allMethods = judo.paymentMethods.filter { it != PaymentMethod.PAY_BY_BANK }
         }
 
