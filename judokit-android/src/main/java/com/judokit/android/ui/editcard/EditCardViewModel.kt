@@ -1,4 +1,4 @@
-package com.judokit.android.ui.editcard
+package com.judopay.ui.editcard
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -6,9 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.judokit.android.db.entity.TokenizedCardEntity
-import com.judokit.android.db.repository.TokenizedCardRepository
-import com.judokit.android.ui.editcard.adapter.ColorPickerItem
+import com.judopay.db.entity.TokenizedCardEntity
+import com.judopay.db.repository.TokenizedCardRepository
+import com.judopay.ui.editcard.adapter.ColorPickerItem
 import kotlinx.coroutines.launch
 
 sealed class EditCardAction {
