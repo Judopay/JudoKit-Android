@@ -21,11 +21,9 @@ import cards.pay.paycardsrecognizer.sdk.ScanCardIntent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.judopay.JudoSharedViewModel
 import com.judopay.R
 import com.judopay.SCAN_CARD_REQUEST_CODE
-import com.judopay.api.error.ApiError
 import com.judopay.api.error.toJudoError
 import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.api.model.response.JudoApiCallResult
@@ -125,7 +123,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         if (judo.paymentWidgetType.isPaymentMethodsWidget) {
             findNavController().popBackStack()
         } else {
-            sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled)
+            sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled())
         }
     }
 
@@ -162,7 +160,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     private fun dispatchPaymentMethodsApiResult(result: JudoApiCallResult<Receipt>) {
         when (result) {
             is JudoApiCallResult.Success -> persistTokenizedCard(result)
-            is JudoApiCallResult.Failure -> presentError(result.error)
+            is JudoApiCallResult.Failure -> sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult())
         }
     }
 
@@ -172,19 +170,8 @@ class CardEntryFragment : BottomSheetDialogFragment() {
             viewModel.send(CardEntryAction.InsertCard(cardDetails))
             findNavController().popBackStack()
         } else {
-            presentError()
+            sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult())
         }
-    }
-
-    private fun presentError(apiError: ApiError? = null) {
-        val message = apiError?.message
-            ?: requireContext().getString(R.string.unable_to_process_request_error_desc)
-
-        MaterialAlertDialogBuilder(context)
-            .setTitle(R.string.unable_to_process_request_error_title)
-            .setMessage(message)
-            .setNegativeButton(R.string.close, null)
-            .show()
     }
 
     private fun handleScanCardButtonClicks(view: View) {

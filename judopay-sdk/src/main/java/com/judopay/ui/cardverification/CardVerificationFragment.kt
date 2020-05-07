@@ -40,10 +40,10 @@ class CardVerificationFragment : Fragment(), WebViewCallback {
         viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is JudoApiCallResult.Success -> if (it.data != null) {
-                    sharedViewModel.threeDSecureResult.postValue(JudoPaymentResult.Success(it.data.toJudoResult()))
+                    sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(it.data.toJudoResult()))
                 }
                 is JudoApiCallResult.Failure -> if (it.error != null) {
-                    sharedViewModel.threeDSecureResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
+                    sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
                 }
             }
         })
@@ -67,7 +67,7 @@ class CardVerificationFragment : Fragment(), WebViewCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        backButton.setOnClickListener { sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled) }
+        backButton.setOnClickListener { sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled()) }
 
         cardVerificationWebView.view = this
 
