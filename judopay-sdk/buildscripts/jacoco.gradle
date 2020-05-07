@@ -6,14 +6,21 @@ def jacocoFileFilter = ['**/R.class',
                         '**/*Test*.*',
                         'android/**/*.*']
 
+task generateCodeAnalysisReport {
+    group 'Reporting'
+    description 'Start reporting code analysis tasks (Jacoco & ktlintCheck)'
+    dependsOn ":judopay-sdk:jacocoTestReport"
+    dependsOn ":judopay-sdk:ktlintCheck"
+}
+
 task jacocoTestReport(type: JacocoReport) {
     group 'Reporting'
     description 'Generate Jacoco coverage report for debug build. Only unit test.'
 
-    dependsOn ":judopay-sdk:testDebugUnitTest"
+    dependsOn ":judopay-sdk:test"
 
     classDirectories.from = files([
-            fileTree(dir: "$project.projectDir/build/intermediates/javac/debug", excludes: jacocoFileFilter),
+            fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: jacocoFileFilter),
     ])
     def coverageSourceDirs = [
             "$project.projectDir/src/main/java",
@@ -25,7 +32,7 @@ task jacocoTestReport(type: JacocoReport) {
     ])
 
     reports {
-        xml.enabled = false
-        html.enabled = true
+        xml.enabled = true
+        html.enabled = false
     }
 }
