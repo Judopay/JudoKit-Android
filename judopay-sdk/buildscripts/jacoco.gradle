@@ -8,7 +8,7 @@ def jacocoFileFilter = ['**/R.class',
 
 task generateCodeAnalysisReport {
     group 'Reporting'
-    description 'Start reporting code analysis tasks (Jacoco & PMD & FindBugs)'
+    description 'Start reporting code analysis tasks (Jacoco & ktLintCheck)'
     dependsOn ":judopay-sdk:jacocoTestReport"
     dependsOn ":judopay-sdk:ktlintCheck"
 }
