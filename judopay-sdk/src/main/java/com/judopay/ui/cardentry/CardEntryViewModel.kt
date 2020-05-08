@@ -88,9 +88,9 @@ class CardEntryViewModel(
     val submitButtonText: Int
         get() = when (judo.paymentWidgetType) {
             PaymentWidgetType.CARD_PAYMENT,
-            PaymentWidgetType.PRE_AUTH_CARD_PAYMENT,
+            PaymentWidgetType.PRE_AUTH,
+            PaymentWidgetType.REGISTER_CARD,
             PaymentWidgetType.CREATE_CARD_TOKEN,
-            PaymentWidgetType.SAVE_CARD,
             PaymentWidgetType.CHECK_CARD -> R.string.pay_now
             PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
             PaymentWidgetType.PAYMENT_METHODS,
@@ -135,10 +135,10 @@ class CardEntryViewModel(
 
         val result = when (judo.paymentWidgetType) {
             PaymentWidgetType.CARD_PAYMENT -> performPaymentRequest(addressBuilder)
-            PaymentWidgetType.PRE_AUTH_CARD_PAYMENT -> performPreAuthPaymentRequest(addressBuilder)
-            PaymentWidgetType.CREATE_CARD_TOKEN -> performRegisterCardRequest(addressBuilder)
+            PaymentWidgetType.PRE_AUTH -> performPreAuthPaymentRequest(addressBuilder)
+            PaymentWidgetType.REGISTER_CARD -> performRegisterCardRequest(addressBuilder)
             PaymentWidgetType.CHECK_CARD -> performCheckCardRequest(addressBuilder)
-            PaymentWidgetType.SAVE_CARD,
+            PaymentWidgetType.CREATE_CARD_TOKEN,
             PaymentWidgetType.PAYMENT_METHODS,
             PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
             PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS -> performSaveCardRequest(
