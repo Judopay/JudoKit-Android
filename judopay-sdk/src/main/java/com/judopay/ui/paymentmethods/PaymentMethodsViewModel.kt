@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.judopay.Judo
 import com.judopay.R
 import com.judopay.api.JudoApiService
-import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.api.model.request.Address
 import com.judopay.api.model.request.TokenRequest
 import com.judopay.api.model.response.CardDate
@@ -17,7 +16,6 @@ import com.judopay.api.model.response.CardToken
 import com.judopay.api.model.response.Consumer
 import com.judopay.api.model.response.JudoApiCallResult
 import com.judopay.api.model.response.Receipt
-import com.judopay.db.JudoRoomDatabase
 import com.judopay.db.entity.TokenizedCardEntity
 import com.judopay.db.repository.TokenizedCardRepository
 import com.judopay.model.Currency

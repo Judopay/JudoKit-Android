@@ -71,13 +71,11 @@ internal class PaymentMethodsViewModelTest {
     internal fun setUp() {
         Dispatchers.setMain(testDispatcher)
 
-
         coEvery { repository.findWithId(0) } returns mockk(relaxed = true)
         coEvery { repository.allCardsSync.value } returns null
         coEvery {
             service.tokenPayment(any()).hint(JudoApiCallResult::class)
         } returns mockk(relaxed = true)
-
     }
 
     @AfterEach
@@ -162,7 +160,6 @@ internal class PaymentMethodsViewModelTest {
         assertFalse(model.currentPaymentMethod.items[0] is PaymentMethodSelectorItem)
     }
 
-
     @DisplayName("Given selected method is cards, then update PaymentMethodsModel currentSelected field to cards")
     @Test
     fun updateCurrentSelectedFieldToCards() {
@@ -234,7 +231,6 @@ internal class PaymentMethodsViewModelTest {
             ButtonState.Enabled(R.string.pay_now)
         )
     }
-
 
     @DisplayName("Given one of the stored cards isDefault=true, then that card is selected")
     @Test
@@ -367,7 +363,6 @@ internal class PaymentMethodsViewModelTest {
         verify { judoApiCallResult.onChanged(capture(slots)) }
     }
 
-
     @DisplayName("Given send with PayWithSelectedStoredCard action is called, when PaymentWidgetType is PAYMENT_METHODS, then call service.tokenPayment(request)")
     @Test
     fun callTokenPaymentOnPayWithSelectedStoredCardWithPaymentWidgetTypePaymentMethods() {
@@ -482,7 +477,6 @@ internal class PaymentMethodsViewModelTest {
         assertTrue(model.headerModel.callToActionModel.paymentButtonState is ButtonState.Loading)
     }
 
-
     @DisplayName("Given send with PayWithSelectedIdealBank action is called, when current payment method is ideal, then update payWithIdealObserver")
     @Test
     fun updatePayWithIdealObserverOnPayWithSelectedIdealBank() {
@@ -586,7 +580,6 @@ internal class PaymentMethodsViewModelTest {
         sut.model.observeForever(paymentMethodsModel)
 
         sut.send(PaymentMethodsAction.SelectPaymentMethod(PaymentMethod.CARD))
-
 
         verify(exactly = 1) { paymentMethodsModel.onChanged(capture(slots)) }
     }
