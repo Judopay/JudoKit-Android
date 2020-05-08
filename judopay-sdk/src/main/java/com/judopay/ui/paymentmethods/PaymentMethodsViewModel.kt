@@ -274,7 +274,7 @@ class PaymentMethodsViewModel(
         if (judo.amount.currency != Currency.EUR) {
             allMethods = judo.paymentMethods.filter { it != PaymentMethod.IDEAL }
         }
-        if (judo.amount.currency != Currency.GBP && !PBBAAppUtils.isCFIAppAvailable(context)) {
+        if (judo.amount.currency != Currency.GBP || !PBBAAppUtils.isCFIAppAvailable(context)) {
             allMethods = judo.paymentMethods.filter { it != PaymentMethod.PAY_BY_BANK }
         }
 
