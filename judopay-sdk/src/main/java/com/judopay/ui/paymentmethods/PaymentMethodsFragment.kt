@@ -154,14 +154,12 @@ class PaymentMethodsFragment : Fragment() {
             }
         })
 
-        sharedViewModel.paymentMethodsGooglePayResult.observe(viewLifecycleOwner, Observer {
-            viewModel.send(PaymentMethodsAction.UpdatePayWithGooglePayButtonState(true))
-            handlePaymentResult(it)
-        })
-
-        sharedViewModel.idealResult.observe(viewLifecycleOwner, Observer {
-            handlePaymentResult(it)
-        })
+        sharedViewModel.paymentMethodsGooglePayResult.observe(
+            viewLifecycleOwner,
+            Observer { result ->
+                viewModel.send(PaymentMethodsAction.UpdatePayWithGooglePayButtonState(true))
+                sharedViewModel.paymentResult.postValue(result)
+            })
     }
 
     private fun handlePbbaSaleResponse(data: PbbaSaleResponse?) {
@@ -180,17 +178,6 @@ class PaymentMethodsFragment : Fragment() {
                     }
                 }
             )
-        }
-    }
-
-    private fun handlePaymentResult(result: JudoPaymentResult?) {
-        when (result) {
-            is JudoPaymentResult.Success -> sharedViewModel.paymentResult.postValue(result)
-            is JudoPaymentResult.Error -> MaterialAlertDialogBuilder(context)
-                .setTitle(R.string.transaction_error_title)
-                .setMessage(R.string.transaction_unsuccessful)
-                .setNegativeButton(R.string.close, null)
-                .show()
         }
     }
 
@@ -325,6 +312,6 @@ class PaymentMethodsFragment : Fragment() {
         view.isEnabled = false
 
         // post the event
-        sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled)
+        sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled())
     }
 }
