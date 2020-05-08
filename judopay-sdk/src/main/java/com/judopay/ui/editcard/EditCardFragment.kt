@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.judopay.R
+import com.judopay.db.JudoRoomDatabase
+import com.judopay.db.repository.TokenizedCardRepository
 import com.judopay.dismissKeyboard
 import com.judopay.ui.common.LengthFilter
 import com.judopay.ui.editcard.adapter.ColorPickerAdapter
@@ -48,7 +50,9 @@ class EditCardFragment : Fragment() {
         val cardId = arguments?.getInt(JUDO_TOKENIZED_CARD_ID) ?: -1
 
         val application = requireActivity().application
-        val factory = EditCardViewModelFactory(application, cardId)
+        val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
+        val cardRepository = TokenizedCardRepository(tokenizedCardDao)
+        val factory = EditCardViewModelFactory(cardId, cardRepository, application)
 
         viewModel = ViewModelProvider(this, factory).get(EditCardViewModel::class.java)
         viewModel.model.observe(viewLifecycleOwner, Observer { updateWithModel(it) })
