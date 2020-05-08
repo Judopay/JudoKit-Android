@@ -105,6 +105,7 @@ class FormView @JvmOverloads constructor(
         CountryValidator(),
         PostcodeValidator()
     )
+    private var isFormValid = false
 
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -228,14 +229,17 @@ class FormView @JvmOverloads constructor(
     }
 
     private fun autoTab(isValidResult: Boolean, type: FormFieldType) {
-        if (isValidResult && type != FormFieldType.HOLDER_NAME) {
+        if (isValidResult && type != FormFieldType.HOLDER_NAME && type != FormFieldType.COUNTRY) {
             val types = FormFieldType.values().toList()
             val nextFormFieldType = types.indexOf(type) + 1
             if (types.size > nextFormFieldType) {
                 when (val field = editTextForType(types[nextFormFieldType])) {
                     is AutoCompleteTextView -> {
-                        editTextForType(FormFieldType.POST_CODE).requestFocus()
+                        editTextForType(type).clearFocus()
                         field.showDropDown()
+                        field.setOnItemClickListener { _, _, _, _ ->
+                            editTextForType(FormFieldType.POST_CODE).requestFocus()
+                        }
                     }
                     else -> field.requestFocus()
                 }
@@ -290,11 +294,12 @@ class FormView @JvmOverloads constructor(
         setupVisibilityOfFields()
         submitButton.state = model.paymentButtonState
 
-        model.enabledFields.forEach {
-            val field = editTextForType(it)
-            val value = inputModelValueOfFieldWithType(it)
-            field.setText(value)
-        }
+        if (!isFormValid)
+            model.enabledFields.forEach {
+                val field = editTextForType(it)
+                val value = inputModelValueOfFieldWithType(it)
+                field.setText(value)
+            }
     }
 
     private fun setupVisibilityOfFields() {
@@ -335,6 +340,7 @@ class FormView @JvmOverloads constructor(
     }
 
     private fun onValidationPassed() {
+        isFormValid = true
         val model = InputModel(
             valueOfFieldWithType(FormFieldType.NUMBER),
             valueOfFieldWithType(FormFieldType.HOLDER_NAME),
