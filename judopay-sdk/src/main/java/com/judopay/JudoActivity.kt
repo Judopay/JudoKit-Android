@@ -15,6 +15,7 @@ import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.WalletConstants
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.judopay.api.factory.JudoApiServiceFactory
 import com.judopay.model.CardScanResultType
 import com.judopay.model.CardScanningResult
@@ -49,7 +50,6 @@ class JudoActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this, factory).get(JudoSharedViewModel::class.java)
         viewModel.paymentResult.observe(this, Observer { dispatchPaymentResult(it) })
-        viewModel.threeDSecureResult.observe(this, Observer { dispatchPaymentResult(it) })
 
         if (judo.paymentWidgetType.isGooglePayWidget) {
             viewModel.send(JudoSharedAction.LoadGPayPaymentData)
@@ -118,8 +118,33 @@ class JudoActivity : AppCompatActivity() {
     }
 
     private fun dispatchPaymentResult(result: JudoPaymentResult) {
-        setResult(result.code, result.toIntent())
-        finish()
+        when (result) {
+            is JudoPaymentResult.Success -> {
+                setResult(result.code, result.toIntent())
+                finish()
+            }
+            is JudoPaymentResult.Error -> {
+                with(viewModel.error) {
+                    code = result.error.code
+                    message = result.error.message
+                    details.add(result.error)
+                }
+
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.unable_to_process_request_error_title)
+                    .setMessage(result.error.message)
+                    .setNegativeButton(R.string.close, null)
+                    .show()
+            }
+            is JudoPaymentResult.UserCancelled -> {
+                with(viewModel.error) {
+                    code = result.error.code
+                    message = result.error.message
+                }
+                setResult(result.code, result.apply { error = viewModel.error }.toIntent())
+                finish()
+            }
+        }
     }
 
     private fun buildJudoGooglePayService(): JudoGooglePayService {

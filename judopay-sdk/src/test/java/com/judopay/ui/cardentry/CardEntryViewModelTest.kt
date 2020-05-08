@@ -203,7 +203,7 @@ internal class CardEntryViewModelTest {
     @DisplayName("Given send is called with SubmitForm action, when payment widget type is pre auth card payment, then should invoke service.preAuthPayment() method")
     @Test
     fun makePreAuthPaymentRequestOnSubmitFormWithPreAuthCardPaymentWidgetType() {
-        every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH_CARD_PAYMENT
+        every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH
 
         sut = CardEntryViewModel(judo, service, repository, application)
 
@@ -216,7 +216,7 @@ internal class CardEntryViewModelTest {
     @DisplayName("Given send is called with SubmitForm action, when payment widget type is create card token, then should invoke service.registerCard() method")
     @Test
     fun makeRegisterCardRequestOnSubmitFormWithCreateCardTokenWidgetType() {
-        every { judo.paymentWidgetType } returns PaymentWidgetType.CREATE_CARD_TOKEN
+        every { judo.paymentWidgetType } returns PaymentWidgetType.REGISTER_CARD
 
         sut = CardEntryViewModel(judo, service, repository, application)
 
@@ -242,7 +242,7 @@ internal class CardEntryViewModelTest {
     @DisplayName("Given send is called with SubmitForm action, when payment widget type is save card, then should invoke service.saveCard() method")
     @Test
     fun makeSaveCardRequestOnSubmitFormWithSaveCardWidgetType() {
-        every { judo.paymentWidgetType } returns PaymentWidgetType.SAVE_CARD
+        every { judo.paymentWidgetType } returns PaymentWidgetType.CREATE_CARD_TOKEN
 
         sut = CardEntryViewModel(judo, service, repository, application)
 
