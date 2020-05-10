@@ -36,7 +36,11 @@ enum class FormFieldType {
     EXPIRATION_DATE,
     SECURITY_NUMBER,
     COUNTRY,
-    POST_CODE
+    POST_CODE;
+
+    companion object {
+        val avsFields = listOf(COUNTRY, POST_CODE)
+    }
 }
 
 enum class FormFieldEvent {
@@ -295,11 +299,12 @@ class FormView @JvmOverloads constructor(
         submitButton.state = model.paymentButtonState
 
         if (!isFormValid)
-            model.enabledFields.forEach {
-                val field = editTextForType(it)
-                val value = inputModelValueOfFieldWithType(it)
-                field.setText(value)
-            }
+            model.enabledFields.filter { field -> field !in FormFieldType.avsFields }
+                .forEach {
+                    val field = editTextForType(it)
+                    val value = inputModelValueOfFieldWithType(it)
+                    field.setText(value)
+                }
     }
 
     private fun setupVisibilityOfFields() {
