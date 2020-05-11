@@ -47,7 +47,7 @@ private fun drawableWith(fillColor: Int, cornerRadius: Float): Drawable {
         .build()
 
     val fillColorStateList = ColorStateList(
-        arrayOf(intArrayOf(android.R.attr.state_enabled)),
+        arrayOf(intArrayOf(-android.R.attr.state_enabled)),
         intArrayOf(fillColor)
     )
 
