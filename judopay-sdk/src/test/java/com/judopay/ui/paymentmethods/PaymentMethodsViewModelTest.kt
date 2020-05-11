@@ -94,9 +94,7 @@ internal class PaymentMethodsViewModelTest {
         sut.model.observeForever(paymentMethodsModel)
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
-
         val model = slots[0]
-
         assertFalse(
             (model.currentPaymentMethod.items[0] as PaymentMethodSelectorItem).paymentMethods.contains(
                 PaymentMethod.IDEAL
@@ -108,7 +106,6 @@ internal class PaymentMethodsViewModelTest {
     @Test
     fun addIdealToModelWhenEur() {
         val judo = getJudo().apply { every { amount } returns Amount("1", Currency.EUR) }
-
         val slots = mutableListOf<PaymentMethodsModel>()
 
         sut = PaymentMethodsViewModel(cardDate, repository, service, application, judo)
@@ -116,9 +113,7 @@ internal class PaymentMethodsViewModelTest {
         sut.model.observeForever(paymentMethodsModel)
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
-
         val model = slots[0]
-
         assertTrue(
             (model.currentPaymentMethod.items[0] as PaymentMethodSelectorItem).paymentMethods.containsAll(
                 judo.paymentMethods.toList()
@@ -136,9 +131,7 @@ internal class PaymentMethodsViewModelTest {
         sut.model.observeForever(paymentMethodsModel)
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
-
         val model = slots[0]
-
         assertTrue(model.currentPaymentMethod.items[0] is PaymentMethodSelectorItem)
     }
 
@@ -154,9 +147,7 @@ internal class PaymentMethodsViewModelTest {
         sut.model.observeForever(paymentMethodsModel)
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
-
         val model = slots[0]
-
         assertFalse(model.currentPaymentMethod.items[0] is PaymentMethodSelectorItem)
     }
 
@@ -170,9 +161,7 @@ internal class PaymentMethodsViewModelTest {
         sut.model.observeForever(paymentMethodsModel)
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
-
         val model = slots[0]
-
         assertTrue((model.currentPaymentMethod.items[0] as PaymentMethodSelectorItem).currentSelected == PaymentMethod.CARD)
     }
 
@@ -186,9 +175,7 @@ internal class PaymentMethodsViewModelTest {
         sut.model.observeForever(paymentMethodsModel)
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
-
         val model = slots[0]
-
         assertTrue(model.headerModel.cardModel is NoPaymentMethodSelectedViewModel)
     }
 
@@ -204,9 +191,7 @@ internal class PaymentMethodsViewModelTest {
         sut.model.observeForever(paymentMethodsModel)
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
-
         val model = slots[0]
-
         assertTrue(model.headerModel.cardModel is PaymentCardViewModel)
     }
 
@@ -223,9 +208,7 @@ internal class PaymentMethodsViewModelTest {
         sut.model.observeForever(paymentMethodsModel)
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
-
         val model = slots[0]
-
         assertEquals(
             model.headerModel.callToActionModel.paymentButtonState,
             ButtonState.Enabled(R.string.pay_now)
@@ -245,9 +228,7 @@ internal class PaymentMethodsViewModelTest {
         sut.model.observeForever(paymentMethodsModel)
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
-
         val model = slots[0]
-
         assertTrue((model.currentPaymentMethod as CardPaymentMethodModel).selectedCard!!.isSelected)
     }
 
@@ -264,9 +245,7 @@ internal class PaymentMethodsViewModelTest {
         sut.model.observeForever(paymentMethodsModel)
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
-
         val model = slots[0]
-
         assertTrue(model.headerModel.cardModel is GooglePayCardViewModel)
     }
 
@@ -282,9 +261,7 @@ internal class PaymentMethodsViewModelTest {
         sut.model.observeForever(paymentMethodsModel)
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
-
         val model = slots[0]
-
         assertTrue(model.headerModel.cardModel is IdealPaymentCardViewModel)
     }
 
@@ -319,13 +296,12 @@ internal class PaymentMethodsViewModelTest {
 
         sut = PaymentMethodsViewModel(cardDate, repository, service, application, judo)
 
-        sut.send(PaymentMethodsAction.PayWithSelectedStoredCard)
-
         sut.model.observeForever(paymentMethodsModel)
 
-        verify { paymentMethodsModel.onChanged(capture(slots)) }
+        sut.send(PaymentMethodsAction.PayWithSelectedStoredCard)
 
-        val model = slots[0]
+        verify { paymentMethodsModel.onChanged(capture(slots)) }
+        val model = slots[1]
         assertTrue(model.headerModel.callToActionModel.paymentButtonState is ButtonState.Loading)
     }
 
@@ -356,9 +332,9 @@ internal class PaymentMethodsViewModelTest {
 
         sut = PaymentMethodsViewModel(cardDate, repository, service, application, judo)
 
-        sut.send(PaymentMethodsAction.PayWithSelectedStoredCard)
-
         sut.judoApiCallResult.observeForever(judoApiCallResult)
+
+        sut.send(PaymentMethodsAction.PayWithSelectedStoredCard)
 
         verify { judoApiCallResult.onChanged(capture(slots)) }
     }
@@ -467,13 +443,12 @@ internal class PaymentMethodsViewModelTest {
 
         sut = PaymentMethodsViewModel(cardDate, repository, service, application, judo)
 
-        sut.send(PaymentMethodsAction.PayWithSelectedIdealBank)
-
         sut.model.observeForever(paymentMethodsModel)
 
-        verify { paymentMethodsModel.onChanged(capture(slots)) }
+        sut.send(PaymentMethodsAction.PayWithSelectedIdealBank)
 
-        val model = slots[0]
+        verify { paymentMethodsModel.onChanged(capture(slots)) }
+        val model = slots[1]
         assertTrue(model.headerModel.callToActionModel.paymentButtonState is ButtonState.Loading)
     }
 
@@ -485,9 +460,9 @@ internal class PaymentMethodsViewModelTest {
 
         sut = PaymentMethodsViewModel(cardDate, repository, service, application, judo)
 
-        sut.send(PaymentMethodsAction.PayWithSelectedIdealBank)
-
         sut.payWithIdealObserver.observeForever(payWithIdealObserver)
+
+        sut.send(PaymentMethodsAction.PayWithSelectedIdealBank)
 
         verify { payWithIdealObserver.onChanged(capture(slots)) }
     }
@@ -505,14 +480,12 @@ internal class PaymentMethodsViewModelTest {
 
         sut = PaymentMethodsViewModel(cardDate, repository, service, application, judo)
 
-        sut.send(PaymentMethodsAction.SelectStoredCard(1))
-
         sut.model.observeForever(paymentMethodsModel)
 
+        sut.send(PaymentMethodsAction.SelectStoredCard(1))
+
         verify { paymentMethodsModel.onChanged(capture(slots)) }
-
-        val model = slots[0]
-
+        val model = slots[1]
         assertFalse(model.headerModel.callToActionModel.paymentButtonState is ButtonState.Loading)
         assertTrue((model.currentPaymentMethod as CardPaymentMethodModel).selectedCard!!.id == 1)
     }
@@ -526,14 +499,12 @@ internal class PaymentMethodsViewModelTest {
 
         sut = PaymentMethodsViewModel(cardDate, repository, service, application, judo)
 
-        sut.send(PaymentMethodsAction.SelectIdealBank(IdealBank.ING_BANK))
-
         sut.model.observeForever(paymentMethodsModel)
 
+        sut.send(PaymentMethodsAction.SelectIdealBank(IdealBank.ING_BANK))
+
         verify { paymentMethodsModel.onChanged(capture(slots)) }
-
-        val model = slots[0]
-
+        val model = slots[1]
         assertFalse(model.headerModel.callToActionModel.paymentButtonState is ButtonState.Loading)
         assertTrue((model.currentPaymentMethod as IdealPaymentMethodModel).selectedBank == IdealBank.ING_BANK)
     }
@@ -564,9 +535,7 @@ internal class PaymentMethodsViewModelTest {
         sut.send(PaymentMethodsAction.SelectPaymentMethod(PaymentMethod.GOOGLE_PAY))
 
         verify(exactly = 2) { paymentMethodsModel.onChanged(capture(slots)) }
-
         val model = slots[1]
-
         assertTrue(model.currentPaymentMethod is GooglePayPaymentMethodModel)
     }
 
@@ -599,9 +568,7 @@ internal class PaymentMethodsViewModelTest {
         sut.send(PaymentMethodsAction.UpdatePayWithGooglePayButtonState(false))
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
-
         val model = slots[1]
-
         assertTrue(model.headerModel.callToActionModel.paymentButtonState is ButtonState.Disabled)
     }
 
@@ -620,9 +587,7 @@ internal class PaymentMethodsViewModelTest {
         sut.send(PaymentMethodsAction.UpdatePayWithGooglePayButtonState(true))
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
-
         val model = slots[1]
-
         assertTrue(model.headerModel.callToActionModel.paymentButtonState is ButtonState.Enabled)
     }
 
@@ -638,9 +603,7 @@ internal class PaymentMethodsViewModelTest {
         sut.send(PaymentMethodsAction.EditMode(true))
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
-
         val model = slots[1]
-
         assertTrue((model.currentPaymentMethod.items[1] as PaymentMethodGenericItem).isInEditMode)
     }
 
@@ -656,9 +619,7 @@ internal class PaymentMethodsViewModelTest {
         sut.send(PaymentMethodsAction.EditMode(false))
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
-
         val model = slots[1]
-
         assertFalse((model.currentPaymentMethod.items[1] as PaymentMethodGenericItem).isInEditMode)
     }
 
