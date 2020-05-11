@@ -516,11 +516,11 @@ internal class PaymentMethodsViewModelTest {
 
         sut = PaymentMethodsViewModel(cardDate, repository, service, application, judo)
 
-        sut.send(PaymentMethodsAction.SelectIdealBank(IdealBank.ING_BANK))
-
         sut.model.observeForever(paymentMethodsModel)
 
-        verify { paymentMethodsModel.onChanged(capture(slots)) }
+        sut.send(PaymentMethodsAction.Update)
+
+        verify(exactly = 2) { paymentMethodsModel.onChanged(capture(slots)) }
     }
 
     @DisplayName("Given send with SelectPaymentMethod action is called with selected method, then build paymentMethodModel with GooglePayPaymentMethodModel")
