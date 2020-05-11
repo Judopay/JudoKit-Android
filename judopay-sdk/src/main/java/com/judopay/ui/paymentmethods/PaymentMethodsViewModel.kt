@@ -56,9 +56,9 @@ import com.judopay.ui.paymentmethods.model.PayByBankPaymentMethodModel
 import com.judopay.ui.paymentmethods.model.PaymentCardViewModel
 import com.judopay.ui.paymentmethods.model.PaymentMethodModel
 import com.zapp.library.merchant.util.PBBAAppUtils
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.util.Date
-import kotlinx.coroutines.launch
 
 // view-model actions
 sealed class PaymentMethodsAction {
@@ -271,12 +271,7 @@ class PaymentMethodsViewModel(
         var allMethods = judo.paymentMethods.toList()
         val cards = allCardsSync.value
 
-        if (judo.amount.currency != Currency.EUR) {
-            allMethods = judo.paymentMethods.filter { it != PaymentMethod.IDEAL }
-        }
-        if (judo.amount.currency != Currency.GBP || !PBBAAppUtils.isCFIAppAvailable(context)) {
-            allMethods = judo.paymentMethods.filter { it != PaymentMethod.PAY_BY_BANK }
-        }
+        allMethods = filterPaymentMethods(allMethods)
 
         if (allMethods.size > 1) {
             recyclerViewData.add(
@@ -410,6 +405,17 @@ class PaymentMethodsViewModel(
             )
         )
         judoApiCallResult.postValue(JudoApiCallResult.Success(receipt))
+    }
+
+    private fun filterPaymentMethods(allMethods: List<PaymentMethod>): List<PaymentMethod> {
+        var paymentMethods = allMethods
+        if (judo.amount.currency != Currency.EUR) {
+            paymentMethods = judo.paymentMethods.filter { it != PaymentMethod.IDEAL }
+        }
+        if (judo.amount.currency != Currency.GBP || !PBBAAppUtils.isCFIAppAvailable(context)) {
+            paymentMethods = paymentMethods.filter { it != PaymentMethod.PAY_BY_BANK }
+        }
+        return paymentMethods
     }
 
     fun retryPbbaPolling() = viewModelScope.launch {
