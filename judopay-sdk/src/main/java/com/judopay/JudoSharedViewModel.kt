@@ -120,11 +120,11 @@ class JudoSharedViewModel(
     private fun sendRequest(googlePayRequest: GooglePayRequest) = viewModelScope.launch {
         val result = when (judo.paymentWidgetType) {
             PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
-            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> judoApiService.googlePayPayment(
+            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> judoApiService.preAuthGooglePayPayment(
                 googlePayRequest
             )
             PaymentWidgetType.GOOGLE_PAY,
-            PaymentWidgetType.PAYMENT_METHODS -> judoApiService.preAuthGooglePayPayment(
+            PaymentWidgetType.PAYMENT_METHODS -> judoApiService.googlePayPayment(
                 googlePayRequest
             )
             else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
