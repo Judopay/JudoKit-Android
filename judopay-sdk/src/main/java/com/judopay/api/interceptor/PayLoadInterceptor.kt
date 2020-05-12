@@ -1,10 +1,11 @@
 package com.judopay.api.interceptor
 
 import android.content.Context
-import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.google.gson.JsonSyntaxException
+import com.judopay.toJSONString
 import java.io.IOException
 import okhttp3.Interceptor
 import okhttp3.MediaType
@@ -47,11 +48,17 @@ class PayLoadInterceptor internal constructor(private val context: Context) : In
         return chain.proceed(request)
     }
 
+    private val payloadService = PayloadService(context)
+
     private val enhancedPaymentDetail: JsonObject
         get() {
-            val paymentDetail = Gson().toJson(PayloadService(context).getEnhancedPaymentDetail())
-            val jsonElement = JsonParser().parse(paymentDetail)
-            return jsonElement.asJsonObject
+            val paymentDetail = payloadService.getEnhancedPaymentDetail()?.toJSONString()
+            return try {
+                val jsonElement = JsonParser().parse(paymentDetail)
+                jsonElement.asJsonObject
+            } catch (e: JsonSyntaxException) {
+                JsonObject()
+            }
         }
 
     private fun convertJsonToRequestBody(json: JsonObject): RequestBody {
