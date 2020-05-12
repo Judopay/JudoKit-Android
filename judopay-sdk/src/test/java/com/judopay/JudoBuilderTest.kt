@@ -37,7 +37,7 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When no required parameters specified, build() should throw a IllegalArgumentException")
+    @DisplayName("Given no required parameters specified, then build() should throw a IllegalArgumentException")
     fun testThatBuildThrows() {
         assertThrows<IllegalArgumentException> {
             Judo.Builder(PaymentWidgetType.CARD_PAYMENT).build()
@@ -45,7 +45,7 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When judoId is null, build() should throw a IllegalArgumentException")
+    @DisplayName("Given judoId is null, then build() should throw a IllegalArgumentException")
     fun testThatBuildThrowsOnIdNull() {
 
         assertThrows<IllegalArgumentException> {
@@ -54,7 +54,7 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When judoId is empty, build() should throw a IllegalArgumentException")
+    @DisplayName("Given judoId is empty, then build() should throw a IllegalArgumentException")
     fun testThatBuildThrowsOnIdEmpty() {
         assertThrows<IllegalArgumentException> {
             judoBuilder.setJudoId("").build()
@@ -62,7 +62,7 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When apiToken is null, build() should throw a IllegalArgumentException")
+    @DisplayName("Given apiToken is null, then build() should throw a IllegalArgumentException")
     fun testThatBuildThrowsOnTokenNull() {
         assertThrows<IllegalArgumentException> {
             judoBuilder.setApiToken(null).build()
@@ -70,7 +70,7 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When apiToken is empty, build() should throw a IllegalArgumentException")
+    @DisplayName("Given apiToken is empty, then build() should throw a IllegalArgumentException")
     fun testThatBuildThrowsOnTokenEmpty() {
         assertThrows<IllegalArgumentException> {
             judoBuilder.setApiToken("").build()
@@ -78,7 +78,7 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When apiSecret is null, build() should throw a IllegalArgumentException")
+    @DisplayName("Given apiSecret is null, then build() should throw a IllegalArgumentException")
     fun testThatBuildThrowsOnSecretNull() {
         assertThrows<IllegalArgumentException> {
             judoBuilder.setApiSecret(null).build()
@@ -86,7 +86,7 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When apiSecret is empty, build() should throw a IllegalArgumentException")
+    @DisplayName("Given apiSecret is empty, then build() should throw a IllegalArgumentException")
     fun testThatBuildThrowsOnSecretEmpty() {
         assertThrows<IllegalArgumentException> {
             judoBuilder.setApiSecret("").build()
@@ -94,7 +94,7 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When amount is null, build() should throw a IllegalArgumentException")
+    @DisplayName("Given amount is null, then build() should throw a IllegalArgumentException")
     fun testThatBuildThrowsOnAmountNull() {
         assertThrows<IllegalArgumentException> {
             judoBuilder.setAmount(null).build()
@@ -102,7 +102,7 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When reference is null, build() should throw a IllegalArgumentException")
+    @DisplayName("Given reference is null, then build() should throw a IllegalArgumentException")
     fun testThatBuildThrowsOnReferenceNull() {
         assertThrows<IllegalArgumentException> {
             judoBuilder.setReference(null).build()
@@ -110,7 +110,7 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When paymentMethods size is 1 and paymentMethod is iDEAL and currency is not EUR, build() should throw a IllegalArgumentException true true true")
+    @DisplayName("Given paymentMethods size is 1 and paymentMethod is iDEAL and currency is not EUR, then build() should throw a IllegalArgumentException true true true")
     fun testThatBuildThrowsOnPaymentMethodsIdealNotSupported() {
         assertThrows<IllegalArgumentException> {
             judoBuilder.setPaymentMethods(arrayOf(PaymentMethod.IDEAL)).build()
@@ -118,7 +118,7 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When paymentMethods size is greater than 1, then build() should not throw a IllegalArgumentException false true true")
+    @DisplayName("Given paymentMethods size is greater than 1, then build() should not throw a IllegalArgumentException false true true")
     fun testThatBuildDoesNotThrowsOnPaymentMethodsIdealNotSupported() {
         assertDoesNotThrow {
             judoBuilder.build()
@@ -126,7 +126,7 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When paymentMethods currency is EUR, build() should not throw a IllegalArgumentException false true false")
+    @DisplayName("Given paymentMethods currency is EUR, then build() should not throw a IllegalArgumentException false true false")
     fun testThatBuildDoesNotThrowsOnPaymentMethodsIdealNotSupportedWithEur() {
         assertDoesNotThrow {
             judoBuilder.setAmount(Amount("1", Currency.EUR)).build()
@@ -134,7 +134,7 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When paymentMethods does not include iDEAL, build() should not throw a IllegalArgumentException true false true")
+    @DisplayName("Given paymentMethods does not include iDEAL, then build() should not throw a IllegalArgumentException true false true")
     fun testThatBuildDoesNotThrowsOnPaymentMethodsNotIncludeIdeal() {
         assertDoesNotThrow {
             judoBuilder.setPaymentMethods(arrayOf(PaymentMethod.CARD)).build()
@@ -142,7 +142,7 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When paymentMethods size is 1 and includes iDEAL and currency is EUR, build() should not throw a IllegalArgumentException")
+    @DisplayName("Given paymentMethods size is 1 and includes iDEAL and currency is EUR, then build() should not throw a IllegalArgumentException")
     fun testThatBuildDoesNotThsrowsOnPaymentMethodsSizeOneIncludesIdealAndCurrencyEur() {
         assertDoesNotThrow {
             judoBuilder.setPaymentMethods(arrayOf(PaymentMethod.IDEAL))
@@ -151,21 +151,21 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When paymentMethods is empty, build() with default payment methods")
+    @DisplayName("Given paymentMethods is empty, then build() with default payment methods")
     fun testThatObjectHasDefaultPaymentMethodsWhenPaymentMethodsEmpty() {
         judoBuilder.setPaymentMethods(emptyArray())
         assertTrue(judoBuilder.build().paymentMethods.contentEquals(arrayOf(PaymentMethod.CARD)))
     }
 
     @Test
-    @DisplayName("When paymentMethods is null, build() with default payment methods")
+    @DisplayName("Given paymentMethods is null, then build() with default payment methods")
     fun testThatObjectHasDefaultPaymentMethodsWhenPaymentMethodsNull() {
         judoBuilder.setPaymentMethods(null)
         assertTrue(judoBuilder.build().paymentMethods.contentEquals(arrayOf(PaymentMethod.CARD)))
     }
 
     @Test
-    @DisplayName("When supportedCardNetworks is empty, build() with default supportedCardNetworks")
+    @DisplayName("Given supportedCardNetworks is empty, then build() with default supportedCardNetworks")
     fun testThatObjectHasDefaultSupportedCardNetworksWhenSupportedCardNetworksEmpty() {
         judoBuilder.setSupportedCardNetworks(emptyArray())
         assertTrue(
@@ -181,7 +181,7 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When supportedCardNetworks is null, build() with default supportedCardNetworks")
+    @DisplayName("Given supportedCardNetworks is null, then build() with default supportedCardNetworks")
     fun testThatObjectHasDefaultSupportedCardNetworksWhenSupportedCardNetworksNull() {
         judoBuilder.setSupportedCardNetworks(null)
         assertTrue(
@@ -197,7 +197,7 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When uiConfiguration is null, build() with default uiConfiguration")
+    @DisplayName("Given uiConfiguration is null, then build() with default uiConfiguration")
     fun testThatObjectHasDefaultUiConfigurationWhenUiConfigurationNull() {
         judoBuilder.setUiConfiguration(null)
         assertTrue(
@@ -206,7 +206,7 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("When isSandbox is null, build() with default isSandbox")
+    @DisplayName("Given isSandbox is null, then build() with default isSandbox")
     fun testThatObjectHasDefaultIsSandboxWhenIsSandboxNull() {
         judoBuilder.setIsSandboxed(null)
         assertFalse(judoBuilder.build().isSandboxed)
