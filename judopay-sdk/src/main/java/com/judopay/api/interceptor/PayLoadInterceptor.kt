@@ -4,6 +4,8 @@ import android.content.Context
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.google.gson.JsonSyntaxException
+import com.judopay.toJSONString
 import java.io.IOException
 import okhttp3.Interceptor
 import okhttp3.MediaType
@@ -14,10 +16,11 @@ import okio.Buffer
 
 private const val ENHANCED_PAYMENT_DETAIL = "EnhancedPaymentDetail"
 private val PAYLOAD_ENDPOINTS = arrayListOf(
-        "/transactions/payments",
-        "/transactions/preauths",
-        "/transactions/registercard",
-        "/transactions/checkcard")
+    "/transactions/payments",
+    "/transactions/preauths",
+    "/transactions/registercard",
+    "/transactions/checkcard"
+)
 
 class PayLoadInterceptor internal constructor(private val context: Context) : Interceptor {
 
@@ -31,24 +34,32 @@ class PayLoadInterceptor internal constructor(private val context: Context) : In
             convertRequestBodyToJson(request)?.let {
                 val json = it.asJsonObject
                 if (json[ENHANCED_PAYMENT_DETAIL] == null) {
-//                    json.add(ENHANCED_PAYMENT_DETAIL, enhancedPaymentDetail)
+                    json.add(ENHANCED_PAYMENT_DETAIL, enhancedPaymentDetail)
                 }
 
-                return chain.proceed(request.newBuilder()
+                return chain.proceed(
+                    request.newBuilder()
                         .post(convertJsonToRequestBody(json))
-                        .build())
+                        .build()
+                )
             }
         }
 
         return chain.proceed(request)
     }
 
-//    private val enhancedPaymentDetail: JsonObject
-//        get() {
-//            val paymentDetail = Gson().toJson(PayLoadUtil.getEnhancedPaymentDetail(context))
-//            val jsonElement = JsonParser().parse(paymentDetail)
-//            return jsonElement.asJsonObject
-//        }
+    private val payloadService = PayloadService(context)
+
+    private val enhancedPaymentDetail: JsonObject
+        get() {
+            val paymentDetail = payloadService.getEnhancedPaymentDetail()?.toJSONString()
+            return try {
+                val jsonElement = JsonParser().parse(paymentDetail)
+                jsonElement.asJsonObject
+            } catch (e: JsonSyntaxException) {
+                JsonObject()
+            }
+        }
 
     private fun convertJsonToRequestBody(json: JsonObject): RequestBody {
         val mediaType = MediaType.parse("application/json")
