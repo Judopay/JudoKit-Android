@@ -16,8 +16,8 @@ class ConsumerDevice(
 )
 
 class ClientDetails(
-    val key: String,
-    val value: String
+    val key: String?,
+    val value: String?
 )
 
 class GeoLocation(private val latitude: Double, private val longitude: Double)

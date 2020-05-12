@@ -28,29 +28,25 @@ import java.util.Locale
 import java.util.TimeZone
 
 class PayloadService(private val context: Context) {
-    fun getEnhancedPaymentDetail(): EnhancedPaymentDetail? {
-        val sdkInfo = getSdkInfo()
-        val consumerDevice: ConsumerDevice = getConsumerDevice()
-        return EnhancedPaymentDetail(sdkInfo, consumerDevice)
-    }
+    fun getEnhancedPaymentDetail(): EnhancedPaymentDetail? =
+        EnhancedPaymentDetail(getSdkInfo(), getConsumerDevice())
 
     private fun getSdkInfo(): SDKInfo {
         return SDKInfo(BuildConfig.VERSION_NAME, context.getString(R.string.judokit_android))
     }
 
-    private fun getConsumerDevice(): ConsumerDevice {
-        val clientDetails: ClientDetails = getClientDetails()
-        val geolocation: GeoLocation = getGeolocation()
-        val threeDSecure: ThreeDSecure = getThreeDSecureInfo()
-        val ipAddress: String = getIPAddress()
-        return ConsumerDevice(ipAddress, clientDetails, geolocation, threeDSecure)
-    }
+    private fun getConsumerDevice(): ConsumerDevice = ConsumerDevice(
+        getIPAddress(),
+        getClientDetails(),
+        getGeolocation(),
+        getThreeDSecureInfo()
+    )
 
     private fun getClientDetails(): ClientDetails {
         val deviceDNA = DeviceDNA(context)
         val mapDeviceDna =
             deviceDNA.deviceDNA
-        return ClientDetails(mapDeviceDna["key"]!!, mapDeviceDna["value"]!!)
+        return ClientDetails(mapDeviceDna["key"], mapDeviceDna["value"])
     }
 
     private fun getGeolocation(): GeoLocation {
@@ -92,10 +88,7 @@ class PayloadService(private val context: Context) {
         return lastKnownLocation
     }
 
-    private fun getThreeDSecureInfo(): ThreeDSecure {
-        val browser: Browser = getBrowserInfo()
-        return ThreeDSecure(browser)
-    }
+    private fun getThreeDSecureInfo(): ThreeDSecure = ThreeDSecure(getBrowserInfo())
 
     private fun getBrowserInfo(): Browser {
         val wm =
