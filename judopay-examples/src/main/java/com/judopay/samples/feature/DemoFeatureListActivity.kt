@@ -28,6 +28,7 @@ import com.judopay.model.JudoResult
 import com.judopay.model.PaymentMethod
 import com.judopay.model.PaymentWidgetType
 import com.judopay.model.Reference
+import com.judopay.model.USER_CANCELLED
 import com.judopay.model.UiConfiguration
 import com.judopay.model.googlepay.GooglePayAddressFormat
 import com.judopay.model.googlepay.GooglePayBillingAddressParameters
@@ -105,7 +106,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     private fun processPaymentError(error: JudoError?) {
         if (error != null) {
-            startResultActivity(error.toResult())
+            if (error.code == USER_CANCELLED && error.details.isEmpty()) {
+                toast("User cancelled the payment.")
+            } else {
+                startResultActivity(error.toResult())
+            }
         } else {
             presentError("Unexpected null error object")
         }

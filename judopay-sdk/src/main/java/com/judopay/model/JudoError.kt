@@ -3,8 +3,8 @@ package com.judopay.model
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
-internal const val INTERNAL_ERROR = -2
-internal const val USER_CANCELLED = -1
+const val INTERNAL_ERROR = -2
+const val USER_CANCELLED = -1
 
 private const val UNKNOWN_ERROR_MSG = "Oops! Something went wrong."
 private const val USER_CANCELLED_MSG = "User cancelled"
