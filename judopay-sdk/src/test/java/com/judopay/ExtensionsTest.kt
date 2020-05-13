@@ -77,7 +77,6 @@ internal class ExtensionsTest {
             every { parent } returns expectedParent
         }
 
-        expectedParent.addView(view)
 
         assertEquals(expectedParent, view.parentOfType(LinearLayout::class.java))
     }
@@ -90,8 +89,6 @@ internal class ExtensionsTest {
             every { parent } returns expectedParent
         }
 
-        expectedParent.addView(view)
-
         assertEquals(null, view.parentOfType(ViewGroup::class.java))
     }
 
@@ -102,8 +99,6 @@ internal class ExtensionsTest {
         val view: View = mockk(relaxed = true) {
             every { parent } returns expectedParent
         }
-
-        expectedParent.addView(view)
 
         assertEquals(null, view.parentOfType(ViewGroup::class.java))
     }
@@ -166,7 +161,6 @@ internal class ExtensionsTest {
     @Test
     fun returnDefaultAmountOnRequireAmountWithCheckCard() {
         val expectedAmount = Amount.Builder().setAmount("").setCurrency(Currency.GBP).build()
-
         val actualAmount = requireAmount(PaymentWidgetType.CHECK_CARD, null)
 
         assertEquals(expectedAmount.amount, actualAmount.amount)
