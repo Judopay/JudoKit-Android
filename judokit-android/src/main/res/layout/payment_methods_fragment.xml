@@ -51,19 +51,19 @@
                 android:minHeight="@dimen/app_bar_layout_min_height"
                 app:layout_collapseMode="pin" />
 
-            <com.judopay.ui.paymentmethods.components.AppBarLayoutHeightAwareContainerView
+            <com.judokit.android.ui.paymentmethods.components.AppBarLayoutHeightAwareContainerView
                 android:id="@+id/heightAwareView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/light_pink_gradient_background"
                 app:layout_collapseMode="pin">
 
-                <com.judopay.ui.paymentmethods.components.PaymentMethodsHeaderView
+                <com.judokit.android.ui.paymentmethods.components.PaymentMethodsHeaderView
                     android:id="@+id/headerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-            </com.judopay.ui.paymentmethods.components.AppBarLayoutHeightAwareContainerView>
+            </com.judokit.android.ui.paymentmethods.components.AppBarLayoutHeightAwareContainerView>
 
             <!-- TODO: Should be replaced by Toolbar:app:navigationIcon -->
             <ImageButton

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="80dp">
 
-    <com.judopay.ui.paymentmethods.components.PaymentSelectorView
+    <com.judokit.android.ui.paymentmethods.components.PaymentSelectorView
         android:id="@+id/slider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

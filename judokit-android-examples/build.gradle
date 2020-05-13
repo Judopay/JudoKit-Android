@@ -4,10 +4,10 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.judopay.samples"
+        applicationId "com.judokit.android.examples"
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 10
@@ -41,7 +41,7 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.preference:preference:1.1.0'
+    implementation 'androidx.preference:preference:1.1.1'
 
     implementation 'com.readystatesoftware.chuck:library:1.1.0'
 

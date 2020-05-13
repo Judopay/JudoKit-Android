@@ -8,7 +8,7 @@ apply from: 'buildscripts/jacoco.gradle'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.3"
 
     defaultConfig {
         minSdkVersion 19
@@ -85,6 +85,6 @@ dependencies {
     testImplementation 'androidx.test:core:1.2.0'
 
     // Mocking framework
-    testImplementation "io.mockk:mockk:1.9.3"
+    testImplementation "io.mockk:mockk:1.10.0"
     testImplementation 'android.arch.core:core-testing:1.1.1'
 }

@@ -28,7 +28,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.judopay.ui.cardentry.components.FormView
+    <com.judokit.android.ui.cardentry.components.FormView
         android:id="@+id/formView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
