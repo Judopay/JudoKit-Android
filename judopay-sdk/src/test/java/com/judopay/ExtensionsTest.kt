@@ -103,20 +103,6 @@ internal class ExtensionsTest {
         assertEquals(null, view.parentOfType(ViewGroup::class.java))
     }
 
-    /*
-    io.mockk.MockKException: Missing calls inside every { ... } block.
-    @DisplayName("Given viewGroup.subViewsWithType is called, when subViewType parameter is View, then return list of views")
-    @Test
-    fun returnListOfViewsOnSubViewsWithType() {
-        val view: View = mockk(relaxed = true)
-        val viewGroup: ViewGroup = mockk(relaxed = true) {
-            every { children } returns sequenceOf(view, view)
-        }
-
-        assertEquals(sequenceOf(view, view), viewGroup.subViewsWithType(View::class.java))
-    }
-     */
-
     @DisplayName("Given FragmentActivity.judo is called, then get judo object")
     @Test
     fun getJudoObjectOnFragmentActivityJudoCall() {
