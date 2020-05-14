@@ -1,4 +1,4 @@
-package com.judopay.ui.cardentry
+package com.judokit.android.ui.cardentry
 
 import android.app.Dialog
 import android.content.DialogInterface
@@ -21,23 +21,23 @@ import cards.pay.paycardsrecognizer.sdk.ScanCardIntent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.judopay.JudoSharedViewModel
-import com.judopay.R
-import com.judopay.SCAN_CARD_REQUEST_CODE
-import com.judopay.api.error.toJudoError
-import com.judopay.api.factory.JudoApiServiceFactory
-import com.judopay.api.model.response.JudoApiCallResult
-import com.judopay.api.model.response.Receipt
-import com.judopay.api.model.response.toCardVerificationModel
-import com.judopay.api.model.response.toJudoPaymentResult
-import com.judopay.api.model.response.toJudoResult
-import com.judopay.db.JudoRoomDatabase
-import com.judopay.db.repository.TokenizedCardRepository
-import com.judopay.judo
-import com.judopay.model.JudoPaymentResult
-import com.judopay.model.isCardPaymentWidget
-import com.judopay.model.isPaymentMethodsWidget
-import com.judopay.ui.paymentmethods.CARD_VERIFICATION
+import com.judokit.android.JudoSharedViewModel
+import com.judokit.android.R
+import com.judokit.android.SCAN_CARD_REQUEST_CODE
+import com.judokit.android.api.error.toJudoError
+import com.judokit.android.api.factory.JudoApiServiceFactory
+import com.judokit.android.api.model.response.JudoApiCallResult
+import com.judokit.android.api.model.response.Receipt
+import com.judokit.android.api.model.response.toCardVerificationModel
+import com.judokit.android.api.model.response.toJudoPaymentResult
+import com.judokit.android.api.model.response.toJudoResult
+import com.judokit.android.db.JudoRoomDatabase
+import com.judokit.android.db.repository.TokenizedCardRepository
+import com.judokit.android.judo
+import com.judokit.android.model.JudoPaymentResult
+import com.judokit.android.model.isCardPaymentWidget
+import com.judokit.android.model.isPaymentMethodsWidget
+import com.judokit.android.ui.paymentmethods.CARD_VERIFICATION
 import kotlinx.android.synthetic.main.card_entry_fragment.*
 
 class CardEntryFragment : BottomSheetDialogFragment() {

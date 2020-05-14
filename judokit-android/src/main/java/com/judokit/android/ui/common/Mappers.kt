@@ -1,29 +1,29 @@
-package com.judopay.ui.common
+package com.judokit.android.ui.common
 
 import com.google.android.gms.wallet.IsReadyToPayRequest
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.PaymentDataRequest
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import com.judopay.Judo
-import com.judopay.api.model.request.GooglePayRequest
-import com.judopay.api.model.request.GooglePayWallet
-import com.judopay.model.GooglePayConfiguration
-import com.judopay.model.googlepay.GPayPaymentGatewayParameters
-import com.judopay.model.googlepay.GooglePayAuthMethod
-import com.judopay.model.googlepay.GooglePayCardParameters
-import com.judopay.model.googlepay.GooglePayIsReadyToPayRequest
-import com.judopay.model.googlepay.GooglePayMerchantInfo
-import com.judopay.model.googlepay.GooglePayPaymentData
-import com.judopay.model.googlepay.GooglePayPaymentDataRequest
-import com.judopay.model.googlepay.GooglePayPaymentMethod
-import com.judopay.model.googlepay.GooglePayPaymentMethodTokenizationSpecification
-import com.judopay.model.googlepay.GooglePayPaymentMethodType
-import com.judopay.model.googlepay.GooglePayTokenizationSpecificationType
-import com.judopay.model.googlepay.GooglePayTransactionInfo
-import com.judopay.model.isSupportedByGooglePay
-import com.judopay.toJSONString
-import com.judopay.toMap
+import com.judokit.android.Judo
+import com.judokit.android.api.model.request.GooglePayRequest
+import com.judokit.android.api.model.request.GooglePayWallet
+import com.judokit.android.model.GooglePayConfiguration
+import com.judokit.android.model.googlepay.GPayPaymentGatewayParameters
+import com.judokit.android.model.googlepay.GooglePayAuthMethod
+import com.judokit.android.model.googlepay.GooglePayCardParameters
+import com.judokit.android.model.googlepay.GooglePayIsReadyToPayRequest
+import com.judokit.android.model.googlepay.GooglePayMerchantInfo
+import com.judokit.android.model.googlepay.GooglePayPaymentData
+import com.judokit.android.model.googlepay.GooglePayPaymentDataRequest
+import com.judokit.android.model.googlepay.GooglePayPaymentMethod
+import com.judokit.android.model.googlepay.GooglePayPaymentMethodTokenizationSpecification
+import com.judokit.android.model.googlepay.GooglePayPaymentMethodType
+import com.judokit.android.model.googlepay.GooglePayTokenizationSpecificationType
+import com.judokit.android.model.googlepay.GooglePayTransactionInfo
+import com.judokit.android.model.isSupportedByGooglePay
+import com.judokit.android.toJSONString
+import com.judokit.android.toMap
 
 internal fun GooglePayConfiguration.toGooglePayPaymentMethod(judo: Judo): GooglePayPaymentMethod {
     val networks = judo.supportedCardNetworks.filter { it.isSupportedByGooglePay }

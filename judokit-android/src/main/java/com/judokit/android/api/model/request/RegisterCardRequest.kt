@@ -1,8 +1,8 @@
-package com.judopay.api.model.request
+package com.judokit.android.api.model.request
 
-import com.judopay.model.PrimaryAccountDetails
-import com.judopay.requireNotNull
-import com.judopay.requireNotNullOrEmpty
+import com.judokit.android.model.PrimaryAccountDetails
+import com.judokit.android.requireNotNull
+import com.judokit.android.requireNotNullOrEmpty
 
 private const val DEFAULT_AMOUNT = "0.01"
 

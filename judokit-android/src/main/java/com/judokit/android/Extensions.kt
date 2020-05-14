@@ -1,4 +1,4 @@
-package com.judopay
+package com.judokit.android
 
 import android.content.Context
 import android.os.Bundle
@@ -10,12 +10,12 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
-import com.judopay.model.Amount
-import com.judopay.model.ApiEnvironment
-import com.judopay.model.Currency
-import com.judopay.model.PaymentWidgetType
-import com.judopay.ui.common.ANIMATION_DURATION_500
-import com.judopay.ui.error.JudoNotProvidedError
+import com.judokit.android.model.Amount
+import com.judokit.android.model.ApiEnvironment
+import com.judokit.android.model.Currency
+import com.judokit.android.model.PaymentWidgetType
+import com.judokit.android.ui.common.ANIMATION_DURATION_500
+import com.judokit.android.ui.error.JudoNotProvidedError
 
 internal val Judo.apiBaseUrl: String
     get() = if (isSandboxed) ApiEnvironment.SANDBOX.host else ApiEnvironment.LIVE.host

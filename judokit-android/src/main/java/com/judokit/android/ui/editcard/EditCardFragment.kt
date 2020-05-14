@@ -1,4 +1,4 @@
-package com.judopay.ui.editcard
+package com.judokit.android.ui.editcard
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,17 +10,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.judopay.R
-import com.judopay.db.JudoRoomDatabase
-import com.judopay.db.repository.TokenizedCardRepository
-import com.judopay.dismissKeyboard
-import com.judopay.ui.common.LengthFilter
-import com.judopay.ui.editcard.adapter.ColorPickerAdapter
-import com.judopay.ui.editcard.adapter.ColorPickerItem
-import com.judopay.ui.paymentmethods.model.PaymentCardViewModel
+import com.judokit.android.R
+import com.judokit.android.db.JudoRoomDatabase
+import com.judokit.android.db.repository.TokenizedCardRepository
+import com.judokit.android.dismissKeyboard
+import com.judokit.android.ui.common.LengthFilter
+import com.judokit.android.ui.editcard.adapter.ColorPickerAdapter
+import com.judokit.android.ui.editcard.adapter.ColorPickerItem
+import com.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import kotlinx.android.synthetic.main.edit_card_fragment.*
 
-const val JUDO_TOKENIZED_CARD_ID = "com.judopay.judo-tokenized-card-id"
+const val JUDO_TOKENIZED_CARD_ID = "com.judokit.android.judo-tokenized-card-id"
 
 data class EditCardModel(
     val colorOptions: List<ColorPickerItem>,

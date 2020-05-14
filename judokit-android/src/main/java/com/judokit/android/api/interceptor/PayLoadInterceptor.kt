@@ -1,11 +1,11 @@
-package com.judopay.api.interceptor
+package com.judokit.android.api.interceptor
 
 import android.content.Context
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
-import com.judopay.toJSONString
+import com.judokit.android.toJSONString
 import java.io.IOException
 import okhttp3.Interceptor
 import okhttp3.MediaType
