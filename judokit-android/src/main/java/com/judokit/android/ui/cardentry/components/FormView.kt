@@ -184,7 +184,7 @@ class FormView @JvmOverloads constructor(
                 }
 
                 if (type == FormFieldType.SECURITY_NUMBER) {
-                    setOnFocusChangeListener { v, hasFocus ->
+                    setOnFocusChangeListener { _, hasFocus ->
                         val text = valueOfFieldWithType(type)
                         if (!hasFocus) textDidChange(type, text, FormFieldEvent.FOCUS_CHANGED)
                     }

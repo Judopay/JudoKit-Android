@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "org.jlleitschuh.gradle.ktlint"
 apply plugin: "de.mannodermaus.android-junit5"
-apply from: 'buildscripts/jacoco.gradle'
+apply plugin: "jacoco"
 
 android {
     compileSdkVersion 29
@@ -14,7 +14,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
         vectorDrawables.useSupportLibrary = true
 
@@ -87,4 +87,43 @@ dependencies {
     // Mocking framework
     testImplementation 'io.mockk:mockk:1.10.0'
     testImplementation 'android.arch.core:core-testing:1.1.1'
+}
+
+task generateCodeAnalysisReport {
+    group 'Reporting'
+    description 'Start reporting code analysis tasks (Jacoco & ktlintCheck)'
+    dependsOn ":judokit-android:jacocoTestReport"
+    dependsOn ":judokit-android:ktlintCheck"
+}
+
+task jacocoTestReport(type: JacocoReport) {
+    group 'Reporting'
+    description 'Generate Jacoco coverage report for debug build. Only unit test.'
+
+    dependsOn ":judokit-android:test"
+
+    classDirectories.from = files([
+            fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug",
+                    excludes: ['**/R.class',
+                               '**/R$*.class',
+                               '**/BuildConfig.*',
+                               '**/*Test*.*',
+                               'android/**/*.*']),
+    ])
+
+    def coverageSourceDirs = [
+            "$project.projectDir/src/main/java",
+    ]
+
+    additionalSourceDirs.from = files(coverageSourceDirs)
+    sourceDirectories.from = files(coverageSourceDirs)
+    executionData.from = fileTree(dir: project.projectDir,
+            includes: [
+                    '/build/jacoco/testDebugUnitTest.exec',
+            ])
+
+    reports {
+        xml.enabled = true
+        html.enabled = false
+    }
 }

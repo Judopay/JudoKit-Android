@@ -2,7 +2,6 @@ package com.judokit.android.ui.editcard
 
 import android.app.Application
 import androidx.lifecycle.Observer
-import com.judokit.android.InstantExecutorExtension
 import com.judokit.android.db.entity.TokenizedCardEntity
 import com.judokit.android.db.repository.TokenizedCardRepository
 import com.judokit.android.model.CardNetwork
@@ -15,7 +14,7 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.spyk
 import io.mockk.verify
-import junit.framework.Assert.assertEquals
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher

@@ -19,7 +19,7 @@ internal class CardNumberInputMaskTextWatcher(
     override fun afterTextChanged(s: Editable?) {
         // Adjust the mask according to detected card network if any
         val network = CardNetwork.ofNumber(s.toString())
-        mask = network?.cardNumberMask ?: DEFAULT_CARD_NUMBER_MASK
+        mask = network.cardNumberMask
         setCardNetworkLogo(network)
 
         // trigger parent formatting logic
