@@ -31,7 +31,7 @@ private const val CARD_ID = 1
 private const val NEW_TITLE = "NEW_TITLE"
 
 @ExperimentalCoroutinesApi
-@ExtendWith(_root_ide_package_.com.judokit.InstantExecutorExtension::class)
+@ExtendWith(com.judokit.android.InstantExecutorExtension::class)
 @DisplayName("Testing edit card view model logic")
 internal class EditCardViewModelTest {
 

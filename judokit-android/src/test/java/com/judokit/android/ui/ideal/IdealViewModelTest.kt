@@ -40,7 +40,7 @@ private const val BIC = "bic"
 private const val ORDER_ID = "orderId"
 
 @ExperimentalCoroutinesApi
-@ExtendWith(_root_ide_package_.com.judokit.InstantExecutorExtension::class)
+@ExtendWith(com.judokit.android.InstantExecutorExtension::class)
 class IdealViewModelTest {
     private val testDispatcher = TestCoroutineDispatcher()
 

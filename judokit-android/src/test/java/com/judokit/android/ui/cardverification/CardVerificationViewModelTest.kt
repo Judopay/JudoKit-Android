@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
-@ExtendWith(_root_ide_package_.com.judokit.InstantExecutorExtension::class)
+@ExtendWith(com.judokit.android.InstantExecutorExtension::class)
 @DisplayName("Testing cardVerificationViewModel logic")
 internal class CardVerificationViewModelTest {
     private val testDispatcher = TestCoroutineDispatcher()
