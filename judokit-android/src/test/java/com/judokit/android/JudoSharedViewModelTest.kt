@@ -422,7 +422,6 @@ internal class JudoSharedViewModelTest {
         assertEquals(expectedPaymentResult, actualPaymentResult)
     }
 
-
     @DisplayName("Given send is called with ScanCardResult action, then update scanCardResult")
     @Test
     fun updateScanCardResultOnScanCardResultAction() {
