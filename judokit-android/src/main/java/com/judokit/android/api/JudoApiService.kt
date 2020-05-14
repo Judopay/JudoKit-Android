@@ -111,5 +111,4 @@ interface JudoApiService {
 
     @GET("order/bank/statusrequest/{orderID}")
     suspend fun status(@Path("orderID") orderId: String): JudoApiCallResult<IdealSaleStatusResponse>
-
 }
