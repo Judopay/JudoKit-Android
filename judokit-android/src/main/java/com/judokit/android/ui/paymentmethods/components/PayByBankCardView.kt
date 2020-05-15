@@ -1,12 +1,12 @@
-package com.judopay.ui.paymentmethods.components
+package com.judokit.android.ui.paymentmethods.components
 
 import android.content.Context
 import android.util.AttributeSet
 import androidx.cardview.widget.CardView
-import com.judopay.R
-import com.judopay.inflate
-import com.judopay.ui.paymentmethods.model.CardViewModel
-import com.judopay.ui.paymentmethods.model.CardViewType
+import com.judokit.android.R
+import com.judokit.android.inflate
+import com.judokit.android.ui.paymentmethods.model.CardViewModel
+import com.judokit.android.ui.paymentmethods.model.CardViewType
 
 open class PayByBankCardViewModel(
     override val type: CardViewType = CardViewType.PAY_BY_BANK,
