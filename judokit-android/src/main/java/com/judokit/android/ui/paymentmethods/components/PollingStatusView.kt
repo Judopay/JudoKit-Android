@@ -1,11 +1,11 @@
-package com.judopay.ui.paymentmethods.components
+package com.judokit.android.ui.paymentmethods.components
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.judopay.R
-import com.judopay.inflate
+import com.judokit.android.R
+import com.judokit.android.inflate
 import kotlinx.android.synthetic.main.polling_status_view.view.*
 
 class PollingStatusView @JvmOverloads constructor(
