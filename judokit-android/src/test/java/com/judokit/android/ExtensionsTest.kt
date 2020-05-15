@@ -1,15 +1,15 @@
-package com.judopay
+package com.judokit.android
 
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.judopay.model.Amount
-import com.judopay.model.ApiEnvironment
-import com.judopay.model.Currency
-import com.judopay.model.PaymentWidgetType
-import com.judopay.ui.error.JudoNotProvidedError
+import com.judokit.android.model.Amount
+import com.judokit.android.model.ApiEnvironment
+import com.judokit.android.model.Currency
+import com.judokit.android.model.PaymentWidgetType
+import com.judokit.android.ui.error.JudoNotProvidedError
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-@DisplayName("Test com.judopay.Extensions")
+@DisplayName("Test com.judokit.android.Extensions")
 internal class ExtensionsTest {
 
     @DisplayName("Given judo.isSandboxed is true, then return ApiEnvironment.SANDBOX.host")
