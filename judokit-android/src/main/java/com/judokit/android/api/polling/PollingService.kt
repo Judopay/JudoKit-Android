@@ -1,9 +1,9 @@
-package com.judopay.api.polling
+package com.judokit.android.api.polling
 
-import com.judopay.api.JudoApiService
-import com.judopay.api.model.response.BankSaleStatusResponse
-import com.judopay.api.model.response.JudoApiCallResult
-import com.judopay.api.model.response.OrderStatus
+import com.judokit.android.api.JudoApiService
+import com.judokit.android.api.model.response.BankSaleStatusResponse
+import com.judokit.android.api.model.response.JudoApiCallResult
+import com.judokit.android.api.model.response.OrderStatus
 import kotlinx.coroutines.delay
 
 private const val DELAY_IN_SECONDS = 130L

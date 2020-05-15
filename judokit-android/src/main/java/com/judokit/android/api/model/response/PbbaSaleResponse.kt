@@ -1,6 +1,5 @@
 package com.judokit.android.api.model.response
 
-import com.judokit.android.api.model.response.BankConsumer
 import java.math.BigDecimal
 
 data class PbbaSaleResponse(
