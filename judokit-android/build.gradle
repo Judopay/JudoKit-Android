@@ -2,9 +2,10 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: "org.jlleitschuh.gradle.ktlint"
-apply plugin: "de.mannodermaus.android-junit5"
-apply plugin: "jacoco"
+apply plugin: 'org.jlleitschuh.gradle.ktlint'
+apply plugin: 'de.mannodermaus.android-junit5'
+apply plugin: 'jacoco'
+apply plugin: 'guru.stefma.bintrayrelease'
 
 android {
     compileSdkVersion 29
@@ -39,6 +40,20 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
+}
+
+version = android.defaultConfig.versionName
+
+group = 'com.judokit.android'
+
+androidArtifact {
+    artifactId = 'judokit-android'
+}
+
+publish {
+    userOrg = 'judopay'
+    desc = 'Android Mobile Payments SDK'
+    website = 'https://github.com/JudoPay/JudoKit-Android'
 }
 
 dependencies {
