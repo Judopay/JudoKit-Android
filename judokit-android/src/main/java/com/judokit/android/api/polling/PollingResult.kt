@@ -1,4 +1,4 @@
-package com.judopay.api.polling
+package com.judokit.android.api.polling
 
 sealed class PollingResult<out T> {
     data class Delay<T>(val data: T) : PollingResult<T>()
