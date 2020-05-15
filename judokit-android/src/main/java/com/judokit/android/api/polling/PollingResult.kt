@@ -1,6 +1,6 @@
 package com.judokit.android.api.polling
 
-import com.judopay.api.error.ApiError
+import com.judokit.android.api.error.ApiError
 
 sealed class PollingResult<out T> {
     object Delay : PollingResult<Nothing>()

@@ -75,7 +75,7 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.judopay.ui.paymentmethods.components.PollingStatusView
+    <com.judokit.android.ui.paymentmethods.components.PollingStatusView
         android:id="@+id/pollingStatusView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
