@@ -1,22 +1,23 @@
-package com.judopay
+package com.judokit.android
 
 import androidx.lifecycle.Observer
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.wallet.PaymentData
-import com.judopay.api.JudoApiService
-import com.judopay.api.model.request.GooglePayRequest
-import com.judopay.api.model.request.toJudoResult
-import com.judopay.api.model.response.JudoApiCallResult
-import com.judopay.api.model.response.Receipt
-import com.judopay.api.model.response.toJudoPaymentResult
-import com.judopay.model.INTERNAL_ERROR
-import com.judopay.model.JudoError
-import com.judopay.model.JudoPaymentResult
-import com.judopay.model.JudoResult
-import com.judopay.model.PaymentWidgetType
-import com.judopay.service.JudoGooglePayService
-import com.judopay.ui.common.toGooglePayRequest
+import com.judokit.android.api.JudoApiService
+import com.judokit.android.api.model.request.GooglePayRequest
+import com.judokit.android.api.model.request.toJudoResult
+import com.judokit.android.api.model.response.JudoApiCallResult
+import com.judokit.android.api.model.response.Receipt
+import com.judokit.android.api.model.response.toJudoPaymentResult
+import com.judokit.android.model.CardScanningResult
+import com.judokit.android.model.INTERNAL_ERROR
+import com.judokit.android.model.JudoError
+import com.judokit.android.model.JudoPaymentResult
+import com.judokit.android.model.JudoResult
+import com.judokit.android.model.PaymentWidgetType
+import com.judokit.android.service.JudoGooglePayService
+import com.judokit.android.ui.common.toGooglePayRequest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -55,17 +56,19 @@ internal class JudoSharedViewModelTest {
 
     private val paymentResult = spyk<Observer<JudoPaymentResult>>()
     private val paymentMethodsGooglePayResult = spyk<Observer<JudoPaymentResult>>()
+    private val scanCardResult = spyk<Observer<CardScanningResult>>()
 
     @BeforeEach
     internal fun setUp() {
         Dispatchers.setMain(testDispatcher)
 
-        mockkStatic("com.judopay.ui.common.MappersKt")
-        mockkStatic("com.judopay.api.model.request.GooglePayRequestKt")
-        mockkStatic("com.judopay.api.model.response.JudoApiCallResultKt")
+        mockkStatic("com.judokit.android.ui.common.MappersKt")
+        mockkStatic("com.judokit.android.api.model.request.GooglePayRequestKt")
+        mockkStatic("com.judokit.android.api.model.response.JudoApiCallResultKt")
 
         sut.paymentResult.observeForever(paymentResult)
         sut.paymentMethodsGooglePayResult.observeForever(paymentMethodsGooglePayResult)
+        sut.scanCardResult.observeForever(scanCardResult)
     }
 
     @AfterEach
@@ -103,9 +106,7 @@ internal class JudoSharedViewModelTest {
         sut.send(JudoSharedAction.LoadGPayPaymentData)
 
         verify { paymentResult.onChanged(capture(slots)) }
-
         val actualPaymentResult = slots[0]
-
         val expectedPaymentResult = JudoPaymentResult.Error(
             JudoError(
                 INTERNAL_ERROR,
@@ -126,9 +127,7 @@ internal class JudoSharedViewModelTest {
         sut.send(JudoSharedAction.LoadGPayPaymentData)
 
         verify { paymentResult.onChanged(capture(slots)) }
-
         val actualPaymentResult = slots[0]
-
         val expectedPaymentResult = JudoPaymentResult.Error(
             JudoError(
                 INTERNAL_ERROR,
@@ -149,9 +148,7 @@ internal class JudoSharedViewModelTest {
         sut.send(JudoSharedAction.LoadGPayPaymentData)
 
         verify { paymentMethodsGooglePayResult.onChanged(capture(slots)) }
-
         val actualPaymentMethodsGooglePayResult = slots[0]
-
         val expectedPaymentMethodsGooglePayResult = JudoPaymentResult.Error(
             JudoError(
                 INTERNAL_ERROR,
@@ -172,9 +169,7 @@ internal class JudoSharedViewModelTest {
         sut.send(JudoSharedAction.LoadGPayPaymentData)
 
         verify { paymentMethodsGooglePayResult.onChanged(capture(slots)) }
-
         val actualPaymentMethodsGooglePayResult = slots[0]
-
         val expectedPaymentMethodsGooglePayResult = JudoPaymentResult.Error(
             JudoError(
                 INTERNAL_ERROR,
@@ -195,9 +190,7 @@ internal class JudoSharedViewModelTest {
         sut.send(JudoSharedAction.LoadGPayPaymentData)
 
         verify { paymentMethodsGooglePayResult.onChanged(capture(slots)) }
-
         val actualPaymentMethodsGooglePayResult = slots[0]
-
         val expectedPaymentMethodsGooglePayResult = JudoPaymentResult.Error(
             JudoError(
                 INTERNAL_ERROR,
@@ -233,9 +226,7 @@ internal class JudoSharedViewModelTest {
         sut.send(JudoSharedAction.LoadGPayPaymentData)
 
         verify { paymentResult.onChanged(capture(slots)) }
-
         val actualPaymentResult = slots[0]
-
         val expectedPaymentResult = JudoPaymentResult.Error(
             JudoError(
                 INTERNAL_ERROR,
@@ -257,9 +248,7 @@ internal class JudoSharedViewModelTest {
         sut.send(JudoSharedAction.LoadGPayPaymentData)
 
         verify { paymentResult.onChanged(capture(slots)) }
-
         val actualPaymentResult = slots[0]
-
         val expectedPaymentResult = JudoPaymentResult.Error(
             JudoError(
                 INTERNAL_ERROR,
@@ -418,21 +407,46 @@ internal class JudoSharedViewModelTest {
     @Test
     fun updatePaymentResultWithErrorOnLoadGpayPaymentDataErrorAction() {
         val slots = mutableListOf<JudoPaymentResult>()
-
         every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
 
         sut.send(JudoSharedAction.LoadGPayPaymentDataError("Message"))
 
         verify { paymentResult.onChanged(capture(slots)) }
-
         val actualPaymentResult = slots[0]
-
         val expectedPaymentResult = JudoPaymentResult.Error(
             JudoError(
                 INTERNAL_ERROR,
                 "Message"
             )
         )
+        assertEquals(expectedPaymentResult, actualPaymentResult)
+    }
+
+    @DisplayName("Given send is called with ScanCardResult action, then update scanCardResult")
+    @Test
+    fun updateScanCardResultOnScanCardResultAction() {
+        val slots = mutableListOf<CardScanningResult>()
+        val expectedCardScanResult: CardScanningResult = mockk(relaxed = true)
+
+        sut.send(JudoSharedAction.ScanCardResult(expectedCardScanResult))
+
+        verify { scanCardResult.onChanged(capture(slots)) }
+        val actualScanCardResult = slots[0]
+        assertEquals(expectedCardScanResult, actualScanCardResult)
+    }
+
+    @DisplayName("Given send is called with LoadGPayPaymentDataUserCancelled action, then update paymentResult with UserCancelled")
+    @Test
+    fun updatePaymentResultOnLoadGpayPaymentDataUserCancelledAction() {
+        val slots = mutableListOf<JudoPaymentResult>()
+        every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
+
+        sut.send(JudoSharedAction.LoadGPayPaymentDataUserCancelled)
+
+        verify { paymentResult.onChanged(capture(slots)) }
+
+        val actualPaymentResult = slots[0]
+        val expectedPaymentResult = JudoPaymentResult.UserCancelled()
         assertEquals(expectedPaymentResult, actualPaymentResult)
     }
 }
