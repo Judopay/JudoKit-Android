@@ -77,7 +77,6 @@ internal class ExtensionsTest {
             every { parent } returns expectedParent
         }
 
-
         assertEquals(expectedParent, view.parentOfType(LinearLayout::class.java))
     }
 
