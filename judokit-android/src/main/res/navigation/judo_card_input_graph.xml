@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/judo_graph"
+    app:startDestination="@id/cardEntryFragment"
+    tools:ignore="UnusedNavigation">
+
+    <dialog
+        android:id="@+id/cardEntryFragment"
+        android:name="com.judokit.android.ui.cardentry.CardEntryFragment"
+        android:label="CardEntryFragment"
+        tools:layout="@layout/card_entry_fragment">
+        <action
+            android:id="@+id/action_cardEntryFragment_to_cardVerificationFragment"
+            app:destination="@id/cardVerificationFragment">
+            <argument
+                android:name="com.judokit.android.model.CardVerificationModel"
+                app:argType="com.judokit.android.model.CardVerificationModel" />
+        </action>
+    </dialog>
+    <fragment
+        android:id="@+id/cardVerificationFragment"
+        android:name="com.judokit.android.ui.cardverification.CardVerificationFragment"
+        android:label="CardVerificationFragment"
+        tools:layout="@layout/card_verification_fragment">
+
+    </fragment>
+
+</navigation>
