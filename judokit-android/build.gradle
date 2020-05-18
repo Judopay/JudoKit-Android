@@ -141,7 +141,10 @@ def addJacocoTask(variant) {
     logger.info("Adding jacoco task for variant $variantName")
 
     // see https://docs.gradle.org/current/dsl/org.gradle.testing.jacoco.tasks.JacocoReport.html
-    def jacocoTask = project.tasks.create("jacoco${variantName}Report", JacocoReport)
+    def taskName = "jacocoTestReport${variantName}"
+    def foundTask = project.tasks.findByName(taskName)
+    def jacocoTask = foundTask ? foundTask : project.tasks.create(taskName, JacocoReport)
+
     jacocoTask.dependsOn("test${variantName}UnitTest")
     jacocoTask.group = 'verification'
     jacocoTask.description = "Generate Jacoco Report for variant $variantName"
