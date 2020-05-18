@@ -24,7 +24,7 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = ["room.incremental":"true"]
+                arguments = ["room.incremental": "true"]
             }
         }
     }
@@ -32,7 +32,12 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            testCoverageEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            testCoverageEnabled true
         }
     }
 
@@ -40,6 +45,11 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
+    testOptions.unitTests.all {
+        jacoco {
+            includeNoLocationClasses = true
+        }
+    }
 }
 
 version = android.defaultConfig.versionName
@@ -117,34 +127,58 @@ task generateCodeAnalysisReport {
     dependsOn ":judokit-android:ktlintCheck"
 }
 
-task jacocoTestReport(type: JacocoReport) {
-    group 'Reporting'
-    description 'Generate Jacoco coverage report for debug build. Only unit test.'
+task jacocoTestReport(group: 'verification', description: 'Grenerate Jacoco Reports for all android variants')
 
-    dependsOn ":judokit-android:test"
+project.afterEvaluate {
+    def variants = android.hasProperty('libraryVariants') ? android.libraryVariants : android.applicationVariants
+    variants.forEach {
+        tasks.jacocoTestReport.dependsOn(addJacocoTask(it))
+    }
+}
 
-    classDirectories.from = files([
-            fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug",
-                    excludes: ['**/R.class',
-                               '**/R$*.class',
-                               '**/BuildConfig.*',
-                               '**/*Test*.*',
-                               'android/**/*.*']),
-    ])
+def addJacocoTask(variant) {
+    def variantName = variant.name.capitalize()
+    logger.info("Adding jacoco task for variant $variantName")
 
-    def coverageSourceDirs = [
-            "$project.projectDir/src/main/java",
+    // see https://docs.gradle.org/current/dsl/org.gradle.testing.jacoco.tasks.JacocoReport.html
+    def jacocoTask = project.tasks.create("jacoco${variantName}Report", JacocoReport)
+    jacocoTask.dependsOn("test${variantName}UnitTest")
+    jacocoTask.group = 'verification'
+    jacocoTask.description = "Generate Jacoco Report for variant $variantName"
+
+    jacocoTask.reports {
+        csv.enabled false
+        html.enabled true
+        xml.enabled true
+    }
+
+    def excludedFiles = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/*Test*.*',
+            'android/**/*.*',
+            '**/*Activity.*',
+            '**/*Fragment.*',
+            '**/*View.*',
+            '**/*Action*.*',
+            '**/*Entity.*'
     ]
 
-    additionalSourceDirs.from = files(coverageSourceDirs)
-    sourceDirectories.from = files(coverageSourceDirs)
-    executionData.from = fileTree(dir: project.projectDir,
-            includes: [
-                    '/build/jacoco/testDebugUnitTest.exec',
-            ])
+    def sourceDirectories = files(variant.sourceSets.java.srcDirs.flatten())
+    def classDirectories = fileTree(dir: variant.javaCompileProvider.get().destinationDir, excludes: excludedFiles)
 
-    reports {
-        xml.enabled = true
-        html.enabled = false
+    if(project.plugins.hasPlugin("kotlin-android")) {
+        sourceDirectories.from(files(variant.sourceSets.kotlin.srcDirs.flatten()))
+        def kotlinTask = tasks.getByName("compile${variantName}Kotlin")
+        if(kotlinTask) {
+            classDirectories += fileTree(dir: kotlinTask.destinationDir, excludes: excludedFiles)
+        }
     }
+
+    jacocoTask.sourceDirectories.from = sourceDirectories
+    jacocoTask.classDirectories.from = classDirectories
+    jacocoTask.executionData.from = files("${buildDir}/jacoco/test${variantName}UnitTest.exec")
+    jacocoTask
 }
