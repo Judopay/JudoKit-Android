@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
 import androidx.lifecycle.viewModelScope
 import com.judokit.android.Judo
 import com.judokit.android.R
-import com.judokit.android.api.factory.JudoApiServiceFactory
+import com.judokit.android.api.JudoApiService
 import com.judokit.android.api.model.request.Address
 import com.judokit.android.api.model.request.PbbaSaleRequest
 import com.judokit.android.api.model.request.TokenRequest
@@ -19,6 +19,8 @@ import com.judokit.android.api.model.response.Consumer
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.PbbaSaleResponse
 import com.judokit.android.api.model.response.Receipt
+import com.judokit.android.api.polling.PollingResult
+import com.judokit.android.api.polling.PollingService
 import com.judokit.android.api.polling.PollingResult
 import com.judokit.android.api.polling.PollingService
 import com.judokit.android.db.JudoRoomDatabase
@@ -57,6 +59,7 @@ import com.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import com.judokit.android.ui.paymentmethods.model.PaymentMethodModel
 import com.zapp.library.merchant.util.PBBAAppUtils
 import java.math.BigDecimal
+import java.math.BigDecimal
 import java.util.Date
 import kotlinx.coroutines.launch
 
@@ -79,18 +82,24 @@ sealed class PaymentMethodsAction {
 
 // view-model custom factory to inject the `judo` configuration object
 internal class PaymentMethodsViewModelFactory(
+    private val cardDate: CardDate,
+    private val cardRepository: TokenizedCardRepository,
+    private val service: JudoApiService,
     private val application: Application,
     private val judo: Judo
 ) : NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == PaymentMethodsViewModel::class.java) {
-            PaymentMethodsViewModel(application, judo) as T
+            PaymentMethodsViewModel(cardDate, cardRepository, service, application, judo) as T
         } else super.create(modelClass)
     }
 }
 
 class PaymentMethodsViewModel(
+    private val cardDate: CardDate,
+    private val cardRepository: TokenizedCardRepository,
+    private val service: JudoApiService,
     application: Application,
     private val judo: Judo
 ) : AndroidViewModel(application) {
@@ -103,9 +112,6 @@ class PaymentMethodsViewModel(
         MutableLiveData<PollingResult<BankSaleStatusResponse>>()
 
     private val context = application
-    private val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
-    private val cardRepository = TokenizedCardRepository(tokenizedCardDao)
-    private val service = JudoApiServiceFactory.createApiService(context, judo)
     private lateinit var pollingService: PollingService
 
     val allCardsSync = cardRepository.allCardsSync
@@ -384,7 +390,7 @@ class PaymentMethodsViewModel(
         cardModel: CardViewModel
     ): ButtonState = when {
         isLoading -> ButtonState.Loading
-        cardModel is PaymentCardViewModel && CardDate(cardModel.expireDate).isAfterToday ->
+        cardModel is PaymentCardViewModel && cardDate.apply { cardDate = cardModel.expireDate }.isAfterToday ->
             ButtonState.Enabled(R.string.pay_now)
         else -> ButtonState.Disabled(R.string.pay_now)
     }
