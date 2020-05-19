@@ -28,7 +28,8 @@ class PollingService(
                 is JudoApiCallResult.Success -> {
                     if (saleStatusResponse.data != null)
                         when (saleStatusResponse.data.orderDetails.orderStatus) {
-                            OrderStatus.SUCCEEDED -> {
+                            OrderStatus.SUCCEEDED,
+                            OrderStatus.FAILED -> {
                                 timeout = 0L
                                 result.invoke(PollingResult.Success(saleStatusResponse.data))
                             }
@@ -39,10 +40,6 @@ class PollingService(
                                     timeout <= TIMEOUT / 2 -> result.invoke(PollingResult.Delay)
                                     else -> result.invoke(PollingResult.Processing)
                                 }
-                            }
-                            OrderStatus.FAILED -> {
-                                timeout = 0L
-                                result.invoke(PollingResult.Success(saleStatusResponse.data))
                             }
                         }
                 }
