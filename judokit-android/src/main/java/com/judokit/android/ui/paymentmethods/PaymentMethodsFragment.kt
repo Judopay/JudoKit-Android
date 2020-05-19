@@ -27,7 +27,6 @@ import com.judokit.android.api.model.response.Receipt
 import com.judokit.android.api.model.response.toCardVerificationModel
 import com.judokit.android.api.model.response.toJudoResult
 import com.judokit.android.api.polling.PollingResult
-import com.judokit.android.api.polling.PollingResult
 import com.judokit.android.db.JudoRoomDatabase
 import com.judokit.android.db.repository.TokenizedCardRepository
 import com.judokit.android.judo
