@@ -225,6 +225,9 @@ class PaymentMethodsFragment : Fragment() {
 
                 PaymentCallToActionType.PAY_WITH_IDEAL ->
                     viewModel.send(PaymentMethodsAction.PayWithSelectedIdealBank)
+
+                PaymentCallToActionType.PAY_WITH_PAY_BY_BANK ->
+                    viewModel.send(PaymentMethodsAction.PayWithPayByBank)
             }
         }
     }

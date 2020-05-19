@@ -99,4 +99,6 @@
     <string name="wocr_hint_position_card_in_frame">Position card in this frame</string>
     <string name="wocr_automatically_scan">We will automatically scan it</string>
 
+    <string name="pay_by_bank">Pay by Bank app</string>
+
 </resources>
