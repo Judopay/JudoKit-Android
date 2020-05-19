@@ -19,12 +19,16 @@ import com.judokit.android.JudoSharedViewModel
 import com.judokit.android.R
 import com.judokit.android.api.error.ApiError
 import com.judokit.android.api.error.toJudoError
+import com.judokit.android.api.factory.JudoApiServiceFactory
+import com.judokit.android.api.model.response.CardDate
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.PbbaSaleResponse
 import com.judokit.android.api.model.response.Receipt
 import com.judokit.android.api.model.response.toCardVerificationModel
 import com.judokit.android.api.model.response.toJudoResult
 import com.judokit.android.api.polling.PollingResult
+import com.judokit.android.db.JudoRoomDatabase
+import com.judokit.android.db.repository.TokenizedCardRepository
 import com.judokit.android.judo
 import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
@@ -76,7 +80,12 @@ class PaymentMethodsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val application = requireActivity().application
-        val factory = PaymentMethodsViewModelFactory(application, judo)
+        val cardDate = CardDate()
+        val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
+        val cardRepository = TokenizedCardRepository(tokenizedCardDao)
+        val service = JudoApiServiceFactory.createApiService(application, judo)
+
+        val factory = PaymentMethodsViewModelFactory(cardDate, cardRepository, service, application, judo)
 
         viewModel = ViewModelProvider(this, factory).get(PaymentMethodsViewModel::class.java)
         viewModel.model.observe(viewLifecycleOwner, Observer { updateWithModel(it) })
