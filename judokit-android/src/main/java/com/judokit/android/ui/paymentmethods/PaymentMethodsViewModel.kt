@@ -21,7 +21,6 @@ import com.judokit.android.api.model.response.PbbaSaleResponse
 import com.judokit.android.api.model.response.Receipt
 import com.judokit.android.api.polling.PollingResult
 import com.judokit.android.api.polling.PollingService
-import com.judokit.android.db.JudoRoomDatabase
 import com.judokit.android.db.entity.TokenizedCardEntity
 import com.judokit.android.db.repository.TokenizedCardRepository
 import com.judokit.android.model.Currency
