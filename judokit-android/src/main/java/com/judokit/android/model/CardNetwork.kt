@@ -93,7 +93,7 @@ val CardNetwork.displayName: String
         CardNetwork.CHINA_UNION_PAY -> "China UnionPay"
         CardNetwork.JCB -> "JCB"
         CardNetwork.DISCOVER -> "Discover"
-        CardNetwork.DINERS_CLUB -> "Diners Club"
+        CardNetwork.DINERS_CLUB -> "Diner's Club"
         CardNetwork.OTHER -> "Unknown Card Network"
     }
 
