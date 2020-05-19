@@ -166,7 +166,8 @@ def addJacocoTask(variant) {
             '**/*Fragment.*',
             '**/*View.*',
             '**/*Action*.*',
-            '**/*Entity.*'
+            '**/*Entity.*',
+            '**/db/dao/**'
     ]
 
     def sourceDirectories = files(variant.sourceSets.java.srcDirs.flatten())

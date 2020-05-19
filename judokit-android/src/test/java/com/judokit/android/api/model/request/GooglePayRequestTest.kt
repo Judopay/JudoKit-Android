@@ -1,13 +1,29 @@
 package com.judokit.android.api.model.request
 
+import io.mockk.every
+import io.mockk.mockk
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.math.BigDecimal
 
 @DisplayName("Testing Google pay request builder")
 internal class GooglePayRequestTest {
 
     private val request = GooglePayRequest.Builder()
+        .setJudoId("id")
+        .setAmount("1")
+        .setCurrency("GBP")
+        .setYourConsumerReference("consumerRef")
+        .setYourPaymentReference("paymentRef")
+        .setGooglePayWallet(mockk(relaxed = true) {
+            every { token } returns "token"
+            every { cardNetwork } returns "Visa"
+        })
+        .setYourPaymentMetaData(mockk(relaxed = true))
+        .setPrimaryAccountDetails(mockk(relaxed = true))
 
     @Test
     @DisplayName("Should throw an exception on providing null judo id")
@@ -73,5 +89,22 @@ internal class GooglePayRequestTest {
     @DisplayName("Should throw an exception on providing null google pay wallet")
     fun exceptionOnNullGooglePayWallet() {
         assertThrows<IllegalArgumentException> { request.setGooglePayWallet(null).build() }
+    }
+
+    @Test
+    @DisplayName("Should not throw exception when every required field is valid")
+    fun exceptionNotThrownOnEveryFieldValid() {
+        assertDoesNotThrow { request.build() }
+    }
+
+    @Test
+    @DisplayName("Given toJudoResult is called, then map fields to JudoResult")
+    fun mapFieldsToJudoResultOnToJudoResultCall() {
+        assertEquals(BigDecimal(1), request.build().toJudoResult().amount)
+        assertEquals("GBP", request.build().toJudoResult().currency)
+        assertEquals("consumerRef", request.build().toJudoResult().consumer?.yourConsumerReference)
+        assertEquals("paymentRef", request.build().toJudoResult().yourPaymentReference)
+        assertEquals("token", request.build().toJudoResult().cardDetails?.token)
+        assertEquals("Visa", request.build().toJudoResult().cardDetails?.scheme)
     }
 }
