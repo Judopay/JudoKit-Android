@@ -102,9 +102,6 @@ class PaymentMethodsViewModel(
     val payByBankObserver = MutableLiveData<JudoApiCallResult<PbbaSaleResponse>>()
 
     private val context = application
-    private val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
-    private val cardRepository = TokenizedCardRepository(tokenizedCardDao)
-    private val service = JudoApiServiceFactory.createApiService(context, judo)
 
     val allCardsSync = cardRepository.allCardsSync
 
