@@ -1,7 +1,6 @@
 package com.judokit.android.ui.paymentmethods
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,9 +19,6 @@ import com.judokit.android.api.model.response.Consumer
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.PbbaSaleResponse
 import com.judokit.android.api.model.response.Receipt
-import com.judokit.android.api.polling.PollingResult
-import com.judokit.android.api.polling.PollingService
-import com.judokit.android.db.JudoRoomDatabase
 import com.judokit.android.api.polling.PollingResult
 import com.judokit.android.api.polling.PollingService
 import com.judokit.android.db.entity.TokenizedCardEntity
