@@ -5,6 +5,8 @@ import com.judokit.android.withWhitespacesRemoved
 import io.mockk.mockkStatic
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -342,85 +344,277 @@ internal class CardNetworkTest {
 
     @DisplayName("Given lightIconImageResId is called, when card network is AMEX, return light AmEX drawable resource")
     @Test
-    fun returnLightAmexDrawableResourceWhenAmex(){
+    fun returnLightAmexDrawableResourceWhenAmex() {
         assertEquals(R.drawable.ic_card_amex_light, CardNetwork.AMEX.lightIconImageResId)
     }
 
     @DisplayName("Given lightIconImageResId is called, when card network is VISA, return light Visa drawable resource")
     @Test
-    fun returnLightVisaDrawableResourceWhenVisa(){
+    fun returnLightVisaDrawableResourceWhenVisa() {
         assertEquals(R.drawable.ic_card_visa_light, CardNetwork.VISA.lightIconImageResId)
     }
 
     @DisplayName("Given lightIconImageResId is called, when card network is MASTERCARD, return default Mastercard drawable resource")
     @Test
-    fun returnDefaultMastercardDrawableResourceWhenMastercard(){
+    fun returnDefaultMastercardDrawableResourceWhenMastercard() {
         assertEquals(R.drawable.ic_card_mastercard, CardNetwork.MASTERCARD.lightIconImageResId)
     }
 
     @DisplayName("Given cardNumberMaxLength is called, when card network is AMEX, return 15")
     @Test
-    fun returnFifteenCardLengthWhenAmex(){
+    fun returnFifteenCardLengthWhenAmex() {
         assertEquals(15, CardNetwork.AMEX.cardNumberMaxLength)
     }
 
     @DisplayName("Given cardNumberMaxLength is called, when card network is DINERS_CLUB, return 14")
     @Test
-    fun returnFourteenCardLengthWhenDinersClub(){
+    fun returnFourteenCardLengthWhenDinersClub() {
         assertEquals(14, CardNetwork.DINERS_CLUB.cardNumberMaxLength)
     }
 
     @DisplayName("Given cardNumberMaxLength is called, when card network is VISA, return 16")
     @Test
-    fun returnSixteenCardLengthWhenVisa(){
+    fun returnSixteenCardLengthWhenVisa() {
         assertEquals(16, CardNetwork.VISA.cardNumberMaxLength)
     }
 
     @DisplayName("Given notSupportedErrorMessageResId is called, when card network is AMEX, return AmEx error string resource")
     @Test
     fun returnAmexErrorStringResourceWhenAmex() {
-        assertEquals(R.string.error_amex_not_supported, CardNetwork.AMEX.notSupportedErrorMessageResId)
+        assertEquals(
+            R.string.error_amex_not_supported,
+            CardNetwork.AMEX.notSupportedErrorMessageResId
+        )
     }
 
     @DisplayName("Given notSupportedErrorMessageResId is called, when card network is MASTERCARD, return Mastercard error string resource")
     @Test
     fun returnMastercardErrorStringResourceWhenMastercard() {
-        assertEquals(R.string.error_mastercard_not_supported, CardNetwork.MASTERCARD.notSupportedErrorMessageResId)
+        assertEquals(
+            R.string.error_mastercard_not_supported,
+            CardNetwork.MASTERCARD.notSupportedErrorMessageResId
+        )
     }
 
     @DisplayName("Given notSupportedErrorMessageResId is called, when card network is MAESTRO, return Maestro error string resource")
     @Test
     fun returnMaestroErrorStringResourceWhenMaestro() {
-        assertEquals(R.string.error_maestro_not_supported, CardNetwork.MAESTRO.notSupportedErrorMessageResId)
+        assertEquals(
+            R.string.error_maestro_not_supported,
+            CardNetwork.MAESTRO.notSupportedErrorMessageResId
+        )
     }
 
     @DisplayName("Given notSupportedErrorMessageResId is called, when card network is VISA, return Visa error string resource")
     @Test
     fun returnVisaErrorStringResourceWhenVisa() {
-        assertEquals(R.string.error_visa_not_supported, CardNetwork.VISA.notSupportedErrorMessageResId)
+        assertEquals(
+            R.string.error_visa_not_supported,
+            CardNetwork.VISA.notSupportedErrorMessageResId
+        )
     }
 
     @DisplayName("Given notSupportedErrorMessageResId is called, when card network is DISCOVER, return Discover error string resource")
     @Test
     fun returnDiscoverErrorStringResourceWhenDiscover() {
-        assertEquals(R.string.error_discover_not_supported, CardNetwork.DISCOVER.notSupportedErrorMessageResId)
+        assertEquals(
+            R.string.error_discover_not_supported,
+            CardNetwork.DISCOVER.notSupportedErrorMessageResId
+        )
     }
 
     @DisplayName("Given notSupportedErrorMessageResId is called, when card network is DINERS_CLUB, return Diner's Club error string resource")
     @Test
     fun returnDinersClubErrorStringResourceWhenDinersClub() {
-        assertEquals(R.string.error_diners_club_not_supported, CardNetwork.DINERS_CLUB.notSupportedErrorMessageResId)
+        assertEquals(
+            R.string.error_diners_club_not_supported,
+            CardNetwork.DINERS_CLUB.notSupportedErrorMessageResId
+        )
     }
 
     @DisplayName("Given notSupportedErrorMessageResId is called, when card network is JCB, return JCB error string resource")
     @Test
     fun returnJCBErrorStringResourceWhenJCB() {
-        assertEquals(R.string.error_jcb_not_supported, CardNetwork.JCB.notSupportedErrorMessageResId)
+        assertEquals(
+            R.string.error_jcb_not_supported,
+            CardNetwork.JCB.notSupportedErrorMessageResId
+        )
+    }
+
+    @DisplayName("Given notSupportedErrorMessageResId is called, when card network is CHINA_UNION_PAY, return China UnionPay error string resource")
+    @Test
+    fun returnChinaUnionPayErrorStringResourceWhenChinaUnionPay() {
+        assertEquals(
+            R.string.error_union_pay_not_supported,
+            CardNetwork.CHINA_UNION_PAY.notSupportedErrorMessageResId
+        )
     }
 
     @DisplayName("Given notSupportedErrorMessageResId is called, when card network is OTHER, return empty string resource")
     @Test
     fun returnEmptyStringResourceWhenOther() {
         assertEquals(R.string.empty, CardNetwork.OTHER.notSupportedErrorMessageResId)
+    }
+
+    @DisplayName("Given defaultCardNameResId is called, when card network is AMEX, return AmEx error string resource")
+    @Test
+    fun returnAmexDefaultNameResourceWhenAmex() {
+        assertEquals(R.string.default_amex_card_title, CardNetwork.AMEX.defaultCardNameResId)
+    }
+
+    @DisplayName("Given defaultCardNameResId is called, when card network is MASTERCARD, return Mastercard error string resource")
+    @Test
+    fun returnMastercardDefaultNameResourceWhenMastercard() {
+        assertEquals(
+            R.string.default_mastercard_card_title,
+            CardNetwork.MASTERCARD.defaultCardNameResId
+        )
+    }
+
+    @DisplayName("Given defaultCardNameResId is called, when card network is MAESTRO, return Maestro error string resource")
+    @Test
+    fun returnMaestroDefaultNameResourceWhenMaestro() {
+        assertEquals(R.string.default_maestro_card_title, CardNetwork.MAESTRO.defaultCardNameResId)
+    }
+
+    @DisplayName("Given defaultCardNameResId is called, when card network is VISA, return Visa error string resource")
+    @Test
+    fun returnVisaDefaultNameResourceWhenVisa() {
+        assertEquals(R.string.default_visa_card_title, CardNetwork.VISA.defaultCardNameResId)
+    }
+
+    @DisplayName("Given defaultCardNameResId is called, when card network is DISCOVER, return Discover error string resource")
+    @Test
+    fun returnDiscoverDefaultNameResourceWhenDiscover() {
+        assertEquals(
+            R.string.default_discover_card_title,
+            CardNetwork.DISCOVER.defaultCardNameResId
+        )
+    }
+
+    @DisplayName("Given defaultCardNameResId is called, when card network is DINERS_CLUB, return Diner's Club error string resource")
+    @Test
+    fun returnDinersClubDefaultNameResourceWhenDinersClub() {
+        assertEquals(
+            R.string.default_dinnersclub_card_title,
+            CardNetwork.DINERS_CLUB.defaultCardNameResId
+        )
+    }
+
+    @DisplayName("Given defaultCardNameResId is called, when card network is JCB, return JCB error string resource")
+    @Test
+    fun returnJCBErrorDefaultNameWhenJCB() {
+        assertEquals(R.string.default_jcb_card_title, CardNetwork.JCB.defaultCardNameResId)
+    }
+
+    @DisplayName("Given defaultCardNameResId is called, when card network is CHINA_UNION_PAY, return China UnionPay error string resource")
+    @Test
+    fun returnChinaUnionPayDefaultNameResourceWhenChinaUnionPay() {
+        assertEquals(
+            R.string.default_chinaunionpay_card_title,
+            CardNetwork.CHINA_UNION_PAY.defaultCardNameResId
+        )
+    }
+
+    @DisplayName("Given defaultCardNameResId is called, when card network is OTHER, return empty string resource")
+    @Test
+    fun returnEmptyStringResourceOnDefaultCardNameResIdWhenOther() {
+        assertEquals(R.string.empty, CardNetwork.OTHER.defaultCardNameResId)
+    }
+
+    @DisplayName("Given typeId is called, when card network is VISA, return 1")
+    @Test
+    fun returnOneOnTypeWhenVisa() {
+        assertEquals(1, CardNetwork.VISA.typeId)
+    }
+
+    @DisplayName("Given typeId is called, when card network is MASTERCARD, return 2")
+    @Test
+    fun returnTwoOnTypeWhenMastercard() {
+        assertEquals(2, CardNetwork.MASTERCARD.typeId)
+    }
+
+    @DisplayName("Given typeId is called, when card network is MAESTRO, return 10")
+    @Test
+    fun returnTenOnTypeWhenMaestro() {
+        assertEquals(10, CardNetwork.MAESTRO.typeId)
+    }
+
+    @DisplayName("Given typeId is called, when card network is AMEX, return 8")
+    @Test
+    fun returnEightOnTypeWhenAmex() {
+        assertEquals(8, CardNetwork.AMEX.typeId)
+    }
+
+    @DisplayName("Given typeId is called, when card network is CHINA_UNION_PAY, return 7")
+    @Test
+    fun returnSevenOnTypeWhenChinaUnionPay() {
+        assertEquals(7, CardNetwork.CHINA_UNION_PAY.typeId)
+    }
+
+    @DisplayName("Given typeId is called, when card network is JCB, return 9")
+    @Test
+    fun returnNineOnTypeWhenJCB() {
+        assertEquals(9, CardNetwork.JCB.typeId)
+    }
+
+    @DisplayName("Given typeId is called, when card network is DISCOVER, return 12")
+    @Test
+    fun returnTwelveOnTypeWhenDiscover() {
+        assertEquals(12, CardNetwork.DISCOVER.typeId)
+    }
+
+    @DisplayName("Given typeId is called, when card network is DINERS_CLUB, return 13")
+    @Test
+    fun returnTwelveOnTypeWhenDinersClub() {
+        assertEquals(13, CardNetwork.DINERS_CLUB.typeId)
+    }
+
+    @DisplayName("Given typeId is called, when card network is OTHER, return -1")
+    @Test
+    fun returnMinusOneOnTypeWhenOther() {
+        assertEquals(-1, CardNetwork.OTHER.typeId)
+    }
+
+    @DisplayName("Given isSupportedByGooglePay is called, when card network is VISA, return true")
+    @Test
+    fun returnTrueOnIsSupportedByGooglePayWhenVisa() {
+        assertTrue(CardNetwork.VISA.isSupportedByGooglePay)
+    }
+
+    @DisplayName("Given isSupportedByGooglePay is called, when card network is MASTERCARD, return true")
+    @Test
+    fun returnTrueOnIsSupportedByGooglePayWhenMastercard() {
+        assertTrue(CardNetwork.MASTERCARD.isSupportedByGooglePay)
+    }
+
+    @DisplayName("Given isSupportedByGooglePay is called, when card network is AMEX, return true")
+    @Test
+    fun returnTrueOnIsSupportedByGooglePayWhenAmex() {
+        assertTrue(CardNetwork.AMEX.isSupportedByGooglePay)
+    }
+
+    @DisplayName("Given isSupportedByGooglePay is called, when card network is DISCOVER, return true")
+    @Test
+    fun returnTrueOnIsSupportedByGooglePayWhenDiscover() {
+        assertTrue(CardNetwork.DISCOVER.isSupportedByGooglePay)
+    }
+
+    @DisplayName("Given isSupportedByGooglePay is called, when card network is MAESTRO, return true")
+    @Test
+    fun returnTrueOnIsSupportedByGooglePayWhenMaestro() {
+        assertTrue(CardNetwork.MAESTRO.isSupportedByGooglePay)
+    }
+
+    @DisplayName("Given isSupportedByGooglePay is called, when card network is JCB, return true")
+    @Test
+    fun returnTrueOnIsSupportedByGooglePayWhenJcb() {
+        assertTrue(CardNetwork.JCB.isSupportedByGooglePay)
+    }
+
+    @DisplayName("Given isSupportedByGooglePay is called, when card network is CHINA_UNION_PAY, return false")
+    @Test
+    fun returnFalseOnIsSupportedByGooglePayWhenChinaUnionPay() {
+        assertFalse(CardNetwork.CHINA_UNION_PAY.isSupportedByGooglePay)
     }
 }
