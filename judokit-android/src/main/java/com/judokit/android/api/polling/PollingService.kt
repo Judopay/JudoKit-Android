@@ -27,25 +27,32 @@ class PollingService(
             when (val saleStatusResponse = service.status(data)) {
                 is JudoApiCallResult.Success -> {
                     if (saleStatusResponse.data != null)
-                        when (saleStatusResponse.data.orderDetails.orderStatus) {
-                            OrderStatus.SUCCEEDED,
-                            OrderStatus.FAILED -> {
-                                timeout = 0L
-                                result.invoke(PollingResult.Success(saleStatusResponse.data))
-                            }
-                            OrderStatus.PENDING -> {
-                                timeout -= REQUEST_DELAY
-                                when {
-                                    timeout <= 0L -> result.invoke(PollingResult.Retry)
-                                    timeout <= TIMEOUT / 2 -> result.invoke(PollingResult.Delay)
-                                    else -> result.invoke(PollingResult.Processing)
-                                }
-                            }
-                        }
+                        handleOrderStatus(saleStatusResponse.data, saleStatusResponse)
                 }
                 is JudoApiCallResult.Failure -> {
                     timeout = 0L
                     result.invoke(PollingResult.Failure(error = saleStatusResponse.error))
+                }
+            }
+        }
+    }
+
+    private fun handleOrderStatus(
+        data: BankSaleStatusResponse,
+        saleStatusResponse: JudoApiCallResult.Success<BankSaleStatusResponse>
+    ) {
+        when (data.orderDetails.orderStatus) {
+            OrderStatus.SUCCEEDED,
+            OrderStatus.FAILED -> {
+                timeout = 0L
+                result.invoke(PollingResult.Success(saleStatusResponse.data))
+            }
+            OrderStatus.PENDING -> {
+                timeout -= REQUEST_DELAY
+                when {
+                    timeout <= 0L -> result.invoke(PollingResult.Retry)
+                    timeout <= TIMEOUT / 2 -> result.invoke(PollingResult.Delay)
+                    else -> result.invoke(PollingResult.Processing)
                 }
             }
         }
