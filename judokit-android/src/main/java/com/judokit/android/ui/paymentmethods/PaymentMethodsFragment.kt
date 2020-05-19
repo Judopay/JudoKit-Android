@@ -21,6 +21,7 @@ import com.judokit.android.api.error.toJudoError
 import com.judokit.android.api.factory.JudoApiServiceFactory
 import com.judokit.android.api.model.response.CardDate
 import com.judokit.android.api.model.response.JudoApiCallResult
+import com.judokit.android.api.model.response.PbbaSaleResponse
 import com.judokit.android.api.model.response.Receipt
 import com.judokit.android.api.model.response.toCardVerificationModel
 import com.judokit.android.api.model.response.toJudoResult
@@ -41,6 +42,8 @@ import com.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodSelector
 import com.judokit.android.ui.paymentmethods.components.PaymentCallToActionType
 import com.judokit.android.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
 import com.judokit.android.ui.paymentmethods.model.PaymentMethodModel
+import com.zapp.library.merchant.ui.PBBAPopupCallback
+import com.zapp.library.merchant.util.PBBAAppUtils
 import kotlinx.android.synthetic.main.payment_methods_fragment.*
 import kotlinx.android.synthetic.main.payment_methods_header_view.*
 
@@ -107,12 +110,39 @@ class PaymentMethodsFragment : Fragment() {
             }
         })
 
+        viewModel.payByBankObserver.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is JudoApiCallResult.Success ->
+                    handlePbbaSaleResponse(it.data)
+                is JudoApiCallResult.Failure -> {
+                }
+            }
+        })
+
         sharedViewModel.paymentMethodsGooglePayResult.observe(
             viewLifecycleOwner,
             Observer { result ->
                 viewModel.send(PaymentMethodsAction.UpdatePayWithGooglePayButtonState(true))
                 sharedViewModel.paymentResult.postValue(result)
             })
+    }
+
+    private fun handlePbbaSaleResponse(data: PbbaSaleResponse?) {
+        if (data != null)
+            PBBAAppUtils.showPBBAPopup(
+                requireActivity(),
+                data.secureToken,
+                data.pbbaBrn,
+                object : PBBAPopupCallback {
+                    override fun onRetryPaymentRequest() {
+                        // noop
+                    }
+
+                    override fun onDismissPopup() {
+                        // noop
+                    }
+                }
+            )
     }
 
     private fun handleFail(error: ApiError?) {

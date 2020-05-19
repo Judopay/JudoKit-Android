@@ -2,7 +2,7 @@ package com.judokit.android.api.model.response
 
 import java.math.BigDecimal
 
-data class IdealSaleResponse(
+data class PbbaSaleResponse(
     val orderId: String,
     val paymentMethod: String,
     val status: String,
@@ -13,5 +13,8 @@ data class IdealSaleResponse(
     val siteId: String,
     val merchantSiteName: String,
     val redirectUrl: String,
-    val merchantRedirectUrl: String
+    val merchantRedirectUrl: String,
+    val merchantPaymentMetadata: String,
+    val pbbaBrn: String,
+    val secureToken: String
 )

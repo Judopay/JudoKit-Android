@@ -10,11 +10,13 @@ import com.judokit.android.Judo
 import com.judokit.android.R
 import com.judokit.android.api.JudoApiService
 import com.judokit.android.api.model.request.Address
+import com.judokit.android.api.model.request.PbbaSaleRequest
 import com.judokit.android.api.model.request.TokenRequest
 import com.judokit.android.api.model.response.CardDate
 import com.judokit.android.api.model.response.CardToken
 import com.judokit.android.api.model.response.Consumer
 import com.judokit.android.api.model.response.JudoApiCallResult
+import com.judokit.android.api.model.response.PbbaSaleResponse
 import com.judokit.android.api.model.response.Receipt
 import com.judokit.android.db.entity.TokenizedCardEntity
 import com.judokit.android.db.repository.TokenizedCardRepository
@@ -49,6 +51,7 @@ import com.judokit.android.ui.paymentmethods.model.IdealPaymentMethodModel
 import com.judokit.android.ui.paymentmethods.model.PayByBankPaymentMethodModel
 import com.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import com.judokit.android.ui.paymentmethods.model.PaymentMethodModel
+import java.math.BigDecimal
 import java.util.Date
 import kotlinx.coroutines.launch
 
@@ -96,7 +99,9 @@ class PaymentMethodsViewModel(
     val model = MutableLiveData<PaymentMethodsModel>()
     val judoApiCallResult = MutableLiveData<JudoApiCallResult<Receipt>>()
     val payWithIdealObserver = MutableLiveData<Event<String>>()
-    val payByBankObserver = MutableLiveData<Event<PayByBankParameters>>()
+    val payByBankObserver = MutableLiveData<JudoApiCallResult<PbbaSaleResponse>>()
+
+    private val context = application
 
     val allCardsSync = cardRepository.allCardsSync
 
@@ -218,7 +223,20 @@ class PaymentMethodsViewModel(
     }
 
     private fun payWithPayByBank() = viewModelScope.launch {
-        // TODO: Sale request
+        val request = PbbaSaleRequest.Builder()
+            .setAmount(BigDecimal(judo.amount.amount))
+            .setMerchantPaymentReference(judo.reference.paymentReference)
+            .setMerchantConsumerReference(judo.reference.consumerReference)
+            .setSiteId(judo.siteId)
+            .setMobileNumber(judo.pbbaConfiguration?.mobileNumber)
+            .setEmailAddress(judo.pbbaConfiguration?.emailAddress)
+            .setAppearsOnStatement(judo.pbbaConfiguration?.appearsOnStatement)
+            .setPaymentMetadata(judo.reference.metaData?.toMap())
+            .build()
+
+        val response = service.sale(request)
+
+        payByBankObserver.postValue(response)
     }
 
     private fun deleteCardWithId(id: Int) = viewModelScope.launch {
@@ -376,8 +394,3 @@ class PaymentMethodsViewModel(
         judoApiCallResult.postValue(JudoApiCallResult.Success(receipt))
     }
 }
-
-data class PayByBankParameters(
-    private val secureToken: String,
-    private val brn: String
-)

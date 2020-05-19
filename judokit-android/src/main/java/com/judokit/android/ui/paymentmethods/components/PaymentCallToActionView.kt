@@ -45,6 +45,7 @@ class PaymentCallToActionView @JvmOverloads constructor(
         inflate(R.layout.payment_call_to_action_view, true)
         payButton.setOnClickListener { onPaymentButtonClick() }
         googlePayButton.setOnClickListener { onPaymentButtonClick() }
+        payByBankButton.setOnClickListener { onPaymentButtonClick() }
     }
 
     var model = PaymentCallToActionViewModel()
