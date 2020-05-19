@@ -3,7 +3,7 @@ package com.judokit.android.api.model.response
 import java.util.Calendar
 import java.util.Date
 
-class CardDate(cardDate: String) {
+class CardDate(var cardDate: String = "") {
 
     internal val month: Int
     internal val year: Int
