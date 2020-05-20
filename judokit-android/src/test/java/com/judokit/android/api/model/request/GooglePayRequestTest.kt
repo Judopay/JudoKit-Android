@@ -2,12 +2,12 @@ package com.judokit.android.api.model.request
 
 import io.mockk.every
 import io.mockk.mockk
+import java.math.BigDecimal
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.math.BigDecimal
 
 @DisplayName("Testing Google pay request builder")
 internal class GooglePayRequestTest {

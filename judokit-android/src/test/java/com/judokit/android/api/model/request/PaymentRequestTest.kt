@@ -1,6 +1,5 @@
 package com.judokit.android.api.model.request
 
-import io.mockk.mockk
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

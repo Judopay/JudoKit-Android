@@ -1,13 +1,13 @@
 package com.judokit.android.api.model.response
 
 import io.mockk.mockk
+import java.math.BigDecimal
+import java.util.Date
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import java.math.BigDecimal
-import java.util.Date
 
 @DisplayName("Testing Receipt model")
 internal class ReceiptTest {
