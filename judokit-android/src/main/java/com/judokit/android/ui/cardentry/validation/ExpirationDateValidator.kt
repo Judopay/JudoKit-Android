@@ -5,10 +5,10 @@ import com.judokit.android.api.model.response.CardDate
 import com.judokit.android.ui.cardentry.components.FormFieldEvent
 import com.judokit.android.ui.cardentry.components.FormFieldType
 
-class ExpirationDateValidator(override val fieldType: FormFieldType = FormFieldType.EXPIRATION_DATE) : Validator {
+class ExpirationDateValidator(override val fieldType: FormFieldType = FormFieldType.EXPIRATION_DATE, val cardDate: CardDate) : Validator {
 
     override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult {
-        val date = CardDate(input)
+        val date = cardDate.apply { cardDate = input }
         val isValid = date.isAfterToday && date.isInsideAllowedDateRange
         val showError = input.length == 5
 

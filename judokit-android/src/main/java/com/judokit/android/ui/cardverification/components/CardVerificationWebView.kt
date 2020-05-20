@@ -1,4 +1,4 @@
-package com.judokit.android.ui.cardverification.component
+package com.judokit.android.ui.cardverification.components
 
 import android.annotation.SuppressLint
 import android.content.Context

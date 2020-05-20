@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.core.widget.addTextChangedListener
 import com.judokit.android.R
+import com.judokit.android.api.model.response.CardDate
 import com.judokit.android.inflate
 import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.Country
@@ -100,7 +101,7 @@ class FormView @JvmOverloads constructor(
     private var validators = mutableListOf(
         CardNumberValidator(supportedNetworks = model.supportedNetworks),
         CardHolderNameValidator(),
-        ExpirationDateValidator(),
+        ExpirationDateValidator(cardDate = CardDate()),
         SecurityCodeValidator(),
         CountryValidator(),
         PostcodeValidator()

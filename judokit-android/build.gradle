@@ -166,7 +166,30 @@ def addJacocoTask(variant) {
             '**/*Fragment.*',
             '**/*View.*',
             '**/*Action*.*',
-            '**/*Entity.*'
+            '**/*Entity.*',
+            '**/adapter/**',
+            '**/components/**',
+            '**/db/JudoRoomDatabase.*',
+            '**/db/dao/**',
+            '**/model/googlepay/**',
+            '**/model/JudoResult.*',
+            '**/model/PrimaryAccountDetails.*',
+            '**/api/model/request/Address.*',
+            '**/api/model/response/CardVerificationResult.*',
+            '**/api/model/response/Consumer.*',
+            '**/api/model/response/OrderDetails.*',
+            '**/api/model/response/Receipts.*',
+            '**/api/model/EnhancedPaymentDetail.*',
+            '**/api/model/ConsumerDevice.*',
+            '**/api/model/Browser.*',
+            '**/api/model/ClientDetails.*',
+            '**/api/model/SDKInfo.*',
+            '**/api/model/GeoLocation.*',
+            '**/api/model/ThreeDSecure.*',
+            '**/api/error/DuplicateTransactionError.*',
+            '**/api/error/TokenSecretError.*',
+            '**/ui/common/ProgressButton.*',
+            '**/ui/common/GooglePayButton.*'
     ]
 
     def sourceDirectories = files(variant.sourceSets.java.srcDirs.flatten())
