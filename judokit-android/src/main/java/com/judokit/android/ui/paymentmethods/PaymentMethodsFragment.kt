@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.ConfigurationCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -20,9 +19,10 @@ import com.judokit.android.R
 import com.judokit.android.api.error.ApiError
 import com.judokit.android.api.error.toJudoError
 import com.judokit.android.api.factory.JudoApiServiceFactory
+import com.judokit.android.api.model.response.BankSaleResponse
+import com.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judokit.android.api.model.response.CardDate
 import com.judokit.android.api.model.response.JudoApiCallResult
-import com.judokit.android.api.model.response.PbbaSaleResponse
 import com.judokit.android.api.model.response.Receipt
 import com.judokit.android.api.model.response.toCardVerificationModel
 import com.judokit.android.api.model.response.toJudoResult
@@ -30,7 +30,10 @@ import com.judokit.android.api.polling.PollingResult
 import com.judokit.android.db.JudoRoomDatabase
 import com.judokit.android.db.repository.TokenizedCardRepository
 import com.judokit.android.judo
+import com.judokit.android.model.JudoError
 import com.judokit.android.model.JudoPaymentResult
+import com.judokit.android.model.JudoResult
+import com.judokit.android.ui.common.getLocale
 import com.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
 import com.judokit.android.ui.ideal.JUDO_IDEAL_BANK
 import com.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapter
@@ -60,6 +63,7 @@ class PaymentMethodsFragment : Fragment() {
 
     private lateinit var viewModel: PaymentMethodsViewModel
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
+    private var bankOrderId: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -85,7 +89,8 @@ class PaymentMethodsFragment : Fragment() {
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
         val service = JudoApiServiceFactory.createApiService(application, judo)
 
-        val factory = PaymentMethodsViewModelFactory(cardDate, cardRepository, service, application, judo)
+        val factory =
+            PaymentMethodsViewModelFactory(cardDate, cardRepository, service, application, judo)
 
         viewModel = ViewModelProvider(this, factory).get(PaymentMethodsViewModel::class.java)
         viewModel.model.observe(viewLifecycleOwner, Observer { updateWithModel(it) })
@@ -115,7 +120,7 @@ class PaymentMethodsFragment : Fragment() {
         viewModel.payByBankResult.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is JudoApiCallResult.Success ->
-                    handlePbbaSaleResponse(it.data)
+                    handleBankSaleResponse(it.data)
                 is JudoApiCallResult.Failure -> {
                     MaterialAlertDialogBuilder(context)
                         .setTitle(R.string.transaction_error_title)
@@ -127,40 +132,7 @@ class PaymentMethodsFragment : Fragment() {
         })
 
         viewModel.payByBankStatusResult.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is PollingResult.Processing -> {
-                    pollingStatusView.processing { viewModel.cancelPbbaPayment() }
-                }
-                is PollingResult.Delay -> {
-                    pollingStatusView.delay {
-                        viewModel.resetPbbaPolling()
-                        pollingStatusView.processing { viewModel.cancelPbbaPayment() }
-                    }
-                }
-                is PollingResult.Retry -> {
-                    pollingStatusView.retry {
-                        viewModel.retryPbbaPolling()
-                        pollingStatusView.processing { viewModel.cancelPbbaPayment() }
-                    }
-                }
-                is PollingResult.Failure -> {
-                    pollingStatusView.fail { requireActivity().finish() }
-                    if (it.error != null) {
-                        sharedViewModel.paymentResult.postValue(
-                            JudoPaymentResult.Error(it.error.toJudoError())
-                        )
-                    }
-                }
-                is PollingResult.Success -> {
-                    pollingStatusView.success { requireActivity().finish() }
-                    if (it.data != null) {
-                        val locale = ConfigurationCompat.getLocales(resources.configuration)[0]
-                        sharedViewModel.paymentResult.postValue(
-                            JudoPaymentResult.Success(it.data.toJudoResult(locale))
-                        )
-                    }
-                }
-            }
+            handleBankResult(it)
         })
 
         sharedViewModel.paymentMethodsGooglePayResult.observe(
@@ -171,7 +143,44 @@ class PaymentMethodsFragment : Fragment() {
             })
     }
 
-    private fun handlePbbaSaleResponse(data: PbbaSaleResponse?) {
+    private fun handleBankResult(pollingResult: PollingResult<BankSaleStatusResponse>?) {
+        when (pollingResult) {
+            is PollingResult.Processing -> {
+                pollingStatusView.processing { viewModel.send(PaymentMethodsAction.CancelBankPayment) }
+            }
+            is PollingResult.Delay -> {
+                pollingStatusView.delay {
+                    viewModel.send(PaymentMethodsAction.ResetBankPolling)
+                    pollingStatusView.processing { viewModel.send(PaymentMethodsAction.CancelBankPayment) }
+                }
+            }
+            is PollingResult.Retry -> {
+                pollingStatusView.retry {
+                    viewModel.send(PaymentMethodsAction.RetryBankPolling)
+                    pollingStatusView.processing { viewModel.send(PaymentMethodsAction.CancelBankPayment) }
+                }
+            }
+            is PollingResult.Failure -> {
+                pollingStatusView.fail { requireActivity().finish() }
+                sharedViewModel.paymentResult.postValue(
+                    JudoPaymentResult.Error(
+                        pollingResult.error?.toJudoError() ?: JudoError.generic()
+                    )
+                )
+            }
+            is PollingResult.Success -> {
+                pollingStatusView.success { requireActivity().finish() }
+                val locale = getLocale(resources)
+                sharedViewModel.paymentResult.postValue(
+                    JudoPaymentResult.Success(
+                        pollingResult.data?.toJudoResult(locale) ?: JudoResult()
+                    )
+                )
+            }
+        }
+    }
+
+    private fun handleBankSaleResponse(data: BankSaleResponse?) {
         if (data != null) {
             PBBAAppUtils.showPBBAPopup(
                 requireActivity(),
@@ -187,6 +196,9 @@ class PaymentMethodsFragment : Fragment() {
                     }
                 }
             )
+            bankOrderId = data.orderId
+        } else {
+            sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(JudoError.generic()))
         }
     }
 
@@ -322,5 +334,13 @@ class PaymentMethodsFragment : Fragment() {
 
         // post the event
         sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled())
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!bankOrderId.isNullOrEmpty()) {
+            viewModel.send(PaymentMethodsAction.StartBankPayment(bankOrderId!!))
+            bankOrderId = null
+        }
     }
 }

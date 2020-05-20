@@ -2,7 +2,7 @@ package com.judokit.android.api.model.response
 
 import java.math.BigDecimal
 
-data class PbbaSaleResponse(
+data class BankSaleResponse(
     val orderId: String,
     val paymentMethod: String,
     val status: String,

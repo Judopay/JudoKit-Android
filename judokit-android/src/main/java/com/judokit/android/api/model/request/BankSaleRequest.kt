@@ -6,7 +6,7 @@ import com.judokit.android.requireNotNull
 import com.judokit.android.requireNotNullOrEmpty
 import java.math.BigDecimal
 
-data class PbbaSaleRequest(
+data class BankSaleRequest(
     val amount: BigDecimal,
     val merchantPaymentReference: String,
     val merchantConsumerReference: String,
@@ -15,11 +15,12 @@ data class PbbaSaleRequest(
     val emailAddress: String?,
     val appearsOnStatement: String?,
     val paymentMetadata: Map<String, String>?,
-    val accountHolderName: String? = "PBBA User",
+    val accountHolderName: String = "PBBA User",
     val bic: String = "RABONL2U",
     val paymentMethod: String = "PBBA",
     val country: String = Country.GB.name,
-    val currency: String = Currency.GBP.name
+    val currency: String = Currency.GBP.name,
+    val merchantRedirectUrl: String = "fb://messaging/"
 ) {
     class Builder {
         private var amount: BigDecimal? = null
@@ -49,7 +50,7 @@ data class PbbaSaleRequest(
         fun setPaymentMetadata(paymentMetadata: Map<String, String>?) =
             apply { this.paymentMetadata = paymentMetadata }
 
-        fun build(): PbbaSaleRequest {
+        fun build(): BankSaleRequest {
             val myAmount = requireNotNull(amount, "amount")
             val myMerchantPaymentReference =
                 requireNotNullOrEmpty(merchantPaymentReference, "merchantPaymentReference")
@@ -57,7 +58,7 @@ data class PbbaSaleRequest(
                 requireNotNullOrEmpty(merchantConsumerReference, "merchantConsumerReference")
             val mySiteId = requireNotNullOrEmpty(siteId, "siteId")
 
-            return PbbaSaleRequest(
+            return BankSaleRequest(
                 myAmount,
                 myMerchantPaymentReference,
                 myMerchantConsumerReference,

@@ -12,7 +12,7 @@ private const val REQUEST_DELAY = 5000L
 private const val TIMEOUT = DELAY_IN_SECONDS * MILLISECONDS
 
 class PollingService(
-    private val data: String,
+    private val orderId: String,
     private val service: JudoApiService,
     private val result: (PollingResult<BankSaleStatusResponse>) -> Unit
 ) {
@@ -24,10 +24,14 @@ class PollingService(
             if (timeout != DELAY_IN_SECONDS * MILLISECONDS) {
                 delay(REQUEST_DELAY)
             }
-            when (val saleStatusResponse = service.status(data)) {
+            when (val saleStatusResponse = service.status(orderId)) {
                 is JudoApiCallResult.Success -> {
-                    if (saleStatusResponse.data != null)
+                    if (saleStatusResponse.data != null) {
                         handleOrderStatus(saleStatusResponse.data, saleStatusResponse)
+                    } else {
+                        timeout = 0L
+                        result.invoke(PollingResult.Failure())
+                    }
                 }
                 is JudoApiCallResult.Failure -> {
                     timeout = 0L

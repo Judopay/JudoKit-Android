@@ -1,18 +1,18 @@
 package com.judokit.android.api
 
+import com.judokit.android.api.model.request.BankSaleRequest
 import com.judokit.android.api.model.request.CheckCardRequest
 import com.judokit.android.api.model.request.GooglePayRequest
 import com.judokit.android.api.model.request.IdealSaleRequest
 import com.judokit.android.api.model.request.PaymentRequest
-import com.judokit.android.api.model.request.PbbaSaleRequest
 import com.judokit.android.api.model.request.RegisterCardRequest
 import com.judokit.android.api.model.request.SaveCardRequest
 import com.judokit.android.api.model.request.TokenRequest
+import com.judokit.android.api.model.response.BankSaleResponse
 import com.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judokit.android.api.model.response.CardVerificationResult
 import com.judokit.android.api.model.response.IdealSaleResponse
 import com.judokit.android.api.model.response.JudoApiCallResult
-import com.judokit.android.api.model.response.PbbaSaleResponse
 import com.judokit.android.api.model.response.Receipt
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -115,5 +115,5 @@ interface JudoApiService {
     suspend fun status(@Path("orderID") orderId: String): JudoApiCallResult<BankSaleStatusResponse>
 
     @POST("order/bank/sale")
-    suspend fun sale(@Body saleRequest: PbbaSaleRequest): JudoApiCallResult<PbbaSaleResponse>
+    suspend fun sale(@Body saleRequest: BankSaleRequest): JudoApiCallResult<BankSaleResponse>
 }

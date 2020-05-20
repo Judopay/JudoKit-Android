@@ -9,6 +9,7 @@ class PBBAConfiguration internal constructor(
     val emailAddress: String?,
     val appearsOnStatement: String?
 ) : Parcelable {
+
     class Builder {
         private var mobileNumber: String? = null
         private var emailAddress: String? = null

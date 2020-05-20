@@ -34,6 +34,9 @@
                 android:name="com.judokit.android.idealbankbic"
                 app:argType="string" />
         </action>
+        <deepLink
+            android:id="@+id/deepLink"
+            app:uri="fb://messaging/" />
 
     </fragment>
 
