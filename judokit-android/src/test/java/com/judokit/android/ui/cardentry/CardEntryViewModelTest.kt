@@ -12,9 +12,11 @@ import com.judokit.android.api.model.response.Receipt
 import com.judokit.android.db.entity.TokenizedCardEntity
 import com.judokit.android.db.repository.TokenizedCardRepository
 import com.judokit.android.model.Amount
+import com.judokit.android.model.CardScanningResult
 import com.judokit.android.model.Currency
 import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.Reference
+import com.judokit.android.model.toInputModel
 import com.judokit.android.ui.cardentry.components.FormFieldType
 import com.judokit.android.ui.cardentry.components.FormModel
 import com.judokit.android.ui.cardentry.components.InputModel
@@ -327,6 +329,32 @@ internal class CardEntryViewModelTest {
 
         val formModel = slots[0]
 
+        assertEquals(CardEntryFragmentModel(mockFormModel), formModel)
+    }
+
+    @DisplayName("Given send is called with ScanCard action,then should update model with disabled button")
+    @Test
+    fun postsJudoApiCallResultOnSubmitForm() {
+        mockkStatic("com.judokit.android.model.CardScanningResultKt")
+        val cardScanningResult: CardScanningResult = mockk(relaxed = true)
+        every { cardScanningResult.toInputModel() } returns inputModel
+
+        val mockFormModel = FormModel(
+            inputModel,
+            enabledFields,
+            judo.supportedCardNetworks.toList(),
+            ButtonState.Disabled(R.string.pay_now)
+        )
+        val slots = mutableListOf<CardEntryFragmentModel>()
+
+        sut = CardEntryViewModel(judo, service, repository, application)
+        sut.model.observeForever(modelMock)
+
+        sut.send(CardEntryAction.ScanCard(cardScanningResult))
+
+        verify { modelMock.onChanged(capture(slots)) }
+
+        val formModel = slots[1]
         assertEquals(CardEntryFragmentModel(mockFormModel), formModel)
     }
 

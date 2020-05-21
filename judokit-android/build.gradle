@@ -173,10 +173,10 @@ def addJacocoTask(variant) {
     def sourceDirectories = files(variant.sourceSets.java.srcDirs.flatten())
     def classDirectories = fileTree(dir: variant.javaCompileProvider.get().destinationDir, excludes: excludedFiles)
 
-    if(project.plugins.hasPlugin("kotlin-android")) {
+    if (project.plugins.hasPlugin("kotlin-android")) {
         sourceDirectories.from(files(variant.sourceSets.kotlin.srcDirs.flatten()))
         def kotlinTask = tasks.getByName("compile${variantName}Kotlin")
-        if(kotlinTask) {
+        if (kotlinTask) {
             classDirectories += fileTree(dir: kotlinTask.destinationDir, excludes: excludedFiles)
         }
     }
