@@ -102,6 +102,22 @@ class Judo internal constructor(
             apply { this.pbbaConfiguration = pbbaConfiguration }
 
         @Throws(IllegalArgumentException::class)
+        private fun validatePaymentMethods(currency: Currency) = paymentMethods?.let { methods ->
+            // Payment methods accepted currencies checks
+            if (methods.size == 1) {
+                val method = methods.first()
+                val expectedCurrency = when (method) {
+                    PaymentMethod.IDEAL -> Currency.EUR
+                    PaymentMethod.PAY_BY_BANK -> Currency.GBP
+                    else -> null
+                }
+                if (expectedCurrency != null && currency != expectedCurrency) {
+                    throw IllegalArgumentException("Cannot make ${method.name} transactions with currencies different than ${expectedCurrency.name}")
+                }
+            }
+        }
+
+        @Throws(IllegalArgumentException::class)
         fun build(): Judo {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val token = requireNotNullOrEmpty(apiToken, "apiToken")
@@ -110,22 +126,18 @@ class Judo internal constructor(
             val myAmount = requireAmount(paymentWidgetType, amount)
             val myReference = requireNotNull(reference, "reference")
 
-            paymentMethods?.let {
-                if (it.size == 1 && it.first() == PaymentMethod.IDEAL && myAmount.currency != Currency.EUR ||
-                    it.size == 1 && it.first() == PaymentMethod.PAY_BY_BANK && myAmount.currency != Currency.GBP
-                ) {
-                    throw IllegalArgumentException("Cannot make ${it.first().name} transactions with currencies different than ${myAmount.currency.name}")
-                }
-            }
+            validatePaymentMethods(myAmount.currency)
 
             val myUiConfiguration = uiConfiguration
                 ?: UiConfiguration.Builder()
                     .setAvsEnabled(false)
                     .setShouldDisplayAmount(true)
                     .build()
+
             val mySandboxed = isSandboxed ?: false
 
             val defaultPaymentMethods = arrayOf(PaymentMethod.CARD)
+
             val defaultSupportedCardNetworks = arrayOf(
                 CardNetwork.VISA,
                 CardNetwork.MASTERCARD,
@@ -133,14 +145,17 @@ class Judo internal constructor(
                 CardNetwork.MAESTRO
             )
 
-            val myPaymentMethods =
-                if (paymentMethods.isNullOrEmpty()) defaultPaymentMethods else checkNotNull(
-                    paymentMethods
-                )
-            val mySupportedCardNetworks =
-                if (supportedCardNetworks.isNullOrEmpty()) defaultSupportedCardNetworks else checkNotNull(
-                    supportedCardNetworks
-                )
+            val myPaymentMethods = if (paymentMethods.isNullOrEmpty()) {
+                defaultPaymentMethods
+            } else {
+                checkNotNull(paymentMethods)
+            }
+
+            val mySupportedCardNetworks = if (supportedCardNetworks.isNullOrEmpty()) {
+                defaultSupportedCardNetworks
+            } else {
+                checkNotNull(supportedCardNetworks)
+            }
 
             return Judo(
                 id,
