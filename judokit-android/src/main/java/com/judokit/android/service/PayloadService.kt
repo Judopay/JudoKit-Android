@@ -1,4 +1,4 @@
-package com.judokit.android.api.interceptor
+package com.judokit.android.service
 
 import android.Manifest
 import android.annotation.SuppressLint

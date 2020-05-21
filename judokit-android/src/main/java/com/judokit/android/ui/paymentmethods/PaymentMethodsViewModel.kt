@@ -19,8 +19,6 @@ import com.judokit.android.api.model.response.CardToken
 import com.judokit.android.api.model.response.Consumer
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.Receipt
-import com.judokit.android.api.polling.PollingResult
-import com.judokit.android.api.polling.PollingService
 import com.judokit.android.db.entity.TokenizedCardEntity
 import com.judokit.android.db.repository.TokenizedCardRepository
 import com.judokit.android.model.Currency
@@ -30,6 +28,8 @@ import com.judokit.android.model.displayName
 import com.judokit.android.model.formatted
 import com.judokit.android.model.paymentButtonType
 import com.judokit.android.model.typeId
+import com.judokit.android.service.polling.PollingResult
+import com.judokit.android.service.polling.PollingService
 import com.judokit.android.toMap
 import com.judokit.android.ui.common.ButtonState
 import com.judokit.android.ui.paymentmethods.adapter.model.IdealBank

@@ -1,4 +1,4 @@
-package com.judokit.android.api.polling
+package com.judokit.android.service.polling
 
 import com.judokit.android.api.error.ApiError
 
