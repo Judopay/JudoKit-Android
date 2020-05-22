@@ -27,12 +27,4 @@ class CardToken(
             val data = endDate ?: ""
             return if (data.length != 4) "" else "${data.substring(0, 2)}/${data.substring(2, 4)}"
         }
-
-    val isExpired: Boolean
-        get() {
-            val date = endDate ?: return true
-
-            val cardDate = CardDate(date)
-            return cardDate.isBeforeToday || !cardDate.isInsideAllowedDateRange
-        }
 }

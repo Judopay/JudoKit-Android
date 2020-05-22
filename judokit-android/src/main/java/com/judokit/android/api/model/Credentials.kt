@@ -12,7 +12,7 @@ private const val API_TOKEN_MANIFEST_NAME = "judo_api_token"
 
 class Credentials(apiToken: String, apiSecret: String) {
 
-    private val encodedCredentials: String = if (apiToken.isNotEmpty() || apiSecret.isNotEmpty()) {
+    private val encodedCredentials: String = if (apiToken.isNotEmpty() && apiSecret.isNotEmpty()) {
         Base64.encodeToString("$apiToken:$apiSecret".toByteArray(StandardCharsets.UTF_8), Base64.NO_WRAP)
     } else throw TokenSecretError("API Token & Secret is not configured correctly, either:" +
             "\t - Call to Judo.setup(\"token\", \"secret\", Judo.SANDBOX) in your Activity class" +
