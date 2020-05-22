@@ -1,5 +1,6 @@
 package com.judokit.android.api.model.request
 
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -8,9 +9,11 @@ import org.junit.jupiter.api.assertThrows
 internal class GooglePayWalletTest {
 
     private val wallet = GooglePayWallet.Builder()
+        .setCardDetails("cardDetails")
+        .setCardNetwork("network")
+        .setToken("token")
 
     @Test
-
     @DisplayName("Should throw exception on providing null card network")
     fun exceptionOnNullCardNetwork() {
         assertThrows<IllegalArgumentException> { wallet.setCardNetwork(null).build() }
@@ -44,5 +47,11 @@ internal class GooglePayWalletTest {
     @DisplayName("Should throw exception on providing empty token")
     fun exceptionOnEmptyToken() {
         assertThrows<IllegalArgumentException> { wallet.setToken("").build() }
+    }
+
+    @Test
+    @DisplayName("Given build is called, when all required fields are valid, then exception not thrown")
+    fun exceptionNotThrownOnBuildWithAllFieldsValid() {
+        assertDoesNotThrow { wallet.build() }
     }
 }

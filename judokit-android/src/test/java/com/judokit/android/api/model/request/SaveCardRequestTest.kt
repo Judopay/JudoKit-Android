@@ -8,6 +8,10 @@ import org.junit.jupiter.api.assertThrows
 internal class SaveCardRequestTest {
 
     private val request = SaveCardRequest.Builder()
+        .setIssueNumber("123")
+        .setStartDate("1220")
+        .setEmailAddress("email@mail.com")
+        .setMobileNumber("1234567")
 
     @Test
     @DisplayName("Should throw exception on providing null judo id")
