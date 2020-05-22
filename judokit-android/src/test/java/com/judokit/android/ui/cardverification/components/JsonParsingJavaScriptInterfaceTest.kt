@@ -1,6 +1,5 @@
 package com.judokit.android.ui.cardverification.components
 
-import com.judokit.android.ui.cardverification.component.JsonParsingJavaScriptInterface
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.DisplayName
