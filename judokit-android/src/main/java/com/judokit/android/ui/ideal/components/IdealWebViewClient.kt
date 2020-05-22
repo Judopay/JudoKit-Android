@@ -1,4 +1,4 @@
-package com.judokit.android.ui.ideal.component
+package com.judokit.android.ui.ideal.components
 
 import android.graphics.Bitmap
 import android.webkit.WebView

@@ -64,4 +64,12 @@ class TokenizedCardRepositoryTest {
 
         coVerify { cardDao.deleteWithId(card.id) }
     }
+
+    @Test
+    @DisplayName("findWithId should call tokenizedCardDao.getWithId with provided id")
+    fun findWithId() {
+        runBlocking { repository.findWithId(card.id) }
+
+        coVerify { cardDao.getWithId(card.id) }
+    }
 }

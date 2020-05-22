@@ -18,7 +18,7 @@ import com.judokit.android.api.model.response.toJudoResult
 import com.judokit.android.judo
 import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.ui.common.getLocale
-import com.judokit.android.ui.ideal.component.IdealWebViewCallback
+import com.judokit.android.ui.ideal.components.IdealWebViewCallback
 import kotlinx.android.synthetic.main.ideal_fragment.*
 
 const val JUDO_IDEAL_BANK = "com.judokit.android.idealbankbic"

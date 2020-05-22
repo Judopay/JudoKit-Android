@@ -1,4 +1,4 @@
-package com.judokit.android.ui.cardverification.component
+package com.judokit.android.ui.cardverification.components
 
 class JsonParsingJavaScriptInterface(private val onJsonReceived: (String) -> Unit) {
 
@@ -8,7 +8,8 @@ class JsonParsingJavaScriptInterface(private val onJsonReceived: (String) -> Uni
             try {
                 val json = content.substring(content.indexOf("{"), content.lastIndexOf("}") + 1)
                 onJsonReceived.invoke(json)
-            } catch (ignore: StringIndexOutOfBoundsException) {
+            } catch (exception: StringIndexOutOfBoundsException) {
+                exception.printStackTrace()
             }
         }
     }
