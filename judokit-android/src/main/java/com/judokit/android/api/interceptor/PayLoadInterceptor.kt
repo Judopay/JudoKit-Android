@@ -5,6 +5,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
+import com.judokit.android.service.PayloadService
 import com.judokit.android.toJSONString
 import java.io.IOException
 import okhttp3.Interceptor
