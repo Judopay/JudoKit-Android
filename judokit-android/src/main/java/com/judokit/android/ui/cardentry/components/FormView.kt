@@ -101,7 +101,7 @@ class FormView @JvmOverloads constructor(
     private var validators = mutableListOf(
         CardNumberValidator(supportedNetworks = model.supportedNetworks),
         CardHolderNameValidator(),
-        ExpirationDateValidator(cardDate = CardDate()),
+        ExpirationDateValidator(),
         SecurityCodeValidator(),
         CountryValidator(),
         PostcodeValidator()
