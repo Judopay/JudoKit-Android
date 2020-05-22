@@ -14,7 +14,6 @@ internal class GooglePayWalletTest {
         .setToken("token")
 
     @Test
-
     @DisplayName("Should throw exception on providing null card network")
     fun exceptionOnNullCardNetwork() {
         assertThrows<IllegalArgumentException> { wallet.setCardNetwork(null).build() }

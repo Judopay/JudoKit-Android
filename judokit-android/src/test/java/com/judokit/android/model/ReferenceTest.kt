@@ -8,6 +8,7 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Test Reference builder")
 internal class ReferenceTest {
+
     private val sut = Reference.Builder()
         .setConsumerReference("consumerRef")
         .setPaymentReference("PaymentRef")
