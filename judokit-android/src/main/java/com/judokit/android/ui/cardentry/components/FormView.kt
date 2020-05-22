@@ -10,7 +10,6 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.core.widget.addTextChangedListener
 import com.judokit.android.R
-import com.judokit.android.api.model.response.CardDate
 import com.judokit.android.inflate
 import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.Country
