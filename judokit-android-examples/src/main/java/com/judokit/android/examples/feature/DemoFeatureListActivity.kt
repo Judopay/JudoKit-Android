@@ -19,6 +19,12 @@ import com.judokit.android.PAYMENT_CANCELLED
 import com.judokit.android.PAYMENT_ERROR
 import com.judokit.android.PAYMENT_SUCCESS
 import com.judokit.android.api.factory.JudoApiServiceFactory
+import com.judokit.android.examples.R
+import com.judokit.android.examples.common.startResultActivity
+import com.judokit.android.examples.common.toResult
+import com.judokit.android.examples.feature.adapter.DemoFeaturesAdapter
+import com.judokit.android.examples.model.DemoFeature
+import com.judokit.android.examples.settings.SettingsActivity
 import com.judokit.android.model.Amount
 import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.Currency
@@ -34,15 +40,9 @@ import com.judokit.android.model.googlepay.GooglePayAddressFormat
 import com.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judokit.android.model.googlepay.GooglePayShippingAddressParameters
-import com.judokit.android.examples.R
-import com.judokit.android.examples.common.startResultActivity
-import com.judokit.android.examples.common.toResult
-import com.judokit.android.examples.feature.adapter.DemoFeaturesAdapter
-import com.judokit.android.examples.model.DemoFeature
-import com.judokit.android.examples.settings.SettingsActivity
 import com.readystatesoftware.chuck.ChuckInterceptor
-import kotlinx.android.synthetic.main.activity_demo_feature_list.*
 import java.util.UUID
+import kotlinx.android.synthetic.main.activity_demo_feature_list.*
 
 const val JUDO_PAYMENT_WIDGET_REQUEST_CODE = 1
 

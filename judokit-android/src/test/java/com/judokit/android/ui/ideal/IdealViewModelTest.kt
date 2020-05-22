@@ -6,8 +6,8 @@ import com.judokit.android.InstantExecutorExtension
 import com.judokit.android.Judo
 import com.judokit.android.api.JudoApiService
 import com.judokit.android.api.model.request.IdealSaleRequest
+import com.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judokit.android.api.model.response.IdealSaleResponse
-import com.judokit.android.api.model.response.IdealSaleStatusResponse
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.OrderStatus
 import com.judokit.android.model.Amount
@@ -51,14 +51,14 @@ class IdealViewModelTest {
     private val sut = IdealViewModel(BIC, judo, service, application)
     private val saleResponse = mockk<IdealSaleResponse>(relaxed = true)
     private val saleCallResult = JudoApiCallResult.Success(saleResponse)
-    private val statusResponse = mockk<IdealSaleStatusResponse>(relaxed = true)
+    private val statusResponse = mockk<BankSaleStatusResponse>(relaxed = true)
     private var statusCallResult = JudoApiCallResult.Success(statusResponse)
 
     private val isLoadingMock = spyk<Observer<Boolean>>()
     private val isDelayMock = spyk<Observer<Boolean>>()
     private val saleCallResultMock = spyk<Observer<JudoApiCallResult<IdealSaleResponse>>>()
     private val saleStatusCallResultMock =
-        spyk<Observer<JudoApiCallResult<IdealSaleStatusResponse>>>()
+        spyk<Observer<JudoApiCallResult<BankSaleStatusResponse>>>()
 
     @BeforeEach
     internal fun setUp() {
@@ -71,7 +71,7 @@ class IdealViewModelTest {
         every { statusResponse.orderDetails.orderStatus } returns OrderStatus.SUCCEEDED
 
         coEvery {
-            service.sale(any()).hint(JudoApiCallResult::class)
+            service.sale(any<IdealSaleRequest>()).hint(JudoApiCallResult::class)
         } returns saleCallResult
         coEvery { service.status(any()).hint(JudoApiCallResult::class) } returns statusCallResult
 
@@ -171,7 +171,7 @@ class IdealViewModelTest {
     @Test
     @DisplayName("Given completeIdealPayment is called, when the request is successful and order status succeeded, then post saleStatusCallRequest with success response")
     fun postSaleStatusCallRequestOnRequestSuccessAndOrderStatusSucceeded() {
-        val slots = mutableListOf<JudoApiCallResult<IdealSaleStatusResponse>>()
+        val slots = mutableListOf<JudoApiCallResult<BankSaleStatusResponse>>()
 
         sut.payWithSelectedBank()
         sut.completeIdealPayment()
@@ -187,7 +187,7 @@ class IdealViewModelTest {
     fun postSaleStatusCallRequestOnRequestSuccessAndOrderStatusFailure() {
         every { statusResponse.orderDetails.orderStatus } returns OrderStatus.FAILED
 
-        val slots = mutableListOf<JudoApiCallResult<IdealSaleStatusResponse>>()
+        val slots = mutableListOf<JudoApiCallResult<BankSaleStatusResponse>>()
 
         sut.payWithSelectedBank()
         sut.completeIdealPayment()
@@ -205,7 +205,7 @@ class IdealViewModelTest {
             service.status(any()).hint(JudoApiCallResult::class)
         } returns JudoApiCallResult.Failure()
 
-        val slots = mutableListOf<JudoApiCallResult<IdealSaleStatusResponse>>()
+        val slots = mutableListOf<JudoApiCallResult<BankSaleStatusResponse>>()
 
         sut.payWithSelectedBank()
         sut.completeIdealPayment()
@@ -239,7 +239,7 @@ class IdealViewModelTest {
     fun postSaleStatusCallRequestOnRequestSuccessAndOrderStatusPending() {
         every { statusResponse.orderDetails.orderStatus } returns OrderStatus.PENDING
 
-        val slots = mutableListOf<JudoApiCallResult<IdealSaleStatusResponse>>()
+        val slots = mutableListOf<JudoApiCallResult<BankSaleStatusResponse>>()
 
         sut.payWithSelectedBank()
         sut.completeIdealPayment()

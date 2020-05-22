@@ -4,7 +4,7 @@ import com.judokit.android.model.JudoResult
 import com.judokit.android.ui.common.toDate
 import java.util.Locale
 
-data class IdealSaleStatusResponse(
+data class BankSaleStatusResponse(
     val paymentMethod: String,
     val siteId: String,
     val orderDetails: OrderDetails,
@@ -12,7 +12,7 @@ data class IdealSaleStatusResponse(
     val merchantConsumerReference: String
 )
 
-fun IdealSaleStatusResponse.toJudoResult(locale: Locale) = JudoResult(
+fun BankSaleStatusResponse.toJudoResult(locale: Locale) = JudoResult(
     receiptId = orderDetails.orderId,
     result = orderDetails.orderStatus.name,
     createdAt = toDate(orderDetails.timestamp, locale),

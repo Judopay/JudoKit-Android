@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.ConfigurationCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -18,6 +17,7 @@ import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.toJudoResult
 import com.judokit.android.judo
 import com.judokit.android.model.JudoPaymentResult
+import com.judokit.android.ui.common.getLocale
 import com.judokit.android.ui.ideal.component.IdealWebViewCallback
 import kotlinx.android.synthetic.main.ideal_fragment.*
 
@@ -61,7 +61,7 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
         viewModel.saleStatusCallResult.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is JudoApiCallResult.Success -> if (it.data != null) {
-                    val locale = ConfigurationCompat.getLocales(resources.configuration)[0]
+                    val locale = getLocale(resources)
                     sharedViewModel.paymentResult.postValue(
                         JudoPaymentResult.Success(it.data.toJudoResult(locale))
                     )

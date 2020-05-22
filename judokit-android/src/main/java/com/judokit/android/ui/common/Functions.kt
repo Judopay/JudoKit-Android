@@ -1,6 +1,8 @@
 package com.judokit.android.ui.common
 
+import android.content.res.Resources
 import android.util.Log
+import androidx.core.os.ConfigurationCompat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -51,3 +53,5 @@ fun toDate(
     Log.e("toDate", exception.toString())
     Date()
 }
+
+fun getLocale(resources: Resources): Locale = ConfigurationCompat.getLocales(resources.configuration)[0]

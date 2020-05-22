@@ -67,5 +67,7 @@
 
 
     <dimen name="size_120">120dp</dimen>
+    <dimen name="width_card_image_view">74dp</dimen>
+    <dimen name="height_card_image_view">32dp</dimen>
 
 </resources>
