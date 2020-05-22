@@ -13,7 +13,7 @@
     <string name="amazon_pay">Amazon Pay</string>
     <string name="ideal_payment">iDeal</string>
     <string name="empty" />
-    <string name="secure_server_transmission">Your card details are encrypted using SSL before transmission to our secure payment service provider.</string>
+    <string name="secure_server_transmission">Your card details are encrypted using TLS before transmission to our secure payment service provider.</string>
 
     <string name="date_hint">MM/YY</string>
     <string name="cvv_hint">CVV</string>
@@ -98,5 +98,10 @@
     <string name="scan_card_go_to_settings">Go to Settings</string>
     <string name="wocr_hint_position_card_in_frame">Position card in this frame</string>
     <string name="wocr_automatically_scan">We will automatically scan it</string>
+
+    <string name="pay_by_bank">Pay by Bank app</string>
+    <string name="retry">Retry</string>
+    <string name="transaction_successful">Transaction successful</string>
+    <string name="pay_by_bank_transaction">Pay by Bank app transaction</string>
 
 </resources>
