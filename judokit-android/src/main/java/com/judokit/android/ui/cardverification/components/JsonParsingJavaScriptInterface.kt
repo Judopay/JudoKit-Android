@@ -8,7 +8,8 @@ class JsonParsingJavaScriptInterface(private val onJsonReceived: (String) -> Uni
             try {
                 val json = content.substring(content.indexOf("{"), content.lastIndexOf("}") + 1)
                 onJsonReceived.invoke(json)
-            } catch (ignore: StringIndexOutOfBoundsException) {
+            } catch (exception: StringIndexOutOfBoundsException) {
+                exception.printStackTrace()
             }
         }
     }
