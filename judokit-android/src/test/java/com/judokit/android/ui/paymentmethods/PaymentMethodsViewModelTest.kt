@@ -28,10 +28,12 @@ import com.judokit.android.ui.paymentmethods.model.GooglePayPaymentMethodModel
 import com.judokit.android.ui.paymentmethods.model.IdealPaymentCardViewModel
 import com.judokit.android.ui.paymentmethods.model.IdealPaymentMethodModel
 import com.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
+import com.zapp.library.merchant.util.PBBAAppUtils
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
@@ -71,6 +73,8 @@ internal class PaymentMethodsViewModelTest {
     internal fun setUp() {
         Dispatchers.setMain(testDispatcher)
 
+        mockkStatic("com.zapp.library.merchant.util.PBBAAppUtils")
+        every { PBBAAppUtils.isCFIAppAvailable(application) } returns false
         coEvery { repository.findWithId(0) } returns mockk(relaxed = true)
         coEvery { repository.allCardsSync.value } returns null
         coEvery {
@@ -116,7 +120,7 @@ internal class PaymentMethodsViewModelTest {
         val model = slots[0]
         assertTrue(
             (model.currentPaymentMethod.items[0] as PaymentMethodSelectorItem).paymentMethods.containsAll(
-                judo.paymentMethods.toList()
+                judo.paymentMethods.toList().filter { it != PaymentMethod.PAY_BY_BANK }
             )
         )
     }

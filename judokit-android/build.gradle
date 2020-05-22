@@ -106,6 +106,8 @@ dependencies {
 
     implementation 'cards.pay:paycardsrecognizer:1.1.0'
 
+    implementation "com.zapp.library:merchant:1.1.0"
+
     // JUnit 4 framework
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$junit_version"
@@ -167,7 +169,29 @@ def addJacocoTask(variant) {
             '**/*View.*',
             '**/*Action*.*',
             '**/*Entity.*',
-            '**/db/dao/**'
+            '**/adapter/**',
+            '**/components/**',
+            '**/db/JudoRoomDatabase.*',
+            '**/db/dao/**',
+            '**/model/googlepay/**',
+            '**/model/JudoResult.*',
+            '**/model/PrimaryAccountDetails.*',
+            '**/api/model/request/Address.*',
+            '**/api/model/response/CardVerificationResult.*',
+            '**/api/model/response/Consumer.*',
+            '**/api/model/response/OrderDetails.*',
+            '**/api/model/response/Receipts.*',
+            '**/api/model/EnhancedPaymentDetail.*',
+            '**/api/model/ConsumerDevice.*',
+            '**/api/model/Browser.*',
+            '**/api/model/ClientDetails.*',
+            '**/api/model/SDKInfo.*',
+            '**/api/model/GeoLocation.*',
+            '**/api/model/ThreeDSecure.*',
+            '**/api/error/DuplicateTransactionError.*',
+            '**/api/error/TokenSecretError.*',
+            '**/ui/common/ProgressButton.*',
+            '**/ui/common/GooglePayButton.*'
     ]
 
     def sourceDirectories = files(variant.sourceSets.java.srcDirs.flatten())

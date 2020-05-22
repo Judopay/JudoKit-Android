@@ -27,6 +27,7 @@
         <action
             android:id="@+id/action_paymentMethodsFragment_to_editCardFragment"
             app:destination="@id/editCardFragment" />
+
         <action
             android:id="@+id/action_paymentMethodsFragment_to_idealFragment"
             app:destination="@id/idealFragment">
@@ -34,6 +35,10 @@
                 android:name="com.judokit.android.idealbankbic"
                 app:argType="string" />
         </action>
+
+        <deepLink
+            android:id="@+id/deepLink"
+            app:uri="fb://messaging/" />
 
     </fragment>
 
