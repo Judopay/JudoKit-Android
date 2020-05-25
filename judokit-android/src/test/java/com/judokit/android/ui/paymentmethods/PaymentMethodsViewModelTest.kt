@@ -87,6 +87,15 @@ internal class PaymentMethodsViewModelTest {
             service.tokenPayment(any()).hint(JudoApiCallResult::class)
         } returns mockk(relaxed = true)
         coEvery { service.sale(any<BankSaleRequest>()) } returns mockk(relaxed = true)
+
+        sut = PaymentMethodsViewModel(
+            cardDate,
+            repository,
+            service,
+            pollingService,
+            application,
+            judo
+        )
     }
 
     @AfterEach
@@ -99,15 +108,6 @@ internal class PaymentMethodsViewModelTest {
     @Test
     fun removeIdealFromModelWhenNotEur() {
         val slots = mutableListOf<PaymentMethodsModel>()
-
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
 
         sut.model.observeForever(paymentMethodsModel)
 
@@ -151,15 +151,6 @@ internal class PaymentMethodsViewModelTest {
     fun updateModelWithSelectorItem() {
         val slots = mutableListOf<PaymentMethodsModel>()
 
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
-
         sut.model.observeForever(paymentMethodsModel)
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
@@ -195,15 +186,6 @@ internal class PaymentMethodsViewModelTest {
     fun updateCurrentSelectedFieldToCards() {
         val slots = mutableListOf<PaymentMethodsModel>()
 
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
-
         sut.model.observeForever(paymentMethodsModel)
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
@@ -215,15 +197,6 @@ internal class PaymentMethodsViewModelTest {
     @Test
     fun addPlaceholderWithNoCardsSaved() {
         val slots = mutableListOf<PaymentMethodsModel>()
-
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
 
         sut.model.observeForever(paymentMethodsModel)
 
@@ -356,15 +329,6 @@ internal class PaymentMethodsViewModelTest {
     @DisplayName("Given send with DeleteCard action is called, then delete card by id")
     @Test
     fun deleteCardByIdOnDeleteCardAction() {
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
-
         sut.send(PaymentMethodsAction.DeleteCard(1))
 
         coVerify { repository.deleteCardWithId(1) }
@@ -374,15 +338,6 @@ internal class PaymentMethodsViewModelTest {
     @Test
     fun buildModelOnDeleteCardAction() {
         val slots = mutableListOf<PaymentMethodsModel>()
-
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
 
         sut.send(PaymentMethodsAction.DeleteCard(1))
 
@@ -395,15 +350,6 @@ internal class PaymentMethodsViewModelTest {
     @Test
     fun updatePaymentMethodModelWithIsLoadingTrueOnPayWithSelectedCStoredCard() {
         val slots = mutableListOf<PaymentMethodsModel>()
-
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
 
         sut.model.observeForever(paymentMethodsModel)
 
@@ -419,15 +365,6 @@ internal class PaymentMethodsViewModelTest {
     fun callFindWithIdOnPayWithSelectedStoredCardWithCardPaymentMethodModel() {
         val card = mockk<TokenizedCardEntity>(relaxed = true) { every { isDefault } returns true }
         every { repository.allCardsSync.value } returns listOf(card)
-
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
 
         sut.send(PaymentMethodsAction.PayWithSelectedStoredCard)
 
@@ -472,15 +409,6 @@ internal class PaymentMethodsViewModelTest {
         }
         coEvery { repository.findWithId(1) } returns card
         every { repository.allCardsSync.value } returns listOf(card)
-
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
 
         sut.send(PaymentMethodsAction.PayWithSelectedStoredCard)
 
@@ -527,15 +455,6 @@ internal class PaymentMethodsViewModelTest {
         coEvery { repository.findWithId(1) } returns card
         every { repository.allCardsSync.value } returns listOf(card)
 
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
-
         try {
             sut.send(PaymentMethodsAction.PayWithSelectedStoredCard)
         } catch (e: IllegalStateException) {
@@ -554,15 +473,6 @@ internal class PaymentMethodsViewModelTest {
         coEvery { repository.findWithId(1) } returns card
         every { repository.allCardsSync.value } returns listOf(card)
 
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
-
         sut.send(PaymentMethodsAction.PayWithSelectedStoredCard)
 
         coVerify { repository.updateAllLastUsedToFalse() }
@@ -580,15 +490,6 @@ internal class PaymentMethodsViewModelTest {
         coEvery { repository.findWithId(1) } returns card
         every { repository.allCardsSync.value } returns listOf(card)
 
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
-
         sut.send(PaymentMethodsAction.PayWithSelectedStoredCard)
 
         coVerify { repository.insert(card) }
@@ -598,15 +499,6 @@ internal class PaymentMethodsViewModelTest {
     @Test
     fun updatePaymentMethodModelWithIsLoadingTrueOnPayWithSelectedIdealBank() {
         val slots = mutableListOf<PaymentMethodsModel>()
-
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
 
         sut.model.observeForever(paymentMethodsModel)
 
@@ -650,15 +542,6 @@ internal class PaymentMethodsViewModelTest {
 
         val slots = mutableListOf<PaymentMethodsModel>()
 
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
-
         sut.model.observeForever(paymentMethodsModel)
 
         sut.send(PaymentMethodsAction.SelectStoredCard(1))
@@ -700,15 +583,6 @@ internal class PaymentMethodsViewModelTest {
     fun updatePaymentMethodModelOnUpdate() {
         val slots = mutableListOf<PaymentMethodsModel>()
 
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
-
         sut.model.observeForever(paymentMethodsModel)
 
         sut.send(PaymentMethodsAction.Update)
@@ -720,15 +594,6 @@ internal class PaymentMethodsViewModelTest {
     @Test
     fun updatePaymentMethodWithGooglePayMethodModelOnSelectPaymentMethod() {
         val slots = mutableListOf<PaymentMethodsModel>()
-
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
 
         sut.model.observeForever(paymentMethodsModel)
 
@@ -743,15 +608,6 @@ internal class PaymentMethodsViewModelTest {
     @Test
     fun doNotUpdatePaymentMethodOnSelectPaymentMethodWhenAlreadySelected() {
         val slots = mutableListOf<PaymentMethodsModel>()
-
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
 
         sut.model.observeForever(paymentMethodsModel)
 
@@ -817,15 +673,6 @@ internal class PaymentMethodsViewModelTest {
     fun updatePaymentMethodModelWithIsInEditModeTrueOnEditModeWithEditModeTrue() {
         val slots = mutableListOf<PaymentMethodsModel>()
 
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
-
         sut.model.observeForever(paymentMethodsModel)
 
         sut.send(PaymentMethodsAction.EditMode(true))
@@ -839,15 +686,6 @@ internal class PaymentMethodsViewModelTest {
     @Test
     fun updatePaymentMethodModelWithIsInEditModeFalseOnEditModeWithEditModeFalse() {
         val slots = mutableListOf<PaymentMethodsModel>()
-
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
 
         sut.model.observeForever(paymentMethodsModel)
 
@@ -863,15 +701,6 @@ internal class PaymentMethodsViewModelTest {
     fun updatePaymentMethodModelOnPayByBankSelected() {
         val slots = mutableListOf<PaymentMethodsModel>()
 
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
-
         sut.model.observeForever(paymentMethodsModel)
 
         sut.send(PaymentMethodsAction.SelectPaymentMethod(PaymentMethod.PAY_BY_BANK))
@@ -884,15 +713,6 @@ internal class PaymentMethodsViewModelTest {
     @DisplayName("Given send with PayWithPayByBank action is called, then make service.sale call")
     @Test
     fun updatePaymentMethodModelOnPayWithPayByBank() {
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
-
         sut.model.observeForever(paymentMethodsModel)
 
         sut.send(PaymentMethodsAction.PayWithPayByBank)
@@ -905,15 +725,6 @@ internal class PaymentMethodsViewModelTest {
     fun updatePayByBankResultOnPayWithPayByBankAction() {
         val slots = mutableListOf<JudoApiCallResult<BankSaleResponse>>()
 
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
-
         sut.payByBankResult.observeForever(payByBankResult)
 
         sut.send(PaymentMethodsAction.PayWithPayByBank)
@@ -924,15 +735,6 @@ internal class PaymentMethodsViewModelTest {
     @DisplayName("Given send with StartBankPayment action is called, then start polling")
     @Test
     fun startPollingOnStartBankPaymentCall() {
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
-
         sut.send(PaymentMethodsAction.StartBankPayment("orderId"))
 
         coVerify { pollingService.start() }
@@ -941,15 +743,6 @@ internal class PaymentMethodsViewModelTest {
     @DisplayName("Given send with CancelBankPayment action is called, then cancel polling")
     @Test
     fun cancelPollingOnCancelBankPaymentCall() {
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
-
         sut.send(PaymentMethodsAction.CancelBankPayment)
 
         verify { pollingService.cancel() }
@@ -958,15 +751,6 @@ internal class PaymentMethodsViewModelTest {
     @DisplayName("Given send with ResetBankPolling action is called, then reset polling")
     @Test
     fun resetPollingOnResetBankPollingCall() {
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
-
         sut.send(PaymentMethodsAction.ResetBankPolling)
 
         verify { pollingService.reset() }
@@ -975,15 +759,6 @@ internal class PaymentMethodsViewModelTest {
     @DisplayName("Given send with RetryBankPolling action is called, then retry polling")
     @Test
     fun retryPollingOnRetryBankPollingCall() {
-        sut = PaymentMethodsViewModel(
-            cardDate,
-            repository,
-            service,
-            pollingService,
-            application,
-            judo
-        )
-
         sut.send(PaymentMethodsAction.RetryBankPolling)
 
         coVerify { pollingService.retry() }
