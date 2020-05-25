@@ -85,13 +85,21 @@ internal class PaymentMethodsViewModelFactory(
     private val cardDate: CardDate,
     private val cardRepository: TokenizedCardRepository,
     private val service: JudoApiService,
+    private val pollingService: PollingService,
     private val application: Application,
     private val judo: Judo
 ) : NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == PaymentMethodsViewModel::class.java) {
-            PaymentMethodsViewModel(cardDate, cardRepository, service, application, judo) as T
+            PaymentMethodsViewModel(
+                cardDate,
+                cardRepository,
+                service,
+                pollingService,
+                application,
+                judo
+            ) as T
         } else super.create(modelClass)
     }
 }
@@ -100,6 +108,7 @@ class PaymentMethodsViewModel(
     private val cardDate: CardDate,
     private val cardRepository: TokenizedCardRepository,
     private val service: JudoApiService,
+    private val pollingService: PollingService,
     application: Application,
     private val judo: Judo
 ) : AndroidViewModel(application) {
@@ -112,7 +121,6 @@ class PaymentMethodsViewModel(
         MutableLiveData<PollingResult<BankSaleStatusResponse>>()
 
     private val context = application
-    private lateinit var pollingService: PollingService
 
     val allCardsSync = cardRepository.allCardsSync
 
@@ -178,10 +186,10 @@ class PaymentMethodsViewModel(
             )
             is PaymentMethodsAction.EditMode -> buildModel(isInEditMode = action.isInEditMode)
             is PaymentMethodsAction.StartBankPayment -> {
-                pollingService = PollingService(
-                    action.orderId,
-                    service
-                ) { payByBankStatusResult.postValue(it) }
+                pollingService.apply {
+                    orderId = action.orderId
+                    result = { payByBankStatusResult.postValue(it) }
+                }
                 viewModelScope.launch {
                     pollingService.start()
                 }

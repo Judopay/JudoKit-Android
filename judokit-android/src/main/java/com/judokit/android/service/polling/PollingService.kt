@@ -26,7 +26,7 @@ class PollingService(private val service: JudoApiService) {
             when (val saleStatusResponse = service.status(orderId)) {
                 is JudoApiCallResult.Success -> {
                     if (saleStatusResponse.data != null) {
-                        handleOrderStatus(saleStatusResponse.data, saleStatusResponse)
+                        handleOrderStatus(saleStatusResponse.data)
                     } else {
                         timeout = 0L
                         result.invoke(PollingResult.Failure())
@@ -40,15 +40,12 @@ class PollingService(private val service: JudoApiService) {
         }
     }
 
-    private fun handleOrderStatus(
-        data: BankSaleStatusResponse,
-        saleStatusResponse: JudoApiCallResult.Success<BankSaleStatusResponse>
-    ) {
+    private fun handleOrderStatus(data: BankSaleStatusResponse) {
         when (data.orderDetails.orderStatus) {
             OrderStatus.SUCCEEDED,
             OrderStatus.FAILED -> {
                 timeout = 0L
-                result.invoke(PollingResult.Success(saleStatusResponse.data))
+                result.invoke(PollingResult.Success(data))
             }
             OrderStatus.PENDING -> {
                 timeout -= REQUEST_DELAY
