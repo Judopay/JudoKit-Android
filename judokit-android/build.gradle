@@ -166,6 +166,7 @@ def addJacocoTask(variant) {
             'android/**/*.*',
             '**/*Activity.*',
             '**/*Fragment.*',
+            '**/*ViewModelFactory.*',
             '**/*View.*',
             '**/*Action*.*',
             '**/*Entity.*',

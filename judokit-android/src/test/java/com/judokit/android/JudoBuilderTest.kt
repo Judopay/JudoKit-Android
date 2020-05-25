@@ -34,6 +34,7 @@ internal class JudoBuilderTest {
             .setPrimaryAccountDetails(mockk())
             .setGooglePayConfiguration(mockk())
             .setAddress(mockk())
+            .setPBBAConfiguration(mockk())
     }
 
     @Test
@@ -113,6 +114,16 @@ internal class JudoBuilderTest {
     fun testThatBuildThrowsOnPaymentMethodsIdealNotSupported() {
         assertThrows<IllegalArgumentException> {
             judoBuilder.setPaymentMethods(arrayOf(PaymentMethod.IDEAL)).build()
+        }
+    }
+
+    @Test
+    @DisplayName("Given paymentMethods size is 1 and paymentMethod is PAY_BY_BANK and currency is not GBP, then build() should throw a IllegalArgumentException")
+    fun testThatBuildThrowsOnPaymentMethodsPBBANotSupported() {
+        assertThrows<IllegalArgumentException> {
+            judoBuilder
+                .setAmount(Amount("1", Currency.EUR))
+                .setPaymentMethods(arrayOf(PaymentMethod.PAY_BY_BANK)).build()
         }
     }
 

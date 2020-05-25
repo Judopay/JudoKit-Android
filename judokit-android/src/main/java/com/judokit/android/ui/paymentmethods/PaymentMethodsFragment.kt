@@ -33,6 +33,7 @@ import com.judokit.android.model.JudoError
 import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.model.JudoResult
 import com.judokit.android.service.polling.PollingResult
+import com.judokit.android.service.polling.PollingService
 import com.judokit.android.ui.common.getLocale
 import com.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
 import com.judokit.android.ui.ideal.JUDO_IDEAL_BANK
@@ -90,9 +91,9 @@ class PaymentMethodsFragment : Fragment() {
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
         val service = JudoApiServiceFactory.createApiService(application, judo)
-
+        val pollingService = PollingService(service)
         val factory =
-            PaymentMethodsViewModelFactory(cardDate, cardRepository, service, application, judo)
+            PaymentMethodsViewModelFactory(cardDate, cardRepository, service, pollingService, application, judo)
 
         viewModel = ViewModelProvider(this, factory).get(PaymentMethodsViewModel::class.java)
         viewModel.model.observe(viewLifecycleOwner, Observer { updateWithModel(it) })
