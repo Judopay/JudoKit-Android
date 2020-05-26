@@ -725,7 +725,7 @@ internal class PaymentMethodsViewModelTest {
     fun updatePayByBankResultOnPayWithPayByBankAction() {
         val slots = mutableListOf<JudoApiCallResult<BankSaleResponse>>()
 
-        sut.payByBankResult.observeForever(payByBankResult)
+        sut.payWithPayByBankObserver.observeForever(payByBankResult)
 
         sut.send(PaymentMethodsAction.PayWithPayByBank)
 

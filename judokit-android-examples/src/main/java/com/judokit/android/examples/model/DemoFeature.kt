@@ -17,7 +17,11 @@ enum class DemoFeature(
     PAYMENT_METHODS(R.string.feature_title_payment_methods, R.string.feature_surtitle_payment_methods),
     PREAUTH_PAYMENT_METHODS(R.string.feature_title_preauth_payment_methods, R.string.feature_surtitle_preauth_payment_methods),
     SERVER_TO_SERVER_PAYMENT_METHODS(R.string.feature_title_server_to_server_payment_methods, R.string.feature_subtitle_server_to_server_payment_methods),
+    PAY_BY_BANK_APP(R.string.empty, R.string.empty),
 }
+
+val DemoFeature.isCustomButton: Boolean
+    get() = this == DemoFeature.PAY_BY_BANK_APP
 
 val DemoFeature.isGooglePay: Boolean
     get() = this == DemoFeature.GOOGLE_PAY_PAYMENT || this == DemoFeature.GOOGLE_PAY_PREAUTH

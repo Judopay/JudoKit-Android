@@ -83,7 +83,7 @@ class PollingStatusView @JvmOverloads constructor(
 
         backButton.setOnClickListener {
             visibility = View.GONE
-            handleButtonClick()
+            onButtonClickListener?.invoke(PollingStatusViewAction.CLOSE)
         }
     }
 

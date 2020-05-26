@@ -6,7 +6,7 @@ import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.OrderStatus
 import kotlinx.coroutines.delay
 
-private const val DELAY_IN_SECONDS = 130L
+private const val DELAY_IN_SECONDS = 10L
 private const val MILLISECONDS = 1000L
 private const val REQUEST_DELAY = 5000L
 private const val TIMEOUT = DELAY_IN_SECONDS * MILLISECONDS
@@ -50,9 +50,9 @@ class PollingService(private val service: JudoApiService) {
             OrderStatus.PENDING -> {
                 timeout -= REQUEST_DELAY
                 when {
-                    timeout <= 0L -> result.invoke(PollingResult.Retry)
-                    timeout <= TIMEOUT / 2 -> result.invoke(PollingResult.Delay)
-                    else -> result.invoke(PollingResult.Processing)
+                    timeout <= 0L -> result.invoke(PollingResult.Retry(data))
+                    timeout <= TIMEOUT / 2 -> result.invoke(PollingResult.Delay(data))
+                    else -> result.invoke(PollingResult.Processing(data))
                 }
             }
         }

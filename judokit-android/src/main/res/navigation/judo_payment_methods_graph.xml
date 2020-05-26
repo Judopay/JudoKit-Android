@@ -39,6 +39,9 @@
         <deepLink
             android:id="@+id/deepLink"
             app:uri="fb://messaging/" />
+        <action
+            android:id="@+id/action_paymentMethodsFragment_to_payByBankFragment"
+            app:destination="@id/payByBankFragment" />
 
     </fragment>
 
@@ -65,5 +68,10 @@
         android:name="com.judokit.android.ui.ideal.IdealFragment"
         android:label="IdealFragment"
         tools:layout="@layout/ideal_fragment" />
+
+    <fragment
+        android:id="@+id/payByBankFragment"
+        android:name="com.judokit.android.ui.paybybank.PayByBankFragment"
+        android:label="PayByBankFragment" />
 
 </navigation>

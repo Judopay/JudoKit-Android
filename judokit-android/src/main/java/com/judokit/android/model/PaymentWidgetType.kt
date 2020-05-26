@@ -12,7 +12,8 @@ enum class PaymentWidgetType {
     PRE_AUTH_GOOGLE_PAY,
     PAYMENT_METHODS,
     PRE_AUTH_PAYMENT_METHODS,
-    SERVER_TO_SERVER_PAYMENT_METHODS
+    SERVER_TO_SERVER_PAYMENT_METHODS,
+    PAY_BY_BANK_APP
 }
 
 val PaymentWidgetType.navigationGraphId: Int
@@ -26,6 +27,7 @@ val PaymentWidgetType.navigationGraphId: Int
         PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
         PaymentWidgetType.PAYMENT_METHODS,
         PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> R.navigation.judo_payment_methods_graph
+        PaymentWidgetType.PAY_BY_BANK_APP -> R.navigation.judo_pay_by_bank_graph
         else -> throw UnsupportedOperationException("Payment Widget of Type: $this not supported")
     }
 

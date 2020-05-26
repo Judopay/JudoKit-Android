@@ -20,9 +20,11 @@ import kotlinx.coroutines.launch
 sealed class PayByBankAction {
     object PayWithPayByBank : PayByBankAction()
     data class StartPolling(val orderId: String) : PayByBankAction()
+    object CancelBankPayment : PayByBankAction()
+    object ResetBankPolling : PayByBankAction()
+    object RetryBankPolling : PayByBankAction()
 }
 
-// view-model custom factory to inject the `judo` configuration object
 internal class PayByBankViewModelFactory(
     private val service: JudoApiService,
     private val pollingService: PollingService,
@@ -43,6 +45,11 @@ class PayByBankViewModel(
     application: Application,
     private val judo: Judo
 ) : AndroidViewModel(application) {
+
+    init {
+        send(PayByBankAction.PayWithPayByBank)
+    }
+
     val payByBankResult = MutableLiveData<JudoApiCallResult<BankSaleResponse>>()
     val payByBankStatusResult =
         MutableLiveData<PollingResult<BankSaleStatusResponse>>()
@@ -60,6 +67,11 @@ class PayByBankViewModel(
                         pollingService.start()
                     }
                 }
+            }
+            is PayByBankAction.CancelBankPayment -> pollingService.cancel()
+            is PayByBankAction.ResetBankPolling -> pollingService.reset()
+            is PayByBankAction.RetryBankPolling -> viewModelScope.launch {
+                pollingService.retry()
             }
         }
     }

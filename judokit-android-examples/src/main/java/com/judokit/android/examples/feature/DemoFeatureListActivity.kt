@@ -137,6 +137,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 DemoFeature.SERVER_TO_SERVER_PAYMENT_METHODS -> PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS
                 DemoFeature.GOOGLE_PAY_PAYMENT -> PaymentWidgetType.GOOGLE_PAY
                 DemoFeature.GOOGLE_PAY_PREAUTH -> PaymentWidgetType.PRE_AUTH_GOOGLE_PAY
+                DemoFeature.PAY_BY_BANK_APP -> PaymentWidgetType.PAY_BY_BANK_APP
             }
             val judoConfig = getJudo(widgetType)
             navigateToJudoPaymentWidgetWithConfigurations(judoConfig)
