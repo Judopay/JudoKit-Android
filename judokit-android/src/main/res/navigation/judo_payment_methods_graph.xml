@@ -69,7 +69,7 @@
         android:label="IdealFragment"
         tools:layout="@layout/ideal_fragment" />
 
-    <fragment
+    <dialog
         android:id="@+id/payByBankFragment"
         android:name="com.judokit.android.ui.paybybank.PayByBankFragment"
         android:label="PayByBankFragment" />

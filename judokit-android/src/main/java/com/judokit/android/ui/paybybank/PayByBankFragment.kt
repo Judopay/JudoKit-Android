@@ -1,11 +1,12 @@
 package com.judokit.android.ui.paybybank
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -37,6 +38,18 @@ class PayByBankFragment : DialogFragment() {
     private lateinit var viewModel: PayByBankViewModel
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
     private var bankOrderId: String? = null
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.window?.apply {
+            setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+            )
+            clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        }
+        return dialog
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
