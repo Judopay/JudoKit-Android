@@ -113,13 +113,6 @@ class PaymentMethodsFragment : Fragment() {
             }
         })
 
-//        sharedViewModel.paymentMethodsGooglePayResult.observe(
-//            viewLifecycleOwner,
-//            Observer { result ->
-//                viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
-//                sharedViewModel.paymentResult.postValue(result)
-//            })
-
         sharedViewModel.paymentMethodsResult.observe(
             viewLifecycleOwner,
             Observer { result ->

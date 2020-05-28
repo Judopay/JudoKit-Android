@@ -22,8 +22,8 @@ import com.judokit.android.api.factory.JudoApiServiceFactory
 import com.judokit.android.examples.R
 import com.judokit.android.examples.common.startResultActivity
 import com.judokit.android.examples.common.toResult
-import com.judokit.android.examples.feature.adapter.DemoFeatureItemCustomViewHolder
 import com.judokit.android.examples.feature.adapter.DemoFeaturesAdapter
+import com.judokit.android.examples.feature.paybybank.PayByBankActivity
 import com.judokit.android.examples.model.DemoFeature
 import com.judokit.android.examples.settings.SettingsActivity
 import com.judokit.android.model.Amount
@@ -95,7 +95,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 }
             }
         }
-        DemoFeatureItemCustomViewHolder.payByBankButton?.isEnabled = true
     }
 
     private fun processSuccessfulPayment(result: JudoResult?) {
@@ -156,7 +155,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
     }
 
     private fun navigateToJudoPaymentWidgetWithConfigurations(judo: Judo) {
-        val intent = Intent(this, JudoActivity::class.java)
+        val intent = if (judo.paymentWidgetType == PaymentWidgetType.PAY_BY_BANK_APP) {
+            Intent(this, PayByBankActivity::class.java)
+        } else {
+            Intent(this, JudoActivity::class.java)
+        }
         intent.putExtra(JUDO_OPTIONS, judo)
         startActivityForResult(intent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
     }

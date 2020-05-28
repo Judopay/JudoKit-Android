@@ -28,4 +28,11 @@
         app:layout_constraintTop_toBottomOf="@+id/titleTextView"
         tools:text="Explanation in here" />
 
+    <FrameLayout
+        android:id="@+id/displayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/surtitleTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/titleTextView" />
 </androidx.constraintlayout.widget.ConstraintLayout>
