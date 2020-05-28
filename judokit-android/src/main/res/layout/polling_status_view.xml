@@ -3,37 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="350dp"
-    android:layout_height="300dp"
-    android:background="@color/white"
+    android:layout_height="250dp"
+    android:background="@drawable/dialog_background"
     android:id="@+id/pollingStatusView">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageButton
-            android:id="@+id/backButton"
-            style="@style/JudoTheme.BackButton"
-            android:contentDescription="@null"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            style="@style/JudoTheme.Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pay_by_bank_transaction"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ProgressBar
         android:id="@+id/pollingProgressBar"
@@ -43,16 +15,20 @@
         app:layout_constraintBottom_toTopOf="@id/pollingButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/pollingTextView"
-        style="@style/JudoTheme.Body.Regular"
+        style="@style/JudoTheme.Title"
+        android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/processing"
+        android:paddingStart="@dimen/space_16"
         app:layout_constraintEnd_toEndOf="parent"
+        android:paddingEnd="@dimen/space_16"
         app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/transaction_unsuccessful"
+        android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/pollingProgressBar" />
 
     <Button

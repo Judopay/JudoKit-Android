@@ -5,7 +5,6 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.judokit.android.examples.R
 import com.judokit.android.examples.common.inflate
-import com.judokit.android.examples.feature.adapter.DemoFeatureItemViewHolder.DemoFeatureItemCustomViewHolder
 import com.judokit.android.examples.model.DemoFeature
 import com.judokit.android.examples.model.isCustomButton
 

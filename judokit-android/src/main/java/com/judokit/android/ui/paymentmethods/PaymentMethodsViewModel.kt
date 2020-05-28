@@ -11,7 +11,6 @@ import com.judokit.android.R
 import com.judokit.android.api.JudoApiService
 import com.judokit.android.api.model.request.Address
 import com.judokit.android.api.model.request.TokenRequest
-import com.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judokit.android.api.model.response.CardDate
 import com.judokit.android.api.model.response.CardToken
 import com.judokit.android.api.model.response.Consumer
@@ -26,8 +25,6 @@ import com.judokit.android.model.displayName
 import com.judokit.android.model.formatted
 import com.judokit.android.model.paymentButtonType
 import com.judokit.android.model.typeId
-import com.judokit.android.service.polling.PollingResult
-import com.judokit.android.service.polling.PollingService
 import com.judokit.android.toMap
 import com.judokit.android.ui.common.ButtonState
 import com.judokit.android.ui.paymentmethods.adapter.model.IdealBank
@@ -53,15 +50,15 @@ import com.judokit.android.ui.paymentmethods.model.PayByBankPaymentMethodModel
 import com.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import com.judokit.android.ui.paymentmethods.model.PaymentMethodModel
 import com.zapp.library.merchant.util.PBBAAppUtils
-import kotlinx.coroutines.launch
 import java.util.Date
+import kotlinx.coroutines.launch
 
 // view-model actions
 sealed class PaymentMethodsAction {
     data class DeleteCard(val cardId: Int) : PaymentMethodsAction()
     data class SelectPaymentMethod(val method: PaymentMethod) : PaymentMethodsAction()
     data class SelectStoredCard(val id: Int) : PaymentMethodsAction()
-    data class UpdatePayWithGooglePayButtonState(val buttonEnabled: Boolean) :
+    data class UpdateButtonState(val buttonEnabled: Boolean) :
         PaymentMethodsAction()
 
     data class EditMode(val isInEditMode: Boolean) : PaymentMethodsAction()
@@ -107,8 +104,6 @@ class PaymentMethodsViewModel(
     val judoApiCallResult = MutableLiveData<JudoApiCallResult<Receipt>>()
     val payWithIdealObserver = MutableLiveData<Event<String>>()
     val payWithPayByBankObserver = MutableLiveData<Event<Nothing>>()
-    val payByBankStatusResult =
-        MutableLiveData<PollingResult<BankSaleStatusResponse>>()
 
     private val context = application
 
@@ -171,7 +166,7 @@ class PaymentMethodsViewModel(
             is PaymentMethodsAction.SelectPaymentMethod -> {
                 if (selectedPaymentMethod != action.method) buildModel(action.method, false)
             }
-            is PaymentMethodsAction.UpdatePayWithGooglePayButtonState -> buildModel(
+            is PaymentMethodsAction.UpdateButtonState -> buildModel(
                 isLoading = !action.buttonEnabled
             )
             is PaymentMethodsAction.EditMode -> buildModel(isInEditMode = action.isInEditMode)

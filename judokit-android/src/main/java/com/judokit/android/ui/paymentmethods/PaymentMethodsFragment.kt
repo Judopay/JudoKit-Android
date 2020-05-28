@@ -30,7 +30,6 @@ import com.judokit.android.judo
 import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
 import com.judokit.android.ui.ideal.JUDO_IDEAL_BANK
-import com.judokit.android.ui.paybybank.PayByBankFragment
 import com.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judokit.android.ui.paymentmethods.adapter.SwipeToDeleteCallback
 import com.judokit.android.ui.paymentmethods.adapter.model.IdealBankItem
@@ -110,15 +109,21 @@ class PaymentMethodsFragment : Fragment() {
 
         viewModel.payWithPayByBankObserver.observe(viewLifecycleOwner, Observer {
             if (!it.hasBeenHandled()) {
-//                childFragmentManager.beginTransaction().add(PayByBankFragment(), "pbba_fragment").commit()
                 findNavController().navigate(R.id.action_paymentMethodsFragment_to_payByBankFragment)
             }
         })
 
-        sharedViewModel.paymentMethodsGooglePayResult.observe(
+//        sharedViewModel.paymentMethodsGooglePayResult.observe(
+//            viewLifecycleOwner,
+//            Observer { result ->
+//                viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
+//                sharedViewModel.paymentResult.postValue(result)
+//            })
+
+        sharedViewModel.paymentMethodsResult.observe(
             viewLifecycleOwner,
             Observer { result ->
-                viewModel.send(PaymentMethodsAction.UpdatePayWithGooglePayButtonState(true))
+                viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
                 sharedViewModel.paymentResult.postValue(result)
             })
     }
@@ -237,7 +242,7 @@ class PaymentMethodsFragment : Fragment() {
 
                 PaymentCallToActionType.PAY_WITH_GOOGLE_PAY -> {
                     sharedViewModel.send(JudoSharedAction.LoadGPayPaymentData)
-                    viewModel.send(PaymentMethodsAction.UpdatePayWithGooglePayButtonState(false))
+                    viewModel.send(PaymentMethodsAction.UpdateButtonState(false))
                 }
 
                 PaymentCallToActionType.PAY_WITH_IDEAL ->

@@ -27,7 +27,7 @@ val PaymentWidgetType.navigationGraphId: Int
         PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
         PaymentWidgetType.PAYMENT_METHODS,
         PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> R.navigation.judo_payment_methods_graph
-        PaymentWidgetType.PAY_BY_BANK_APP -> R.navigation.judo_pay_by_bank_graph
+        PaymentWidgetType.PAY_BY_BANK_APP -> R.navigation.judo_polling_status_graph
         else -> throw UnsupportedOperationException("Payment Widget of Type: $this not supported")
     }
 
@@ -39,3 +39,6 @@ val PaymentWidgetType.isCardPaymentWidget: Boolean
 
 val PaymentWidgetType.isGooglePayWidget: Boolean
     get() = this == PaymentWidgetType.GOOGLE_PAY || this == PaymentWidgetType.PRE_AUTH_GOOGLE_PAY
+
+val PaymentWidgetType.isExposed: Boolean
+    get() = this == PaymentWidgetType.PAY_BY_BANK_APP

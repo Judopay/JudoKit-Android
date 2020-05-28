@@ -22,6 +22,7 @@ import com.judokit.android.api.factory.JudoApiServiceFactory
 import com.judokit.android.examples.R
 import com.judokit.android.examples.common.startResultActivity
 import com.judokit.android.examples.common.toResult
+import com.judokit.android.examples.feature.adapter.DemoFeatureItemCustomViewHolder
 import com.judokit.android.examples.feature.adapter.DemoFeaturesAdapter
 import com.judokit.android.examples.model.DemoFeature
 import com.judokit.android.examples.settings.SettingsActivity
@@ -94,6 +95,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 }
             }
         }
+        DemoFeatureItemCustomViewHolder.payByBankButton?.isEnabled = true
     }
 
     private fun processSuccessfulPayment(result: JudoResult?) {

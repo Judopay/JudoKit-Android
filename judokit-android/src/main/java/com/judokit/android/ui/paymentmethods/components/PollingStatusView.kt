@@ -80,11 +80,6 @@ class PollingStatusView @JvmOverloads constructor(
         inflate(R.layout.polling_status_view, true)
 
         pollingButton.setOnClickListener { handleButtonClick() }
-
-        backButton.setOnClickListener {
-            visibility = View.GONE
-            onButtonClickListener?.invoke(PollingStatusViewAction.CLOSE)
-        }
     }
 
     private fun updateState() {

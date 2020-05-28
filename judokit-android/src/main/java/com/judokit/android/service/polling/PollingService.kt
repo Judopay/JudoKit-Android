@@ -50,9 +50,9 @@ class PollingService(private val service: JudoApiService) {
             OrderStatus.PENDING -> {
                 timeout -= REQUEST_DELAY
                 when {
-                    timeout <= 0L -> result.invoke(PollingResult.Retry(data))
-                    timeout <= TIMEOUT / 2 -> result.invoke(PollingResult.Delay(data))
-                    else -> result.invoke(PollingResult.Processing(data))
+                    timeout <= 0L -> result.invoke(PollingResult.Retry)
+                    timeout <= TIMEOUT / 2 -> result.invoke(PollingResult.Delay)
+                    else -> result.invoke(PollingResult.Processing)
                 }
             }
         }

@@ -64,7 +64,7 @@
             android:layout_marginBottom="@dimen/space_3"
             app:style="black_buy_with" />
 
-        <com.judokit.android.ui.paybybank.components.PayByBankButton
+        <com.judokit.android.ui.common.PayByBankButton
             android:id="@+id/payByBankButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

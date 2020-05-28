@@ -22,7 +22,9 @@ import com.judokit.android.model.CardScanningResult
 import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.model.code
 import com.judokit.android.model.googlepay.GooglePayEnvironment
+import com.judokit.android.model.isExposed
 import com.judokit.android.model.isGooglePayWidget
+import com.judokit.android.model.isPaymentMethodsWidget
 import com.judokit.android.model.navigationGraphId
 import com.judokit.android.model.toCardScanningResult
 import com.judokit.android.model.toIntent
@@ -50,6 +52,14 @@ class JudoActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this, factory).get(JudoSharedViewModel::class.java)
         viewModel.paymentResult.observe(this, Observer { dispatchPaymentResult(it) })
+
+        viewModel.bankPaymentResult.observe(this, Observer {
+            if (judo.paymentWidgetType.isPaymentMethodsWidget) {
+                viewModel.paymentMethodsResult.postValue(it)
+            } else {
+                viewModel.paymentResult.postValue(it)
+            }
+        })
 
         if (judo.paymentWidgetType.isGooglePayWidget) {
             viewModel.send(JudoSharedAction.LoadGPayPaymentData)
@@ -129,12 +139,16 @@ class JudoActivity : AppCompatActivity() {
                     message = result.error.message
                     details.add(result.error)
                 }
-
-                MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.unable_to_process_request_error_title)
-                    .setMessage(result.error.message)
-                    .setNegativeButton(R.string.close, null)
-                    .show()
+                if (judo.paymentWidgetType.isExposed) {
+                    setResult(result.code, result.toIntent())
+                    finish()
+                } else {
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string.unable_to_process_request_error_title)
+                        .setMessage(result.error.message)
+                        .setNegativeButton(R.string.close, null)
+                        .show()
+                }
             }
             is JudoPaymentResult.UserCancelled -> {
                 with(viewModel.error) {

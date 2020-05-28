@@ -1,4 +1,4 @@
-package com.judokit.android.ui.paybybank.components
+package com.judokit.android.ui.common
 
 import android.content.Context
 import android.util.AttributeSet
@@ -17,8 +17,8 @@ class PayByBankButton @JvmOverloads constructor(
         inflate(R.layout.pbba_button, true)
     }
 
-    override fun setOnClickListener(l: OnClickListener?) {
-        pbbaButton.setOnClickListener(l)
+    override fun setOnClickListener(listener: OnClickListener?) {
+        pbbaButton.setOnClickListener(listener)
     }
 
     override fun setEnabled(enabled: Boolean) {

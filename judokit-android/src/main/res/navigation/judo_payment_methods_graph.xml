@@ -41,7 +41,7 @@
             app:uri="fb://messaging/" />
         <action
             android:id="@+id/action_paymentMethodsFragment_to_payByBankFragment"
-            app:destination="@id/payByBankFragment" />
+            app:destination="@id/pollingStatusFragment" />
 
     </fragment>
 
@@ -70,8 +70,8 @@
         tools:layout="@layout/ideal_fragment" />
 
     <dialog
-        android:id="@+id/payByBankFragment"
-        android:name="com.judokit.android.ui.paybybank.PayByBankFragment"
-        android:label="PayByBankFragment" />
+        android:id="@+id/pollingStatusFragment"
+        android:name="com.judokit.android.ui.pollingstatus.PollingStatusFragment"
+        android:label="PollingStatusFragment" />
 
 </navigation>

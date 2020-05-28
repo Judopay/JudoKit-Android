@@ -1,4 +1,4 @@
-package com.judokit.android.ui.paybybank
+package com.judokit.android.ui.pollingstatus
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -17,15 +17,15 @@ import com.judokit.android.service.polling.PollingService
 import com.judokit.android.toMap
 import kotlinx.coroutines.launch
 
-sealed class PayByBankAction {
-    object PayWithPayByBank : PayByBankAction()
-    data class StartPolling(val orderId: String) : PayByBankAction()
-    object CancelBankPayment : PayByBankAction()
-    object ResetBankPolling : PayByBankAction()
-    object RetryBankPolling : PayByBankAction()
+sealed class PollingAction {
+    object PayWithPayByBank : PollingAction()
+    data class StartPolling(val orderId: String) : PollingAction()
+    object CancelPolling : PollingAction()
+    object ResetPolling : PollingAction()
+    object RetryPolling : PollingAction()
 }
 
-internal class PayByBankViewModelFactory(
+internal class PollingStatusViewModelFactory(
     private val service: JudoApiService,
     private val pollingService: PollingService,
     private val application: Application,
@@ -33,44 +33,37 @@ internal class PayByBankViewModelFactory(
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return if (modelClass == PayByBankViewModel::class.java) {
-            PayByBankViewModel(service, pollingService, application, judo) as T
+        return if (modelClass == PollingStatusViewModel::class.java) {
+            PollingStatusViewModel(service, pollingService, application, judo) as T
         } else super.create(modelClass)
     }
 }
 
-class PayByBankViewModel(
+class PollingStatusViewModel(
     private val service: JudoApiService,
     private val pollingService: PollingService,
     application: Application,
     private val judo: Judo
 ) : AndroidViewModel(application) {
 
-    init {
-        send(PayByBankAction.PayWithPayByBank)
-    }
-
     val payByBankResult = MutableLiveData<JudoApiCallResult<BankSaleResponse>>()
-    val payByBankStatusResult =
-        MutableLiveData<PollingResult<BankSaleStatusResponse>>()
+    val saleStatusResult = MutableLiveData<PollingResult<BankSaleStatusResponse>>()
 
-    fun send(action: PayByBankAction) {
+    fun send(action: PollingAction) {
         when (action) {
-            is PayByBankAction.PayWithPayByBank -> payWithPayByBank()
-            is PayByBankAction.StartPolling -> {
+            is PollingAction.PayWithPayByBank -> payWithPayByBank()
+            is PollingAction.StartPolling -> {
                 viewModelScope.launch {
                     pollingService.apply {
                         orderId = action.orderId
-                        result = { payByBankStatusResult.postValue(it) }
+                        result = { saleStatusResult.postValue(it) }
                     }
-                    viewModelScope.launch {
                         pollingService.start()
-                    }
                 }
             }
-            is PayByBankAction.CancelBankPayment -> pollingService.cancel()
-            is PayByBankAction.ResetBankPolling -> pollingService.reset()
-            is PayByBankAction.RetryBankPolling -> viewModelScope.launch {
+            is PollingAction.CancelPolling -> pollingService.cancel()
+            is PollingAction.ResetPolling -> pollingService.reset()
+            is PollingAction.RetryPolling -> viewModelScope.launch {
                 pollingService.retry()
             }
         }

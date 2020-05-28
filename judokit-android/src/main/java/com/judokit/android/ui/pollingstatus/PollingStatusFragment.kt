@@ -1,10 +1,13 @@
-package com.judokit.android.ui.paybybank
+package com.judokit.android.ui.pollingstatus
 
 import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
@@ -31,17 +34,24 @@ import com.judokit.android.ui.paymentmethods.components.PollingStatusViewAction
 import com.judokit.android.ui.paymentmethods.components.PollingStatusViewState
 import com.zapp.library.merchant.ui.PBBAPopupCallback
 import com.zapp.library.merchant.util.PBBAAppUtils
-import kotlinx.android.synthetic.main.pay_by_bank_fragment.*
+import kotlinx.android.synthetic.main.polling_status_fragment.*
 
-class PayByBankFragment : DialogFragment() {
+class PollingStatusFragment : DialogFragment() {
 
-    private lateinit var viewModel: PayByBankViewModel
+    private lateinit var viewModel: PollingStatusViewModel
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
     private var bankOrderId: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
+        val dialog = object : Dialog(requireContext(), theme) {
+            override fun onBackPressed() {
+                sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.UserCancelled())
+                super.onBackPressed()
+            }
+        }
         dialog.window?.apply {
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            requestFeature(Window.FEATURE_NO_TITLE)
             setFlags(
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
@@ -55,7 +65,7 @@ class PayByBankFragment : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.pay_by_bank_fragment, container, false)
+    ): View? = inflater.inflate(R.layout.polling_status_fragment, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -63,19 +73,21 @@ class PayByBankFragment : DialogFragment() {
         val application = requireActivity().application
         val service = JudoApiServiceFactory.createApiService(application, judo)
         val pollingService = PollingService(service)
-        val factory = PayByBankViewModelFactory(service, pollingService, application, judo)
-        viewModel = ViewModelProvider(this, factory).get(PayByBankViewModel::class.java)
+        val factory = PollingStatusViewModelFactory(service, pollingService, application, judo)
+        viewModel = ViewModelProvider(this, factory).get(PollingStatusViewModel::class.java)
+
+        viewModel.send(PollingAction.PayWithPayByBank)
 
         viewModel.payByBankResult.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is JudoApiCallResult.Success -> handleBankSaleResponse(it.data)
                 is JudoApiCallResult.Failure -> {
-                    sharedViewModel.paymentResult.postValue(it.toJudoPaymentResult())
+                    sharedViewModel.bankPaymentResult.postValue(it.toJudoPaymentResult())
                     findNavController().popBackStack()
                 }
             }
         })
-        viewModel.payByBankStatusResult.observe(viewLifecycleOwner, Observer {
+        viewModel.saleStatusResult.observe(viewLifecycleOwner, Observer {
             handleBankResult(it)
         })
         pollingStatusView.onButtonClickListener = { handlePollingStatusViewButtonClick(it) }
@@ -99,7 +111,7 @@ class PayByBankFragment : DialogFragment() {
             )
             bankOrderId = data.orderId
         } else {
-            sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(JudoError.generic()))
+            sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Error(JudoError.generic()))
             findNavController().popBackStack()
         }
     }
@@ -108,8 +120,8 @@ class PayByBankFragment : DialogFragment() {
         when (action) {
             PollingStatusViewAction.RETRY -> {
                 when (pollingStatusView.state) {
-                    PollingStatusViewState.DELAY -> viewModel.send(PayByBankAction.ResetBankPolling)
-                    PollingStatusViewState.RETRY -> viewModel.send(PayByBankAction.RetryBankPolling)
+                    PollingStatusViewState.DELAY -> viewModel.send(PollingAction.ResetPolling)
+                    PollingStatusViewState.RETRY -> viewModel.send(PollingAction.RetryPolling)
                     else -> {
                         // noop
                     }
@@ -122,11 +134,11 @@ class PayByBankFragment : DialogFragment() {
                 when (pollingStatusView.state) {
                     PollingStatusViewState.FAIL,
                     PollingStatusViewState.SUCCESS -> {
-                        sharedViewModel.paymentResult.postValue(result)
+                        sharedViewModel.bankPaymentResult.postValue(result)
                     }
                     else -> {
-                        viewModel.send(PayByBankAction.CancelBankPayment)
-                        sharedViewModel.paymentResult.postValue(result)
+                        viewModel.send(PollingAction.CancelPolling)
+                        sharedViewModel.bankPaymentResult.postValue(result)
                     }
                 }
             }
@@ -147,7 +159,7 @@ class PayByBankFragment : DialogFragment() {
             }
             is PollingResult.Failure -> {
                 val error = pollingResult.error?.toJudoError() ?: JudoError.generic()
-                sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(error))
+                sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Error(error))
                 PollingStatusViewState.FAIL
             }
             else -> null
@@ -157,8 +169,12 @@ class PayByBankFragment : DialogFragment() {
     override fun onResume() {
         super.onResume()
         if (!bankOrderId.isNullOrEmpty()) {
+            requireDialog().window?.apply {
+                addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+                setDimAmount(0.1f)
+            }
             pollingStatusView.visibility = View.VISIBLE
-            viewModel.send(PayByBankAction.StartPolling(bankOrderId!!))
+            viewModel.send(PollingAction.StartPolling(bankOrderId!!))
             bankOrderId = null
         }
     }
