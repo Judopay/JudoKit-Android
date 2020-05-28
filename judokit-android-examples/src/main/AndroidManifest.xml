@@ -21,7 +21,6 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.DemoApp"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".feature.paybybank.PayByBankActivity"></activity>
         <activity
             android:name=".result.ResultActivity"
             android:theme="@style/Theme.DemoApp" />
@@ -45,6 +44,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".feature.paybybank.PayByBankActivity" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
