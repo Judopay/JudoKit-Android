@@ -7,7 +7,6 @@ import com.judokit.android.Judo
 import com.judokit.android.R
 import com.judokit.android.api.JudoApiService
 import com.judokit.android.api.model.request.BankSaleRequest
-import com.judokit.android.api.model.response.BankSaleResponse
 import com.judokit.android.api.model.response.CardDate
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.Receipt
@@ -73,7 +72,7 @@ internal class PaymentMethodsViewModelTest {
     private val paymentMethodsModel = spyk<Observer<PaymentMethodsModel>>()
     private val judoApiCallResult = spyk<Observer<JudoApiCallResult<Receipt>>>()
     private val payWithIdealObserver = spyk<Observer<Event<String>>>()
-    private val payByBankResult = spyk<Observer<JudoApiCallResult<BankSaleResponse>>>()
+    private val payWithPayByBankObserver = spyk<Observer<Event<Nothing>>>()
 
     @BeforeEach
     internal fun setUp() {
@@ -696,59 +695,17 @@ internal class PaymentMethodsViewModelTest {
         assertTrue(model.headerModel.cardModel is PayByBankCardViewModel)
     }
 
-//    @DisplayName("Given send with PayWithPayByBank action is called, then make service.sale call")
-//    @Test
-//    fun updatePaymentMethodModelOnPayWithPayByBank() {
-//        sut.model.observeForever(paymentMethodsModel)
-//
-//        sut.send(PaymentMethodsAction.PayWithPayByBank)
-//
-//        coVerify { service.sale(any<BankSaleRequest>()) }
-//    }
-//
-//    @DisplayName("Given send with PayWithPayByBank action is called, then update payByBankResult")
-//    @Test
-//    fun updatePayByBankResultOnPayWithPayByBankAction() {
-//        val slots = mutableListOf<JudoApiCallResult<BankSaleResponse>>()
-//
-//        sut.payWithPayByBankObserver.observeForever(payByBankResult)
-//
-//        sut.send(PaymentMethodsAction.PayWithPayByBank)
-//
-//        verify { payByBankResult.onChanged(capture(slots)) }
-//    }
-//
-//    @DisplayName("Given send with StartBankPayment action is called, then start polling")
-//    @Test
-//    fun startPollingOnStartBankPaymentCall() {
-//        sut.send(PaymentMethodsAction.StartBankPayment("orderId"))
-//
-//        coVerify { pollingService.start() }
-//    }
-//
-//    @DisplayName("Given send with CancelBankPayment action is called, then cancel polling")
-//    @Test
-//    fun cancelPollingOnCancelBankPaymentCall() {
-//        sut.send(PaymentMethodsAction.CancelBankPayment)
-//
-//        verify { pollingService.cancel() }
-//    }
-//
-//    @DisplayName("Given send with ResetBankPolling action is called, then reset polling")
-//    @Test
-//    fun resetPollingOnResetBankPollingCall() {
-//        sut.send(PaymentMethodsAction.ResetBankPolling)
-//
-//        verify { pollingService.reset() }
-//    }
-//
-//    @DisplayName("Given send with RetryBankPolling action is called, then retry polling")
-//    @Test
-//    fun retryPollingOnRetryBankPollingCall() {
-//        sut.send(PaymentMethodsAction.RetryBankPolling)
-//
-//        coVerify { pollingService.retry() }
-//    }
+    @DisplayName("Given send with PayWithPayByBank action is called, then update payWithPayByBankObserver")
+    @Test
+    fun updatePayWithPayByBankObserverOnPayWithPayByBank() {
+        val slots = mutableListOf<Event<Nothing>>()
+
+        sut.payWithPayByBankObserver.observeForever(payWithPayByBankObserver)
+
+        sut.send(PaymentMethodsAction.PayWithPayByBank)
+
+        verify { payWithPayByBankObserver.onChanged(capture(slots)) }
+    }
 
     private fun getJudo() = mockk<Judo>(relaxed = true) {
         every { paymentWidgetType } returns PaymentWidgetType.PAYMENT_METHODS
