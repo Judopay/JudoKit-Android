@@ -177,6 +177,7 @@ def addJacocoTask(variant) {
             '**/model/googlepay/**',
             '**/model/JudoResult.*',
             '**/model/PrimaryAccountDetails.*',
+            '**/model/Event.*',
             '**/api/model/request/Address.*',
             '**/api/model/response/CardVerificationResult.*',
             '**/api/model/response/Consumer.*',
@@ -192,7 +193,8 @@ def addJacocoTask(variant) {
             '**/api/error/DuplicateTransactionError.*',
             '**/api/error/TokenSecretError.*',
             '**/ui/common/ProgressButton.*',
-            '**/ui/common/GooglePayButton.*'
+            '**/ui/common/GooglePayButton.*',
+            '**/ui/common/PayByBankButton.*'
     ]
 
     def sourceDirectories = files(variant.sourceSets.java.srcDirs.flatten())
