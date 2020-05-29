@@ -44,7 +44,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".feature.paybybank.PayByBankActivity" />
+        <activity android:name=".feature.paybybank.PayByBankActivity"
+            android:label="@string/title_activity_pay_by_bank"
+            android:theme="@style/Theme.DemoApp"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"

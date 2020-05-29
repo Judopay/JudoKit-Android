@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Judopay demo</string>
     <string name="title_activity_demo_feature_list">Judo Examples</string>
+    <string name="title_activity_pay_by_bank">Pay by Bank App</string>
 
     <string name="feature_title_payment">Pay with card</string>
     <string name="feature_surtitle_payment">by entering card details</string>
