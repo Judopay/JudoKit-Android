@@ -171,7 +171,7 @@ class PollingStatusFragment : DialogFragment() {
         if (!bankOrderId.isNullOrEmpty()) {
             requireDialog().window?.apply {
                 addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-                setDimAmount(0.1f)
+                setDimAmount(0.5f)
             }
             pollingStatusView.visibility = View.VISIBLE
             viewModel.send(PollingAction.StartPolling(bankOrderId!!))

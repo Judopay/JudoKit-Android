@@ -2,16 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pollingStatusView"
     android:layout_width="350dp"
     android:layout_height="250dp"
-    android:background="@drawable/dialog_background"
-    android:id="@+id/pollingStatusView">
+    android:background="@drawable/dialog_background">
 
     <ProgressBar
         android:id="@+id/pollingProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:indeterminate="true"
+        android:theme="@style/JudoTheme.ProgressBar"
         app:layout_constraintBottom_toTopOf="@id/pollingButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,15 +20,15 @@
     <TextView
         android:id="@+id/pollingTextView"
         style="@style/JudoTheme.Title"
-        android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:paddingStart="@dimen/space_16"
-        app:layout_constraintEnd_toEndOf="parent"
         android:paddingEnd="@dimen/space_16"
-        app:layout_constraintStart_toStartOf="parent"
         android:text="@string/transaction_unsuccessful"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/pollingProgressBar" />
 
     <Button

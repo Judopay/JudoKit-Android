@@ -21,8 +21,3 @@ enum class DemoFeature(
     SERVER_TO_SERVER_PAYMENT_METHODS(R.string.feature_title_server_to_server_payment_methods, R.string.feature_subtitle_server_to_server_payment_methods),
     PAY_BY_BANK_APP(R.string.feature_title_pay_by_bank_app, R.string.feature_subtitle_pay_by_bank_app),
 }
-
-fun DemoFeature.displayButton(context: Context) = when (this) {
-    DemoFeature.PAY_BY_BANK_APP -> PayByBankButton(context)
-    else -> null
-}
