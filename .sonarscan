@@ -1,1 +1,1 @@
-sonar.exclusions=judokit-android-examples/**, judokit-android/src/test/**
+sonar.exclusions=judokit-android-examples/**/*, judokit-android/src/test/**/*
