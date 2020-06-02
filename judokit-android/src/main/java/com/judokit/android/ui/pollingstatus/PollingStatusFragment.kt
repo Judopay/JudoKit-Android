@@ -19,7 +19,7 @@ import com.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.toJudoPaymentResult
 import com.judokit.android.api.model.response.toJudoResult
-import com.judokit.android.configureDialog
+import com.judokit.android.applyDialogStyling
 import com.judokit.android.judo
 import com.judokit.android.model.JudoError
 import com.judokit.android.model.JudoPaymentResult
@@ -47,7 +47,7 @@ class PollingStatusFragment : DialogFragment() {
                 super.onBackPressed()
             }
         }
-        dialog.window?.configureDialog()
+        dialog.window?.applyDialogStyling()
         return dialog
     }
 

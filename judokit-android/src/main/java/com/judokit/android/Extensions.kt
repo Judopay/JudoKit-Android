@@ -120,7 +120,7 @@ internal fun requireAmount(paymentWidgetType: PaymentWidgetType, amount: Amount?
     }
 }
 
-internal fun Window.configureDialog() {
+internal fun Window.applyDialogStyling() {
     setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     requestFeature(Window.FEATURE_NO_TITLE)
     setFlags(
