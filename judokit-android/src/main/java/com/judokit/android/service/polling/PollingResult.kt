@@ -11,5 +11,6 @@ sealed class PollingResult<out T> {
         val error: ApiError? = null,
         val throwable: Throwable? = null
     ) : PollingResult<Nothing>()
+
     data class Success<T>(val data: T?) : PollingResult<T>()
 }

@@ -9,6 +9,7 @@ import com.judokit.android.R
 import com.judokit.android.inflate
 import com.judokit.android.ui.common.ButtonState
 import kotlinx.android.synthetic.main.payment_call_to_action_view.view.*
+import kotlinx.android.synthetic.main.pbba_button.view.*
 
 enum class PaymentButtonType {
     PLAIN,

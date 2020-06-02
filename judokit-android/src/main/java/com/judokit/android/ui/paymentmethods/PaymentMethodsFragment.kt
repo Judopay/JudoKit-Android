@@ -19,8 +19,6 @@ import com.judokit.android.R
 import com.judokit.android.api.error.ApiError
 import com.judokit.android.api.error.toJudoError
 import com.judokit.android.api.factory.JudoApiServiceFactory
-import com.judokit.android.api.model.response.BankSaleResponse
-import com.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judokit.android.api.model.response.CardDate
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.Receipt
@@ -29,12 +27,7 @@ import com.judokit.android.api.model.response.toJudoResult
 import com.judokit.android.db.JudoRoomDatabase
 import com.judokit.android.db.repository.TokenizedCardRepository
 import com.judokit.android.judo
-import com.judokit.android.model.JudoError
 import com.judokit.android.model.JudoPaymentResult
-import com.judokit.android.model.JudoResult
-import com.judokit.android.service.polling.PollingResult
-import com.judokit.android.service.polling.PollingService
-import com.judokit.android.ui.common.getLocale
 import com.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
 import com.judokit.android.ui.ideal.JUDO_IDEAL_BANK
 import com.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapter
@@ -47,11 +40,7 @@ import com.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodSavedCar
 import com.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodSelectorItem
 import com.judokit.android.ui.paymentmethods.components.PaymentCallToActionType
 import com.judokit.android.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
-import com.judokit.android.ui.paymentmethods.components.PollingStatusViewAction
-import com.judokit.android.ui.paymentmethods.components.PollingStatusViewState
 import com.judokit.android.ui.paymentmethods.model.PaymentMethodModel
-import com.zapp.library.merchant.ui.PBBAPopupCallback
-import com.zapp.library.merchant.util.PBBAAppUtils
 import kotlinx.android.synthetic.main.payment_methods_fragment.*
 import kotlinx.android.synthetic.main.payment_methods_header_view.*
 
@@ -66,7 +55,6 @@ class PaymentMethodsFragment : Fragment() {
 
     private lateinit var viewModel: PaymentMethodsViewModel
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
-    private var bankOrderId: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,9 +79,8 @@ class PaymentMethodsFragment : Fragment() {
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
         val service = JudoApiServiceFactory.createApiService(application, judo)
-        val pollingService = PollingService(service)
         val factory =
-            PaymentMethodsViewModelFactory(cardDate, cardRepository, service, pollingService, application, judo)
+            PaymentMethodsViewModelFactory(cardDate, cardRepository, service, application, judo)
 
         viewModel = ViewModelProvider(this, factory).get(PaymentMethodsViewModel::class.java)
         viewModel.model.observe(viewLifecycleOwner, Observer { updateWithModel(it) })
@@ -120,99 +107,18 @@ class PaymentMethodsFragment : Fragment() {
             }
         })
 
-        viewModel.payByBankResult.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is JudoApiCallResult.Success ->
-                    handleBankSaleResponse(it.data)
-                is JudoApiCallResult.Failure -> {
-                    MaterialAlertDialogBuilder(context)
-                        .setTitle(R.string.transaction_error_title)
-                        .setMessage(R.string.transaction_unsuccessful)
-                        .setNegativeButton(R.string.close, null)
-                        .show()
-                }
+        viewModel.payWithPayByBankObserver.observe(viewLifecycleOwner, Observer {
+            if (!it.hasBeenHandled()) {
+                findNavController().navigate(R.id.action_paymentMethodsFragment_to_payByBankFragment)
             }
         })
 
-        viewModel.payByBankStatusResult.observe(viewLifecycleOwner, Observer {
-            handleBankResult(it)
-        })
-
-        sharedViewModel.paymentMethodsGooglePayResult.observe(
+        sharedViewModel.paymentMethodsResult.observe(
             viewLifecycleOwner,
             Observer { result ->
-                viewModel.send(PaymentMethodsAction.UpdatePayWithGooglePayButtonState(true))
+                viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
                 sharedViewModel.paymentResult.postValue(result)
             })
-
-        pollingStatusView.onButtonClickListener = { handlePollingStatusViewButtonClick(it) }
-    }
-
-    private fun handlePollingStatusViewButtonClick(action: PollingStatusViewAction) =
-        when (action) {
-            PollingStatusViewAction.RETRY -> {
-                when (pollingStatusView.state) {
-                    PollingStatusViewState.DELAY -> viewModel.send(PaymentMethodsAction.ResetBankPolling)
-                    PollingStatusViewState.RETRY -> viewModel.send(PaymentMethodsAction.RetryBankPolling)
-                    else -> {
-                        // noop
-                    }
-                }
-
-                pollingStatusView.state = PollingStatusViewState.PROCESSING
-            }
-
-            PollingStatusViewAction.CLOSE -> {
-                when (pollingStatusView.state) {
-                    PollingStatusViewState.FAIL,
-                    PollingStatusViewState.SUCCESS -> requireActivity().finish()
-                    else -> viewModel.send(PaymentMethodsAction.CancelBankPayment)
-                }
-            }
-        }
-
-    private fun handleBankResult(pollingResult: PollingResult<BankSaleStatusResponse>?) {
-        pollingStatusView.state = when (pollingResult) {
-            is PollingResult.Processing -> PollingStatusViewState.PROCESSING
-            is PollingResult.Delay -> PollingStatusViewState.DELAY
-            is PollingResult.Retry -> PollingStatusViewState.RETRY
-            is PollingResult.Success -> PollingStatusViewState.SUCCESS
-            is PollingResult.Failure -> PollingStatusViewState.FAIL
-            else -> null
-        }
-
-        when (pollingResult) {
-            is PollingResult.Failure -> {
-                val error = pollingResult.error?.toJudoError() ?: JudoError.generic()
-                sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(error))
-            }
-            is PollingResult.Success -> {
-                val result = pollingResult.data?.toJudoResult(getLocale(resources)) ?: JudoResult()
-                sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(result))
-            }
-        }
-    }
-
-    private fun handleBankSaleResponse(data: BankSaleResponse?) {
-        if (data != null) {
-            PBBAAppUtils.showPBBAPopup(
-                requireActivity(),
-                data.secureToken,
-                data.pbbaBrn,
-                object : PBBAPopupCallback {
-                    override fun onRetryPaymentRequest() {
-                        // noop
-                    }
-
-                    override fun onDismissPopup() {
-                        // noop
-                    }
-                }
-            )
-            bankOrderId = data.orderId
-        } else {
-            sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(JudoError.generic()))
-        }
     }
 
     private fun handleFail(error: ApiError?) {
@@ -329,7 +235,7 @@ class PaymentMethodsFragment : Fragment() {
 
                 PaymentCallToActionType.PAY_WITH_GOOGLE_PAY -> {
                     sharedViewModel.send(JudoSharedAction.LoadGPayPaymentData)
-                    viewModel.send(PaymentMethodsAction.UpdatePayWithGooglePayButtonState(false))
+                    viewModel.send(PaymentMethodsAction.UpdateButtonState(false))
                 }
 
                 PaymentCallToActionType.PAY_WITH_IDEAL ->
@@ -347,13 +253,5 @@ class PaymentMethodsFragment : Fragment() {
 
         // post the event
         sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled())
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (!bankOrderId.isNullOrEmpty()) {
-            viewModel.send(PaymentMethodsAction.StartBankPayment(bankOrderId!!))
-            bankOrderId = null
-        }
     }
 }
