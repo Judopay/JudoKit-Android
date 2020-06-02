@@ -32,6 +32,7 @@ import com.judokit.android.model.Currency
 import com.judokit.android.model.GooglePayConfiguration
 import com.judokit.android.model.JudoError
 import com.judokit.android.model.JudoResult
+import com.judokit.android.model.PBBAConfiguration
 import com.judokit.android.model.PaymentMethod
 import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.Reference
@@ -42,10 +43,11 @@ import com.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judokit.android.model.googlepay.GooglePayShippingAddressParameters
 import com.readystatesoftware.chuck.ChuckInterceptor
-import java.util.UUID
 import kotlinx.android.synthetic.main.activity_demo_feature_list.*
+import java.util.UUID
 
 const val JUDO_PAYMENT_WIDGET_REQUEST_CODE = 1
+const val LAST_USED_WIDGET_TYPE_LEY = "LAST_USED_WIDGET_TYPE"
 
 class DemoFeatureListActivity : AppCompatActivity() {
 
@@ -61,6 +63,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false)
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+
+        checkForDeepLink()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -94,6 +98,27 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     processPaymentError(error)
                 }
             }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        checkForDeepLink(intent)
+        super.onNewIntent(intent)
+    }
+
+    private fun checkForDeepLink(intent: Intent? = this.intent) {
+        val uri = intent?.data
+        val newIntent = Intent(this, JudoActivity::class.java)
+        if (uri != null) {
+            val lastUsedPaymentWidget = sharedPreferences.getString(
+                LAST_USED_WIDGET_TYPE_LEY,
+                PaymentWidgetType.PAYMENT_METHODS.name
+            ) ?: PaymentWidgetType.PAYMENT_METHODS.name
+            val judo = getJudo(PaymentWidgetType.valueOf(lastUsedPaymentWidget)).newBuilder()
+                .setPBBAConfiguration(pbbaConfiguration.newBuilder().setDeepLinkURL(uri).build())
+                .build()
+            newIntent.putExtra(JUDO_OPTIONS, judo)
+            startActivityForResult(newIntent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
         }
     }
 
@@ -142,6 +167,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             }
             val judoConfig = getJudo(widgetType)
             navigateToJudoPaymentWidgetWithConfigurations(judoConfig)
+            sharedPreferences.edit().putString(LAST_USED_WIDGET_TYPE_LEY, widgetType.name).apply()
         } catch (exception: Exception) {
             when (exception) {
                 is IllegalArgumentException, is IllegalStateException -> {
@@ -199,6 +225,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setPaymentMethods(paymentMethods)
             .setUiConfiguration(uiConfiguration)
             .setGooglePayConfiguration(googlePayConfiguration)
+            .setPBBAConfiguration(pbbaConfiguration)
             .build()
     }
 
@@ -299,4 +326,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 .setShippingAddressParameters(shippingAddressParams)
                 .build()
         }
+    private val pbbaConfiguration: PBBAConfiguration
+        get() = PBBAConfiguration.Builder().setDeepLinkScheme("judo://pay").build()
 }

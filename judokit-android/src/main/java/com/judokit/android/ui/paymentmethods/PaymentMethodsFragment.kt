@@ -73,7 +73,9 @@ class PaymentMethodsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        if (judo.pbbaConfiguration?.deepLinkURL != null) {
+            findNavController().navigate(R.id.action_paymentMethodsFragment_to_payByBankFragment)
+        }
         val application = requireActivity().application
         val cardDate = CardDate()
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()

@@ -24,6 +24,7 @@ import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.toJudoPaymentResult
 import com.judokit.android.api.model.response.toJudoResult
 import com.judokit.android.judo
+import com.judokit.android.model.INTERNAL_ERROR
 import com.judokit.android.model.JudoError
 import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.model.JudoResult
@@ -36,11 +37,12 @@ import com.zapp.library.merchant.ui.PBBAPopupCallback
 import com.zapp.library.merchant.util.PBBAAppUtils
 import kotlinx.android.synthetic.main.polling_status_fragment.*
 
+private const val ORDER_ID = "aptrId"
+
 class PollingStatusFragment : DialogFragment() {
 
     private lateinit var viewModel: PollingStatusViewModel
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
-    private var bankOrderId: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = object : Dialog(requireContext(), theme) {
@@ -76,7 +78,25 @@ class PollingStatusFragment : DialogFragment() {
         val factory = PollingStatusViewModelFactory(service, pollingService, application, judo)
         viewModel = ViewModelProvider(this, factory).get(PollingStatusViewModel::class.java)
 
-        viewModel.send(PollingAction.PayWithPayByBank)
+        val url = judo.pbbaConfiguration?.deepLinkURL
+
+        if (url != null && sharedViewModel.error.details.isEmpty()) {
+            pollingStatusView.visibility = View.VISIBLE
+            requireDialog().window?.apply {
+                addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+                setDimAmount(0.5f)
+            }
+            val orderId = url.getQueryParameter(ORDER_ID)
+            if (orderId != null) {
+                viewModel.send(PollingAction.StartPolling(orderId))
+            } else {
+                val error = JudoError(INTERNAL_ERROR, "OrderID cannot be null")
+                sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Error(error))
+            }
+
+        } else {
+            viewModel.send(PollingAction.PayWithPayByBank)
+        }
 
         viewModel.payByBankResult.observe(viewLifecycleOwner, Observer {
             when (it) {
@@ -109,7 +129,11 @@ class PollingStatusFragment : DialogFragment() {
                     }
                 }
             )
-            bankOrderId = data.orderId
+            pollingStatusView.visibility = View.VISIBLE
+            requireDialog().window?.apply {
+                addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+                setDimAmount(0.5f)
+            }
         } else {
             sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Error(JudoError.generic()))
             findNavController().popBackStack()
@@ -134,10 +158,13 @@ class PollingStatusFragment : DialogFragment() {
                 when (pollingStatusView.state) {
                     PollingStatusViewState.FAIL,
                     PollingStatusViewState.SUCCESS -> {
+                        findNavController().popBackStack()
                         sharedViewModel.bankPaymentResult.postValue(result)
+
                     }
                     else -> {
                         viewModel.send(PollingAction.CancelPolling)
+                        findNavController().popBackStack()
                         sharedViewModel.bankPaymentResult.postValue(result)
                     }
                 }
@@ -158,24 +185,15 @@ class PollingStatusFragment : DialogFragment() {
                 PollingStatusViewState.SUCCESS
             }
             is PollingResult.Failure -> {
+                result = JudoPaymentResult.Error(JudoError.generic())
+                PollingStatusViewState.FAIL
+            }
+            is PollingResult.CallFailure -> {
                 val error = pollingResult.error?.toJudoError() ?: JudoError.generic()
-                sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Error(error))
+                result = JudoPaymentResult.Error(error)
                 PollingStatusViewState.FAIL
             }
             else -> null
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (!bankOrderId.isNullOrEmpty()) {
-            requireDialog().window?.apply {
-                addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-                setDimAmount(0.5f)
-            }
-            pollingStatusView.visibility = View.VISIBLE
-            viewModel.send(PollingAction.StartPolling(bankOrderId!!))
-            bankOrderId = null
         }
     }
 }

@@ -177,6 +177,22 @@ class Judo internal constructor(
         }
     }
 
+    fun newBuilder() = Builder(paymentWidgetType)
+        .setAddress(address)
+        .setAmount(amount)
+        .setApiSecret(apiSecret)
+        .setApiToken(apiToken)
+        .setGooglePayConfiguration(googlePayConfiguration)
+        .setIsSandboxed(isSandboxed)
+        .setJudoId(judoId)
+        .setPBBAConfiguration(pbbaConfiguration)
+        .setPaymentMethods(paymentMethods)
+        .setPrimaryAccountDetails(primaryAccountDetails)
+        .setReference(reference)
+        .setSiteId(siteId)
+        .setSupportedCardNetworks(supportedCardNetworks)
+        .setUiConfiguration(uiConfiguration)
+
     override fun toString(): String {
         return "Judo(judoId='$judoId', siteId=$siteId, apiToken='$apiToken', apiSecret='$apiSecret', isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration)"
     }

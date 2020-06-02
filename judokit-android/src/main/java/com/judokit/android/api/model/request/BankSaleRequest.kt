@@ -15,12 +15,12 @@ data class BankSaleRequest(
     val emailAddress: String?,
     val appearsOnStatement: String?,
     val paymentMetadata: Map<String, String>?,
+    val merchantRedirectUrl: String,
     val accountHolderName: String = "PBBA User",
     val bic: String = "RABONL2U",
     val paymentMethod: String = "PBBA",
     val country: String = Country.GB.name,
-    val currency: String = Currency.GBP.name,
-    val merchantRedirectUrl: String = "fb://messaging/"
+    val currency: String = Currency.GBP.name
 ) {
     class Builder {
         private var amount: BigDecimal? = null
@@ -31,6 +31,7 @@ data class BankSaleRequest(
         private var appearsOnStatement: String? = null
         private var emailAddress: String? = null
         private var paymentMetadata: Map<String, String>? = null
+        private var merchantRedirectUrl: String? = null
 
         fun setAmount(amount: BigDecimal?) = apply { this.amount = amount }
 
@@ -50,6 +51,9 @@ data class BankSaleRequest(
         fun setPaymentMetadata(paymentMetadata: Map<String, String>?) =
             apply { this.paymentMetadata = paymentMetadata }
 
+        fun setMerchantRedirectUrl(merchantRedirectUrl: String?) =
+            apply { this.merchantRedirectUrl = merchantRedirectUrl }
+
         fun build(): BankSaleRequest {
             val myAmount = requireNotNull(amount, "amount")
             val myMerchantPaymentReference =
@@ -57,6 +61,8 @@ data class BankSaleRequest(
             val myMerchantConsumerReference =
                 requireNotNullOrEmpty(merchantConsumerReference, "merchantConsumerReference")
             val mySiteId = requireNotNullOrEmpty(siteId, "siteId")
+            val myMerchantRedirectUrl =
+                requireNotNullOrEmpty(merchantRedirectUrl, "merchantRedirectUrl")
 
             return BankSaleRequest(
                 myAmount,
@@ -66,7 +72,8 @@ data class BankSaleRequest(
                 mobileNumber,
                 emailAddress,
                 appearsOnStatement,
-                paymentMetadata
+                paymentMetadata,
+                myMerchantRedirectUrl
             )
         }
     }

@@ -79,6 +79,7 @@ class PollingStatusViewModel(
             .setEmailAddress(judo.pbbaConfiguration?.emailAddress)
             .setAppearsOnStatement(judo.pbbaConfiguration?.appearsOnStatement)
             .setPaymentMetadata(judo.reference.metaData?.toMap())
+            .setMerchantRedirectUrl(judo.pbbaConfiguration?.deepLinkScheme)
             .build()
 
         val response = service.sale(request)

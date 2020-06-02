@@ -97,7 +97,7 @@ internal class PollingServiceTest {
 
         runBlockingTest { sut.start() }
 
-        val expectedResult = PollingResult.Failure()
+        val expectedResult = PollingResult.CallFailure()
         assertEquals(expectedResult, actualResult)
     }
 
@@ -111,7 +111,7 @@ internal class PollingServiceTest {
 
         runBlockingTest { sut.start() }
 
-        val expectedResult = PollingResult.Failure(error = failStatusCallResult.error)
+        val expectedResult = PollingResult.CallFailure(error = failStatusCallResult.error)
         assertEquals(expectedResult, actualResult)
     }
 
