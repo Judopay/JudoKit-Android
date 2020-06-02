@@ -11,6 +11,7 @@ import com.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.model.Amount
 import com.judokit.android.model.Currency
+import com.judokit.android.model.PBBAConfiguration
 import com.judokit.android.model.PaymentMethod
 import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.Reference
@@ -145,5 +146,13 @@ internal class PollingStatusViewModelTest {
         every { apiSecret } returns "secret"
         every { amount } returns Amount("1", Currency.GBP)
         every { reference } returns Reference("consumer", "payment")
+        every { pbbaConfiguration } returns
+                PBBAConfiguration(
+                    "mobile",
+                    "email",
+                    "appearOnStatementAs",
+                    mockk(relaxed = true),
+                    "judo://pay"
+                )
     }
 }
