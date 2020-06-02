@@ -35,6 +35,7 @@ import com.zapp.library.merchant.ui.PBBAPopupCallback
 import com.zapp.library.merchant.util.PBBAAppUtils
 import kotlinx.android.synthetic.main.polling_status_fragment.*
 
+// TODO: Change to orderId
 private const val ORDER_ID = "aptrId"
 
 class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
