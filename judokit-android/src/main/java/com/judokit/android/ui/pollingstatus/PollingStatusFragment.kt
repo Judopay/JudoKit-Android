@@ -93,7 +93,6 @@ class PollingStatusFragment : DialogFragment() {
                 val error = JudoError(INTERNAL_ERROR, "OrderID cannot be null")
                 sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Error(error))
             }
-
         } else {
             viewModel.send(PollingAction.PayWithPayByBank)
         }
@@ -160,7 +159,6 @@ class PollingStatusFragment : DialogFragment() {
                     PollingStatusViewState.SUCCESS -> {
                         findNavController().popBackStack()
                         sharedViewModel.bankPaymentResult.postValue(result)
-
                     }
                     else -> {
                         viewModel.send(PollingAction.CancelPolling)
