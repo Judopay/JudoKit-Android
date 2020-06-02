@@ -160,7 +160,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
         } else {
             JudoActivity::class.java
         }
-        Intent(this, myClass)
+        val intent = Intent(this, myClass)
         intent.putExtra(JUDO_OPTIONS, judo)
         startActivityForResult(intent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
     }
