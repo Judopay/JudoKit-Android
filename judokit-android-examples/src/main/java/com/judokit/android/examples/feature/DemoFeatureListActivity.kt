@@ -23,6 +23,7 @@ import com.judokit.android.examples.R
 import com.judokit.android.examples.common.startResultActivity
 import com.judokit.android.examples.common.toResult
 import com.judokit.android.examples.feature.adapter.DemoFeaturesAdapter
+import com.judokit.android.examples.feature.paybybank.PayByBankActivity
 import com.judokit.android.examples.model.DemoFeature
 import com.judokit.android.examples.settings.SettingsActivity
 import com.judokit.android.model.Amount
@@ -137,6 +138,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 DemoFeature.SERVER_TO_SERVER_PAYMENT_METHODS -> PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS
                 DemoFeature.GOOGLE_PAY_PAYMENT -> PaymentWidgetType.GOOGLE_PAY
                 DemoFeature.GOOGLE_PAY_PREAUTH -> PaymentWidgetType.PRE_AUTH_GOOGLE_PAY
+                DemoFeature.PAY_BY_BANK_APP -> PaymentWidgetType.PAY_BY_BANK_APP
             }
             val judoConfig = getJudo(widgetType)
             navigateToJudoPaymentWidgetWithConfigurations(judoConfig)
@@ -153,7 +155,12 @@ class DemoFeatureListActivity : AppCompatActivity() {
     }
 
     private fun navigateToJudoPaymentWidgetWithConfigurations(judo: Judo) {
-        val intent = Intent(this, JudoActivity::class.java)
+        val myClass = if (judo.paymentWidgetType == PaymentWidgetType.PAY_BY_BANK_APP) {
+            PayByBankActivity::class.java
+        } else {
+            JudoActivity::class.java
+        }
+        val intent = Intent(this, myClass)
         intent.putExtra(JUDO_OPTIONS, judo)
         startActivityForResult(intent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
     }

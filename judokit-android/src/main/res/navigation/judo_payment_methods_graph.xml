@@ -39,6 +39,9 @@
         <deepLink
             android:id="@+id/deepLink"
             app:uri="fb://messaging/" />
+        <action
+            android:id="@+id/action_paymentMethodsFragment_to_payByBankFragment"
+            app:destination="@id/pollingStatusFragment" />
 
     </fragment>
 
@@ -65,5 +68,10 @@
         android:name="com.judokit.android.ui.ideal.IdealFragment"
         android:label="IdealFragment"
         tools:layout="@layout/ideal_fragment" />
+
+    <dialog
+        android:id="@+id/pollingStatusFragment"
+        android:name="com.judokit.android.ui.pollingstatus.PollingStatusFragment"
+        android:label="PollingStatusFragment" />
 
 </navigation>

@@ -67,7 +67,7 @@ internal class JudoSharedViewModelTest {
         mockkStatic("com.judokit.android.api.model.response.JudoApiCallResultKt")
 
         sut.paymentResult.observeForever(paymentResult)
-        sut.paymentMethodsGooglePayResult.observeForever(paymentMethodsGooglePayResult)
+        sut.paymentMethodsResult.observeForever(paymentMethodsGooglePayResult)
         sut.scanCardResult.observeForever(scanCardResult)
     }
 

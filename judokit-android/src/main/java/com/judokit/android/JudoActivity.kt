@@ -15,18 +15,20 @@ import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.WalletConstants
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.judokit.android.api.factory.JudoApiServiceFactory
 import com.judokit.android.model.CardScanResultType
 import com.judokit.android.model.CardScanningResult
 import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.model.code
 import com.judokit.android.model.googlepay.GooglePayEnvironment
+import com.judokit.android.model.isExposed
 import com.judokit.android.model.isGooglePayWidget
+import com.judokit.android.model.isPaymentMethodsWidget
 import com.judokit.android.model.navigationGraphId
 import com.judokit.android.model.toCardScanningResult
 import com.judokit.android.model.toIntent
 import com.judokit.android.service.JudoGooglePayService
+import com.judokit.android.ui.common.showAlert
 
 internal const val LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE = Activity.RESULT_FIRST_USER + 1
 internal const val SCAN_CARD_REQUEST_CODE = Activity.RESULT_FIRST_USER + 2
@@ -50,6 +52,14 @@ class JudoActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this, factory).get(JudoSharedViewModel::class.java)
         viewModel.paymentResult.observe(this, Observer { dispatchPaymentResult(it) })
+
+        viewModel.bankPaymentResult.observe(this, Observer {
+            if (judo.paymentWidgetType.isPaymentMethodsWidget) {
+                viewModel.paymentMethodsResult.postValue(it)
+            } else {
+                viewModel.paymentResult.postValue(it)
+            }
+        })
 
         if (judo.paymentWidgetType.isGooglePayWidget) {
             viewModel.send(JudoSharedAction.LoadGPayPaymentData)
@@ -130,11 +140,13 @@ class JudoActivity : AppCompatActivity() {
                     details.add(result.error)
                 }
 
-                MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.unable_to_process_request_error_title)
-                    .setMessage(result.error.message)
-                    .setNegativeButton(R.string.close, null)
-                    .show()
+                if (judo.paymentWidgetType.isExposed) {
+                    setResult(result.code, result.toIntent())
+                    finish()
+                    return
+                }
+
+                showAlert(this, result.error.message)
             }
             is JudoPaymentResult.UserCancelled -> {
                 with(viewModel.error) {

@@ -10,10 +10,7 @@ import com.judokit.android.Judo
 import com.judokit.android.R
 import com.judokit.android.api.JudoApiService
 import com.judokit.android.api.model.request.Address
-import com.judokit.android.api.model.request.BankSaleRequest
 import com.judokit.android.api.model.request.TokenRequest
-import com.judokit.android.api.model.response.BankSaleResponse
-import com.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judokit.android.api.model.response.CardDate
 import com.judokit.android.api.model.response.CardToken
 import com.judokit.android.api.model.response.Consumer
@@ -28,8 +25,6 @@ import com.judokit.android.model.displayName
 import com.judokit.android.model.formatted
 import com.judokit.android.model.paymentButtonType
 import com.judokit.android.model.typeId
-import com.judokit.android.service.polling.PollingResult
-import com.judokit.android.service.polling.PollingService
 import com.judokit.android.toMap
 import com.judokit.android.ui.common.ButtonState
 import com.judokit.android.ui.paymentmethods.adapter.model.IdealBank
@@ -63,7 +58,7 @@ sealed class PaymentMethodsAction {
     data class DeleteCard(val cardId: Int) : PaymentMethodsAction()
     data class SelectPaymentMethod(val method: PaymentMethod) : PaymentMethodsAction()
     data class SelectStoredCard(val id: Int) : PaymentMethodsAction()
-    data class UpdatePayWithGooglePayButtonState(val buttonEnabled: Boolean) :
+    data class UpdateButtonState(val buttonEnabled: Boolean) :
         PaymentMethodsAction()
 
     data class EditMode(val isInEditMode: Boolean) : PaymentMethodsAction()
@@ -73,11 +68,6 @@ sealed class PaymentMethodsAction {
     object PayWithSelectedIdealBank : PaymentMethodsAction()
     object PayWithPayByBank : PaymentMethodsAction()
     object Update : PaymentMethodsAction() // TODO: temporary
-
-    data class StartBankPayment(val orderId: String) : PaymentMethodsAction()
-    object CancelBankPayment : PaymentMethodsAction()
-    object ResetBankPolling : PaymentMethodsAction()
-    object RetryBankPolling : PaymentMethodsAction()
 }
 
 // view-model custom factory to inject the `judo` configuration object
@@ -85,7 +75,6 @@ internal class PaymentMethodsViewModelFactory(
     private val cardDate: CardDate,
     private val cardRepository: TokenizedCardRepository,
     private val service: JudoApiService,
-    private val pollingService: PollingService,
     private val application: Application,
     private val judo: Judo
 ) : NewInstanceFactory() {
@@ -96,7 +85,6 @@ internal class PaymentMethodsViewModelFactory(
                 cardDate,
                 cardRepository,
                 service,
-                pollingService,
                 application,
                 judo
             ) as T
@@ -108,7 +96,6 @@ class PaymentMethodsViewModel(
     private val cardDate: CardDate,
     private val cardRepository: TokenizedCardRepository,
     private val service: JudoApiService,
-    private val pollingService: PollingService,
     application: Application,
     private val judo: Judo
 ) : AndroidViewModel(application) {
@@ -116,9 +103,7 @@ class PaymentMethodsViewModel(
     val model = MutableLiveData<PaymentMethodsModel>()
     val judoApiCallResult = MutableLiveData<JudoApiCallResult<Receipt>>()
     val payWithIdealObserver = MutableLiveData<Event<String>>()
-    val payByBankResult = MutableLiveData<JudoApiCallResult<BankSaleResponse>>()
-    val payByBankStatusResult =
-        MutableLiveData<PollingResult<BankSaleStatusResponse>>()
+    val payWithPayByBankObserver = MutableLiveData<Event<Nothing>>()
 
     private val context = application
 
@@ -169,7 +154,7 @@ class PaymentMethodsViewModel(
             }
             is PaymentMethodsAction.PayWithPayByBank -> {
                 buildModel(isLoading = true)
-                payWithPayByBank()
+                payWithPayByBankObserver.postValue(Event())
             }
             is PaymentMethodsAction.SelectStoredCard -> {
                 buildModel(isLoading = false, selectedCardId = action.id)
@@ -181,24 +166,10 @@ class PaymentMethodsViewModel(
             is PaymentMethodsAction.SelectPaymentMethod -> {
                 if (selectedPaymentMethod != action.method) buildModel(action.method, false)
             }
-            is PaymentMethodsAction.UpdatePayWithGooglePayButtonState -> buildModel(
+            is PaymentMethodsAction.UpdateButtonState -> buildModel(
                 isLoading = !action.buttonEnabled
             )
             is PaymentMethodsAction.EditMode -> buildModel(isInEditMode = action.isInEditMode)
-            is PaymentMethodsAction.StartBankPayment -> {
-                pollingService.apply {
-                    orderId = action.orderId
-                    result = { payByBankStatusResult.postValue(it) }
-                }
-                viewModelScope.launch {
-                    pollingService.start()
-                }
-            }
-            is PaymentMethodsAction.CancelBankPayment -> pollingService.cancel()
-            is PaymentMethodsAction.ResetBankPolling -> pollingService.reset()
-            is PaymentMethodsAction.RetryBankPolling -> viewModelScope.launch {
-                pollingService.retry()
-            }
         }
     }
 
@@ -253,25 +224,6 @@ class PaymentMethodsViewModel(
                 )
             }
         }
-    }
-
-    private fun payWithPayByBank() = viewModelScope.launch {
-        val request = BankSaleRequest.Builder()
-            .setAmount(judo.amount.amount.toBigDecimalOrNull())
-            .setMerchantPaymentReference(judo.reference.paymentReference)
-            .setMerchantConsumerReference(judo.reference.consumerReference)
-            .setSiteId(judo.siteId)
-            .setMobileNumber(judo.pbbaConfiguration?.mobileNumber)
-            .setEmailAddress(judo.pbbaConfiguration?.emailAddress)
-            .setAppearsOnStatement(judo.pbbaConfiguration?.appearsOnStatement)
-            .setPaymentMetadata(judo.reference.metaData?.toMap())
-            .build()
-
-        val response = service.sale(request)
-
-        payByBankResult.postValue(response)
-
-        buildModel()
     }
 
     private fun deleteCardWithId(id: Int) = viewModelScope.launch {
