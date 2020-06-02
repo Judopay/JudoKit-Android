@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -41,7 +42,6 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
     private lateinit var viewModel: PollingStatusViewModel
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
     var result: JudoPaymentResult = JudoPaymentResult.UserCancelled()
-    private var bankOrderId: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = object : Dialog(requireContext(), theme) {
@@ -125,10 +125,7 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
                 this
             )
             pollingStatusView.visibility = View.VISIBLE
-            requireDialog().window?.apply {
-                addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-                setDimAmount(0.5f)
-            }
+            requireDialog().window?.setDimAmount(0.5f)
         } else {
             sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Error(JudoError.generic()))
             findNavController().popBackStack()
