@@ -33,7 +33,7 @@ import com.zapp.library.merchant.ui.PBBAPopupCallback
 import com.zapp.library.merchant.util.PBBAAppUtils
 import kotlinx.android.synthetic.main.polling_status_fragment.*
 
-class PollingStatusFragment : DialogFragment() {
+class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
 
     private lateinit var viewModel: PollingStatusViewModel
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
@@ -77,6 +77,15 @@ class PollingStatusFragment : DialogFragment() {
         pollingStatusView.onButtonClickListener = { handlePollingStatusViewButtonClick(it) }
     }
 
+    // PBBAPopupCallback
+    override fun onRetryPaymentRequest() {
+        viewModel.send(PollingAction.RetryPolling)
+    }
+
+    override fun onDismissPopup() {
+        viewModel.send(PollingAction.CancelPolling)
+    }
+
     private fun handlePayByBankResult(result: JudoApiCallResult<BankSaleResponse>?) {
         when (result) {
             is JudoApiCallResult.Success -> handleBankSaleResponse(result.data)
@@ -93,15 +102,7 @@ class PollingStatusFragment : DialogFragment() {
                 requireActivity(),
                 data.secureToken,
                 data.pbbaBrn,
-                object : PBBAPopupCallback {
-                    override fun onRetryPaymentRequest() {
-                        viewModel.send(PollingAction.RetryPolling)
-                    }
-
-                    override fun onDismissPopup() {
-                        viewModel.send(PollingAction.CancelPolling)
-                    }
-                }
+                this
             )
             bankOrderId = data.orderId
         } else {

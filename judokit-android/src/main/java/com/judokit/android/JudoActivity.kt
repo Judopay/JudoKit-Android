@@ -139,13 +139,14 @@ class JudoActivity : AppCompatActivity() {
                     message = result.error.message
                     details.add(result.error)
                 }
+
                 if (judo.paymentWidgetType.isExposed) {
                     setResult(result.code, result.toIntent())
                     finish()
                     return
-                } else {
-                    showAlert(this, result.error.message)
                 }
+
+                showAlert(this, result.error.message)
             }
             is JudoPaymentResult.UserCancelled -> {
                 with(viewModel.error) {
