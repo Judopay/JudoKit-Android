@@ -1,9 +1,7 @@
 package com.judokit.android.examples.model
 
-import android.content.Context
 import androidx.annotation.StringRes
 import com.judokit.android.examples.R
-import com.judokit.android.ui.common.PayByBankButton
 
 enum class DemoFeature(
     @StringRes val title: Int,

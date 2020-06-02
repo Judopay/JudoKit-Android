@@ -1,14 +1,10 @@
 package com.judokit.android.ui.pollingstatus
 
 import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -23,6 +19,7 @@ import com.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.toJudoPaymentResult
 import com.judokit.android.api.model.response.toJudoResult
+import com.judokit.android.applyDialogStyling
 import com.judokit.android.judo
 import com.judokit.android.model.INTERNAL_ERROR
 import com.judokit.android.model.JudoError
@@ -39,10 +36,12 @@ import kotlinx.android.synthetic.main.polling_status_fragment.*
 
 private const val ORDER_ID = "aptrId"
 
-class PollingStatusFragment : DialogFragment() {
+class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
 
     private lateinit var viewModel: PollingStatusViewModel
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
+    var result: JudoPaymentResult = JudoPaymentResult.UserCancelled()
+    private var bankOrderId: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = object : Dialog(requireContext(), theme) {
@@ -51,15 +50,7 @@ class PollingStatusFragment : DialogFragment() {
                 super.onBackPressed()
             }
         }
-        dialog.window?.apply {
-            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            requestFeature(Window.FEATURE_NO_TITLE)
-            setFlags(
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-            )
-            clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-        }
+        dialog.window?.applyDialogStyling()
         return dialog
     }
 
@@ -97,19 +88,32 @@ class PollingStatusFragment : DialogFragment() {
             viewModel.send(PollingAction.PayWithPayByBank)
         }
 
-        viewModel.payByBankResult.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is JudoApiCallResult.Success -> handleBankSaleResponse(it.data)
-                is JudoApiCallResult.Failure -> {
-                    sharedViewModel.bankPaymentResult.postValue(it.toJudoPaymentResult())
-                    findNavController().popBackStack()
-                }
-            }
+        viewModel.payByBankResult.observe(viewLifecycleOwner, Observer { result ->
+            handlePayByBankResult(result)
         })
-        viewModel.saleStatusResult.observe(viewLifecycleOwner, Observer {
-            handleBankResult(it)
+        viewModel.saleStatusResult.observe(viewLifecycleOwner, Observer { result ->
+            handleSaleStatusResult(result)
         })
         pollingStatusView.onButtonClickListener = { handlePollingStatusViewButtonClick(it) }
+    }
+
+    // PBBAPopupCallback
+    override fun onRetryPaymentRequest() {
+        viewModel.send(PollingAction.RetryPolling)
+    }
+
+    override fun onDismissPopup() {
+        viewModel.send(PollingAction.CancelPolling)
+    }
+
+    private fun handlePayByBankResult(result: JudoApiCallResult<BankSaleResponse>?) {
+        when (result) {
+            is JudoApiCallResult.Success -> handleBankSaleResponse(result.data)
+            is JudoApiCallResult.Failure -> {
+                sharedViewModel.bankPaymentResult.postValue(result.toJudoPaymentResult())
+                findNavController().popBackStack()
+            }
+        }
     }
 
     private fun handleBankSaleResponse(data: BankSaleResponse?) {
@@ -118,15 +122,7 @@ class PollingStatusFragment : DialogFragment() {
                 requireActivity(),
                 data.secureToken,
                 data.pbbaBrn,
-                object : PBBAPopupCallback {
-                    override fun onRetryPaymentRequest() {
-                        // noop
-                    }
-
-                    override fun onDismissPopup() {
-                        // noop
-                    }
-                }
+                this
             )
             pollingStatusView.visibility = View.VISIBLE
             requireDialog().window?.apply {
@@ -170,8 +166,7 @@ class PollingStatusFragment : DialogFragment() {
         }
     }
 
-    var result: JudoPaymentResult = JudoPaymentResult.UserCancelled()
-    private fun handleBankResult(pollingResult: PollingResult<BankSaleStatusResponse>?) {
+    private fun handleSaleStatusResult(pollingResult: PollingResult<BankSaleStatusResponse>?) {
         pollingStatusView.state = when (pollingResult) {
             is PollingResult.Processing -> PollingStatusViewState.PROCESSING
             is PollingResult.Delay -> PollingStatusViewState.DELAY

@@ -181,11 +181,12 @@ class DemoFeatureListActivity : AppCompatActivity() {
     }
 
     private fun navigateToJudoPaymentWidgetWithConfigurations(judo: Judo) {
-        val intent = if (judo.paymentWidgetType == PaymentWidgetType.PAY_BY_BANK_APP) {
-            Intent(this, PayByBankActivity::class.java)
+        val myClass = if (judo.paymentWidgetType == PaymentWidgetType.PAY_BY_BANK_APP) {
+            PayByBankActivity::class.java
         } else {
-            Intent(this, JudoActivity::class.java)
+            JudoActivity::class.java
         }
+        Intent(this, myClass)
         intent.putExtra(JUDO_OPTIONS, judo)
         startActivityForResult(intent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
     }

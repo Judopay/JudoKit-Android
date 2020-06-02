@@ -98,8 +98,6 @@ internal class PollingStatusViewModelTest {
         coVerify { pollingService.start() }
     }
 
-    var bool = false
-
     @DisplayName("Given send with StartPolling action is called, when result is invoked, then update saleStatusResult")
     @Test
     fun updateSaleStatusResultOnPollingResultInvoked() {
