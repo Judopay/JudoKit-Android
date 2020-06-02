@@ -52,20 +52,22 @@ class PollingStatusViewModel(
     fun send(action: PollingAction) {
         when (action) {
             is PollingAction.PayWithPayByBank -> payWithPayByBank()
-            is PollingAction.StartPolling -> {
-                viewModelScope.launch {
-                    pollingService.apply {
-                        orderId = action.orderId
-                        result = { saleStatusResult.postValue(it) }
-                    }
-                        pollingService.start()
-                }
-            }
+            is PollingAction.StartPolling -> startPolling(action.orderId)
             is PollingAction.CancelPolling -> pollingService.cancel()
             is PollingAction.ResetPolling -> pollingService.reset()
             is PollingAction.RetryPolling -> viewModelScope.launch {
                 pollingService.retry()
             }
+        }
+    }
+
+    private fun startPolling(myOrderId: String) {
+        viewModelScope.launch {
+            pollingService.apply {
+                orderId = myOrderId
+                result = { saleStatusResult.postValue(it) }
+            }
+            pollingService.start()
         }
     }
 

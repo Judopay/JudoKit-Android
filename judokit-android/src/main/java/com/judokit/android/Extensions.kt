@@ -1,10 +1,14 @@
 package com.judokit.android
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
@@ -114,4 +118,14 @@ internal fun requireAmount(paymentWidgetType: PaymentWidgetType, amount: Amount?
         requireNotNullOrEmpty(amount?.amount, "amount")
         amount!!
     }
+}
+
+internal fun Window.configureDialog() {
+    setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    requestFeature(Window.FEATURE_NO_TITLE)
+    setFlags(
+        WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+        WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+    )
+    setDimAmount(0.0f)
 }
