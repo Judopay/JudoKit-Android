@@ -28,6 +28,7 @@ import com.judokit.android.db.JudoRoomDatabase
 import com.judokit.android.db.repository.TokenizedCardRepository
 import com.judokit.android.judo
 import com.judokit.android.model.JudoPaymentResult
+import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
 import com.judokit.android.ui.ideal.JUDO_IDEAL_BANK
 import com.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapter
@@ -45,6 +46,7 @@ import kotlinx.android.synthetic.main.payment_methods_fragment.*
 import kotlinx.android.synthetic.main.payment_methods_header_view.*
 
 internal const val CARD_VERIFICATION = "com.judokit.android.model.CardVerificationModel"
+internal const val PAYMENT_WIDGET_TYPE = "com.judokit.android.model.paymentWidgetType"
 
 data class PaymentMethodsModel(
     val headerModel: PaymentMethodsHeaderViewModel,
@@ -74,7 +76,11 @@ class PaymentMethodsFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (judo.pbbaConfiguration?.deepLinkURL != null) {
-            findNavController().navigate(R.id.action_paymentMethodsFragment_to_payByBankFragment)
+            findNavController().navigate(
+                R.id.action_paymentMethodsFragment_to_PollingStatusFragment, bundleOf(
+                    PAYMENT_WIDGET_TYPE to PaymentWidgetType.PAY_BY_BANK_APP
+                )
+            )
         }
         val application = requireActivity().application
         val cardDate = CardDate()
@@ -111,7 +117,11 @@ class PaymentMethodsFragment : Fragment() {
 
         viewModel.payWithPayByBankObserver.observe(viewLifecycleOwner, Observer {
             if (!it.hasBeenHandled()) {
-                findNavController().navigate(R.id.action_paymentMethodsFragment_to_payByBankFragment)
+                findNavController().navigate(
+                    R.id.action_paymentMethodsFragment_to_PollingStatusFragment, bundleOf(
+                        PAYMENT_WIDGET_TYPE to PaymentWidgetType.PAY_BY_BANK_APP
+                    )
+                )
             }
         })
 

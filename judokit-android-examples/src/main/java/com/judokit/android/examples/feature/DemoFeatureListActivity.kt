@@ -114,8 +114,9 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 LAST_USED_WIDGET_TYPE_LEY,
                 PaymentWidgetType.PAYMENT_METHODS.name
             ) ?: PaymentWidgetType.PAYMENT_METHODS.name
+            val newPbbaConfig = pbbaConfiguration.newBuilder().setDeepLinkURL(uri).build()
             val judo = getJudo(PaymentWidgetType.valueOf(lastUsedPaymentWidget)).newBuilder()
-                .setPBBAConfiguration(pbbaConfiguration.newBuilder().setDeepLinkURL(uri).build())
+                .setPBBAConfiguration(newPbbaConfig)
                 .build()
             newIntent.putExtra(JUDO_OPTIONS, judo)
             startActivityForResult(newIntent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)

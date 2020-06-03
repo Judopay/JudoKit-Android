@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -22,21 +21,19 @@ import com.judokit.android.api.model.response.toJudoPaymentResult
 import com.judokit.android.api.model.response.toJudoResult
 import com.judokit.android.applyDialogStyling
 import com.judokit.android.judo
-import com.judokit.android.model.INTERNAL_ERROR
 import com.judokit.android.model.JudoError
 import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.model.JudoResult
+import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.service.polling.PollingResult
 import com.judokit.android.service.polling.PollingService
 import com.judokit.android.ui.common.getLocale
+import com.judokit.android.ui.paymentmethods.PAYMENT_WIDGET_TYPE
 import com.judokit.android.ui.paymentmethods.components.PollingStatusViewAction
 import com.judokit.android.ui.paymentmethods.components.PollingStatusViewState
 import com.zapp.library.merchant.ui.PBBAPopupCallback
 import com.zapp.library.merchant.util.PBBAAppUtils
 import kotlinx.android.synthetic.main.polling_status_fragment.*
-
-// TODO: Change to orderId
-private const val ORDER_ID = "aptrId"
 
 class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
 
@@ -64,30 +61,25 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        val paymentWidgetType = arguments?.getParcelable<PaymentWidgetType>(PAYMENT_WIDGET_TYPE)
+
         val application = requireActivity().application
         val service = JudoApiServiceFactory.createApiService(application, judo)
         val pollingService = PollingService(service)
-        val factory = PollingStatusViewModelFactory(service, pollingService, application, judo)
+        val factory = PollingStatusViewModelFactory(
+            service,
+            pollingService,
+            application,
+            judo,
+            paymentWidgetType
+        )
         viewModel = ViewModelProvider(this, factory).get(PollingStatusViewModel::class.java)
 
-        val url = judo.pbbaConfiguration?.deepLinkURL
+        viewModel.send(PollingAction.Initialise(sharedViewModel.error.details.isEmpty()))
 
-        if (url != null && sharedViewModel.error.details.isEmpty()) {
-            pollingStatusView.visibility = View.VISIBLE
-            requireDialog().window?.apply {
-                addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-                setDimAmount(0.5f)
-            }
-            val orderId = url.getQueryParameter(ORDER_ID)
-            if (orderId != null) {
-                viewModel.send(PollingAction.StartPolling(orderId))
-            } else {
-                val error = JudoError(INTERNAL_ERROR, "OrderID cannot be null")
-                sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Error(error))
-            }
-        } else {
-            viewModel.send(PollingAction.PayWithPayByBank)
-        }
+        viewModel.viewObserver.observe(viewLifecycleOwner, Observer {
+            requireDialog().window?.setDimAmount(0.5f)
+        })
 
         viewModel.payByBankResult.observe(viewLifecycleOwner, Observer { result ->
             handlePayByBankResult(result)
