@@ -77,10 +77,6 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
 
         viewModel.send(PollingAction.Initialise(sharedViewModel.error.details.isEmpty()))
 
-        viewModel.viewObserver.observe(viewLifecycleOwner, Observer {
-            requireDialog().window?.setDimAmount(0.5f)
-        })
-
         viewModel.payByBankResult.observe(viewLifecycleOwner, Observer { result ->
             handlePayByBankResult(result)
         })

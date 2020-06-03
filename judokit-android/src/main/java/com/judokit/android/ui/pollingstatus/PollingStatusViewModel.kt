@@ -17,11 +17,9 @@ import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.service.polling.PollingResult
 import com.judokit.android.service.polling.PollingService
 import com.judokit.android.toMap
-import com.judokit.android.ui.paymentmethods.model.Event
 import kotlinx.coroutines.launch
 
-// TODO: Change to orderId
-private const val ORDER_ID = "aptrId"
+private const val ORDER_ID = "orderId"
 
 sealed class PollingAction {
     data class Initialise(val isDeepLinkCallback: Boolean) : PollingAction()
@@ -61,7 +59,6 @@ class PollingStatusViewModel(
 
     val payByBankResult = MutableLiveData<JudoApiCallResult<BankSaleResponse>>()
     val saleStatusResult = MutableLiveData<PollingResult<BankSaleStatusResponse>>()
-    val viewObserver = MutableLiveData<Event<Nothing>>()
 
     fun send(action: PollingAction) {
         when (action) {
@@ -95,7 +92,6 @@ class PollingStatusViewModel(
     private fun handleDeepLinkCallback(url: Uri) {
         val orderId = url.getQueryParameter(ORDER_ID)
         if (orderId != null) {
-            viewObserver.postValue(Event())
             startPolling(orderId)
         } else {
             saleStatusResult.postValue(PollingResult.CallFailure())

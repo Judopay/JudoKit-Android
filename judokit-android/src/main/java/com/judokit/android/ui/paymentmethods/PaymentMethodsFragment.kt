@@ -76,11 +76,7 @@ class PaymentMethodsFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (judo.pbbaConfiguration?.deepLinkURL != null) {
-            findNavController().navigate(
-                R.id.action_paymentMethodsFragment_to_PollingStatusFragment, bundleOf(
-                    PAYMENT_WIDGET_TYPE to PaymentWidgetType.PAY_BY_BANK_APP
-                )
-            )
+            navigateToPollingStatus()
         }
         val application = requireActivity().application
         val cardDate = CardDate()
@@ -117,11 +113,7 @@ class PaymentMethodsFragment : Fragment() {
 
         viewModel.payWithPayByBankObserver.observe(viewLifecycleOwner, Observer {
             if (!it.hasBeenHandled()) {
-                findNavController().navigate(
-                    R.id.action_paymentMethodsFragment_to_PollingStatusFragment, bundleOf(
-                        PAYMENT_WIDGET_TYPE to PaymentWidgetType.PAY_BY_BANK_APP
-                    )
-                )
+                navigateToPollingStatus()
             }
         })
 
@@ -131,6 +123,14 @@ class PaymentMethodsFragment : Fragment() {
                 viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
                 sharedViewModel.paymentResult.postValue(result)
             })
+    }
+
+    private fun navigateToPollingStatus() {
+        findNavController().navigate(
+            R.id.action_paymentMethodsFragment_to_PollingStatusFragment, bundleOf(
+                PAYMENT_WIDGET_TYPE to PaymentWidgetType.PAY_BY_BANK_APP
+            )
+        )
     }
 
     private fun handleFail(error: ApiError?) {

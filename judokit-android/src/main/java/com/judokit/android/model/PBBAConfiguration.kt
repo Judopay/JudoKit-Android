@@ -45,13 +45,6 @@ class PBBAConfiguration internal constructor(
         }
     }
 
-    fun newBuilder() = Builder()
-        .setMobileNumber(mobileNumber)
-        .setEmailAddress(emailAddress)
-        .setAppearsOnStatementAs(appearsOnStatement)
-        .setDeepLinkURL(deepLinkURL)
-        .setDeepLinkScheme(deepLinkScheme)
-
     override fun toString(): String {
         return "PBBAConfiguration(mobileNumber=$mobileNumber, emailAddress=$emailAddress, appearsOnStatement=$appearsOnStatement, deepLinkURL=$deepLinkURL, deepLinkScheme=$deepLinkScheme)"
     }
