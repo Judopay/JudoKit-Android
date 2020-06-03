@@ -82,8 +82,6 @@ class PollingStatusViewModel(
                     payWithPayByBank()
                 }
             }
-            //TODO: add ideal
-            //PaymentWidgetType.IDEAL ->
             else -> throw IllegalStateException("Unsupported PaymentWidgetType")
         }
     }

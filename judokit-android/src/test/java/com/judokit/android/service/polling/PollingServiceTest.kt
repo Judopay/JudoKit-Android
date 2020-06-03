@@ -27,9 +27,10 @@ internal class PollingServiceTest {
         result = { actualResult = it }
     }
 
-    private val statusResponse = mockk<BankSaleStatusResponse>(relaxed = true){
+    private val statusResponse = mockk<BankSaleStatusResponse>(relaxed = true) {
         every { orderDetails.orderStatus } returns OrderStatus.SUCCEEDED
     }
+
     private val statusCallResult: JudoApiCallResult.Success<BankSaleStatusResponse> =
         mockk(relaxed = true) {
             every { data } returns statusResponse
