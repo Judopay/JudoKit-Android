@@ -178,7 +178,9 @@ def addJacocoTask(variant) {
             '**/model/JudoResult.*',
             '**/model/PrimaryAccountDetails.*',
             '**/model/Event.*',
+            '**/model/PBBAConfiguration.*',
             '**/api/model/request/Address.*',
+            '**/api/model/request/BankSaleRequest.*',
             '**/api/model/response/CardVerificationResult.*',
             '**/api/model/response/Consumer.*',
             '**/api/model/response/OrderDetails.*',
@@ -194,7 +196,8 @@ def addJacocoTask(variant) {
             '**/api/error/TokenSecretError.*',
             '**/ui/common/ProgressButton.*',
             '**/ui/common/GooglePayButton.*',
-            '**/ui/common/PayByBankButton.*'
+            '**/ui/common/PayByBankButton.*',
+            '**/service/polling/PollingResult.*'
     ]
 
     def sourceDirectories = files(variant.sourceSets.java.srcDirs.flatten())

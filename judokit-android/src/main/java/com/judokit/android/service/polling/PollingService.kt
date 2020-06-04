@@ -16,7 +16,7 @@ class PollingService(private val service: JudoApiService) {
     lateinit var orderId: String
     lateinit var result: (PollingResult<BankSaleStatusResponse>) -> Unit
 
-    var timeout = TIMEOUT
+    private var timeout = TIMEOUT
 
     suspend fun start() {
         while (timeout > 0L) {
