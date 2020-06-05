@@ -18,6 +18,7 @@ internal class BankSaleRequestTest {
                 .setMerchantConsumerReference("reference")
                 .setMerchantPaymentReference("reference")
                 .setSiteId("site id")
+                .setMerchantRedirectUrl("judo://pay")
                 .build(),
             getBankSaleRequest()
         )

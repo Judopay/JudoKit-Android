@@ -1,6 +1,7 @@
 package com.judokit.android.ui.pollingstatus
 
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.Observer
 import com.judokit.android.InstantExecutorExtension
 import com.judokit.android.Judo
@@ -11,6 +12,7 @@ import com.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.model.Amount
 import com.judokit.android.model.Currency
+import com.judokit.android.model.PBBAConfiguration
 import com.judokit.android.model.PaymentMethod
 import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.Reference
@@ -30,9 +32,11 @@ import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
@@ -47,7 +51,13 @@ internal class PollingStatusViewModelTest {
     private val application: Application = mockk(relaxed = true)
     private val judo = getJudo()
 
-    private val sut = PollingStatusViewModel(service, pollingService, application, judo)
+    private val sut = PollingStatusViewModel(
+        service,
+        pollingService,
+        application,
+        judo,
+        PaymentWidgetType.PAY_BY_BANK_APP
+    )
 
     private val payByBankResult = spyk<Observer<JudoApiCallResult<BankSaleResponse>>>()
     private val saleStatusResult = spyk<Observer<PollingResult<BankSaleStatusResponse>>>()
@@ -73,7 +83,7 @@ internal class PollingStatusViewModelTest {
     @DisplayName("Given send with PayWithPayByBank action is called, then make service.sale call")
     @Test
     fun updatePaymentMethodModelOnPayWithPayByBank() {
-        sut.send(PollingAction.PayWithPayByBank)
+        sut.send(PollingAction.Initialise(false))
 
         coVerify { service.sale(any<BankSaleRequest>()) }
     }
@@ -85,7 +95,7 @@ internal class PollingStatusViewModelTest {
 
         sut.payByBankResult.observeForever(payByBankResult)
 
-        sut.send(PollingAction.PayWithPayByBank)
+        sut.send(PollingAction.Initialise(false))
 
         verify { payByBankResult.onChanged(capture(slots)) }
     }
@@ -93,7 +103,7 @@ internal class PollingStatusViewModelTest {
     @DisplayName("Given send with StartPolling action is called, then start polling")
     @Test
     fun startPollingOnStartPolling() {
-        sut.send(PollingAction.StartPolling("orderId"))
+        sut.send(PollingAction.Initialise(true))
 
         coVerify { pollingService.start() }
     }
@@ -107,10 +117,67 @@ internal class PollingStatusViewModelTest {
         } answers { lambda<(PollingResult<BankSaleStatusResponse>) -> Unit>().invoke(mockk(relaxed = true)) }
         sut.saleStatusResult.observeForever(saleStatusResult)
 
-        sut.send(PollingAction.StartPolling("orderId"))
+        sut.send(PollingAction.Initialise(true))
 
         verify { saleStatusResult.onChanged(capture(slots)) }
     }
+
+    @DisplayName("Given send with Initialise action is called, when payment widget type is PAYMENT_METHODS, then throw exception")
+    @Test
+    fun throwExceptionOnPaymentMethodsWidgetType() {
+        val sut = PollingStatusViewModel(
+            service,
+            pollingService,
+            application,
+            judo,
+            PaymentWidgetType.PAYMENT_METHODS
+        )
+
+        assertThrows<IllegalStateException> { sut.send(PollingAction.Initialise(false)) }
+    }
+
+    @DisplayName("Given paymentWidgetType is null, when judo.paymentWidgetType is PAY_BY_BANK and isDeeplinkCallback true, then update saleStatusResult")
+    @Test
+    fun updateSaleResultOnIsJudoPaymentWidgetTypePayByBank() {
+        every { judo.paymentWidgetType } returns PaymentWidgetType.PAY_BY_BANK_APP
+
+        val sut = PollingStatusViewModel(
+            service,
+            pollingService,
+            application,
+            judo,
+            null
+        )
+
+        val slots = mutableListOf<JudoApiCallResult<BankSaleResponse>>()
+
+        sut.payByBankResult.observeForever(payByBankResult)
+
+        sut.send(PollingAction.Initialise(false))
+
+        verify { payByBankResult.onChanged(capture(slots)) }
+    }
+
+
+    @DisplayName("Given send with Initialise action is called, when orderId is null, then update saleStatusResult with Failure")
+    @Test
+    fun updateSaleStatusResultWithFailureOnOrderIdNull() {
+        val uri: Uri = mockk(relaxed = true){
+            every { getQueryParameter("orderId") } returns null
+        }
+        every { judo.pbbaConfiguration?.deepLinkURL } returns uri
+
+        val slots = mutableListOf<PollingResult<BankSaleStatusResponse>>()
+
+        sut.saleStatusResult.observeForever(saleStatusResult)
+
+        sut.send(PollingAction.Initialise(true))
+
+        verify { saleStatusResult.onChanged(capture(slots)) }
+        val result = slots[0]
+        Assertions.assertEquals(result, PollingResult.CallFailure())
+    }
+
 
     @DisplayName("Given send with CancelPolling action is called, then cancel polling")
     @Test
@@ -145,5 +212,13 @@ internal class PollingStatusViewModelTest {
         every { apiSecret } returns "secret"
         every { amount } returns Amount("1", Currency.GBP)
         every { reference } returns Reference("consumer", "payment")
+        every { pbbaConfiguration } returns
+                PBBAConfiguration(
+                    "mobile",
+                    "email",
+                    "appearOnStatementAs",
+                    mockk(relaxed = true),
+                    "judo://pay"
+                )
     }
 }

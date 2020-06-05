@@ -27,7 +27,10 @@ internal class PollingServiceTest {
         result = { actualResult = it }
     }
 
-    private val statusResponse = mockk<BankSaleStatusResponse>(relaxed = true)
+    private val statusResponse = mockk<BankSaleStatusResponse>(relaxed = true) {
+        every { orderDetails.orderStatus } returns OrderStatus.SUCCEEDED
+    }
+
     private val statusCallResult: JudoApiCallResult.Success<BankSaleStatusResponse> =
         mockk(relaxed = true) {
             every { data } returns statusResponse
@@ -75,7 +78,7 @@ internal class PollingServiceTest {
 
         runBlockingTest { sut.start() }
 
-        val expectedResult = PollingResult.Success(statusResponse)
+        val expectedResult = PollingResult.Failure(statusResponse)
         assertEquals(expectedResult, actualResult)
     }
 
@@ -97,7 +100,7 @@ internal class PollingServiceTest {
 
         runBlockingTest { sut.start() }
 
-        val expectedResult = PollingResult.Failure()
+        val expectedResult = PollingResult.CallFailure()
         assertEquals(expectedResult, actualResult)
     }
 
@@ -111,7 +114,7 @@ internal class PollingServiceTest {
 
         runBlockingTest { sut.start() }
 
-        val expectedResult = PollingResult.Failure(error = failStatusCallResult.error)
+        val expectedResult = PollingResult.CallFailure(error = failStatusCallResult.error)
         assertEquals(expectedResult, actualResult)
     }
 

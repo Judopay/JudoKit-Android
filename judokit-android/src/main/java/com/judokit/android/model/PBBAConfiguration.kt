@@ -1,5 +1,6 @@
 package com.judokit.android.model
 
+import android.net.Uri
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
@@ -7,13 +8,17 @@ import kotlinx.android.parcel.Parcelize
 class PBBAConfiguration internal constructor(
     val mobileNumber: String?,
     val emailAddress: String?,
-    val appearsOnStatement: String?
+    val appearsOnStatement: String?,
+    val deepLinkURL: Uri?,
+    val deepLinkScheme: String
 ) : Parcelable {
 
     class Builder {
         private var mobileNumber: String? = null
         private var emailAddress: String? = null
         private var appearsOnStatementAs: String? = null
+        private var deepLinkURL: Uri? = null
+        private var deepLinkScheme: String? = null
 
         fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = mobileNumber }
 
@@ -21,12 +26,26 @@ class PBBAConfiguration internal constructor(
             apply { this.appearsOnStatementAs = appearsOnStatementAs }
 
         fun setEmailAddress(emailAddress: String?) = apply { this.emailAddress = emailAddress }
+
+        fun setDeepLinkURL(deepLinkURL: Uri?) = apply { this.deepLinkURL = deepLinkURL }
+
+        fun setDeepLinkScheme(deepLinkScheme: String?) =
+            apply { this.deepLinkScheme = deepLinkScheme }
+
+        fun build(): PBBAConfiguration {
+            val myDeepLinkScheme = requireNotNull(deepLinkScheme)
+
+            return PBBAConfiguration(
+                mobileNumber,
+                emailAddress,
+                appearsOnStatementAs,
+                deepLinkURL,
+                myDeepLinkScheme
+            )
+        }
     }
 
-    fun build(): PBBAConfiguration =
-        PBBAConfiguration(mobileNumber, emailAddress, appearsOnStatement)
-
     override fun toString(): String {
-        return "PBBAConfiguration(mobileNumber=$mobileNumber, emailAddress=$emailAddress, appearsOnStatement=$appearsOnStatement)"
+        return "PBBAConfiguration(mobileNumber=$mobileNumber, emailAddress=$emailAddress, appearsOnStatement=$appearsOnStatement, deepLinkURL=$deepLinkURL, deepLinkScheme=$deepLinkScheme)"
     }
 }

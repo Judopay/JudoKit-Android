@@ -1,8 +1,11 @@
 package com.judokit.android.model
 
+import android.os.Parcelable
 import com.judokit.android.R
+import kotlinx.android.parcel.Parcelize
 
-enum class PaymentWidgetType {
+@Parcelize
+enum class PaymentWidgetType : Parcelable {
     CARD_PAYMENT,
     PRE_AUTH,
     REGISTER_CARD,

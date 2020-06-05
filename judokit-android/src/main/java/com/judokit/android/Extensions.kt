@@ -127,5 +127,5 @@ internal fun Window.applyDialogStyling() {
         WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
         WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
     )
-    setDimAmount(0.0f)
+    setDimAmount(0.5f)
 }
