@@ -1,7 +1,7 @@
 package com.judokit.android.examples.model
 
 import androidx.annotation.StringRes
-import com.judokit.android.examples.R
+import com.judopay.samples.R
 
 enum class DemoFeature(
     @StringRes val title: Int,
