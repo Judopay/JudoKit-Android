@@ -36,6 +36,7 @@
         <activity
             android:name=".feature.DemoFeatureListActivity"
             android:label="@string/title_activity_demo_feature_list"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.DemoApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,10 +44,21 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="pay"
+                    android:scheme="judo" />
+            </intent-filter>
         </activity>
-        <activity android:name=".feature.paybybank.PayByBankActivity"
+        <activity
+            android:name=".feature.paybybank.PayByBankActivity"
             android:label="@string/title_activity_pay_by_bank"
-            android:theme="@style/Theme.DemoApp"/>
+            android:theme="@style/Theme.DemoApp" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

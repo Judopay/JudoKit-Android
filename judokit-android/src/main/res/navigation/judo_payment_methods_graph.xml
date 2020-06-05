@@ -36,12 +36,13 @@
                 app:argType="string" />
         </action>
 
-        <deepLink
-            android:id="@+id/deepLink"
-            app:uri="fb://messaging/" />
         <action
-            android:id="@+id/action_paymentMethodsFragment_to_payByBankFragment"
-            app:destination="@id/pollingStatusFragment" />
+            android:id="@+id/action_paymentMethodsFragment_to_PollingStatusFragment"
+            app:destination="@id/pollingStatusFragment">
+            <argument
+                android:name="com.judokit.android.model.paymentWidgetType"
+                app:argType="com.judokit.android.model.PaymentWidgetType" />
+        </action>
 
     </fragment>
 

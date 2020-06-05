@@ -16,7 +16,7 @@ class PollingService(private val service: JudoApiService) {
     lateinit var orderId: String
     lateinit var result: (PollingResult<BankSaleStatusResponse>) -> Unit
 
-    var timeout = TIMEOUT
+    private var timeout = TIMEOUT
 
     suspend fun start() {
         while (timeout > 0L) {
@@ -29,12 +29,12 @@ class PollingService(private val service: JudoApiService) {
                         handleOrderStatus(saleStatusResponse.data)
                     } else {
                         timeout = 0L
-                        result.invoke(PollingResult.Failure())
+                        result.invoke(PollingResult.CallFailure())
                     }
                 }
                 is JudoApiCallResult.Failure -> {
                     timeout = 0L
-                    result.invoke(PollingResult.Failure(error = saleStatusResponse.error))
+                    result.invoke(PollingResult.CallFailure(error = saleStatusResponse.error))
                 }
             }
         }
@@ -42,10 +42,13 @@ class PollingService(private val service: JudoApiService) {
 
     private fun handleOrderStatus(data: BankSaleStatusResponse) {
         when (data.orderDetails.orderStatus) {
-            OrderStatus.SUCCEEDED,
-            OrderStatus.FAILED -> {
+            OrderStatus.SUCCEEDED -> {
                 timeout = 0L
                 result.invoke(PollingResult.Success(data))
+            }
+            OrderStatus.FAILED -> {
+                timeout = 0L
+                result.invoke(PollingResult.Failure(data))
             }
             OrderStatus.PENDING -> {
                 timeout -= REQUEST_DELAY
