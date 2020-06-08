@@ -36,6 +36,7 @@ sealed class CardEntryAction {
     data class ValidationPassed(val input: InputModel) : CardEntryAction()
     data class InsertCard(val tokenizedCard: CardToken) : CardEntryAction()
     data class ScanCard(val result: CardScanningResult) : CardEntryAction()
+    data class EnableFormFields(val formFields: List<FormFieldType>) : CardEntryAction()
     object SubmitForm : CardEntryAction()
 }
 
@@ -43,12 +44,19 @@ internal class CardEntryViewModelFactory(
     private val judo: Judo,
     private val service: JudoApiService,
     private val cardRepository: TokenizedCardRepository,
+    private val fromPaymentMethodsPayment: Boolean,
     private val application: Application
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == CardEntryViewModel::class.java) {
-            CardEntryViewModel(judo, service, cardRepository, application) as T
+            CardEntryViewModel(
+                judo,
+                service,
+                cardRepository,
+                fromPaymentMethodsPayment,
+                application
+            ) as T
         } else super.create(modelClass)
     }
 }
@@ -57,32 +65,35 @@ class CardEntryViewModel(
     private val judo: Judo,
     private val service: JudoApiService,
     private val cardRepository: TokenizedCardRepository,
+    private val fromPaymentMethodsPayment: Boolean,
     application: Application
 ) : AndroidViewModel(application) {
 
     val model = MutableLiveData<CardEntryFragmentModel>()
     val judoApiCallResult = MutableLiveData<JudoApiCallResult<Receipt>>()
+    val securityCodeResult = MutableLiveData<String>()
 
     private val context = application
 
     // used when the form needs to be pre populated, ex. `Scan Card`
     private var inputModel = InputModel()
 
-    private val enabledFormFields: List<FormFieldType>
-        get() {
+    var enabledFormFields: List<FormFieldType> = getDefaultEnabledFields()
+
+    private fun getDefaultEnabledFields() = if (fromPaymentMethodsPayment) {
+        mutableListOf(FormFieldType.SECURITY_NUMBER)
+    } else {
             val fields = mutableListOf(
                 FormFieldType.NUMBER,
                 FormFieldType.HOLDER_NAME,
                 FormFieldType.EXPIRATION_DATE,
                 FormFieldType.SECURITY_NUMBER
             )
-
             if (judo.uiConfiguration.avsEnabled) {
                 fields.add(FormFieldType.COUNTRY)
                 fields.add(FormFieldType.POST_CODE)
             }
-
-            return fields
+        fields
         }
 
     val submitButtonText: Int
@@ -94,7 +105,11 @@ class CardEntryViewModel(
             PaymentWidgetType.CHECK_CARD -> R.string.pay_now
             PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
             PaymentWidgetType.PAYMENT_METHODS,
-            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> R.string.add_card
+            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> if (fromPaymentMethodsPayment) {
+                R.string.pay_now
+            } else {
+                R.string.add_card
+            }
             else -> R.string.empty
         }
 
@@ -121,6 +136,10 @@ class CardEntryViewModel(
                 inputModel = action.result.toInputModel()
                 buildModel(isLoading = false, isFormValid = false)
             }
+            is CardEntryAction.EnableFormFields -> {
+                enabledFormFields = action.formFields
+                buildModel(isLoading = false, isFormValid = false)
+            }
         }
     }
 
@@ -141,9 +160,12 @@ class CardEntryViewModel(
             PaymentWidgetType.CREATE_CARD_TOKEN,
             PaymentWidgetType.PAYMENT_METHODS,
             PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
-            PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS -> performSaveCardRequest(
-                addressBuilder
-            )
+            PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS -> if (fromPaymentMethodsPayment) {
+                securityCodeResult.postValue(inputModel.securityNumber)
+                return@launch
+            } else {
+                performSaveCardRequest(addressBuilder)
+            }
             else -> throw IllegalStateException("Unsupported PaymentWidgetType")
         }
 
@@ -265,5 +287,21 @@ class CardEntryViewModel(
     private fun insert(card: TokenizedCardEntity) = viewModelScope.launch {
         cardRepository.updateAllLastUsedToFalse()
         cardRepository.insert(card)
+    }
+
+    private fun setDefaultEnabledFields(): MutableList<FormFieldType> {
+        val fields = mutableListOf(
+            FormFieldType.NUMBER,
+            FormFieldType.HOLDER_NAME,
+            FormFieldType.EXPIRATION_DATE,
+            FormFieldType.SECURITY_NUMBER
+        )
+
+        if (judo.uiConfiguration.avsEnabled) {
+            fields.add(FormFieldType.COUNTRY)
+            fields.add(FormFieldType.POST_CODE)
+        }
+
+        return fields
     }
 }

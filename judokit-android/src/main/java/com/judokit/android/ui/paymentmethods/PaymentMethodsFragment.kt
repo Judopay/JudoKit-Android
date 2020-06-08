@@ -47,6 +47,7 @@ import kotlinx.android.synthetic.main.payment_methods_header_view.*
 
 internal const val CARD_VERIFICATION = "com.judokit.android.model.CardVerificationModel"
 internal const val PAYMENT_WIDGET_TYPE = "com.judokit.android.model.paymentWidgetType"
+internal const val FROM_PAYMENT_METHODS_PAYMENT = "com.judokit.android.fromPaymentMethodsPayment"
 
 data class PaymentMethodsModel(
     val headerModel: PaymentMethodsHeaderViewModel,
@@ -123,6 +124,9 @@ class PaymentMethodsFragment : Fragment() {
                 viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
                 sharedViewModel.paymentResult.postValue(result)
             })
+        sharedViewModel.securityCodeResult.observe(viewLifecycleOwner, Observer { securityCode ->
+            viewModel.send(PaymentMethodsAction.PayWithSelectedStoredCard(securityCode))
+        })
     }
 
     private fun navigateToPollingStatus() {
@@ -242,9 +246,17 @@ class PaymentMethodsFragment : Fragment() {
 
         paymentCallToActionView.callbackListener = {
             when (it) {
-                PaymentCallToActionType.PAY_WITH_CARD ->
-                    viewModel.send(PaymentMethodsAction.PayWithSelectedStoredCard)
-
+                PaymentCallToActionType.PAY_WITH_CARD -> {
+                    if (judo.uiConfiguration.shouldEnterSecurityCode) {
+                        findNavController().navigate(
+                            R.id.action_paymentMethodsFragment_to_cardEntryFragment, bundleOf(
+                            FROM_PAYMENT_METHODS_PAYMENT to true
+                            )
+                        )
+                    } else {
+                        viewModel.send(PaymentMethodsAction.PayWithSelectedStoredCard())
+                    }
+                }
                 PaymentCallToActionType.PAY_WITH_GOOGLE_PAY -> {
                     sharedViewModel.send(JudoSharedAction.LoadGPayPaymentData)
                     viewModel.send(PaymentMethodsAction.UpdateButtonState(false))

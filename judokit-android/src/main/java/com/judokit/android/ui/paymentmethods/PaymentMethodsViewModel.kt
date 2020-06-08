@@ -64,7 +64,7 @@ sealed class PaymentMethodsAction {
     data class EditMode(val isInEditMode: Boolean) : PaymentMethodsAction()
     data class SelectIdealBank(val idealBank: IdealBank) : PaymentMethodsAction()
 
-    object PayWithSelectedStoredCard : PaymentMethodsAction()
+    data class PayWithSelectedStoredCard(val securityCode: String? = null) : PaymentMethodsAction()
     object PayWithSelectedIdealBank : PaymentMethodsAction()
     object PayWithPayByBank : PaymentMethodsAction()
     object Update : PaymentMethodsAction() // TODO: temporary
@@ -146,7 +146,7 @@ class PaymentMethodsViewModel(
             }
             is PaymentMethodsAction.PayWithSelectedStoredCard -> {
                 buildModel(isLoading = true)
-                payWithSelectedCard()
+                payWithSelectedCard(action.securityCode)
             }
             is PaymentMethodsAction.PayWithSelectedIdealBank -> {
                 buildModel(isLoading = true)
@@ -174,7 +174,7 @@ class PaymentMethodsViewModel(
     }
 
     @Throws(IllegalStateException::class)
-    private fun payWithSelectedCard() = viewModelScope.launch {
+    private fun payWithSelectedCard(securityCode: String?) = viewModelScope.launch {
         model.value?.let { methodModel ->
             if (methodModel.currentPaymentMethod is CardPaymentMethodModel) {
                 val card = methodModel.currentPaymentMethod.selectedCard
@@ -193,6 +193,7 @@ class PaymentMethodsViewModel(
                             .setCardLastFour(entity.ending)
                             .setCardToken(entity.token)
                             .setCardType(entity.network.typeId)
+                            .setCv2(securityCode)
                             .setAddress(Address.Builder().build())
                             .build()
 

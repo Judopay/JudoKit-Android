@@ -14,7 +14,11 @@
 
         <action
             android:id="@+id/action_paymentMethodsFragment_to_cardEntryFragment"
-            app:destination="@id/cardEntryFragment" />
+            app:destination="@id/cardEntryFragment">
+            <argument
+                android:name="com.judokit.android.fromPaymentMethodsPayment"
+                app:argType="boolean" />
+        </action>
 
         <action
             android:id="@+id/action_paymentMethodsFragment_to_cardVerificationFragment"

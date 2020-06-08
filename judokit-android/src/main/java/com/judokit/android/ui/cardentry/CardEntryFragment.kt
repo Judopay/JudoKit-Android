@@ -37,7 +37,9 @@ import com.judokit.android.judo
 import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.model.isCardPaymentWidget
 import com.judokit.android.model.isPaymentMethodsWidget
+import com.judokit.android.ui.cardentry.components.FormFieldType
 import com.judokit.android.ui.paymentmethods.CARD_VERIFICATION
+import com.judokit.android.ui.paymentmethods.FROM_PAYMENT_METHODS_PAYMENT
 import kotlinx.android.synthetic.main.card_entry_fragment.*
 
 class CardEntryFragment : BottomSheetDialogFragment() {
@@ -54,12 +56,22 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
         val service = JudoApiServiceFactory.createApiService(application, judo)
-        val factory = CardEntryViewModelFactory(judo, service, cardRepository, application)
+        val fromPaymentMethodPayment = arguments?.getBoolean(FROM_PAYMENT_METHODS_PAYMENT) ?: false
+        val factory = CardEntryViewModelFactory(judo, service, cardRepository, fromPaymentMethodPayment, application)
 
         viewModel = ViewModelProvider(this, factory).get(CardEntryViewModel::class.java)
 
+        if (fromPaymentMethodPayment) {
+            scanCardButton.visibility = View.GONE
+            viewModel.send(CardEntryAction.EnableFormFields(listOf(FormFieldType.SECURITY_NUMBER)))
+        }
+
         viewModel.model.observe(viewLifecycleOwner, Observer { updateWithModel(it) })
         viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer { dispatchApiResult(it) })
+        viewModel.securityCodeResult.observe(viewLifecycleOwner, Observer {
+            sharedViewModel.securityCodeResult.postValue(it)
+            findNavController().popBackStack()
+        })
 
         formView.submitButtonText = viewModel.submitButtonText
 
