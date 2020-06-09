@@ -7,7 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.snackbar.Snackbar
-import com.judokit.android.examples.R
+import com.judopay.samples.R
 import com.judokit.android.examples.common.startResultActivity
 import com.judokit.android.examples.model.Result
 import com.judokit.android.examples.result.adapter.ResultActivityAdapter
