@@ -19,6 +19,7 @@ import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.Receipt
 import com.judokit.android.db.entity.TokenizedCardEntity
 import com.judokit.android.db.repository.TokenizedCardRepository
+import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.CardScanningResult
 import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.toInputModel
@@ -44,7 +45,7 @@ internal class CardEntryViewModelFactory(
     private val judo: Judo,
     private val service: JudoApiService,
     private val cardRepository: TokenizedCardRepository,
-    private val fromPaymentMethodsPayment: Boolean,
+    private val selectedCardNetwork: CardNetwork?,
     private val application: Application
 ) : ViewModelProvider.NewInstanceFactory() {
 
@@ -54,7 +55,7 @@ internal class CardEntryViewModelFactory(
                 judo,
                 service,
                 cardRepository,
-                fromPaymentMethodsPayment,
+                selectedCardNetwork,
                 application
             ) as T
         } else super.create(modelClass)
@@ -65,7 +66,7 @@ class CardEntryViewModel(
     private val judo: Judo,
     private val service: JudoApiService,
     private val cardRepository: TokenizedCardRepository,
-    private val fromPaymentMethodsPayment: Boolean,
+    private val selectedCardNetwork: CardNetwork?,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -80,7 +81,7 @@ class CardEntryViewModel(
 
     var enabledFormFields: List<FormFieldType> = getDefaultEnabledFields()
 
-    private fun getDefaultEnabledFields() = if (fromPaymentMethodsPayment) {
+    private fun getDefaultEnabledFields() = if (selectedCardNetwork != null) {
         mutableListOf(FormFieldType.SECURITY_NUMBER)
     } else {
             val fields = mutableListOf(
@@ -105,7 +106,7 @@ class CardEntryViewModel(
             PaymentWidgetType.CHECK_CARD -> R.string.pay_now
             PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
             PaymentWidgetType.PAYMENT_METHODS,
-            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> if (fromPaymentMethodsPayment) {
+            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> if (selectedCardNetwork != null) {
                 R.string.pay_now
             } else {
                 R.string.add_card
@@ -125,7 +126,7 @@ class CardEntryViewModel(
             }
             is CardEntryAction.ValidationPassed -> {
                 inputModel = action.input
-                buildModel(isLoading = false, isFormValid = true)
+                buildModel(isLoading = false, isFormValid = true, cardNetwork = selectedCardNetwork)
             }
             is CardEntryAction.SubmitForm -> {
                 buildModel(isLoading = true, isFormValid = true)
@@ -138,7 +139,7 @@ class CardEntryViewModel(
             }
             is CardEntryAction.EnableFormFields -> {
                 enabledFormFields = action.formFields
-                buildModel(isLoading = false, isFormValid = false)
+                buildModel(isLoading = false, isFormValid = false, cardNetwork = selectedCardNetwork)
             }
         }
     }
@@ -160,7 +161,7 @@ class CardEntryViewModel(
             PaymentWidgetType.CREATE_CARD_TOKEN,
             PaymentWidgetType.PAYMENT_METHODS,
             PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
-            PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS -> if (fromPaymentMethodsPayment) {
+            PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS -> if (selectedCardNetwork != null) {
                 securityCodeResult.postValue(inputModel.securityNumber)
                 return@launch
             } else {
@@ -267,7 +268,7 @@ class CardEntryViewModel(
         return service.saveCard(request)
     }
 
-    private fun buildModel(isLoading: Boolean, isFormValid: Boolean) {
+    private fun buildModel(isLoading: Boolean, isFormValid: Boolean, cardNetwork: CardNetwork? = null) {
         val buttonState = when {
             isLoading -> ButtonState.Loading
             isFormValid -> ButtonState.Enabled(submitButtonText)
@@ -278,7 +279,8 @@ class CardEntryViewModel(
             inputModel, // Model to pre fill the form
             enabledFormFields, // Fields enabled
             judo.supportedCardNetworks.toList(), // Supported networks
-            buttonState
+            buttonState,
+            cardNetwork
         )
 
         model.postValue(CardEntryFragmentModel(formModel))

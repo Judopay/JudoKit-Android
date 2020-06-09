@@ -13,7 +13,8 @@ import com.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
 
 internal class CardNumberInputMaskTextWatcher(
     private val editText: EditText,
-    private val securityCodeMask: SecurityCodeInputMaskTextWatcher
+    private val securityCodeMask: SecurityCodeInputMaskTextWatcher,
+    private val cardNetwork: CardNetwork? = null
 ) : InputMaskTextWatcher(editText, DEFAULT_CARD_NUMBER_MASK) {
 
     override fun afterTextChanged(s: Editable?) {
@@ -32,8 +33,8 @@ internal class CardNumberInputMaskTextWatcher(
         layout?.accessoryImage = resId
 
         securityCodeMask.apply {
-            hint = network?.securityCodeName ?: "CVV"
-            mask = network?.securityCodeNumberMask ?: "###"
+            hint = cardNetwork?.securityCodeName ?: network?.securityCodeName ?: "CVV"
+            mask = cardNetwork?.securityCodeNumberMask ?: network?.securityCodeNumberMask ?: "###"
         }
     }
 }

@@ -16,6 +16,8 @@ import com.judokit.android.model.Country
 import com.judokit.android.model.asCountry
 import com.judokit.android.model.displayName
 import com.judokit.android.model.postcodeMaxLength
+import com.judokit.android.model.securityCodeName
+import com.judokit.android.model.securityCodeNumberMask
 import com.judokit.android.parentOfType
 import com.judokit.android.subViewsWithType
 import com.judokit.android.ui.cardentry.formatting.CardNumberInputMaskTextWatcher
@@ -67,7 +69,8 @@ data class FormModel(
     val formModel: InputModel,
     val enabledFields: List<FormFieldType>,
     val supportedNetworks: List<CardNetwork>,
-    val paymentButtonState: ButtonState = ButtonState.Disabled(R.string.add_card)
+    val paymentButtonState: ButtonState = ButtonState.Disabled(R.string.add_card),
+    val cardNetwork: CardNetwork? = null
 )
 
 typealias OnSubmitListener = (model: InputModel) -> Unit
@@ -110,39 +113,30 @@ class FormView @JvmOverloads constructor(
     override fun onFinishInflate() {
         super.onFinishInflate()
 
-        setupFieldsFormatting()
         setupFieldsContent()
     }
 
     private fun setupFieldsFormatting() {
-        // expiration date field formatting
-        with(editTextForType(FormFieldType.EXPIRATION_DATE)) {
-            val mask = InputMaskTextWatcher(
-                this,
-                "##/##"
-            )
-            addTextChangedListener(mask)
+        val securityCodeMask = securityCodeFormatter()
+        model.enabledFields.forEach {
+            when (it) {
+                FormFieldType.EXPIRATION_DATE -> expirationDateFormatting()
+                FormFieldType.NUMBER -> numberFormatter(securityCodeMask)
+                FormFieldType.COUNTRY -> countryFormatter()
+                FormFieldType.SECURITY_NUMBER -> {
+                    if (model.cardNetwork != null) {
+                        securityCodeMask.apply {
+                            hint = model.cardNetwork?.securityCodeName ?: "CVV"
+                            mask = model.cardNetwork?.securityCodeNumberMask ?: "###"
+                        }
+                    }
+                }
+                else -> return@forEach
+            }
         }
+    }
 
-        // security code field formatting
-        val securityCode = editTextForType(FormFieldType.SECURITY_NUMBER)
-        val securityCodeMask =
-            SecurityCodeInputMaskTextWatcher(
-                securityCode
-            )
-        securityCode.addTextChangedListener(securityCodeMask)
-
-        // card number field formatting
-        with(editTextForType(FormFieldType.NUMBER)) {
-            val mask =
-                CardNumberInputMaskTextWatcher(
-                    this,
-                    securityCodeMask
-                )
-            addTextChangedListener(mask)
-        }
-
-        // Postcode formatting
+    private fun countryFormatter() {
         val country =
             inputModelValueOfFieldWithType(FormFieldType.COUNTRY).asCountry() ?: Country.OTHER
         onCountryDidSelect(country)
@@ -150,6 +144,38 @@ class FormView @JvmOverloads constructor(
         countryTextInputEditText.setOnItemClickListener { _, _, _, id ->
             val selected = Country.values()[id.toInt()]
             onCountryDidSelect(selected)
+        }
+    }
+
+    private fun numberFormatter(securityCodeMask: SecurityCodeInputMaskTextWatcher) {
+        with(editTextForType(FormFieldType.NUMBER)) {
+            val mask =
+                CardNumberInputMaskTextWatcher(
+                    this,
+                    securityCodeMask,
+                    model.cardNetwork
+                )
+            addTextChangedListener(mask)
+        }
+    }
+
+    private fun securityCodeFormatter(): SecurityCodeInputMaskTextWatcher {
+        val securityCode = editTextForType(FormFieldType.SECURITY_NUMBER)
+        val securityCodeMask =
+            SecurityCodeInputMaskTextWatcher(
+                securityCode
+            )
+        securityCode.addTextChangedListener(securityCodeMask)
+        return securityCodeMask
+    }
+
+    private fun expirationDateFormatting() {
+        with(editTextForType(FormFieldType.EXPIRATION_DATE)) {
+            val mask = InputMaskTextWatcher(
+                this,
+                "##/##"
+            )
+            addTextChangedListener(mask)
         }
     }
 
@@ -202,8 +228,12 @@ class FormView @JvmOverloads constructor(
             if (it.fieldType == type) {
                 // TODO: to rethink this logic
                 if (it is SecurityCodeValidator) {
-                    val cardNumber = valueOfFieldWithType(FormFieldType.NUMBER)
-                    it.cardNetwork = CardNetwork.ofNumber(cardNumber)
+                    if (model.cardNetwork != null) {
+                        it.cardNetwork = model.cardNetwork
+                    } else {
+                        val cardNumber = valueOfFieldWithType(FormFieldType.NUMBER)
+                        it.cardNetwork = CardNetwork.ofNumber(cardNumber)
+                    }
                 }
                 it.validate(value, event)
             } else null
@@ -291,6 +321,7 @@ class FormView @JvmOverloads constructor(
     }
 
     private fun update() {
+        setupFieldsFormatting()
         setupVisibilityOfFields()
         submitButton.state = model.paymentButtonState
 
