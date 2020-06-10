@@ -51,8 +51,8 @@ import com.judokit.android.ui.paymentmethods.model.PayByBankPaymentMethodModel
 import com.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import com.judokit.android.ui.paymentmethods.model.PaymentMethodModel
 import com.zapp.library.merchant.util.PBBAAppUtils
-import kotlinx.coroutines.launch
 import java.util.Date
+import kotlinx.coroutines.launch
 
 // view-model actions
 sealed class PaymentMethodsAction {
@@ -181,7 +181,7 @@ class PaymentMethodsViewModel(
             if (methodModel.currentPaymentMethod is CardPaymentMethodModel) {
                 val card = methodModel.currentPaymentMethod.selectedCard
                 card?.let {
-                    if (judo.uiConfiguration.shouldEnterSecurityCode && securityCode == null) {
+                    if (judo.uiConfiguration.shouldPaymentWidgetVerifySecurityCode && securityCode == null) {
                         selectedCardNetworkObserver.postValue(it.network)
                         buildModel(isLoading = false)
                     } else {

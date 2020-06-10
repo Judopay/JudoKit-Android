@@ -1,6 +1,7 @@
 package com.judokit.android.ui.cardentry
 
 import android.app.Application
+import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,7 +32,7 @@ import com.judokit.android.ui.common.ButtonState
 import com.judokit.android.ui.paymentmethods.toTokenizedCardEntity
 import kotlinx.coroutines.launch
 
-data class CardEntryFragmentModel(val formModel: FormModel)
+data class CardEntryFragmentModel(val formModel: FormModel, val displayScanButton: Int)
 
 sealed class CardEntryAction {
     data class ValidationPassed(val input: InputModel) : CardEntryAction()
@@ -283,27 +284,16 @@ class CardEntryViewModel(
             cardNetwork
         )
 
-        model.postValue(CardEntryFragmentModel(formModel))
+        val displayScanButton = if (cardNetwork == null) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+        model.postValue(CardEntryFragmentModel(formModel, displayScanButton))
     }
 
     private fun insert(card: TokenizedCardEntity) = viewModelScope.launch {
         cardRepository.updateAllLastUsedToFalse()
         cardRepository.insert(card)
-    }
-
-    private fun setDefaultEnabledFields(): MutableList<FormFieldType> {
-        val fields = mutableListOf(
-            FormFieldType.NUMBER,
-            FormFieldType.HOLDER_NAME,
-            FormFieldType.EXPIRATION_DATE,
-            FormFieldType.SECURITY_NUMBER
-        )
-
-        if (judo.uiConfiguration.avsEnabled) {
-            fields.add(FormFieldType.COUNTRY)
-            fields.add(FormFieldType.POST_CODE)
-        }
-
-        return fields
     }
 }

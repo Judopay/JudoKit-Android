@@ -63,7 +63,6 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         viewModel = ViewModelProvider(this, factory).get(CardEntryViewModel::class.java)
 
         if (selectedCardNetwork != null) {
-            scanCardButton.visibility = View.GONE
             viewModel.send(CardEntryAction.EnableFormFields(listOf(FormFieldType.SECURITY_NUMBER)))
         }
 
@@ -141,6 +140,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     }
 
     private fun updateWithModel(model: CardEntryFragmentModel) {
+        scanCardButton.visibility = model.displayScanButton
         formView.model = model.formModel
     }
 

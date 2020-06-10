@@ -132,7 +132,7 @@
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:iconSpaceReserved="false"
-            app:key="should_enter_security_code"
+            app:key="should_payment_widget_verify_security_code"
             app:summary="@string/security_code_summary"
             app:title="@string/security_code_title" />
 

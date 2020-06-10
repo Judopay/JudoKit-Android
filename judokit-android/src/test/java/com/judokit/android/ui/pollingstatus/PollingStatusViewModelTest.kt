@@ -158,11 +158,10 @@ internal class PollingStatusViewModelTest {
         verify { payByBankResult.onChanged(capture(slots)) }
     }
 
-
     @DisplayName("Given send with Initialise action is called, when orderId is null, then update saleStatusResult with Failure")
     @Test
     fun updateSaleStatusResultWithFailureOnOrderIdNull() {
-        val uri: Uri = mockk(relaxed = true){
+        val uri: Uri = mockk(relaxed = true) {
             every { getQueryParameter("orderId") } returns null
         }
         every { judo.pbbaConfiguration?.deepLinkURL } returns uri
@@ -177,7 +176,6 @@ internal class PollingStatusViewModelTest {
         val result = slots[0]
         Assertions.assertEquals(result, PollingResult.CallFailure())
     }
-
 
     @DisplayName("Given send with CancelPolling action is called, then cancel polling")
     @Test
