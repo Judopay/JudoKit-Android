@@ -80,9 +80,7 @@ class CardEntryViewModel(
     // used when the form needs to be pre populated, ex. `Scan Card`
     private var inputModel = InputModel()
 
-    var enabledFormFields: List<FormFieldType> = getDefaultEnabledFields()
-
-    private fun getDefaultEnabledFields() = if (selectedCardNetwork != null) {
+    private var enabledFormFields: List<FormFieldType> = if (selectedCardNetwork != null) {
         mutableListOf(FormFieldType.SECURITY_NUMBER)
     } else {
             val fields = mutableListOf(
