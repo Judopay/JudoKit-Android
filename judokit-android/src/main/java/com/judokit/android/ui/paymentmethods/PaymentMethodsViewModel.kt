@@ -148,7 +148,8 @@ class PaymentMethodsViewModel(
             }
             is PaymentMethodsAction.PayWithSelectedStoredCard -> {
                 buildModel(isLoading = true)
-                payWithSelectedCard(action.securityCode)
+                val paymentMethod = model.value?.currentPaymentMethod
+                payWithSelectedCard(paymentMethod, action.securityCode)
             }
             is PaymentMethodsAction.PayWithSelectedIdealBank -> {
                 buildModel(isLoading = true)
@@ -175,49 +176,63 @@ class PaymentMethodsViewModel(
         }
     }
 
+    private fun payWithSelectedCard(paymentMethod: PaymentMethodModel?, securityCode: String?) {
+        if (paymentMethod is CardPaymentMethodModel) {
+            val isSecurityCodeRequired =
+                judo.uiConfiguration.shouldPaymentWidgetVerifySecurityCode && securityCode == null
+            if (isSecurityCodeRequired) {
+                showSecurityCodeDialog(paymentMethod)
+            } else {
+                sendCardPaymentRequest(paymentMethod, securityCode)
+            }
+        }
+    }
+
+    private fun showSecurityCodeDialog(paymentMethod: CardPaymentMethodModel) {
+        val card = paymentMethod.selectedCard
+        card?.let {
+            selectedCardNetworkObserver.postValue(it.network)
+            buildModel(isLoading = false)
+        }
+    }
+
     @Throws(IllegalStateException::class)
-    private fun payWithSelectedCard(securityCode: String?) = viewModelScope.launch {
-        model.value?.let { methodModel ->
-            if (methodModel.currentPaymentMethod is CardPaymentMethodModel) {
-                val card = methodModel.currentPaymentMethod.selectedCard
-                card?.let {
-                    if (judo.uiConfiguration.shouldPaymentWidgetVerifySecurityCode && securityCode == null) {
-                        selectedCardNetworkObserver.postValue(it.network)
-                        buildModel(isLoading = false)
-                    } else {
-                        val entity = cardRepository.findWithId(it.id)
-                        if (judo.paymentWidgetType == PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS) {
-                            buildReceipt(entity)
-                        } else {
-                            val request = TokenRequest.Builder()
-                                .setAmount(judo.amount.amount)
-                                .setCurrency(judo.amount.currency.name)
-                                .setJudoId(judo.judoId)
-                                .setYourPaymentReference(judo.reference.paymentReference)
-                                .setYourConsumerReference(judo.reference.consumerReference)
-                                .setYourPaymentMetaData(judo.reference.metaData?.toMap())
-                                .setCardLastFour(entity.ending)
-                                .setCardToken(entity.token)
-                                .setCardType(entity.network.typeId)
-                                .setCv2(securityCode)
-                                .setAddress(Address.Builder().build())
-                                .build()
+    private fun sendCardPaymentRequest(
+        paymentMethod: CardPaymentMethodModel,
+        securityCode: String?
+    ) = viewModelScope.launch {
+        val card = paymentMethod.selectedCard
+        card?.let {
+            val entity = cardRepository.findWithId(it.id)
+            if (judo.paymentWidgetType == PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS) {
+                buildReceipt(entity)
+            } else {
+                val request = TokenRequest.Builder()
+                    .setAmount(judo.amount.amount)
+                    .setCurrency(judo.amount.currency.name)
+                    .setJudoId(judo.judoId)
+                    .setYourPaymentReference(judo.reference.paymentReference)
+                    .setYourConsumerReference(judo.reference.consumerReference)
+                    .setYourPaymentMetaData(judo.reference.metaData?.toMap())
+                    .setCardLastFour(entity.ending)
+                    .setCardToken(entity.token)
+                    .setCardType(entity.network.typeId)
+                    .setCv2(securityCode)
+                    .setAddress(Address.Builder().build())
+                    .build()
 
-                            val response = when (judo.paymentWidgetType) {
-                                PaymentWidgetType.PAYMENT_METHODS -> service.tokenPayment(request)
-                                PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> service.preAuthTokenPayment(
-                                    request
-                                )
-                                else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
-                            }
-                            cardRepository.updateAllLastUsedToFalse()
-                            cardRepository.insert(entity.apply { isLastUsed = true })
-
-                            buildModel()
-                            judoApiCallResult.postValue(response)
-                        }
-                    }
+                val response = when (judo.paymentWidgetType) {
+                    PaymentWidgetType.PAYMENT_METHODS -> service.tokenPayment(request)
+                    PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> service.preAuthTokenPayment(
+                        request
+                    )
+                    else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
                 }
+                cardRepository.updateAllLastUsedToFalse()
+                cardRepository.insert(entity.apply { isLastUsed = true })
+
+                buildModel()
+                judoApiCallResult.postValue(response)
             }
         }
     }
