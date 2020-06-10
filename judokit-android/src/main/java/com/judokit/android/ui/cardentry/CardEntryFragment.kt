@@ -140,7 +140,11 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     }
 
     private fun updateWithModel(model: CardEntryFragmentModel) {
-        scanCardButton.visibility = model.displayScanButton
+        if (model.displayScanButton) {
+            scanCardButton.visibility = View.VISIBLE
+        } else {
+            scanCardButton.visibility = View.GONE
+        }
         formView.model = model.formModel
     }
 
