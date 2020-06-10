@@ -18,7 +18,6 @@ import com.judokit.android.model.Currency
 import com.judokit.android.model.PaymentMethod
 import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.Reference
-import com.judokit.android.service.polling.PollingService
 import com.judokit.android.ui.common.ButtonState
 import com.judokit.android.ui.paymentmethods.adapter.model.IdealBank
 import com.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodGenericItem

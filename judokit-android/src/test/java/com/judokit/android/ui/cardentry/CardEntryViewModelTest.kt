@@ -197,7 +197,7 @@ internal class CardEntryViewModelTest {
     @DisplayName("Given send is called with SubmitForm action, when payment widget type is card payment, then should invoke service.payment() method")
     @Test
     fun makePaymentRequestOnSubmitFormWithCardPaymentWidgetType() {
-        sut = CardEntryViewModel(judo, service, repository,selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
 
         sut.send(CardEntryAction.ValidationPassed(inputModel))
         sut.send(CardEntryAction.SubmitForm)
