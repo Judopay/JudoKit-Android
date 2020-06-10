@@ -32,7 +32,7 @@ import com.judokit.android.ui.common.ButtonState
 import com.judokit.android.ui.paymentmethods.toTokenizedCardEntity
 import kotlinx.coroutines.launch
 
-data class CardEntryFragmentModel(val formModel: FormModel, val displayScanButton: Int)
+data class CardEntryFragmentModel(val formModel: FormModel, val displayScanButton: Int = View.VISIBLE)
 
 sealed class CardEntryAction {
     data class ValidationPassed(val input: InputModel) : CardEntryAction()

@@ -217,6 +217,7 @@ internal class JudoBuilderTest {
 
         assertFalse(judoBuilder.build().uiConfiguration.avsEnabled)
         assertTrue(judoBuilder.build().uiConfiguration.shouldDisplayAmount)
+        assertTrue(judoBuilder.build().uiConfiguration.shouldPaymentWidgetVerifySecurityCode)
     }
 
     @Test
