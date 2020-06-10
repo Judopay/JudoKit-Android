@@ -101,6 +101,6 @@
     <string name="avs_summary">Turn on to enable Address Verification Service.</string>
 
     <string name="security_code_title">Security code</string>
-    <string name="security_code_summary">Turn on to enable security code verification on payment methods screen.</string>
+    <string name="security_code_summary">Turn on to enable security code verification in the payment methods screen.</string>
 
 </resources>

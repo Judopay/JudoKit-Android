@@ -179,7 +179,7 @@ class PaymentMethodsViewModel(
     private fun payWithSelectedCard(paymentMethod: PaymentMethodModel?, securityCode: String?) {
         if (paymentMethod is CardPaymentMethodModel) {
             val isSecurityCodeRequired =
-                judo.uiConfiguration.shouldPaymentWidgetVerifySecurityCode && securityCode == null
+                judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode && securityCode == null
             if (isSecurityCodeRequired) {
                 showSecurityCodeDialog(paymentMethod)
             } else {
@@ -354,7 +354,7 @@ class PaymentMethodsViewModel(
             amount = judo.amount.formatted,
             buttonType = method.type.paymentButtonType,
             paymentButtonState = buildPaymentButtonState(method.type, isLoading, cardModel),
-            shouldDisplayAmount = judo.uiConfiguration.shouldDisplayAmount
+            shouldDisplayAmount = judo.uiConfiguration.shouldPaymentMethodsDisplayAmount
         )
 
         val headerViewModel = PaymentMethodsHeaderViewModel(cardModel, callToActionModel)
