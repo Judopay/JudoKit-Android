@@ -62,6 +62,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer { dispatchApiResult(it) })
 
         formView.submitButtonText = viewModel.submitButtonText
+        formView.amount = viewModel.amount
 
         sharedViewModel.scanCardResult.observe(viewLifecycleOwner, Observer {
             viewModel.send(CardEntryAction.ScanCard(it))

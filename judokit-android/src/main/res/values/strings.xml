@@ -1,6 +1,9 @@
 <resources>
     <string name="judokit_android">JudoKit-Android</string>
-    <string name="pay_now">Pay Now</string>
+    <string name="pay_now">%1$s Pay Now</string>
+    <string name="check_card">Check Card</string>
+    <string name="register_card">Register Card</string>
+    <string name="save_card">Save Card</string>
     <string name="connected_cards">Connected Cards</string>
     <string name="button_edit">Edit</string>
     <string name="button_done">Done</string>

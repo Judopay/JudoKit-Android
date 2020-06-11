@@ -232,9 +232,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
         get() {
             val isAVSEnabled = sharedPreferences.getBoolean("is_avs_enabled", false)
             val shouldDisplayAmount = sharedPreferences.getBoolean("should_display_amount", true)
+            val shouldPaymentButtonDisplayAmount = sharedPreferences.getBoolean("should_payment_button_display_amount", false)
             return UiConfiguration.Builder()
                 .setAvsEnabled(isAVSEnabled)
                 .setShouldDisplayAmount(shouldDisplayAmount)
+                .setShouldPaymentButtonDisplayAmount(shouldPaymentButtonDisplayAmount)
                 .build()
         }
 
