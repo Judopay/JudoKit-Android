@@ -1,7 +1,6 @@
 package com.judokit.android.ui.cardentry
 
 import android.app.Application
-import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,7 +31,7 @@ import com.judokit.android.ui.common.ButtonState
 import com.judokit.android.ui.paymentmethods.toTokenizedCardEntity
 import kotlinx.coroutines.launch
 
-data class CardEntryFragmentModel(val formModel: FormModel, val displayScanButton: Boolean)
+data class CardEntryFragmentModel(val formModel: FormModel, val displayScanButton: Boolean = true)
 
 sealed class CardEntryAction {
     data class ValidationPassed(val input: InputModel) : CardEntryAction()

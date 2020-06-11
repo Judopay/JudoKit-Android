@@ -1,7 +1,6 @@
 package com.judokit.android.ui.cardentry
 
 import android.app.Application
-import android.view.View
 import androidx.lifecycle.Observer
 import com.judokit.android.InstantExecutorExtension
 import com.judokit.android.Judo
@@ -35,9 +34,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
-import org.hamcrest.CoreMatchers.any
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -403,7 +403,7 @@ internal class CardEntryViewModelTest {
         assertEquals(CardEntryFragmentModel(mockFormModel), formModel)
     }
 
-    @DisplayName("Given selectedCardNetwork is not null, then should update model with displayScanButton GONE")
+    @DisplayName("Given selectedCardNetwork is not null, then should update model with displayScanButton false")
     @Test
     fun shouldUpdateModelWithDisplayScanButtonGoneOnSelectedCardNetworkNotNull() {
         val slots = mutableListOf<CardEntryFragmentModel>()
@@ -416,10 +416,10 @@ internal class CardEntryViewModelTest {
         verify { modelMock.onChanged(capture(slots)) }
 
         val formModel = slots[1]
-        assertEquals(View.GONE, formModel.displayScanButton)
+        assertFalse(formModel.displayScanButton)
     }
 
-    @DisplayName("Given selectedCardNetwork is null, then should update model with displayScanButton GONE")
+    @DisplayName("Given selectedCardNetwork is null, then should update model with displayScanButton true")
     @Test
     fun shouldUpdateModelWithDisplayScanButtonVisibleOnSelectedCardNetworkNull() {
         val slots = mutableListOf<CardEntryFragmentModel>()
@@ -432,7 +432,7 @@ internal class CardEntryViewModelTest {
         verify { modelMock.onChanged(capture(slots)) }
 
         val formModel = slots[1]
-        assertEquals(View.VISIBLE, formModel.displayScanButton)
+        assertTrue(formModel.displayScanButton)
     }
 
     private fun getInputModel() = mockk<InputModel>(relaxed = true) {
