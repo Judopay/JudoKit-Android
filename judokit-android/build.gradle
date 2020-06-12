@@ -179,6 +179,7 @@ def addJacocoTask(variant) {
             '**/model/PrimaryAccountDetails.*',
             '**/model/Event.*',
             '**/model/PBBAConfiguration.*',
+            '**/model/UiConfiguration.*',
             '**/api/model/request/Address.*',
             '**/api/model/request/BankSaleRequest.*',
             '**/api/model/response/CardVerificationResult.*',
