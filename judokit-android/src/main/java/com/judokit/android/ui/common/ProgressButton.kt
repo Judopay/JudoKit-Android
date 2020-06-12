@@ -12,8 +12,8 @@ import com.google.android.material.button.MaterialButton
 import com.judokit.android.R
 
 sealed class ButtonState {
-    data class Enabled(@StringRes val text: Int) : ButtonState()
-    data class Disabled(@StringRes val text: Int) : ButtonState()
+    data class Enabled(@StringRes val text: Int, val amount: String? = null) : ButtonState()
+    data class Disabled(@StringRes val text: Int, val amount: String? = null) : ButtonState()
     object Loading : ButtonState()
 }
 
@@ -52,9 +52,9 @@ class ProgressButton @JvmOverloads constructor(
 
     private fun updateState() {
         val text = when (val myState = state) {
-            is ButtonState.Enabled -> myState.text
-            is ButtonState.Disabled -> myState.text
-            else -> R.string.empty
+            is ButtonState.Enabled -> resources.getString(myState.text, myState.amount ?: "")
+            is ButtonState.Disabled -> resources.getString(myState.text, myState.amount ?: "")
+            else -> resources.getString(R.string.empty)
         }
 
         super.setText(text)

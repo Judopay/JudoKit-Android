@@ -133,6 +133,7 @@ class Judo internal constructor(
                     .setAvsEnabled(false)
                     .setShouldPaymentMethodsDisplayAmount(true)
                     .setShouldPaymentMethodsVerifySecurityCode(true)
+                    .setShouldPaymentButtonDisplayAmount(false)
                     .build()
 
             val mySandboxed = isSandboxed ?: false

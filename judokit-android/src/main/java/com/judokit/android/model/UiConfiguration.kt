@@ -8,6 +8,7 @@ import kotlinx.android.parcel.Parcelize
 class UiConfiguration internal constructor(
     val avsEnabled: Boolean,
     val shouldPaymentMethodsDisplayAmount: Boolean,
+    val shouldPaymentButtonDisplayAmount: Boolean,
     val shouldPaymentMethodsVerifySecurityCode: Boolean
 ) : Parcelable {
 
@@ -15,6 +16,7 @@ class UiConfiguration internal constructor(
         private var avsEnabled: Boolean? = null
         private var shouldPaymentMethodsDisplayAmount: Boolean? = null
         private var shouldPaymentMethodsVerifySecurityCode: Boolean? = null
+        private var shouldPaymentButtonDisplayAmount: Boolean? = null
 
         fun setAvsEnabled(enabled: Boolean?) = apply { this.avsEnabled = enabled }
 
@@ -24,14 +26,18 @@ class UiConfiguration internal constructor(
         fun setShouldPaymentMethodsVerifySecurityCode(shouldPaymentMethodsVerifySecurityCode: Boolean?) =
             apply { this.shouldPaymentMethodsVerifySecurityCode = shouldPaymentMethodsVerifySecurityCode }
 
+        fun setShouldPaymentButtonDisplayAmount(shouldPaymentButtonDisplayAmount: Boolean?) =
+            apply { this.shouldPaymentButtonDisplayAmount = shouldPaymentButtonDisplayAmount }
+
         fun build(): UiConfiguration {
             val avsEnabled = requireNotNull(this.avsEnabled, "avsEnabled")
             val shouldDisplayAmount =
                 requireNotNull(this.shouldPaymentMethodsDisplayAmount, "shouldPaymentMethodsDisplayAmount")
             val shouldPaymentMethodsVerifySecurityCode =
                 requireNotNull(this.shouldPaymentMethodsVerifySecurityCode, "shouldPaymentMethodsVerifySecurityCode")
+            val shouldPaymentButtonDisplayAmount = requireNotNull(this.shouldPaymentButtonDisplayAmount, "shouldPaymentButtonDisplayAmount")
 
-            return UiConfiguration(avsEnabled, shouldDisplayAmount, shouldPaymentMethodsVerifySecurityCode)
+            return UiConfiguration(avsEnabled, shouldDisplayAmount, shouldPaymentButtonDisplayAmount, shouldPaymentMethodsVerifySecurityCode)
         }
     }
 

@@ -74,6 +74,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         })
 
         formView.submitButtonText = viewModel.submitButtonText
+        formView.amount = viewModel.amount
 
         sharedViewModel.scanCardResult.observe(viewLifecycleOwner, Observer {
             viewModel.send(CardEntryAction.ScanCard(it))
