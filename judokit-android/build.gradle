@@ -172,6 +172,7 @@ def addJacocoTask(variant) {
             '**/*Entity.*',
             '**/adapter/**',
             '**/components/**',
+            '**/formatting/**',
             '**/db/JudoRoomDatabase.*',
             '**/db/dao/**',
             '**/model/googlepay/**',

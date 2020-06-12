@@ -16,6 +16,8 @@ import com.judokit.android.model.Country
 import com.judokit.android.model.asCountry
 import com.judokit.android.model.displayName
 import com.judokit.android.model.postcodeMaxLength
+import com.judokit.android.model.securityCodeNameOfCardNetwork
+import com.judokit.android.model.securityCodeNumberMaskOfCardNetwork
 import com.judokit.android.parentOfType
 import com.judokit.android.subViewsWithType
 import com.judokit.android.ui.cardentry.formatting.CardNumberInputMaskTextWatcher
@@ -67,7 +69,8 @@ data class FormModel(
     val formModel: InputModel,
     val enabledFields: List<FormFieldType>,
     val supportedNetworks: List<CardNetwork>,
-    val paymentButtonState: ButtonState = ButtonState.Disabled(R.string.add_card)
+    val paymentButtonState: ButtonState = ButtonState.Disabled(R.string.add_card),
+    val cardNetwork: CardNetwork? = null
 )
 
 typealias OnSubmitListener = (model: InputModel) -> Unit
@@ -97,6 +100,10 @@ class FormView @JvmOverloads constructor(
     internal var onValidationPassedListener: OnSubmitListener? = null
     internal var onSubmitButtonClickListener: SubmitButtonClickListener? = null
 
+    private var securityCodeWatcher: SecurityCodeInputMaskTextWatcher? = null
+    private var cardNumberWatcher: CardNumberInputMaskTextWatcher? = null
+    private var expirationDateWatcher: InputMaskTextWatcher? = null
+
     private val validationResultsCache = mutableMapOf<FormFieldType, Boolean>()
     private var validators = mutableListOf(
         CardNumberValidator(supportedNetworks = model.supportedNetworks),
@@ -111,39 +118,30 @@ class FormView @JvmOverloads constructor(
     override fun onFinishInflate() {
         super.onFinishInflate()
 
-        setupFieldsFormatting()
         setupFieldsContent()
     }
 
     private fun setupFieldsFormatting() {
-        // expiration date field formatting
-        with(editTextForType(FormFieldType.EXPIRATION_DATE)) {
-            val mask = InputMaskTextWatcher(
-                this,
-                "##/##"
-            )
-            addTextChangedListener(mask)
+        addSecurityCodeFormatter()
+        model.enabledFields.forEach {
+            when (it) {
+                FormFieldType.EXPIRATION_DATE -> addExpirationDateFormatting()
+                FormFieldType.NUMBER -> addNumberFormatter()
+                FormFieldType.COUNTRY -> addCountryFormatter()
+                FormFieldType.SECURITY_NUMBER -> {
+                    if (model.cardNetwork != null) {
+                        securityCodeWatcher?.apply {
+                            hint = model.cardNetwork.securityCodeNameOfCardNetwork
+                            mask = model.cardNetwork.securityCodeNumberMaskOfCardNetwork
+                        }
+                    }
+                }
+                else -> return@forEach
+            }
         }
+    }
 
-        // security code field formatting
-        val securityCode = editTextForType(FormFieldType.SECURITY_NUMBER)
-        val securityCodeMask =
-            SecurityCodeInputMaskTextWatcher(
-                securityCode
-            )
-        securityCode.addTextChangedListener(securityCodeMask)
-
-        // card number field formatting
-        with(editTextForType(FormFieldType.NUMBER)) {
-            val mask =
-                CardNumberInputMaskTextWatcher(
-                    this,
-                    securityCodeMask
-                )
-            addTextChangedListener(mask)
-        }
-
-        // Postcode formatting
+    private fun addCountryFormatter() {
         val country =
             inputModelValueOfFieldWithType(FormFieldType.COUNTRY).asCountry() ?: Country.OTHER
         onCountryDidSelect(country)
@@ -151,6 +149,47 @@ class FormView @JvmOverloads constructor(
         countryTextInputEditText.setOnItemClickListener { _, _, _, id ->
             val selected = Country.values()[id.toInt()]
             onCountryDidSelect(selected)
+        }
+    }
+
+    private fun addNumberFormatter() {
+        with(editTextForType(FormFieldType.NUMBER)) {
+            if (cardNumberWatcher != null) {
+                removeTextChangedListener(cardNumberWatcher)
+            }
+            val mask =
+                CardNumberInputMaskTextWatcher(
+                    this,
+                    securityCodeWatcher,
+                    model.cardNetwork
+                )
+            addTextChangedListener(mask)
+            cardNumberWatcher = mask
+        }
+    }
+
+    private fun addSecurityCodeFormatter() {
+        with(editTextForType(FormFieldType.SECURITY_NUMBER)) {
+            if (securityCodeWatcher != null) {
+                removeTextChangedListener(securityCodeWatcher)
+            }
+            val mask = SecurityCodeInputMaskTextWatcher(this)
+            addTextChangedListener(mask)
+            securityCodeWatcher = mask
+        }
+    }
+
+    private fun addExpirationDateFormatting() {
+        with(editTextForType(FormFieldType.EXPIRATION_DATE)) {
+            if (expirationDateWatcher != null) {
+                removeTextChangedListener(expirationDateWatcher)
+            }
+            val mask = InputMaskTextWatcher(
+                this,
+                "##/##"
+            )
+            addTextChangedListener(mask)
+            expirationDateWatcher = mask
         }
     }
 
@@ -203,8 +242,12 @@ class FormView @JvmOverloads constructor(
             if (it.fieldType == type) {
                 // TODO: to rethink this logic
                 if (it is SecurityCodeValidator) {
-                    val cardNumber = valueOfFieldWithType(FormFieldType.NUMBER)
-                    it.cardNetwork = CardNetwork.ofNumber(cardNumber)
+                    if (model.cardNetwork != null) {
+                        it.cardNetwork = model.cardNetwork
+                    } else {
+                        val cardNumber = valueOfFieldWithType(FormFieldType.NUMBER)
+                        it.cardNetwork = CardNetwork.ofNumber(cardNumber)
+                    }
                 }
                 it.validate(value, event)
             } else null
@@ -292,6 +335,7 @@ class FormView @JvmOverloads constructor(
     }
 
     private fun update() {
+        setupFieldsFormatting()
         setupVisibilityOfFields()
         submitButton.state = model.paymentButtonState
 
