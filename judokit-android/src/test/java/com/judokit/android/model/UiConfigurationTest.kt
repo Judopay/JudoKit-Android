@@ -9,13 +9,13 @@ internal class UiConfigurationTest {
 
     val sut = UiConfiguration.Builder()
         .setAvsEnabled(true)
-        .setShouldDisplayAmount(true)
+        .setShouldPaymentMethodsDisplayAmount(true)
         .setShouldPaymentButtonDisplayAmount(true)
 
     @DisplayName("Given shouldDisplayAmount is null, then build should throw exception")
     @Test
     fun throwExceptionOnShouldDisplayAmountNull() {
-        assertThrows<IllegalArgumentException> { sut.setShouldDisplayAmount(null).build() }
+        assertThrows<IllegalArgumentException> { sut.setShouldPaymentMethodsDisplayAmount(null).build() }
     }
 
     @DisplayName("Given shouldPaymentButtonDisplayAmount is null, then build should throw exception")

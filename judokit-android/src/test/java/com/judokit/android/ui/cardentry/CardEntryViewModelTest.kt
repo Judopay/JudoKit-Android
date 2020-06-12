@@ -388,9 +388,9 @@ internal class CardEntryViewModelTest {
         every { judo.paymentWidgetType } returns PaymentWidgetType.CARD_PAYMENT
         every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns true
 
-        sut = CardEntryViewModel(judo, service, repository, application)
+        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
 
-        assertEquals("${judo.amount.formatted} ", sut.amount)
+        assertEquals(judo.amount.formatted, sut.amount)
     }
 
     @DisplayName("Given payment widget type is PRE_AUTH, when shouldPaymentButtonDisplayAmount is true, then amount should return formatted amount")
@@ -399,9 +399,9 @@ internal class CardEntryViewModelTest {
         every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH
         every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns true
 
-        sut = CardEntryViewModel(judo, service, repository, application)
+        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
 
-        assertEquals("${judo.amount.formatted} ", sut.amount)
+        assertEquals(judo.amount.formatted, sut.amount)
     }
 
     @DisplayName("Given payment widget type is PRE_AUTH, when shouldPaymentButtonDisplayAmount is false, then amount should return null")
@@ -410,7 +410,7 @@ internal class CardEntryViewModelTest {
         every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH
         every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns false
 
-        sut = CardEntryViewModel(judo, service, repository, application)
+        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
 
         assertEquals(null, sut.amount)
     }
@@ -421,7 +421,7 @@ internal class CardEntryViewModelTest {
         every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH
         every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns false
 
-        sut = CardEntryViewModel(judo, service, repository, application)
+        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
 
         assertEquals(null, sut.amount)
     }

@@ -98,11 +98,15 @@ class CardEntryViewModel(
 
     val submitButtonText: Int
         get() = when (judo.paymentWidgetType) {
-            PaymentWidgetType.CARD_PAYMENT,
-            PaymentWidgetType.PRE_AUTH -> R.string.pay_now
             PaymentWidgetType.REGISTER_CARD -> R.string.register_card
             PaymentWidgetType.CREATE_CARD_TOKEN -> R.string.save_card
             PaymentWidgetType.CHECK_CARD -> R.string.check_card
+            PaymentWidgetType.CARD_PAYMENT,
+            PaymentWidgetType.PRE_AUTH -> if (judo.uiConfiguration.shouldPaymentButtonDisplayAmount) {
+                R.string.pay_amount
+            } else {
+                R.string.pay_now
+            }
             PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
             PaymentWidgetType.PAYMENT_METHODS,
             PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> if (selectedCardNetwork != null) {
@@ -117,7 +121,7 @@ class CardEntryViewModel(
         get() = when (judo.paymentWidgetType) {
             PaymentWidgetType.CARD_PAYMENT,
             PaymentWidgetType.PRE_AUTH -> if (judo.uiConfiguration.shouldPaymentButtonDisplayAmount)
-                "${judo.amount.formatted} "
+                judo.amount.formatted
             else
                 null
             else -> null
