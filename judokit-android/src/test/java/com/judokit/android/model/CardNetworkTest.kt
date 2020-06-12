@@ -617,4 +617,32 @@ internal class CardNetworkTest {
     fun returnFalseOnIsSupportedByGooglePayWhenChinaUnionPay() {
         assertFalse(CardNetwork.CHINA_UNION_PAY.isSupportedByGooglePay)
     }
+
+    @DisplayName("Given securityCodeNameOfCardNetwork is called, when card network is null, return CVV")
+    @Test
+    fun returnCVVOnSecurityCodeNameOfCardNetworkWhenCardNetworkNull() {
+        val network: CardNetwork? = null
+        assertEquals("CVV", network.securityCodeNameOfCardNetwork)
+    }
+
+    @DisplayName("Given securityCodeNameOfCardNetwork is called, when card network is VISA, return CV2")
+    @Test
+    fun returnCV2OnSecurityCodeNameOfCardNetworkWhenCardNetworkVisa() {
+        val network: CardNetwork? = CardNetwork.VISA
+        assertEquals("CVV2", network.securityCodeNameOfCardNetwork)
+    }
+
+    @DisplayName("Given securityCodeNumberMaskOfCardNetwork is called, when card network is null, return default mask")
+    @Test
+    fun returnDefaultMaskOnsecurityCodeNumberMaskOfCardNetworkWhenCardNetworkNull() {
+        val network: CardNetwork? = null
+        assertEquals("###", network.securityCodeNumberMaskOfCardNetwork)
+    }
+
+    @DisplayName("Given securityCodeNumberMaskOfCardNetwork is called, when card network is AMEX, return ####")
+    @Test
+    fun returnAmexMaskOnSecurityCodeNameOfCardNetworkWhenCardNetworkAmex() {
+        val network: CardNetwork? = CardNetwork.AMEX
+        assertEquals("####", network.securityCodeNumberMaskOfCardNetwork)
+    }
 }
