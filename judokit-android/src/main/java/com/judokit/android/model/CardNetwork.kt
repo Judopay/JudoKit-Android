@@ -172,3 +172,19 @@ val CardNetwork.isSupportedByGooglePay: Boolean
         CardNetwork.JCB -> true
         else -> false
     }
+
+val CardNetwork?.securityCodeNameOfCardNetwork: String
+    get() {
+        if (this == null) {
+            return CardNetwork.OTHER.securityCodeName
+        }
+        return securityCodeName
+    }
+
+val CardNetwork?.securityCodeNumberMaskOfCardNetwork: String
+    get() {
+        if (this == null) {
+            return CardNetwork.OTHER.securityCodeNumberMask
+        }
+        return securityCodeNumberMask
+    }

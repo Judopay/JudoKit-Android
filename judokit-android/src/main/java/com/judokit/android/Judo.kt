@@ -131,7 +131,8 @@ class Judo internal constructor(
             val myUiConfiguration = uiConfiguration
                 ?: UiConfiguration.Builder()
                     .setAvsEnabled(false)
-                    .setShouldDisplayAmount(true)
+                    .setShouldPaymentMethodsDisplayAmount(true)
+                    .setShouldPaymentMethodsVerifySecurityCode(true)
                     .build()
 
             val mySandboxed = isSandboxed ?: false

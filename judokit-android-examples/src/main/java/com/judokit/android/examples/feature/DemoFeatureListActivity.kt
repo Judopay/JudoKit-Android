@@ -232,9 +232,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
         get() {
             val isAVSEnabled = sharedPreferences.getBoolean("is_avs_enabled", false)
             val shouldDisplayAmount = sharedPreferences.getBoolean("should_display_amount", true)
+            val shouldPaymentMethodsVerifySecurityCode = sharedPreferences.getBoolean("should_payment_methods_verify_security_code", true)
             return UiConfiguration.Builder()
                 .setAvsEnabled(isAVSEnabled)
-                .setShouldDisplayAmount(shouldDisplayAmount)
+                .setShouldPaymentMethodsDisplayAmount(shouldDisplayAmount)
+                .setShouldPaymentMethodsVerifySecurityCode(shouldPaymentMethodsVerifySecurityCode)
                 .build()
         }
 

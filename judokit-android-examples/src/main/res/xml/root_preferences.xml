@@ -132,6 +132,13 @@
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:iconSpaceReserved="false"
+            app:key="should_payment_methods_verify_security_code"
+            app:summary="@string/security_code_summary"
+            app:title="@string/security_code_title" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"
             app:key="should_display_amount"
             app:summary="@string/should_display_amount_summary"
             app:title="@string/should_display_amount_title" />

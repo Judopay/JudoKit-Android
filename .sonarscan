@@ -1,1 +1,1 @@
-sonar.exclusions=judokit-android-examples/**/*, judokit-android/src/test/**/*, judokit-android/**/*Activity.*, judokit-android/**/*Fragment.*, judokit-android/**/*View.*, judokit-android/**/*View.*, judokit-android/**/components/*,
+sonar.exclusions=judokit-android-examples/**/*, judokit-android/src/test/**/*, judokit-android/**/*Activity.*, judokit-android/**/*Fragment.*, judokit-android/**/*View.*, judokit-android/**/components/*, judokit-android/**/formatting/*
