@@ -16,6 +16,7 @@ import com.judokit.android.model.CardScanningResult
 import com.judokit.android.model.Currency
 import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.Reference
+import com.judokit.android.model.formatted
 import com.judokit.android.model.toInputModel
 import com.judokit.android.ui.cardentry.components.FormFieldType
 import com.judokit.android.ui.cardentry.components.FormModel
@@ -356,6 +357,50 @@ internal class CardEntryViewModelTest {
 
         val formModel = slots[1]
         assertEquals(CardEntryFragmentModel(mockFormModel), formModel)
+    }
+
+    @DisplayName("Given payment widget type is CARD_PAYMENT, when shouldPaymentButtonDisplayAmount is true, then amount should return formatted amount")
+    @Test
+    fun returnFormattedAmountOnShouldPaymentButtonDisplayAmountTrueWithWidgetTypeCardPayment() {
+        every { judo.paymentWidgetType } returns PaymentWidgetType.CARD_PAYMENT
+        every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns true
+
+        sut = CardEntryViewModel(judo, service, repository, application)
+
+        assertEquals("${judo.amount.formatted} ", sut.amount)
+    }
+
+    @DisplayName("Given payment widget type is PRE_AUTH, when shouldPaymentButtonDisplayAmount is true, then amount should return formatted amount")
+    @Test
+    fun returnFormattedAmountOnShouldPaymentButtonDisplayAmountTrueWithWidgetTypePreAuth() {
+        every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH
+        every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns true
+
+        sut = CardEntryViewModel(judo, service, repository, application)
+
+        assertEquals("${judo.amount.formatted} ", sut.amount)
+    }
+
+    @DisplayName("Given payment widget type is PRE_AUTH, when shouldPaymentButtonDisplayAmount is false, then amount should return null")
+    @Test
+    fun returnAmountNullWhenShouldPaymentButtonDisplayAmountFalseWithWidgetTypePreAuth() {
+        every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH
+        every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns false
+
+        sut = CardEntryViewModel(judo, service, repository, application)
+
+        assertEquals(null, sut.amount)
+    }
+
+    @DisplayName("Given payment widget type is PAYMENT_METHODS, then amount should return null")
+    @Test
+    fun returnAmountNullWhenWidgetTypePaymentMethods() {
+        every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH
+        every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns false
+
+        sut = CardEntryViewModel(judo, service, repository, application)
+
+        assertEquals(null, sut.amount)
     }
 
     private fun getInputModel() = mockk<InputModel>(relaxed = true) {
