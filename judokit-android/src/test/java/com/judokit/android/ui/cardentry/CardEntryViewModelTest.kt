@@ -426,6 +426,39 @@ internal class CardEntryViewModelTest {
         assertEquals(null, sut.amount)
     }
 
+    @DisplayName("Given payment widget type is CARD_PAYMENT, when shouldPaymentButtonDisplayAmount is false then submitButtonText should return pay now")
+    @Test
+    fun returnPayNowWhenWidgetTypeCardPaymentWithShouldPaymentButtonDisplayAmountFalse() {
+        every { judo.paymentWidgetType } returns PaymentWidgetType.CARD_PAYMENT
+        every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns false
+
+        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+
+        assertEquals(R.string.pay_now, sut.submitButtonText)
+    }
+
+    @DisplayName("Given payment widget type is PRE_AUTH, when shouldPaymentButtonDisplayAmount is false then submitButtonText should return pay now")
+    @Test
+    fun returnPayNowWhenWidgetTypePreAuthWithShouldPaymentButtonDisplayAmountFalse() {
+        every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH
+        every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns false
+
+        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+
+        assertEquals(R.string.pay_now, sut.submitButtonText)
+    }
+
+    @DisplayName("Given payment widget type is PRE_AUTH, when shouldPaymentButtonDisplayAmount is true then submitButtonText should return pay amount")
+    @Test
+    fun returnPayAmountWhenWidgetTypePreAuthWithShouldPaymentButtonDisplayAmountTrue() {
+        every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH
+        every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns true
+
+        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+
+        assertEquals(R.string.pay_amount, sut.submitButtonText)
+    }
+
     @DisplayName("Given send is called with EnableFormFields action, then should update model with specified enabled fields")
     @Test
     fun shouldUpdateModelWithSpecifiedEnabledFieldsOnEnableFormFieldsAction() {
