@@ -22,6 +22,7 @@ import com.judokit.android.db.repository.TokenizedCardRepository
 import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.CardScanningResult
 import com.judokit.android.model.PaymentWidgetType
+import com.judokit.android.model.formatted
 import com.judokit.android.model.toInputModel
 import com.judokit.android.toMap
 import com.judokit.android.ui.cardentry.components.FormFieldType
@@ -97,11 +98,15 @@ class CardEntryViewModel(
 
     val submitButtonText: Int
         get() = when (judo.paymentWidgetType) {
+            PaymentWidgetType.REGISTER_CARD -> R.string.register_card
+            PaymentWidgetType.CREATE_CARD_TOKEN -> R.string.save_card
+            PaymentWidgetType.CHECK_CARD -> R.string.check_card
             PaymentWidgetType.CARD_PAYMENT,
-            PaymentWidgetType.PRE_AUTH,
-            PaymentWidgetType.REGISTER_CARD,
-            PaymentWidgetType.CREATE_CARD_TOKEN,
-            PaymentWidgetType.CHECK_CARD -> R.string.pay_now
+            PaymentWidgetType.PRE_AUTH -> if (judo.uiConfiguration.shouldPaymentButtonDisplayAmount) {
+                R.string.pay_amount
+            } else {
+                R.string.pay_now
+            }
             PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
             PaymentWidgetType.PAYMENT_METHODS,
             PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> if (selectedCardNetwork != null) {
@@ -110,6 +115,16 @@ class CardEntryViewModel(
                 R.string.add_card
             }
             else -> R.string.empty
+        }
+
+    val amount: String?
+        get() = when (judo.paymentWidgetType) {
+            PaymentWidgetType.CARD_PAYMENT,
+            PaymentWidgetType.PRE_AUTH -> if (judo.uiConfiguration.shouldPaymentButtonDisplayAmount)
+                judo.amount.formatted
+            else
+                null
+            else -> null
         }
 
     init {
@@ -269,8 +284,8 @@ class CardEntryViewModel(
     private fun buildModel(isLoading: Boolean, isFormValid: Boolean, cardNetwork: CardNetwork? = null) {
         val buttonState = when {
             isLoading -> ButtonState.Loading
-            isFormValid -> ButtonState.Enabled(submitButtonText)
-            else -> ButtonState.Disabled(submitButtonText)
+            isFormValid -> ButtonState.Enabled(submitButtonText, amount)
+            else -> ButtonState.Disabled(submitButtonText, amount)
         }
 
         val formModel = FormModel(

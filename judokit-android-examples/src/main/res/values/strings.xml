@@ -103,4 +103,7 @@
     <string name="security_code_title">Security code</string>
     <string name="security_code_summary">Turn on to enable security code verification in the payment methods screen.</string>
 
+    <string name="should_payment_button_display_amount_title">Display amount on button</string>
+    <string name="should_payment_button_display_amount_summary">Turn on to show amount on the Pay button.</string>
+
 </resources>

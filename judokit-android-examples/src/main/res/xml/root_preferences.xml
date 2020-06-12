@@ -143,6 +143,13 @@
             app:summary="@string/should_display_amount_summary"
             app:title="@string/should_display_amount_title" />
 
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="should_payment_button_display_amount"
+            app:summary="@string/should_payment_button_display_amount_summary"
+            app:title="@string/should_payment_button_display_amount_title" />
+
         <MultiSelectListPreference
             app:defaultValue="@array/default_card_networks_values"
             app:entries="@array/card_networks_entries"

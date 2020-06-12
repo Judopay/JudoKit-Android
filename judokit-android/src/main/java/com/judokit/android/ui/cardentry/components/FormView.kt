@@ -87,6 +87,7 @@ class FormView @JvmOverloads constructor(
     }
 
     var submitButtonText: Int = R.string.pay_now
+    var amount: String? = null
     var model = FormModel(InputModel(), emptyList(), emptyList())
         set(value) {
             field = value
@@ -303,7 +304,7 @@ class FormView @JvmOverloads constructor(
         if (isFormValid) {
             onValidationPassed()
         } else {
-            submitButton.state = ButtonState.Disabled(submitButtonText)
+            submitButton.state = ButtonState.Disabled(submitButtonText, amount)
         }
     }
 
