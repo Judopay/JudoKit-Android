@@ -233,12 +233,11 @@ class FormView @JvmOverloads constructor(
     private fun update() {
         updateValidators()
         updateFieldsVisibility()
+        updateFormatters()
 
         if (model.enabledFields.contains(FormFieldType.COUNTRY)) {
             setupCountrySpinner()
         }
-
-        securityCodeFormatter.cardNetwork = model.cardNetwork
 
         submitButton.state = model.paymentButtonState
 
@@ -260,6 +259,11 @@ class FormView @JvmOverloads constructor(
         validatorInstance<CardNumberValidator>()?.let {
             it.supportedNetworks = model.supportedNetworks
         }
+    }
+
+    private fun updateFormatters() {
+        val cardNumber = model.valueOfFieldWithType(FormFieldType.NUMBER)
+        securityCodeFormatter.cardNetwork = model.cardNetwork ?: CardNetwork.ofNumber(cardNumber)
     }
 
     private fun updateFieldsVisibility() {
