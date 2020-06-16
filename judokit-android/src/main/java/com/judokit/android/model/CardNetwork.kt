@@ -54,7 +54,8 @@ enum class CardNetwork : Parcelable {
             8 -> AMEX
             7 -> CHINA_UNION_PAY
             9 -> JCB
-            12 -> DISCOVER
+            12,
+            14 -> DISCOVER
             13 -> DINERS_CLUB
             else -> OTHER
         }

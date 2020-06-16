@@ -47,7 +47,7 @@ import kotlinx.android.synthetic.main.payment_methods_header_view.*
 
 internal const val CARD_VERIFICATION = "com.judokit.android.model.CardVerificationModel"
 internal const val PAYMENT_WIDGET_TYPE = "com.judokit.android.model.paymentWidgetType"
-internal const val SHOULD_VERIFY_SECURITY_CODE = "com.judokit.android.shouldVerifySecurityCode"
+internal const val CARD_NETWORK = "com.judokit.android.cardNetwork"
 
 data class PaymentMethodsModel(
     val headerModel: PaymentMethodsHeaderViewModel,
@@ -121,7 +121,7 @@ class PaymentMethodsFragment : Fragment() {
         viewModel.selectedCardNetworkObserver.observe(viewLifecycleOwner, Observer {
             findNavController().navigate(
                 R.id.action_paymentMethodsFragment_to_cardEntryFragment, bundleOf(
-                    SHOULD_VERIFY_SECURITY_CODE to it
+                    CARD_NETWORK to it
                 )
             )
         })

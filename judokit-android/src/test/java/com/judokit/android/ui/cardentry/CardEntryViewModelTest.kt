@@ -18,9 +18,9 @@ import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.Reference
 import com.judokit.android.model.formatted
 import com.judokit.android.model.toInputModel
-import com.judokit.android.ui.cardentry.components.FormFieldType
-import com.judokit.android.ui.cardentry.components.FormModel
-import com.judokit.android.ui.cardentry.components.InputModel
+import com.judokit.android.ui.cardentry.model.FormFieldType
+import com.judokit.android.ui.cardentry.model.FormModel
+import com.judokit.android.ui.cardentry.model.InputModel
 import com.judokit.android.ui.common.ButtonState
 import com.judokit.android.ui.paymentmethods.toTokenizedCardEntity
 import io.mockk.coEvery

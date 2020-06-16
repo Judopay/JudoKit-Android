@@ -40,7 +40,11 @@ class PaymentCardView @JvmOverloads constructor(
         expireDateTextView.text = model.expireDate
 
         val image = model.cardNetwork.lightIconImageResId
-        if (image > 0) networkIconImageView.setImageResource(image)
+        if (image > 0) {
+            networkIconImageView.setImageResource(image)
+        } else {
+            networkIconImageView.setImageDrawable(null)
+        }
 
         val date = CardDate(model.expireDate)
         if (date.isAfterToday) {
