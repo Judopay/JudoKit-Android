@@ -1,12 +1,17 @@
 package com.judokit.android
 
 import android.app.Activity
+import android.content.Context
 import android.os.Parcelable
+import com.judokit.android.api.factory.JudoApiServiceFactory
 import com.judokit.android.api.model.request.Address
+import com.judokit.android.api.model.request.TokenRequest
+import com.judokit.android.api.model.response.toJudoPaymentResult
 import com.judokit.android.model.Amount
 import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.Currency
 import com.judokit.android.model.GooglePayConfiguration
+import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.model.PBBAConfiguration
 import com.judokit.android.model.PaymentMethod
 import com.judokit.android.model.PaymentWidgetType
@@ -56,6 +61,50 @@ class Judo internal constructor(
     val address: Address?,
     val pbbaConfiguration: PBBAConfiguration?
 ) : Parcelable {
+
+    suspend fun toPreAuthTokenPayment(
+        context: Context,
+        cardToken: String,
+        securityCode: String?
+    ): JudoPaymentResult {
+        val service = JudoApiServiceFactory.createApiService(context, this)
+        val request = TokenRequest.Builder()
+            .setAmount(amount.amount)
+            .setCurrency(amount.currency.name)
+            .setJudoId(judoId)
+            .setYourPaymentReference(reference.paymentReference)
+            .setYourConsumerReference(reference.consumerReference)
+            .setYourPaymentMetaData(reference.metaData?.toMap())
+            .setCardToken(cardToken)
+            .setCv2(securityCode)
+            .setPrimaryAccountDetails(primaryAccountDetails)
+            .setAddress(address)
+            .build()
+
+        return service.tokenPayment(request).toJudoPaymentResult()
+    }
+
+    suspend fun toTokenPayment(
+        context: Context,
+        cardToken: String,
+        securityCode: String?
+    ): JudoPaymentResult {
+        val service = JudoApiServiceFactory.createApiService(context, this)
+        val request = TokenRequest.Builder()
+            .setAmount(amount.amount)
+            .setCurrency(amount.currency.name)
+            .setJudoId(judoId)
+            .setYourPaymentReference(reference.paymentReference)
+            .setYourConsumerReference(reference.consumerReference)
+            .setYourPaymentMetaData(reference.metaData?.toMap())
+            .setCardToken(cardToken)
+            .setCv2(securityCode)
+            .setPrimaryAccountDetails(primaryAccountDetails)
+            .setAddress(address)
+            .build()
+
+        return service.preAuthTokenPayment(request).toJudoPaymentResult()
+    }
 
     class Builder(private val paymentWidgetType: PaymentWidgetType) {
         private var judoId: String? = null

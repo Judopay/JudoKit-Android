@@ -21,6 +21,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.DemoApp"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name="com.judokit.android.examples.feature.tokenpayment.DemoTokenPaymentActivity"></activity>
         <activity
             android:name="com.judokit.android.examples.result.ResultActivity"
             android:theme="@style/Theme.DemoApp" />

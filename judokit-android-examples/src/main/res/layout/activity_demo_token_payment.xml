@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.judokit.android.examples.feature.tokenpayment.DemoTokenPaymentActivity">
+
+    <com.judokit.android.ui.common.ProgressButton
+        android:id="@+id/createCardTokenButton"
+        style="@style/JudoTheme.BlackRoundedButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:minWidth="@dimen/min_touch_target_size"
+        android:text="@string/create_card_token"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.judokit.android.ui.common.ProgressButton
+        android:id="@+id/tokenPaymentButton"
+        style="@style/JudoTheme.BlackRoundedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:minWidth="@dimen/min_touch_target_size"
+        android:text="@string/token_payment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/createCardTokenButton"
+        app:layout_goneMarginStart="@dimen/space_16" />
+
+    <com.judokit.android.ui.common.ProgressButton
+        android:id="@+id/preAuthTokenPaymentButton"
+        style="@style/JudoTheme.BlackRoundedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_16"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:minWidth="@dimen/min_touch_target_size"
+        android:text="@string/preauth_token_payment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tokenPaymentButton" />
+</androidx.constraintlayout.widget.ConstraintLayout>
