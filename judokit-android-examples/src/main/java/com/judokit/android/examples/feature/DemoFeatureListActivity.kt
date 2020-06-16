@@ -152,9 +152,9 @@ class DemoFeatureListActivity : AppCompatActivity() {
     private fun showcaseFeature(feature: DemoFeature) {
         try {
             val widgetType = when (feature) {
-                DemoFeature.TOKEN_PAYMENT,
                 DemoFeature.PAYMENT -> PaymentWidgetType.CARD_PAYMENT
                 DemoFeature.PREAUTH -> PaymentWidgetType.PRE_AUTH
+                DemoFeature.TOKEN_PAYMENT,
                 DemoFeature.REGISTER_CARD -> PaymentWidgetType.REGISTER_CARD
                 DemoFeature.CREATE_CARD_TOKEN -> PaymentWidgetType.CREATE_CARD_TOKEN
                 DemoFeature.CHECK_CARD -> PaymentWidgetType.CHECK_CARD
@@ -182,14 +182,13 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     private fun navigateToJudoPaymentWidgetWithConfigurations(judo: Judo, feature: DemoFeature) {
         val myClass = when (judo.paymentWidgetType) {
-            PaymentWidgetType.CARD_PAYMENT -> if (feature == DemoFeature.TOKEN_PAYMENT) {
+            PaymentWidgetType.REGISTER_CARD -> if (feature == DemoFeature.TOKEN_PAYMENT) {
                 DemoTokenPaymentActivity::class.java
             } else {
                 JudoActivity::class.java
             }
             PaymentWidgetType.PAY_BY_BANK_APP -> PayByBankActivity::class.java
             else -> JudoActivity::class.java
-
         }
         val intent = Intent(this, myClass)
         intent.putExtra(JUDO_OPTIONS, judo)

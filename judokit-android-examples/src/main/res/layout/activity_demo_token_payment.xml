@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.judokit.android.examples.feature.tokenpayment.DemoTokenPaymentActivity">
-
+<!--<label-->
     <com.judokit.android.ui.common.ProgressButton
         android:id="@+id/createCardTokenButton"
         style="@style/JudoTheme.BlackRoundedButton"
@@ -24,7 +24,7 @@
         android:id="@+id/tokenPaymentButton"
         style="@style/JudoTheme.BlackRoundedButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/button_height"
         android:layout_marginStart="@dimen/spacing_16"
         android:layout_marginTop="@dimen/spacing_16"
         android:layout_marginEnd="@dimen/spacing_16"
@@ -39,7 +39,7 @@
         android:id="@+id/preAuthTokenPaymentButton"
         style="@style/JudoTheme.BlackRoundedButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/button_height"
         android:layout_marginStart="@dimen/space_16"
         android:layout_marginEnd="@dimen/spacing_16"
         android:minWidth="@dimen/min_touch_target_size"
