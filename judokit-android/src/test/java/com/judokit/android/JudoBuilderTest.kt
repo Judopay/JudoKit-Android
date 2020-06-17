@@ -22,7 +22,7 @@ internal class JudoBuilderTest {
     @BeforeEach
     fun setUp() {
         judoBuilder = Judo.Builder(PaymentWidgetType.CARD_PAYMENT)
-            .setJudoId("1")
+            .setJudoId("111111111")
             .setApiToken("1")
             .setApiSecret("1")
             .setAmount(Amount("1", Currency.GBP))
@@ -58,6 +58,24 @@ internal class JudoBuilderTest {
     fun testThatBuildThrowsOnIdEmpty() {
         assertThrows<IllegalArgumentException> {
             judoBuilder.setJudoId("").build()
+        }
+    }
+
+    @Test
+    @DisplayName("Given judoId does not match regex, then build() should throw a IllegalArgumentException")
+    fun testThatBuildThrowsOnIdNotMatchingRegex() {
+        assertThrows<IllegalArgumentException> {
+            judoBuilder.setJudoId("1111").build()
+        }
+    }
+
+    @Test
+    @DisplayName("Given judoId matches regex, then build() should not throw exception")
+    fun testThatBuildDoesNotThrowOnIdMatchingRegex() {
+        assertDoesNotThrow {
+            judoBuilder.setJudoId("111-111-111").build()
+            judoBuilder.setJudoId("111111111").build()
+            judoBuilder.setJudoId("111111").build()
         }
     }
 
