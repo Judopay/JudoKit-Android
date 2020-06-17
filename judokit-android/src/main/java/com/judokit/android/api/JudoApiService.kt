@@ -14,7 +14,6 @@ import com.judokit.android.api.model.response.CardVerificationResult
 import com.judokit.android.api.model.response.IdealSaleResponse
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.Receipt
-import kotlinx.coroutines.Deferred
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET

@@ -71,7 +71,6 @@ class Judo internal constructor(
         .setAddress(Address.Builder().build())
         .build()
 
-
     class Builder(private val paymentWidgetType: PaymentWidgetType) {
         private var judoId: String? = null
         private var siteId: String? = null

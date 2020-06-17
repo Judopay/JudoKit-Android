@@ -112,4 +112,5 @@
     <string name="create_card_token">Create card token</string>
     <string name="token_payment">Token payment</string>
     <string name="preauth_token_payment">PreAuth token payment</string>
+    <string name="token_payment_description">To make a token or preauth token payment, first you have to create a card token</string>
 </resources>
