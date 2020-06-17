@@ -238,7 +238,7 @@ internal class JudoBuilderTest {
     @Test
     @DisplayName("Given toTokenPayment is called, when every required parameter is present, then exception not thrown")
     fun returnTokenRequestObjectOnToTokenPaymentCall() {
-        assertDoesNotThrow{
+        assertDoesNotThrow {
             judoBuilder.build().toTokenPayment(CARD_TOKEN, SECURITY_CODE)
         }
     }
