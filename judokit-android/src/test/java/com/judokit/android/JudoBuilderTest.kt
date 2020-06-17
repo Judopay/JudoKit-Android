@@ -5,6 +5,7 @@ import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.Currency
 import com.judokit.android.model.PaymentMethod
 import com.judokit.android.model.PaymentWidgetType
+import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -13,6 +14,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+
+private const val CARD_TOKEN = "card_token"
+private const val SECURITY_CODE = "security_code"
 
 @DisplayName("Testing the Judo configuration object builder logic")
 internal class JudoBuilderTest {
@@ -26,7 +30,10 @@ internal class JudoBuilderTest {
             .setApiToken("1")
             .setApiSecret("1")
             .setAmount(Amount("1", Currency.GBP))
-            .setReference(mockk())
+            .setReference(mockk(relaxed = true) {
+                every { consumerReference } returns "consumer"
+                every { paymentReference } returns "payment"
+            })
             .setPaymentMethods(PaymentMethod.values())
             .setUiConfiguration(mockk())
             .setIsSandboxed(true)
@@ -226,5 +233,13 @@ internal class JudoBuilderTest {
         judoBuilder.setIsSandboxed(null)
 
         assertFalse(judoBuilder.build().isSandboxed)
+    }
+
+    @Test
+    @DisplayName("Given toTokenPayment is called, when every required parameter is present, then exception not thrown")
+    fun returnTokenRequestObjectOnToTokenPaymentCall() {
+        assertDoesNotThrow{
+            judoBuilder.build().toTokenPayment(CARD_TOKEN, SECURITY_CODE)
+        }
     }
 }
