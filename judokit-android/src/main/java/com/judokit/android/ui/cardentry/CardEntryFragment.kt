@@ -58,7 +58,13 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
         val service = JudoApiServiceFactory.createApiService(application, judo)
         val selectedCardNetwork = arguments?.getParcelable<CardNetwork>(CARD_NETWORK)
-        val factory = CardEntryViewModelFactory(judo, service, cardRepository, selectedCardNetwork, application)
+        val factory = CardEntryViewModelFactory(
+            judo,
+            service,
+            cardRepository,
+            selectedCardNetwork,
+            application
+        )
 
         viewModel = ViewModelProvider(this, factory).get(CardEntryViewModel::class.java)
 
@@ -105,8 +111,9 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         scanCardButton.setOnClickListener(this::handleScanCardButtonClicks)
 
         formView.apply {
-            onFormValidListener =
-                { model, isValid -> viewModel.send(CardEntryAction.ValidationPassed(model, isValid)) }
+            onFormValidationStatusListener = { model, isValid ->
+                viewModel.send(CardEntryAction.ValidationStatusChanged(model, isValid))
+            }
             onSubmitButtonClickListener = { viewModel.send(CardEntryAction.SubmitForm) }
         }
     }

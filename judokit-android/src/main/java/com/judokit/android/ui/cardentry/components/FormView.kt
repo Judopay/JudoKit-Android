@@ -35,7 +35,7 @@ import com.judokit.android.ui.cardentry.validation.SecurityCodeValidator
 import com.judokit.android.ui.common.PATTERN_CARD_EXPIRATION_DATE
 import kotlinx.android.synthetic.main.form_view.view.*
 
-internal typealias OnFormValid = (model: InputModel, isValid: Boolean) -> Unit
+internal typealias FormValidationStatus = (model: InputModel, isValid: Boolean) -> Unit
 internal typealias SubmitButtonClickListener = () -> Unit
 
 class FormView @JvmOverloads constructor(
@@ -58,7 +58,7 @@ class FormView @JvmOverloads constructor(
             update()
         }
 
-    internal var onFormValidListener: OnFormValid? = null
+    internal var onFormValidationStatusListener: FormValidationStatus? = null
     internal var onSubmitButtonClickListener: SubmitButtonClickListener? = null
 
     private val validationResultsCache = mutableMapOf<FormFieldType, Boolean>()
@@ -324,7 +324,7 @@ class FormView @JvmOverloads constructor(
             valueOfEditTextWithType(FormFieldType.POST_CODE)
         )
 
-        onFormValidListener?.invoke(inputModel, isFormValid)
+        onFormValidationStatusListener?.invoke(inputModel, isFormValid)
     }
 
     private inline fun <reified V> validatorInstance(): V? {
