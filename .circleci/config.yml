@@ -21,7 +21,7 @@ commands:
 executors:
   android:
     docker:
-      image: circleci/android:api-29
+      - image: circleci/android:api-29
 
 jobs:
   build_sdk:
@@ -109,6 +109,18 @@ jobs:
               --app judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk \
               --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk
 
+  sonar_scan:
+    docker:
+      - image: gcr.io/opnf-management/sonar-scanner:latest
+        auth:
+          username: _json_key
+          password: $GCLOUD_SERVICE_KEY
+    working_directory: /home/circleci/project
+    steps:
+      - attach_workspace:
+          at: /home/circleci/project
+      - run: /opt/run-scan.sh
+
   release_sample:
     executor: android
     steps:
@@ -145,6 +157,10 @@ workflows:
       - unit_test_sdk:
           requires:
             - build_sdk
+      - sonar_scan:
+          context: shared-secrets
+          requires:
+            - unit_test_sdk
       - release_sample:
           requires:
             - build_sample
