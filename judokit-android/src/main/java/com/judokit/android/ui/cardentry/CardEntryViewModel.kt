@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 data class CardEntryFragmentModel(val formModel: FormModel, val displayScanButton: Boolean = true)
 
 sealed class CardEntryAction {
-    data class ValidationPassed(val input: InputModel) : CardEntryAction()
+    data class ValidationPassed(val input: InputModel, val isFormValid: Boolean) : CardEntryAction()
     data class InsertCard(val tokenizedCard: CardToken) : CardEntryAction()
     data class ScanCard(val result: CardScanningResult) : CardEntryAction()
     data class EnableFormFields(val formFields: List<FormFieldType>) : CardEntryAction()
@@ -139,7 +139,7 @@ class CardEntryViewModel(
             }
             is CardEntryAction.ValidationPassed -> {
                 inputModel = action.input
-                buildModel(isLoading = false, isFormValid = true, cardNetwork = selectedCardNetwork)
+                buildModel(isLoading = false, isFormValid = action.isFormValid, cardNetwork = selectedCardNetwork)
             }
             is CardEntryAction.SubmitForm -> {
                 buildModel(isLoading = true, isFormValid = true)

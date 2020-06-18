@@ -105,8 +105,8 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         scanCardButton.setOnClickListener(this::handleScanCardButtonClicks)
 
         formView.apply {
-            onValidationPassedListener =
-                { model -> viewModel.send(CardEntryAction.ValidationPassed(model)) }
+            onFormValidListener =
+                { model, isValid -> viewModel.send(CardEntryAction.ValidationPassed(model, isValid)) }
             onSubmitButtonClickListener = { viewModel.send(CardEntryAction.SubmitForm) }
         }
     }

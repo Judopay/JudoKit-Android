@@ -35,7 +35,7 @@ import com.judokit.android.ui.cardentry.validation.SecurityCodeValidator
 import com.judokit.android.ui.common.PATTERN_CARD_EXPIRATION_DATE
 import kotlinx.android.synthetic.main.form_view.view.*
 
-internal typealias OnSubmitListener = (model: InputModel) -> Unit
+internal typealias OnFormValid = (model: InputModel, isValid: Boolean) -> Unit
 internal typealias SubmitButtonClickListener = () -> Unit
 
 class FormView @JvmOverloads constructor(
@@ -58,7 +58,7 @@ class FormView @JvmOverloads constructor(
             update()
         }
 
-    internal var onValidationPassedListener: OnSubmitListener? = null
+    internal var onFormValidListener: OnFormValid? = null
     internal var onSubmitButtonClickListener: SubmitButtonClickListener? = null
 
     private val validationResultsCache = mutableMapOf<FormFieldType, Boolean>()
@@ -66,7 +66,7 @@ class FormView @JvmOverloads constructor(
         CardNumberValidator(supportedNetworks = model.supportedNetworks),
         CardHolderNameValidator(),
         ExpirationDateValidator(),
-        SecurityCodeValidator(),
+        SecurityCodeValidator(model.cardNetwork),
         CountryValidator(),
         PostcodeValidator()
     )
@@ -88,7 +88,7 @@ class FormView @JvmOverloads constructor(
     }
 
     private fun setupFieldsFormatting() {
-        setupExpirationDateFormatting()
+        setupExpirationDateFormatter()
         setupCountryFormatter()
 
         setupSecurityCodeFormatter()
@@ -115,7 +115,7 @@ class FormView @JvmOverloads constructor(
             addTextChangedListener(securityCodeFormatter)
         }
 
-    private fun setupExpirationDateFormatting() =
+    private fun setupExpirationDateFormatter() =
         with(editTextForType(FormFieldType.EXPIRATION_DATE)) {
             val mask = InputMaskTextWatcher(this, PATTERN_CARD_EXPIRATION_DATE)
             addTextChangedListener(mask)
@@ -223,11 +223,7 @@ class FormView @JvmOverloads constructor(
             isFormValid = validationResults.reduce { acc, b -> acc && b }
         }
 
-        if (isFormValid) {
-            onValidationPassed()
-        } else {
-            submitButton.state = model.paymentButtonState
-        }
+            onValidationPassed(isFormValid)
     }
 
     private fun update() {
@@ -258,6 +254,9 @@ class FormView @JvmOverloads constructor(
     private fun updateValidators() {
         validatorInstance<CardNumberValidator>()?.let {
             it.supportedNetworks = model.supportedNetworks
+        }
+        validatorInstance<SecurityCodeValidator>()?.let {
+            it.cardNetwork = model.cardNetwork
         }
     }
 
@@ -315,7 +314,7 @@ class FormView @JvmOverloads constructor(
         return editText.text.toString()
     }
 
-    private fun onValidationPassed() {
+    private fun onValidationPassed(isFormValid: Boolean) {
         val inputModel = InputModel(
             valueOfEditTextWithType(FormFieldType.NUMBER),
             valueOfEditTextWithType(FormFieldType.HOLDER_NAME),
@@ -325,7 +324,7 @@ class FormView @JvmOverloads constructor(
             valueOfEditTextWithType(FormFieldType.POST_CODE)
         )
 
-        onValidationPassedListener?.invoke(inputModel)
+        onFormValidListener?.invoke(inputModel, isFormValid)
     }
 
     private inline fun <reified V> validatorInstance(): V? {
