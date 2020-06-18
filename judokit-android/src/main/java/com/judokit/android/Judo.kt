@@ -13,6 +13,7 @@ import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.PrimaryAccountDetails
 import com.judokit.android.model.Reference
 import com.judokit.android.model.UiConfiguration
+import com.judokit.android.ui.common.REGEX_JUDO_ID
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -38,7 +39,6 @@ const val PAYMENT_CANCELLED = Activity.RESULT_FIRST_USER + 2
 /** Judo activity result: operation error  */
 const val PAYMENT_ERROR = Activity.RESULT_FIRST_USER + 3
 
-private val REGEX_JUDO_ID = "^(([0-9]{9})|([0-9]{3}-[0-9]{3}-[0-9]{3})|([0-9]{6}))?\$".toRegex()
 @Parcelize
 class Judo internal constructor(
     val judoId: String,
@@ -119,17 +119,17 @@ class Judo internal constructor(
         }
 
         @Throws(java.lang.IllegalArgumentException::class)
-        private fun validateJudoId(id: String?): String {
-            val judoId = requireNotNullOrEmpty(id, "judoId")
-            if (judoId.matches(REGEX_JUDO_ID))
-                return judoId
+        private fun requireJudoId(judoId: String?): String {
+            val id = requireNotNullOrEmpty(judoId, "judoId")
+            if (id.matches(REGEX_JUDO_ID.toRegex()))
+                return id
             else
                 throw IllegalArgumentException("JudoId is invalid")
         }
 
         @Throws(IllegalArgumentException::class)
         fun build(): Judo {
-            val id = validateJudoId(judoId)
+            val id = requireJudoId(judoId)
             val token = requireNotNullOrEmpty(apiToken, "apiToken")
             val secret = requireNotNullOrEmpty(apiSecret, "apiSecret")
 
