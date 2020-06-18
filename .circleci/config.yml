@@ -6,6 +6,7 @@ commands:
       - run:
           name: Disable Pre-Dexing # https://www.littlerobots.nl/blog/disable-android-pre-dexing-on-ci-builds/
           command: |
+            mkdir -p ~/.gradle
             echo 'allprojects {
                   project.plugins.whenPluginAdded { plugin ->
                           if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
@@ -144,6 +145,8 @@ jobs:
   release_sdk:
     executor: android
     steps:
+      - attach_workspace:
+          at: /home/circleci/project
       - run:
           name: Release SDK to Bintray
           command: ./gradlew clean build bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayKey=$BINTRAY_API_KEY -PdryRun=false
@@ -152,7 +155,11 @@ workflows:
   version: 2
   build:
     jobs:
-      - build_sdk
+      - build_sdk:
+          filters:
+            tags:
+              only:
+                - /^v((\d)+\.){1,2}(\d+)/i
       - build_sample
       - unit_test_sdk:
           requires:
@@ -171,6 +178,9 @@ workflows:
                 - master
       - release_sdk:
           filters:
+            branches:
+              ignore:
+                - /.*/
             tags:
               only:
                 - /^v((\d)+\.){1,2}(\d+)/i
