@@ -35,7 +35,6 @@ internal class JudoBuilderTest {
                 every { paymentReference } returns "payment"
             })
             .setPaymentMethods(PaymentMethod.values())
-            .setUiConfiguration(mockk())
             .setIsSandboxed(true)
             .setSupportedCardNetworks(CardNetwork.values())
             .setPrimaryAccountDetails(mockk())
@@ -236,10 +235,16 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("Given uiConfiguration is null, then build() with default uiConfiguration")
-    fun testThatObjectHasDefaultUiConfigurationWhenUiConfigurationNull() {
+    @DisplayName("Given uiConfiguration is null, then build() should throw exception")
+    fun testThatBuildThrowsExceptionWhenUiConfigurationNull() {
         judoBuilder.setUiConfiguration(null)
 
+        assertThrows<IllegalArgumentException> { judoBuilder.build() }
+    }
+
+    @Test
+    @DisplayName("Given uiConfiguration is not specified, then build() with default uiConfiguration")
+    fun testThatObjectHasDefaultUiConfigurationWhenUiConfigurationNotSpecified() {
         assertFalse(judoBuilder.build().uiConfiguration.avsEnabled)
         assertTrue(judoBuilder.build().uiConfiguration.shouldPaymentMethodsDisplayAmount)
         assertTrue(judoBuilder.build().uiConfiguration.shouldPaymentMethodsVerifySecurityCode)
