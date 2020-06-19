@@ -134,13 +134,14 @@ jobs:
           name: Store Google Service Account
           command: |
             echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-            gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+            export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-service-key.json
       - run:
           name: Distribute Sample App
           command: |
             firebase appdistribution:distribute \
               judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk \
-              --app "$FIREBASE_APP_ID"
+              --app "$ANDROID_FIREBASE_APP_ID" \
+              --groups "default-testers"
 
   release_sdk:
     executor: android
@@ -149,7 +150,7 @@ jobs:
           at: /home/circleci/project
       - run:
           name: Release SDK to Bintray
-          command: ./gradlew clean build bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayKey=$BINTRAY_API_KEY -PdryRun=false
+          command: ./gradlew bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayKey=$BINTRAY_API_KEY -PdryRun=false
 
 workflows:
   version: 2
@@ -169,6 +170,7 @@ workflows:
           requires:
             - unit_test_sdk
       - release_sample:
+          context: shared-secrets
           requires:
             - build_sample
             - unit_test_sdk
@@ -177,6 +179,7 @@ workflows:
               only:
                 - master
       - release_sdk:
+          context: shared-secrets
           filters:
             branches:
               ignore:
