@@ -12,10 +12,10 @@ class UiConfiguration internal constructor(
 ) : Parcelable {
 
     class Builder {
-        private var avsEnabled: Boolean? = null
-        private var shouldPaymentMethodsDisplayAmount: Boolean? = null
-        private var shouldPaymentMethodsVerifySecurityCode: Boolean? = null
-        private var shouldPaymentButtonDisplayAmount: Boolean? = null
+        private var avsEnabled: Boolean? = false
+        private var shouldPaymentMethodsDisplayAmount: Boolean? = true
+        private var shouldPaymentMethodsVerifySecurityCode: Boolean? = true
+        private var shouldPaymentButtonDisplayAmount: Boolean? = false
 
         fun setAvsEnabled(enabled: Boolean?) = apply { this.avsEnabled = enabled }
 
@@ -31,11 +31,13 @@ class UiConfiguration internal constructor(
             apply { this.shouldPaymentButtonDisplayAmount = shouldPaymentButtonDisplayAmount }
 
         fun build(): UiConfiguration {
-            val avsEnabled = this.avsEnabled ?: false
-            val shouldPaymentMethodsDisplayAmount = this.shouldPaymentMethodsDisplayAmount ?: true
+            val avsEnabled = requireNotNull(this.avsEnabled)
+            val shouldPaymentMethodsDisplayAmount =
+                requireNotNull(this.shouldPaymentMethodsDisplayAmount)
             val shouldPaymentMethodsVerifySecurityCode =
-                this.shouldPaymentMethodsVerifySecurityCode ?: true
-            val shouldPaymentButtonDisplayAmount = this.shouldPaymentButtonDisplayAmount ?: false
+                requireNotNull(this.shouldPaymentMethodsVerifySecurityCode)
+            val shouldPaymentButtonDisplayAmount =
+                requireNotNull(this.shouldPaymentButtonDisplayAmount)
 
             return UiConfiguration(
                 avsEnabled,
