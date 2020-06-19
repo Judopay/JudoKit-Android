@@ -2,8 +2,8 @@ package com.judokit.android.ui.cardentry.validation
 
 import com.judokit.android.R
 import com.judokit.android.api.model.response.CardDate
-import com.judokit.android.ui.cardentry.components.FormFieldEvent
-import com.judokit.android.ui.cardentry.components.FormFieldType
+import com.judokit.android.ui.cardentry.model.FormFieldEvent
+import com.judokit.android.ui.cardentry.model.FormFieldType
 
 class ExpirationDateValidator(
     override val fieldType: FormFieldType = FormFieldType.EXPIRATION_DATE,

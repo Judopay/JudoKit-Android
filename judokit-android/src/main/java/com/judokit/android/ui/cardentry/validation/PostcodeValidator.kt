@@ -2,8 +2,8 @@ package com.judokit.android.ui.cardentry.validation
 
 import com.judokit.android.R
 import com.judokit.android.model.Country
-import com.judokit.android.ui.cardentry.components.FormFieldEvent
-import com.judokit.android.ui.cardentry.components.FormFieldType
+import com.judokit.android.ui.cardentry.model.FormFieldEvent
+import com.judokit.android.ui.cardentry.model.FormFieldType
 
 data class PostcodeValidator(
     var country: Country? = null,

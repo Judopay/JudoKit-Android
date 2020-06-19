@@ -101,14 +101,15 @@ class JudoEditTextInputLayout @JvmOverloads constructor(
         }
     }
 
-    private fun updateAccessoryViewState() {
-        accessoryImage?.let {
-            accessoryImageView.setImageResource(it)
-            accessoryImageView.visibility = View.VISIBLE
-            return
-        }
+    private fun updateAccessoryViewState() = with(accessoryImageView) {
+        val image = accessoryImage ?: 0
 
-        accessoryImageView.setImageDrawable(null)
-        accessoryImageView.visibility = View.GONE
+        visibility = if (image > 0) {
+            setImageResource(image)
+            View.VISIBLE
+        } else {
+            setImageDrawable(null)
+            View.GONE
+        }
     }
 }

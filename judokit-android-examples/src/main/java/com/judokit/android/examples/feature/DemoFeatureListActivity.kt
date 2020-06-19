@@ -44,8 +44,8 @@ import com.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judokit.android.model.googlepay.GooglePayShippingAddressParameters
 import com.judopay.samples.R
 import com.readystatesoftware.chuck.ChuckInterceptor
-import kotlinx.android.synthetic.main.activity_demo_feature_list.*
 import java.util.UUID
+import kotlinx.android.synthetic.main.activity_demo_feature_list.*
 
 const val JUDO_PAYMENT_WIDGET_REQUEST_CODE = 1
 const val LAST_USED_WIDGET_TYPE_KEY = "LAST_USED_WIDGET_TYPE"

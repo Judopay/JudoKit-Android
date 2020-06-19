@@ -1,7 +1,7 @@
 package com.judokit.android.model
 
 import cards.pay.paycardsrecognizer.sdk.Card
-import com.judokit.android.ui.cardentry.components.InputModel
+import com.judokit.android.ui.cardentry.model.InputModel
 
 enum class CardScanResultType {
     SUCCESS,
