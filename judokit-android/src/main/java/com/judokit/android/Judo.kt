@@ -14,6 +14,7 @@ import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.PrimaryAccountDetails
 import com.judokit.android.model.Reference
 import com.judokit.android.model.UiConfiguration
+import com.judokit.android.ui.common.REGEX_JUDO_ID
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -131,9 +132,18 @@ class Judo internal constructor(
             }
         }
 
+        @Throws(java.lang.IllegalArgumentException::class)
+        private fun requireJudoId(judoId: String?): String {
+            val id = requireNotNullOrEmpty(judoId, "judoId")
+            if (id.matches(REGEX_JUDO_ID.toRegex()))
+                return id
+            else
+                throw IllegalArgumentException("JudoId is invalid")
+        }
+
         @Throws(IllegalArgumentException::class)
         fun build(): Judo {
-            val id = requireNotNullOrEmpty(judoId, "judoId")
+            val id = requireJudoId(judoId)
             val token = requireNotNullOrEmpty(apiToken, "apiToken")
             val secret = requireNotNullOrEmpty(apiSecret, "apiSecret")
 
