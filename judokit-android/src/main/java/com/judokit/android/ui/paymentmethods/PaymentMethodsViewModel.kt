@@ -53,6 +53,7 @@ import com.judokit.android.ui.paymentmethods.model.PaymentMethodModel
 import com.zapp.library.merchant.util.PBBAAppUtils
 import java.util.Date
 import kotlinx.coroutines.launch
+import retrofit2.await
 
 // view-model actions
 sealed class PaymentMethodsAction {
@@ -222,10 +223,10 @@ class PaymentMethodsViewModel(
                     .build()
 
                 val response = when (judo.paymentWidgetType) {
-                    PaymentWidgetType.PAYMENT_METHODS -> service.tokenPayment(request)
+                    PaymentWidgetType.PAYMENT_METHODS -> service.tokenPayment(request).await()
                     PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> service.preAuthTokenPayment(
                         request
-                    )
+                    ).await()
                     else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
                 }
                 cardRepository.updateAllLastUsedToFalse()
