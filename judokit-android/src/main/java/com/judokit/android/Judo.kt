@@ -152,13 +152,7 @@ class Judo internal constructor(
 
             validatePaymentMethods(myAmount.currency)
 
-            val myUiConfiguration = uiConfiguration
-                ?: UiConfiguration.Builder()
-                    .setAvsEnabled(false)
-                    .setShouldPaymentMethodsDisplayAmount(true)
-                    .setShouldPaymentMethodsVerifySecurityCode(true)
-                    .setShouldPaymentButtonDisplayAmount(false)
-                    .build()
+            val myUiConfiguration = uiConfiguration ?: UiConfiguration.Builder().build()
 
             val mySandboxed = isSandboxed ?: false
 
