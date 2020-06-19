@@ -14,6 +14,7 @@ import com.judokit.android.api.model.response.CardVerificationResult
 import com.judokit.android.api.model.response.IdealSaleResponse
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.Receipt
+import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -51,7 +52,7 @@ interface JudoApiService {
      * @return the receipt for the token payment with the status of the transaction
      */
     @POST("transactions/payments")
-    suspend fun tokenPayment(@Body tokenRequest: TokenRequest): JudoApiCallResult<Receipt>
+    fun tokenPayment(@Body tokenRequest: TokenRequest): Call<JudoApiCallResult<Receipt>>
 
     /**
      * Perform a token pre-auth using a tokenised card
@@ -60,7 +61,7 @@ interface JudoApiService {
      * @return the receipt for the pre-auth with the status of the transaction
      */
     @POST("transactions/preauths")
-    suspend fun preAuthTokenPayment(@Body tokenRequest: TokenRequest): JudoApiCallResult<Receipt>
+    fun preAuthTokenPayment(@Body tokenRequest: TokenRequest): Call<JudoApiCallResult<Receipt>>
 
     /**
      * Complete a transaction that required 3D-Secure verification by providing the 3D-Secure response data.

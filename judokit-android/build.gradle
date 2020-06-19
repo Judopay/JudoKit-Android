@@ -76,7 +76,7 @@ dependencies {
 
     implementation 'com.judopay:device-dna:1.0.0'
 
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    api "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
     implementation "androidx.core:core:$androidx_core_version"

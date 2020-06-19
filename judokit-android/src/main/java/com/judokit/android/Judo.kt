@@ -3,6 +3,7 @@ package com.judokit.android
 import android.app.Activity
 import android.os.Parcelable
 import com.judokit.android.api.model.request.Address
+import com.judokit.android.api.model.request.TokenRequest
 import com.judokit.android.model.Amount
 import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.Currency
@@ -13,6 +14,7 @@ import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.PrimaryAccountDetails
 import com.judokit.android.model.Reference
 import com.judokit.android.model.UiConfiguration
+import com.judokit.android.ui.common.REGEX_JUDO_ID
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -56,6 +58,19 @@ class Judo internal constructor(
     val address: Address?,
     val pbbaConfiguration: PBBAConfiguration?
 ) : Parcelable {
+
+    fun toTokenPayment(cardToken: String, securityCode: String? = null) = TokenRequest.Builder()
+        .setAmount(amount.amount)
+        .setCurrency(amount.currency.name)
+        .setJudoId(judoId)
+        .setYourPaymentReference(reference.paymentReference)
+        .setYourConsumerReference(reference.consumerReference)
+        .setYourPaymentMetaData(reference.metaData?.toMap())
+        .setCardToken(cardToken)
+        .setCv2(securityCode)
+        .setPrimaryAccountDetails(primaryAccountDetails)
+        .setAddress(Address.Builder().build())
+        .build()
 
     class Builder(private val paymentWidgetType: PaymentWidgetType) {
         private var judoId: String? = null
@@ -117,9 +132,18 @@ class Judo internal constructor(
             }
         }
 
+        @Throws(java.lang.IllegalArgumentException::class)
+        private fun requireJudoId(judoId: String?): String {
+            val id = requireNotNullOrEmpty(judoId, "judoId")
+            if (id.matches(REGEX_JUDO_ID.toRegex()))
+                return id
+            else
+                throw IllegalArgumentException("JudoId is invalid")
+        }
+
         @Throws(IllegalArgumentException::class)
         fun build(): Judo {
-            val id = requireNotNullOrEmpty(judoId, "judoId")
+            val id = requireJudoId(judoId)
             val token = requireNotNullOrEmpty(apiToken, "apiToken")
             val secret = requireNotNullOrEmpty(apiSecret, "apiSecret")
 
