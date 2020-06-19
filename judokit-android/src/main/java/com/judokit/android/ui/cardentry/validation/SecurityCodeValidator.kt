@@ -3,8 +3,8 @@ package com.judokit.android.ui.cardentry.validation
 import com.judokit.android.R
 import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.securityCodeLength
-import com.judokit.android.ui.cardentry.components.FormFieldEvent
-import com.judokit.android.ui.cardentry.components.FormFieldType
+import com.judokit.android.ui.cardentry.model.FormFieldEvent
+import com.judokit.android.ui.cardentry.model.FormFieldType
 
 data class SecurityCodeValidator(
     var cardNetwork: CardNetwork? = null,

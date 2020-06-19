@@ -2,9 +2,9 @@ package com.judokit.android.examples.result.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.judopay.samples.R
 import com.judokit.android.examples.common.inflate
 import com.judokit.android.examples.model.ResultItem
+import com.judopay.samples.R
 
 class ResultActivityAdapter(
     features: List<ResultItem> = emptyList(),
