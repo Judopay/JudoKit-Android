@@ -80,7 +80,7 @@ class Judo internal constructor(
         private var isSandboxed: Boolean? = null
         private var amount: Amount? = null
         private var reference: Reference? = null
-        private var uiConfiguration: UiConfiguration? = null
+        private var uiConfiguration: UiConfiguration? = UiConfiguration.Builder().build()
         private var paymentMethods: Array<PaymentMethod>? = null
         private var supportedCardNetworks: Array<CardNetwork>? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
@@ -152,14 +152,7 @@ class Judo internal constructor(
 
             validatePaymentMethods(myAmount.currency)
 
-            val myUiConfiguration = uiConfiguration
-                ?: UiConfiguration.Builder()
-                    .setAvsEnabled(false)
-                    .setShouldPaymentMethodsDisplayAmount(true)
-                    .setShouldPaymentMethodsVerifySecurityCode(true)
-                    .setShouldPaymentButtonDisplayAmount(false)
-                    .build()
-
+            val myUiConfiguration = requireNotNull(uiConfiguration, "uiConfiguration")
             val mySandboxed = isSandboxed ?: false
 
             val defaultPaymentMethods = arrayOf(PaymentMethod.CARD)
