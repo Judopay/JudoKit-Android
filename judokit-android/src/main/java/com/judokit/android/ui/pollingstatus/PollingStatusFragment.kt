@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.judokit.android.JudoSharedViewModel
 import com.judokit.android.R
+import com.judokit.android.animateWithAlpha
 import com.judokit.android.api.error.toJudoError
 import com.judokit.android.api.factory.JudoApiServiceFactory
 import com.judokit.android.api.model.response.BankSaleResponse
@@ -113,8 +114,7 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
                 data.pbbaBrn,
                 this
             )
-            pollingStatusView.visibility = View.VISIBLE
-            requireDialog().window?.setDimAmount(0.5f)
+            pollingStatusView.animateWithAlpha(1.0f)
         } else {
             sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Error(JudoError.generic()))
             findNavController().popBackStack()
