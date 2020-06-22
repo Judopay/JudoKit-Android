@@ -26,7 +26,7 @@ import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.code
 import com.judokit.android.model.toIntent
 import com.judokit.android.ui.common.ButtonState
-import com.judopay.samples.R
+import com.judokit.android.examples.R
 import kotlinx.android.synthetic.main.activity_demo_token_payment.*
 import retrofit2.Call
 import retrofit2.Callback
