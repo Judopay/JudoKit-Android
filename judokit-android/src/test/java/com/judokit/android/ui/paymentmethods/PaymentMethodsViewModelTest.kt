@@ -52,6 +52,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import retrofit2.await
 
 @ExperimentalCoroutinesApi
 @ExtendWith(InstantExecutorExtension::class)
@@ -77,13 +78,16 @@ internal class PaymentMethodsViewModelTest {
     @BeforeEach
     internal fun setUp() {
         Dispatchers.setMain(testDispatcher)
-
+        mockkStatic("retrofit2.KotlinExtensions")
         mockkStatic("com.zapp.library.merchant.util.PBBAAppUtils")
         every { PBBAAppUtils.isCFIAppAvailable(application) } returns false
         coEvery { repository.findWithId(0) } returns mockk(relaxed = true)
         coEvery { repository.allCardsSync.value } returns null
         coEvery {
-            service.tokenPayment(any()).hint(JudoApiCallResult::class)
+            service.tokenPayment(any()).await()
+        } returns mockk(relaxed = true)
+        coEvery {
+            service.preAuthTokenPayment(any()).await()
         } returns mockk(relaxed = true)
         coEvery { service.sale(any<BankSaleRequest>()) } returns mockk(relaxed = true)
 
@@ -402,7 +406,7 @@ internal class PaymentMethodsViewModelTest {
 
         sut.send(PaymentMethodsAction.PayWithSelectedStoredCard())
 
-        coVerify { service.tokenPayment(any()) }
+        coVerify { service.tokenPayment(any()).await() }
     }
 
     @DisplayName("Given send with PayWithSelectedStoredCard action is called, when PaymentWidgetType is PRE_AUTH_PAYMENT_METHODS, then call service.preAuthTokenPayment(request)")
@@ -428,7 +432,7 @@ internal class PaymentMethodsViewModelTest {
 
         sut.send(PaymentMethodsAction.PayWithSelectedStoredCard())
 
-        coVerify { service.preAuthTokenPayment(any()) }
+        coVerify { service.preAuthTokenPayment(any()).await() }
     }
 
     @DisplayName("Given send with PayWithSelectedStoredCard action is called, when PaymentWidgetType is CARD_PAYMENT, then throw IllegalStateException")

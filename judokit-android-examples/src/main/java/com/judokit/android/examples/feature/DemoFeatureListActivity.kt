@@ -23,6 +23,7 @@ import com.judokit.android.examples.common.startResultActivity
 import com.judokit.android.examples.common.toResult
 import com.judokit.android.examples.feature.adapter.DemoFeaturesAdapter
 import com.judokit.android.examples.feature.paybybank.PayByBankActivity
+import com.judokit.android.examples.feature.tokenpayment.DemoTokenPaymentActivity
 import com.judokit.android.examples.model.DemoFeature
 import com.judokit.android.examples.settings.SettingsActivity
 import com.judokit.android.model.Amount
@@ -43,8 +44,8 @@ import com.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judokit.android.model.googlepay.GooglePayShippingAddressParameters
 import com.judokit.android.examples.R
 import com.readystatesoftware.chuck.ChuckInterceptor
-import kotlinx.android.synthetic.main.activity_demo_feature_list.*
 import java.util.UUID
+import kotlinx.android.synthetic.main.activity_demo_feature_list.*
 
 const val JUDO_PAYMENT_WIDGET_REQUEST_CODE = 1
 const val LAST_USED_WIDGET_TYPE_KEY = "LAST_USED_WIDGET_TYPE"
@@ -153,6 +154,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             val widgetType = when (feature) {
                 DemoFeature.PAYMENT -> PaymentWidgetType.CARD_PAYMENT
                 DemoFeature.PREAUTH -> PaymentWidgetType.PRE_AUTH
+                DemoFeature.TOKEN_PAYMENT,
                 DemoFeature.REGISTER_CARD -> PaymentWidgetType.REGISTER_CARD
                 DemoFeature.CREATE_CARD_TOKEN -> PaymentWidgetType.CREATE_CARD_TOKEN
                 DemoFeature.CHECK_CARD -> PaymentWidgetType.CHECK_CARD
@@ -164,7 +166,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 DemoFeature.PAY_BY_BANK_APP -> PaymentWidgetType.PAY_BY_BANK_APP
             }
             val judoConfig = getJudo(widgetType)
-            navigateToJudoPaymentWidgetWithConfigurations(judoConfig)
+            navigateToJudoPaymentWidgetWithConfigurations(judoConfig, feature)
             sharedPreferences.edit().putString(LAST_USED_WIDGET_TYPE_KEY, widgetType.name).apply()
         } catch (exception: Exception) {
             when (exception) {
@@ -178,11 +180,15 @@ class DemoFeatureListActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToJudoPaymentWidgetWithConfigurations(judo: Judo) {
-        val myClass = if (judo.paymentWidgetType == PaymentWidgetType.PAY_BY_BANK_APP) {
-            PayByBankActivity::class.java
-        } else {
-            JudoActivity::class.java
+    private fun navigateToJudoPaymentWidgetWithConfigurations(judo: Judo, feature: DemoFeature) {
+        val myClass = when (judo.paymentWidgetType) {
+            PaymentWidgetType.REGISTER_CARD -> if (feature == DemoFeature.TOKEN_PAYMENT) {
+                DemoTokenPaymentActivity::class.java
+            } else {
+                JudoActivity::class.java
+            }
+            PaymentWidgetType.PAY_BY_BANK_APP -> PayByBankActivity::class.java
+            else -> JudoActivity::class.java
         }
         val intent = Intent(this, myClass)
         intent.putExtra(JUDO_OPTIONS, judo)

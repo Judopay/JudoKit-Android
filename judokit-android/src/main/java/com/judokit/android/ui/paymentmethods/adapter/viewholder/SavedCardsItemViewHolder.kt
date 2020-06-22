@@ -57,7 +57,11 @@ class SavedCardsItemViewHolder(view: View) : RecyclerView.ViewHolder(view),
             title.text = model.title
 
             val image = model.network.iconImageResId
-            if (image > 0) networkIconImageView.setImageResource(image)
+            if (image > 0) {
+                networkIconImageView.setImageResource(image)
+            } else {
+                networkIconImageView.setImageDrawable(null)
+            }
         }
 
     private fun createBoldSubtitle(model: PaymentMethodSavedCardItem): SpannableStringBuilder {

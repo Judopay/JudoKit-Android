@@ -269,7 +269,7 @@ class IdealViewModelTest {
     }
 
     private fun getJudo() = Judo.Builder(PaymentWidgetType.CARD_PAYMENT)
-        .setJudoId("id")
+        .setJudoId("111111111")
         .setSiteId("siteId")
         .setApiToken("token")
         .setApiSecret("secret")

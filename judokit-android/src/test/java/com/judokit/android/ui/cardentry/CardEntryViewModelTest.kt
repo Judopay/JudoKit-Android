@@ -18,9 +18,9 @@ import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.Reference
 import com.judokit.android.model.formatted
 import com.judokit.android.model.toInputModel
-import com.judokit.android.ui.cardentry.components.FormFieldType
-import com.judokit.android.ui.cardentry.components.FormModel
-import com.judokit.android.ui.cardentry.components.InputModel
+import com.judokit.android.ui.cardentry.model.FormFieldType
+import com.judokit.android.ui.cardentry.model.FormModel
+import com.judokit.android.ui.cardentry.model.InputModel
 import com.judokit.android.ui.common.ButtonState
 import com.judokit.android.ui.paymentmethods.toTokenizedCardEntity
 import io.mockk.coEvery
@@ -164,7 +164,7 @@ internal class CardEntryViewModelTest {
         sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
         sut.model.observeForever(modelMock)
 
-        sut.send(CardEntryAction.ValidationPassed(inputModel))
+        sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
 
         verify { modelMock.onChanged(capture(slots)) }
 
@@ -200,7 +200,7 @@ internal class CardEntryViewModelTest {
     fun makePaymentRequestOnSubmitFormWithCardPaymentWidgetType() {
         sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
 
-        sut.send(CardEntryAction.ValidationPassed(inputModel))
+        sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
         sut.send(CardEntryAction.SubmitForm)
 
         coVerify { service.payment(any()) }
@@ -213,7 +213,7 @@ internal class CardEntryViewModelTest {
 
         sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
 
-        sut.send(CardEntryAction.ValidationPassed(inputModel))
+        sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
         sut.send(CardEntryAction.SubmitForm)
 
         coVerify { service.preAuthPayment(any()) }
@@ -226,7 +226,7 @@ internal class CardEntryViewModelTest {
 
         sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
 
-        sut.send(CardEntryAction.ValidationPassed(inputModel))
+        sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
         sut.send(CardEntryAction.SubmitForm)
 
         coVerify { service.registerCard(any()) }
@@ -239,7 +239,7 @@ internal class CardEntryViewModelTest {
 
         sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
 
-        sut.send(CardEntryAction.ValidationPassed(inputModel))
+        sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
         sut.send(CardEntryAction.SubmitForm)
 
         coVerify { service.checkCard(any()) }
@@ -252,7 +252,7 @@ internal class CardEntryViewModelTest {
 
         sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
 
-        sut.send(CardEntryAction.ValidationPassed(inputModel))
+        sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
         sut.send(CardEntryAction.SubmitForm)
 
         coVerify { service.saveCard(any()) }
@@ -281,7 +281,7 @@ internal class CardEntryViewModelTest {
         sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
         sut.judoApiCallResult.observeForever(judoApiCallResultMock)
 
-        sut.send(CardEntryAction.ValidationPassed(inputModel))
+        sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
         sut.send(CardEntryAction.SubmitForm)
 
         verify { judoApiCallResultMock.onChanged(capture(slots)) }
@@ -301,7 +301,7 @@ internal class CardEntryViewModelTest {
 
         sut.securityCodeResult.observeForever(securityCodeResultMock)
 
-        sut.send(CardEntryAction.ValidationPassed(inputModel))
+        sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
         sut.send(CardEntryAction.SubmitForm)
 
         verify { securityCodeResultMock.onChanged(capture(slots)) }

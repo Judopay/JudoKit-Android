@@ -36,6 +36,9 @@
     <string name="feature_title_pay_by_bank_app">Pay by Bank app</string>
     <string name="feature_subtitle_pay_by_bank_app">by using your existing Bank app</string>
 
+    <string name="feature_title_token_payment">Token payments</string>
+    <string name="feature_subtitle_token_payment">Token payments (no UI)</string>
+
     <string name="title_settings">Settings</string>
 
     <!-- Preference Titles -->
@@ -106,4 +109,8 @@
     <string name="should_payment_button_display_amount_title">Display amount on button</string>
     <string name="should_payment_button_display_amount_summary">Turn on to show amount on the Pay button.</string>
 
+    <string name="create_card_token">Create card token</string>
+    <string name="token_payment">Token payment</string>
+    <string name="preauth_token_payment">PreAuth token payment</string>
+    <string name="token_payment_description">To make a token or preauth token payment, first you have to create a card token</string>
 </resources>
