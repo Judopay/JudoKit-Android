@@ -46,7 +46,7 @@ jobs:
             - .
 
   # Add below as additional command once instrumented tests are added
-  # ./gradlew :judokit-android-examples:assembleDebugAndroidTest
+  # ./gradlew :judokit-android-examples:assembleReleaseAndroidTest
   build_sample:
     executor: android
     steps:
@@ -58,7 +58,7 @@ jobs:
       - run:
           name: Build Sample App APK
           command: |
-            ./gradlew :judokit-android-examples:assembleDebug
+            ./gradlew :judokit-android-examples:assembleRelease
       - save_cache:
           key: judokit-android-examples-{{ checksum "judokit-android-examples/build.gradle" }}
           paths:
