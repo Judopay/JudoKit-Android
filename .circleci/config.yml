@@ -137,7 +137,7 @@ jobs:
             export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-service-key.json
       - run:
           name: Create Release Notes
-          command: echo $(git log -1 --pretty=format:"%b") > ./build/notes.txt
+          command: echo "$(git log -1 --pretty=format:"%b")" > ./build/notes.txt
       - run:
           name: Distribute Sample App
           command: |
