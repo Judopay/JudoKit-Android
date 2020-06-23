@@ -1,7 +1,8 @@
 .gradle
 /.idea/*
 .DS_Store
-/build
+build
 /captures
 *.iml
 local.properties
+.scannerwork

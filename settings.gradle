@@ -1,3 +1,10 @@
 rootProject.name='JudoKit-Android'
 include ':judokit-android-examples'
 include ':judokit-android'
+
+buildCache {
+    local {
+        directory = new File(rootDir, 'build/cache')
+        removeUnusedEntriesAfterDays = 30
+    }
+}

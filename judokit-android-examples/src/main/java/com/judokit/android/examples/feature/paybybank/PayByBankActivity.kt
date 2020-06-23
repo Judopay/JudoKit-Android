@@ -7,7 +7,7 @@ import com.judokit.android.JUDO_OPTIONS
 import com.judokit.android.Judo
 import com.judokit.android.JudoActivity
 import com.judokit.android.examples.feature.JUDO_PAYMENT_WIDGET_REQUEST_CODE
-import com.judopay.samples.R
+import com.judokit.android.examples.R
 import kotlinx.android.synthetic.main.activity_pay_by_bank.*
 
 class PayByBankActivity : AppCompatActivity() {
