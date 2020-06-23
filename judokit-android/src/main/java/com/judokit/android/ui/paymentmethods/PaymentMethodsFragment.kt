@@ -1,5 +1,6 @@
 package com.judokit.android.ui.paymentmethods
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -76,8 +77,11 @@ class PaymentMethodsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (judo.pbbaConfiguration?.deepLinkURL != null) {
-            navigateToPollingStatus()
+
+        judo.pbbaConfiguration?.deepLinkURL?.let {
+            if (it != Uri.EMPTY) {
+                navigateToPollingStatus()
+            }
         }
         val application = requireActivity().application
         val cardDate = CardDate()

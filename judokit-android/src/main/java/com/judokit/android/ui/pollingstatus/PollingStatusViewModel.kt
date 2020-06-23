@@ -73,7 +73,7 @@ class PollingStatusViewModel(
         when (paymentWidgetType ?: judo.paymentWidgetType) {
             PaymentWidgetType.PAY_BY_BANK_APP -> {
                 val url = judo.pbbaConfiguration?.deepLinkURL
-                if (url != null && isDeepLinkCallback) {
+                if (url != null && url != Uri.EMPTY && isDeepLinkCallback) {
                     handleDeepLinkCallback(url)
                 } else {
                     payWithPayByBank()
