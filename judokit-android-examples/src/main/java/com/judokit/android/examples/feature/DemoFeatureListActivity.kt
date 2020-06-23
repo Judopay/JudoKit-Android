@@ -42,7 +42,7 @@ import com.judokit.android.model.googlepay.GooglePayAddressFormat
 import com.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judokit.android.model.googlepay.GooglePayShippingAddressParameters
-import com.judopay.samples.R
+import com.judokit.android.examples.R
 import com.readystatesoftware.chuck.ChuckInterceptor
 import java.util.UUID
 import kotlinx.android.synthetic.main.activity_demo_feature_list.*

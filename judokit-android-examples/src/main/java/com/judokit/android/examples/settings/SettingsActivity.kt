@@ -3,7 +3,7 @@ package com.judokit.android.examples.settings
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceFragmentCompat
-import com.judopay.samples.R
+import com.judokit.android.examples.R
 
 class SettingsActivity : AppCompatActivity() {
 
