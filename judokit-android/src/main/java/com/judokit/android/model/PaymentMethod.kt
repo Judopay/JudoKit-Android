@@ -18,15 +18,15 @@ internal val PaymentMethod.icon
         PaymentMethod.CARD -> R.drawable.ic_cards
         PaymentMethod.GOOGLE_PAY -> R.drawable.ic_google_pay
         PaymentMethod.IDEAL -> R.drawable.ic_ideal
-        PaymentMethod.PAY_BY_BANK -> R.drawable.ic_pay_by_bank_logo
+        PaymentMethod.PAY_BY_BANK -> R.drawable.ic_pay_by_bank_app_logo
     }
 
 internal val PaymentMethod.text
     get() = when (this) {
         PaymentMethod.CARD -> R.string.cards
-        PaymentMethod.GOOGLE_PAY -> R.string.empty
         PaymentMethod.IDEAL -> R.string.ideal_payment
-        PaymentMethod.PAY_BY_BANK -> R.string.pay_by_bank
+        PaymentMethod.GOOGLE_PAY,
+        PaymentMethod.PAY_BY_BANK -> R.string.empty
     }
 
 internal val PaymentMethod.paymentButtonType: PaymentButtonType
