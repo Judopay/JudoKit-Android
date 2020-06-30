@@ -4,13 +4,14 @@ import android.content.Context
 import android.os.Build
 import com.judokit.android.BuildConfig
 import com.judokit.android.api.AppMetaDataProvider
-import com.judokit.android.api.model.Credentials
+import com.judokit.android.api.model.Authorization
 import java.io.IOException
 import okhttp3.Headers
 import okhttp3.Interceptor
 import okhttp3.Response
 
-private const val AUTHORIZATION_HEADER = "Authorization"
+internal const val AUTHORIZATION_HEADER = "Authorization"
+internal const val PAYMENT_SESSION_HEADER = "Payment-Session"
 private const val CONTENT_TYPE_HEADER = "Content-Type"
 private const val ACCEPT_HEADER = "Accept"
 private const val API_VERSION_HEADER = "Api-Version"
@@ -24,7 +25,7 @@ private const val CACHE_CONTROL = "no-cache"
 private const val CUSTOM_UI_MODE = "Custom-UI"
 
 internal class ApiHeadersInterceptor(
-    private val credentials: Credentials,
+    private val authorization: Authorization,
     context: Context
 ) : Interceptor {
 
@@ -41,7 +42,7 @@ internal class ApiHeadersInterceptor(
 
     private val headers: Headers
         get() = Headers.Builder()
-            .add(AUTHORIZATION_HEADER, credentials.basicAuthorizationHeader)
+            .addAll(authorization.headers)
             .add(CONTENT_TYPE_HEADER, JSON_MIME_TYPE)
             .add(ACCEPT_HEADER, JSON_MIME_TYPE)
             .add(API_VERSION_HEADER, API_VERSION)

@@ -2,7 +2,6 @@ package com.judokit.android.ui.ideal
 
 import android.app.Application
 import androidx.lifecycle.Observer
-import com.judokit.android.InstantExecutorExtension
 import com.judokit.android.Judo
 import com.judokit.android.api.JudoApiService
 import com.judokit.android.api.model.request.IdealSaleRequest
@@ -271,8 +270,7 @@ class IdealViewModelTest {
     private fun getJudo() = Judo.Builder(PaymentWidgetType.CARD_PAYMENT)
         .setJudoId("111111111")
         .setSiteId("siteId")
-        .setApiToken("token")
-        .setApiSecret("secret")
+        .setAuthorization(mockk(relaxed = true))
         .setAmount(Amount("1", Currency.EUR))
         .setReference(Reference("consumer", "payment"))
         .build()

@@ -41,6 +41,11 @@
             app:summary="@string/secret_summary"
             app:title="@string/secret_title" />
 
+        <EditTextPreference
+            app:iconSpaceReserved="false"
+            app:key="payment_session"
+            app:summary="@string/payment_session_summary"
+            app:title="@string/payment_session_title" />
     </PreferenceCategory>
 
     <PreferenceCategory

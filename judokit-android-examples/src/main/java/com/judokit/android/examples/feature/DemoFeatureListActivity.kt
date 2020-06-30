@@ -19,6 +19,9 @@ import com.judokit.android.PAYMENT_CANCELLED
 import com.judokit.android.PAYMENT_ERROR
 import com.judokit.android.PAYMENT_SUCCESS
 import com.judokit.android.api.factory.JudoApiServiceFactory
+import com.judokit.android.api.model.BasicAuthorization
+import com.judokit.android.api.model.PaymentSessionAuthorization
+import com.judokit.android.examples.R
 import com.judokit.android.examples.common.startResultActivity
 import com.judokit.android.examples.common.toResult
 import com.judokit.android.examples.feature.adapter.DemoFeaturesAdapter
@@ -42,7 +45,6 @@ import com.judokit.android.model.googlepay.GooglePayAddressFormat
 import com.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judokit.android.model.googlepay.GooglePayShippingAddressParameters
-import com.judokit.android.examples.R
 import com.readystatesoftware.chuck.ChuckInterceptor
 import java.util.UUID
 import kotlinx.android.synthetic.main.activity_demo_feature_list.*
@@ -217,12 +219,18 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val siteId = sharedPreferences.getString("site_id", null)
         val token = sharedPreferences.getString("token", null)
         val secret = sharedPreferences.getString("secret", null)
+        val paymentSession = sharedPreferences.getString("payment_session", null)
+
+        val authorization = if (!paymentSession.isNullOrEmpty()) {
+            PaymentSessionAuthorization(paymentSession, token)
+        } else {
+            BasicAuthorization(token, secret)
+        }
 
         return Judo.Builder(widgetType)
             .setJudoId(judoId)
             .setSiteId(siteId)
-            .setApiToken(token)
-            .setApiSecret(secret)
+            .setAuthorization(authorization)
             .setAmount(amount)
             .setReference(reference)
             .setIsSandboxed(isSandboxed)

@@ -524,8 +524,7 @@ internal class CardEntryViewModelTest {
         every { paymentWidgetType } returns PaymentWidgetType.CARD_PAYMENT
         every { judoId } returns "id"
         every { siteId } returns "siteId"
-        every { apiToken } returns "token"
-        every { apiSecret } returns "secret"
+        every { authorization } returns mockk(relaxed = true)
         every { amount } returns Amount("1", Currency.EUR)
         every { reference } returns Reference("consumer", "payment")
     }

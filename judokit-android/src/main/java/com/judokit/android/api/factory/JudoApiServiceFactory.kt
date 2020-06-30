@@ -11,7 +11,6 @@ import com.judokit.android.api.interceptor.ApiHeadersInterceptor
 import com.judokit.android.api.interceptor.DeDuplicationInterceptor
 import com.judokit.android.api.interceptor.DeviceDnaInterceptor
 import com.judokit.android.api.interceptor.PayLoadInterceptor
-import com.judokit.android.api.model.Credentials.Companion.fromConfiguration
 import com.judokit.android.apiBaseUrl
 import java.math.BigDecimal
 import java.security.KeyStore
@@ -132,7 +131,7 @@ object JudoApiServiceFactory {
 
         add(DeDuplicationInterceptor())
         add(DeviceDnaInterceptor(context))
-        add(ApiHeadersInterceptor(fromConfiguration(context, judo), context))
+        add(ApiHeadersInterceptor(judo.authorization, context))
         add(PayLoadInterceptor(context))
 
         externalInterceptors?.forEach {
