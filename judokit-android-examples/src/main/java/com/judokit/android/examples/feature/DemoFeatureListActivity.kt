@@ -19,6 +19,7 @@ import com.judokit.android.PAYMENT_CANCELLED
 import com.judokit.android.PAYMENT_ERROR
 import com.judokit.android.PAYMENT_SUCCESS
 import com.judokit.android.api.factory.JudoApiServiceFactory
+import com.judokit.android.api.model.Authorization
 import com.judokit.android.api.model.BasicAuthorization
 import com.judokit.android.api.model.PaymentSessionAuthorization
 import com.judokit.android.examples.R
@@ -217,15 +218,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val isSandboxed = sharedPreferences.getBoolean("is_sandboxed", true)
         val judoId = sharedPreferences.getString("judo_id", null)
         val siteId = sharedPreferences.getString("site_id", null)
-        val token = sharedPreferences.getString("token", null)
-        val secret = sharedPreferences.getString("secret", null)
-        val paymentSession = sharedPreferences.getString("payment_session", null)
-
-        val authorization = if (!paymentSession.isNullOrEmpty()) {
-            PaymentSessionAuthorization(paymentSession, token)
-        } else {
-            BasicAuthorization(token, secret)
-        }
 
         return Judo.Builder(widgetType)
             .setJudoId(judoId)
@@ -275,11 +267,18 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     private val reference: Reference
         get() {
-            val randomString = UUID.randomUUID().toString()
+            val isPaymentSessionEnabled =
+                sharedPreferences.getBoolean("is_payment_session_enabled", false)
+
+            val paymentReference = if (isPaymentSessionEnabled) {
+                sharedPreferences.getString("payment_reference", null)
+            } else {
+                UUID.randomUUID().toString()
+            }
 
             return Reference.Builder()
                 .setConsumerReference("my-unique-ref")
-                .setPaymentReference(randomString)
+                .setPaymentReference(paymentReference)
                 .build()
         }
 
@@ -347,4 +346,19 @@ class DemoFeatureListActivity : AppCompatActivity() {
     private val pbbaConfiguration: PBBAConfiguration
         get() = PBBAConfiguration.Builder().setDeepLinkScheme("judo://pay")
             .setDeepLinkURL(deepLinkIntent?.data).build()
+
+    private val authorization: Authorization
+        get() {
+            val token = sharedPreferences.getString("token", null)
+            val secret = sharedPreferences.getString("secret", null)
+            val isPaymentSessionEnabled =
+                sharedPreferences.getBoolean("is_payment_session_enabled", false)
+
+            return if (isPaymentSessionEnabled) {
+                val paymentSession = sharedPreferences.getString("payment_session", null)
+                PaymentSessionAuthorization(paymentSession, token)
+            } else {
+                BasicAuthorization(token, secret)
+            }
+        }
 }

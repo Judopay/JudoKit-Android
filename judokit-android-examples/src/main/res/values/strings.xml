@@ -65,6 +65,12 @@
     <string name="payment_session_title">Payment session</string>
     <string name="payment_session_summary">Your API authorization payment session</string>
 
+    <string name="is_payment_session_enabled_title">Enable payment session authorization</string>
+    <string name="is_payment_session_enabled_summary">Turn on to set payment session and custom payment reference</string>
+
+    <string name="payment_reference_title">Payment reference</string>
+    <string name="payment_reference_summary">Your custom payment reference</string>
+
     <string name="should_display_amount_title">Display amount label</string>
     <string name="should_display_amount_summary">Turn off to hide amount label in the payment methods screen.</string>
 

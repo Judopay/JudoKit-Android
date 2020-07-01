@@ -41,11 +41,27 @@
             app:summary="@string/secret_summary"
             app:title="@string/secret_title" />
 
+        <SwitchPreference
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="is_payment_session_enabled"
+            app:summary="@string/is_payment_session_enabled_summary"
+            app:title="@string/is_payment_session_enabled_title" />
+
         <EditTextPreference
+            app:dependency="is_payment_session_enabled"
             app:iconSpaceReserved="false"
             app:key="payment_session"
             app:summary="@string/payment_session_summary"
             app:title="@string/payment_session_title" />
+
+        <EditTextPreference
+            app:dependency="is_payment_session_enabled"
+            app:iconSpaceReserved="false"
+            app:key="payment_reference"
+            app:summary="@string/payment_reference_summary"
+            app:title="@string/payment_reference_title" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
