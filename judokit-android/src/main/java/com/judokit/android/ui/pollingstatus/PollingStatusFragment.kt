@@ -85,6 +85,8 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
             handleSaleStatusResult(result)
         })
         pollingStatusView.onButtonClickListener = { handlePollingStatusViewButtonClick(it) }
+
+        pollingStatusView.animateWithAlpha(1.0f)
     }
 
     // PBBAPopupCallback
@@ -114,7 +116,6 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
                 data.pbbaBrn,
                 this
             )
-            pollingStatusView.animateWithAlpha(1.0f)
         } else {
             sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Error(JudoError.generic()))
             findNavController().popBackStack()
