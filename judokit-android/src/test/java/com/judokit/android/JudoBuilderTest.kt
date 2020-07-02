@@ -27,8 +27,7 @@ internal class JudoBuilderTest {
     fun setUp() {
         judoBuilder = Judo.Builder(PaymentWidgetType.CARD_PAYMENT)
             .setJudoId("111111111")
-            .setApiToken("1")
-            .setApiSecret("1")
+            .setAuthorization(mockk(relaxed = true))
             .setAmount(Amount("1", Currency.GBP))
             .setReference(mockk(relaxed = true) {
                 every { consumerReference } returns "consumer"
@@ -86,34 +85,10 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("Given apiToken is null, then build() should throw a IllegalArgumentException")
-    fun testThatBuildThrowsOnTokenNull() {
+    @DisplayName("Given authorization is null, then build() should throw a IllegalArgumentException")
+    fun testThatBuildThrowsOnAuthorizationNull() {
         assertThrows<IllegalArgumentException> {
-            judoBuilder.setApiToken(null).build()
-        }
-    }
-
-    @Test
-    @DisplayName("Given apiToken is empty, then build() should throw a IllegalArgumentException")
-    fun testThatBuildThrowsOnTokenEmpty() {
-        assertThrows<IllegalArgumentException> {
-            judoBuilder.setApiToken("").build()
-        }
-    }
-
-    @Test
-    @DisplayName("Given apiSecret is null, then build() should throw a IllegalArgumentException")
-    fun testThatBuildThrowsOnSecretNull() {
-        assertThrows<IllegalArgumentException> {
-            judoBuilder.setApiSecret(null).build()
-        }
-    }
-
-    @Test
-    @DisplayName("Given apiSecret is empty, then build() should throw a IllegalArgumentException")
-    fun testThatBuildThrowsOnSecretEmpty() {
-        assertThrows<IllegalArgumentException> {
-            judoBuilder.setApiSecret("").build()
+            judoBuilder.setAuthorization(null).build()
         }
     }
 

@@ -2,6 +2,7 @@ package com.judokit.android
 
 import android.app.Activity
 import android.os.Parcelable
+import com.judokit.android.api.model.Authorization
 import com.judokit.android.api.model.request.Address
 import com.judokit.android.api.model.request.TokenRequest
 import com.judokit.android.model.Amount
@@ -44,8 +45,7 @@ const val PAYMENT_ERROR = Activity.RESULT_FIRST_USER + 3
 class Judo internal constructor(
     val judoId: String,
     val siteId: String?,
-    val apiToken: String,
-    val apiSecret: String,
+    val authorization: Authorization,
     val isSandboxed: Boolean,
     val amount: Amount,
     val reference: Reference,
@@ -75,8 +75,7 @@ class Judo internal constructor(
     class Builder(private val paymentWidgetType: PaymentWidgetType) {
         private var judoId: String? = null
         private var siteId: String? = null
-        private var apiToken: String? = null
-        private var apiSecret: String? = null
+        private var authorization: Authorization? = null
         private var isSandboxed: Boolean? = null
         private var amount: Amount? = null
         private var reference: Reference? = null
@@ -90,8 +89,9 @@ class Judo internal constructor(
 
         fun setJudoId(id: String?) = apply { this.judoId = id }
         fun setSiteId(id: String?) = apply { this.siteId = id }
-        fun setApiToken(token: String?) = apply { this.apiToken = token }
-        fun setApiSecret(secret: String?) = apply { this.apiSecret = secret }
+        fun setAuthorization(authorization: Authorization?) =
+            apply { this.authorization = authorization }
+
         fun setIsSandboxed(sandboxed: Boolean?) = apply { this.isSandboxed = sandboxed }
         fun setAmount(amount: Amount?) = apply { this.amount = amount }
         fun setReference(reference: Reference?) = apply { this.reference = reference }
@@ -144,8 +144,7 @@ class Judo internal constructor(
         @Throws(IllegalArgumentException::class)
         fun build(): Judo {
             val id = requireJudoId(judoId)
-            val token = requireNotNullOrEmpty(apiToken, "apiToken")
-            val secret = requireNotNullOrEmpty(apiSecret, "apiSecret")
+            val myAuthorization = requireNotNull(authorization, "authorization")
 
             val myAmount = requireAmount(paymentWidgetType, amount)
             val myReference = requireNotNull(reference, "reference")
@@ -179,8 +178,7 @@ class Judo internal constructor(
             return Judo(
                 id,
                 siteId,
-                token,
-                secret,
+                myAuthorization,
                 mySandboxed,
                 myAmount,
                 myReference,
@@ -197,6 +195,6 @@ class Judo internal constructor(
     }
 
     override fun toString(): String {
-        return "Judo(judoId='$judoId', siteId=$siteId, apiToken='$apiToken', apiSecret='$apiSecret', isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration)"
+        return "Judo(judoId='$judoId', siteId=$siteId, authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration)"
     }
 }

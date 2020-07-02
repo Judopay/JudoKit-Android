@@ -19,6 +19,10 @@ import com.judokit.android.PAYMENT_CANCELLED
 import com.judokit.android.PAYMENT_ERROR
 import com.judokit.android.PAYMENT_SUCCESS
 import com.judokit.android.api.factory.JudoApiServiceFactory
+import com.judokit.android.api.model.Authorization
+import com.judokit.android.api.model.BasicAuthorization
+import com.judokit.android.api.model.PaymentSessionAuthorization
+import com.judokit.android.examples.R
 import com.judokit.android.examples.common.startResultActivity
 import com.judokit.android.examples.common.toResult
 import com.judokit.android.examples.feature.adapter.DemoFeaturesAdapter
@@ -42,7 +46,6 @@ import com.judokit.android.model.googlepay.GooglePayAddressFormat
 import com.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judokit.android.model.googlepay.GooglePayShippingAddressParameters
-import com.judokit.android.examples.R
 import com.readystatesoftware.chuck.ChuckInterceptor
 import java.util.UUID
 import kotlinx.android.synthetic.main.activity_demo_feature_list.*
@@ -215,14 +218,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val isSandboxed = sharedPreferences.getBoolean("is_sandboxed", true)
         val judoId = sharedPreferences.getString("judo_id", null)
         val siteId = sharedPreferences.getString("site_id", null)
-        val token = sharedPreferences.getString("token", null)
-        val secret = sharedPreferences.getString("secret", null)
 
         return Judo.Builder(widgetType)
             .setJudoId(judoId)
             .setSiteId(siteId)
-            .setApiToken(token)
-            .setApiSecret(secret)
+            .setAuthorization(authorization)
             .setAmount(amount)
             .setReference(reference)
             .setIsSandboxed(isSandboxed)
@@ -238,8 +238,10 @@ class DemoFeatureListActivity : AppCompatActivity() {
         get() {
             val isAVSEnabled = sharedPreferences.getBoolean("is_avs_enabled", false)
             val shouldDisplayAmount = sharedPreferences.getBoolean("should_display_amount", true)
-            val shouldPaymentMethodsVerifySecurityCode = sharedPreferences.getBoolean("should_payment_methods_verify_security_code", true)
-            val shouldPaymentButtonDisplayAmount = sharedPreferences.getBoolean("should_payment_button_display_amount", false)
+            val shouldPaymentMethodsVerifySecurityCode =
+                sharedPreferences.getBoolean("should_payment_methods_verify_security_code", true)
+            val shouldPaymentButtonDisplayAmount =
+                sharedPreferences.getBoolean("should_payment_button_display_amount", false)
             return UiConfiguration.Builder()
                 .setAvsEnabled(isAVSEnabled)
                 .setShouldPaymentMethodsDisplayAmount(shouldDisplayAmount)
@@ -267,11 +269,18 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     private val reference: Reference
         get() {
-            val randomString = UUID.randomUUID().toString()
+            val isPaymentSessionEnabled =
+                sharedPreferences.getBoolean("is_payment_session_enabled", false)
+
+            val paymentReference = if (isPaymentSessionEnabled) {
+                sharedPreferences.getString("payment_reference", null)
+            } else {
+                UUID.randomUUID().toString()
+            }
 
             return Reference.Builder()
                 .setConsumerReference("my-unique-ref")
-                .setPaymentReference(randomString)
+                .setPaymentReference(paymentReference)
                 .build()
         }
 
@@ -339,4 +348,25 @@ class DemoFeatureListActivity : AppCompatActivity() {
     private val pbbaConfiguration: PBBAConfiguration
         get() = PBBAConfiguration.Builder().setDeepLinkScheme("judo://pay")
             .setDeepLinkURL(deepLinkIntent?.data).build()
+
+    private val authorization: Authorization
+        get() {
+            val token = sharedPreferences.getString("token", null)
+            val secret = sharedPreferences.getString("secret", null)
+            val isPaymentSessionEnabled =
+                sharedPreferences.getBoolean("is_payment_session_enabled", false)
+
+            return if (isPaymentSessionEnabled) {
+                val paymentSession = sharedPreferences.getString("payment_session", null)
+                PaymentSessionAuthorization.Builder()
+                    .setPaymentSession(paymentSession)
+                    .setApiToken(token)
+                    .build()
+            } else {
+                BasicAuthorization.Builder()
+                    .setApiToken(token)
+                    .setApiSecret(secret)
+                    .build()
+            }
+        }
 }
