@@ -6,7 +6,6 @@ apply plugin: 'org.jlleitschuh.gradle.ktlint'
 apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'jacoco'
 apply plugin: 'guru.stefma.bintrayrelease'
-apply plugin: 'org.sonarqube'
 
 android {
     compileSdkVersion 29
@@ -136,12 +135,6 @@ project.afterEvaluate {
     def variants = android.hasProperty('libraryVariants') ? android.libraryVariants : android.applicationVariants
     variants.forEach {
         tasks.jacocoTestReport.dependsOn(addJacocoTask(it))
-    }
-}
-
-sonarqube {
-    properties {
-        property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/jacocoTestReportRelease/jacocoTestReportRelease.xml"
     }
 }
 
