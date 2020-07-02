@@ -10,8 +10,6 @@ import okhttp3.Headers
 import okhttp3.Interceptor
 import okhttp3.Response
 
-internal const val AUTHORIZATION_HEADER = "Authorization"
-internal const val PAYMENT_SESSION_HEADER = "Payment-Session"
 private const val CONTENT_TYPE_HEADER = "Content-Type"
 private const val ACCEPT_HEADER = "Accept"
 private const val API_VERSION_HEADER = "Api-Version"

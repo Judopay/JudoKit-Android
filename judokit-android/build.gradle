@@ -182,6 +182,7 @@ def addJacocoTask(variant) {
             '**/model/PBBAConfiguration.*',
             '**/model/UiConfiguration.*',
             '**/api/factory/**',
+            '**/api/interceptor/ApiHeadersInterceptor.*',
             '**/api/model/request/Address.*',
             '**/api/model/request/BankSaleRequest.*',
             '**/api/model/response/CardVerificationResult.*',

@@ -238,8 +238,10 @@ class DemoFeatureListActivity : AppCompatActivity() {
         get() {
             val isAVSEnabled = sharedPreferences.getBoolean("is_avs_enabled", false)
             val shouldDisplayAmount = sharedPreferences.getBoolean("should_display_amount", true)
-            val shouldPaymentMethodsVerifySecurityCode = sharedPreferences.getBoolean("should_payment_methods_verify_security_code", true)
-            val shouldPaymentButtonDisplayAmount = sharedPreferences.getBoolean("should_payment_button_display_amount", false)
+            val shouldPaymentMethodsVerifySecurityCode =
+                sharedPreferences.getBoolean("should_payment_methods_verify_security_code", true)
+            val shouldPaymentButtonDisplayAmount =
+                sharedPreferences.getBoolean("should_payment_button_display_amount", false)
             return UiConfiguration.Builder()
                 .setAvsEnabled(isAVSEnabled)
                 .setShouldPaymentMethodsDisplayAmount(shouldDisplayAmount)
@@ -356,9 +358,15 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
             return if (isPaymentSessionEnabled) {
                 val paymentSession = sharedPreferences.getString("payment_session", null)
-                PaymentSessionAuthorization(paymentSession, token)
+                PaymentSessionAuthorization.Builder()
+                    .setPaymentSession(paymentSession)
+                    .setApiToken(token)
+                    .build()
             } else {
-                BasicAuthorization(token, secret)
+                BasicAuthorization.Builder()
+                    .setApiToken(token)
+                    .setApiSecret(secret)
+                    .build()
             }
         }
 }
