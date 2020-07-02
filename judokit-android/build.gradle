@@ -181,6 +181,7 @@ def addJacocoTask(variant) {
             '**/model/Event.*',
             '**/model/PBBAConfiguration.*',
             '**/model/UiConfiguration.*',
+            '**/api/factory/**',
             '**/api/model/request/Address.*',
             '**/api/model/request/BankSaleRequest.*',
             '**/api/model/response/CardVerificationResult.*',
