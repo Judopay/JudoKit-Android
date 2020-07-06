@@ -14,7 +14,11 @@
 
         <action
             android:id="@+id/action_paymentMethodsFragment_to_cardEntryFragment"
-            app:destination="@id/cardEntryFragment" />
+            app:destination="@id/cardEntryFragment">
+            <argument
+                android:name="com.judokit.android.model.shouldVerifySecurityCode"
+                app:argType="com.judokit.android.model.CardNetwork" />
+        </action>
 
         <action
             android:id="@+id/action_paymentMethodsFragment_to_cardVerificationFragment"
@@ -27,12 +31,21 @@
         <action
             android:id="@+id/action_paymentMethodsFragment_to_editCardFragment"
             app:destination="@id/editCardFragment" />
+
         <action
             android:id="@+id/action_paymentMethodsFragment_to_idealFragment"
             app:destination="@id/idealFragment">
             <argument
                 android:name="com.judokit.android.idealbankbic"
                 app:argType="string" />
+        </action>
+
+        <action
+            android:id="@+id/action_paymentMethodsFragment_to_PollingStatusFragment"
+            app:destination="@id/pollingStatusFragment">
+            <argument
+                android:name="com.judokit.android.model.paymentWidgetType"
+                app:argType="com.judokit.android.model.PaymentWidgetType" />
         </action>
 
     </fragment>
@@ -60,5 +73,10 @@
         android:name="com.judokit.android.ui.ideal.IdealFragment"
         android:label="IdealFragment"
         tools:layout="@layout/ideal_fragment" />
+
+    <dialog
+        android:id="@+id/pollingStatusFragment"
+        android:name="com.judokit.android.ui.pollingstatus.PollingStatusFragment"
+        android:label="PollingStatusFragment" />
 
 </navigation>

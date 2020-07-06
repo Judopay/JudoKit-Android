@@ -20,7 +20,10 @@
 
     <dimen name="height_1">1dp</dimen>
     <dimen name="height_60">60dp</dimen>
+    <dimen name="height_250">250dp</dimen>
     <dimen name="width_60">60dp</dimen>
+    <dimen name="width_200">200dp</dimen>
+    <dimen name="width_350">350dp</dimen>
 
     <!-- Font sizes -->
     <dimen name="large_title">24sp</dimen>
@@ -60,6 +63,7 @@
     <dimen name="payment_selector_item_min_width">90dp</dimen>
 
     <dimen name="corner_radius_2_8dp">2.8dp</dimen>
+    <dimen name="corner_radius_30dp">30dp</dimen>
     <dimen name="size_36dp">36dp</dimen>
     <dimen name="size_50dp">50dp</dimen>
     <dimen name="powered_by_judo_width">96dp</dimen>
@@ -67,5 +71,7 @@
 
 
     <dimen name="size_120">120dp</dimen>
+    <dimen name="width_card_image_view">74dp</dimen>
+    <dimen name="height_card_image_view">32dp</dimen>
 
 </resources>

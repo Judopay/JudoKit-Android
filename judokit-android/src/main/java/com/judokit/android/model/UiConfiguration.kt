@@ -1,33 +1,54 @@
 package com.judokit.android.model
 
 import android.os.Parcelable
-import com.judokit.android.requireNotNull
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class UiConfiguration internal constructor(
     val avsEnabled: Boolean,
-    val shouldDisplayAmount: Boolean
+    val shouldPaymentMethodsDisplayAmount: Boolean,
+    val shouldPaymentButtonDisplayAmount: Boolean,
+    val shouldPaymentMethodsVerifySecurityCode: Boolean
 ) : Parcelable {
 
     class Builder {
-        private var avsEnabled: Boolean? = null
-        private var shouldDisplayAmount: Boolean? = null
+        private var avsEnabled: Boolean? = false
+        private var shouldPaymentMethodsDisplayAmount: Boolean? = true
+        private var shouldPaymentMethodsVerifySecurityCode: Boolean? = true
+        private var shouldPaymentButtonDisplayAmount: Boolean? = false
 
         fun setAvsEnabled(enabled: Boolean?) = apply { this.avsEnabled = enabled }
 
-        fun setShouldDisplayAmount(shouldDisplay: Boolean?) =
-            apply { this.shouldDisplayAmount = shouldDisplay }
+        fun setShouldPaymentMethodsDisplayAmount(shouldPaymentMethodsDisplayAmount: Boolean?) =
+            apply { this.shouldPaymentMethodsDisplayAmount = shouldPaymentMethodsDisplayAmount }
+
+        fun setShouldPaymentMethodsVerifySecurityCode(shouldPaymentMethodsVerifySecurityCode: Boolean?) =
+            apply {
+                this.shouldPaymentMethodsVerifySecurityCode = shouldPaymentMethodsVerifySecurityCode
+            }
+
+        fun setShouldPaymentButtonDisplayAmount(shouldPaymentButtonDisplayAmount: Boolean?) =
+            apply { this.shouldPaymentButtonDisplayAmount = shouldPaymentButtonDisplayAmount }
 
         fun build(): UiConfiguration {
-            val avsEnabled = requireNotNull(this.avsEnabled, "avsEnabled")
-            val shouldDisplayAmount = requireNotNull(this.shouldDisplayAmount, "shouldDisplayAmount")
+            val avsEnabled = requireNotNull(this.avsEnabled)
+            val shouldPaymentMethodsDisplayAmount =
+                requireNotNull(this.shouldPaymentMethodsDisplayAmount)
+            val shouldPaymentMethodsVerifySecurityCode =
+                requireNotNull(this.shouldPaymentMethodsVerifySecurityCode)
+            val shouldPaymentButtonDisplayAmount =
+                requireNotNull(this.shouldPaymentButtonDisplayAmount)
 
-            return UiConfiguration(avsEnabled, shouldDisplayAmount)
+            return UiConfiguration(
+                avsEnabled,
+                shouldPaymentMethodsDisplayAmount,
+                shouldPaymentButtonDisplayAmount,
+                shouldPaymentMethodsVerifySecurityCode
+            )
         }
     }
 
     override fun toString(): String {
-        return "UiConfiguration(avsEnabled=$avsEnabled, shouldDisplayAmount=$shouldDisplayAmount)"
+        return "UiConfiguration(avsEnabled=$avsEnabled, shouldDisplayAmount=$shouldPaymentMethodsDisplayAmount, shouldEnterSecurityCode=$shouldPaymentMethodsVerifySecurityCode)"
     }
 }

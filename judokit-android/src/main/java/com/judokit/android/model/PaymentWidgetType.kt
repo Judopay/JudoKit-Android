@@ -1,8 +1,11 @@
 package com.judokit.android.model
 
+import android.os.Parcelable
 import com.judokit.android.R
+import kotlinx.android.parcel.Parcelize
 
-enum class PaymentWidgetType {
+@Parcelize
+enum class PaymentWidgetType : Parcelable {
     CARD_PAYMENT,
     PRE_AUTH,
     REGISTER_CARD,
@@ -12,7 +15,8 @@ enum class PaymentWidgetType {
     PRE_AUTH_GOOGLE_PAY,
     PAYMENT_METHODS,
     PRE_AUTH_PAYMENT_METHODS,
-    SERVER_TO_SERVER_PAYMENT_METHODS
+    SERVER_TO_SERVER_PAYMENT_METHODS,
+    PAY_BY_BANK_APP
 }
 
 val PaymentWidgetType.navigationGraphId: Int
@@ -26,6 +30,7 @@ val PaymentWidgetType.navigationGraphId: Int
         PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
         PaymentWidgetType.PAYMENT_METHODS,
         PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> R.navigation.judo_payment_methods_graph
+        PaymentWidgetType.PAY_BY_BANK_APP -> R.navigation.judo_polling_status_graph
         else -> throw UnsupportedOperationException("Payment Widget of Type: $this not supported")
     }
 
@@ -37,3 +42,6 @@ val PaymentWidgetType.isCardPaymentWidget: Boolean
 
 val PaymentWidgetType.isGooglePayWidget: Boolean
     get() = this == PaymentWidgetType.GOOGLE_PAY || this == PaymentWidgetType.PRE_AUTH_GOOGLE_PAY
+
+val PaymentWidgetType.isExposed: Boolean
+    get() = this == PaymentWidgetType.PAY_BY_BANK_APP

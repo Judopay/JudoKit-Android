@@ -20,8 +20,8 @@
 
     <ImageView
         android:id="@+id/bankLogoImageView"
-        android:layout_width="74dp"
-        android:layout_height="32dp"
+        android:layout_width="@dimen/width_card_image_view"
+        android:layout_height="@dimen/height_card_image_view"
         android:layout_marginStart="@dimen/space_24"
         android:layout_marginBottom="@dimen/space_24"
         android:contentDescription="@null"

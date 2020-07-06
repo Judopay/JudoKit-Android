@@ -37,7 +37,7 @@
         android:id="@+id/idealProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:indeterminate="true"
+        android:theme="@style/JudoTheme.ProgressBar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +53,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/idealProgressBar" />
 
-    <com.judokit.android.ui.ideal.component.IdealWebView
+    <com.judokit.android.ui.ideal.components.IdealWebView
         android:id="@+id/idealWebView"
         android:layout_width="match_parent"
         android:layout_height="0dp"

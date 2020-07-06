@@ -25,8 +25,8 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.spyk
 import io.mockk.verify
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertTrue
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -67,7 +67,7 @@ internal class JudoSharedViewModelTest {
         mockkStatic("com.judokit.android.api.model.response.JudoApiCallResultKt")
 
         sut.paymentResult.observeForever(paymentResult)
-        sut.paymentMethodsGooglePayResult.observeForever(paymentMethodsGooglePayResult)
+        sut.paymentMethodsResult.observeForever(paymentMethodsGooglePayResult)
         sut.scanCardResult.observeForever(scanCardResult)
     }
 

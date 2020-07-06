@@ -5,6 +5,7 @@ import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.Currency
 import com.judokit.android.model.PaymentMethod
 import com.judokit.android.model.PaymentWidgetType
+import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -14,6 +15,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
+private const val CARD_TOKEN = "card_token"
+private const val SECURITY_CODE = "security_code"
+
 @DisplayName("Testing the Judo configuration object builder logic")
 internal class JudoBuilderTest {
 
@@ -22,18 +26,20 @@ internal class JudoBuilderTest {
     @BeforeEach
     fun setUp() {
         judoBuilder = Judo.Builder(PaymentWidgetType.CARD_PAYMENT)
-            .setJudoId("1")
-            .setApiToken("1")
-            .setApiSecret("1")
+            .setJudoId("111111111")
+            .setAuthorization(mockk(relaxed = true))
             .setAmount(Amount("1", Currency.GBP))
-            .setReference(mockk())
+            .setReference(mockk(relaxed = true) {
+                every { consumerReference } returns "consumer"
+                every { paymentReference } returns "payment"
+            })
             .setPaymentMethods(PaymentMethod.values())
-            .setUiConfiguration(mockk())
             .setIsSandboxed(true)
             .setSupportedCardNetworks(CardNetwork.values())
             .setPrimaryAccountDetails(mockk())
             .setGooglePayConfiguration(mockk())
             .setAddress(mockk())
+            .setPBBAConfiguration(mockk())
     }
 
     @Test
@@ -61,34 +67,28 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("Given apiToken is null, then build() should throw a IllegalArgumentException")
-    fun testThatBuildThrowsOnTokenNull() {
+    @DisplayName("Given judoId does not match regex, then build() should throw a IllegalArgumentException")
+    fun testThatBuildThrowsOnIdNotMatchingRegex() {
         assertThrows<IllegalArgumentException> {
-            judoBuilder.setApiToken(null).build()
+            judoBuilder.setJudoId("1111").build()
         }
     }
 
     @Test
-    @DisplayName("Given apiToken is empty, then build() should throw a IllegalArgumentException")
-    fun testThatBuildThrowsOnTokenEmpty() {
-        assertThrows<IllegalArgumentException> {
-            judoBuilder.setApiToken("").build()
+    @DisplayName("Given judoId matches regex, then build() should not throw exception")
+    fun testThatBuildDoesNotThrowOnIdMatchingRegex() {
+        assertDoesNotThrow {
+            judoBuilder.setJudoId("111-111-111").build()
+            judoBuilder.setJudoId("111111111").build()
+            judoBuilder.setJudoId("111111").build()
         }
     }
 
     @Test
-    @DisplayName("Given apiSecret is null, then build() should throw a IllegalArgumentException")
-    fun testThatBuildThrowsOnSecretNull() {
+    @DisplayName("Given authorization is null, then build() should throw a IllegalArgumentException")
+    fun testThatBuildThrowsOnAuthorizationNull() {
         assertThrows<IllegalArgumentException> {
-            judoBuilder.setApiSecret(null).build()
-        }
-    }
-
-    @Test
-    @DisplayName("Given apiSecret is empty, then build() should throw a IllegalArgumentException")
-    fun testThatBuildThrowsOnSecretEmpty() {
-        assertThrows<IllegalArgumentException> {
-            judoBuilder.setApiSecret("").build()
+            judoBuilder.setAuthorization(null).build()
         }
     }
 
@@ -113,6 +113,16 @@ internal class JudoBuilderTest {
     fun testThatBuildThrowsOnPaymentMethodsIdealNotSupported() {
         assertThrows<IllegalArgumentException> {
             judoBuilder.setPaymentMethods(arrayOf(PaymentMethod.IDEAL)).build()
+        }
+    }
+
+    @Test
+    @DisplayName("Given paymentMethods size is 1 and paymentMethod is PAY_BY_BANK and currency is not GBP, then build() should throw a IllegalArgumentException")
+    fun testThatBuildThrowsOnPaymentMethodsPBBANotSupported() {
+        assertThrows<IllegalArgumentException> {
+            judoBuilder
+                .setAmount(Amount("1", Currency.EUR))
+                .setPaymentMethods(arrayOf(PaymentMethod.PAY_BY_BANK)).build()
         }
     }
 
@@ -200,12 +210,19 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("Given uiConfiguration is null, then build() with default uiConfiguration")
-    fun testThatObjectHasDefaultUiConfigurationWhenUiConfigurationNull() {
+    @DisplayName("Given uiConfiguration is null, then build() should throw exception")
+    fun testThatBuildThrowsExceptionWhenUiConfigurationNull() {
         judoBuilder.setUiConfiguration(null)
 
+        assertThrows<IllegalArgumentException> { judoBuilder.build() }
+    }
+
+    @Test
+    @DisplayName("Given uiConfiguration is not specified, then build() with default uiConfiguration")
+    fun testThatObjectHasDefaultUiConfigurationWhenUiConfigurationNotSpecified() {
         assertFalse(judoBuilder.build().uiConfiguration.avsEnabled)
-        assertTrue(judoBuilder.build().uiConfiguration.shouldDisplayAmount)
+        assertTrue(judoBuilder.build().uiConfiguration.shouldPaymentMethodsDisplayAmount)
+        assertTrue(judoBuilder.build().uiConfiguration.shouldPaymentMethodsVerifySecurityCode)
     }
 
     @Test
@@ -214,5 +231,13 @@ internal class JudoBuilderTest {
         judoBuilder.setIsSandboxed(null)
 
         assertFalse(judoBuilder.build().isSandboxed)
+    }
+
+    @Test
+    @DisplayName("Given toTokenPayment is called, when every required parameter is present, then exception not thrown")
+    fun returnTokenRequestObjectOnToTokenPaymentCall() {
+        assertDoesNotThrow {
+            judoBuilder.build().toTokenPayment(CARD_TOKEN, SECURITY_CODE)
+        }
     }
 }

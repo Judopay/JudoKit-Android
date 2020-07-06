@@ -11,7 +11,9 @@
         <activity
             android:name=".JudoActivity"
             android:theme="@style/JudoTheme"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize">
+            <nav-graph android:value="@navigation/judo_payment_methods_graph" />
+        </activity>
 
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"

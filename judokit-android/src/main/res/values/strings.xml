@@ -1,6 +1,10 @@
 <resources>
     <string name="judokit_android">JudoKit-Android</string>
-    <string name="pay_now">Pay Now</string>
+    <string name="pay_now">%1$sPay Now</string>
+    <string name="pay_amount">Pay %1$s</string>
+    <string name="check_card">Check Card</string>
+    <string name="register_card">Register Card</string>
+    <string name="save_card">Save Card</string>
     <string name="connected_cards">Connected Cards</string>
     <string name="button_edit">Edit</string>
     <string name="button_done">Done</string>
@@ -13,7 +17,7 @@
     <string name="amazon_pay">Amazon Pay</string>
     <string name="ideal_payment">iDeal</string>
     <string name="empty" />
-    <string name="secure_server_transmission">Your card details are encrypted using SSL before transmission to our secure payment service provider.</string>
+    <string name="secure_server_transmission">Your card details are encrypted using TLS before transmission to our secure payment service provider.</string>
 
     <string name="date_hint">MM/YY</string>
     <string name="cvv_hint">CVV</string>
@@ -66,7 +70,7 @@
 
     <string name="unable_to_process_request_error_desc">Sorry, we\'re currently unable to process this request.</string>
     <string name="unable_to_process_request_error_title">Unable to process</string>
-    <string name="processing">Processing…</string>
+    <string name="processing">Transaction pending…</string>
 
     <string name="customize_card">Customize Card</string>
     <string name="save_as_default_payment_method">Save as default payment method</string>
@@ -98,5 +102,10 @@
     <string name="scan_card_go_to_settings">Go to Settings</string>
     <string name="wocr_hint_position_card_in_frame">Position card in this frame</string>
     <string name="wocr_automatically_scan">We will automatically scan it</string>
+
+    <string name="pay_by_bank">Pay by Bank app</string>
+    <string name="retry">Retry</string>
+    <string name="transaction_successful">Transaction successful</string>
+    <string name="pay_by_bank_transaction">Pay by Bank app transaction</string>
 
 </resources>

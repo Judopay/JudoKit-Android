@@ -1,5 +1,6 @@
 package com.judokit.android.api
 
+import com.judokit.android.api.model.request.BankSaleRequest
 import com.judokit.android.api.model.request.CheckCardRequest
 import com.judokit.android.api.model.request.GooglePayRequest
 import com.judokit.android.api.model.request.IdealSaleRequest
@@ -7,11 +8,13 @@ import com.judokit.android.api.model.request.PaymentRequest
 import com.judokit.android.api.model.request.RegisterCardRequest
 import com.judokit.android.api.model.request.SaveCardRequest
 import com.judokit.android.api.model.request.TokenRequest
+import com.judokit.android.api.model.response.BankSaleResponse
+import com.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judokit.android.api.model.response.CardVerificationResult
 import com.judokit.android.api.model.response.IdealSaleResponse
-import com.judokit.android.api.model.response.IdealSaleStatusResponse
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.Receipt
+import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -49,7 +52,7 @@ interface JudoApiService {
      * @return the receipt for the token payment with the status of the transaction
      */
     @POST("transactions/payments")
-    suspend fun tokenPayment(@Body tokenRequest: TokenRequest): JudoApiCallResult<Receipt>
+    fun tokenPayment(@Body tokenRequest: TokenRequest): Call<JudoApiCallResult<Receipt>>
 
     /**
      * Perform a token pre-auth using a tokenised card
@@ -58,7 +61,7 @@ interface JudoApiService {
      * @return the receipt for the pre-auth with the status of the transaction
      */
     @POST("transactions/preauths")
-    suspend fun preAuthTokenPayment(@Body tokenRequest: TokenRequest): JudoApiCallResult<Receipt>
+    fun preAuthTokenPayment(@Body tokenRequest: TokenRequest): Call<JudoApiCallResult<Receipt>>
 
     /**
      * Complete a transaction that required 3D-Secure verification by providing the 3D-Secure response data.
@@ -110,5 +113,8 @@ interface JudoApiService {
     suspend fun sale(@Body saleRequest: IdealSaleRequest): JudoApiCallResult<IdealSaleResponse>
 
     @GET("order/bank/statusrequest/{orderID}")
-    suspend fun status(@Path("orderID") orderId: String): JudoApiCallResult<IdealSaleStatusResponse>
+    suspend fun status(@Path("orderID") orderId: String): JudoApiCallResult<BankSaleStatusResponse>
+
+    @POST("order/bank/sale")
+    suspend fun sale(@Body saleRequest: BankSaleRequest): JudoApiCallResult<BankSaleResponse>
 }

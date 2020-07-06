@@ -6,8 +6,8 @@ import kotlinx.android.parcel.Parcelize
 const val INTERNAL_ERROR = -2
 const val USER_CANCELLED = -1
 
-private const val UNKNOWN_ERROR_MSG = "Oops! Something went wrong."
-private const val USER_CANCELLED_MSG = "User cancelled"
+internal const val UNKNOWN_ERROR_MSG = "Oops! Something went wrong."
+internal const val USER_CANCELLED_MSG = "User cancelled"
 
 @Parcelize
 data class JudoError(

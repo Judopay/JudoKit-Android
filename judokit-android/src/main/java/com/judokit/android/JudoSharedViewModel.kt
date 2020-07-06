@@ -53,6 +53,10 @@ class JudoSharedViewModel(
     // used to share a card payment result between fragments (card input / payment methods)
     val paymentResult = MutableLiveData<JudoPaymentResult>()
 
+    val bankPaymentResult = MutableLiveData<JudoPaymentResult>()
+    val paymentMethodsResult = MutableLiveData<JudoPaymentResult>()
+    // used to pass security code from card entry to payment methods screen
+    val securityCodeResult = MutableLiveData<String>()
     // used to share the GooglePay payment result between this activity and the payment methods fragment
     val paymentMethodsGooglePayResult = MutableLiveData<JudoPaymentResult>()
 
@@ -138,7 +142,7 @@ class JudoSharedViewModel(
 
         val liveData = when {
             type.isGooglePayWidget -> paymentResult
-            type.isPaymentMethodsWidget -> paymentMethodsGooglePayResult
+            type.isPaymentMethodsWidget -> paymentMethodsResult
             else -> null
         }
 

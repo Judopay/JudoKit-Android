@@ -1,5 +1,6 @@
 package com.judokit.android.api.model.request
 
+import io.mockk.mockk
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -8,6 +9,12 @@ import org.junit.jupiter.api.assertThrows
 internal class TokenRequestTest {
 
     private val request = TokenRequest.Builder()
+        .setUniqueRequest(false)
+        .setEndDate("1220")
+        .setCv2("452")
+        .setEmailAddress("mail@mail.com")
+        .setMobileNumber("1234567")
+        .setPrimaryAccountDetails(mockk(relaxed = true))
 
     @Test
     @DisplayName("Should throw exception on providing null judo id")

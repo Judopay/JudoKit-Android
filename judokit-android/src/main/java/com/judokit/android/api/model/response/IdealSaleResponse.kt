@@ -9,14 +9,9 @@ data class IdealSaleResponse(
     val merchantPaymentReference: String,
     val currency: String,
     val amount: BigDecimal,
-    val consumer: IdealConsumer,
+    val consumer: BankConsumer,
     val siteId: String,
     val merchantSiteName: String,
     val redirectUrl: String,
     val merchantRedirectUrl: String
-)
-
-data class IdealConsumer(
-    val consumerId: String,
-    val merchantConsumerReference: String
 )

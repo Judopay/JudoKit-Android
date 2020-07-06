@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.zapp.library.merchant.ui.view.PBBAButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pbbaButton"
+    android:layout_width="@dimen/width_200"
+    android:layout_height="@dimen/button_height"
+    android:paddingTop="@dimen/space_6"
+    android:paddingBottom="@dimen/space_6"
+    />

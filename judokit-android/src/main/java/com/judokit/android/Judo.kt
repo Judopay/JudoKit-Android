@@ -2,16 +2,20 @@ package com.judokit.android
 
 import android.app.Activity
 import android.os.Parcelable
+import com.judokit.android.api.model.Authorization
 import com.judokit.android.api.model.request.Address
+import com.judokit.android.api.model.request.TokenRequest
 import com.judokit.android.model.Amount
 import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.Currency
 import com.judokit.android.model.GooglePayConfiguration
+import com.judokit.android.model.PBBAConfiguration
 import com.judokit.android.model.PaymentMethod
 import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.PrimaryAccountDetails
 import com.judokit.android.model.Reference
 import com.judokit.android.model.UiConfiguration
+import com.judokit.android.ui.common.REGEX_JUDO_ID
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -36,12 +40,12 @@ const val PAYMENT_CANCELLED = Activity.RESULT_FIRST_USER + 2
 
 /** Judo activity result: operation error  */
 const val PAYMENT_ERROR = Activity.RESULT_FIRST_USER + 3
+
 @Parcelize
 class Judo internal constructor(
     val judoId: String,
     val siteId: String?,
-    val apiToken: String,
-    val apiSecret: String,
+    val authorization: Authorization,
     val isSandboxed: Boolean,
     val amount: Amount,
     val reference: Reference,
@@ -51,28 +55,43 @@ class Judo internal constructor(
     val primaryAccountDetails: PrimaryAccountDetails?,
     val googlePayConfiguration: GooglePayConfiguration?,
     val paymentWidgetType: PaymentWidgetType,
-    val address: Address?
+    val address: Address?,
+    val pbbaConfiguration: PBBAConfiguration?
 ) : Parcelable {
+
+    fun toTokenPayment(cardToken: String, securityCode: String? = null) = TokenRequest.Builder()
+        .setAmount(amount.amount)
+        .setCurrency(amount.currency.name)
+        .setJudoId(judoId)
+        .setYourPaymentReference(reference.paymentReference)
+        .setYourConsumerReference(reference.consumerReference)
+        .setYourPaymentMetaData(reference.metaData?.toMap())
+        .setCardToken(cardToken)
+        .setCv2(securityCode)
+        .setPrimaryAccountDetails(primaryAccountDetails)
+        .setAddress(Address.Builder().build())
+        .build()
 
     class Builder(private val paymentWidgetType: PaymentWidgetType) {
         private var judoId: String? = null
         private var siteId: String? = null
-        private var apiToken: String? = null
-        private var apiSecret: String? = null
+        private var authorization: Authorization? = null
         private var isSandboxed: Boolean? = null
         private var amount: Amount? = null
         private var reference: Reference? = null
-        private var uiConfiguration: UiConfiguration? = null
+        private var uiConfiguration: UiConfiguration? = UiConfiguration.Builder().build()
         private var paymentMethods: Array<PaymentMethod>? = null
         private var supportedCardNetworks: Array<CardNetwork>? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
         private var googlePayConfiguration: GooglePayConfiguration? = null
         private var address: Address? = null
+        private var pbbaConfiguration: PBBAConfiguration? = null
 
         fun setJudoId(id: String?) = apply { this.judoId = id }
         fun setSiteId(id: String?) = apply { this.siteId = id }
-        fun setApiToken(token: String?) = apply { this.apiToken = token }
-        fun setApiSecret(secret: String?) = apply { this.apiSecret = secret }
+        fun setAuthorization(authorization: Authorization?) =
+            apply { this.authorization = authorization }
+
         fun setIsSandboxed(sandboxed: Boolean?) = apply { this.isSandboxed = sandboxed }
         fun setAmount(amount: Amount?) = apply { this.amount = amount }
         fun setReference(reference: Reference?) = apply { this.reference = reference }
@@ -94,29 +113,49 @@ class Judo internal constructor(
         fun setAddress(address: Address?) =
             apply { this.address = address }
 
+        fun setPBBAConfiguration(pbbaConfiguration: PBBAConfiguration?) =
+            apply { this.pbbaConfiguration = pbbaConfiguration }
+
+        @Throws(IllegalArgumentException::class)
+        private fun validatePaymentMethods(currency: Currency) = paymentMethods?.let { methods ->
+            // Payment methods accepted currencies checks
+            if (methods.size == 1) {
+                val method = methods.first()
+                val expectedCurrency = when (method) {
+                    PaymentMethod.IDEAL -> Currency.EUR
+                    PaymentMethod.PAY_BY_BANK -> Currency.GBP
+                    else -> null
+                }
+                if (expectedCurrency != null && currency != expectedCurrency) {
+                    throw IllegalArgumentException("Cannot make ${method.name} transactions with currencies different than ${expectedCurrency.name}")
+                }
+            }
+        }
+
+        @Throws(java.lang.IllegalArgumentException::class)
+        private fun requireJudoId(judoId: String?): String {
+            val id = requireNotNullOrEmpty(judoId, "judoId")
+            if (id.matches(REGEX_JUDO_ID.toRegex()))
+                return id
+            else
+                throw IllegalArgumentException("JudoId is invalid")
+        }
+
         @Throws(IllegalArgumentException::class)
         fun build(): Judo {
-            val id = requireNotNullOrEmpty(judoId, "judoId")
-            val token = requireNotNullOrEmpty(apiToken, "apiToken")
-            val secret = requireNotNullOrEmpty(apiSecret, "apiSecret")
+            val id = requireJudoId(judoId)
+            val myAuthorization = requireNotNull(authorization, "authorization")
 
             val myAmount = requireAmount(paymentWidgetType, amount)
             val myReference = requireNotNull(reference, "reference")
 
-            paymentMethods?.let {
-                if (it.size == 1 && it.first() == PaymentMethod.IDEAL && myAmount.currency != Currency.EUR) {
-                    throw IllegalArgumentException("Cannot make iDEAL transactions with currencies different than EUR")
-                }
-            }
+            validatePaymentMethods(myAmount.currency)
 
-            val myUiConfiguration = uiConfiguration
-                ?: UiConfiguration.Builder()
-                    .setAvsEnabled(false)
-                    .setShouldDisplayAmount(true)
-                    .build()
+            val myUiConfiguration = requireNotNull(uiConfiguration, "uiConfiguration")
             val mySandboxed = isSandboxed ?: false
 
             val defaultPaymentMethods = arrayOf(PaymentMethod.CARD)
+
             val defaultSupportedCardNetworks = arrayOf(
                 CardNetwork.VISA,
                 CardNetwork.MASTERCARD,
@@ -124,20 +163,22 @@ class Judo internal constructor(
                 CardNetwork.MAESTRO
             )
 
-            val myPaymentMethods =
-                if (paymentMethods.isNullOrEmpty()) defaultPaymentMethods else checkNotNull(
-                    paymentMethods
-                )
-            val mySupportedCardNetworks =
-                if (supportedCardNetworks.isNullOrEmpty()) defaultSupportedCardNetworks else checkNotNull(
-                    supportedCardNetworks
-                )
+            val myPaymentMethods = if (paymentMethods.isNullOrEmpty()) {
+                defaultPaymentMethods
+            } else {
+                checkNotNull(paymentMethods)
+            }
+
+            val mySupportedCardNetworks = if (supportedCardNetworks.isNullOrEmpty()) {
+                defaultSupportedCardNetworks
+            } else {
+                checkNotNull(supportedCardNetworks)
+            }
 
             return Judo(
                 id,
                 siteId,
-                token,
-                secret,
+                myAuthorization,
                 mySandboxed,
                 myAmount,
                 myReference,
@@ -147,12 +188,13 @@ class Judo internal constructor(
                 primaryAccountDetails,
                 googlePayConfiguration,
                 paymentWidgetType,
-                address
+                address,
+                pbbaConfiguration
             )
         }
     }
 
     override fun toString(): String {
-        return "Judo(judoId='$judoId', siteId=$siteId, apiToken='$apiToken', apiSecret='$apiSecret', isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address)"
+        return "Judo(judoId='$judoId', siteId=$siteId, authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration)"
     }
 }

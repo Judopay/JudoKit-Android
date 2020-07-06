@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">Judopay demo</string>
+    <string name="app_name">Judopay Sample App</string>
     <string name="title_activity_demo_feature_list">Judo Examples</string>
+    <string name="title_activity_pay_by_bank">Pay by Bank App</string>
 
     <string name="feature_title_payment">Pay with card</string>
     <string name="feature_surtitle_payment">by entering card details</string>
@@ -31,6 +32,13 @@
 
     <string name="feature_title_server_to_server_payment_methods">Server-to-Server payment methods</string>
     <string name="feature_subtitle_server_to_server_payment_methods">with default Server-to-Server payment methods</string>
+
+    <string name="feature_title_pay_by_bank_app">Pay by Bank app</string>
+    <string name="feature_subtitle_pay_by_bank_app">by using your existing Bank app</string>
+
+    <string name="feature_title_token_payment">Token payments</string>
+    <string name="feature_subtitle_token_payment">Token payments (no UI)</string>
+
     <string name="title_settings">Settings</string>
 
     <!-- Preference Titles -->
@@ -53,6 +61,15 @@
 
     <string name="secret_title">Secret</string>
     <string name="secret_summary">Your API authorization secret</string>
+
+    <string name="payment_session_title">Payment session</string>
+    <string name="payment_session_summary">Your API authorization payment session</string>
+
+    <string name="is_payment_session_enabled_title">Enable payment session authorization</string>
+    <string name="is_payment_session_enabled_summary">Turn on to set payment session and custom payment reference</string>
+
+    <string name="payment_reference_title">Payment reference</string>
+    <string name="payment_reference_summary">Your custom payment reference</string>
 
     <string name="should_display_amount_title">Display amount label</string>
     <string name="should_display_amount_summary">Turn off to hide amount label in the payment methods screen.</string>
@@ -95,4 +112,14 @@
     <string name="avs_title">Address Verification Service</string>
     <string name="avs_summary">Turn on to enable Address Verification Service.</string>
 
+    <string name="security_code_title">Security code</string>
+    <string name="security_code_summary">Turn on to enable security code verification in the payment methods screen.</string>
+
+    <string name="should_payment_button_display_amount_title">Display amount on button</string>
+    <string name="should_payment_button_display_amount_summary">Turn on to show amount on the Pay button.</string>
+
+    <string name="create_card_token">Create card token</string>
+    <string name="token_payment">Token payment</string>
+    <string name="preauth_token_payment">PreAuth token payment</string>
+    <string name="token_payment_description">To make a token or preauth token payment, first you have to create a card token</string>
 </resources>

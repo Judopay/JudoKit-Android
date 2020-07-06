@@ -1,0 +1,193 @@
+version: 2.1
+
+commands:
+  disable_predex:
+    steps:
+      - run:
+          name: Disable Pre-Dexing # https://www.littlerobots.nl/blog/disable-android-pre-dexing-on-ci-builds/
+          command: |
+            mkdir -p ~/.gradle
+            echo 'allprojects {
+                  project.plugins.whenPluginAdded { plugin ->
+                          if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
+                              println "Disable pre dexing for module ${project.name}"
+                              project.android.dexOptions.preDexLibraries = false
+                          } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
+                              println "Disable pre dexing for module ${project.name}"
+                              project.android.dexOptions.preDexLibraries = false
+                          }
+                      }
+                  }' > ~/.gradle/init.gradle
+
+executors:
+  android:
+    docker:
+      - image: circleci/android:api-29
+
+jobs:
+  build_sdk:
+    executor: android
+    steps:
+      - disable_predex
+      - checkout
+      - restore_cache:
+          keys:
+            - judokit-android-{{ checksum "judokit-android/build.gradle" }}
+      - run:
+          name: Build SDK
+          command: ./gradlew :judokit-android:build
+      - save_cache:
+          key: judokit-android-{{ checksum "judokit-android/build.gradle" }}
+          paths:
+            - ./build/cache
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  # Add below as additional command once instrumented tests are added
+  # ./gradlew :judokit-android-examples:assembleReleaseAndroidTest
+  build_sample:
+    executor: android
+    steps:
+      - disable_predex
+      - checkout
+      - restore_cache:
+          keys:
+            - judokit-android-examples-{{ checksum "judokit-android-examples/build.gradle" }}
+      - run:
+          name: Build Sample App APK
+          command: |
+            ./gradlew :judokit-android-examples:assembleRelease
+      - save_cache:
+          key: judokit-android-examples-{{ checksum "judokit-android-examples/build.gradle" }}
+          paths:
+            - ./build/cache
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  unit_test_sdk:
+    executor: android
+    steps:
+      - attach_workspace:
+          at: /home/circleci/project
+      - disable_predex
+      - run:
+          name: Run SDK Unit Tests
+          command: ./gradlew :judokit-android:test generateCodeAnalysisReport
+
+  # Below step not currently used as no unit tests have been written
+  unit_test_sample:
+    executor: android
+    steps:
+      - attach_workspace:
+          at: /home/circleci/project
+      - disable_predex
+      - run:
+          name: Run Sample App Unit Tests
+          command: ./gradlew :judokit-android-examples:test
+
+  # Below step not currently used as no instrumented tests have been written
+  instrumented_test_sample:
+    executor: android
+    steps:
+      - attach_workspace:
+          at: /home/circleci/project
+      - run:
+          name: Store Google Service Account
+          command: echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+      - run:
+          name: Authorize gcloud and set config defaults
+          command: |
+            sudo gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+            sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+      - run:
+          name: Test with Firebase Test Lab
+          command: >
+            gcloud firebase test android run \
+              --app judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk \
+              --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk
+
+  sonar_scan:
+    docker:
+      - image: gcr.io/opnf-management/sonar-scanner:latest
+        auth:
+          username: _json_key
+          password: $GCLOUD_SERVICE_KEY
+    working_directory: /home/circleci/project
+    steps:
+      - attach_workspace:
+          at: /home/circleci/project
+      - run: /opt/run-scan.sh
+
+  release_sample:
+    executor: android
+    steps:
+      - attach_workspace:
+          at: /home/circleci/project
+      - run:
+          name: Install Firebase CLI
+          command: curl -sL https://firebase.tools | bash
+      - run:
+          name: Store Google Service Account
+          command: |
+            echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+            export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-service-key.json
+      - run:
+          name: Create Release Notes
+          command: echo "$(git log -1 --pretty=format:"%b")" > ./build/notes.txt
+      - run:
+          name: Distribute Sample App
+          command: |
+            firebase appdistribution:distribute \
+              judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk \
+              --app "$ANDROID_FIREBASE_APP_ID" \
+              --groups "default-testers" \
+              --release-notes-file ./build/notes.txt
+
+  release_sdk:
+    executor: android
+    steps:
+      - attach_workspace:
+          at: /home/circleci/project
+      - run:
+          name: Release SDK to Bintray
+          command: ./gradlew bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayKey=$BINTRAY_API_KEY -PdryRun=false
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build_sdk:
+          filters:
+            tags:
+              only:
+                - /^v((\d)+\.){1,2}(\d+)/i
+      - build_sample
+      - unit_test_sdk:
+          requires:
+            - build_sdk
+      - sonar_scan:
+          context: shared-secrets
+          requires:
+            - unit_test_sdk
+      - release_sample:
+          context: shared-secrets
+          requires:
+            - build_sample
+            - unit_test_sdk
+          filters:
+            branches:
+              only:
+                - master
+      - release_sdk:
+          context: shared-secrets
+          filters:
+            branches:
+              ignore:
+                - /.*/
+            tags:
+              only:
+                - /^v((\d)+\.){1,2}(\d+)/i

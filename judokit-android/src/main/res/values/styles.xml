@@ -86,6 +86,11 @@
         <item name="android:background">@drawable/bottom_sheet_modal_background</item>
     </style>
 
+    <style name="JudoTheme.ProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="colorAccent">@color/jpBlackColor</item>
+        <item name="android:indeterminate">true</item>
+    </style>
+
     <style name="JudoTheme.TextInputEditText" parent="Widget.AppCompat.EditText">
         <!-- Theme attributes -->
         <item name="android:textColorHint">@color/jpDarkGrayColor</item>

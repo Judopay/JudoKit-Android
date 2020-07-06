@@ -34,9 +34,12 @@ import com.judokit.android.api.model.response.toJudoResult
 import com.judokit.android.db.JudoRoomDatabase
 import com.judokit.android.db.repository.TokenizedCardRepository
 import com.judokit.android.judo
+import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.model.isCardPaymentWidget
 import com.judokit.android.model.isPaymentMethodsWidget
+import com.judokit.android.ui.cardentry.model.FormFieldType
+import com.judokit.android.ui.paymentmethods.CARD_NETWORK
 import com.judokit.android.ui.paymentmethods.CARD_VERIFICATION
 import kotlinx.android.synthetic.main.card_entry_fragment.*
 
@@ -54,14 +57,27 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
         val service = JudoApiServiceFactory.createApiService(application, judo)
-        val factory = CardEntryViewModelFactory(judo, service, cardRepository, application)
+        val selectedCardNetwork = arguments?.getParcelable<CardNetwork>(CARD_NETWORK)
+        val factory = CardEntryViewModelFactory(
+            judo,
+            service,
+            cardRepository,
+            selectedCardNetwork,
+            application
+        )
 
         viewModel = ViewModelProvider(this, factory).get(CardEntryViewModel::class.java)
 
+        if (selectedCardNetwork != null) {
+            viewModel.send(CardEntryAction.EnableFormFields(listOf(FormFieldType.SECURITY_NUMBER)))
+        }
+
         viewModel.model.observe(viewLifecycleOwner, Observer { updateWithModel(it) })
         viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer { dispatchApiResult(it) })
-
-        formView.submitButtonText = viewModel.submitButtonText
+        viewModel.securityCodeResult.observe(viewLifecycleOwner, Observer {
+            sharedViewModel.securityCodeResult.postValue(it)
+            findNavController().popBackStack()
+        })
 
         sharedViewModel.scanCardResult.observe(viewLifecycleOwner, Observer {
             viewModel.send(CardEntryAction.ScanCard(it))
@@ -95,8 +111,9 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         scanCardButton.setOnClickListener(this::handleScanCardButtonClicks)
 
         formView.apply {
-            onValidationPassedListener =
-                { model -> viewModel.send(CardEntryAction.ValidationPassed(model)) }
+            onFormValidationStatusListener = { model, isValid ->
+                viewModel.send(CardEntryAction.ValidationStatusChanged(model, isValid))
+            }
             onSubmitButtonClickListener = { viewModel.send(CardEntryAction.SubmitForm) }
         }
     }
@@ -128,6 +145,11 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     }
 
     private fun updateWithModel(model: CardEntryFragmentModel) {
+        if (model.displayScanButton) {
+            scanCardButton.visibility = View.VISIBLE
+        } else {
+            scanCardButton.visibility = View.GONE
+        }
         formView.model = model.formModel
     }
 

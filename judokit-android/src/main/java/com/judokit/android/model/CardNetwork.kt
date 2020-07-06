@@ -54,7 +54,8 @@ enum class CardNetwork : Parcelable {
             8 -> AMEX
             7 -> CHINA_UNION_PAY
             9 -> JCB
-            12 -> DISCOVER
+            12,
+            14 -> DISCOVER
             13 -> DINERS_CLUB
             else -> OTHER
         }
@@ -93,7 +94,7 @@ val CardNetwork.displayName: String
         CardNetwork.CHINA_UNION_PAY -> "China UnionPay"
         CardNetwork.JCB -> "JCB"
         CardNetwork.DISCOVER -> "Discover"
-        CardNetwork.DINERS_CLUB -> "Diners Club"
+        CardNetwork.DINERS_CLUB -> "Diner's Club"
         CardNetwork.OTHER -> "Unknown Card Network"
     }
 
@@ -171,4 +172,20 @@ val CardNetwork.isSupportedByGooglePay: Boolean
         CardNetwork.MAESTRO,
         CardNetwork.JCB -> true
         else -> false
+    }
+
+val CardNetwork?.securityCodeNameOfCardNetwork: String
+    get() {
+        if (this == null) {
+            return CardNetwork.OTHER.securityCodeName
+        }
+        return securityCodeName
+    }
+
+val CardNetwork?.securityCodeNumberMaskOfCardNetwork: String
+    get() {
+        if (this == null) {
+            return CardNetwork.OTHER.securityCodeNumberMask
+        }
+        return securityCodeNumberMask
     }

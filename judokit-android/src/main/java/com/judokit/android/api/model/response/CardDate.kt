@@ -3,10 +3,15 @@ package com.judokit.android.api.model.response
 import java.util.Calendar
 import java.util.Date
 
-class CardDate(cardDate: String) {
+class CardDate(cardDate: String = "") {
+    var cardDate: String = cardDate
+        set(value) {
+            field = value
+            splitCardDate(field)
+        }
 
-    internal val month: Int
-    internal val year: Int
+    internal var month: Int = 0
+    internal var year: Int = 0
 
     private fun getYear(year: String): Int {
         return if (isDateInvalid(year)) {
@@ -76,9 +81,13 @@ class CardDate(cardDate: String) {
         return !date.matches("(?:0[1-9]|1[0-2])[0-9]{2}".toRegex())
     }
 
-    init {
+    private fun splitCardDate(cardDate: String) {
         val splitCardDate = cardDate.replace("/".toRegex(), "")
         month = getMonth(splitCardDate)
         year = getYear(splitCardDate)
+    }
+
+    init {
+        splitCardDate(cardDate)
     }
 }

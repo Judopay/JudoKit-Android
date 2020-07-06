@@ -19,12 +19,24 @@ import com.judokit.android.PAYMENT_CANCELLED
 import com.judokit.android.PAYMENT_ERROR
 import com.judokit.android.PAYMENT_SUCCESS
 import com.judokit.android.api.factory.JudoApiServiceFactory
+import com.judokit.android.api.model.Authorization
+import com.judokit.android.api.model.BasicAuthorization
+import com.judokit.android.api.model.PaymentSessionAuthorization
+import com.judokit.android.examples.R
+import com.judokit.android.examples.common.startResultActivity
+import com.judokit.android.examples.common.toResult
+import com.judokit.android.examples.feature.adapter.DemoFeaturesAdapter
+import com.judokit.android.examples.feature.paybybank.PayByBankActivity
+import com.judokit.android.examples.feature.tokenpayment.DemoTokenPaymentActivity
+import com.judokit.android.examples.model.DemoFeature
+import com.judokit.android.examples.settings.SettingsActivity
 import com.judokit.android.model.Amount
 import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.Currency
 import com.judokit.android.model.GooglePayConfiguration
 import com.judokit.android.model.JudoError
 import com.judokit.android.model.JudoResult
+import com.judokit.android.model.PBBAConfiguration
 import com.judokit.android.model.PaymentMethod
 import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.Reference
@@ -34,21 +46,17 @@ import com.judokit.android.model.googlepay.GooglePayAddressFormat
 import com.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judokit.android.model.googlepay.GooglePayShippingAddressParameters
-import com.judokit.android.examples.R
-import com.judokit.android.examples.common.startResultActivity
-import com.judokit.android.examples.common.toResult
-import com.judokit.android.examples.feature.adapter.DemoFeaturesAdapter
-import com.judokit.android.examples.model.DemoFeature
-import com.judokit.android.examples.settings.SettingsActivity
 import com.readystatesoftware.chuck.ChuckInterceptor
-import kotlinx.android.synthetic.main.activity_demo_feature_list.*
 import java.util.UUID
+import kotlinx.android.synthetic.main.activity_demo_feature_list.*
 
 const val JUDO_PAYMENT_WIDGET_REQUEST_CODE = 1
+const val LAST_USED_WIDGET_TYPE_KEY = "LAST_USED_WIDGET_TYPE"
 
 class DemoFeatureListActivity : AppCompatActivity() {
 
     private lateinit var sharedPreferences: SharedPreferences
+    private var deepLinkIntent = intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +68,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false)
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+
+        deepLinkIfNeeded()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -94,6 +104,24 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 }
             }
         }
+        deepLinkIntent = intent
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        deepLinkIntent = intent
+        deepLinkIfNeeded()
+        super.onNewIntent(intent)
+    }
+
+    private fun deepLinkIfNeeded() = deepLinkIntent?.data?.let {
+        val newIntent = Intent(this, JudoActivity::class.java)
+        val lastUsedPaymentWidget = sharedPreferences.getString(
+            LAST_USED_WIDGET_TYPE_KEY,
+            null
+        ) ?: PaymentWidgetType.PAYMENT_METHODS.name
+
+        newIntent.putExtra(JUDO_OPTIONS, getJudo(PaymentWidgetType.valueOf(lastUsedPaymentWidget)))
+        startActivityForResult(newIntent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
     }
 
     private fun processSuccessfulPayment(result: JudoResult?) {
@@ -129,6 +157,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             val widgetType = when (feature) {
                 DemoFeature.PAYMENT -> PaymentWidgetType.CARD_PAYMENT
                 DemoFeature.PREAUTH -> PaymentWidgetType.PRE_AUTH
+                DemoFeature.TOKEN_PAYMENT,
                 DemoFeature.REGISTER_CARD -> PaymentWidgetType.REGISTER_CARD
                 DemoFeature.CREATE_CARD_TOKEN -> PaymentWidgetType.CREATE_CARD_TOKEN
                 DemoFeature.CHECK_CARD -> PaymentWidgetType.CHECK_CARD
@@ -137,9 +166,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 DemoFeature.SERVER_TO_SERVER_PAYMENT_METHODS -> PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS
                 DemoFeature.GOOGLE_PAY_PAYMENT -> PaymentWidgetType.GOOGLE_PAY
                 DemoFeature.GOOGLE_PAY_PREAUTH -> PaymentWidgetType.PRE_AUTH_GOOGLE_PAY
+                DemoFeature.PAY_BY_BANK_APP -> PaymentWidgetType.PAY_BY_BANK_APP
             }
             val judoConfig = getJudo(widgetType)
-            navigateToJudoPaymentWidgetWithConfigurations(judoConfig)
+            navigateToJudoPaymentWidgetWithConfigurations(judoConfig, feature)
+            sharedPreferences.edit().putString(LAST_USED_WIDGET_TYPE_KEY, widgetType.name).apply()
         } catch (exception: Exception) {
             when (exception) {
                 is IllegalArgumentException, is IllegalStateException -> {
@@ -152,8 +183,17 @@ class DemoFeatureListActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToJudoPaymentWidgetWithConfigurations(judo: Judo) {
-        val intent = Intent(this, JudoActivity::class.java)
+    private fun navigateToJudoPaymentWidgetWithConfigurations(judo: Judo, feature: DemoFeature) {
+        val myClass = when (judo.paymentWidgetType) {
+            PaymentWidgetType.REGISTER_CARD -> if (feature == DemoFeature.TOKEN_PAYMENT) {
+                DemoTokenPaymentActivity::class.java
+            } else {
+                JudoActivity::class.java
+            }
+            PaymentWidgetType.PAY_BY_BANK_APP -> PayByBankActivity::class.java
+            else -> JudoActivity::class.java
+        }
+        val intent = Intent(this, myClass)
         intent.putExtra(JUDO_OPTIONS, judo)
         startActivityForResult(intent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
     }
@@ -178,14 +218,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val isSandboxed = sharedPreferences.getBoolean("is_sandboxed", true)
         val judoId = sharedPreferences.getString("judo_id", null)
         val siteId = sharedPreferences.getString("site_id", null)
-        val token = sharedPreferences.getString("token", null)
-        val secret = sharedPreferences.getString("secret", null)
 
         return Judo.Builder(widgetType)
             .setJudoId(judoId)
             .setSiteId(siteId)
-            .setApiToken(token)
-            .setApiSecret(secret)
+            .setAuthorization(authorization)
             .setAmount(amount)
             .setReference(reference)
             .setIsSandboxed(isSandboxed)
@@ -193,6 +230,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setPaymentMethods(paymentMethods)
             .setUiConfiguration(uiConfiguration)
             .setGooglePayConfiguration(googlePayConfiguration)
+            .setPBBAConfiguration(pbbaConfiguration)
             .build()
     }
 
@@ -200,9 +238,15 @@ class DemoFeatureListActivity : AppCompatActivity() {
         get() {
             val isAVSEnabled = sharedPreferences.getBoolean("is_avs_enabled", false)
             val shouldDisplayAmount = sharedPreferences.getBoolean("should_display_amount", true)
+            val shouldPaymentMethodsVerifySecurityCode =
+                sharedPreferences.getBoolean("should_payment_methods_verify_security_code", true)
+            val shouldPaymentButtonDisplayAmount =
+                sharedPreferences.getBoolean("should_payment_button_display_amount", false)
             return UiConfiguration.Builder()
                 .setAvsEnabled(isAVSEnabled)
-                .setShouldDisplayAmount(shouldDisplayAmount)
+                .setShouldPaymentMethodsDisplayAmount(shouldDisplayAmount)
+                .setShouldPaymentMethodsVerifySecurityCode(shouldPaymentMethodsVerifySecurityCode)
+                .setShouldPaymentButtonDisplayAmount(shouldPaymentButtonDisplayAmount)
                 .build()
         }
 
@@ -225,11 +269,18 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     private val reference: Reference
         get() {
-            val randomString = UUID.randomUUID().toString()
+            val isPaymentSessionEnabled =
+                sharedPreferences.getBoolean("is_payment_session_enabled", false)
+
+            val paymentReference = if (isPaymentSessionEnabled) {
+                sharedPreferences.getString("payment_reference", null)
+            } else {
+                UUID.randomUUID().toString()
+            }
 
             return Reference.Builder()
                 .setConsumerReference("my-unique-ref")
-                .setPaymentReference(randomString)
+                .setPaymentReference(paymentReference)
                 .build()
         }
 
@@ -292,5 +343,30 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 .setIsShippingAddressRequired(isShippingAddressRequired)
                 .setShippingAddressParameters(shippingAddressParams)
                 .build()
+        }
+
+    private val pbbaConfiguration: PBBAConfiguration
+        get() = PBBAConfiguration.Builder().setDeepLinkScheme("judo://pay")
+            .setDeepLinkURL(deepLinkIntent?.data).build()
+
+    private val authorization: Authorization
+        get() {
+            val token = sharedPreferences.getString("token", null)
+            val secret = sharedPreferences.getString("secret", null)
+            val isPaymentSessionEnabled =
+                sharedPreferences.getBoolean("is_payment_session_enabled", false)
+
+            return if (isPaymentSessionEnabled) {
+                val paymentSession = sharedPreferences.getString("payment_session", null)
+                PaymentSessionAuthorization.Builder()
+                    .setPaymentSession(paymentSession)
+                    .setApiToken(token)
+                    .build()
+            } else {
+                BasicAuthorization.Builder()
+                    .setApiToken(token)
+                    .setApiSecret(secret)
+                    .build()
+            }
         }
 }

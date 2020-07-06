@@ -2,7 +2,7 @@ package com.judokit.android.ui.cardentry.validation
 
 import com.judokit.android.R
 import com.judokit.android.model.CardNetwork
-import com.judokit.android.ui.cardentry.components.FormModel
+import com.judokit.android.ui.cardentry.model.FormModel
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
