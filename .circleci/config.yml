@@ -137,13 +137,13 @@ jobs:
           name: Store Google Service Account
           command: |
             echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-            export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-service-key.json
       - run:
           name: Create Release Notes
           command: echo "$(git log -1 --pretty=format:"%b")" > ./notes.txt
       - run:
           name: Distribute Sample App
           command: |
+            export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-service-key.json
             firebase appdistribution:distribute \
               judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk \
               --app "$ANDROID_FIREBASE_APP_ID" \
