@@ -119,6 +119,7 @@ jobs:
           password: $GCLOUD_SERVICE_KEY
     working_directory: /home/circleci/project
     steps:
+      - checkout
       - attach_workspace:
           at: /home/circleci/project
       - run: /opt/run-scan.sh
@@ -126,6 +127,7 @@ jobs:
   release_sample:
     executor: android
     steps:
+      - checkout
       - attach_workspace:
           at: /home/circleci/project
       - run:
