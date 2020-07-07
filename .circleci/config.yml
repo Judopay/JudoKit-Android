@@ -43,7 +43,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .
+            - judokit-android/build
 
   # Add below as additional command once instrumented tests are added
   # ./gradlew :judokit-android-examples:assembleReleaseAndroidTest
@@ -66,11 +66,12 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .
+            - judokit-android-examples/build
 
   unit_test_sdk:
     executor: android
     steps:
+      - checkout
       - attach_workspace:
           at: /home/circleci/project
       - disable_predex
