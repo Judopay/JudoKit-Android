@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId "com.judokit.android.examples"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 12
         versionName "1.0-" + getGitHash()
@@ -31,6 +31,10 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 

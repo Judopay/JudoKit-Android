@@ -12,7 +12,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "1.0.0"
@@ -49,6 +49,10 @@ android {
         jacoco {
             includeNoLocationClasses = true
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -107,6 +111,11 @@ dependencies {
     implementation 'cards.pay:paycardsrecognizer:1.1.0'
 
     implementation "com.zapp.library:merchant:1.1.0"
+
+    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:16.1.0'
+    implementation "androidx.camera:camera-camera2:1.0.0-beta06"
+    implementation "androidx.camera:camera-lifecycle:1.0.0-beta06"
+    implementation "androidx.camera:camera-view:1.0.0-alpha13"
 
     // JUnit 4 framework
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"

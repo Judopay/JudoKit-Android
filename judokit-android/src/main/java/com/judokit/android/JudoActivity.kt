@@ -2,6 +2,7 @@ package com.judokit.android
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
@@ -15,6 +16,8 @@ import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.WalletConstants
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
 import com.judokit.android.api.factory.JudoApiServiceFactory
 import com.judokit.android.model.CardScanResultType
 import com.judokit.android.model.CardScanningResult
@@ -29,6 +32,7 @@ import com.judokit.android.model.toCardScanningResult
 import com.judokit.android.model.toIntent
 import com.judokit.android.service.JudoGooglePayService
 import com.judokit.android.ui.common.showAlert
+
 
 internal const val LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE = Activity.RESULT_FIRST_USER + 1
 internal const val SCAN_CARD_REQUEST_CODE = Activity.RESULT_FIRST_USER + 2

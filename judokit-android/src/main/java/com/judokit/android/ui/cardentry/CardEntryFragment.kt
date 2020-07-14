@@ -2,8 +2,12 @@ package com.judokit.android.ui.cardentry
 
 import android.app.Dialog
 import android.content.DialogInterface
+import android.content.Intent
+import android.graphics.Bitmap
+import android.hardware.Camera
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,10 +21,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
-import cards.pay.paycardsrecognizer.sdk.ScanCardIntent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
 import com.judokit.android.JudoSharedViewModel
 import com.judokit.android.R
 import com.judokit.android.SCAN_CARD_REQUEST_CODE
@@ -197,9 +202,10 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     }
 
     private fun handleScanCardButtonClicks(view: View) {
-        val activity = requireActivity()
-        val intent = ScanCardIntent.Builder(activity).build()
-        activity.startActivityForResult(intent, SCAN_CARD_REQUEST_CODE)
+        findNavController().navigate(R.id.action_cardEntryFragment_to_cardScanFragment)
+//        val activity = requireActivity()
+//        val intent = ScanCardIntent.Builder(activity).build()
+//        activity.startActivityForResult(intent, SCAN_CARD_REQUEST_CODE)
     }
 
     private fun unSubscribeFromInsetsChanges() = requireDialog().window?.apply {

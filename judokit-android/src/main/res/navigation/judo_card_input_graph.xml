@@ -18,6 +18,9 @@
                 android:name="com.judokit.android.model.CardVerificationModel"
                 app:argType="com.judokit.android.model.CardVerificationModel" />
         </action>
+        <action
+            android:id="@+id/action_cardEntryFragment_to_cardScanFragment"
+            app:destination="@id/cardScanFragment" />
     </dialog>
     <fragment
         android:id="@+id/cardVerificationFragment"
@@ -26,5 +29,9 @@
         tools:layout="@layout/card_verification_fragment">
 
     </fragment>
+    <fragment
+        android:id="@+id/cardScanFragment"
+        android:name="com.judokit.android.ui.CardScanFragment"
+        android:label="CardScanFragment" />
 
 </navigation>
