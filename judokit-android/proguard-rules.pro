@@ -21,4 +21,8 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class com.judokit.android.api.model.** { *; }
+-keepnames class com.judokit.android.api.model.** { *; }
+-keep class com.judokit.android.model.** { *; }
 -keepnames class com.judokit.android.model.** { *; }
+-keep class com.judokit.android.api.error.** { *; }
+-keepnames class com.judokit.android.api.error.** { *; }
