@@ -1,4 +1,8 @@
 <resources>
+    <style name="SplashTheme" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen_background</item>
+    </style>
+
     <style name="Theme.DemoApp" parent="Theme.MaterialComponents.DayNight" >
         <item name="toolbarStyle">@style/ToolbarStyle</item>
         <item name="toolbarNavigationButtonStyle">@style/Toolbar.Button.Navigation.Tinted</item>
