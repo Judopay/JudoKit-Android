@@ -20,9 +20,12 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.judokit.android.api.model.** { *; }
--keepnames class com.judokit.android.api.model.** { *; }
--keep class com.judokit.android.model.** { *; }
--keepnames class com.judokit.android.model.** { *; }
--keep class com.judokit.android.api.error.** { *; }
--keepnames class com.judokit.android.api.error.** { *; }
+-keep class com.judokit.** { *; }
+-keepnames class com.judokit.** { *; }
+
+#-keep class com.judokit.android.api.model.** { *; }
+#-keepnames class com.judokit.android.api.model.** { *; }
+#-keep class com.judokit.android.model.** { *; }
+#-keepnames class com.judokit.android.model.** { *; }
+#-keep class com.judokit.android.api.error.** { *; }
+#-keepnames class com.judokit.android.api.error.** { *; }
