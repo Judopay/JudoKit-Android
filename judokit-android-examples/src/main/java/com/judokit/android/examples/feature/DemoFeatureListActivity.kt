@@ -217,11 +217,9 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
         val isSandboxed = sharedPreferences.getBoolean("is_sandboxed", true)
         val judoId = sharedPreferences.getString("judo_id", null)
-        val siteId = sharedPreferences.getString("site_id", null)
 
         return Judo.Builder(widgetType)
             .setJudoId(judoId)
-            .setSiteId(siteId)
             .setAuthorization(authorization)
             .setAmount(amount)
             .setReference(reference)
