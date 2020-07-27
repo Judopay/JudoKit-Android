@@ -6,7 +6,7 @@ import java.util.Locale
 
 data class BankSaleStatusResponse(
     val paymentMethod: String,
-    val siteId: String,
+    val judoId: String,
     val orderDetails: OrderDetails,
     val merchantPaymentReference: String,
     val merchantConsumerReference: String

@@ -113,7 +113,7 @@ class PollingStatusViewModel(
             .setAmount(judo.amount.amount.toBigDecimalOrNull())
             .setMerchantPaymentReference(judo.reference.paymentReference)
             .setMerchantConsumerReference(judo.reference.consumerReference)
-            .setSiteId(judo.siteId)
+            .setJudoId(judo.judoId)
             .setMobileNumber(judo.pbbaConfiguration?.mobileNumber)
             .setEmailAddress(judo.pbbaConfiguration?.emailAddress)
             .setAppearsOnStatement(judo.pbbaConfiguration?.appearsOnStatement)

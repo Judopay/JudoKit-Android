@@ -10,7 +10,7 @@ data class BankSaleRequest(
     val amount: BigDecimal,
     val merchantPaymentReference: String,
     val merchantConsumerReference: String,
-    val siteId: String,
+    val judoId: String,
     val mobileNumber: String?,
     val emailAddress: String?,
     val appearsOnStatement: String?,
@@ -26,7 +26,7 @@ data class BankSaleRequest(
         private var amount: BigDecimal? = null
         private var merchantPaymentReference: String? = null
         private var merchantConsumerReference: String? = null
-        private var siteId: String? = null
+        private var judoId: String? = null
         private var mobileNumber: String? = null
         private var appearsOnStatement: String? = null
         private var emailAddress: String? = null
@@ -41,7 +41,7 @@ data class BankSaleRequest(
         fun setMerchantConsumerReference(merchantConsumerReference: String?) =
             apply { this.merchantConsumerReference = merchantConsumerReference }
 
-        fun setSiteId(siteId: String?) = apply { this.siteId = siteId }
+        fun setJudoId(judoId: String?) = apply { this.judoId = judoId }
 
         fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = mobileNumber }
         fun setAppearsOnStatement(appearsOnStatement: String?) =
@@ -60,7 +60,7 @@ data class BankSaleRequest(
                 requireNotNullOrEmpty(merchantPaymentReference, "merchantPaymentReference")
             val myMerchantConsumerReference =
                 requireNotNullOrEmpty(merchantConsumerReference, "merchantConsumerReference")
-            val mySiteId = requireNotNullOrEmpty(siteId, "siteId")
+            val myJudoId = requireNotNullOrEmpty(judoId, "judoId")
             val myMerchantRedirectUrl =
                 requireNotNullOrEmpty(merchantRedirectUrl, "merchantRedirectUrl")
 
@@ -68,7 +68,7 @@ data class BankSaleRequest(
                 myAmount,
                 myMerchantPaymentReference,
                 myMerchantConsumerReference,
-                mySiteId,
+                myJudoId,
                 mobileNumber,
                 emailAddress,
                 appearsOnStatement,

@@ -523,7 +523,6 @@ internal class CardEntryViewModelTest {
     private fun getJudo() = mockk<Judo>(relaxed = true) {
         every { paymentWidgetType } returns PaymentWidgetType.CARD_PAYMENT
         every { judoId } returns "id"
-        every { siteId } returns "siteId"
         every { authorization } returns mockk(relaxed = true)
         every { amount } returns Amount("1", Currency.EUR)
         every { reference } returns Reference("consumer", "payment")
