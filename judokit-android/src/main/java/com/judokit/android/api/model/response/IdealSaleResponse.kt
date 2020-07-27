@@ -10,7 +10,7 @@ data class IdealSaleResponse(
     val currency: String,
     val amount: BigDecimal,
     val consumer: BankConsumer,
-    val siteId: String,
+    val judoId: String,
     val merchantSiteName: String,
     val redirectUrl: String,
     val merchantRedirectUrl: String

@@ -18,7 +18,7 @@ internal class IdealSaleRequestTest {
             request.setAmount(BigDecimal(1))
                 .setMerchantConsumerReference("reference")
                 .setMerchantPaymentReference("reference")
-                .setSiteId("site id")
+                .setJudoId("judo id")
                 .setBic("bic")
                 .build(),
             getIdealSaleRequest()
@@ -60,18 +60,18 @@ internal class IdealSaleRequestTest {
     }
 
     @Test
-    @DisplayName("Given null siteId is provided, then build() should throw IllegalArgumentException")
-    fun exceptionOnNullSiteId() {
+    @DisplayName("Given null judoId is provided, then build() should throw IllegalArgumentException")
+    fun exceptionOnNullJudoId() {
         assertThrows<IllegalArgumentException> {
-            request.setSiteId(null).build()
+            request.setJudoId(null).build()
         }
     }
 
     @Test
-    @DisplayName("Given empty siteId is provided, then build() should throw IllegalArgumentException")
-    fun exceptionOnEmptySiteId() {
+    @DisplayName("Given empty judoId is provided, then build() should throw IllegalArgumentException")
+    fun exceptionOnEmptyJudoId() {
         assertThrows<IllegalArgumentException> {
-            request.setSiteId("").build()
+            request.setJudoId("").build()
         }
     }
 
@@ -94,6 +94,6 @@ internal class IdealSaleRequestTest {
     private fun getIdealSaleRequest() = request.setAmount(BigDecimal(1))
         .setMerchantConsumerReference("reference")
         .setMerchantPaymentReference("reference")
-        .setSiteId("site id")
+        .setJudoId("judo id")
         .setBic("bic").build()
 }

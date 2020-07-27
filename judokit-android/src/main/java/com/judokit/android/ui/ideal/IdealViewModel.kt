@@ -97,7 +97,7 @@ class IdealViewModel(
             .setMerchantConsumerReference(judo.reference.consumerReference)
             .setMerchantPaymentReference(judo.reference.paymentReference)
             .setPaymentMetadata(judo.reference.metaData?.toMap())
-            .setSiteId(judo.siteId)
+            .setJudoId(judo.judoId)
             .setBic(bic)
             .build()
 
