@@ -11,6 +11,10 @@ def getGitHash = { ->
     return stdout.toString().trim()
 }
 
+def keystorePropertiesFile = rootProject.file("judokit-android-examples/keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -19,19 +23,30 @@ android {
         applicationId "com.judokit.android.examples"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 19
+        versionCode 20
         versionName "1.0-" + getGitHash()
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        config {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
+
 }
 
 dependencies {
