@@ -160,7 +160,6 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
     private fun getJudo(judo: Judo): Judo = with(judo) {
         Judo.Builder(PaymentWidgetType.CARD_PAYMENT)
             .setJudoId(judoId)
-            .setSiteId(siteId)
             .setAuthorization(authorization)
             .setIsSandboxed(isSandboxed)
             .setAmount(this@DemoTokenPaymentActivity.amount)

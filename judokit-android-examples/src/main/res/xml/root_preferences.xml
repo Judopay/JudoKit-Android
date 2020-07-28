@@ -21,13 +21,6 @@
             app:title="@string/judo_id_title" />
 
         <EditTextPreference
-            app:defaultValue="@string/default_site_id"
-            app:iconSpaceReserved="false"
-            app:key="site_id"
-            app:summary="@string/site_id_summary"
-            app:title="@string/site_id_title" />
-
-        <EditTextPreference
             app:defaultValue="@string/default_token"
             app:iconSpaceReserved="false"
             app:key="token"

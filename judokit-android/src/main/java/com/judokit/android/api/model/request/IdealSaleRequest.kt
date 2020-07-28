@@ -10,7 +10,7 @@ data class IdealSaleRequest(
     val merchantPaymentReference: String,
     val paymentMetadata: Map<String, String>?,
     val merchantConsumerReference: String,
-    val siteId: String,
+    val judoId: String,
     val bic: String,
     val currency: String = Currency.EUR.name,
     val country: String = "NL",
@@ -22,7 +22,7 @@ data class IdealSaleRequest(
         private var merchantPaymentReference: String? = null
         private var paymentMetadata: Map<String, String>? = null
         private var merchantConsumerReference: String? = null
-        private var siteId: String? = null
+        private var judoId: String? = null
         private var bic: String? = null
 
         fun setAmount(amount: BigDecimal?) = apply { this.amount = amount }
@@ -36,7 +36,7 @@ data class IdealSaleRequest(
         fun setMerchantConsumerReference(merchantConsumerReference: String?) =
             apply { this.merchantConsumerReference = merchantConsumerReference }
 
-        fun setSiteId(siteId: String?) = apply { this.siteId = siteId }
+        fun setJudoId(judoId: String?) = apply { this.judoId = judoId }
 
         fun setBic(bic: String?) = apply { this.bic = bic }
 
@@ -46,7 +46,7 @@ data class IdealSaleRequest(
                 requireNotNullOrEmpty(merchantPaymentReference, "merchantPaymentReference")
             val myMerchantConsumerReference =
                 requireNotNullOrEmpty(merchantConsumerReference, "merchantConsumerReference")
-            val mySiteId = requireNotNullOrEmpty(siteId, "siteId")
+            val myJudoId = requireNotNullOrEmpty(judoId, "judoId")
             val myBic = requireNotNullOrEmpty(bic, "bic")
 
             return IdealSaleRequest(
@@ -54,7 +54,7 @@ data class IdealSaleRequest(
                 myMerchantPaymentReference,
                 paymentMetadata,
                 myMerchantConsumerReference,
-                mySiteId,
+                myJudoId,
                 myBic
             )
         }

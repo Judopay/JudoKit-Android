@@ -269,7 +269,6 @@ class IdealViewModelTest {
 
     private fun getJudo() = Judo.Builder(PaymentWidgetType.CARD_PAYMENT)
         .setJudoId("111111111")
-        .setSiteId("siteId")
         .setAuthorization(mockk(relaxed = true))
         .setAmount(Amount("1", Currency.EUR))
         .setReference(Reference("consumer", "payment"))
@@ -280,7 +279,7 @@ class IdealViewModelTest {
         .setMerchantConsumerReference(judo.reference.consumerReference)
         .setMerchantPaymentReference(judo.reference.paymentReference)
         .setPaymentMetadata(judo.reference.metaData?.toMap())
-        .setSiteId(judo.siteId)
+        .setJudoId(judo.judoId)
         .setBic(BIC)
         .build()
 }

@@ -53,9 +53,6 @@
     <string name="judo_id_title">Judo ID</string>
     <string name="judo_id_summary">Your Judo ID</string>
 
-    <string name="site_id_title">Site ID</string>
-    <string name="site_id_summary">Your Site ID</string>
-
     <string name="token_title">Token</string>
     <string name="token_summary">Your API authorization token</string>
 

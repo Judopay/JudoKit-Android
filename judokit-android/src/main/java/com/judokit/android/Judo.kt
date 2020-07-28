@@ -44,7 +44,6 @@ const val PAYMENT_ERROR = Activity.RESULT_FIRST_USER + 3
 @Parcelize
 class Judo internal constructor(
     val judoId: String,
-    val siteId: String?,
     val authorization: Authorization,
     val isSandboxed: Boolean,
     val amount: Amount,
@@ -74,7 +73,6 @@ class Judo internal constructor(
 
     class Builder(private val paymentWidgetType: PaymentWidgetType) {
         private var judoId: String? = null
-        private var siteId: String? = null
         private var authorization: Authorization? = null
         private var isSandboxed: Boolean? = null
         private var amount: Amount? = null
@@ -88,7 +86,6 @@ class Judo internal constructor(
         private var pbbaConfiguration: PBBAConfiguration? = null
 
         fun setJudoId(id: String?) = apply { this.judoId = id }
-        fun setSiteId(id: String?) = apply { this.siteId = id }
         fun setAuthorization(authorization: Authorization?) =
             apply { this.authorization = authorization }
 
@@ -177,7 +174,6 @@ class Judo internal constructor(
 
             return Judo(
                 id,
-                siteId,
                 myAuthorization,
                 mySandboxed,
                 myAmount,
@@ -195,6 +191,6 @@ class Judo internal constructor(
     }
 
     override fun toString(): String {
-        return "Judo(judoId='$judoId', siteId=$siteId, authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration)"
+        return "Judo(judoId='$judoId', authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration)"
     }
 }

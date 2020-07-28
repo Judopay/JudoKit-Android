@@ -205,7 +205,6 @@ internal class PollingStatusViewModelTest {
         every { paymentWidgetType } returns PaymentWidgetType.PAYMENT_METHODS
         every { paymentMethods } returns PaymentMethod.values()
         every { judoId } returns "1"
-        every { siteId } returns "siteId"
         every { authorization } returns mockk(relaxed = true)
         every { amount } returns Amount("1", Currency.GBP)
         every { reference } returns Reference("consumer", "payment")
