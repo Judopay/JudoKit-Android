@@ -261,7 +261,7 @@ internal class CardNetworkTest {
     @DisplayName("Given displayName is called, when card network is AMEX, return AmEx")
     @Test
     fun returnAmexDisplayNameWhenAmex() {
-        assertEquals("AmEx", CardNetwork.AMEX.displayName)
+        assertEquals("American Express", CardNetwork.AMEX.displayName)
     }
 
     @DisplayName("Given displayName is called, when card network is CHINA_UNION_PAY, return China UnionPay")
