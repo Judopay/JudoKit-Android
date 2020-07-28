@@ -30,7 +30,7 @@
     <string name="error_visa_not_supported">Visa is not supported</string>
     <string name="error_mastercard_not_supported">Mastercard is not supported</string>
     <string name="error_maestro_not_supported">Maestro is not supported</string>
-    <string name="error_amex_not_supported">AmEx is not supported</string>
+    <string name="error_amex_not_supported">American Express is not supported</string>
     <string name="error_discover_not_supported">Discover is not supported</string>
     <string name="error_union_pay_not_supported">China UnionPay is not supported</string>
     <string name="error_jcb_not_supported">JCB is not supported</string>

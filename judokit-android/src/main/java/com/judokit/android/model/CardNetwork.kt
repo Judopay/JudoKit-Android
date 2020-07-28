@@ -90,7 +90,7 @@ val CardNetwork.displayName: String
         CardNetwork.VISA -> "Visa"
         CardNetwork.MASTERCARD -> "Master Card"
         CardNetwork.MAESTRO -> "Maestro"
-        CardNetwork.AMEX -> "AmEx"
+        CardNetwork.AMEX -> "American Express"
         CardNetwork.CHINA_UNION_PAY -> "China UnionPay"
         CardNetwork.JCB -> "JCB"
         CardNetwork.DISCOVER -> "Discover"
