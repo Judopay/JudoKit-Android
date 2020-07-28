@@ -256,7 +256,8 @@ class FormView @JvmOverloads constructor(
             it.supportedNetworks = model.supportedNetworks
         }
         validatorInstance<SecurityCodeValidator>()?.let {
-            it.cardNetwork = model.cardNetwork
+            val cardNumber = model.valueOfFieldWithType(FormFieldType.NUMBER)
+            it.cardNetwork = model.cardNetwork ?: CardNetwork.ofNumber(cardNumber)
         }
     }
 
