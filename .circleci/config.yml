@@ -179,7 +179,8 @@ workflows:
             tags:
               only:
                 - /^v((\d)+\.){1,2}(\d+)/i
-      - build_sample
+      - build_sample:
+          context: shared-secrets
       - unit_test_sdk:
           requires:
             - build_sdk
