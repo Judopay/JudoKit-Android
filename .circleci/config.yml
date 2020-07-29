@@ -156,7 +156,7 @@ jobs:
           command: |
             export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-service-key.json
             firebase appdistribution:distribute \
-              judokit-android-examples/build/outputs/apk/release/judokit-android-examples-release-unsigned.apk \
+              judokit-android-examples/build/outputs/apk/release/judokit-android-examples-release.apk \
               --app "$ANDROID_FIREBASE_APP_ID" \
               --groups "default-testers" \
               --release-notes-file ./notes.txt
