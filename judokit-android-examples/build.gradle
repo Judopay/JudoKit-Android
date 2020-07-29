@@ -46,6 +46,10 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"true"]
+        }
+        debug {
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"false"]
         }
     }
 
