@@ -58,7 +58,7 @@ jobs:
       - run:
           name: Prepare Signing Key
           command: |
-            echo "$ANDROID_SIGNING_KEY" | base64 -d > signing.key
+            echo "$ANDROID_SIGNING_PRIVATE_KEY" | base64 -d > signing.key
             echo "$ANDROID_SIGNING_CERTIFICATE" | base64 -d > signing.crt
             openssl pkcs12 -export -inkey signing.key -in signing.crt -out signing.p12 -passout "pass:$ANDROID_KEYSTORE_PASSWORD"
             keytool -importkeystore -srckeystore signing.p12 -srcstoretype pkcs12 -srcstorepass "$ANDROID_KEYSTORE_PASSWORD" -destkeystore signing.jks -deststoretype JKS -storepass "$ANDROID_KEYSTORE_PASSWORD" -noprompt 2>/dev/null
