@@ -51,9 +51,9 @@ import com.judokit.android.ui.paymentmethods.model.PayByBankPaymentMethodModel
 import com.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import com.judokit.android.ui.paymentmethods.model.PaymentMethodModel
 import com.zapp.library.merchant.util.PBBAAppUtils
-import java.util.Date
 import kotlinx.coroutines.launch
 import retrofit2.await
+import java.util.Date
 
 // view-model actions
 sealed class PaymentMethodsAction {
@@ -106,7 +106,7 @@ class PaymentMethodsViewModel(
     val judoApiCallResult = MutableLiveData<JudoApiCallResult<Receipt>>()
     val payWithIdealObserver = MutableLiveData<Event<String>>()
     val payWithPayByBankObserver = MutableLiveData<Event<Nothing>>()
-    val selectedCardNetworkObserver = MutableLiveData<CardNetwork>()
+    val selectedCardNetworkObserver = MutableLiveData<Event<CardNetwork>>()
 
     private val context = application
 
@@ -192,7 +192,7 @@ class PaymentMethodsViewModel(
     private fun showSecurityCodeDialog(paymentMethod: CardPaymentMethodModel) {
         val card = paymentMethod.selectedCard
         card?.let {
-            selectedCardNetworkObserver.postValue(it.network)
+            selectedCardNetworkObserver.postValue(Event(it.network))
             buildModel(isLoading = false)
         }
     }

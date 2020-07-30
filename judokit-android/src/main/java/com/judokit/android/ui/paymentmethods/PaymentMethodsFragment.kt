@@ -123,11 +123,13 @@ class PaymentMethodsFragment : Fragment() {
         })
 
         viewModel.selectedCardNetworkObserver.observe(viewLifecycleOwner, Observer {
-            findNavController().navigate(
-                R.id.action_paymentMethodsFragment_to_cardEntryFragment, bundleOf(
-                    CARD_NETWORK to it
+            it.getContentIfNotHandled()?.let { cardNetwork ->
+                findNavController().navigate(
+                    R.id.action_paymentMethodsFragment_to_cardEntryFragment, bundleOf(
+                        CARD_NETWORK to cardNetwork
+                    )
                 )
-            )
+            }
         })
 
         sharedViewModel.paymentMethodsResult.observe(
