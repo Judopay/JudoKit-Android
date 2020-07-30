@@ -106,7 +106,7 @@ class PaymentMethodsViewModel(
     val judoApiCallResult = MutableLiveData<JudoApiCallResult<Receipt>>()
     val payWithIdealObserver = MutableLiveData<Event<String>>()
     val payWithPayByBankObserver = MutableLiveData<Event<Nothing>>()
-    val selectedCardNetworkObserver = MutableLiveData<CardNetwork>()
+    val selectedCardNetworkObserver = MutableLiveData<Event<CardNetwork>>()
 
     private val context = application
 
@@ -192,7 +192,7 @@ class PaymentMethodsViewModel(
     private fun showSecurityCodeDialog(paymentMethod: CardPaymentMethodModel) {
         val card = paymentMethod.selectedCard
         card?.let {
-            selectedCardNetworkObserver.postValue(it.network)
+            selectedCardNetworkObserver.postValue(Event(it.network))
             buildModel(isLoading = false)
         }
     }

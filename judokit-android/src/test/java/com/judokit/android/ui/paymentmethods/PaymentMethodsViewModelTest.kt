@@ -73,7 +73,7 @@ internal class PaymentMethodsViewModelTest {
     private val judoApiCallResult = spyk<Observer<JudoApiCallResult<Receipt>>>()
     private val payWithIdealObserver = spyk<Observer<Event<String>>>()
     private val payWithPayByBankObserver = spyk<Observer<Event<Nothing>>>()
-    private val selectedCardNetworkObserver = spyk<Observer<CardNetwork>>()
+    private val selectedCardNetworkObserver = spyk<Observer<Event<CardNetwork>>>()
 
     @BeforeEach
     internal fun setUp() {
@@ -720,7 +720,7 @@ internal class PaymentMethodsViewModelTest {
         coEvery { repository.findWithId(1) } returns card
         every { repository.allCardsSync.value } returns listOf(card)
         every { judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode } returns false
-        val slots = mutableListOf<CardNetwork>()
+        val slots = mutableListOf<Event<CardNetwork>>()
 
         sut.selectedCardNetworkObserver.observeForever(selectedCardNetworkObserver)
 
@@ -739,7 +739,7 @@ internal class PaymentMethodsViewModelTest {
         }
         coEvery { repository.findWithId(1) } returns card
         every { repository.allCardsSync.value } returns listOf(card)
-        val slots = mutableListOf<CardNetwork>()
+        val slots = mutableListOf<Event<CardNetwork>>()
 
         sut.selectedCardNetworkObserver.observeForever(selectedCardNetworkObserver)
 
@@ -761,7 +761,7 @@ internal class PaymentMethodsViewModelTest {
 
         every { judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode } returns true
 
-        val slots = mutableListOf<CardNetwork>()
+        val slots = mutableListOf<Event<CardNetwork>>()
 
         sut.selectedCardNetworkObserver.observeForever(selectedCardNetworkObserver)
 
