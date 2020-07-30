@@ -19,4 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Prevents crash when using Kotlin reflections on SDK 23
 -keep class kotlin.Metadata { *; }
