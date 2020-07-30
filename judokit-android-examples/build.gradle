@@ -23,7 +23,7 @@ android {
         applicationId "com.judokit.android.examples"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 20
+        versionCode 23
         versionName "1.0-" + getGitHash()
         multiDexEnabled true
 
