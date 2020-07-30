@@ -68,8 +68,8 @@
             android:theme="@style/Theme.DemoApp" />
 
         <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="48353c55c5341cdb82eb38812dfff4209d00118b" />
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="${crashlyticsCollectionEnabled}" />
     </application>
 
 </manifest>

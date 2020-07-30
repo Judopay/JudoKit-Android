@@ -56,6 +56,9 @@ jobs:
           keys:
             - judokit-android-examples-{{ checksum "judokit-android-examples/build.gradle" }}
       - run:
+          name: Prepare Google Services Json
+          command: echo "$ANDROID_GOOGLE_SERVICES_JSON" | base64 -d > judokit-android-examples/google-services.json
+      - run:
           name: Prepare Signing Key
           command: |
             echo "$ANDROID_SIGNING_PRIVATE_KEY" | base64 -d > signing.key
