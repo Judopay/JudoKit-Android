@@ -181,7 +181,7 @@ workflows:
           filters:
             tags:
               only:
-                - /^v[0-9]+(\.[0-9]+)*$/i
+                - /^v[0-9]+(\.[0-9]+)*$/
       - build_sample:
           context: shared-secrets
       - unit_test_sdk:
@@ -210,4 +210,28 @@ workflows:
                 - /.*/
             tags:
               only:
-                - /^v[0-9]+(\.[0-9]+)*$/i
+                - /^v[0-9]+(\.[0-9]+)*$/
+
+v2.0.0
+
+Release 2.0.0
+
+### New Features:
+- Pay by Bank app (PbBa) Integration in Payment Widget;
+- PbBa Integration Outside of Payment Widget;
+- Security code Payments in Payment Widget;
+- Added Amount to Pay Buttton in card entry form;
+- Token Payments without UI;
+- Initiate Payment with Payment Session Authorization method.
+
+### Improvements:
+- Added deeplink logic for PbBa;
+- Added Judo ID Validation;
+- Added JudoID instead of SiteID to Bank Transfer Requests;
+- String changed from AmEx to American Express.
+
+### BUG Fixes:
+- Fixed a crash when user clicks on Google Pay Payment or Preauth option;
+- Fixed a bug where security code didn't detect the card network;
+- Fixed a bug where payment is triggered on payment method screen after coming back from edit card screen;
+- Fixed a bug where polling dialog didn't show up after deeplink.
