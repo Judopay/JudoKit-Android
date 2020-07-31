@@ -167,6 +167,7 @@ jobs:
   release_sdk:
     executor: android
     steps:
+      - checkout
       - attach_workspace:
           at: /home/circleci/project
       - run:
