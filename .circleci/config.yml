@@ -181,7 +181,7 @@ workflows:
           filters:
             tags:
               only:
-                - /^v((\d)+\.){1,2}(\d+)/i
+                - /^v[0-9]+(\.[0-9]+)*$/i
       - build_sample:
           context: shared-secrets
       - unit_test_sdk:
@@ -202,10 +202,12 @@ workflows:
                 - master
       - release_sdk:
           context: shared-secrets
+          requires:
+            - build_sdk
           filters:
             branches:
               ignore:
                 - /.*/
             tags:
               only:
-                - /^v((\d)+\.){1,2}(\d+)/i
+                - /^v[0-9]+(\.[0-9]+)*$/i
