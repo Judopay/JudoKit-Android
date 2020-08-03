@@ -109,7 +109,6 @@ internal fun requireAmount(paymentWidgetType: PaymentWidgetType, amount: Amount?
     val defaultAmount = Amount.Builder().setAmount("").setCurrency(Currency.GBP)
     return if (arrayOf(
             PaymentWidgetType.CHECK_CARD,
-            PaymentWidgetType.CREATE_CARD_TOKEN,
             PaymentWidgetType.REGISTER_CARD
         ).contains(paymentWidgetType)
     ) {

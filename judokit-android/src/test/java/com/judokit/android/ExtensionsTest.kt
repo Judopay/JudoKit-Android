@@ -152,16 +152,6 @@ internal class ExtensionsTest {
         assertEquals(expectedAmount.currency, actualAmount.currency)
     }
 
-    @DisplayName("Given requireAmount is called, when paymentWidgetType is CREATE_CARD_TOKEN, then return defaultAmount")
-    @Test
-    fun returnDefaultAmountOnRequireAmountWithCreateCardToken() {
-        val expectedAmount = Amount.Builder().setAmount("").setCurrency(Currency.GBP).build()
-        val actualAmount = requireAmount(PaymentWidgetType.CREATE_CARD_TOKEN, null)
-
-        assertEquals(expectedAmount.amount, actualAmount.amount)
-        assertEquals(expectedAmount.currency, actualAmount.currency)
-    }
-
     @DisplayName("Given requireAmount is called, when paymentWidgetType is REGISTER_CARD, then return defaultAmount")
     @Test
     fun returnDefaultAmountOnRequireAmountWithRegisterCard() {
@@ -170,6 +160,17 @@ internal class ExtensionsTest {
 
         assertEquals(expectedAmount.amount, actualAmount.amount)
         assertEquals(expectedAmount.currency, actualAmount.currency)
+    }
+
+    @DisplayName("Given requireAmount is called, when paymentWidgetType is CREATE_CARD_TOKEN and amount is null, then throw IllegalArguementException")
+    @Test
+    fun throwsExceptionOnAmountNullWithPaymentWidgetTypeCreateCardToken() {
+        assertThrows<IllegalArgumentException> {
+            requireAmount(
+                PaymentWidgetType.CREATE_CARD_TOKEN,
+                null
+            )
+        }
     }
 
     @DisplayName("Given requireAmount is called, when paymentWidgetType is not CHECK_CARD or CREATE_CARD_TOKEN or REGISTER_CARD and amount is null, then throw IllegalArguementException")
