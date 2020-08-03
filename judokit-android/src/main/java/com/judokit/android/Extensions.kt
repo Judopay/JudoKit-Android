@@ -14,10 +14,7 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
-import com.judokit.android.model.Amount
 import com.judokit.android.model.ApiEnvironment
-import com.judokit.android.model.Currency
-import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.ui.common.ANIMATION_DURATION_500
 import com.judokit.android.ui.error.JudoNotProvidedError
 
@@ -104,21 +101,6 @@ fun View.dismissKeyboard() {
 }
 
 fun Any.toJSONString(): String = Gson().toJson(this)
-
-internal fun requireAmount(paymentWidgetType: PaymentWidgetType, amount: Amount?): Amount {
-    val defaultAmount = Amount.Builder().setAmount("").setCurrency(Currency.GBP)
-    return if (arrayOf(
-            PaymentWidgetType.CHECK_CARD,
-            PaymentWidgetType.CREATE_CARD_TOKEN,
-            PaymentWidgetType.REGISTER_CARD
-        ).contains(paymentWidgetType)
-    ) {
-        defaultAmount.build()
-    } else {
-        requireNotNullOrEmpty(amount?.amount, "amount")
-        amount!!
-    }
-}
 
 internal fun Window.applyDialogStyling() {
     setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

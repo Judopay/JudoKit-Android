@@ -143,7 +143,7 @@ class Judo internal constructor(
             val id = requireJudoId(judoId)
             val myAuthorization = requireNotNull(authorization, "authorization")
 
-            val myAmount = requireAmount(paymentWidgetType, amount)
+            val myAmount = requireNotNull(amount, "amount")
             val myReference = requireNotNull(reference, "reference")
 
             validatePaymentMethods(myAmount.currency)
