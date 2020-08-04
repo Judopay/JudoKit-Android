@@ -5,10 +5,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.judokit.android.model.Amount
 import com.judokit.android.model.ApiEnvironment
-import com.judokit.android.model.Currency
-import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.ui.error.JudoNotProvidedError
 import io.mockk.every
 import io.mockk.mockk
@@ -140,68 +137,5 @@ internal class ExtensionsTest {
         val whitespaceString = "White space"
 
         assertEquals("Whitespace", whitespaceString.withWhitespacesRemoved)
-    }
-
-    @DisplayName("Given requireAmount is called, when paymentWidgetType is CHECK_CARD, then return defaultAmount")
-    @Test
-    fun returnDefaultAmountOnRequireAmountWithCheckCard() {
-        val expectedAmount = Amount.Builder().setAmount("").setCurrency(Currency.GBP).build()
-        val actualAmount = requireAmount(PaymentWidgetType.CHECK_CARD, null)
-
-        assertEquals(expectedAmount.amount, actualAmount.amount)
-        assertEquals(expectedAmount.currency, actualAmount.currency)
-    }
-
-    @DisplayName("Given requireAmount is called, when paymentWidgetType is CREATE_CARD_TOKEN, then return defaultAmount")
-    @Test
-    fun returnDefaultAmountOnRequireAmountWithCreateCardToken() {
-        val expectedAmount = Amount.Builder().setAmount("").setCurrency(Currency.GBP).build()
-        val actualAmount = requireAmount(PaymentWidgetType.CREATE_CARD_TOKEN, null)
-
-        assertEquals(expectedAmount.amount, actualAmount.amount)
-        assertEquals(expectedAmount.currency, actualAmount.currency)
-    }
-
-    @DisplayName("Given requireAmount is called, when paymentWidgetType is REGISTER_CARD, then return defaultAmount")
-    @Test
-    fun returnDefaultAmountOnRequireAmountWithRegisterCard() {
-        val expectedAmount = Amount.Builder().setAmount("").setCurrency(Currency.GBP).build()
-        val actualAmount = requireAmount(PaymentWidgetType.REGISTER_CARD, null)
-
-        assertEquals(expectedAmount.amount, actualAmount.amount)
-        assertEquals(expectedAmount.currency, actualAmount.currency)
-    }
-
-    @DisplayName("Given requireAmount is called, when paymentWidgetType is not CHECK_CARD or CREATE_CARD_TOKEN or REGISTER_CARD and amount is null, then throw IllegalArguementException")
-    @Test
-    fun throwsExceptionOnAmountNull() {
-        assertThrows<IllegalArgumentException> {
-            requireAmount(
-                PaymentWidgetType.PAYMENT_METHODS,
-                null
-            )
-        }
-    }
-
-    @DisplayName("Given requireAmount is called, when paymentWidgetType is not CHECK_CARD or CREATE_CARD_TOKEN or REGISTER_CARD and amount.amount is empty, then throw IllegalArguementException")
-    @Test
-    fun throwsExceptionOnAmountEmpty() {
-        assertThrows<IllegalArgumentException> {
-            requireAmount(
-                PaymentWidgetType.PAYMENT_METHODS,
-                mockk {
-                    every { amount } returns ""
-                }
-            )
-        }
-    }
-
-    @DisplayName("Given requireAmount is called, when paymentWidgetType is not CHECK_CARD or CREATE_CARD_TOKEN or REGISTER_CARD and amount is valid, then return amount")
-    @Test
-    fun returnAmountOnRequireAmountCalledWithValidArguments() {
-        val expectedAmount = Amount.Builder().setAmount("1").setCurrency(Currency.GBP).build()
-        val actualAmount = requireAmount(PaymentWidgetType.PAYMENT_METHODS, expectedAmount)
-
-        assertEquals(expectedAmount, actualAmount)
     }
 }
