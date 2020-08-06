@@ -2,6 +2,7 @@ package com.judokit.android.model
 
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -44,6 +45,7 @@ internal class AmountTest {
     @DisplayName("Given formatted is called, then should return formatted amount")
     @Test
     fun returnFormattedAmountOnFormattedCalled() {
-        assertEquals("GBP1.00", sut.setCurrency(Currency.GBP).build().formatted)
+        val result = sut.setCurrency(Currency.GBP).build().formatted
+        assertTrue(listOf("£1.00", "GBP1.00").contains(result))
     }
 }
