@@ -7,3 +7,4 @@ build
 local.properties
 .scannerwork
 credentials.json
+google-services.json
