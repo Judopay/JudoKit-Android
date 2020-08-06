@@ -168,7 +168,6 @@ class Judo internal constructor(
         }
     }
 
-    // TODO: Extract it in a extension file
     fun toTokenPayment(cardToken: String, securityCode: String? = null) = TokenRequest.Builder()
         .setAmount(amount.amount)
         .setCurrency(amount.currency.name)

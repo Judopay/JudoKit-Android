@@ -85,7 +85,7 @@ dependencies {
 
     implementation "androidx.core:core:$androidx_core_version"
     implementation "androidx.core:core-ktx:$androidx_core_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
@@ -139,7 +139,7 @@ task jacocoTestReport(group: 'verification', description: 'Grenerate Jacoco Repo
 
 project.afterEvaluate {
     def variants = android.hasProperty('libraryVariants') ? android.libraryVariants : android.applicationVariants
-    variants.findAll { it.name != "release" }.forEach {
+    variants.forEach {
         tasks.jacocoTestReport.dependsOn(addJacocoTask(it))
     }
 }
