@@ -1,6 +1,5 @@
 package com.judokit.android
 
-import android.app.Activity
 import android.os.Parcelable
 import com.judokit.android.api.model.Authorization
 import com.judokit.android.api.model.request.Address
@@ -26,21 +25,6 @@ import kotlinx.android.parcel.Parcelize
  * use {@link Judo#JUDO_OPTIONS} as the extra or argument name.
  */
 
-// Bundle keys
-const val JUDO_OPTIONS = "com.judokit.android.options"
-const val JUDO_RESULT = "com.judokit.android.result"
-const val JUDO_ERROR = "com.judokit.android.error"
-
-// Result codes
-/** Judo activity result: operation succeeded.  */
-const val PAYMENT_SUCCESS = Activity.RESULT_FIRST_USER + 1
-
-/** Judo activity result: operation canceled.  */
-const val PAYMENT_CANCELLED = Activity.RESULT_FIRST_USER + 2
-
-/** Judo activity result: operation error  */
-const val PAYMENT_ERROR = Activity.RESULT_FIRST_USER + 3
-
 @Parcelize
 class Judo internal constructor(
     val judoId: String,
@@ -58,18 +42,12 @@ class Judo internal constructor(
     val pbbaConfiguration: PBBAConfiguration?
 ) : Parcelable {
 
-    fun toTokenPayment(cardToken: String, securityCode: String? = null) = TokenRequest.Builder()
-        .setAmount(amount.amount)
-        .setCurrency(amount.currency.name)
-        .setJudoId(judoId)
-        .setYourPaymentReference(reference.paymentReference)
-        .setYourConsumerReference(reference.consumerReference)
-        .setYourPaymentMetaData(reference.metaData?.toMap())
-        .setCardToken(cardToken)
-        .setCv2(securityCode)
-        .setPrimaryAccountDetails(primaryAccountDetails)
-        .setAddress(Address.Builder().build())
-        .build()
+    companion object {
+        // Bundle keys
+        const val JUDO_OPTIONS = "com.judokit.android.options"
+        const val JUDO_RESULT = "com.judokit.android.result"
+        const val JUDO_ERROR = "com.judokit.android.error"
+    }
 
     class Builder(private val paymentWidgetType: PaymentWidgetType) {
         private var judoId: String? = null
@@ -189,6 +167,20 @@ class Judo internal constructor(
             )
         }
     }
+
+    // TODO: Extract it in a extension file
+    fun toTokenPayment(cardToken: String, securityCode: String? = null) = TokenRequest.Builder()
+        .setAmount(amount.amount)
+        .setCurrency(amount.currency.name)
+        .setJudoId(judoId)
+        .setYourPaymentReference(reference.paymentReference)
+        .setYourConsumerReference(reference.consumerReference)
+        .setYourPaymentMetaData(reference.metaData?.toMap())
+        .setCardToken(cardToken)
+        .setCv2(securityCode)
+        .setPrimaryAccountDetails(primaryAccountDetails)
+        .setAddress(Address.Builder().build())
+        .build()
 
     override fun toString(): String {
         return "Judo(judoId='$judoId', authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration)"

@@ -74,14 +74,20 @@ class CardEntryFragment : BottomSheetDialogFragment() {
 
         viewModel.model.observe(viewLifecycleOwner, Observer { updateWithModel(it) })
         viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer { dispatchApiResult(it) })
-        viewModel.securityCodeResult.observe(viewLifecycleOwner, Observer {
-            sharedViewModel.securityCodeResult.postValue(it)
-            findNavController().popBackStack()
-        })
+        viewModel.securityCodeResult.observe(
+            viewLifecycleOwner,
+            Observer {
+                sharedViewModel.securityCodeResult.postValue(it)
+                findNavController().popBackStack()
+            }
+        )
 
-        sharedViewModel.scanCardResult.observe(viewLifecycleOwner, Observer {
-            viewModel.send(CardEntryAction.ScanCard(it))
-        })
+        sharedViewModel.scanCardResult.observe(
+            viewLifecycleOwner,
+            Observer {
+                viewModel.send(CardEntryAction.ScanCard(it))
+            }
+        )
     }
 
     // present it always expanded
@@ -233,7 +239,8 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         if (receipt != null) {
             if (receipt.is3dSecureRequired) {
                 findNavController().navigate(
-                    R.id.action_cardEntryFragment_to_cardVerificationFragment, bundleOf(
+                    R.id.action_cardEntryFragment_to_cardVerificationFragment,
+                    bundleOf(
                         CARD_VERIFICATION to receipt.toCardVerificationModel()
                     )
                 )

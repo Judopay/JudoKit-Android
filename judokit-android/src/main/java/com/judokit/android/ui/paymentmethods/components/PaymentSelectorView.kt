@@ -56,8 +56,8 @@ class PaymentSelectorView @JvmOverloads constructor(
             val itemView = PaymentSelectorItemView(context).apply {
                 if (paymentMethods.size < 3) {
                     layoutParams = ViewGroup.LayoutParams(
-                            0,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        0,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
                     )
                     gravity = Gravity.CENTER
                 }
@@ -137,23 +137,23 @@ class PaymentSelectorView @JvmOverloads constructor(
     private fun chainViews(itemViews: MutableList<Int>, set: ConstraintSet) {
         if (itemViews.size > 2) {
             set.createHorizontalChain(
-                    ConstraintSet.PARENT_ID,
-                    ConstraintSet.LEFT,
-                    ConstraintSet.PARENT_ID,
-                    ConstraintSet.RIGHT,
-                    itemViews.toIntArray(),
-                    null,
-                    ConstraintSet.CHAIN_SPREAD_INSIDE
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.LEFT,
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.RIGHT,
+                itemViews.toIntArray(),
+                null,
+                ConstraintSet.CHAIN_SPREAD_INSIDE
             )
         } else {
             set.createHorizontalChain(
-                    ConstraintSet.PARENT_ID,
-                    ConstraintSet.LEFT,
-                    ConstraintSet.PARENT_ID,
-                    ConstraintSet.RIGHT,
-                    itemViews.toIntArray(),
-                    null,
-                    ConstraintSet.CHAIN_SPREAD
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.LEFT,
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.RIGHT,
+                itemViews.toIntArray(),
+                null,
+                ConstraintSet.CHAIN_SPREAD
             )
         }
     }
@@ -161,10 +161,10 @@ class PaymentSelectorView @JvmOverloads constructor(
     private fun scrollToView(itemView: PaymentSelectorItemView) {
         val rect = Rect()
         itemView.getTextView()
-                .measure(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                )
+            .measure(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
         if (!(itemView.getGlobalVisibleRect(rect) && itemView.height == rect.height() && itemView.width == rect.width())) {
             val itemViewWidth = itemView.getImageView().width + itemView.getTextView().measuredWidth
             if (currentSelected != null && !lastUsedSelected) {

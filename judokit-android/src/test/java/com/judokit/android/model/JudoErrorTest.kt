@@ -1,5 +1,7 @@
 package com.judokit.android.model
 
+import com.judokit.android.model.JudoError.Companion.INTERNAL_ERROR
+import com.judokit.android.model.JudoError.Companion.USER_CANCELLED
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

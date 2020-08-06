@@ -37,25 +37,31 @@ class CardVerificationFragment : Fragment(), WebViewCallback {
         val factory = IdealViewModelFactory(service, application)
         viewModel = ViewModelProvider(this, factory).get(CardVerificationViewModel::class.java)
 
-        viewModel.judoApiCallResult.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is JudoApiCallResult.Success -> if (it.data != null) {
-                    sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(it.data.toJudoResult()))
-                }
-                is JudoApiCallResult.Failure -> if (it.error != null) {
-                    sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
+        viewModel.judoApiCallResult.observe(
+            viewLifecycleOwner,
+            Observer {
+                when (it) {
+                    is JudoApiCallResult.Success -> if (it.data != null) {
+                        sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(it.data.toJudoResult()))
+                    }
+                    is JudoApiCallResult.Failure -> if (it.error != null) {
+                        sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
+                    }
                 }
             }
-        })
-        viewModel.isLoading.observe(viewLifecycleOwner, Observer {
-            if (it) {
-                threeDSTextView.visibility = View.VISIBLE
-                threeDSProgressBar.visibility = View.VISIBLE
-            } else {
-                threeDSTextView.visibility = View.GONE
-                threeDSProgressBar.visibility = View.GONE
+        )
+        viewModel.isLoading.observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it) {
+                    threeDSTextView.visibility = View.VISIBLE
+                    threeDSProgressBar.visibility = View.VISIBLE
+                } else {
+                    threeDSTextView.visibility = View.GONE
+                    threeDSProgressBar.visibility = View.GONE
+                }
             }
-        })
+        )
     }
 
     override fun onCreateView(

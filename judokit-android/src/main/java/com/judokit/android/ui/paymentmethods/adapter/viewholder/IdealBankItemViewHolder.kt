@@ -11,7 +11,8 @@ import com.judokit.android.ui.paymentmethods.adapter.model.bankResId
 import com.judokit.android.ui.paymentmethods.adapter.model.drawableResId
 import kotlinx.android.synthetic.main.ideal_bank_item.view.*
 
-class IdealBankItemViewHolder(view: View) : RecyclerView.ViewHolder(view),
+class IdealBankItemViewHolder(view: View) :
+    RecyclerView.ViewHolder(view),
     BindableRecyclerViewHolder<IdealBankItem, PaymentMethodItemAction> {
 
     override fun bind(model: IdealBankItem, listener: PaymentMethodsAdapterListener?) {

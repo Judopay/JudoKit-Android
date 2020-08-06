@@ -51,5 +51,6 @@ internal class ApiHeadersInterceptor(
             .build()
 
     private val userAgent: String
-        get() = """Android/${BuildConfig.VERSION_NAME} ${Build.MANUFACTURER} ${Build.MODEL} ${appMetaDataProvider.appName} ${appMetaDataProvider.appVersion}""".trimMargin()
+        get() =
+            """Android/${BuildConfig.VERSION_NAME} ${Build.MANUFACTURER} ${Build.MODEL} ${appMetaDataProvider.appName} ${appMetaDataProvider.appVersion}""".trimMargin()
 }

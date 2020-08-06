@@ -83,18 +83,18 @@ class CardEntryViewModel(
     private var enabledFormFields: List<FormFieldType> = if (selectedCardNetwork != null) {
         mutableListOf(FormFieldType.SECURITY_NUMBER)
     } else {
-            val fields = mutableListOf(
-                FormFieldType.NUMBER,
-                FormFieldType.HOLDER_NAME,
-                FormFieldType.EXPIRATION_DATE,
-                FormFieldType.SECURITY_NUMBER
-            )
-            if (judo.uiConfiguration.avsEnabled) {
-                fields.add(FormFieldType.COUNTRY)
-                fields.add(FormFieldType.POST_CODE)
-            }
-        fields
+        val fields = mutableListOf(
+            FormFieldType.NUMBER,
+            FormFieldType.HOLDER_NAME,
+            FormFieldType.EXPIRATION_DATE,
+            FormFieldType.SECURITY_NUMBER
+        )
+        if (judo.uiConfiguration.avsEnabled) {
+            fields.add(FormFieldType.COUNTRY)
+            fields.add(FormFieldType.POST_CODE)
         }
+        fields
+    }
 
     val submitButtonText: Int
         get() = when (judo.paymentWidgetType) {
@@ -102,28 +102,31 @@ class CardEntryViewModel(
             PaymentWidgetType.CREATE_CARD_TOKEN -> R.string.save_card
             PaymentWidgetType.CHECK_CARD -> R.string.check_card
             PaymentWidgetType.CARD_PAYMENT,
-            PaymentWidgetType.PRE_AUTH -> if (judo.uiConfiguration.shouldPaymentButtonDisplayAmount) {
-                R.string.pay_amount
-            } else {
-                R.string.pay_now
-            }
+            PaymentWidgetType.PRE_AUTH ->
+                if (judo.uiConfiguration.shouldPaymentButtonDisplayAmount) {
+                    R.string.pay_amount
+                } else {
+                    R.string.pay_now
+                }
             PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
             PaymentWidgetType.PAYMENT_METHODS,
-            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> if (selectedCardNetwork != null) {
-                R.string.pay_now
-            } else {
-                R.string.add_card
-            }
+            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS ->
+                if (selectedCardNetwork != null) {
+                    R.string.pay_now
+                } else {
+                    R.string.add_card
+                }
             else -> R.string.empty
         }
 
     val amount: String?
         get() = when (judo.paymentWidgetType) {
             PaymentWidgetType.CARD_PAYMENT,
-            PaymentWidgetType.PRE_AUTH -> if (judo.uiConfiguration.shouldPaymentButtonDisplayAmount)
-                judo.amount.formatted
-            else
-                null
+            PaymentWidgetType.PRE_AUTH ->
+                if (judo.uiConfiguration.shouldPaymentButtonDisplayAmount)
+                    judo.amount.formatted
+                else
+                    null
             else -> null
         }
 
@@ -174,12 +177,13 @@ class CardEntryViewModel(
             PaymentWidgetType.CREATE_CARD_TOKEN,
             PaymentWidgetType.PAYMENT_METHODS,
             PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
-            PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS -> if (selectedCardNetwork != null) {
-                securityCodeResult.postValue(inputModel.securityNumber)
-                return@launch
-            } else {
-                performSaveCardRequest(addressBuilder)
-            }
+            PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS ->
+                if (selectedCardNetwork != null) {
+                    securityCodeResult.postValue(inputModel.securityNumber)
+                    return@launch
+                } else {
+                    performSaveCardRequest(addressBuilder)
+                }
             else -> throw IllegalStateException("Unsupported PaymentWidgetType")
         }
 

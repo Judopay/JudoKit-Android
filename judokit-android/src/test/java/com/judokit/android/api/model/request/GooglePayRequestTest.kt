@@ -18,10 +18,12 @@ internal class GooglePayRequestTest {
         .setCurrency("GBP")
         .setYourConsumerReference("consumerRef")
         .setYourPaymentReference("paymentRef")
-        .setGooglePayWallet(mockk(relaxed = true) {
-            every { token } returns "token"
-            every { cardNetwork } returns "Visa"
-        })
+        .setGooglePayWallet(
+            mockk(relaxed = true) {
+                every { token } returns "token"
+                every { cardNetwork } returns "Visa"
+            }
+        )
         .setYourPaymentMetaData(mockk(relaxed = true))
         .setPrimaryAccountDetails(mockk(relaxed = true))
 

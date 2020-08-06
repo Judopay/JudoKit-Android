@@ -14,6 +14,7 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
+import com.judokit.android.Judo.Companion.JUDO_OPTIONS
 import com.judokit.android.model.ApiEnvironment
 import com.judokit.android.ui.common.ANIMATION_DURATION_500
 import com.judokit.android.ui.error.JudoNotProvidedError

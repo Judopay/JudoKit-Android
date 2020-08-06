@@ -6,17 +6,18 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
-import com.judokit.android.JUDO_OPTIONS
-import com.judokit.android.JUDO_RESULT
 import com.judokit.android.Judo
+import com.judokit.android.Judo.Companion.JUDO_OPTIONS
+import com.judokit.android.Judo.Companion.JUDO_RESULT
 import com.judokit.android.JudoActivity
-import com.judokit.android.PAYMENT_CANCELLED
-import com.judokit.android.PAYMENT_ERROR
-import com.judokit.android.PAYMENT_SUCCESS
+import com.judokit.android.JudoActivity.Companion.RESULT_PAYMENT_CANCELLED
+import com.judokit.android.JudoActivity.Companion.RESULT_PAYMENT_ERROR
+import com.judokit.android.JudoActivity.Companion.RESULT_PAYMENT_SUCCESS
 import com.judokit.android.api.factory.JudoApiServiceFactory
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.Receipt
 import com.judokit.android.api.model.response.toJudoPaymentResult
+import com.judokit.android.examples.R
 import com.judokit.android.examples.feature.JUDO_PAYMENT_WIDGET_REQUEST_CODE
 import com.judokit.android.model.Amount
 import com.judokit.android.model.Currency
@@ -26,7 +27,6 @@ import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.code
 import com.judokit.android.model.toIntent
 import com.judokit.android.ui.common.ButtonState
-import com.judokit.android.examples.R
 import kotlinx.android.synthetic.main.activity_demo_token_payment.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -82,7 +82,7 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
         if (requestCode == REGISTER_CARD_REQUEST_CODE) {
             createCardTokenButton.state = ButtonState.Enabled(R.string.create_card_token)
             when (resultCode) {
-                PAYMENT_SUCCESS -> {
+                RESULT_PAYMENT_SUCCESS -> {
                     val result = data?.getParcelableExtra<JudoResult>(JUDO_RESULT)
                     val token = result?.cardDetails?.token
                     if (token.isNullOrBlank()) {
@@ -93,8 +93,8 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
                     handleState(ActivityState.Idle)
                 }
 
-                PAYMENT_CANCELLED,
-                PAYMENT_ERROR -> {
+                RESULT_PAYMENT_CANCELLED,
+                RESULT_PAYMENT_ERROR -> {
                     setResult(resultCode, data)
                     finish()
                 }

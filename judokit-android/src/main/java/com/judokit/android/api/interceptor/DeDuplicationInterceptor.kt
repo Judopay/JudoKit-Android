@@ -32,9 +32,10 @@ internal class DeDuplicationInterceptor : Interceptor {
                 val uniqueRequest = jsonObject[UNIQUE_REQUEST_KEY]
 
                 if (uniqueRequest != null &&
-                        uniqueRequest.asBoolean &&
-                        uniqueReference != null &&
-                        UNIQUE_RESPONSES.contains(uniqueReference.asString)) {
+                    uniqueRequest.asBoolean &&
+                    uniqueReference != null &&
+                    UNIQUE_RESPONSES.contains(uniqueReference.asString)
+                ) {
                     throw DuplicateTransactionError(uniqueReference.asString)
                 } else {
                     val response = chain.proceed(request)

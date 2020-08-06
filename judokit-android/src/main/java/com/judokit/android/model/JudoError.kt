@@ -3,9 +3,6 @@ package com.judokit.android.model
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
-const val INTERNAL_ERROR = -2
-const val USER_CANCELLED = -1
-
 internal const val UNKNOWN_ERROR_MSG = "Oops! Something went wrong."
 internal const val USER_CANCELLED_MSG = "User cancelled"
 
@@ -15,7 +12,12 @@ data class JudoError(
     var message: String = USER_CANCELLED_MSG,
     var details: MutableList<JudoError> = mutableListOf()
 ) : Parcelable {
+
     companion object {
+
+        const val INTERNAL_ERROR = -2
+        const val USER_CANCELLED = -1
+
         fun userCancelled(): JudoError {
             return JudoError(USER_CANCELLED, USER_CANCELLED_MSG)
         }

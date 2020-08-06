@@ -102,9 +102,11 @@ class EditCardFragment : Fragment() {
             viewModel.send(EditCardAction.ChangeTitle(it.toString()))
         }
 
-        titleEditText.filters = arrayOf(LengthFilter(CARD_TITLE_MAX_CHARACTERS) {
-            titleTextInputLayout.isErrorEnabled = it
-        })
+        titleEditText.filters = arrayOf(
+            LengthFilter(CARD_TITLE_MAX_CHARACTERS) {
+                titleTextInputLayout.isErrorEnabled = it
+            }
+        )
 
         titleEditText.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {

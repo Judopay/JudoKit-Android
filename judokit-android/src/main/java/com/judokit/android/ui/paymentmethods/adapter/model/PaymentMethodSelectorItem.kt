@@ -8,22 +8,22 @@ data class PaymentMethodSelectorItem(
     var currentSelected: PaymentMethod
 ) : PaymentMethodItem {
 
-        override fun equals(other: Any?): Boolean {
-                if (this === other) return true
-                if (javaClass != other?.javaClass) return false
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
 
-                other as PaymentMethodSelectorItem
+        other as PaymentMethodSelectorItem
 
-                if (type != other.type) return false
-                if (paymentMethods != other.paymentMethods) return false
+        if (type != other.type) return false
+        if (paymentMethods != other.paymentMethods) return false
 
-                return true
-        }
+        return true
+    }
 
-        override fun hashCode(): Int {
-                var result = type.hashCode()
-                result = 31 * result + paymentMethods.hashCode()
-                result = 31 * result + currentSelected.hashCode()
-                return result
-        }
+    override fun hashCode(): Int {
+        var result = type.hashCode()
+        result = 31 * result + paymentMethods.hashCode()
+        result = 31 * result + currentSelected.hashCode()
+        return result
+    }
 }

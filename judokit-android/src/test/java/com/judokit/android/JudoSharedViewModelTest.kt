@@ -11,8 +11,8 @@ import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.Receipt
 import com.judokit.android.api.model.response.toJudoPaymentResult
 import com.judokit.android.model.CardScanningResult
-import com.judokit.android.model.INTERNAL_ERROR
 import com.judokit.android.model.JudoError
+import com.judokit.android.model.JudoError.Companion.INTERNAL_ERROR
 import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.model.JudoResult
 import com.judokit.android.model.PaymentWidgetType

@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.judokit.android.Judo.Companion.JUDO_OPTIONS
 import com.judokit.android.model.ApiEnvironment
 import com.judokit.android.ui.error.JudoNotProvidedError
 import io.mockk.every

@@ -10,14 +10,14 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.judokit.android.JUDO_ERROR
-import com.judokit.android.JUDO_OPTIONS
-import com.judokit.android.JUDO_RESULT
 import com.judokit.android.Judo
+import com.judokit.android.Judo.Companion.JUDO_ERROR
+import com.judokit.android.Judo.Companion.JUDO_OPTIONS
+import com.judokit.android.Judo.Companion.JUDO_RESULT
 import com.judokit.android.JudoActivity
-import com.judokit.android.PAYMENT_CANCELLED
-import com.judokit.android.PAYMENT_ERROR
-import com.judokit.android.PAYMENT_SUCCESS
+import com.judokit.android.JudoActivity.Companion.RESULT_PAYMENT_CANCELLED
+import com.judokit.android.JudoActivity.Companion.RESULT_PAYMENT_ERROR
+import com.judokit.android.JudoActivity.Companion.RESULT_PAYMENT_SUCCESS
 import com.judokit.android.api.factory.JudoApiServiceFactory
 import com.judokit.android.api.model.Authorization
 import com.judokit.android.api.model.BasicAuthorization
@@ -35,20 +35,20 @@ import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.Currency
 import com.judokit.android.model.GooglePayConfiguration
 import com.judokit.android.model.JudoError
+import com.judokit.android.model.JudoError.Companion.USER_CANCELLED
 import com.judokit.android.model.JudoResult
 import com.judokit.android.model.PBBAConfiguration
 import com.judokit.android.model.PaymentMethod
 import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.Reference
-import com.judokit.android.model.USER_CANCELLED
 import com.judokit.android.model.UiConfiguration
 import com.judokit.android.model.googlepay.GooglePayAddressFormat
 import com.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judokit.android.model.googlepay.GooglePayShippingAddressParameters
 import com.readystatesoftware.chuck.ChuckInterceptor
-import java.util.UUID
 import kotlinx.android.synthetic.main.activity_demo_feature_list.*
+import java.util.UUID
 
 const val JUDO_PAYMENT_WIDGET_REQUEST_CODE = 1
 const val LAST_USED_WIDGET_TYPE_KEY = "LAST_USED_WIDGET_TYPE"
@@ -92,13 +92,13 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
         if (requestCode == JUDO_PAYMENT_WIDGET_REQUEST_CODE) {
             when (resultCode) {
-                PAYMENT_SUCCESS -> {
+                RESULT_PAYMENT_SUCCESS -> {
                     val result = data?.getParcelableExtra<JudoResult>(JUDO_RESULT)
                     processSuccessfulPayment(result)
                 }
 
-                PAYMENT_CANCELLED,
-                PAYMENT_ERROR -> {
+                RESULT_PAYMENT_CANCELLED,
+                RESULT_PAYMENT_ERROR -> {
                     val error = data?.getParcelableExtra<JudoError>(JUDO_ERROR)
                     processPaymentError(error)
                 }
@@ -185,11 +185,12 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     private fun navigateToJudoPaymentWidgetWithConfigurations(judo: Judo, feature: DemoFeature) {
         val myClass = when (judo.paymentWidgetType) {
-            PaymentWidgetType.REGISTER_CARD -> if (feature == DemoFeature.TOKEN_PAYMENT) {
-                DemoTokenPaymentActivity::class.java
-            } else {
-                JudoActivity::class.java
-            }
+            PaymentWidgetType.REGISTER_CARD ->
+                if (feature == DemoFeature.TOKEN_PAYMENT) {
+                    DemoTokenPaymentActivity::class.java
+                } else {
+                    JudoActivity::class.java
+                }
             PaymentWidgetType.PAY_BY_BANK_APP -> PayByBankActivity::class.java
             else -> JudoActivity::class.java
         }

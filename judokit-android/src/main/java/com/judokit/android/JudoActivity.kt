@@ -35,6 +35,18 @@ internal const val SCAN_CARD_REQUEST_CODE = Activity.RESULT_FIRST_USER + 2
 
 class JudoActivity : AppCompatActivity() {
 
+    companion object {
+        // Result codes
+        /** Judo activity result: operation succeeded.  */
+        const val RESULT_PAYMENT_SUCCESS = Activity.RESULT_FIRST_USER + 1
+
+        /** Judo activity result: operation canceled.  */
+        const val RESULT_PAYMENT_CANCELLED = Activity.RESULT_FIRST_USER + 2
+
+        /** Judo activity result: operation error  */
+        const val RESULT_PAYMENT_ERROR = Activity.RESULT_FIRST_USER + 3
+    }
+
     private lateinit var viewModel: JudoSharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,13 +65,16 @@ class JudoActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, factory).get(JudoSharedViewModel::class.java)
         viewModel.paymentResult.observe(this, Observer { dispatchPaymentResult(it) })
 
-        viewModel.bankPaymentResult.observe(this, Observer {
-            if (judo.paymentWidgetType.isPaymentMethodsWidget) {
-                viewModel.paymentMethodsResult.postValue(it)
-            } else {
-                viewModel.paymentResult.postValue(it)
+        viewModel.bankPaymentResult.observe(
+            this,
+            Observer {
+                if (judo.paymentWidgetType.isPaymentMethodsWidget) {
+                    viewModel.paymentMethodsResult.postValue(it)
+                } else {
+                    viewModel.paymentResult.postValue(it)
+                }
             }
-        })
+        )
 
         if (judo.paymentWidgetType.isGooglePayWidget) {
             viewModel.send(JudoSharedAction.LoadGPayPaymentData)
