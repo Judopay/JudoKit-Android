@@ -6,7 +6,8 @@ import com.judokit.android.examples.common.BindableRecyclerViewHolder
 import com.judokit.android.examples.model.ResultItem
 import kotlinx.android.synthetic.main.item_result_property.view.*
 
-class ResultActivityItemViewHolder(view: View) : RecyclerView.ViewHolder(view),
+class ResultActivityItemViewHolder(view: View) :
+    RecyclerView.ViewHolder(view),
     BindableRecyclerViewHolder<ResultItem> {
 
     override fun bind(model: ResultItem, listener: ((ResultItem) -> Unit)?) = with(itemView) {

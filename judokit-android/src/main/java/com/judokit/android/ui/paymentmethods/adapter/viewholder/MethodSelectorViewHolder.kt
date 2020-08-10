@@ -9,8 +9,9 @@ import com.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItemActi
 import com.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodSelectorItem
 import kotlinx.android.synthetic.main.payment_methods_selector_item.view.*
 
-class MethodSelectorViewHolder(view: View) : RecyclerView.ViewHolder(view),
-        BindableRecyclerViewHolder<PaymentMethodItem, PaymentMethodItemAction> {
+class MethodSelectorViewHolder(view: View) :
+    RecyclerView.ViewHolder(view),
+    BindableRecyclerViewHolder<PaymentMethodItem, PaymentMethodItemAction> {
 
     override fun bind(
         model: PaymentMethodItem,

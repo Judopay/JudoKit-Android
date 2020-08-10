@@ -223,7 +223,7 @@ class FormView @JvmOverloads constructor(
             isFormValid = validationResults.reduce { acc, b -> acc && b }
         }
 
-            onValidationPassed(isFormValid)
+        onValidationPassed(isFormValid)
     }
 
     private fun update() {

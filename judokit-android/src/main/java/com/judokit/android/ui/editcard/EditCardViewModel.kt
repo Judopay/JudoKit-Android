@@ -52,9 +52,11 @@ class EditCardViewModel(
 
     private val isSaveButtonEnabled: Boolean
         get() {
-            return (selectedPattern != cardEntity.pattern ||
+            return (
+                selectedPattern != cardEntity.pattern ||
                     isSelectedAsDefault != cardEntity.isDefault ||
-                    currentCardTitle != cardEntity.title) && currentCardTitle.length <= 28
+                    currentCardTitle != cardEntity.title
+                ) && currentCardTitle.length <= 28
         }
 
     init {
@@ -102,10 +104,12 @@ class EditCardViewModel(
     }
 
     private fun persistChanges() = viewModelScope.launch {
-        cardRepository.insert(cardEntity.apply {
-            title = currentCardTitle
-            pattern = selectedPattern
-            isDefault = isSelectedAsDefault
-        })
+        cardRepository.insert(
+            cardEntity.apply {
+                title = currentCardTitle
+                pattern = selectedPattern
+                isDefault = isSelectedAsDefault
+            }
+        )
     }
 }

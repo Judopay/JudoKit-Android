@@ -53,13 +53,16 @@ class JudoActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, factory).get(JudoSharedViewModel::class.java)
         viewModel.paymentResult.observe(this, Observer { dispatchPaymentResult(it) })
 
-        viewModel.bankPaymentResult.observe(this, Observer {
-            if (judo.paymentWidgetType.isPaymentMethodsWidget) {
-                viewModel.paymentMethodsResult.postValue(it)
-            } else {
-                viewModel.paymentResult.postValue(it)
+        viewModel.bankPaymentResult.observe(
+            this,
+            Observer {
+                if (judo.paymentWidgetType.isPaymentMethodsWidget) {
+                    viewModel.paymentMethodsResult.postValue(it)
+                } else {
+                    viewModel.paymentResult.postValue(it)
+                }
             }
-        })
+        )
 
         if (judo.paymentWidgetType.isGooglePayWidget) {
             viewModel.send(JudoSharedAction.LoadGPayPaymentData)

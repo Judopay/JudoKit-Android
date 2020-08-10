@@ -51,9 +51,9 @@ import com.judokit.android.ui.paymentmethods.model.PayByBankPaymentMethodModel
 import com.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import com.judokit.android.ui.paymentmethods.model.PaymentMethodModel
 import com.zapp.library.merchant.util.PBBAAppUtils
-import java.util.Date
 import kotlinx.coroutines.launch
 import retrofit2.await
+import java.util.Date
 
 // view-model actions
 sealed class PaymentMethodsAction {

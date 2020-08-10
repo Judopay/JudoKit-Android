@@ -3,8 +3,8 @@ package com.judokit.android.model
 import android.os.Bundle
 import android.os.Parcelable
 import com.judokit.android.requireNotNullOrEmpty
-import java.util.UUID
 import kotlinx.android.parcel.Parcelize
+import java.util.UUID
 
 @Parcelize
 class Reference internal constructor(

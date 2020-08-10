@@ -41,15 +41,15 @@ internal class PostcodeValidatorTest {
 
     /**
      * TODO: Fix postcode validation
-    @Test
-    @DisplayName("validate post code for CA")
-    fun validateCAPostCode() {
-    validator.country = Country.CA
-    assertEquals(
-    validator.validate("A1A 1A1"),
-    ValidationResult(true, R.string.empty)
-    )
-    }
+     @Test
+     @DisplayName("validate post code for CA")
+     fun validateCAPostCode() {
+     validator.country = Country.CA
+     assertEquals(
+     validator.validate("A1A 1A1"),
+     ValidationResult(true, R.string.empty)
+     )
+     }
      */
 
     @Test

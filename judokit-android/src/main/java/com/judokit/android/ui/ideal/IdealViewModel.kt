@@ -14,9 +14,9 @@ import com.judokit.android.api.model.response.IdealSaleResponse
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.OrderStatus
 import com.judokit.android.toMap
-import java.math.BigDecimal
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 
 // view-model custom factory to inject the `judo` configuration object
 internal class IdealViewModelFactory(

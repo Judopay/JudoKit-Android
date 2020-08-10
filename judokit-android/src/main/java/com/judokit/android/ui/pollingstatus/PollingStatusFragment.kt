@@ -78,12 +78,18 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
 
         viewModel.send(PollingAction.Initialise(sharedViewModel.error.details.isEmpty()))
 
-        viewModel.payByBankResult.observe(viewLifecycleOwner, Observer { result ->
-            handlePayByBankResult(result)
-        })
-        viewModel.saleStatusResult.observe(viewLifecycleOwner, Observer { result ->
-            handleSaleStatusResult(result)
-        })
+        viewModel.payByBankResult.observe(
+            viewLifecycleOwner,
+            Observer { result ->
+                handlePayByBankResult(result)
+            }
+        )
+        viewModel.saleStatusResult.observe(
+            viewLifecycleOwner,
+            Observer { result ->
+                handleSaleStatusResult(result)
+            }
+        )
         pollingStatusView.onButtonClickListener = { handlePollingStatusViewButtonClick(it) }
 
         pollingStatusView.animateWithAlpha(1.0f)

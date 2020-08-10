@@ -1,8 +1,8 @@
 package com.judokit.android.examples
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.judokit.android.examples.feature.DemoFeatureListActivity
 
 class SplashActivity : AppCompatActivity() {

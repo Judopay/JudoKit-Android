@@ -18,11 +18,12 @@ fun JudoApiCallResult<Receipt>.toJudoPaymentResult(): JudoPaymentResult {
     val fallbackError = JudoError.generic()
 
     return when (this) {
-        is JudoApiCallResult.Success -> if (data != null) {
-            JudoPaymentResult.Success(data.toJudoResult())
-        } else {
-            JudoPaymentResult.Error(fallbackError)
-        }
+        is JudoApiCallResult.Success ->
+            if (data != null) {
+                JudoPaymentResult.Success(data.toJudoResult())
+            } else {
+                JudoPaymentResult.Error(fallbackError)
+            }
         is JudoApiCallResult.Failure -> JudoPaymentResult.Error(error?.toJudoError() ?: fallbackError)
     }
 }

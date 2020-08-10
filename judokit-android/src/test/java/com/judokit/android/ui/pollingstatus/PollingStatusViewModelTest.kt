@@ -209,12 +209,12 @@ internal class PollingStatusViewModelTest {
         every { amount } returns Amount("1", Currency.GBP)
         every { reference } returns Reference("consumer", "payment")
         every { pbbaConfiguration } returns
-                PBBAConfiguration(
-                    "mobile",
-                    "email",
-                    "appearOnStatementAs",
-                    mockk(relaxed = true),
-                    "judo://pay"
-                )
+            PBBAConfiguration(
+                "mobile",
+                "email",
+                "appearOnStatementAs",
+                mockk(relaxed = true),
+                "judo://pay"
+            )
     }
 }

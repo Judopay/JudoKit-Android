@@ -7,8 +7,8 @@ import com.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judokit.android.model.googlepay.GooglePayPriceStatus
 import com.judokit.android.model.googlepay.GooglePayShippingAddressParameters
 import com.judokit.android.requireNotNull
-import java.util.Locale
 import kotlinx.android.parcel.Parcelize
+import java.util.Locale
 
 @Parcelize
 class GooglePayConfiguration internal constructor(

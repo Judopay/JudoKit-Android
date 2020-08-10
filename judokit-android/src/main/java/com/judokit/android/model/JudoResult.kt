@@ -3,9 +3,9 @@ package com.judokit.android.model
 import android.os.Parcelable
 import com.judokit.android.api.model.response.CardToken
 import com.judokit.android.api.model.response.Consumer
+import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 import java.util.Date
-import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class JudoResult(
