@@ -18,6 +18,7 @@ import com.judokit.android.service.polling.PollingResult
 import com.judokit.android.service.polling.PollingService
 import com.judokit.android.toMap
 import kotlinx.coroutines.launch
+import retrofit2.await
 
 private const val ORDER_ID = "orderId"
 
@@ -121,7 +122,7 @@ class PollingStatusViewModel(
             .setMerchantRedirectUrl(judo.pbbaConfiguration?.deepLinkScheme)
             .build()
 
-        val response = service.sale(request)
+        val response = service.sale(request).await()
 
         payByBankResult.postValue(response)
     }

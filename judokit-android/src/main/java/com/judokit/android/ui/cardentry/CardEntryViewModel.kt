@@ -31,6 +31,7 @@ import com.judokit.android.ui.cardentry.model.InputModel
 import com.judokit.android.ui.common.ButtonState
 import com.judokit.android.ui.paymentmethods.toTokenizedCardEntity
 import kotlinx.coroutines.launch
+import retrofit2.await
 
 data class CardEntryFragmentModel(val formModel: FormModel, val displayScanButton: Boolean = true)
 
@@ -203,7 +204,7 @@ class CardEntryViewModel(
             .setPrimaryAccountDetails(judo.primaryAccountDetails)
             .build()
 
-        return service.checkCard(request)
+        return service.checkCard(request).await()
     }
 
     private suspend fun performRegisterCardRequest(addressBuilder: Address.Builder): JudoApiCallResult<Receipt> {
@@ -222,7 +223,7 @@ class CardEntryViewModel(
             .setAmount(judo.amount.amount)
             .build()
 
-        return service.registerCard(request)
+        return service.registerCard(request).await()
     }
 
     private suspend fun performPreAuthPaymentRequest(addressBuilder: Address.Builder): JudoApiCallResult<Receipt> {
@@ -241,7 +242,7 @@ class CardEntryViewModel(
             .setPrimaryAccountDetails(judo.primaryAccountDetails)
             .build()
 
-        return service.preAuthPayment(request)
+        return service.preAuthPayment(request).await()
     }
 
     private suspend fun performPaymentRequest(addressBuilder: Address.Builder): JudoApiCallResult<Receipt> {
@@ -260,7 +261,7 @@ class CardEntryViewModel(
             .setPrimaryAccountDetails(judo.primaryAccountDetails)
             .build()
 
-        return service.payment(request)
+        return service.payment(request).await()
     }
 
     private suspend fun performSaveCardRequest(addressBuilder: Address.Builder): JudoApiCallResult<Receipt> {
@@ -278,7 +279,7 @@ class CardEntryViewModel(
             .setPrimaryAccountDetails(judo.primaryAccountDetails)
             .build()
 
-        return service.saveCard(request)
+        return service.saveCard(request).await()
     }
 
     private fun buildModel(isLoading: Boolean, isFormValid: Boolean, cardNetwork: CardNetwork? = null) {

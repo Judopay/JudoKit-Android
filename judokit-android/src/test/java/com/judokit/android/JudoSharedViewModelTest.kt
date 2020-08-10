@@ -37,6 +37,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import retrofit2.await
 
 // ApiException(Status.RESULT_CANCELED)
 private const val API_EXCEPTION_STATUS_MESSAGE = "16: "
@@ -62,6 +63,7 @@ internal class JudoSharedViewModelTest {
     internal fun setUp() {
         Dispatchers.setMain(testDispatcher)
 
+        mockkStatic("retrofit2.KotlinExtensions")
         mockkStatic("com.judokit.android.ui.common.MappersKt")
         mockkStatic("com.judokit.android.api.model.request.GooglePayRequestKt")
         mockkStatic("com.judokit.android.api.model.response.JudoApiCallResultKt")
@@ -393,7 +395,7 @@ internal class JudoSharedViewModelTest {
         val expectedJudoPaymentResult: JudoPaymentResult = mockk(relaxed = true)
         every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
         every { paymentData.toGooglePayRequest(judo) } returns googlePayRequest
-        coEvery { judoApiService.googlePayPayment(googlePayRequest) } returns judoApiCallResult
+        coEvery { judoApiService.googlePayPayment(googlePayRequest).await() } returns judoApiCallResult
         every { judoApiCallResult.toJudoPaymentResult() } returns expectedJudoPaymentResult
 
         sut.send(JudoSharedAction.LoadGPayPaymentDataSuccess(paymentData))

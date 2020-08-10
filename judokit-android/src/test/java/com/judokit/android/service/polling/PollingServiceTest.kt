@@ -8,12 +8,14 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
+import retrofit2.await
 
 @ExperimentalCoroutinesApi
 @DisplayName("Testing polling logic")
@@ -38,8 +40,9 @@ internal class PollingServiceTest {
 
     @Before
     fun setUp() {
+        mockkStatic("retrofit2.KotlinExtensions")
         coEvery {
-            service.status("orderId").hint(JudoApiCallResult::class)
+            service.status("orderId").await().hint(JudoApiCallResult::class)
         } returns statusCallResult
     }
 
@@ -109,7 +112,7 @@ internal class PollingServiceTest {
     fun invokePollingResultFailureOnRequestFailed() {
         val failStatusCallResult: JudoApiCallResult.Failure = mockk(relaxed = true)
         coEvery {
-            service.status("orderId").hint(JudoApiCallResult::class)
+            service.status("orderId").await().hint(JudoApiCallResult::class)
         } returns failStatusCallResult
 
         runBlockingTest { sut.start() }
