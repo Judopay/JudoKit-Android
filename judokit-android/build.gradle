@@ -6,6 +6,13 @@ apply plugin: 'org.jlleitschuh.gradle.ktlint'
 apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'jacoco'
 apply plugin: 'guru.stefma.bintrayrelease'
+apply plugin: "org.sonarqube"
+
+sonarqube {
+    properties {
+        property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/jacocoTestReportDebug/jacocoTestReportDebug.xml"
+    }
+}
 
 android {
     compileSdkVersion 29
@@ -31,7 +38,6 @@ android {
 
     buildTypes {
         release {
-            testCoverageEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
