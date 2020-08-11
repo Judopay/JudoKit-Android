@@ -5,6 +5,7 @@ import com.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.OrderStatus
 import kotlinx.coroutines.delay
+import retrofit2.await
 
 private const val DELAY_IN_SECONDS = 130L
 private const val MILLISECONDS = 1000L
@@ -23,7 +24,7 @@ class PollingService(private val service: JudoApiService) {
             if (timeout != DELAY_IN_SECONDS * MILLISECONDS) {
                 delay(REQUEST_DELAY)
             }
-            when (val saleStatusResponse = service.status(orderId)) {
+            when (val saleStatusResponse = service.status(orderId).await()) {
                 is JudoApiCallResult.Success -> {
                     if (saleStatusResponse.data != null) {
                         handleOrderStatus(saleStatusResponse.data)

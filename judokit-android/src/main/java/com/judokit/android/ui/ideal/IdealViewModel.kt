@@ -17,6 +17,7 @@ import com.judokit.android.toMap
 import java.math.BigDecimal
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import retrofit2.await
 
 // view-model custom factory to inject the `judo` configuration object
 internal class IdealViewModelFactory(
@@ -60,7 +61,7 @@ class IdealViewModel(
                 delay(REQUEST_DELAY)
             }
 
-            when (val response = service.status(orderId)) {
+            when (val response = service.status(orderId).await()) {
                 is JudoApiCallResult.Success -> {
                     if (response.data != null)
                         when (response.data.orderDetails.orderStatus) {
@@ -101,7 +102,7 @@ class IdealViewModel(
             .setBic(bic)
             .build()
 
-        val response = service.sale(request)
+        val response = service.sale(request).await()
 
         saleCallResult.postValue(response)
 

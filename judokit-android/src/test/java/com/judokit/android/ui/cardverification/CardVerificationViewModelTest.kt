@@ -10,6 +10,7 @@ import com.judokit.android.api.model.response.Receipt
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import retrofit2.await
 
 @ExperimentalCoroutinesApi
 @ExtendWith(com.judokit.android.InstantExecutorExtension::class)
@@ -49,8 +51,10 @@ internal class CardVerificationViewModelTest {
         sut.isLoading.observeForever(isLoadingMock)
         sut.judoApiCallResult.observeForever(judoApiCallResultMock)
 
+        mockkStatic("retrofit2.KotlinExtensions")
+
         coEvery {
-            service.complete3dSecure(receiptId, cardVerificationResult)
+            service.complete3dSecure(receiptId, cardVerificationResult).await()
                 .hint(JudoApiCallResult::class)
         } returns judoApiCallResult
 
