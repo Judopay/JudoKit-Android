@@ -14,7 +14,6 @@ import com.judokit.android.api.model.request.TokenRequest
 import com.judokit.android.toMap
 import java.math.BigDecimal
 
-
 fun createPaymentRequest(
     judo: Judo,
     cardNumber: String,
