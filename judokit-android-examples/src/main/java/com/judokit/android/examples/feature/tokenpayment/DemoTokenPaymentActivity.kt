@@ -14,6 +14,7 @@ import com.judokit.android.PAYMENT_CANCELLED
 import com.judokit.android.PAYMENT_ERROR
 import com.judokit.android.PAYMENT_SUCCESS
 import com.judokit.android.api.factory.JudoApiServiceFactory
+import com.judokit.android.api.createTokenRequest
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.Receipt
 import com.judokit.android.api.model.response.toJudoPaymentResult
@@ -27,7 +28,6 @@ import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.code
 import com.judokit.android.model.toIntent
 import com.judokit.android.ui.common.ButtonState
-import com.judokit.android.ui.common.createTokenRequest
 import kotlinx.android.synthetic.main.activity_demo_token_payment.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -67,13 +67,25 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
 
         tokenPaymentButton.setOnClickListener {
             handleState(ActivityState.PayWithToken)
-            service.tokenPayment(createTokenRequest(getJudo(judo), cardToken, "452"))
+            service.tokenPayment(
+                createTokenRequest(
+                    getJudo(judo),
+                    cardToken,
+                    "452"
+                )
+            )
                 .enqueue(this@DemoTokenPaymentActivity)
         }
 
         preAuthTokenPaymentButton.setOnClickListener {
             handleState(ActivityState.PayWithPreAuthToken)
-            service.preAuthTokenPayment(createTokenRequest(getJudo(judo), cardToken, "452"))
+            service.preAuthTokenPayment(
+                createTokenRequest(
+                    getJudo(judo),
+                    cardToken,
+                    "452"
+                )
+            )
                 .enqueue(this@DemoTokenPaymentActivity)
         }
     }

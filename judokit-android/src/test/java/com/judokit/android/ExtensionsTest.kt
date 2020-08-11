@@ -138,10 +138,4 @@ internal class ExtensionsTest {
 
         assertEquals("Whitespace", whitespaceString.withWhitespacesRemoved)
     }
-
-//    @DisplayName("Given ")
-//    @Test
-//    fun w(){
-//        every { PaymentRequest.Builder().build() } returns
-//    }
 }
