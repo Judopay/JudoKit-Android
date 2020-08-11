@@ -4,7 +4,6 @@ import android.app.Activity
 import android.os.Parcelable
 import com.judokit.android.api.model.Authorization
 import com.judokit.android.api.model.request.Address
-import com.judokit.android.api.model.request.TokenRequest
 import com.judokit.android.model.Amount
 import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.Currency
@@ -57,19 +56,6 @@ class Judo internal constructor(
     val address: Address?,
     val pbbaConfiguration: PBBAConfiguration?
 ) : Parcelable {
-
-    fun toTokenPayment(cardToken: String, securityCode: String? = null) = TokenRequest.Builder()
-        .setAmount(amount.amount)
-        .setCurrency(amount.currency.name)
-        .setJudoId(judoId)
-        .setYourPaymentReference(reference.paymentReference)
-        .setYourConsumerReference(reference.consumerReference)
-        .setYourPaymentMetaData(reference.metaData?.toMap())
-        .setCardToken(cardToken)
-        .setCv2(securityCode)
-        .setPrimaryAccountDetails(primaryAccountDetails)
-        .setAddress(Address.Builder().build())
-        .build()
 
     class Builder(private val paymentWidgetType: PaymentWidgetType) {
         private var judoId: String? = null
