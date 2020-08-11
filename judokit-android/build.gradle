@@ -6,13 +6,6 @@ apply plugin: 'org.jlleitschuh.gradle.ktlint'
 apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'jacoco'
 apply plugin: 'guru.stefma.bintrayrelease'
-apply plugin: "org.sonarqube"
-
-sonarqube {
-    properties {
-        property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/jacocoTestReportDebug/jacocoTestReportDebug.xml"
-    }
-}
 
 android {
     compileSdkVersion 29
@@ -157,7 +150,6 @@ def addJacocoTask(variant) {
     jacocoTask.description = "Generate Jacoco Report for variant $variantName"
 
     jacocoTask.reports {
-        xml.destination file("${rootProject.projectDir}/build/reports/jacoco/test/jacocoTestReport.xml")
         csv.enabled false
         html.enabled true
         xml.enabled true
