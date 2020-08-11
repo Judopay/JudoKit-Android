@@ -14,9 +14,20 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
+import com.judokit.android.api.model.request.Address
+import com.judokit.android.api.model.request.BankSaleRequest
+import com.judokit.android.api.model.request.CheckCardRequest
+import com.judokit.android.api.model.request.GooglePayRequest
+import com.judokit.android.api.model.request.GooglePayWallet
+import com.judokit.android.api.model.request.IdealSaleRequest
+import com.judokit.android.api.model.request.PaymentRequest
+import com.judokit.android.api.model.request.RegisterCardRequest
+import com.judokit.android.api.model.request.SaveCardRequest
+import com.judokit.android.api.model.request.TokenRequest
 import com.judokit.android.model.ApiEnvironment
 import com.judokit.android.ui.common.ANIMATION_DURATION_500
 import com.judokit.android.ui.error.JudoNotProvidedError
+import java.math.BigDecimal
 
 internal val Judo.apiBaseUrl: String
     get() = if (isSandboxed) ApiEnvironment.SANDBOX.host else ApiEnvironment.LIVE.host
@@ -111,3 +122,143 @@ internal fun Window.applyDialogStyling() {
     )
     setDimAmount(0.5f)
 }
+
+fun Judo.toPaymentRequest(
+    cardNumber: String,
+    expiryDate: String,
+    securityCode: String
+) = PaymentRequest.Builder()
+    .setUniqueRequest(false)
+    .setYourPaymentReference(reference.paymentReference)
+    .setAmount(amount.amount)
+    .setCurrency(amount.currency.name)
+    .setJudoId(judoId)
+    .setYourConsumerReference(reference.consumerReference)
+    .setYourPaymentMetaData(reference.metaData?.toMap())
+    .setAddress(address)
+    .setCardNumber(cardNumber)
+    .setCv2(securityCode)
+    .setExpiryDate(expiryDate)
+    .setPrimaryAccountDetails(primaryAccountDetails)
+    .build()
+
+fun Judo.toRegisterCardRequest(
+    address: Address,
+    cardNumber: String,
+    expirationDate: String,
+    securityCode: String
+) =
+    RegisterCardRequest.Builder()
+        .setUniqueRequest(false)
+        .setYourPaymentReference(reference.paymentReference)
+        .setCurrency(amount.currency.name)
+        .setJudoId(judoId)
+        .setYourConsumerReference(reference.consumerReference)
+        .setYourPaymentMetaData(reference.metaData?.toMap())
+        .setAddress(address)
+        .setCardNumber(cardNumber)
+        .setExpiryDate(expirationDate)
+        .setCv2(securityCode)
+        .setPrimaryAccountDetails(primaryAccountDetails)
+        .setAmount(amount.amount)
+        .build()
+
+fun Judo.toSaveCardRequest(
+    address: Address,
+    cardNumber: String,
+    expirationDate: String,
+    securityCode: String
+) =
+    SaveCardRequest.Builder()
+        .setUniqueRequest(false)
+        .setYourPaymentReference(reference.paymentReference)
+        .setCurrency(amount.currency.name)
+        .setJudoId(judoId)
+        .setYourConsumerReference(reference.consumerReference)
+        .setYourPaymentMetaData(reference.metaData?.toMap())
+        .setAddress(address)
+        .setCardNumber(cardNumber)
+        .setExpiryDate(expirationDate)
+        .setCv2(securityCode)
+        .setPrimaryAccountDetails(primaryAccountDetails)
+        .build()
+
+fun Judo.toCheckCardRequest(
+    address: Address,
+    cardNumber: String,
+    expirationDate: String,
+    securityCode: String
+) =
+    CheckCardRequest.Builder()
+        .setUniqueRequest(false)
+        .setYourPaymentReference(reference.paymentReference)
+        .setCurrency(amount.currency.name)
+        .setJudoId(judoId)
+        .setYourConsumerReference(reference.consumerReference)
+        .setYourPaymentMetaData(reference.metaData?.toMap())
+        .setAddress(address)
+        .setCardNumber(cardNumber)
+        .setExpiryDate(expirationDate)
+        .setCv2(securityCode)
+        .setPrimaryAccountDetails(primaryAccountDetails)
+        .build()
+
+fun Judo.toGooglePayRequest(
+    cardNetwork: String,
+    cardDetails: String,
+    token: String
+): GooglePayRequest {
+    val wallet = GooglePayWallet.Builder()
+        .setCardNetwork(cardNetwork)
+        .setCardDetails(cardDetails)
+        .setToken(token)
+        .build()
+
+    return GooglePayRequest.Builder()
+        .setJudoId(judoId)
+        .setAmount(amount.amount)
+        .setCurrency(amount.currency.name)
+        .setYourPaymentReference(reference.paymentReference)
+        .setYourConsumerReference(reference.consumerReference)
+        .setYourPaymentMetaData(reference.metaData?.toMap())
+        .setPrimaryAccountDetails(primaryAccountDetails)
+        .setGooglePayWallet(wallet)
+        .build()
+}
+
+fun Judo.toIdealSaleRequest(bic: String) =
+    IdealSaleRequest.Builder()
+        .setAmount(BigDecimal(amount.amount))
+        .setMerchantConsumerReference(reference.consumerReference)
+        .setMerchantPaymentReference(reference.paymentReference)
+        .setPaymentMetadata(reference.metaData?.toMap())
+        .setJudoId(judoId)
+        .setBic(bic)
+        .build()
+
+fun Judo.toBankSaleRequest() =
+    BankSaleRequest.Builder()
+        .setAmount(amount.amount.toBigDecimalOrNull())
+        .setMerchantPaymentReference(reference.paymentReference)
+        .setMerchantConsumerReference(reference.consumerReference)
+        .setJudoId(judoId)
+        .setMobileNumber(pbbaConfiguration?.mobileNumber)
+        .setEmailAddress(pbbaConfiguration?.emailAddress)
+        .setAppearsOnStatement(pbbaConfiguration?.appearsOnStatement)
+        .setPaymentMetadata(reference.metaData?.toMap())
+        .setMerchantRedirectUrl(pbbaConfiguration?.deepLinkScheme)
+        .build()
+
+fun Judo.toTokenRequest(cardToken: String, securityCode: String? = null) =
+    TokenRequest.Builder()
+        .setAmount(amount.amount)
+        .setCurrency(amount.currency.name)
+        .setJudoId(judoId)
+        .setYourPaymentReference(reference.paymentReference)
+        .setYourConsumerReference(reference.consumerReference)
+        .setYourPaymentMetaData(reference.metaData?.toMap())
+        .setCardToken(cardToken)
+        .setCv2(securityCode)
+        .setPrimaryAccountDetails(primaryAccountDetails)
+        .setAddress(Address.Builder().build())
+        .build()
