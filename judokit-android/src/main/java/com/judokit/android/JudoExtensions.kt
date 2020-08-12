@@ -135,7 +135,7 @@ fun Judo.toPaymentRequest(
     .setJudoId(judoId)
     .setYourConsumerReference(reference.consumerReference)
     .setYourPaymentMetaData(reference.metaData?.toMap())
-    .setAddress(address)
+    .setAddress(address ?: Address.Builder().build())
     .setCardNumber(cardNumber)
     .setCv2(securityCode)
     .setExpiryDate(expiryDate)
@@ -143,7 +143,6 @@ fun Judo.toPaymentRequest(
     .build()
 
 fun Judo.toRegisterCardRequest(
-    address: Address,
     cardNumber: String,
     expirationDate: String,
     securityCode: String
@@ -155,7 +154,7 @@ fun Judo.toRegisterCardRequest(
         .setJudoId(judoId)
         .setYourConsumerReference(reference.consumerReference)
         .setYourPaymentMetaData(reference.metaData?.toMap())
-        .setAddress(address)
+        .setAddress(address ?: Address.Builder().build())
         .setCardNumber(cardNumber)
         .setExpiryDate(expirationDate)
         .setCv2(securityCode)
@@ -164,7 +163,6 @@ fun Judo.toRegisterCardRequest(
         .build()
 
 fun Judo.toSaveCardRequest(
-    address: Address,
     cardNumber: String,
     expirationDate: String,
     securityCode: String
@@ -176,7 +174,7 @@ fun Judo.toSaveCardRequest(
         .setJudoId(judoId)
         .setYourConsumerReference(reference.consumerReference)
         .setYourPaymentMetaData(reference.metaData?.toMap())
-        .setAddress(address)
+        .setAddress(address ?: Address.Builder().build())
         .setCardNumber(cardNumber)
         .setExpiryDate(expirationDate)
         .setCv2(securityCode)
@@ -184,7 +182,6 @@ fun Judo.toSaveCardRequest(
         .build()
 
 fun Judo.toCheckCardRequest(
-    address: Address,
     cardNumber: String,
     expirationDate: String,
     securityCode: String
@@ -196,7 +193,7 @@ fun Judo.toCheckCardRequest(
         .setJudoId(judoId)
         .setYourConsumerReference(reference.consumerReference)
         .setYourPaymentMetaData(reference.metaData?.toMap())
-        .setAddress(address)
+        .setAddress(address ?: Address.Builder().build())
         .setCardNumber(cardNumber)
         .setExpiryDate(expirationDate)
         .setCv2(securityCode)
@@ -260,5 +257,5 @@ fun Judo.toTokenRequest(cardToken: String, securityCode: String? = null) =
         .setCardToken(cardToken)
         .setCv2(securityCode)
         .setPrimaryAccountDetails(primaryAccountDetails)
-        .setAddress(Address.Builder().build())
+        .setAddress(address ?: Address.Builder().build())
         .build()
