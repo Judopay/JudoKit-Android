@@ -34,7 +34,7 @@ interface JudoApiService {
      * @return the receipt for the payment with the status of the transaction
      */
     @POST("transactions/payments")
-    suspend fun payment(@Body paymentRequest: PaymentRequest): JudoApiCallResult<Receipt>
+    fun payment(@Body paymentRequest: PaymentRequest): Call<JudoApiCallResult<Receipt>>
 
     /**
      * Perform a pre-auth transaction
@@ -43,7 +43,7 @@ interface JudoApiService {
      * @return the receipt for the pre-auth with the status of the transaction
      */
     @POST("transactions/preauths")
-    suspend fun preAuthPayment(@Body paymentRequest: PaymentRequest): JudoApiCallResult<Receipt>
+    fun preAuthPayment(@Body paymentRequest: PaymentRequest): Call<JudoApiCallResult<Receipt>>
 
     /**
      * Perform a token payment using a tokenised card
@@ -71,10 +71,10 @@ interface JudoApiService {
      * @return the receipt for the transaction
      */
     @PUT("transactions/{receiptId}")
-    suspend fun complete3dSecure(
+    fun complete3dSecure(
         @Path("receiptId") receiptId: String,
         @Body cardVerificationResult: CardVerificationResult
-    ): JudoApiCallResult<Receipt>
+    ): Call<JudoApiCallResult<Receipt>>
 
     /**
      * Register a card to be used for making future tokenised payments
@@ -83,7 +83,7 @@ interface JudoApiService {
      * @return the receipt for the card registration with the status of the transaction
      */
     @POST("transactions/registercard")
-    suspend fun registerCard(@Body registerCardRequest: RegisterCardRequest): JudoApiCallResult<Receipt>
+    fun registerCard(@Body registerCardRequest: RegisterCardRequest): Call<JudoApiCallResult<Receipt>>
 
     /**
      * Save a card to be used for making future tokenised payments
@@ -92,7 +92,7 @@ interface JudoApiService {
      * @return the receipt for the card save with the status of the transaction
      */
     @POST("transactions/savecard")
-    suspend fun saveCard(@Body saveCardRequest: SaveCardRequest): JudoApiCallResult<Receipt>
+    fun saveCard(@Body saveCardRequest: SaveCardRequest): Call<JudoApiCallResult<Receipt>>
 
     /**
      * Performs a card check against the card. This doesn't do an authorisation, it just checks whether or not the card is valid
@@ -101,20 +101,20 @@ interface JudoApiService {
      * @return the receipt for the card check with the status of the transaction
      */
     @POST("transactions/checkcard")
-    suspend fun checkCard(@Body checkCardRequest: CheckCardRequest): JudoApiCallResult<Receipt>
+    fun checkCard(@Body checkCardRequest: CheckCardRequest): Call<JudoApiCallResult<Receipt>>
 
     @POST("transactions/payments")
-    suspend fun googlePayPayment(@Body googlePayRequest: GooglePayRequest): JudoApiCallResult<Receipt>
+    fun googlePayPayment(@Body googlePayRequest: GooglePayRequest): Call<JudoApiCallResult<Receipt>>
 
     @POST("transactions/preauths")
-    suspend fun preAuthGooglePayPayment(@Body googlePayRequest: GooglePayRequest): JudoApiCallResult<Receipt>
+    fun preAuthGooglePayPayment(@Body googlePayRequest: GooglePayRequest): Call<JudoApiCallResult<Receipt>>
 
     @POST("order/bank/sale")
-    suspend fun sale(@Body saleRequest: IdealSaleRequest): JudoApiCallResult<IdealSaleResponse>
+    fun sale(@Body saleRequest: IdealSaleRequest): Call<JudoApiCallResult<IdealSaleResponse>>
 
     @GET("order/bank/statusrequest/{orderID}")
-    suspend fun status(@Path("orderID") orderId: String): JudoApiCallResult<BankSaleStatusResponse>
+    fun status(@Path("orderID") orderId: String): Call<JudoApiCallResult<BankSaleStatusResponse>>
 
     @POST("order/bank/sale")
-    suspend fun sale(@Body saleRequest: BankSaleRequest): JudoApiCallResult<BankSaleResponse>
+    fun sale(@Body saleRequest: BankSaleRequest): Call<JudoApiCallResult<BankSaleResponse>>
 }

@@ -11,6 +11,7 @@ import com.judokit.android.api.model.response.CardVerificationResult
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.Receipt
 import kotlinx.coroutines.launch
+import retrofit2.await
 
 internal class IdealViewModelFactory(
     private val service: JudoApiService,
@@ -34,7 +35,7 @@ class CardVerificationViewModel(val service: JudoApiService, application: Applic
         cardVerificationResult: CardVerificationResult
     ) = viewModelScope.launch {
         isLoading.postValue(true)
-        val response = service.complete3dSecure(receiptId, cardVerificationResult)
+        val response = service.complete3dSecure(receiptId, cardVerificationResult).await()
         judoApiCallResult.postValue(response)
         isLoading.postValue(false)
     }

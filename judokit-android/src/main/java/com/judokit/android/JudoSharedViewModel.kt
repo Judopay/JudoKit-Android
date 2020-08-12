@@ -20,6 +20,7 @@ import com.judokit.android.model.isPaymentMethodsWidget
 import com.judokit.android.service.JudoGooglePayService
 import com.judokit.android.ui.common.toGooglePayRequest
 import kotlinx.coroutines.launch
+import retrofit2.await
 
 // view-model actions
 sealed class JudoSharedAction {
@@ -126,11 +127,11 @@ class JudoSharedViewModel(
             PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
             PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> judoApiService.preAuthGooglePayPayment(
                 googlePayRequest
-            )
+            ).await()
             PaymentWidgetType.GOOGLE_PAY,
             PaymentWidgetType.PAYMENT_METHODS -> judoApiService.googlePayPayment(
                 googlePayRequest
-            )
+            ).await()
             else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
         }
 

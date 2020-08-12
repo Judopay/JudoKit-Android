@@ -89,7 +89,7 @@ internal class PaymentMethodsViewModelTest {
         coEvery {
             service.preAuthTokenPayment(any()).await()
         } returns mockk(relaxed = true)
-        coEvery { service.sale(any<BankSaleRequest>()) } returns mockk(relaxed = true)
+        coEvery { service.sale(any<BankSaleRequest>()).await() } returns mockk(relaxed = true)
 
         sut = PaymentMethodsViewModel(
             cardDate,
