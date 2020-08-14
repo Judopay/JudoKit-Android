@@ -43,6 +43,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import retrofit2.await
 
 @ExperimentalCoroutinesApi
 @ExtendWith(InstantExecutorExtension::class)
@@ -78,27 +79,28 @@ internal class CardEntryViewModelTest {
     internal fun setUp() {
         Dispatchers.setMain(testDispatcher)
 
+        mockkStatic("retrofit2.KotlinExtensions")
         mockkStatic("com.judokit.android.ui.paymentmethods.MappersKt")
         coEvery { repository.insert(card.toTokenizedCardEntity(application)) } returns mockk(relaxed = true)
 
         coEvery {
-            service.payment(any()).hint(JudoApiCallResult::class)
+            service.payment(any()).await().hint(JudoApiCallResult::class)
         } returns judoApiCallResult
 
         coEvery {
-            service.preAuthPayment(any()).hint(JudoApiCallResult::class)
+            service.preAuthPayment(any()).await().hint(JudoApiCallResult::class)
         } returns judoApiCallResult
 
         coEvery {
-            service.checkCard(any()).hint(JudoApiCallResult::class)
+            service.checkCard(any()).await().hint(JudoApiCallResult::class)
         } returns judoApiCallResult
 
         coEvery {
-            service.saveCard(any()).hint(JudoApiCallResult::class)
+            service.saveCard(any()).await().hint(JudoApiCallResult::class)
         } returns judoApiCallResult
 
         coEvery {
-            service.registerCard(any()).hint(JudoApiCallResult::class)
+            service.registerCard(any()).await().hint(JudoApiCallResult::class)
         } returns judoApiCallResult
     }
 

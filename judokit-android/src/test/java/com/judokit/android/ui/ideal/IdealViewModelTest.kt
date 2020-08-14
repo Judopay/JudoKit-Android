@@ -18,6 +18,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +35,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
+import retrofit2.await
 
 private const val BIC = "bic"
 private const val ORDER_ID = "orderId"
@@ -61,6 +63,8 @@ class IdealViewModelTest {
 
     @BeforeEach
     internal fun setUp() {
+        mockkStatic("retrofit2.KotlinExtensions")
+
         sut.isLoading.observeForever(isLoadingMock)
         sut.isRequestDelayed.observeForever(isDelayMock)
         sut.saleCallResult.observeForever(saleCallResultMock)
@@ -70,9 +74,9 @@ class IdealViewModelTest {
         every { statusResponse.orderDetails.orderStatus } returns OrderStatus.SUCCEEDED
 
         coEvery {
-            service.sale(any<IdealSaleRequest>()).hint(JudoApiCallResult::class)
+            service.sale(any<IdealSaleRequest>()).await().hint(JudoApiCallResult::class)
         } returns saleCallResult
-        coEvery { service.status(any()).hint(JudoApiCallResult::class) } returns statusCallResult
+        coEvery { service.status(any()).await().hint(JudoApiCallResult::class) } returns statusCallResult
 
         Dispatchers.setMain(testDispatcher)
     }
@@ -201,7 +205,7 @@ class IdealViewModelTest {
     @DisplayName("Given completeIdealPayment is called, when the request fails, then post saleStatusCallRequest with failure response")
     fun postSaleStatusCallRequestOnRequestFailed() {
         coEvery {
-            service.status(any()).hint(JudoApiCallResult::class)
+            service.status(any()).await().hint(JudoApiCallResult::class)
         } returns JudoApiCallResult.Failure()
 
         val slots = mutableListOf<JudoApiCallResult<BankSaleStatusResponse>>()
@@ -219,7 +223,7 @@ class IdealViewModelTest {
     @DisplayName("Given completeIdealPayment is called, when the request is completed, then set isLoading = false")
     fun isLoadingFalseOnStatusRequestCompleted() {
         coEvery {
-            service.status(any()).hint(JudoApiCallResult::class)
+            service.status(any()).await().hint(JudoApiCallResult::class)
         } returns JudoApiCallResult.Failure()
 
         val slots = mutableListOf<Boolean>()

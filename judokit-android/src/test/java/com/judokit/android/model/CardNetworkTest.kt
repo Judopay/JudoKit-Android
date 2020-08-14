@@ -16,7 +16,7 @@ internal class CardNetworkTest {
     @DisplayName("Given ofNumber is called, then call withWhitespacesRemoved")
     @Test
     fun callWithWhitespacesRemovedOnOfNumberCall() {
-        mockkStatic("com.judokit.android.ExtensionsKt")
+        mockkStatic("com.judokit.android.JudoExtensionsKt")
         val number = "4111 1111 1111 1111"
 
         CardNetwork.ofNumber(number)

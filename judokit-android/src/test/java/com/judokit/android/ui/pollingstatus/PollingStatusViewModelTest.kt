@@ -38,6 +38,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import retrofit2.await
 
 @ExperimentalCoroutinesApi
 @ExtendWith(InstantExecutorExtension::class)
@@ -66,12 +67,13 @@ internal class PollingStatusViewModelTest {
     internal fun setUp() {
         Dispatchers.setMain(testDispatcher)
 
+        mockkStatic("retrofit2.KotlinExtensions")
         mockkStatic("com.zapp.library.merchant.util.PBBAAppUtils")
 
         coEvery {
-            service.tokenPayment(any()).hint(JudoApiCallResult::class)
+            service.tokenPayment(any()).await().hint(JudoApiCallResult::class)
         } returns mockk(relaxed = true)
-        coEvery { service.sale(any<BankSaleRequest>()) } returns mockk(relaxed = true)
+        coEvery { service.sale(any<BankSaleRequest>()).await() } returns mockk(relaxed = true)
     }
 
     @AfterEach

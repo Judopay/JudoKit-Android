@@ -14,8 +14,8 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-@DisplayName("Test com.judokit.android.Extensions")
-internal class ExtensionsTest {
+@DisplayName("Test com.judokit.android.JudoExtensions")
+internal class JudoExtensionsTest {
 
     @DisplayName("Given judo.isSandboxed is true, then return ApiEnvironment.SANDBOX.host")
     @Test
