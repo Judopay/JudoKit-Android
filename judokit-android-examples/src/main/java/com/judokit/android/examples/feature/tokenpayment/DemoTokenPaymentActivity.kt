@@ -17,7 +17,6 @@ import com.judokit.android.api.factory.JudoApiServiceFactory
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.Receipt
 import com.judokit.android.api.model.response.toJudoPaymentResult
-import com.judokit.android.toTokenRequest
 import com.judokit.android.examples.R
 import com.judokit.android.examples.feature.JUDO_PAYMENT_WIDGET_REQUEST_CODE
 import com.judokit.android.model.Amount
@@ -27,6 +26,7 @@ import com.judokit.android.model.JudoResult
 import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.code
 import com.judokit.android.model.toIntent
+import com.judokit.android.toTokenRequest
 import com.judokit.android.ui.common.ButtonState
 import kotlinx.android.synthetic.main.activity_demo_token_payment.*
 import retrofit2.Call
