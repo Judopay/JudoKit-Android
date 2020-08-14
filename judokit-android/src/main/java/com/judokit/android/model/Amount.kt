@@ -3,8 +3,8 @@ package com.judokit.android.model
 import android.os.Parcelable
 import com.judokit.android.requireNotNull
 import com.judokit.android.requireNotNullOrEmpty
-import java.text.NumberFormat
 import kotlinx.android.parcel.Parcelize
+import java.text.NumberFormat
 
 @Parcelize
 class Amount internal constructor(val amount: String, val currency: Currency) : Parcelable {

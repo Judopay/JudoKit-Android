@@ -47,8 +47,8 @@ import com.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judokit.android.model.googlepay.GooglePayShippingAddressParameters
 import com.readystatesoftware.chuck.ChuckInterceptor
-import java.util.UUID
 import kotlinx.android.synthetic.main.activity_demo_feature_list.*
+import java.util.UUID
 
 const val JUDO_PAYMENT_WIDGET_REQUEST_CODE = 1
 const val LAST_USED_WIDGET_TYPE_KEY = "LAST_USED_WIDGET_TYPE"
@@ -185,11 +185,12 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     private fun navigateToJudoPaymentWidgetWithConfigurations(judo: Judo, feature: DemoFeature) {
         val myClass = when (judo.paymentWidgetType) {
-            PaymentWidgetType.REGISTER_CARD -> if (feature == DemoFeature.TOKEN_PAYMENT) {
-                DemoTokenPaymentActivity::class.java
-            } else {
-                JudoActivity::class.java
-            }
+            PaymentWidgetType.REGISTER_CARD ->
+                if (feature == DemoFeature.TOKEN_PAYMENT) {
+                    DemoTokenPaymentActivity::class.java
+                } else {
+                    JudoActivity::class.java
+                }
             PaymentWidgetType.PAY_BY_BANK_APP -> PayByBankActivity::class.java
             else -> JudoActivity::class.java
         }

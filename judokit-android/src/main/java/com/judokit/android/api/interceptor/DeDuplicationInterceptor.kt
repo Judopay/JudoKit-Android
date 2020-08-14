@@ -2,11 +2,11 @@ package com.judokit.android.api.interceptor
 
 import com.google.gson.JsonParser
 import com.judokit.android.api.error.DuplicateTransactionError
-import java.io.IOException
 import okhttp3.Interceptor
 import okhttp3.RequestBody
 import okhttp3.Response
 import okio.Buffer
+import java.io.IOException
 
 private const val PAYMENT_REFERENCE_KEY = "yourPaymentReference"
 private const val UNIQUE_REQUEST_KEY = "uniqueRequest"
@@ -32,9 +32,10 @@ internal class DeDuplicationInterceptor : Interceptor {
                 val uniqueRequest = jsonObject[UNIQUE_REQUEST_KEY]
 
                 if (uniqueRequest != null &&
-                        uniqueRequest.asBoolean &&
-                        uniqueReference != null &&
-                        UNIQUE_RESPONSES.contains(uniqueReference.asString)) {
+                    uniqueRequest.asBoolean &&
+                    uniqueReference != null &&
+                    UNIQUE_RESPONSES.contains(uniqueReference.asString)
+                ) {
                     throw DuplicateTransactionError(uniqueReference.asString)
                 } else {
                     val response = chain.proceed(request)

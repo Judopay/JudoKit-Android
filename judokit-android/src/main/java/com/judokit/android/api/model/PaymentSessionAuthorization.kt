@@ -2,10 +2,10 @@ package com.judokit.android.api.model
 
 import android.util.Base64
 import com.judokit.android.requireNotNullOrEmpty
-import java.nio.charset.StandardCharsets
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import okhttp3.Headers
+import java.nio.charset.StandardCharsets
 
 private const val AUTHORIZATION_HEADER = "Authorization"
 private const val PAYMENT_SESSION_HEADER = "Payment-Session"

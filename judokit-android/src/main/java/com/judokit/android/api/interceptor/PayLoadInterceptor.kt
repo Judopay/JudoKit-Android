@@ -7,13 +7,13 @@ import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
 import com.judokit.android.service.PayloadService
 import com.judokit.android.toJSONString
-import java.io.IOException
 import okhttp3.Interceptor
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
 import okio.Buffer
+import java.io.IOException
 
 private const val ENHANCED_PAYMENT_DETAIL = "EnhancedPaymentDetail"
 private val PAYLOAD_ENDPOINTS = arrayListOf(

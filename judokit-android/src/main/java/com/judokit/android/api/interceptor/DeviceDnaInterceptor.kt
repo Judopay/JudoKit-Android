@@ -5,13 +5,13 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.judopay.devicedna.DeviceDNA
-import java.io.IOException
 import okhttp3.Interceptor
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
 import okio.Buffer
+import java.io.IOException
 
 private const val CLIENT_DETAILS = "clientDetails"
 private const val METHOD_POST = "POST"

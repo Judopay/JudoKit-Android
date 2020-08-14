@@ -8,9 +8,9 @@ import com.judokit.android.Judo
 import com.judokit.android.LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE
 import com.judokit.android.ui.common.toIsReadyToPayRequest
 import com.judokit.android.ui.common.toPaymentDataRequest
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import kotlinx.coroutines.suspendCancellableCoroutine
 
 class JudoGooglePayService(
     private val paymentsClient: PaymentsClient,

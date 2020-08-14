@@ -2,9 +2,9 @@
 
 buildscript {
     ext.kotlin_version = '1.3.72'
-    ext.androidx_core_version = '1.3.0'
+    ext.androidx_core_version = '1.3.1'
     ext.retrofit_version = '2.6.0'
-    ext.navigation_version = '2.2.2'
+    ext.navigation_version = '2.3.0'
     ext.lifecycle_version = '2.2.0'
     ext.junit_version = '5.3.2'
     ext.room_version = '2.2.5'
@@ -27,7 +27,6 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'de.mannodermaus.gradle.plugins:android-junit5:1.6.0.0'
-        classpath 'org.jlleitschuh.gradle:ktlint-gradle:9.2.1'
         classpath 'guru.stefma.bintrayrelease:bintrayrelease:1.1.1'
         classpath 'com.google.gms:google-services:4.3.3'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.2.0'

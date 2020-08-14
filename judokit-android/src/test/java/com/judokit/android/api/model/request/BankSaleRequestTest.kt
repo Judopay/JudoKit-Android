@@ -1,10 +1,10 @@
 package com.judokit.android.api.model.request
 
-import java.math.BigDecimal
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.math.BigDecimal
 
 @DisplayName("Testing Bank sale request builder")
 internal class BankSaleRequestTest {

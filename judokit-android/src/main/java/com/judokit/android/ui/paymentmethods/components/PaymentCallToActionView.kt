@@ -64,10 +64,12 @@ class PaymentCallToActionView @JvmOverloads constructor(
         when (buttonType) {
             PaymentButtonType.PLAIN,
             PaymentButtonType.IDEAL -> payButton.state = paymentButtonState
-            PaymentButtonType.GOOGLE_PAY -> googlePayButton.isEnabled =
-                paymentButtonState is ButtonState.Enabled
-            PaymentButtonType.PAY_BY_BANK -> payByBankButton.isEnabled =
-                paymentButtonState is ButtonState.Enabled
+            PaymentButtonType.GOOGLE_PAY ->
+                googlePayButton.isEnabled =
+                    paymentButtonState is ButtonState.Enabled
+            PaymentButtonType.PAY_BY_BANK ->
+                payByBankButton.isEnabled =
+                    paymentButtonState is ButtonState.Enabled
         }
 
         val buttonToShow = when (buttonType) {

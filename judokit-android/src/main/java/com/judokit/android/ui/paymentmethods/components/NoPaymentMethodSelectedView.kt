@@ -44,7 +44,7 @@ class NoPaymentMethodSelectedView @JvmOverloads constructor(
     fun hide(placeholderImage: ImageView) {
         placeholderImage.apply {
             visibility = View.GONE
-                animateWithAlpha(alpha = 0.0f)
+            animateWithAlpha(alpha = 0.0f)
         }
         noPaymentMethodSelectedView.apply {
             visibility = View.GONE

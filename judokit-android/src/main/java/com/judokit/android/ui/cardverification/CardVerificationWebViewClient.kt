@@ -38,12 +38,12 @@ class CardVerificationWebViewClient(
         view.setInitialScale(1)
         view.loadUrl(
             "javascript:(function() {" +
-                    "var meta = document.createElement('meta');" +
-                    "meta.setAttribute('name','viewport');" +
-                    "meta.setAttribute('content','width=device-width, initial-scale=1.0');" +
-                    "var head = document.getElementsByTagName('head')[0];" +
-                    "head.appendChild(meta);" +
-                    "})()"
+                "var meta = document.createElement('meta');" +
+                "meta.setAttribute('name','viewport');" +
+                "meta.setAttribute('content','width=device-width, initial-scale=1.0');" +
+                "var head = document.getElementsByTagName('head')[0];" +
+                "head.appendChild(meta);" +
+                "})()"
         )
     }
 }

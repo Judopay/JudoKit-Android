@@ -4,14 +4,14 @@ import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.judokit.android.api.error.ApiError
 import com.judokit.android.api.model.response.JudoApiCallResult
-import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
 import okhttp3.Request
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
 
 abstract class CallDelegate<TypeIn, TypeOut>(protected val proxy: Call<TypeIn>) : Call<TypeOut> {
 

@@ -29,10 +29,12 @@ internal class JudoBuilderTest {
             .setJudoId("111111111")
             .setAuthorization(mockk(relaxed = true))
             .setAmount(Amount("1", Currency.GBP))
-            .setReference(mockk(relaxed = true) {
-                every { consumerReference } returns "consumer"
-                every { paymentReference } returns "payment"
-            })
+            .setReference(
+                mockk(relaxed = true) {
+                    every { consumerReference } returns "consumer"
+                    every { paymentReference } returns "payment"
+                }
+            )
             .setPaymentMethods(PaymentMethod.values())
             .setIsSandboxed(true)
             .setSupportedCardNetworks(CardNetwork.values())

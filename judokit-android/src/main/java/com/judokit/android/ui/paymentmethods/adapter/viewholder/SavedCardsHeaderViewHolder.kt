@@ -9,7 +9,8 @@ import com.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodGenericI
 import com.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItemAction
 import kotlinx.android.synthetic.main.saved_card_header_item.view.editButton
 
-class SavedCardsHeaderViewHolder(view: View) : RecyclerView.ViewHolder(view),
+class SavedCardsHeaderViewHolder(view: View) :
+    RecyclerView.ViewHolder(view),
     BindableRecyclerViewHolder<PaymentMethodGenericItem, PaymentMethodItemAction> {
     override fun bind(model: PaymentMethodGenericItem, listener: PaymentMethodsAdapterListener?) =
         with(itemView) {

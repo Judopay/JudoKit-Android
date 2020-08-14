@@ -4,10 +4,10 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonElement
 import io.mockk.every
 import io.mockk.mockk
-import java.lang.reflect.Type
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import java.lang.reflect.Type
 
 @DisplayName("Testing DateJsonDeserializer")
 internal class DateJsonDeserializerTest {

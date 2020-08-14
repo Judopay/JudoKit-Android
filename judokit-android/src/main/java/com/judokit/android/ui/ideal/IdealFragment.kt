@@ -46,48 +46,60 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
         val factory = IdealViewModelFactory(bic, judo, service, application)
         viewModel = ViewModelProvider(this, factory).get(IdealViewModel::class.java)
 
-        viewModel.saleCallResult.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is JudoApiCallResult.Success -> if (it.data != null) {
-                    idealWebView.authorize(it.data.redirectUrl, it.data.merchantRedirectUrl)
-                }
-                is JudoApiCallResult.Failure -> if (it.error != null) {
-                    sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
-                    findNavController().popBackStack()
-                }
-            }
-        })
-
-        viewModel.saleStatusCallResult.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is JudoApiCallResult.Success -> if (it.data != null) {
-                    val locale = getLocale(resources)
-                    sharedViewModel.paymentResult.postValue(
-                        JudoPaymentResult.Success(it.data.toJudoResult(locale))
-                    )
-                }
-                is JudoApiCallResult.Failure -> if (it.error != null) {
-                    sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
+        viewModel.saleCallResult.observe(
+            viewLifecycleOwner,
+            Observer {
+                when (it) {
+                    is JudoApiCallResult.Success -> if (it.data != null) {
+                        idealWebView.authorize(it.data.redirectUrl, it.data.merchantRedirectUrl)
+                    }
+                    is JudoApiCallResult.Failure -> if (it.error != null) {
+                        sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
+                        findNavController().popBackStack()
+                    }
                 }
             }
-            findNavController().popBackStack()
-        })
+        )
 
-        viewModel.isLoading.observe(viewLifecycleOwner, Observer {
-            if (it) {
-                idealWebView.visibility = View.GONE
-                idealTextView.visibility = View.VISIBLE
-                idealProgressBar.visibility = View.VISIBLE
-            } else {
-                idealWebView.visibility = View.VISIBLE
-                idealTextView.visibility = View.GONE
-                idealProgressBar.visibility = View.GONE
+        viewModel.saleStatusCallResult.observe(
+            viewLifecycleOwner,
+            Observer {
+                when (it) {
+                    is JudoApiCallResult.Success -> if (it.data != null) {
+                        val locale = getLocale(resources)
+                        sharedViewModel.paymentResult.postValue(
+                            JudoPaymentResult.Success(it.data.toJudoResult(locale))
+                        )
+                    }
+                    is JudoApiCallResult.Failure -> if (it.error != null) {
+                        sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
+                    }
+                }
+                findNavController().popBackStack()
             }
-        })
+        )
 
-        viewModel.isRequestDelayed.observe(viewLifecycleOwner, Observer {
-            if (it) idealTextView.text = getString(R.string.there_is_a_delay)
-        })
+        viewModel.isLoading.observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it) {
+                    idealWebView.visibility = View.GONE
+                    idealTextView.visibility = View.VISIBLE
+                    idealProgressBar.visibility = View.VISIBLE
+                } else {
+                    idealWebView.visibility = View.VISIBLE
+                    idealTextView.visibility = View.GONE
+                    idealProgressBar.visibility = View.GONE
+                }
+            }
+        )
+
+        viewModel.isRequestDelayed.observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it) idealTextView.text = getString(R.string.there_is_a_delay)
+            }
+        )
 
         viewModel.payWithSelectedBank()
     }

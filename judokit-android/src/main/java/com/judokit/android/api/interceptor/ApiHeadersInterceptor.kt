@@ -5,10 +5,10 @@ import android.os.Build
 import com.judokit.android.BuildConfig
 import com.judokit.android.api.AppMetaDataProvider
 import com.judokit.android.api.model.Authorization
-import java.io.IOException
 import okhttp3.Headers
 import okhttp3.Interceptor
 import okhttp3.Response
+import java.io.IOException
 
 private const val CONTENT_TYPE_HEADER = "Content-Type"
 private const val ACCEPT_HEADER = "Accept"
@@ -51,5 +51,6 @@ internal class ApiHeadersInterceptor(
             .build()
 
     private val userAgent: String
-        get() = """Android/${BuildConfig.VERSION_NAME} ${Build.MANUFACTURER} ${Build.MODEL} ${appMetaDataProvider.appName} ${appMetaDataProvider.appVersion}""".trimMargin()
+        get() =
+            """Android/${BuildConfig.VERSION_NAME} ${Build.MANUFACTURER} ${Build.MODEL} ${appMetaDataProvider.appName} ${appMetaDataProvider.appVersion}""".trimMargin()
 }

@@ -92,6 +92,10 @@ jobs:
       - run:
           name: Run SDK Unit Tests
           command: ./gradlew :judokit-android:test generateCodeAnalysisReport
+      - persist_to_workspace:
+          root: .
+          paths:
+            - judokit-android/build
 
   # Below step not currently used as no unit tests have been written
   unit_test_sample:

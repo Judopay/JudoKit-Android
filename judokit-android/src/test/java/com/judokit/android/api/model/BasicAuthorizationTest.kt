@@ -3,13 +3,13 @@ package com.judokit.android.api.model
 import android.util.Base64
 import io.mockk.every
 import io.mockk.mockkStatic
-import java.nio.charset.StandardCharsets
 import okhttp3.Headers
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.nio.charset.StandardCharsets
 
 @DisplayName("Testing BasicAuthorization class")
 internal class BasicAuthorizationTest {
