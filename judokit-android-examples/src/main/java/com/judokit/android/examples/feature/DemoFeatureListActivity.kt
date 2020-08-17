@@ -1,11 +1,15 @@
 package com.judokit.android.examples.feature
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -46,6 +50,8 @@ import com.judokit.android.model.googlepay.GooglePayAddressFormat
 import com.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judokit.android.model.googlepay.GooglePayShippingAddressParameters
+import com.judokit.android.ui.common.BR_PBBA_RESULT
+import com.judokit.android.ui.common.PBBA_RESULT
 import com.readystatesoftware.chuck.ChuckInterceptor
 import kotlinx.android.synthetic.main.activity_demo_feature_list.*
 import java.util.UUID
@@ -58,8 +64,20 @@ class DemoFeatureListActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private var deepLinkIntent = intent
 
+    private val orderIdReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val result = intent?.getParcelableExtra<JudoResult>(PBBA_RESULT)
+            //Handle result
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            orderIdReceiver,
+            IntentFilter(BR_PBBA_RESULT)
+        )
 
         JudoApiServiceFactory.externalInterceptors = listOf(ChuckInterceptor(this))
 
