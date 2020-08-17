@@ -1,6 +1,7 @@
 package com.judokit.android.ui.pollingstatus
 
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import com.judokit.android.JudoSharedViewModel
 import com.judokit.android.R
@@ -28,6 +30,8 @@ import com.judokit.android.model.JudoResult
 import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.service.polling.PollingResult
 import com.judokit.android.service.polling.PollingService
+import com.judokit.android.ui.common.BR_PBBA_RESULT
+import com.judokit.android.ui.common.PBBA_RESULT
 import com.judokit.android.ui.common.getLocale
 import com.judokit.android.ui.paymentmethods.PAYMENT_WIDGET_TYPE
 import com.judokit.android.ui.paymentmethods.components.PollingStatusViewAction
@@ -111,6 +115,12 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
     private fun handleBankSaleResponse(data: BankSaleResponse?) {
         if (data != null) {
             sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Success(data.toJudoResult()))
+            val intent = Intent(BR_PBBA_RESULT)
+            intent.putExtra(
+                PBBA_RESULT,
+                data.toJudoResult()
+            )
+            LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
             PBBAAppUtils.openBankingApp(requireActivity(), data.secureToken)
         } else {
             sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Error(JudoError.generic()))
