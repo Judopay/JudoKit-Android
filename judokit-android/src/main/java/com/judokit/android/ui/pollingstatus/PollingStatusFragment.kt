@@ -110,12 +110,8 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
 
     private fun handleBankSaleResponse(data: BankSaleResponse?) {
         if (data != null) {
-            PBBAAppUtils.showPBBAPopup(
-                requireActivity(),
-                data.secureToken,
-                data.pbbaBrn,
-                this
-            )
+            sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Success(data.toJudoResult()))
+            PBBAAppUtils.openBankingApp(requireActivity(), data.secureToken)
         } else {
             sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Error(JudoError.generic()))
             findNavController().popBackStack()

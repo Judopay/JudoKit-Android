@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.core.os.ConfigurationCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.judokit.android.R
+import com.zapp.library.merchant.util.PBBAAppUtils
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -67,3 +68,5 @@ fun showAlert(context: Context, message: String) {
         .setNegativeButton(R.string.close, null)
         .show()
 }
+
+fun isBankingAppAvailable(context: Context) = PBBAAppUtils.isCFIAppAvailable(context)
