@@ -44,6 +44,6 @@ internal class AmountTest {
     @DisplayName("Given formatted is called, then should return formatted amount")
     @Test
     fun returnFormattedAmountOnFormattedCalled() {
-        assertEquals("GBP1.00", sut.setCurrency(Currency.GBP).build().formatted)
+        assertEquals("£1.00", sut.setCurrency(Currency.GBP).build().formatted)
     }
 }
