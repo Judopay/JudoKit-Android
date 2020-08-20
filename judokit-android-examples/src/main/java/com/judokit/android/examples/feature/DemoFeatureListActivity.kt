@@ -67,7 +67,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
     private val orderIdReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val result = intent?.getParcelableExtra<JudoResult>(PBBA_RESULT)
-            //Handle result
+            // Handle result
         }
     }
 
