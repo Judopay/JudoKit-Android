@@ -5,6 +5,7 @@ import com.judokit.android.requireNotNull
 import com.judokit.android.requireNotNullOrEmpty
 import kotlinx.android.parcel.Parcelize
 import java.text.NumberFormat
+import java.util.Locale
 
 @Parcelize
 class Amount internal constructor(val amount: String, val currency: Currency) : Parcelable {
@@ -39,7 +40,7 @@ class Amount internal constructor(val amount: String, val currency: Currency) : 
 val Amount.formatted: String
     get() {
         return try {
-            val format = NumberFormat.getCurrencyInstance()
+            val format = NumberFormat.getCurrencyInstance(Locale.getDefault())
             format.maximumFractionDigits = 2
             format.currency = java.util.Currency.getInstance(currency.name)
             format.format(amount.toBigDecimal())
