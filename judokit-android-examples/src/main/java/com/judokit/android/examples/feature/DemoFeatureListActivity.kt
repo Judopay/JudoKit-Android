@@ -52,6 +52,7 @@ import com.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judokit.android.model.googlepay.GooglePayShippingAddressParameters
 import com.judokit.android.ui.common.BR_PBBA_RESULT
 import com.judokit.android.ui.common.PBBA_RESULT
+import com.judokit.android.ui.common.isBankingAppAvailable
 import com.readystatesoftware.chuck.ChuckInterceptor
 import kotlinx.android.synthetic.main.activity_demo_feature_list.*
 import java.util.UUID
@@ -184,7 +185,13 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 DemoFeature.SERVER_TO_SERVER_PAYMENT_METHODS -> PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS
                 DemoFeature.GOOGLE_PAY_PAYMENT -> PaymentWidgetType.GOOGLE_PAY
                 DemoFeature.GOOGLE_PAY_PREAUTH -> PaymentWidgetType.PRE_AUTH_GOOGLE_PAY
-                DemoFeature.PAY_BY_BANK_APP -> PaymentWidgetType.PAY_BY_BANK_APP
+                DemoFeature.PAY_BY_BANK_APP -> {
+                    if (isBankingAppAvailable(this)) {
+                        PaymentWidgetType.PAY_BY_BANK_APP
+                    } else {
+                        throw IllegalStateException("Banking app not available")
+                    }
+                }
             }
             val judoConfig = getJudo(widgetType)
             navigateToJudoPaymentWidgetWithConfigurations(judoConfig, feature)

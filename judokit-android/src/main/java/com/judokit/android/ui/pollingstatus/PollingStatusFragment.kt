@@ -49,7 +49,7 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = object : Dialog(requireContext(), theme) {
             override fun onBackPressed() {
-                sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.UserCancelled())
+                sharedViewModel.bankPaymentResult.postValue(result)
                 super.onBackPressed()
             }
         }
