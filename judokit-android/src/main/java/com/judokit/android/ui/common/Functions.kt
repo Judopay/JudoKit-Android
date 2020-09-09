@@ -69,4 +69,9 @@ fun showAlert(context: Context, message: String) {
         .show()
 }
 
+/**
+ * Checks whether banking application is installed on user's phone or not.
+ * @param context context of the application.
+ * @return True if there is at least one PBBA enabled CFI App available, false otherwise.
+ */
 fun isBankingAppAvailable(context: Context) = PBBAAppUtils.isCFIAppAvailable(context)
