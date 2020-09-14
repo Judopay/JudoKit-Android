@@ -78,7 +78,6 @@ class Judo internal constructor(
         private var address: Address? = null
         private var pbbaConfiguration: PBBAConfiguration? = null
 
-
         /**
          * Sets the unique merchant ID
          * @param id Merchant unique identifier provided by Judo
