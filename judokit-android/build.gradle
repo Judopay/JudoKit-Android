@@ -5,6 +5,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'jacoco'
 apply plugin: 'guru.stefma.bintrayrelease'
+apply plugin: "org.jetbrains.dokka-android"
 
 apply from: '../ktlint.gradle'
 
