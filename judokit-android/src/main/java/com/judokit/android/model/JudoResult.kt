@@ -7,6 +7,9 @@ import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 import java.util.Date
 
+/**
+ * The successful result of a transaction performed within Judo SDK.
+ */
 @Parcelize
 data class JudoResult(
     val receiptId: String? = null,
