@@ -6,6 +6,9 @@ import com.judokit.android.model.CardNetwork.Companion.DEFAULT_CARD_NUMBER_MASK
 import com.judokit.android.withWhitespacesRemoved
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * A set of available card networks to choose from when initiating the Judo SDK
+ */
 @Parcelize
 enum class CardNetwork : Parcelable {
     VISA,
@@ -30,6 +33,11 @@ enum class CardNetwork : Parcelable {
         private val REGEX_JCB = "^(?:35\\d{0,2})\\d{0,12}".toRegex()
         private val REGEX_CHINA_UNION_PAY = "^(62|81)\\d{0,14}".toRegex()
 
+        /**
+         * A method that returns the card network based on the provided card number.
+         * @param number - the provided card number
+         * @returns one of the pre-defined card network types
+         */
         fun ofNumber(number: String): CardNetwork {
             val sanitizedNumber = number.withWhitespacesRemoved
             return when {
@@ -45,6 +53,11 @@ enum class CardNetwork : Parcelable {
             }
         }
 
+        /**
+         * A method that returns the card network type based on the identifier provided.
+         * @param id - The provided card network identifier.
+         * @return One of the predefined card network type.
+         */
         fun withIdentifier(id: Int): CardNetwork = when (id) {
             1 /*VISA*/,
             3 /*VISA_ELECTRON*/,
@@ -62,6 +75,10 @@ enum class CardNetwork : Parcelable {
     }
 }
 
+/**
+ * Extension property that returns the mask of the card number based on the card network.
+ * @return Mask of the card number.
+ */
 val CardNetwork.cardNumberMask: String
     get() = when (this) {
         CardNetwork.AMEX -> "#### ###### #####"
@@ -69,12 +86,24 @@ val CardNetwork.cardNumberMask: String
         else -> DEFAULT_CARD_NUMBER_MASK
     }
 
+/**
+ * Extension property that returns the mask of the security code based on the card network.
+ * @return Mask of the secuirty code.
+ */
 val CardNetwork.securityCodeNumberMask: String
     get() = if (this == CardNetwork.AMEX) "####" else "###"
 
+/**
+ * Extension property that returns security code length based on card network.
+ * @return Card network security code length.
+ */
 val CardNetwork.securityCodeLength: Int
     get() = if (this == CardNetwork.AMEX) 4 else 3
 
+/**
+ * Extension property that returns security code name based on card network.
+ * @return Card network security code name.
+ */
 val CardNetwork.securityCodeName: String
     get() = when (this) {
         CardNetwork.AMEX -> "CID"
@@ -85,6 +114,10 @@ val CardNetwork.securityCodeName: String
         else -> "CVV"
     }
 
+/**
+ * Extension property that returns the display name of the card network.
+ * @return Display name of the card network.
+ */
 val CardNetwork.displayName: String
     get() = when (this) {
         CardNetwork.VISA -> "Visa"
@@ -98,6 +131,10 @@ val CardNetwork.displayName: String
         CardNetwork.OTHER -> "Unknown Card Network"
     }
 
+/**
+ * Extension property that returns the icon of the provided card network.
+ * @return Drawable resource identifier of the card network icon.
+ */
 val CardNetwork.iconImageResId: Int
     get() = when (this) {
         CardNetwork.AMEX -> R.drawable.ic_card_amex
@@ -110,6 +147,10 @@ val CardNetwork.iconImageResId: Int
         else -> 0
     }
 
+/**
+ * Extension property that returns the light version of the icon based on provided card network.
+ * @return Drawable resource identifier of the light card network icon.
+ */
 val CardNetwork.lightIconImageResId: Int
     get() = when (this) {
         CardNetwork.AMEX -> R.drawable.ic_card_amex_light
@@ -117,6 +158,10 @@ val CardNetwork.lightIconImageResId: Int
         else -> this.iconImageResId
     }
 
+/**
+ * Extension property that returns the maximum length of the card number.
+ * @return Length of the card number.
+ */
 val CardNetwork.cardNumberMaxLength: Int
     get() = when (this) {
         CardNetwork.AMEX -> 15
@@ -124,6 +169,10 @@ val CardNetwork.cardNumberMaxLength: Int
         else -> 16
     }
 
+/**
+ * Extension property that returns error message of the provided card network.
+ * @return The string resource identifier of the error message.
+ */
 val CardNetwork.notSupportedErrorMessageResId: Int
     get() = when (this) {
         CardNetwork.VISA -> R.string.error_visa_not_supported
@@ -137,6 +186,10 @@ val CardNetwork.notSupportedErrorMessageResId: Int
         else -> R.string.empty
     }
 
+/**
+ * Extension property that returns card name of the provided card network.
+ * @return The string resource identifier of the card name.
+ */
 val CardNetwork.defaultCardNameResId: Int
     get() = when (this) {
         CardNetwork.AMEX -> R.string.default_amex_card_title
@@ -150,6 +203,10 @@ val CardNetwork.defaultCardNameResId: Int
         else -> R.string.empty
     }
 
+/**
+ * Extension property that returns the card network identifier based on the card network provided.
+ * @return One of the card network identifiers.
+ */
 val CardNetwork.typeId: Int
     get() = when (this) {
         CardNetwork.VISA -> 1
@@ -163,6 +220,10 @@ val CardNetwork.typeId: Int
         else -> -1
     }
 
+/**
+ * Extension property that checks if provided card network is supported by GooglePay
+ * @return True if supported, false if not.
+ */
 val CardNetwork.isSupportedByGooglePay: Boolean
     get() = when (this) {
         CardNetwork.VISA,
@@ -174,6 +235,10 @@ val CardNetwork.isSupportedByGooglePay: Boolean
         else -> false
     }
 
+/**
+ * Extension property that returns security code name of the card network provided.
+ * @return Security code name of card network.
+ */
 val CardNetwork?.securityCodeNameOfCardNetwork: String
     get() {
         if (this == null) {
@@ -182,6 +247,10 @@ val CardNetwork?.securityCodeNameOfCardNetwork: String
         return securityCodeName
     }
 
+/**
+ * Extension property that returns security code mask of the card network provided.
+ * @return Security code mask of card network.
+ */
 val CardNetwork?.securityCodeNumberMaskOfCardNetwork: String
     get() {
         if (this == null) {
