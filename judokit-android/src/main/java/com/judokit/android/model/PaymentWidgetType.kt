@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 /**
  * A set of values that is used to invoke any of the defined payment flows. It is a mandatory
  * parameter when creating a [com.judokit.android.Judo] configuration object through it's builder.
- * @see com.judokit.android.Judo.Builder.paymentWidgetType
+ * @see com.judokit.android.Judo.Builder
  */
 @Parcelize
 enum class PaymentWidgetType : Parcelable {
