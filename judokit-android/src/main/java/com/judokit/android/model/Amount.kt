@@ -34,9 +34,8 @@ class Amount internal constructor(val amount: String, val currency: Currency) : 
 
         /**
          * Creates an instance of [Amount] based on provided data in setters.
-         * @throws IllegalStateException If:
-         * - the provided amount is not a number;
-         * - the provided currency is null.
+         * @throws IllegalStateException If the provided amount is not a number
+         * @throws IllegalArgumentException If the provided currency is null.
          * @return an [Amount] object.
          */
         fun build(): Amount {
