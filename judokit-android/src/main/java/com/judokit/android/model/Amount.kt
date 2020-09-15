@@ -7,16 +7,37 @@ import kotlinx.android.parcel.Parcelize
 import java.text.NumberFormat
 import java.util.Locale
 
+/**
+ * Amount objects store information about an amount and the corresponding currency for a transaction.
+ * Use [Builder] to create an instance.
+ */
 @Parcelize
 class Amount internal constructor(val amount: String, val currency: Currency) : Parcelable {
 
+    /**
+     * Builder class for creating an instance of Amount.
+     */
     class Builder {
         private var amount: String? = null
         private var currency: Currency? = null
 
+        /**
+         * Sets the amount. Can be an empty string if necessary
+         */
         fun setAmount(amount: String?) = apply { this.amount = amount }
+
+        /**
+         * Sets the currency.
+         * @see Currency for all supported currencies
+         */
         fun setCurrency(currency: Currency?) = apply { this.currency = currency }
 
+        /**
+         * Creates an instance of Amount based on provided data in setters.
+         * @throws IllegalStateException If:
+         * - the provided amount is not a number;
+         * - the provided currency is null.
+         */
         fun build(): Amount {
             val myAmount: String?
             if (amount.isNullOrEmpty())
