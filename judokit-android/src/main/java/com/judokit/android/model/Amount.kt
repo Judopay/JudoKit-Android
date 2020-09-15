@@ -37,6 +37,7 @@ class Amount internal constructor(val amount: String, val currency: Currency) : 
          * @throws IllegalStateException If:
          * - the provided amount is not a number;
          * - the provided currency is null.
+         * @return an [Amount] object.
          */
         fun build(): Amount {
             val myAmount: String?
