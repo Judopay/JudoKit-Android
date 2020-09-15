@@ -15,7 +15,7 @@ import java.util.Locale
 class Amount internal constructor(val amount: String, val currency: Currency) : Parcelable {
 
     /**
-     * Builder class for creating an instance of Amount.
+     * Builder class for creating an instance of [Amount].
      */
     class Builder {
         private var amount: String? = null
@@ -28,12 +28,12 @@ class Amount internal constructor(val amount: String, val currency: Currency) : 
 
         /**
          * Sets the currency.
-         * @see Currency for all supported currencies
+         * @param currency Accepts one of the values from [Currency] enum.
          */
         fun setCurrency(currency: Currency?) = apply { this.currency = currency }
 
         /**
-         * Creates an instance of Amount based on provided data in setters.
+         * Creates an instance of [Amount] based on provided data in setters.
          * @throws IllegalStateException If:
          * - the provided amount is not a number;
          * - the provided currency is null.
