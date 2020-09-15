@@ -249,7 +249,7 @@ class Judo internal constructor(
             }
         }
 
-        @Throws(java.lang.IllegalArgumentException::class)
+        @Throws(IllegalArgumentException::class)
         private fun requireJudoId(judoId: String?): String {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             if (id.matches(REGEX_JUDO_ID.toRegex()))
