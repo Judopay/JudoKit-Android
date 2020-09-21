@@ -168,7 +168,7 @@ class Judo internal constructor(
 
         /**
          * Sets Pay by Bank app configuration.
-         * @param pbbaConfiguration An instance of JPPbbaConfiguration required for PbBA
+         * @param pbbaConfiguration An instance of PBBAConfiguration required for PbBA
          * Pay-related transactions.
          * @see PBBAConfiguration
          */

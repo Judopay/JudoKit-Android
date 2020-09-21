@@ -88,7 +88,7 @@ val CardNetwork.cardNumberMask: String
 
 /**
  * Extension property that returns the mask of the security code based on the card network.
- * @return Mask of the secuirty code.
+ * @return Mask of the security code.
  */
 val CardNetwork.securityCodeNumberMask: String
     get() = if (this == CardNetwork.AMEX) "####" else "###"

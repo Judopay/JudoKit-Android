@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 
 /**
  * A configuration class responsible for setting additional parameters for
- * pay by Bank app payment method.
+ * Pay by Bank app payment method.
  */
 @Parcelize
 class PBBAConfiguration internal constructor(
