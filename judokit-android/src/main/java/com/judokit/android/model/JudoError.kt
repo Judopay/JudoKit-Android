@@ -6,10 +6,9 @@ import com.judokit.android.R
 import kotlinx.android.parcel.Parcelize
 
 const val USER_CANCELLED = -1
-const val INTERNAL_ERROR = -2
-const val RESPONSE_PARSING = -3
-const val GOOGLE_PAY_NOT_SUPPORTED = -4
-const val REQUEST_FAILED = -5
+const val RESPONSE_PARSING = -2
+const val GOOGLE_PAY_NOT_SUPPORTED = -3
+const val REQUEST_FAILED = -4
 
 internal const val USER_CANCELLED_MSG = "The transaction was cancelled by the user."
 
