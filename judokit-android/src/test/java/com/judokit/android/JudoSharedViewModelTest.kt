@@ -1,5 +1,7 @@
 package com.judokit.android
 
+import android.app.Application
+import android.content.res.Resources
 import androidx.lifecycle.Observer
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.Status
@@ -11,7 +13,6 @@ import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.Receipt
 import com.judokit.android.api.model.response.toJudoPaymentResult
 import com.judokit.android.model.CardScanningResult
-import com.judokit.android.model.INTERNAL_ERROR
 import com.judokit.android.model.JudoError
 import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.model.JudoResult
@@ -52,8 +53,10 @@ internal class JudoSharedViewModelTest {
     private val judo: Judo = mockk(relaxed = true)
     private val googlePayService: JudoGooglePayService = mockk(relaxed = true)
     private val judoApiService: JudoApiService = mockk(relaxed = true)
+    private val application: Application = mockk(relaxed = true)
+    private val resources: Resources = application.resources
 
-    private val sut = JudoSharedViewModel(judo, googlePayService, judoApiService)
+    private val sut = JudoSharedViewModel(judo, googlePayService, judoApiService, application)
 
     private val paymentResult = spyk<Observer<JudoPaymentResult>>()
     private val paymentMethodsGooglePayResult = spyk<Observer<JudoPaymentResult>>()
@@ -110,8 +113,8 @@ internal class JudoSharedViewModelTest {
         verify { paymentResult.onChanged(capture(slots)) }
         val actualPaymentResult = slots[0]
         val expectedPaymentResult = JudoPaymentResult.Error(
-            JudoError(
-                INTERNAL_ERROR,
+            JudoError.googlePayNotSupported(
+                resources,
                 "GooglePay is not supported on your device"
             )
         )
@@ -131,8 +134,8 @@ internal class JudoSharedViewModelTest {
         verify { paymentResult.onChanged(capture(slots)) }
         val actualPaymentResult = slots[0]
         val expectedPaymentResult = JudoPaymentResult.Error(
-            JudoError(
-                INTERNAL_ERROR,
+            JudoError.googlePayNotSupported(
+                resources,
                 "GooglePay is not supported on your device"
             )
         )
@@ -152,10 +155,7 @@ internal class JudoSharedViewModelTest {
         verify { paymentMethodsGooglePayResult.onChanged(capture(slots)) }
         val actualPaymentMethodsGooglePayResult = slots[0]
         val expectedPaymentMethodsGooglePayResult = JudoPaymentResult.Error(
-            JudoError(
-                INTERNAL_ERROR,
-                "GooglePay is not supported on your device"
-            )
+            JudoError.googlePayNotSupported(resources, "GooglePay is not supported on your device")
         )
         assertEquals(expectedPaymentMethodsGooglePayResult, actualPaymentMethodsGooglePayResult)
     }
@@ -173,10 +173,7 @@ internal class JudoSharedViewModelTest {
         verify { paymentMethodsGooglePayResult.onChanged(capture(slots)) }
         val actualPaymentMethodsGooglePayResult = slots[0]
         val expectedPaymentMethodsGooglePayResult = JudoPaymentResult.Error(
-            JudoError(
-                INTERNAL_ERROR,
-                "GooglePay is not supported on your device"
-            )
+            JudoError.googlePayNotSupported(resources, "GooglePay is not supported on your device")
         )
         assertEquals(expectedPaymentMethodsGooglePayResult, actualPaymentMethodsGooglePayResult)
     }
@@ -194,8 +191,8 @@ internal class JudoSharedViewModelTest {
         verify { paymentMethodsGooglePayResult.onChanged(capture(slots)) }
         val actualPaymentMethodsGooglePayResult = slots[0]
         val expectedPaymentMethodsGooglePayResult = JudoPaymentResult.Error(
-            JudoError(
-                INTERNAL_ERROR,
+            JudoError.googlePayNotSupported(
+                resources,
                 "GooglePay is not supported on your device"
             )
         )
@@ -230,8 +227,8 @@ internal class JudoSharedViewModelTest {
         verify { paymentResult.onChanged(capture(slots)) }
         val actualPaymentResult = slots[0]
         val expectedPaymentResult = JudoPaymentResult.Error(
-            JudoError(
-                INTERNAL_ERROR,
+            JudoError.googlePayNotSupported(
+                resources,
                 "Error"
             )
         )
@@ -252,8 +249,8 @@ internal class JudoSharedViewModelTest {
         verify { paymentResult.onChanged(capture(slots)) }
         val actualPaymentResult = slots[0]
         val expectedPaymentResult = JudoPaymentResult.Error(
-            JudoError(
-                INTERNAL_ERROR,
+            JudoError.googlePayNotSupported(
+                resources,
                 API_EXCEPTION_STATUS_MESSAGE
             )
         )
@@ -395,8 +392,10 @@ internal class JudoSharedViewModelTest {
         val expectedJudoPaymentResult: JudoPaymentResult = mockk(relaxed = true)
         every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
         every { paymentData.toGooglePayRequest(judo) } returns googlePayRequest
-        coEvery { judoApiService.googlePayPayment(googlePayRequest).await() } returns judoApiCallResult
-        every { judoApiCallResult.toJudoPaymentResult() } returns expectedJudoPaymentResult
+        coEvery {
+            judoApiService.googlePayPayment(googlePayRequest).await()
+        } returns judoApiCallResult
+        every { judoApiCallResult.toJudoPaymentResult(resources) } returns expectedJudoPaymentResult
 
         sut.send(JudoSharedAction.LoadGPayPaymentDataSuccess(paymentData))
 
@@ -416,8 +415,8 @@ internal class JudoSharedViewModelTest {
         verify { paymentResult.onChanged(capture(slots)) }
         val actualPaymentResult = slots[0]
         val expectedPaymentResult = JudoPaymentResult.Error(
-            JudoError(
-                INTERNAL_ERROR,
+            JudoError.googlePayNotSupported(
+                resources,
                 "Message"
             )
         )

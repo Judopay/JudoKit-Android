@@ -16,6 +16,7 @@ import com.judokit.android.api.factory.JudoApiServiceFactory
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.toJudoResult
 import com.judokit.android.judo
+import com.judokit.android.model.JudoError
 import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.ui.common.getLocale
 import com.judokit.android.ui.ideal.components.IdealWebViewCallback
@@ -50,9 +51,19 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
             viewLifecycleOwner,
             Observer {
                 when (it) {
-                    is JudoApiCallResult.Success -> if (it.data != null) {
-                        idealWebView.authorize(it.data.redirectUrl, it.data.merchantRedirectUrl)
-                    }
+                    is JudoApiCallResult.Success ->
+                        if (it.data != null) {
+                            idealWebView.authorize(it.data.redirectUrl, it.data.merchantRedirectUrl)
+                        } else {
+                            sharedViewModel.paymentResult.postValue(
+                                JudoPaymentResult.Error(
+                                    JudoError.judoResponseParseError(
+                                        resources
+                                    )
+                                )
+                            )
+                            findNavController().popBackStack()
+                        }
                     is JudoApiCallResult.Failure -> if (it.error != null) {
                         sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
                         findNavController().popBackStack()

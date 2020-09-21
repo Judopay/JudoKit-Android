@@ -1,5 +1,7 @@
 package com.judokit.android
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -11,7 +13,6 @@ import com.judokit.android.api.model.request.GooglePayRequest
 import com.judokit.android.api.model.request.toJudoResult
 import com.judokit.android.api.model.response.toJudoPaymentResult
 import com.judokit.android.model.CardScanningResult
-import com.judokit.android.model.INTERNAL_ERROR
 import com.judokit.android.model.JudoError
 import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.model.PaymentWidgetType
@@ -35,12 +36,13 @@ sealed class JudoSharedAction {
 internal class JudoSharedViewModelFactory(
     private val judo: Judo,
     private val googlePayService: JudoGooglePayService,
-    private val judoApiService: JudoApiService
+    private val judoApiService: JudoApiService,
+    private val application: Application
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == JudoSharedViewModel::class.java) {
-            JudoSharedViewModel(judo, googlePayService, judoApiService) as T
+            JudoSharedViewModel(judo, googlePayService, judoApiService, application) as T
         } else super.create(modelClass)
     }
 }
@@ -48,9 +50,11 @@ internal class JudoSharedViewModelFactory(
 class JudoSharedViewModel(
     private val judo: Judo,
     private val googlePayService: JudoGooglePayService,
-    private val judoApiService: JudoApiService
-) : ViewModel() {
+    private val judoApiService: JudoApiService,
+    application: Application
+) : AndroidViewModel(application) {
 
+    private val resources = application.resources
     // used to share a card payment result between fragments (card input / payment methods)
     val paymentResult = MutableLiveData<JudoPaymentResult>()
 
@@ -97,7 +101,7 @@ class JudoSharedViewModel(
     }
 
     private fun onLoadGPayPaymentDataError(errorMessage: String) {
-        dispatchResult(JudoPaymentResult.Error(JudoError(INTERNAL_ERROR, errorMessage)))
+        dispatchResult(JudoPaymentResult.Error(JudoError.googlePayNotSupported(resources, errorMessage)))
     }
 
     private fun onScanCardSuccess(result: CardScanningResult) {
@@ -135,7 +139,7 @@ class JudoSharedViewModel(
             else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
         }
 
-        dispatchResult(result.toJudoPaymentResult())
+        dispatchResult(result.toJudoPaymentResult(resources))
     }
 
     private fun dispatchResult(result: JudoPaymentResult) {

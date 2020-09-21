@@ -1,13 +1,17 @@
 package com.judokit.android.model
 
+import android.content.res.Resources
 import android.os.Parcelable
+import com.judokit.android.R
 import kotlinx.android.parcel.Parcelize
 
-const val INTERNAL_ERROR = -2
 const val USER_CANCELLED = -1
+const val INTERNAL_ERROR = -2
+const val RESPONSE_PARSING = -3
+const val GOOGLE_PAY_NOT_SUPPORTED = -4
+const val REQUEST_FAILED = -5
 
-internal const val UNKNOWN_ERROR_MSG = "Oops! Something went wrong."
-internal const val USER_CANCELLED_MSG = "User cancelled"
+internal const val USER_CANCELLED_MSG = "The transaction was cancelled by the user."
 
 @Parcelize
 data class JudoError(
@@ -16,12 +20,46 @@ data class JudoError(
     var details: MutableList<JudoError> = mutableListOf()
 ) : Parcelable {
     companion object {
-        fun userCancelled(): JudoError {
-            return JudoError(USER_CANCELLED, USER_CANCELLED_MSG)
-        }
+        fun userCancelled(resources: Resources) = JudoError(
+            USER_CANCELLED, resources.getString(R.string.error_user_cancelled_desc),
+            mutableListOf(
+                JudoError(
+                    USER_CANCELLED,
+                    resources.getString(R.string.error_user_cancelled_reason)
+                )
+            )
+        )
 
-        fun generic(): JudoError {
-            return JudoError(INTERNAL_ERROR, UNKNOWN_ERROR_MSG)
-        }
+        fun judoRequestFailedError(resources: Resources): JudoError = JudoError(
+            REQUEST_FAILED,
+            resources.getString(R.string.error_request_failed_desc),
+            mutableListOf(
+                JudoError(
+                    REQUEST_FAILED,
+                    resources.getString(R.string.error_request_failed_reason)
+                )
+            )
+        )
+
+        fun judoResponseParseError(resources: Resources) = JudoError(
+            RESPONSE_PARSING, resources.getString(R.string.error_response_parse_desc),
+            mutableListOf(
+                JudoError(
+                    RESPONSE_PARSING,
+                    resources.getString(R.string.error_response_parse_reason)
+                )
+            )
+        )
+
+        fun googlePayNotSupported(resources: Resources, message: String?) = JudoError(
+            GOOGLE_PAY_NOT_SUPPORTED,
+            resources.getString(R.string.error_google_pay_not_supported_desc),
+            mutableListOf(
+                JudoError(
+                    GOOGLE_PAY_NOT_SUPPORTED,
+                    message ?: resources.getString(R.string.error_google_pay_not_supported_reason)
+                )
+            )
+        )
     }
 }

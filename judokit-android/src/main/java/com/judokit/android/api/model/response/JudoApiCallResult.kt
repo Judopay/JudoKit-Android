@@ -1,5 +1,6 @@
 package com.judokit.android.api.model.response
 
+import android.content.res.Resources
 import com.judokit.android.api.error.ApiError
 import com.judokit.android.api.error.toJudoError
 import com.judokit.android.model.JudoError
@@ -14,8 +15,8 @@ sealed class JudoApiCallResult<out T> {
     ) : JudoApiCallResult<Nothing>()
 }
 
-fun JudoApiCallResult<Receipt>.toJudoPaymentResult(): JudoPaymentResult {
-    val fallbackError = JudoError.generic()
+fun JudoApiCallResult<Receipt>.toJudoPaymentResult(resources: Resources): JudoPaymentResult {
+    val fallbackError = JudoError.judoRequestFailedError(resources)
 
     return when (this) {
         is JudoApiCallResult.Success ->

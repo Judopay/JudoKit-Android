@@ -1,5 +1,6 @@
 package com.judokit.android.api.model.response
 
+import android.content.res.Resources
 import com.judokit.android.model.JudoPaymentResult
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -9,12 +10,14 @@ import org.junit.jupiter.api.Test
 @DisplayName("Testing JudoApiCallResult extension functions")
 internal class JudoApiCallResultKtTest {
 
+    private val resources: Resources = mockk(relaxed = true)
+
     @DisplayName("Given toJudoPaymentResult is called, when JudoApiCallResult is success, then return JudoPaymentResult.Success")
     @Test
     fun returnSuccessOnToJudoPaymentResultCallWithJudoApiCallResultSuccess() {
         assertTrue(
             JudoApiCallResult.Success<Receipt>(mockk(relaxed = true))
-                .toJudoPaymentResult() is JudoPaymentResult.Success
+                .toJudoPaymentResult(resources) is JudoPaymentResult.Success
         )
     }
 
@@ -23,7 +26,7 @@ internal class JudoApiCallResultKtTest {
     fun returnErrorOnToJudoPaymentResultCallWithJudoApiCallResultSuccessAndDataNull() {
         assertTrue(
             JudoApiCallResult.Success<Receipt>(null)
-                .toJudoPaymentResult() is JudoPaymentResult.Error
+                .toJudoPaymentResult(resources) is JudoPaymentResult.Error
         )
     }
 
@@ -32,7 +35,7 @@ internal class JudoApiCallResultKtTest {
     fun returnErrorOnToJudoPaymentResultCallWithJudoApiCallResultSuccess() {
         assertTrue(
             JudoApiCallResult.Failure()
-                .toJudoPaymentResult() is JudoPaymentResult.Error
+                .toJudoPaymentResult(resources) is JudoPaymentResult.Error
         )
     }
 }
