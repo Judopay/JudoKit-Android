@@ -4,18 +4,71 @@ import android.os.Parcelable
 import com.judokit.android.R
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * A set of values that is used to invoke any of the defined payment flows. It is a mandatory
+ * parameter when creating a [com.judokit.android.Judo] configuration object through it's builder.
+ * @see com.judokit.android.Judo.Builder
+ */
 @Parcelize
 enum class PaymentWidgetType : Parcelable {
+    /**
+     * Starts a standard card payment flow.
+     */
     CARD_PAYMENT,
+
+    /**
+     * Starts a pre-auth card payment flow.
+     */
     PRE_AUTH,
+
+    /**
+     * Starts a register card flow for making future tokenized payments
+     */
     REGISTER_CARD,
+
+    /**
+     * Starts a save card flow for making future tokenized payments
+     */
     CREATE_CARD_TOKEN,
+
+    /**
+     * Starts a check card flow to perform a card check against the card.
+     */
     CHECK_CARD,
+
+    /**
+     * Starts a GooglePay payment flow outside of payment methods screen.
+     */
     GOOGLE_PAY,
+
+    /**
+     * Starts a pre-auth GooglePay payment flow outside of payment methods screen.
+     */
     PRE_AUTH_GOOGLE_PAY,
+
+    /**
+     * Starts the payment methods widget to perform card, GooglePay, Pay by Bank app and iDEAL
+     * payments.
+     */
     PAYMENT_METHODS,
+
+    /**
+     * Starts the payment methods widget to perform card, GooglePay, Pay by Bank app and iDEAL
+     * pre-auth payments.
+     */
     PRE_AUTH_PAYMENT_METHODS,
+
+    /**
+     * Starts the payment methods widget to create a receipt against a card which can be used to
+     * make payments outside of Judo SDK. Works for card payments only.
+     */
     SERVER_TO_SERVER_PAYMENT_METHODS,
+
+    /**
+     * Starts Pay by Bank app payment flow outside of payment method screen. You must set GBP
+     * currency [com.judokit.android.Judo.Builder.setAmount] when building Judo configuration object
+     * to be able to start Pay by Bank app journey.
+     */
     PAY_BY_BANK_APP
 }
 

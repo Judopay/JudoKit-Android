@@ -10,6 +10,12 @@ import java.nio.charset.StandardCharsets
 private const val AUTHORIZATION_HEADER = "Authorization"
 private const val PAYMENT_SESSION_HEADER = "Payment-Session"
 
+/**
+ * Authorization type that uses token and one time use payment session combination to authorize
+ * Judo backend requests.
+ * @param paymentSession One time use token that is generated via an API call.
+ * @param apiToken Token provided by JudoPay.
+ */
 @Parcelize
 class PaymentSessionAuthorization internal constructor(
     private val paymentSession: String,

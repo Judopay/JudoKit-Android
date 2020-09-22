@@ -10,6 +10,10 @@ import com.judokit.android.requireNotNull
 import kotlinx.android.parcel.Parcelize
 import java.util.Locale
 
+/**
+ * A configuration class responsible for setting all the necessary parameters for a
+ * GooglePay transaction.
+ */
 @Parcelize
 class GooglePayConfiguration internal constructor(
     val environment: GooglePayEnvironment,
@@ -46,38 +50,86 @@ class GooglePayConfiguration internal constructor(
         private var isShippingAddressRequired: Boolean? = null
         private var shippingAddressParameters: GooglePayShippingAddressParameters? = null
 
+        /**
+         * Sets the environment.
+         * @see GooglePayEnvironment
+         */
         fun setEnvironment(environment: GooglePayEnvironment?) =
             apply { this.environment = environment }
 
+        /**
+         * Sets the merchant name.
+         */
         fun setMerchantName(name: String?) = apply { this.merchantName = name }
 
+        /**
+         * Sets the transaction country code.
+         */
         fun setTransactionCountryCode(countryCode: String?) =
             apply { this.transactionCountryCode = countryCode }
 
+        /**
+         * Sets the transaction identifier.
+         */
         fun setTransactionId(id: String?) = apply { this.transactionId = id }
 
+        /**
+         * Sets the total price status.
+         * If set to null, [GooglePayPriceStatus.FINAL] will be used.
+         * @see GooglePayPriceStatus
+         */
         fun setTotalPriceStatus(status: GooglePayPriceStatus?) =
             apply { this.totalPriceStatus = status }
 
+        /**
+         * Sets the total price label.
+         */
         fun setTotalPriceLabel(totalLabel: String?) = apply { this.totalPriceLabel = totalLabel }
 
+        /**
+         * Sets the checkout option.
+         * @see GooglePayCheckoutOption
+         */
         fun setCheckoutOption(option: GooglePayCheckoutOption?) =
             apply { this.checkoutOption = option }
 
+        /**
+         * Sets whether the email is required.
+         */
         fun setIsEmailRequired(required: Boolean?) = apply { this.isEmailRequired = required }
 
+        /**
+         * Sets whether the billing address is required.
+         */
         fun setIsBillingAddressRequired(required: Boolean?) =
             apply { this.isBillingAddressRequired = required }
 
+        /**
+         * Sets the billing address parameters.
+         * @see GooglePayBillingAddressParameters
+         */
         fun setBillingAddressParameters(parameters: GooglePayBillingAddressParameters?) =
             apply { this.billingAddressParameters = parameters }
 
+        /**
+         * Sets whether the shipping address is required.
+         */
         fun setIsShippingAddressRequired(required: Boolean?) =
             apply { this.isShippingAddressRequired = required }
 
+        /**
+         * Sets shipping address parameters.
+         * @see GooglePayShippingAddressParameters
+         */
         fun setShippingAddressParameters(parameters: GooglePayShippingAddressParameters?) =
             apply { this.shippingAddressParameters = parameters }
 
+        /**
+         * Creates an instance of [GooglePayConfiguration] based on provided data in setters.
+         * @throws IllegalArgumentException If environment or country code is null.
+         * @throws IllegalArgumentException If any of the allowedCountryCodes are invalid.
+         * @return An instance of [GooglePayConfiguration]
+         */
         fun build(): GooglePayConfiguration {
 
             val env = requireNotNull(environment, "environment")

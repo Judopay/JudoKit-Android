@@ -33,6 +33,17 @@ import com.judokit.android.ui.common.showAlert
 internal const val LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE = Activity.RESULT_FIRST_USER + 1
 internal const val SCAN_CARD_REQUEST_CODE = Activity.RESULT_FIRST_USER + 2
 
+/**
+ * Entry point for invoking Judo SDK to make any of the defined
+ * [payment journeys.][com.judokit.android.model.PaymentWidgetType]
+ * Activity must be started with [startActivityForResult].
+ *
+ * ```
+ * val intent = Intent(this, JudoActivity::class.java)
+ * intent.putExtra(JUDO_OPTIONS, judo)
+ * startActivityForResult(intent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
+ * ```
+ */
 class JudoActivity : AppCompatActivity() {
 
     private lateinit var viewModel: JudoSharedViewModel

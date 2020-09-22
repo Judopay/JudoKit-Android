@@ -5,11 +5,33 @@ import com.judokit.android.R
 import com.judokit.android.ui.paymentmethods.components.PaymentButtonType
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * A set of available payment methods to use in payment methods screen.
+ * If no payment method is specified, then only card payment will be available.
+ */
 @Parcelize
 enum class PaymentMethod : Parcelable {
+    /**
+     * Adds card payment method.
+     */
     CARD,
+
+    /**
+     * Adds GooglePay payment method.
+     */
     GOOGLE_PAY,
+
+    /**
+     * Adds iDEAL payment method.
+     * [Currency] must also be set to EUR to use this payment method.
+     */
     IDEAL,
+
+    /**
+     * Adds Pay by Bank app payment method.
+     * PbBa payment method will not be activated if no banking app is installed on consumer device.
+     * [Currency] must also be set to GBP to use this payment method.
+     */
     PAY_BY_BANK
 }
 
