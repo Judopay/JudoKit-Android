@@ -9,6 +9,9 @@ const val USER_CANCELLED = -1
 internal const val UNKNOWN_ERROR_MSG = "Oops! Something went wrong."
 internal const val USER_CANCELLED_MSG = "User cancelled"
 
+/**
+ * The unsuccessful or cancelled result of a transaction within Judo SDK.
+ */
 @Parcelize
 data class JudoError(
     var code: Int = USER_CANCELLED,

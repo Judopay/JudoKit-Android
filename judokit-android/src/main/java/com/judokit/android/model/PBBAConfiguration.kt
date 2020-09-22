@@ -4,6 +4,10 @@ import android.net.Uri
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * A configuration class responsible for setting additional parameters for
+ * Pay by Bank app payment method.
+ */
 @Parcelize
 class PBBAConfiguration internal constructor(
     val mobileNumber: String?,
@@ -20,18 +24,42 @@ class PBBAConfiguration internal constructor(
         private var deepLinkURL: Uri? = null
         private var deepLinkScheme: String? = null
 
+        /**
+         * Sets the consumer's mobile number.
+         */
         fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = mobileNumber }
 
+        /**
+         * Sets how the consumer should appear on a statement.
+         */
         fun setAppearsOnStatementAs(appearsOnStatementAs: String?) =
             apply { this.appearsOnStatementAs = appearsOnStatementAs }
 
+        /**
+         * Sets consumer's email address.
+         */
         fun setEmailAddress(emailAddress: String?) = apply { this.emailAddress = emailAddress }
 
+        /**
+         * Sets the deep-link URL acquired from banking app after redirect, located in data field
+         * of the intent object.
+         * ```
+         * intent.data
+         * ```
+         */
         fun setDeepLinkURL(deepLinkURL: Uri?) = apply { this.deepLinkURL = deepLinkURL }
 
+        /**
+         * Sets the deep-link scheme configured in AndroidManifest.xml file.
+         */
         fun setDeepLinkScheme(deepLinkScheme: String?) =
             apply { this.deepLinkScheme = deepLinkScheme }
 
+        /**
+         * Creates an instance of [PBBAConfiguration] based on provided data in setters.
+         * @throws IllegalArgumentException If deepLinkScheme is null.
+         * @return An instance of [PBBAConfiguration]
+         */
         fun build(): PBBAConfiguration {
             val myDeepLinkScheme = requireNotNull(deepLinkScheme)
 

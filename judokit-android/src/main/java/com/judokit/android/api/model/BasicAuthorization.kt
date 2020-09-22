@@ -9,6 +9,11 @@ import java.nio.charset.StandardCharsets
 
 private const val AUTHORIZATION_HEADER = "Authorization"
 
+/**
+ * Authorization type that uses token and secret combination to authorize Judo backend requests.
+ * @param apiToken Token provided by JudoPay.
+ * @param apiSecret Secret provided by JudoPay.
+ */
 @Parcelize
 class BasicAuthorization internal constructor(
     private val apiToken: String,
