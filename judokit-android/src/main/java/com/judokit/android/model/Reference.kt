@@ -23,7 +23,11 @@ class Reference internal constructor(
         fun setMetaData(data: Bundle?) = apply { this.metaData = data }
 
         fun build(): Reference {
-            val myConsumerReference = requireNotNullOrEmpty(consumerReference, "consumerReference")
+            val myConsumerReference = requireNotNullOrEmpty(
+                consumerReference,
+                "consumerReference",
+                "The consumer reference entered is invalid. The consumer reference parameter has either not been set or has an incorrect format."
+            )
             val myPaymentReference = if (paymentReference.isNullOrEmpty()) UUID.randomUUID()
                 .toString() else paymentReference!!
 

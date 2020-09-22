@@ -2,6 +2,7 @@ package com.judokit.android.model
 
 import android.net.Uri
 import android.os.Parcelable
+import com.judokit.android.requireNotNull
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -33,7 +34,11 @@ class PBBAConfiguration internal constructor(
             apply { this.deepLinkScheme = deepLinkScheme }
 
         fun build(): PBBAConfiguration {
-            val myDeepLinkScheme = requireNotNull(deepLinkScheme)
+            val myDeepLinkScheme = requireNotNull(
+                deepLinkScheme,
+                "deepLinkScheme",
+                "PBBA transactions require the deeplink scheme to be set. Either the app's URL Scheme or the deeplink scheme parameter has not been set."
+            )
 
             return PBBAConfiguration(
                 mobileNumber,

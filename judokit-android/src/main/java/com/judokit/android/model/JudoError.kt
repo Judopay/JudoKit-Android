@@ -10,7 +10,8 @@ const val RESPONSE_PARSING = -2
 const val GOOGLE_PAY_NOT_SUPPORTED = -3
 const val REQUEST_FAILED = -4
 
-internal const val USER_CANCELLED_MSG = "The transaction was cancelled by the user."
+internal const val USER_CANCELLED_MSG =
+    "The transaction was cancelled by the user. The user closed the transaction flow without completing the transaction."
 
 /**
  * Error class that stores code, message and an optional list of details of the underlying error

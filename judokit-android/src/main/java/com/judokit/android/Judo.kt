@@ -110,23 +110,26 @@ class Judo internal constructor(
                     else -> null
                 }
                 if (expectedCurrency != null && currency != expectedCurrency) {
-                    throw IllegalArgumentException("Cannot make ${method.name} transactions with currencies different than ${expectedCurrency.name}")
+                    throw IllegalArgumentException("${method.name} transactions only support ${expectedCurrency.name} as the currency. Invalid currency passed to ${method.name} transaction configuration.")
                 }
             }
         }
 
         @Throws(java.lang.IllegalArgumentException::class)
-        private fun requireJudoId(judoId: String?): String {
-            val id = requireNotNullOrEmpty(judoId, "judoId")
+        private fun requireJudoId(judoId: String?, message: String?): String {
+            val id = requireNotNullOrEmpty(judoId, "judoId", message)
             if (id.matches(REGEX_JUDO_ID.toRegex()))
                 return id
             else
-                throw IllegalArgumentException("JudoId is invalid")
+                throw IllegalArgumentException("The Judo ID entered is invalid. The specified Judo ID parameter has an incorrect format.")
         }
 
         @Throws(IllegalArgumentException::class)
         fun build(): Judo {
-            val id = requireJudoId(judoId)
+            val id = requireJudoId(
+                judoId,
+                "The Judo ID parameter cannot be null or empty. The required Judo ID parameter has not been set in the Judo configuration."
+            )
             val myAuthorization = requireNotNull(authorization, "authorization")
 
             val myAmount = requireNotNull(amount, "amount")

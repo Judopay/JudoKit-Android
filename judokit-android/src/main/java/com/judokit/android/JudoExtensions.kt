@@ -32,17 +32,17 @@ import java.math.BigDecimal
 internal val Judo.apiBaseUrl: String
     get() = if (isSandboxed) ApiEnvironment.SANDBOX.host else ApiEnvironment.LIVE.host
 
-internal fun requireNotNullOrEmpty(value: String?, propertyName: String): String {
+internal fun requireNotNullOrEmpty(value: String?, propertyName: String, message: String? = null): String {
     when {
-        value == null -> throw IllegalArgumentException("$propertyName cannot be null")
-        value.isEmpty() -> throw IllegalArgumentException("$propertyName cannot be empty")
+        value == null -> throw IllegalArgumentException(message ?: "$propertyName cannot be null")
+        value.isEmpty() -> throw IllegalArgumentException(message ?: "$propertyName cannot be empty")
         else -> return value
     }
 }
 
-internal fun <T : Any> requireNotNull(value: T?, propertyName: String): T {
+internal fun <T : Any> requireNotNull(value: T?, propertyName: String, message: String? = null): T {
     if (value == null)
-        throw IllegalArgumentException("$propertyName cannot be null")
+        throw IllegalArgumentException(message ?: "$propertyName cannot be null")
     else return value
 }
 
