@@ -35,7 +35,6 @@ import com.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItem
 import com.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItemType
 import com.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodSavedCardItem
 import com.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodSelectorItem
-import com.judokit.android.ui.paymentmethods.adapter.model.bic
 import com.judokit.android.ui.paymentmethods.components.GooglePayCardViewModel
 import com.judokit.android.ui.paymentmethods.components.NoPaymentMethodSelectedViewModel
 import com.judokit.android.ui.paymentmethods.components.PayByBankCardViewModel
@@ -243,7 +242,7 @@ class PaymentMethodsViewModel(
             if (methodModel.currentPaymentMethod is IdealPaymentMethodModel) {
                 payWithIdealObserver.postValue(
                     Event(
-                        methodModel.currentPaymentMethod.selectedBank.bic()
+                        methodModel.currentPaymentMethod.selectedBank.bic
                     )
                 )
             }
