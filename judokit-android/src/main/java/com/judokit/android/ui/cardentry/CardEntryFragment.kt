@@ -173,7 +173,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
 
         // in any other cases we're the only fragment in the stack,
         // so push the result to the parent activity
-        sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult())
+        sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult(resources))
     }
 
     private fun dispatchCardPaymentApiResult(result: JudoApiCallResult<Receipt>) {
@@ -188,7 +188,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     private fun dispatchPaymentMethodsApiResult(result: JudoApiCallResult<Receipt>) {
         when (result) {
             is JudoApiCallResult.Success -> persistTokenizedCard(result)
-            is JudoApiCallResult.Failure -> sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult())
+            is JudoApiCallResult.Failure -> sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult(resources))
         }
     }
 
@@ -198,7 +198,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
             viewModel.send(CardEntryAction.InsertCard(cardDetails))
             findNavController().popBackStack()
         } else {
-            sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult())
+            sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult(resources))
         }
     }
 

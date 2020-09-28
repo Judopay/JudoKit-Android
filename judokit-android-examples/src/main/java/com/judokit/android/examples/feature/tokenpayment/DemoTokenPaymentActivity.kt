@@ -115,7 +115,7 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
         call: Call<JudoApiCallResult<Receipt>>,
         response: Response<JudoApiCallResult<Receipt>>
     ) {
-        when (val result = response.body()?.toJudoPaymentResult()) {
+        when (val result = response.body()?.toJudoPaymentResult(resources)) {
             is JudoPaymentResult.Error,
             is JudoPaymentResult.Success -> {
                 setResult(result.code, result.toIntent())

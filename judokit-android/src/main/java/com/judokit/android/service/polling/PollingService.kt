@@ -7,7 +7,7 @@ import com.judokit.android.api.model.response.OrderStatus
 import kotlinx.coroutines.delay
 import retrofit2.await
 
-private const val DELAY_IN_SECONDS = 130L
+private const val DELAY_IN_SECONDS = 60L
 private const val MILLISECONDS = 1000L
 private const val REQUEST_DELAY = 5000L
 private const val TIMEOUT = DELAY_IN_SECONDS * MILLISECONDS

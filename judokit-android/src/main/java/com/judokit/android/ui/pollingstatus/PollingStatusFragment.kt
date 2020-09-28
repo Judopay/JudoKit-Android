@@ -110,15 +110,16 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
 
     private fun handlePayByBankResult(result: JudoApiCallResult<BankSaleResponse>?) {
         when (result) {
-            is JudoApiCallResult.Success -> handleBankSaleResponse(result.data)
+            is JudoApiCallResult.Success -> handleBankSaleResponse(result)
             is JudoApiCallResult.Failure -> {
-                sharedViewModel.bankPaymentResult.postValue(result.toJudoPaymentResult())
+                sharedViewModel.bankPaymentResult.postValue(result.toJudoPaymentResult(resources))
                 findNavController().popBackStack()
             }
         }
     }
 
-    private fun handleBankSaleResponse(data: BankSaleResponse?) {
+    private fun handleBankSaleResponse(result: JudoApiCallResult.Success<BankSaleResponse>?) {
+        val data = result?.data
         if (data != null) {
             sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Success(data.toJudoResult()))
             val intent = Intent(BR_PBBA_RESULT)
@@ -129,7 +130,7 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
             LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
             PBBAAppUtils.openBankingApp(requireActivity(), data.secureToken)
         } else {
-            sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Error(JudoError.generic()))
+            sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Error(JudoError.judoResponseParseError(resources)))
             findNavController().popBackStack()
         }
     }
@@ -177,11 +178,16 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
                 PollingStatusViewState.SUCCESS
             }
             is PollingResult.Failure -> {
-                result = JudoPaymentResult.Error(JudoError.generic())
+                result = JudoPaymentResult.Error(JudoError.judoRequestFailedError(resources))
                 PollingStatusViewState.FAIL
             }
             is PollingResult.CallFailure -> {
-                val error = pollingResult.error?.toJudoError() ?: JudoError.generic()
+                val error = pollingResult.error?.toJudoError() ?: JudoError.judoRequestFailedError(resources)
+                result = JudoPaymentResult.Error(error)
+                PollingStatusViewState.FAIL
+            }
+            is PollingResult.ResponseParseError -> {
+                val error = JudoError.judoResponseParseError(resources)
                 result = JudoPaymentResult.Error(error)
                 PollingStatusViewState.FAIL
             }

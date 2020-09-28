@@ -95,7 +95,7 @@ class PollingStatusViewModel(
         if (orderId != null) {
             startPolling(orderId)
         } else {
-            saleStatusResult.postValue(PollingResult.CallFailure())
+            saleStatusResult.postValue(PollingResult.ResponseParseError)
         }
     }
 

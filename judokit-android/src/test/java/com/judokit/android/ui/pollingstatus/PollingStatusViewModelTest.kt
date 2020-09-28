@@ -176,7 +176,7 @@ internal class PollingStatusViewModelTest {
 
         verify { saleStatusResult.onChanged(capture(slots)) }
         val result = slots[0]
-        Assertions.assertEquals(result, PollingResult.CallFailure())
+        Assertions.assertEquals(PollingResult.ResponseParseError, result)
     }
 
     @DisplayName("Given send with CancelPolling action is called, then cancel polling")

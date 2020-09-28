@@ -6,6 +6,7 @@ sealed class PollingResult<out T> {
     object Delay : PollingResult<Nothing>()
     object Retry : PollingResult<Nothing>()
     object Processing : PollingResult<Nothing>()
+    object ResponseParseError : PollingResult<Nothing>()
     data class CallFailure(
         val statusCode: Int = -1,
         val error: ApiError? = null,
