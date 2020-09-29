@@ -35,7 +35,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import retrofit2.await
-import java.math.BigDecimal
 
 private const val BIC = "bic"
 private const val ORDER_ID = "orderId"

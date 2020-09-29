@@ -17,7 +17,6 @@ import com.judokit.android.toMap
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.await
-import java.math.BigDecimal
 
 // view-model custom factory to inject the `judo` configuration object
 internal class IdealViewModelFactory(

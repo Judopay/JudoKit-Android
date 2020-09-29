@@ -1,9 +1,7 @@
 package com.judokit.android.api.model.request
 
 import com.judokit.android.model.Currency
-import com.judokit.android.requireNotNull
 import com.judokit.android.requireNotNullOrEmpty
-import java.math.BigDecimal
 
 data class IdealSaleRequest(
     val amount: String,

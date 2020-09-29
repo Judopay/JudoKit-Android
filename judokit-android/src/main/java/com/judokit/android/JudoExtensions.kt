@@ -27,7 +27,6 @@ import com.judokit.android.api.model.request.TokenRequest
 import com.judokit.android.model.ApiEnvironment
 import com.judokit.android.ui.common.ANIMATION_DURATION_500
 import com.judokit.android.ui.error.JudoNotProvidedError
-import java.math.BigDecimal
 
 internal val Judo.apiBaseUrl: String
     get() = if (isSandboxed) ApiEnvironment.SANDBOX.host else ApiEnvironment.LIVE.host
