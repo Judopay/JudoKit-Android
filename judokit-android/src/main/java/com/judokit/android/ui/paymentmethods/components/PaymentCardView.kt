@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.payment_card_view.view.isExpiredTextView
 import kotlinx.android.synthetic.main.payment_card_view.view.networkIconImageView
 import kotlinx.android.synthetic.main.payment_card_view.view.paymentCardViewContainer
 
-private const val CARD_MASK ="•••• •••• ••••"
+private const val CARD_MASK = "•••• •••• ••••"
 
 class PaymentCardView @JvmOverloads constructor(
     context: Context,
