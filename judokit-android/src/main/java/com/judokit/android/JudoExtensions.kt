@@ -225,7 +225,7 @@ fun Judo.toGooglePayRequest(
 
 fun Judo.toIdealSaleRequest(bic: String) =
     IdealSaleRequest.Builder()
-        .setAmount(BigDecimal(amount.amount))
+        .setAmount(amount.amount)
         .setMerchantConsumerReference(reference.consumerReference)
         .setMerchantPaymentReference(reference.paymentReference)
         .setPaymentMetadata(reference.metaData?.toMap())
@@ -235,7 +235,7 @@ fun Judo.toIdealSaleRequest(bic: String) =
 
 fun Judo.toBankSaleRequest() =
     BankSaleRequest.Builder()
-        .setAmount(amount.amount.toBigDecimalOrNull())
+        .setAmount(amount.amount)
         .setMerchantPaymentReference(reference.paymentReference)
         .setMerchantConsumerReference(reference.consumerReference)
         .setJudoId(judoId)

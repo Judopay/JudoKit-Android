@@ -15,7 +15,7 @@ internal class IdealSaleRequestTest {
     @DisplayName("Given all mandatory fields provided, then build() should return IdealSaleRequest object")
     fun buildSaleRequest() {
         assertEquals(
-            request.setAmount(BigDecimal(1))
+            request.setAmount("1")
                 .setMerchantConsumerReference("reference")
                 .setMerchantPaymentReference("reference")
                 .setJudoId("judo id")
@@ -91,7 +91,7 @@ internal class IdealSaleRequestTest {
         }
     }
 
-    private fun getIdealSaleRequest() = request.setAmount(BigDecimal(1))
+    private fun getIdealSaleRequest() = request.setAmount("1")
         .setMerchantConsumerReference("reference")
         .setMerchantPaymentReference("reference")
         .setJudoId("judo id")

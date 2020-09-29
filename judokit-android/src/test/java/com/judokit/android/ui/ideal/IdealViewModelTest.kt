@@ -279,7 +279,7 @@ class IdealViewModelTest {
         .build()
 
     private fun buildSaleRequest() = IdealSaleRequest.Builder()
-        .setAmount(BigDecimal(judo.amount.amount))
+        .setAmount(judo.amount.amount)
         .setMerchantConsumerReference(judo.reference.consumerReference)
         .setMerchantPaymentReference(judo.reference.paymentReference)
         .setPaymentMetadata(judo.reference.metaData?.toMap())

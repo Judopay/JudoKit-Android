@@ -15,7 +15,7 @@ internal class BankSaleRequestTest {
     @DisplayName("Given all mandatory fields provided, then build() should return BankSaleRequest object")
     fun buildSaleRequest() {
         assertEquals(
-            sut.setAmount(BigDecimal(1))
+            sut.setAmount("1")
                 .setMerchantConsumerReference("reference")
                 .setMerchantPaymentReference("reference")
                 .setJudoId("judo id")
@@ -87,7 +87,7 @@ internal class BankSaleRequestTest {
         }
     }
 
-    private fun getBankSaleRequest() = sut.setAmount(BigDecimal(1))
+    private fun getBankSaleRequest() = sut.setAmount("1")
         .setMerchantConsumerReference("reference")
         .setMerchantPaymentReference("reference")
         .setJudoId("judo id")
