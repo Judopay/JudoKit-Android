@@ -44,8 +44,8 @@
 
     <TextView
         android:id="@+id/wocr_powered_by_paycards_link"
-        style="@style/wocr_PaycardsButton"
-        android:text="@string/wocr_powered_by_pay_cards"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         android:visibility="gone"
         app:wocr_layout_cardAlignGravity="bottom|left"
         tools:ignore="MissingPrefix,SpUsage" />

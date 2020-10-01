@@ -108,7 +108,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
 
     implementation 'com.judopay:device-dna:1.0.0'
-    implementation 'cards.pay:paycardsrecognizer:1.1.0'
+    compileOnly 'cards.pay:paycardsrecognizer:1.1.0'
     implementation "com.zapp.library:merchant:1.1.0"
 
     // JUnit 4 framework

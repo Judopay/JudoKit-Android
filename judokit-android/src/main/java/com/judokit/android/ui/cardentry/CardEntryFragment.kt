@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -114,7 +115,12 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         cancelButton.setOnClickListener(this::onUserCancelled)
-        scanCardButton.setOnClickListener(this::handleScanCardButtonClicks)
+        try {
+            Class.forName("cards.pay.paycardsrecognizer.sdk.ScanCardIntent")
+            scanCardButton.setOnClickListener { handleScanCardButtonClicks() }
+        } catch (e: Exception) {
+            Log.d(this::class.qualifiedName, "Scanning library unavailable")
+        }
 
         formView.apply {
             onFormValidationStatusListener = { model, isValid ->
@@ -151,9 +157,14 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     }
 
     private fun updateWithModel(model: CardEntryFragmentModel) {
-        if (model.displayScanButton) {
-            scanCardButton.visibility = View.VISIBLE
-        } else {
+        try {
+            Class.forName("cards.pay.paycardsrecognizer.sdk.ScanCardIntent")
+            if (model.displayScanButton) {
+                scanCardButton.visibility = View.VISIBLE
+            } else {
+                scanCardButton.visibility = View.GONE
+            }
+        } catch (e: Exception) {
             scanCardButton.visibility = View.GONE
         }
         formView.model = model.formModel
@@ -188,7 +199,11 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     private fun dispatchPaymentMethodsApiResult(result: JudoApiCallResult<Receipt>) {
         when (result) {
             is JudoApiCallResult.Success -> persistTokenizedCard(result)
-            is JudoApiCallResult.Failure -> sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult(resources))
+            is JudoApiCallResult.Failure -> sharedViewModel.paymentResult.postValue(
+                result.toJudoPaymentResult(
+                    resources
+                )
+            )
         }
     }
 
@@ -202,7 +217,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun handleScanCardButtonClicks(view: View) {
+    private fun handleScanCardButtonClicks() {
         val activity = requireActivity()
         val intent = ScanCardIntent.Builder(activity).build()
         activity.startActivityForResult(intent, SCAN_CARD_REQUEST_CODE)
