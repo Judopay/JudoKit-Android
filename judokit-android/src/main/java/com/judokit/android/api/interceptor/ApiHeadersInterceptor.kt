@@ -18,9 +18,15 @@ private const val UI_MODE_HEADER = "UI-Client-Mode"
 private const val SDK_VERSION_HEADER = "Sdk-Version"
 private const val USER_AGENT_HEADER = "User-Agent"
 private const val JSON_MIME_TYPE = "application/json"
-private const val API_VERSION = "2.0.0.0"
+private const val API_VERSION = "5.6.0"
+private const val SALE_API_VERSION = "2.0.0.0"
 private const val CACHE_CONTROL = "no-cache"
 private const val CUSTOM_UI_MODE = "Custom-UI"
+
+private val SALE_ENDPOINTS = arrayListOf(
+    "/order/bank/sale",
+    "/order/bank/statusrequest"
+)
 
 internal class ApiHeadersInterceptor(
     private val authorization: Authorization,
@@ -31,24 +37,27 @@ internal class ApiHeadersInterceptor(
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
+        val path = chain.request().url().encodedPath()
+        val isSaleRequest = SALE_ENDPOINTS.contains(path)
+        val headers = getHeaders(isSaleRequest)
         val request = chain.request()
             .newBuilder()
             .headers(headers)
             .build()
+
         return chain.proceed(request)
     }
 
-    private val headers: Headers
-        get() = Headers.Builder()
-            .addAll(authorization.headers)
-            .add(CONTENT_TYPE_HEADER, JSON_MIME_TYPE)
-            .add(ACCEPT_HEADER, JSON_MIME_TYPE)
-            .add(API_VERSION_HEADER, API_VERSION)
-            .add(CACHE_CONTROL_HEADER, CACHE_CONTROL)
-            .add(SDK_VERSION_HEADER, "Android-" + BuildConfig.VERSION_NAME)
-            .addUnsafeNonAscii(USER_AGENT_HEADER, userAgent)
-            .add(UI_MODE_HEADER, CUSTOM_UI_MODE)
-            .build()
+    private fun getHeaders(isSaleRequest: Boolean) = Headers.Builder()
+        .addAll(authorization.headers)
+        .add(CONTENT_TYPE_HEADER, JSON_MIME_TYPE)
+        .add(ACCEPT_HEADER, JSON_MIME_TYPE)
+        .add(API_VERSION_HEADER, if (isSaleRequest) SALE_API_VERSION else API_VERSION)
+        .add(CACHE_CONTROL_HEADER, CACHE_CONTROL)
+        .add(SDK_VERSION_HEADER, "Android-" + BuildConfig.VERSION_NAME)
+        .addUnsafeNonAscii(USER_AGENT_HEADER, userAgent)
+        .add(UI_MODE_HEADER, CUSTOM_UI_MODE)
+        .build()
 
     private val userAgent: String
         get() =
