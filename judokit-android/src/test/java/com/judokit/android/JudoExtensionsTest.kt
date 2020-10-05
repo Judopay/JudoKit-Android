@@ -26,7 +26,7 @@ internal class JudoExtensionsTest {
             every { consumerReference } returns "ref"
             every { paymentReference } returns "ref"
         }
-        every { pbbaConfiguration } returns mockk(relaxed = true){
+        every { pbbaConfiguration } returns mockk(relaxed = true) {
             every { mobileNumber } returns "1"
             every { emailAddress } returns "email"
             every { appearsOnStatement } returns "appearsOnStatement"
