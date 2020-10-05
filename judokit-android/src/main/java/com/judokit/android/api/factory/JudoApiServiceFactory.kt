@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.judokit.android.Judo
+import com.judokit.android.api.AppMetaDataProvider
 import com.judokit.android.api.JudoApiService
 import com.judokit.android.api.deserializer.DateJsonDeserializer
 import com.judokit.android.api.deserializer.FormattedBigDecimalDeserializer
@@ -131,7 +132,7 @@ object JudoApiServiceFactory {
 
         add(DeDuplicationInterceptor())
         add(DeviceDnaInterceptor(context))
-        add(ApiHeadersInterceptor(judo.authorization, context))
+        add(ApiHeadersInterceptor(judo.authorization, AppMetaDataProvider(context)))
         add(PayLoadInterceptor(context))
 
         externalInterceptors?.forEach {

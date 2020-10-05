@@ -1,7 +1,5 @@
 package com.judokit.android.api.interceptor
 
-import android.content.Context
-import android.os.Build
 import com.judokit.android.BuildConfig
 import com.judokit.android.api.AppMetaDataProvider
 import com.judokit.android.api.model.Authorization
@@ -30,10 +28,8 @@ private val SALE_ENDPOINTS = arrayListOf(
 
 internal class ApiHeadersInterceptor(
     private val authorization: Authorization,
-    context: Context
+    private val appMetaDataProvider: AppMetaDataProvider
 ) : Interceptor {
-
-    private val appMetaDataProvider = AppMetaDataProvider(context)
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -54,12 +50,8 @@ internal class ApiHeadersInterceptor(
         .add(ACCEPT_HEADER, JSON_MIME_TYPE)
         .add(API_VERSION_HEADER, if (isSaleRequest) SALE_API_VERSION else API_VERSION)
         .add(CACHE_CONTROL_HEADER, CACHE_CONTROL)
-        .add(SDK_VERSION_HEADER, "Android-" + BuildConfig.VERSION_NAME)
-        .addUnsafeNonAscii(USER_AGENT_HEADER, userAgent)
+        .add(SDK_VERSION_HEADER, "Android-${BuildConfig.VERSION_NAME}")
+        .addUnsafeNonAscii(USER_AGENT_HEADER, appMetaDataProvider.userAgent)
         .add(UI_MODE_HEADER, CUSTOM_UI_MODE)
         .build()
-
-    private val userAgent: String
-        get() =
-            """Android/${BuildConfig.VERSION_NAME} ${Build.MANUFACTURER} ${Build.MODEL} ${appMetaDataProvider.appName} ${appMetaDataProvider.appVersion}""".trimMargin()
 }
