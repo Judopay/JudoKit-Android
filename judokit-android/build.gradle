@@ -108,12 +108,13 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
 
     implementation 'com.judopay:device-dna:1.0.0'
-    compileOnly 'cards.pay:paycardsrecognizer:1.1.0'
     implementation "com.zapp.library:merchant:1.1.0"
+    compileOnly "cards.pay:paycardsrecognizer:$cards_pay_version"
 
     // JUnit 4 framework
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$junit_version"
+    testImplementation "cards.pay:paycardsrecognizer:$cards_pay_version"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:$junit_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
 
