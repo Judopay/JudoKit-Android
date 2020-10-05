@@ -111,7 +111,7 @@ class PollingStatusViewModel(
 
     private fun payWithPayByBank() = viewModelScope.launch {
         val request = BankSaleRequest.Builder()
-            .setAmount(judo.amount.amount.toBigDecimalOrNull())
+            .setAmount(judo.amount.amount)
             .setMerchantPaymentReference(judo.reference.paymentReference)
             .setMerchantConsumerReference(judo.reference.consumerReference)
             .setJudoId(judo.judoId)

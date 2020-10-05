@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.math.BigDecimal
 
 @DisplayName("Testing Bank sale request builder")
 internal class BankSaleRequestTest {
@@ -15,7 +14,7 @@ internal class BankSaleRequestTest {
     @DisplayName("Given all mandatory fields provided, then build() should return BankSaleRequest object")
     fun buildSaleRequest() {
         assertEquals(
-            sut.setAmount(BigDecimal(1))
+            sut.setAmount("1")
                 .setMerchantConsumerReference("reference")
                 .setMerchantPaymentReference("reference")
                 .setJudoId("judo id")
@@ -87,7 +86,7 @@ internal class BankSaleRequestTest {
         }
     }
 
-    private fun getBankSaleRequest() = sut.setAmount(BigDecimal(1))
+    private fun getBankSaleRequest() = sut.setAmount("1")
         .setMerchantConsumerReference("reference")
         .setMerchantPaymentReference("reference")
         .setJudoId("judo id")

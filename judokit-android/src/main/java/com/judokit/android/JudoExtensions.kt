@@ -27,7 +27,6 @@ import com.judokit.android.api.model.request.TokenRequest
 import com.judokit.android.model.ApiEnvironment
 import com.judokit.android.ui.common.ANIMATION_DURATION_500
 import com.judokit.android.ui.error.JudoNotProvidedError
-import java.math.BigDecimal
 
 internal val Judo.apiBaseUrl: String
     get() = if (isSandboxed) ApiEnvironment.SANDBOX.host else ApiEnvironment.LIVE.host
@@ -225,7 +224,7 @@ fun Judo.toGooglePayRequest(
 
 fun Judo.toIdealSaleRequest(bic: String) =
     IdealSaleRequest.Builder()
-        .setAmount(BigDecimal(amount.amount))
+        .setAmount(amount.amount)
         .setMerchantConsumerReference(reference.consumerReference)
         .setMerchantPaymentReference(reference.paymentReference)
         .setPaymentMetadata(reference.metaData?.toMap())
@@ -235,7 +234,7 @@ fun Judo.toIdealSaleRequest(bic: String) =
 
 fun Judo.toBankSaleRequest() =
     BankSaleRequest.Builder()
-        .setAmount(amount.amount.toBigDecimalOrNull())
+        .setAmount(amount.amount)
         .setMerchantPaymentReference(reference.paymentReference)
         .setMerchantConsumerReference(reference.consumerReference)
         .setJudoId(judoId)
