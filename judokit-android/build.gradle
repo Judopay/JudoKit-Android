@@ -193,6 +193,7 @@ def addJacocoTask(variant) {
             '**/api/interceptor/ApiHeadersInterceptor.*',
             '**/api/model/request/Address.*',
             '**/api/model/request/BankSaleRequest.*',
+            '**/api/model/request/IdealSaleRequest.*',
             '**/api/model/response/CardVerificationResult.*',
             '**/api/model/response/Consumer.*',
             '**/api/model/response/OrderDetails.*',
