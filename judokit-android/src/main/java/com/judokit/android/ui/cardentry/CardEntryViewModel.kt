@@ -29,9 +29,12 @@ import com.judokit.android.ui.cardentry.model.FormFieldType
 import com.judokit.android.ui.cardentry.model.FormModel
 import com.judokit.android.ui.cardentry.model.InputModel
 import com.judokit.android.ui.common.ButtonState
+import com.judokit.android.ui.common.isDependencyPresent
 import com.judokit.android.ui.paymentmethods.toTokenizedCardEntity
 import kotlinx.coroutines.launch
 import retrofit2.await
+
+private const val PAY_CARDS_DEPENDENCY = "cards.pay.paycardsrecognizer.sdk.ScanCardIntent"
 
 data class CardEntryFragmentModel(val formModel: FormModel, val displayScanButton: Boolean = true)
 
@@ -301,7 +304,7 @@ class CardEntryViewModel(
             cardNetwork
         )
 
-        val shouldDisplayScanButton = cardNetwork == null
+        val shouldDisplayScanButton = cardNetwork == null && isDependencyPresent(PAY_CARDS_DEPENDENCY)
         model.postValue(CardEntryFragmentModel(formModel, shouldDisplayScanButton))
     }
 

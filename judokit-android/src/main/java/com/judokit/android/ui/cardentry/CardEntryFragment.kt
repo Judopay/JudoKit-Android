@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -115,12 +114,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         cancelButton.setOnClickListener(this::onUserCancelled)
-        try {
-            Class.forName("cards.pay.paycardsrecognizer.sdk.ScanCardIntent")
-            scanCardButton.setOnClickListener { handleScanCardButtonClicks() }
-        } catch (e: Exception) {
-            Log.d(this::class.qualifiedName, "Scanning library unavailable")
-        }
+        scanCardButton.setOnClickListener { handleScanCardButtonClicks() }
 
         formView.apply {
             onFormValidationStatusListener = { model, isValid ->
@@ -157,14 +151,9 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     }
 
     private fun updateWithModel(model: CardEntryFragmentModel) {
-        try {
-            Class.forName("cards.pay.paycardsrecognizer.sdk.ScanCardIntent")
-            if (model.displayScanButton) {
-                scanCardButton.visibility = View.VISIBLE
-            } else {
-                scanCardButton.visibility = View.GONE
-            }
-        } catch (e: Exception) {
+        if (model.displayScanButton) {
+            scanCardButton.visibility = View.VISIBLE
+        } else {
             scanCardButton.visibility = View.GONE
         }
         formView.model = model.formModel
