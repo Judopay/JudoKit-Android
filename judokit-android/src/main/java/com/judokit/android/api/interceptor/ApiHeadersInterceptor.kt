@@ -23,7 +23,7 @@ private const val SALE_API_VERSION = "2.0.0.0"
 private const val CACHE_CONTROL = "no-cache"
 private const val CUSTOM_UI_MODE = "Custom-UI"
 
-private const val SALE_ENDPOINT = "/order/bank"
+private const val BANK_ENDPOINT = "/order/bank"
 
 internal class ApiHeadersInterceptor(
     private val authorization: Authorization,
@@ -35,7 +35,7 @@ internal class ApiHeadersInterceptor(
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val path = chain.request().url().encodedPath()
-        val isSaleRequest = path.contains(SALE_ENDPOINT)
+        val isSaleRequest = path.startsWith(BANK_ENDPOINT)
         val headers = getHeaders(isSaleRequest)
         val request = chain.request()
             .newBuilder()
