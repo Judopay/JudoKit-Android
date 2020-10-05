@@ -190,7 +190,7 @@ def addJacocoTask(variant) {
             '**/model/UiConfiguration.*',
             '**/model/JudoError.*',
             '**/api/factory/**',
-            '**/api/interceptor/ApiHeadersInterceptor.*',
+            '**/api/interceptor/ApiHeadersInterceptor*',
             '**/api/model/request/Address.*',
             '**/api/model/request/BankSaleRequest.*',
             '**/api/model/request/IdealSaleRequest.*',
