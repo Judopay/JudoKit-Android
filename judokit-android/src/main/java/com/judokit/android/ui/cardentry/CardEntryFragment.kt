@@ -91,7 +91,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     // present it always expanded
     override fun onCreateDialog(savedInstanceState: Bundle?) =
         BottomSheetDialog(requireContext(), theme).apply {
-                this.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            this.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
 
     override fun onCreateView(
@@ -99,7 +99,6 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View = inflater.inflate(R.layout.card_entry_fragment, container, false)
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -179,7 +178,11 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     private fun dispatchPaymentMethodsApiResult(result: JudoApiCallResult<Receipt>) {
         when (result) {
             is JudoApiCallResult.Success -> persistTokenizedCard(result)
-            is JudoApiCallResult.Failure -> sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult(resources))
+            is JudoApiCallResult.Failure -> sharedViewModel.paymentResult.postValue(
+                result.toJudoPaymentResult(
+                    resources
+                )
+            )
         }
     }
 
