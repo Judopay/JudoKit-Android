@@ -102,12 +102,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_8"
         android:layout_marginEnd="@dimen/space_6"
-        app:layout_constraintBottom_toTopOf="@+id/submitButton"
+        app:layout_constraintBottom_toTopOf="@+id/bottomBarrier"
         app:layout_constraintEnd_toStartOf="@+id/postcodeTextInputLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/securityNumberTextInputLayout">
 
         <AutoCompleteTextView
+            android:padding="7dp"
             android:id="@+id/countryTextInputEditText"
             style="@style/JudoTheme.TextInputEditText"
             android:layout_width="match_parent"

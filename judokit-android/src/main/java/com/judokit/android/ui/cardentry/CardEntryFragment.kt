@@ -1,6 +1,5 @@
 package com.judokit.android.ui.cardentry
 
-import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import android.widget.FrameLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -91,24 +89,17 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     }
 
     // present it always expanded
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+    override fun onCreateDialog(savedInstanceState: Bundle?) =
         BottomSheetDialog(requireContext(), theme).apply {
-            setOnShowListener {
-                val bottomSheetDialog = dialog as BottomSheetDialog
-                val bottomSheet =
-                    bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout?
-                BottomSheetBehavior.from<FrameLayout?>(bottomSheet!!)
-                    .setState(BottomSheetBehavior.STATE_EXPANDED)
-            }
+                this.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.card_entry_fragment, container, false)
-    }
+    ): View = inflater.inflate(R.layout.card_entry_fragment, container, false)
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
