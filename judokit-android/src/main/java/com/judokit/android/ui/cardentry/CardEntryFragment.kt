@@ -178,11 +178,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     private fun dispatchPaymentMethodsApiResult(result: JudoApiCallResult<Receipt>) {
         when (result) {
             is JudoApiCallResult.Success -> persistTokenizedCard(result)
-            is JudoApiCallResult.Failure -> sharedViewModel.paymentResult.postValue(
-                result.toJudoPaymentResult(
-                    resources
-                )
-            )
+            is JudoApiCallResult.Failure -> sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult(resources))
         }
     }
 
