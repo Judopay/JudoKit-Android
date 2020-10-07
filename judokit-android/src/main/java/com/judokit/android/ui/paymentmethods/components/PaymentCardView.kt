@@ -1,5 +1,6 @@
 package com.judokit.android.ui.paymentmethods.components
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -18,6 +19,8 @@ import kotlinx.android.synthetic.main.payment_card_view.view.isExpiredTextView
 import kotlinx.android.synthetic.main.payment_card_view.view.networkIconImageView
 import kotlinx.android.synthetic.main.payment_card_view.view.paymentCardViewContainer
 
+private const val CARD_MASK = "•••• •••• ••••"
+
 class PaymentCardView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -34,9 +37,10 @@ class PaymentCardView @JvmOverloads constructor(
             update()
         }
 
+    @SuppressLint("SetTextI18n")
     private fun update() {
         cardNameTextView.text = model.name
-        cardNumberMaskTextView.text = resources.getString(R.string.mask, model.maskedNumber)
+        cardNumberMaskTextView.text = "$CARD_MASK ${model.maskedNumber}"
         expireDateTextView.text = model.expireDate
 
         val image = model.cardNetwork.lightIconImageResId
