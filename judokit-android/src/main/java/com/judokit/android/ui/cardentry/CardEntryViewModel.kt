@@ -234,26 +234,17 @@ class CardEntryViewModel(
     }
 
     private suspend fun performPreAuthPaymentRequest(addressBuilder: Address.Builder): JudoApiCallResult<Receipt> {
-        val request = PaymentRequest.Builder()
-            .setUniqueRequest(false)
-            .setYourPaymentReference(judo.reference.paymentReference)
-            .setAmount(judo.amount.amount)
-            .setCurrency(judo.amount.currency.name)
-            .setJudoId(judo.judoId)
-            .setYourConsumerReference(judo.reference.consumerReference)
-            .setYourPaymentMetaData(judo.reference.metaData?.toMap())
-            .setAddress(addressBuilder.build())
-            .setCardNumber(inputModel.cardNumber)
-            .setCv2(inputModel.securityNumber)
-            .setExpiryDate(inputModel.expirationDate)
-            .setPrimaryAccountDetails(judo.primaryAccountDetails)
-            .build()
-
+        val request = buildPaymentRequest(addressBuilder)
         return service.preAuthPayment(request).await()
     }
 
     private suspend fun performPaymentRequest(addressBuilder: Address.Builder): JudoApiCallResult<Receipt> {
-        val request = PaymentRequest.Builder()
+        val request = buildPaymentRequest(addressBuilder)
+        return service.payment(request).await()
+    }
+
+    private fun buildPaymentRequest(addressBuilder: Address.Builder): PaymentRequest {
+        return PaymentRequest.Builder()
             .setUniqueRequest(false)
             .setYourPaymentReference(judo.reference.paymentReference)
             .setAmount(judo.amount.amount)
@@ -267,8 +258,6 @@ class CardEntryViewModel(
             .setExpiryDate(inputModel.expirationDate)
             .setPrimaryAccountDetails(judo.primaryAccountDetails)
             .build()
-
-        return service.payment(request).await()
     }
 
     private suspend fun performSaveCardRequest(addressBuilder: Address.Builder): JudoApiCallResult<Receipt> {
