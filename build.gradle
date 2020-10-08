@@ -8,6 +8,7 @@ buildscript {
     ext.lifecycle_version = '2.2.0'
     ext.junit_version = '5.3.2'
     ext.room_version = '2.2.5'
+    ext.cards_pay_version = '1.1.0'
 
     repositories {
         mavenLocal()

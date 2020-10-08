@@ -72,5 +72,6 @@ dependencies {
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'com.readystatesoftware.chuck:library:1.1.0'
     implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
+    implementation 'cards.pay:paycardsrecognizer:1.1.0'
     ktlint 'com.pinterest:ktlint:0.37.2'
 }

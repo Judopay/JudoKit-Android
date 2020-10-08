@@ -75,3 +75,17 @@ fun showAlert(context: Context, message: String) {
  * @return True if there is at least one PBBA enabled CFI App available, false otherwise.
  */
 fun isBankingAppAvailable(context: Context) = PBBAAppUtils.isCFIAppAvailable(context)
+
+/**
+ * Helper function to check if a dependency is present using reflection.
+ * @param className name of a class in a dependency package.
+ * @return true if present, otherwise false
+ */
+internal fun isDependencyPresent(className: String) =
+    try {
+        Class.forName(className)
+        true
+    } catch (e: Throwable) {
+        Log.i("isDependencyPresent", "Dependency $className not available", e)
+        false
+    }
