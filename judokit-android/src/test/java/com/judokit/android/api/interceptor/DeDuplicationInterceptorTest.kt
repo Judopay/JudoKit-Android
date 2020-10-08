@@ -5,12 +5,12 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import okhttp3.Interceptor
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Protocol
 import okhttp3.Request
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
-import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -23,18 +23,18 @@ internal class DeDuplicationInterceptorTest {
     @Test
     fun shouldThrowDuplicateTransactionExceptionWhenDuplicate() {
 
-        val mediaType = MediaType.parse("application/json")
+        val mediaType = "application/json".toMediaTypeOrNull()
 
         val json =
             "{\"yourPaymentReference\": \"uniqueRef\", \"uniqueRequest\": true}"
-        val body = RequestBody.create(mediaType, json)
+        val body = json.toRequestBody(mediaType)
 
         val request = Request.Builder()
             .url("http://www.judopay.com")
             .post(body)
             .build()
 
-        val responseBody = ResponseBody.create(mediaType, "")
+        val responseBody = "".toResponseBody(mediaType)
         val response = Response.Builder()
             .request(request)
             .body(responseBody)
@@ -56,15 +56,15 @@ internal class DeDuplicationInterceptorTest {
     @DisplayName("Given request body not json, then proceed request")
     @Test
     fun shouldProcessWhenRequestBodyNotJson() {
-        val textHtmlMediaType = MediaType.parse("text/html")
-        val body = RequestBody.create(textHtmlMediaType, "")
+        val textHtmlMediaType = "text/html".toMediaTypeOrNull()
+        val body = "".toRequestBody(textHtmlMediaType)
         val request = Request.Builder()
             .url("http://www.judopay.com")
             .post(body)
             .build()
 
-        val mediaType = MediaType.parse("application/json")
-        val responseBody = ResponseBody.create(mediaType, "")
+        val mediaType = "application/json".toMediaTypeOrNull()
+        val responseBody = "".toResponseBody(mediaType)
         val response = Response.Builder()
             .request(request)
             .body(responseBody)
@@ -91,8 +91,8 @@ internal class DeDuplicationInterceptorTest {
             .url("http://www.judopay.com")
             .build()
 
-        val mediaType = MediaType.parse("application/json")
-        val responseBody = ResponseBody.create(mediaType, "")
+        val mediaType = "application/json".toMediaTypeOrNull()
+        val responseBody = "".toResponseBody(mediaType)
         val response = Response.Builder()
             .request(request)
             .body(responseBody)
