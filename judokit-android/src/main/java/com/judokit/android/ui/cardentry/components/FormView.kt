@@ -90,7 +90,6 @@ class FormView @JvmOverloads constructor(
     private fun setupFieldsFormatting() {
         setupExpirationDateFormatter()
         setupCountryFormatter()
-
         setupSecurityCodeFormatter()
         setupNumberFormatter()
     }

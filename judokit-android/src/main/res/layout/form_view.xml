@@ -102,7 +102,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_8"
         android:layout_marginEnd="@dimen/space_6"
-        app:layout_constraintBottom_toTopOf="@+id/submitButton"
+        app:layout_constraintBottom_toTopOf="@+id/bottomBarrier"
         app:layout_constraintEnd_toStartOf="@+id/postcodeTextInputLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/securityNumberTextInputLayout">
@@ -116,6 +116,7 @@
             android:focusable="false"
             android:longClickable="false"
             android:maxLines="1"
+            android:padding="@dimen/space_7"
             tools:ignore="LabelFor"
             tools:text="Country" />
     </com.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
@@ -161,8 +162,8 @@
         app:layout_constraintTop_toBottomOf="@+id/bottomBarrier" />
 
     <TextView
-        style="@style/JudoTheme.Caption"
         android:id="@+id/secureTransmissionTextView"
+        style="@style/JudoTheme.Caption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_8"
