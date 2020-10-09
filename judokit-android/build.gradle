@@ -18,14 +18,14 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "2.0.6"
 
         vectorDrawables.useSupportLibrary = true
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.judokit.android.test.CucumberRunner"
         consumerProguardFiles 'proguard-rules.pro'
 
         javaCompileOptions {
@@ -47,6 +47,11 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     testOptions.unitTests.all {
@@ -118,11 +123,20 @@ dependencies {
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
 
     // Robolectric environment
-    testImplementation 'androidx.test:core:1.2.0'
+    androidTestImplementation 'androidx.test:core-ktx:1.3.0'
+    // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test:rules:1.3.0'
 
     // Mocking framework
     testImplementation 'io.mockk:mockk:1.10.0'
     testImplementation 'android.arch.core:core-testing:1.1.1'
+
+    androidTestImplementation 'androidx.test:rules:1.3.0'
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
+    androidTestImplementation "io.cucumber:cucumber-android:4.8.4"
+    androidTestImplementation "io.cucumber:cucumber-picocontainer:4.8.1"
 
     ktlint 'com.pinterest:ktlint:0.37.2'
 }
