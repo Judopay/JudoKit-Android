@@ -22,6 +22,7 @@ import com.judokit.android.ui.cardentry.model.FormFieldType
 import com.judokit.android.ui.cardentry.model.FormModel
 import com.judokit.android.ui.cardentry.model.InputModel
 import com.judokit.android.ui.common.ButtonState
+import com.judokit.android.ui.common.isDependencyPresent
 import com.judokit.android.ui.paymentmethods.toTokenizedCardEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -81,6 +82,7 @@ internal class CardEntryViewModelTest {
 
         mockkStatic("retrofit2.KotlinExtensions")
         mockkStatic("com.judokit.android.ui.paymentmethods.MappersKt")
+        mockkStatic("com.judokit.android.ui.common.FunctionsKt")
         coEvery { repository.insert(card.toTokenizedCardEntity(application)) } returns mockk(relaxed = true)
 
         coEvery {
@@ -507,12 +509,42 @@ internal class CardEntryViewModelTest {
         sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
         sut.model.observeForever(modelMock)
 
-        sut.send(CardEntryAction.EnableFormFields(listOf(FormFieldType.NUMBER, FormFieldType.SECURITY_NUMBER)))
+        sut.send(
+            CardEntryAction.EnableFormFields(
+                listOf(
+                    FormFieldType.NUMBER,
+                    FormFieldType.SECURITY_NUMBER
+                )
+            )
+        )
 
         verify { modelMock.onChanged(capture(slots)) }
 
         val formModel = slots[1]
         assertTrue(formModel.displayScanButton)
+    }
+
+    @DisplayName("Given scan card dependency is not present, then should update model with displayScanButton false")
+    @Test
+    fun shouldUpdateModelWithDisplayScanButtonVisibleOnSelectedCardNetworkNullAndScanCardPresent() {
+        val slots = mutableListOf<CardEntryFragmentModel>()
+        every { isDependencyPresent("cards.pay.paycardsrecognizer.sdk.ScanCardIntent") } returns false
+        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut.model.observeForever(modelMock)
+
+        sut.send(
+            CardEntryAction.EnableFormFields(
+                listOf(
+                    FormFieldType.NUMBER,
+                    FormFieldType.SECURITY_NUMBER
+                )
+            )
+        )
+
+        verify { modelMock.onChanged(capture(slots)) }
+
+        val formModel = slots[1]
+        assertFalse(formModel.displayScanButton)
     }
 
     private fun getInputModel() = mockk<InputModel>(relaxed = true) {

@@ -46,8 +46,7 @@
     <string name="invalid_postcode">Invalid postcode entered</string>
     <string name="invalid_zip_code">Invalid ZIP code entered</string>
 
-    <string name="transaction_error_title">Oops! Something went wrong.</string>
-    <string name="transaction_unsuccessful">Transaction unsuccessful, please try again</string>
+    <string name="transaction_unsuccessful">Transaction unsuccessful - please try again</string>
     <string name="close">Close</string>
 
     <string name="no_connected_cards">You didn\'t connect any cards yet</string>
@@ -66,7 +65,6 @@
     <string name="default_chinaunionpay_card_title">My China Union Pay Card</string>
     <string name="default_discover_card_title">My Discover Card</string>
     <string name="default_dinnersclub_card_title">My Dinners Club Card</string>
-    <string name="mask">•••• •••• •••• %1$s</string>
 
     <string name="unable_to_process_request_error_desc">Sorry, we\'re currently unable to process this request.</string>
     <string name="unable_to_process_request_error_title">Unable to process</string>
@@ -105,7 +103,7 @@
 
     <string name="pay_by_bank">Pay by Bank app</string>
     <string name="retry">Retry</string>
-    <string name="transaction_successful">Transaction successful</string>
+    <string name="transaction_successful">Transaction success!</string>
     <string name="pay_by_bank_transaction">Pay by Bank app transaction</string>
 
 <!--    Google Pay not supported on device-->

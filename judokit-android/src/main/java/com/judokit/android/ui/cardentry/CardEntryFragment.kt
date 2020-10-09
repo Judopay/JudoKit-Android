@@ -104,7 +104,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         cancelButton.setOnClickListener(this::onUserCancelled)
-        scanCardButton.setOnClickListener(this::handleScanCardButtonClicks)
+        scanCardButton.setOnClickListener { handleScanCardButtonClicks() }
 
         formView.apply {
             onFormValidationStatusListener = { model, isValid ->
@@ -178,7 +178,11 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     private fun dispatchPaymentMethodsApiResult(result: JudoApiCallResult<Receipt>) {
         when (result) {
             is JudoApiCallResult.Success -> persistTokenizedCard(result)
-            is JudoApiCallResult.Failure -> sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult(resources))
+            is JudoApiCallResult.Failure -> sharedViewModel.paymentResult.postValue(
+                result.toJudoPaymentResult(
+                    resources
+                )
+            )
         }
     }
 
@@ -192,7 +196,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun handleScanCardButtonClicks(view: View) {
+    private fun handleScanCardButtonClicks() {
         val activity = requireActivity()
         val intent = ScanCardIntent.Builder(activity).build()
         activity.startActivityForResult(intent, SCAN_CARD_REQUEST_CODE)
