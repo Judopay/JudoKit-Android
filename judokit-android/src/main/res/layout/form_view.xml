@@ -108,7 +108,6 @@
         app:layout_constraintTop_toBottomOf="@+id/securityNumberTextInputLayout">
 
         <AutoCompleteTextView
-            android:padding="7dp"
             android:id="@+id/countryTextInputEditText"
             style="@style/JudoTheme.TextInputEditText"
             android:layout_width="match_parent"
@@ -117,6 +116,7 @@
             android:focusable="false"
             android:longClickable="false"
             android:maxLines="1"
+            android:padding="@dimen/space_7"
             tools:ignore="LabelFor"
             tools:text="Country" />
     </com.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
@@ -162,8 +162,8 @@
         app:layout_constraintTop_toBottomOf="@+id/bottomBarrier" />
 
     <TextView
-        style="@style/JudoTheme.Caption"
         android:id="@+id/secureTransmissionTextView"
+        style="@style/JudoTheme.Caption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_8"
