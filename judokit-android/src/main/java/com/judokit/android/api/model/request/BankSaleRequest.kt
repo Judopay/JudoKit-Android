@@ -2,12 +2,10 @@ package com.judokit.android.api.model.request
 
 import com.judokit.android.model.Country
 import com.judokit.android.model.Currency
-import com.judokit.android.requireNotNull
 import com.judokit.android.requireNotNullOrEmpty
-import java.math.BigDecimal
 
 data class BankSaleRequest(
-    val amount: BigDecimal,
+    val amount: String,
     val merchantPaymentReference: String,
     val merchantConsumerReference: String,
     val judoId: String,
@@ -23,7 +21,7 @@ data class BankSaleRequest(
     val currency: String = Currency.GBP.name
 ) {
     class Builder {
-        private var amount: BigDecimal? = null
+        private var amount: String? = null
         private var merchantPaymentReference: String? = null
         private var merchantConsumerReference: String? = null
         private var judoId: String? = null
@@ -33,7 +31,7 @@ data class BankSaleRequest(
         private var paymentMetadata: Map<String, String>? = null
         private var merchantRedirectUrl: String? = null
 
-        fun setAmount(amount: BigDecimal?) = apply { this.amount = amount }
+        fun setAmount(amount: String?) = apply { this.amount = amount }
 
         fun setMerchantPaymentReference(merchantPaymentReference: String?) =
             apply { this.merchantPaymentReference = merchantPaymentReference }
@@ -55,7 +53,7 @@ data class BankSaleRequest(
             apply { this.merchantRedirectUrl = merchantRedirectUrl }
 
         fun build(): BankSaleRequest {
-            val myAmount = requireNotNull(amount, "amount")
+            val myAmount = requireNotNullOrEmpty(amount, "amount")
             val myMerchantPaymentReference =
                 requireNotNullOrEmpty(merchantPaymentReference, "merchantPaymentReference")
             val myMerchantConsumerReference =

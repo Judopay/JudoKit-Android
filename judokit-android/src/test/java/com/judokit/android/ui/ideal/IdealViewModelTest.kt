@@ -35,7 +35,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import retrofit2.await
-import java.math.BigDecimal
 
 private const val BIC = "bic"
 private const val ORDER_ID = "orderId"
@@ -279,7 +278,7 @@ class IdealViewModelTest {
         .build()
 
     private fun buildSaleRequest() = IdealSaleRequest.Builder()
-        .setAmount(BigDecimal(judo.amount.amount))
+        .setAmount(judo.amount.amount)
         .setMerchantConsumerReference(judo.reference.consumerReference)
         .setMerchantPaymentReference(judo.reference.paymentReference)
         .setPaymentMetadata(judo.reference.metaData?.toMap())

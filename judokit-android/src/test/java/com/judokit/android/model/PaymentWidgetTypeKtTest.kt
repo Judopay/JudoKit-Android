@@ -135,6 +135,18 @@ internal class PaymentWidgetTypeKtTest {
         assertTrue(PaymentWidgetType.PRE_AUTH.isCardPaymentWidget)
     }
 
+    @DisplayName("Given isCardPaymentWidget is called, when widget type is REGISTER_CARD, then return true")
+    @Test
+    fun returnTrueOnIsCardPaymentWidgetCallWithRegisterCardType() {
+        assertTrue(PaymentWidgetType.REGISTER_CARD.isCardPaymentWidget)
+    }
+
+    @DisplayName("Given isCardPaymentWidget is called, when widget type is CHECK_CARD, then return true")
+    @Test
+    fun returnTrueOnIsCardPaymentWidgetCallWithCheckCardType() {
+        assertTrue(PaymentWidgetType.CHECK_CARD.isCardPaymentWidget)
+    }
+
     @DisplayName("Given isCardPaymentWidget is called, when widget type is GOOGLE_PAY, then return false")
     @Test
     fun returnFalseOnIsCardPaymentWidgetCallWithGooglePayType() {

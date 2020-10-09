@@ -1,12 +1,10 @@
 package com.judokit.android.api.model.request
 
 import com.judokit.android.model.Currency
-import com.judokit.android.requireNotNull
 import com.judokit.android.requireNotNullOrEmpty
-import java.math.BigDecimal
 
 data class IdealSaleRequest(
-    val amount: BigDecimal,
+    val amount: String,
     val merchantPaymentReference: String,
     val paymentMetadata: Map<String, String>?,
     val merchantConsumerReference: String,
@@ -18,14 +16,14 @@ data class IdealSaleRequest(
     val accountHolderName: String = "iDEAL User"
 ) {
     class Builder {
-        private var amount: BigDecimal? = null
+        private var amount: String? = null
         private var merchantPaymentReference: String? = null
         private var paymentMetadata: Map<String, String>? = null
         private var merchantConsumerReference: String? = null
         private var judoId: String? = null
         private var bic: String? = null
 
-        fun setAmount(amount: BigDecimal?) = apply { this.amount = amount }
+        fun setAmount(amount: String?) = apply { this.amount = amount }
 
         fun setMerchantPaymentReference(merchantPaymentReference: String?) =
             apply { this.merchantPaymentReference = merchantPaymentReference }
@@ -41,7 +39,7 @@ data class IdealSaleRequest(
         fun setBic(bic: String?) = apply { this.bic = bic }
 
         fun build(): IdealSaleRequest {
-            val myAmount = requireNotNull(amount, "amount")
+            val myAmount = requireNotNullOrEmpty(amount, "amount")
             val myMerchantPaymentReference =
                 requireNotNullOrEmpty(merchantPaymentReference, "merchantPaymentReference")
             val myMerchantConsumerReference =

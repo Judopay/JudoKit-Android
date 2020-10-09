@@ -17,7 +17,6 @@ import com.judokit.android.toMap
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.await
-import java.math.BigDecimal
 
 // view-model custom factory to inject the `judo` configuration object
 internal class IdealViewModelFactory(
@@ -94,7 +93,7 @@ class IdealViewModel(
     fun payWithSelectedBank() = viewModelScope.launch {
         isLoading.postValue(true)
         val request = IdealSaleRequest.Builder()
-            .setAmount(BigDecimal(judo.amount.amount))
+            .setAmount(judo.amount.amount)
             .setMerchantConsumerReference(judo.reference.consumerReference)
             .setMerchantPaymentReference(judo.reference.paymentReference)
             .setPaymentMetadata(judo.reference.metaData?.toMap())

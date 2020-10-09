@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.judokit.android.api.model.request.BankSaleRequest
+import com.judokit.android.api.model.request.IdealSaleRequest
 import com.judokit.android.model.ApiEnvironment
 import com.judokit.android.ui.error.JudoNotProvidedError
 import io.mockk.every
@@ -16,6 +18,21 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Test com.judokit.android.JudoExtensions")
 internal class JudoExtensionsTest {
+
+    val judo: Judo = mockk(relaxed = true) {
+        every { judoId } returns "123456789"
+        every { amount } returns mockk(relaxed = true) { every { amount } returns "1" }
+        every { reference } returns mockk(relaxed = true) {
+            every { consumerReference } returns "ref"
+            every { paymentReference } returns "ref"
+        }
+        every { pbbaConfiguration } returns mockk(relaxed = true) {
+            every { mobileNumber } returns "1"
+            every { emailAddress } returns "email"
+            every { appearsOnStatement } returns "appearsOnStatement"
+            every { deepLinkScheme } returns "redirectUrl"
+        }
+    }
 
     @DisplayName("Given judo.isSandboxed is true, then return ApiEnvironment.SANDBOX.host")
     @Test
@@ -137,5 +154,40 @@ internal class JudoExtensionsTest {
         val whitespaceString = "White space"
 
         assertEquals("Whitespace", whitespaceString.withWhitespacesRemoved)
+    }
+
+    @DisplayName("Given Judo.toIdealSaleRequest is called, then map Judo to IdealSaleRequest")
+    @Test
+    fun mapJudoToIdealSaleRequest() {
+        val expected = IdealSaleRequest.Builder().setAmount("1")
+            .setMerchantConsumerReference("ref")
+            .setMerchantPaymentReference("ref")
+            .setJudoId("123456789")
+            .setBic("bic")
+            .setPaymentMetadata(emptyMap())
+            .build()
+
+        val actual = judo.toIdealSaleRequest("bic")
+
+        assertEquals(expected, actual)
+    }
+
+    @DisplayName("Given Judo.toBankSaleRequest is called, then map Judo to BankSaleRequest")
+    @Test
+    fun mapJudoToBankSaleRequest() {
+        val expected = BankSaleRequest.Builder().setAmount("1")
+            .setMerchantConsumerReference("ref")
+            .setMerchantPaymentReference("ref")
+            .setJudoId("123456789")
+            .setPaymentMetadata(emptyMap())
+            .setMobileNumber("1")
+            .setEmailAddress("email")
+            .setAppearsOnStatement("appearsOnStatement")
+            .setMerchantRedirectUrl("redirectUrl")
+            .build()
+
+        val actual = judo.toBankSaleRequest()
+
+        assertEquals(expected, actual)
     }
 }

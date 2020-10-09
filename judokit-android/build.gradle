@@ -21,7 +21,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
-        versionName "2.0.5"
+        versionName "2.0.6"
 
         vectorDrawables.useSupportLibrary = true
 
@@ -117,6 +117,7 @@ dependencies {
     testImplementation "cards.pay:paycardsrecognizer:$cards_pay_version"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:$junit_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.0'
 
     // Robolectric environment
     testImplementation 'androidx.test:core:1.2.0'
@@ -191,9 +192,10 @@ def addJacocoTask(variant) {
             '**/model/UiConfiguration.*',
             '**/model/JudoError.*',
             '**/api/factory/**',
-            '**/api/interceptor/ApiHeadersInterceptor.*',
+            '**/api/AppMetaDataProvider.*',
             '**/api/model/request/Address.*',
             '**/api/model/request/BankSaleRequest.*',
+            '**/api/model/request/IdealSaleRequest.*',
             '**/api/model/response/CardVerificationResult.*',
             '**/api/model/response/Consumer.*',
             '**/api/model/response/OrderDetails.*',
