@@ -3,11 +3,13 @@ package com.judokit.android.api
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.os.Build
+import com.judokit.android.BuildConfig
 
 class AppMetaDataProvider(context: Context) {
 
     private val applicationContext = context.applicationContext
-    val appVersion: String
+    private val appVersion: String
         get() = try {
             val packageInfo = applicationContext.packageManager.getPackageInfo(applicationContext.packageName, 0)
             packageInfo.versionName
@@ -16,7 +18,7 @@ class AppMetaDataProvider(context: Context) {
             ""
         }
 
-    val appName: String
+    private val appName: String
         get() {
             val packageManager = applicationContext.packageManager
             var applicationInfo: ApplicationInfo? = null
@@ -26,4 +28,8 @@ class AppMetaDataProvider(context: Context) {
             }
             return (if (applicationInfo != null) packageManager.getApplicationLabel(applicationInfo) else "Unknown") as String
         }
+
+    val userAgent: String
+        get() =
+            """Android/${BuildConfig.VERSION_NAME} ${Build.MANUFACTURER} ${Build.MODEL} $appName $appVersion""".trimMargin()
 }

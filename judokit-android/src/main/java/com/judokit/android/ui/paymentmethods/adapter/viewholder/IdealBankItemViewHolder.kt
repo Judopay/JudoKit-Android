@@ -7,8 +7,6 @@ import com.judokit.android.ui.paymentmethods.adapter.BindableRecyclerViewHolder
 import com.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapterListener
 import com.judokit.android.ui.paymentmethods.adapter.model.IdealBankItem
 import com.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItemAction
-import com.judokit.android.ui.paymentmethods.adapter.model.bankResId
-import com.judokit.android.ui.paymentmethods.adapter.model.drawableResId
 import kotlinx.android.synthetic.main.ideal_bank_item.view.*
 
 class IdealBankItemViewHolder(view: View) :
@@ -17,8 +15,8 @@ class IdealBankItemViewHolder(view: View) :
 
     override fun bind(model: IdealBankItem, listener: PaymentMethodsAdapterListener?) {
         with(itemView) {
-            bankImage.setImageResource(model.idealBank.drawableResId())
-            bankName.text = resources.getString(model.idealBank.bankResId())
+            bankImage.setImageResource(model.idealBank.drawableResId)
+            bankName.text = model.idealBank.title
             val checkMark =
                 if (model.isSelected) R.drawable.ic_radio_on else R.drawable.ic_radio_off
             radioIconImageView.visibility = View.VISIBLE

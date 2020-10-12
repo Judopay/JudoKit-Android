@@ -24,6 +24,7 @@
         android:layout_marginTop="@dimen/space_20"
         android:layout_marginEnd="@dimen/space_24"
         android:text="@string/button_scan_card"
+        android:visibility="gone"
         app:icon="@drawable/ic_scan_card_16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
