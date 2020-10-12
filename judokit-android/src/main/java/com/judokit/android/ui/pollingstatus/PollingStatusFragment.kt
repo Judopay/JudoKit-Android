@@ -120,7 +120,7 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
 
     private fun handleBankSaleResponse(result: JudoApiCallResult.Success<BankSaleResponse>?) {
         val data = result?.data
-        if (data != null) {
+        if (data?.secureToken!=null) {
             sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Success(data.toJudoResult()))
             val intent = Intent(BR_PBBA_RESULT)
             intent.putExtra(
