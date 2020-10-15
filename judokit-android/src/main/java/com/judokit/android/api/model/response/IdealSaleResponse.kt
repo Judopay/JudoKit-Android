@@ -12,6 +12,6 @@ data class IdealSaleResponse(
     val consumer: BankConsumer,
     val judoId: String,
     val merchantSiteName: String,
-    val redirectUrl: String,
-    val merchantRedirectUrl: String
+    val redirectUrl: String?,
+    val merchantRedirectUrl: String?
 )

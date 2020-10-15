@@ -51,9 +51,13 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
             viewLifecycleOwner,
             Observer {
                 when (it) {
-                    is JudoApiCallResult.Success ->
-                        if (it.data != null) {
-                            idealWebView.authorize(it.data.redirectUrl, it.data.merchantRedirectUrl)
+                    is JudoApiCallResult.Success -> {
+                        val idealSaleResponse = it.data
+                        if (idealSaleResponse?.redirectUrl != null && idealSaleResponse.merchantRedirectUrl != null) {
+                            idealWebView.authorize(
+                                idealSaleResponse.redirectUrl,
+                                idealSaleResponse.merchantRedirectUrl
+                            )
                         } else {
                             sharedViewModel.paymentResult.postValue(
                                 JudoPaymentResult.Error(
@@ -64,6 +68,7 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
                             )
                             findNavController().popBackStack()
                         }
+                    }
                     is JudoApiCallResult.Failure -> if (it.error != null) {
                         sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
                         findNavController().popBackStack()

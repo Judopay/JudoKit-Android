@@ -17,7 +17,7 @@ data class BankSaleResponse(
     val merchantRedirectUrl: String,
     val merchantPaymentMetadata: String,
     val pbbaBrn: String,
-    val secureToken: String
+    val secureToken: String?
 )
 
 fun BankSaleResponse.toJudoResult() = JudoResult(
