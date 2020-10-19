@@ -25,7 +25,6 @@ android {
 
         vectorDrawables.useSupportLibrary = true
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'proguard-rules.pro'
 
         javaCompileOptions {
@@ -118,9 +117,6 @@ dependencies {
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:$junit_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.0'
-
-    // Robolectric environment
-    testImplementation 'androidx.test:core:1.2.0'
 
     // Mocking framework
     testImplementation 'io.mockk:mockk:1.10.0'

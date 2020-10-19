@@ -31,7 +31,7 @@ android {
         versionName "1.0-" + getGitHash()
         multiDexEnabled true
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.judokit.android.examples.test.CucumberRunner"
     }
 
     signingConfigs {
@@ -54,6 +54,14 @@ android {
             manifestPlaceholders = [crashlyticsCollectionEnabled:"false"]
         }
     }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -74,4 +82,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
     implementation 'cards.pay:paycardsrecognizer:1.1.0'
     ktlint 'com.pinterest:ktlint:0.37.2'
+
+    androidTestImplementation "androidx.test:core-ktx:$androidx_test_version"
+    androidTestImplementation "androidx.test:runner:$androidx_test_version"
+    androidTestImplementation "androidx.test:rules:$androidx_test_version"
+
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
+    androidTestImplementation "io.cucumber:cucumber-android:4.8.4"
 }
