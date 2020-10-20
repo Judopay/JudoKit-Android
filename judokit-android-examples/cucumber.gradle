@@ -1,0 +1,122 @@
+task runInstrumentationTests {
+    group "verification"
+    mustRunAfter "deleteExistingCucumberReports"
+    dependsOn "deleteExistingCucumberReports", "installDebug", "installDebugAndroidTest"
+    finalizedBy "downloadCucumberReports", "uninstallDebug"
+    doLast {
+        exec {
+            commandLine android.getAdbExecutable().toString(), 'shell', 'am', 'instrument', '-w', '-r', 'com.judokit.android.examples.test/com.judokit.android.examples.test.CucumberRunner'
+        }
+    }
+}
+
+/**
+ * Downloads all Cucumber reports from the connected device.
+ */
+task downloadCucumberReports {
+    group "Verification"
+    description "Downloads the rich Cucumber report files (HTML, XML, JSON) from the connected device"
+
+    doLast {
+        def deviceSourcePath = getCucumberDevicePath()
+        def localReportPath = new File(buildDir, "reports/cucumber")
+        if (!localReportPath.exists()) {
+            localReportPath.mkdirs()
+        }
+        if (!localReportPath.exists()) {
+            throw new GradleException("Could not create $localReportPath")
+        }
+        def adb = getAdbPath()
+        def files = getCucumberReportFileNames()
+        files.each { fileName ->
+            println fileName
+            exec {
+                commandLine adb, 'pull', "$deviceSourcePath/$fileName", localReportPath
+            }
+        }
+    }
+}
+
+/**
+ * Deletes existing Cucumber reports on the device.
+ */
+task deleteExistingCucumberReports {
+    group "Verification"
+    description "Removes the rich Cucumber report files (HTML, XML, JSON) from the connected device"
+    doLast {
+        def deviceSourcePath = getCucumberDevicePath()
+        def files = getCucumberReportFileNames()
+        files.each { fileName ->
+            def deviceFileName = deviceSourcePath + '/' + fileName
+            def output2 = executeAdb('if [ -d "' + deviceFileName + '" ]; then rm -r "' + deviceFileName + '"; else rm -r "' + deviceFileName + '" ; fi')
+            println output2
+        }
+    }
+}
+
+/**
+ * Sets the required permissions for Cucumber to write on the internal storage.
+ */
+task grantPermissions(dependsOn: 'installDebug') {
+    doLast {
+        def adb = getAdbPath()
+        // We only set the permissions for the main application
+        def mainPackageName = android.defaultConfig.applicationId
+        def readPermission = "android.permission.READ_EXTERNAL_STORAGE"
+        def writePermission = "android.permission.WRITE_EXTERNAL_STORAGE"
+        exec { commandLine adb, 'shell', 'pm', 'grant', mainPackageName, readPermission }
+        exec { commandLine adb, 'shell', 'pm', 'grant', mainPackageName, writePermission }
+    }
+}
+
+
+// ==================================================================
+// Utility methods
+// ==================================================================
+
+/**
+ * Utility method to get the full ADB path
+ * @return the absolute ADB path
+ */
+String getAdbPath() {
+    def adb = android.getAdbExecutable().toString()
+    if (adb.isEmpty()) {
+        throw new GradleException("Could not detect adb path")
+    }
+    return adb
+}
+
+/**
+ * Sometime adb returns '\r' character multiple times.
+ * @param s the original string returned by adb
+ * @return the fixed string without '\r'
+ */
+static def fixAdbOutput(String s) {
+    return s.replaceAll("[\r\n]+", "\n").trim()
+}
+
+/**
+ * Runs the adb tool
+ * @param program the program which is executed on the connected device
+ * @return the output of the adb tool
+ */
+def executeAdb(String program) {
+    def process = new ProcessBuilder(getAdbPath(), "shell", program).redirectErrorStream(true).start()
+    String text = new BufferedReader(new InputStreamReader(process.inputStream)).text
+    return fixAdbOutput(text)
+}
+
+/**
+ * The path which is used to store the Cucumber files.
+ * @return
+ */
+def getCucumberDevicePath() {
+    return 'sdcard/Android/data/com.judokit.android.examples/files/reports'
+}
+
+/**
+ * @return the known Cucumber report files/directories
+ */
+static def getCucumberReportFileNames() {
+    return ['cucumber.xml', 'cucumber.html', 'cucumber.json']
+}

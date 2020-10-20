@@ -8,3 +8,6 @@ local.properties
 .scannerwork
 credentials.json
 google-services.json
+keystore.file
+test-credentials.properties
+/judokit-android-examples/src/androidTest/assets/features/*
