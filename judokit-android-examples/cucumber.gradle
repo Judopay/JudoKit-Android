@@ -2,7 +2,7 @@ task runInstrumentationTests {
     group "verification"
     mustRunAfter "deleteExistingCucumberReports"
     dependsOn "deleteExistingCucumberReports", "installDebug", "installDebugAndroidTest"
-    finalizedBy "downloadCucumberReports", "uninstallDebug"
+    finalizedBy "downloadCucumberReports"
     doLast {
         exec {
             commandLine android.getAdbExecutable().toString(), 'shell', 'am', 'instrument', '-w', '-r', 'com.judokit.android.examples.test/com.judokit.android.examples.test.CucumberRunner'
@@ -16,7 +16,7 @@ task runInstrumentationTests {
 task downloadCucumberReports {
     group "Verification"
     description "Downloads the rich Cucumber report files (HTML, XML, JSON) from the connected device"
-
+    finalizedBy "uninstallDebug"
     doLast {
         def deviceSourcePath = getCucumberDevicePath()
         def localReportPath = new File(buildDir, "reports/cucumber")
