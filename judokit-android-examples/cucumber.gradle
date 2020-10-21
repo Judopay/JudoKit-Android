@@ -29,7 +29,6 @@ task downloadCucumberReports {
         def adb = getAdbPath()
         def files = getCucumberReportFileNames()
         files.each { fileName ->
-            println fileName
             exec {
                 commandLine adb, 'pull', "$deviceSourcePath/$fileName", localReportPath
             }
@@ -49,7 +48,6 @@ task deleteExistingCucumberReports {
         files.each { fileName ->
             def deviceFileName = deviceSourcePath + '/' + fileName
             def output2 = executeAdb('if [ -d "' + deviceFileName + '" ]; then rm -r "' + deviceFileName + '"; else rm -r "' + deviceFileName + '" ; fi')
-            println output2
         }
     }
 }
@@ -68,7 +66,6 @@ task grantPermissions(dependsOn: 'installDebug') {
         exec { commandLine adb, 'shell', 'pm', 'grant', mainPackageName, writePermission }
     }
 }
-
 
 // ==================================================================
 // Utility methods

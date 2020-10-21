@@ -225,7 +225,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
     }
 
     private fun toast(message: String) =
-        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(sampleAppConstraintLayout, message, Snackbar.LENGTH_SHORT).show()
 
     private fun setupRecyclerView() {
         val dividerItemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)

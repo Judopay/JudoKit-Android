@@ -6,8 +6,8 @@ import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import org.hamcrest.BaseMatcher
 import org.hamcrest.CoreMatchers.isA
 import org.hamcrest.Description
@@ -21,7 +21,7 @@ fun ViewInteraction.waitUntilVisible(timeout: Long = DEFAULT_TIMEOUT): ViewInter
     val endTime = startTime + timeout
     do {
         try {
-            check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+            check(matches(isDisplayed()))
             return this
         } catch (e: NoMatchingViewException) {
             Thread.sleep(TIMEOUT_INTERVAL)
