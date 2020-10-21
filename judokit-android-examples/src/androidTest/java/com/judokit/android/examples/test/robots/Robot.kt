@@ -55,7 +55,7 @@ class Robot {
     fun isVisible(screen: String) {
         val view = when (screen) {
             "Main" -> onView(withId(R.id.recyclerView))
-            "Receipt" -> onView(withText("JudoResult")).waitUntilVisible()
+            "Results" -> onView(withText("JudoResult")).waitUntilVisible()
             else -> onView(withId(R.id.recyclerView))
         }
         view.check(matches(isDisplayed()))
@@ -83,16 +83,6 @@ class Robot {
 
             onView(withText(R.string.secret_title)).perform(click())
             onView(withId(android.R.id.edit)).perform(replaceText(secret))
-            onView(withText("OK")).perform(click())
-
-            onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(
-                    actionOnItem<RecyclerView.ViewHolder>(
-                        hasDescendant(withText(R.string.card_networks_title)),
-                        click()
-                    )
-                )
-            onView(withText("Maestro")).perform(setChecked(true))
             onView(withText("OK")).perform(click())
 
             pressBack()
