@@ -4,6 +4,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
@@ -14,7 +15,9 @@ import com.judokit.android.examples.test.espresso.waitUntilVisible
 import com.judokit.android.examples.test.exceptions.ViewNotDefinedException
 import com.judokit.android.examples.test.robots.enum.View
 import com.judokit.android.examples.test.robots.enum.ViewType
+import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.not
 
 class CardEntryRobot {
@@ -39,7 +42,7 @@ class CardEntryRobot {
 
     fun tapOn(text: String, type: String) {
         when (type) {
-            ViewType.ITEM.value ->
+            ViewType.TEXT_FIELD.value ->
                 when (text) {
                     View.SECURE_CODE.value -> onView(withId(R.id.securityNumberTextInputEditText)).perform(
                         click()
@@ -64,7 +67,7 @@ class CardEntryRobot {
             View.SECURE_CODE.value -> onView(withId(R.id.securityNumberTextInputEditText))
             else -> onView(withId(R.id.numberTextInputEditText))
         }
-        view.perform(replaceText(textToEnter))
+        view.perform(click(), replaceText(textToEnter))
     }
 
     fun isVisible(view: String) {
@@ -96,5 +99,15 @@ class CardEntryRobot {
 
     fun isDisabled(button: String) {
         onView(withText(button)).check(matches(not(isEnabled())))
+    }
+
+    fun isValueOfFieldEqual(field: String, value: String) {
+        onView(ViewMatchers.withTagValue(CoreMatchers.`is`(field))).check(
+            matches(
+                withText(
+                    containsString(value)
+                )
+            )
+        )
     }
 }

@@ -48,10 +48,13 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
-    testOptions.unitTests.all {
-        jacoco {
-            includeNoLocationClasses = true
-            jacoco.excludes = ['jdk.internal.*']
+    testOptions {
+        animationsDisabled = true
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+                jacoco.excludes = ['jdk.internal.*']
+            }
         }
     }
 }

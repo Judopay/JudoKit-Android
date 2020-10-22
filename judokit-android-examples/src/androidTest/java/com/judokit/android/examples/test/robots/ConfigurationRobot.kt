@@ -10,7 +10,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.judokit.android.examples.R
 import java.util.Properties
 
-private const val TAG_REQUIRE_BASE_CONFIG = "@require-base-config"
+private const val TAG_REQUIRE_NON_3DS_CONFIG = "@require-non-3ds-config"
 
 private const val CREDENTIALS_FILE_NAME = "test-credentials.properties"
 private const val JUDO_ID = "judo-id"
@@ -29,7 +29,7 @@ class ConfigurationRobot {
     fun configure(tags: MutableCollection<String>) {
         onView(withId(R.id.action_settings)).perform(click())
         when {
-            tags.contains(TAG_REQUIRE_BASE_CONFIG) -> {
+            tags.contains(TAG_REQUIRE_NON_3DS_CONFIG) -> {
                 setJudoId()
                 setToken()
                 setSecret()

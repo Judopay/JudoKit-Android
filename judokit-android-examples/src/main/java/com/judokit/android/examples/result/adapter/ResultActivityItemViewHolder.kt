@@ -12,6 +12,7 @@ class ResultActivityItemViewHolder(view: View) :
 
     override fun bind(model: ResultItem, listener: ((ResultItem) -> Unit)?) = with(itemView) {
         nameTextView.text = model.title
+        valueTextView.tag = model.title
         valueTextView.text = model.value
 
         if (model.subResult != null) {

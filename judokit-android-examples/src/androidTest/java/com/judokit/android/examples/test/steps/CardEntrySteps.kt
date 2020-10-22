@@ -46,7 +46,7 @@ class CardEntrySteps {
         robot.press(button)
     }
 
-    @And("^I tap on the \"(.*?)\" (option|cell|item)$")
+    @And("^I tap on the \"(.*?)\" (option|cell|item|text field)$")
     fun tapOn(text: String, type: String) {
         robot.tapOn(text, type)
     }
@@ -61,7 +61,7 @@ class CardEntrySteps {
         // no-op
     }
 
-    @Then("^the (.*?) (?:screen|page|view) should be visible$")
+    @Then("^the (.*?) (?:screen|page|view|label) should be visible$")
     fun shouldBeVisible(screen: String) {
         robot.isVisible(screen)
     }
@@ -69,5 +69,10 @@ class CardEntrySteps {
     @Then("^the \"(.*?)\" (?:button|option) should be disabled$")
     fun shouldBeDisabled(button: String) {
         robot.isDisabled(button)
+    }
+
+    @And("^the \"(.*?)\" should be \"(.*?)\"$")
+    fun isValueOfFieldEqual(title: String, value: String) {
+        robot.isValueOfFieldEqual(title, value)
     }
 }

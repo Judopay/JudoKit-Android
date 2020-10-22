@@ -3,7 +3,8 @@ package com.judokit.android.examples.test.robots.enum
 enum class ViewType(val value: String) {
     OPTION("option"),
     CELL("cell"),
-    ITEM("item")
+    ITEM("item"),
+    TEXT_FIELD("text field")
 }
 
 enum class View(val value: String) {
