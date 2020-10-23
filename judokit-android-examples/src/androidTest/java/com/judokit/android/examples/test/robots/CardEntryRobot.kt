@@ -103,11 +103,7 @@ class CardEntryRobot {
 
     fun isValueOfFieldEqual(field: String, value: String) {
         onView(ViewMatchers.withTagValue(CoreMatchers.`is`(field))).check(
-            matches(
-                withText(
-                    containsString(value)
-                )
-            )
+            matches(withText(containsString(value)))
         )
     }
 }

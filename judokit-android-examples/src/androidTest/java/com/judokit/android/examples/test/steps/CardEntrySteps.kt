@@ -71,7 +71,7 @@ class CardEntrySteps {
         robot.isDisabled(button)
     }
 
-    @And("^the \"(.*?)\" should be \"(.*?)\"$")
+    @And("^the \"(.*?)\" (?:list|table) (?:item|option|cell) should contain \"(.*?)\"$")
     fun isValueOfFieldEqual(title: String, value: String) {
         robot.isValueOfFieldEqual(title, value)
     }
