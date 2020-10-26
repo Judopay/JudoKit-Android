@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
+apply from: 'cucumber.gradle'
 apply from: '../ktlint.gradle'
 
 def getGitHash = { ->
@@ -48,10 +49,10 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
-            manifestPlaceholders = [crashlyticsCollectionEnabled:"true"]
+            manifestPlaceholders = [crashlyticsCollectionEnabled: "true"]
         }
         debug {
-            manifestPlaceholders = [crashlyticsCollectionEnabled:"false"]
+            manifestPlaceholders = [crashlyticsCollectionEnabled: "false"]
         }
     }
 
@@ -61,6 +62,9 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    testOptions {
+        animationsDisabled = true
     }
 }
 
