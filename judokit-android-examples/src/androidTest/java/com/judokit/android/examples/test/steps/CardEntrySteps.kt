@@ -61,7 +61,7 @@ class CardEntrySteps {
         // no-op
     }
 
-    @Then("^the (.*?) (?:screen|page|view|label) should be visible$")
+    @Then("^the \"(.*?)\" (?:screen|page|view|label) should be visible$")
     fun shouldBeVisible(screen: String) {
         robot.isVisible(screen)
     }
