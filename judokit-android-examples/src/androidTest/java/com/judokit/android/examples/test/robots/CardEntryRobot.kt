@@ -4,6 +4,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.isPlatformPopup
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -50,6 +51,9 @@ class CardEntryRobot {
                     View.CARDHOLDER_NAME.value -> onView(withId(R.id.nameTextInputEditText)).perform(
                         click()
                     )
+                    View.COUNTRY.value -> onView(withId(R.id.countryTextInputEditText)).perform(
+                        click()
+                    )
                     else -> throw throw ViewNotDefinedException(
                         CardEntryRobot::class.qualifiedName,
                         text
@@ -65,6 +69,7 @@ class CardEntryRobot {
             View.CARDHOLDER_NAME.value -> onView(withId(R.id.nameTextInputEditText))
             View.EXPIRY_DATE.value -> onView(withId(R.id.expirationDateTextInputEditText))
             View.SECURE_CODE.value -> onView(withId(R.id.securityNumberTextInputEditText))
+            View.POST_CODE.value -> onView(withId(R.id.postcodeTextInputEditText))
             else -> onView(withId(R.id.numberTextInputEditText))
         }
         view.perform(click(), replaceText(textToEnter))
@@ -92,6 +97,12 @@ class CardEntryRobot {
                     isDescendantOfA(withId(R.id.securityNumberTextInputLayout))
                 )
             )
+            View.INVALID_POST_CODE.value -> onView(
+                allOf(
+                    withId(R.id.errorTextView),
+                    isDescendantOfA(withId(R.id.postcodeTextInputLayout))
+                )
+            )
             else -> throw ViewNotDefinedException(CardEntryRobot::class.qualifiedName, view)
         }
         matchedView.check(matches(isDisplayed()))
@@ -105,5 +116,18 @@ class CardEntryRobot {
         onView(ViewMatchers.withTagValue(CoreMatchers.`is`(field))).check(
             matches(withText(containsString(value)))
         )
+    }
+
+    fun selectFromDropdown(country: String) {
+        onView(withText(country)).inRoot(isPlatformPopup()).perform(click())
+    }
+
+    fun expectedValue(view: String, expectedValue: String) {
+        val matchedView = when (view) {
+            View.POST_CODE.value -> onView(withId(R.id.postcodeTextInputEditText))
+            View.SUBMIT_BUTTON.value -> onView(withId(R.id.submitButton))
+            else -> throw ViewNotDefinedException(CardEntryRobot::class.qualifiedName, view)
+        }
+        matchedView.check(matches(withText(expectedValue)))
     }
 }

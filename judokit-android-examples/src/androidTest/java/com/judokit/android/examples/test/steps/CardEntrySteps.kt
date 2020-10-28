@@ -6,6 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.core.app.launchActivity
 import com.judokit.android.JudoActivity
 import com.judokit.android.examples.SplashActivity
+import com.judokit.android.examples.test.espresso.clearSharedPreferences
 import com.judokit.android.examples.test.robots.CardEntryRobot
 import com.judokit.android.examples.test.robots.ConfigurationRobot
 import io.cucumber.core.api.Scenario
@@ -34,6 +35,7 @@ class CardEntrySteps {
     @After
     fun tearDown() {
         activityScenario.close()
+        clearSharedPreferences()
     }
 
     @Given("^I am on the (.*?) (?:screen|view|page)$")
@@ -74,5 +76,20 @@ class CardEntrySteps {
     @And("^the \"(.*?)\" (?:list|table) (?:item|option|cell) should contain \"(.*?)\"$")
     fun isValueOfFieldEqual(title: String, value: String) {
         robot.isValueOfFieldEqual(title, value)
+    }
+
+    @And("^I select \"(.*?)\" from the Country dropdown$")
+    fun selectFromDropdown(country: String) {
+        robot.selectFromDropdown(country)
+    }
+
+    @Then("^the value in \"(.*?)\" (?:text|input) field should be \"(.*?)\"$")
+    fun expectedInput(textField: String, expectedValue: String) {
+        robot.expectedValue(textField, expectedValue)
+    }
+
+    @Then("^the \"(.*?)\" label should be \"(.*?)\"$")
+    fun compareLabel(view: String, label: String) {
+        robot.expectedValue(view, label)
     }
 }

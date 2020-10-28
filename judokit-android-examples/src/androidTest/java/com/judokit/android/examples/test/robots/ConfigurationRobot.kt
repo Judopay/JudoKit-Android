@@ -1,16 +1,21 @@
 package com.judokit.android.examples.test.robots
 
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
+import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem
+import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
 import com.judokit.android.examples.R
 import java.util.Properties
 
-private const val TAG_REQUIRE_NON_3DS_CONFIG = "@require-non-3ds-config"
+private const val TAG_REQUIRE_NON_3DS = "@require-non-3ds-config"
+private const val TAG_REQUIRE_AVS = "@require-avs"
+private const val TAG_DISPLAY_AMOUNT_ON_BUTTON = "@display-amount-on-button"
 
 private const val CREDENTIALS_FILE_NAME = "test-credentials.properties"
 private const val JUDO_ID = "judo-id"
@@ -28,13 +33,17 @@ class ConfigurationRobot {
 
     fun configure(tags: MutableCollection<String>) {
         onView(withId(R.id.action_settings)).perform(click())
-        when {
-            tags.contains(TAG_REQUIRE_NON_3DS_CONFIG) -> {
-                setJudoId()
-                setToken()
-                setSecret()
+
+        setJudoId()
+        for (tag in tags) {
+            when (tag) {
+                TAG_REQUIRE_NON_3DS -> {
+                    setToken()
+                    setSecret()
+                }
+                TAG_REQUIRE_AVS -> setAvsEnabled()
+                TAG_DISPLAY_AMOUNT_ON_BUTTON -> setDisplayAmountOnButton()
             }
-            else -> setJudoId()
         }
         pressBack()
     }
@@ -58,5 +67,25 @@ class ConfigurationRobot {
         onView(withText(R.string.secret_title)).perform(click())
         onView(withId(android.R.id.edit)).perform(replaceText(judoId))
         onView(withText("OK")).perform(click())
+    }
+
+    private fun setAvsEnabled() {
+        onView(withId(androidx.preference.R.id.recycler_view))
+            .perform(
+                actionOnItem<RecyclerView.ViewHolder>(
+                    hasDescendant(withText(R.string.avs_title)),
+                    click()
+                )
+            )
+    }
+
+    private fun setDisplayAmountOnButton() {
+        onView(withId(androidx.preference.R.id.recycler_view))
+            .perform(
+                actionOnItem<RecyclerView.ViewHolder>(
+                    hasDescendant(withText(R.string.should_payment_button_display_amount_title)),
+                    click()
+                )
+            )
     }
 }
