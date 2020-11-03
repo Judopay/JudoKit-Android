@@ -3,7 +3,7 @@ package com.judokit.android.examples.test.steps
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.launchActivity
 import com.judokit.android.examples.feature.DemoFeatureListActivity
-import com.judokit.android.examples.test.espresso.clearSharedPreferences
+import com.judokit.android.examples.test.espresso.clearData
 import com.judokit.android.examples.test.robots.CardEntryRobot
 import com.judokit.android.examples.test.robots.ConfigurationRobot
 import io.cucumber.core.api.Scenario
@@ -20,7 +20,6 @@ class CardEntrySteps {
     private val configurationRobot = ConfigurationRobot()
     private val robot = CardEntryRobot()
 
-
     @Before("@card-entry")
     fun setUp(scenario: Scenario) {
         activityScenario = launchActivity()
@@ -32,7 +31,7 @@ class CardEntrySteps {
     @After("@card-entry")
     fun tearDown() {
         activityScenario.close()
-        clearSharedPreferences()
+        clearData()
     }
 
     @Given("^I am on the (.*?) (?:screen|view|page)$")

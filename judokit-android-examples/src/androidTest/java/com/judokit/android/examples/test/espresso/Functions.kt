@@ -49,7 +49,10 @@ fun setChecked(checked: Boolean) = object : ViewAction {
     }
 }
 
-fun clearSharedPreferences() {
+/**
+ * Helper function to clear shared preferences and delete database
+ */
+fun clearData() {
     val context = InstrumentationRegistry.getInstrumentation().targetContext
     val parentDirectory = context.filesDir.parentFile
     val sharedPreferencesFileNames = File(parentDirectory, "shared_prefs").list()
@@ -57,4 +60,5 @@ fun clearSharedPreferences() {
         context.getSharedPreferences(fileName.replace(".xml", ""), Context.MODE_PRIVATE).edit()
             .clear().commit()
     }
+    context.deleteDatabase("judo_database")
 }
