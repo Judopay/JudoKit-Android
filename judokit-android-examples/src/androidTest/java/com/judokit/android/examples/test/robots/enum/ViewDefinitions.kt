@@ -20,5 +20,5 @@ enum class View(val value: String) {
     CHECK_EXPIRY_DATE("Check expiry date"),
     CHECK_CVV("Check CVV"),
     INVALID_POST_CODE("Invalid postcode entered"),
-    SUBMIT_BUTTON("Submit button")
+    SUBMIT_BUTTON("Submit")
 }
