@@ -60,17 +60,17 @@ class CardEntrySteps {
         // no-op
     }
 
-    @Then("^the \"(.*?)\" (?:screen|page|view|label) should be visible$")
+    @Then("^the (.*?) (?:screen|page|view|label) should be visible$")
     fun shouldBeVisible(screen: String) {
         robot.isVisible(screen)
     }
 
-    @Then("^the \"(.*?)\" (?:button|option) should be disabled$")
+    @Then("^the (.*?) (?:button|option) should be disabled$")
     fun shouldBeDisabled(button: String) {
         robot.isDisabled(button)
     }
 
-    @And("^the \"(.*?)\" (?:list|table) (?:item|option|cell) should contain \"(.*?)\"$")
+    @And("^the (.*?) (?:list|table) (?:item|option|cell) should contain \"(.*?)\"$")
     fun isValueOfFieldEqual(title: String, value: String) {
         robot.isValueOfFieldEqual(title, value)
     }
@@ -80,12 +80,12 @@ class CardEntrySteps {
         robot.selectFromDropdown(country)
     }
 
-    @Then("^the value in \"(.*?)\" (?:text|input) field should be \"(.*?)\"$")
+    @Then("^the value in (.*?) (?:text|input) field should be \"(.*?)\"$")
     fun expectedInput(textField: String, expectedValue: String) {
         robot.expectedValue(textField, expectedValue)
     }
 
-    @Then("^the \"(.*?)\" title should be \"(.*?)\"$")
+    @Then("^the (.*?) button title should be \"(.*?)\"$")
     fun compareLabel(view: String, label: String) {
         robot.expectedValue(view, label)
     }
