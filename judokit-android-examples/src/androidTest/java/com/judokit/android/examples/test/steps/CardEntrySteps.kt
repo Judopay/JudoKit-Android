@@ -1,11 +1,8 @@
 package com.judokit.android.examples.test.steps
 
-import android.content.Intent
 import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.core.app.launchActivity
-import com.judokit.android.JudoActivity
-import com.judokit.android.examples.SplashActivity
+import com.judokit.android.examples.feature.DemoFeatureListActivity
 import com.judokit.android.examples.test.espresso.clearSharedPreferences
 import com.judokit.android.examples.test.robots.CardEntryRobot
 import com.judokit.android.examples.test.robots.ConfigurationRobot
@@ -19,20 +16,20 @@ import io.cucumber.java.en.When
 
 class CardEntrySteps {
 
-    private lateinit var activityScenario: ActivityScenario<JudoActivity>
+    private lateinit var activityScenario: ActivityScenario<DemoFeatureListActivity>
     private val configurationRobot = ConfigurationRobot()
     private val robot = CardEntryRobot()
 
-    @Before
+
+    @Before("@card-entry")
     fun setUp(scenario: Scenario) {
-        val intent = Intent(ApplicationProvider.getApplicationContext(), SplashActivity::class.java)
-        activityScenario = launchActivity(intent)
+        activityScenario = launchActivity()
 
         val tags = scenario.sourceTagNames
         configurationRobot.configure(tags)
     }
 
-    @After
+    @After("@card-entry")
     fun tearDown() {
         activityScenario.close()
         clearSharedPreferences()
@@ -88,7 +85,7 @@ class CardEntrySteps {
         robot.expectedValue(textField, expectedValue)
     }
 
-    @Then("^the \"(.*?)\" label should be \"(.*?)\"$")
+    @Then("^the \"(.*?)\" title should be \"(.*?)\"$")
     fun compareLabel(view: String, label: String) {
         robot.expectedValue(view, label)
     }
