@@ -79,31 +79,13 @@ class CardEntryRobot {
         val matchedView = when (view) {
             View.MAIN.value -> onView(withId(R.id.sampleAppConstraintLayout))
             View.RESULTS.value -> onView(withText("JudoResult")).waitUntilVisible()
-            View.INVALID_CARD_NUMBER.value -> onView(
-                allOf(
-                    withId(R.id.errorTextView),
-                    isDescendantOfA(withId(R.id.numberTextInputLayout))
-                )
-            )
-            View.CHECK_EXPIRY_DATE.value -> onView(
-                allOf(
-                    withId(R.id.errorTextView),
-                    isDescendantOfA(withId(R.id.expirationDateTextInputLayout))
-                )
-            )
-            View.CHECK_CVV.value -> onView(
-                allOf(
-                    withId(R.id.errorTextView),
-                    isDescendantOfA(withId(R.id.securityNumberTextInputLayout))
-                )
-            )
             View.INVALID_POST_CODE.value -> onView(
                 allOf(
                     withId(R.id.errorTextView),
                     isDescendantOfA(withId(R.id.postcodeTextInputLayout))
                 )
             )
-            else -> throw ViewNotDefinedException(CardEntryRobot::class.qualifiedName, view)
+            else -> onView(withText(view))
         }
         matchedView.check(matches(isDisplayed()))
     }

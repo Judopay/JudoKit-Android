@@ -2,6 +2,7 @@ package com.judokit.android.ui.cardentry.validation
 
 import com.judokit.android.R
 import com.judokit.android.model.CardNetwork
+import com.judokit.android.model.securityCodeInvalidResId
 import com.judokit.android.model.securityCodeLength
 import com.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judokit.android.ui.cardentry.model.FormFieldType
@@ -13,10 +14,14 @@ data class SecurityCodeValidator(
 
     override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult {
         val requiredLength = cardNetwork?.securityCodeLength ?: 3
-        val isValid = input.length == requiredLength
-        val message = if (!isValid && formFieldEvent == FormFieldEvent.FOCUS_CHANGED)
-            R.string.check_cvv else R.string.empty
+        val isLengthValid = input.length == requiredLength
+        val shouldDisplayMessage = !isLengthValid && formFieldEvent == FormFieldEvent.FOCUS_CHANGED
+        val message = if (shouldDisplayMessage) {
+            cardNetwork?.securityCodeInvalidResId ?: R.string.empty
+        } else {
+            R.string.empty
+        }
 
-        return ValidationResult(isValid, message)
+        return ValidationResult(isLengthValid, message)
     }
 }
