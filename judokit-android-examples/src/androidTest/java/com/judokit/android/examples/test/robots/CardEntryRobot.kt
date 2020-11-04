@@ -38,7 +38,7 @@ class CardEntryRobot {
     }
 
     fun press(button: String) {
-        onView(withText(button)).perform(click())
+        onView(withText(button)).waitUntilVisible().perform(click())
     }
 
     fun tapOn(text: String, type: String) {
