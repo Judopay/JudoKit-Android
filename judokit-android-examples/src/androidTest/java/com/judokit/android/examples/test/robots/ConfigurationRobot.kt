@@ -15,7 +15,7 @@ import java.util.Properties
 
 private const val TAG_REQUIRE_NON_3DS = "@require-non-3ds-config"
 private const val TAG_REQUIRE_AVS = "@require-avs"
-private const val TAG_DISPLAY_AMOUNT_ON_BUTTON = "@display-amount-on-button"
+private const val TAG_REQUIRE_BUTTON_AMOUNT = "@require-button-amount"
 
 private const val CREDENTIALS_FILE_NAME = "test-credentials.properties"
 private const val JUDO_ID = "judo-id"
@@ -42,7 +42,7 @@ class ConfigurationRobot {
                     setSecret()
                 }
                 TAG_REQUIRE_AVS -> setAvsEnabled()
-                TAG_DISPLAY_AMOUNT_ON_BUTTON -> setDisplayAmountOnButton()
+                TAG_REQUIRE_BUTTON_AMOUNT -> setDisplayAmountOnButton()
             }
         }
         pressBack()

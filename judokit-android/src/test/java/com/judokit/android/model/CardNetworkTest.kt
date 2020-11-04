@@ -240,6 +240,48 @@ internal class CardNetworkTest {
         assertEquals("CVV", CardNetwork.OTHER.securityCodeName)
     }
 
+    @DisplayName("Given securityCodeInvalidResId is called, when card network is AMEX, return Check your CID")
+    @Test
+    fun returnCheckYourCidWhenAmex() {
+        assertEquals(R.string.check_amex_security_code, CardNetwork.AMEX.securityCodeInvalidResId)
+    }
+
+    @DisplayName("Given securityCodeInvalidResId is called, when card network is VISA, return Check your CVV2")
+    @Test
+    fun returnCheckYourCvv2WhenVisa() {
+        assertEquals(R.string.check_visa_security_code, CardNetwork.VISA.securityCodeInvalidResId)
+    }
+
+    @DisplayName("Given securityCodeInvalidResId is called, when card network is MASTERCARD, return Check your CVC2")
+    @Test
+    fun returnCheckYourCvc2WhenMastercard() {
+        assertEquals(
+            R.string.check_mastercard_security_code,
+            CardNetwork.MASTERCARD.securityCodeInvalidResId
+        )
+    }
+
+    @DisplayName("Given securityCodeInvalidResId is called, when card network is CHINA_UNION_PAY, return Check your CVN2")
+    @Test
+    fun returnCheckYourCvn2WhenChinaUnionPay() {
+        assertEquals(
+            R.string.check_china_union_pay_security_code,
+            CardNetwork.CHINA_UNION_PAY.securityCodeInvalidResId
+        )
+    }
+
+    @DisplayName("Given securityCodeInvalidResId is called, when card network is JCB, return Check your CAV2")
+    @Test
+    fun returnCheckYourCav2WhenJCB() {
+        assertEquals(R.string.check_jcb_security_code, CardNetwork.JCB.securityCodeInvalidResId)
+    }
+
+    @DisplayName("Given securityCodeInvalidResId is called, when card network is OTHER, return Check your CVV")
+    @Test
+    fun returnCheckYourCvvWhenOther() {
+        assertEquals(R.string.check_cvv, CardNetwork.OTHER.securityCodeInvalidResId)
+    }
+
     @DisplayName("Given displayName is called, when card network is VISA, return Visa")
     @Test
     fun returnVisaDisplayNameWhenVisa() {
