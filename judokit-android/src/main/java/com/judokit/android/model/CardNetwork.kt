@@ -117,13 +117,13 @@ val CardNetwork.securityCodeName: String
 
 val CardNetwork.securityCodeInvalidResId: Int
     get() = when (this) {
-            CardNetwork.AMEX -> R.string.check_amex_security_code
-            CardNetwork.VISA -> R.string.check_visa_security_code
-            CardNetwork.MASTERCARD -> R.string.check_mastercard_security_code
-            CardNetwork.CHINA_UNION_PAY -> R.string.check_china_union_pay_security_code
-            CardNetwork.JCB -> R.string.check_jcb_security_code
-            else -> R.string.check_cvv
-        }
+        CardNetwork.AMEX -> R.string.check_amex_security_code
+        CardNetwork.VISA -> R.string.check_visa_security_code
+        CardNetwork.MASTERCARD -> R.string.check_mastercard_security_code
+        CardNetwork.CHINA_UNION_PAY -> R.string.check_china_union_pay_security_code
+        CardNetwork.JCB -> R.string.check_jcb_security_code
+        else -> R.string.check_cvv
+    }
 
 /**
  * Extension property that returns the display name of the card network.
