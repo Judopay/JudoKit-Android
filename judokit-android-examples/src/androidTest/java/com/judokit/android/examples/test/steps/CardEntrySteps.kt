@@ -1,11 +1,9 @@
 package com.judokit.android.examples.test.steps
 
-import android.content.Intent
 import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.core.app.launchActivity
-import com.judokit.android.JudoActivity
-import com.judokit.android.examples.SplashActivity
+import com.judokit.android.examples.feature.DemoFeatureListActivity
+import com.judokit.android.examples.test.espresso.clearData
 import com.judokit.android.examples.test.robots.CardEntryRobot
 import com.judokit.android.examples.test.robots.ConfigurationRobot
 import io.cucumber.core.api.Scenario
@@ -18,22 +16,22 @@ import io.cucumber.java.en.When
 
 class CardEntrySteps {
 
-    private lateinit var activityScenario: ActivityScenario<JudoActivity>
+    private lateinit var activityScenario: ActivityScenario<DemoFeatureListActivity>
     private val configurationRobot = ConfigurationRobot()
     private val robot = CardEntryRobot()
 
-    @Before
+    @Before("@card-entry")
     fun setUp(scenario: Scenario) {
-        val intent = Intent(ApplicationProvider.getApplicationContext(), SplashActivity::class.java)
-        activityScenario = launchActivity(intent)
+        activityScenario = launchActivity()
 
         val tags = scenario.sourceTagNames
         configurationRobot.configure(tags)
     }
 
-    @After
+    @After("@card-entry")
     fun tearDown() {
         activityScenario.close()
+        clearData()
     }
 
     @Given("^I am on the (.*?) (?:screen|view|page)$")
@@ -61,9 +59,14 @@ class CardEntrySteps {
         // no-op
     }
 
-    @Then("^the \"(.*?)\" (?:screen|page|view|label) should be visible$")
-    fun shouldBeVisible(screen: String) {
+    @Then("^the (.*?) (?:screen|page|view) should be visible$")
+    fun viewShouldBeVisible(screen: String) {
         robot.isVisible(screen)
+    }
+
+    @Then("^(?:the|an) \"(.*?)\" label should be visible$")
+    fun labelShouldBeVisible(label: String) {
+        robot.isVisible(label)
     }
 
     @Then("^the \"(.*?)\" (?:button|option) should be disabled$")
@@ -74,5 +77,20 @@ class CardEntrySteps {
     @And("^the \"(.*?)\" (?:list|table) (?:item|option|cell) should contain \"(.*?)\"$")
     fun isValueOfFieldEqual(title: String, value: String) {
         robot.isValueOfFieldEqual(title, value)
+    }
+
+    @And("^I select \"(.*?)\" from the Country dropdown$")
+    fun selectFromDropdown(country: String) {
+        robot.selectFromDropdown(country)
+    }
+
+    @Then("^the value in (.*?) (?:text|input) field should be \"(.*?)\"$")
+    fun expectedInput(textField: String, expectedValue: String) {
+        robot.expectedValue(textField, expectedValue)
+    }
+
+    @Then("^the (.*?) button title should be \"(.*?)\"$")
+    fun compareLabel(view: String, label: String) {
+        robot.expectedValue(view, label)
     }
 }

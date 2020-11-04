@@ -13,6 +13,7 @@ internal class SecurityCodeValidatorTest {
     @Test
     @DisplayName("Given the card network is unknown and input length is less than 3 when field looses focus, then a validation error should be returned with check cvv string")
     fun invalidateWhenLengthLessThanThreeOnFocusChanged() {
+        validator.cardNetwork = CardNetwork.OTHER
         assertEquals(
             validator.validate("12", FormFieldEvent.FOCUS_CHANGED),
             ValidationResult(false, R.string.check_cvv)
@@ -35,7 +36,7 @@ internal class SecurityCodeValidatorTest {
 
         assertEquals(
             validator.validate("123", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.check_cvv)
+            ValidationResult(false, R.string.check_amex_security_code)
         )
     }
 

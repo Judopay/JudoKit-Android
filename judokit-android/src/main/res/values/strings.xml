@@ -25,7 +25,7 @@
     <string name="card_holder_hint">Cardholder Name</string>
     <string name="country_hint">Country</string>
     <string name="post_code_hint">Postcode</string>
-    <string name="check_card_number">Check card number</string>
+    <string name="check_card_number">Invalid card number</string>
     <string name="error_unknown_not_supported">Unknown Card Network is not supported</string>
     <string name="error_visa_not_supported">Visa is not supported</string>
     <string name="error_mastercard_not_supported">Mastercard is not supported</string>
@@ -36,7 +36,12 @@
     <string name="error_jcb_not_supported">JCB is not supported</string>
     <string name="error_diners_club_not_supported">Diners Club is not supported</string>
     <string name="check_expiry_date">Check expiry date</string>
-    <string name="check_cvv">Check CVV</string>
+    <string name="check_cvv">Check your CVV</string>
+    <string name="check_amex_security_code">Check your CID</string>
+    <string name="check_visa_security_code">Check your CVV2</string>
+    <string name="check_jcb_security_code">Check your CAV2</string>
+    <string name="check_mastercard_security_code">Check your CVC2</string>
+    <string name="check_china_union_pay_security_code">Check your CVN2</string>
     <string name="error_country_should_not_be_empty">Please select a country</string>
     <string name="card_subtitle">%1$s Ending</string>
     <string name="expired">Expired</string>
