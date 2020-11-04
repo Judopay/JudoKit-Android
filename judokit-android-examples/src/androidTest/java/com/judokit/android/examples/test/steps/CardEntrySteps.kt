@@ -20,7 +20,6 @@ class CardEntrySteps {
     private val configurationRobot = ConfigurationRobot()
     private val robot = CardEntryRobot()
 
-
     @Before("@card-entry")
     fun setUp(scenario: Scenario) {
         activityScenario = launchActivity()
