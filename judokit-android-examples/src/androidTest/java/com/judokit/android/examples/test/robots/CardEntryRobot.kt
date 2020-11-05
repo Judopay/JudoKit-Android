@@ -85,6 +85,12 @@ class CardEntryRobot {
                     isDescendantOfA(withId(R.id.postcodeTextInputLayout))
                 )
             )
+            View.CHECK_EXPIRY_DATE.value -> onView(
+                allOf(
+                    withId(R.id.errorTextView),
+                    isDescendantOfA(withId(R.id.expirationDateTextInputLayout))
+                )
+            )
             else -> onView(withText(view))
         }
         matchedView.check(matches(isDisplayed()))

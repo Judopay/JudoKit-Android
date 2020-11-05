@@ -69,6 +69,7 @@ class PaymentSelectorView @JvmOverloads constructor(
                     elevation = 10f
                     translationZ = 10f
                 }
+                tag = paymentMethod.name
             }
             paymentSelectorContainer.addView(itemView)
             itemViews.add(itemView)

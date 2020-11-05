@@ -6,6 +6,7 @@ import io.cucumber.junit.CucumberOptions
 import java.io.File
 
 @CucumberOptions(
+    tags = ["@payment-methods", "~@require-google-pay-setup", "~@require-pbba-app"],
     features = ["features"],
     glue = ["com.judokit.android.examples.test.steps"]
 )
