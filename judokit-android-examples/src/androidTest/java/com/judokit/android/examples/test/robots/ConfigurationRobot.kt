@@ -24,8 +24,8 @@ private const val TAG_REQUIRE_AVS = "@require-avs"
 private const val TAG_REQUIRE_BUTTON_AMOUNT = "@require-button-amount"
 private const val TAG_DISABLE_SECURITY_CODE = "@disable-security-code"
 private const val TAG_ENABLE_CARD_PAYMENT_ONLY = "@enable-card-payment-only"
-private const val TAG_ENABLE_PBBA_ONLY = "@enable-pbba-only"
-private const val TAG_ENABLE_GOOGLE_PAY_ONLY = "@enable-google-pay-only"
+private const val TAG_ENABLE_PBBA = "@enable-pbba"
+private const val TAG_ENABLE_GOOGLE_PAY = "@enable-google-pay"
 private const val TAG_ENABLE_ALL_PAYMENT_METHODS = "@enable-all-payment-methods"
 private const val TAG_DISABLE_ALL_PAYMENT_METHODS = "@disable-all-payment-methods"
 private const val TAG_CURRENCY_GBP = "@currency-gbp"
@@ -75,23 +75,13 @@ class ConfigurationRobot {
                             Pair(PaymentMethod.PAY_BY_BANK, false)
                         )
                     )
-                TAG_ENABLE_PBBA_ONLY ->
+                TAG_ENABLE_PBBA ->
                     enablePaymentMethod(
-                        mapOf(
-                            Pair(PaymentMethod.CARD, false),
-                            Pair(PaymentMethod.IDEAL, false),
-                            Pair(PaymentMethod.GOOGLE_PAY, false),
-                            Pair(PaymentMethod.PAY_BY_BANK, true)
-                        )
+                        mapOf(Pair(PaymentMethod.PAY_BY_BANK, true))
                     )
-                TAG_ENABLE_GOOGLE_PAY_ONLY ->
+                TAG_ENABLE_GOOGLE_PAY ->
                     enablePaymentMethod(
-                        mapOf(
-                            Pair(PaymentMethod.CARD, false),
-                            Pair(PaymentMethod.IDEAL, false),
-                            Pair(PaymentMethod.GOOGLE_PAY, true),
-                            Pair(PaymentMethod.PAY_BY_BANK, false)
-                        )
+                        mapOf(Pair(PaymentMethod.GOOGLE_PAY, true))
                     )
                 TAG_DISABLE_ALL_PAYMENT_METHODS ->
                     enablePaymentMethod(
@@ -178,7 +168,6 @@ class ConfigurationRobot {
         paymentMethods.forEach {
             onView(withText(it.key.text)).perform(setChecked(it.value))
         }
-
         onView(withText("OK")).perform(click())
     }
 

@@ -7,6 +7,7 @@ import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.platform.app.InstrumentationRegistry
@@ -45,7 +46,9 @@ fun setChecked(checked: Boolean) = object : ViewAction {
     override fun getDescription(): String? = null
     override fun perform(uiController: UiController?, view: View) {
         val checkableView: Checkable = view as Checkable
-        checkableView.isChecked = checked
+        if (checked != checkableView.isChecked) {
+            click().perform(uiController, view)
+        }
     }
 }
 

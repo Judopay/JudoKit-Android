@@ -3,7 +3,7 @@ package com.judokit.android.examples.test.steps
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -21,7 +21,6 @@ import io.cucumber.java.Before
 import io.cucumber.java.en.Then
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.allOf
-import org.hamcrest.CoreMatchers.not
 
 class PaymentMethodsSteps {
 
@@ -55,20 +54,18 @@ class PaymentMethodsSteps {
         )
     }
 
-    @Then("^(.*?) payment method should be (?:visible|invisible)$")
-    fun paymentMethodVisibility(paymentMethod: String) {
-        try {
-            val matchedView = onView(withTagValue(`is`(paymentMethod)))
+    @Then("^(.*?) payment method should be (visible|invisible)$")
+    fun paymentMethodVisibility(paymentMethod: String, visibility: String) {
+        val matchedView = onView(withTagValue(`is`(paymentMethod)))
+        if (visibility == "visible") {
             matchedView.check(matches((isDisplayed())))
-        } catch (e: NoMatchingViewException) {
+        } else {
+            matchedView.check(doesNotExist())
         }
     }
 
     @Then("^the payment method selector should be invisible$")
     fun paymentMethodSelectorInvisible() {
-        try {
-            onView(withId(R.id.slider)).check(matches((not(isDisplayed()))))
-        } catch (e: NoMatchingViewException) {
-        }
+        onView(withId(R.id.slider)).check(doesNotExist())
     }
 }
