@@ -3,6 +3,7 @@ package com.judokit.android.examples.feature.tokenpayment
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
@@ -13,9 +14,11 @@ import com.judokit.android.JudoActivity
 import com.judokit.android.PAYMENT_CANCELLED
 import com.judokit.android.PAYMENT_ERROR
 import com.judokit.android.PAYMENT_SUCCESS
+import com.judokit.android.api.JudoApiService
 import com.judokit.android.api.factory.JudoApiServiceFactory
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.Receipt
+import com.judokit.android.api.model.response.toCardVerificationModel
 import com.judokit.android.api.model.response.toJudoPaymentResult
 import com.judokit.android.examples.R
 import com.judokit.android.examples.feature.JUDO_PAYMENT_WIDGET_REQUEST_CODE
@@ -27,6 +30,8 @@ import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.code
 import com.judokit.android.model.toIntent
 import com.judokit.android.toTokenRequest
+import com.judokit.android.ui.cardverification.components.ThreeDSOneCardVerificationView
+import com.judokit.android.ui.cardverification.components.ThreeDSOneCompletionCallback
 import com.judokit.android.ui.common.ButtonState
 import kotlinx.android.synthetic.main.activity_demo_token_payment.*
 import retrofit2.Call
@@ -45,6 +50,7 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var cardToken: String
+    private lateinit var service: JudoApiService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +60,7 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
         val judo = intent.getParcelableExtra<Judo>(JUDO_OPTIONS)
             ?: throw IllegalStateException("Judo object is required")
 
-        val service = JudoApiServiceFactory.createApiService(this, judo)
+        service = JudoApiServiceFactory.createApiService(this, judo)
 
         tokenPaymentButton.state = ButtonState.Disabled(R.string.token_payment)
         preAuthTokenPaymentButton.state = ButtonState.Disabled(R.string.preauth_token_payment)
@@ -115,10 +121,43 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
         call: Call<JudoApiCallResult<Receipt>>,
         response: Response<JudoApiCallResult<Receipt>>
     ) {
-        when (val result = response.body()?.toJudoPaymentResult(resources)) {
-            is JudoPaymentResult.Error,
-            is JudoPaymentResult.Success -> {
-                setResult(result.code, result.toIntent())
+        when (val apiResult = response.body()) {
+            is JudoApiCallResult.Success -> {
+                val receipt = apiResult.data
+                if (receipt != null) {
+                    if (receipt.is3dSecureRequired) {
+                        this.runOnUiThread {
+                            ThreeDSOneCardVerificationView(
+                                this,
+                                service
+                            ).show(
+                                receipt.toCardVerificationModel(),
+                                object : ThreeDSOneCompletionCallback {
+                                    override fun onSuccess(success: JudoPaymentResult) {
+                                        setResult(success.code, success.toIntent())
+                                        finish()
+                                    }
+
+                                    override fun onFailure(error: JudoPaymentResult) {
+                                        setResult(error.code, error.toIntent())
+                                        finish()
+                                    }
+                                })
+                        }
+                    } else {
+                        setResult(
+                            apiResult.toJudoPaymentResult(resources).code,
+                            apiResult.toJudoPaymentResult(resources).toIntent()
+                        )
+                        finish()
+                    }
+                }
+            }
+            is JudoApiCallResult.Failure -> {
+                setResult(
+                    apiResult.toJudoPaymentResult(resources).code,
+                    apiResult.toJudoPaymentResult(resources).toIntent()
+                )
                 finish()
             }
         }

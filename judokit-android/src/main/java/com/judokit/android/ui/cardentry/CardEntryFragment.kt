@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -22,6 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.judokit.android.JudoSharedViewModel
 import com.judokit.android.R
 import com.judokit.android.SCAN_CARD_REQUEST_CODE
+import com.judokit.android.api.JudoApiService
 import com.judokit.android.api.error.toJudoError
 import com.judokit.android.api.factory.JudoApiServiceFactory
 import com.judokit.android.api.model.response.JudoApiCallResult
@@ -37,13 +37,15 @@ import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.model.isCardPaymentWidget
 import com.judokit.android.model.isPaymentMethodsWidget
 import com.judokit.android.ui.cardentry.model.FormFieldType
+import com.judokit.android.ui.cardverification.components.ThreeDSOneCardVerificationView
+import com.judokit.android.ui.cardverification.components.ThreeDSOneCompletionCallback
 import com.judokit.android.ui.paymentmethods.CARD_NETWORK
-import com.judokit.android.ui.paymentmethods.CARD_VERIFICATION
 import kotlinx.android.synthetic.main.card_entry_fragment.*
 
 class CardEntryFragment : BottomSheetDialogFragment() {
 
     private lateinit var viewModel: CardEntryViewModel
+    private lateinit var service: JudoApiService
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
 
     override fun getTheme(): Int = R.style.JudoTheme_BottomSheetDialogTheme
@@ -54,7 +56,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         val application = requireActivity().application
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
-        val service = JudoApiServiceFactory.createApiService(application, judo)
+        service = JudoApiServiceFactory.createApiService(application, judo)
         val selectedCardNetwork = arguments?.getParcelable<CardNetwork>(CARD_NETWORK)
         val factory = CardEntryViewModelFactory(
             judo,
@@ -232,12 +234,22 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     private fun handleSuccess(receipt: Receipt?) {
         if (receipt != null) {
             if (receipt.is3dSecureRequired) {
-                findNavController().navigate(
-                    R.id.action_cardEntryFragment_to_cardVerificationFragment,
-                    bundleOf(
-                        CARD_VERIFICATION to receipt.toCardVerificationModel()
-                    )
-                )
+                requireActivity().runOnUiThread {
+                    ThreeDSOneCardVerificationView(
+                        requireContext(),
+                        service
+                    ).show(
+                        receipt.toCardVerificationModel(),
+                        object : ThreeDSOneCompletionCallback {
+                            override fun onSuccess(success: JudoPaymentResult) {
+                                sharedViewModel.paymentResult.postValue((success))
+                            }
+
+                            override fun onFailure(error: JudoPaymentResult) {
+                                sharedViewModel.paymentResult.postValue((error))
+                            }
+                        })
+                }
             } else {
                 sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(receipt.toJudoResult()))
             }

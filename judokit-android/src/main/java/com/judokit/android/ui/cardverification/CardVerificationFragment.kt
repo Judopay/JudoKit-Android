@@ -79,14 +79,14 @@ class CardVerificationFragment : Fragment(), WebViewCallback {
 
         val cardVerificationModel =
             arguments?.getParcelable<CardVerificationModel>(CARD_VERIFICATION)
-        cardVerificationModel?.let {
-            cardVerificationWebView.authorize(
-                it.acsUrl,
-                it.md,
-                it.paReq,
-                it.receiptId
-            )
-        }
+//        cardVerificationModel?.let {
+//            cardVerificationWebView.authorize(
+//                it.acsUrl,
+//                it.md,
+//                it.paReq,
+//                it.receiptId
+//            )
+//        }
     }
 
     override fun send(action: WebViewAction) {

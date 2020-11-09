@@ -9,6 +9,7 @@ import android.webkit.WebView
 import com.google.gson.Gson
 import com.judokit.android.BuildConfig
 import com.judokit.android.api.model.response.CardVerificationResult
+import com.judokit.android.model.CardVerificationModel
 import com.judokit.android.ui.cardverification.CardVerificationWebViewClient
 import com.judokit.android.ui.cardverification.WebViewCallback
 import com.judokit.android.ui.cardverification.model.WebViewAction
@@ -57,21 +58,16 @@ class CardVerificationWebView @JvmOverloads constructor(
      * @param paReq parameter submitted to the acsUrl
      * @param receiptId the receipt ID of the transaction
      */
-    fun authorize(
-        acsUrl: String?,
-        md: String?,
-        paReq: String?,
-        receiptId: String?
-    ) {
+    fun authorize(model: CardVerificationModel?) {
         try {
             val postData: String = format(
                 Locale.ENGLISH, "MD=%s&TermUrl=%s&PaReq=%s",
-                encode(md, CHARSET), encode(REDIRECT_URL, CHARSET), encode(paReq, CHARSET)
+                encode(model?.md, CHARSET), encode(REDIRECT_URL, CHARSET), encode(model?.paReq, CHARSET)
             )
-            this.receiptId = receiptId ?: ""
+            this.receiptId = model?.receiptId ?: ""
             val webViewClient = CardVerificationWebViewClient(JS_NAMESPACE, REDIRECT_URL)
             setWebViewClient(webViewClient)
-            postUrl(acsUrl, postData.toByteArray(StandardCharsets.UTF_8))
+            postUrl(model?.acsUrl, postData.toByteArray(StandardCharsets.UTF_8))
         } catch (throwable: UnsupportedEncodingException) {
             throw Show3dSecureWebViewError(throwable)
         }

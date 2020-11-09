@@ -17,6 +17,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.judokit.android.JudoSharedAction
 import com.judokit.android.JudoSharedViewModel
 import com.judokit.android.R
+import com.judokit.android.api.JudoApiService
 import com.judokit.android.api.error.ApiError
 import com.judokit.android.api.error.toJudoError
 import com.judokit.android.api.factory.JudoApiServiceFactory
@@ -30,6 +31,8 @@ import com.judokit.android.db.repository.TokenizedCardRepository
 import com.judokit.android.judo
 import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.model.PaymentWidgetType
+import com.judokit.android.ui.cardverification.components.ThreeDSOneCardVerificationView
+import com.judokit.android.ui.cardverification.components.ThreeDSOneCompletionCallback
 import com.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
 import com.judokit.android.ui.ideal.JUDO_IDEAL_BANK
 import com.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapter
@@ -58,6 +61,7 @@ data class PaymentMethodsModel(
 class PaymentMethodsFragment : Fragment() {
 
     private lateinit var viewModel: PaymentMethodsViewModel
+    private lateinit var service: JudoApiService
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -87,7 +91,7 @@ class PaymentMethodsFragment : Fragment() {
         val cardDate = CardDate()
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
-        val service = JudoApiServiceFactory.createApiService(application, judo)
+        service = JudoApiServiceFactory.createApiService(application, judo)
         val factory =
             PaymentMethodsViewModelFactory(cardDate, cardRepository, service, application, judo)
 
@@ -182,12 +186,22 @@ class PaymentMethodsFragment : Fragment() {
     private fun handleSuccess(receipt: Receipt?) {
         if (receipt != null)
             if (receipt.is3dSecureRequired) {
-                findNavController().navigate(
-                    R.id.action_paymentMethodsFragment_to_cardVerificationFragment,
-                    bundleOf(
-                        CARD_VERIFICATION to receipt.toCardVerificationModel()
-                    )
-                )
+                requireActivity().runOnUiThread {
+                    ThreeDSOneCardVerificationView(
+                        requireContext(),
+                        service
+                    ).show(
+                        receipt.toCardVerificationModel(),
+                        object : ThreeDSOneCompletionCallback {
+                            override fun onSuccess(success: JudoPaymentResult) {
+                                sharedViewModel.paymentResult.postValue((success))
+                            }
+
+                            override fun onFailure(error: JudoPaymentResult) {
+                                sharedViewModel.paymentResult.postValue((error))
+                            }
+                        })
+                }
             } else {
                 sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(receipt.toJudoResult()))
             }
