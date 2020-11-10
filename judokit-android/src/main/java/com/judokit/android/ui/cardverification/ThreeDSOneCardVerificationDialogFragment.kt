@@ -57,7 +57,7 @@ class ThreeDSOneCardVerificationDialogFragment constructor(
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        //Required to make the dialog fullscreen
+        // Required to make the dialog fullscreen
         requireDialog().window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
