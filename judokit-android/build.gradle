@@ -179,6 +179,7 @@ def addJacocoTask(variant) {
             '**/*Entity.*',
             '**/*Functions.*',
             '**/*Constants.*',
+            '**/*WebViewClient.*',
             '**/adapter/**',
             '**/components/**',
             '**/formatting/**',
