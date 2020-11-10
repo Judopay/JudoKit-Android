@@ -3,7 +3,6 @@ package com.judokit.android.examples.feature.tokenpayment
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
@@ -30,8 +29,8 @@ import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.code
 import com.judokit.android.model.toIntent
 import com.judokit.android.toTokenRequest
-import com.judokit.android.ui.cardverification.components.ThreeDSOneCardVerificationView
-import com.judokit.android.ui.cardverification.components.ThreeDSOneCompletionCallback
+import com.judokit.android.ui.cardverification.ThreeDSOneCardVerificationDialogFragment
+import com.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
 import com.judokit.android.ui.common.ButtonState
 import kotlinx.android.synthetic.main.activity_demo_token_payment.*
 import retrofit2.Call
@@ -126,24 +125,22 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
                 val receipt = apiResult.data
                 if (receipt != null) {
                     if (receipt.is3dSecureRequired) {
-                        this.runOnUiThread {
-                            ThreeDSOneCardVerificationView(
-                                this,
-                                service
-                            ).show(
-                                receipt.toCardVerificationModel(),
-                                object : ThreeDSOneCompletionCallback {
-                                    override fun onSuccess(success: JudoPaymentResult) {
-                                        setResult(success.code, success.toIntent())
-                                        finish()
-                                    }
+                        ThreeDSOneCardVerificationDialogFragment(
+                            service,
+                            receipt.toCardVerificationModel(),
+                            object :
+                                ThreeDSOneCompletionCallback {
+                                override fun onSuccess(success: JudoPaymentResult) {
+                                    setResult(success.code, success.toIntent())
+                                    finish()
+                                }
 
-                                    override fun onFailure(error: JudoPaymentResult) {
-                                        setResult(error.code, error.toIntent())
-                                        finish()
-                                    }
-                                })
-                        }
+                                override fun onFailure(error: JudoPaymentResult) {
+                                    setResult(error.code, error.toIntent())
+                                    finish()
+                                }
+                            }
+                        ).show(supportFragmentManager, "3DS_VERIFICATION_DIALOG")
                     } else {
                         setResult(
                             apiResult.toJudoPaymentResult(resources).code,
@@ -181,7 +178,7 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
                     ButtonState.Disabled(R.string.preauth_token_payment)
             }
             is ActivityState.PayWithPreAuthToken -> {
-                tokenPaymentButton.state = ButtonState.Disabled(R.string.preauth_token_payment)
+                tokenPaymentButton.state = ButtonState.Disabled(R.string.token_payment)
                 preAuthTokenPaymentButton.state = ButtonState.Loading
             }
         }

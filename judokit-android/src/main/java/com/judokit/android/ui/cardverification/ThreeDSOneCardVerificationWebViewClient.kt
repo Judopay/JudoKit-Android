@@ -6,7 +6,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.judokit.android.ui.cardverification.model.WebViewAction
 
-class CardVerificationWebViewClient(
+class ThreeDSOneCardVerificationWebViewClient(
     private val javaScriptNamespace: String?,
     private val redirectUrl: String?
 ) : WebViewClient() {

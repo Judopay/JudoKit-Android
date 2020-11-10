@@ -37,8 +37,9 @@ import com.judokit.android.model.JudoPaymentResult
 import com.judokit.android.model.isCardPaymentWidget
 import com.judokit.android.model.isPaymentMethodsWidget
 import com.judokit.android.ui.cardentry.model.FormFieldType
-import com.judokit.android.ui.cardverification.components.ThreeDSOneCardVerificationView
-import com.judokit.android.ui.cardverification.components.ThreeDSOneCompletionCallback
+import com.judokit.android.ui.cardverification.THREE_DS_ONE_DIALOG_FRAGMENT_TAG
+import com.judokit.android.ui.cardverification.ThreeDSOneCardVerificationDialogFragment
+import com.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
 import com.judokit.android.ui.paymentmethods.CARD_NETWORK
 import kotlinx.android.synthetic.main.card_entry_fragment.*
 
@@ -234,22 +235,20 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     private fun handleSuccess(receipt: Receipt?) {
         if (receipt != null) {
             if (receipt.is3dSecureRequired) {
-                requireActivity().runOnUiThread {
-                    ThreeDSOneCardVerificationView(
-                        requireContext(),
-                        service
-                    ).show(
-                        receipt.toCardVerificationModel(),
-                        object : ThreeDSOneCompletionCallback {
-                            override fun onSuccess(success: JudoPaymentResult) {
-                                sharedViewModel.paymentResult.postValue((success))
-                            }
+                ThreeDSOneCardVerificationDialogFragment(
+                    service,
+                    receipt.toCardVerificationModel(),
+                    object :
+                        ThreeDSOneCompletionCallback {
+                        override fun onSuccess(success: JudoPaymentResult) {
+                            sharedViewModel.paymentResult.postValue((success))
+                        }
 
-                            override fun onFailure(error: JudoPaymentResult) {
-                                sharedViewModel.paymentResult.postValue((error))
-                            }
-                        })
-                }
+                        override fun onFailure(error: JudoPaymentResult) {
+                            sharedViewModel.paymentResult.postValue((error))
+                        }
+                    }
+                ).show(childFragmentManager, THREE_DS_ONE_DIALOG_FRAGMENT_TAG)
             } else {
                 sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(receipt.toJudoResult()))
             }

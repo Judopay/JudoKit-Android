@@ -2,7 +2,6 @@ package com.judokit.android.ui.cardverification
 
 import android.app.Application
 import androidx.lifecycle.Observer
-import com.judokit.android.InstantExecutorExtension
 import com.judokit.android.api.JudoApiService
 import com.judokit.android.api.model.response.CardVerificationResult
 import com.judokit.android.api.model.response.JudoApiCallResult
@@ -31,7 +30,7 @@ import retrofit2.await
 @ExperimentalCoroutinesApi
 @ExtendWith(com.judokit.android.InstantExecutorExtension::class)
 @DisplayName("Testing cardVerificationViewModel logic")
-internal class CardVerificationViewModelTest {
+internal class ThreeDSOneCardVerificationViewModelTest {
     private val testDispatcher = TestCoroutineDispatcher()
 
     private val application: Application = mockk()
@@ -44,7 +43,7 @@ internal class CardVerificationViewModelTest {
     private val isLoadingMock = spyk<Observer<Boolean>>()
     private val judoApiCallResultMock = spyk<Observer<JudoApiCallResult<Receipt>>>()
 
-    private val sut = CardVerificationViewModel(service, application)
+    private val sut = ThreeDSOneCardVerificationViewModel(service, application)
 
     @BeforeEach
     internal fun setUp() {
