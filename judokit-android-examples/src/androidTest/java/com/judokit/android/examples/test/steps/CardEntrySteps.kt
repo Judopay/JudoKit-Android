@@ -59,14 +59,14 @@ class CardEntrySteps {
         // no-op
     }
 
-    @Then("^the (.*?) (?:screen|page|view) should be visible$")
-    fun viewShouldBeVisible(screen: String) {
-        robot.isVisible(screen)
+    @Then("^the (.*?) (screen|page|view|item) should (be|not be) visible$")
+    fun viewShouldBeVisible(identifier: String, type: String, visibility: String) {
+        robot.isVisible(identifier, type, visibility)
     }
 
-    @Then("^(?:the|an) \"(.*?)\" label should be visible$")
-    fun labelShouldBeVisible(label: String) {
-        robot.isVisible(label)
+    @Then("^(?:the|an) \"(.*?)\" label should (not be|be) visible$")
+    fun labelShouldBeVisible(label: String, visibility: String) {
+        robot.isVisible(label, label, visibility)
     }
 
     @Then("^the \"(.*?)\" (?:button|option) should be disabled$")

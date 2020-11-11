@@ -5,13 +5,14 @@ import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withTagValue
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.judokit.android.examples.R
 import com.judokit.android.examples.feature.DemoFeatureListActivity
+import com.judokit.android.examples.test.espresso.RecyclerViewMatcher
 import com.judokit.android.examples.test.espresso.clearData
 import com.judokit.android.examples.test.espresso.waitUntilVisible
 import com.judokit.android.examples.test.robots.ConfigurationRobot
@@ -41,31 +42,25 @@ class PaymentMethodsSteps {
         clearData()
     }
 
-    @Then("^the card ending with \"(.*?)\" should be selected$")
-    fun isAddedCardSelected(cardEnding: String) {
-        onView(
-            allOf(
-                withId(R.id.radioIconImageView),
-                withTagValue(`is`("true")),
-                hasSibling(withText("Visa Ending $cardEnding"))
+    @Then("^the item nr. (.*?) containing \"(.*?)\" should be selected$")
+    fun isAddedCardSelected(position: Int, cardEnding: String) {
+        Thread.sleep(2000)
+        onView(RecyclerViewMatcher(R.id.recyclerView).atPosition(position)).waitUntilVisible()
+            .check(
+                matches(
+                    hasDescendant(
+                        allOf(
+                            withId(R.id.radioIconImageView),
+                            withTagValue(`is`("true")),
+                            hasSibling(withText(cardEnding))
+                        )
+                    )
+                )
             )
-        ).waitUntilVisible().check(
-            matches(isDisplayed())
-        )
     }
 
-    @Then("^(.*?) payment method should be (visible|invisible)$")
-    fun paymentMethodVisibility(paymentMethod: String, visibility: String) {
-        val matchedView = onView(withTagValue(`is`(paymentMethod)))
-        if (visibility == "visible") {
-            matchedView.check(matches((isDisplayed())))
-        } else {
-            matchedView.check(doesNotExist())
-        }
-    }
-
-    @Then("^the payment method selector should be invisible$")
-    fun paymentMethodSelectorInvisible() {
+    @Then("^the payment method selector should not be visible$")
+    fun paymentMethodSelectorNotVisible() {
         onView(withId(R.id.slider)).check(doesNotExist())
     }
 }

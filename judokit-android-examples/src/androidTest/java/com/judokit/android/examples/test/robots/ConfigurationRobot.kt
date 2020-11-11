@@ -23,13 +23,14 @@ private const val TAG_REQUIRE_NON_3DS = "@require-non-3ds-config"
 private const val TAG_REQUIRE_AVS = "@require-avs"
 private const val TAG_REQUIRE_BUTTON_AMOUNT = "@require-button-amount"
 private const val TAG_DISABLE_SECURITY_CODE = "@disable-security-code"
-private const val TAG_ENABLE_CARD_PAYMENT_ONLY = "@enable-card-payment-only"
-private const val TAG_ENABLE_PBBA = "@enable-pbba"
-private const val TAG_ENABLE_GOOGLE_PAY = "@enable-google-pay"
-private const val TAG_ENABLE_ALL_PAYMENT_METHODS = "@enable-all-payment-methods"
-private const val TAG_DISABLE_ALL_PAYMENT_METHODS = "@disable-all-payment-methods"
-private const val TAG_CURRENCY_GBP = "@currency-gbp"
-private const val TAG_CURRENCY_EUR = "@currency-eur"
+private const val TAG_ENABLE_CARD_PAYMENT_ONLY = "@require-card-payment-enabled-only"
+private const val TAG_ENABLE_IDEAL = "@require-ideal-enabled-only"
+private const val TAG_ENABLE_PBBA = "@require-pbba-enabled-only"
+private const val TAG_ENABLE_GOOGLE_PAY = "@require-google-pay-enabled-only"
+private const val TAG_ENABLE_ALL_PAYMENT_METHODS = "@require-all-payment-methods-enabled"
+private const val TAG_DISABLE_ALL_PAYMENT_METHODS = "@require-all-payment-methods-disabled"
+private const val TAG_CURRENCY_GBP = "@require-currency-gbp"
+private const val TAG_CURRENCY_EUR = "@require-currency-eur"
 
 private const val CREDENTIALS_FILE_NAME = "test-credentials.properties"
 private const val JUDO_ID = "judo-id"
@@ -77,11 +78,30 @@ class ConfigurationRobot {
                     )
                 TAG_ENABLE_PBBA ->
                     enablePaymentMethod(
-                        mapOf(Pair(PaymentMethod.PAY_BY_BANK, true))
+                        mapOf(
+                            Pair(PaymentMethod.CARD, false),
+                            Pair(PaymentMethod.IDEAL, false),
+                            Pair(PaymentMethod.GOOGLE_PAY, false),
+                            Pair(PaymentMethod.PAY_BY_BANK, true)
+                        )
+                    )
+                TAG_ENABLE_IDEAL ->
+                    enablePaymentMethod(
+                        mapOf(
+                            Pair(PaymentMethod.CARD, false),
+                            Pair(PaymentMethod.IDEAL, true),
+                            Pair(PaymentMethod.GOOGLE_PAY, false),
+                            Pair(PaymentMethod.PAY_BY_BANK, false)
+                        )
                     )
                 TAG_ENABLE_GOOGLE_PAY ->
                     enablePaymentMethod(
-                        mapOf(Pair(PaymentMethod.GOOGLE_PAY, true))
+                        mapOf(
+                            Pair(PaymentMethod.CARD, false),
+                            Pair(PaymentMethod.IDEAL, false),
+                            Pair(PaymentMethod.GOOGLE_PAY, true),
+                            Pair(PaymentMethod.PAY_BY_BANK, false)
+                        )
                     )
                 TAG_DISABLE_ALL_PAYMENT_METHODS ->
                     enablePaymentMethod(

@@ -3,6 +3,7 @@ package com.judokit.android.examples.test.robots
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers.isPlatformPopup
 import androidx.test.espresso.matcher.ViewMatchers
@@ -75,25 +76,31 @@ class CardEntryRobot {
         view.perform(click(), replaceText(textToEnter))
     }
 
-    fun isVisible(view: String) {
-        val matchedView = when (view) {
+    fun isVisible(identifier: String, view: String, visibility: String) {
+        val matchedView = when (identifier) {
+            View.CARD_HEADER.value -> onView(withId(R.id.cardView))
+            View.GOOGLE_PAY_HEADER.value -> onView(withId(R.id.googlePayCardView))
+            View.IDEAL_HEADER.value -> onView(withId(R.id.idealPaymentCardView))
+            View.PBBA_HEADER.value -> onView(withId(R.id.payByBankCardView))
+            View.CARD_PAYMENT_METHOD.value -> onView(ViewMatchers.withTagValue(CoreMatchers.`is`("CARD")))
+            View.GOOGLE_PAY_PAYMENT_METHOD.value -> onView(ViewMatchers.withTagValue(CoreMatchers.`is`("GOOGLE_PAY")))
+            View.IDEAL_PAYMENT_METHOD.value -> onView(ViewMatchers.withTagValue(CoreMatchers.`is`("IDEAL")))
+            View.PAYMENT_METHODS.value -> onView(withId(R.id.coordinatorLayout))
             View.MAIN.value -> onView(withId(R.id.sampleAppConstraintLayout))
             View.RESULTS.value -> onView(withText("JudoResult")).waitUntilVisible()
-            View.INVALID_POST_CODE.value -> onView(
-                allOf(
-                    withId(R.id.errorTextView),
-                    isDescendantOfA(withId(R.id.postcodeTextInputLayout))
-                )
-            )
-            View.CHECK_EXPIRY_DATE.value -> onView(
-                allOf(
-                    withId(R.id.errorTextView),
-                    isDescendantOfA(withId(R.id.expirationDateTextInputLayout))
-                )
-            )
+            View.INVALID_POST_CODE.value -> onView(allOf(withId(R.id.errorTextView), isDescendantOfA(withId(R.id.postcodeTextInputLayout))))
+            View.CHECK_EXPIRY_DATE.value -> onView(allOf(withId(R.id.errorTextView), isDescendantOfA(withId(R.id.expirationDateTextInputLayout))))
             else -> onView(withText(view))
         }
-        matchedView.check(matches(isDisplayed()))
+        if (visibility == "be") {
+            matchedView.check(matches(isDisplayed()))
+        } else {
+            if (view == "screen") {
+                matchedView.check(doesNotExist())
+            } else {
+                matchedView.check(matches(not(isDisplayed())))
+            }
+        }
     }
 
     fun isDisabled(button: String) {
