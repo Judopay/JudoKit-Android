@@ -16,9 +16,15 @@ enum class View(val value: String) {
     POST_CODE("Post Code"),
     MAIN("Main"),
     RESULTS("Results"),
-    INVALID_CARD_NUMBER("Invalid card number"),
     CHECK_EXPIRY_DATE("Check expiry date"),
-    CHECK_CVV("Check CVV"),
     INVALID_POST_CODE("Invalid postcode entered"),
-    SUBMIT_BUTTON("Submit")
+    SUBMIT_BUTTON("Submit"),
+    CARD_HEADER("Card Header"),
+    GOOGLE_PAY_HEADER("Google Pay Header"),
+    IDEAL_HEADER("iDEAL Header"),
+    PBBA_HEADER("PbBa Header"),
+    CARD_PAYMENT_METHOD("Card payment method"),
+    GOOGLE_PAY_PAYMENT_METHOD("Google Pay payment method"),
+    IDEAL_PAYMENT_METHOD("iDEAL payment method"),
+    PAYMENT_METHODS("Payment Methods")
 }

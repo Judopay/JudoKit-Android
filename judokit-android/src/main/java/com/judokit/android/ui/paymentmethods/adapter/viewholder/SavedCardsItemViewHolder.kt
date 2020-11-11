@@ -50,6 +50,7 @@ class SavedCardsItemViewHolder(view: View) :
                 networkIconContainer.layoutParams = params
                 val checkMark =
                     if (model.isSelected) R.drawable.ic_radio_on else R.drawable.ic_radio_off
+                radioIconImageView.tag = model.isSelected.toString()
                 radioIconImageView.visibility = View.VISIBLE
                 radioIconImageView.setImageResource(checkMark)
                 setOnClickListener { listener?.invoke(PaymentMethodItemAction.PICK_CARD, model) }
