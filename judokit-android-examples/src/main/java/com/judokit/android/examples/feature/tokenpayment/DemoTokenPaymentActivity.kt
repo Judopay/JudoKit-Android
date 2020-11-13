@@ -29,6 +29,7 @@ import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.code
 import com.judokit.android.model.toIntent
 import com.judokit.android.toTokenRequest
+import com.judokit.android.ui.cardverification.THREE_DS_ONE_DIALOG_FRAGMENT_TAG
 import com.judokit.android.ui.cardverification.ThreeDSOneCardVerificationDialogFragment
 import com.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
 import com.judokit.android.ui.common.ButtonState
@@ -123,38 +124,33 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
         when (val apiResult = response.body()) {
             is JudoApiCallResult.Success -> {
                 val receipt = apiResult.data
-                if (receipt != null) {
-                    if (receipt.is3dSecureRequired) {
-                        ThreeDSOneCardVerificationDialogFragment(
-                            service,
-                            receipt.toCardVerificationModel(),
-                            object :
-                                ThreeDSOneCompletionCallback {
-                                override fun onSuccess(success: JudoPaymentResult) {
-                                    setResult(success.code, success.toIntent())
-                                    finish()
-                                }
+                if (receipt != null && receipt.is3dSecureRequired) {
+                    val callback = object : ThreeDSOneCompletionCallback {
+                        override fun onSuccess(success: JudoPaymentResult) {
+                            setResult(success.code, success.toIntent())
+                            finish()
+                        }
 
-                                override fun onFailure(error: JudoPaymentResult) {
-                                    setResult(error.code, error.toIntent())
-                                    finish()
-                                }
-                            }
-                        ).show(supportFragmentManager, "3DS_VERIFICATION_DIALOG")
-                    } else {
-                        setResult(
-                            apiResult.toJudoPaymentResult(resources).code,
-                            apiResult.toJudoPaymentResult(resources).toIntent()
-                        )
-                        finish()
+                        override fun onFailure(error: JudoPaymentResult) {
+                            setResult(error.code, error.toIntent())
+                            finish()
+                        }
                     }
+                    val fragment = ThreeDSOneCardVerificationDialogFragment(
+                        service,
+                        receipt.toCardVerificationModel(),
+                        callback
+                    )
+                    fragment.show(supportFragmentManager, THREE_DS_ONE_DIALOG_FRAGMENT_TAG)
+                } else {
+                    val result = apiResult.toJudoPaymentResult(resources)
+                    setResult(result.code, result.toIntent())
+                    finish()
                 }
             }
             is JudoApiCallResult.Failure -> {
-                setResult(
-                    apiResult.toJudoPaymentResult(resources).code,
-                    apiResult.toJudoPaymentResult(resources).toIntent()
-                )
+                val result = apiResult.toJudoPaymentResult(resources)
+                setResult(result.code, result.toIntent())
                 finish()
             }
         }

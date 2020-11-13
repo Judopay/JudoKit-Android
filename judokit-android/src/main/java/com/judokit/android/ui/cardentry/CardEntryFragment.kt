@@ -43,7 +43,7 @@ import com.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
 import com.judokit.android.ui.paymentmethods.CARD_NETWORK
 import kotlinx.android.synthetic.main.card_entry_fragment.*
 
-class CardEntryFragment : BottomSheetDialogFragment() {
+class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallback {
 
     private lateinit var viewModel: CardEntryViewModel
     private lateinit var service: JudoApiService
@@ -238,20 +238,19 @@ class CardEntryFragment : BottomSheetDialogFragment() {
                 ThreeDSOneCardVerificationDialogFragment(
                     service,
                     receipt.toCardVerificationModel(),
-                    object :
-                        ThreeDSOneCompletionCallback {
-                        override fun onSuccess(success: JudoPaymentResult) {
-                            sharedViewModel.paymentResult.postValue((success))
-                        }
-
-                        override fun onFailure(error: JudoPaymentResult) {
-                            sharedViewModel.paymentResult.postValue((error))
-                        }
-                    }
+                    this
                 ).show(childFragmentManager, THREE_DS_ONE_DIALOG_FRAGMENT_TAG)
             } else {
                 sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(receipt.toJudoResult()))
             }
         }
+    }
+
+    override fun onSuccess(success: JudoPaymentResult) {
+        sharedViewModel.paymentResult.postValue((success))
+    }
+
+    override fun onFailure(error: JudoPaymentResult) {
+        sharedViewModel.paymentResult.postValue((error))
     }
 }

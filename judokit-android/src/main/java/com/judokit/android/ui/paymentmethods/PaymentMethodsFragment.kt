@@ -50,7 +50,6 @@ import com.judokit.android.ui.paymentmethods.model.PaymentMethodModel
 import kotlinx.android.synthetic.main.payment_methods_fragment.*
 import kotlinx.android.synthetic.main.payment_methods_header_view.*
 
-internal const val CARD_VERIFICATION = "com.judokit.android.model.CardVerificationModel"
 internal const val PAYMENT_WIDGET_TYPE = "com.judokit.android.model.paymentWidgetType"
 internal const val CARD_NETWORK = "com.judokit.android.cardNetwork"
 
@@ -187,19 +186,22 @@ class PaymentMethodsFragment : Fragment() {
     private fun handleSuccess(receipt: Receipt?) {
         if (receipt != null)
             if (receipt.is3dSecureRequired) {
+
+                val callback = object :
+                    ThreeDSOneCompletionCallback {
+                    override fun onSuccess(success: JudoPaymentResult) {
+                        sharedViewModel.paymentResult.postValue((success))
+                    }
+
+                    override fun onFailure(error: JudoPaymentResult) {
+                        sharedViewModel.paymentResult.postValue((error))
+                    }
+                }
+
                 ThreeDSOneCardVerificationDialogFragment(
                     service,
                     receipt.toCardVerificationModel(),
-                    object :
-                        ThreeDSOneCompletionCallback {
-                        override fun onSuccess(success: JudoPaymentResult) {
-                            sharedViewModel.paymentResult.postValue((success))
-                        }
-
-                        override fun onFailure(error: JudoPaymentResult) {
-                            sharedViewModel.paymentResult.postValue((error))
-                        }
-                    }
+                    callback
                 ).show(childFragmentManager, THREE_DS_ONE_DIALOG_FRAGMENT_TAG)
             } else {
                 sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(receipt.toJudoResult()))
