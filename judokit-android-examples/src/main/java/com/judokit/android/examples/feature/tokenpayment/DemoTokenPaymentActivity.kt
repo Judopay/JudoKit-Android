@@ -13,9 +13,11 @@ import com.judokit.android.JudoActivity
 import com.judokit.android.PAYMENT_CANCELLED
 import com.judokit.android.PAYMENT_ERROR
 import com.judokit.android.PAYMENT_SUCCESS
+import com.judokit.android.api.JudoApiService
 import com.judokit.android.api.factory.JudoApiServiceFactory
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.Receipt
+import com.judokit.android.api.model.response.toCardVerificationModel
 import com.judokit.android.api.model.response.toJudoPaymentResult
 import com.judokit.android.examples.R
 import com.judokit.android.examples.feature.JUDO_PAYMENT_WIDGET_REQUEST_CODE
@@ -27,6 +29,9 @@ import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.code
 import com.judokit.android.model.toIntent
 import com.judokit.android.toTokenRequest
+import com.judokit.android.ui.cardverification.THREE_DS_ONE_DIALOG_FRAGMENT_TAG
+import com.judokit.android.ui.cardverification.ThreeDSOneCardVerificationDialogFragment
+import com.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
 import com.judokit.android.ui.common.ButtonState
 import kotlinx.android.synthetic.main.activity_demo_token_payment.*
 import retrofit2.Call
@@ -45,6 +50,7 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var cardToken: String
+    private lateinit var service: JudoApiService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +60,7 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
         val judo = intent.getParcelableExtra<Judo>(JUDO_OPTIONS)
             ?: throw IllegalStateException("Judo object is required")
 
-        val service = JudoApiServiceFactory.createApiService(this, judo)
+        service = JudoApiServiceFactory.createApiService(this, judo)
 
         tokenPaymentButton.state = ButtonState.Disabled(R.string.token_payment)
         preAuthTokenPaymentButton.state = ButtonState.Disabled(R.string.preauth_token_payment)
@@ -115,9 +121,35 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
         call: Call<JudoApiCallResult<Receipt>>,
         response: Response<JudoApiCallResult<Receipt>>
     ) {
-        when (val result = response.body()?.toJudoPaymentResult(resources)) {
-            is JudoPaymentResult.Error,
-            is JudoPaymentResult.Success -> {
+        when (val apiResult = response.body()) {
+            is JudoApiCallResult.Success -> {
+                val receipt = apiResult.data
+                if (receipt != null && receipt.is3dSecureRequired) {
+                    val callback = object : ThreeDSOneCompletionCallback {
+                        override fun onSuccess(success: JudoPaymentResult) {
+                            setResult(success.code, success.toIntent())
+                            finish()
+                        }
+
+                        override fun onFailure(error: JudoPaymentResult) {
+                            setResult(error.code, error.toIntent())
+                            finish()
+                        }
+                    }
+                    val fragment = ThreeDSOneCardVerificationDialogFragment(
+                        service,
+                        receipt.toCardVerificationModel(),
+                        callback
+                    )
+                    fragment.show(supportFragmentManager, THREE_DS_ONE_DIALOG_FRAGMENT_TAG)
+                } else {
+                    val result = apiResult.toJudoPaymentResult(resources)
+                    setResult(result.code, result.toIntent())
+                    finish()
+                }
+            }
+            is JudoApiCallResult.Failure -> {
+                val result = apiResult.toJudoPaymentResult(resources)
                 setResult(result.code, result.toIntent())
                 finish()
             }
@@ -142,7 +174,7 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
                     ButtonState.Disabled(R.string.preauth_token_payment)
             }
             is ActivityState.PayWithPreAuthToken -> {
-                tokenPaymentButton.state = ButtonState.Disabled(R.string.preauth_token_payment)
+                tokenPaymentButton.state = ButtonState.Disabled(R.string.token_payment)
                 preAuthTokenPaymentButton.state = ButtonState.Loading
             }
         }
