@@ -16,7 +16,7 @@ enum class View(val value: String) {
     POST_CODE("Post Code"),
     MAIN("Main"),
     RESULTS("Results"),
-    CHECK_EXPIRY_DATE("Check expiry date"),
+    CHECK_EXPIRY_DATE("Invalid date value entered"),
     INVALID_POST_CODE("Invalid postcode entered"),
     SUBMIT_BUTTON("Submit"),
     CARD_HEADER("Card Header"),
