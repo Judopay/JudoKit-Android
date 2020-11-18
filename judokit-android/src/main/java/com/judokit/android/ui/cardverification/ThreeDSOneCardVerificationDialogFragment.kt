@@ -79,6 +79,7 @@ class ThreeDSOneCardVerificationDialogFragment constructor(
                         completionCallback.onFailure(JudoPaymentResult.Error(it.error.toJudoError()))
                     }
                 }
+                dismiss()
             }
         )
     }
