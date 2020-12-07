@@ -178,6 +178,23 @@ jobs:
           name: Release SDK to Bintray
           command: ./gradlew bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayKey=$BINTRAY_API_KEY -PdryRun=false
 
+  report_to_jira:
+    docker:
+      - image: gcr.io/opnf-management/deployer:latest
+        auth:
+          username: _json_key
+          password: $GCLOUD_SERVICE_KEY
+    parameters:
+      environment:
+        type: string
+    steps:
+      - checkout
+      - run:
+          name: Report Deployment to Jira
+          environment:
+            ENVIRONMENT: << parameters.environment >>
+          command: /resources/scripts/report-status-to-jira.sh
+
 workflows:
   version: 2
   build:
@@ -205,6 +222,11 @@ workflows:
             branches:
               only:
                 - master
+      - report_to_jira:
+          context: shared-secrets
+          environment: staging
+          requires:
+            - release_sample
       - release_sdk:
           context: shared-secrets
           requires:
@@ -216,3 +238,8 @@ workflows:
             tags:
               only:
                 - /^v[0-9]+(\.[0-9]+)*$/
+      - report_to_jira:
+          context: shared-secrets
+          environment: prod
+          requires:
+            - release_sdk
