@@ -60,18 +60,21 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
         viewModel.saleCallResult.observe(viewLifecycleOwner, { handleSaleResult(it) })
         viewModel.saleStatusResult.observe(viewLifecycleOwner, { handleSaleStatusResult(it) })
 
-        viewModel.isLoading.observe(viewLifecycleOwner, {
-            if (it) {
-                idealWebView.visibility = View.GONE
-                idealPollingStatusView.apply {
-                    visibility = View.VISIBLE
-                    state = PollingStatusViewState.PROCESSING
+        viewModel.isLoading.observe(
+            viewLifecycleOwner,
+            {
+                if (it) {
+                    idealWebView.visibility = View.GONE
+                    idealPollingStatusView.apply {
+                        visibility = View.VISIBLE
+                        state = PollingStatusViewState.PROCESSING
+                    }
+                } else {
+                    idealWebView.visibility = View.VISIBLE
+                    idealPollingStatusView.visibility = View.GONE
                 }
-            } else {
-                idealWebView.visibility = View.VISIBLE
-                idealPollingStatusView.visibility = View.GONE
             }
-        })
+        )
 
         idealPollingStatusView.animateWithAlpha(1.0f)
         viewModel.send(IdealAction.Initialise(bic))
