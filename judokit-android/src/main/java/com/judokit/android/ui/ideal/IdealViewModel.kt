@@ -23,7 +23,7 @@ sealed class IdealAction {
     object CancelPolling : IdealAction()
     object ResetPolling : IdealAction()
     object RetryPolling : IdealAction()
-    data class StartPolling(val orderId: String) : IdealAction()
+    object StartPolling : IdealAction()
 }
 
 internal class IdealViewModelFactory(
@@ -51,11 +51,12 @@ class IdealViewModel(
     val saleStatusResult = MutableLiveData<PollingResult<BankSaleStatusResponse>>()
     val isLoading = MutableLiveData<Boolean>()
     val isRequestDelayed = MutableLiveData<Boolean>()
+    private var myOrderId: String = ""
 
     fun send(action: IdealAction) {
         when (action) {
             is IdealAction.Initialise -> payWithSelectedBank(action.bic)
-            is IdealAction.StartPolling -> startPolling(action.orderId)
+            is IdealAction.StartPolling -> startPolling()
             is IdealAction.CancelPolling -> pollingService.cancel()
             is IdealAction.ResetPolling -> pollingService.reset()
             is IdealAction.RetryPolling -> retry()
@@ -75,12 +76,17 @@ class IdealViewModel(
 
         val response = service.sale(request).await()
 
-        saleCallResult.postValue(response)
+        if (response is JudoApiCallResult.Success && response.data != null) {
+            saleCallResult.postValue(response)
+            myOrderId = response.data.orderId
+        } else {
+            saleCallResult.postValue(JudoApiCallResult.Failure())
+        }
 
         isLoading.postValue(false)
     }
 
-    private fun startPolling(myOrderId: String) {
+    private fun startPolling() {
         viewModelScope.launch {
             pollingService.apply {
                 orderId = myOrderId

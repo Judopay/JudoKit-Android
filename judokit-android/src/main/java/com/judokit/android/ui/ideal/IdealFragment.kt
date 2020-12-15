@@ -27,7 +27,6 @@ import com.judokit.android.ui.common.getLocale
 import com.judokit.android.ui.ideal.components.IdealWebViewCallback
 import com.judokit.android.ui.paymentmethods.components.PollingStatusViewState
 import kotlinx.android.synthetic.main.ideal_fragment.*
-import kotlinx.android.synthetic.main.polling_status_fragment.*
 import kotlinx.android.synthetic.main.polling_status_view.view.*
 
 const val JUDO_IDEAL_BANK = "com.judokit.android.idealbankbic"
@@ -37,7 +36,6 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
 
     private lateinit var viewModel: IdealViewModel
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
-    private lateinit var orderId: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,7 +87,6 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
                         idealSaleResponse.redirectUrl,
                         idealSaleResponse.merchantRedirectUrl
                     )
-                    orderId = result.data.orderId
                 } else {
                     sharedViewModel.paymentResult.postValue(
                         JudoPaymentResult.Error(
@@ -114,7 +111,7 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
 
     override fun onPageStarted(checksum: String) {
         idealPollingStatusView.visibility = View.VISIBLE
-        viewModel.send(IdealAction.StartPolling(orderId))
+        viewModel.send(IdealAction.StartPolling)
     }
 
     private fun handleSaleStatusResult(pollingResult: PollingResult<BankSaleStatusResponse>?) {

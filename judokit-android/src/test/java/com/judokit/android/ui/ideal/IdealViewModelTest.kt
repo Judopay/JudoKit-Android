@@ -113,7 +113,7 @@ class IdealViewModelTest {
     }
 
     @Test
-    @DisplayName("Given send method is called with action Initialise, when sale request is finished, then update saleCallResult observer")
+    @DisplayName("Given send method is called with action Initialise, when sale request is successful and data not null, then update saleCallResult observer")
     fun postSaleResponseAfterSaleRequestFinished() {
         val slots = mutableListOf<JudoApiCallResult<IdealSaleResponse>>()
 
@@ -126,7 +126,43 @@ class IdealViewModelTest {
     }
 
     @Test
-    @DisplayName("Given send is called with action Initialse, when sale request is finished, then set isLoading = false")
+    @DisplayName("Given send method is called with action Initialise, when sale request is successful and data is null, then update saleCallResult observer with JudoApiCallResult failure")
+    fun updateSaleCallResultWithFailure() {
+        val emptySaleCallResult = JudoApiCallResult.Success(null)
+        val slots = mutableListOf<JudoApiCallResult<IdealSaleResponse>>()
+        coEvery {
+            service.sale(any<IdealSaleRequest>()).await().hint(JudoApiCallResult::class)
+        } returns emptySaleCallResult
+
+        sut.send(IdealAction.Initialise(BIC))
+
+        verify { saleCallResultMock.onChanged(capture(slots)) }
+
+        val saleCallResult = slots[0]
+
+        assertEquals(saleCallResult, JudoApiCallResult.Failure())
+    }
+
+    @Test
+    @DisplayName("Given send method is called with action Initialise, when sale request is failed, then update saleCallResult observer with JudoApiCallResult failure")
+    fun updateSaleCallResultWithFailureWHenRequestFailed() {
+        val failedSaleCallResult = JudoApiCallResult.Failure()
+        val slots = mutableListOf<JudoApiCallResult<IdealSaleResponse>>()
+        coEvery {
+            service.sale(any<IdealSaleRequest>()).await().hint(JudoApiCallResult::class)
+        } returns failedSaleCallResult
+
+        sut.send(IdealAction.Initialise(BIC))
+
+        verify { saleCallResultMock.onChanged(capture(slots)) }
+
+        val saleCallResult = slots[0]
+
+        assertEquals(saleCallResult, JudoApiCallResult.Failure())
+    }
+
+    @Test
+    @DisplayName("Given send is called with action Initialise, when sale request is finished, then set isLoading = false")
     fun loadingFalseOnSaleRequestFinished() {
         val slots = mutableListOf<Boolean>()
 
@@ -141,7 +177,7 @@ class IdealViewModelTest {
     @Test
     @DisplayName("Given send is called with action StartPolling, then start method of PollingService should be called")
     fun callStartOnStartPollingAction() {
-        sut.send(IdealAction.StartPolling(ORDER_ID))
+        sut.send(IdealAction.StartPolling)
 
         coVerify { pollingService.start() }
     }
