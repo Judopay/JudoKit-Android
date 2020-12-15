@@ -19,6 +19,7 @@ import io.cucumber.java.Before
 import io.cucumber.java.en.And
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.When
+import org.junit.Assume
 
 class ThreeDSecureSteps {
 
@@ -39,6 +40,18 @@ class ThreeDSecureSteps {
             "test-input-data.json"
         ).bufferedReader().use { it.readText() }
         val testConfiguration = Gson().fromJson(jsonString, TestConfiguration::class.java)
+
+        testConfiguration.testsToSkip.forEach {
+            if (it in tags) {
+                Assume.assumeTrue(false)
+            }
+        }
+
+        testConfiguration.testsToInclude.forEach {
+            if (it !in tags) {
+                Assume.assumeTrue(false)
+            }
+        }
 
         scenarioData =
             testConfiguration.testData.find { testData -> testData.tags.any { it in tags } }

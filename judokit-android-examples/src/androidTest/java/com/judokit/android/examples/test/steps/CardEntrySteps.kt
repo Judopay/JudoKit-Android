@@ -48,6 +48,13 @@ class CardEntrySteps {
             }
         }
 
+        // Skip scenarios that are not in testsToInclude
+        testConfiguration.testsToInclude.forEach {
+            if (it !in tags) {
+                Assume.assumeTrue(false)
+            }
+        }
+
         // Extract data for the specific scenario by tag
         scenarioData =
             testConfiguration.testData.find { testData -> testData.tags.any { it in tags } }

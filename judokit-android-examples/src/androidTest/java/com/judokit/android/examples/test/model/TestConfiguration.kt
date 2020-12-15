@@ -8,6 +8,7 @@ data class TestConfiguration(
     val threeDSSecret: String,
     val sandbox: Boolean,
     val testsToSkip: List<String>,
+    val testsToInclude: List<String>,
     val testData: List<TestData>,
     val defaultCards: List<Card>
 )

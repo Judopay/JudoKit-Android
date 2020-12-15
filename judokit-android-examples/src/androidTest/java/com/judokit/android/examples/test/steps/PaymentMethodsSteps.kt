@@ -25,6 +25,7 @@ import io.cucumber.java.Before
 import io.cucumber.java.en.Then
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.allOf
+import org.junit.Assume
 
 class PaymentMethodsSteps {
 
@@ -41,6 +42,17 @@ class PaymentMethodsSteps {
         ).bufferedReader().use { it.readText() }
         val testConfiguration = Gson().fromJson(jsonString, TestConfiguration::class.java)
 
+        testConfiguration.testsToSkip.forEach {
+            if (it in tags) {
+                Assume.assumeTrue(false)
+            }
+        }
+
+        testConfiguration.testsToInclude.forEach {
+            if (it !in tags) {
+                Assume.assumeTrue(false)
+            }
+        }
         configurationRobot.configure(tags, testConfiguration!!)
     }
 
