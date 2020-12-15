@@ -12,85 +12,57 @@ import com.judokit.android.api.model.request.IdealSaleRequest
 import com.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judokit.android.api.model.response.IdealSaleResponse
 import com.judokit.android.api.model.response.JudoApiCallResult
-import com.judokit.android.api.model.response.OrderStatus
+import com.judokit.android.service.polling.PollingResult
+import com.judokit.android.service.polling.PollingService
 import com.judokit.android.toMap
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.await
 
-// view-model custom factory to inject the `judo` configuration object
+sealed class IdealAction {
+    data class Initialise(val bic: String) : IdealAction()
+    object CancelPolling : IdealAction()
+    object ResetPolling : IdealAction()
+    object RetryPolling : IdealAction()
+    data class StartPolling(val orderId: String) : IdealAction()
+}
+
 internal class IdealViewModelFactory(
-    private val bic: String,
     private val judo: Judo,
     private val service: JudoApiService,
+    private val pollingService: PollingService,
     private val application: Application
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == IdealViewModel::class.java) {
-            IdealViewModel(bic, judo, service, application) as T
+            IdealViewModel(judo, service, pollingService, application) as T
         } else super.create(modelClass)
     }
 }
 
-private const val DELAY_IN_SECONDS = 130L
-private const val MILLISECONDS = 1000L
-private const val REQUEST_DELAY = 5000L
-private const val TIMEOUT = DELAY_IN_SECONDS * MILLISECONDS
-
 class IdealViewModel(
-    val bic: String,
     val judo: Judo,
     val service: JudoApiService,
+    private val pollingService: PollingService,
     application: Application
 ) :
     AndroidViewModel(application) {
-    val saleStatusCallResult = MutableLiveData<JudoApiCallResult<BankSaleStatusResponse>>()
     val saleCallResult = MutableLiveData<JudoApiCallResult<IdealSaleResponse>>()
+    val saleStatusResult = MutableLiveData<PollingResult<BankSaleStatusResponse>>()
     val isLoading = MutableLiveData<Boolean>()
     val isRequestDelayed = MutableLiveData<Boolean>()
-    private lateinit var orderId: String
 
-    fun completeIdealPayment() = viewModelScope.launch {
-        isLoading.postValue(true)
-        isRequestDelayed.postValue(false)
-        var timeout = TIMEOUT
-        while (timeout != 0L) {
-            if (timeout != DELAY_IN_SECONDS * MILLISECONDS) {
-                delay(REQUEST_DELAY)
-            }
-
-            when (val response = service.status(orderId).await()) {
-                is JudoApiCallResult.Success -> {
-                    if (response.data != null)
-                        when (response.data.orderDetails.orderStatus) {
-                            OrderStatus.SUCCEEDED -> {
-                                timeout = 0L
-                                saleStatusCallResult.postValue(response)
-                            }
-                            OrderStatus.PENDING -> {
-                                timeout -= REQUEST_DELAY
-                                if (timeout <= TIMEOUT / 2)
-                                    isRequestDelayed.postValue(true)
-                                if (timeout == 0L)
-                                    saleStatusCallResult.postValue(response)
-                            }
-                            else -> {
-                                timeout = 0L
-                                saleStatusCallResult.postValue(response)
-                            }
-                        }
-                }
-                is JudoApiCallResult.Failure -> {
-                    timeout = 0L
-                    saleStatusCallResult.postValue(response)
-                }
-            }
+    fun send(action: IdealAction) {
+        when (action) {
+            is IdealAction.Initialise -> payWithSelectedBank(action.bic)
+            is IdealAction.StartPolling -> startPolling(action.orderId)
+            is IdealAction.CancelPolling -> pollingService.cancel()
+            is IdealAction.ResetPolling -> pollingService.reset()
+            is IdealAction.RetryPolling -> retry()
         }
-        isLoading.postValue(false)
     }
 
-    fun payWithSelectedBank() = viewModelScope.launch {
+    private fun payWithSelectedBank(bic: String) = viewModelScope.launch {
         isLoading.postValue(true)
         val request = IdealSaleRequest.Builder()
             .setAmount(judo.amount.amount)
@@ -105,10 +77,22 @@ class IdealViewModel(
 
         saleCallResult.postValue(response)
 
-        if (response is JudoApiCallResult.Success && response.data != null) {
-            orderId = response.data.orderId
-        }
-
         isLoading.postValue(false)
+    }
+
+    private fun startPolling(myOrderId: String) {
+        viewModelScope.launch {
+            pollingService.apply {
+                orderId = myOrderId
+                result = { saleStatusResult.postValue(it) }
+            }
+            pollingService.start()
+        }
+    }
+
+    private fun retry() {
+        viewModelScope.launch {
+            pollingService.retry()
+        }
     }
 }

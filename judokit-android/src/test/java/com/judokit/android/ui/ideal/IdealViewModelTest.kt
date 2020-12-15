@@ -13,6 +13,8 @@ import com.judokit.android.model.Amount
 import com.judokit.android.model.Currency
 import com.judokit.android.model.PaymentWidgetType
 import com.judokit.android.model.Reference
+import com.judokit.android.service.polling.PollingResult
+import com.judokit.android.service.polling.PollingService
 import com.judokit.android.toMap
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -47,8 +49,9 @@ class IdealViewModelTest {
     private val judo = getJudo()
     private val saleRequest = buildSaleRequest()
     private val service: JudoApiService = mockk(relaxed = true)
+    private val pollingService: PollingService = mockk(relaxed = true)
     private val application: Application = mockk(relaxed = true)
-    private val sut = IdealViewModel(BIC, judo, service, application)
+    private val sut = IdealViewModel(judo, service, pollingService, application)
     private val saleResponse = mockk<IdealSaleResponse>(relaxed = true)
     private val saleCallResult = JudoApiCallResult.Success(saleResponse)
     private val statusResponse = mockk<BankSaleStatusResponse>(relaxed = true)
@@ -57,8 +60,8 @@ class IdealViewModelTest {
     private val isLoadingMock = spyk<Observer<Boolean>>()
     private val isDelayMock = spyk<Observer<Boolean>>()
     private val saleCallResultMock = spyk<Observer<JudoApiCallResult<IdealSaleResponse>>>()
-    private val saleStatusCallResultMock =
-        spyk<Observer<JudoApiCallResult<BankSaleStatusResponse>>>()
+    private val pollingResultMock =
+        spyk<Observer<PollingResult<BankSaleStatusResponse>>>()
 
     @BeforeEach
     internal fun setUp() {
@@ -67,7 +70,7 @@ class IdealViewModelTest {
         sut.isLoading.observeForever(isLoadingMock)
         sut.isRequestDelayed.observeForever(isDelayMock)
         sut.saleCallResult.observeForever(saleCallResultMock)
-        sut.saleStatusCallResult.observeForever(saleStatusCallResultMock)
+        sut.saleStatusResult.observeForever(pollingResultMock)
 
         every { saleResponse.orderId } returns ORDER_ID
         every { statusResponse.orderDetails.orderStatus } returns OrderStatus.SUCCEEDED
@@ -75,7 +78,9 @@ class IdealViewModelTest {
         coEvery {
             service.sale(any<IdealSaleRequest>()).await().hint(JudoApiCallResult::class)
         } returns saleCallResult
-        coEvery { service.status(any()).await().hint(JudoApiCallResult::class) } returns statusCallResult
+        coEvery {
+            service.status(any()).await().hint(JudoApiCallResult::class)
+        } returns statusCallResult
 
         Dispatchers.setMain(testDispatcher)
     }
@@ -87,11 +92,11 @@ class IdealViewModelTest {
     }
 
     @Test
-    @DisplayName("Given payWithSelectedBank is called, then first observable should be set isLoading = true")
-    fun loadingTrueOnPayWithSelectedBank() {
+    @DisplayName("Given send method is called with action Initialise, then the loading observable should be set to isLoading = true")
+    fun loadingTrueOnInitialise() {
         val slots = mutableListOf<Boolean>()
 
-        sut.payWithSelectedBank()
+        sut.send(IdealAction.Initialise(BIC))
 
         verify { isLoadingMock.onChanged(capture(slots)) }
 
@@ -100,19 +105,19 @@ class IdealViewModelTest {
     }
 
     @Test
-    @DisplayName("Given payWithSelectedBank is called, then sale method should be called")
+    @DisplayName("Given send method is called with action Initialise, then sale method should be called")
     fun makeSaleRequestOnPayWithSelectedBank() {
-        sut.payWithSelectedBank()
+        sut.send(IdealAction.Initialise(BIC))
 
         coVerify { service.sale(saleRequest) }
     }
 
     @Test
-    @DisplayName("Given payWithSelectedBank is called, when sale request finished, then post sale response")
+    @DisplayName("Given send method is called with action Initialise, when sale request is finished, then update saleCallResult observer")
     fun postSaleResponseAfterSaleRequestFinished() {
         val slots = mutableListOf<JudoApiCallResult<IdealSaleResponse>>()
 
-        sut.payWithSelectedBank()
+        sut.send(IdealAction.Initialise(BIC))
 
         verify { saleCallResultMock.onChanged(capture(slots)) }
 
@@ -121,11 +126,11 @@ class IdealViewModelTest {
     }
 
     @Test
-    @DisplayName("Given payWithSelectedBank is called, when sale request is finished, then set isLoading = false")
-    fun loadingTrueOnSaleRequestFinished() {
+    @DisplayName("Given send is called with action Initialse, when sale request is finished, then set isLoading = false")
+    fun loadingFalseOnSaleRequestFinished() {
         val slots = mutableListOf<Boolean>()
 
-        sut.payWithSelectedBank()
+        sut.send(IdealAction.Initialise(BIC))
 
         verify { isLoadingMock.onChanged(capture(slots)) }
 
@@ -134,140 +139,35 @@ class IdealViewModelTest {
     }
 
     @Test
-    @DisplayName("Given order id is set on payWithSelectedBank, when completeIdealPayment is called, then set isLoading = true")
-    fun setIsLoadingTrueOnCompleteIdealPaymentCall() {
-        val slots = mutableListOf<Boolean>()
+    @DisplayName("Given send is called with action StartPolling, then start method of PollingService should be called")
+    fun callStartOnStartPollingAction() {
+        sut.send(IdealAction.StartPolling(ORDER_ID))
 
-        sut.payWithSelectedBank()
-        sut.completeIdealPayment()
-
-        verify { isLoadingMock.onChanged(capture(slots)) }
-
-        val isLoading = slots[0]
-        assertTrue(isLoading)
+        coVerify { pollingService.start() }
     }
 
     @Test
-    @DisplayName("Given order id is set on payWithSelectedBank, when completeIdealPayment is called, then set isRequestDelayed = false")
-    fun setIsDelayFalseOnCompleteIdealPaymentCall() {
-        val slots = mutableListOf<Boolean>()
+    @DisplayName("Given send is called with action CancelPolling, then cancel method of PollingService should be called")
+    fun callCancelOnCancelPollingAction() {
+        sut.send(IdealAction.CancelPolling)
 
-        sut.payWithSelectedBank()
-        sut.completeIdealPayment()
-
-        verify { isDelayMock.onChanged(capture(slots)) }
-
-        val isDelay = slots[0]
-        assertFalse(isDelay)
+        verify { pollingService.cancel() }
     }
 
     @Test
-    @DisplayName("Given order id is set on payWithSelectedBank, when completeIdealPayment is called, then make status request")
-    fun makeStatusRequestOnCompleteIdealPayment() {
-        sut.payWithSelectedBank()
-        sut.completeIdealPayment()
+    @DisplayName("Given send is called with action ResetPolling, then reset method of PollingService should be called")
+    fun callResetOnResetPollingAction() {
+        sut.send(IdealAction.ResetPolling)
 
-        coVerify { service.status(ORDER_ID) }
+        verify { pollingService.reset() }
     }
 
     @Test
-    @DisplayName("Given completeIdealPayment is called, when the request is successful and order status succeeded, then post saleStatusCallRequest with success response")
-    fun postSaleStatusCallRequestOnRequestSuccessAndOrderStatusSucceeded() {
-        val slots = mutableListOf<JudoApiCallResult<BankSaleStatusResponse>>()
+    @DisplayName("Given send is called with action RetryPolling, then retry method of PollingService should be called")
+    fun callRetryOnRetryPollingAction() {
+        sut.send(IdealAction.RetryPolling)
 
-        sut.payWithSelectedBank()
-        sut.completeIdealPayment()
-
-        verify { saleStatusCallResultMock.onChanged(capture(slots)) }
-
-        val statusCallResult = slots[0]
-        assertEquals(this.statusCallResult, statusCallResult)
-    }
-
-    @Test
-    @DisplayName("Given completeIdealPayment is called, when the request is successful and order status failed, then post saleStatusCallRequest with Success response")
-    fun postSaleStatusCallRequestOnRequestSuccessAndOrderStatusFailure() {
-        every { statusResponse.orderDetails.orderStatus } returns OrderStatus.FAILED
-
-        val slots = mutableListOf<JudoApiCallResult<BankSaleStatusResponse>>()
-
-        sut.payWithSelectedBank()
-        sut.completeIdealPayment()
-
-        verify { saleStatusCallResultMock.onChanged(capture(slots)) }
-
-        val statusCallResult = slots[0]
-        assertEquals(this.statusCallResult, statusCallResult)
-    }
-
-    @Test
-    @DisplayName("Given completeIdealPayment is called, when the request fails, then post saleStatusCallRequest with failure response")
-    fun postSaleStatusCallRequestOnRequestFailed() {
-        coEvery {
-            service.status(any()).await().hint(JudoApiCallResult::class)
-        } returns JudoApiCallResult.Failure()
-
-        val slots = mutableListOf<JudoApiCallResult<BankSaleStatusResponse>>()
-
-        sut.payWithSelectedBank()
-        sut.completeIdealPayment()
-
-        verify { saleStatusCallResultMock.onChanged(capture(slots)) }
-
-        val statusCallResult = slots[0]
-        assertEquals(JudoApiCallResult.Failure(-1, null, null), statusCallResult)
-    }
-
-    @Test
-    @DisplayName("Given completeIdealPayment is called, when the request is completed, then set isLoading = false")
-    fun isLoadingFalseOnStatusRequestCompleted() {
-        coEvery {
-            service.status(any()).await().hint(JudoApiCallResult::class)
-        } returns JudoApiCallResult.Failure()
-
-        val slots = mutableListOf<Boolean>()
-
-        sut.payWithSelectedBank()
-        sut.completeIdealPayment()
-
-        verify { isLoadingMock.onChanged(capture(slots)) }
-
-        val isLoading = slots[1]
-        assertEquals(false, isLoading)
-    }
-
-    @Test
-    @DisplayName("Given completeIdealPayment is called, when the request is successful and order status pending, then post saleStatusCallRequest with success response")
-    fun postSaleStatusCallRequestOnRequestSuccessAndOrderStatusPending() {
-        every { statusResponse.orderDetails.orderStatus } returns OrderStatus.PENDING
-
-        val slots = mutableListOf<JudoApiCallResult<BankSaleStatusResponse>>()
-
-        sut.payWithSelectedBank()
-        sut.completeIdealPayment()
-        testDispatcher.advanceUntilIdle()
-
-        verify { saleStatusCallResultMock.onChanged(capture(slots)) }
-
-        val statusCallResult = slots[0]
-        assertEquals(this.statusCallResult, statusCallResult)
-    }
-
-    @Test
-    @DisplayName("Given completeIdealPayment is called, when the request is successful and order status pending, then set isDelay = true")
-    fun setIsDelayTrueOnSaleStatusCallRequestSuccessAndOrderStatusPending() {
-        every { statusResponse.orderDetails.orderStatus } returns OrderStatus.PENDING
-
-        val slots = mutableListOf<Boolean>()
-
-        sut.payWithSelectedBank()
-        sut.completeIdealPayment()
-        testDispatcher.advanceUntilIdle()
-
-        verify { isDelayMock.onChanged(capture(slots)) }
-
-        val isDelay = slots[1]
-        assertTrue(isDelay)
+        coVerify { pollingService.retry() }
     }
 
     private fun getJudo() = Judo.Builder(PaymentWidgetType.CARD_PAYMENT)
