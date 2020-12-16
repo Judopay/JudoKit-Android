@@ -6,21 +6,28 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.judokit.android.JudoSharedViewModel
 import com.judokit.android.R
+import com.judokit.android.animateWithAlpha
 import com.judokit.android.api.error.toJudoError
 import com.judokit.android.api.factory.JudoApiServiceFactory
+import com.judokit.android.api.model.response.BankSaleStatusResponse
+import com.judokit.android.api.model.response.IdealSaleResponse
 import com.judokit.android.api.model.response.JudoApiCallResult
 import com.judokit.android.api.model.response.toJudoResult
 import com.judokit.android.judo
 import com.judokit.android.model.JudoError
 import com.judokit.android.model.JudoPaymentResult
+import com.judokit.android.model.JudoResult
+import com.judokit.android.service.polling.PollingResult
+import com.judokit.android.service.polling.PollingService
 import com.judokit.android.ui.common.getLocale
 import com.judokit.android.ui.ideal.components.IdealWebViewCallback
+import com.judokit.android.ui.paymentmethods.components.PollingStatusViewState
 import kotlinx.android.synthetic.main.ideal_fragment.*
+import kotlinx.android.synthetic.main.polling_status_view.view.*
 
 const val JUDO_IDEAL_BANK = "com.judokit.android.idealbankbic"
 const val BIC_NOT_NULL = "BIC must not be null"
@@ -44,80 +51,54 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
 
         val application = requireActivity().application
         val service = JudoApiServiceFactory.createApiService(application, judo)
-        val factory = IdealViewModelFactory(bic, judo, service, application)
+        val pollingService = PollingService(service)
+        val factory = IdealViewModelFactory(judo, service, pollingService, application)
         viewModel = ViewModelProvider(this, factory).get(IdealViewModel::class.java)
 
-        viewModel.saleCallResult.observe(
-            viewLifecycleOwner,
-            Observer {
-                when (it) {
-                    is JudoApiCallResult.Success -> {
-                        val idealSaleResponse = it.data
-                        if (idealSaleResponse?.redirectUrl != null && idealSaleResponse.merchantRedirectUrl != null) {
-                            idealWebView.authorize(
-                                idealSaleResponse.redirectUrl,
-                                idealSaleResponse.merchantRedirectUrl
-                            )
-                        } else {
-                            sharedViewModel.paymentResult.postValue(
-                                JudoPaymentResult.Error(
-                                    JudoError.judoResponseParseError(
-                                        resources
-                                    )
-                                )
-                            )
-                            findNavController().popBackStack()
-                        }
-                    }
-                    is JudoApiCallResult.Failure -> if (it.error != null) {
-                        sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
-                        findNavController().popBackStack()
-                    }
-                }
-            }
-        )
-
-        viewModel.saleStatusCallResult.observe(
-            viewLifecycleOwner,
-            Observer {
-                when (it) {
-                    is JudoApiCallResult.Success -> if (it.data != null) {
-                        val locale = getLocale(resources)
-                        sharedViewModel.paymentResult.postValue(
-                            JudoPaymentResult.Success(it.data.toJudoResult(locale))
-                        )
-                    }
-                    is JudoApiCallResult.Failure -> if (it.error != null) {
-                        sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(it.error.toJudoError()))
-                    }
-                }
-                findNavController().popBackStack()
-            }
-        )
+        viewModel.saleCallResult.observe(viewLifecycleOwner, { handleSaleResult(it) })
+        viewModel.saleStatusResult.observe(viewLifecycleOwner, { handleSaleStatusResult(it) })
 
         viewModel.isLoading.observe(
             viewLifecycleOwner,
-            Observer {
+            {
                 if (it) {
                     idealWebView.visibility = View.GONE
-                    idealTextView.visibility = View.VISIBLE
-                    idealProgressBar.visibility = View.VISIBLE
+                    idealPollingStatusView.apply {
+                        visibility = View.VISIBLE
+                        state = PollingStatusViewState.PROCESSING
+                    }
                 } else {
                     idealWebView.visibility = View.VISIBLE
-                    idealTextView.visibility = View.GONE
-                    idealProgressBar.visibility = View.GONE
+                    idealPollingStatusView.visibility = View.GONE
                 }
             }
         )
 
-        viewModel.isRequestDelayed.observe(
-            viewLifecycleOwner,
-            Observer {
-                if (it) idealTextView.text = getString(R.string.there_is_a_delay)
-            }
-        )
+        idealPollingStatusView.animateWithAlpha(1.0f)
+        viewModel.send(IdealAction.Initialise(bic))
+    }
 
-        viewModel.payWithSelectedBank()
+    private fun handleSaleResult(result: JudoApiCallResult<IdealSaleResponse>?) {
+        when (result) {
+            is JudoApiCallResult.Success -> {
+                val idealSaleResponse = result.data
+                if (idealSaleResponse?.redirectUrl != null && idealSaleResponse.merchantRedirectUrl != null) {
+                    idealWebView.authorize(
+                        idealSaleResponse.redirectUrl,
+                        idealSaleResponse.merchantRedirectUrl
+                    )
+                } else {
+                    sharedViewModel.paymentResult.postValue(
+                        JudoPaymentResult.Error(
+                            JudoError.judoResponseParseError(resources)
+                        )
+                    )
+                }
+            }
+            is JudoApiCallResult.Failure -> if (result.error != null) {
+                sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(result.error.toJudoError()))
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -129,8 +110,51 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
     }
 
     override fun onPageStarted(checksum: String) {
-        idealTextView.visibility = View.VISIBLE
-        idealProgressBar.visibility = View.VISIBLE
-        viewModel.completeIdealPayment()
+        idealPollingStatusView.visibility = View.VISIBLE
+        viewModel.send(IdealAction.StartPolling)
+    }
+
+    private fun handleSaleStatusResult(pollingResult: PollingResult<BankSaleStatusResponse>?) {
+        when (pollingResult) {
+            is PollingResult.Processing -> {
+                idealPollingStatusView.state = PollingStatusViewState.PROCESSING
+                idealWebView.visibility = View.GONE
+            }
+            is PollingResult.Delay -> {
+                idealPollingStatusView.state = PollingStatusViewState.DELAY
+                idealPollingStatusView.pollingButton.setOnClickListener {
+                    viewModel.send(IdealAction.RetryPolling)
+                }
+            }
+            is PollingResult.Retry -> {
+                idealPollingStatusView.state = PollingStatusViewState.RETRY
+                idealPollingStatusView.pollingButton.setOnClickListener {
+                    viewModel.send(IdealAction.RetryPolling)
+                }
+            }
+            is PollingResult.Success -> {
+                val result = JudoPaymentResult.Success(
+                    pollingResult.data?.toJudoResult(getLocale(resources)) ?: JudoResult()
+                )
+                sharedViewModel.paymentResult.postValue(result)
+            }
+            is PollingResult.Failure -> {
+                val result = JudoPaymentResult.Error(JudoError.judoRequestFailedError(resources))
+                sharedViewModel.paymentResult.postValue(result)
+                findNavController().popBackStack()
+            }
+            is PollingResult.CallFailure -> {
+                val result = pollingResult.error?.toJudoError() ?: JudoError.judoRequestFailedError(
+                    resources
+                )
+                sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(result))
+                findNavController().popBackStack()
+            }
+            is PollingResult.ResponseParseError -> {
+                val error = JudoError.judoResponseParseError(resources)
+                val result = JudoPaymentResult.Error(error)
+                sharedViewModel.paymentResult.postValue(result)
+            }
+        }
     }
 }
