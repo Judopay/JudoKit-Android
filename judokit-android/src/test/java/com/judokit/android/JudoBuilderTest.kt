@@ -1,19 +1,33 @@
 package com.judokit.android
 
+import com.judokit.android.api.JudoApiService
+import com.judokit.android.api.error.toJudoError
+import com.judokit.android.api.model.response.JudoApiCallResult
+import com.judokit.android.api.model.response.Receipt
+import com.judokit.android.api.model.response.toJudoResult
 import com.judokit.android.model.Amount
 import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.Currency
+import com.judokit.android.model.JudoError
 import com.judokit.android.model.PaymentMethod
 import com.judokit.android.model.PaymentWidgetType
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.slot
+import okhttp3.ResponseBody
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.mockito.ArgumentMatchers.any
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 private const val CARD_TOKEN = "card_token"
 private const val SECURITY_CODE = "security_code"
@@ -22,9 +36,11 @@ private const val SECURITY_CODE = "security_code"
 internal class JudoBuilderTest {
 
     private lateinit var judoBuilder: Judo.Builder
+    private val service: JudoApiService = mockk(relaxed = true)
 
     @BeforeEach
     fun setUp() {
+        mockkStatic("retrofit2.KotlinExtensions")
         judoBuilder = Judo.Builder(PaymentWidgetType.CARD_PAYMENT)
             .setJudoId("111111111")
             .setAuthorization(mockk(relaxed = true))
@@ -233,5 +249,80 @@ internal class JudoBuilderTest {
         judoBuilder.setIsSandboxed(null)
 
         assertFalse(judoBuilder.build().isSandboxed)
+    }
+
+    @Test
+    @DisplayName("Given fetchTransactionWithReceiptId is called, when the response is successful, onSuccess callback should be invoked with JudoResult")
+    fun invokeOnSuccessOnSuccessfulResponseWhenFetchTransactionWithReceiptIdIsCalled() {
+        val result: JudoApiCallResult.Success<Receipt> = mockk(relaxed = true) {
+            every { data } returns mockk(relaxed = true)
+        }
+        val callMock: Call<JudoApiCallResult<Receipt>> = mockk(relaxed = true)
+        val callbackMock = slot<Callback<JudoApiCallResult<Receipt>>>()
+        every { callMock.enqueue(capture(callbackMock)) } answers {
+            callbackMock.captured.onResponse(callMock, Response.success(result))
+        }
+        every { service.fetchTransactionWithReceiptId("receiptId") } returns callMock
+
+        judoBuilder.build().fetchTransactionWithReceiptId(
+            service,
+            "receiptId",
+            {
+                assertEquals(it, result.data?.toJudoResult())
+            },
+            {
+                // no-op
+            }
+        )
+    }
+
+    @Test
+    @DisplayName("Given fetchTransactionWithReceiptId is called, when the response is failure, onFailure callback should be invoked with JudoError")
+    fun invokeOnFailureOnFailedResponseWhenFetchTransactionWithReceiptIdIsCalled() {
+        val result: JudoApiCallResult.Failure = mockk(relaxed = true) {
+            every { error } returns mockk(relaxed = true)
+        }
+        val callMock: Call<JudoApiCallResult<Receipt>> = mockk(relaxed = true)
+        val callbackMock = slot<Callback<JudoApiCallResult<Receipt>>>()
+        every { callMock.enqueue(capture(callbackMock)) } answers {
+            callbackMock.captured.onResponse(callMock, Response.success(result))
+        }
+        every { service.fetchTransactionWithReceiptId("receiptId") } returns callMock
+
+        judoBuilder.build().fetchTransactionWithReceiptId(
+            service,
+            "receiptId",
+            {
+                // no-op
+            },
+            {
+                assertEquals(it, result.error?.toJudoError())
+            }
+        )
+    }
+
+    @Test
+    @DisplayName("Given fetchTransactionWithReceiptId is called, when the request responds with HTTP error, then throw exception")
+    fun throwExceptionOnHttpErrorWhenFetchTransactionWithReceiptIdIsCalled() {
+
+        val callMock: Call<JudoApiCallResult<Receipt>> = mockk(relaxed = true)
+        val callbackMock = slot<Callback<JudoApiCallResult<Receipt>>>()
+        every { callMock.enqueue(capture(callbackMock)) } answers {
+            callbackMock.captured.onFailure(callMock, mockk())
+        }
+        every { service.fetchTransactionWithReceiptId("receiptId") } returns callMock
+
+        assertThrows<Exception> {
+            judoBuilder.build().fetchTransactionWithReceiptId(
+                service,
+                "receiptId",
+                {
+                    // no-op
+                },
+                {
+                    // no-op
+                }
+            )
+        }
     }
 }
