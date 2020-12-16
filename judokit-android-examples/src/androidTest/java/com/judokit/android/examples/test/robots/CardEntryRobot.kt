@@ -64,7 +64,7 @@ class CardEntryRobot {
         }
     }
 
-    fun enterTextIntoField(textToEnter: String, fieldName: String) {
+    fun enterTextIntoField(textToEnter: String?, fieldName: String) {
         val view = when (fieldName) {
             View.CARD_NUMBER.value -> onView(withId(R.id.numberTextInputEditText))
             View.CARDHOLDER_NAME.value -> onView(withId(R.id.nameTextInputEditText))

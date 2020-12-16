@@ -10,11 +10,14 @@ import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withTagValue
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.platform.app.InstrumentationRegistry
+import com.google.gson.Gson
 import com.judokit.android.examples.R
 import com.judokit.android.examples.feature.DemoFeatureListActivity
 import com.judokit.android.examples.test.espresso.RecyclerViewMatcher
 import com.judokit.android.examples.test.espresso.clearData
 import com.judokit.android.examples.test.espresso.waitUntilVisible
+import com.judokit.android.examples.test.model.TestConfiguration
 import com.judokit.android.examples.test.robots.ConfigurationRobot
 import io.cucumber.core.api.Scenario
 import io.cucumber.java.After
@@ -22,6 +25,7 @@ import io.cucumber.java.Before
 import io.cucumber.java.en.Then
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.allOf
+import org.junit.Assume
 
 class PaymentMethodsSteps {
 
@@ -33,7 +37,23 @@ class PaymentMethodsSteps {
         activityScenario = launchActivity()
 
         val tags = scenario.sourceTagNames
-        configurationRobot.configure(tags)
+        val jsonString = InstrumentationRegistry.getInstrumentation().context.resources.assets.open(
+            "test-input-data.json"
+        ).bufferedReader().use { it.readText() }
+        val testConfiguration = Gson().fromJson(jsonString, TestConfiguration::class.java)
+
+        testConfiguration.testsToSkip.forEach {
+            if (it in tags) {
+                Assume.assumeTrue(false)
+            }
+        }
+
+        testConfiguration.testsToInclude.forEach {
+            if (it !in tags) {
+                Assume.assumeTrue(false)
+            }
+        }
+        configurationRobot.configure(tags, testConfiguration!!)
     }
 
     @After("@payment-methods")

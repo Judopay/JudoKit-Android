@@ -2,9 +2,13 @@ package com.judokit.android.examples.test.steps
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.launchActivity
+import androidx.test.platform.app.InstrumentationRegistry
+import com.google.gson.Gson
 import com.judokit.android.examples.feature.DemoFeatureListActivity
 import com.judokit.android.examples.test.espresso.DEFAULT_TIMEOUT
 import com.judokit.android.examples.test.espresso.clearData
+import com.judokit.android.examples.test.model.TestConfiguration
+import com.judokit.android.examples.test.model.TestData
 import com.judokit.android.examples.test.robots.CardEntryRobot
 import com.judokit.android.examples.test.robots.ConfigurationRobot
 import com.judokit.android.examples.test.robots.ThreeDSecureRobot
@@ -15,6 +19,7 @@ import io.cucumber.java.Before
 import io.cucumber.java.en.And
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.When
+import org.junit.Assume
 
 class ThreeDSecureSteps {
 
@@ -24,11 +29,33 @@ class ThreeDSecureSteps {
     private val robot = ThreeDSecureRobot()
     private val cardEntryRobot = CardEntryRobot()
 
+    private var scenarioData: TestData? = null
+
     @Before("@3DS")
     fun setUp(scenario: Scenario) {
         activityScenario = launchActivity()
+
         val tags = scenario.sourceTagNames
-        configurationRobot.configure(tags)
+        val jsonString = InstrumentationRegistry.getInstrumentation().context.resources.assets.open(
+            "test-input-data.json"
+        ).bufferedReader().use { it.readText() }
+        val testConfiguration = Gson().fromJson(jsonString, TestConfiguration::class.java)
+
+        testConfiguration.testsToSkip.forEach {
+            if (it in tags) {
+                Assume.assumeTrue(false)
+            }
+        }
+
+        testConfiguration.testsToInclude.forEach {
+            if (it !in tags) {
+                Assume.assumeTrue(false)
+            }
+        }
+
+        scenarioData =
+            testConfiguration.testData.find { testData -> testData.tags.any { it in tags } }
+        configurationRobot.configure(tags, testConfiguration!!)
     }
 
     @After("@3DS")
@@ -37,8 +64,8 @@ class ThreeDSecureSteps {
         clearData()
     }
 
-    @Given("^I initiated a 3DS (.*?) transaction$")
-    fun initiate3DSTransaction(paymentWidgetType: String) {
+    @Given("^I initiated a (.*?) 3DS (.*?) transaction$")
+    fun initiate3DSTransaction(identifier: String, paymentWidgetType: String) {
         cardEntryRobot.isOnScreen("Main")
 
         when (paymentWidgetType) {
@@ -60,10 +87,12 @@ class ThreeDSecureSteps {
             cardEntryRobot.press("ADD CARD")
         }
 
-        cardEntryRobot.enterTextIntoField("4000 0000 0000 0002", "Card Number")
-        cardEntryRobot.enterTextIntoField("John Rambo", "Cardholder Name")
-        cardEntryRobot.enterTextIntoField("12/29", "Expiry Date")
-        cardEntryRobot.enterTextIntoField("123", "Secure Code")
+        val card = scenarioData?.cards?.find { it.cardType == identifier }
+
+        cardEntryRobot.enterTextIntoField(card?.cardNumber, "Card Number")
+        cardEntryRobot.enterTextIntoField(card?.cardHolder, "Cardholder Name")
+        cardEntryRobot.enterTextIntoField(card?.expiryDate, "Expiry Date")
+        cardEntryRobot.enterTextIntoField(card?.securityCode, "Secure Code")
 
         if (paymentWidgetType == PaymentWidgetType.PAYMENT_METHODS.name ||
             paymentWidgetType == PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS.name
@@ -78,7 +107,7 @@ class ThreeDSecureSteps {
             )
             else -> {
                 cardEntryRobot.press("PAY NOW")
-                cardEntryRobot.enterTextIntoField("123", "Secure Code")
+                cardEntryRobot.enterTextIntoField(card?.securityCode, "Secure Code")
                 cardEntryRobot.press("PAY NOW")
             }
         }

@@ -10,13 +10,12 @@ import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.platform.app.InstrumentationRegistry
 import com.judokit.android.examples.R
 import com.judokit.android.examples.test.espresso.setChecked
+import com.judokit.android.examples.test.model.TestConfiguration
 import com.judokit.android.model.Currency
 import com.judokit.android.model.PaymentMethod
 import org.hamcrest.CoreMatchers.anything
-import java.util.Properties
 
 private const val TAG_REQUIRE_3DS = "@require-3ds-config"
 private const val TAG_REQUIRE_NON_3DS = "@require-non-3ds-config"
@@ -32,35 +31,24 @@ private const val TAG_DISABLE_ALL_PAYMENT_METHODS = "@require-all-payment-method
 private const val TAG_CURRENCY_GBP = "@require-currency-gbp"
 private const val TAG_CURRENCY_EUR = "@require-currency-eur"
 
-private const val CREDENTIALS_FILE_NAME = "test-credentials.properties"
-private const val JUDO_ID = "judo-id"
-private const val TOKEN = "token"
-private const val THREE_DS_TOKEN = "3DS-token"
-private const val SECRET = "secret"
-private const val THREE_DS_SECRET = "3DS-secret"
-
 class ConfigurationRobot {
-    private val props = Properties().apply {
-        load(
-            InstrumentationRegistry.getInstrumentation().context.resources.assets.open(
-                CREDENTIALS_FILE_NAME
-            )
-        )
-    }
 
-    fun configure(tags: MutableCollection<String>) {
+    fun configure(tags: MutableCollection<String>, testData: TestConfiguration) {
         onView(withId(R.id.action_settings)).perform(click())
 
-        setJudoId()
+        setJudoId(testData.judoId)
+        if (!testData.sandbox) {
+            setSandboxDisabled()
+        }
         for (tag in tags) {
             when (tag) {
                 TAG_REQUIRE_NON_3DS -> {
-                    setToken(threeDSecureEnabled = false)
-                    setSecret(threeDSecureEnabled = false)
+                    setToken(testData.token)
+                    setSecret(testData.secret)
                 }
                 TAG_REQUIRE_3DS -> {
-                    setToken(threeDSecureEnabled = true)
-                    setSecret(threeDSecureEnabled = true)
+                    setToken(testData.threeDSToken)
+                    setSecret(testData.threeDSSecret)
                 }
                 TAG_REQUIRE_AVS -> setAvsEnabled()
                 TAG_REQUIRE_BUTTON_AMOUNT -> setDisplayAmountOnButton()
@@ -126,25 +114,32 @@ class ConfigurationRobot {
         pressBack()
     }
 
-    private fun setJudoId() {
-        val judoId = props.getProperty(JUDO_ID)
+    private fun setJudoId(judoId: String) {
         onView(withText(R.string.judo_id_title)).perform(click())
         onView(withId(android.R.id.edit)).perform(replaceText(judoId))
         onView(withText("OK")).perform(click())
     }
 
-    private fun setToken(threeDSecureEnabled: Boolean) {
-        val judoId = props.getProperty(if (threeDSecureEnabled) THREE_DS_TOKEN else TOKEN)
+    private fun setToken(token: String) {
         onView(withText(R.string.token_title)).perform(click())
-        onView(withId(android.R.id.edit)).perform(replaceText(judoId))
+        onView(withId(android.R.id.edit)).perform(replaceText(token))
         onView(withText("OK")).perform(click())
     }
 
-    private fun setSecret(threeDSecureEnabled: Boolean) {
-        val judoId = props.getProperty(if (threeDSecureEnabled) THREE_DS_SECRET else SECRET)
+    private fun setSecret(secret: String) {
         onView(withText(R.string.secret_title)).perform(click())
-        onView(withId(android.R.id.edit)).perform(replaceText(judoId))
+        onView(withId(android.R.id.edit)).perform(replaceText(secret))
         onView(withText("OK")).perform(click())
+    }
+
+    private fun setSandboxDisabled() {
+        onView(withId(androidx.preference.R.id.recycler_view))
+            .perform(
+                actionOnItem<RecyclerView.ViewHolder>(
+                    hasDescendant(withText(R.string.is_sandboxed_title)),
+                    click()
+                )
+            )
     }
 
     private fun setAvsEnabled() {
