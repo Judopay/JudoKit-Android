@@ -272,10 +272,14 @@ class Judo internal constructor(
         }
     }
 
-    override fun toString(): String {
-        return "Judo(judoId='$judoId', authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration)"
-    }
-
+    /**
+     * A method used to fetch the details of a transaction based on a provided receipt ID
+     *
+     * @param service - an instance of [JudoApiService] created through [com.judokit.android.api.factory.JudoApiServiceFactory.createApiService]
+     * @param receiptId - a string which contains the receipt ID of a transaction.
+     * @param onSuccess - a callback function for obtaining a [JudoResult] instance.
+     * @param onFailure - a callback function for obtaining [JudoError] instance.
+     */
     fun fetchTransactionWithReceiptId(
         service: JudoApiService,
         receiptId: String,
@@ -302,5 +306,9 @@ class Judo internal constructor(
                     throw Exception(t)
                 }
             })
+    }
+
+    override fun toString(): String {
+        return "Judo(judoId='$judoId', authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration)"
     }
 }
