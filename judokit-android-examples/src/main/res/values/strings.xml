@@ -39,6 +39,9 @@
     <string name="feature_title_token_payment">Token payments</string>
     <string name="feature_subtitle_token_payment">Token payments (no UI)</string>
 
+    <string name="feature_title_get_transaction_details">Get transaction details</string>
+    <string name="feature_subtitle_get_transaction_details">Get transaction for receipt ID</string>
+
     <string name="title_settings">Settings</string>
 
     <!-- Preference Titles -->
