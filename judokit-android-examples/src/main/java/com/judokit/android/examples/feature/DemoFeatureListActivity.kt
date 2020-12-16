@@ -256,13 +256,16 @@ class DemoFeatureListActivity : AppCompatActivity() {
             ) { dialog, _ ->
                 judo.fetchTransactionWithReceiptId(
                     service,
-                    view.receiptIdEditText.text.toString(), {
+                    view.receiptIdEditText.text.toString(),
+                    {
                         processSuccessfulPayment(it)
                         dialog.dismiss()
-                    }, {
+                    },
+                    {
                         processPaymentError(it)
                         dialog.dismiss()
-                    })
+                    }
+                )
 
                 view.receiptProgressBar.visibility = View.VISIBLE
                 view.receiptIdEditText.visibility = View.GONE

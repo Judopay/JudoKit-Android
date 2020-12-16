@@ -279,28 +279,28 @@ class Judo internal constructor(
     fun fetchTransactionWithReceiptId(
         service: JudoApiService,
         receiptId: String,
-        onSuccess: (JudoResult?)->Unit,
-        onFailure: (JudoError?)->Unit
+        onSuccess: (JudoResult?) -> Unit,
+        onFailure: (JudoError?) -> Unit
     ) {
-        service.fetchTransactionWithReceiptId(receiptId).enqueue(object :
-            Callback<JudoApiCallResult<Receipt>> {
-            override fun onResponse(
-                call: Call<JudoApiCallResult<Receipt>>,
-                response: Response<JudoApiCallResult<Receipt>>
-            ) {
-                when (val result = response.body()) {
-                    is JudoApiCallResult.Success -> {
-                        onSuccess(result.data?.toJudoResult())
-                    }
-                    is JudoApiCallResult.Failure -> {
-                        onFailure(result.error?.toJudoError())
+        service.fetchTransactionWithReceiptId(receiptId)
+            .enqueue(object : Callback<JudoApiCallResult<Receipt>> {
+                override fun onResponse(
+                    call: Call<JudoApiCallResult<Receipt>>,
+                    response: Response<JudoApiCallResult<Receipt>>
+                ) {
+                    when (val result = response.body()) {
+                        is JudoApiCallResult.Success -> {
+                            onSuccess(result.data?.toJudoResult())
+                        }
+                        is JudoApiCallResult.Failure -> {
+                            onFailure(result.error?.toJudoError())
+                        }
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<JudoApiCallResult<Receipt>>, t: Throwable) {
-                throw Exception(t)
-            }
-        })
+                override fun onFailure(call: Call<JudoApiCallResult<Receipt>>, t: Throwable) {
+                    throw Exception(t)
+                }
+            })
     }
 }
