@@ -103,18 +103,51 @@ interface JudoApiService {
     @POST("transactions/checkcard")
     fun checkCard(@Body checkCardRequest: CheckCardRequest): Call<JudoApiCallResult<Receipt>>
 
+    /**
+     * A method that invokes a Google Pay payment transaction
+     *
+     * @param googlePayRequest - an instance of GooglePayRequest describing the Google Pay request
+     * @return The receipt of the Google Pay transaction
+     */
     @POST("transactions/payments")
     fun googlePayPayment(@Body googlePayRequest: GooglePayRequest): Call<JudoApiCallResult<Receipt>>
 
+    /**
+     * A method that invokes a Google Pay pre-auth transaction.
+     *
+     * @param googlePayRequest - an instance of [GooglePayRequest] describing the Google Pay request.
+     * @return The receipt of the Google Pay transaction.
+     */
     @POST("transactions/preauths")
     fun preAuthGooglePayPayment(@Body googlePayRequest: GooglePayRequest): Call<JudoApiCallResult<Receipt>>
 
+    /**
+     * A method that invokes a Bank transaction, used for completing transactions via iDEAL Bank apps.
+     *
+     * @param saleRequest - an instance of [IdealSaleRequest] describing the Bank request.
+     * @return the receipt of the iDEAL transaction.
+     */
     @POST("order/bank/sale")
     fun sale(@Body saleRequest: IdealSaleRequest): Call<JudoApiCallResult<IdealSaleResponse>>
 
     @GET("order/bank/statusrequest/{orderID}")
     fun status(@Path("orderID") orderId: String): Call<JudoApiCallResult<BankSaleStatusResponse>>
 
+    /**
+     * A method that invokes a Bank transaction, used for completing transactions via PayByBankApp.
+     *
+     * @param saleRequest - an instance of [BankSaleRequest] describing the Bank request.
+     * @return the receipt of the PayByBankApp transaction.
+     */
     @POST("order/bank/sale")
     fun sale(@Body saleRequest: BankSaleRequest): Call<JudoApiCallResult<BankSaleResponse>>
+
+    /**
+     * A method used to fetch the details of a transaction based on a provided receipt ID
+     *
+     * @param receiptId - a string which contains the receipt ID of a transaction.
+     * @return the receipt object that corresponds to the passed receipt ID
+     */
+    @GET("transactions/{receiptId}")
+    fun fetchTransactionWithReceiptId(@Path("receiptId") receiptId: String): Call<JudoApiCallResult<Receipt>>
 }

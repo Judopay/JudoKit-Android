@@ -15,9 +15,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-private const val CARD_TOKEN = "card_token"
-private const val SECURITY_CODE = "security_code"
-
 @DisplayName("Testing the Judo configuration object builder logic")
 internal class JudoBuilderTest {
 

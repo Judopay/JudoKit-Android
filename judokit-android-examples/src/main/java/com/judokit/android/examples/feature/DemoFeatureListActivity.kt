@@ -8,6 +8,8 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
@@ -22,10 +24,14 @@ import com.judokit.android.JudoActivity
 import com.judokit.android.PAYMENT_CANCELLED
 import com.judokit.android.PAYMENT_ERROR
 import com.judokit.android.PAYMENT_SUCCESS
+import com.judokit.android.api.error.toJudoError
 import com.judokit.android.api.factory.JudoApiServiceFactory
 import com.judokit.android.api.model.Authorization
 import com.judokit.android.api.model.BasicAuthorization
 import com.judokit.android.api.model.PaymentSessionAuthorization
+import com.judokit.android.api.model.response.JudoApiCallResult
+import com.judokit.android.api.model.response.Receipt
+import com.judokit.android.api.model.response.toJudoResult
 import com.judokit.android.examples.R
 import com.judokit.android.examples.common.startResultActivity
 import com.judokit.android.examples.common.toResult
@@ -55,6 +61,10 @@ import com.judokit.android.ui.common.PBBA_RESULT
 import com.judokit.android.ui.common.isBankingAppAvailable
 import com.readystatesoftware.chuck.ChuckInterceptor
 import kotlinx.android.synthetic.main.activity_demo_feature_list.*
+import kotlinx.android.synthetic.main.dialog_get_transaction.view.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.UUID
 
 const val JUDO_PAYMENT_WIDGET_REQUEST_CODE = 1
@@ -174,6 +184,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
     private fun showcaseFeature(feature: DemoFeature) {
         try {
             val widgetType = when (feature) {
+                DemoFeature.GET_TRANSACTION_DETAILS,
                 DemoFeature.PAYMENT -> PaymentWidgetType.CARD_PAYMENT
                 DemoFeature.PREAUTH -> PaymentWidgetType.PRE_AUTH
                 DemoFeature.REGISTER_CARD -> PaymentWidgetType.REGISTER_CARD
@@ -209,19 +220,23 @@ class DemoFeatureListActivity : AppCompatActivity() {
     }
 
     private fun navigateToJudoPaymentWidgetWithConfigurations(judo: Judo, feature: DemoFeature) {
-        val myClass = when (judo.paymentWidgetType) {
-            PaymentWidgetType.CREATE_CARD_TOKEN ->
-                if (feature == DemoFeature.TOKEN_PAYMENT) {
-                    DemoTokenPaymentActivity::class.java
-                } else {
-                    JudoActivity::class.java
-                }
-            PaymentWidgetType.PAY_BY_BANK_APP -> PayByBankActivity::class.java
-            else -> JudoActivity::class.java
+        if (feature == DemoFeature.GET_TRANSACTION_DETAILS) {
+            showGetTransactionDialog(judo)
+        } else {
+            val myClass = when (judo.paymentWidgetType) {
+                PaymentWidgetType.CREATE_CARD_TOKEN ->
+                    if (feature == DemoFeature.TOKEN_PAYMENT) {
+                        DemoTokenPaymentActivity::class.java
+                    } else {
+                        JudoActivity::class.java
+                    }
+                PaymentWidgetType.PAY_BY_BANK_APP -> PayByBankActivity::class.java
+                else -> JudoActivity::class.java
+            }
+            val intent = Intent(this, myClass)
+            intent.putExtra(JUDO_OPTIONS, judo)
+            startActivityForResult(intent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
         }
-        val intent = Intent(this, myClass)
-        intent.putExtra(JUDO_OPTIONS, judo)
-        startActivityForResult(intent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
     }
 
     private fun toast(message: String) =
@@ -236,6 +251,43 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 showcaseFeature(it)
             }
         }
+    }
+
+    private fun showGetTransactionDialog(judo: Judo) {
+        val view = layoutInflater.inflate(R.layout.dialog_get_transaction, null)
+        val service = JudoApiServiceFactory.createApiService(this, judo)
+        AlertDialog.Builder(this).setTitle(R.string.feature_title_get_transaction_details)
+            .setView(view)
+            .setPositiveButton(
+                R.string.dialog_button_ok
+            ) { dialog, _ ->
+                val fetchTransactionDetailsCallback = object : Callback<JudoApiCallResult<Receipt>> {
+                    override fun onResponse(
+                        call: Call<JudoApiCallResult<Receipt>>,
+                        response: Response<JudoApiCallResult<Receipt>>
+                    ) {
+                        when (val result = response.body()) {
+                            is JudoApiCallResult.Success -> {
+                                processSuccessfulPayment(result.data?.toJudoResult())
+                            }
+                            is JudoApiCallResult.Failure -> {
+                                processPaymentError(result.error?.toJudoError())
+                            }
+                        }
+                        dialog.dismiss()
+                    }
+
+                    override fun onFailure(call: Call<JudoApiCallResult<Receipt>>, t: Throwable) {
+                        dialog.dismiss()
+                        throw Exception(t)
+                    }
+                }
+                service.fetchTransactionWithReceiptId(view.receiptIdEditText.text.toString())
+                    .enqueue(fetchTransactionDetailsCallback)
+                view.receiptProgressBar.visibility = View.VISIBLE
+                view.receiptIdEditText.visibility = View.GONE
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }.show()
     }
 
     @Throws(IllegalArgumentException::class, IllegalStateException::class)
