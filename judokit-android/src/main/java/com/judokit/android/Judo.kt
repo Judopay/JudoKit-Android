@@ -2,19 +2,12 @@ package com.judokit.android
 
 import android.app.Activity
 import android.os.Parcelable
-import com.judokit.android.api.JudoApiService
-import com.judokit.android.api.error.toJudoError
 import com.judokit.android.api.model.Authorization
 import com.judokit.android.api.model.request.Address
-import com.judokit.android.api.model.response.JudoApiCallResult
-import com.judokit.android.api.model.response.Receipt
-import com.judokit.android.api.model.response.toJudoResult
 import com.judokit.android.model.Amount
 import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.Currency
 import com.judokit.android.model.GooglePayConfiguration
-import com.judokit.android.model.JudoError
-import com.judokit.android.model.JudoResult
 import com.judokit.android.model.PBBAConfiguration
 import com.judokit.android.model.PaymentMethod
 import com.judokit.android.model.PaymentWidgetType
@@ -23,9 +16,6 @@ import com.judokit.android.model.Reference
 import com.judokit.android.model.UiConfiguration
 import com.judokit.android.ui.common.REGEX_JUDO_ID
 import kotlinx.android.parcel.Parcelize
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 /**
  * The wrapper for providing data to Activity and Fragments classes in the SDK (e.g. JudopayActivity).
@@ -270,42 +260,6 @@ class Judo internal constructor(
             else
                 throw IllegalArgumentException("The Judo ID entered is invalid. The specified Judo ID parameter has an incorrect format.")
         }
-    }
-
-    /**
-     * A method used to fetch the details of a transaction based on a provided receipt ID
-     *
-     * @param service - an instance of [JudoApiService] created through [com.judokit.android.api.factory.JudoApiServiceFactory.createApiService]
-     * @param receiptId - a string which contains the receipt ID of a transaction.
-     * @param onSuccess - a callback function for obtaining a [JudoResult] instance.
-     * @param onFailure - a callback function for obtaining [JudoError] instance.
-     */
-    fun fetchTransactionWithReceiptId(
-        service: JudoApiService,
-        receiptId: String,
-        onSuccess: (JudoResult?) -> Unit,
-        onFailure: (JudoError?) -> Unit
-    ) {
-        service.fetchTransactionWithReceiptId(receiptId)
-            .enqueue(object : Callback<JudoApiCallResult<Receipt>> {
-                override fun onResponse(
-                    call: Call<JudoApiCallResult<Receipt>>,
-                    response: Response<JudoApiCallResult<Receipt>>
-                ) {
-                    when (val result = response.body()) {
-                        is JudoApiCallResult.Success -> {
-                            onSuccess(result.data?.toJudoResult())
-                        }
-                        is JudoApiCallResult.Failure -> {
-                            onFailure(result.error?.toJudoError())
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<JudoApiCallResult<Receipt>>, t: Throwable) {
-                    throw Exception(t)
-                }
-            })
     }
 
     override fun toString(): String {

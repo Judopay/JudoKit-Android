@@ -24,10 +24,14 @@ import com.judokit.android.JudoActivity
 import com.judokit.android.PAYMENT_CANCELLED
 import com.judokit.android.PAYMENT_ERROR
 import com.judokit.android.PAYMENT_SUCCESS
+import com.judokit.android.api.error.toJudoError
 import com.judokit.android.api.factory.JudoApiServiceFactory
 import com.judokit.android.api.model.Authorization
 import com.judokit.android.api.model.BasicAuthorization
 import com.judokit.android.api.model.PaymentSessionAuthorization
+import com.judokit.android.api.model.response.JudoApiCallResult
+import com.judokit.android.api.model.response.Receipt
+import com.judokit.android.api.model.response.toJudoResult
 import com.judokit.android.examples.R
 import com.judokit.android.examples.common.startResultActivity
 import com.judokit.android.examples.common.toResult
@@ -58,6 +62,9 @@ import com.judokit.android.ui.common.isBankingAppAvailable
 import com.readystatesoftware.chuck.ChuckInterceptor
 import kotlinx.android.synthetic.main.activity_demo_feature_list.*
 import kotlinx.android.synthetic.main.dialog_get_transaction.view.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.UUID
 
 const val JUDO_PAYMENT_WIDGET_REQUEST_CODE = 1
@@ -254,19 +261,29 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setPositiveButton(
                 R.string.dialog_button_ok
             ) { dialog, _ ->
-                judo.fetchTransactionWithReceiptId(
-                    service,
-                    view.receiptIdEditText.text.toString(),
-                    {
-                        processSuccessfulPayment(it)
-                        dialog.dismiss()
-                    },
-                    {
-                        processPaymentError(it)
+                val fetchTransactionDetailsCallback = object : Callback<JudoApiCallResult<Receipt>> {
+                    override fun onResponse(
+                        call: Call<JudoApiCallResult<Receipt>>,
+                        response: Response<JudoApiCallResult<Receipt>>
+                    ) {
+                        when (val result = response.body()) {
+                            is JudoApiCallResult.Success -> {
+                                processSuccessfulPayment(result.data?.toJudoResult())
+                            }
+                            is JudoApiCallResult.Failure -> {
+                                processPaymentError(result.error?.toJudoError())
+                            }
+                        }
                         dialog.dismiss()
                     }
-                )
 
+                    override fun onFailure(call: Call<JudoApiCallResult<Receipt>>, t: Throwable) {
+                        dialog.dismiss()
+                        throw Exception(t)
+                    }
+                }
+                service.fetchTransactionWithReceiptId(view.receiptIdEditText.text.toString())
+                    .enqueue(fetchTransactionDetailsCallback)
                 view.receiptProgressBar.visibility = View.VISIBLE
                 view.receiptIdEditText.visibility = View.GONE
             }
