@@ -7,7 +7,6 @@ data class Card(
     val expiryDate: String,
     val cardHolder: String,
     val country: String,
-    val postCode: String,
-    val expectedPostCode: String,
-    val secureCodeErrorMessage: String
+    val secureCodeErrorMessage: String,
+    val paymentMethodsSubtitle: String
 )

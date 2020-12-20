@@ -76,7 +76,7 @@ class CardEntryRobot {
         view.perform(click(), replaceText(textToEnter))
     }
 
-    fun isVisible(identifier: String, view: String, visibility: String) {
+    fun isVisible(identifier: String?, view: String?, visibility: String) {
         val matchedView = when (identifier) {
             View.CARD_HEADER.value -> onView(withId(R.id.cardView))
             View.GOOGLE_PAY_HEADER.value -> onView(withId(R.id.googlePayCardView))

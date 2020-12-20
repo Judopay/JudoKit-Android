@@ -43,21 +43,21 @@ class CardEntrySteps {
 
         // Skips scenario
         testConfiguration.testsToSkip.forEach {
-            if (it in tags) {
+            if ("@$it" in tags) {
                 Assume.assumeTrue(false)
             }
         }
 
         // Skip scenarios that are not in testsToInclude
         testConfiguration.testsToInclude.forEach {
-            if (it !in tags) {
+            if ("@$it" !in tags) {
                 Assume.assumeTrue(false)
             }
         }
 
         // Extract data for the specific scenario by tag
         scenarioData =
-            testConfiguration.testData.find { testData -> testData.tags.any { it in tags } }
+            testConfiguration.testData.find { testData -> testData.tags.any { "@$it" in tags } }
 
         // Apply configurations
         configurationRobot.configure(tags, testConfiguration)
@@ -86,19 +86,26 @@ class CardEntrySteps {
 
     @And("^I enter (.*?) \"(.*?)\" (?:in|into) the (.*?) (?:text|input) field$")
     fun enterTextInto(identifier: String, key: String, fieldName: String) {
-        val card = if (scenarioData != null) {
-            scenarioData?.cards?.find { it.cardType == identifier }
-        } else {
-            testConfiguration.defaultCards.find { it.cardType == identifier }
-        }
+        val defaultCard = testConfiguration.defaultCards.find { it.cardType == identifier }
+        val card = scenarioData?.cards?.find { it.cardType == identifier }
 
         when (key) {
-            "CARD NUMBER" -> robot.enterTextIntoField(card?.cardNumber, fieldName)
-            "CARDHOLDER NAME" -> robot.enterTextIntoField(card?.cardHolder, fieldName)
-            "EXPIRY DATE" -> robot.enterTextIntoField(card?.expiryDate, fieldName)
-            "SECURE CODE" -> robot.enterTextIntoField(card?.securityCode, fieldName)
+            "CARD NUMBER" -> robot.enterTextIntoField(
+                card?.cardNumber ?: defaultCard?.cardNumber,
+                fieldName
+            )
+            "CARDHOLDER NAME" -> robot.enterTextIntoField(
+                card?.cardHolder ?: defaultCard?.cardHolder, fieldName
+            )
+            "EXPIRY DATE" -> robot.enterTextIntoField(
+                card?.expiryDate ?: defaultCard?.expiryDate,
+                fieldName
+            )
+            "SECURE CODE" -> robot.enterTextIntoField(
+                card?.securityCode ?: defaultCard?.securityCode, fieldName
+            )
             "POST CODE" -> {
-                val avs = scenarioData?.cards?.find { it.country == identifier }
+                val avs = scenarioData?.avs?.find { it.country == identifier }
                 robot.enterTextIntoField(avs?.postCode, fieldName)
             }
         }
@@ -121,12 +128,12 @@ class CardEntrySteps {
 
     @Then("^(?:the|an) (.*?) \"(.*?)\" label should (not be|be) visible$")
     fun labelShouldBeVisible(cardNetwork: String, label: String, visibility: String) {
-        val card = scenarioData?.cards?.find { it.cardType == cardNetwork }!!
-
+        val card = scenarioData?.cards?.find { it.cardType == cardNetwork }
+        val defaultCard = testConfiguration.defaultCards.find{it.cardType==cardNetwork}
         when (label) {
             "SECURE CODE ERROR MESSAGE" -> robot.isVisible(
-                card.secureCodeErrorMessage,
-                card.secureCodeErrorMessage,
+                card?.secureCodeErrorMessage ?: defaultCard?.secureCodeErrorMessage,
+                card?.secureCodeErrorMessage ?: defaultCard?.secureCodeErrorMessage,
                 visibility
             )
         }
@@ -147,18 +154,16 @@ class CardEntrySteps {
         robot.isValueOfFieldEqual(title, value)
     }
 
-    @And("^I select (.*?) \"COUNTRY\" from the Country dropdown$")
+    @And("^I select \"(.*?)\" from the Country dropdown$")
     fun selectFromDropdown(country: String) {
-        val card = scenarioData?.cards?.find { it.country == country }!!
-        robot.selectFromDropdown(card.country)
+        val avs = scenarioData?.avs?.find { it.country == country }!!
+        robot.selectFromDropdown(avs.country)
     }
 
-    @Then("^the value in (.*?) (?:text|input) field should be (.*?) \"(.*?)\"$")
-    fun expectedInput(textField: String, country: String, expectedValue: String) {
-        val card = scenarioData?.cards?.find { it.country == country }!!
-
+    @Then("^the value in (.*?) (?:text|input) field should be (.*?)$")
+    fun expectedInput(textField: String, expectedValue: String) {
         when (expectedValue) {
-            "EXPECTED POST CODE" -> robot.expectedValue(textField, card.expectedPostCode)
+            "EXPECTED POST CODE" -> robot.expectedValue(textField, expectedValue)
         }
     }
 

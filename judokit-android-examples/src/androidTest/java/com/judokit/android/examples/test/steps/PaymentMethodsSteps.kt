@@ -7,6 +7,7 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withTagValue
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -18,6 +19,7 @@ import com.judokit.android.examples.test.espresso.RecyclerViewMatcher
 import com.judokit.android.examples.test.espresso.clearData
 import com.judokit.android.examples.test.espresso.waitUntilVisible
 import com.judokit.android.examples.test.model.TestConfiguration
+import com.judokit.android.examples.test.model.TestData
 import com.judokit.android.examples.test.robots.ConfigurationRobot
 import io.cucumber.core.api.Scenario
 import io.cucumber.java.After
@@ -31,6 +33,7 @@ class PaymentMethodsSteps {
 
     private lateinit var activityScenario: ActivityScenario<DemoFeatureListActivity>
     private val configurationRobot = ConfigurationRobot()
+    private var scenarioData: TestData? = null
 
     @Before("@payment-methods")
     fun setUp(scenario: Scenario) {
@@ -53,6 +56,10 @@ class PaymentMethodsSteps {
                 Assume.assumeTrue(false)
             }
         }
+
+        scenarioData =
+            testConfiguration.testData.find { testData -> testData.tags.any { "@$it" in tags } }
+
         configurationRobot.configure(tags, testConfiguration!!)
     }
 
@@ -62,21 +69,12 @@ class PaymentMethodsSteps {
         clearData()
     }
 
-    @Then("^the item nr. (.*?) containing \"(.*?)\" should be selected$")
-    fun isAddedCardSelected(position: Int, cardEnding: String) {
+    @Then("^a (.*?) \"PAYMENT METHODS SUBTITLE\" item should be selected")
+    fun isAddedCardSelected(cardNetwork: String) {
         Thread.sleep(2000)
-        onView(RecyclerViewMatcher(R.id.recyclerView).atPosition(position)).waitUntilVisible()
-            .check(
-                matches(
-                    hasDescendant(
-                        allOf(
-                            withId(R.id.radioIconImageView),
-                            withTagValue(`is`("true")),
-                            hasSibling(withText(cardEnding))
-                        )
-                    )
-                )
-            )
+        val subtitle =
+            scenarioData?.cards?.find { it.cardType == cardNetwork }?.paymentMethodsSubtitle
+        onView(withText(subtitle)).check(matches(isDisplayed()))
     }
 
     @Then("^the payment method selector should not be visible$")
