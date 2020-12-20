@@ -5,19 +5,14 @@ import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
-import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withTagValue
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.gson.Gson
 import com.judokit.android.examples.R
 import com.judokit.android.examples.feature.DemoFeatureListActivity
-import com.judokit.android.examples.test.espresso.RecyclerViewMatcher
 import com.judokit.android.examples.test.espresso.clearData
-import com.judokit.android.examples.test.espresso.waitUntilVisible
 import com.judokit.android.examples.test.model.TestConfiguration
 import com.judokit.android.examples.test.model.TestData
 import com.judokit.android.examples.test.robots.ConfigurationRobot
@@ -25,8 +20,6 @@ import io.cucumber.core.api.Scenario
 import io.cucumber.java.After
 import io.cucumber.java.Before
 import io.cucumber.java.en.Then
-import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assume
 
 class PaymentMethodsSteps {

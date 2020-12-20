@@ -129,7 +129,7 @@ class CardEntrySteps {
     @Then("^(?:the|an) (.*?) \"(.*?)\" label should (not be|be) visible$")
     fun labelShouldBeVisible(cardNetwork: String, label: String, visibility: String) {
         val card = scenarioData?.cards?.find { it.cardType == cardNetwork }
-        val defaultCard = testConfiguration.defaultCards.find{it.cardType==cardNetwork}
+        val defaultCard = testConfiguration.defaultCards.find { it.cardType == cardNetwork }
         when (label) {
             "SECURE CODE ERROR MESSAGE" -> robot.isVisible(
                 card?.secureCodeErrorMessage ?: defaultCard?.secureCodeErrorMessage,
