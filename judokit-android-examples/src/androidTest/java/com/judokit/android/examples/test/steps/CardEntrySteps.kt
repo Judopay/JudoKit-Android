@@ -1,73 +1,17 @@
 package com.judokit.android.examples.test.steps
 
-import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.launchActivity
-import androidx.test.platform.app.InstrumentationRegistry
-import com.google.gson.Gson
-import com.judokit.android.examples.feature.DemoFeatureListActivity
-import com.judokit.android.examples.test.espresso.clearData
-import com.judokit.android.examples.test.model.TestConfiguration
-import com.judokit.android.examples.test.model.TestData
 import com.judokit.android.examples.test.robots.CardEntryRobot
-import com.judokit.android.examples.test.robots.ConfigurationRobot
-import io.cucumber.core.api.Scenario
-import io.cucumber.java.After
-import io.cucumber.java.Before
+import com.judokit.android.examples.test.robots.ConfigurationRobot.Companion.scenarioData
+import com.judokit.android.examples.test.robots.ConfigurationRobot.Companion.testConfiguration
 import io.cucumber.java.en.And
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
-import org.junit.Assume
+import java.util.concurrent.TimeUnit
 
 class CardEntrySteps {
 
-    private lateinit var activityScenario: ActivityScenario<DemoFeatureListActivity>
-    private val configurationRobot = ConfigurationRobot()
     private val robot = CardEntryRobot()
-
-    private var scenarioData: TestData? = null
-    private lateinit var testConfiguration: TestConfiguration
-
-    @Before("@card-entry")
-    fun setUp(scenario: Scenario) {
-        activityScenario = launchActivity()
-
-        val tags = scenario.sourceTagNames
-
-        val jsonString = InstrumentationRegistry.getInstrumentation().context.resources.assets.open(
-            "test-input-data.json"
-        ).bufferedReader().use { it.readText() }
-
-        // Parses test-input-data.json into TestConfiguration object
-        testConfiguration = Gson().fromJson(jsonString, TestConfiguration::class.java)
-
-        // Skips scenario
-        testConfiguration.testsToSkip.forEach {
-            if ("@$it" in tags) {
-                Assume.assumeTrue(false)
-            }
-        }
-
-        // Skip scenarios that are not in testsToInclude
-        testConfiguration.testsToInclude.forEach {
-            if ("@$it" !in tags) {
-                Assume.assumeTrue(false)
-            }
-        }
-
-        // Extract data for the specific scenario by tag
-        scenarioData =
-            testConfiguration.testData.find { testData -> testData.tags.any { "@$it" in tags } }
-
-        // Apply configurations
-        configurationRobot.configure(tags, testConfiguration)
-    }
-
-    @After("@card-entry")
-    fun tearDown() {
-        activityScenario.close()
-        clearData()
-    }
 
     @Given("^I am on the (.*?) (?:screen|view|page)$")
     fun onScreen(screen: String) {
@@ -82,6 +26,11 @@ class CardEntrySteps {
     @And("^I tap on the \"(.*?)\" (option|cell|item|text field)$")
     fun tapOn(text: String, type: String) {
         robot.tapOn(text, type)
+    }
+
+    @And("^I tap on the Country text field$")
+    fun tapOnCountryTextField(text: String) {
+        robot.tapOn(text, "text field")
     }
 
     @And("^I enter (.*?) \"(.*?)\" (?:in|into) the (.*?) (?:text|input) field$")
@@ -118,10 +67,10 @@ class CardEntrySteps {
 
     @And("^I wait for \"(.*)\" seconds$")
     fun waitFor(timeout: Long) {
-        // no-op
+        TimeUnit.SECONDS.sleep(timeout)
     }
 
-    @Then("^the (.*?) (screen|page|view|item) should (be|not be) visible$")
+    @Then("^the (.*?) (screen|page|view|option) should (be|not be) visible$")
     fun viewShouldBeVisible(identifier: String, type: String, visibility: String) {
         robot.isVisible(identifier, type, visibility)
     }
