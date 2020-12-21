@@ -57,5 +57,4 @@ class ConfigurationSteps {
         activityScenario.close()
         clearData()
     }
-
 }
