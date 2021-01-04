@@ -132,7 +132,7 @@ val CardNetwork.securityCodeInvalidResId: Int
 val CardNetwork.displayName: String
     get() = when (this) {
         CardNetwork.VISA -> "Visa"
-        CardNetwork.MASTERCARD -> "Master Card"
+        CardNetwork.MASTERCARD -> "Mastercard"
         CardNetwork.MAESTRO -> "Maestro"
         CardNetwork.AMEX -> "American Express"
         CardNetwork.CHINA_UNION_PAY -> "China UnionPay"

@@ -323,7 +323,7 @@ internal class CardEntryViewModelTest {
             InputModel(),
             enabledFields,
             judo.supportedCardNetworks.toList(),
-            ButtonState.Disabled(R.string.add_card)
+            ButtonState.Disabled(R.string.save_card)
         )
         val slots = mutableListOf<CardEntryFragmentModel>()
 

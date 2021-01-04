@@ -118,7 +118,7 @@ class CardEntryViewModel(
                 if (selectedCardNetwork != null) {
                     R.string.pay_now
                 } else {
-                    R.string.add_card
+                    R.string.save_card
                 }
             else -> R.string.empty
         }

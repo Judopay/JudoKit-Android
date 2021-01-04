@@ -13,6 +13,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.judokit.android.examples.R
 import com.judokit.android.examples.test.espresso.setChecked
 import com.judokit.android.examples.test.model.TestConfiguration
+import com.judokit.android.examples.test.model.TestData
 import com.judokit.android.model.Currency
 import com.judokit.android.model.PaymentMethod
 import org.hamcrest.CoreMatchers.anything
@@ -23,9 +24,9 @@ private const val TAG_REQUIRE_AVS = "@require-avs"
 private const val TAG_REQUIRE_BUTTON_AMOUNT = "@require-button-amount"
 private const val TAG_DISABLE_SECURITY_CODE = "@disable-security-code"
 private const val TAG_ENABLE_CARD_PAYMENT_ONLY = "@require-card-payment-enabled-only"
-private const val TAG_ENABLE_IDEAL = "@require-ideal-enabled-only"
-private const val TAG_ENABLE_PBBA = "@require-pbba-enabled-only"
-private const val TAG_ENABLE_GOOGLE_PAY = "@require-google-pay-enabled-only"
+private const val TAG_ENABLE_IDEAL = "@require-ideal-payment-method"
+private const val TAG_ENABLE_PBBA = "@require-pbba-payment-method"
+private const val TAG_ENABLE_GOOGLE_PAY = "@require-apple-pay-google-pay-payment-method"
 private const val TAG_ENABLE_ALL_PAYMENT_METHODS = "@require-all-payment-methods-enabled"
 private const val TAG_DISABLE_ALL_PAYMENT_METHODS = "@require-all-payment-methods-disabled"
 private const val TAG_CURRENCY_GBP = "@require-currency-gbp"
@@ -201,6 +202,11 @@ class ConfigurationRobot {
             )
         onData(anything()).inAdapterView(withId(androidx.preference.R.id.select_dialog_listview))
             .atPosition(currencyPositionInList).perform(click())
+    }
+
+    companion object {
+        var scenarioData: TestData? = null
+        lateinit var testConfiguration: TestConfiguration
     }
 }
 

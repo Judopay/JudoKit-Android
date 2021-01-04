@@ -99,4 +99,5 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
     androidTestImplementation "androidx.test.espresso:espresso-web:$espresso_version"
     androidTestImplementation "io.cucumber:cucumber-android:4.8.4"
+    androidTestImplementation "androidx.room:room-runtime:$room_version"
 }

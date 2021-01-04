@@ -1,9 +1,6 @@
 package com.judokit.android.examples.test.robots.enum
 
 enum class ViewType(val value: String) {
-    OPTION("option"),
-    CELL("cell"),
-    ITEM("item"),
     TEXT_FIELD("text field")
 }
 
@@ -20,11 +17,11 @@ enum class View(val value: String) {
     INVALID_POST_CODE("Invalid postcode entered"),
     SUBMIT_BUTTON("Submit"),
     CARD_HEADER("Card Header"),
-    GOOGLE_PAY_HEADER("Google Pay Header"),
+    GOOGLE_PAY_HEADER("Apple Pay/Google Pay Header"),
     IDEAL_HEADER("iDEAL Header"),
     PBBA_HEADER("PbBa Header"),
-    CARD_PAYMENT_METHOD("Card payment method"),
-    GOOGLE_PAY_PAYMENT_METHOD("Google Pay payment method"),
-    IDEAL_PAYMENT_METHOD("iDEAL payment method"),
-    PAYMENT_METHODS("Payment Methods")
+    CARD_SELECTOR("Card Selector"),
+    GOOGLE_PAY_SELECTOR("Apple Pay/Google Pay Selector"),
+    IDEAL_SELECTOR("iDEAL Selector"),
+    PAYMENT_METHODS("payment methods")
 }

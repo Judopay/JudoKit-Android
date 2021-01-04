@@ -12,7 +12,11 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.web.sugar.Web
+import androidx.test.espresso.web.webdriver.DriverAtoms
+import androidx.test.espresso.web.webdriver.Locator
 import com.judokit.android.examples.R
+import com.judokit.android.examples.test.espresso.DEFAULT_TIMEOUT
 import com.judokit.android.examples.test.espresso.waitUntilVisible
 import com.judokit.android.examples.test.exceptions.ViewNotDefinedException
 import com.judokit.android.examples.test.robots.enum.View
@@ -39,7 +43,15 @@ class CardEntryRobot {
     }
 
     fun press(button: String) {
-        onView(withText(button)).waitUntilVisible().perform(click())
+        when (button) {
+            View.SUBMIT_BUTTON.value -> {
+                Thread.sleep(DEFAULT_TIMEOUT)
+                Web.onWebView()
+                    .withElement(DriverAtoms.findElement(Locator.NAME, "UsernamePasswordEntry"))
+                    .perform(DriverAtoms.webClick())
+            }
+            else -> onView(withText(button)).waitUntilVisible().perform(click())
+        }
     }
 
     fun tapOn(text: String, type: String) {
@@ -76,20 +88,36 @@ class CardEntryRobot {
         view.perform(click(), replaceText(textToEnter))
     }
 
-    fun isVisible(identifier: String, view: String, visibility: String) {
+    fun isVisible(identifier: String?, view: String?, visibility: String) {
         val matchedView = when (identifier) {
             View.CARD_HEADER.value -> onView(withId(R.id.cardView))
             View.GOOGLE_PAY_HEADER.value -> onView(withId(R.id.googlePayCardView))
             View.IDEAL_HEADER.value -> onView(withId(R.id.idealPaymentCardView))
             View.PBBA_HEADER.value -> onView(withId(R.id.payByBankCardView))
-            View.CARD_PAYMENT_METHOD.value -> onView(ViewMatchers.withTagValue(CoreMatchers.`is`("CARD")))
-            View.GOOGLE_PAY_PAYMENT_METHOD.value -> onView(ViewMatchers.withTagValue(CoreMatchers.`is`("GOOGLE_PAY")))
-            View.IDEAL_PAYMENT_METHOD.value -> onView(ViewMatchers.withTagValue(CoreMatchers.`is`("IDEAL")))
+            View.CARD_SELECTOR.value -> onView(ViewMatchers.withTagValue(CoreMatchers.`is`("CARD")))
+            View.GOOGLE_PAY_SELECTOR.value -> onView(
+                ViewMatchers.withTagValue(
+                    CoreMatchers.`is`(
+                        "GOOGLE_PAY"
+                    )
+                )
+            )
+            View.IDEAL_SELECTOR.value -> onView(ViewMatchers.withTagValue(CoreMatchers.`is`("IDEAL")))
             View.PAYMENT_METHODS.value -> onView(withId(R.id.coordinatorLayout))
             View.MAIN.value -> onView(withId(R.id.sampleAppConstraintLayout))
             View.RESULTS.value -> onView(withText("JudoResult")).waitUntilVisible()
-            View.INVALID_POST_CODE.value -> onView(allOf(withId(R.id.errorTextView), isDescendantOfA(withId(R.id.postcodeTextInputLayout))))
-            View.CHECK_EXPIRY_DATE.value -> onView(allOf(withId(R.id.errorTextView), isDescendantOfA(withId(R.id.expirationDateTextInputLayout))))
+            View.INVALID_POST_CODE.value -> onView(
+                allOf(
+                    withId(R.id.errorTextView),
+                    isDescendantOfA(withId(R.id.postcodeTextInputLayout))
+                )
+            )
+            View.CHECK_EXPIRY_DATE.value -> onView(
+                allOf(
+                    withId(R.id.errorTextView),
+                    isDescendantOfA(withId(R.id.expirationDateTextInputLayout))
+                )
+            )
             else -> onView(withText(view))
         }
         if (visibility == "be") {
