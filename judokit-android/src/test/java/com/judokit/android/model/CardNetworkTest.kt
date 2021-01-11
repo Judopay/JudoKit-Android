@@ -288,10 +288,10 @@ internal class CardNetworkTest {
         assertEquals("Visa", CardNetwork.VISA.displayName)
     }
 
-    @DisplayName("Given displayName is called, when card network is MASTERCARD, return Master Card")
+    @DisplayName("Given displayName is called, when card network is MASTERCARD, return Mastercard")
     @Test
     fun returnMasterCardDisplayNameWhenMasterCard() {
-        assertEquals("Master Card", CardNetwork.MASTERCARD.displayName)
+        assertEquals("Mastercard", CardNetwork.MASTERCARD.displayName)
     }
 
     @DisplayName("Given displayName is called, when card network is MAESTRO, return Maestro")
