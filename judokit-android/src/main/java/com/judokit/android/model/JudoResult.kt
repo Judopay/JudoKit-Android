@@ -12,7 +12,7 @@ import java.util.Date
  */
 @Parcelize
 data class JudoResult(
-    val judoID: String? = null,
+    val judoId: String? = null,
     val receiptId: String? = null,
     val originalReceiptId: String? = null,
     val partnerServiceFee: String? = null,

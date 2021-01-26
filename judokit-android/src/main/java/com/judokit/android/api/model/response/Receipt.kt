@@ -9,7 +9,7 @@ import java.util.Date
  * The Receipt of a transaction performed with the judo API.
  */
 class Receipt(
-    var judoID: Long? = null,
+    var judoId: Long? = null,
     var receiptId: String? = null,
     var originalReceiptId: String? = null,
     var partnerServiceFee: String? = null,
@@ -36,12 +36,12 @@ class Receipt(
         get() = !(acsUrl.isNullOrEmpty() && md.isNullOrEmpty() && paReq.isNullOrEmpty())
 
     override fun toString(): String {
-        return "Receipt(judoID=$judoID, receiptId=$receiptId, originalReceiptId=$originalReceiptId, partnerServiceFee=$partnerServiceFee, yourPaymentReference=$yourPaymentReference, type=$type, createdAt=$createdAt, merchantName=$merchantName, appearsOnStatementAs=$appearsOnStatementAs, originalAmount=$originalAmount, netAmount=$netAmount, amount=$amount, currency=$currency, cardDetails=$cardDetails, consumer=$consumer, risks=$risks, md=$md, paReq=$paReq, acsUrl=$acsUrl, result=$result, message=$message)"
+        return "Receipt(judoId=$judoId, receiptId=$receiptId, originalReceiptId=$originalReceiptId, partnerServiceFee=$partnerServiceFee, yourPaymentReference=$yourPaymentReference, type=$type, createdAt=$createdAt, merchantName=$merchantName, appearsOnStatementAs=$appearsOnStatementAs, originalAmount=$originalAmount, netAmount=$netAmount, amount=$amount, currency=$currency, cardDetails=$cardDetails, consumer=$consumer, risks=$risks, md=$md, paReq=$paReq, acsUrl=$acsUrl, result=$result, message=$message)"
     }
 }
 
 fun Receipt.toJudoResult() = JudoResult(
-    judoID.toString(),
+    judoId.toString(),
     receiptId,
     originalReceiptId,
     partnerServiceFee,
