@@ -389,7 +389,7 @@ class PaymentMethodsViewModel(
 
     private fun buildReceipt(card: TokenizedCardEntity) = with(card) {
         val receipt = Receipt(
-            judoID = judo.judoId.toLong(),
+            judoId = judo.judoId.toLong(),
             yourPaymentReference = judo.reference.paymentReference,
             createdAt = Date(),
             amount = judo.amount.amount.toBigDecimal(),
