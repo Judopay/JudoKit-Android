@@ -174,6 +174,20 @@ internal class ReceiptTest {
         assertEquals(result, Receipt(result = result).toJudoResult().result)
     }
 
+    @DisplayName("Given toJudoResult is called, then map judoID to JudoResult judoID string")
+    @Test
+    fun mapResultToJudoResultJudoID() {
+        val judoID: Long = 123456
+        assertEquals(judoID.toString(), Receipt(judoID = judoID).toJudoResult().judoID)
+    }
+
+    @DisplayName("Given toJudoResult is called, then map message to JudoResult message")
+    @Test
+    fun mapResultToJudoResultMessage() {
+        val message = "Card Declined"
+        assertEquals(message, Receipt(message = message).toJudoResult().message)
+    }
+
     @DisplayName("Given toCardVerificationModel is called, then map fields to CardVerificationModel")
     @Test
     fun mapFieldsToCardVerificationModel() {

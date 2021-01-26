@@ -12,6 +12,7 @@ import java.util.Date
  */
 @Parcelize
 data class JudoResult(
+    val judoID: String? = null,
     val receiptId: String? = null,
     val originalReceiptId: String? = null,
     val partnerServiceFee: String? = null,
@@ -26,5 +27,6 @@ data class JudoResult(
     val currency: String? = null,
     val cardDetails: CardToken? = null,
     val consumer: Consumer? = null,
-    val result: String? = null
+    val result: String? = null,
+    val message: String? = null
 ) : Parcelable

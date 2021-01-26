@@ -28,18 +28,20 @@ class Receipt(
     var md: String? = null,
     var paReq: String? = null,
     var acsUrl: String? = null,
-    val result: String? = null
+    val result: String? = null,
+    val message: String? = null
 ) {
 
     val is3dSecureRequired: Boolean
         get() = !(acsUrl.isNullOrEmpty() && md.isNullOrEmpty() && paReq.isNullOrEmpty())
 
     override fun toString(): String {
-        return "Receipt(judoID=$judoID, receiptId=$receiptId, originalReceiptId=$originalReceiptId, partnerServiceFee=$partnerServiceFee, yourPaymentReference=$yourPaymentReference, type=$type, createdAt=$createdAt, merchantName=$merchantName, appearsOnStatementAs=$appearsOnStatementAs, originalAmount=$originalAmount, netAmount=$netAmount, amount=$amount, currency=$currency, cardDetails=$cardDetails, consumer=$consumer, risks=$risks, md=$md, paReq=$paReq, acsUrl=$acsUrl, result=$result)"
+        return "Receipt(judoID=$judoID, receiptId=$receiptId, originalReceiptId=$originalReceiptId, partnerServiceFee=$partnerServiceFee, yourPaymentReference=$yourPaymentReference, type=$type, createdAt=$createdAt, merchantName=$merchantName, appearsOnStatementAs=$appearsOnStatementAs, originalAmount=$originalAmount, netAmount=$netAmount, amount=$amount, currency=$currency, cardDetails=$cardDetails, consumer=$consumer, risks=$risks, md=$md, paReq=$paReq, acsUrl=$acsUrl, result=$result, message=$message)"
     }
 }
 
 fun Receipt.toJudoResult() = JudoResult(
+    judoID.toString(),
     receiptId,
     originalReceiptId,
     partnerServiceFee,
@@ -54,7 +56,8 @@ fun Receipt.toJudoResult() = JudoResult(
     currency,
     cardDetails,
     consumer,
-    result
+    result,
+    message
 )
 
 fun Receipt.toCardVerificationModel() = CardVerificationModel.Builder()
