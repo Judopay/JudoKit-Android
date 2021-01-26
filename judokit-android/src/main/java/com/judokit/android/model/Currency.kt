@@ -22,6 +22,7 @@ enum class Currency : Parcelable {
     JPY,
     NOK,
     NZD,
+    PKR,
     PLN,
     SEK,
     SGD,
