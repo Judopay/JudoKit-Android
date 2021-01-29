@@ -1,53 +1,99 @@
 <resources>
     <!-- Currency Preference -->
     <string-array name="currency_entries">
-        <item>AED - United Arab Emirates Dirham</item>
-        <item>AUD - Australia Dollar</item>
-        <item>BRL - Brazil Real</item>
-        <item>CAD - Canada Dollar</item>
-        <item>CHF - Switzerland Franc</item>
-        <item>CZK - Czech Republic Koruna</item>
-        <item>DKK - Denmark Krone</item>
-        <item>EUR - Euro Member Countries</item>
-        <item>GBP - United Kingdom Pound</item>
-        <item>HKD - Hong Kong Dollar</item>
-        <item>HUF - Hungary Forint</item>
-        <item>JPY - Japan Yen</item>
-        <item>NOK - Norway Krone</item>
-        <item>NZD - New Zealand Dollar</item>
-        <item>PKR - Pakistani rupee</item>
-        <item>PLN - Poland Zloty</item>
-        <item>SEK - Sweden Krona</item>
-        <item>SGD - Singapore Dollar</item>
-        <item>QAR - Qatar Riyal</item>
-        <item>SAR - Saudi Arabia Riyal</item>
-        <item>USD - United States Dollar</item>
-        <item>ZAR - South Africa Rand</item>
+        <item>British pound (GBP)</item>
+        <item>United States dollar (USD)</item>
+        <item>Euro (EUR)</item>
+        <item>Australian dollar (AUD)</item>
+        <item>Swedish krona (SEK)</item>
+        <item>Canadian dollar (CAD)</item>
+        <item>Norwegian krone (NOK)</item>
+        <item>Brazilian real (BRL)</item>
+        <item>Swiss franc (CHF)</item>
+        <item>Czech koruna (CZK)</item>
+        <item>Danish krone (DKK)</item>
+        <item>Hong Kong dollar (HKD)</item>
+        <item>Hungarian forint (HUF)</item>
+        <item>Japanese yen (JPY)</item>
+        <item>New Zealand dollar (NZD)</item>
+        <item>Polish złoty (PLN)</item>
+        <item>South African rand (ZAR)</item>
+        <item>Argentine peso (ARS)</item>
+        <item>Bahraini dinar (BHD)</item>
+        <item>Burmese kyat (MMK)</item>
+        <item>Cayman Islands dollar (KYD)</item>
+        <item>Chilean peso (CLP)</item>
+        <item>Chinese yuan (CNY)</item>
+        <item>Colombian peso (COP)</item>
+        <item>Icelandic króna (ISK)</item>
+        <item>Indian rupee (INR)</item>
+        <item>Indonesian rupiah (IDR)</item>
+        <item>Jordanian dinar (JOD)</item>
+        <item>Kuwaiti dinar (KWD)</item>
+        <item>Omani rial (OMR)</item>
+        <item>Nigerian naira (NGN)</item>
+        <item>Pakistani rupee (PKR)</item>
+        <item>Nicaraguan córdoba (NIO)</item>
+        <item>Panamanian balboa (PAB)</item>
+        <item>Philippine peso (PHP)</item>
+        <item>Qatari riyal (QAR)</item>
+        <item>Russian ruble (RUB)</item>
+        <item>Saudi riyal (SAR)</item>
+        <item>Singapore dollar (SGD)</item>
+        <item>Vietnamese đồng (VND)</item>
+        <item>United Arab Emirates dirham (AED)</item>
+        <item>Serbian dinar (RSD)</item>
+        <item>Romanian leu (RON)</item>
+        <item>Mexican peso (MXN)</item>
+        <item>Ukrainian hryvnia (UAH)</item>
     </string-array>
 
     <string-array name="currency_values">
-        <item>AED</item>
+        <item>GBP</item>
+        <item>USD</item>
+        <item>EUR</item>
         <item>AUD</item>
-        <item>BRL</item>
+        <item>SEK</item>
         <item>CAD</item>
+        <item>NOK</item>
+        <item>BRL</item>
         <item>CHF</item>
         <item>CZK</item>
         <item>DKK</item>
-        <item>EUR</item>
-        <item>GBP</item>
         <item>HKD</item>
         <item>HUF</item>
         <item>JPY</item>
-        <item>NOK</item>
         <item>NZD</item>
-        <item>PKR</item>
         <item>PLN</item>
-        <item>SEK</item>
-        <item>SGD</item>
-        <item>QAR</item>
-        <item>SAR</item>
-        <item>USD</item>
         <item>ZAR</item>
+        <item>ARS</item>
+        <item>BHD</item>
+        <item>MMK</item>
+        <item>KYD</item>
+        <item>CLP</item>
+        <item>CNY</item>
+        <item>COP</item>
+        <item>ISK</item>
+        <item>INR</item>
+        <item>IDR</item>
+        <item>JOD</item>
+        <item>KWD</item>
+        <item>OMR</item>
+        <item>NGN</item>
+        <item>PKR</item>
+        <item>NIO</item>
+        <item>PAB</item>
+        <item>PHP</item>
+        <item>QAR</item>
+        <item>RUB</item>
+        <item>SAR</item>
+        <item>SGD</item>
+        <item>VND</item>
+        <item>AED</item>
+        <item>RSD</item>
+        <item>RON</item>
+        <item>MXN</item>
+        <item>UAH</item>
     </string-array>
 
     <!-- Supported card network Preference-->
