@@ -39,6 +39,7 @@ internal class JudoBuilderTest {
             .setGooglePayConfiguration(mockk())
             .setAddress(mockk())
             .setPBBAConfiguration(mockk())
+            .setInitialRecurringPayment(false)
     }
 
     @Test
@@ -230,5 +231,13 @@ internal class JudoBuilderTest {
         judoBuilder.setIsSandboxed(null)
 
         assertFalse(judoBuilder.build().isSandboxed)
+    }
+
+    @Test
+    @DisplayName("Given setInitialRecurringPayment is called with value false, then initialRecurringPayment should return false")
+    fun initialRecurringPaymentShouldReturnFalse() {
+        judoBuilder.setInitialRecurringPayment(false)
+
+        assertFalse(judoBuilder.build().initialRecurringPayment!!)
     }
 }

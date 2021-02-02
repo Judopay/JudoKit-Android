@@ -219,6 +219,7 @@ class PaymentMethodsViewModel(
                     .setCardType(entity.network.typeId)
                     .setCv2(securityCode)
                     .setAddress(Address.Builder().build())
+                    .setInitialRecurringPayment(judo.initialRecurringPayment)
                     .build()
 
                 val response = when (judo.paymentWidgetType) {

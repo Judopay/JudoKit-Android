@@ -22,7 +22,8 @@ class RegisterCardRequest private constructor(
     private var emailAddress: String?,
     private var mobileNumber: String?,
     private var primaryAccountDetails: PrimaryAccountDetails?,
-    private var amount: String
+    private var amount: String,
+    private var initialRecurringPayment: Boolean?
 ) {
     class Builder {
         private var uniqueRequest: Boolean? = null
@@ -41,6 +42,7 @@ class RegisterCardRequest private constructor(
         private var mobileNumber: String? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
         private var amount: String? = null
+        private var initialRecurringPayment: Boolean? = null
 
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
@@ -79,6 +81,9 @@ class RegisterCardRequest private constructor(
         fun setAmount(amount: String?) =
             apply { this.amount = amount }
 
+        fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
+            apply { this.initialRecurringPayment = initialRecurringPayment }
+
         fun build(): RegisterCardRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myCurrency = requireNotNullOrEmpty(currency, "currency")
@@ -108,7 +113,8 @@ class RegisterCardRequest private constructor(
                 emailAddress,
                 mobileNumber,
                 primaryAccountDetails,
-                myAmount
+                myAmount,
+                initialRecurringPayment
             )
         }
     }

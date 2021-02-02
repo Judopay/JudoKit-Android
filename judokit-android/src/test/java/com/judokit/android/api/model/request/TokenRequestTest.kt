@@ -15,6 +15,7 @@ internal class TokenRequestTest {
         .setEmailAddress("mail@mail.com")
         .setMobileNumber("1234567")
         .setPrimaryAccountDetails(mockk(relaxed = true))
+        .setInitialRecurringPayment(false)
 
     @Test
     @DisplayName("Should throw exception on providing null judo id")

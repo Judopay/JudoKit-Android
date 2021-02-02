@@ -139,6 +139,7 @@ fun Judo.toPaymentRequest(
     .setCv2(securityCode)
     .setExpiryDate(expiryDate)
     .setPrimaryAccountDetails(primaryAccountDetails)
+    .setInitialRecurringPayment(initialRecurringPayment)
     .build()
 
 fun Judo.toRegisterCardRequest(
@@ -159,6 +160,7 @@ fun Judo.toRegisterCardRequest(
         .setCv2(securityCode)
         .setPrimaryAccountDetails(primaryAccountDetails)
         .setAmount(amount.amount)
+        .setInitialRecurringPayment(initialRecurringPayment)
         .build()
 
 fun Judo.toSaveCardRequest(
@@ -197,6 +199,7 @@ fun Judo.toCheckCardRequest(
         .setExpiryDate(expirationDate)
         .setCv2(securityCode)
         .setPrimaryAccountDetails(primaryAccountDetails)
+        .setInitialRecurringPayment(initialRecurringPayment)
         .build()
 
 fun Judo.toGooglePayRequest(
@@ -257,4 +260,5 @@ fun Judo.toTokenRequest(cardToken: String, securityCode: String? = null) =
         .setCv2(securityCode)
         .setPrimaryAccountDetails(primaryAccountDetails)
         .setAddress(address ?: Address.Builder().build())
+        .setInitialRecurringPayment(initialRecurringPayment)
         .build()

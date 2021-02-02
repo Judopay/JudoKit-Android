@@ -295,6 +295,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
         val isSandboxed = sharedPreferences.getBoolean("is_sandboxed", true)
         val judoId = sharedPreferences.getString("judo_id", null)
+        val initialRecurringPayment =
+            sharedPreferences.getBoolean("is_initial_recurring_payment", false)
 
         return Judo.Builder(widgetType)
             .setJudoId(judoId)
@@ -307,6 +309,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setUiConfiguration(uiConfiguration)
             .setGooglePayConfiguration(googlePayConfiguration)
             .setPBBAConfiguration(pbbaConfiguration)
+            .setInitialRecurringPayment(initialRecurringPayment)
             .build()
     }
 
