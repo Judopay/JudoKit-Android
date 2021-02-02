@@ -5,9 +5,17 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.google.gson.Gson
+import com.judokit.android.api.model.request.Address
 import com.judokit.android.api.model.request.BankSaleRequest
+import com.judokit.android.api.model.request.CheckCardRequest
 import com.judokit.android.api.model.request.IdealSaleRequest
+import com.judokit.android.api.model.request.PaymentRequest
+import com.judokit.android.api.model.request.RegisterCardRequest
+import com.judokit.android.api.model.request.TokenRequest
 import com.judokit.android.model.ApiEnvironment
+import com.judokit.android.model.Currency
+import com.judokit.android.model.PrimaryAccountDetails
 import com.judokit.android.ui.error.JudoNotProvidedError
 import io.mockk.every
 import io.mockk.mockk
@@ -19,13 +27,21 @@ import org.junit.jupiter.api.assertThrows
 @DisplayName("Test com.judokit.android.JudoExtensions")
 internal class JudoExtensionsTest {
 
+    private val mockAddress: Address = mockk()
+    private val mockPrimaryAccountDetails: PrimaryAccountDetails = mockk()
     val judo: Judo = mockk(relaxed = true) {
         every { judoId } returns "123456789"
-        every { amount } returns mockk(relaxed = true) { every { amount } returns "1" }
+        every { amount } returns mockk(relaxed = true) {
+            every { currency } returns Currency.GBP
+            every { amount } returns "1"
+        }
         every { reference } returns mockk(relaxed = true) {
             every { consumerReference } returns "ref"
             every { paymentReference } returns "ref"
         }
+        every { primaryAccountDetails } returns mockPrimaryAccountDetails
+        every { address } returns mockAddress
+        every { initialRecurringPayment } returns false
         every { pbbaConfiguration } returns mockk(relaxed = true) {
             every { mobileNumber } returns "1"
             every { emailAddress } returns "email"
@@ -189,5 +205,107 @@ internal class JudoExtensionsTest {
         val actual = judo.toBankSaleRequest()
 
         assertEquals(expected, actual)
+    }
+
+    @DisplayName("Given Judo.toPaymentRequest is called, then map Judo to PaymentRequest")
+    @Test
+    fun mapJudoToPaymentRequest() {
+        val expected = PaymentRequest.Builder()
+            .setUniqueRequest(false)
+            .setYourPaymentReference("ref")
+            .setJudoId("123456789")
+            .setYourPaymentMetaData(emptyMap())
+            .setAmount("1")
+            .setCurrency(Currency.GBP.name)
+            .setJudoId("123456789")
+            .setYourConsumerReference("ref")
+            .setAddress(mockAddress)
+            .setCardNumber("4111111111111111")
+            .setCv2("452")
+            .setExpiryDate("1229")
+            .setPrimaryAccountDetails(mockPrimaryAccountDetails)
+            .setInitialRecurringPayment(false)
+            .build()
+
+        val actual = judo.toPaymentRequest("4111111111111111", "1229", "452")
+
+        val gson = Gson()
+        assertEquals(gson.toJson(expected), gson.toJson(actual))
+    }
+
+    @DisplayName("Given Judo.toRegisterCardRequest is called, then map Judo to RegisterCardRequest")
+    @Test
+    fun mapJudoToRegisterCardRequest() {
+        val expected = RegisterCardRequest.Builder()
+            .setUniqueRequest(false)
+            .setYourPaymentReference("ref")
+            .setJudoId("123456789")
+            .setYourPaymentMetaData(emptyMap())
+            .setAmount("1")
+            .setCurrency(Currency.GBP.name)
+            .setJudoId("123456789")
+            .setYourConsumerReference("ref")
+            .setAddress(mockAddress)
+            .setCardNumber("4111111111111111")
+            .setCv2("452")
+            .setExpiryDate("1229")
+            .setPrimaryAccountDetails(mockPrimaryAccountDetails)
+            .setInitialRecurringPayment(false)
+            .build()
+
+        val actual = judo.toRegisterCardRequest("4111111111111111", "1229", "452")
+
+        val gson = Gson()
+        assertEquals(gson.toJson(expected), gson.toJson(actual))
+    }
+
+    @DisplayName("Given Judo.toSaveCardRequest is called, then map Judo to CheckCardRequest")
+    @Test
+    fun mapJudoToCheckCardRequest() {
+        val expected = CheckCardRequest.Builder()
+            .setUniqueRequest(false)
+            .setYourPaymentReference("ref")
+            .setJudoId("123456789")
+            .setYourPaymentMetaData(emptyMap())
+            .setCurrency(Currency.GBP.name)
+            .setJudoId("123456789")
+            .setYourConsumerReference("ref")
+            .setAddress(mockAddress)
+            .setCardNumber("4111111111111111")
+            .setCv2("452")
+            .setExpiryDate("1229")
+            .setPrimaryAccountDetails(mockPrimaryAccountDetails)
+            .setInitialRecurringPayment(false)
+            .build()
+
+        val actual = judo.toCheckCardRequest("4111111111111111", "1229", "452")
+
+        val gson = Gson()
+        assertEquals(gson.toJson(expected), gson.toJson(actual))
+    }
+
+    @DisplayName("Given Judo.toTokenRequest is called, then map Judo to TokenRequest")
+    @Test
+    fun mapJudoToTokenRequest() {
+        val expected = TokenRequest.Builder()
+            .setAmount("1")
+            .setUniqueRequest(false)
+            .setYourPaymentReference("ref")
+            .setJudoId("123456789")
+            .setYourPaymentMetaData(emptyMap())
+            .setCurrency(Currency.GBP.name)
+            .setJudoId("123456789")
+            .setYourConsumerReference("ref")
+            .setAddress(mockAddress)
+            .setCardToken("cardToken")
+            .setCv2("452")
+            .setPrimaryAccountDetails(mockPrimaryAccountDetails)
+            .setInitialRecurringPayment(false)
+            .build()
+
+        val actual = judo.toTokenRequest("cardToken", "452")
+
+        val gson = Gson()
+        assertEquals(gson.toJson(expected), gson.toJson(actual))
     }
 }

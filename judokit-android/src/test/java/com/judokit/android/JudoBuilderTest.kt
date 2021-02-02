@@ -232,4 +232,12 @@ internal class JudoBuilderTest {
 
         assertFalse(judoBuilder.build().isSandboxed)
     }
+
+    @Test
+    @DisplayName("Given setInitialRecurringPayment is called with value false, then initialRecurringPayment should return false")
+    fun initialRecurringPaymentShouldReturnFalse() {
+        judoBuilder.setInitialRecurringPayment(false)
+
+        assertFalse(judoBuilder.build().initialRecurringPayment!!)
+    }
 }
