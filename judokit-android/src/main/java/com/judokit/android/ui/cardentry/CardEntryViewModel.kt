@@ -209,6 +209,7 @@ class CardEntryViewModel(
             .setExpiryDate(inputModel.expirationDate)
             .setCv2(inputModel.securityNumber)
             .setPrimaryAccountDetails(judo.primaryAccountDetails)
+            .setInitialRecurringPayment(judo.initialRecurringPayment)
             .build()
 
         return service.checkCard(request).await()
@@ -228,6 +229,7 @@ class CardEntryViewModel(
             .setCv2(inputModel.securityNumber)
             .setPrimaryAccountDetails(judo.primaryAccountDetails)
             .setAmount(judo.amount.amount)
+            .setInitialRecurringPayment(judo.initialRecurringPayment)
             .build()
 
         return service.registerCard(request).await()
@@ -257,6 +259,7 @@ class CardEntryViewModel(
             .setCv2(inputModel.securityNumber)
             .setExpiryDate(inputModel.expirationDate)
             .setPrimaryAccountDetails(judo.primaryAccountDetails)
+            .setInitialRecurringPayment(judo.initialRecurringPayment)
             .build()
     }
 

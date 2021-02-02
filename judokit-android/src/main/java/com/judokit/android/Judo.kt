@@ -57,7 +57,8 @@ class Judo internal constructor(
     val googlePayConfiguration: GooglePayConfiguration?,
     val paymentWidgetType: PaymentWidgetType,
     val address: Address?,
-    val pbbaConfiguration: PBBAConfiguration?
+    val pbbaConfiguration: PBBAConfiguration?,
+    val initialRecurringPayment: Boolean?
 ) : Parcelable {
 
     /**
@@ -77,6 +78,7 @@ class Judo internal constructor(
         private var googlePayConfiguration: GooglePayConfiguration? = null
         private var address: Address? = null
         private var pbbaConfiguration: PBBAConfiguration? = null
+        private var initialRecurringPayment: Boolean? = null
 
         /**
          * Sets the unique merchant ID
@@ -176,6 +178,13 @@ class Judo internal constructor(
             apply { this.pbbaConfiguration = pbbaConfiguration }
 
         /**
+         * Sets the flag for initial recurring payment.
+         * @param initialRecurringPayment Boolean value that toggles initial recurring payment.
+         */
+        fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
+            apply { this.initialRecurringPayment = initialRecurringPayment }
+
+        /**
          * Method that initializes Judo configuration object that can be used for
          * processing a payment.
          * @return A new Judo object that can be added to an intent with [JUDO_OPTIONS] key
@@ -232,7 +241,8 @@ class Judo internal constructor(
                 googlePayConfiguration,
                 paymentWidgetType,
                 address,
-                pbbaConfiguration
+                pbbaConfiguration,
+                initialRecurringPayment
             )
         }
 

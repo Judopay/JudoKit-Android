@@ -17,6 +17,7 @@ class CheckCardRequest private constructor(
     private var currency: String?,
     private var primaryAccountDetails: PrimaryAccountDetails?,
     private var yourPaymentMetaData: Map<String, String>?,
+    private var initialRecurringPayment: Boolean?,
     private var amount: String = "0"
 ) {
     class Builder {
@@ -33,6 +34,7 @@ class CheckCardRequest private constructor(
         private var currency: String? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
         private var yourPaymentMetaData: Map<String, String>? = null
+        private var initialRecurringPayment: Boolean? = null
 
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
@@ -64,6 +66,9 @@ class CheckCardRequest private constructor(
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
             apply { this.primaryAccountDetails = primaryAccountDetails }
 
+        fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
+            apply { this.initialRecurringPayment = initialRecurringPayment }
+
         fun build(): CheckCardRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myCurrency = requireNotNullOrEmpty(currency, "currency")
@@ -89,7 +94,8 @@ class CheckCardRequest private constructor(
                 issueNumber,
                 myCurrency,
                 primaryAccountDetails,
-                yourPaymentMetaData
+                yourPaymentMetaData,
+                initialRecurringPayment
             )
         }
     }

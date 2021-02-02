@@ -118,6 +118,9 @@
     <string name="should_payment_button_display_amount_title">Display amount on button</string>
     <string name="should_payment_button_display_amount_summary">Turn on to show amount on the Pay button.</string>
 
+    <string name="is_initial_recurring_payment_title">Initial recurring payment</string>
+    <string name="is_initial_recurring_payment_summary">Turn on to set initialRecurringPayment flag to true.</string>
+
     <string name="create_card_token">Create card token</string>
     <string name="token_payment">Token payment</string>
     <string name="preauth_token_payment">PreAuth token payment</string>

@@ -11,6 +11,7 @@ internal class RegisterCardRequestTest {
         .setStartDate("1220")
         .setEmailAddress("email@mail.com")
         .setMobileNumber("1234567")
+        .setInitialRecurringPayment(false)
 
     @Test
     @DisplayName("Should throw exception on providing null judo id")

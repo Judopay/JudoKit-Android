@@ -21,7 +21,8 @@ class PaymentRequest private constructor(
     private var saveCardOnly: String?,
     private var emailAddress: String?,
     private var mobileNumber: String?,
-    private var primaryAccountDetails: PrimaryAccountDetails?
+    private var primaryAccountDetails: PrimaryAccountDetails?,
+    private var initialRecurringPayment: Boolean?
 ) {
     class Builder {
         private var uniqueRequest: Boolean? = null
@@ -41,6 +42,7 @@ class PaymentRequest private constructor(
         private var emailAddress: String? = null
         private var mobileNumber: String? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
+        private var initialRecurringPayment: Boolean? = null
 
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
@@ -80,6 +82,9 @@ class PaymentRequest private constructor(
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
             apply { this.primaryAccountDetails = primaryAccountDetails }
 
+        fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
+            apply { this.initialRecurringPayment = initialRecurringPayment }
+
         fun build(): PaymentRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myAmount = requireNotNullOrEmpty(amount, "amount")
@@ -110,7 +115,8 @@ class PaymentRequest private constructor(
                 saveCardOnly,
                 emailAddress,
                 mobileNumber,
-                primaryAccountDetails
+                primaryAccountDetails,
+                initialRecurringPayment
             )
         }
     }

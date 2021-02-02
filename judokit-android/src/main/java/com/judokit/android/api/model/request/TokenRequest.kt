@@ -20,7 +20,8 @@ class TokenRequest private constructor(
     private var cardAddress: Address?,
     private var emailAddress: String?,
     private var mobileNumber: String?,
-    private var primaryAccountDetails: PrimaryAccountDetails?
+    private var primaryAccountDetails: PrimaryAccountDetails?,
+    private var initialRecurringPayment: Boolean?
 ) {
     class Builder {
         private var uniqueRequest: Boolean? = false
@@ -39,6 +40,7 @@ class TokenRequest private constructor(
         private var emailAddress: String? = null
         private var mobileNumber: String? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
+        private var initialRecurringPayment: Boolean? = null
 
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
@@ -76,6 +78,9 @@ class TokenRequest private constructor(
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
             apply { this.primaryAccountDetails = primaryAccountDetails }
 
+        fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
+            apply { this.initialRecurringPayment = initialRecurringPayment }
+
         fun build(): TokenRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myAmount = requireNotNullOrEmpty(amount, "amount")
@@ -103,7 +108,8 @@ class TokenRequest private constructor(
                 myAddress,
                 emailAddress,
                 mobileNumber,
-                primaryAccountDetails
+                primaryAccountDetails,
+                initialRecurringPayment
             )
         }
     }
