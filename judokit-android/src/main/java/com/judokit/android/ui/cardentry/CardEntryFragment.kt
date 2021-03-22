@@ -32,10 +32,7 @@ import com.judokit.android.api.model.response.toJudoResult
 import com.judokit.android.db.JudoRoomDatabase
 import com.judokit.android.db.repository.TokenizedCardRepository
 import com.judokit.android.judo
-import com.judokit.android.model.CardNetwork
-import com.judokit.android.model.JudoPaymentResult
-import com.judokit.android.model.isCardPaymentWidget
-import com.judokit.android.model.isPaymentMethodsWidget
+import com.judokit.android.model.*
 import com.judokit.android.ui.cardentry.model.FormFieldType
 import com.judokit.android.ui.cardverification.THREE_DS_ONE_DIALOG_FRAGMENT_TAG
 import com.judokit.android.ui.cardverification.ThreeDSOneCardVerificationDialogFragment
@@ -172,9 +169,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
     private fun dispatchCardPaymentApiResult(result: JudoApiCallResult<Receipt>) {
         when (result) {
             is JudoApiCallResult.Success -> handleSuccess(result.data)
-            is JudoApiCallResult.Failure -> if (result.error != null) sharedViewModel.paymentResult.postValue(
-                JudoPaymentResult.Error(result.error.toJudoError())
-            )
+            is JudoApiCallResult.Failure -> handleFailure(result)
         }
     }
 
@@ -243,6 +238,18 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
             } else {
                 sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(receipt.toJudoResult()))
             }
+        }
+    }
+
+    private fun handleFailure(failure: JudoApiCallResult.Failure) {
+        if (failure.error != null) {
+            sharedViewModel.paymentResult.postValue(
+                JudoPaymentResult.Error(failure.error.toJudoError())
+            )
+        } else if (failure.throwable != null) {
+            sharedViewModel.paymentResult.postValue(
+                JudoPaymentResult.Error(JudoError.judoNetworkError(resources, failure.throwable))
+            )
         }
     }
 

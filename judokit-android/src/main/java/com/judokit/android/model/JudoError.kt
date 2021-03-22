@@ -9,6 +9,7 @@ const val USER_CANCELLED = -1
 const val RESPONSE_PARSING = -2
 const val GOOGLE_PAY_NOT_SUPPORTED = -3
 const val REQUEST_FAILED = -4
+const val NETWORK_ERROR = -5
 
 internal const val USER_CANCELLED_MSG =
     "The transaction was cancelled by the user. The user closed the transaction flow without completing the transaction."
@@ -76,6 +77,21 @@ data class JudoError(
                 JudoError(
                     GOOGLE_PAY_NOT_SUPPORTED,
                     message ?: resources.getString(R.string.error_google_pay_not_supported_reason)
+                )
+            )
+        )
+
+        /**
+         * Utility function that creates a JudoError object with network error
+         * error code and message. Used when the network failure.
+         */
+        fun judoNetworkError(resources: Resources, throwable: Throwable): JudoError = JudoError(
+            NETWORK_ERROR,
+            resources.getString(R.string.error_network_failed_desc),
+            mutableListOf(
+                JudoError(
+                    NETWORK_ERROR,
+                    throwable.localizedMessage ?: resources.getString(R.string.error_network_failed_reason)
                 )
             )
         )
