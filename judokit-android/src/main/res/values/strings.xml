@@ -1,5 +1,5 @@
 <resources>
-    <string name="judokit_android">JudoKit-Android</string>
+    <string name="judokit_android" translatable="false">JudoKit-Android</string>
     <string name="pay_now">%1$sPay Now</string>
     <string name="pay_amount">Pay %1$s</string>
     <string name="check_card">Check Card</string>
@@ -14,9 +14,9 @@
     <string name="add_card">Add card</string>
     <string name="you_will_pay">You will pay</string>
     <string name="cards">Cards</string>
-    <string name="amazon_pay">Amazon Pay</string>
-    <string name="ideal_payment">iDeal</string>
-    <string name="empty" />
+    <string name="amazon_pay" translatable="false">Amazon Pay</string>
+    <string name="ideal_payment" translatable="false">iDeal</string>
+    <string name="empty" translatable="false" />
     <string name="secure_server_transmission">Your card details are encrypted using TLS before transmission to our secure payment service provider.</string>
 
     <string name="date_hint">MM/YY</string>
@@ -57,7 +57,7 @@
     <string name="no_connected_cards">You didn\'t connect any cards yet</string>
     <string name="choose_payment_method">Choose a Payment Method</string>
     <string name="no_cards_added">You didn’t add any cards yet.\nAdd one right now or use any of the payment methods below</string>
-    <string name="google_pay">Google Pay</string>
+    <string name="google_pay" translatable="false">Google Pay</string>
     <string name="delete">Delete</string>
 
     <string name="delete_card_alert_title">Delete Card ?</string>
@@ -71,7 +71,6 @@
     <string name="default_discover_card_title">My Discover Card</string>
     <string name="default_dinnersclub_card_title">My Dinners Club Card</string>
 
-    <string name="unable_to_process_request_error_desc">Sorry, we\'re currently unable to process this request.</string>
     <string name="unable_to_process_request_error_title">Unable to process</string>
     <string name="processing">Transaction pending…</string>
 
@@ -81,18 +80,18 @@
 
     <string name="error_card_title_too_long">Card Name cannot be longer than %1$d characters</string>
 
-    <string name="rabobank">Rabobank</string>
-    <string name="abn_amro">ABN AMRO</string>
-    <string name="van_lanschot_bankiers">Van Lanschot Bankiers</string>
-    <string name="triodos_bank">Triodos Bank</string>
-    <string name="ing_bank">ING Bank</string>
-    <string name="sns_bank">SNS Bank</string>
-    <string name="asn">ASN</string>
-    <string name="regiobank">RegioBank</string>
-    <string name="knab">Knab</string>
-    <string name="bunq">Bunq</string>
-    <string name="moneyou">Moneyou</string>
-    <string name="handelsbanken">Handelsbanken</string>
+    <string name="rabobank" translatable="false">Rabobank</string>
+    <string name="abn_amro" translatable="false">ABN AMRO</string>
+    <string name="van_lanschot_bankiers" translatable="false">Van Lanschot Bankiers</string>
+    <string name="triodos_bank" translatable="false">Triodos Bank</string>
+    <string name="ing_bank" translatable="false">ING Bank</string>
+    <string name="sns_bank" translatable="false">SNS Bank</string>
+    <string name="asn" translatable="false">ASN</string>
+    <string name="regiobank" translatable="false">RegioBank</string>
+    <string name="knab" translatable="false">Knab</string>
+    <string name="bunq" translatable="false">Bunq</string>
+    <string name="moneyou" translatable="false">Moneyou</string>
+    <string name="handelsbanken" translatable="false">Handelsbanken</string>
 
     <string name="there_is_a_delay">This is taking longer than expected. Please wait…</string>
     <string name="ideal_transaction">iDEAL transaction</string>
@@ -106,24 +105,25 @@
     <string name="wocr_hint_position_card_in_frame">Position card in this frame</string>
     <string name="wocr_automatically_scan">We will automatically scan it</string>
 
-    <string name="pay_by_bank">Pay by Bank app</string>
+    <string name="pay_by_bank" translatable="false">Pay by Bank app</string>
     <string name="retry">Retry</string>
     <string name="transaction_successful">Transaction success!</string>
     <string name="pay_by_bank_transaction">Pay by Bank app transaction</string>
 
-<!--    Google Pay not supported on device-->
+    <!--    Google Pay not supported on device-->
     <string name="error_google_pay_not_supported_desc">Google Pay is not supported on this device.</string>
     <string name="error_google_pay_not_supported_reason">A Google Pay transaction was attempted on a device that either does not support, or does not have Google Pay set up.</string>
 
-<!--    Backend request failed-->
+    <!--    Backend request failed-->
     <string name="error_request_failed_desc">The request has failed or responded without data.</string>
     <string name="error_request_failed_reason">The transaction response returned without any data or there was an error while forming the request.</string>
 
-<!--    User cancelled-->
-    <string name="error_user_cancelled_desc">The transaction was cancelled by the user.</string>
-    <string name="error_user_cancelled_reason">The user closed the transaction flow without completing the transaction.</string>
-
-<!--    Unexpected response format (when PBBA/iDEAL does not have the necessary properties)-->
+    <!--    Unexpected response format (when PBBA/iDEAL does not have the necessary properties)-->
     <string name="error_response_parse_desc">Unexpected response format returned.</string>
     <string name="error_response_parse_reason">The response did not contain some of the required parameters needed to complete the transaction.</string>
+
+    <string name="country_uk">UK</string>
+    <string name="country_usa">USA</string>
+    <string name="country_canada">Canada</string>
+    <string name="country_other">Other</string>
 </resources>
