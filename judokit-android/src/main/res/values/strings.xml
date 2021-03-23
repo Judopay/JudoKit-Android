@@ -111,16 +111,16 @@
     <string name="pay_by_bank_transaction">Pay by Bank app transaction</string>
 
     <!--    Google Pay not supported on device-->
-    <string name="error_google_pay_not_supported_desc">Google Pay is not supported on this device.</string>
-    <string name="error_google_pay_not_supported_reason">A Google Pay transaction was attempted on a device that either does not support, or does not have Google Pay set up.</string>
+    <string name="error_google_pay_not_supported_desc" translatable="false">Google Pay is not supported on this device.</string>
+    <string name="error_google_pay_not_supported_reason" translatable="false">A Google Pay transaction was attempted on a device that either does not support, or does not have Google Pay set up.</string>
 
     <!--    Backend request failed-->
-    <string name="error_request_failed_desc">The request has failed or responded without data.</string>
-    <string name="error_request_failed_reason">The transaction response returned without any data or there was an error while forming the request.</string>
+    <string name="error_request_failed_desc" translatable="false">The request has failed or responded without data.</string>
+    <string name="error_request_failed_reason" translatable="false">The transaction response returned without any data or there was an error while forming the request.</string>
 
     <!--    Unexpected response format (when PBBA/iDEAL does not have the necessary properties)-->
-    <string name="error_response_parse_desc">Unexpected response format returned.</string>
-    <string name="error_response_parse_reason">The response did not contain some of the required parameters needed to complete the transaction.</string>
+    <string name="error_response_parse_desc" translatable="false">Unexpected response format returned.</string>
+    <string name="error_response_parse_reason" translatable="false">The response did not contain some of the required parameters needed to complete the transaction.</string>
 
     <string name="country_uk">UK</string>
     <string name="country_usa">USA</string>
