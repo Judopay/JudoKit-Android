@@ -7,7 +7,7 @@
 
     <dialog
         android:id="@+id/pollingStatusFragment"
-        android:name="com.judokit.android.ui.pollingstatus.PollingStatusFragment"
+        android:name="com.judopay.judokit.android.ui.pollingstatus.PollingStatusFragment"
         android:label="PollingStatusFragment"
         tools:layout="@layout/polling_status_fragment"/>
 </navigation>

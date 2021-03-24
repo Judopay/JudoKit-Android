@@ -8,7 +8,7 @@
 
     <dialog
         android:id="@+id/cardEntryFragment"
-        android:name="com.judokit.android.ui.cardentry.CardEntryFragment"
+        android:name="com.judopay.judokit.android.ui.cardentry.CardEntryFragment"
         android:label="CardEntryFragment"
         tools:layout="@layout/card_entry_fragment" />
 </navigation>

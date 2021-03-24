@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3">
 
-        <com.judokit.android.ui.paymentmethods.components.PaymentCardView
+        <com.judopay.judokit.android.ui.paymentmethods.components.PaymentCardView
             android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -32,7 +32,7 @@
             app:cardCornerRadius="@dimen/card_corner_radius"
             app:cardElevation="@dimen/card_elevation_8dp" />
 
-        <com.judokit.android.ui.paymentmethods.components.PaymentCardView
+        <com.judopay.judokit.android.ui.paymentmethods.components.PaymentCardView
             android:id="@+id/secondaryPaymentCardView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -41,7 +41,7 @@
             app:cardCornerRadius="@dimen/card_corner_radius"
             app:cardElevation="@dimen/card_elevation_8dp" />
 
-        <com.judokit.android.ui.paymentmethods.components.GooglePayCardView
+        <com.judopay.judokit.android.ui.paymentmethods.components.GooglePayCardView
             android:id="@+id/googlePayCardView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -50,7 +50,7 @@
             app:cardCornerRadius="@dimen/card_corner_radius"
             app:cardElevation="@dimen/card_elevation_8dp" />
 
-        <com.judokit.android.ui.paymentmethods.components.IdealPaymentCardView
+        <com.judopay.judokit.android.ui.paymentmethods.components.IdealPaymentCardView
             android:id="@+id/idealPaymentCardView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -59,7 +59,7 @@
             app:cardCornerRadius="@dimen/card_corner_radius"
             app:cardElevation="@dimen/card_elevation_8dp" />
 
-        <com.judokit.android.ui.paymentmethods.components.IdealPaymentCardView
+        <com.judopay.judokit.android.ui.paymentmethods.components.IdealPaymentCardView
             android:id="@+id/secondaryIdealPaymentCardView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -68,7 +68,7 @@
             app:cardCornerRadius="@dimen/card_corner_radius"
             app:cardElevation="@dimen/card_elevation_8dp" />
 
-        <com.judokit.android.ui.paymentmethods.components.PayByBankCardView
+        <com.judopay.judokit.android.ui.paymentmethods.components.PayByBankCardView
             android:id="@+id/payByBankCardView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -91,7 +91,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.judokit.android.ui.paymentmethods.components.NoPaymentMethodSelectedView
+    <com.judopay.judokit.android.ui.paymentmethods.components.NoPaymentMethodSelectedView
         android:id="@+id/noPaymentMethodSelectedView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.judokit.android.ui.paymentmethods.components.PaymentCallToActionView
+    <com.judopay.judokit.android.ui.paymentmethods.components.PaymentCallToActionView
         android:id="@+id/paymentCallToActionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

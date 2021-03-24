@@ -1,0 +1,78 @@
+package com.judopay.judokit.android.api.model.request
+
+import com.judopay.judokit.android.model.Country
+import com.judopay.judokit.android.model.Currency
+import com.judopay.judokit.android.requireNotNullOrEmpty
+
+data class BankSaleRequest(
+    val amount: String,
+    val merchantPaymentReference: String,
+    val merchantConsumerReference: String,
+    val judoId: String,
+    val mobileNumber: String?,
+    val emailAddress: String?,
+    val appearsOnStatement: String?,
+    val paymentMetadata: Map<String, String>?,
+    val merchantRedirectUrl: String,
+    val accountHolderName: String = "PBBA User",
+    val bic: String = "RABONL2U",
+    val paymentMethod: String = "PBBA",
+    val country: String = Country.GB.name,
+    val currency: String = Currency.GBP.name
+) {
+    class Builder {
+        private var amount: String? = null
+        private var merchantPaymentReference: String? = null
+        private var merchantConsumerReference: String? = null
+        private var judoId: String? = null
+        private var mobileNumber: String? = null
+        private var appearsOnStatement: String? = null
+        private var emailAddress: String? = null
+        private var paymentMetadata: Map<String, String>? = null
+        private var merchantRedirectUrl: String? = null
+
+        fun setAmount(amount: String?) = apply { this.amount = amount }
+
+        fun setMerchantPaymentReference(merchantPaymentReference: String?) =
+            apply { this.merchantPaymentReference = merchantPaymentReference }
+
+        fun setMerchantConsumerReference(merchantConsumerReference: String?) =
+            apply { this.merchantConsumerReference = merchantConsumerReference }
+
+        fun setJudoId(judoId: String?) = apply { this.judoId = judoId }
+
+        fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = mobileNumber }
+        fun setAppearsOnStatement(appearsOnStatement: String?) =
+            apply { this.appearsOnStatement = appearsOnStatement }
+
+        fun setEmailAddress(emailAddress: String?) = apply { this.emailAddress = emailAddress }
+        fun setPaymentMetadata(paymentMetadata: Map<String, String>?) =
+            apply { this.paymentMetadata = paymentMetadata }
+
+        fun setMerchantRedirectUrl(merchantRedirectUrl: String?) =
+            apply { this.merchantRedirectUrl = merchantRedirectUrl }
+
+        fun build(): BankSaleRequest {
+            val myAmount = requireNotNullOrEmpty(amount, "amount")
+            val myMerchantPaymentReference =
+                requireNotNullOrEmpty(merchantPaymentReference, "merchantPaymentReference")
+            val myMerchantConsumerReference =
+                requireNotNullOrEmpty(merchantConsumerReference, "merchantConsumerReference")
+            val myJudoId = requireNotNullOrEmpty(judoId, "judoId")
+            val myMerchantRedirectUrl =
+                requireNotNullOrEmpty(merchantRedirectUrl, "merchantRedirectUrl")
+
+            return BankSaleRequest(
+                myAmount,
+                myMerchantPaymentReference,
+                myMerchantConsumerReference,
+                myJudoId,
+                mobileNumber,
+                emailAddress,
+                appearsOnStatement,
+                paymentMetadata,
+                myMerchantRedirectUrl
+            )
+        }
+    }
+}

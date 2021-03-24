@@ -25,14 +25,14 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.judokit.android.examples"
+        applicationId "com.judopay.judokit.android.examples"
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 23
         versionName "1.0-" + getGitHash()
         multiDexEnabled true
 
-        testInstrumentationRunner "com.judokit.android.examples.test.CucumberRunner"
+        testInstrumentationRunner "com.judopay.judokit.android.examples.test.CucumberRunner"
     }
 
     signingConfigs {

@@ -5,7 +5,7 @@ task runInstrumentationTests {
     finalizedBy "downloadCucumberReports"
     doLast {
         exec {
-            commandLine android.getAdbExecutable().toString(), 'shell', 'am', 'instrument', '-w', '-r', 'com.judokit.android.examples.test/com.judokit.android.examples.test.CucumberRunner'
+            commandLine android.getAdbExecutable().toString(), 'shell', 'am', 'instrument', '-w', '-r', 'com.judopay.judokit.android.examples.test/com.judopay.judokit.android.examples.test.CucumberRunner'
         }
     }
 }
@@ -108,7 +108,7 @@ def executeAdb(String program) {
  * @return
  */
 def getCucumberDevicePath() {
-    return 'sdcard/Android/data/com.judokit.android.examples/files/reports'
+    return 'sdcard/Android/data/com.judopay.judokit.android.examples/files/reports'
 }
 
 /**

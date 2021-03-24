@@ -60,7 +60,7 @@ android {
 }
 
 version = android.defaultConfig.versionName
-group = 'com.judokit.android'
+group = 'com.judopay.judokit.android'
 
 androidArtifact {
     artifactId = 'judokit-android'
