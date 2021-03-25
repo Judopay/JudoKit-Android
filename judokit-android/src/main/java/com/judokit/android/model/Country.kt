@@ -1,5 +1,7 @@
 package com.judokit.android.model
 
+import com.judokit.android.R
+
 // ISO 3166-2 list of supported card form countries
 enum class Country {
     GB,
@@ -16,6 +18,14 @@ val Country.displayName: String
         Country.US -> "USA"
         Country.CA -> "Canada"
         Country.OTHER -> "Other"
+    }
+
+val Country.translatableName: Int
+    get() = when (this) {
+        Country.GB -> R.string.country_uk
+        Country.US -> R.string.country_usa
+        Country.CA -> R.string.country_canada
+        Country.OTHER -> R.string.country_other
     }
 
 val Country.postcodeMaxLength: Int

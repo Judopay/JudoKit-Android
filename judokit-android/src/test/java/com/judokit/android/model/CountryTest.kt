@@ -1,5 +1,6 @@
 package com.judokit.android.model
 
+import com.judokit.android.R
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -29,6 +30,30 @@ internal class CountryTest {
     @Test
     fun returnOtherOnAsCountryCall() {
         assertEquals(Country.OTHER, "Other".asCountry())
+    }
+
+    @DisplayName("Given GB.translatableName is called, then return GB from string resources")
+    @Test
+    fun returnUKFromStringResourcesOnTranslatableNameCall() {
+        assertEquals(R.string.country_uk, Country.GB.translatableName)
+    }
+
+    @DisplayName("Given US.translatableName is called, then return US from string resources")
+    @Test
+    fun returnUSFromStringResourcesOnTranslatableNameCall() {
+        assertEquals(R.string.country_usa, Country.US.translatableName)
+    }
+
+    @DisplayName("Given CA.translatableName is called, then return Canada from string resources")
+    @Test
+    fun returnCanadaFromStringResourcesOnTranslatableNameCall() {
+        assertEquals(R.string.country_canada, Country.CA.translatableName)
+    }
+
+    @DisplayName("Given OTHER.translatableName is called, then return Other from string resources")
+    @Test
+    fun returnOtherFromStringResourcesOnTranslatableNameCall() {
+        assertEquals(R.string.country_other, Country.OTHER.translatableName)
     }
 
     @DisplayName("Given postCodeMaxLength is called, when country is US, then return 5")

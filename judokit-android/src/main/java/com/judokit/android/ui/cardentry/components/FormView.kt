@@ -14,8 +14,8 @@ import com.judokit.android.inflate
 import com.judokit.android.model.CardNetwork
 import com.judokit.android.model.Country
 import com.judokit.android.model.asCountry
-import com.judokit.android.model.displayName
 import com.judokit.android.model.postcodeMaxLength
+import com.judokit.android.model.translatableName
 import com.judokit.android.parentOfType
 import com.judokit.android.ui.cardentry.formatting.CardNumberInputMaskTextWatcher
 import com.judokit.android.ui.cardentry.formatting.InputMaskTextWatcher
@@ -72,7 +72,7 @@ class FormView @JvmOverloads constructor(
     )
 
     private val countriesAdapter: ArrayAdapter<String> by lazy {
-        val countries = Country.values().map { it.displayName }
+        val countries = Country.values().map { context.getString(it.translatableName) }
         ArrayAdapter(context, android.R.layout.simple_list_item_1, countries)
     }
 

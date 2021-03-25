@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pay_now">%1$sPaga ahora </string>
+    <string name="pay_amount">Paga %1$s</string>
+    <string name="check_card">Comprobar tarjeta</string>
+    <string name="register_card">Registrar tarjeta</string>
+    <string name="save_card">Guardar tarjeta</string>
+    <string name="connected_cards">Tarjetas conectadas</string>
+    <string name="button_edit">Editar</string>
+    <string name="button_done">Completo</string>
+    <string name="cancel">Cancelar</string>
+    <string name="ok">Ok</string>
+    <string name="button_scan_card">Escanear tarjeta</string>
+    <string name="add_card">Añadir tarjeta</string>
+    <string name="you_will_pay">Usted pagará</string>
+    <string name="cards">Tarjetas</string>
+    <string name="secure_server_transmission">Servidor seguro: los detalles de su tarjeta son encriptados usando SSL antes de su transmisión a nuestro procesador de pagos seguro. No se almacenarán en su dispositivo ni en nuestros servidores.</string>
+
+    <string name="date_hint">MM/AA</string>
+    <string name="cvv_hint">Código CVV</string>
+    <string name="card_number_hint">Numero de tarjeta</string>
+    <string name="card_holder_hint">Nombre del titular de la tarejeta</string>
+    <string name="country_hint">País</string>
+    <string name="post_code_hint">Código postal</string>
+    <string name="check_card_number">Compruebe el número de tarjeta</string>
+    <string name="error_unknown_not_supported">Tarjeta no es compatible</string>
+    <string name="error_visa_not_supported">Visa no es compatible</string>
+    <string name="error_mastercard_not_supported">Mastercard no es compatible</string>
+    <string name="error_maestro_not_supported">Maestro no es compatible</string>
+    <string name="error_amex_not_supported">American Express no es compatible</string>
+    <string name="error_discover_not_supported">Discover no es compatible</string>
+    <string name="error_union_pay_not_supported">China UnionPay no es compatible</string>
+    <string name="error_jcb_not_supported">JCB no es compatible</string>
+    <string name="error_diners_club_not_supported">Diners Club no es compatible</string>
+    <string name="check_expiry_date">Compruebe la fecha de caducidad</string>
+    <string name="check_cvv">Compruebe el código de seguridad CVV</string>
+    <string name="check_amex_security_code">Compruebe el código de seguridad CID</string>
+    <string name="check_visa_security_code">Compruebe el código de seguridad CVV2</string>
+    <string name="check_jcb_security_code">Compruebe el código de seguridad CAV2</string>
+    <string name="check_mastercard_security_code">Compruebe el código de seguridad CVC2</string>
+    <string name="check_china_union_pay_security_code">Compruebe el código de seguridad CVN2</string>
+    <string name="error_country_should_not_be_empty">Por favor seleccione un país</string>
+    <string name="expired">expirado</string>
+    <string name="is_expired">es expirado</string>
+    <string name="will_expire_soon">expirará pronto</string>
+    <string name="expire_soon">expirar pronto</string>
+    <string name="invalid_postcode">Código postal inválido</string>
+    <string name="invalid_zip_code">Código postal inválido</string>
+
+    <string name="transaction_unsuccessful">Transacción fallida - por favor prueba otra vez</string>
+    <string name="close">Cerrar</string>
+
+    <string name="no_connected_cards">Todavía no ha conectado ninguna tarjeta</string>
+    <string name="choose_payment_method">Elija un método de pago</string>
+    <string name="no_cards_added">Todavía no ha añadido ninguna tarjeta.\nAñada una ahora o utilice uno de los métodos de pago a continuación</string>
+    <string name="delete">Borrar</string>
+
+    <string name="delete_card_alert_title">¿Borrar tarjeta?</string>
+    <string name="delete_card_alert_message">¿Seguro que quiere borrar esta tarjeta de su cartera?</string>
+    <string name="default_visa_card_title">Mi tarjeta VISA</string>
+    <string name="default_mastercard_card_title">Mi tarjeta MasterCard</string>
+    <string name="default_maestro_card_title">Mi tarjeta Maestro</string>
+    <string name="default_amex_card_title">Mi tarjeta American Express</string>
+    <string name="default_jcb_card_title">Mi tarjeta JCB</string>
+    <string name="default_chinaunionpay_card_title">Mi tarjeta China Union Pay</string>
+    <string name="default_discover_card_title">Mi tarjeta Discover</string>
+    <string name="default_dinnersclub_card_title">Mi tarjeta Dinners Club</string>
+
+    <string name="unable_to_process_request_error_title">Error</string>
+    <string name="processing">Procesando…</string>
+
+    <string name="customize_card">Personalizar tarjeta</string>
+    <string name="save_as_default_payment_method">Guardar como método de pago por defecto</string>
+    <string name="save">Guardar</string>
+
+    <string name="error_card_title_too_long">El nombre no puede exceder los %1$d caracteres</string>
+
+    <string name="there_is_a_delay">Está tardando más de lo esperado. Por favor, espere…</string>
+    <string name="ideal_transaction">Transacción iDEAL</string>
+    <string name="dismiss">Ignorar</string>
+    <string name="three_d_secure_check">Verificación 3D Secure</string>
+
+    <string name="scan_card_no_permission_title">Permisos de la cámara no concedidos</string>
+    <string name="scan_card_no_permission_message">Permiso requerido para utilizar la funcionalidad de escaneo. Por favor vaya a configuración y habilite su cámara</string>
+    <string name="scan_card_confirm">Recibido</string>
+    <string name="scan_card_go_to_settings">Vaya a configuración</string>
+    <string name="wocr_hint_position_card_in_frame">Posicione la tarjeta en el marco</string>
+    <string name="wocr_automatically_scan">Haremos lo posible para escanearla</string>
+
+    <string name="retry">Reintentar</string>
+    <string name="transaction_successful">Transacción completa</string>
+    <string name="pay_by_bank_transaction">Transacción Pay by Bank app</string>
+
+    <string name="country_uk">UK</string>
+    <string name="country_usa">USA</string>
+    <string name="country_canada">Canadá</string>
+    <string name="country_other">Otro</string>
+
+    <string name="card_subtitle">%1$s Terminación</string>
+</resources>
