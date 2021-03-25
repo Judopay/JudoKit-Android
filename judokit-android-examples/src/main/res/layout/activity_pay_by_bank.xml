@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".feature.paybybank.PayByBankActivity">
+    tools:context="com.judokit.android.examples.feature.paybybank.PayByBankActivity">
 
     <com.judopay.judokit.android.ui.common.PayByBankButton
         android:id="@+id/payByBankButton"
