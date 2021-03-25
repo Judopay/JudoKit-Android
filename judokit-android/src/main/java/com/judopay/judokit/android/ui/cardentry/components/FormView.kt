@@ -14,7 +14,6 @@ import com.judopay.judokit.android.inflate
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.Country
 import com.judopay.judokit.android.model.asCountry
-import com.judopay.judokit.android.model.displayName
 import com.judopay.judokit.android.model.postcodeMaxLength
 import com.judopay.judokit.android.model.translatableName
 import com.judopay.judokit.android.parentOfType

@@ -1,6 +1,6 @@
 package com.judopay.judokit.android.model
 
-import com.judokit.android.R
+import com.judopay.judokit.android.R
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

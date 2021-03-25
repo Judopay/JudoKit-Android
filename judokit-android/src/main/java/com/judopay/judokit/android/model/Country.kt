@@ -1,6 +1,6 @@
 package com.judopay.judokit.android.model
 
-import com.judokit.android.R
+import com.judopay.judokit.android.R
 
 // ISO 3166-2 list of supported card form countries
 enum class Country {
