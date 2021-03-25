@@ -37,11 +37,12 @@
     <ViewAnimator
         android:id="@+id/buttonsAnimator"
         android:layout_width="200dp"
-        android:layout_height="@dimen/button_height"
+        android:layout_height="wrap_content"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:inAnimation="@anim/fade_in"
         android:minWidth="@dimen/min_touch_target_size"
+        android:minHeight="@dimen/button_height"
         android:outAnimation="@anim/fade_out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
