@@ -8,7 +8,7 @@
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
--keepclassmembers class com.judokit.android.ui.cardverification.components.JsonParsingJavaScriptInterface {
+-keepclassmembers class com.judopay.judokit.android.ui.cardverification.components.JsonParsingJavaScriptInterface {
    public *;
 }
 
@@ -20,13 +20,13 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.judokit.** { *; }
--keepnames class com.judokit.** { *; }
+-keep class com.judopay.judokit.** { *; }
+-keepnames class com.judopay.judokit.** { *; }
 -keep class cards.pay.paycardsrecognizer.sdk.** { *; }
 
-#-keep class com.judokit.android.api.model.** { *; }
-#-keepnames class com.judokit.android.api.model.** { *; }
-#-keep class com.judokit.android.model.** { *; }
-#-keepnames class com.judokit.android.model.** { *; }
-#-keep class com.judokit.android.api.error.** { *; }
-#-keepnames class com.judokit.android.api.error.** { *; }
+#-keep class com.judopay.judokit.android.api.model.** { *; }
+#-keepnames class com.judopay.judokit.android.api.model.** { *; }
+#-keep class com.judopay.judokit.android.model.** { *; }
+#-keepnames class com.judopay.judokit.android.model.** { *; }
+#-keep class com.judopay.judokit.android.api.error.** { *; }
+#-keepnames class com.judopay.judokit.android.api.error.** { *; }

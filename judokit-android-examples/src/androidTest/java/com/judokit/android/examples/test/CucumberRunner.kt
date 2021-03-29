@@ -25,7 +25,7 @@ class CucumberRunner : CucumberAndroidJUnitRunner() {
      *
      * @return the plugin string for the configuration, which contains XML, HTML and JSON paths
      */
-    private fun getPluginConfigurationString(): String? {
+    private fun getPluginConfigurationString(): String {
         val separator = "--"
         return "junit:${getCucumberXml()}${separator}html:${getCucumberHtml()}${separator}json:${getCucumberJson()}"
     }

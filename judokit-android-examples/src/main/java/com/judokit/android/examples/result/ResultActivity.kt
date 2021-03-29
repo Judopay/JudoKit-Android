@@ -13,7 +13,7 @@ import com.judokit.android.examples.model.Result
 import com.judokit.android.examples.result.adapter.ResultActivityAdapter
 import kotlinx.android.synthetic.main.activity_result.*
 
-const val RESULT = "com.judokit.android.examples.result"
+const val RESULT = "com.judopay.judokit.android.examples.result"
 
 class ResultActivity : AppCompatActivity() {
 

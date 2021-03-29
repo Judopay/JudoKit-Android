@@ -22,28 +22,28 @@
         android:theme="@style/Theme.DemoApp"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".SplashActivity"
+            android:name="com.judokit.android.examples.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".feature.tokenpayment.DemoTokenPaymentActivity" />
+        <activity android:name="com.judokit.android.examples.feature.tokenpayment.DemoTokenPaymentActivity" />
         <activity
-            android:name=".result.ResultActivity"
+            android:name="com.judokit.android.examples.result.ResultActivity"
             android:theme="@style/Theme.DemoApp" />
         <activity
-            android:name=".settings.SettingsActivity"
+            android:name="com.judokit.android.examples.settings.SettingsActivity"
             android:label="@string/title_settings"
-            android:parentActivityName=".feature.DemoFeatureListActivity"
+            android:parentActivityName="com.judokit.android.examples.feature.DemoFeatureListActivity"
             android:theme="@style/Theme.DemoApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.judokit.android.examples.feature.DemoFeatureListActivity" />
         </activity>
         <activity
-            android:name=".feature.DemoFeatureListActivity"
+            android:name="com.judokit.android.examples.feature.DemoFeatureListActivity"
             android:label="@string/title_activity_demo_feature_list"
             android:launchMode="singleTask"
             android:theme="@style/Theme.DemoApp">
@@ -63,7 +63,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".feature.paybybank.PayByBankActivity"
+            android:name="com.judokit.android.examples.feature.paybybank.PayByBankActivity"
             android:label="@string/title_activity_pay_by_bank"
             android:theme="@style/Theme.DemoApp" />
 

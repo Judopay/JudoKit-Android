@@ -14,8 +14,8 @@ import com.judokit.android.examples.R
 import com.judokit.android.examples.test.espresso.setChecked
 import com.judokit.android.examples.test.model.TestConfiguration
 import com.judokit.android.examples.test.model.TestData
-import com.judokit.android.model.Currency
-import com.judokit.android.model.PaymentMethod
+import com.judopay.judokit.android.model.Currency
+import com.judopay.judokit.android.model.PaymentMethod
 import org.hamcrest.CoreMatchers.anything
 
 private const val TAG_REQUIRE_3DS = "@require-3ds-config"

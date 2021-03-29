@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/paymentMethodsFragment"
-        android:name="com.judokit.android.ui.paymentmethods.PaymentMethodsFragment"
+        android:name="com.judopay.judokit.android.ui.paymentmethods.PaymentMethodsFragment"
         android:label="PaymentMethodsFragment"
         tools:layout="@layout/payment_methods_fragment">
 
@@ -16,8 +16,8 @@
             android:id="@+id/action_paymentMethodsFragment_to_cardEntryFragment"
             app:destination="@id/cardEntryFragment">
             <argument
-                android:name="com.judokit.android.model.shouldVerifySecurityCode"
-                app:argType="com.judokit.android.model.CardNetwork" />
+                android:name="com.judopay.judokit.android.model.shouldVerifySecurityCode"
+                app:argType="com.judopay.judokit.android.model.CardNetwork" />
         </action>
 
         <action
@@ -28,7 +28,7 @@
             android:id="@+id/action_paymentMethodsFragment_to_idealFragment"
             app:destination="@id/idealFragment">
             <argument
-                android:name="com.judokit.android.idealbankbic"
+                android:name="com.judopay.judokit.android.idealbankbic"
                 app:argType="string" />
         </action>
 
@@ -36,33 +36,33 @@
             android:id="@+id/action_paymentMethodsFragment_to_PollingStatusFragment"
             app:destination="@id/pollingStatusFragment">
             <argument
-                android:name="com.judokit.android.model.paymentWidgetType"
-                app:argType="com.judokit.android.model.PaymentWidgetType" />
+                android:name="com.judopay.judokit.android.model.paymentWidgetType"
+                app:argType="com.judopay.judokit.android.model.PaymentWidgetType" />
         </action>
 
     </fragment>
 
     <dialog
         android:id="@+id/cardEntryFragment"
-        android:name="com.judokit.android.ui.cardentry.CardEntryFragment"
+        android:name="com.judopay.judokit.android.ui.cardentry.CardEntryFragment"
         android:label="CardEntryFragment"
         tools:layout="@layout/card_entry_fragment" />
 
     <fragment
         android:id="@+id/editCardFragment"
-        android:name="com.judokit.android.ui.editcard.EditCardFragment"
+        android:name="com.judopay.judokit.android.ui.editcard.EditCardFragment"
         android:label="EditCardFragment"
         tools:layout="@layout/edit_card_fragment" />
 
     <fragment
         android:id="@+id/idealFragment"
-        android:name="com.judokit.android.ui.ideal.IdealFragment"
+        android:name="com.judopay.judokit.android.ui.ideal.IdealFragment"
         android:label="IdealFragment"
         tools:layout="@layout/ideal_fragment" />
 
     <dialog
         android:id="@+id/pollingStatusFragment"
-        android:name="com.judokit.android.ui.pollingstatus.PollingStatusFragment"
+        android:name="com.judopay.judokit.android.ui.pollingstatus.PollingStatusFragment"
         android:label="PollingStatusFragment" />
 
 </navigation>

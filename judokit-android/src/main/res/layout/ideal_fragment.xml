@@ -34,7 +34,7 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.judokit.android.ui.paymentmethods.components.PollingStatusView
+    <com.judopay.judokit.android.ui.paymentmethods.components.PollingStatusView
         android:id="@+id/idealPollingStatusView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
-    <com.judokit.android.ui.ideal.components.IdealWebView
+    <com.judopay.judokit.android.ui.ideal.components.IdealWebView
         android:id="@+id/idealWebView"
         android:layout_width="match_parent"
         android:layout_height="0dp"

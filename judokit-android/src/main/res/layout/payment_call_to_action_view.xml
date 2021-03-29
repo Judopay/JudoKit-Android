@@ -48,14 +48,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.judokit.android.ui.common.ProgressButton
+        <com.judopay.judokit.android.ui.common.ProgressButton
             android:id="@+id/payButton"
             style="@style/JudoTheme.BlackRoundedButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/pay_now" />
 
-        <com.judokit.android.ui.common.GooglePayButton
+        <com.judopay.judokit.android.ui.common.GooglePayButton
             android:id="@+id/googlePayButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -65,7 +65,7 @@
             android:layout_marginBottom="@dimen/space_3"
             app:style="black_buy_with" />
 
-        <com.judokit.android.ui.common.PayByBankButton
+        <com.judopay.judokit.android.ui.common.PayByBankButton
             android:id="@+id/payByBankButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
