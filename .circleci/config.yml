@@ -175,8 +175,10 @@ jobs:
       - attach_workspace:
           at: /home/circleci/project
       - run:
-          name: Release SDK to Bintray
-          command: ./gradlew bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayKey=$BINTRAY_API_KEY -PdryRun=false
+          name: Release SDK to Maven Central
+          command: |
+            export ORG_GRADLE_PROJECT_signingKey=$(echo "$ORG_GRADLE_PROJECT_signingKey_base64" | base64 -d)
+            ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
 
   report_to_jira:
     docker:
