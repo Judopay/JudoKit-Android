@@ -6,13 +6,17 @@ import com.google.gson.GsonBuilder
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.AppMetaDataProvider
 import com.judopay.judokit.android.api.JudoApiService
+import com.judopay.judokit.android.api.deserializer.ChallengeRequestIndicatorSerializer
 import com.judopay.judokit.android.api.deserializer.DateJsonDeserializer
 import com.judopay.judokit.android.api.deserializer.FormattedBigDecimalDeserializer
+import com.judopay.judokit.android.api.deserializer.ScaExemptionSerializer
 import com.judopay.judokit.android.api.interceptor.ApiHeadersInterceptor
 import com.judopay.judokit.android.api.interceptor.DeDuplicationInterceptor
 import com.judopay.judokit.android.api.interceptor.DeviceDnaInterceptor
 import com.judopay.judokit.android.api.interceptor.PayLoadInterceptor
 import com.judopay.judokit.android.apiBaseUrl
+import com.judopay.judokit.android.model.ChallengeRequestIndicator
+import com.judopay.judokit.android.model.ScaExemption
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
 import okhttp3.Interceptor
@@ -67,6 +71,8 @@ object JudoApiServiceFactory {
         get() = GsonBuilder()
             .registerTypeAdapter(Date::class.java, DateJsonDeserializer())
             .registerTypeAdapter(BigDecimal::class.java, FormattedBigDecimalDeserializer())
+            .registerTypeAdapter(ScaExemption::class.java, ScaExemptionSerializer())
+            .registerTypeAdapter(ChallengeRequestIndicator::class.java, ChallengeRequestIndicatorSerializer())
             .create()
 
     private fun getOkHttpClient(context: Context, judo: Judo): OkHttpClient {

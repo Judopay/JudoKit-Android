@@ -8,7 +8,7 @@ import com.google.gson.JsonSyntaxException
 import com.judopay.judokit.android.service.PayloadService
 import com.judopay.judokit.android.toJSONString
 import okhttp3.Interceptor
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
@@ -29,9 +29,9 @@ class PayLoadInterceptor internal constructor(context: Context) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
 
         val request = chain.request()
-        val path = request.url().encodedPath()
+        val path = request.url.encodedPath
 
-        if (PAYLOAD_ENDPOINTS.contains(path) && request.body() != null) {
+        if (PAYLOAD_ENDPOINTS.contains(path) && request.body != null) {
             convertRequestBodyToJson(request)?.let {
                 val json = it.asJsonObject
                 if (json[ENHANCED_PAYMENT_DETAIL] == null) {
@@ -63,14 +63,14 @@ class PayLoadInterceptor internal constructor(context: Context) : Interceptor {
         }
 
     private fun convertJsonToRequestBody(json: JsonObject): RequestBody {
-        val mediaType = MediaType.parse("application/json")
+        val mediaType = "application/json".toMediaTypeOrNull()
         return RequestBody.create(mediaType, json.toString())
     }
 
     private fun convertRequestBodyToJson(request: Request): JsonElement? {
         val buffer = Buffer()
         try {
-            request.newBuilder().build().body()?.let {
+            request.newBuilder().build().body?.let {
                 it.writeTo(buffer)
                 val body = buffer.readUtf8()
                 val parser = JsonParser()

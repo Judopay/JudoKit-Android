@@ -1,13 +1,10 @@
 package com.judopay.judokit.android.api.model
 
-import android.util.Base64
 import com.judopay.judokit.android.requireNotNullOrEmpty
-import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import okhttp3.Headers
-import java.nio.charset.StandardCharsets
 
-private const val AUTHORIZATION_HEADER = "Authorization"
+private const val API_TOKEN_HEADER = "Api-Token"
 private const val PAYMENT_SESSION_HEADER = "Payment-Session"
 
 /**
@@ -39,14 +36,9 @@ class PaymentSessionAuthorization internal constructor(
         }
     }
 
-    @IgnoredOnParcel
-    private val encodedCredentials: String =
-        Base64.encodeToString("$apiToken:".toByteArray(StandardCharsets.UTF_8), Base64.NO_WRAP)
-
-    private val authorizationHeaderValue: String
-        get() = "Basic $encodedCredentials"
-
     override val headers: Headers
-        get() = Headers.Builder().add(AUTHORIZATION_HEADER, authorizationHeaderValue)
+        get() = Headers.Builder()
+//            .add(AUTHORIZATION_HEADER, authorizationHeaderValue)
+            .add(API_TOKEN_HEADER, apiToken)
             .add(PAYMENT_SESSION_HEADER, paymentSession).build()
 }

@@ -40,8 +40,10 @@ import com.judokit.android.examples.feature.paybybank.PayByBankActivity
 import com.judokit.android.examples.feature.tokenpayment.DemoTokenPaymentActivity
 import com.judokit.android.examples.model.DemoFeature
 import com.judokit.android.examples.settings.SettingsActivity
+import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.model.Amount
 import com.judopay.judokit.android.model.CardNetwork
+import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.GooglePayConfiguration
 import com.judopay.judokit.android.model.JudoError
@@ -50,6 +52,7 @@ import com.judopay.judokit.android.model.PBBAConfiguration
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.Reference
+import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.model.USER_CANCELLED
 import com.judopay.judokit.android.model.UiConfiguration
 import com.judopay.judokit.android.model.googlepay.GooglePayAddressFormat
@@ -297,6 +300,10 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val judoId = sharedPreferences.getString("judo_id", null)
         val initialRecurringPayment =
             sharedPreferences.getBoolean("is_initial_recurring_payment", false)
+        val mobileNumber = sharedPreferences.getString("mobileNumber", null)
+        val emailAddress = sharedPreferences.getString("emailAddress", null)
+        val challengeRequestIndicator = sharedPreferences.getString("challengeRequestIndicator", null)?.let { ChallengeRequestIndicator.valueOf(it) }
+        val scaExemption = sharedPreferences.getString("scaExemption", null)?.let { ScaExemption.valueOf(it) }
 
         return Judo.Builder(widgetType)
             .setJudoId(judoId)
@@ -310,6 +317,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setGooglePayConfiguration(googlePayConfiguration)
             .setPBBAConfiguration(pbbaConfiguration)
             .setInitialRecurringPayment(initialRecurringPayment)
+            .setAddress(address)
+            .setMobileNumber(mobileNumber)
+            .setEmailAddress(emailAddress)
+            .setChallengeRequestIndicator(challengeRequestIndicator)
+            .setScaExemption(scaExemption)
             .build()
     }
 
@@ -358,7 +370,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             }
 
             return Reference.Builder()
-                .setConsumerReference("my-unique-ref")
+                .setConsumerReference("ASC123")
                 .setPaymentReference(paymentReference)
                 .build()
         }
@@ -427,6 +439,26 @@ class DemoFeatureListActivity : AppCompatActivity() {
     private val pbbaConfiguration: PBBAConfiguration
         get() = PBBAConfiguration.Builder().setDeepLinkScheme("judo://pay")
             .setDeepLinkURL(deepLinkIntent?.data).build()
+
+    private val address: Address
+        get() {
+            val line1 = sharedPreferences.getString("line1", null)
+            val line2 = sharedPreferences.getString("line2", null)
+            val line3 = sharedPreferences.getString("line3", null)
+            val town = sharedPreferences.getString("town", null)
+            val billingCountry = sharedPreferences.getString("billingCountry", null)
+            val postCode = sharedPreferences.getString("postCode", null)
+            val countryCode = sharedPreferences.getString("countryCode", null)?.toInt()
+
+            return Address.Builder()
+                .setLine1(line1)
+                .setLine2(line2)
+                .setLine3(line3)
+                .setTown(town)
+                .setBillingCountry(billingCountry)
+                .setPostCode(postCode)
+                .setCountryCode(countryCode).build()
+        }
 
     private val authorization: Authorization
         get() {

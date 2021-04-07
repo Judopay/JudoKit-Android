@@ -1,0 +1,38 @@
+package com.judopay.judokit.android.api.model.request.threedsecure
+
+import com.google.gson.annotations.SerializedName
+import com.judopay.judokit.android.model.ChallengeRequestIndicator
+import com.judopay.judokit.android.model.ScaExemption
+import com.judopay.judokit.android.requireNotNull
+
+class ThreeDSecure private constructor(
+    private val challengeRequestIndicator: ChallengeRequestIndicator,
+    private val scaExemption: ScaExemption,
+    @SerializedName("sdk")
+    private val sdkParameters: SdkParameters,
+    private val authenticationSource: String = "MOBILE_SDK"
+) {
+    class Builder {
+        private var challengeRequestIndicator: ChallengeRequestIndicator? = null
+        private var scaExemption: ScaExemption? = null
+        private var sdkParameters: SdkParameters? = null
+
+        fun setChallengeRequestIndicator(challengeRequestIndicator: ChallengeRequestIndicator?) =
+            apply { this.challengeRequestIndicator = challengeRequestIndicator }
+
+        fun setScaExemption(scaExemption: ScaExemption?) =
+            apply { this.scaExemption = scaExemption }
+
+        fun setSdkParameters(sdkParameters: SdkParameters?) =
+            apply { this.sdkParameters = sdkParameters }
+
+        fun build(): ThreeDSecure {
+            val myChallengeRequestIndicator =
+                requireNotNull(challengeRequestIndicator, "challengeRequestIndicator")
+            val myScaExemption = requireNotNull(scaExemption, "scaExemption")
+            val mySdkParameters = requireNotNull(sdkParameters, "sdkParameters")
+
+            return ThreeDSecure(myChallengeRequestIndicator, myScaExemption, mySdkParameters)
+        }
+    }
+}

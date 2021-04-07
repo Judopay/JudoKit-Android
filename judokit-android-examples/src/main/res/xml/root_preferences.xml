@@ -59,6 +59,108 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
+        app:title="Address">
+
+        <EditTextPreference
+            app:defaultValue="My house"
+            app:iconSpaceReserved="false"
+            app:key="line1"
+            app:summary="Your address line 1"
+            app:title="Line 1"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="My street"
+            app:iconSpaceReserved="false"
+            app:key="line2"
+            app:summary="Your address line 2"
+            app:title="Line 2"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="My area"
+            app:iconSpaceReserved="false"
+            app:key="line3"
+            app:summary="Your address line 3"
+            app:title="Line 3"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="My town"
+            app:iconSpaceReserved="false"
+            app:key="town"
+            app:summary="Your town"
+            app:title="Town"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="My billing country"
+            app:iconSpaceReserved="false"
+            app:key="billingCountry"
+            app:summary="Your billing country"
+            app:title="Billing country"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="TR14 8PA"
+            app:iconSpaceReserved="false"
+            app:key="postCode"
+            app:summary="Your post code"
+            app:title="Post code"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="826"
+            app:iconSpaceReserved="false"
+            app:key="countryCode"
+            app:summary="Your country code"
+            app:title="Country code"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:defaultValue="email@address.com"
+            app:iconSpaceReserved="false"
+            app:key="emailAddress"
+            app:summary="Your email address"
+            app:title="Email address"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="07999999999"
+            app:iconSpaceReserved="false"
+            app:key="mobileNumber"
+            app:summary="Your mobile number"
+            app:title="Mobile number"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="3DS 2.0">
+
+        <ListPreference
+            app:defaultValue="challengePreferred"
+            app:entries="@array/three_ds_two_challenge_request_indicator_entries"
+            app:entryValues="@array/three_ds_two_challenge_request_indicator_values"
+            app:iconSpaceReserved="false"
+            app:key="challengeRequestIndicator"
+            app:summary="Select challenge request indicator"
+            app:title="Challenge request indicator"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="secureCorporate"
+            app:entries="@array/three_ds_two_sca_exemption_entries"
+            app:entryValues="@array/three_ds_two_sca_exemption_values"
+            app:iconSpaceReserved="false"
+            app:key="scaExemption"
+            app:summary="Select SCA exemption"
+            app:title="SCA exemption"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
         app:title="@string/amount_header">
 
         <EditTextPreference

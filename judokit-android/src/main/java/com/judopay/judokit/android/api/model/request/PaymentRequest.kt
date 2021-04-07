@@ -1,6 +1,9 @@
 package com.judopay.judokit.android.api.model.request
 
+import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecure
+import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.PrimaryAccountDetails
+import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.requireNotNull
 import com.judopay.judokit.android.requireNotNullOrEmpty
 
@@ -21,8 +24,11 @@ class PaymentRequest private constructor(
     private var saveCardOnly: String?,
     private var emailAddress: String?,
     private var mobileNumber: String?,
+    private var phoneCountryCode: String?,
     private var primaryAccountDetails: PrimaryAccountDetails?,
-    private var initialRecurringPayment: Boolean?
+    private var initialRecurringPayment: Boolean?,
+    private var threeDSecure: ThreeDSecure?,
+    private var cardHolderName: String?
 ) {
     class Builder {
         private var uniqueRequest: Boolean? = null
@@ -43,6 +49,11 @@ class PaymentRequest private constructor(
         private var mobileNumber: String? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
         private var initialRecurringPayment: Boolean? = null
+        private var challengeRequestIndicator: ChallengeRequestIndicator? = null
+        private var scaExemption: ScaExemption? = null
+        private var cardHolderName: String? = null
+        private var phoneCountryCode: String? = null
+        private var threeDSecure: ThreeDSecure? = null
 
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
@@ -85,6 +96,21 @@ class PaymentRequest private constructor(
         fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
             apply { this.initialRecurringPayment = initialRecurringPayment }
 
+        fun setChallengeRequestIndicator(challengeRequestIndicator: ChallengeRequestIndicator?) =
+            apply { this.challengeRequestIndicator = challengeRequestIndicator }
+
+        fun setScaExemption(scaExemption: ScaExemption?) =
+            apply { this.scaExemption = scaExemption }
+
+        fun setThreeDSecure(threeDSecure: ThreeDSecure?) =
+            apply { this.threeDSecure = threeDSecure }
+
+        fun setCardHolderName(cardHolderName: String?) =
+            apply { this.cardHolderName = cardHolderName }
+
+        fun setPhoneCountryCode(phoneCountryCode: String?) =
+            apply { this.phoneCountryCode = phoneCountryCode }
+
         fun build(): PaymentRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myAmount = requireNotNullOrEmpty(amount, "amount")
@@ -97,6 +123,7 @@ class PaymentRequest private constructor(
             val paymentReference =
                 requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
             val myAddress = requireNotNull(address, "address")
+            val myThreeDSecure = requireNotNull(threeDSecure, "threeDSecure")
 
             return PaymentRequest(
                 uniqueRequest,
@@ -115,8 +142,11 @@ class PaymentRequest private constructor(
                 saveCardOnly,
                 emailAddress,
                 mobileNumber,
+                phoneCountryCode,
                 primaryAccountDetails,
-                initialRecurringPayment
+                initialRecurringPayment,
+                myThreeDSecure,
+                cardHolderName
             )
         }
     }

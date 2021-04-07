@@ -283,7 +283,7 @@ internal class CardEntryViewModelTest {
         every { judo.uiConfiguration.avsEnabled } returns true
 
         sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
-        sut.judoApiCallResult.observeForever(judoApiCallResultMock)
+        sut.judoPaymentResult.observeForever(judoApiCallResultMock)
 
         sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
         sut.send(CardEntryAction.SubmitForm)

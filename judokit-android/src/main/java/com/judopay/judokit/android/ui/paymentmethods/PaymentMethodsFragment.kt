@@ -13,26 +13,21 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.judopay.judo3ds2.model.ConfigParameters
+import com.judopay.judo3ds2.service.ThreeDS2ServiceImpl
 import com.judopay.judokit.android.JudoSharedAction
 import com.judopay.judokit.android.JudoSharedViewModel
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.JudoApiService
-import com.judopay.judokit.android.api.error.ApiError
-import com.judopay.judokit.android.api.error.toJudoError
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.response.CardDate
-import com.judopay.judokit.android.api.model.response.JudoApiCallResult
-import com.judopay.judokit.android.api.model.response.Receipt
-import com.judopay.judokit.android.api.model.response.toCardVerificationModel
-import com.judopay.judokit.android.api.model.response.toJudoResult
 import com.judopay.judokit.android.db.JudoRoomDatabase
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.judo
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentWidgetType
-import com.judopay.judokit.android.ui.cardverification.THREE_DS_ONE_DIALOG_FRAGMENT_TAG
-import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCardVerificationDialogFragment
-import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
+import com.judopay.judokit.android.service.CardTransactionService
+import com.judopay.judokit.android.ui.common.getLocale
 import com.judopay.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
 import com.judopay.judokit.android.ui.ideal.JUDO_IDEAL_BANK
 import com.judopay.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapter
@@ -91,20 +86,20 @@ class PaymentMethodsFragment : Fragment() {
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
         service = JudoApiServiceFactory.createApiService(application, judo)
+        val threeDSService = ThreeDS2ServiceImpl()
+        threeDSService.initialize(requireContext(), ConfigParameters(), getLocale(resources), null)
+        val transaction = threeDSService.createTransaction("F000000000", "2.2.0")
+        val cardTransactionService = CardTransactionService(requireActivity(), judo, service, transaction)
+
         val factory =
-            PaymentMethodsViewModelFactory(cardDate, cardRepository, service, application, judo)
+            PaymentMethodsViewModelFactory(cardDate, cardRepository, cardTransactionService, application, judo)
 
         viewModel = ViewModelProvider(this, factory).get(PaymentMethodsViewModel::class.java)
         viewModel.model.observe(viewLifecycleOwner, { updateWithModel(it) })
 
         viewModel.judoApiCallResult.observe(
             viewLifecycleOwner,
-            {
-                when (it) {
-                    is JudoApiCallResult.Success -> handleSuccess(it.data)
-                    is JudoApiCallResult.Failure -> handleFail(it.error)
-                }
-            }
+            { sharedViewModel.paymentResult.postValue((it)) }
         )
 
         // TODO: to be refactored
@@ -174,37 +169,6 @@ class PaymentMethodsFragment : Fragment() {
                 PAYMENT_WIDGET_TYPE to PaymentWidgetType.PAY_BY_BANK_APP
             )
         )
-    }
-
-    private fun handleFail(error: ApiError?) {
-        if (error != null) {
-            sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(error.toJudoError()))
-        }
-    }
-
-    private fun handleSuccess(receipt: Receipt?) {
-        if (receipt != null)
-            if (receipt.is3dSecureRequired) {
-
-                val callback = object :
-                    ThreeDSOneCompletionCallback {
-                    override fun onSuccess(success: JudoPaymentResult) {
-                        sharedViewModel.paymentResult.postValue((success))
-                    }
-
-                    override fun onFailure(error: JudoPaymentResult) {
-                        sharedViewModel.paymentResult.postValue((error))
-                    }
-                }
-
-                ThreeDSOneCardVerificationDialogFragment(
-                    service,
-                    receipt.toCardVerificationModel(),
-                    callback
-                ).show(childFragmentManager, THREE_DS_ONE_DIALOG_FRAGMENT_TAG)
-            } else {
-                sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(receipt.toJudoResult()))
-            }
     }
 
     // handle callbacks from the recycler view elements
