@@ -301,9 +301,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val initialRecurringPayment =
             sharedPreferences.getBoolean("is_initial_recurring_payment", false)
         val mobileNumber = sharedPreferences.getString("mobileNumber", null)
+        val phoneCountryCode = sharedPreferences.getString("phoneCountryCode", null)
         val emailAddress = sharedPreferences.getString("emailAddress", null)
         val challengeRequestIndicator = sharedPreferences.getString("challengeRequestIndicator", null)?.let { ChallengeRequestIndicator.valueOf(it) }
         val scaExemption = sharedPreferences.getString("scaExemption", null)?.let { ScaExemption.valueOf(it) }
+        val threeDSTwoMaxTimeout = sharedPreferences.getString("threeDSTwoMaxTimeout", null)?.toInt()
 
         return Judo.Builder(widgetType)
             .setJudoId(judoId)
@@ -319,9 +321,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setInitialRecurringPayment(initialRecurringPayment)
             .setAddress(address)
             .setMobileNumber(mobileNumber)
+            .setPhoneCountryCode(phoneCountryCode)
             .setEmailAddress(emailAddress)
             .setChallengeRequestIndicator(challengeRequestIndicator)
             .setScaExemption(scaExemption)
+            .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
             .build()
     }
 

@@ -56,6 +56,7 @@ class PaymentMethodsFragment : Fragment() {
 
     private lateinit var viewModel: PaymentMethodsViewModel
     private lateinit var service: JudoApiService
+    private val threeDS2Service = ThreeDS2ServiceImpl()
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -86,8 +87,7 @@ class PaymentMethodsFragment : Fragment() {
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
         service = JudoApiServiceFactory.createApiService(application, judo)
-        val threeDS2Service = ThreeDS2ServiceImpl()
-        threeDS2Service.initialize(requireContext(), ConfigParameters(), getLocale(resources), null)
+        threeDS2Service.initialize(requireActivity(), ConfigParameters(), getLocale(resources), null)
         val cardTransactionService = CardTransactionService(requireActivity(), judo, service, threeDS2Service)
 
         val factory =
@@ -159,6 +159,11 @@ class PaymentMethodsFragment : Fragment() {
                 viewModel.send(PaymentMethodsAction.PayWithSelectedStoredCard(securityCode))
             }
         )
+    }
+
+    override fun onDestroy() {
+        threeDS2Service.cleanup(requireActivity())
+        super.onDestroy()
     }
 
     private fun navigateToPollingStatus() {

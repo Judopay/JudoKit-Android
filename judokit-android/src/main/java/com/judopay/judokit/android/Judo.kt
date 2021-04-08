@@ -42,6 +42,9 @@ const val PAYMENT_CANCELLED = Activity.RESULT_FIRST_USER + 2
 /** Judo activity result: operation error  */
 const val PAYMENT_ERROR = Activity.RESULT_FIRST_USER + 3
 
+/** Default 3DS 2.0 maximum timeout value */
+private const val DEFAULT_MAX_TIMEOUT = 6
+
 /**
  * Judo configuration object that is required for initiating a payment.
  */
@@ -64,7 +67,9 @@ class Judo internal constructor(
     val challengeRequestIndicator: ChallengeRequestIndicator?,
     val scaExemption: ScaExemption?,
     val mobileNumber: String?,
-    val emailAddress: String?
+    val phoneCountryCode: String?,
+    val emailAddress: String?,
+    val threeDSTwoMaxTimeout: Int
 ) : Parcelable {
 
     /**
@@ -88,7 +93,9 @@ class Judo internal constructor(
         private var challengeRequestIndicator: ChallengeRequestIndicator? = null
         private var scaExemption: ScaExemption? = null
         private var mobileNumber: String? = null
+        private var phoneCountryCode: String? = null
         private var emailAddress: String? = null
+        private var threeDSTwoMaxTimeout: Int? = null
 
         /**
          * Sets the unique merchant ID
@@ -223,6 +230,18 @@ class Judo internal constructor(
             apply { this.emailAddress = emailAddress }
 
         /**
+         * Sets the maximum timeout for 3DS 2.0 transactions.
+         * @param maxTimeout max timeout in minutes.
+         */
+        fun setThreeDSTwoMaxTimeout(maxTimeout: Int?) =
+            apply { this.threeDSTwoMaxTimeout = maxTimeout }
+
+        /**
+         * Sets phone country code.
+         */
+        fun setPhoneCountryCode(phoneCountryCode: String?) = apply { this.phoneCountryCode = phoneCountryCode }
+
+        /**
          * Method that initializes Judo configuration object that can be used for
          * processing a payment.
          * @return A new Judo object that can be added to an intent with [JUDO_OPTIONS] key
@@ -297,7 +316,9 @@ class Judo internal constructor(
                 challengeRequestIndicator,
                 scaExemption,
                 mobileNumber,
-                emailAddress
+                phoneCountryCode,
+                emailAddress,
+                threeDSTwoMaxTimeout ?: DEFAULT_MAX_TIMEOUT
             )
         }
 

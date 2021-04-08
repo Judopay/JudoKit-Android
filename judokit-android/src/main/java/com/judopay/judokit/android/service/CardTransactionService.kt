@@ -8,6 +8,7 @@ import com.judopay.judo3ds2.model.RuntimeErrorEvent
 import com.judopay.judo3ds2.service.ThreeDS2Service
 import com.judopay.judo3ds2.transaction.Transaction
 import com.judopay.judo3ds2.transaction.challenge.ChallengeStatusReceiver
+import com.judopay.judo3ds2.ui.views.ProgressDialog
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.model.request.Address
@@ -54,6 +55,7 @@ class CardTransactionService(
     lateinit var result: JudoPaymentResult
     lateinit var callback: CardTransactionCallback
     lateinit var transaction: Transaction
+    lateinit var progressDialog: ProgressDialog
 
     suspend fun makeTransaction(inputModel: InputModel, callback: CardTransactionCallback) {
         this.callback = callback
@@ -95,6 +97,7 @@ class CardTransactionService(
         callback: CardTransactionCallback
     ) {
         this.callback = callback
+        transaction = threeDS2Service.createTransaction("F000000000", "2.2.0")
         if (judo.paymentWidgetType == PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS) {
             buildReceipt(card)
         } else {
@@ -141,11 +144,12 @@ class CardTransactionService(
                         ).show(activity.supportFragmentManager, THREE_DS_ONE_DIALOG_FRAGMENT_TAG)
                     }
                     receipt.is3dSecure2Required -> {
+                        progressDialog = transaction.getProgressView(activity).also { it.show() }
                         transaction.doChallenge(
                             activity,
                             receipt.toChallengeParameters(),
                             this,
-                            5
+                            judo.threeDSTwoMaxTimeout
                         )
                     }
                     else -> callback.onFinish(result)
@@ -216,7 +220,7 @@ class CardTransactionService(
             .setCardHolderName(inputModel.cardHolderName)
             .setMobileNumber(judo.mobileNumber)
             .setEmailAddress(judo.emailAddress)
-            .setPhoneCountryCode("44")
+            .setPhoneCountryCode(judo.phoneCountryCode)
             .setThreeDSecure(buildThreeDSecureParameters())
             .build()
 
@@ -241,7 +245,7 @@ class CardTransactionService(
         .setCardHolderName(inputModel.cardHolderName)
         .setMobileNumber(judo.mobileNumber)
         .setEmailAddress(judo.emailAddress)
-        .setPhoneCountryCode("44")
+        .setPhoneCountryCode(judo.phoneCountryCode)
         .build()
 
     private fun buildSaveCardRequest(address: Address?, inputModel: InputModel) =
@@ -277,7 +281,7 @@ class CardTransactionService(
             .setCardHolderName(inputModel.cardHolderName)
             .setMobileNumber(judo.mobileNumber)
             .setEmailAddress(judo.emailAddress)
-            .setPhoneCountryCode("44")
+            .setPhoneCountryCode(judo.phoneCountryCode)
             .build()
 
     private fun buildThreeDSecureParameters(): ThreeDSecureTwo {
@@ -292,7 +296,7 @@ class CardTransactionService(
                         EphemeralPublicKey::class.java
                     )
                 )
-                .setMaxTimeout(42)
+                .setMaxTimeout(judo.threeDSTwoMaxTimeout)
                 .setReferenceNumber(getSDKReferenceNumber())
                 .setTransactionId(getSDKTransactionID())
                 .build()
@@ -323,30 +327,37 @@ class CardTransactionService(
     }
 
     override fun onSuccess(success: JudoPaymentResult) {
+        transaction.close()
         callback.onFinish(success as JudoPaymentResult.Success)
     }
 
     override fun onFailure(error: JudoPaymentResult) {
+        transaction.close()
         callback.onFinish(error as JudoPaymentResult.Error)
     }
 
     override fun cancelled() {
+        progressDialog.dismiss()
         TODO("Not yet implemented")
     }
 
     override fun completed(completionEvent: CompletionEvent) {
+        progressDialog.dismiss()
         TODO("Not yet implemented")
     }
 
     override fun protocolError(protocolErrorEvent: ProtocolErrorEvent) {
+        progressDialog.dismiss()
         TODO("Not yet implemented")
     }
 
     override fun runtimeError(runtimeErrorEvent: RuntimeErrorEvent) {
+        progressDialog.dismiss()
         TODO("Not yet implemented")
     }
 
     override fun timedout() {
+        progressDialog.dismiss()
         TODO("Not yet implemented")
     }
 }

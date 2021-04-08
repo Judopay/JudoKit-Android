@@ -42,6 +42,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
 
     private lateinit var viewModel: CardEntryViewModel
     private lateinit var service: JudoApiService
+    private val threeDS2Service = ThreeDS2ServiceImpl()
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
 
     override fun getTheme(): Int = R.style.JudoTheme_BottomSheetDialogTheme
@@ -54,8 +55,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
         service = JudoApiServiceFactory.createApiService(application, judo)
         val selectedCardNetwork = arguments?.getParcelable<CardNetwork>(CARD_NETWORK)
-        val threeDS2Service = ThreeDS2ServiceImpl()
-        threeDS2Service.initialize(requireContext(), ConfigParameters(), getLocale(resources), null)
+        threeDS2Service.initialize(requireActivity(), ConfigParameters(), getLocale(resources), null)
         val cardTransactionService =
             CardTransactionService(requireActivity(), judo, service, threeDS2Service)
         val factory = CardEntryViewModelFactory(
@@ -129,6 +129,11 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         onUserCancelled()
+    }
+
+    override fun onDestroy() {
+        threeDS2Service.cleanup(requireActivity())
+        super.onDestroy()
     }
 
     private fun onUserCancelled() {

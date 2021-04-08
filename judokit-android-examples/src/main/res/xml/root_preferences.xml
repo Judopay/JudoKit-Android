@@ -131,6 +131,14 @@
             app:summary="Your mobile number"
             app:title="Mobile number"
             app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="44"
+            app:iconSpaceReserved="false"
+            app:key="phoneCountryCode"
+            app:summary="Your phone country code"
+            app:title="Phone country code"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -155,6 +163,14 @@
             app:key="scaExemption"
             app:summary="Select SCA exemption"
             app:title="SCA exemption"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="6"
+            app:iconSpaceReserved="false"
+            app:key="threeDSTwoMaxTimeout"
+            app:summary="Max timeout for 3DS 2.0 transaction"
+            app:title="3DS 2.0 max timeout"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
