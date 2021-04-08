@@ -1,9 +1,5 @@
 package com.judopay.judokit.android.service
 
-import android.os.Handler
-import android.os.Looper
-import android.widget.Toast
-import android.widget.Toast.LENGTH_LONG
 import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
 import com.judopay.judo3ds2.model.CompletionEvent
@@ -22,7 +18,7 @@ import com.judopay.judokit.android.api.model.request.SaveCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
 import com.judopay.judokit.android.api.model.request.threedsecure.EphemeralPublicKey
 import com.judopay.judokit.android.api.model.request.threedsecure.SdkParameters
-import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecure
+import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
 import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.api.model.response.Consumer
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
@@ -145,16 +141,12 @@ class CardTransactionService(
                         ).show(activity.supportFragmentManager, THREE_DS_ONE_DIALOG_FRAGMENT_TAG)
                     }
                     receipt.is3dSecure2Required -> {
-                            Toast.makeText(activity, receipt.message, LENGTH_LONG).show()
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            callback.onFinish(result)
-                        }, 5000)
-//                        transaction.doChallenge(
-//                            activity,
-//                            receipt.toChallengeParameters(),
-//                            this,
-//                            5
-//                        )
+                        transaction.doChallenge(
+                            activity,
+                            receipt.toChallengeParameters(),
+                            this,
+                            5
+                        )
                     }
                     else -> callback.onFinish(result)
                 }
@@ -288,7 +280,7 @@ class CardTransactionService(
             .setPhoneCountryCode("44")
             .build()
 
-    private fun buildThreeDSecureParameters(): ThreeDSecure {
+    private fun buildThreeDSecureParameters(): ThreeDSecureTwo {
         val parameters = transaction.getAuthenticationRequestParameters()
         val sdkParameters = with(parameters) {
             SdkParameters.Builder()
@@ -305,7 +297,7 @@ class CardTransactionService(
                 .setTransactionId(getSDKTransactionID())
                 .build()
         }
-        return ThreeDSecure.Builder()
+        return ThreeDSecureTwo.Builder()
             .setChallengeRequestIndicator(judo.challengeRequestIndicator)
             .setScaExemption(judo.scaExemption)
             .setSdkParameters(sdkParameters)

@@ -13,7 +13,7 @@ import com.judopay.judokit.android.api.model.request.IdealSaleRequest
 import com.judopay.judokit.android.api.model.request.PaymentRequest
 import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
-import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecure
+import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
 import com.judopay.judokit.android.model.ApiEnvironment
 import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.PrimaryAccountDetails
@@ -29,7 +29,7 @@ import org.junit.jupiter.api.assertThrows
 internal class JudoExtensionsTest {
 
     private val mockAddress: Address = mockk()
-    private val mockThreeDSecure: ThreeDSecure = mockk()
+    private val mockThreeDSecureTwo: ThreeDSecureTwo = mockk()
     private val mockPrimaryAccountDetails: PrimaryAccountDetails = mockk()
     val judo: Judo = mockk(relaxed = true) {
         every { judoId } returns "123456789"
@@ -227,10 +227,10 @@ internal class JudoExtensionsTest {
             .setExpiryDate("1229")
             .setPrimaryAccountDetails(mockPrimaryAccountDetails)
             .setInitialRecurringPayment(false)
-            .setThreeDSecure(mockThreeDSecure)
+            .setThreeDSecure(mockThreeDSecureTwo)
             .build()
 
-        val actual = judo.toPaymentRequest("4111111111111111", "1229", "452", mockThreeDSecure)
+        val actual = judo.toPaymentRequest("4111111111111111", "1229", "452", mockThreeDSecureTwo)
 
         val gson = Gson()
         assertEquals(gson.toJson(expected), gson.toJson(actual))
@@ -254,10 +254,10 @@ internal class JudoExtensionsTest {
             .setExpiryDate("1229")
             .setPrimaryAccountDetails(mockPrimaryAccountDetails)
             .setInitialRecurringPayment(false)
-            .setThreeDSecure(mockThreeDSecure)
+            .setThreeDSecure(mockThreeDSecureTwo)
             .build()
 
-        val actual = judo.toRegisterCardRequest("4111111111111111", "1229", "452", mockThreeDSecure)
+        val actual = judo.toRegisterCardRequest("4111111111111111", "1229", "452", mockThreeDSecureTwo)
 
         val gson = Gson()
         assertEquals(gson.toJson(expected), gson.toJson(actual))
@@ -280,10 +280,10 @@ internal class JudoExtensionsTest {
             .setExpiryDate("1229")
             .setPrimaryAccountDetails(mockPrimaryAccountDetails)
             .setInitialRecurringPayment(false)
-            .setThreeDSecure(mockThreeDSecure)
+            .setThreeDSecure(mockThreeDSecureTwo)
             .build()
 
-        val actual = judo.toCheckCardRequest("4111111111111111", "1229", "452", mockThreeDSecure)
+        val actual = judo.toCheckCardRequest("4111111111111111", "1229", "452", mockThreeDSecureTwo)
 
         val gson = Gson()
         assertEquals(gson.toJson(expected), gson.toJson(actual))

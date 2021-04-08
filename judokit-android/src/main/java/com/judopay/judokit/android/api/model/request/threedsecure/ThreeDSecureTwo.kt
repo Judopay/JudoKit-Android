@@ -5,7 +5,7 @@ import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.requireNotNull
 
-class ThreeDSecure private constructor(
+class ThreeDSecureTwo private constructor(
     private val challengeRequestIndicator: ChallengeRequestIndicator,
     private val scaExemption: ScaExemption,
     @SerializedName("sdk")
@@ -26,13 +26,13 @@ class ThreeDSecure private constructor(
         fun setSdkParameters(sdkParameters: SdkParameters?) =
             apply { this.sdkParameters = sdkParameters }
 
-        fun build(): ThreeDSecure {
+        fun build(): ThreeDSecureTwo {
             val myChallengeRequestIndicator =
                 requireNotNull(challengeRequestIndicator, "challengeRequestIndicator")
             val myScaExemption = requireNotNull(scaExemption, "scaExemption")
             val mySdkParameters = requireNotNull(sdkParameters, "sdkParameters")
 
-            return ThreeDSecure(myChallengeRequestIndicator, myScaExemption, mySdkParameters)
+            return ThreeDSecureTwo(myChallengeRequestIndicator, myScaExemption, mySdkParameters)
         }
     }
 }

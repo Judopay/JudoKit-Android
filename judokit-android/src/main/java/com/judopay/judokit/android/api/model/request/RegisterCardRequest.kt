@@ -1,6 +1,6 @@
 package com.judopay.judokit.android.api.model.request
 
-import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecure
+import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
 import com.judopay.judokit.android.model.PrimaryAccountDetails
 import com.judopay.judokit.android.requireNotNull
 import com.judopay.judokit.android.requireNotNullOrEmpty
@@ -26,7 +26,7 @@ class RegisterCardRequest private constructor(
     private var primaryAccountDetails: PrimaryAccountDetails?,
     private var amount: String,
     private var initialRecurringPayment: Boolean?,
-    private var threeDSecure: ThreeDSecure?,
+    private var threeDSecure: ThreeDSecureTwo?,
     private var cardHolderName: String?
 ) {
     class Builder {
@@ -47,7 +47,7 @@ class RegisterCardRequest private constructor(
         private var primaryAccountDetails: PrimaryAccountDetails? = null
         private var amount: String? = null
         private var initialRecurringPayment: Boolean? = null
-        private var threeDSecure: ThreeDSecure? = null
+        private var threeDSecure: ThreeDSecureTwo? = null
         private var cardHolderName: String? = null
         private var phoneCountryCode: String? = null
 
@@ -91,7 +91,7 @@ class RegisterCardRequest private constructor(
         fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
             apply { this.initialRecurringPayment = initialRecurringPayment }
 
-        fun setThreeDSecure(threeDSecure: ThreeDSecure?) = apply { this.threeDSecure = threeDSecure }
+        fun setThreeDSecure(threeDSecureTwo: ThreeDSecureTwo?) = apply { this.threeDSecure = threeDSecureTwo }
 
         fun setCardHolderName(cardHolderName: String?) =
             apply { this.cardHolderName = cardHolderName }
