@@ -1,5 +1,9 @@
 package com.judopay.judokit.android.service
 
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
 import com.judopay.judo3ds2.model.CompletionEvent
@@ -141,12 +145,16 @@ class CardTransactionService(
                         ).show(activity.supportFragmentManager, THREE_DS_ONE_DIALOG_FRAGMENT_TAG)
                     }
                     receipt.is3dSecure2Required -> {
-                        transaction.doChallenge(
-                            activity,
-                            receipt.toChallengeParameters(),
-                            this,
-                            5
-                        )
+                            Toast.makeText(activity, receipt.message, LENGTH_LONG).show()
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            callback.onFinish(result)
+                        }, 5000)
+//                        transaction.doChallenge(
+//                            activity,
+//                            receipt.toChallengeParameters(),
+//                            this,
+//                            5
+//                        )
                     }
                     else -> callback.onFinish(result)
                 }

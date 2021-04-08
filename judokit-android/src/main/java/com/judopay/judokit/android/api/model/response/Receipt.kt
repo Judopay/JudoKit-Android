@@ -7,6 +7,8 @@ import com.judopay.judokit.android.model.JudoResult
 import java.math.BigDecimal
 import java.util.Date
 
+private const val CHALLENGE_REQUIRED_MESSAGE = "Issuer ACS has responded with a Challenge URL"
+
 /**
  * The Receipt of a transaction performed with the judo API.
  */
@@ -46,7 +48,7 @@ class Receipt(
         get() = !(acsUrl.isNullOrEmpty() && md.isNullOrEmpty() && paReq.isNullOrEmpty())
 
     val is3dSecure2Required: Boolean
-        get() = !(acsUrl.isNullOrEmpty() && md.isNullOrEmpty() && paReq.isNullOrEmpty())
+        get() = message == CHALLENGE_REQUIRED_MESSAGE
 
     override fun toString(): String {
         return "Receipt(judoId=$judoId, receiptId=$receiptId, originalReceiptId=$originalReceiptId, partnerServiceFee=$partnerServiceFee, yourPaymentReference=$yourPaymentReference, type=$type, createdAt=$createdAt, merchantName=$merchantName, appearsOnStatementAs=$appearsOnStatementAs, originalAmount=$originalAmount, netAmount=$netAmount, amount=$amount, currency=$currency, cardDetails=$cardDetails, consumer=$consumer, risks=$risks, md=$md, paReq=$paReq, acsUrl=$acsUrl, result=$result, message=$message)"

@@ -1,6 +1,5 @@
 package com.judopay.judokit.android.api.deserializer
 
-import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
@@ -16,10 +15,9 @@ internal class ScaExemptionSerializer : JsonSerializer<ScaExemption> {
         src: ScaExemption,
         typeOfSrc: Type?,
         context: JsonSerializationContext?
-    ): JsonElement {
-        return context?.serialize(src.value) ?: throw NotSerializableException(src::class.java.name)
-    }
+    ) = context?.serialize(src.value) ?: throw NotSerializableException(src::class.java.name)
 }
+
 internal class ChallengeRequestIndicatorSerializer : JsonSerializer<ChallengeRequestIndicator> {
 
     @Throws(JsonParseException::class)
@@ -27,7 +25,5 @@ internal class ChallengeRequestIndicatorSerializer : JsonSerializer<ChallengeReq
         src: ChallengeRequestIndicator,
         typeOfSrc: Type?,
         context: JsonSerializationContext?
-    ): JsonElement {
-        return context?.serialize(src.value) ?: throw NotSerializableException(src::class.java.name)
-    }
+    ) = context?.serialize(src.value) ?: throw NotSerializableException(src::class.java.name)
 }

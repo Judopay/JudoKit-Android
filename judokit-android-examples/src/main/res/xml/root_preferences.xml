@@ -138,7 +138,7 @@
         app:title="3DS 2.0">
 
         <ListPreference
-            app:defaultValue="challengePreferred"
+            app:defaultValue="NO_PREFERENCE"
             app:entries="@array/three_ds_two_challenge_request_indicator_entries"
             app:entryValues="@array/three_ds_two_challenge_request_indicator_values"
             app:iconSpaceReserved="false"
@@ -148,7 +148,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:defaultValue="secureCorporate"
+            app:defaultValue="LOW_VALUE"
             app:entries="@array/three_ds_two_sca_exemption_entries"
             app:entryValues="@array/three_ds_two_sca_exemption_values"
             app:iconSpaceReserved="false"
