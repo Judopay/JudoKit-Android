@@ -166,10 +166,10 @@
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
-            app:defaultValue="6"
+            app:defaultValue="5"
             app:iconSpaceReserved="false"
             app:key="threeDSTwoMaxTimeout"
-            app:summary="Max timeout for 3DS 2.0 transaction"
+            app:summary="Max timeout for 3DS 2.0 transaction in minutes"
             app:title="3DS 2.0 max timeout"
             app:useSimpleSummaryProvider="true" />
 
