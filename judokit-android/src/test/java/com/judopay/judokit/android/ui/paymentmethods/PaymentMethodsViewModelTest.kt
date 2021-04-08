@@ -5,19 +5,18 @@ import androidx.lifecycle.Observer
 import com.judopay.judokit.android.InstantExecutorExtension
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.R
-import com.judopay.judokit.android.api.JudoApiService
-import com.judopay.judokit.android.api.model.request.BankSaleRequest
 import com.judopay.judokit.android.api.model.response.CardDate
-import com.judopay.judokit.android.api.model.response.JudoApiCallResult
-import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.db.entity.TokenizedCardEntity
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.model.Amount
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.Currency
+import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.Reference
+import com.judopay.judokit.android.service.CardTransactionCallback
+import com.judopay.judokit.android.service.CardTransactionService
 import com.judopay.judokit.android.ui.common.ButtonState
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.IdealBank
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
@@ -37,6 +36,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import io.mockk.slot
 import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
@@ -52,7 +52,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import retrofit2.await
 
 @ExperimentalCoroutinesApi
 @ExtendWith(InstantExecutorExtension::class)
@@ -62,15 +61,16 @@ internal class PaymentMethodsViewModelTest {
     private val testDispatcher = TestCoroutineDispatcher()
 
     private val cardDate: CardDate = mockk(relaxed = true)
-    private val service: JudoApiService = mockk(relaxed = true)
+    private val cardTransactionService: CardTransactionService = mockk(relaxed = true)
     private val repository: TokenizedCardRepository = mockk(relaxed = true)
     private val application: Application = mockk(relaxed = true)
     private val judo = getJudo()
 
     private lateinit var sut: PaymentMethodsViewModel
 
+    private val cardTransactionCallback = slot<CardTransactionCallback>()
     private val paymentMethodsModel = spyk<Observer<PaymentMethodsModel>>()
-    private val judoApiCallResult = spyk<Observer<JudoApiCallResult<Receipt>>>()
+    private val judoPaymentResult = spyk<Observer<JudoPaymentResult>>()
     private val payWithIdealObserver = spyk<Observer<Event<String>>>()
     private val payWithPayByBankObserver = spyk<Observer<Event<Nothing>>>()
     private val selectedCardNetworkObserver = spyk<Observer<Event<CardNetwork>>>()
@@ -83,18 +83,12 @@ internal class PaymentMethodsViewModelTest {
         every { PBBAAppUtils.isCFIAppAvailable(application) } returns false
         coEvery { repository.findWithId(0) } returns mockk(relaxed = true)
         coEvery { repository.allCardsSync.value } returns null
-        coEvery {
-            service.tokenPayment(any()).await()
-        } returns mockk(relaxed = true)
-        coEvery {
-            service.preAuthTokenPayment(any()).await()
-        } returns mockk(relaxed = true)
-        coEvery { service.sale(any<BankSaleRequest>()).await() } returns mockk(relaxed = true)
+        coEvery { cardTransactionService.tokenPayment(any(), any(), capture(cardTransactionCallback)) } coAnswers { cardTransactionCallback }
 
         sut = PaymentMethodsViewModel(
             cardDate,
             repository,
-            service,
+            cardTransactionService,
             application,
             judo
         )
@@ -131,7 +125,7 @@ internal class PaymentMethodsViewModelTest {
         sut = PaymentMethodsViewModel(
             cardDate,
             repository,
-            service,
+            cardTransactionService,
             application,
             judo
         )
@@ -169,7 +163,7 @@ internal class PaymentMethodsViewModelTest {
         sut = PaymentMethodsViewModel(
             cardDate,
             repository,
-            service,
+            cardTransactionService,
             application,
             judo
         )
@@ -215,7 +209,7 @@ internal class PaymentMethodsViewModelTest {
         sut = PaymentMethodsViewModel(
             cardDate,
             repository,
-            service,
+            cardTransactionService,
             application,
             judo
         )
@@ -238,7 +232,7 @@ internal class PaymentMethodsViewModelTest {
         sut = PaymentMethodsViewModel(
             cardDate,
             repository,
-            service,
+            cardTransactionService,
             application,
             judo
         )
@@ -264,7 +258,7 @@ internal class PaymentMethodsViewModelTest {
         sut = PaymentMethodsViewModel(
             cardDate,
             repository,
-            service,
+            cardTransactionService,
             application,
             judo
         )
@@ -287,7 +281,7 @@ internal class PaymentMethodsViewModelTest {
         sut = PaymentMethodsViewModel(
             cardDate,
             repository,
-            service,
+            cardTransactionService,
             application,
             judo
         )
@@ -309,7 +303,7 @@ internal class PaymentMethodsViewModelTest {
         sut = PaymentMethodsViewModel(
             cardDate,
             repository,
-            service,
+            cardTransactionService,
             application,
             judo
         )
@@ -376,21 +370,22 @@ internal class PaymentMethodsViewModelTest {
         val card = mockk<TokenizedCardEntity>(relaxed = true) { every { isDefault } returns true }
         every { repository.allCardsSync.value } returns listOf(card)
 
-        val slots = mutableListOf<JudoApiCallResult<Receipt>>()
+        val slots = mutableListOf<JudoPaymentResult>()
 
         sut = PaymentMethodsViewModel(
             cardDate,
             repository,
-            service,
+            cardTransactionService,
             application,
             judo
         )
 
-        sut.judoApiCallResult.observeForever(judoApiCallResult)
+        sut.judoPaymentResult.observeForever(judoPaymentResult)
 
         sut.send(PaymentMethodsAction.PayWithSelectedStoredCard())
+        cardTransactionCallback.captured.onFinish(mockk())
 
-        verify { judoApiCallResult.onChanged(capture(slots)) }
+        verify { judoPaymentResult.onChanged(capture(slots)) }
     }
 
     @DisplayName("Given send with PayWithSelectedStoredCard action is called, when PaymentWidgetType is PAYMENT_METHODS, then call service.tokenPayment(request)")
@@ -406,7 +401,7 @@ internal class PaymentMethodsViewModelTest {
 
         sut.send(PaymentMethodsAction.PayWithSelectedStoredCard())
 
-        coVerify { service.tokenPayment(any()).await() }
+        coVerify { cardTransactionService.tokenPayment(any(), any(), any()) }
     }
 
     @DisplayName("Given send with PayWithSelectedStoredCard action is called, when PaymentWidgetType is PRE_AUTH_PAYMENT_METHODS, then call service.preAuthTokenPayment(request)")
@@ -425,14 +420,14 @@ internal class PaymentMethodsViewModelTest {
         sut = PaymentMethodsViewModel(
             cardDate,
             repository,
-            service,
+            cardTransactionService,
             application,
             judo
         )
 
         sut.send(PaymentMethodsAction.PayWithSelectedStoredCard())
 
-        coVerify { service.preAuthTokenPayment(any()).await() }
+        coVerify { cardTransactionService.tokenPayment(any(), any(), any()) }
     }
 
     @DisplayName("Given send with PayWithSelectedStoredCard action is called, when PaymentWidgetType is CARD_PAYMENT, then throw IllegalStateException")
@@ -465,6 +460,7 @@ internal class PaymentMethodsViewModelTest {
         every { repository.allCardsSync.value } returns listOf(card)
 
         sut.send(PaymentMethodsAction.PayWithSelectedStoredCard())
+        cardTransactionCallback.captured.onFinish(mockk())
 
         coVerify { repository.updateAllLastUsedToFalse() }
     }
@@ -482,6 +478,7 @@ internal class PaymentMethodsViewModelTest {
         every { repository.allCardsSync.value } returns listOf(card)
 
         sut.send(PaymentMethodsAction.PayWithSelectedStoredCard())
+        cardTransactionCallback.captured.onFinish(mockk())
 
         coVerify { repository.insert(card) }
     }
@@ -509,7 +506,7 @@ internal class PaymentMethodsViewModelTest {
         sut = PaymentMethodsViewModel(
             cardDate,
             repository,
-            service,
+            cardTransactionService,
             application,
             judo
         )
@@ -552,7 +549,7 @@ internal class PaymentMethodsViewModelTest {
         sut = PaymentMethodsViewModel(
             cardDate,
             repository,
-            service,
+            cardTransactionService,
             application,
             judo
         )
@@ -616,7 +613,7 @@ internal class PaymentMethodsViewModelTest {
         sut = PaymentMethodsViewModel(
             cardDate,
             repository,
-            service,
+            cardTransactionService,
             application,
             judo
         )
@@ -641,7 +638,7 @@ internal class PaymentMethodsViewModelTest {
         sut = PaymentMethodsViewModel(
             cardDate,
             repository,
-            service,
+            cardTransactionService,
             application,
             judo
         )

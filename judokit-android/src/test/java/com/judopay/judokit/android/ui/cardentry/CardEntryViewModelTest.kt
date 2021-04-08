@@ -5,19 +5,19 @@ import androidx.lifecycle.Observer
 import com.judopay.judokit.android.InstantExecutorExtension
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.R
-import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.model.response.CardToken
-import com.judopay.judokit.android.api.model.response.JudoApiCallResult
-import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.model.Amount
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.CardScanningResult
 import com.judopay.judokit.android.model.Currency
+import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.Reference
 import com.judopay.judokit.android.model.formatted
 import com.judopay.judokit.android.model.toInputModel
+import com.judopay.judokit.android.service.CardTransactionCallback
+import com.judopay.judokit.android.service.CardTransactionService
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldType
 import com.judopay.judokit.android.ui.cardentry.model.FormModel
 import com.judopay.judokit.android.ui.cardentry.model.InputModel
@@ -29,6 +29,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import io.mockk.slot
 import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +45,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import retrofit2.await
 
 @ExperimentalCoroutinesApi
 @ExtendWith(InstantExecutorExtension::class)
@@ -54,17 +54,18 @@ internal class CardEntryViewModelTest {
     private val testDispatcher = TestCoroutineDispatcher()
 
     private val judo = getJudo()
-    private val service: JudoApiService = mockk(relaxed = true)
     private val repository: TokenizedCardRepository = mockk(relaxed = true)
+    private val cardTransactionService: CardTransactionService = mockk(relaxed = true)
     private val application: Application = mockk(relaxed = true)
 
     private val card: CardToken = mockk(relaxed = true)
     private var selectedCardNetwork: CardNetwork? = null
     private val inputModel: InputModel = getInputModel()
-    private val judoApiCallResult = JudoApiCallResult.Success(mockk<Receipt>(relaxed = true))
+    private val expectedJudoPaymentResult = JudoPaymentResult.Success(mockk(relaxed = true))
 
+    private val cardTransactionCallback = slot<CardTransactionCallback>()
     private val modelMock = spyk<Observer<CardEntryFragmentModel>>()
-    private val judoApiCallResultMock = spyk<Observer<JudoApiCallResult<Receipt>?>>()
+    private val judoPaymentResultMock = spyk<Observer<JudoPaymentResult?>>()
     private val securityCodeResultMock = spyk<Observer<String>>()
 
     private val enabledFields = listOf(
@@ -84,26 +85,7 @@ internal class CardEntryViewModelTest {
         mockkStatic("com.judopay.judokit.android.ui.paymentmethods.MappersKt")
         mockkStatic("com.judopay.judokit.android.ui.common.FunctionsKt")
         coEvery { repository.insert(card.toTokenizedCardEntity(application)) } returns mockk(relaxed = true)
-
-        coEvery {
-            service.payment(any()).await().hint(JudoApiCallResult::class)
-        } returns judoApiCallResult
-
-        coEvery {
-            service.preAuthPayment(any()).await().hint(JudoApiCallResult::class)
-        } returns judoApiCallResult
-
-        coEvery {
-            service.checkCard(any()).await().hint(JudoApiCallResult::class)
-        } returns judoApiCallResult
-
-        coEvery {
-            service.saveCard(any()).await().hint(JudoApiCallResult::class)
-        } returns judoApiCallResult
-
-        coEvery {
-            service.registerCard(any()).await().hint(JudoApiCallResult::class)
-        } returns judoApiCallResult
+        coEvery { cardTransactionService.makeTransaction(any(), capture(cardTransactionCallback)) } coAnswers { cardTransactionCallback }
     }
 
     @AfterEach
@@ -124,7 +106,7 @@ internal class CardEntryViewModelTest {
         )
         val slots = mutableListOf<CardEntryFragmentModel>()
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
         sut.model.observeForever(modelMock)
 
         verify { modelMock.onChanged(capture(slots)) }
@@ -137,7 +119,7 @@ internal class CardEntryViewModelTest {
     @DisplayName("Given send is called with InsertCard action, then should call repository updateAllLastUsedToFalse")
     @Test
     fun callUpdateAllLastUsedToFalseOnSendWithInsertCardAction() {
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         sut.send(CardEntryAction.InsertCard(card))
 
@@ -147,7 +129,7 @@ internal class CardEntryViewModelTest {
     @DisplayName("Given send is called with InsertCard action, then should call repository insert")
     @Test
     fun insertOnSendWithInsertCardAction() {
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         sut.send(CardEntryAction.InsertCard(card))
 
@@ -165,7 +147,7 @@ internal class CardEntryViewModelTest {
         )
         val slots = mutableListOf<CardEntryFragmentModel>()
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
         sut.model.observeForever(modelMock)
 
         sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
@@ -188,7 +170,7 @@ internal class CardEntryViewModelTest {
             ButtonState.Loading
         )
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
         sut.model.observeForever(modelMock)
 
         sut.send(CardEntryAction.SubmitForm)
@@ -202,12 +184,12 @@ internal class CardEntryViewModelTest {
     @DisplayName("Given send is called with SubmitForm action, when payment widget type is card payment, then should invoke service.payment() method")
     @Test
     fun makePaymentRequestOnSubmitFormWithCardPaymentWidgetType() {
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
         sut.send(CardEntryAction.SubmitForm)
 
-        coVerify { service.payment(any()) }
+        coVerify { cardTransactionService.makeTransaction(any(), any()) }
     }
 
     @DisplayName("Given send is called with SubmitForm action, when payment widget type is pre auth card payment, then should invoke service.preAuthPayment() method")
@@ -215,12 +197,12 @@ internal class CardEntryViewModelTest {
     fun makePreAuthPaymentRequestOnSubmitFormWithPreAuthCardPaymentWidgetType() {
         every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
         sut.send(CardEntryAction.SubmitForm)
 
-        coVerify { service.preAuthPayment(any()) }
+        coVerify { cardTransactionService.makeTransaction(any(), any()) }
     }
 
     @DisplayName("Given send is called with SubmitForm action, when payment widget type is create card token, then should invoke service.registerCard() method")
@@ -228,12 +210,12 @@ internal class CardEntryViewModelTest {
     fun makeRegisterCardRequestOnSubmitFormWithCreateCardTokenWidgetType() {
         every { judo.paymentWidgetType } returns PaymentWidgetType.REGISTER_CARD
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
         sut.send(CardEntryAction.SubmitForm)
 
-        coVerify { service.registerCard(any()) }
+        coVerify { cardTransactionService.makeTransaction(any(), any()) }
     }
 
     @DisplayName("Given send is called with SubmitForm action, when payment widget type is check card, then should invoke service.checkCard() method")
@@ -241,12 +223,12 @@ internal class CardEntryViewModelTest {
     fun makeCheckCardRequestOnSubmitFormWithCheckCardWidgetType() {
         every { judo.paymentWidgetType } returns PaymentWidgetType.CHECK_CARD
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
         sut.send(CardEntryAction.SubmitForm)
 
-        coVerify { service.checkCard(any()) }
+        coVerify { cardTransactionService.makeTransaction(any(), any()) }
     }
 
     @DisplayName("Given send is called with SubmitForm action, when payment widget type is save card, then should invoke service.saveCard() method")
@@ -254,12 +236,12 @@ internal class CardEntryViewModelTest {
     fun makeSaveCardRequestOnSubmitFormWithSaveCardWidgetType() {
         every { judo.paymentWidgetType } returns PaymentWidgetType.CREATE_CARD_TOKEN
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
         sut.send(CardEntryAction.SubmitForm)
 
-        coVerify { service.saveCard(any()) }
+        coVerify { cardTransactionService.makeTransaction(any(), any()) }
     }
 
     @DisplayName("Given send is called with SubmitForm action, when payment widget type is GOOGLE_PAY, then should throw IllegalArguementException")
@@ -267,7 +249,7 @@ internal class CardEntryViewModelTest {
     fun throwExceptionOnSubmitFormWithGooglePayWidgetType() {
         every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         try {
             sut.send(CardEntryAction.SubmitForm)
@@ -276,22 +258,24 @@ internal class CardEntryViewModelTest {
         }
     }
 
-    @DisplayName("Given send is called with SubmitForm action, then update judoApiCallResult model")
+    @DisplayName("Given send is called with SubmitForm action, then update judoPaymentResult model")
     @Test
-    fun postJudoApiCallResultOnSubmitForm() {
-        val slots = mutableListOf<JudoApiCallResult<Receipt>>()
+    fun postJudoPaymentResultOnSubmitForm() {
+        val slots = mutableListOf<JudoPaymentResult>()
         every { judo.uiConfiguration.avsEnabled } returns true
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
-        sut.judoPaymentResult.observeForever(judoApiCallResultMock)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
+        sut.judoPaymentResult.observeForever(judoPaymentResultMock)
 
         sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
         sut.send(CardEntryAction.SubmitForm)
 
-        verify { judoApiCallResultMock.onChanged(capture(slots)) }
+        cardTransactionCallback.captured.onFinish(expectedJudoPaymentResult)
 
-        val result = slots[0]
-        assertEquals(judoApiCallResult, result)
+        verify { judoPaymentResultMock.onChanged(capture(slots)) }
+
+        val actualJudoPaymentResult = slots[0]
+        assertEquals(expectedJudoPaymentResult, actualJudoPaymentResult)
     }
 
     @DisplayName("Given send is called with SubmitForm action, when selectedCardNetwork is not null, then update securityCodeResult model")
@@ -301,7 +285,7 @@ internal class CardEntryViewModelTest {
         every { judo.paymentWidgetType } returns PaymentWidgetType.PAYMENT_METHODS
         selectedCardNetwork = CardNetwork.VISA
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         sut.securityCodeResult.observeForever(securityCodeResultMock)
 
@@ -327,7 +311,7 @@ internal class CardEntryViewModelTest {
         )
         val slots = mutableListOf<CardEntryFragmentModel>()
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
         sut.model.observeForever(modelMock)
 
         verify { modelMock.onChanged(capture(slots)) }
@@ -350,7 +334,7 @@ internal class CardEntryViewModelTest {
         )
         val slots = mutableListOf<CardEntryFragmentModel>()
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
         sut.model.observeForever(modelMock)
 
         verify { modelMock.onChanged(capture(slots)) }
@@ -375,7 +359,7 @@ internal class CardEntryViewModelTest {
         )
         val slots = mutableListOf<CardEntryFragmentModel>()
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
         sut.model.observeForever(modelMock)
 
         sut.send(CardEntryAction.ScanCard(cardScanningResult))
@@ -392,7 +376,7 @@ internal class CardEntryViewModelTest {
         every { judo.paymentWidgetType } returns PaymentWidgetType.CARD_PAYMENT
         every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns true
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         assertEquals(judo.amount.formatted, sut.amount)
     }
@@ -403,7 +387,7 @@ internal class CardEntryViewModelTest {
         every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH
         every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns true
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         assertEquals(judo.amount.formatted, sut.amount)
     }
@@ -414,7 +398,7 @@ internal class CardEntryViewModelTest {
         every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH
         every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns false
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         assertEquals(null, sut.amount)
     }
@@ -425,7 +409,7 @@ internal class CardEntryViewModelTest {
         every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH
         every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns false
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         assertEquals(null, sut.amount)
     }
@@ -436,7 +420,7 @@ internal class CardEntryViewModelTest {
         every { judo.paymentWidgetType } returns PaymentWidgetType.CARD_PAYMENT
         every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns false
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         assertEquals(R.string.pay_now, sut.submitButtonText)
     }
@@ -447,7 +431,7 @@ internal class CardEntryViewModelTest {
         every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH
         every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns false
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         assertEquals(R.string.pay_now, sut.submitButtonText)
     }
@@ -458,7 +442,7 @@ internal class CardEntryViewModelTest {
         every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH
         every { judo.uiConfiguration.shouldPaymentButtonDisplayAmount } returns true
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         assertEquals(R.string.pay_amount, sut.submitButtonText)
     }
@@ -474,7 +458,7 @@ internal class CardEntryViewModelTest {
         )
         val slots = mutableListOf<CardEntryFragmentModel>()
 
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
         sut.model.observeForever(modelMock)
 
         sut.send(CardEntryAction.EnableFormFields(listOf(FormFieldType.NUMBER, FormFieldType.SECURITY_NUMBER)))
@@ -490,7 +474,7 @@ internal class CardEntryViewModelTest {
     fun shouldUpdateModelWithDisplayScanButtonGoneOnSelectedCardNetworkNotNull() {
         val slots = mutableListOf<CardEntryFragmentModel>()
         selectedCardNetwork = CardNetwork.VISA
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
         sut.model.observeForever(modelMock)
 
         sut.send(CardEntryAction.EnableFormFields(listOf(FormFieldType.NUMBER, FormFieldType.SECURITY_NUMBER)))
@@ -506,7 +490,7 @@ internal class CardEntryViewModelTest {
     fun shouldUpdateModelWithDisplayScanButtonVisibleOnSelectedCardNetworkNull() {
         val slots = mutableListOf<CardEntryFragmentModel>()
         selectedCardNetwork = null
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
         sut.model.observeForever(modelMock)
 
         sut.send(
@@ -529,7 +513,7 @@ internal class CardEntryViewModelTest {
     fun shouldUpdateModelWithDisplayScanButtonVisibleOnSelectedCardNetworkNullAndScanCardPresent() {
         val slots = mutableListOf<CardEntryFragmentModel>()
         every { isDependencyPresent("cards.pay.paycardsrecognizer.sdk.ScanCardIntent") } returns false
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
+        sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
         sut.model.observeForever(modelMock)
 
         sut.send(

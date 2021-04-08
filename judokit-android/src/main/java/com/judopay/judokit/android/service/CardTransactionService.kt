@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.judopay.judo3ds2.model.CompletionEvent
 import com.judopay.judo3ds2.model.ProtocolErrorEvent
 import com.judopay.judo3ds2.model.RuntimeErrorEvent
+import com.judopay.judo3ds2.service.ThreeDS2Service
 import com.judopay.judo3ds2.transaction.Transaction
 import com.judopay.judo3ds2.transaction.challenge.ChallengeStatusReceiver
 import com.judopay.judokit.android.Judo
@@ -47,14 +48,16 @@ class CardTransactionService(
     private val activity: FragmentActivity,
     private val judo: Judo,
     private val service: JudoApiService,
-    private val transaction: Transaction
+    private val threeDS2Service: ThreeDS2Service
 ) : ThreeDSOneCompletionCallback, ChallengeStatusReceiver {
 
     lateinit var result: JudoPaymentResult
     lateinit var callback: CardTransactionCallback
+    lateinit var transaction: Transaction
 
     suspend fun makeTransaction(inputModel: InputModel, callback: CardTransactionCallback) {
         this.callback = callback
+        transaction = threeDS2Service.createTransaction("F000000000", "2.2.0")
         val address = Address.Builder().apply {
             setLine1(judo.address?.line1)
             setLine2(judo.address?.line2)

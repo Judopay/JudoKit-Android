@@ -54,18 +54,12 @@ internal class PaymentSessionAuthorizationTest {
         assertThrows<IllegalArgumentException> { sut.setPaymentSession(null).build() }
     }
 
-    @DisplayName("Given token and paymentSession are present, then headers should contain authorization")
+    @DisplayName("Given token and paymentSession are present, then headers should contain Api-Token")
     @Test
     fun headersShouldContainAuthorization() {
-        val credentials = Base64.encodeToString(
-            "token:".toByteArray(StandardCharsets.UTF_8),
-            Base64.NO_WRAP
-        )
+        val expected = Headers.Builder().add("Api-Token", "token").build()["Api-Token"]
 
-        val expected = Headers.Builder().add("Authorization", "Basic $credentials").build()
-            .get("Authorization")
-
-        Assertions.assertEquals(expected, sut.build().headers.get("Authorization"))
+        Assertions.assertEquals(expected, sut.build().headers["Api-Token"])
     }
 
     @DisplayName("Given token and paymentSession are present, then headers should contain Payment-Session")
@@ -74,6 +68,6 @@ internal class PaymentSessionAuthorizationTest {
         val expected = Headers.Builder().add("Payment-Session", "paymentSession").build()
             .get("Payment-Session")
 
-        Assertions.assertEquals(expected, sut.build().headers.get("Payment-Session"))
+        Assertions.assertEquals(expected, sut.build().headers["Payment-Session"])
     }
 }

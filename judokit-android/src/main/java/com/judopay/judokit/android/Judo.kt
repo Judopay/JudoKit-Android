@@ -266,10 +266,10 @@ class Judo internal constructor(
                 checkNotNull(supportedCardNetworks)
             }
 
-            val isPBBAConfigMissing =
+            val isPbbaAddressConfigMissing =
                 (pbbaConfiguration?.emailAddress.isNullOrEmpty() && !emailAddress.isNullOrEmpty()) || (pbbaConfiguration?.mobileNumber.isNullOrEmpty() || !mobileNumber.isNullOrEmpty())
 
-            val myPBBAConfiguration = if (isPBBAConfigMissing)
+            val myPBBAConfiguration = if (pbbaConfiguration != null && isPbbaAddressConfigMissing)
                 PBBAConfiguration.Builder()
                     .setAppearsOnStatementAs(pbbaConfiguration?.appearsOnStatement)
                     .setDeepLinkScheme(pbbaConfiguration?.deepLinkScheme)

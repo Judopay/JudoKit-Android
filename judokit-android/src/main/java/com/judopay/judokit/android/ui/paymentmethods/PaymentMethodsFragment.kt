@@ -86,10 +86,9 @@ class PaymentMethodsFragment : Fragment() {
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
         service = JudoApiServiceFactory.createApiService(application, judo)
-        val threeDSService = ThreeDS2ServiceImpl()
-        threeDSService.initialize(requireContext(), ConfigParameters(), getLocale(resources), null)
-        val transaction = threeDSService.createTransaction("F000000000", "2.2.0")
-        val cardTransactionService = CardTransactionService(requireActivity(), judo, service, transaction)
+        val threeDS2Service = ThreeDS2ServiceImpl()
+        threeDS2Service.initialize(requireContext(), ConfigParameters(), getLocale(resources), null)
+        val cardTransactionService = CardTransactionService(requireActivity(), judo, service, threeDS2Service)
 
         val factory =
             PaymentMethodsViewModelFactory(cardDate, cardRepository, cardTransactionService, application, judo)
@@ -97,7 +96,7 @@ class PaymentMethodsFragment : Fragment() {
         viewModel = ViewModelProvider(this, factory).get(PaymentMethodsViewModel::class.java)
         viewModel.model.observe(viewLifecycleOwner, { updateWithModel(it) })
 
-        viewModel.judoApiCallResult.observe(
+        viewModel.judoPaymentResult.observe(
             viewLifecycleOwner,
             { sharedViewModel.paymentResult.postValue((it)) }
         )

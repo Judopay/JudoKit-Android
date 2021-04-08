@@ -24,6 +24,7 @@ import com.judopay.judokit.android.api.model.request.PaymentRequest
 import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
+import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecure
 import com.judopay.judokit.android.model.ApiEnvironment
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_500
 import com.judopay.judokit.android.ui.error.JudoNotProvidedError
@@ -125,7 +126,8 @@ internal fun Window.applyDialogStyling() {
 fun Judo.toPaymentRequest(
     cardNumber: String,
     expiryDate: String,
-    securityCode: String
+    securityCode: String,
+    threeDS2Parameters: ThreeDSecure?
 ) = PaymentRequest.Builder()
     .setUniqueRequest(false)
     .setYourPaymentReference(reference.paymentReference)
@@ -140,12 +142,14 @@ fun Judo.toPaymentRequest(
     .setExpiryDate(expiryDate)
     .setPrimaryAccountDetails(primaryAccountDetails)
     .setInitialRecurringPayment(initialRecurringPayment)
+    .setThreeDSecure(threeDS2Parameters)
     .build()
 
 fun Judo.toRegisterCardRequest(
     cardNumber: String,
     expirationDate: String,
-    securityCode: String
+    securityCode: String,
+    threeDS2Parameters: ThreeDSecure?
 ) =
     RegisterCardRequest.Builder()
         .setUniqueRequest(false)
@@ -161,6 +165,7 @@ fun Judo.toRegisterCardRequest(
         .setPrimaryAccountDetails(primaryAccountDetails)
         .setAmount(amount.amount)
         .setInitialRecurringPayment(initialRecurringPayment)
+        .setThreeDSecure(threeDS2Parameters)
         .build()
 
 fun Judo.toSaveCardRequest(
@@ -185,7 +190,8 @@ fun Judo.toSaveCardRequest(
 fun Judo.toCheckCardRequest(
     cardNumber: String,
     expirationDate: String,
-    securityCode: String
+    securityCode: String,
+    threeDS2Parameters: ThreeDSecure?
 ) =
     CheckCardRequest.Builder()
         .setUniqueRequest(false)
@@ -200,6 +206,7 @@ fun Judo.toCheckCardRequest(
         .setCv2(securityCode)
         .setPrimaryAccountDetails(primaryAccountDetails)
         .setInitialRecurringPayment(initialRecurringPayment)
+        .setThreeDSecure(threeDS2Parameters)
         .build()
 
 fun Judo.toGooglePayRequest(
