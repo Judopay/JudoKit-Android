@@ -4,13 +4,6 @@ import com.google.gson.annotations.SerializedName
 import com.judopay.judokit.android.requireNotNull
 import com.judopay.judokit.android.requireNotNullOrEmpty
 
-data class EphemeralPublicKey(
-    val kty: String,
-    val crv: String,
-    val x: String,
-    val y: String
-)
-
 class SdkParameters private constructor(
     private val applicationId: String,
     private val encodedData: String,
