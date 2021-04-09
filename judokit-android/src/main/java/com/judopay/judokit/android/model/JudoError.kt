@@ -9,6 +9,7 @@ const val USER_CANCELLED = -1
 const val RESPONSE_PARSING = -2
 const val GOOGLE_PAY_NOT_SUPPORTED = -3
 const val REQUEST_FAILED = -4
+const val EXCEPTION_CAUGHT = -5
 
 internal const val USER_CANCELLED_MSG =
     "The transaction was cancelled by the user. The user closed the transaction flow without completing the transaction."
@@ -78,6 +79,14 @@ data class JudoError(
                     message ?: resources.getString(R.string.error_google_pay_not_supported_reason)
                 )
             )
+        )
+
+        /**
+         * Utility function that creates a JudoError object with thrown exception error code and message.
+         */
+        fun judoInternalError(message: String?) = JudoError(
+            EXCEPTION_CAUGHT,
+            message ?: "Unknown error"
         )
     }
 }
