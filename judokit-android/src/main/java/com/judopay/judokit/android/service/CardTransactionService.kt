@@ -10,7 +10,6 @@ import com.judopay.judo3ds2.transaction.Transaction
 import com.judopay.judo3ds2.transaction.challenge.ChallengeStatusReceiver
 import com.judopay.judo3ds2.ui.views.ProgressDialog
 import com.judopay.judokit.android.Judo
-import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.request.CheckCardRequest
@@ -30,11 +29,9 @@ import com.judopay.judokit.android.api.model.response.toChallengeParameters
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
 import com.judopay.judokit.android.api.model.response.toJudoResult
 import com.judopay.judokit.android.db.entity.TokenizedCardEntity
-import com.judopay.judokit.android.model.EXCEPTION_CAUGHT
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentWidgetType
-import com.judopay.judokit.android.model.REQUEST_FAILED
 import com.judopay.judokit.android.model.displayName
 import com.judopay.judokit.android.model.typeId
 import com.judopay.judokit.android.toMap
