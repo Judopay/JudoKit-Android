@@ -93,7 +93,7 @@ internal class ApiHeadersInterceptorTest {
         val recordedRequest = makeRequest("/")
 
         assertEquals(
-            "6.3.0",
+            "5.6.0",
             recordedRequest.getHeader("Api-Version")
         )
     }

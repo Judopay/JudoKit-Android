@@ -120,6 +120,10 @@ class CardTransactionService(
                     .setCv2(securityCode)
                     .setAddress(judo.address)
                     .setInitialRecurringPayment(judo.initialRecurringPayment)
+                    .setMobileNumber(judo.mobileNumber)
+                    .setEmailAddress(judo.emailAddress)
+                    .setPhoneCountryCode(judo.phoneCountryCode)
+                    .setThreeDSecure(buildThreeDSecureParameters())
                     .build()
 
                 val response = when (judo.paymentWidgetType) {
@@ -225,8 +229,6 @@ class CardTransactionService(
             .setExpiryDate(inputModel.expirationDate)
             .setPrimaryAccountDetails(judo.primaryAccountDetails)
             .setInitialRecurringPayment(judo.initialRecurringPayment)
-            .setChallengeRequestIndicator(judo.challengeRequestIndicator)
-            .setScaExemption(judo.scaExemption)
             .setCardHolderName(inputModel.cardHolderName)
             .setMobileNumber(judo.mobileNumber)
             .setEmailAddress(judo.emailAddress)

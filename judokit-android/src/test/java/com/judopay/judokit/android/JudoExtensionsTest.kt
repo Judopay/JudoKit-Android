@@ -306,9 +306,10 @@ internal class JudoExtensionsTest {
             .setCv2("452")
             .setPrimaryAccountDetails(mockPrimaryAccountDetails)
             .setInitialRecurringPayment(false)
+            .setThreeDSecure(mockThreeDSecureTwo)
             .build()
 
-        val actual = judo.toTokenRequest("cardToken", "452")
+        val actual = judo.toTokenRequest("cardToken", mockThreeDSecureTwo, "452")
 
         val gson = Gson()
         assertEquals(gson.toJson(expected), gson.toJson(actual))

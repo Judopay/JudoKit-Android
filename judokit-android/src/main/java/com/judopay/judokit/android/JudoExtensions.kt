@@ -255,7 +255,7 @@ fun Judo.toBankSaleRequest() =
         .setMerchantRedirectUrl(pbbaConfiguration?.deepLinkScheme)
         .build()
 
-fun Judo.toTokenRequest(cardToken: String, securityCode: String? = null) =
+fun Judo.toTokenRequest(cardToken: String, threeDSecureTwo: ThreeDSecureTwo?, securityCode: String? = null) =
     TokenRequest.Builder()
         .setAmount(amount.amount)
         .setCurrency(amount.currency.name)
@@ -268,4 +268,5 @@ fun Judo.toTokenRequest(cardToken: String, securityCode: String? = null) =
         .setPrimaryAccountDetails(primaryAccountDetails)
         .setAddress(address ?: Address.Builder().build())
         .setInitialRecurringPayment(initialRecurringPayment)
+        .setThreeDSecure(threeDSecureTwo)
         .build()

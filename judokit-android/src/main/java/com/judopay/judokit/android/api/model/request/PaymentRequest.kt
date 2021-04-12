@@ -96,12 +96,6 @@ class PaymentRequest private constructor(
         fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
             apply { this.initialRecurringPayment = initialRecurringPayment }
 
-        fun setChallengeRequestIndicator(challengeRequestIndicator: ChallengeRequestIndicator?) =
-            apply { this.challengeRequestIndicator = challengeRequestIndicator }
-
-        fun setScaExemption(scaExemption: ScaExemption?) =
-            apply { this.scaExemption = scaExemption }
-
         fun setThreeDSecure(threeDSecureTwo: ThreeDSecureTwo?) =
             apply { this.threeDSecure = threeDSecureTwo }
 
