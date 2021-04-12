@@ -125,7 +125,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
-            app:defaultValue="07999999999"
+            app:defaultValue="0799999999"
             app:iconSpaceReserved="false"
             app:key="mobileNumber"
             app:summary="Your mobile number"
@@ -166,10 +166,10 @@
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
-            app:defaultValue="5"
+            app:defaultValue="30"
             app:iconSpaceReserved="false"
             app:key="threeDSTwoMaxTimeout"
-            app:summary="Max timeout for 3DS 2.0 transaction in minutes"
+            app:summary="Max timeout for 3DS 2.0 transaction"
             app:title="3DS 2.0 max timeout"
             app:useSimpleSummaryProvider="true" />
 
