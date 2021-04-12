@@ -374,7 +374,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             }
 
             return Reference.Builder()
-                .setConsumerReference("ASC123")
+                .setConsumerReference("my-unique-ref")
                 .setPaymentReference(paymentReference)
                 .build()
         }

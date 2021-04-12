@@ -43,7 +43,7 @@ const val PAYMENT_CANCELLED = Activity.RESULT_FIRST_USER + 2
 const val PAYMENT_ERROR = Activity.RESULT_FIRST_USER + 3
 
 /** Default 3DS 2.0 maximum timeout value */
-private const val DEFAULT_MAX_TIMEOUT = 6
+private const val DEFAULT_MAX_TIMEOUT = 120
 
 /**
  * Judo configuration object that is required for initiating a payment.

@@ -42,6 +42,8 @@ import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallb
 import retrofit2.await
 import java.util.Date
 
+private const val THREE_DS_TWO_MIN_TIMEOUT = 5
+
 interface CardTransactionCallback {
     fun onFinish(result: JudoPaymentResult)
 }
@@ -163,7 +165,7 @@ class CardTransactionService(
                             activity,
                             receipt.toChallengeParameters(),
                             this,
-                            judo.threeDSTwoMaxTimeout
+                            THREE_DS_TWO_MIN_TIMEOUT
                         )
                     }
                     else -> callback.onFinish(result)
