@@ -255,7 +255,7 @@ fun Judo.toBankSaleRequest() =
         .setMerchantRedirectUrl(pbbaConfiguration?.deepLinkScheme)
         .build()
 
-fun Judo.toTokenRequest(cardToken: String, threeDSecureTwo: ThreeDSecureTwo?, securityCode: String? = null) =
+fun Judo.toTokenRequest(cardToken: String, threeDSecureTwo: ThreeDSecureTwo? = null, securityCode: String? = null) =
     TokenRequest.Builder()
         .setAmount(amount.amount)
         .setCurrency(amount.currency.name)
