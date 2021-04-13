@@ -1,41 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:clipToPadding="false">
+    android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/cancelButton"
-        style="@style/JudoTheme.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_24"
-        android:layout_marginTop="@dimen/space_20"
-        android:text="@string/cancel"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/scanCardButton"
-        style="@style/JudoTheme.OutlinedButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_20"
-        android:layout_marginEnd="@dimen/space_24"
-        android:text="@string/button_scan_card"
-        android:visibility="gone"
-        app:icon="@drawable/ic_scan_card_16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.judopay.judokit.android.ui.cardentry.components.FormView
-        android:id="@+id/formView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cancelButton" />
+        android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/cardEntryToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_24"
+            app:liftOnScroll="true"
+            app:liftOnScrollTargetViewId="@id/formScrollView"
+            style="@style/Widget.MaterialComponents.AppBarLayout.Surface">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/cancelButton"
+                    style="@style/JudoTheme.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_24"
+                    android:text="@string/cancel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/scanCardButton"
+                    style="@style/JudoTheme.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="@dimen/space_24"
+                    android:gravity="end"
+                    android:text="@string/button_scan_card"
+                    app:icon="@drawable/ic_scan_card_16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/formScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <ViewAnimator
+                android:id="@+id/cardEntryViewAnimator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:measureAllChildren="false">
+
+                <com.judopay.judokit.android.ui.cardentry.components.FormView
+                    android:id="@+id/formView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <com.judopay.judokit.android.ui.cardentry.components.BillingDetailsFormView
+                    android:id="@+id/billingDetailsFormView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </ViewAnimator>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

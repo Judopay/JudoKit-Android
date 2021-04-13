@@ -37,6 +37,7 @@ import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallb
 import com.judopay.judokit.android.ui.common.getLocale
 import com.judopay.judokit.android.ui.paymentmethods.CARD_NETWORK
 import kotlinx.android.synthetic.main.card_entry_fragment.*
+import kotlinx.android.synthetic.main.form_view.*
 
 class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallback {
 
@@ -104,7 +105,6 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         cancelButton.setOnClickListener { onUserCancelled() }
         scanCardButton.setOnClickListener { handleScanCardButtonClicks() }
 
@@ -112,8 +112,13 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
             onFormValidationStatusListener = { model, isValid ->
                 viewModel.send(CardEntryAction.ValidationStatusChanged(model, isValid))
             }
-            onSubmitButtonClickListener = { viewModel.send(CardEntryAction.SubmitForm) }
+            onSubmitButtonClickListener = {
+                billingDetailsFormView.visibility = View.VISIBLE
+                cardEntryViewAnimator.displayedChild = 1
+//                viewModel.send(CardEntryAction.SubmitForm)
+            }
         }
+        submitButton.isEnabled = true
     }
 
     override fun onStart() {
