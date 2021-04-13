@@ -30,7 +30,7 @@ internal class ApiHeadersInterceptor(
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
-        val path = chain.request().url().encodedPath()
+        val path = chain.request().url.encodedPath
         val isSaleRequest = path.startsWith(BANK_ENDPOINT)
         val headers = getHeaders(isSaleRequest)
         val request = chain.request()

@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
+import com.judokit.android.examples.R
+import com.judokit.android.examples.feature.JUDO_PAYMENT_WIDGET_REQUEST_CODE
 import com.judopay.judokit.android.JUDO_OPTIONS
 import com.judopay.judokit.android.JUDO_RESULT
 import com.judopay.judokit.android.Judo
@@ -19,8 +21,6 @@ import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.api.model.response.toCardVerificationModel
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
-import com.judokit.android.examples.R
-import com.judokit.android.examples.feature.JUDO_PAYMENT_WIDGET_REQUEST_CODE
 import com.judopay.judokit.android.model.Amount
 import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.JudoPaymentResult
@@ -74,7 +74,7 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
         tokenPaymentButton.setOnClickListener {
             handleState(ActivityState.PayWithToken)
             service.tokenPayment(
-                getJudo(judo).toTokenRequest(cardToken, "452")
+                getJudo(judo).toTokenRequest(cardToken, securityCode = "452")
             )
                 .enqueue(this@DemoTokenPaymentActivity)
         }
@@ -82,7 +82,7 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
         preAuthTokenPaymentButton.setOnClickListener {
             handleState(ActivityState.PayWithPreAuthToken)
             service.preAuthTokenPayment(
-                getJudo(judo).toTokenRequest(cardToken, "452")
+                getJudo(judo).toTokenRequest(cardToken, securityCode = "452")
             )
                 .enqueue(this@DemoTokenPaymentActivity)
         }

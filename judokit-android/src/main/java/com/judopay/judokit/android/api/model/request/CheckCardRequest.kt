@@ -1,6 +1,8 @@
 package com.judopay.judokit.android.api.model.request
 
+import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
 import com.judopay.judokit.android.model.PrimaryAccountDetails
+import com.judopay.judokit.android.requireNotNull
 import com.judopay.judokit.android.requireNotNullOrEmpty
 
 class CheckCardRequest private constructor(
@@ -18,6 +20,11 @@ class CheckCardRequest private constructor(
     private var primaryAccountDetails: PrimaryAccountDetails?,
     private var yourPaymentMetaData: Map<String, String>?,
     private var initialRecurringPayment: Boolean?,
+    private var emailAddress: String?,
+    private var mobileNumber: String?,
+    private var phoneCountryCode: String?,
+    private var threeDSecure: ThreeDSecureTwo?,
+    private var cardHolderName: String?,
     private var amount: String = "0"
 ) {
     class Builder {
@@ -35,6 +42,11 @@ class CheckCardRequest private constructor(
         private var primaryAccountDetails: PrimaryAccountDetails? = null
         private var yourPaymentMetaData: Map<String, String>? = null
         private var initialRecurringPayment: Boolean? = null
+        private var threeDSecure: ThreeDSecureTwo? = null
+        private var cardHolderName: String? = null
+        private var phoneCountryCode: String? = null
+        private var emailAddress: String? = null
+        private var mobileNumber: String? = null
 
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
@@ -69,6 +81,18 @@ class CheckCardRequest private constructor(
         fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
             apply { this.initialRecurringPayment = initialRecurringPayment }
 
+        fun setEmailAddress(emailAddress: String?) = apply { this.emailAddress = emailAddress }
+
+        fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = mobileNumber }
+
+        fun setThreeDSecure(threeDSecureTwo: ThreeDSecureTwo?) = apply { this.threeDSecure = threeDSecureTwo }
+
+        fun setCardHolderName(cardHolderName: String?) =
+            apply { this.cardHolderName = cardHolderName }
+
+        fun setPhoneCountryCode(phoneCountryCode: String?) =
+            apply { this.phoneCountryCode = phoneCountryCode }
+
         fun build(): CheckCardRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myCurrency = requireNotNullOrEmpty(currency, "currency")
@@ -79,7 +103,8 @@ class CheckCardRequest private constructor(
             val myExpiryDate = requireNotNullOrEmpty(expiryDate, "expiryDate")
             val paymentReference =
                 requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
-            val myAddress = com.judopay.judokit.android.requireNotNull(address, "address")
+            val myAddress = requireNotNull(address, "address")
+            val myThreeDSecure = requireNotNull(threeDSecure, "threeDSecure")
 
             return CheckCardRequest(
                 uniqueRequest,
@@ -95,7 +120,12 @@ class CheckCardRequest private constructor(
                 myCurrency,
                 primaryAccountDetails,
                 yourPaymentMetaData,
-                initialRecurringPayment
+                initialRecurringPayment,
+                emailAddress,
+                mobileNumber,
+                phoneCountryCode,
+                myThreeDSecure,
+                cardHolderName
             )
         }
     }

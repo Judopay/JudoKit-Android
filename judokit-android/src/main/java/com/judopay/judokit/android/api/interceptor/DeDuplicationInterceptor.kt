@@ -17,7 +17,7 @@ internal class DeDuplicationInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
 
         val request = chain.request()
-        val body = request.body()
+        val body = request.body
 
         if (body != null) {
 

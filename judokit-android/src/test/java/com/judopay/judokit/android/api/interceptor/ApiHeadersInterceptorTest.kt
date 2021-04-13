@@ -54,7 +54,7 @@ internal class ApiHeadersInterceptorTest {
         val recordedRequest = makeRequest("/")
 
         assertEquals(
-            authorization.build().headers.get("Authorization"),
+            authorization.build().headers["Authorization"],
             recordedRequest.getHeader("Authorization")
         )
     }

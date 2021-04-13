@@ -6,6 +6,7 @@ import com.judopay.judokit.android.api.model.Authorization
 import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.model.Amount
 import com.judopay.judokit.android.model.CardNetwork
+import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.GooglePayConfiguration
 import com.judopay.judokit.android.model.PBBAConfiguration
@@ -13,6 +14,7 @@ import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.PrimaryAccountDetails
 import com.judopay.judokit.android.model.Reference
+import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.model.UiConfiguration
 import com.judopay.judokit.android.ui.common.REGEX_JUDO_ID
 import kotlinx.android.parcel.Parcelize
@@ -40,6 +42,9 @@ const val PAYMENT_CANCELLED = Activity.RESULT_FIRST_USER + 2
 /** Judo activity result: operation error  */
 const val PAYMENT_ERROR = Activity.RESULT_FIRST_USER + 3
 
+/** Default 3DS 2.0 maximum timeout value */
+private const val DEFAULT_MAX_TIMEOUT = 120
+
 /**
  * Judo configuration object that is required for initiating a payment.
  */
@@ -58,7 +63,13 @@ class Judo internal constructor(
     val paymentWidgetType: PaymentWidgetType,
     val address: Address?,
     val pbbaConfiguration: PBBAConfiguration?,
-    val initialRecurringPayment: Boolean?
+    val initialRecurringPayment: Boolean?,
+    val challengeRequestIndicator: ChallengeRequestIndicator?,
+    val scaExemption: ScaExemption?,
+    val mobileNumber: String?,
+    val phoneCountryCode: String?,
+    val emailAddress: String?,
+    val threeDSTwoMaxTimeout: Int
 ) : Parcelable {
 
     /**
@@ -79,6 +90,12 @@ class Judo internal constructor(
         private var address: Address? = null
         private var pbbaConfiguration: PBBAConfiguration? = null
         private var initialRecurringPayment: Boolean? = null
+        private var challengeRequestIndicator: ChallengeRequestIndicator? = null
+        private var scaExemption: ScaExemption? = null
+        private var mobileNumber: String? = null
+        private var phoneCountryCode: String? = null
+        private var emailAddress: String? = null
+        private var threeDSTwoMaxTimeout: Int? = null
 
         /**
          * Sets the unique merchant ID
@@ -185,6 +202,46 @@ class Judo internal constructor(
             apply { this.initialRecurringPayment = initialRecurringPayment }
 
         /**
+         * Sets the value for challenge request indicator.
+         * @param challengeRequestIndicator Enum value [ChallengeRequestIndicator].
+         */
+        fun setChallengeRequestIndicator(challengeRequestIndicator: ChallengeRequestIndicator?) =
+            apply { this.challengeRequestIndicator = challengeRequestIndicator }
+
+        /**
+         * Sets the value for SCA exemption.
+         * @param scaExemption Enum value [ScaExemption].
+         */
+        fun setScaExemption(scaExemption: ScaExemption?) =
+            apply { this.scaExemption = scaExemption }
+
+        /**
+         * Sets the cardholder's mobile number.
+         * @param mobileNumber the mobile number of the cardholder.
+         */
+        fun setMobileNumber(mobileNumber: String?) =
+            apply { this.mobileNumber = mobileNumber }
+
+        /**
+         * Sets the cardholder's email address.
+         * @param emailAddress the email address of the cardholder.
+         */
+        fun setEmailAddress(emailAddress: String?) =
+            apply { this.emailAddress = emailAddress }
+
+        /**
+         * Sets the maximum timeout for 3DS 2.0 transactions.
+         * @param maxTimeout max timeout in minutes.
+         */
+        fun setThreeDSTwoMaxTimeout(maxTimeout: Int?) =
+            apply { this.threeDSTwoMaxTimeout = maxTimeout }
+
+        /**
+         * Sets phone country code.
+         */
+        fun setPhoneCountryCode(phoneCountryCode: String?) = apply { this.phoneCountryCode = phoneCountryCode }
+
+        /**
          * Method that initializes Judo configuration object that can be used for
          * processing a payment.
          * @return A new Judo object that can be added to an intent with [JUDO_OPTIONS] key
@@ -228,6 +285,19 @@ class Judo internal constructor(
                 checkNotNull(supportedCardNetworks)
             }
 
+            val isPbbaAddressConfigMissing =
+                (pbbaConfiguration?.emailAddress.isNullOrEmpty() && !emailAddress.isNullOrEmpty()) || (pbbaConfiguration?.mobileNumber.isNullOrEmpty() || !mobileNumber.isNullOrEmpty())
+
+            val myPBBAConfiguration = if (pbbaConfiguration != null && isPbbaAddressConfigMissing)
+                PBBAConfiguration.Builder()
+                    .setAppearsOnStatementAs(pbbaConfiguration?.appearsOnStatement)
+                    .setDeepLinkScheme(pbbaConfiguration?.deepLinkScheme)
+                    .setDeepLinkURL(pbbaConfiguration?.deepLinkURL)
+                    .setEmailAddress(pbbaConfiguration?.emailAddress ?: emailAddress)
+                    .setMobileNumber(pbbaConfiguration?.mobileNumber ?: mobileNumber)
+                    .build()
+            else pbbaConfiguration
+
             return Judo(
                 id,
                 myAuthorization,
@@ -241,8 +311,14 @@ class Judo internal constructor(
                 googlePayConfiguration,
                 paymentWidgetType,
                 address,
-                pbbaConfiguration,
-                initialRecurringPayment
+                myPBBAConfiguration,
+                initialRecurringPayment,
+                challengeRequestIndicator,
+                scaExemption,
+                mobileNumber,
+                phoneCountryCode,
+                emailAddress,
+                threeDSTwoMaxTimeout ?: DEFAULT_MAX_TIMEOUT
             )
         }
 
@@ -273,6 +349,6 @@ class Judo internal constructor(
     }
 
     override fun toString(): String {
-        return "Judo(judoId='$judoId', authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration)"
+        return "Judo(judoId='$judoId', authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration, initialRecurringPayment=$initialRecurringPayment, challengeRequestIndicator=$challengeRequestIndicator, scaExemption=$scaExemption)"
     }
 }

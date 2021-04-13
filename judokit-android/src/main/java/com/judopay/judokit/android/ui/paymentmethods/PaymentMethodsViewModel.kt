@@ -8,25 +8,16 @@ import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
 import androidx.lifecycle.viewModelScope
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.R
-import com.judopay.judokit.android.api.JudoApiService
-import com.judopay.judokit.android.api.model.request.Address
-import com.judopay.judokit.android.api.model.request.TokenRequest
 import com.judopay.judokit.android.api.model.response.CardDate
-import com.judopay.judokit.android.api.model.response.CardToken
-import com.judopay.judokit.android.api.model.response.Consumer
-import com.judopay.judokit.android.api.model.response.JudoApiCallResult
-import com.judopay.judokit.android.api.model.response.Receipt
-import com.judopay.judokit.android.db.entity.TokenizedCardEntity
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.Currency
+import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentMethod
-import com.judopay.judokit.android.model.PaymentWidgetType
-import com.judopay.judokit.android.model.displayName
 import com.judopay.judokit.android.model.formatted
 import com.judopay.judokit.android.model.paymentButtonType
-import com.judopay.judokit.android.model.typeId
-import com.judopay.judokit.android.toMap
+import com.judopay.judokit.android.service.CardTransactionCallback
+import com.judopay.judokit.android.service.CardTransactionService
 import com.judopay.judokit.android.ui.common.ButtonState
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.IdealBank
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.IdealBankItem
@@ -51,8 +42,6 @@ import com.judopay.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentMethodModel
 import com.zapp.library.merchant.util.PBBAAppUtils
 import kotlinx.coroutines.launch
-import retrofit2.await
-import java.util.Date
 
 // view-model actions
 sealed class PaymentMethodsAction {
@@ -75,7 +64,7 @@ sealed class PaymentMethodsAction {
 internal class PaymentMethodsViewModelFactory(
     private val cardDate: CardDate,
     private val cardRepository: TokenizedCardRepository,
-    private val service: JudoApiService,
+    private val cardTransactionService: CardTransactionService,
     private val application: Application,
     private val judo: Judo
 ) : NewInstanceFactory() {
@@ -85,7 +74,7 @@ internal class PaymentMethodsViewModelFactory(
             PaymentMethodsViewModel(
                 cardDate,
                 cardRepository,
-                service,
+                cardTransactionService,
                 application,
                 judo
             ) as T
@@ -96,13 +85,13 @@ internal class PaymentMethodsViewModelFactory(
 class PaymentMethodsViewModel(
     private val cardDate: CardDate,
     private val cardRepository: TokenizedCardRepository,
-    private val service: JudoApiService,
+    private val cardTransactionService: CardTransactionService,
     application: Application,
     private val judo: Judo
 ) : AndroidViewModel(application) {
 
     val model = MutableLiveData<PaymentMethodsModel>()
-    val judoApiCallResult = MutableLiveData<JudoApiCallResult<Receipt>>()
+    val judoPaymentResult = MutableLiveData<JudoPaymentResult>()
     val payWithIdealObserver = MutableLiveData<Event<String>>()
     val payWithPayByBankObserver = MutableLiveData<Event<Nothing>>()
     val selectedCardNetworkObserver = MutableLiveData<Event<CardNetwork>>()
@@ -204,37 +193,23 @@ class PaymentMethodsViewModel(
         val card = paymentMethod.selectedCard
         card?.let {
             val entity = cardRepository.findWithId(it.id)
-            if (judo.paymentWidgetType == PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS) {
-                buildReceipt(entity)
-            } else {
-                val request = TokenRequest.Builder()
-                    .setAmount(judo.amount.amount)
-                    .setCurrency(judo.amount.currency.name)
-                    .setJudoId(judo.judoId)
-                    .setYourPaymentReference(judo.reference.paymentReference)
-                    .setYourConsumerReference(judo.reference.consumerReference)
-                    .setYourPaymentMetaData(judo.reference.metaData?.toMap())
-                    .setCardLastFour(entity.ending)
-                    .setCardToken(entity.token)
-                    .setCardType(entity.network.typeId)
-                    .setCv2(securityCode)
-                    .setAddress(Address.Builder().build())
-                    .setInitialRecurringPayment(judo.initialRecurringPayment)
-                    .build()
 
-                val response = when (judo.paymentWidgetType) {
-                    PaymentWidgetType.PAYMENT_METHODS -> service.tokenPayment(request).await()
-                    PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> service.preAuthTokenPayment(
-                        request
-                    ).await()
-                    else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
+            val cardTransactionCallback = object : CardTransactionCallback {
+                override fun onFinish(result: JudoPaymentResult) {
+                    viewModelScope.launch {
+                        cardRepository.updateAllLastUsedToFalse()
+                        cardRepository.insert(entity.apply { isLastUsed = true })
+                        buildModel()
+                        judoPaymentResult.postValue(result)
+                    }
                 }
-                cardRepository.updateAllLastUsedToFalse()
-                cardRepository.insert(entity.apply { isLastUsed = true })
-
-                buildModel()
-                judoApiCallResult.postValue(response)
             }
+
+            cardTransactionService.tokenPayment(
+                entity,
+                securityCode,
+                cardTransactionCallback
+            )
         }
     }
 
@@ -386,24 +361,6 @@ class PaymentMethodsViewModel(
         }.isAfterToday ->
             ButtonState.Enabled(R.string.pay_now)
         else -> ButtonState.Disabled(R.string.pay_now)
-    }
-
-    private fun buildReceipt(card: TokenizedCardEntity) = with(card) {
-        val receipt = Receipt(
-            judoId = judo.judoId.toLong(),
-            yourPaymentReference = judo.reference.paymentReference,
-            createdAt = Date(),
-            amount = judo.amount.amount.toBigDecimal(),
-            currency = judo.amount.currency.name,
-            consumer = Consumer(yourConsumerReference = judo.reference.consumerReference),
-            cardDetails = CardToken(
-                lastFour = ending,
-                token = token,
-                type = network.typeId,
-                scheme = network.displayName
-            )
-        )
-        judoApiCallResult.postValue(JudoApiCallResult.Success(receipt))
     }
 
     private fun filterPaymentMethods(allMethods: List<PaymentMethod>): List<PaymentMethod> {

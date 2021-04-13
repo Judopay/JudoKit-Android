@@ -1,5 +1,6 @@
 package com.judopay.judokit.android.api.model.request
 
+import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
 import com.judopay.judokit.android.model.PrimaryAccountDetails
 import com.judopay.judokit.android.requireNotNull
 import com.judopay.judokit.android.requireNotNullOrEmpty
@@ -21,9 +22,12 @@ class RegisterCardRequest private constructor(
     private var issueNumber: String?,
     private var emailAddress: String?,
     private var mobileNumber: String?,
+    private var phoneCountryCode: String?,
     private var primaryAccountDetails: PrimaryAccountDetails?,
     private var amount: String,
-    private var initialRecurringPayment: Boolean?
+    private var initialRecurringPayment: Boolean?,
+    private var threeDSecure: ThreeDSecureTwo?,
+    private var cardHolderName: String?
 ) {
     class Builder {
         private var uniqueRequest: Boolean? = null
@@ -43,6 +47,9 @@ class RegisterCardRequest private constructor(
         private var primaryAccountDetails: PrimaryAccountDetails? = null
         private var amount: String? = null
         private var initialRecurringPayment: Boolean? = null
+        private var threeDSecure: ThreeDSecureTwo? = null
+        private var cardHolderName: String? = null
+        private var phoneCountryCode: String? = null
 
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
@@ -84,6 +91,14 @@ class RegisterCardRequest private constructor(
         fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
             apply { this.initialRecurringPayment = initialRecurringPayment }
 
+        fun setThreeDSecure(threeDSecureTwo: ThreeDSecureTwo?) = apply { this.threeDSecure = threeDSecureTwo }
+
+        fun setCardHolderName(cardHolderName: String?) =
+            apply { this.cardHolderName = cardHolderName }
+
+        fun setPhoneCountryCode(phoneCountryCode: String?) =
+            apply { this.phoneCountryCode = phoneCountryCode }
+
         fun build(): RegisterCardRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myCurrency = requireNotNullOrEmpty(currency, "currency")
@@ -96,6 +111,7 @@ class RegisterCardRequest private constructor(
                 requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
             val myAddress = requireNotNull(address, "address")
             val myAmount = if (amount.isNullOrEmpty()) DEFAULT_AMOUNT else amount!!
+            val myThreeDSecure = requireNotNull(threeDSecure)
 
             return RegisterCardRequest(
                 uniqueRequest,
@@ -112,9 +128,12 @@ class RegisterCardRequest private constructor(
                 issueNumber,
                 emailAddress,
                 mobileNumber,
+                phoneCountryCode,
                 primaryAccountDetails,
                 myAmount,
-                initialRecurringPayment
+                initialRecurringPayment,
+                myThreeDSecure,
+                cardHolderName
             )
         }
     }

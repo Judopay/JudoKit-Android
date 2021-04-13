@@ -17,17 +17,13 @@ import cards.pay.paycardsrecognizer.sdk.ScanCardIntent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.judopay.judo3ds2.model.ConfigParameters
+import com.judopay.judo3ds2.service.ThreeDS2ServiceImpl
 import com.judopay.judokit.android.JudoSharedViewModel
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.SCAN_CARD_REQUEST_CODE
 import com.judopay.judokit.android.api.JudoApiService
-import com.judopay.judokit.android.api.error.toJudoError
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
-import com.judopay.judokit.android.api.model.response.JudoApiCallResult
-import com.judopay.judokit.android.api.model.response.Receipt
-import com.judopay.judokit.android.api.model.response.toCardVerificationModel
-import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
-import com.judopay.judokit.android.api.model.response.toJudoResult
 import com.judopay.judokit.android.db.JudoRoomDatabase
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.judo
@@ -35,10 +31,10 @@ import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.isCardPaymentWidget
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
+import com.judopay.judokit.android.service.CardTransactionService
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldType
-import com.judopay.judokit.android.ui.cardverification.THREE_DS_ONE_DIALOG_FRAGMENT_TAG
-import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCardVerificationDialogFragment
 import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
+import com.judopay.judokit.android.ui.common.getLocale
 import com.judopay.judokit.android.ui.paymentmethods.CARD_NETWORK
 import kotlinx.android.synthetic.main.card_entry_fragment.*
 
@@ -46,6 +42,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
 
     private lateinit var viewModel: CardEntryViewModel
     private lateinit var service: JudoApiService
+    private val threeDS2Service = ThreeDS2ServiceImpl()
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
 
     override fun getTheme(): Int = R.style.JudoTheme_BottomSheetDialogTheme
@@ -58,9 +55,12 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
         service = JudoApiServiceFactory.createApiService(application, judo)
         val selectedCardNetwork = arguments?.getParcelable<CardNetwork>(CARD_NETWORK)
+        threeDS2Service.initialize(requireActivity(), ConfigParameters(), getLocale(resources), null)
+        val cardTransactionService =
+            CardTransactionService(requireActivity(), judo, service, threeDS2Service)
         val factory = CardEntryViewModelFactory(
             judo,
-            service,
+            cardTransactionService,
             cardRepository,
             selectedCardNetwork,
             application
@@ -73,7 +73,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         }
 
         viewModel.model.observe(viewLifecycleOwner, { updateWithModel(it) })
-        viewModel.judoApiCallResult.observe(viewLifecycleOwner, { dispatchApiResult(it) })
+        viewModel.judoPaymentResult.observe(viewLifecycleOwner, { dispatchResult(it) })
         viewModel.securityCodeResult.observe(
             viewLifecycleOwner,
             {
@@ -105,7 +105,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        cancelButton.setOnClickListener(this::onUserCancelled)
+        cancelButton.setOnClickListener { onUserCancelled() }
         scanCardButton.setOnClickListener { handleScanCardButtonClicks() }
 
         formView.apply {
@@ -128,12 +128,17 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        onUserCancelled(cancelButton)
+        onUserCancelled()
     }
 
-    private fun onUserCancelled(view: View) {
+    override fun onDestroy() {
+        threeDS2Service.cleanup(requireActivity())
+        super.onDestroy()
+    }
+
+    private fun onUserCancelled() {
         // disable the button
-        view.isEnabled = false
+        cancelButton.isEnabled = false
 
         if (judo.paymentWidgetType.isPaymentMethodsWidget) {
             findNavController().popBackStack()
@@ -151,7 +156,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         formView.model = model.formModel
     }
 
-    private fun dispatchApiResult(result: JudoApiCallResult<Receipt>) {
+    private fun dispatchResult(result: JudoPaymentResult) {
         if (judo.paymentWidgetType.isPaymentMethodsWidget) {
             // we're pushed on top of the payment methods fragment
             // we need to persist the card and that should trigger an update in the payment methods screen
@@ -165,36 +170,36 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
 
         // in any other cases we're the only fragment in the stack,
         // so push the result to the parent activity
-        sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult(resources))
+        sharedViewModel.paymentResult.postValue(result)
     }
 
-    private fun dispatchCardPaymentApiResult(result: JudoApiCallResult<Receipt>) {
+    private fun dispatchCardPaymentApiResult(result: JudoPaymentResult) {
         when (result) {
-            is JudoApiCallResult.Success -> handleSuccess(result.data)
-            is JudoApiCallResult.Failure -> if (result.error != null) sharedViewModel.paymentResult.postValue(
-                JudoPaymentResult.Error(result.error.toJudoError())
-            )
-        }
-    }
-
-    private fun dispatchPaymentMethodsApiResult(result: JudoApiCallResult<Receipt>) {
-        when (result) {
-            is JudoApiCallResult.Success -> persistTokenizedCard(result)
-            is JudoApiCallResult.Failure -> sharedViewModel.paymentResult.postValue(
-                result.toJudoPaymentResult(
-                    resources
+            is JudoPaymentResult.Success -> sharedViewModel.paymentResult.postValue(result)
+            is JudoPaymentResult.Error -> sharedViewModel.paymentResult.postValue(
+                JudoPaymentResult.Error(
+                    result.error
                 )
             )
+            is JudoPaymentResult.UserCancelled -> onUserCancelled()
         }
     }
 
-    private fun persistTokenizedCard(result: JudoApiCallResult.Success<Receipt>) {
-        val cardDetails = result.data?.cardDetails
+    private fun dispatchPaymentMethodsApiResult(result: JudoPaymentResult) {
+        when (result) {
+            is JudoPaymentResult.Success -> persistTokenizedCard(result)
+            is JudoPaymentResult.Error -> sharedViewModel.paymentResult.postValue(result)
+            is JudoPaymentResult.UserCancelled -> onUserCancelled()
+        }
+    }
+
+    private fun persistTokenizedCard(result: JudoPaymentResult.Success) {
+        val cardDetails = result.result.cardDetails
         if (cardDetails != null) {
             viewModel.send(CardEntryAction.InsertCard(cardDetails))
             findNavController().popBackStack()
         } else {
-            sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult(resources))
+            sharedViewModel.paymentResult.postValue(result)
         }
     }
 
@@ -228,20 +233,6 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
             }
 
             decorView.setOnApplyWindowInsetsListener(insetsListener)
-        }
-    }
-
-    private fun handleSuccess(receipt: Receipt?) {
-        if (receipt != null) {
-            if (receipt.is3dSecureRequired) {
-                ThreeDSOneCardVerificationDialogFragment(
-                    service,
-                    receipt.toCardVerificationModel(),
-                    this
-                ).show(childFragmentManager, THREE_DS_ONE_DIALOG_FRAGMENT_TAG)
-            } else {
-                sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(receipt.toJudoResult()))
-            }
         }
     }
 
