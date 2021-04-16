@@ -306,6 +306,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val challengeRequestIndicator = sharedPreferences.getString("challengeRequestIndicator", null)?.let { ChallengeRequestIndicator.valueOf(it) }
         val scaExemption = sharedPreferences.getString("scaExemption", null)?.let { ScaExemption.valueOf(it) }
         val threeDSTwoMaxTimeout = sharedPreferences.getString("threeDSTwoMaxTimeout", null)?.toInt()
+        val is3DS2Enabled = sharedPreferences.getBoolean("is_3DS2_enabled", false)
 
         return Judo.Builder(widgetType)
             .setJudoId(judoId)
@@ -326,6 +327,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setChallengeRequestIndicator(challengeRequestIndicator)
             .setScaExemption(scaExemption)
             .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
+            .set3DS2Enabled(is3DS2Enabled)
             .build()
     }
 

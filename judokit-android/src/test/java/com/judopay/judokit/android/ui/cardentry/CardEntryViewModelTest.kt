@@ -173,7 +173,7 @@ internal class CardEntryViewModelTest {
         sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
         sut.model.observeForever(modelMock)
 
-        sut.send(CardEntryAction.SubmitForm)
+        sut.send(CardEntryAction.SubmitCardEntryForm)
 
         verify { modelMock.onChanged(capture(slots)) }
 
@@ -187,7 +187,7 @@ internal class CardEntryViewModelTest {
         sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
-        sut.send(CardEntryAction.SubmitForm)
+        sut.send(CardEntryAction.SubmitCardEntryForm)
 
         coVerify { cardTransactionService.makeTransaction(any(), any()) }
     }
@@ -200,7 +200,7 @@ internal class CardEntryViewModelTest {
         sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
-        sut.send(CardEntryAction.SubmitForm)
+        sut.send(CardEntryAction.SubmitCardEntryForm)
 
         coVerify { cardTransactionService.makeTransaction(any(), any()) }
     }
@@ -213,7 +213,7 @@ internal class CardEntryViewModelTest {
         sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
-        sut.send(CardEntryAction.SubmitForm)
+        sut.send(CardEntryAction.SubmitCardEntryForm)
 
         coVerify { cardTransactionService.makeTransaction(any(), any()) }
     }
@@ -226,7 +226,7 @@ internal class CardEntryViewModelTest {
         sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
-        sut.send(CardEntryAction.SubmitForm)
+        sut.send(CardEntryAction.SubmitCardEntryForm)
 
         coVerify { cardTransactionService.makeTransaction(any(), any()) }
     }
@@ -239,7 +239,7 @@ internal class CardEntryViewModelTest {
         sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
-        sut.send(CardEntryAction.SubmitForm)
+        sut.send(CardEntryAction.SubmitCardEntryForm)
 
         coVerify { cardTransactionService.makeTransaction(any(), any()) }
     }
@@ -252,7 +252,7 @@ internal class CardEntryViewModelTest {
         sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
         try {
-            sut.send(CardEntryAction.SubmitForm)
+            sut.send(CardEntryAction.SubmitCardEntryForm)
         } catch (e: IllegalStateException) {
             assertEquals(IllegalStateException::class.java, e::class.java)
         }
@@ -268,7 +268,7 @@ internal class CardEntryViewModelTest {
         sut.judoPaymentResult.observeForever(judoPaymentResultMock)
 
         sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
-        sut.send(CardEntryAction.SubmitForm)
+        sut.send(CardEntryAction.SubmitCardEntryForm)
 
         cardTransactionCallback.captured.onFinish(expectedJudoPaymentResult)
 
@@ -290,7 +290,7 @@ internal class CardEntryViewModelTest {
         sut.securityCodeResult.observeForever(securityCodeResultMock)
 
         sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
-        sut.send(CardEntryAction.SubmitForm)
+        sut.send(CardEntryAction.SubmitCardEntryForm)
 
         verify { securityCodeResultMock.onChanged(capture(slots)) }
 

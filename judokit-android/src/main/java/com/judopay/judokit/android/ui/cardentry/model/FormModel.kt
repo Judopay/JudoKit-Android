@@ -8,8 +8,8 @@ data class FormModel(
     val inputModel: InputModel,
     val enabledFields: List<FormFieldType>,
     val supportedNetworks: List<CardNetwork>,
-    val paymentButtonState: ButtonState = ButtonState.Disabled(R.string.add_card),
-    val cardNetwork: CardNetwork? = null
+    val cardNetwork: CardNetwork? = null,
+    val buttonState: ButtonState = ButtonState.Disabled(R.string.add_card)
 )
 
 fun FormModel.valueOfFieldWithType(type: FormFieldType): String = with(inputModel) {

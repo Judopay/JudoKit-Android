@@ -33,19 +33,20 @@ import com.judopay.judokit.android.ui.cardentry.validation.ExpirationDateValidat
 import com.judopay.judokit.android.ui.cardentry.validation.PostcodeValidator
 import com.judopay.judokit.android.ui.cardentry.validation.SecurityCodeValidator
 import com.judopay.judokit.android.ui.common.PATTERN_CARD_EXPIRATION_DATE
-import kotlinx.android.synthetic.main.form_view.view.*
+import kotlinx.android.synthetic.main.card_entry_form_view.view.*
+import kotlinx.android.synthetic.main.card_entry_fragment.view.*
 
 internal typealias FormValidationStatus = (model: InputModel, isValid: Boolean) -> Unit
-internal typealias SubmitButtonClickListener = () -> Unit
+internal typealias CardEntryButtonClickListener = () -> Unit
 
-class FormView @JvmOverloads constructor(
+class CardEntryFormView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
 ) : FrameLayout(context, attrs, defStyle) {
 
     init {
-        inflate(R.layout.form_view, true)
+        inflate(R.layout.card_entry_form_view, true)
     }
 
     internal var model = FormModel(
@@ -59,7 +60,7 @@ class FormView @JvmOverloads constructor(
         }
 
     internal var onFormValidationStatusListener: FormValidationStatus? = null
-    internal var onSubmitButtonClickListener: SubmitButtonClickListener? = null
+    internal var onCardEntryButtonClickListener: CardEntryButtonClickListener? = null
 
     private val validationResultsCache = mutableMapOf<FormFieldType, Boolean>()
     private var validators = mutableListOf(
@@ -135,7 +136,7 @@ class FormView @JvmOverloads constructor(
     }
 
     private fun setupFieldsContent() {
-        submitButton.setOnClickListener { onSubmitButtonClickListener?.invoke() }
+        cardEntrySubmitButton.setOnClickListener { onCardEntryButtonClickListener?.invoke() }
 
         FormFieldType.values().forEach { type ->
             editTextForType(type).apply {
@@ -234,7 +235,7 @@ class FormView @JvmOverloads constructor(
             setupCountrySpinner()
         }
 
-        submitButton.state = model.paymentButtonState
+        cardEntrySubmitButton.state = model.buttonState
 
         preFillFields()
     }

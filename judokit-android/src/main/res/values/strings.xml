@@ -126,4 +126,6 @@
     <string name="country_usa">USA</string>
     <string name="country_canada">Canada</string>
     <string name="country_other">Other</string>
+
+    <string name="continue_text">Continue</string>
 </resources>

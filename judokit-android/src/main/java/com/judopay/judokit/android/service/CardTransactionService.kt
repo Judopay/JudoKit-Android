@@ -347,7 +347,7 @@ class CardTransactionService(
 
     override fun onFailure(error: JudoPaymentResult) {
         transaction.close()
-        callback.onFinish(error as JudoPaymentResult.Error)
+        callback.onFinish(error)
     }
 
     override fun cancelled() {

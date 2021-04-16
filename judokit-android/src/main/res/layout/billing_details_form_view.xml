@@ -1,26 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:clipToPadding="false"
-    android:paddingStart="@dimen/space_24"
-    android:paddingEnd="@dimen/space_24"
-    android:paddingBottom="@dimen/space_12"
-    tools:background="@color/white">
+    android:id="@+id/billingContainer"
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/billingDetailsTextView"
-        style="@style/JudoTheme.TextView"
-        android:layout_width="wrap_content"
+    <androidx.core.widget.NestedScrollView
+        app:layout_anchor="@null"
+        android:id="@+id/billingDetailsScrollView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Billing Details"
-        android:textSize="@dimen/text_size_18"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@color/jpDarkGrayColor"
-        />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_marginBottom="56dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/space_24"
+            android:paddingEnd="@dimen/space_24"
+            android:paddingBottom="@dimen/space_12"
+            tools:background="@color/white">
+
+            <TextView
+                android:id="@+id/billingDetailsTextView"
+                style="@style/JudoTheme.TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Billing Details"
+                android:textColor="@color/jpDarkGrayColor"
+                android:textSize="@dimen/text_size_18"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
     <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
         android:id="@+id/emailTextInputLayout"
@@ -171,42 +183,50 @@
             tools:text="S60 5NX" />
 
     </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
-    <com.judopay.judokit.android.ui.common.ProgressButton
-        android:id="@+id/backButton"
-        style="@style/JudoTheme.TextButton"
-        android:layout_width="100dp"
-        android:layout_height="@dimen/button_height"
-        android:layout_marginTop="@dimen/space_16"
-        android:minWidth="@dimen/min_touch_target_size"
-        android:text="Back"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/postalCodeTextInputLayout" />
-
-    <com.judopay.judokit.android.ui.common.ProgressButton
-        android:id="@+id/submitButton"
-        style="@style/JudoTheme.BlackRoundedButton"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/button_height"
-        android:layout_marginTop="@dimen/space_16"
-        android:minWidth="@dimen/min_touch_target_size"
-        android:text="@string/pay_now"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/backButton"
-        app:layout_constraintTop_toBottomOf="@id/postalCodeTextInputLayout"/>
-
-    <TextView
-        android:id="@+id/secureTransmissionTextView"
-        style="@style/JudoTheme.Caption"
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/cardEntryBottomAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_8"
-        android:drawableStart="@drawable/ic_lock_20dp"
-        android:drawablePadding="@dimen/space_8"
-        android:text="@string/secure_server_transmission"
-        android:textColor="@color/brown_grey"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_gravity="bottom">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/space_24">
+            <com.judopay.judokit.android.ui.common.ProgressButton
+                android:id="@+id/billingDetailsBackButton"
+                style="@style/JudoTheme.TextButton"
+                android:layout_width="100dp"
+                android:layout_height="@dimen/button_height"
+                android:minWidth="@dimen/min_touch_target_size"
+                android:text="Back"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.judopay.judokit.android.ui.common.ProgressButton
+                android:id="@+id/billingDetailsSubmitButton"
+                style="@style/JudoTheme.BlackRoundedButton"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:minWidth="@dimen/min_touch_target_size"
+                android:text="@string/pay_now"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/billingDetailsBackButton"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.bottomappbar.BottomAppBar>
+    <View
+        android:outlineProvider="none"
+        android:elevation="10dp"
+        android:id="@+id/bottomAppBarShadowBlocker"
+        android:background="@color/white"
+        app:layout_anchorGravity="top"
+        app:layout_anchor="@id/cardEntryBottomAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submitButton" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintStart_toStartOf="parent"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

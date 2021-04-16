@@ -9,5 +9,13 @@ data class InputModel(
     val expirationDate: String = "",
     val securityNumber: String = "",
     val country: String = Country.GB.displayName,
-    val postCode: String = ""
+    val postCode: String = "",
+    val email: String = "",
+    val phoneCountryCode: String = "",
+    val mobileNumber: String = "",
+    val addressLine1: String = "",
+    val addressLine2: String = "",
+    val addressLine3: String = "",
+    val city: String = "",
+    val postalCode: String = ""
 )
