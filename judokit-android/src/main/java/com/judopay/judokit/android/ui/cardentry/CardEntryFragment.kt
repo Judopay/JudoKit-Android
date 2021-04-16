@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import android.view.animation.AnimationUtils
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -42,9 +41,6 @@ import com.judopay.judokit.android.ui.cardentry.model.FormFieldType
 import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
 import com.judopay.judokit.android.ui.common.getLocale
 import com.judopay.judokit.android.ui.paymentmethods.CARD_NETWORK
-import com.judopay.judokit.android.ui.paymentmethods.model.CardAnimationType
-import com.judopay.judokit.android.ui.paymentmethods.model.inAnimation
-import com.judopay.judokit.android.ui.paymentmethods.model.outAnimation
 import kotlinx.android.synthetic.main.billing_details_form_view.*
 import kotlinx.android.synthetic.main.card_entry_form_view.*
 import kotlinx.android.synthetic.main.card_entry_fragment.*
@@ -101,16 +97,22 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
             }
         )
 
-        viewModel.navigationObserver.observe(viewLifecycleOwner, {
-            bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            when (it) {
-                is CardEntryNavigation.Card -> cardEntryViewAnimator.displayedChild = 0
-                is CardEntryNavigation.Billing -> cardEntryViewAnimator.displayedChild = 1
+        viewModel.navigationObserver.observe(
+            viewLifecycleOwner,
+            {
+                bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                when (it) {
+                    is CardEntryNavigation.Card -> cardEntryViewAnimator.displayedChild = 0
+                    is CardEntryNavigation.Billing -> cardEntryViewAnimator.displayedChild = 1
+                }
+                Handler(Looper.getMainLooper()).postDelayed(
+                    {
+                        bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    },
+                    1000
+                )
             }
-            Handler(Looper.getMainLooper()).postDelayed({
-                bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            }, 1000)
-        })
+        )
 
         sharedViewModel.scanCardResult.observe(
             viewLifecycleOwner,
@@ -124,7 +126,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
     override fun onCreateDialog(savedInstanceState: Bundle?) =
         BottomSheetDialog(requireContext(), theme).apply {
             behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            behavior.peekHeight =  200
+            behavior.peekHeight = 200
         }
 
     override fun onCreateView(
@@ -139,25 +141,36 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         scanCardButton.setOnClickListener { handleScanCardButtonClicks() }
 
         formView.apply {
-            onFormValidationStatusListener = { model, isValid -> viewModel.send(CardEntryAction.ValidationStatusChanged(model, isValid)) }
+            onFormValidationStatusListener = { model, isValid ->
+                viewModel.send(
+                    CardEntryAction.ValidationStatusChanged(
+                        model,
+                        isValid
+                    )
+                )
+            }
             onCardEntryButtonClickListener = { viewModel.send(CardEntryAction.SubmitCardEntryForm) }
         }
         billingDetailsFormView.apply {
-            onBillingDetailsBackButtonClickListener = { viewModel.send(CardEntryAction.PressBackButton) }
-            onBillingDetailsSubmitButtonClickListener = { viewModel.send(CardEntryAction.SubmitBillingDetailsForm) }
+            onBillingDetailsBackButtonClickListener =
+                { viewModel.send(CardEntryAction.PressBackButton) }
+            onBillingDetailsSubmitButtonClickListener =
+                { viewModel.send(CardEntryAction.SubmitBillingDetailsForm) }
         }
 
         // Show/Hide view that covers bottomAppBar upper shadow based on scroll
-        billingDetailsScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
-            val autoTransition = AutoTransition()
-            autoTransition.duration = 200
-            TransitionManager.beginDelayedTransition(billingContainer, autoTransition)
-            if (v.canScrollVertically(1)) {
-                bottomAppBarShadowBlocker.visibility = View.INVISIBLE
-            } else {
-                bottomAppBarShadowBlocker.visibility = View.VISIBLE
+        billingDetailsScrollView.setOnScrollChangeListener(
+            NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
+                val autoTransition = AutoTransition()
+                autoTransition.duration = 200
+                TransitionManager.beginDelayedTransition(billingContainer, autoTransition)
+                if (v.canScrollVertically(1)) {
+                    bottomAppBarShadowBlocker.visibility = View.INVISIBLE
+                } else {
+                    bottomAppBarShadowBlocker.visibility = View.VISIBLE
+                }
             }
-        })
+        )
 
         // Prevents bottom sheet dialog to jump around when animating.
         val transition = LayoutTransition()
@@ -297,6 +310,6 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         sharedViewModel.paymentResult.postValue((error))
     }
 
-    private val bottomSheetDialog:BottomSheetDialog
-    get() = dialog as BottomSheetDialog
+    private val bottomSheetDialog: BottomSheetDialog
+        get() = dialog as BottomSheetDialog
 }

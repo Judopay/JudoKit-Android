@@ -30,8 +30,8 @@ import kotlinx.coroutines.launch
 private const val PAY_CARDS_DEPENDENCY = "cards.pay.paycardsrecognizer.sdk.ScanCardIntent"
 
 sealed class CardEntryNavigation {
-    object Card: CardEntryNavigation()
-    object Billing: CardEntryNavigation()
+    object Card : CardEntryNavigation()
+    object Billing : CardEntryNavigation()
 }
 
 data class CardEntryFragmentModel(val formModel: FormModel, val displayScanButton: Boolean = true, val isOnCardEntryForm: Boolean = true)
@@ -240,7 +240,6 @@ class CardEntryViewModel(
                 isFormValid -> ButtonState.Enabled(continueButtonText, amount)
                 else -> ButtonState.Disabled(continueButtonText, amount)
             }
-
         } else {
             when {
                 isLoading -> ButtonState.Loading
