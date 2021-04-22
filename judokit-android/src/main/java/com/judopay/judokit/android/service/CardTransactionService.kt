@@ -32,10 +32,10 @@ import com.judopay.judokit.android.db.entity.TokenizedCardEntity
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentWidgetType
+import com.judopay.judokit.android.model.TransactionDetail
 import com.judopay.judokit.android.model.displayName
 import com.judopay.judokit.android.model.typeId
 import com.judopay.judokit.android.toMap
-import com.judopay.judokit.android.ui.cardentry.model.InputModel
 import com.judopay.judokit.android.ui.cardverification.THREE_DS_ONE_DIALOG_FRAGMENT_TAG
 import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCardVerificationDialogFragment
 import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
@@ -60,34 +60,30 @@ class CardTransactionService(
     lateinit var transaction: Transaction
     private var progressDialog: ProgressDialog? = null
 
-    suspend fun makeTransaction(inputModel: InputModel, callback: CardTransactionCallback) {
+    suspend fun makeTransaction(transactionDetail: TransactionDetail, callback: CardTransactionCallback) {
         try {
             this.callback = callback
             transaction = threeDS2Service.createTransaction("F000000000", "2.2.0")
             val address = Address.Builder().apply {
-                setLine1(judo.address?.line1)
-                setLine2(judo.address?.line2)
-                setLine3(judo.address?.line3)
-                setTown(judo.address?.town)
-                setBillingCountry(judo.address?.billingCountry)
-                setPostCode(judo.address?.postCode)
-                setCountryCode(judo.address?.countryCode)
-                if (judo.uiConfiguration.avsEnabled) {
-                    setBillingCountry(inputModel.country)
-                    setPostCode(inputModel.postCode)
-                }
+                setLine1(transactionDetail.addressLine1)
+                setLine2(transactionDetail.addressLine2)
+                setLine3(transactionDetail.addressLine3)
+                setTown(transactionDetail.city)
+                setPostCode(transactionDetail.postalCode)
+                setCountryCode(transactionDetail.country?.toInt())
             }.build()
+
             val apiResult = when (judo.paymentWidgetType) {
-                PaymentWidgetType.CARD_PAYMENT -> performPaymentRequest(address, inputModel)
-                PaymentWidgetType.PRE_AUTH -> performPreAuthPaymentRequest(address, inputModel)
-                PaymentWidgetType.REGISTER_CARD -> performRegisterCardRequest(address, inputModel)
-                PaymentWidgetType.CHECK_CARD -> performCheckCardRequest(address, inputModel)
+                PaymentWidgetType.CARD_PAYMENT -> performPaymentRequest(address, transactionDetail)
+                PaymentWidgetType.PRE_AUTH -> performPreAuthPaymentRequest(address, transactionDetail)
+                PaymentWidgetType.REGISTER_CARD -> performRegisterCardRequest(address, transactionDetail)
+                PaymentWidgetType.CHECK_CARD -> performCheckCardRequest(address, transactionDetail)
                 PaymentWidgetType.CREATE_CARD_TOKEN,
                 PaymentWidgetType.PAYMENT_METHODS,
                 PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
                 PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS -> performSaveCardRequest(
                     address,
-                    inputModel
+                    transactionDetail
                 )
                 else -> throw IllegalStateException("Unsupported PaymentWidgetType")
             }
@@ -178,7 +174,7 @@ class CardTransactionService(
 
     private suspend fun performPaymentRequest(
         address: Address?,
-        inputModel: InputModel
+        inputModel: TransactionDetail
     ): JudoApiCallResult<Receipt> {
         val request = buildPaymentRequest(address, inputModel)
         return service.payment(request).await()
@@ -186,7 +182,7 @@ class CardTransactionService(
 
     private suspend fun performPreAuthPaymentRequest(
         address: Address?,
-        inputModel: InputModel
+        inputModel: TransactionDetail
     ): JudoApiCallResult<Receipt> {
         val request = buildPaymentRequest(address, inputModel)
         return service.preAuthPayment(request).await()
@@ -194,7 +190,7 @@ class CardTransactionService(
 
     private suspend fun performRegisterCardRequest(
         address: Address?,
-        inputModel: InputModel
+        inputModel: TransactionDetail
     ): JudoApiCallResult<Receipt> {
         val request = buildRegisterCardRequest(address, inputModel)
         return service.registerCard(request).await()
@@ -202,7 +198,7 @@ class CardTransactionService(
 
     private suspend fun performCheckCardRequest(
         address: Address?,
-        inputModel: InputModel
+        inputModel: TransactionDetail
     ): JudoApiCallResult<Receipt> {
         val request = buildCheckCardRequest(address, inputModel)
         return service.checkCard(request).await()
@@ -210,13 +206,13 @@ class CardTransactionService(
 
     private suspend fun performSaveCardRequest(
         address: Address?,
-        inputModel: InputModel
+        inputModel: TransactionDetail
     ): JudoApiCallResult<Receipt> {
         val request = buildSaveCardRequest(address, inputModel)
         return service.saveCard(request).await()
     }
 
-    private fun buildPaymentRequest(address: Address?, inputModel: InputModel) =
+    private fun buildPaymentRequest(address: Address?, inputModel: TransactionDetail) =
         PaymentRequest.Builder()
             .setUniqueRequest(false)
             .setYourPaymentReference(judo.reference.paymentReference)
@@ -232,15 +228,15 @@ class CardTransactionService(
             .setPrimaryAccountDetails(judo.primaryAccountDetails)
             .setInitialRecurringPayment(judo.initialRecurringPayment)
             .setCardHolderName(inputModel.cardHolderName)
-            .setMobileNumber(judo.mobileNumber)
-            .setEmailAddress(judo.emailAddress)
-            .setPhoneCountryCode(judo.phoneCountryCode)
+            .setMobileNumber(inputModel.mobileNumber)
+            .setEmailAddress(inputModel.email)
+            .setPhoneCountryCode(inputModel.phoneCountryCode)
             .setThreeDSecure(buildThreeDSecureParameters())
             .build()
 
     private fun buildRegisterCardRequest(
         address: Address?,
-        inputModel: InputModel
+        inputModel: TransactionDetail
     ) = RegisterCardRequest.Builder()
         .setUniqueRequest(false)
         .setYourPaymentReference(judo.reference.paymentReference)
@@ -257,12 +253,12 @@ class CardTransactionService(
         .setInitialRecurringPayment(judo.initialRecurringPayment)
         .setThreeDSecure(buildThreeDSecureParameters())
         .setCardHolderName(inputModel.cardHolderName)
-        .setMobileNumber(judo.mobileNumber)
-        .setEmailAddress(judo.emailAddress)
-        .setPhoneCountryCode(judo.phoneCountryCode)
+        .setMobileNumber(inputModel.mobileNumber)
+        .setEmailAddress(inputModel.email)
+        .setPhoneCountryCode(inputModel.phoneCountryCode)
         .build()
 
-    private fun buildSaveCardRequest(address: Address?, inputModel: InputModel) =
+    private fun buildSaveCardRequest(address: Address?, inputModel: TransactionDetail) =
         SaveCardRequest.Builder()
             .setUniqueRequest(false)
             .setYourPaymentReference(judo.reference.paymentReference)
@@ -277,7 +273,7 @@ class CardTransactionService(
             .setPrimaryAccountDetails(judo.primaryAccountDetails)
             .build()
 
-    private fun buildCheckCardRequest(address: Address?, inputModel: InputModel) =
+    private fun buildCheckCardRequest(address: Address?, inputModel: TransactionDetail) =
         CheckCardRequest.Builder()
             .setUniqueRequest(false)
             .setYourPaymentReference(judo.reference.paymentReference)
@@ -293,9 +289,9 @@ class CardTransactionService(
             .setInitialRecurringPayment(judo.initialRecurringPayment)
             .setThreeDSecure(buildThreeDSecureParameters())
             .setCardHolderName(inputModel.cardHolderName)
-            .setMobileNumber(judo.mobileNumber)
-            .setEmailAddress(judo.emailAddress)
-            .setPhoneCountryCode(judo.phoneCountryCode)
+            .setMobileNumber(inputModel.mobileNumber)
+            .setEmailAddress(inputModel.email)
+            .setPhoneCountryCode(inputModel.phoneCountryCode)
             .build()
 
     private fun buildThreeDSecureParameters(): ThreeDSecureTwo {

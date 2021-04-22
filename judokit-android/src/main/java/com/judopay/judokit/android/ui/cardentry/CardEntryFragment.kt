@@ -152,22 +152,30 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
             onCardEntryButtonClickListener = { viewModel.send(CardEntryAction.SubmitCardEntryForm) }
         }
         billingDetailsFormView.apply {
+            onFormValidationStatusListener = { model, isValid ->
+                viewModel.send(
+                    CardEntryAction.BillingDetailsValidationStatusChanged(
+                        model,
+                        isValid
+                    )
+                )
+            }
             onBillingDetailsBackButtonClickListener =
                 { viewModel.send(CardEntryAction.PressBackButton) }
             onBillingDetailsSubmitButtonClickListener =
                 { viewModel.send(CardEntryAction.SubmitBillingDetailsForm) }
         }
 
-        // Show/Hide view that covers bottomAppBar upper shadow based on scroll
+        // sets bottomAppBar elevation based on scroll
         billingDetailsScrollView.setOnScrollChangeListener(
             NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
                 val autoTransition = AutoTransition()
                 autoTransition.duration = 200
                 TransitionManager.beginDelayedTransition(billingContainer, autoTransition)
                 if (v.canScrollVertically(1)) {
-                    bottomAppBarShadowBlocker.visibility = View.INVISIBLE
+                    billingDetailsBottomAppBar.elevation = 4f
                 } else {
-                    bottomAppBarShadowBlocker.visibility = View.VISIBLE
+                    billingDetailsBottomAppBar.elevation = 0f
                 }
             }
         )
@@ -215,11 +223,8 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         } else {
             scanCardButton.visibility = View.GONE
         }
-        if (model.isOnCardEntryForm) {
-            formView.model = model.formModel
-        } else {
-            billingDetailsFormView.model = model.formModel
-        }
+        formView.model = model.formModel.cardDetailsInputModel
+        billingDetailsFormView.model = model.formModel.billingDetailsInputModel
     }
 
     private fun dispatchResult(result: JudoPaymentResult) {

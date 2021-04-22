@@ -1,24 +1,28 @@
 package com.judopay.judokit.android.ui.cardentry.model
 
-import com.judopay.judokit.android.R
-import com.judopay.judokit.android.model.CardNetwork
-import com.judopay.judokit.android.ui.common.ButtonState
-
 data class FormModel(
-    val inputModel: InputModel,
-    val enabledFields: List<FormFieldType>,
-    val supportedNetworks: List<CardNetwork>,
-    val cardNetwork: CardNetwork? = null,
-    val buttonState: ButtonState = ButtonState.Disabled(R.string.add_card)
+    val cardDetailsInputModel: CardDetailsInputModel,
+    val billingDetailsInputModel: BillingDetailsInputModel
 )
 
-fun FormModel.valueOfFieldWithType(type: FormFieldType): String = with(inputModel) {
-    return when (type) {
-        FormFieldType.NUMBER -> cardNumber
-        FormFieldType.HOLDER_NAME -> cardHolderName
-        FormFieldType.EXPIRATION_DATE -> expirationDate
-        FormFieldType.SECURITY_NUMBER -> securityNumber
-        FormFieldType.COUNTRY -> country
-        FormFieldType.POST_CODE -> postCode
-    }
+fun CardDetailsInputModel.valueOfFieldWithType(type: FormFieldType): String = when (type) {
+    FormFieldType.NUMBER -> cardNumber
+    FormFieldType.HOLDER_NAME -> cardHolderName
+    FormFieldType.EXPIRATION_DATE -> expirationDate
+    FormFieldType.SECURITY_NUMBER -> securityNumber
+    FormFieldType.COUNTRY -> country
+    FormFieldType.POST_CODE -> postCode
 }
+
+fun BillingDetailsInputModel.valueOfBillingDetailsFieldWithType(type: BillingDetailsFieldType): String =
+    when (type) {
+        BillingDetailsFieldType.COUNTRY -> countryCode
+        BillingDetailsFieldType.POST_CODE -> postalCode
+        BillingDetailsFieldType.EMAIL -> email
+        BillingDetailsFieldType.PHONE_COUNTRY_CODE -> phoneCountryCode
+        BillingDetailsFieldType.MOBILE_NUMBER -> mobileNumber
+        BillingDetailsFieldType.ADDRESS_LINE_1 -> addressLine1
+        BillingDetailsFieldType.ADDRESS_LINE_2 -> addressLine2
+        BillingDetailsFieldType.ADDRESS_LINE_3 -> addressLine3
+        BillingDetailsFieldType.CITY -> city
+    }

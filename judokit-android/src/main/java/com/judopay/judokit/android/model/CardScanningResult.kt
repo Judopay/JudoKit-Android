@@ -1,7 +1,7 @@
 package com.judopay.judokit.android.model
 
 import cards.pay.paycardsrecognizer.sdk.Card
-import com.judopay.judokit.android.ui.cardentry.model.InputModel
+import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
 
 enum class CardScanResultType {
     SUCCESS,
@@ -22,7 +22,7 @@ fun Card.toCardScanningResult() = CardScanningResult(
     expirationDate = expirationDate
 )
 
-fun CardScanningResult.toInputModel() = InputModel(
+fun CardScanningResult.toInputModel() = CardDetailsInputModel(
     cardNumber = cardNumber,
     cardHolderName = cardHolder ?: "",
     expirationDate = expirationDate ?: ""

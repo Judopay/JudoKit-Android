@@ -20,23 +20,21 @@ import com.judopay.judokit.android.parentOfType
 import com.judopay.judokit.android.ui.cardentry.formatting.CardNumberInputMaskTextWatcher
 import com.judopay.judokit.android.ui.cardentry.formatting.InputMaskTextWatcher
 import com.judopay.judokit.android.ui.cardentry.formatting.SecurityCodeInputMaskTextWatcher
+import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldType
-import com.judopay.judokit.android.ui.cardentry.model.FormModel
-import com.judopay.judokit.android.ui.cardentry.model.InputModel
 import com.judopay.judokit.android.ui.cardentry.model.fieldHintResId
 import com.judopay.judokit.android.ui.cardentry.model.valueOfFieldWithType
-import com.judopay.judokit.android.ui.cardentry.validation.CardHolderNameValidator
-import com.judopay.judokit.android.ui.cardentry.validation.CardNumberValidator
-import com.judopay.judokit.android.ui.cardentry.validation.CountryValidator
-import com.judopay.judokit.android.ui.cardentry.validation.ExpirationDateValidator
-import com.judopay.judokit.android.ui.cardentry.validation.PostcodeValidator
-import com.judopay.judokit.android.ui.cardentry.validation.SecurityCodeValidator
+import com.judopay.judokit.android.ui.cardentry.validation.carddetails.CardHolderNameValidator
+import com.judopay.judokit.android.ui.cardentry.validation.carddetails.CardNumberValidator
+import com.judopay.judokit.android.ui.cardentry.validation.carddetails.CountryValidator
+import com.judopay.judokit.android.ui.cardentry.validation.carddetails.ExpirationDateValidator
+import com.judopay.judokit.android.ui.cardentry.validation.carddetails.PostcodeValidator
+import com.judopay.judokit.android.ui.cardentry.validation.carddetails.SecurityCodeValidator
 import com.judopay.judokit.android.ui.common.PATTERN_CARD_EXPIRATION_DATE
 import kotlinx.android.synthetic.main.card_entry_form_view.view.*
-import kotlinx.android.synthetic.main.card_entry_fragment.view.*
 
-internal typealias FormValidationStatus = (model: InputModel, isValid: Boolean) -> Unit
+internal typealias FormValidationStatus = (model: CardDetailsInputModel, isValid: Boolean) -> Unit
 internal typealias CardEntryButtonClickListener = () -> Unit
 
 class CardEntryFormView @JvmOverloads constructor(
@@ -49,11 +47,8 @@ class CardEntryFormView @JvmOverloads constructor(
         inflate(R.layout.card_entry_form_view, true)
     }
 
-    internal var model = FormModel(
-        InputModel(),
-        emptyList(),
-        emptyList()
-    )
+    internal var model = CardDetailsInputModel()
+
         set(value) {
             field = value
             update()
@@ -170,7 +165,7 @@ class CardEntryFormView @JvmOverloads constructor(
         }
 
         val validationResults = validators.mapNotNull {
-            if (it.fieldType == type) {
+            if (it.fieldType == type.name) {
                 it.validate(value, event)
             } else null
         }
@@ -316,7 +311,7 @@ class CardEntryFormView @JvmOverloads constructor(
     }
 
     private fun onValidationPassed(isFormValid: Boolean) {
-        val inputModel = InputModel(
+        val inputModel = CardDetailsInputModel(
             valueOfEditTextWithType(FormFieldType.NUMBER),
             valueOfEditTextWithType(FormFieldType.HOLDER_NAME),
             valueOfEditTextWithType(FormFieldType.EXPIRATION_DATE),

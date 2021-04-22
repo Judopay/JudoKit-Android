@@ -15,7 +15,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="94dp"
+            android:layout_marginBottom="@dimen/space_94"
             android:clipToPadding="false"
             android:paddingStart="@dimen/space_24"
             android:paddingEnd="@dimen/space_24"
@@ -71,7 +71,7 @@
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/expirationDateTextInputLayout"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/width_0"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_8"
                 android:layout_marginEnd="@dimen/space_6"
@@ -91,7 +91,7 @@
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/securityNumberTextInputLayout"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/width_0"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_6"
                 android:layout_marginTop="@dimen/space_8"
@@ -111,7 +111,7 @@
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/countryTextInputLayout"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/width_0"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_8"
                 android:layout_marginEnd="@dimen/space_6"
@@ -136,7 +136,7 @@
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/postcodeTextInputLayout"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/width_0"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_6"
                 android:layout_marginTop="@dimen/space_8"
@@ -168,7 +168,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:elevation="0dp">
+        app:elevation="@dimen/elevation_0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -179,7 +179,7 @@
             <com.judopay.judokit.android.ui.common.ProgressButton
                 android:id="@+id/cardEntrySubmitButton"
                 style="@style/JudoTheme.BlackRoundedButton"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/width_0"
                 android:layout_height="@dimen/button_height"
                 android:minWidth="@dimen/min_touch_target_size"
                 android:text="@string/pay_now"

@@ -3,6 +3,7 @@ package com.judopay.judokit.android.ui.cardentry.validation
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.ui.cardentry.model.FormModel
+import com.judopay.judokit.android.ui.cardentry.validation.carddetails.CardNumberValidator
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -17,9 +18,9 @@ internal class CardNumberValidatorTest {
 
     @BeforeEach
     internal fun setUp() {
-        every { formModel.supportedNetworks } returns CardNetwork.values().toList()
+        every { formModel.cardDetailsInputModel.supportedNetworks } returns CardNetwork.values().toList()
 
-        validator = CardNumberValidator(supportedNetworks = formModel.supportedNetworks)
+        validator = CardNumberValidator(supportedNetworks = formModel.cardDetailsInputModel.supportedNetworks)
     }
 
     @Test
@@ -61,9 +62,9 @@ internal class CardNumberValidatorTest {
     @Test
     @DisplayName("Given that card number is unsupported with valid length and valid luhn number, then a validation error should return with error_visa_not_supported string")
     fun unsupportedAndValidCardNumber() {
-        every { formModel.supportedNetworks } returns listOf(CardNetwork.AMEX)
+        every { formModel.cardDetailsInputModel.supportedNetworks } returns listOf(CardNetwork.AMEX)
 
-        validator = CardNumberValidator(supportedNetworks = formModel.supportedNetworks)
+        validator = CardNumberValidator(supportedNetworks = formModel.cardDetailsInputModel.supportedNetworks)
 
         assertEquals(
             validator.validate("4111 1111 1111 1111"),

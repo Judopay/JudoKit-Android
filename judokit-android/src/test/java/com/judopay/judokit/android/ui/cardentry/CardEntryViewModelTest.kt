@@ -18,9 +18,10 @@ import com.judopay.judokit.android.model.formatted
 import com.judopay.judokit.android.model.toInputModel
 import com.judopay.judokit.android.service.CardTransactionCallback
 import com.judopay.judokit.android.service.CardTransactionService
+import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsInputModel
+import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldType
 import com.judopay.judokit.android.ui.cardentry.model.FormModel
-import com.judopay.judokit.android.ui.cardentry.model.InputModel
 import com.judopay.judokit.android.ui.common.ButtonState
 import com.judopay.judokit.android.ui.common.isDependencyPresent
 import com.judopay.judokit.android.ui.paymentmethods.toTokenizedCardEntity
@@ -60,7 +61,8 @@ internal class CardEntryViewModelTest {
 
     private val card: CardToken = mockk(relaxed = true)
     private var selectedCardNetwork: CardNetwork? = null
-    private val inputModel: InputModel = getInputModel()
+    private val inputModel: CardDetailsInputModel = getInputModel()
+    private val billingDetailsInputModel: BillingDetailsInputModel = getBillingDetailsInputModel()
     private val expectedJudoPaymentResult = JudoPaymentResult.Success(mockk(relaxed = true))
 
     private val cardTransactionCallback = slot<CardTransactionCallback>()
@@ -99,10 +101,8 @@ internal class CardEntryViewModelTest {
     fun postModelOnInitWithDisabledButton() {
 
         val mockFormModel = FormModel(
-            InputModel(),
-            enabledFields,
-            judo.supportedCardNetworks.toList(),
-            ButtonState.Disabled(R.string.pay_now)
+            CardDetailsInputModel(),
+            BillingDetailsInputModel()
         )
         val slots = mutableListOf<CardEntryFragmentModel>()
 
@@ -141,9 +141,7 @@ internal class CardEntryViewModelTest {
     fun postModelOnValidationPassedWithEnabledButton() {
         val mockFormModel = FormModel(
             inputModel,
-            enabledFields,
-            judo.supportedCardNetworks.toList(),
-            ButtonState.Enabled(R.string.pay_now)
+            billingDetailsInputModel
         )
         val slots = mutableListOf<CardEntryFragmentModel>()
 
@@ -164,10 +162,8 @@ internal class CardEntryViewModelTest {
         val slots = mutableListOf<CardEntryFragmentModel>()
 
         val myFormModel = FormModel(
-            InputModel(),
-            enabledFields,
-            judo.supportedCardNetworks.toList(),
-            ButtonState.Loading
+            CardDetailsInputModel(),
+            BillingDetailsInputModel()
         )
 
         sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
@@ -304,10 +300,8 @@ internal class CardEntryViewModelTest {
         every { judo.paymentWidgetType } returns PaymentWidgetType.PAYMENT_METHODS
 
         val mockFormModel = FormModel(
-            InputModel(),
-            enabledFields,
-            judo.supportedCardNetworks.toList(),
-            ButtonState.Disabled(R.string.save_card)
+            CardDetailsInputModel(),
+            BillingDetailsInputModel()
         )
         val slots = mutableListOf<CardEntryFragmentModel>()
 
@@ -327,10 +321,8 @@ internal class CardEntryViewModelTest {
         every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
 
         val mockFormModel = FormModel(
-            InputModel(),
-            enabledFields,
-            judo.supportedCardNetworks.toList(),
-            ButtonState.Disabled(R.string.empty)
+            CardDetailsInputModel(),
+            BillingDetailsInputModel()
         )
         val slots = mutableListOf<CardEntryFragmentModel>()
 
@@ -353,9 +345,7 @@ internal class CardEntryViewModelTest {
 
         val mockFormModel = FormModel(
             inputModel,
-            enabledFields,
-            judo.supportedCardNetworks.toList(),
-            ButtonState.Disabled(R.string.pay_now)
+            billingDetailsInputModel
         )
         val slots = mutableListOf<CardEntryFragmentModel>()
 
@@ -451,10 +441,8 @@ internal class CardEntryViewModelTest {
     @Test
     fun shouldUpdateModelWithSpecifiedEnabledFieldsOnEnableFormFieldsAction() {
         val mockFormModel = FormModel(
-            InputModel(),
-            listOf(FormFieldType.NUMBER, FormFieldType.SECURITY_NUMBER),
-            judo.supportedCardNetworks.toList(),
-            ButtonState.Disabled(R.string.pay_now)
+            CardDetailsInputModel(),
+            BillingDetailsInputModel()
         )
         val slots = mutableListOf<CardEntryFragmentModel>()
 
@@ -531,11 +519,27 @@ internal class CardEntryViewModelTest {
         assertFalse(formModel.displayScanButton)
     }
 
-    private fun getInputModel() = mockk<InputModel>(relaxed = true) {
+    private fun getInputModel() = mockk<CardDetailsInputModel>(relaxed = true) {
         every { cardNumber } returns "4111111111111111"
         every { cardHolderName } returns "name"
         every { expirationDate } returns "12/20"
         every { securityNumber } returns "452"
+        every { enabledFields } returns enabledFields
+        every { supportedNetworks } returns judo.supportedCardNetworks.toList()
+        every { buttonState } returns ButtonState.Disabled(R.string.pay_now)
+    }
+
+    private fun getBillingDetailsInputModel() = mockk<BillingDetailsInputModel>(relaxed = true) {
+        every { email } returns "my@email.com"
+        every { countryCode } returns "123"
+        every { phoneCountryCode } returns "44"
+        every { mobileNumber } returns "07999999999"
+        every { addressLine1 } returns "line1"
+        every { addressLine2 } returns "line2"
+        every { addressLine3 } returns "line3"
+        every { city } returns "city"
+        every { postalCode } returns "postcode"
+        every { buttonState } returns ButtonState.Disabled(R.string.pay_now)
     }
 
     private fun getJudo() = mockk<Judo>(relaxed = true) {

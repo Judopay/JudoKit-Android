@@ -27,8 +27,26 @@ class JudoEditTextInputLayout @JvmOverloads constructor(
     defStyle: Int = 0
 ) : FrameLayout(context, attrs, defStyle) {
 
+    private var mDisableLeftCornerRadius = false
+    private var mDisableRightCornerRadius = false
+
     init {
         inflate(R.layout.judo_edit_text_input_layout, true)
+
+        context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.JudoEditTextInputLayout,
+            0, 0
+        ).apply {
+            try {
+                mDisableLeftCornerRadius =
+                    getBoolean(R.styleable.JudoEditTextInputLayout_disableLeftCornerRadius, false)
+                mDisableRightCornerRadius =
+                    getBoolean(R.styleable.JudoEditTextInputLayout_disableRightCornerRadius, false)
+            } finally {
+                recycle()
+            }
+        }
     }
 
     var isErrorEnabled: Boolean = false
@@ -71,6 +89,21 @@ class JudoEditTextInputLayout @JvmOverloads constructor(
                 LinearLayout.LayoutParams.MATCH_PARENT
             )
             containerLayout.addView(it, layoutParams)
+        }
+
+        background = when {
+            mDisableLeftCornerRadius -> ContextCompat.getDrawable(
+                context,
+                R.drawable.edit_text_input_layout_background_shape_corners_right
+            )
+            mDisableRightCornerRadius -> ContextCompat.getDrawable(
+                context,
+                R.drawable.edit_text_input_layout_background_shape_corners_left
+            )
+            else -> ContextCompat.getDrawable(
+                context,
+                R.drawable.edit_text_input_layout_background_shape
+            )
         }
     }
 
