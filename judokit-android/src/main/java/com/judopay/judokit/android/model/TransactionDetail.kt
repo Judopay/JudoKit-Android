@@ -1,12 +1,10 @@
 package com.judopay.judokit.android.model
 
-import com.judopay.judokit.android.requireNotNullOrEmpty
-
 class TransactionDetail private constructor(
-    val cardNumber: String,
-    val cardHolderName: String,
-    val expirationDate: String,
-    val securityNumber: String,
+    val cardNumber: String?,
+    val cardHolderName: String?,
+    val expirationDate: String?,
+    val securityNumber: String?,
     val country: String?,
     val email: String?,
     val phoneCountryCode: String?,
@@ -15,7 +13,7 @@ class TransactionDetail private constructor(
     val addressLine2: String?,
     val addressLine3: String?,
     val city: String?,
-    val postalCode: String?,
+    val postalCode: String?
 ) {
     class Builder {
         private var cardNumber: String? = null
@@ -54,26 +52,20 @@ class TransactionDetail private constructor(
         fun setCity(city: String?) = apply { this.city = city }
         fun setPostalCode(postalCode: String?) = apply { this.postalCode = postalCode }
 
-        fun build(): TransactionDetail {
-            val myCardNumber = requireNotNullOrEmpty(cardNumber, "cardNumber")
-            val myCardHolderName = requireNotNullOrEmpty(cardHolderName, "cardHolderName")
-            val myExpirationDate = requireNotNullOrEmpty(expirationDate, "expirationDate")
-            val mySecurityCode = requireNotNullOrEmpty(securityNumber, "securityNumber")
-            return TransactionDetail(
-                myCardNumber,
-                myCardHolderName,
-                myExpirationDate,
-                mySecurityCode,
-                countryCode,
-                email,
-                phoneCountryCode,
-                mobileNumber,
-                addressLine1,
-                addressLine2,
-                addressLine3,
-                city,
-                postalCode
-            )
-        }
+        fun build() = TransactionDetail(
+            cardNumber,
+            cardHolderName,
+            expirationDate,
+            securityNumber,
+            countryCode,
+            email,
+            phoneCountryCode,
+            mobileNumber,
+            addressLine1,
+            addressLine2,
+            addressLine3,
+            city,
+            postalCode
+        )
     }
 }

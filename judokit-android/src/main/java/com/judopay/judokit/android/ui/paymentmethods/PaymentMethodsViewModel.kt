@@ -10,14 +10,15 @@ import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.model.response.CardDate
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
-import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentMethod
+import com.judopay.judokit.android.model.TransactionDetail
 import com.judopay.judokit.android.model.formatted
 import com.judopay.judokit.android.model.paymentButtonType
 import com.judopay.judokit.android.service.CardTransactionCallback
 import com.judopay.judokit.android.service.CardTransactionService
+import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.common.ButtonState
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.IdealBank
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.IdealBankItem
@@ -54,7 +55,8 @@ sealed class PaymentMethodsAction {
     data class EditMode(val isInEditMode: Boolean) : PaymentMethodsAction()
     data class SelectIdealBank(val idealBank: IdealBank) : PaymentMethodsAction()
 
-    data class PayWithSelectedStoredCard(val securityCode: String? = null) : PaymentMethodsAction()
+    object InitiateSelectedCardPayment : PaymentMethodsAction()
+    data class PayWithCard(val transactionDetail: TransactionDetail) : PaymentMethodsAction()
     object PayWithSelectedIdealBank : PaymentMethodsAction()
     object PayWithPayByBank : PaymentMethodsAction()
     object Update : PaymentMethodsAction() // TODO: temporary
@@ -94,7 +96,7 @@ class PaymentMethodsViewModel(
     val judoPaymentResult = MutableLiveData<JudoPaymentResult>()
     val payWithIdealObserver = MutableLiveData<Event<String>>()
     val payWithPayByBankObserver = MutableLiveData<Event<Nothing>>()
-    val selectedCardNetworkObserver = MutableLiveData<Event<CardNetwork>>()
+    val displayCardEntryObserver = MutableLiveData<Event<CardEntryOptions>>()
 
     private val context = application
 
@@ -135,10 +137,10 @@ class PaymentMethodsViewModel(
                 deleteCardWithId(action.cardId)
                 buildModel()
             }
-            is PaymentMethodsAction.PayWithSelectedStoredCard -> {
+            is PaymentMethodsAction.InitiateSelectedCardPayment -> {
                 buildModel(isLoading = true)
                 val paymentMethod = model.value?.currentPaymentMethod
-                payWithSelectedCard(paymentMethod, action.securityCode)
+                payWithSelectedCard(paymentMethod)
             }
             is PaymentMethodsAction.PayWithSelectedIdealBank -> {
                 buildModel(isLoading = true)
@@ -162,33 +164,41 @@ class PaymentMethodsViewModel(
                 isLoading = !action.buttonEnabled
             )
             is PaymentMethodsAction.EditMode -> buildModel(isInEditMode = action.isInEditMode)
-        }
-    }
-
-    private fun payWithSelectedCard(paymentMethod: PaymentMethodModel?, securityCode: String?) {
-        if (paymentMethod is CardPaymentMethodModel) {
-            val isSecurityCodeRequired =
-                judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode && securityCode == null
-            if (isSecurityCodeRequired) {
-                showSecurityCodeDialog(paymentMethod)
-            } else {
-                sendCardPaymentRequest(paymentMethod, securityCode)
+            is PaymentMethodsAction.PayWithCard -> {
+                buildModel(isLoading = true)
+                val paymentMethod = model.value?.currentPaymentMethod
+                if (paymentMethod is CardPaymentMethodModel) {
+                    sendCardPaymentRequest(paymentMethod, action.transactionDetail)
+                }
             }
         }
     }
 
-    private fun showSecurityCodeDialog(paymentMethod: CardPaymentMethodModel) {
-        val card = paymentMethod.selectedCard
-        card?.let {
-            selectedCardNetworkObserver.postValue(Event(it.network))
-            buildModel(isLoading = false)
+    private fun payWithSelectedCard(paymentMethod: PaymentMethodModel?) {
+        if (paymentMethod is CardPaymentMethodModel) {
+            val isSecurityCodeRequired =
+                judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode
+            val cardNetwork = if (isSecurityCodeRequired) {
+                val card = paymentMethod.selectedCard
+                card?.network
+            } else null
+            if (judo.is3DS2Enabled || isSecurityCodeRequired) {
+                val cardEntryOptions = CardEntryOptions(
+                    fromPaymentMethods = true,
+                    shouldDisplayBillingDetails = judo.is3DS2Enabled,
+                    shouldDisplaySecurityCode = cardNetwork
+                )
+                displayCardEntryObserver.postValue(Event(cardEntryOptions))
+            } else {
+                sendCardPaymentRequest(paymentMethod, null)
+            }
         }
     }
 
     @Throws(IllegalStateException::class)
     private fun sendCardPaymentRequest(
         paymentMethod: CardPaymentMethodModel,
-        securityCode: String?
+        transactionDetail: TransactionDetail?
     ) = viewModelScope.launch {
         val card = paymentMethod.selectedCard
         card?.let {
@@ -207,7 +217,7 @@ class PaymentMethodsViewModel(
 
             cardTransactionService.tokenPayment(
                 entity,
-                securityCode,
+                transactionDetail,
                 cardTransactionCallback
             )
         }

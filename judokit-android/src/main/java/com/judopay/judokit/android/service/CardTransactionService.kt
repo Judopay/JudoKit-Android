@@ -34,6 +34,7 @@ import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.TransactionDetail
 import com.judopay.judokit.android.model.displayName
+import com.judopay.judokit.android.model.isPaymentMethodsWidget
 import com.judopay.judokit.android.model.typeId
 import com.judopay.judokit.android.toMap
 import com.judopay.judokit.android.ui.cardverification.THREE_DS_ONE_DIALOG_FRAGMENT_TAG
@@ -64,19 +65,28 @@ class CardTransactionService(
         try {
             this.callback = callback
             transaction = threeDS2Service.createTransaction("F000000000", "2.2.0")
-            val address = Address.Builder().apply {
-                setLine1(transactionDetail.addressLine1)
-                setLine2(transactionDetail.addressLine2)
-                setLine3(transactionDetail.addressLine3)
-                setTown(transactionDetail.city)
-                setPostCode(transactionDetail.postalCode)
-                setCountryCode(transactionDetail.country?.toInt())
-            }.build()
+            val address =
+                if (judo.is3DS2Enabled && !judo.paymentWidgetType.isPaymentMethodsWidget) {
+                    Address.Builder().apply {
+                        setLine1(transactionDetail.addressLine1)
+                        setLine2(transactionDetail.addressLine2)
+                        setLine3(transactionDetail.addressLine3)
+                        setTown(transactionDetail.city)
+                        setPostCode(transactionDetail.postalCode)
+                        setCountryCode(transactionDetail.country?.toIntOrNull())
+                    }.build()
+                } else Address.Builder().build()
 
             val apiResult = when (judo.paymentWidgetType) {
                 PaymentWidgetType.CARD_PAYMENT -> performPaymentRequest(address, transactionDetail)
-                PaymentWidgetType.PRE_AUTH -> performPreAuthPaymentRequest(address, transactionDetail)
-                PaymentWidgetType.REGISTER_CARD -> performRegisterCardRequest(address, transactionDetail)
+                PaymentWidgetType.PRE_AUTH -> performPreAuthPaymentRequest(
+                    address,
+                    transactionDetail
+                )
+                PaymentWidgetType.REGISTER_CARD -> performRegisterCardRequest(
+                    address,
+                    transactionDetail
+                )
                 PaymentWidgetType.CHECK_CARD -> performCheckCardRequest(address, transactionDetail)
                 PaymentWidgetType.CREATE_CARD_TOKEN,
                 PaymentWidgetType.PAYMENT_METHODS,
@@ -96,12 +106,23 @@ class CardTransactionService(
 
     internal suspend fun tokenPayment(
         card: TokenizedCardEntity,
-        securityCode: String?,
+        transactionDetail: TransactionDetail?,
         callback: CardTransactionCallback
     ) {
         try {
             this.callback = callback
             transaction = threeDS2Service.createTransaction("F000000000", "2.2.0")
+            val address =
+                if (judo.is3DS2Enabled) {
+                    Address.Builder().apply {
+                        setLine1(transactionDetail?.addressLine1)
+                        setLine2(transactionDetail?.addressLine2)
+                        setLine3(transactionDetail?.addressLine3)
+                        setTown(transactionDetail?.city)
+                        setPostCode(transactionDetail?.postalCode)
+                        setCountryCode(transactionDetail?.country?.toIntOrNull())
+                    }.build()
+                } else Address.Builder().build()
             if (judo.paymentWidgetType == PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS) {
                 buildReceipt(card)
             } else {
@@ -115,13 +136,13 @@ class CardTransactionService(
                     .setCardLastFour(card.ending)
                     .setCardToken(card.token)
                     .setCardType(card.network.typeId)
-                    .setCv2(securityCode)
-                    .setAddress(judo.address)
+                    .setCv2(transactionDetail?.securityNumber)
                     .setInitialRecurringPayment(judo.initialRecurringPayment)
-                    .setMobileNumber(judo.mobileNumber)
-                    .setEmailAddress(judo.emailAddress)
-                    .setPhoneCountryCode(judo.phoneCountryCode)
                     .setThreeDSecure(buildThreeDSecureParameters())
+                    .setAddress(address)
+                    .setMobileNumber(transactionDetail?.mobileNumber)
+                    .setEmailAddress(transactionDetail?.email)
+                    .setPhoneCountryCode(transactionDetail?.phoneCountryCode)
                     .build()
 
                 val response = when (judo.paymentWidgetType) {

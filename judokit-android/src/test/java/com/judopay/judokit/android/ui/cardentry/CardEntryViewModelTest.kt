@@ -283,7 +283,7 @@ internal class CardEntryViewModelTest {
 
         sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
 
-        sut.securityCodeResult.observeForever(securityCodeResultMock)
+        sut.cardEntryToPaymentMethodResult.observeForever(securityCodeResultMock)
 
         sut.send(CardEntryAction.ValidationStatusChanged(inputModel, true))
         sut.send(CardEntryAction.SubmitCardEntryForm)

@@ -31,16 +31,17 @@ import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.db.JudoRoomDatabase
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
+import com.judopay.judokit.android.dismissKeyboard
 import com.judopay.judokit.android.judo
-import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.isCardPaymentWidget
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
 import com.judopay.judokit.android.service.CardTransactionService
+import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldType
 import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
 import com.judopay.judokit.android.ui.common.getLocale
-import com.judopay.judokit.android.ui.paymentmethods.CARD_NETWORK
+import com.judopay.judokit.android.ui.paymentmethods.CARD_ENTRY_OPTIONS
 import kotlinx.android.synthetic.main.billing_details_form_view.*
 import kotlinx.android.synthetic.main.card_entry_form_view.*
 import kotlinx.android.synthetic.main.card_entry_fragment.*
@@ -64,7 +65,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
         service = JudoApiServiceFactory.createApiService(application, judo)
-        val selectedCardNetwork = arguments?.getParcelable<CardNetwork>(CARD_NETWORK)
+        val cardEntryOptions = arguments?.getParcelable<CardEntryOptions>(CARD_ENTRY_OPTIONS)
         threeDS2Service.initialize(
             requireActivity(),
             ConfigParameters(),
@@ -77,22 +78,22 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
             judo,
             cardTransactionService,
             cardRepository,
-            selectedCardNetwork,
+            cardEntryOptions,
             application
         )
 
         viewModel = ViewModelProvider(this, factory).get(CardEntryViewModel::class.java)
 
-        if (selectedCardNetwork != null) {
+        if (cardEntryOptions?.shouldDisplaySecurityCode != null) {
             viewModel.send(CardEntryAction.EnableFormFields(listOf(FormFieldType.SECURITY_NUMBER)))
         }
 
         viewModel.model.observe(viewLifecycleOwner, { updateWithModel(it) })
         viewModel.judoPaymentResult.observe(viewLifecycleOwner, { dispatchResult(it) })
-        viewModel.securityCodeResult.observe(
+        viewModel.cardEntryToPaymentMethodResult.observe(
             viewLifecycleOwner,
             {
-                sharedViewModel.securityCodeResult.postValue(it)
+                sharedViewModel.cardEntryToPaymentMethodResult.postValue(it)
                 findNavController().popBackStack()
             }
         )
@@ -127,6 +128,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         BottomSheetDialog(requireContext(), theme).apply {
             behavior.state = BottomSheetBehavior.STATE_EXPANDED
             behavior.peekHeight = 200
+            isCancelable = false
         }
 
     override fun onCreateView(
@@ -139,7 +141,6 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         super.onViewCreated(view, savedInstanceState)
         cancelButton.setOnClickListener { onUserCancelled() }
         scanCardButton.setOnClickListener { handleScanCardButtonClicks() }
-
         formView.apply {
             onFormValidationStatusListener = { model, isValid ->
                 viewModel.send(
@@ -149,7 +150,15 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
                     )
                 )
             }
-            onCardEntryButtonClickListener = { viewModel.send(CardEntryAction.SubmitCardEntryForm) }
+            onCardEntryButtonClickListener = {
+                dismissKeyboard()
+                Handler(Looper.getMainLooper()).postDelayed(
+                    {
+                        viewModel.send(CardEntryAction.SubmitCardEntryForm)
+                    },
+                    500
+                )
+            }
         }
         billingDetailsFormView.apply {
             onFormValidationStatusListener = { model, isValid ->
@@ -173,7 +182,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
                 autoTransition.duration = 200
                 TransitionManager.beginDelayedTransition(billingContainer, autoTransition)
                 if (v.canScrollVertically(1)) {
-                    billingDetailsBottomAppBar.elevation = 4f
+                    billingDetailsBottomAppBar.elevation = 10f
                 } else {
                     billingDetailsBottomAppBar.elevation = 0f
                 }
@@ -222,6 +231,11 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
             scanCardButton.visibility = View.VISIBLE
         } else {
             scanCardButton.visibility = View.GONE
+        }
+        if (model.displayBackButton) {
+            billingDetailsBackButton.visibility = View.VISIBLE
+        } else {
+            billingDetailsBackButton.visibility = View.GONE
         }
         formView.model = model.formModel.cardDetailsInputModel
         billingDetailsFormView.model = model.formModel.billingDetailsInputModel

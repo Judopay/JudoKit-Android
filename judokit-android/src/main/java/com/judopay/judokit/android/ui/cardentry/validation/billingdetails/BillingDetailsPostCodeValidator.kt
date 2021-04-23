@@ -7,7 +7,7 @@ import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
 import com.judopay.judokit.android.ui.cardentry.validation.Validator
 
 class BillingDetailsPostCodeValidator(
-    override val fieldType: String = BillingDetailsFieldType.CITY.name
+    override val fieldType: String = BillingDetailsFieldType.POST_CODE.name
 ) : Validator {
 
     private val regex = Regex("^[a-zA-Z0-9]+\$")
