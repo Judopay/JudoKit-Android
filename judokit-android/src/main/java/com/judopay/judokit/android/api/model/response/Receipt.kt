@@ -41,7 +41,8 @@ class Receipt(
     val acsUiTemplate: String? = null,
     val threeDSServerTransactionID: String? = null,
     val acsTransactionId: String? = null,
-    val acsThreeDSRequestorAppURL: String? = null
+    val acsThreeDSRequestorAppURL: String? = null,
+    val cReq: String? = null
 ) {
 
     val is3dSecureRequired: Boolean
@@ -82,10 +83,9 @@ fun Receipt.toCardVerificationModel() = CardVerificationModel.Builder()
     .setAcsUrl(acsUrl)
     .build()
 
-fun Receipt.toChallengeParameters() = ChallengeParameters(
-    threeDSServerTransactionID,
-    acsTransactionId,
-    acsReferenceNumber,
-    acsSignedContent,
-    acsThreeDSRequestorAppURL
+data class CReqParameters(
+    val messageType: String,
+    val messageVersion: String,
+    val threeDSServerTransID: String,
+    val acsTransID: String
 )

@@ -21,7 +21,7 @@ import com.judokit.android.examples.common.startResultActivity
 import com.judokit.android.examples.common.toResult
 import com.judokit.android.examples.feature.adapter.DemoFeaturesAdapter
 import com.judokit.android.examples.feature.paybybank.PayByBankActivity
-import com.judokit.android.examples.feature.tokenpayment.DemoTokenPaymentActivity
+import com.judokit.android.examples.feature.noui.DemoNoUiPaymentActivity
 import com.judokit.android.examples.model.DemoFeature
 import com.judokit.android.examples.settings.SettingsActivity
 import com.judopay.judokit.android.JUDO_ERROR
@@ -188,10 +188,9 @@ class DemoFeatureListActivity : AppCompatActivity() {
         try {
             val widgetType = when (feature) {
                 DemoFeature.GET_TRANSACTION_DETAILS,
-                DemoFeature.PAYMENT -> PaymentWidgetType.CARD_PAYMENT
+                DemoFeature.PAYMENT, DemoFeature.NO_UI -> PaymentWidgetType.CARD_PAYMENT
                 DemoFeature.PREAUTH -> PaymentWidgetType.PRE_AUTH
                 DemoFeature.REGISTER_CARD -> PaymentWidgetType.REGISTER_CARD
-                DemoFeature.TOKEN_PAYMENT,
                 DemoFeature.CREATE_CARD_TOKEN -> PaymentWidgetType.CREATE_CARD_TOKEN
                 DemoFeature.CHECK_CARD -> PaymentWidgetType.CHECK_CARD
                 DemoFeature.PAYMENT_METHODS -> PaymentWidgetType.PAYMENT_METHODS
@@ -227,9 +226,9 @@ class DemoFeatureListActivity : AppCompatActivity() {
             showGetTransactionDialog(judo)
         } else {
             val myClass = when (judo.paymentWidgetType) {
-                PaymentWidgetType.CREATE_CARD_TOKEN ->
-                    if (feature == DemoFeature.TOKEN_PAYMENT) {
-                        DemoTokenPaymentActivity::class.java
+                PaymentWidgetType.CARD_PAYMENT ->
+                    if (feature == DemoFeature.NO_UI) {
+                        DemoNoUiPaymentActivity::class.java
                     } else {
                         JudoActivity::class.java
                     }

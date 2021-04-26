@@ -168,8 +168,8 @@ class PaymentMethodsFragment : Fragment() {
         )
         sharedViewModel.cardEntryToPaymentMethodResult.observe(
             viewLifecycleOwner,
-            { transactionDetail ->
-                viewModel.send(PaymentMethodsAction.PayWithCard(transactionDetail))
+            { transactionDetailBuilder ->
+                viewModel.send(PaymentMethodsAction.PayWithCard(transactionDetailBuilder))
             }
         )
     }

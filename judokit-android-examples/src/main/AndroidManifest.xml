@@ -29,7 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.judokit.android.examples.feature.tokenpayment.DemoTokenPaymentActivity" />
+        <activity android:name="com.judokit.android.examples.feature.noui.DemoNoUiPaymentActivity" />
         <activity
             android:name="com.judokit.android.examples.result.ResultActivity"
             android:theme="@style/Theme.DemoApp" />
