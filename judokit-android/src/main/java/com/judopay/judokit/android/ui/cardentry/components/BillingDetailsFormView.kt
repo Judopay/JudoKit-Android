@@ -4,7 +4,6 @@ import android.content.Context
 import android.telephony.PhoneNumberFormattingTextWatcher
 import android.util.AttributeSet
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.core.widget.addTextChangedListener
@@ -189,9 +188,6 @@ class BillingDetailsFormView @JvmOverloads constructor(
         val message = context.getString(result?.message ?: R.string.empty)
         val errorEnabled = value.isNotBlank() && !isValidResult && message.isNotEmpty()
 
-//        if (event == FormFieldEvent.TEXT_CHANGED)
-//            autoTab(isValidResult, type)
-
         layout?.let {
             it.isErrorEnabled = errorEnabled
             it.error = message
@@ -207,30 +203,6 @@ class BillingDetailsFormView @JvmOverloads constructor(
     private fun valueOfEditTextWithType(type: BillingDetailsFieldType): String {
         val editText = editTextForType(type)
         return editText.text.toString()
-    }
-
-    private fun autoTab(isValidResult: Boolean, type: BillingDetailsFieldType) {
-        if (isValidResult &&
-            type != BillingDetailsFieldType.ADDRESS_LINE_1 &&
-            type != BillingDetailsFieldType.ADDRESS_LINE_2 &&
-            type != BillingDetailsFieldType.ADDRESS_LINE_3 &&
-            type != BillingDetailsFieldType.COUNTRY
-        ) {
-            val types = BillingDetailsFieldType.values().toList()
-            val nextFormFieldType = types.indexOf(type) + 1
-            if (types.size > nextFormFieldType) {
-                when (val field = editTextForType(types[nextFormFieldType])) {
-                    is AutoCompleteTextView -> {
-                        editTextForType(type).clearFocus()
-                        field.showDropDown()
-                        field.setOnItemClickListener { _, _, _, _ ->
-                            editTextForType(BillingDetailsFieldType.POST_CODE).requestFocus()
-                        }
-                    }
-                    else -> field.requestFocus()
-                }
-            }
-        }
     }
 
     private fun updateSubmitButtonState() {

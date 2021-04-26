@@ -58,11 +58,16 @@ class JudoActivity : AppCompatActivity() {
         // Treat the content of the window as secure, preventing it from appearing in screenshots
         // or from being viewed on non-secure displays.
         val secureFlag = WindowManager.LayoutParams.FLAG_SECURE
-//        window.setFlags(secureFlag, secureFlag)
+        window.setFlags(secureFlag, secureFlag)
 
         // setup shared view-model & response callbacks
         val judoApiService = JudoApiServiceFactory.createApiService(applicationContext, judo)
-        val factory = JudoSharedViewModelFactory(judo, buildJudoGooglePayService(), judoApiService, application)
+        val factory = JudoSharedViewModelFactory(
+            judo,
+            buildJudoGooglePayService(),
+            judoApiService,
+            application
+        )
 
         viewModel = ViewModelProvider(this, factory).get(JudoSharedViewModel::class.java)
         viewModel.paymentResult.observe(this, { dispatchPaymentResult(it) })
@@ -86,7 +91,15 @@ class JudoActivity : AppCompatActivity() {
         // setup navigation graph
         val graphId = judo.paymentWidgetType.navigationGraphId
         val bundle = if (graphId == R.navigation.judo_card_input_graph) {
-            bundleOf(CARD_ENTRY_OPTIONS to CardEntryOptions(shouldDisplayBillingDetails = judo.is3DS2Enabled && judo.paymentWidgetType != PaymentWidgetType.CREATE_CARD_TOKEN))
+            // Card entry fragment parameters
+            bundleOf(
+                CARD_ENTRY_OPTIONS
+                        to
+                        CardEntryOptions(
+                            shouldDisplayBillingDetails = judo.is3DS2Enabled &&
+                                    judo.paymentWidgetType != PaymentWidgetType.CREATE_CARD_TOKEN
+                        )
+            )
         } else null
         val navigationHost = NavHostFragment.create(graphId, bundle)
 

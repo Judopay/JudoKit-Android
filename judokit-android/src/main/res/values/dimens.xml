@@ -61,7 +61,7 @@
     <dimen name="card_corner_radius">10dp</dimen>
     <dimen name="card_elevation_2dp">2dp</dimen>
     <dimen name="card_elevation_8dp">8dp</dimen>
-    <dimen name="elevation_10">10dp</dimen>
+    <dimen name="elevation_4">4dp</dimen>
     <dimen name="card_height">190dp</dimen>
 
     <dimen name="payment_selector_height">64dp</dimen>

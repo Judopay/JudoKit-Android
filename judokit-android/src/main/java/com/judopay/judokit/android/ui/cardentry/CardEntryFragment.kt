@@ -49,6 +49,11 @@ import kotlinx.android.synthetic.main.card_entry_fragment.view.*
 import kotlinx.android.synthetic.main.payment_methods_header_view.*
 import kotlinx.android.synthetic.main.payment_methods_header_view.view.*
 
+private const val BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME = 1000L
+private const val BOTTOM_SHEET_PEEK_HEIGHT = 200
+private const val KEYBOARD_DISMISS_TIMEOUT = 500L
+private const val BOTTOM_APP_BAR_ELEVATION_CHANGE_DURATION = 200L
+
 class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallback {
 
     private lateinit var viewModel: CardEntryViewModel
@@ -110,7 +115,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
                     {
                         bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
                     },
-                    1000
+                    BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME
                 )
             }
         )
@@ -127,7 +132,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
     override fun onCreateDialog(savedInstanceState: Bundle?) =
         BottomSheetDialog(requireContext(), theme).apply {
             behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            behavior.peekHeight = 200
+            behavior.peekHeight = BOTTOM_SHEET_PEEK_HEIGHT
             isCancelable = false
         }
 
@@ -156,7 +161,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
                     {
                         viewModel.send(CardEntryAction.SubmitCardEntryForm)
                     },
-                    500
+                    KEYBOARD_DISMISS_TIMEOUT
                 )
             }
         }
@@ -179,12 +184,12 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         billingDetailsScrollView.setOnScrollChangeListener(
             NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
                 val autoTransition = AutoTransition()
-                autoTransition.duration = 200
+                autoTransition.duration = BOTTOM_APP_BAR_ELEVATION_CHANGE_DURATION
                 TransitionManager.beginDelayedTransition(billingContainer, autoTransition)
                 if (v.canScrollVertically(1)) {
-                    billingDetailsBottomAppBar.elevation = 10f
+                    billingDetailsBottomAppBar.elevation = resources.getDimension(R.dimen.elevation_4)
                 } else {
-                    billingDetailsBottomAppBar.elevation = 0f
+                    billingDetailsBottomAppBar.elevation = resources.getDimension(R.dimen.elevation_0)
                 }
             }
         )
