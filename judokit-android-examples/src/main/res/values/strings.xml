@@ -36,9 +36,6 @@
     <string name="feature_title_pay_by_bank_app">Pay by Bank app</string>
     <string name="feature_subtitle_pay_by_bank_app">by using your existing Bank app</string>
 
-    <string name="feature_title_token_payment">Token payments</string>
-    <string name="feature_subtitle_token_payment">Token payments (no UI)</string>
-
     <string name="feature_title_get_transaction_details">Get transaction details</string>
     <string name="feature_subtitle_get_transaction_details">Get transaction for receipt ID</string>
 
@@ -139,6 +136,7 @@
 
     <string name="three_ds2_max_timeout_summary">Max timeout for 3DS 2.0 transaction</string>
     <string name="three_ds2_max_timeout_title">3DS 2.0 max timeout</string>
+
     <string name="feature_title_payment_no_ui">Card payments no UI</string>
-    <string name="feature_subtitle_payment_no_ui">Card payments using transactionDetail</string>
+    <string name="feature_subtitle_payment_no_ui">Card payments using card transaction service</string>
 </resources>

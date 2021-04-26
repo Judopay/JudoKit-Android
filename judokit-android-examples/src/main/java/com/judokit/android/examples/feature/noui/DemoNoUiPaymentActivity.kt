@@ -99,7 +99,8 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
                         setResult(result.code, result.toIntent())
                         finish()
                     }
-                })
+                }
+            )
         }
 
         createCardTokenButton.setOnClickListener {
@@ -123,7 +124,8 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
                         setResult(result.code, result.toIntent())
                         finish()
                     }
-                })
+                }
+            )
         }
 
         preAuthTokenPaymentButton.setOnClickListener {
@@ -142,7 +144,8 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
                         setResult(result.code, result.toIntent())
                         finish()
                     }
-                })
+                }
+            )
         }
     }
 

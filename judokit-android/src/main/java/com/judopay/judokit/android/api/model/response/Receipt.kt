@@ -1,7 +1,6 @@
 package com.judopay.judokit.android.api.model.response
 
 import com.google.gson.JsonObject
-import com.judopay.judo3ds2.transaction.challenge.ChallengeParameters
 import com.judopay.judokit.android.model.CardVerificationModel
 import com.judopay.judokit.android.model.JudoResult
 import java.math.BigDecimal

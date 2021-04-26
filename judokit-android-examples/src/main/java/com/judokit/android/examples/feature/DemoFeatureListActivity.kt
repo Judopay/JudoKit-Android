@@ -20,8 +20,8 @@ import com.judokit.android.examples.R
 import com.judokit.android.examples.common.startResultActivity
 import com.judokit.android.examples.common.toResult
 import com.judokit.android.examples.feature.adapter.DemoFeaturesAdapter
-import com.judokit.android.examples.feature.paybybank.PayByBankActivity
 import com.judokit.android.examples.feature.noui.DemoNoUiPaymentActivity
+import com.judokit.android.examples.feature.paybybank.PayByBankActivity
 import com.judokit.android.examples.model.DemoFeature
 import com.judokit.android.examples.settings.SettingsActivity
 import com.judopay.judokit.android.JUDO_ERROR
