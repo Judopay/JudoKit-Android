@@ -274,6 +274,7 @@ class CardEntryViewModel(
         val cardTransactionCallback = object : CardTransactionCallback {
             override fun onFinish(result: JudoPaymentResult) {
                 judoPaymentResult.postValue(result)
+                buildModel(isLoading = false, isFormValid = true)
             }
         }
         val transactionDetailBuilder = TransactionDetail.Builder()
@@ -300,8 +301,6 @@ class CardEntryViewModel(
             transactionDetailBuilder.build(),
             cardTransactionCallback
         )
-
-        buildModel(isLoading = false, isFormValid = true)
     }
 
     private fun buildModel(

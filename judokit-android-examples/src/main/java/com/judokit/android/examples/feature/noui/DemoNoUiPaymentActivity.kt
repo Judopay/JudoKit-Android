@@ -8,8 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.judokit.android.examples.R
 import com.judokit.android.examples.feature.JUDO_PAYMENT_WIDGET_REQUEST_CODE
-import com.judopay.judo3ds2.model.ConfigParameters
-import com.judopay.judo3ds2.service.ThreeDS2ServiceImpl
 import com.judopay.judokit.android.JUDO_OPTIONS
 import com.judopay.judokit.android.JUDO_RESULT
 import com.judopay.judokit.android.Judo
@@ -31,7 +29,6 @@ import com.judopay.judokit.android.model.toIntent
 import com.judopay.judokit.android.service.CardTransactionCallback
 import com.judopay.judokit.android.service.CardTransactionService
 import com.judopay.judokit.android.ui.common.ButtonState
-import com.judopay.judokit.android.ui.common.getLocale
 import kotlinx.android.synthetic.main.activity_demo_no_ui_payment.*
 
 private const val REGISTER_CARD_REQUEST_CODE = 2
@@ -47,7 +44,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var service: JudoApiService
-    private val threeDS2Service = ThreeDS2ServiceImpl()
+    private lateinit var cardTransactionService: CardTransactionService
     private lateinit var transactionDetailsBuilder: TransactionDetail.Builder
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,12 +56,6 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
             ?: throw IllegalStateException("Judo object is required")
 
         service = JudoApiServiceFactory.createApiService(this, judo)
-        threeDS2Service.initialize(
-            this,
-            ConfigParameters(),
-            getLocale(resources),
-            null
-        )
         tokenPaymentButton.state = ButtonState.Disabled(R.string.token_payment)
         preAuthTokenPaymentButton.state = ButtonState.Disabled(R.string.preauth_token_payment)
         transactionDetailsBuilder = TransactionDetail.Builder()
@@ -80,11 +71,10 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
             .setPostalCode(judo.address?.postCode)
 
         cardPaymentButton.setOnClickListener {
-            val cardTransactionService = CardTransactionService(
+            cardTransactionService = CardTransactionService(
                 this,
                 getJudo(judo, PaymentWidgetType.CARD_PAYMENT),
-                service,
-                threeDS2Service
+                service
             )
             handleState(ActivityState.PayWithCard)
             cardTransactionService.makeTransaction(
@@ -105,15 +95,14 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
 
         createCardTokenButton.setOnClickListener {
             val intent = Intent(this@DemoNoUiPaymentActivity, JudoActivity::class.java)
-            intent.putExtra(JUDO_OPTIONS, judo)
+            intent.putExtra(JUDO_OPTIONS, getJudo(judo, PaymentWidgetType.CREATE_CARD_TOKEN))
             startActivityForResult(intent, REGISTER_CARD_REQUEST_CODE)
         }
         tokenPaymentButton.setOnClickListener {
-            val cardTransactionService = CardTransactionService(
+            cardTransactionService = CardTransactionService(
                 this,
                 getJudo(judo, PaymentWidgetType.CARD_PAYMENT),
-                service,
-                threeDS2Service
+                service
             )
             handleState(ActivityState.PayWithToken)
             cardTransactionService.tokenPayment(
@@ -129,11 +118,10 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
         }
 
         preAuthTokenPaymentButton.setOnClickListener {
-            val cardTransactionService = CardTransactionService(
+            cardTransactionService = CardTransactionService(
                 this,
                 getJudo(judo, PaymentWidgetType.PRE_AUTH),
-                service,
-                threeDS2Service
+                service
             )
             handleState(ActivityState.PayWithPreAuthToken)
             cardTransactionService.tokenPayment(
@@ -181,6 +169,11 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
             setResult(resultCode, data)
             finish()
         }
+    }
+
+    override fun onDestroy() {
+        cardTransactionService.close()
+        super.onDestroy()
     }
 
     private fun handleState(state: ActivityState) {

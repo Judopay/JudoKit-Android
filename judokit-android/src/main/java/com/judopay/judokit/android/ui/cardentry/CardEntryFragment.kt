@@ -22,8 +22,6 @@ import cards.pay.paycardsrecognizer.sdk.ScanCardIntent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.judopay.judo3ds2.model.ConfigParameters
-import com.judopay.judo3ds2.service.ThreeDS2ServiceImpl
 import com.judopay.judokit.android.JudoSharedViewModel
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.SCAN_CARD_REQUEST_CODE
@@ -40,7 +38,6 @@ import com.judopay.judokit.android.service.CardTransactionService
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldType
 import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
-import com.judopay.judokit.android.ui.common.getLocale
 import com.judopay.judokit.android.ui.paymentmethods.CARD_ENTRY_OPTIONS
 import kotlinx.android.synthetic.main.billing_details_form_view.*
 import kotlinx.android.synthetic.main.card_entry_form_view.*
@@ -58,7 +55,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
 
     private lateinit var viewModel: CardEntryViewModel
     private lateinit var service: JudoApiService
-    private val threeDS2Service = ThreeDS2ServiceImpl()
+    private lateinit var cardTransactionService: CardTransactionService
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
 
     override fun getTheme(): Int = R.style.JudoTheme_BottomSheetDialogTheme
@@ -71,14 +68,9 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
         service = JudoApiServiceFactory.createApiService(application, judo)
         val cardEntryOptions = arguments?.getParcelable<CardEntryOptions>(CARD_ENTRY_OPTIONS)
-        threeDS2Service.initialize(
-            requireActivity(),
-            ConfigParameters(),
-            getLocale(resources),
-            null
-        )
-        val cardTransactionService =
-            CardTransactionService(requireActivity(), judo, service, threeDS2Service)
+
+        cardTransactionService =
+            CardTransactionService(requireActivity(), judo, service)
         val factory = CardEntryViewModelFactory(
             judo,
             cardTransactionService,
@@ -216,7 +208,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
     }
 
     override fun onDestroy() {
-        threeDS2Service.cleanup(requireActivity())
+        cardTransactionService.close()
         super.onDestroy()
     }
 

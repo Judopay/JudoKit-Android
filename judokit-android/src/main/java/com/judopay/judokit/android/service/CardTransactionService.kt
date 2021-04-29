@@ -5,9 +5,10 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.judopay.judo3ds2.model.CompletionEvent
+import com.judopay.judo3ds2.model.ConfigParameters
 import com.judopay.judo3ds2.model.ProtocolErrorEvent
 import com.judopay.judo3ds2.model.RuntimeErrorEvent
-import com.judopay.judo3ds2.service.ThreeDS2Service
+import com.judopay.judo3ds2.service.ThreeDS2ServiceImpl
 import com.judopay.judo3ds2.transaction.Transaction
 import com.judopay.judo3ds2.transaction.challenge.ChallengeParameters
 import com.judopay.judo3ds2.transaction.challenge.ChallengeStatusReceiver
@@ -42,6 +43,7 @@ import com.judopay.judokit.android.toMap
 import com.judopay.judokit.android.ui.cardverification.THREE_DS_ONE_DIALOG_FRAGMENT_TAG
 import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCardVerificationDialogFragment
 import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
+import com.judopay.judokit.android.ui.common.getLocale
 import kotlinx.coroutines.launch
 import retrofit2.await
 import java.util.Date
@@ -55,20 +57,32 @@ interface CardTransactionCallback {
 class CardTransactionService(
     private val activity: FragmentActivity,
     private val judo: Judo,
-    private val service: JudoApiService,
-    private val threeDS2Service: ThreeDS2Service
+    private val service: JudoApiService
 ) : ThreeDSOneCompletionCallback, ChallengeStatusReceiver {
 
-    lateinit var result: JudoPaymentResult
-    lateinit var callback: CardTransactionCallback
-    lateinit var transaction: Transaction
+    private var threeDS2Service: ThreeDS2ServiceImpl = ThreeDS2ServiceImpl()
+    private lateinit var result: JudoPaymentResult
+    private lateinit var callback: CardTransactionCallback
+    private lateinit var transaction: Transaction
     private var progressDialog: ProgressDialog? = null
+
+    init {
+        threeDS2Service.initialize(
+            activity,
+            ConfigParameters(),
+            getLocale(activity.resources),
+            null
+        )
+    }
 
     fun makeTransaction(transactionDetail: TransactionDetail, callback: CardTransactionCallback) {
         try {
             this.callback = callback
             activity.lifecycleScope.launch {
-                transaction = threeDS2Service.createTransaction("F000000000", "2.1.0")
+                transaction = threeDS2Service.createTransaction(
+                    "F000000000",
+                    "2.2.0"
+                )
                 val address =
                     if (judo.is3DS2Enabled && !judo.paymentWidgetType.isPaymentMethodsWidget) {
                         Address.Builder().apply {
@@ -122,7 +136,10 @@ class CardTransactionService(
         try {
             this.callback = callback
             activity.lifecycleScope.launch {
-                transaction = threeDS2Service.createTransaction("F000000000", "2.2.0")
+                transaction = threeDS2Service.createTransaction(
+                    "F000000000",
+                    "2.2.0"
+                )
                 val address =
                     if (judo.is3DS2Enabled) {
                         Address.Builder().apply {
@@ -172,6 +189,10 @@ class CardTransactionService(
             callback.onFinish(JudoPaymentResult.Error(JudoError.judoInternalError(e.message)))
             progressDialog?.dismiss()
         }
+    }
+
+    fun close() {
+        threeDS2Service.cleanup(activity)
     }
 
     private fun handleApiResult(
