@@ -58,8 +58,46 @@ class CardTransactionService(
     private val activity: FragmentActivity,
     private val judo: Judo,
     private val service: JudoApiService
-) : ThreeDSOneCompletionCallback, ChallengeStatusReceiver {
+) {
 
+    private val challengeStatusReceiver = object : ChallengeStatusReceiver {
+        override fun cancelled() {
+            progressDialog?.dismiss()
+            TODO("Not yet implemented")
+        }
+
+        override fun completed(completionEvent: CompletionEvent) {
+            progressDialog?.dismiss()
+            TODO("Not yet implemented")
+        }
+
+        override fun protocolError(protocolErrorEvent: ProtocolErrorEvent) {
+            progressDialog?.dismiss()
+            TODO("Not yet implemented")
+        }
+
+        override fun runtimeError(runtimeErrorEvent: RuntimeErrorEvent) {
+            progressDialog?.dismiss()
+            TODO("Not yet implemented")
+        }
+
+        override fun timedout() {
+            progressDialog?.dismiss()
+            TODO("Not yet implemented")
+        }
+    }
+
+   private val threeDSOneCompletionCallback = object : ThreeDSOneCompletionCallback{
+       override fun onSuccess(success: JudoPaymentResult) {
+           transaction.close()
+           callback.onFinish(success as JudoPaymentResult.Success)
+       }
+
+       override fun onFailure(error: JudoPaymentResult) {
+           transaction.close()
+           callback.onFinish(error)
+       }
+   }
     private var threeDS2Service: ThreeDS2ServiceImpl = ThreeDS2ServiceImpl()
     private lateinit var result: JudoPaymentResult
     private lateinit var callback: CardTransactionCallback
@@ -81,7 +119,7 @@ class CardTransactionService(
             activity.lifecycleScope.launch {
                 transaction = threeDS2Service.createTransaction(
                     "F000000000",
-                    "2.2.0"
+                    "2.1.0"
                 )
                 val address =
                     if (judo.is3DS2Enabled && !judo.paymentWidgetType.isPaymentMethodsWidget) {
@@ -208,7 +246,7 @@ class CardTransactionService(
                         ThreeDSOneCardVerificationDialogFragment(
                             service,
                             receipt.toCardVerificationModel(),
-                            this
+                            threeDSOneCompletionCallback
                         ).show(activity.supportFragmentManager, THREE_DS_ONE_DIALOG_FRAGMENT_TAG)
                     }
                     receipt.is3dSecure2Required -> {
@@ -227,7 +265,7 @@ class CardTransactionService(
                         transaction.doChallenge(
                             activity,
                             challengeParameters,
-                            this,
+                            challengeStatusReceiver,
                             THREE_DS_TWO_MIN_TIMEOUT
                         )
                     }
@@ -401,40 +439,5 @@ class CardTransactionService(
             )
         )
         callback.onFinish(JudoPaymentResult.Success(receipt.toJudoResult()))
-    }
-
-    override fun onSuccess(success: JudoPaymentResult) {
-        transaction.close()
-        callback.onFinish(success as JudoPaymentResult.Success)
-    }
-
-    override fun onFailure(error: JudoPaymentResult) {
-        transaction.close()
-        callback.onFinish(error)
-    }
-
-    override fun cancelled() {
-        progressDialog?.dismiss()
-        TODO("Not yet implemented")
-    }
-
-    override fun completed(completionEvent: CompletionEvent) {
-        progressDialog?.dismiss()
-        TODO("Not yet implemented")
-    }
-
-    override fun protocolError(protocolErrorEvent: ProtocolErrorEvent) {
-        progressDialog?.dismiss()
-        TODO("Not yet implemented")
-    }
-
-    override fun runtimeError(runtimeErrorEvent: RuntimeErrorEvent) {
-        progressDialog?.dismiss()
-        TODO("Not yet implemented")
-    }
-
-    override fun timedout() {
-        progressDialog?.dismiss()
-        TODO("Not yet implemented")
     }
 }
