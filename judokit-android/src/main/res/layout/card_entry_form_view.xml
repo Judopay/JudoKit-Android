@@ -175,7 +175,6 @@
             android:layout_height="wrap_content"
             android:paddingEnd="@dimen/space_24">
 
-
             <com.judopay.judokit.android.ui.common.ProgressButton
                 android:id="@+id/cardEntrySubmitButton"
                 style="@style/JudoTheme.BlackRoundedButton"
