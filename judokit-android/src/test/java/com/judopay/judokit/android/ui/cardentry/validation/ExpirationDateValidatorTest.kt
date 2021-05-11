@@ -2,6 +2,7 @@ package com.judopay.judokit.android.ui.cardentry.validation
 
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.model.response.CardDate
+import com.judopay.judokit.android.ui.cardentry.validation.carddetails.ExpirationDateValidator
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals

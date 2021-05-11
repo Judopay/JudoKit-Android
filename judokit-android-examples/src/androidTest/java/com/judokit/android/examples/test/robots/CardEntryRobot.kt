@@ -148,7 +148,7 @@ class CardEntryRobot {
     fun expectedValue(view: String, expectedValue: String) {
         val matchedView = when (view) {
             View.POST_CODE.value -> onView(withId(R.id.postcodeTextInputEditText))
-            View.SUBMIT_BUTTON.value -> onView(withId(R.id.submitButton))
+            View.SUBMIT_BUTTON.value -> onView(withId(R.id.cardEntryButton))
             else -> throw ViewNotDefinedException(CardEntryRobot::class.qualifiedName, view)
         }
         matchedView.check(matches(withText(expectedValue)))

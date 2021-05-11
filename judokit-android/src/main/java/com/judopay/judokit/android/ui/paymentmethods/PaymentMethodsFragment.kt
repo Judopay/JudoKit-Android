@@ -13,8 +13,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.judopay.judo3ds2.model.ConfigParameters
-import com.judopay.judo3ds2.service.ThreeDS2ServiceImpl
 import com.judopay.judokit.android.JudoSharedAction
 import com.judopay.judokit.android.JudoSharedViewModel
 import com.judopay.judokit.android.R
@@ -27,7 +25,7 @@ import com.judopay.judokit.android.judo
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.service.CardTransactionService
-import com.judopay.judokit.android.ui.common.getLocale
+import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
 import com.judopay.judokit.android.ui.ideal.JUDO_IDEAL_BANK
 import com.judopay.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapter
@@ -45,7 +43,7 @@ import kotlinx.android.synthetic.main.payment_methods_fragment.*
 import kotlinx.android.synthetic.main.payment_methods_header_view.*
 
 internal const val PAYMENT_WIDGET_TYPE = "com.judopay.judokit.android.model.paymentWidgetType"
-internal const val CARD_NETWORK = "com.judopay.judokit.android.cardNetwork"
+internal const val CARD_ENTRY_OPTIONS = "com.judopay.judokit.android.cardEntryOptions"
 
 data class PaymentMethodsModel(
     val headerModel: PaymentMethodsHeaderViewModel,
@@ -56,7 +54,7 @@ class PaymentMethodsFragment : Fragment() {
 
     private lateinit var viewModel: PaymentMethodsViewModel
     private lateinit var service: JudoApiService
-    private val threeDS2Service = ThreeDS2ServiceImpl()
+    private lateinit var cardTransactionService: CardTransactionService
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -87,11 +85,16 @@ class PaymentMethodsFragment : Fragment() {
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
         service = JudoApiServiceFactory.createApiService(application, judo)
-        threeDS2Service.initialize(requireActivity(), ConfigParameters(), getLocale(resources), null)
-        val cardTransactionService = CardTransactionService(requireActivity(), judo, service, threeDS2Service)
+        cardTransactionService = CardTransactionService(requireActivity(), judo, service)
 
         val factory =
-            PaymentMethodsViewModelFactory(cardDate, cardRepository, cardTransactionService, application, judo)
+            PaymentMethodsViewModelFactory(
+                cardDate,
+                cardRepository,
+                cardTransactionService,
+                application,
+                judo
+            )
 
         viewModel = ViewModelProvider(this, factory).get(PaymentMethodsViewModel::class.java)
         viewModel.model.observe(viewLifecycleOwner, { updateWithModel(it) })
@@ -132,14 +135,14 @@ class PaymentMethodsFragment : Fragment() {
             }
         )
 
-        viewModel.selectedCardNetworkObserver.observe(
+        viewModel.displayCardEntryObserver.observe(
             viewLifecycleOwner,
             {
-                it.getContentIfNotHandled()?.let { cardNetwork ->
+                it.getContentIfNotHandled()?.let { cardEntryOptions ->
                     findNavController().navigate(
                         R.id.action_paymentMethodsFragment_to_cardEntryFragment,
                         bundleOf(
-                            CARD_NETWORK to cardNetwork
+                            CARD_ENTRY_OPTIONS to cardEntryOptions
                         )
                     )
                 }
@@ -153,16 +156,16 @@ class PaymentMethodsFragment : Fragment() {
                 sharedViewModel.paymentResult.postValue(result)
             }
         )
-        sharedViewModel.securityCodeResult.observe(
+        sharedViewModel.cardEntryToPaymentMethodResult.observe(
             viewLifecycleOwner,
-            { securityCode ->
-                viewModel.send(PaymentMethodsAction.PayWithSelectedStoredCard(securityCode))
+            { transactionDetailBuilder ->
+                viewModel.send(PaymentMethodsAction.PayWithCard(transactionDetailBuilder))
             }
         )
     }
 
     override fun onDestroy() {
-        threeDS2Service.cleanup(requireActivity())
+        cardTransactionService.destroy()
         super.onDestroy()
     }
 
@@ -229,7 +232,17 @@ class PaymentMethodsFragment : Fragment() {
     }
 
     private fun onAddCard() =
-        findNavController().navigate(R.id.action_paymentMethodsFragment_to_cardEntryFragment)
+        findNavController().navigate(
+            R.id.action_paymentMethodsFragment_to_cardEntryFragment,
+            bundleOf(
+                CARD_ENTRY_OPTIONS to CardEntryOptions(
+                    fromPaymentMethods = true,
+                    shouldDisplayBillingDetails = false,
+                    shouldDisplaySecurityCode = null,
+                    addCardPressed = true
+                )
+            )
+        )
 
     private fun updateWithModel(model: PaymentMethodsModel) {
         headerView.paymentMethods = judo.paymentMethods.toList()
@@ -266,7 +279,7 @@ class PaymentMethodsFragment : Fragment() {
         paymentCallToActionView.callbackListener = {
             when (it) {
                 PaymentCallToActionType.PAY_WITH_CARD -> {
-                    viewModel.send(PaymentMethodsAction.PayWithSelectedStoredCard())
+                    viewModel.send(PaymentMethodsAction.InitiateSelectedCardPayment)
                 }
                 PaymentCallToActionType.PAY_WITH_GOOGLE_PAY -> {
                     sharedViewModel.send(JudoSharedAction.LoadGPayPaymentData)

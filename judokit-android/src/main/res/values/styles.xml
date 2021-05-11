@@ -2,7 +2,6 @@
     <style name="JudoTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:fontFamily">@font/sf_pro_display</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
-
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="alertDialogTheme">@style/Theme.AppCompat.Light.Dialog.Alert</item>

@@ -83,7 +83,14 @@ internal class PaymentMethodsViewModelTest {
         every { PBBAAppUtils.isCFIAppAvailable(application) } returns false
         coEvery { repository.findWithId(0) } returns mockk(relaxed = true)
         coEvery { repository.allCardsSync.value } returns null
-        coEvery { cardTransactionService.tokenPayment(any(), any(), capture(cardTransactionCallback)) } coAnswers { cardTransactionCallback }
+        coEvery {
+            cardTransactionService.tokenPayment(
+                any(),
+                any(),
+                billingDetails,
+                capture(cardTransactionCallback)
+            )
+        } coAnswers { cardTransactionCallback }
 
         sut = PaymentMethodsViewModel(
             cardDate,
@@ -342,7 +349,7 @@ internal class PaymentMethodsViewModelTest {
 
         sut.model.observeForever(paymentMethodsModel)
 
-        sut.send(PaymentMethodsAction.PayWithSelectedStoredCard())
+        sut.send(PaymentMethodsAction.InitiateSelectedCardPayment())
 
         verify { paymentMethodsModel.onChanged(capture(slots)) }
         val model = slots[1]
@@ -355,7 +362,7 @@ internal class PaymentMethodsViewModelTest {
         val card = mockk<TokenizedCardEntity>(relaxed = true) { every { isDefault } returns true }
         every { repository.allCardsSync.value } returns listOf(card)
 
-        sut.send(PaymentMethodsAction.PayWithSelectedStoredCard())
+        sut.send(PaymentMethodsAction.InitiateSelectedCardPayment())
 
         coVerify { repository.findWithId(0) }
     }
@@ -382,7 +389,7 @@ internal class PaymentMethodsViewModelTest {
 
         sut.judoPaymentResult.observeForever(judoPaymentResult)
 
-        sut.send(PaymentMethodsAction.PayWithSelectedStoredCard())
+        sut.send(PaymentMethodsAction.InitiateSelectedCardPayment())
         cardTransactionCallback.captured.onFinish(mockk())
 
         verify { judoPaymentResult.onChanged(capture(slots)) }
@@ -399,9 +406,9 @@ internal class PaymentMethodsViewModelTest {
         coEvery { repository.findWithId(1) } returns card
         every { repository.allCardsSync.value } returns listOf(card)
 
-        sut.send(PaymentMethodsAction.PayWithSelectedStoredCard())
+        sut.send(PaymentMethodsAction.InitiateSelectedCardPayment())
 
-        coVerify { cardTransactionService.tokenPayment(any(), any(), any()) }
+        coVerify { cardTransactionService.tokenPayment(any(), any(), billingDetails, any()) }
     }
 
     @DisplayName("Given send with PayWithSelectedStoredCard action is called, when PaymentWidgetType is PRE_AUTH_PAYMENT_METHODS, then call service.preAuthTokenPayment(request)")
@@ -425,9 +432,9 @@ internal class PaymentMethodsViewModelTest {
             judo
         )
 
-        sut.send(PaymentMethodsAction.PayWithSelectedStoredCard())
+        sut.send(PaymentMethodsAction.InitiateSelectedCardPayment())
 
-        coVerify { cardTransactionService.tokenPayment(any(), any(), any()) }
+        coVerify { cardTransactionService.tokenPayment(any(), any(), billingDetails, any()) }
     }
 
     @DisplayName("Given send with PayWithSelectedStoredCard action is called, when PaymentWidgetType is CARD_PAYMENT, then throw IllegalStateException")
@@ -442,7 +449,7 @@ internal class PaymentMethodsViewModelTest {
         every { repository.allCardsSync.value } returns listOf(card)
 
         try {
-            sut.send(PaymentMethodsAction.PayWithSelectedStoredCard())
+            sut.send(PaymentMethodsAction.InitiateSelectedCardPayment())
         } catch (e: IllegalStateException) {
             assertEquals(IllegalStateException::class.java, e::class.java)
         }
@@ -459,7 +466,7 @@ internal class PaymentMethodsViewModelTest {
         coEvery { repository.findWithId(1) } returns card
         every { repository.allCardsSync.value } returns listOf(card)
 
-        sut.send(PaymentMethodsAction.PayWithSelectedStoredCard())
+        sut.send(PaymentMethodsAction.InitiateSelectedCardPayment())
         cardTransactionCallback.captured.onFinish(mockk())
 
         coVerify { repository.updateAllLastUsedToFalse() }
@@ -477,7 +484,7 @@ internal class PaymentMethodsViewModelTest {
         coEvery { repository.findWithId(1) } returns card
         every { repository.allCardsSync.value } returns listOf(card)
 
-        sut.send(PaymentMethodsAction.PayWithSelectedStoredCard())
+        sut.send(PaymentMethodsAction.InitiateSelectedCardPayment())
         cardTransactionCallback.captured.onFinish(mockk())
 
         coVerify { repository.insert(card) }
@@ -719,9 +726,9 @@ internal class PaymentMethodsViewModelTest {
         every { judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode } returns false
         val slots = mutableListOf<Event<CardNetwork>>()
 
-        sut.selectedCardNetworkObserver.observeForever(selectedCardNetworkObserver)
+        sut.displayCardEntryObserver.observeForever(selectedCardNetworkObserver)
 
-        sut.send(PaymentMethodsAction.PayWithSelectedStoredCard())
+        sut.send(PaymentMethodsAction.InitiateSelectedCardPayment())
 
         verify(inverse = true) { selectedCardNetworkObserver.onChanged(capture(slots)) }
     }
@@ -738,9 +745,9 @@ internal class PaymentMethodsViewModelTest {
         every { repository.allCardsSync.value } returns listOf(card)
         val slots = mutableListOf<Event<CardNetwork>>()
 
-        sut.selectedCardNetworkObserver.observeForever(selectedCardNetworkObserver)
+        sut.displayCardEntryObserver.observeForever(selectedCardNetworkObserver)
 
-        sut.send(PaymentMethodsAction.PayWithSelectedStoredCard("452"))
+        sut.send(PaymentMethodsAction.InitiateSelectedCardPayment("452"))
 
         verify(inverse = true) { selectedCardNetworkObserver.onChanged(capture(slots)) }
     }
@@ -760,9 +767,9 @@ internal class PaymentMethodsViewModelTest {
 
         val slots = mutableListOf<Event<CardNetwork>>()
 
-        sut.selectedCardNetworkObserver.observeForever(selectedCardNetworkObserver)
+        sut.displayCardEntryObserver.observeForever(selectedCardNetworkObserver)
 
-        sut.send(PaymentMethodsAction.PayWithSelectedStoredCard())
+        sut.send(PaymentMethodsAction.InitiateSelectedCardPayment())
 
         verify { selectedCardNetworkObserver.onChanged(capture(slots)) }
     }

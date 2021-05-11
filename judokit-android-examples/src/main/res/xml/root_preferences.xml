@@ -143,7 +143,14 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:title="3DS 2.0">
+        app:title="@string/three_ds2_header">
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="is_3DS2_enabled"
+            app:summary="@string/is_3ds2_enabled_summary"
+            app:title="@string/is_3ds2_enabled_title" />
 
         <ListPreference
             app:defaultValue="NO_PREFERENCE"
@@ -151,8 +158,8 @@
             app:entryValues="@array/three_ds_two_challenge_request_indicator_values"
             app:iconSpaceReserved="false"
             app:key="challengeRequestIndicator"
-            app:summary="Select challenge request indicator"
-            app:title="Challenge request indicator"
+            app:summary="@string/challenge_request_indicator_summary"
+            app:title="@string/challenge_request_indicator_title"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
@@ -161,16 +168,16 @@
             app:entryValues="@array/three_ds_two_sca_exemption_values"
             app:iconSpaceReserved="false"
             app:key="scaExemption"
-            app:summary="Select SCA exemption"
-            app:title="SCA exemption"
+            app:summary="@string/sca_exemption_summary"
+            app:title="@string/sca_exemption_title"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             app:defaultValue="30"
             app:iconSpaceReserved="false"
             app:key="threeDSTwoMaxTimeout"
-            app:summary="Max timeout for 3DS 2.0 transaction"
-            app:title="3DS 2.0 max timeout"
+            app:summary="@string/three_ds2_max_timeout_summary"
+            app:title="@string/three_ds2_max_timeout_title"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
