@@ -208,7 +208,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
     }
 
     override fun onDestroy() {
-        cardTransactionService.close()
+        cardTransactionService.destroy()
         super.onDestroy()
     }
 

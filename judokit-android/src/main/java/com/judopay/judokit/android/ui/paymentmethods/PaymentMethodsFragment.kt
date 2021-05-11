@@ -165,7 +165,7 @@ class PaymentMethodsFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        cardTransactionService.close()
+        cardTransactionService.destroy()
         super.onDestroy()
     }
 

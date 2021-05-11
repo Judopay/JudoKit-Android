@@ -172,7 +172,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        cardTransactionService.close()
+        cardTransactionService.destroy()
         super.onDestroy()
     }
 

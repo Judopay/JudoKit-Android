@@ -229,7 +229,7 @@ class CardTransactionService(
         }
     }
 
-    fun close() {
+    fun destroy() {
         threeDS2Service.cleanup(activity)
     }
 
