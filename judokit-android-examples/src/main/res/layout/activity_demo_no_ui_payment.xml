@@ -4,7 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.judopay.judokit.android.examples.com.judokit.android.examples.feature.tokenpayment.DemoTokenPaymentActivity">
+    tools:context="com.judokit.android.examples.feature.noui.DemoNoUiPaymentActivity">
+
+    <com.judopay.judokit.android.ui.common.ProgressButton
+        android:id="@+id/cardPaymentButton"
+        style="@style/JudoTheme.BlackRoundedButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:minWidth="@dimen/min_touch_target_size"
+        android:text="@string/feature_title_payment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/tokenPaymentDescription"
@@ -18,7 +32,7 @@
         android:text="@string/token_payment_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/cardPaymentButton"/>
 
     <com.judopay.judokit.android.ui.common.ProgressButton
         android:id="@+id/createCardTokenButton"

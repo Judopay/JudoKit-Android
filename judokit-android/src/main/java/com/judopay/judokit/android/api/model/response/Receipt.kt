@@ -1,7 +1,6 @@
 package com.judopay.judokit.android.api.model.response
 
 import com.google.gson.JsonObject
-import com.judopay.judo3ds2.transaction.challenge.ChallengeParameters
 import com.judopay.judokit.android.model.CardVerificationModel
 import com.judopay.judokit.android.model.JudoResult
 import java.math.BigDecimal
@@ -41,7 +40,8 @@ class Receipt(
     val acsUiTemplate: String? = null,
     val threeDSServerTransactionID: String? = null,
     val acsTransactionId: String? = null,
-    val acsThreeDSRequestorAppURL: String? = null
+    val acsThreeDSRequestorAppURL: String? = null,
+    val cReq: String? = null
 ) {
 
     val is3dSecureRequired: Boolean
@@ -82,10 +82,9 @@ fun Receipt.toCardVerificationModel() = CardVerificationModel.Builder()
     .setAcsUrl(acsUrl)
     .build()
 
-fun Receipt.toChallengeParameters() = ChallengeParameters(
-    threeDSServerTransactionID,
-    acsTransactionId,
-    acsReferenceNumber,
-    acsSignedContent,
-    acsThreeDSRequestorAppURL
+data class CReqParameters(
+    val messageType: String,
+    val messageVersion: String,
+    val threeDSServerTransID: String,
+    val acsTransID: String
 )

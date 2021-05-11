@@ -2,6 +2,8 @@
 
     <!-- Grid spacing -->
     <dimen name="negative_space_3">-3dp</dimen>
+    <dimen name="negative_space_4">-4dp</dimen>
+    <dimen name="space_1">1dp</dimen>
     <dimen name="space_3">3dp</dimen>
     <dimen name="space_4">4dp</dimen>
     <dimen name="space_6">6dp</dimen>
@@ -17,9 +19,11 @@
     <dimen name="space_40">40dp</dimen>
     <dimen name="space_48">48dp</dimen>
     <dimen name="space_56">56dp</dimen>
+    <dimen name="space_68">68dp</dimen>
     <dimen name="space_132">132dp</dimen>
 
     <dimen name="height_1">1dp</dimen>
+    <dimen name="height_8">8dp</dimen>
     <dimen name="height_60">60dp</dimen>
     <dimen name="height_250">250dp</dimen>
     <dimen name="width_60">60dp</dimen>
@@ -55,8 +59,9 @@
 
     <!-- Cards -->
     <dimen name="card_corner_radius">10dp</dimen>
-    <dimen name="card_elevation_8dp">8dp</dimen>
     <dimen name="card_elevation_2dp">2dp</dimen>
+    <dimen name="card_elevation_8dp">8dp</dimen>
+    <dimen name="elevation_4">4dp</dimen>
     <dimen name="card_height">190dp</dimen>
 
     <dimen name="payment_selector_height">64dp</dimen>
@@ -74,5 +79,9 @@
     <dimen name="size_120">120dp</dimen>
     <dimen name="width_card_image_view">74dp</dimen>
     <dimen name="height_card_image_view">32dp</dimen>
+    <dimen name="space_80">80dp</dimen>
+    <dimen name="space_94">94dp</dimen>
+    <dimen name="elevation_0">0dp</dimen>
+    <dimen name="width_100">100dp</dimen>
 
 </resources>
