@@ -1,18 +1,23 @@
 package com.judopay.judokit.android.service
 
+import android.util.Base64
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.judopay.judo3ds2.model.CompletionEvent
+import com.judopay.judo3ds2.model.ConfigParameters
 import com.judopay.judo3ds2.model.ProtocolErrorEvent
 import com.judopay.judo3ds2.model.RuntimeErrorEvent
-import com.judopay.judo3ds2.service.ThreeDS2Service
+import com.judopay.judo3ds2.service.ThreeDS2ServiceImpl
 import com.judopay.judo3ds2.transaction.Transaction
+import com.judopay.judo3ds2.transaction.challenge.ChallengeParameters
 import com.judopay.judo3ds2.transaction.challenge.ChallengeStatusReceiver
 import com.judopay.judo3ds2.ui.views.ProgressDialog
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.request.CheckCardRequest
+import com.judopay.judokit.android.api.model.request.Complete3DS2Request
 import com.judopay.judokit.android.api.model.request.PaymentRequest
 import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
@@ -20,18 +25,18 @@ import com.judopay.judokit.android.api.model.request.TokenRequest
 import com.judopay.judokit.android.api.model.request.threedsecure.EphemeralPublicKey
 import com.judopay.judokit.android.api.model.request.threedsecure.SdkParameters
 import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
+import com.judopay.judokit.android.api.model.response.CReqParameters
 import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.api.model.response.Consumer
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.api.model.response.toCardVerificationModel
-import com.judopay.judokit.android.api.model.response.toChallengeParameters
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
 import com.judopay.judokit.android.api.model.response.toJudoResult
-import com.judopay.judokit.android.db.entity.TokenizedCardEntity
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentWidgetType
+import com.judopay.judokit.android.model.REQUEST_FAILED
 import com.judopay.judokit.android.model.TransactionDetail
 import com.judopay.judokit.android.model.displayName
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
@@ -40,6 +45,8 @@ import com.judopay.judokit.android.toMap
 import com.judopay.judokit.android.ui.cardverification.THREE_DS_ONE_DIALOG_FRAGMENT_TAG
 import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCardVerificationDialogFragment
 import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
+import com.judopay.judokit.android.ui.common.getLocale
+import kotlinx.coroutines.launch
 import retrofit2.await
 import java.util.Date
 
@@ -52,112 +59,204 @@ interface CardTransactionCallback {
 class CardTransactionService(
     private val activity: FragmentActivity,
     private val judo: Judo,
-    private val service: JudoApiService,
-    private val threeDS2Service: ThreeDS2Service
-) : ThreeDSOneCompletionCallback, ChallengeStatusReceiver {
+    private val service: JudoApiService
+) {
 
-    lateinit var result: JudoPaymentResult
-    lateinit var callback: CardTransactionCallback
-    lateinit var transaction: Transaction
+    private lateinit var receiptId: String
+    private lateinit var cv2: String
+    private lateinit var version: String
+
+    private val challengeStatusReceiver = object : ChallengeStatusReceiver {
+        override fun cancelled() {
+            progressDialog?.dismiss()
+            callback.onFinish(JudoPaymentResult.UserCancelled())
+        }
+
+        override fun completed(completionEvent: CompletionEvent) {
+            progressDialog?.dismiss()
+            activity.lifecycleScope.launch {
+                val result =
+                    service.complete3ds2(receiptId, Complete3DS2Request(version, cv2)).await()
+                callback.onFinish(result.toJudoPaymentResult(activity.resources))
+            }
+        }
+
+        override fun protocolError(protocolErrorEvent: ProtocolErrorEvent) {
+            progressDialog?.dismiss()
+            callback.onFinish(
+                JudoPaymentResult.Error(
+                    JudoError(
+                        protocolErrorEvent.errorMessage.errorCode.toIntOrNull() ?: REQUEST_FAILED,
+                        protocolErrorEvent.errorMessage.errorDescription
+                    )
+                )
+            )
+        }
+
+        override fun runtimeError(runtimeErrorEvent: RuntimeErrorEvent) {
+            progressDialog?.dismiss()
+            callback.onFinish(
+                JudoPaymentResult.Error(
+                    JudoError(
+                        runtimeErrorEvent.errorCode?.toIntOrNull() ?: REQUEST_FAILED,
+                        runtimeErrorEvent.errorMessage
+                    )
+                )
+            )
+        }
+
+        override fun timedout() {
+            progressDialog?.dismiss()
+            JudoPaymentResult.Error(JudoError(REQUEST_FAILED, "Request timed out."))
+        }
+    }
+
+    private val threeDSOneCompletionCallback = object : ThreeDSOneCompletionCallback {
+        override fun onSuccess(success: JudoPaymentResult) {
+            transaction.close()
+            callback.onFinish(success as JudoPaymentResult.Success)
+        }
+
+        override fun onFailure(error: JudoPaymentResult) {
+            transaction.close()
+            callback.onFinish(error)
+        }
+    }
+    private var threeDS2Service: ThreeDS2ServiceImpl = ThreeDS2ServiceImpl()
+    private lateinit var result: JudoPaymentResult
+    private lateinit var callback: CardTransactionCallback
+    private lateinit var transaction: Transaction
     private var progressDialog: ProgressDialog? = null
 
-    suspend fun makeTransaction(transactionDetail: TransactionDetail, callback: CardTransactionCallback) {
+    init {
+        threeDS2Service.initialize(
+            activity,
+            ConfigParameters(),
+            getLocale(activity.resources),
+            null
+        )
+    }
+
+    fun makeTransaction(transactionDetail: TransactionDetail, callback: CardTransactionCallback) {
         try {
             this.callback = callback
-            transaction = threeDS2Service.createTransaction("F000000000", "2.2.0")
-            val address =
-                if (judo.is3DS2Enabled && !judo.paymentWidgetType.isPaymentMethodsWidget) {
-                    Address.Builder().apply {
-                        setLine1(transactionDetail.addressLine1)
-                        setLine2(transactionDetail.addressLine2)
-                        setLine3(transactionDetail.addressLine3)
-                        setTown(transactionDetail.city)
-                        setPostCode(transactionDetail.postalCode)
-                        setCountryCode(transactionDetail.country?.toIntOrNull())
-                    }.build()
-                } else Address.Builder().build()
+            activity.lifecycleScope.launch {
+                transaction = threeDS2Service.createTransaction(
+                    "F000000000",
+                    "2.1.0"
+                )
+                val address =
+                    if (judo.is3DS2Enabled && !judo.paymentWidgetType.isPaymentMethodsWidget) {
+                        Address.Builder().apply {
+                            setLine1(transactionDetail.addressLine1)
+                            setLine2(transactionDetail.addressLine2)
+                            setLine3(transactionDetail.addressLine3)
+                            setTown(transactionDetail.city)
+                            setPostCode(transactionDetail.postalCode)
+                            setCountryCode(transactionDetail.country?.toIntOrNull())
+                        }.build()
+                    } else Address.Builder().build()
 
-            val apiResult = when (judo.paymentWidgetType) {
-                PaymentWidgetType.CARD_PAYMENT -> performPaymentRequest(address, transactionDetail)
-                PaymentWidgetType.PRE_AUTH -> performPreAuthPaymentRequest(
-                    address,
-                    transactionDetail
-                )
-                PaymentWidgetType.REGISTER_CARD -> performRegisterCardRequest(
-                    address,
-                    transactionDetail
-                )
-                PaymentWidgetType.CHECK_CARD -> performCheckCardRequest(address, transactionDetail)
-                PaymentWidgetType.CREATE_CARD_TOKEN,
-                PaymentWidgetType.PAYMENT_METHODS,
-                PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
-                PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS -> performSaveCardRequest(
-                    address,
-                    transactionDetail
-                )
-                else -> throw IllegalStateException("Unsupported PaymentWidgetType")
+                val apiResult = when (judo.paymentWidgetType) {
+                    PaymentWidgetType.CARD_PAYMENT -> performPaymentRequest(
+                        address,
+                        transactionDetail
+                    )
+                    PaymentWidgetType.PRE_AUTH -> performPreAuthPaymentRequest(
+                        address,
+                        transactionDetail
+                    )
+                    PaymentWidgetType.REGISTER_CARD -> performRegisterCardRequest(
+                        address,
+                        transactionDetail
+                    )
+                    PaymentWidgetType.CHECK_CARD -> performCheckCardRequest(
+                        address,
+                        transactionDetail
+                    )
+                    PaymentWidgetType.CREATE_CARD_TOKEN,
+                    PaymentWidgetType.PAYMENT_METHODS,
+                    PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
+                    PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS -> performSaveCardRequest(
+                        address,
+                        transactionDetail
+                    )
+                    else -> throw IllegalStateException("Unsupported PaymentWidgetType")
+                }
+                cv2 = transactionDetail.securityNumber ?: ""
+                handleApiResult(apiResult, callback)
             }
-            handleApiResult(apiResult, callback)
         } catch (e: Exception) {
             callback.onFinish(JudoPaymentResult.Error(JudoError.judoInternalError(e.message)))
             progressDialog?.dismiss()
         }
     }
 
-    internal suspend fun tokenPayment(
-        card: TokenizedCardEntity,
-        transactionDetail: TransactionDetail?,
+    fun tokenPayment(
+        transactionDetail: TransactionDetail,
         callback: CardTransactionCallback
     ) {
         try {
             this.callback = callback
-            transaction = threeDS2Service.createTransaction("F000000000", "2.2.0")
-            val address =
-                if (judo.is3DS2Enabled) {
-                    Address.Builder().apply {
-                        setLine1(transactionDetail?.addressLine1)
-                        setLine2(transactionDetail?.addressLine2)
-                        setLine3(transactionDetail?.addressLine3)
-                        setTown(transactionDetail?.city)
-                        setPostCode(transactionDetail?.postalCode)
-                        setCountryCode(transactionDetail?.country?.toIntOrNull())
-                    }.build()
-                } else Address.Builder().build()
-            if (judo.paymentWidgetType == PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS) {
-                buildReceipt(card)
-            } else {
-                val request = TokenRequest.Builder()
-                    .setAmount(judo.amount.amount)
-                    .setCurrency(judo.amount.currency.name)
-                    .setJudoId(judo.judoId)
-                    .setYourPaymentReference(judo.reference.paymentReference)
-                    .setYourConsumerReference(judo.reference.consumerReference)
-                    .setYourPaymentMetaData(judo.reference.metaData?.toMap())
-                    .setCardLastFour(card.ending)
-                    .setCardToken(card.token)
-                    .setCardType(card.network.typeId)
-                    .setCv2(transactionDetail?.securityNumber)
-                    .setInitialRecurringPayment(judo.initialRecurringPayment)
-                    .setThreeDSecure(buildThreeDSecureParameters())
-                    .setAddress(address)
-                    .setMobileNumber(transactionDetail?.mobileNumber)
-                    .setEmailAddress(transactionDetail?.email)
-                    .setPhoneCountryCode(transactionDetail?.phoneCountryCode)
-                    .build()
+            activity.lifecycleScope.launch {
+                transaction = threeDS2Service.createTransaction(
+                    "F000000000",
+                    "2.2.0"
+                )
+                val address =
+                    if (judo.is3DS2Enabled) {
+                        Address.Builder().apply {
+                            setLine1(transactionDetail.addressLine1)
+                            setLine2(transactionDetail.addressLine2)
+                            setLine3(transactionDetail.addressLine3)
+                            setTown(transactionDetail.city)
+                            setPostCode(transactionDetail.postalCode)
+                            setCountryCode(transactionDetail.country?.toIntOrNull())
+                        }.build()
+                    } else Address.Builder().build()
+                if (judo.paymentWidgetType == PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS) {
+                    buildReceipt(transactionDetail)
+                } else {
+                    val request = TokenRequest.Builder()
+                        .setAmount(judo.amount.amount)
+                        .setCurrency(judo.amount.currency.name)
+                        .setJudoId(judo.judoId)
+                        .setYourPaymentReference(judo.reference.paymentReference)
+                        .setYourConsumerReference(judo.reference.consumerReference)
+                        .setYourPaymentMetaData(judo.reference.metaData?.toMap())
+                        .setCardLastFour(transactionDetail.cardLastFour)
+                        .setCardToken(transactionDetail.cardToken)
+                        .setCardType(transactionDetail.cardType?.typeId ?: 0)
+                        .setCv2(transactionDetail.securityNumber)
+                        .setInitialRecurringPayment(judo.initialRecurringPayment)
+                        .setThreeDSecure(buildThreeDSecureParameters())
+                        .setAddress(address)
+                        .setMobileNumber(transactionDetail.mobileNumber)
+                        .setEmailAddress(transactionDetail.email)
+                        .setPhoneCountryCode(transactionDetail.phoneCountryCode)
+                        .build()
 
-                val response = when (judo.paymentWidgetType) {
-                    PaymentWidgetType.PAYMENT_METHODS -> service.tokenPayment(request).await()
-                    PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> service.preAuthTokenPayment(
-                        request
-                    ).await()
-                    else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
+                    val response = when (judo.paymentWidgetType) {
+                        PaymentWidgetType.PAYMENT_METHODS, PaymentWidgetType.CARD_PAYMENT -> service.tokenPayment(
+                            request
+                        ).await()
+                        PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS, PaymentWidgetType.PRE_AUTH -> service.preAuthTokenPayment(
+                            request
+                        ).await()
+                        else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
+                    }
+                    cv2 = transactionDetail.securityNumber ?: ""
+                    handleApiResult(response, callback)
                 }
-                handleApiResult(response, callback)
             }
         } catch (e: Exception) {
             callback.onFinish(JudoPaymentResult.Error(JudoError.judoInternalError(e.message)))
             progressDialog?.dismiss()
         }
+    }
+
+    fun destroy() {
+        threeDS2Service.cleanup(activity)
     }
 
     private fun handleApiResult(
@@ -173,15 +272,29 @@ class CardTransactionService(
                         ThreeDSOneCardVerificationDialogFragment(
                             service,
                             receipt.toCardVerificationModel(),
-                            this
+                            threeDSOneCompletionCallback
                         ).show(activity.supportFragmentManager, THREE_DS_ONE_DIALOG_FRAGMENT_TAG)
                     }
                     receipt.is3dSecure2Required -> {
+
+                        val cReqParams = Gson().fromJson(
+                            String(Base64.decode(receipt.cReq, Base64.NO_WRAP)),
+                            CReqParameters::class.java
+                        )
+                        receiptId = receipt.receiptId ?: ""
+                        version = cReqParams.messageVersion
+                        val challengeParameters = ChallengeParameters(
+                            cReqParams.threeDSServerTransID,
+                            cReqParams.acsTransID,
+                            receipt.acsReferenceNumber,
+                            receipt.acsSignedContent,
+                            null
+                        )
                         progressDialog = transaction.getProgressView(activity).also { it.show() }
                         transaction.doChallenge(
                             activity,
-                            receipt.toChallengeParameters(),
-                            this,
+                            challengeParameters,
+                            challengeStatusReceiver,
                             THREE_DS_TWO_MIN_TIMEOUT
                         )
                     }
@@ -339,7 +452,7 @@ class CardTransactionService(
             .build()
     }
 
-    private fun buildReceipt(card: TokenizedCardEntity) = with(card) {
+    private fun buildReceipt(transactionDetail: TransactionDetail) = with(transactionDetail) {
         val receipt = Receipt(
             judoId = judo.judoId.toLong(),
             yourPaymentReference = judo.reference.paymentReference,
@@ -348,47 +461,12 @@ class CardTransactionService(
             currency = judo.amount.currency.name,
             consumer = Consumer(yourConsumerReference = judo.reference.consumerReference),
             cardDetails = CardToken(
-                lastFour = ending,
-                token = token,
-                type = network.typeId,
-                scheme = network.displayName
+                lastFour = cardLastFour,
+                token = cardToken,
+                type = cardType?.typeId ?: -1,
+                scheme = cardType?.displayName
             )
         )
         callback.onFinish(JudoPaymentResult.Success(receipt.toJudoResult()))
-    }
-
-    override fun onSuccess(success: JudoPaymentResult) {
-        transaction.close()
-        callback.onFinish(success as JudoPaymentResult.Success)
-    }
-
-    override fun onFailure(error: JudoPaymentResult) {
-        transaction.close()
-        callback.onFinish(error)
-    }
-
-    override fun cancelled() {
-        progressDialog?.dismiss()
-        TODO("Not yet implemented")
-    }
-
-    override fun completed(completionEvent: CompletionEvent) {
-        progressDialog?.dismiss()
-        TODO("Not yet implemented")
-    }
-
-    override fun protocolError(protocolErrorEvent: ProtocolErrorEvent) {
-        progressDialog?.dismiss()
-        TODO("Not yet implemented")
-    }
-
-    override fun runtimeError(runtimeErrorEvent: RuntimeErrorEvent) {
-        progressDialog?.dismiss()
-        TODO("Not yet implemented")
-    }
-
-    override fun timedout() {
-        progressDialog?.dismiss()
-        TODO("Not yet implemented")
     }
 }

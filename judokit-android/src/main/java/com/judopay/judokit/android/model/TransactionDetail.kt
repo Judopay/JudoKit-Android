@@ -13,7 +13,10 @@ class TransactionDetail private constructor(
     val addressLine2: String?,
     val addressLine3: String?,
     val city: String?,
-    val postalCode: String?
+    val postalCode: String?,
+    val cardToken: String?,
+    val cardType: CardNetwork?,
+    val cardLastFour: String?
 ) {
     class Builder {
         private var cardNumber: String? = null
@@ -29,6 +32,9 @@ class TransactionDetail private constructor(
         private var addressLine3: String? = null
         private var city: String? = null
         private var postalCode: String? = null
+        private var cardToken: String? = null
+        private var cardType: CardNetwork? = null
+        private var cardLastFour: String? = null
 
         fun setCardNumber(cardNumber: String?) = apply { this.cardNumber = cardNumber }
         fun setCardHolderName(cardHolderName: String?) =
@@ -51,6 +57,9 @@ class TransactionDetail private constructor(
         fun setAddressLine3(addressLine3: String?) = apply { this.addressLine3 = addressLine3 }
         fun setCity(city: String?) = apply { this.city = city }
         fun setPostalCode(postalCode: String?) = apply { this.postalCode = postalCode }
+        fun setCardToken(cardToken: String?) = apply { this.cardToken = cardToken }
+        fun setCardType(cardType: CardNetwork?) = apply { this.cardType = cardType }
+        fun setCardLastFour(cardLastFour: String?) = apply { this.cardLastFour = cardLastFour }
 
         fun build() = TransactionDetail(
             cardNumber,
@@ -65,7 +74,10 @@ class TransactionDetail private constructor(
             addressLine2,
             addressLine3,
             city,
-            postalCode
+            postalCode,
+            cardToken,
+            cardType,
+            cardLastFour
         )
     }
 }

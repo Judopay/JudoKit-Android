@@ -93,12 +93,7 @@ class JudoActivity : AppCompatActivity() {
         val bundle = if (graphId == R.navigation.judo_card_input_graph) {
             // Card entry fragment parameters
             bundleOf(
-                CARD_ENTRY_OPTIONS
-                        to
-                        CardEntryOptions(
-                            shouldDisplayBillingDetails = judo.is3DS2Enabled &&
-                                    judo.paymentWidgetType != PaymentWidgetType.CREATE_CARD_TOKEN
-                        )
+                CARD_ENTRY_OPTIONS to CardEntryOptions(shouldDisplayBillingDetails = judo.is3DS2Enabled && judo.paymentWidgetType != PaymentWidgetType.CREATE_CARD_TOKEN)
             )
         } else null
         val navigationHost = NavHostFragment.create(graphId, bundle)

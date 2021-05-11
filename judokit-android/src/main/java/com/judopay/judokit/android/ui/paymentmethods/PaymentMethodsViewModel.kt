@@ -56,7 +56,7 @@ sealed class PaymentMethodsAction {
     data class SelectIdealBank(val idealBank: IdealBank) : PaymentMethodsAction()
 
     object InitiateSelectedCardPayment : PaymentMethodsAction()
-    data class PayWithCard(val transactionDetail: TransactionDetail) : PaymentMethodsAction()
+    data class PayWithCard(val transactionDetail: TransactionDetail.Builder) : PaymentMethodsAction()
     object PayWithSelectedIdealBank : PaymentMethodsAction()
     object PayWithPayByBank : PaymentMethodsAction()
     object Update : PaymentMethodsAction() // TODO: temporary
@@ -190,7 +190,7 @@ class PaymentMethodsViewModel(
                 )
                 displayCardEntryObserver.postValue(Event(cardEntryOptions))
             } else {
-                sendCardPaymentRequest(paymentMethod, null)
+                sendCardPaymentRequest(paymentMethod, TransactionDetail.Builder())
             }
         }
     }
@@ -198,7 +198,7 @@ class PaymentMethodsViewModel(
     @Throws(IllegalStateException::class)
     private fun sendCardPaymentRequest(
         paymentMethod: CardPaymentMethodModel,
-        transactionDetail: TransactionDetail?
+        transactionDetailBuilder: TransactionDetail.Builder
     ) = viewModelScope.launch {
         val card = paymentMethod.selectedCard
         card?.let {
@@ -214,10 +214,12 @@ class PaymentMethodsViewModel(
                     }
                 }
             }
-
+            transactionDetailBuilder.setCardToken(entity.token)
+                .setCardLastFour(entity.ending)
+                .setCardType(entity.network)
+                .setExpirationDate(entity.expireDate)
             cardTransactionService.tokenPayment(
-                entity,
-                transactionDetail,
+                transactionDetailBuilder.build(),
                 cardTransactionCallback
             )
         }

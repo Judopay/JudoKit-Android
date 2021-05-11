@@ -93,7 +93,7 @@ class CardEntryViewModel(
 
     val model = MutableLiveData<CardEntryFragmentModel>()
     val judoPaymentResult = MutableLiveData<JudoPaymentResult>()
-    val cardEntryToPaymentMethodResult = MutableLiveData<TransactionDetail>()
+    val cardEntryToPaymentMethodResult = MutableLiveData<TransactionDetail.Builder>()
     val navigationObserver = MutableLiveData<CardEntryNavigation>()
 
     private val context = application
@@ -266,7 +266,6 @@ class CardEntryViewModel(
                         .setAddressLine3(addressLine3)
                         .setCity(city)
                         .setPostalCode(postalCode)
-                        .build()
                 )
             }
             return@launch
@@ -275,6 +274,7 @@ class CardEntryViewModel(
         val cardTransactionCallback = object : CardTransactionCallback {
             override fun onFinish(result: JudoPaymentResult) {
                 judoPaymentResult.postValue(result)
+                buildModel(isLoading = false, isFormValid = true)
             }
         }
         val transactionDetailBuilder = TransactionDetail.Builder()
@@ -301,8 +301,6 @@ class CardEntryViewModel(
             transactionDetailBuilder.build(),
             cardTransactionCallback
         )
-
-        buildModel(isLoading = false, isFormValid = true)
     }
 
     private fun buildModel(

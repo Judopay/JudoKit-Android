@@ -13,8 +13,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.judopay.judo3ds2.model.ConfigParameters
-import com.judopay.judo3ds2.service.ThreeDS2ServiceImpl
 import com.judopay.judokit.android.JudoSharedAction
 import com.judopay.judokit.android.JudoSharedViewModel
 import com.judopay.judokit.android.R
@@ -28,7 +26,6 @@ import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.service.CardTransactionService
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
-import com.judopay.judokit.android.ui.common.getLocale
 import com.judopay.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
 import com.judopay.judokit.android.ui.ideal.JUDO_IDEAL_BANK
 import com.judopay.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapter
@@ -57,7 +54,7 @@ class PaymentMethodsFragment : Fragment() {
 
     private lateinit var viewModel: PaymentMethodsViewModel
     private lateinit var service: JudoApiService
-    private val threeDS2Service = ThreeDS2ServiceImpl()
+    private lateinit var cardTransactionService: CardTransactionService
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -88,14 +85,7 @@ class PaymentMethodsFragment : Fragment() {
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
         service = JudoApiServiceFactory.createApiService(application, judo)
-        threeDS2Service.initialize(
-            requireActivity(),
-            ConfigParameters(),
-            getLocale(resources),
-            null
-        )
-        val cardTransactionService =
-            CardTransactionService(requireActivity(), judo, service, threeDS2Service)
+        cardTransactionService = CardTransactionService(requireActivity(), judo, service)
 
         val factory =
             PaymentMethodsViewModelFactory(
@@ -168,14 +158,14 @@ class PaymentMethodsFragment : Fragment() {
         )
         sharedViewModel.cardEntryToPaymentMethodResult.observe(
             viewLifecycleOwner,
-            { transactionDetail ->
-                viewModel.send(PaymentMethodsAction.PayWithCard(transactionDetail))
+            { transactionDetailBuilder ->
+                viewModel.send(PaymentMethodsAction.PayWithCard(transactionDetailBuilder))
             }
         )
     }
 
     override fun onDestroy() {
-        threeDS2Service.cleanup(requireActivity())
+        cardTransactionService.destroy()
         super.onDestroy()
     }
 
