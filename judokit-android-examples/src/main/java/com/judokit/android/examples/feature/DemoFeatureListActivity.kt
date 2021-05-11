@@ -375,7 +375,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             }
 
             return Reference.Builder()
-                .setConsumerReference("my-unique-ref")
+                .setConsumerReference(UUID.randomUUID().toString())
                 .setPaymentReference(paymentReference)
                 .build()
         }

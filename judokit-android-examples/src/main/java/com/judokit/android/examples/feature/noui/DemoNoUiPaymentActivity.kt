@@ -79,9 +79,9 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
             handleState(ActivityState.PayWithCard)
             cardTransactionService.makeTransaction(
                 transactionDetailsBuilder
-                    .setCardNumber("4111111111111111")
+                    .setCardNumber("4000023104662535")
                     .setExpirationDate("12/25")
-                    .setCardHolderName("name")
+                    .setCardHolderName("CHALLENGE")
                     .build(),
                 object : CardTransactionCallback {
                     override fun onFinish(result: JudoPaymentResult) {
@@ -236,6 +236,8 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
             .setPBBAConfiguration(pbbaConfiguration)
             .setScaExemption(scaExemption)
             .setChallengeRequestIndicator(challengeRequestIndicator)
+            .set3DS2Enabled(is3DS2Enabled)
+            .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
             .build()
     }
 }
