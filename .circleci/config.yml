@@ -231,7 +231,7 @@ workflows:
       - instrumented_test_sample:
           context: shared-secrets
           requires:
-            - build_sdk
+            - build_sample
       - unit_test_sdk:
           requires:
             - build_sdk
