@@ -7,6 +7,6 @@ import com.google.gson.annotations.SerializedName
  * transaction with the judo API.
  */
 class CardVerificationResult(
-    @field:SerializedName("MD") val md: String,
+    @field:SerializedName("MD") var md: String?,
     @field:SerializedName("PaRes") val paRes: String
 )

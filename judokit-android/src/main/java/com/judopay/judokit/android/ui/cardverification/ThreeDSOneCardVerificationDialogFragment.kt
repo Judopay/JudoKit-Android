@@ -108,7 +108,12 @@ class ThreeDSOneCardVerificationDialogFragment constructor(
                 threeDSProgressBar.visibility = View.GONE
             }
             is WebViewAction.OnAuthorizationComplete -> {
-                viewModel.complete3DSecure(action.receiptId, action.cardVerificationResult)
+                with(action.cardVerificationResult) {
+                    if (md == null) {
+                        md = cardVerificationModel.md
+                    }
+                    viewModel.complete3DSecure(action.receiptId, this)
+                }
             }
         }
     }
