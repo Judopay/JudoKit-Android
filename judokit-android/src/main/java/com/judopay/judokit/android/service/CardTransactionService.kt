@@ -146,7 +146,7 @@ class CardTransactionService(
                     "2.1.0"
                 )
                 val address =
-                    if (judo.is3DS2Enabled && !judo.paymentWidgetType.isPaymentMethodsWidget) {
+                    if (judo.is3DS2Enabled && !judo.paymentWidgetType.isPaymentMethodsWidget && judo.paymentWidgetType != PaymentWidgetType.CREATE_CARD_TOKEN) {
                         Address.Builder().apply {
                             setLine1(transactionDetail.addressLine1)
                             setLine2(transactionDetail.addressLine2)
@@ -155,7 +155,7 @@ class CardTransactionService(
                             setPostCode(transactionDetail.postalCode)
                             setCountryCode(transactionDetail.country?.toIntOrNull())
                         }.build()
-                    } else Address.Builder().build()
+                    } else null
 
                 val apiResult = when (judo.paymentWidgetType) {
                     PaymentWidgetType.CARD_PAYMENT -> performPaymentRequest(
@@ -392,20 +392,24 @@ class CardTransactionService(
         .setPhoneCountryCode(inputModel.phoneCountryCode)
         .build()
 
-    private fun buildSaveCardRequest(address: Address?, inputModel: TransactionDetail) =
-        SaveCardRequest.Builder()
+    private fun buildSaveCardRequest(address: Address?, inputModel: TransactionDetail): SaveCardRequest {
+        val request = SaveCardRequest.Builder()
             .setUniqueRequest(false)
             .setYourPaymentReference(judo.reference.paymentReference)
             .setCurrency(judo.amount.currency.name)
             .setJudoId(judo.judoId)
             .setYourConsumerReference(judo.reference.consumerReference)
             .setYourPaymentMetaData(judo.reference.metaData?.toMap())
-            .setAddress(address)
             .setCardNumber(inputModel.cardNumber)
             .setExpiryDate(inputModel.expirationDate)
             .setCv2(inputModel.securityNumber)
             .setPrimaryAccountDetails(judo.primaryAccountDetails)
-            .build()
+
+        if (address != null) {
+            request.setAddress(address)
+        }
+        return request.build()
+    }
 
     private fun buildCheckCardRequest(address: Address?, inputModel: TransactionDetail) =
         CheckCardRequest.Builder()
