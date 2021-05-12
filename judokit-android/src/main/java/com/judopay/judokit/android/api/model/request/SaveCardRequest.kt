@@ -19,7 +19,7 @@ class SaveCardRequest private constructor(
     private var judoId: String,
     private var yourConsumerReference: String,
     private var yourPaymentMetaData: Map<String, String>?,
-    private var cardAddress: Address,
+    private var cardAddress: Address?,
     private var cardNumber: String,
     private var cv2: String,
     private var expiryDate: String,
@@ -90,7 +90,6 @@ class SaveCardRequest private constructor(
             val myExpiryDate = requireNotNullOrEmpty(expiryDate, "expiryDate")
             val paymentReference =
                 requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
-            val myAddress = requireNotNull(address, "address")
 
             return SaveCardRequest(
                 uniqueRequest,
@@ -99,7 +98,7 @@ class SaveCardRequest private constructor(
                 id,
                 consumerReference,
                 yourPaymentMetaData,
-                myAddress,
+                address,
                 myCardNumber,
                 myCv2,
                 myExpiryDate,

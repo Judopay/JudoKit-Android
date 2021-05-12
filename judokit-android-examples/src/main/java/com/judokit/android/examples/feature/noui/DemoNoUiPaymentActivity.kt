@@ -44,8 +44,8 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var service: JudoApiService
-    private lateinit var cardTransactionService: CardTransactionService
     private lateinit var transactionDetailsBuilder: TransactionDetail.Builder
+    private var cardTransactionService: CardTransactionService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +77,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
                 service
             )
             handleState(ActivityState.PayWithCard)
-            cardTransactionService.makeTransaction(
+            cardTransactionService?.makeTransaction(
                 transactionDetailsBuilder
                     .setCardNumber("4000023104662535")
                     .setExpirationDate("12/25")
@@ -85,7 +85,6 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
                     .build(),
                 object : CardTransactionCallback {
                     override fun onFinish(result: JudoPaymentResult) {
-                        handleState(ActivityState.Idle)
                         setResult(result.code, result.toIntent())
                         finish()
                     }
@@ -105,7 +104,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
                 service
             )
             handleState(ActivityState.PayWithToken)
-            cardTransactionService.tokenPayment(
+            cardTransactionService?.tokenPayment(
                 transactionDetailsBuilder.build(),
                 object : CardTransactionCallback {
                     override fun onFinish(result: JudoPaymentResult) {
@@ -124,7 +123,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
                 service
             )
             handleState(ActivityState.PayWithPreAuthToken)
-            cardTransactionService.tokenPayment(
+            cardTransactionService?.tokenPayment(
                 transactionDetailsBuilder.build(),
                 object : CardTransactionCallback {
                     override fun onFinish(result: JudoPaymentResult) {
@@ -172,7 +171,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        cardTransactionService.destroy()
+        cardTransactionService?.destroy()
         super.onDestroy()
     }
 
