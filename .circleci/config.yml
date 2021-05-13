@@ -143,6 +143,7 @@ jobs:
             gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
       - run:
           name: Test with Firebase Test Lab
+          no_output_timeout: 30m
           command: >
             gcloud firebase test android run \
               --app judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk \
