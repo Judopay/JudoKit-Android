@@ -146,7 +146,8 @@ jobs:
           command: >
             gcloud firebase test android run \
               --app judokit-android-examples/build/outputs/apk/release/judokit-android-examples-release.apk \
-              --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk
+              --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk \
+              --results-bucket $FIREBASE_TEST_RESULTS_BUCKET
 
   sonar_scan:
     docker:
