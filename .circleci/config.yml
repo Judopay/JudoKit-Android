@@ -88,7 +88,7 @@ jobs:
       - run:
           name: Build Sample App APK
           command: |
-            ./gradlew :judokit-android-examples:assembleRelease
+            ./gradlew :judokit-android-examples:assemble
       - run:
           name: Build Test Package
           command: |
@@ -145,7 +145,7 @@ jobs:
           name: Test with Firebase Test Lab
           command: >
             gcloud firebase test android run \
-              --app judokit-android-examples/build/outputs/apk/release/judokit-android-examples-release.apk \
+              --app judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk \
               --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk \
               --results-bucket $FIREBASE_TEST_RESULTS_BUCKET
 
