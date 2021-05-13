@@ -145,7 +145,7 @@ jobs:
           name: Test with Firebase Test Lab
           command: >
             gcloud firebase test android run \
-              --app judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug.apk \
+              --app judokit-android-examples/build/outputs/apk/release/judokit-android-examples-release.apk \
               --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk
 
   sonar_scan:
