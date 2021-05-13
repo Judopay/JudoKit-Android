@@ -128,7 +128,6 @@ jobs:
           name: Run Sample App Unit Tests
           command: ./gradlew :judokit-android-examples:test
 
-  # Below step not currently used as no instrumented tests have been written
   instrumented_test_sample:
     executor: android
     steps:
@@ -140,8 +139,8 @@ jobs:
       - run:
           name: Authorize gcloud and set config defaults
           command: |
-            sudo gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-            sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
       - run:
           name: Test with Firebase Test Lab
           command: >
