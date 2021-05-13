@@ -16,6 +16,7 @@ enum class View(val value: String) {
     CHECK_EXPIRY_DATE("Invalid date value entered"),
     INVALID_POST_CODE("Invalid postcode entered"),
     SUBMIT_BUTTON("Submit"),
+    DISMISS_BUTTON("Dismiss"),
     CARD_HEADER("Card Header"),
     GOOGLE_PAY_HEADER("Apple Pay/Google Pay Header"),
     IDEAL_HEADER("iDEAL Header"),
