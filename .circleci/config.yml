@@ -80,7 +80,7 @@ jobs:
       - run:
           name: Extract contents from JudoKit-Automation-Scenarios
           command: |
-            mv ./judokit-android-examples/src/androidTest/assets/JudoKit-Automation-Scenarios/* ./judokit-android-examples/src/androidTest/assets/
+            mv judokit-android-examples/src/androidTest/assets/JudoKit-Automation-Scenarios/* judokit-android-examples/src/androidTest/assets/
       - run:
           name: Inject Test Credentials
           command: |
