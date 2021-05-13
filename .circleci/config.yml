@@ -78,10 +78,6 @@ jobs:
             git clone git@github.com:Judopay/JudoKit-Automation-Scenarios.git \
               judokit-android-examples/src/androidTest/assets
       - run:
-          name: Extract contents from JudoKit-Automation-Scenarios
-          command: |
-            mv judokit-android-examples/src/androidTest/assets/JudoKit-Automation-Scenarios/* judokit-android-examples/src/androidTest/assets/
-      - run:
           name: Inject Test Credentials
           command: |
             sed -i "s/YOUR-JUDO-ID/$JUDO_API_ID/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
