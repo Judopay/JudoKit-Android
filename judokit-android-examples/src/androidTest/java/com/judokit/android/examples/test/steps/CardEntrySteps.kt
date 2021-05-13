@@ -28,7 +28,7 @@ class CardEntrySteps {
         robot.tapOn(text, type)
     }
 
-    @And("^I tap on the Country text field$")
+    @And("^I tap on the (.*?) text field$")
     fun tapOnCountryTextField(text: String) {
         robot.tapOn(text, "text field")
     }

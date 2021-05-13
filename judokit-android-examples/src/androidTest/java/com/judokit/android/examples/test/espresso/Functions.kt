@@ -19,7 +19,7 @@ import java.io.File
 import java.util.concurrent.TimeoutException
 
 const val TIMEOUT_INTERVAL = 500L
-const val DEFAULT_TIMEOUT = 30000L
+const val DEFAULT_TIMEOUT = 10000L
 
 fun ViewInteraction.waitUntilVisible(timeout: Long = DEFAULT_TIMEOUT): ViewInteraction {
     val startTime = System.currentTimeMillis()
