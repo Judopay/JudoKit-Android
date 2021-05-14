@@ -148,7 +148,8 @@ jobs:
             gcloud firebase test android run \
               --app judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk \
               --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk \
-              --results-bucket $FIREBASE_TEST_RESULTS_BUCKET
+              --results-bucket $FIREBASE_TEST_RESULTS_BUCKET \
+              --timeout=30m
 
   sonar_scan:
     docker:

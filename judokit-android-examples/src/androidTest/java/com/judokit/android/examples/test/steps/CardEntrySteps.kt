@@ -28,10 +28,10 @@ class CardEntrySteps {
         robot.tapOn(text, type)
     }
 
-    @And("^I tap on the (.*?) text field$")
-    fun tapOnCountryTextField(text: String) {
-        robot.tapOn(text, "text field")
-    }
+//    @And("^I tap on the (.*?) text field$")
+//    fun tapOnCountryTextField(text: String) {
+//        robot.tapOn(text, "text field")
+//    }
 
     @And("^I enter (.*?) \"(.*?)\" (?:in|into) the (.*?) (?:text|input) field$")
     fun enterTextInto(identifier: String, key: String, fieldName: String) {
