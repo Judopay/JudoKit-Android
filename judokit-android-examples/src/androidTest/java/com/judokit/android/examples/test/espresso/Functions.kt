@@ -32,7 +32,7 @@ fun ViewInteraction.waitUntilVisible(timeout: Long = DEFAULT_TIMEOUT): ViewInter
             Thread.sleep(TIMEOUT_INTERVAL)
         }
     } while (System.currentTimeMillis() < endTime)
-    return this
+    throw TimeoutException()
 }
 
 fun setChecked(checked: Boolean) = object : ViewAction {

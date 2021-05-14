@@ -80,11 +80,11 @@ jobs:
       - run:
           name: Inject Test Credentials
           command: |
-            sed -i "s/YOUR-JUDO-ID/$JUDO_API_ID/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
-            sed -i "s/YOUR-TOKEN/$JUDO_API_TOKEN/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
-            sed -i "s/YOUR-SECRET/$JUDO_API_SECRET/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
-            sed -i "s/YOUR-3DS-TOKEN/$JUDO_API_TOKEN/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
-            sed -i "s/YOUR-3DS-SECRET/$JUDO_API_SECRET/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
+            sed -i "s/YOUR-JUDO-ID/$TEST_JUDO_API_ID/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
+            sed -i "s/YOUR-TOKEN/$TEST_JUDO_API_TOKEN/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
+            sed -i "s/YOUR-SECRET/$TEST_JUDO_API_SECRET/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
+            sed -i "s/YOUR-3DS-TOKEN/$TEST_JUDO_API_3DS_TOKEN/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
+            sed -i "s/YOUR-3DS-SECRET/$TEST_JUDO_API_3DS_SECRET/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
       - run:
           name: Build Sample App APK
           command: |
