@@ -53,7 +53,7 @@ class JudoActivity : AppCompatActivity() {
 
         // Treat the content of the window as secure, preventing it from appearing in screenshots
         // or from being viewed on non-secure displays.
-        if (BuildConfig.DEBUG) {
+        if (!BuildConfig.DEBUG) {
             val secureFlag = WindowManager.LayoutParams.FLAG_SECURE
             window.setFlags(secureFlag, secureFlag)
         }
