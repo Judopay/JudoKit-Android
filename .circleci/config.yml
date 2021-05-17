@@ -45,8 +45,6 @@ jobs:
           paths:
             - judokit-android/build
 
-  # Add below as additional command once instrumented tests are added
-  # ./gradlew :judokit-android-examples:assembleReleaseAndroidTest
   build_sample:
     executor: android
     steps:
