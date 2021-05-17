@@ -52,10 +52,22 @@ import java.util.Date
 
 private const val THREE_DS_TWO_MIN_TIMEOUT = 5
 
+/**
+ * Result callback to receive transaction result when calling [CardTransactionService.makeTransaction]
+ * or [CardTransactionService.tokenPayment].
+ * @see JudoPaymentResult
+ */
 interface CardTransactionCallback {
     fun onFinish(result: JudoPaymentResult)
 }
 
+/**
+ * Class for making card transactions. 3DS and 3DS2 is handled internally.
+ * @constructor
+ * @param activity - Current activity that is being used.
+ * @param judo - Judo configuration object.
+ * @param service - An instance of JudoApiService to make API calls.
+ */
 class CardTransactionService(
     private val activity: FragmentActivity,
     private val judo: Judo,
@@ -137,6 +149,11 @@ class CardTransactionService(
         )
     }
 
+    /**
+     * Method that makes a card transaction.
+     * @param transactionDetail - details of the transaction.
+     * @param callback - result of the transaction.
+     */
     fun makeTransaction(transactionDetail: TransactionDetail, callback: CardTransactionCallback) {
         try {
             this.callback = callback
@@ -192,6 +209,11 @@ class CardTransactionService(
         }
     }
 
+    /**
+     * Method that makes a tokenized card transaction.
+     * @param transactionDetail - details of the transaction.
+     * @param callback - result of the transaction.
+     */
     fun tokenPayment(
         transactionDetail: TransactionDetail,
         callback: CardTransactionCallback
@@ -255,6 +277,10 @@ class CardTransactionService(
         }
     }
 
+    /**
+     * Method that cleans up resources taken by the 3DS2 service. Should be called when the transaction
+     * is finished.
+     */
     fun destroy() {
         threeDS2Service.cleanup(activity)
     }

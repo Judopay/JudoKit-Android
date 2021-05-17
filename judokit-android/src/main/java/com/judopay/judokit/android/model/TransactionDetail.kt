@@ -1,5 +1,10 @@
 package com.judopay.judokit.android.model
 
+/**
+ * Class to pass necessary data for a card transaction.
+ * Used in [com.judopay.judokit.android.service.CardTransactionService].
+ * Use the [Builder] for constructing an instance of [TransactionDetail].
+ */
 class TransactionDetail private constructor(
     val cardNumber: String?,
     val cardHolderName: String?,
