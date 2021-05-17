@@ -189,9 +189,9 @@ class ConfigurationRobot {
 
     private fun setCurrency(currency: Currency) {
         val currencyPositionInList = if (currency == Currency.EUR) {
-            7
+            2
         } else {
-            8
+            0
         }
         onView(withId(androidx.preference.R.id.recycler_view))
             .perform(
