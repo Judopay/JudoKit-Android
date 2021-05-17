@@ -234,6 +234,10 @@ workflows:
           context: shared-secrets
           requires:
             - build_sample
+          filters:
+            branches:
+              only:
+                - master
       - unit_test_sdk:
           requires:
             - build_sdk
