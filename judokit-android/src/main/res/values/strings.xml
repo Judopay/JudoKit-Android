@@ -122,6 +122,10 @@
     <string name="error_response_parse_desc" translatable="false">Unexpected response format returned.</string>
     <string name="error_response_parse_reason" translatable="false">The response did not contain some of the required parameters needed to complete the transaction.</string>
 
+    <!--    Network failed-->
+    <string name="error_network_failed_desc">No internet connection.</string>
+    <string name="error_network_failed_reason">Could not connect to server due to network failure.</string>
+
     <string name="country_uk">UK</string>
     <string name="country_usa">USA</string>
     <string name="country_canada">Canada</string>

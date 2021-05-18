@@ -8,6 +8,7 @@ import com.judopay.judokit.android.model.Amount
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.GooglePayConfiguration
+import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.PBBAConfiguration
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
@@ -58,7 +59,8 @@ class Judo internal constructor(
     val paymentWidgetType: PaymentWidgetType,
     val address: Address?,
     val pbbaConfiguration: PBBAConfiguration?,
-    val initialRecurringPayment: Boolean?
+    val initialRecurringPayment: Boolean?,
+    val networkTimeout: NetworkTimeout
 ) : Parcelable {
 
     /**
@@ -79,6 +81,7 @@ class Judo internal constructor(
         private var address: Address? = null
         private var pbbaConfiguration: PBBAConfiguration? = null
         private var initialRecurringPayment: Boolean? = null
+        private var networkTimeout: NetworkTimeout? = null
 
         /**
          * Sets the unique merchant ID
@@ -185,6 +188,13 @@ class Judo internal constructor(
             apply { this.initialRecurringPayment = initialRecurringPayment }
 
         /**
+         * Sets the network timeout.
+         * @param networkTimeout class for setting read, write and connect timeouts.
+         */
+        fun setNetworkTimeout(networkTimeout: NetworkTimeout?) =
+            apply { this.networkTimeout = networkTimeout }
+
+        /**
          * Method that initializes Judo configuration object that can be used for
          * processing a payment.
          * @return A new Judo object that can be added to an intent with [JUDO_OPTIONS] key
@@ -228,6 +238,8 @@ class Judo internal constructor(
                 checkNotNull(supportedCardNetworks)
             }
 
+            val myNetworkTimeout = networkTimeout ?: NetworkTimeout.Builder().build()
+
             return Judo(
                 id,
                 myAuthorization,
@@ -242,7 +254,8 @@ class Judo internal constructor(
                 paymentWidgetType,
                 address,
                 pbbaConfiguration,
-                initialRecurringPayment
+                initialRecurringPayment,
+                myNetworkTimeout
             )
         }
 
