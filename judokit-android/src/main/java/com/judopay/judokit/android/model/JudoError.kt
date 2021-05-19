@@ -82,8 +82,8 @@ data class JudoError(
         )
 
         /**
-         * Utility function that creates a JudoError object with network error
-         * error code and message. Used when the network failure.
+         * Utility function that creates a JudoError object with network
+         * error code and message. Used when the network fails.
          */
         fun judoNetworkError(resources: Resources, throwable: Throwable): JudoError = JudoError(
             NETWORK_ERROR,
