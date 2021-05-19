@@ -121,9 +121,9 @@ object JudoApiServiceFactory {
 
     private fun setTimeouts(builder: OkHttpClient.Builder, networkTimeout: NetworkTimeout) {
         with(networkTimeout) {
-            builder.connectTimeout(1, TimeUnit.SECONDS)
-                .readTimeout(1, TimeUnit.SECONDS)
-                .writeTimeout(1, TimeUnit.SECONDS)
+            builder.connectTimeout(connectTimeout, TimeUnit.SECONDS)
+                .readTimeout(readTimeout, TimeUnit.SECONDS)
+                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
         }
     }
 
