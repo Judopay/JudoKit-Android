@@ -56,7 +56,30 @@
             app:title="@string/payment_reference_title" />
 
     </PreferenceCategory>
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/network_timeouts_header">
 
+        <EditTextPreference
+            android:inputType="number"
+            app:iconSpaceReserved="false"
+            app:key="connect_timeout"
+            app:summary="@string/connect_timeout_summary"
+            app:title="@string/connect_timeout_title" />
+
+        <EditTextPreference
+            app:iconSpaceReserved="false"
+            app:key="read_timeout"
+            app:summary="@string/read_timeout_summary"
+            app:title="@string/read_timeout_title" />
+
+        <EditTextPreference
+            app:iconSpaceReserved="false"
+            app:key="write_timeout"
+            app:summary="@string/write_timeout_summary"
+            app:title="@string/write_timeout_title" />
+
+    </PreferenceCategory>
     <PreferenceCategory
         app:iconSpaceReserved="false"
         app:title="@string/amount_header">
