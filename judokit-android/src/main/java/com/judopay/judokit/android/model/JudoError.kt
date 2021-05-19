@@ -95,5 +95,19 @@ data class JudoError(
                 )
             )
         )
+        /**
+         * Utility function that creates a JudoError object with poor internet connectivity
+         * error code and message. Used when a SocketTimeoutException is thrown.
+         */
+        fun judoPoorConnectivityError(resources: Resources, throwable: Throwable): JudoError = JudoError(
+            NETWORK_ERROR,
+            resources.getString(R.string.error_poor_connectivity_desc),
+            mutableListOf(
+                JudoError(
+                    NETWORK_ERROR,
+                    throwable.localizedMessage ?: resources.getString(R.string.error_poor_connectivity_reason)
+                )
+            )
+        )
     }
 }
