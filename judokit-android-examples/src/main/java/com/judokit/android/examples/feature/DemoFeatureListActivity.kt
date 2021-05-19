@@ -46,6 +46,7 @@ import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.GooglePayConfiguration
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoResult
+import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.PBBAConfiguration
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
@@ -261,27 +262,31 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setPositiveButton(
                 R.string.dialog_button_ok
             ) { dialog, _ ->
-                val fetchTransactionDetailsCallback = object : Callback<JudoApiCallResult<Receipt>> {
-                    override fun onResponse(
-                        call: Call<JudoApiCallResult<Receipt>>,
-                        response: Response<JudoApiCallResult<Receipt>>
-                    ) {
-                        when (val result = response.body()) {
-                            is JudoApiCallResult.Success -> {
-                                processSuccessfulPayment(result.data?.toJudoResult())
+                val fetchTransactionDetailsCallback =
+                    object : Callback<JudoApiCallResult<Receipt>> {
+                        override fun onResponse(
+                            call: Call<JudoApiCallResult<Receipt>>,
+                            response: Response<JudoApiCallResult<Receipt>>
+                        ) {
+                            when (val result = response.body()) {
+                                is JudoApiCallResult.Success -> {
+                                    processSuccessfulPayment(result.data?.toJudoResult())
+                                }
+                                is JudoApiCallResult.Failure -> {
+                                    processPaymentError(result.error?.toJudoError())
+                                }
                             }
-                            is JudoApiCallResult.Failure -> {
-                                processPaymentError(result.error?.toJudoError())
-                            }
+                            dialog.dismiss()
                         }
-                        dialog.dismiss()
-                    }
 
-                    override fun onFailure(call: Call<JudoApiCallResult<Receipt>>, t: Throwable) {
-                        dialog.dismiss()
-                        throw Exception(t)
+                        override fun onFailure(
+                            call: Call<JudoApiCallResult<Receipt>>,
+                            t: Throwable
+                        ) {
+                            dialog.dismiss()
+                            throw Exception(t)
+                        }
                     }
-                }
                 service.fetchTransactionWithReceiptId(view.receiptIdEditText.text.toString())
                     .enqueue(fetchTransactionDetailsCallback)
                 view.receiptProgressBar.visibility = View.VISIBLE
@@ -310,6 +315,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setGooglePayConfiguration(googlePayConfiguration)
             .setPBBAConfiguration(pbbaConfiguration)
             .setInitialRecurringPayment(initialRecurringPayment)
+            .setNetworkTimeout(networkTimeout)
             .build()
     }
 
@@ -447,5 +453,18 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     .setApiSecret(secret)
                     .build()
             }
+        }
+
+    private val networkTimeout: NetworkTimeout
+        get() {
+            val connectTimeout = sharedPreferences.getString("connect_timeout", null)
+            val readTimeout = sharedPreferences.getString("read_timeout", null)
+            val writeTimeout = sharedPreferences.getString("write_timeout", null)
+
+            return NetworkTimeout.Builder()
+                .setConnectTimeout(connectTimeout?.toLongOrNull())
+                .setReadTimeout(readTimeout?.toLongOrNull())
+                .setWriteTimeout(writeTimeout?.toLongOrNull())
+                .build()
         }
 }

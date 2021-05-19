@@ -17,13 +17,12 @@ import com.judopay.judokit.android.JudoSharedAction
 import com.judopay.judokit.android.JudoSharedViewModel
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.JudoApiService
-import com.judopay.judokit.android.api.error.ApiError
-import com.judopay.judokit.android.api.error.toJudoError
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.response.CardDate
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.api.model.response.toCardVerificationModel
+import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
 import com.judopay.judokit.android.api.model.response.toJudoResult
 import com.judopay.judokit.android.db.JudoRoomDatabase
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
@@ -100,9 +99,11 @@ class PaymentMethodsFragment : Fragment() {
         viewModel.judoApiCallResult.observe(
             viewLifecycleOwner,
             {
-                when (it) {
-                    is JudoApiCallResult.Success -> handleSuccess(it.data)
-                    is JudoApiCallResult.Failure -> handleFail(it.error)
+                it.getContentIfNotHandled()?.let { result ->
+                    when (result) {
+                        is JudoApiCallResult.Success -> handleSuccess(result.data)
+                        is JudoApiCallResult.Failure -> handleFail(result)
+                    }
                 }
             }
         )
@@ -176,10 +177,8 @@ class PaymentMethodsFragment : Fragment() {
         )
     }
 
-    private fun handleFail(error: ApiError?) {
-        if (error != null) {
-            sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(error.toJudoError()))
-        }
+    private fun handleFail(result: JudoApiCallResult.Failure) {
+        sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult(resources))
     }
 
     private fun handleSuccess(receipt: Receipt?) {

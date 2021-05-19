@@ -11,8 +11,10 @@ import com.judopay.judokit.android.api.deserializer.FormattedBigDecimalDeseriali
 import com.judopay.judokit.android.api.interceptor.ApiHeadersInterceptor
 import com.judopay.judokit.android.api.interceptor.DeDuplicationInterceptor
 import com.judopay.judokit.android.api.interceptor.DeviceDnaInterceptor
+import com.judopay.judokit.android.api.interceptor.NetworkConnectivityInterceptor
 import com.judopay.judokit.android.api.interceptor.PayLoadInterceptor
 import com.judopay.judokit.android.apiBaseUrl
+import com.judopay.judokit.android.model.NetworkTimeout
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
 import okhttp3.Interceptor
@@ -108,7 +110,7 @@ object JudoApiServiceFactory {
                     .build()
             )
 
-            setTimeouts(builder)
+            setTimeouts(builder, judo.networkTimeout)
             addInterceptors(builder, context, judo)
 
             builder.build()
@@ -117,10 +119,12 @@ object JudoApiServiceFactory {
         }
     }
 
-    private fun setTimeouts(builder: OkHttpClient.Builder) = with(builder) {
-        connectTimeout(5, TimeUnit.SECONDS)
-            .readTimeout(3, TimeUnit.MINUTES)
-            .writeTimeout(30, TimeUnit.SECONDS)
+    private fun setTimeouts(builder: OkHttpClient.Builder, networkTimeout: NetworkTimeout) {
+        with(networkTimeout) {
+            builder.connectTimeout(connectTimeout, TimeUnit.SECONDS)
+                .readTimeout(readTimeout, TimeUnit.SECONDS)
+                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
+        }
     }
 
     private fun addInterceptors(
@@ -129,6 +133,7 @@ object JudoApiServiceFactory {
         judo: Judo
     ) = client.interceptors().apply {
 
+        add(NetworkConnectivityInterceptor(context))
         add(DeDuplicationInterceptor())
         add(DeviceDnaInterceptor(context))
         add(ApiHeadersInterceptor(judo.authorization, AppMetaDataProvider(context)))
