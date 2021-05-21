@@ -9,8 +9,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.JudoApiService
+import com.judopay.judokit.android.api.error.toJudoError
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
-import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
+import com.judopay.judokit.android.api.model.response.toJudoResult
 import com.judopay.judokit.android.model.CardVerificationModel
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.ui.cardverification.model.WebViewAction
@@ -70,10 +71,12 @@ class ThreeDSOneCardVerificationDialogFragment constructor(
             viewLifecycleOwner,
             {
                 when (it) {
-                    is JudoApiCallResult.Success ->
-                        completionCallback.onSuccess(it.toJudoPaymentResult(resources))
-                    is JudoApiCallResult.Failure ->
-                        completionCallback.onFailure(it.toJudoPaymentResult(resources))
+                    is JudoApiCallResult.Success -> if (it.data != null) {
+                        completionCallback.onSuccess(JudoPaymentResult.Success(it.data.toJudoResult()))
+                    }
+                    is JudoApiCallResult.Failure -> if (it.error != null) {
+                        completionCallback.onFailure(JudoPaymentResult.Error(it.error.toJudoError()))
+                    }
                 }
                 dismiss()
             }

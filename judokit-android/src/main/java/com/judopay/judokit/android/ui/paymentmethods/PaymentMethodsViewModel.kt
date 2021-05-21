@@ -102,7 +102,7 @@ class PaymentMethodsViewModel(
 ) : AndroidViewModel(application) {
 
     val model = MutableLiveData<PaymentMethodsModel>()
-    val judoApiCallResult = MutableLiveData<Event<JudoApiCallResult<Receipt>>>()
+    val judoApiCallResult = MutableLiveData<JudoApiCallResult<Receipt>>()
     val payWithIdealObserver = MutableLiveData<Event<String>>()
     val payWithPayByBankObserver = MutableLiveData<Event<Nothing>>()
     val selectedCardNetworkObserver = MutableLiveData<Event<CardNetwork>>()
@@ -233,7 +233,7 @@ class PaymentMethodsViewModel(
                 cardRepository.insert(entity.apply { isLastUsed = true })
 
                 buildModel()
-                judoApiCallResult.postValue(Event(response))
+                judoApiCallResult.postValue(response)
             }
         }
     }
@@ -403,7 +403,7 @@ class PaymentMethodsViewModel(
                 scheme = network.displayName
             )
         )
-        judoApiCallResult.postValue(Event(JudoApiCallResult.Success(receipt)))
+        judoApiCallResult.postValue(JudoApiCallResult.Success(receipt))
     }
 
     private fun filterPaymentMethods(allMethods: List<PaymentMethod>): List<PaymentMethod> {
