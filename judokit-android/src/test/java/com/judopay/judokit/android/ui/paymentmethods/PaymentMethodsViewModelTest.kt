@@ -70,7 +70,7 @@ internal class PaymentMethodsViewModelTest {
     private lateinit var sut: PaymentMethodsViewModel
 
     private val paymentMethodsModel = spyk<Observer<PaymentMethodsModel>>()
-    private val judoApiCallResult = spyk<Observer<Event<JudoApiCallResult<Receipt>>>>()
+    private val judoApiCallResult = spyk<Observer<JudoApiCallResult<Receipt>>>()
     private val payWithIdealObserver = spyk<Observer<Event<String>>>()
     private val payWithPayByBankObserver = spyk<Observer<Event<Nothing>>>()
     private val selectedCardNetworkObserver = spyk<Observer<Event<CardNetwork>>>()
@@ -376,7 +376,7 @@ internal class PaymentMethodsViewModelTest {
         val card = mockk<TokenizedCardEntity>(relaxed = true) { every { isDefault } returns true }
         every { repository.allCardsSync.value } returns listOf(card)
 
-        val slots = mutableListOf<Event<JudoApiCallResult<Receipt>>>()
+        val slots = mutableListOf<JudoApiCallResult<Receipt>>()
 
         sut = PaymentMethodsViewModel(
             cardDate,

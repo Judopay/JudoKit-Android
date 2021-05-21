@@ -16,7 +16,6 @@ import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judopay.judokit.android.api.model.response.IdealSaleResponse
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
-import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
 import com.judopay.judokit.android.api.model.response.toJudoResult
 import com.judopay.judokit.android.judo
 import com.judopay.judokit.android.model.JudoError
@@ -96,9 +95,8 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
                     )
                 }
             }
-            is JudoApiCallResult.Failure -> {
-                sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult(resources))
-                findNavController().popBackStack()
+            is JudoApiCallResult.Failure -> if (result.error != null) {
+                sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(result.error.toJudoError()))
             }
         }
     }

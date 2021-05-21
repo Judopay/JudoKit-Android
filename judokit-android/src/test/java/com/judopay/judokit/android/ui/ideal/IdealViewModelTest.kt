@@ -140,7 +140,7 @@ class IdealViewModelTest {
 
         val saleCallResult = slots[0]
 
-        assertEquals(JudoApiCallResult.Failure(), saleCallResult)
+        assertEquals(saleCallResult, JudoApiCallResult.Failure())
     }
 
     @Test

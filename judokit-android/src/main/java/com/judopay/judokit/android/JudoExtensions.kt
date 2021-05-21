@@ -45,19 +45,6 @@ internal fun <T : Any> requireNotNull(value: T?, propertyName: String, message: 
     else return value
 }
 
-internal fun validateTimeout(
-    timeout: Long?,
-    propertyName: String,
-    minTimeout: Long,
-    maxTimeout: Long
-): Long {
-    return timeout?.let {
-        if (it !in minTimeout..maxTimeout)
-            throw IllegalArgumentException("$propertyName should be greater than $minTimeout seconds and less than $maxTimeout seconds")
-        else it
-    } ?: minTimeout
-}
-
 @Suppress("UNCHECKED_CAST")
 fun <T : View> View.parentOfType(parentType: Class<T>): T? {
     var parent = parent
