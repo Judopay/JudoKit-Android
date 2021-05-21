@@ -46,7 +46,6 @@
 
     <!-- Preference Titles -->
     <string name="api_header">API Configurations</string>
-    <string name="network_timeouts_header">Network timeouts (seconds)</string>
     <string name="amount_header">Amount</string>
     <string name="others_header">Others</string>
 
@@ -62,15 +61,6 @@
 
     <string name="secret_title">Secret</string>
     <string name="secret_summary">Your API authorization secret</string>
-
-    <string name="connect_timeout_title">Connect timeout</string>
-    <string name="connect_timeout_summary">Sets the default connect timeout for new connections. Must be in a range between 5 and 30</string>
-
-    <string name="read_timeout_title">Read timeout</string>
-    <string name="read_timeout_summary">Sets the default read timeout for new connections. Must be in a range between 180 and 300</string>
-
-    <string name="write_timeout_title">Write timeout</string>
-    <string name="write_timeout_summary">Sets the default write timeout for new connections. Must be in a range between 30 and 120</string>
 
     <string name="payment_session_title">Payment session</string>
     <string name="payment_session_summary">Your API authorization payment session</string>
