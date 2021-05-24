@@ -21,7 +21,6 @@ import com.judopay.judokit.android.JudoSharedViewModel
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.SCAN_CARD_REQUEST_CODE
 import com.judopay.judokit.android.api.JudoApiService
-import com.judopay.judokit.android.api.error.toJudoError
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.Receipt
@@ -171,20 +170,14 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
     private fun dispatchCardPaymentApiResult(result: JudoApiCallResult<Receipt>) {
         when (result) {
             is JudoApiCallResult.Success -> handleSuccess(result.data)
-            is JudoApiCallResult.Failure -> if (result.error != null) sharedViewModel.paymentResult.postValue(
-                JudoPaymentResult.Error(result.error.toJudoError())
-            )
+            is JudoApiCallResult.Failure -> handleFailure(result)
         }
     }
 
     private fun dispatchPaymentMethodsApiResult(result: JudoApiCallResult<Receipt>) {
         when (result) {
             is JudoApiCallResult.Success -> persistTokenizedCard(result)
-            is JudoApiCallResult.Failure -> sharedViewModel.paymentResult.postValue(
-                result.toJudoPaymentResult(
-                    resources
-                )
-            )
+            is JudoApiCallResult.Failure -> handleFailure(result)
         }
     }
 
@@ -243,6 +236,10 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
                 sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(receipt.toJudoResult()))
             }
         }
+    }
+
+    private fun handleFailure(failure: JudoApiCallResult.Failure) {
+        sharedViewModel.paymentResult.postValue(failure.toJudoPaymentResult(resources))
     }
 
     override fun onSuccess(success: JudoPaymentResult) {

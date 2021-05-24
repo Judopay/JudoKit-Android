@@ -74,13 +74,16 @@ class IdealViewModel(
             .setBic(bic)
             .build()
 
-        val response = service.sale(request).await()
-
-        if (response is JudoApiCallResult.Success && response.data != null) {
-            saleCallResult.postValue(response)
-            myOrderId = response.data.orderId
-        } else {
-            saleCallResult.postValue(JudoApiCallResult.Failure())
+        when (val response = service.sale(request).await()) {
+            is JudoApiCallResult.Success -> {
+                if (response.data != null) {
+                    saleCallResult.postValue(response)
+                    myOrderId = response.data.orderId
+                } else {
+                    saleCallResult.postValue(JudoApiCallResult.Failure())
+                }
+            }
+            is JudoApiCallResult.Failure -> saleCallResult.postValue(response)
         }
 
         isLoading.postValue(false)

@@ -3,8 +3,10 @@ package com.judopay.judokit.android.api.model.response
 import android.content.res.Resources
 import com.judopay.judokit.android.api.error.ApiError
 import com.judopay.judokit.android.api.error.toJudoError
+import com.judopay.judokit.android.api.exception.NetworkConnectivityException
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
+import java.net.SocketTimeoutException
 
 sealed class JudoApiCallResult<out T> {
     data class Success<T>(val data: T?) : JudoApiCallResult<T>()
@@ -25,6 +27,14 @@ fun JudoApiCallResult<Receipt>.toJudoPaymentResult(resources: Resources): JudoPa
             } else {
                 JudoPaymentResult.Error(fallbackError)
             }
-        is JudoApiCallResult.Failure -> JudoPaymentResult.Error(error?.toJudoError() ?: fallbackError)
+        is JudoApiCallResult.Failure ->
+            when (throwable) {
+                is NetworkConnectivityException ->
+                    JudoPaymentResult.Error(JudoError.judoNetworkError(resources, throwable))
+                is SocketTimeoutException ->
+                    JudoPaymentResult.Error(JudoError.judoPoorConnectivityError(resources, throwable))
+                else ->
+                    JudoPaymentResult.Error(error?.toJudoError() ?: fallbackError)
+            }
     }
 }
