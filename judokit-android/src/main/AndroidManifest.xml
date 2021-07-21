@@ -19,4 +19,13 @@
             android:value="true" />
     </application>
 
+    <!-- Android 11, PbBA library using queryIntentActivities https://developer.android.com/about/versions/11/privacy/package-visibility -->
+    <!-- TODO: when migrating to PbBA v4.+ remove this -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="zapp"/>
+        </intent>
+    </queries>
+
 </manifest>
