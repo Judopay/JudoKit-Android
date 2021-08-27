@@ -48,6 +48,7 @@
     <string name="api_header">API Configurations</string>
     <string name="network_timeouts_header">Network timeouts (seconds)</string>
     <string name="amount_header">Amount</string>
+    <string name="address_header">Address</string>
     <string name="others_header">Others</string>
 
     <!-- Messages Preferences -->
@@ -86,6 +87,27 @@
 
     <string name="amount_title">Amount</string>
     <string name="amount_summary">Your amount</string>
+
+    <string name="is_address_enabled_title">Enable card address</string>
+    <string name="is_address_enabled_summary">Turn on to set card address details</string>
+
+    <string name="address_line_1_title">Line 1</string>
+    <string name="address_line_1_summary">Sets address line 1</string>
+
+    <string name="address_line_2_title">Line 2</string>
+    <string name="address_line_2_summary">Sets address line 2</string>
+
+    <string name="address_line_3_title">Line 3</string>
+    <string name="address_line_3_summary">Sets address line 3</string>
+
+    <string name="address_town_title">Town</string>
+    <string name="address_town_summary">Sets address town</string>
+
+    <string name="address_post_code_title">Post code</string>
+    <string name="address_post_code_summary">Sets address post code</string>
+
+    <string name="address_billing_country_title">Billing country</string>
+    <string name="address_billing_country_summary">Sets address billing country</string>
 
     <string name="currency_title">Currency</string>
     <string name="currency_summary">Your amount currency</string>

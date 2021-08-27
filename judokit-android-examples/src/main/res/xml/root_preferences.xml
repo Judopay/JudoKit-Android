@@ -56,6 +56,7 @@
             app:title="@string/payment_reference_title" />
 
     </PreferenceCategory>
+
     <PreferenceCategory
         app:iconSpaceReserved="false"
         app:title="@string/network_timeouts_header">
@@ -80,6 +81,7 @@
             app:title="@string/write_timeout_title" />
 
     </PreferenceCategory>
+
     <PreferenceCategory
         app:iconSpaceReserved="false"
         app:title="@string/amount_header">
@@ -101,6 +103,67 @@
             app:summary="@string/currency_summary"
             app:title="@string/currency_title"
             app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/address_header">
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="is_address_enabled"
+            app:summary="@string/is_address_enabled_summary"
+            app:title="@string/is_address_enabled_title" />
+
+        <EditTextPreference
+            app:defaultValue="My house"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="address_line_1"
+            app:summary="@string/address_line_1_summary"
+            app:title="@string/address_line_1_title" />
+
+        <EditTextPreference
+            app:defaultValue="My street"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="address_line_2"
+            app:summary="@string/address_line_2_summary"
+            app:title="@string/address_line_2_title" />
+
+        <EditTextPreference
+            app:defaultValue="My area"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="address_line_3"
+            app:summary="@string/address_line_3_summary"
+            app:title="@string/address_line_3_title" />
+
+        <EditTextPreference
+            app:defaultValue="My town"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="address_town"
+            app:summary="@string/address_town_summary"
+            app:title="@string/address_town_title" />
+
+        <EditTextPreference
+            app:defaultValue="TR14 8PA"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="address_post_code"
+            app:summary="@string/address_post_code_summary"
+            app:title="@string/address_post_code_title" />
+
+        <EditTextPreference
+            app:defaultValue="UK"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="address_billing_country"
+            app:summary="@string/address_billing_country_summary"
+            app:title="@string/address_billing_country_title" />
 
     </PreferenceCategory>
 
