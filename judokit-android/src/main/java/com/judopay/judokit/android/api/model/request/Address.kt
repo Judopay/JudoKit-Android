@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
  * An Address linked to a card payment, used when address verification is performed.
  */
 @Parcelize
-class Address private constructor(
+class Address internal constructor(
     var line1: String?,
     var line2: String?,
     var line3: String?,

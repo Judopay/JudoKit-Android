@@ -16,6 +16,14 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.judokit.android.examples.R
+import com.judokit.android.examples.common.startResultActivity
+import com.judokit.android.examples.common.toResult
+import com.judokit.android.examples.feature.adapter.DemoFeaturesAdapter
+import com.judokit.android.examples.feature.paybybank.PayByBankActivity
+import com.judokit.android.examples.feature.tokenpayment.DemoTokenPaymentActivity
+import com.judokit.android.examples.model.DemoFeature
+import com.judokit.android.examples.settings.SettingsActivity
 import com.judopay.judokit.android.JUDO_ERROR
 import com.judopay.judokit.android.JUDO_OPTIONS
 import com.judopay.judokit.android.JUDO_RESULT
@@ -29,17 +37,10 @@ import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.Authorization
 import com.judopay.judokit.android.api.model.BasicAuthorization
 import com.judopay.judokit.android.api.model.PaymentSessionAuthorization
+import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.api.model.response.toJudoResult
-import com.judokit.android.examples.R
-import com.judokit.android.examples.common.startResultActivity
-import com.judokit.android.examples.common.toResult
-import com.judokit.android.examples.feature.adapter.DemoFeaturesAdapter
-import com.judokit.android.examples.feature.paybybank.PayByBankActivity
-import com.judokit.android.examples.feature.tokenpayment.DemoTokenPaymentActivity
-import com.judokit.android.examples.model.DemoFeature
-import com.judokit.android.examples.settings.SettingsActivity
 import com.judopay.judokit.android.model.Amount
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.Currency
@@ -302,8 +303,9 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val judoId = sharedPreferences.getString("judo_id", null)
         val initialRecurringPayment =
             sharedPreferences.getBoolean("is_initial_recurring_payment", false)
+        val address = cardAddress
 
-        return Judo.Builder(widgetType)
+        val builder = Judo.Builder(widgetType)
             .setJudoId(judoId)
             .setAuthorization(authorization)
             .setAmount(amount)
@@ -316,8 +318,30 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setPBBAConfiguration(pbbaConfiguration)
             .setInitialRecurringPayment(initialRecurringPayment)
             .setNetworkTimeout(networkTimeout)
-            .build()
+
+        if (address != null) {
+            builder.setAddress(address)
+        }
+
+        return builder.build()
     }
+
+    private val cardAddress: Address?
+        get() {
+            val isAddressEnabled = sharedPreferences.getBoolean("is_address_enabled", false)
+            if (isAddressEnabled) {
+                return Address.Builder()
+                    .setLine1(sharedPreferences.getString("address_line_1", null))
+                    .setLine2(sharedPreferences.getString("address_line_2", null))
+                    .setLine3(sharedPreferences.getString("address_line_3", null))
+                    .setTown(sharedPreferences.getString("address_town", null))
+                    .setPostCode(sharedPreferences.getString("address_post_code", null))
+                    .setBillingCountry(sharedPreferences.getString("address_billing_country", null))
+                    .build()
+            }
+
+            return null
+        }
 
     private val uiConfiguration: UiConfiguration
         get() {
