@@ -87,6 +87,7 @@ class ThreeDSOneCardVerificationDialogFragment constructor(
             completionCallback.onFailure(JudoPaymentResult.UserCancelled())
             dismiss()
         }
+
         with(cardVerificationWebView) {
             this.view = this@ThreeDSOneCardVerificationDialogFragment
             authorize(cardVerificationModel)

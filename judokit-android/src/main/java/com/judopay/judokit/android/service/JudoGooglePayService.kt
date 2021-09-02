@@ -35,7 +35,13 @@ class JudoGooglePayService(
             paymentsClient.isReadyToPay(isReadyToPayRequest).addOnCompleteListener { task ->
                 try {
                     val isGooglePayAvailable = task.isSuccessful
-                    cont.resume(isGooglePayAvailable)
+                    val exception = task.exception
+
+                    if (exception != null) {
+                        cont.resumeWithException(exception)
+                    } else {
+                        cont.resume(isGooglePayAvailable)
+                    }
                 } catch (exception: ApiException) {
                     cont.resumeWithException(exception)
                 }
