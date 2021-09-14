@@ -178,6 +178,13 @@
             app:summary="@string/google_pay_is_production_summary"
             app:title="@string/google_pay_is_production_title" />
 
+        <EditTextPreference
+            app:defaultValue="GB"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_country_code"
+            app:summary="@string/google_pay_country_code_summary"
+            app:title="@string/google_pay_country_code_title" />
+
         <ListPreference
             app:defaultValue="NONE"
             app:entries="@array/google_pay_address_entries"
