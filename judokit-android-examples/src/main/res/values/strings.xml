@@ -122,6 +122,24 @@
     <string name="dialog_success_title">Success</string>
     <string name="dialog_button_ok">Ok</string>
 
+    <string name="primary_account_details_header">Primary account details</string>
+    <string name="primary_account_details_summary">MCC 6012 fields</string>
+
+    <string name="is_primary_account_details_enabled_title">Enable primary account details</string>
+    <string name="is_primary_account_details_enabled_summary">Turn on to attach primary account details to the request body.</string>
+
+    <string name="primary_account_name_title">Name</string>
+    <string name="primary_account_name_summary">Sets name</string>
+
+    <string name="primary_account_account_number_title">Account number</string>
+    <string name="primary_account_account_number_summary">Sets account number</string>
+
+    <string name="primary_account_date_of_birth_title">Date of birth</string>
+    <string name="primary_account_date_of_birth_summary">Sets date of birth</string>
+
+    <string name="primary_account_post_code_title">Post code</string>
+    <string name="primary_account_post_code_summary">Sets postal code</string>
+
     <string name="google_pay_header">Google Pay</string>
     <string name="google_pay_is_production_title">Production environment</string>
     <string name="google_pay_is_production_summary">Use Google Pay production environment.</string>

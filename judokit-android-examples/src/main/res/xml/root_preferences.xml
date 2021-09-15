@@ -169,6 +169,52 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
+        app:title="@string/primary_account_details_header"
+        android:summary="@string/primary_account_details_summary">
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="is_primary_account_details_enabled"
+            app:title="@string/is_primary_account_details_enabled_title"
+            app:summary="@string/is_primary_account_details_enabled_summary" />
+
+        <EditTextPreference
+            app:defaultValue="test-account-name"
+            app:dependency="is_primary_account_details_enabled"
+            app:iconSpaceReserved="false"
+            app:key="primary_account_name"
+            app:title="@string/primary_account_name_title"
+            app:summary="@string/primary_account_name_summary" />
+
+        <EditTextPreference
+            app:defaultValue="4015434234"
+            app:dependency="is_primary_account_details_enabled"
+            app:iconSpaceReserved="false"
+            app:key="primary_account_account_number"
+            app:title="@string/primary_account_account_number_title"
+            app:summary="@string/primary_account_account_number_summary" />
+
+        <EditTextPreference
+            app:defaultValue="1970-10-11"
+            app:dependency="is_primary_account_details_enabled"
+            app:iconSpaceReserved="false"
+            app:key="primary_account_date_of_birth"
+            app:title="@string/primary_account_date_of_birth_title"
+            app:summary="@string/primary_account_date_of_birth_summary" />
+
+        <EditTextPreference
+            app:defaultValue="EC2A"
+            app:dependency="is_primary_account_details_enabled"
+            app:iconSpaceReserved="false"
+            app:key="primary_account_post_code"
+            app:title="@string/primary_account_post_code_title"
+            app:summary="@string/primary_account_post_code_summary" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
         app:title="@string/google_pay_header">
 
         <SwitchPreferenceCompat
