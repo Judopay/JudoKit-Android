@@ -304,6 +304,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val initialRecurringPayment =
             sharedPreferences.getBoolean("is_initial_recurring_payment", false)
         val address = cardAddress
+        val accountDetails = primaryAccountDetails
 
         val builder = Judo.Builder(widgetType)
             .setJudoId(judoId)
@@ -321,6 +322,10 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
         if (address != null) {
             builder.setAddress(address)
+        }
+
+        if (accountDetails != null) {
+            builder.setPrimaryAccountDetails(primaryAccountDetails)
         }
 
         return builder.build()
@@ -454,6 +459,20 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 .setIsShippingAddressRequired(isShippingAddressRequired)
                 .setShippingAddressParameters(shippingAddressParams)
                 .build()
+        }
+
+    private val primaryAccountDetails: PrimaryAccountDetails?
+        get() {
+            val isPrimaryAccountDetailsEnabled = sharedPreferences.getBoolean("is_primary_account_details_enabled", false)
+            if (isPrimaryAccountDetailsEnabled) {
+                return PrimaryAccountDetails.Builder()
+                    .setName(sharedPreferences.getString("primary_account_name", null))
+                    .setAccountNumber(sharedPreferences.getString("primary_account_account_number", null))
+                    .setDateOfBirth(sharedPreferences.getString("primary_account_date_of_birth", null))
+                    .setPostCode(sharedPreferences.getString("primary_account_post_code", null))
+                    .build()
+            }
+            return null
         }
 
     private val pbbaConfiguration: PBBAConfiguration
