@@ -51,6 +51,7 @@ import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.PBBAConfiguration
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
+import com.judopay.judokit.android.model.PrimaryAccountDetails
 import com.judopay.judokit.android.model.Reference
 import com.judopay.judokit.android.model.USER_CANCELLED
 import com.judopay.judokit.android.model.UiConfiguration
