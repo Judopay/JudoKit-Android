@@ -26,6 +26,7 @@ internal class GooglePayRequestTest {
         )
         .setYourPaymentMetaData(mockk(relaxed = true))
         .setPrimaryAccountDetails(mockk(relaxed = true))
+        .setCardAddress(mockk(relaxed = true))
 
     @Test
     @DisplayName("Should throw an exception on providing null judo id")
