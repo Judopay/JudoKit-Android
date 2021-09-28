@@ -234,6 +234,7 @@ fun Judo.toGooglePayRequest(
         .setYourConsumerReference(reference.consumerReference)
         .setYourPaymentMetaData(reference.metaData?.toMap())
         .setPrimaryAccountDetails(primaryAccountDetails)
+        .setCardAddress(address)
         .setGooglePayWallet(wallet)
         .build()
 }
