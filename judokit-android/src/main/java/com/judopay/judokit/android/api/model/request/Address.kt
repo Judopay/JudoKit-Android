@@ -12,7 +12,7 @@ class Address internal constructor(
     var line2: String?,
     var line3: String?,
     var town: String?,
-    var billingCountry: String?,
+    var countryCode: Int?,
     var postCode: String?
 ) : Parcelable {
 
@@ -22,7 +22,7 @@ class Address internal constructor(
         private var line3: String? = null
         private var postCode: String? = null
         private var town: String? = null
-        private var billingCountry: String? = null
+        private var countryCode: Int? = null
 
         /**
          * Sets line one of the address.
@@ -47,7 +47,7 @@ class Address internal constructor(
         /**
          *  Sets billing country of the address.
          */
-        fun setBillingCountry(country: String?) = apply { this.billingCountry = country }
+        fun setCountryCode(code: Int?) = apply { this.countryCode = code }
 
         /**
          * Sets post code of the address.
@@ -59,7 +59,7 @@ class Address internal constructor(
          * @return An instance of [Address]
          */
         fun build(): Address {
-            return Address(line1, line2, line3, town, billingCountry, postCode)
+            return Address(line1, line2, line3, town, countryCode, postCode)
         }
     }
 }

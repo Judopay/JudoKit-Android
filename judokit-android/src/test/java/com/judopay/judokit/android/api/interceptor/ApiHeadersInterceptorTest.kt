@@ -1,9 +1,9 @@
 package com.judopay.judokit.android.api.interceptor
 
 import android.util.Base64
-import com.judopay.judokit.android.BuildConfig
 import com.judopay.judokit.android.api.AppMetaDataProvider
 import com.judopay.judokit.android.api.model.BasicAuthorization
+import com.judopay.judokit.android.ui.common.JUDO_KIT_VERSION
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -126,7 +126,7 @@ internal class ApiHeadersInterceptorTest {
         val recordedRequest = makeRequest("/")
 
         assertEquals(
-            "Android-${BuildConfig.VERSION_NAME}",
+            "Android-${JUDO_KIT_VERSION}",
             recordedRequest.getHeader("Sdk-Version")
         )
     }

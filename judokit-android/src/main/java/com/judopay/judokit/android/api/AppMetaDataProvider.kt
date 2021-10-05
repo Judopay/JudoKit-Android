@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
-import com.judopay.judokit.android.BuildConfig
+import com.judopay.judokit.android.ui.common.JUDO_KIT_VERSION
 
 class AppMetaDataProvider(context: Context) {
 
@@ -31,5 +31,5 @@ class AppMetaDataProvider(context: Context) {
 
     val userAgent: String
         get() =
-            """Android/${BuildConfig.VERSION_NAME} ${Build.MANUFACTURER} ${Build.MODEL} $appName $appVersion""".trimMargin()
+            """Android/${JUDO_KIT_VERSION} ${Build.MANUFACTURER} ${Build.MODEL} $appName $appVersion""".trimMargin()
 }
