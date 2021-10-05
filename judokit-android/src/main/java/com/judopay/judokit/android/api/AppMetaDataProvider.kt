@@ -31,5 +31,5 @@ class AppMetaDataProvider(context: Context) {
 
     val userAgent: String
         get() =
-            """Android/${JUDO_KIT_VERSION} ${Build.MANUFACTURER} ${Build.MODEL} $appName $appVersion""".trimMargin()
+            """Android/$JUDO_KIT_VERSION ${Build.MANUFACTURER} ${Build.MODEL} $appName $appVersion""".trimMargin()
 }

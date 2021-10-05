@@ -126,7 +126,7 @@ internal class ApiHeadersInterceptorTest {
         val recordedRequest = makeRequest("/")
 
         assertEquals(
-            "Android-${JUDO_KIT_VERSION}",
+            "Android-$JUDO_KIT_VERSION",
             recordedRequest.getHeader("Sdk-Version")
         )
     }
