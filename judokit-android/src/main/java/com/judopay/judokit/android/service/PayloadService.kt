@@ -10,7 +10,6 @@ import android.view.WindowManager
 import android.webkit.WebSettings
 import com.judopay.devicedna.DeviceDNA
 import com.judopay.devicedna.PermissionUtil
-import com.judopay.judokit.android.BuildConfig
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.model.Browser
 import com.judopay.judokit.android.api.model.ClientDetails
@@ -19,6 +18,7 @@ import com.judopay.judokit.android.api.model.EnhancedPaymentDetail
 import com.judopay.judokit.android.api.model.GeoLocation
 import com.judopay.judokit.android.api.model.SDKInfo
 import com.judopay.judokit.android.api.model.ThreeDSecure
+import com.judopay.judokit.android.ui.common.JUDO_KIT_VERSION
 import java.net.Inet4Address
 import java.net.InetAddress
 import java.net.NetworkInterface
@@ -32,7 +32,7 @@ class PayloadService(private val context: Context) {
         EnhancedPaymentDetail(getSdkInfo(), getConsumerDevice())
 
     private fun getSdkInfo(): SDKInfo {
-        return SDKInfo(BuildConfig.VERSION_NAME, context.getString(R.string.judokit_android))
+        return SDKInfo(JUDO_KIT_VERSION, context.getString(R.string.judokit_android))
     }
 
     private fun getConsumerDevice(): ConsumerDevice = ConsumerDevice(

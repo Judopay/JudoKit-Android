@@ -158,7 +158,8 @@
             app:title="@string/address_post_code_title" />
 
         <EditTextPreference
-            app:defaultValue="UK"
+            app:defaultValue="826"
+            android:inputType="number"
             app:dependency="is_address_enabled"
             app:iconSpaceReserved="false"
             app:key="address_billing_country"
@@ -329,6 +330,24 @@
             app:summary="@string/payment_methods_summary"
             app:title="@string/payment_methods_title"
             app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/sdk_info_header">
+
+        <com.judokit.android.examples.settings.preferences.SDKInfoPreference
+            app:key="sdk_version"
+            app:enableCopying="true"
+            app:iconSpaceReserved="false"
+            app:title="@string/sdk_version_title"/>
+
+        <com.judokit.android.examples.settings.preferences.SDKInfoPreference
+            app:key="judo_api_version"
+            app:enableCopying="true"
+            app:iconSpaceReserved="false"
+            app:title="@string/judo_api_version_title"/>
 
     </PreferenceCategory>
 

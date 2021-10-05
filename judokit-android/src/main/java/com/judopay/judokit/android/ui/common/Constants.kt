@@ -17,3 +17,13 @@ const val BR_PBBA_RESULT = "BR_PBBA_RESULT"
  *  Constant for acquiring JudoResult of PayByBank app sale response from an intent
  */
 const val PBBA_RESULT = "PBBA_RESULT"
+
+/**
+ *  Constant to store the sdk version, injected in every Judo API request headers/body
+ */
+const val JUDO_KIT_VERSION = "2.1.7"
+
+/**
+ *  Constant to store the Judo API version, injected in every Judo API request headers
+ */
+const val JUDO_API_VERSION = "5.6.0"

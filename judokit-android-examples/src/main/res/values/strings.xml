@@ -50,6 +50,7 @@
     <string name="amount_header">Amount</string>
     <string name="address_header">Address</string>
     <string name="others_header">Others</string>
+    <string name="sdk_info_header">JudoKit information</string>
 
     <!-- Messages Preferences -->
     <string name="is_sandboxed_title">Sandboxed</string>
@@ -173,6 +174,9 @@
 
     <string name="is_initial_recurring_payment_title">Initial recurring payment</string>
     <string name="is_initial_recurring_payment_summary">Turn on to set initialRecurringPayment flag to true.</string>
+
+    <string name="sdk_version_title">SDK version</string>
+    <string name="judo_api_version_title">Judo API version</string>
 
     <string name="create_card_token">Create card token</string>
     <string name="token_payment">Token payment</string>

@@ -21,7 +21,9 @@ import com.judopay.judokit.android.db.entity.TokenizedCardEntity
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.CardScanningResult
+import com.judopay.judokit.android.model.ISONumericCode
 import com.judopay.judokit.android.model.PaymentWidgetType
+import com.judopay.judokit.android.model.asCountry
 import com.judopay.judokit.android.model.formatted
 import com.judopay.judokit.android.model.toInputModel
 import com.judopay.judokit.android.toMap
@@ -174,13 +176,12 @@ class CardEntryViewModel(
                 .setLine3(it.line3)
                 .setTown(it.town)
                 .setPostCode(it.postCode)
-                .setBillingCountry(it.billingCountry)
+                .setCountryCode(it.countryCode)
         }
 
         if (judo.uiConfiguration.avsEnabled) {
-            addressBuilder
-                .setBillingCountry(inputModel.country)
-                .setPostCode(inputModel.postCode)
+            val code = inputModel.country.asCountry()?.ISONumericCode
+            addressBuilder.setCountryCode(code).setPostCode(inputModel.postCode)
         }
 
         val address = addressBuilder.build()

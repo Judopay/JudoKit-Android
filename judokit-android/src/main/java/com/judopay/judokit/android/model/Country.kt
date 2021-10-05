@@ -12,6 +12,16 @@ enum class Country {
 
 fun String.asCountry() = Country.values().firstOrNull { it.displayName.equals(this, true) }
 
+fun Int.asCountry() = Country.values().firstOrNull { it.ISONumericCode == this }
+
+val Country.ISONumericCode: Int?
+    get() = when (this) {
+        Country.GB -> 826
+        Country.US -> 840
+        Country.CA -> 124
+        Country.OTHER -> null
+    }
+
 val Country.displayName: String
     get() = when (this) {
         Country.GB -> "UK"

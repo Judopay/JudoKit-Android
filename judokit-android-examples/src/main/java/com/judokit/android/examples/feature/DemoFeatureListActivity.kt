@@ -342,7 +342,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     .setLine3(sharedPreferences.getString("address_line_3", null))
                     .setTown(sharedPreferences.getString("address_town", null))
                     .setPostCode(sharedPreferences.getString("address_post_code", null))
-                    .setBillingCountry(sharedPreferences.getString("address_billing_country", null))
+                    .setCountryCode(sharedPreferences.getString("address_billing_country", null)?.toIntOrNull())
                     .build()
             }
 

@@ -19,7 +19,7 @@ fun Judo.toPrePopulatedInputModel(): InputModel {
     var postCode = ""
 
     address?.let {
-        val myCountry = it.billingCountry?.asCountry() ?: Country.GB
+        val myCountry = it.countryCode?.asCountry() ?: Country.GB
         country = myCountry.displayName
         postCode = it.postCode ?: ""
     }
