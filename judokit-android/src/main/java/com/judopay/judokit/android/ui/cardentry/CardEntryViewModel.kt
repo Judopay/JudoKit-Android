@@ -21,11 +21,11 @@ import com.judopay.judokit.android.db.entity.TokenizedCardEntity
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.CardScanningResult
+import com.judopay.judokit.android.model.ISONumericCode
 import com.judopay.judokit.android.model.PaymentWidgetType
+import com.judopay.judokit.android.model.asCountry
 import com.judopay.judokit.android.model.formatted
 import com.judopay.judokit.android.model.toInputModel
-import com.judopay.judokit.android.model.asCountry
-import com.judopay.judokit.android.model.ISONumericCode
 import com.judopay.judokit.android.toMap
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldType
 import com.judopay.judokit.android.ui.cardentry.model.FormModel
