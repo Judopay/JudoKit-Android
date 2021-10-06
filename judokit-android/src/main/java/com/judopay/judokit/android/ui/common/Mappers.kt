@@ -118,6 +118,7 @@ internal fun PaymentData.toGooglePayRequest(judo: Judo): GooglePayRequest {
         .setYourConsumerReference(reference.consumerReference)
         .setYourPaymentMetaData(reference.metaData?.toMap())
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
+        .setCardAddress(judo.address)
         .setGooglePayWallet(wallet)
         .build()
 }
