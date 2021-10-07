@@ -25,6 +25,7 @@ import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
 import com.judopay.judokit.android.model.ApiEnvironment
+import com.judopay.judokit.android.model.googlepay.GooglePayAddress
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_500
 import com.judopay.judokit.android.ui.error.JudoNotProvidedError
 
@@ -218,12 +219,14 @@ fun Judo.toCheckCardRequest(
 fun Judo.toGooglePayRequest(
     cardNetwork: String,
     cardDetails: String,
-    token: String
+    token: String,
+    billingAddress: GooglePayAddress? = null
 ): GooglePayRequest {
     val wallet = GooglePayWallet.Builder()
+        .setToken(token)
         .setCardNetwork(cardNetwork)
         .setCardDetails(cardDetails)
-        .setToken(token)
+        .setBillingAddress(billingAddress)
         .build()
 
     return GooglePayRequest.Builder()
