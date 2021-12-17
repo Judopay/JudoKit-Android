@@ -4,8 +4,9 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'jacoco'
-apply plugin: 'guru.stefma.bintrayrelease'
 apply plugin: "org.jetbrains.dokka-android"
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
 
 apply from: '../ktlint.gradle'
 
@@ -14,14 +15,14 @@ dokka {
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 31
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 1
-        versionName "2.0.9"
+        minSdkVersion 19
+        targetSdkVersion 31
+        versionCode versionCode
+        versionName versionName
 
         vectorDrawables.useSupportLibrary = true
 
@@ -59,20 +60,6 @@ android {
     }
 }
 
-version = android.defaultConfig.versionName
-group = 'com.judopay.judokit.android'
-
-androidArtifact {
-    artifactId = 'judokit-android'
-}
-
-publish {
-    userOrg = 'judopay'
-    desc = 'Android Mobile Payments SDK'
-    website = 'https://github.com/JudoPay/JudoKit-Android'
-}
-
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -104,7 +91,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
     implementation 'com.google.android.material:material:1.2.0'
-    implementation 'com.google.android.gms:play-services-wallet:18.0.0'
+    implementation 'com.google.android.gms:play-services-wallet:18.1.3'
 
     // Room and Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-runtime:$room_version"
@@ -234,4 +221,67 @@ def addJacocoTask(variant) {
     jacocoTask.classDirectories.from = classDirectories
     jacocoTask.executionData.from = files("${buildDir}/jacoco/test${variantName}UnitTest.exec")
     jacocoTask
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+signing {
+    def signingKey = findProperty("signingKey")
+    def signingPassword = findProperty("signingPassword")
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications
+}
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            artifactId = 'judokit-android'
+            artifact sourcesJar
+            artifact ("$buildDir/outputs/aar/${project.getName()}-release.aar")
+            pom {
+                name = 'Judopay JudoKit-Android'
+                description = 'JudoKit-Android is an SDK to assist Android app developers to accept payments.'
+                url = 'https://github.com/Judopay/JudoKit-Android'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'judopay'
+                        name = 'Judopay'
+                        email = 'developersupport@judopay.com'
+                        organization = 'Judopay'
+                        organizationUrl = 'https://www.judopay.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/Judopay/JudoKit-Android.git'
+                    developerConnection = 'scm:git:ssh://github.com:Judopay/JudoKit-Android.git'
+                    url = 'https://github.com/Judopay/JudoKit-Android'
+                }
+                // A slightly hacky fix so that your POM will include any transitive dependencies
+                // that your library builds upon
+                withXml {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+
+                    project.configurations.implementation.allDependencies.each {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                    }
+                }
+            }
+        }
+    }
 }

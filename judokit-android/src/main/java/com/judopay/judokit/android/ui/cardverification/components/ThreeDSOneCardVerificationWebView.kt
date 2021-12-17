@@ -77,6 +77,10 @@ internal class CardVerificationWebView @JvmOverloads constructor(
     }
 
     override fun send(action: WebViewAction) {
+        if (!isAttachedToWindow) {
+            return
+        }
+
         view.send(action)
     }
 }

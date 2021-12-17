@@ -3,11 +3,13 @@ package com.judopay.judokit.android
 import com.judopay.judokit.android.model.Amount
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.Currency
+import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -239,5 +241,34 @@ internal class JudoBuilderTest {
         judoBuilder.setInitialRecurringPayment(false)
 
         assertFalse(judoBuilder.build().initialRecurringPayment!!)
+    }
+
+    @Test
+    @DisplayName("Given setNetworkTimeout is called with value null, then apply default timeout values")
+    fun applyDefaultTimeoutValuesWhenSetNetworkTimeoutParameterNull() {
+        judoBuilder.setNetworkTimeout(null)
+
+        assertEquals(5L, judoBuilder.build().networkTimeout.connectTimeout)
+        assertEquals(180L, judoBuilder.build().networkTimeout.readTimeout)
+        assertEquals(30L, judoBuilder.build().networkTimeout.writeTimeout)
+    }
+
+    @Test
+    @DisplayName("Given setNetworkTimeout is called with a new NetworkTimeout parameter, then apply custom timeout values")
+    fun applyCustomTimeoutValuesWhenSetNetworkTimeoutParameterIsSet() {
+        val connectTimeout = 10L
+        val readTimeout = 200L
+        val writeTimeout = 80L
+        judoBuilder.setNetworkTimeout(
+            NetworkTimeout.Builder()
+                .setConnectTimeout(connectTimeout)
+                .setReadTimeout(readTimeout)
+                .setWriteTimeout(writeTimeout)
+                .build()
+        )
+
+        assertEquals(connectTimeout, judoBuilder.build().networkTimeout.connectTimeout)
+        assertEquals(readTimeout, judoBuilder.build().networkTimeout.readTimeout)
+        assertEquals(writeTimeout, judoBuilder.build().networkTimeout.writeTimeout)
     }
 }

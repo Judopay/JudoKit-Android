@@ -97,4 +97,4 @@ val PaymentWidgetType.isGooglePayWidget: Boolean
     get() = this == PaymentWidgetType.GOOGLE_PAY || this == PaymentWidgetType.PRE_AUTH_GOOGLE_PAY
 
 val PaymentWidgetType.isExposed: Boolean
-    get() = this == PaymentWidgetType.PAY_BY_BANK_APP
+    get() = this == PaymentWidgetType.PAY_BY_BANK_APP || isGooglePayWidget

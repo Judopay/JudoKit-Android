@@ -179,6 +179,26 @@
             app:summary="@string/three_ds2_max_timeout_summary"
             app:title="@string/three_ds2_max_timeout_title"
             app:useSimpleSummaryProvider="true" />
+        app:title="@string/network_timeouts_header">
+
+        <EditTextPreference
+            android:inputType="number"
+            app:iconSpaceReserved="false"
+            app:key="connect_timeout"
+            app:summary="@string/connect_timeout_summary"
+            app:title="@string/connect_timeout_title" />
+
+        <EditTextPreference
+            app:iconSpaceReserved="false"
+            app:key="read_timeout"
+            app:summary="@string/read_timeout_summary"
+            app:title="@string/read_timeout_title" />
+
+        <EditTextPreference
+            app:iconSpaceReserved="false"
+            app:key="write_timeout"
+            app:summary="@string/write_timeout_summary"
+            app:title="@string/write_timeout_title" />
 
     </PreferenceCategory>
 
@@ -208,6 +228,114 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
+        app:title="@string/address_header">
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="is_address_enabled"
+            app:summary="@string/is_address_enabled_summary"
+            app:title="@string/is_address_enabled_title" />
+
+        <EditTextPreference
+            app:defaultValue="My house"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="address_line_1"
+            app:summary="@string/address_line_1_summary"
+            app:title="@string/address_line_1_title" />
+
+        <EditTextPreference
+            app:defaultValue="My street"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="address_line_2"
+            app:summary="@string/address_line_2_summary"
+            app:title="@string/address_line_2_title" />
+
+        <EditTextPreference
+            app:defaultValue="My area"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="address_line_3"
+            app:summary="@string/address_line_3_summary"
+            app:title="@string/address_line_3_title" />
+
+        <EditTextPreference
+            app:defaultValue="My town"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="address_town"
+            app:summary="@string/address_town_summary"
+            app:title="@string/address_town_title" />
+
+        <EditTextPreference
+            app:defaultValue="TR14 8PA"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="address_post_code"
+            app:summary="@string/address_post_code_summary"
+            app:title="@string/address_post_code_title" />
+
+        <EditTextPreference
+            app:defaultValue="826"
+            android:inputType="number"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="address_billing_country"
+            app:summary="@string/address_billing_country_summary"
+            app:title="@string/address_billing_country_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/primary_account_details_header"
+        android:summary="@string/primary_account_details_summary">
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="is_primary_account_details_enabled"
+            app:title="@string/is_primary_account_details_enabled_title"
+            app:summary="@string/is_primary_account_details_enabled_summary" />
+
+        <EditTextPreference
+            app:defaultValue="test-account-name"
+            app:dependency="is_primary_account_details_enabled"
+            app:iconSpaceReserved="false"
+            app:key="primary_account_name"
+            app:title="@string/primary_account_name_title"
+            app:summary="@string/primary_account_name_summary" />
+
+        <EditTextPreference
+            app:defaultValue="4015434234"
+            app:dependency="is_primary_account_details_enabled"
+            app:iconSpaceReserved="false"
+            app:key="primary_account_account_number"
+            app:title="@string/primary_account_account_number_title"
+            app:summary="@string/primary_account_account_number_summary" />
+
+        <EditTextPreference
+            app:defaultValue="1970-10-11"
+            app:dependency="is_primary_account_details_enabled"
+            app:iconSpaceReserved="false"
+            app:key="primary_account_date_of_birth"
+            app:title="@string/primary_account_date_of_birth_title"
+            app:summary="@string/primary_account_date_of_birth_summary" />
+
+        <EditTextPreference
+            app:defaultValue="EC2A"
+            app:dependency="is_primary_account_details_enabled"
+            app:iconSpaceReserved="false"
+            app:key="primary_account_post_code"
+            app:title="@string/primary_account_post_code_title"
+            app:summary="@string/primary_account_post_code_summary" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
         app:title="@string/google_pay_header">
 
         <SwitchPreferenceCompat
@@ -216,6 +344,13 @@
             app:key="is_google_pay_production_environment"
             app:summary="@string/google_pay_is_production_summary"
             app:title="@string/google_pay_is_production_title" />
+
+        <EditTextPreference
+            app:defaultValue="GB"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_country_code"
+            app:summary="@string/google_pay_country_code_summary"
+            app:title="@string/google_pay_country_code_title" />
 
         <ListPreference
             app:defaultValue="NONE"
@@ -315,6 +450,24 @@
             app:summary="@string/payment_methods_summary"
             app:title="@string/payment_methods_title"
             app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/sdk_info_header">
+
+        <com.judokit.android.examples.settings.preferences.SDKInfoPreference
+            app:key="sdk_version"
+            app:enableCopying="true"
+            app:iconSpaceReserved="false"
+            app:title="@string/sdk_version_title"/>
+
+        <com.judokit.android.examples.settings.preferences.SDKInfoPreference
+            app:key="judo_api_version"
+            app:enableCopying="true"
+            app:iconSpaceReserved="false"
+            app:title="@string/judo_api_version_title"/>
 
     </PreferenceCategory>
 

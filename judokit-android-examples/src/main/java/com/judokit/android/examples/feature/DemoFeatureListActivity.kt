@@ -48,9 +48,11 @@ import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.GooglePayConfiguration
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoResult
+import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.PBBAConfiguration
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
+import com.judopay.judokit.android.model.PrimaryAccountDetails
 import com.judopay.judokit.android.model.Reference
 import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.model.USER_CANCELLED
@@ -263,27 +265,31 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setPositiveButton(
                 R.string.dialog_button_ok
             ) { dialog, _ ->
-                val fetchTransactionDetailsCallback = object : Callback<JudoApiCallResult<Receipt>> {
-                    override fun onResponse(
-                        call: Call<JudoApiCallResult<Receipt>>,
-                        response: Response<JudoApiCallResult<Receipt>>
-                    ) {
-                        when (val result = response.body()) {
-                            is JudoApiCallResult.Success -> {
-                                processSuccessfulPayment(result.data?.toJudoResult())
+                val fetchTransactionDetailsCallback =
+                    object : Callback<JudoApiCallResult<Receipt>> {
+                        override fun onResponse(
+                            call: Call<JudoApiCallResult<Receipt>>,
+                            response: Response<JudoApiCallResult<Receipt>>
+                        ) {
+                            when (val result = response.body()) {
+                                is JudoApiCallResult.Success -> {
+                                    processSuccessfulPayment(result.data?.toJudoResult())
+                                }
+                                is JudoApiCallResult.Failure -> {
+                                    processPaymentError(result.error?.toJudoError())
+                                }
                             }
-                            is JudoApiCallResult.Failure -> {
-                                processPaymentError(result.error?.toJudoError())
-                            }
+                            dialog.dismiss()
                         }
-                        dialog.dismiss()
-                    }
 
-                    override fun onFailure(call: Call<JudoApiCallResult<Receipt>>, t: Throwable) {
-                        dialog.dismiss()
-                        throw Exception(t)
+                        override fun onFailure(
+                            call: Call<JudoApiCallResult<Receipt>>,
+                            t: Throwable
+                        ) {
+                            dialog.dismiss()
+                            throw Exception(t)
+                        }
                     }
-                }
                 service.fetchTransactionWithReceiptId(view.receiptIdEditText.text.toString())
                     .enqueue(fetchTransactionDetailsCallback)
                 view.receiptProgressBar.visibility = View.VISIBLE
@@ -306,8 +312,10 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val scaExemption = sharedPreferences.getString("scaExemption", null)?.let { ScaExemption.valueOf(it) }
         val threeDSTwoMaxTimeout = sharedPreferences.getString("threeDSTwoMaxTimeout", null)?.toInt()
         val is3DS2Enabled = sharedPreferences.getBoolean("is_3DS2_enabled", false)
+        val address = cardAddress
+        val accountDetails = primaryAccountDetails
 
-        return Judo.Builder(widgetType)
+        val builder = Judo.Builder(widgetType)
             .setJudoId(judoId)
             .setAuthorization(authorization)
             .setAmount(amount)
@@ -328,7 +336,35 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
             .set3DS2Enabled(is3DS2Enabled)
             .build()
+            .setNetworkTimeout(networkTimeout)
+
+        if (address != null) {
+            builder.setAddress(address)
+        }
+
+        if (accountDetails != null) {
+            builder.setPrimaryAccountDetails(primaryAccountDetails)
+        }
+
+        return builder.build()
     }
+
+    private val cardAddress: Address?
+        get() {
+            val isAddressEnabled = sharedPreferences.getBoolean("is_address_enabled", false)
+            if (isAddressEnabled) {
+                return Address.Builder()
+                    .setLine1(sharedPreferences.getString("address_line_1", null))
+                    .setLine2(sharedPreferences.getString("address_line_2", null))
+                    .setLine3(sharedPreferences.getString("address_line_3", null))
+                    .setTown(sharedPreferences.getString("address_town", null))
+                    .setPostCode(sharedPreferences.getString("address_post_code", null))
+                    .setCountryCode(sharedPreferences.getString("address_billing_country", null)?.toIntOrNull())
+                    .build()
+            }
+
+            return null
+        }
 
     private val uiConfiguration: UiConfiguration
         get() {
@@ -414,6 +450,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 sharedPreferences.getBoolean("is_billing_address_phone_number_required", false)
             val isEmailAddressRequired =
                 sharedPreferences.getBoolean("is_email_address_required", false)
+            val countryCode =
+                sharedPreferences.getString("google_pay_country_code", "GB")
 
             val isBillingAddressRequired = billingAddress != null && billingAddress != "NONE"
 
@@ -431,7 +469,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             }
 
             return GooglePayConfiguration.Builder()
-                .setTransactionCountryCode("GB")
+                .setTransactionCountryCode(countryCode)
                 .setEnvironment(gPayEnv)
                 .setIsEmailRequired(isEmailAddressRequired)
                 .setIsBillingAddressRequired(isBillingAddressRequired)
@@ -439,6 +477,20 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 .setIsShippingAddressRequired(isShippingAddressRequired)
                 .setShippingAddressParameters(shippingAddressParams)
                 .build()
+        }
+
+    private val primaryAccountDetails: PrimaryAccountDetails?
+        get() {
+            val isPrimaryAccountDetailsEnabled = sharedPreferences.getBoolean("is_primary_account_details_enabled", false)
+            if (isPrimaryAccountDetailsEnabled) {
+                return PrimaryAccountDetails.Builder()
+                    .setName(sharedPreferences.getString("primary_account_name", null))
+                    .setAccountNumber(sharedPreferences.getString("primary_account_account_number", null))
+                    .setDateOfBirth(sharedPreferences.getString("primary_account_date_of_birth", null))
+                    .setPostCode(sharedPreferences.getString("primary_account_post_code", null))
+                    .build()
+            }
+            return null
         }
 
     private val pbbaConfiguration: PBBAConfiguration
@@ -484,5 +536,18 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     .setApiSecret(secret)
                     .build()
             }
+        }
+
+    private val networkTimeout: NetworkTimeout
+        get() {
+            val connectTimeout = sharedPreferences.getString("connect_timeout", null)
+            val readTimeout = sharedPreferences.getString("read_timeout", null)
+            val writeTimeout = sharedPreferences.getString("write_timeout", null)
+
+            return NetworkTimeout.Builder()
+                .setConnectTimeout(connectTimeout?.toLongOrNull())
+                .setReadTimeout(readTimeout?.toLongOrNull())
+                .setWriteTimeout(writeTimeout?.toLongOrNull())
+                .build()
         }
 }

@@ -54,6 +54,7 @@ class Address internal constructor(
          *  Sets billing country of the address.
          */
         fun setBillingCountry(country: String?) = apply { this.billingCountry = country }
+        fun setCountryCode(code: Int?) = apply { this.countryCode = code }
 
         /**
          * Sets post code of the address.

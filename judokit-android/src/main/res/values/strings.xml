@@ -133,6 +133,14 @@
     <string name="error_response_parse_desc" translatable="false">Unexpected response format returned.</string>
     <string name="error_response_parse_reason" translatable="false">The response did not contain some of the required parameters needed to complete the transaction.</string>
 
+    <!--    Network failed-->
+    <string name="error_network_failed_desc" translatable="false">No internet connection.</string>
+    <string name="error_network_failed_reason" translatable="false">Could not connect to server due to network failure.</string>
+
+    <!--   Poor connectivity-->
+    <string name="error_poor_connectivity_desc" translatable="false">Device has poor internet connectivity.</string>
+    <string name="error_poor_connectivity_reason" translatable="false">The request took too much time.</string>
+
     <string name="country_uk">UK</string>
     <string name="country_usa">USA</string>
     <string name="country_canada">Canada</string>

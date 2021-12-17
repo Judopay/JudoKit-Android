@@ -45,8 +45,6 @@ jobs:
           paths:
             - judokit-android/build
 
-  # Add below as additional command once instrumented tests are added
-  # ./gradlew :judokit-android-examples:assembleReleaseAndroidTest
   build_sample:
     executor: android
     steps:
@@ -70,9 +68,29 @@ jobs:
             echo "keyAlias=1" >> ./judokit-android-examples/keystore.properties
             echo "keyPassword=${ANDROID_KEYSTORE_PASSWORD}" >> ./judokit-android-examples/keystore.properties
       - run:
+          name: Clone JudoKit-Automation-Scenarios
+          command: |
+            echo "$GITHUB_SSH_KEY" | base64 -d > ~/.ssh/id_rsa_judoci
+            chmod 600 ~/.ssh/id_rsa_judoci
+            export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_judoci -o IdentitiesOnly=yes"
+            git clone git@github.com:Judopay/JudoKit-Automation-Scenarios.git \
+              judokit-android-examples/src/androidTest/assets
+      - run:
+          name: Inject Test Credentials
+          command: |
+            sed -i "s/YOUR-JUDO-ID/$TEST_JUDO_API_ID/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
+            sed -i "s/YOUR-TOKEN/$TEST_JUDO_API_TOKEN/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
+            sed -i "s/YOUR-SECRET/$TEST_JUDO_API_SECRET/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
+            sed -i "s/YOUR-3DS-TOKEN/$TEST_JUDO_API_3DS_TOKEN/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
+            sed -i "s/YOUR-3DS-SECRET/$TEST_JUDO_API_3DS_SECRET/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
+      - run:
           name: Build Sample App APK
           command: |
-            ./gradlew :judokit-android-examples:assembleRelease
+            ./gradlew :judokit-android-examples:assemble
+      - run:
+          name: Build Test Package
+          command: |
+            ./gradlew :judokit-android-examples:assembleAndroidTest
       - save_cache:
           key: judokit-android-examples-{{ checksum "judokit-android-examples/build.gradle" }}
           paths:
@@ -108,7 +126,6 @@ jobs:
           name: Run Sample App Unit Tests
           command: ./gradlew :judokit-android-examples:test
 
-  # Below step not currently used as no instrumented tests have been written
   instrumented_test_sample:
     executor: android
     steps:
@@ -120,14 +137,17 @@ jobs:
       - run:
           name: Authorize gcloud and set config defaults
           command: |
-            sudo gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-            sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
       - run:
           name: Test with Firebase Test Lab
+          no_output_timeout: 30m
           command: >
             gcloud firebase test android run \
               --app judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk \
-              --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk
+              --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk \
+              --results-bucket $FIREBASE_TEST_RESULTS_BUCKET \
+              --timeout=30m
 
   sonar_scan:
     docker:
@@ -175,8 +195,10 @@ jobs:
       - attach_workspace:
           at: /home/circleci/project
       - run:
-          name: Release SDK to Bintray
-          command: ./gradlew bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayKey=$BINTRAY_API_KEY -PdryRun=false
+          name: Release SDK to Maven Central
+          command: |
+            export ORG_GRADLE_PROJECT_signingKey=$(echo "$ORG_GRADLE_PROJECT_signingKey_base64" | base64 -d)
+            ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
 
   report_to_jira:
     docker:
@@ -206,6 +228,14 @@ workflows:
                 - /^v[0-9]+(\.[0-9]+)*$/
       - build_sample:
           context: shared-secrets
+      - instrumented_test_sample:
+          context: shared-secrets
+          requires:
+            - build_sample
+          filters:
+            branches:
+              only:
+                - master
       - unit_test_sdk:
           requires:
             - build_sdk

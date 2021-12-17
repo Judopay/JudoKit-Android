@@ -98,13 +98,9 @@ internal fun GooglePayConfiguration.toPaymentDataRequest(judo: Judo): PaymentDat
 @Throws(IllegalArgumentException::class, JsonSyntaxException::class)
 internal fun PaymentData.toGooglePayRequest(judo: Judo): GooglePayRequest {
     val gPayPaymentData = Gson().fromJson(toJson(), GooglePayPaymentData::class.java)
-    val info = gPayPaymentData.paymentMethodData.info
-    val token = gPayPaymentData.paymentMethodData.tokenizationData.token
 
     val wallet = GooglePayWallet.Builder()
-        .setCardNetwork(info.cardNetwork)
-        .setCardDetails(info.cardDetails)
-        .setToken(token)
+        .setGooglePayPaymentData(gPayPaymentData)
         .build()
 
     val amount = judo.amount
@@ -118,6 +114,7 @@ internal fun PaymentData.toGooglePayRequest(judo: Judo): GooglePayRequest {
         .setYourConsumerReference(reference.consumerReference)
         .setYourPaymentMetaData(reference.metaData?.toMap())
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
+        .setCardAddress(judo.address)
         .setGooglePayWallet(wallet)
         .build()
 }

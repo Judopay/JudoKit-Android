@@ -50,6 +50,9 @@ class CardEntryRobot {
                     .withElement(DriverAtoms.findElement(Locator.NAME, "UsernamePasswordEntry"))
                     .perform(DriverAtoms.webClick())
             }
+            View.DISMISS_BUTTON.value ->
+                onView(withId(R.id.backButton)).waitUntilVisible()
+                    .perform(click())
             else -> onView(withText(button)).waitUntilVisible().perform(click())
         }
     }

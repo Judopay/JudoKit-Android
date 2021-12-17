@@ -16,6 +16,7 @@ class GooglePayRequest private constructor(
     internal var yourConsumerReference: String?,
     private var yourPaymentMetaData: Map<String, String>?,
     private var primaryAccountDetails: PrimaryAccountDetails?,
+    private var cardAddress: Address?,
     internal val googlePayWallet: GooglePayWallet
 ) {
 
@@ -27,6 +28,7 @@ class GooglePayRequest private constructor(
         private var yourConsumerReference: String? = null
         private var yourPaymentMetaData: Map<String, String>? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
+        private var cardAddress: Address? = null
         private var googlePayWallet: GooglePayWallet? = null
 
         fun setJudoId(judoId: String?) = apply { this.judoId = judoId }
@@ -46,6 +48,9 @@ class GooglePayRequest private constructor(
 
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
             apply { this.primaryAccountDetails = primaryAccountDetails }
+
+        fun setCardAddress(cardAddress: Address?) =
+            apply { this.cardAddress = cardAddress }
 
         fun setGooglePayWallet(wallet: GooglePayWallet?) =
             apply { this.googlePayWallet = wallet }
@@ -68,6 +73,7 @@ class GooglePayRequest private constructor(
                 consumerReference,
                 yourPaymentMetaData,
                 primaryAccountDetails,
+                cardAddress,
                 myWallet
             )
         }

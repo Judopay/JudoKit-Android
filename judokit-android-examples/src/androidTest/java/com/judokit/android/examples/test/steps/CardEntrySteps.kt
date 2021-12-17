@@ -28,11 +28,6 @@ class CardEntrySteps {
         robot.tapOn(text, type)
     }
 
-    @And("^I tap on the Country text field$")
-    fun tapOnCountryTextField(text: String) {
-        robot.tapOn(text, "text field")
-    }
-
     @And("^I enter (.*?) \"(.*?)\" (?:in|into) the (.*?) (?:text|input) field$")
     fun enterTextInto(identifier: String, key: String, fieldName: String) {
         val defaultCard = testConfiguration.defaultCards.find { it.cardType == identifier }

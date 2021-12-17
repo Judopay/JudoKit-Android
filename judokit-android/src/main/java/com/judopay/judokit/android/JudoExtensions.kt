@@ -26,6 +26,7 @@ import com.judopay.judokit.android.api.model.request.SaveCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
 import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
 import com.judopay.judokit.android.model.ApiEnvironment
+import com.judopay.judokit.android.model.googlepay.GooglePayAddress
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_500
 import com.judopay.judokit.android.ui.error.JudoNotProvidedError
 
@@ -44,6 +45,19 @@ internal fun <T : Any> requireNotNull(value: T?, propertyName: String, message: 
     if (value == null)
         throw IllegalArgumentException(message ?: "$propertyName cannot be null")
     else return value
+}
+
+internal fun validateTimeout(
+    timeout: Long?,
+    propertyName: String,
+    minTimeout: Long,
+    maxTimeout: Long
+): Long {
+    return timeout?.let {
+        if (it !in minTimeout..maxTimeout)
+            throw IllegalArgumentException("$propertyName should be greater than $minTimeout seconds and less than $maxTimeout seconds")
+        else it
+    } ?: minTimeout
 }
 
 @Suppress("UNCHECKED_CAST")
@@ -212,12 +226,14 @@ fun Judo.toCheckCardRequest(
 fun Judo.toGooglePayRequest(
     cardNetwork: String,
     cardDetails: String,
-    token: String
+    token: String,
+    billingAddress: GooglePayAddress? = null
 ): GooglePayRequest {
     val wallet = GooglePayWallet.Builder()
+        .setToken(token)
         .setCardNetwork(cardNetwork)
         .setCardDetails(cardDetails)
-        .setToken(token)
+        .setBillingAddress(billingAddress)
         .build()
 
     return GooglePayRequest.Builder()
@@ -228,6 +244,7 @@ fun Judo.toGooglePayRequest(
         .setYourConsumerReference(reference.consumerReference)
         .setYourPaymentMetaData(reference.metaData?.toMap())
         .setPrimaryAccountDetails(primaryAccountDetails)
+        .setCardAddress(address)
         .setGooglePayWallet(wallet)
         .build()
 }

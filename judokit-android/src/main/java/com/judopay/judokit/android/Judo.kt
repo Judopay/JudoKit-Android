@@ -9,6 +9,7 @@ import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.GooglePayConfiguration
+import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.PBBAConfiguration
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
@@ -64,6 +65,7 @@ class Judo internal constructor(
     val address: Address?,
     val pbbaConfiguration: PBBAConfiguration?,
     val initialRecurringPayment: Boolean?,
+    val networkTimeout: NetworkTimeout
     val challengeRequestIndicator: ChallengeRequestIndicator?,
     val scaExemption: ScaExemption?,
     val mobileNumber: String?,
@@ -91,6 +93,7 @@ class Judo internal constructor(
         private var address: Address? = null
         private var pbbaConfiguration: PBBAConfiguration? = null
         private var initialRecurringPayment: Boolean? = null
+        private var networkTimeout: NetworkTimeout? = null
         private var challengeRequestIndicator: ChallengeRequestIndicator? = null
         private var scaExemption: ScaExemption? = null
         private var mobileNumber: String? = null
@@ -204,6 +207,11 @@ class Judo internal constructor(
             apply { this.initialRecurringPayment = initialRecurringPayment }
 
         /**
+         * Sets the network timeout.
+         * @param networkTimeout class for setting read, write and connect timeouts.
+         */
+        fun setNetworkTimeout(networkTimeout: NetworkTimeout?) =
+            apply { this.networkTimeout = networkTimeout }
          * Sets the value for challenge request indicator.
          * @param challengeRequestIndicator Enum value [ChallengeRequestIndicator].
          */
@@ -293,6 +301,7 @@ class Judo internal constructor(
                 checkNotNull(supportedCardNetworks)
             }
 
+            val myNetworkTimeout = networkTimeout ?: NetworkTimeout.Builder().build()
             val isPbbaAddressConfigMissing =
                 (pbbaConfiguration?.emailAddress.isNullOrEmpty() && !emailAddress.isNullOrEmpty()) || (pbbaConfiguration?.mobileNumber.isNullOrEmpty() || !mobileNumber.isNullOrEmpty())
 
@@ -321,6 +330,9 @@ class Judo internal constructor(
                 googlePayConfiguration,
                 paymentWidgetType,
                 address,
+                pbbaConfiguration,
+                initialRecurringPayment,
+                myNetworkTimeout
                 myPBBAConfiguration,
                 initialRecurringPayment,
                 challengeRequestIndicator,

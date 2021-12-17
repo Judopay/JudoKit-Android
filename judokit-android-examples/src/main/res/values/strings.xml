@@ -43,8 +43,11 @@
 
     <!-- Preference Titles -->
     <string name="api_header">API Configurations</string>
+    <string name="network_timeouts_header">Network timeouts (seconds)</string>
     <string name="amount_header">Amount</string>
+    <string name="address_header">Address</string>
     <string name="others_header">Others</string>
+    <string name="sdk_info_header">JudoKit information</string>
 
     <!-- Messages Preferences -->
     <string name="is_sandboxed_title">Sandboxed</string>
@@ -58,6 +61,15 @@
 
     <string name="secret_title">Secret</string>
     <string name="secret_summary">Your API authorization secret</string>
+
+    <string name="connect_timeout_title">Connect timeout</string>
+    <string name="connect_timeout_summary">Sets the default connect timeout for new connections. Must be in a range between 5 and 30</string>
+
+    <string name="read_timeout_title">Read timeout</string>
+    <string name="read_timeout_summary">Sets the default read timeout for new connections. Must be in a range between 180 and 300</string>
+
+    <string name="write_timeout_title">Write timeout</string>
+    <string name="write_timeout_summary">Sets the default write timeout for new connections. Must be in a range between 30 and 120</string>
 
     <string name="payment_session_title">Payment session</string>
     <string name="payment_session_summary">Your API authorization payment session</string>
@@ -74,6 +86,27 @@
     <string name="amount_title">Amount</string>
     <string name="amount_summary">Your amount</string>
 
+    <string name="is_address_enabled_title">Enable card address</string>
+    <string name="is_address_enabled_summary">Turn on to set card address details</string>
+
+    <string name="address_line_1_title">Line 1</string>
+    <string name="address_line_1_summary">Sets address line 1</string>
+
+    <string name="address_line_2_title">Line 2</string>
+    <string name="address_line_2_summary">Sets address line 2</string>
+
+    <string name="address_line_3_title">Line 3</string>
+    <string name="address_line_3_summary">Sets address line 3</string>
+
+    <string name="address_town_title">Town</string>
+    <string name="address_town_summary">Sets address town</string>
+
+    <string name="address_post_code_title">Post code</string>
+    <string name="address_post_code_summary">Sets address post code</string>
+
+    <string name="address_billing_country_title">Billing country</string>
+    <string name="address_billing_country_summary">Sets address billing country</string>
+
     <string name="currency_title">Currency</string>
     <string name="currency_summary">Your amount currency</string>
 
@@ -87,9 +120,30 @@
     <string name="dialog_success_title">Success</string>
     <string name="dialog_button_ok">Ok</string>
 
+    <string name="primary_account_details_header">Primary account details</string>
+    <string name="primary_account_details_summary">MCC 6012 fields</string>
+
+    <string name="is_primary_account_details_enabled_title">Enable primary account details</string>
+    <string name="is_primary_account_details_enabled_summary">Turn on to attach primary account details to the request body.</string>
+
+    <string name="primary_account_name_title">Name</string>
+    <string name="primary_account_name_summary">Sets name</string>
+
+    <string name="primary_account_account_number_title">Account number</string>
+    <string name="primary_account_account_number_summary">Sets account number</string>
+
+    <string name="primary_account_date_of_birth_title">Date of birth</string>
+    <string name="primary_account_date_of_birth_summary">Sets date of birth</string>
+
+    <string name="primary_account_post_code_title">Post code</string>
+    <string name="primary_account_post_code_summary">Sets postal code</string>
+
     <string name="google_pay_header">Google Pay</string>
     <string name="google_pay_is_production_title">Production environment</string>
     <string name="google_pay_is_production_summary">Use Google Pay production environment.</string>
+
+    <string name="google_pay_country_code_title">Country code</string>
+    <string name="google_pay_country_code_summary">A country code in ISO 3166–1 alpha-2 format</string>
 
     <string name="billing_address_title">Billing address</string>
     <string name="billing_address_summary">Billing address format required to complete the transaction.</string>
@@ -117,6 +171,9 @@
 
     <string name="is_initial_recurring_payment_title">Initial recurring payment</string>
     <string name="is_initial_recurring_payment_summary">Turn on to set initialRecurringPayment flag to true.</string>
+
+    <string name="sdk_version_title">SDK version</string>
+    <string name="judo_api_version_title">Judo API version</string>
 
     <string name="create_card_token">Create card token</string>
     <string name="token_payment">Token payment</string>
