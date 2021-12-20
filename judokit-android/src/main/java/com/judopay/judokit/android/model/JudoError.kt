@@ -96,6 +96,7 @@ data class JudoError(
                 )
             )
         )
+
         /**
          * Utility function that creates a JudoError object with poor internet connectivity
          * error code and message. Used when a SocketTimeoutException is thrown.
@@ -109,6 +110,9 @@ data class JudoError(
                     throwable.localizedMessage ?: resources.getString(R.string.error_poor_connectivity_reason)
                 )
             )
+        )
+
+        /**
          * Utility function that creates a JudoError object with thrown exception error code and message.
          */
         fun judoInternalError(message: String?) = JudoError(

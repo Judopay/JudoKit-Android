@@ -1,7 +1,6 @@
 package com.judopay.judokit.android.api.model.request
 
 import com.judopay.judokit.android.model.PrimaryAccountDetails
-import com.judopay.judokit.android.requireNotNull
 import com.judopay.judokit.android.requireNotNullOrEmpty
 
 /**

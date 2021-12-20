@@ -16,8 +16,8 @@ import com.judopay.judokit.android.api.interceptor.DeviceDnaInterceptor
 import com.judopay.judokit.android.api.interceptor.NetworkConnectivityInterceptor
 import com.judopay.judokit.android.api.interceptor.PayLoadInterceptor
 import com.judopay.judokit.android.apiBaseUrl
-import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.ChallengeRequestIndicator
+import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.ScaExemption
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec

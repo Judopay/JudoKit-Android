@@ -65,7 +65,7 @@ class Judo internal constructor(
     val address: Address?,
     val pbbaConfiguration: PBBAConfiguration?,
     val initialRecurringPayment: Boolean?,
-    val networkTimeout: NetworkTimeout
+    val networkTimeout: NetworkTimeout,
     val challengeRequestIndicator: ChallengeRequestIndicator?,
     val scaExemption: ScaExemption?,
     val mobileNumber: String?,
@@ -212,6 +212,8 @@ class Judo internal constructor(
          */
         fun setNetworkTimeout(networkTimeout: NetworkTimeout?) =
             apply { this.networkTimeout = networkTimeout }
+
+        /**
          * Sets the value for challenge request indicator.
          * @param challengeRequestIndicator Enum value [ChallengeRequestIndicator].
          */
@@ -249,7 +251,8 @@ class Judo internal constructor(
         /**
          * Sets phone country code.
          */
-        fun setPhoneCountryCode(phoneCountryCode: String?) = apply { this.phoneCountryCode = phoneCountryCode }
+        fun setPhoneCountryCode(phoneCountryCode: String?) =
+            apply { this.phoneCountryCode = phoneCountryCode }
 
         /**
          * Sets whether 3DS 2.0 flow should be enabled or disabled.
@@ -332,9 +335,7 @@ class Judo internal constructor(
                 address,
                 pbbaConfiguration,
                 initialRecurringPayment,
-                myNetworkTimeout
-                myPBBAConfiguration,
-                initialRecurringPayment,
+                myNetworkTimeout,
                 challengeRequestIndicator,
                 scaExemption,
                 mobileNumber,

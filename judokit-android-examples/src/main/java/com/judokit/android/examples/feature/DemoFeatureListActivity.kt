@@ -335,7 +335,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setScaExemption(scaExemption)
             .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
             .set3DS2Enabled(is3DS2Enabled)
-            .build()
             .setNetworkTimeout(networkTimeout)
 
         if (address != null) {
