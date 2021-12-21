@@ -21,9 +21,9 @@ const val PBBA_RESULT = "PBBA_RESULT"
 /**
  *  Constant to store the sdk version, injected in every Judo API request headers/body
  */
-const val JUDO_KIT_VERSION = "2.1.8"
+const val JUDO_KIT_VERSION = "2.2.0"
 
 /**
  *  Constant to store the Judo API version, injected in every Judo API request headers
  */
-const val JUDO_API_VERSION = "5.6.0"
+const val JUDO_API_VERSION = "6.7.0"

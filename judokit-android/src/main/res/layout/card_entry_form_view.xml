@@ -192,14 +192,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_8"
-                android:drawableStart="@drawable/ic_lock_20dp"
+                android:layout_marginBottom="@dimen/space_8"
                 android:drawablePadding="@dimen/space_8"
                 android:text="@string/secure_server_transmission"
                 android:textColor="@color/brown_grey"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardEntrySubmitButton" />
+                app:layout_constraintTop_toBottomOf="@+id/cardEntrySubmitButton"
+                app:drawableStartCompat="@drawable/ic_lock_20dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.bottomappbar.BottomAppBar>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

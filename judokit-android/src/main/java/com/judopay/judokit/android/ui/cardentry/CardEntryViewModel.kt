@@ -23,7 +23,7 @@ import com.judopay.judokit.android.service.CardTransactionService
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
-import com.judopay.judokit.android.ui.cardentry.model.FormFieldType
+import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.FormModel
 import com.judopay.judokit.android.ui.common.ButtonState
 import com.judopay.judokit.android.ui.common.isDependencyPresent
@@ -56,7 +56,7 @@ sealed class CardEntryAction {
 
     data class InsertCard(val tokenizedCard: CardToken) : CardEntryAction()
     data class ScanCard(val result: CardScanningResult) : CardEntryAction()
-    data class EnableFormFields(val formFields: List<FormFieldType>) : CardEntryAction()
+    data class EnableFormFields(val cardDetailsFields: List<CardDetailsFieldType>) : CardEntryAction()
     object SubmitCardEntryForm : CardEntryAction()
     object SubmitBillingDetailsForm : CardEntryAction()
     object PressBackButton : CardEntryAction()
@@ -105,19 +105,19 @@ class CardEntryViewModel(
     private var isBillingFormValid = false
     private var navigation: CardEntryNavigation = CardEntryNavigation.Card
 
-    private var enabledFormFields: List<FormFieldType> =
+    private var enabledCardDetailsFields: List<CardDetailsFieldType> =
         if (cardEntryOptions.shouldDisplaySecurityCode != null) {
-            mutableListOf(FormFieldType.SECURITY_NUMBER)
+            mutableListOf(CardDetailsFieldType.SECURITY_NUMBER)
         } else {
             val fields = mutableListOf(
-                FormFieldType.NUMBER,
-                FormFieldType.HOLDER_NAME,
-                FormFieldType.EXPIRATION_DATE,
-                FormFieldType.SECURITY_NUMBER
+                CardDetailsFieldType.NUMBER,
+                CardDetailsFieldType.HOLDER_NAME,
+                CardDetailsFieldType.EXPIRATION_DATE,
+                CardDetailsFieldType.SECURITY_NUMBER
             )
             if (judo.uiConfiguration.avsEnabled && !judo.is3DS2Enabled) {
-                fields.add(FormFieldType.COUNTRY)
-                fields.add(FormFieldType.POST_CODE)
+                fields.add(CardDetailsFieldType.COUNTRY)
+                fields.add(CardDetailsFieldType.POST_CODE)
             }
             fields
         }
@@ -174,7 +174,7 @@ class CardEntryViewModel(
     init {
         if (cardEntryOptions.fromPaymentMethods) {
             cardEntryOptions.shouldDisplaySecurityCode?.let {
-                send(CardEntryAction.EnableFormFields(listOf(FormFieldType.SECURITY_NUMBER)))
+                send(CardEntryAction.EnableFormFields(listOf(CardDetailsFieldType.SECURITY_NUMBER)))
             }
             if (cardEntryOptions.shouldDisplaySecurityCode == null && cardEntryOptions.shouldDisplayBillingDetails) {
                 navigationObserver.postValue(CardEntryNavigation.Billing)
@@ -227,7 +227,7 @@ class CardEntryViewModel(
                 buildModel(isLoading = false, isFormValid = false)
             }
             is CardEntryAction.EnableFormFields -> {
-                enabledFormFields = action.formFields
+                enabledCardDetailsFields = action.cardDetailsFields
                 buildModel(
                     isLoading = false,
                     isFormValid = false,
@@ -327,7 +327,7 @@ class CardEntryViewModel(
             }
         }
         inputModel.apply {
-            this.enabledFields = enabledFormFields
+            this.enabledFields = enabledCardDetailsFields
             this.supportedNetworks = judo.supportedCardNetworks.toList()
             this.cardNetwork = cardNetwork
         }

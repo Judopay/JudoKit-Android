@@ -1,4 +1,4 @@
-package com.judopay.judokit.android.ui.cardentry.components
+package com.judopay.judokit.android.ui.cardentry.model
 
 import android.content.Context
 import com.google.gson.Gson

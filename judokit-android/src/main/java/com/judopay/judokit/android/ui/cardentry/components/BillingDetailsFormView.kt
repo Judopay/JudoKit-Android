@@ -24,6 +24,7 @@ import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.Mobile
 import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.PhoneCountryCodeValidator
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.CountryValidator
 import kotlinx.android.synthetic.main.billing_details_form_view.view.*
+import com.judopay.judokit.android.ui.cardentry.model.CountryInfo
 
 internal typealias BillingDetailsFormValidationStatus = (model: BillingDetailsInputModel, isValid: Boolean) -> Unit
 internal typealias BillingDetailsSubmitButtonClickListener = () -> Unit

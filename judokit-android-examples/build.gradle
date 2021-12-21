@@ -28,8 +28,8 @@ android {
         applicationId "com.judokit.android.examples"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 23
-        versionName "1.0-" + getGitHash()
+        versionCode 220
+        versionName "2.2.0 (2) -" + getGitHash()
         multiDexEnabled true
 
         testInstrumentationRunner "com.judokit.android.examples.test.CucumberRunner"
@@ -50,6 +50,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
             manifestPlaceholders = [crashlyticsCollectionEnabled: "true"]
+            testCoverageEnabled false
         }
         debug {
             manifestPlaceholders = [crashlyticsCollectionEnabled: "false"]
@@ -86,7 +87,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.preference:preference:1.1.1'
-    implementation 'com.readystatesoftware.chuck:library:1.1.0'
+    implementation "com.github.chuckerteam.chucker:library:3.5.2"
     implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
     implementation 'cards.pay:paycardsrecognizer:1.1.0'
     ktlint 'com.pinterest:ktlint:0.41.0'

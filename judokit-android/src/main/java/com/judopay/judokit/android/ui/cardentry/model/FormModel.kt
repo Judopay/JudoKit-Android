@@ -5,13 +5,13 @@ data class FormModel(
     val billingDetailsInputModel: BillingDetailsInputModel
 )
 
-fun CardDetailsInputModel.valueOfFieldWithType(type: FormFieldType): String = when (type) {
-    FormFieldType.NUMBER -> cardNumber
-    FormFieldType.HOLDER_NAME -> cardHolderName
-    FormFieldType.EXPIRATION_DATE -> expirationDate
-    FormFieldType.SECURITY_NUMBER -> securityNumber
-    FormFieldType.COUNTRY -> country
-    FormFieldType.POST_CODE -> postCode
+fun CardDetailsInputModel.valueOfFieldWithType(type: CardDetailsFieldType): String = when (type) {
+    CardDetailsFieldType.NUMBER -> cardNumber
+    CardDetailsFieldType.HOLDER_NAME -> cardHolderName
+    CardDetailsFieldType.EXPIRATION_DATE -> expirationDate
+    CardDetailsFieldType.SECURITY_NUMBER -> securityNumber
+    CardDetailsFieldType.COUNTRY -> country
+    CardDetailsFieldType.POST_CODE -> postCode
 }
 
 fun BillingDetailsInputModel.valueOfBillingDetailsFieldWithType(type: BillingDetailsFieldType): String =

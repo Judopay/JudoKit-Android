@@ -59,94 +59,10 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:title="Address">
-
-        <EditTextPreference
-            app:defaultValue="My house"
-            app:iconSpaceReserved="false"
-            app:key="line1"
-            app:summary="Your address line 1"
-            app:title="Line 1"
-            app:useSimpleSummaryProvider="true" />
-
-        <EditTextPreference
-            app:defaultValue="My street"
-            app:iconSpaceReserved="false"
-            app:key="line2"
-            app:summary="Your address line 2"
-            app:title="Line 2"
-            app:useSimpleSummaryProvider="true" />
-
-        <EditTextPreference
-            app:defaultValue="My area"
-            app:iconSpaceReserved="false"
-            app:key="line3"
-            app:summary="Your address line 3"
-            app:title="Line 3"
-            app:useSimpleSummaryProvider="true" />
-
-        <EditTextPreference
-            app:defaultValue="My town"
-            app:iconSpaceReserved="false"
-            app:key="town"
-            app:summary="Your town"
-            app:title="Town"
-            app:useSimpleSummaryProvider="true" />
-
-        <EditTextPreference
-            app:defaultValue="My billing country"
-            app:iconSpaceReserved="false"
-            app:key="billingCountry"
-            app:summary="Your billing country"
-            app:title="Billing country"
-            app:useSimpleSummaryProvider="true" />
-
-        <EditTextPreference
-            app:defaultValue="TR14 8PA"
-            app:iconSpaceReserved="false"
-            app:key="postCode"
-            app:summary="Your post code"
-            app:title="Post code"
-            app:useSimpleSummaryProvider="true" />
-
-        <EditTextPreference
-            app:defaultValue="826"
-            app:iconSpaceReserved="false"
-            app:key="countryCode"
-            app:summary="Your country code"
-            app:title="Country code"
-            app:useSimpleSummaryProvider="true" />
-        <EditTextPreference
-            app:defaultValue="email@address.com"
-            app:iconSpaceReserved="false"
-            app:key="emailAddress"
-            app:summary="Your email address"
-            app:title="Email address"
-            app:useSimpleSummaryProvider="true" />
-
-        <EditTextPreference
-            app:defaultValue="0799999999"
-            app:iconSpaceReserved="false"
-            app:key="mobileNumber"
-            app:summary="Your mobile number"
-            app:title="Mobile number"
-            app:useSimpleSummaryProvider="true" />
-
-        <EditTextPreference
-            app:defaultValue="44"
-            app:iconSpaceReserved="false"
-            app:key="phoneCountryCode"
-            app:summary="Your phone country code"
-            app:title="Phone country code"
-            app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        app:iconSpaceReserved="false"
         app:title="@string/three_ds2_header">
 
         <SwitchPreferenceCompat
-            app:defaultValue="false"
+            app:defaultValue="true"
             app:iconSpaceReserved="false"
             app:key="is_3DS2_enabled"
             app:summary="@string/is_3ds2_enabled_summary"
@@ -179,7 +95,6 @@
             app:summary="@string/three_ds2_max_timeout_summary"
             app:title="@string/three_ds2_max_timeout_title"
             app:useSimpleSummaryProvider="true" />
-        app:title="@string/network_timeouts_header">
 
         <EditTextPreference
             android:inputType="number"
@@ -285,6 +200,42 @@
             app:key="address_billing_country"
             app:summary="@string/address_billing_country_summary"
             app:title="@string/address_billing_country_title" />
+
+        <EditTextPreference
+            app:defaultValue="826"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="address_country_code"
+            app:summary="Your country code"
+            app:title="Country code"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="44"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="phone_country_code"
+            app:summary="Your phone country code"
+            app:title="Phone country code"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="0799999999"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="mobile_number"
+            app:summary="Your mobile number"
+            app:title="Mobile number"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="email@address.com"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="email_address"
+            app:summary="Your email address"
+            app:title="Email address"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 

@@ -36,7 +36,7 @@ import com.judopay.judokit.android.model.isCardPaymentWidget
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
 import com.judopay.judokit.android.service.CardTransactionService
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
-import com.judopay.judokit.android.ui.cardentry.model.FormFieldType
+import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
 import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
 import com.judopay.judokit.android.ui.paymentmethods.CARD_ENTRY_OPTIONS
 import kotlinx.android.synthetic.main.billing_details_form_view.*
@@ -82,7 +82,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         viewModel = ViewModelProvider(this, factory).get(CardEntryViewModel::class.java)
 
         if (cardEntryOptions?.shouldDisplaySecurityCode != null) {
-            viewModel.send(CardEntryAction.EnableFormFields(listOf(FormFieldType.SECURITY_NUMBER)))
+            viewModel.send(CardEntryAction.EnableFormFields(listOf(CardDetailsFieldType.SECURITY_NUMBER)))
         }
 
         viewModel.model.observe(viewLifecycleOwner, { updateWithModel(it) })

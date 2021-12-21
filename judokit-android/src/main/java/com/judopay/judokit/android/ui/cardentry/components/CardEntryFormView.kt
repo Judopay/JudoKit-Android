@@ -22,7 +22,7 @@ import com.judopay.judokit.android.ui.cardentry.formatting.InputMaskTextWatcher
 import com.judopay.judokit.android.ui.cardentry.formatting.SecurityCodeInputMaskTextWatcher
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
-import com.judopay.judokit.android.ui.cardentry.model.FormFieldType
+import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.fieldHintResId
 import com.judopay.judokit.android.ui.cardentry.model.valueOfFieldWithType
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.CardHolderNameValidator
@@ -48,7 +48,6 @@ class CardEntryFormView @JvmOverloads constructor(
     }
 
     internal var model = CardDetailsInputModel()
-
         set(value) {
             field = value
             update()
@@ -57,7 +56,7 @@ class CardEntryFormView @JvmOverloads constructor(
     internal var onFormValidationStatusListener: FormValidationStatus? = null
     internal var onCardEntryButtonClickListener: CardEntryButtonClickListener? = null
 
-    private val validationResultsCache = mutableMapOf<FormFieldType, Boolean>()
+    private val validationResultsCache = mutableMapOf<CardDetailsFieldType, Boolean>()
     private var validators = mutableListOf(
         CardNumberValidator(supportedNetworks = model.supportedNetworks),
         CardHolderNameValidator(),
@@ -73,7 +72,7 @@ class CardEntryFormView @JvmOverloads constructor(
     }
 
     private val securityCodeFormatter: SecurityCodeInputMaskTextWatcher by lazy {
-        val editText = editTextForType(FormFieldType.SECURITY_NUMBER)
+        val editText = editTextForType(CardDetailsFieldType.SECURITY_NUMBER)
         SecurityCodeInputMaskTextWatcher(editText).also { it.cardNetwork = model.cardNetwork }
     }
 
@@ -91,12 +90,12 @@ class CardEntryFormView @JvmOverloads constructor(
     }
 
     private fun setupCountryFormatter() {
-        val country = model.valueOfFieldWithType(FormFieldType.COUNTRY).asCountry()
+        val country = model.valueOfFieldWithType(CardDetailsFieldType.COUNTRY).asCountry()
         onCountryDidSelect(country ?: Country.OTHER)
     }
 
     private fun setupNumberFormatter() =
-        with(editTextForType(FormFieldType.NUMBER)) {
+        with(editTextForType(CardDetailsFieldType.NUMBER)) {
             val mask = CardNumberInputMaskTextWatcher(
                 this,
                 securityCodeFormatter,
@@ -106,20 +105,20 @@ class CardEntryFormView @JvmOverloads constructor(
         }
 
     private fun setupSecurityCodeFormatter() =
-        with(editTextForType(FormFieldType.SECURITY_NUMBER)) {
+        with(editTextForType(CardDetailsFieldType.SECURITY_NUMBER)) {
             addTextChangedListener(securityCodeFormatter)
         }
 
     private fun setupExpirationDateFormatter() =
-        with(editTextForType(FormFieldType.EXPIRATION_DATE)) {
+        with(editTextForType(CardDetailsFieldType.EXPIRATION_DATE)) {
             val mask = InputMaskTextWatcher(this, PATTERN_CARD_EXPIRATION_DATE)
             addTextChangedListener(mask)
         }
 
     private fun onCountryDidSelect(country: Country) {
         val previousSelected =
-            model.valueOfFieldWithType(FormFieldType.COUNTRY).asCountry()
-        val postCodeEditText = editTextForType(FormFieldType.POST_CODE)
+            model.valueOfFieldWithType(CardDetailsFieldType.COUNTRY).asCountry()
+        val postCodeEditText = editTextForType(CardDetailsFieldType.POST_CODE)
 
         postCodeEditText.filters = arrayOf(InputFilter.LengthFilter(country.postcodeMaxLength))
 
@@ -133,7 +132,7 @@ class CardEntryFormView @JvmOverloads constructor(
     private fun setupFieldsContent() {
         cardEntrySubmitButton.setOnClickListener { onCardEntryButtonClickListener?.invoke() }
 
-        FormFieldType.values().forEach { type ->
+        CardDetailsFieldType.values().forEach { type ->
             editTextForType(type).apply {
                 setHint(type.fieldHintResId)
 
@@ -143,7 +142,7 @@ class CardEntryFormView @JvmOverloads constructor(
                     textDidChange(type, this, FormFieldEvent.TEXT_CHANGED)
                 }
 
-                if (type == FormFieldType.SECURITY_NUMBER) {
+                if (type == CardDetailsFieldType.SECURITY_NUMBER) {
                     setOnFocusChangeListener { _, hasFocus ->
                         val text = valueOfEditTextWithType(type)
                         if (!hasFocus) textDidChange(type, text, FormFieldEvent.FOCUS_CHANGED)
@@ -157,8 +156,8 @@ class CardEntryFormView @JvmOverloads constructor(
         }
     }
 
-    private fun textDidChange(type: FormFieldType, value: String, event: FormFieldEvent) {
-        if (type == FormFieldType.NUMBER) {
+    private fun textDidChange(type: CardDetailsFieldType, value: String, event: FormFieldEvent) {
+        if (type == CardDetailsFieldType.NUMBER) {
             validatorInstance<SecurityCodeValidator>()?.let {
                 it.cardNetwork = model.cardNetwork ?: CardNetwork.ofNumber(value)
             }
@@ -189,9 +188,9 @@ class CardEntryFormView @JvmOverloads constructor(
         updateSubmitButtonState()
     }
 
-    private fun autoTab(isValidResult: Boolean, type: FormFieldType) {
-        if (isValidResult && type != FormFieldType.HOLDER_NAME && type != FormFieldType.COUNTRY) {
-            val types = FormFieldType.values().toList()
+    private fun autoTab(isValidResult: Boolean, type: CardDetailsFieldType) {
+        if (isValidResult && type != CardDetailsFieldType.HOLDER_NAME && type != CardDetailsFieldType.COUNTRY) {
+            val types = CardDetailsFieldType.values().toList()
             val nextFormFieldType = types.indexOf(type) + 1
             if (types.size > nextFormFieldType) {
                 when (val field = editTextForType(types[nextFormFieldType])) {
@@ -199,7 +198,7 @@ class CardEntryFormView @JvmOverloads constructor(
                         editTextForType(type).clearFocus()
                         field.showDropDown()
                         field.setOnItemClickListener { _, _, _, _ ->
-                            editTextForType(FormFieldType.POST_CODE).requestFocus()
+                            editTextForType(CardDetailsFieldType.POST_CODE).requestFocus()
                         }
                     }
                     else -> field.requestFocus()
@@ -226,7 +225,7 @@ class CardEntryFormView @JvmOverloads constructor(
         updateFieldsVisibility()
         updateFormatters()
 
-        if (model.enabledFields.contains(FormFieldType.COUNTRY)) {
+        if (model.enabledFields.contains(CardDetailsFieldType.COUNTRY)) {
             setupCountrySpinner()
         }
 
@@ -251,18 +250,18 @@ class CardEntryFormView @JvmOverloads constructor(
             it.supportedNetworks = model.supportedNetworks
         }
         validatorInstance<SecurityCodeValidator>()?.let {
-            val cardNumber = model.valueOfFieldWithType(FormFieldType.NUMBER)
+            val cardNumber = model.valueOfFieldWithType(CardDetailsFieldType.NUMBER)
             it.cardNetwork = model.cardNetwork ?: CardNetwork.ofNumber(cardNumber)
         }
     }
 
     private fun updateFormatters() {
-        val cardNumber = model.valueOfFieldWithType(FormFieldType.NUMBER)
+        val cardNumber = model.valueOfFieldWithType(CardDetailsFieldType.NUMBER)
         securityCodeFormatter.cardNetwork = model.cardNetwork ?: CardNetwork.ofNumber(cardNumber)
     }
 
     private fun updateFieldsVisibility() {
-        FormFieldType.values().forEach { fieldType ->
+        CardDetailsFieldType.values().forEach { fieldType ->
             textInputLayoutForType(fieldType)?.let { layout ->
                 val isEnabled = model.enabledFields.contains(fieldType)
                 layout.visibility = if (isEnabled) View.VISIBLE else View.GONE
@@ -279,45 +278,33 @@ class CardEntryFormView @JvmOverloads constructor(
         }
     }
 
-    private fun editTextForType(type: FormFieldType): EditText = when (type) {
-        FormFieldType.NUMBER -> {
-            numberTextInputEditText
-        }
-        FormFieldType.HOLDER_NAME -> {
-            nameTextInputEditText
-        }
-        FormFieldType.EXPIRATION_DATE -> {
-            expirationDateTextInputEditText
-        }
-        FormFieldType.SECURITY_NUMBER -> {
-            securityNumberTextInputEditText
-        }
-        FormFieldType.COUNTRY -> {
-            countryTextInputEditText
-        }
-        FormFieldType.POST_CODE -> {
-            postcodeTextInputEditText
-        }
+    private fun editTextForType(type: CardDetailsFieldType): EditText = when (type) {
+        CardDetailsFieldType.NUMBER -> numberTextInputEditText
+        CardDetailsFieldType.HOLDER_NAME -> nameTextInputEditText
+        CardDetailsFieldType.EXPIRATION_DATE -> expirationDateTextInputEditText
+        CardDetailsFieldType.SECURITY_NUMBER -> securityNumberTextInputEditText
+        CardDetailsFieldType.COUNTRY -> countryTextInputEditText
+        CardDetailsFieldType.POST_CODE -> postcodeTextInputEditText
     }
 
-    private fun textInputLayoutForType(type: FormFieldType): JudoEditTextInputLayout? {
+    private fun textInputLayoutForType(type: CardDetailsFieldType): JudoEditTextInputLayout? {
         val editText = editTextForType(type)
         return editText.parentOfType(JudoEditTextInputLayout::class.java)
     }
 
-    private fun valueOfEditTextWithType(type: FormFieldType): String {
+    private fun valueOfEditTextWithType(type: CardDetailsFieldType): String {
         val editText = editTextForType(type)
         return editText.text.toString()
     }
 
     private fun onValidationPassed(isFormValid: Boolean) {
         val inputModel = CardDetailsInputModel(
-            valueOfEditTextWithType(FormFieldType.NUMBER),
-            valueOfEditTextWithType(FormFieldType.HOLDER_NAME),
-            valueOfEditTextWithType(FormFieldType.EXPIRATION_DATE),
-            valueOfEditTextWithType(FormFieldType.SECURITY_NUMBER),
-            valueOfEditTextWithType(FormFieldType.COUNTRY),
-            valueOfEditTextWithType(FormFieldType.POST_CODE)
+            valueOfEditTextWithType(CardDetailsFieldType.NUMBER),
+            valueOfEditTextWithType(CardDetailsFieldType.HOLDER_NAME),
+            valueOfEditTextWithType(CardDetailsFieldType.EXPIRATION_DATE),
+            valueOfEditTextWithType(CardDetailsFieldType.SECURITY_NUMBER),
+            valueOfEditTextWithType(CardDetailsFieldType.COUNTRY),
+            valueOfEditTextWithType(CardDetailsFieldType.POST_CODE)
         )
 
         onFormValidationStatusListener?.invoke(inputModel, isFormValid)

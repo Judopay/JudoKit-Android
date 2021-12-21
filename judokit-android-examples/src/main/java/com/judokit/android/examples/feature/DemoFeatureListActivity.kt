@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.chuckerteam.chucker.api.ChuckerCollector
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.judokit.android.examples.R
@@ -64,7 +66,6 @@ import com.judopay.judokit.android.model.googlepay.GooglePayShippingAddressParam
 import com.judopay.judokit.android.ui.common.BR_PBBA_RESULT
 import com.judopay.judokit.android.ui.common.PBBA_RESULT
 import com.judopay.judokit.android.ui.common.isBankingAppAvailable
-import com.readystatesoftware.chuck.ChuckInterceptor
 import kotlinx.android.synthetic.main.activity_demo_feature_list.*
 import kotlinx.android.synthetic.main.dialog_get_transaction.view.*
 import retrofit2.Call
@@ -95,7 +96,14 @@ class DemoFeatureListActivity : AppCompatActivity() {
             IntentFilter(BR_PBBA_RESULT)
         )
 
-        JudoApiServiceFactory.externalInterceptors = listOf(ChuckInterceptor(this))
+        JudoApiServiceFactory.externalInterceptors = listOf(
+            ChuckerInterceptor.Builder(this)
+                .collector(ChuckerCollector(this))
+                .maxContentLength(250000L)
+                .redactHeaders(emptySet())
+                .alwaysReadResponseBody(false)
+                .build()
+        )
 
         setContentView(R.layout.activity_demo_feature_list)
         setupRecyclerView()
@@ -305,9 +313,9 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val judoId = sharedPreferences.getString("judo_id", null)
         val initialRecurringPayment =
             sharedPreferences.getBoolean("is_initial_recurring_payment", false)
-        val mobileNumber = sharedPreferences.getString("mobileNumber", null)
-        val phoneCountryCode = sharedPreferences.getString("phoneCountryCode", null)
-        val emailAddress = sharedPreferences.getString("emailAddress", null)
+        val mobileNumber = sharedPreferences.getString("mobile_number", null)
+        val phoneCountryCode = sharedPreferences.getString("phone_country_code", null)
+        val emailAddress = sharedPreferences.getString("email_address", null)
         val challengeRequestIndicator = sharedPreferences.getString("challengeRequestIndicator", null)?.let { ChallengeRequestIndicator.valueOf(it) }
         val scaExemption = sharedPreferences.getString("scaExemption", null)?.let { ScaExemption.valueOf(it) }
         val threeDSTwoMaxTimeout = sharedPreferences.getString("threeDSTwoMaxTimeout", null)?.toInt()
@@ -327,7 +335,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setGooglePayConfiguration(googlePayConfiguration)
             .setPBBAConfiguration(pbbaConfiguration)
             .setInitialRecurringPayment(initialRecurringPayment)
-            .setAddress(address)
             .setMobileNumber(mobileNumber)
             .setPhoneCountryCode(phoneCountryCode)
             .setEmailAddress(emailAddress)
@@ -358,7 +365,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     .setLine3(sharedPreferences.getString("address_line_3", null))
                     .setTown(sharedPreferences.getString("address_town", null))
                     .setPostCode(sharedPreferences.getString("address_post_code", null))
-                    .setCountryCode(sharedPreferences.getString("address_billing_country", null)?.toIntOrNull())
+                    .setCountryCode(sharedPreferences.getString("address_country_code", null)?.toIntOrNull())
+                    .setBillingCountry(sharedPreferences.getString("address_billing_country", null))
                     .build()
             }
 
@@ -495,26 +503,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
     private val pbbaConfiguration: PBBAConfiguration
         get() = PBBAConfiguration.Builder().setDeepLinkScheme("judo://pay")
             .setDeepLinkURL(deepLinkIntent?.data).build()
-
-    private val address: Address
-        get() {
-            val line1 = sharedPreferences.getString("line1", null)
-            val line2 = sharedPreferences.getString("line2", null)
-            val line3 = sharedPreferences.getString("line3", null)
-            val town = sharedPreferences.getString("town", null)
-            val billingCountry = sharedPreferences.getString("billingCountry", null)
-            val postCode = sharedPreferences.getString("postCode", null)
-            val countryCode = sharedPreferences.getString("countryCode", null)?.toInt()
-
-            return Address.Builder()
-                .setLine1(line1)
-                .setLine2(line2)
-                .setLine3(line3)
-                .setTown(town)
-                .setBillingCountry(billingCountry)
-                .setPostCode(postCode)
-                .setCountryCode(countryCode).build()
-        }
 
     private val authorization: Authorization
         get() {

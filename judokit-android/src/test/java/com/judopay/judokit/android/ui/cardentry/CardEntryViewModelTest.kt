@@ -20,7 +20,7 @@ import com.judopay.judokit.android.service.CardTransactionCallback
 import com.judopay.judokit.android.service.CardTransactionService
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
-import com.judopay.judokit.android.ui.cardentry.model.FormFieldType
+import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.FormModel
 import com.judopay.judokit.android.ui.common.ButtonState
 import com.judopay.judokit.android.ui.common.isDependencyPresent
@@ -71,10 +71,10 @@ internal class CardEntryViewModelTest {
     private val securityCodeResultMock = spyk<Observer<String>>()
 
     private val enabledFields = listOf(
-        FormFieldType.NUMBER,
-        FormFieldType.HOLDER_NAME,
-        FormFieldType.EXPIRATION_DATE,
-        FormFieldType.SECURITY_NUMBER
+        CardDetailsFieldType.NUMBER,
+        CardDetailsFieldType.HOLDER_NAME,
+        CardDetailsFieldType.EXPIRATION_DATE,
+        CardDetailsFieldType.SECURITY_NUMBER
     )
 
     private lateinit var sut: CardEntryViewModel
@@ -449,7 +449,7 @@ internal class CardEntryViewModelTest {
         sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
         sut.model.observeForever(modelMock)
 
-        sut.send(CardEntryAction.EnableFormFields(listOf(FormFieldType.NUMBER, FormFieldType.SECURITY_NUMBER)))
+        sut.send(CardEntryAction.EnableFormFields(listOf(CardDetailsFieldType.NUMBER, CardDetailsFieldType.SECURITY_NUMBER)))
 
         verify { modelMock.onChanged(capture(slots)) }
 
@@ -465,7 +465,7 @@ internal class CardEntryViewModelTest {
         sut = CardEntryViewModel(judo, cardTransactionService, repository, selectedCardNetwork, application)
         sut.model.observeForever(modelMock)
 
-        sut.send(CardEntryAction.EnableFormFields(listOf(FormFieldType.NUMBER, FormFieldType.SECURITY_NUMBER)))
+        sut.send(CardEntryAction.EnableFormFields(listOf(CardDetailsFieldType.NUMBER, CardDetailsFieldType.SECURITY_NUMBER)))
 
         verify { modelMock.onChanged(capture(slots)) }
 
@@ -484,8 +484,8 @@ internal class CardEntryViewModelTest {
         sut.send(
             CardEntryAction.EnableFormFields(
                 listOf(
-                    FormFieldType.NUMBER,
-                    FormFieldType.SECURITY_NUMBER
+                    CardDetailsFieldType.NUMBER,
+                    CardDetailsFieldType.SECURITY_NUMBER
                 )
             )
         )
@@ -507,8 +507,8 @@ internal class CardEntryViewModelTest {
         sut.send(
             CardEntryAction.EnableFormFields(
                 listOf(
-                    FormFieldType.NUMBER,
-                    FormFieldType.SECURITY_NUMBER
+                    CardDetailsFieldType.NUMBER,
+                    CardDetailsFieldType.SECURITY_NUMBER
                 )
             )
         )
