@@ -287,3 +287,17 @@ fun Judo.toTokenRequest(cardToken: String, threeDSecureTwo: ThreeDSecureTwo? = n
         .setInitialRecurringPayment(initialRecurringPayment)
         .setThreeDSecure(threeDSecureTwo)
         .build()
+
+internal fun isAnyNullOrEmpty(vararg elements: String?): Boolean {
+    elements.forEach {
+        if (it.isNullOrEmpty()) {
+            return true
+        }
+    }
+
+    return false
+}
+
+internal fun isNoneNullOrEmpty(vararg elements: String?): Boolean {
+    return !isAnyNullOrEmpty(*elements)
+}

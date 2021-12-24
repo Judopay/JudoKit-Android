@@ -1,6 +1,7 @@
 package com.judopay.judokit.android.api.model.response
 
 import com.google.gson.JsonObject
+import com.judopay.judokit.android.isNoneNullOrEmpty
 import com.judopay.judokit.android.model.CardVerificationModel
 import com.judopay.judokit.android.model.JudoResult
 import java.math.BigDecimal
@@ -45,7 +46,7 @@ class Receipt(
 ) {
 
     val is3dSecureRequired: Boolean
-        get() = !(acsUrl.isNullOrEmpty() && md.isNullOrEmpty() && paReq.isNullOrEmpty())
+        get() = isNoneNullOrEmpty(acsUrl, md, paReq)
 
     val is3dSecure2Required: Boolean
         get() = message == CHALLENGE_REQUIRED_MESSAGE

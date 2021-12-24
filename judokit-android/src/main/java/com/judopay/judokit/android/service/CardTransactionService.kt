@@ -276,7 +276,6 @@ class CardTransactionService(
                         ).show(activity.supportFragmentManager, THREE_DS_ONE_DIALOG_FRAGMENT_TAG)
                     }
                     receipt.is3dSecure2Required -> {
-
                         val cReqParams = Gson().fromJson(
                             String(Base64.decode(receipt.cReq, Base64.NO_WRAP)),
                             CReqParameters::class.java
