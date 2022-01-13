@@ -176,7 +176,9 @@ class JudoActivity : AppCompatActivity() {
                     return
                 }
 
-                showAlert(this, result.error.message)
+                if (!isFinishing && !isDestroyed) {
+                    showAlert(this, result.error.message)
+                }
             }
             is JudoPaymentResult.UserCancelled -> {
                 with(viewModel.error) {

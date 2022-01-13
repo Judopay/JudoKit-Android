@@ -46,7 +46,7 @@ import kotlinx.android.synthetic.main.card_entry_fragment.view.*
 import kotlinx.android.synthetic.main.payment_methods_header_view.*
 import kotlinx.android.synthetic.main.payment_methods_header_view.view.*
 
-private const val BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME = 1000L
+private const val BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME = 300L
 private const val BOTTOM_SHEET_PEEK_HEIGHT = 200
 private const val KEYBOARD_DISMISS_TIMEOUT = 500L
 private const val BOTTOM_APP_BAR_ELEVATION_CHANGE_DURATION = 200L
@@ -99,12 +99,13 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
             viewLifecycleOwner,
             {
                 bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                when (it) {
-                    is CardEntryNavigation.Card -> cardEntryViewAnimator.displayedChild = 0
-                    is CardEntryNavigation.Billing -> cardEntryViewAnimator.displayedChild = 1
-                }
+
                 Handler(Looper.getMainLooper()).postDelayed(
                     {
+                        when (it) {
+                            is CardEntryNavigation.Card -> cardEntryViewAnimator.displayedChild = 0
+                            is CardEntryNavigation.Billing -> cardEntryViewAnimator.displayedChild = 1
+                        }
                         bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
                     },
                     BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME

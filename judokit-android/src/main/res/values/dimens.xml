@@ -80,7 +80,7 @@
     <dimen name="width_card_image_view">74dp</dimen>
     <dimen name="height_card_image_view">32dp</dimen>
     <dimen name="space_80">80dp</dimen>
-    <dimen name="space_94">94dp</dimen>
+    <dimen name="space_94">106dp</dimen>
     <dimen name="elevation_0">0dp</dimen>
     <dimen name="width_100">100dp</dimen>
 

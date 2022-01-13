@@ -59,7 +59,7 @@ interface CardTransactionCallback {
 class CardTransactionService(
     private val activity: FragmentActivity,
     private val judo: Judo,
-    private val service: JudoApiService
+    private val apiService: JudoApiService
 ) {
 
     private lateinit var receiptId: String
@@ -76,7 +76,7 @@ class CardTransactionService(
             progressDialog?.dismiss()
             activity.lifecycleScope.launch {
                 val result =
-                    service.complete3ds2(receiptId, Complete3DS2Request(version, cv2)).await()
+                    apiService.complete3ds2(receiptId, Complete3DS2Request(version, cv2)).await()
                 callback.onFinish(result.toJudoPaymentResult(activity.resources))
             }
         }
@@ -122,6 +122,7 @@ class CardTransactionService(
             callback.onFinish(error)
         }
     }
+
     private var threeDS2Service: ThreeDS2ServiceImpl = ThreeDS2ServiceImpl()
     private lateinit var result: JudoPaymentResult
     private lateinit var callback: CardTransactionCallback
@@ -237,10 +238,10 @@ class CardTransactionService(
                         .build()
 
                     val response = when (judo.paymentWidgetType) {
-                        PaymentWidgetType.PAYMENT_METHODS, PaymentWidgetType.CARD_PAYMENT -> service.tokenPayment(
+                        PaymentWidgetType.PAYMENT_METHODS, PaymentWidgetType.CARD_PAYMENT -> apiService.tokenPayment(
                             request
                         ).await()
-                        PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS, PaymentWidgetType.PRE_AUTH -> service.preAuthTokenPayment(
+                        PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS, PaymentWidgetType.PRE_AUTH -> apiService.preAuthTokenPayment(
                             request
                         ).await()
                         else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
@@ -270,7 +271,7 @@ class CardTransactionService(
                 when {
                     receipt.is3dSecureRequired -> {
                         ThreeDSOneCardVerificationDialogFragment(
-                            service,
+                            apiService,
                             receipt.toCardVerificationModel(),
                             threeDSOneCompletionCallback
                         ).show(activity.supportFragmentManager, THREE_DS_ONE_DIALOG_FRAGMENT_TAG)
@@ -289,7 +290,13 @@ class CardTransactionService(
                             receipt.acsSignedContent,
                             null
                         )
-                        progressDialog = transaction.getProgressView(activity).also { it.show() }
+
+                        progressDialog = transaction.getProgressView(activity)
+
+                        if (!activity.isFinishing && !activity.isDestroyed) {
+                            progressDialog?.show()
+                        }
+
                         transaction.doChallenge(
                             activity,
                             challengeParameters,
@@ -310,7 +317,7 @@ class CardTransactionService(
         inputModel: TransactionDetail
     ): JudoApiCallResult<Receipt> {
         val request = buildPaymentRequest(address, inputModel)
-        return service.payment(request).await()
+        return apiService.payment(request).await()
     }
 
     private suspend fun performPreAuthPaymentRequest(
@@ -318,7 +325,7 @@ class CardTransactionService(
         inputModel: TransactionDetail
     ): JudoApiCallResult<Receipt> {
         val request = buildPaymentRequest(address, inputModel)
-        return service.preAuthPayment(request).await()
+        return apiService.preAuthPayment(request).await()
     }
 
     private suspend fun performRegisterCardRequest(
@@ -326,7 +333,7 @@ class CardTransactionService(
         inputModel: TransactionDetail
     ): JudoApiCallResult<Receipt> {
         val request = buildRegisterCardRequest(address, inputModel)
-        return service.registerCard(request).await()
+        return apiService.registerCard(request).await()
     }
 
     private suspend fun performCheckCardRequest(
@@ -334,7 +341,7 @@ class CardTransactionService(
         inputModel: TransactionDetail
     ): JudoApiCallResult<Receipt> {
         val request = buildCheckCardRequest(address, inputModel)
-        return service.checkCard(request).await()
+        return apiService.checkCard(request).await()
     }
 
     private suspend fun performSaveCardRequest(
@@ -342,7 +349,7 @@ class CardTransactionService(
         inputModel: TransactionDetail
     ): JudoApiCallResult<Receipt> {
         val request = buildSaveCardRequest(address, inputModel)
-        return service.saveCard(request).await()
+        return apiService.saveCard(request).await()
     }
 
     private fun buildPaymentRequest(address: Address?, inputModel: TransactionDetail) =

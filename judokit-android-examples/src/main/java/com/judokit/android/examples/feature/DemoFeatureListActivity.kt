@@ -187,6 +187,10 @@ class DemoFeatureListActivity : AppCompatActivity() {
     }
 
     private fun presentError(message: String) {
+        if (isFinishing || isDestroyed) {
+            return
+        }
+
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.dialog_error_title)
             .setMessage(message)

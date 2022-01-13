@@ -20,17 +20,28 @@
             android:paddingStart="@dimen/space_24"
             android:paddingEnd="@dimen/space_24"
             android:paddingBottom="@dimen/space_12"
-            tools:background="@color/white">
+            tools:background="@color/greyish"
+            tools:ignore="MissingConstraints">
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flow1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="numberTextInputLayout,nameTextInputLayout"
+                app:flow_horizontalAlign="start"
+                app:flow_horizontalBias="0"
+                app:flow_maxElementsWrap="1"
+                app:flow_verticalBias="0"
+                app:flow_verticalGap="@dimen/space_8"
+                app:flow_wrapMode="chain"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/numberTextInputLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_8"
-                android:layout_marginBottom="@dimen/space_8"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/numberTextInputEditText"
@@ -45,13 +56,7 @@
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/nameTextInputLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_8"
-                android:layout_marginBottom="@dimen/space_8"
-                app:layout_constraintBottom_toTopOf="@+id/nameAndNumberBarrier"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/numberTextInputLayout">
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/nameTextInputEditText"
@@ -62,23 +67,27 @@
                     tools:text="Endava Recruit" />
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
-            <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/nameAndNumberBarrier"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flow2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:barrierDirection="bottom"
-                app:constraint_referenced_ids="numberTextInputLayout,nameTextInputLayout" />
+                app:constraint_referenced_ids="expirationDateTextInputLayout,securityNumberTextInputLayout,countryTextInputLayout,postcodeTextInputLayout"
+                app:flow_horizontalAlign="start"
+                app:flow_horizontalBias="0"
+                app:flow_maxElementsWrap="2"
+                app:flow_verticalBias="0"
+                app:flow_verticalGap="@dimen/space_8"
+                app:flow_horizontalGap="@dimen/space_8"
+                app:flow_wrapMode="chain"
+                android:layout_marginTop="@dimen/space_8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/flow1" />
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/expirationDateTextInputLayout"
                 android:layout_width="@dimen/width_0"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_8"
-                android:layout_marginEnd="@dimen/space_6"
-                android:layout_marginBottom="@dimen/space_8"
-                app:layout_constraintEnd_toStartOf="@+id/securityNumberTextInputLayout"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nameAndNumberBarrier">
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/expirationDateTextInputEditText"
@@ -92,13 +101,7 @@
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/securityNumberTextInputLayout"
                 android:layout_width="@dimen/width_0"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_6"
-                android:layout_marginTop="@dimen/space_8"
-                android:layout_marginBottom="@dimen/space_8"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/expirationDateTextInputLayout"
-                app:layout_constraintTop_toBottomOf="@+id/nameAndNumberBarrier">
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/securityNumberTextInputEditText"
@@ -113,12 +116,7 @@
                 android:id="@+id/countryTextInputLayout"
                 android:layout_width="@dimen/width_0"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_8"
-                android:layout_marginEnd="@dimen/space_6"
-                app:layout_constraintBottom_toTopOf="@+id/bottomBarrier"
-                app:layout_constraintEnd_toStartOf="@+id/postcodeTextInputLayout"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/securityNumberTextInputLayout">
+                android:visibility="gone">
 
                 <AutoCompleteTextView
                     android:id="@+id/countryTextInputEditText"
@@ -138,12 +136,7 @@
                 android:id="@+id/postcodeTextInputLayout"
                 android:layout_width="@dimen/width_0"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_6"
-                android:layout_marginTop="@dimen/space_8"
-                app:layout_constraintBottom_toTopOf="@+id/bottomBarrier"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/countryTextInputLayout"
-                app:layout_constraintTop_toBottomOf="@+id/securityNumberTextInputLayout">
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/postcodeTextInputEditText"
@@ -154,12 +147,6 @@
                     tools:text="Postcode" />
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
-            <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/bottomBarrier"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:barrierDirection="bottom"
-                app:constraint_referenced_ids="countryTextInputLayout,postcodeTextInputLayout" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -168,39 +155,48 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:elevation="@dimen/elevation_0">
+        app:contentInsetStart="@dimen/space_24"
+        app:contentInsetEnd="@dimen/space_24"
+        app:elevation="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/space_24">
+            android:layout_marginBottom="@dimen/space_12">
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flow3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="cardEntrySubmitButton,secureTransmissionTextView"
+                app:flow_horizontalAlign="start"
+                app:flow_horizontalBias="0"
+                app:flow_maxElementsWrap="1"
+                app:flow_verticalBias="0"
+                app:flow_verticalGap="@dimen/space_8"
+                app:flow_wrapMode="chain"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <com.judopay.judokit.android.ui.common.ProgressButton
                 android:id="@+id/cardEntrySubmitButton"
                 style="@style/JudoTheme.BlackRoundedButton"
-                android:layout_width="@dimen/width_0"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
-                android:minWidth="@dimen/min_touch_target_size"
-                android:text="@string/pay_now"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:text="@string/pay_now"/>
 
             <TextView
                 android:id="@+id/secureTransmissionTextView"
                 style="@style/JudoTheme.Caption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_8"
-                android:layout_marginBottom="@dimen/space_8"
                 android:drawablePadding="@dimen/space_8"
                 android:text="@string/secure_server_transmission"
                 android:textColor="@color/brown_grey"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardEntrySubmitButton"
                 app:drawableStartCompat="@drawable/ic_lock_20dp" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.bottomappbar.BottomAppBar>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
