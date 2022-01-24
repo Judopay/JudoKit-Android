@@ -7,9 +7,7 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.core.widget.addTextChangedListener
-import com.judopay.judokit.android.R
-import com.judopay.judokit.android.inflate
-import com.judopay.judokit.android.parentOfType
+import com.judopay.judokit.android.*
 import com.judopay.judokit.android.ui.cardentry.formatting.PhoneCountryCodeTextWatcher
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsInputModel
@@ -25,6 +23,7 @@ import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.PhoneC
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.CountryValidator
 import kotlinx.android.synthetic.main.billing_details_form_view.view.*
 import com.judopay.judokit.android.ui.cardentry.model.CountryInfo
+import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
 
 internal typealias BillingDetailsFormValidationStatus = (model: BillingDetailsInputModel, isValid: Boolean) -> Unit
 internal typealias BillingDetailsSubmitButtonClickListener = () -> Unit
@@ -62,6 +61,8 @@ class BillingDetailsFormView @JvmOverloads constructor(
         AddressLineValidator()
     )
 
+    private val phoneNumberFields = arrayListOf(BillingDetailsFieldType.PHONE_COUNTRY_CODE.name, BillingDetailsFieldType.MOBILE_NUMBER.name)
+
     private val countries: Array<CountryInfo>
         get() = CountryInfo.list(context)
 
@@ -70,6 +71,7 @@ class BillingDetailsFormView @JvmOverloads constructor(
     private val phoneCountryCodeFormatter: PhoneCountryCodeTextWatcher by lazy {
         PhoneCountryCodeTextWatcher()
     }
+
     private var mobileNumberFormatter: PhoneNumberFormattingTextWatcher? = null
     private var selectedCountry: CountryInfo? = null
 
@@ -83,11 +85,10 @@ class BillingDetailsFormView @JvmOverloads constructor(
 
     private fun setupCountrySpinner() = countryTextInputEditText.apply {
         val adapter =
-            ArrayAdapter(context, android.R.layout.select_dialog_item, countries)
+            ArrayAdapter(context, R.layout.country_select_dialog_item, countries)
         setAdapter(adapter)
         setOnItemClickListener { parent, _, index, _ ->
             selectedCountry = parent.getItemAtPosition(index) as CountryInfo
-            editTextForType(BillingDetailsFieldType.PHONE_COUNTRY_CODE).setText(selectedCountry?.dialCode)
         }
     }
 
@@ -112,7 +113,10 @@ class BillingDetailsFormView @JvmOverloads constructor(
     private fun setupFieldsContent() {
         setAddAddressButtonClickListener()
         billingDetailsBackButton.setOnClickListener { onBillingDetailsBackButtonClickListener?.invoke() }
-        billingDetailsSubmitButton.setOnClickListener { onBillingDetailsSubmitButtonClickListener?.invoke() }
+        billingDetailsSubmitButton.setOnClickListener {
+            dismissKeyboard()
+            onBillingDetailsSubmitButtonClickListener?.invoke()
+        }
 
         BillingDetailsFieldType.values().forEach { type ->
             editTextForType(type).apply {
@@ -176,6 +180,16 @@ class BillingDetailsFormView @JvmOverloads constructor(
     private fun textDidChange(type: BillingDetailsFieldType, value: String, event: FormFieldEvent) {
         val validationResults = validators.mapNotNull {
             if (it.fieldType == type.name) {
+                if (phoneNumberFields.contains(it.fieldType)) {
+                    val code = valueOfEditTextWithType(BillingDetailsFieldType.PHONE_COUNTRY_CODE)
+                    val number = valueOfEditTextWithType(BillingDetailsFieldType.MOBILE_NUMBER)
+                    when {
+                        // in case country code is empty, don't apply the phone validation
+                        code.isEmpty() && number.isEmpty() -> return@mapNotNull null
+                        code.isEmpty() && number.isNotEmpty() -> return@mapNotNull ValidationResult(false, R.string.invalid_phone_country_code)
+                    }
+                }
+
                 it.validate(value, event)
             } else null
         }
@@ -193,6 +207,7 @@ class BillingDetailsFormView @JvmOverloads constructor(
             it.isErrorEnabled = errorEnabled
             it.error = message
         }
+
         updateSubmitButtonState()
     }
 

@@ -32,7 +32,9 @@ import com.judopay.judokit.android.ui.cardentry.validation.carddetails.Expiratio
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.PostcodeValidator
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.SecurityCodeValidator
 import com.judopay.judokit.android.ui.common.PATTERN_CARD_EXPIRATION_DATE
+import kotlinx.android.synthetic.main.billing_details_form_view.view.*
 import kotlinx.android.synthetic.main.card_entry_form_view.view.*
+import kotlinx.android.synthetic.main.card_entry_form_view.view.countryTextInputEditText
 
 internal typealias FormValidationStatus = (model: CardDetailsInputModel, isValid: Boolean) -> Unit
 internal typealias CardEntryButtonClickListener = () -> Unit
@@ -192,8 +194,9 @@ class CardEntryFormView @JvmOverloads constructor(
         if (isValidResult && type != CardDetailsFieldType.HOLDER_NAME && type != CardDetailsFieldType.COUNTRY) {
             val types = CardDetailsFieldType.values().toList()
             val nextFormFieldType = types.indexOf(type) + 1
-            if (types.size > nextFormFieldType) {
-                when (val field = editTextForType(types[nextFormFieldType])) {
+            if (types.size > nextFormFieldType && model.enabledFields.contains(types[nextFormFieldType])) {
+                val field = editTextForType(types[nextFormFieldType])
+                when (field) {
                     is AutoCompleteTextView -> {
                         editTextForType(type).clearFocus()
                         field.showDropDown()
@@ -201,7 +204,9 @@ class CardEntryFormView @JvmOverloads constructor(
                             editTextForType(CardDetailsFieldType.POST_CODE).requestFocus()
                         }
                     }
-                    else -> field.requestFocus()
+                    else -> {
+                        field.requestFocus()
+                    }
                 }
             }
         }

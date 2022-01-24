@@ -9,6 +9,9 @@ data class PhoneCountryCodeValidator(
     override val fieldType: String = BillingDetailsFieldType.PHONE_COUNTRY_CODE.name
 ) : Validator {
 
-    override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult =
-        ValidationResult(input.length > 4)
+    override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult {
+        val isValid = input.length > 4
+
+        return ValidationResult(isValid)
+    }
 }

@@ -59,6 +59,7 @@
     <string name="invalid_zip_code">Invalid ZIP code entered</string>
     <string name="invalid_email_address">Please enter a valid email</string>
     <string name="invalid_address">Please enter a valid address</string>
+    <string name="invalid_phone_country_code">Please enter a valid country code</string>
     <string name="invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="invalid_city">Please enter a valid city</string>
 
