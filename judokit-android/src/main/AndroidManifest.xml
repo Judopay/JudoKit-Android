@@ -12,7 +12,8 @@
         <activity
             android:name=".JudoActivity"
             android:theme="@style/JudoTheme"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false"/>
 
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"

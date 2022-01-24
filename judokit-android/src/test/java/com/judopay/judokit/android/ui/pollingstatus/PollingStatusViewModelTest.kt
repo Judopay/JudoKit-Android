@@ -68,11 +68,11 @@ internal class PollingStatusViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         mockkStatic("retrofit2.KotlinExtensions")
-        mockkStatic("com.zapp.library.merchant.util.PBBAAppUtils")
 
         coEvery {
             service.tokenPayment(any()).await().hint(JudoApiCallResult::class)
         } returns mockk(relaxed = true)
+
         coEvery { service.sale(any<BankSaleRequest>()).await() } returns mockk(relaxed = true)
     }
 

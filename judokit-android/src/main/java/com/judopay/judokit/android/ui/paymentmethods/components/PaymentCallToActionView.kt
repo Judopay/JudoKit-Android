@@ -45,7 +45,7 @@ class PaymentCallToActionView @JvmOverloads constructor(
         inflate(R.layout.payment_call_to_action_view, true)
         payButton.setOnClickListener { onPaymentButtonClick() }
         googlePayButton.setOnClickListener { onPaymentButtonClick() }
-        payByBankButton.setOnClickListener { onPaymentButtonClick() }
+//        payByBankButton.setOnClickListener { onPaymentButtonClick() }
     }
 
     var model = PaymentCallToActionViewModel()
@@ -66,16 +66,22 @@ class PaymentCallToActionView @JvmOverloads constructor(
             PaymentButtonType.GOOGLE_PAY ->
                 googlePayButton.isEnabled =
                     paymentButtonState is ButtonState.Enabled
-            PaymentButtonType.PAY_BY_BANK ->
-                payByBankButton.isEnabled =
-                    paymentButtonState is ButtonState.Enabled
+            else -> {
+                // noop
+            }
+//            PaymentButtonType.PAY_BY_BANK ->
+//                payByBankButton.isEnabled =
+//                    paymentButtonState is ButtonState.Enabled
         }
 
         val buttonToShow = when (buttonType) {
             PaymentButtonType.PLAIN,
             PaymentButtonType.IDEAL -> payButton
             PaymentButtonType.GOOGLE_PAY -> googlePayButton
-            PaymentButtonType.PAY_BY_BANK -> payByBankButton
+            else -> {
+                // noop
+            }
+//            PaymentButtonType.PAY_BY_BANK -> payByBankButton
         }
 
         with(buttonsAnimator) {

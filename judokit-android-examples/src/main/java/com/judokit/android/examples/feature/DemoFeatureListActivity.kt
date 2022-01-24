@@ -1,10 +1,6 @@
 package com.judokit.android.examples.feature
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.content.SharedPreferences
+import android.content.*
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -14,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.chuckerteam.chucker.api.ChuckerCollector
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.judokit.android.examples.R
@@ -24,14 +22,7 @@ import com.judokit.android.examples.feature.paybybank.PayByBankActivity
 import com.judokit.android.examples.feature.tokenpayment.DemoTokenPaymentActivity
 import com.judokit.android.examples.model.DemoFeature
 import com.judokit.android.examples.settings.SettingsActivity
-import com.judopay.judokit.android.JUDO_ERROR
-import com.judopay.judokit.android.JUDO_OPTIONS
-import com.judopay.judokit.android.JUDO_RESULT
-import com.judopay.judokit.android.Judo
-import com.judopay.judokit.android.JudoActivity
-import com.judopay.judokit.android.PAYMENT_CANCELLED
-import com.judopay.judokit.android.PAYMENT_ERROR
-import com.judopay.judokit.android.PAYMENT_SUCCESS
+import com.judopay.judokit.android.*
 import com.judopay.judokit.android.api.error.toJudoError
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.Authorization
@@ -41,20 +32,8 @@ import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.api.model.response.toJudoResult
-import com.judopay.judokit.android.model.Amount
-import com.judopay.judokit.android.model.CardNetwork
+import com.judopay.judokit.android.model.*
 import com.judopay.judokit.android.model.Currency
-import com.judopay.judokit.android.model.GooglePayConfiguration
-import com.judopay.judokit.android.model.JudoError
-import com.judopay.judokit.android.model.JudoResult
-import com.judopay.judokit.android.model.NetworkTimeout
-import com.judopay.judokit.android.model.PBBAConfiguration
-import com.judopay.judokit.android.model.PaymentMethod
-import com.judopay.judokit.android.model.PaymentWidgetType
-import com.judopay.judokit.android.model.PrimaryAccountDetails
-import com.judopay.judokit.android.model.Reference
-import com.judopay.judokit.android.model.USER_CANCELLED
-import com.judopay.judokit.android.model.UiConfiguration
 import com.judopay.judokit.android.model.googlepay.GooglePayAddressFormat
 import com.judopay.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayEnvironment
@@ -62,13 +41,12 @@ import com.judopay.judokit.android.model.googlepay.GooglePayShippingAddressParam
 import com.judopay.judokit.android.ui.common.BR_PBBA_RESULT
 import com.judopay.judokit.android.ui.common.PBBA_RESULT
 import com.judopay.judokit.android.ui.common.isBankingAppAvailable
-import com.readystatesoftware.chuck.ChuckInterceptor
 import kotlinx.android.synthetic.main.activity_demo_feature_list.*
 import kotlinx.android.synthetic.main.dialog_get_transaction.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.UUID
+import java.util.*
 
 const val JUDO_PAYMENT_WIDGET_REQUEST_CODE = 1
 const val LAST_USED_WIDGET_TYPE_KEY = "LAST_USED_WIDGET_TYPE"
@@ -93,7 +71,14 @@ class DemoFeatureListActivity : AppCompatActivity() {
             IntentFilter(BR_PBBA_RESULT)
         )
 
-        JudoApiServiceFactory.externalInterceptors = listOf(ChuckInterceptor(this))
+        JudoApiServiceFactory.externalInterceptors = listOf(
+            ChuckerInterceptor.Builder(this)
+                .collector(ChuckerCollector(this))
+                .maxContentLength(250000L)
+                .redactHeaders(emptySet())
+                .alwaysReadResponseBody(false)
+                .build()
+        )
 
         setContentView(R.layout.activity_demo_feature_list)
         setupRecyclerView()
@@ -342,7 +327,9 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     .setLine3(sharedPreferences.getString("address_line_3", null))
                     .setTown(sharedPreferences.getString("address_town", null))
                     .setPostCode(sharedPreferences.getString("address_post_code", null))
-                    .setCountryCode(sharedPreferences.getString("address_billing_country", null)?.toIntOrNull())
+                    .setCountryCode(
+                        sharedPreferences.getString("address_billing_country", null)?.toIntOrNull()
+                    )
                     .build()
             }
 
@@ -464,12 +451,23 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     private val primaryAccountDetails: PrimaryAccountDetails?
         get() {
-            val isPrimaryAccountDetailsEnabled = sharedPreferences.getBoolean("is_primary_account_details_enabled", false)
+            val isPrimaryAccountDetailsEnabled =
+                sharedPreferences.getBoolean("is_primary_account_details_enabled", false)
             if (isPrimaryAccountDetailsEnabled) {
                 return PrimaryAccountDetails.Builder()
                     .setName(sharedPreferences.getString("primary_account_name", null))
-                    .setAccountNumber(sharedPreferences.getString("primary_account_account_number", null))
-                    .setDateOfBirth(sharedPreferences.getString("primary_account_date_of_birth", null))
+                    .setAccountNumber(
+                        sharedPreferences.getString(
+                            "primary_account_account_number",
+                            null
+                        )
+                    )
+                    .setDateOfBirth(
+                        sharedPreferences.getString(
+                            "primary_account_date_of_birth",
+                            null
+                        )
+                    )
                     .setPostCode(sharedPreferences.getString("primary_account_post_code", null))
                     .build()
             }

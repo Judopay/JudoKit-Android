@@ -16,18 +16,18 @@ class PayByBankActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pay_by_bank)
 
-        val judo = intent.getParcelableExtra<Judo>(JUDO_OPTIONS)
+//        val judo = intent.getParcelableExtra<Judo>(JUDO_OPTIONS)
 
-        payByBankButton.setOnClickListener {
-            val intent = Intent(this, JudoActivity::class.java)
-            intent.putExtra(JUDO_OPTIONS, judo)
-            startActivityForResult(intent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
-        }
+//        payByBankButton.setOnClickListener {
+//            val intent = Intent(this, JudoActivity::class.java)
+//            intent.putExtra(JUDO_OPTIONS, judo)
+//            startActivityForResult(intent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
+//        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        payByBankButton.isEnabled = true
+//        payByBankButton.isEnabled = true
         if (requestCode == JUDO_PAYMENT_WIDGET_REQUEST_CODE) {
             setResult(resultCode, data)
             finish()

@@ -12,17 +12,14 @@ import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.model.Amount
 import com.judopay.judokit.android.model.CardNetwork
-import com.judopay.judokit.android.model.CardScanningResult
 import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.Reference
 import com.judopay.judokit.android.model.formatted
-import com.judopay.judokit.android.model.toInputModel
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldType
 import com.judopay.judokit.android.ui.cardentry.model.FormModel
 import com.judopay.judokit.android.ui.cardentry.model.InputModel
 import com.judopay.judokit.android.ui.common.ButtonState
-import com.judopay.judokit.android.ui.common.isDependencyPresent
 import com.judopay.judokit.android.ui.paymentmethods.toTokenizedCardEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -39,7 +36,6 @@ import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -360,32 +356,6 @@ internal class CardEntryViewModelTest {
         assertEquals(CardEntryFragmentModel(mockFormModel), formModel)
     }
 
-    @DisplayName("Given send is called with ScanCard action,then should update model with disabled button")
-    @Test
-    fun postsJudoApiCallResultOnSubmitForm() {
-        mockkStatic("com.judopay.judokit.android.model.CardScanningResultKt")
-        val cardScanningResult: CardScanningResult = mockk(relaxed = true)
-        every { cardScanningResult.toInputModel() } returns inputModel
-
-        val mockFormModel = FormModel(
-            inputModel,
-            enabledFields,
-            judo.supportedCardNetworks.toList(),
-            ButtonState.Disabled(R.string.pay_now)
-        )
-        val slots = mutableListOf<CardEntryFragmentModel>()
-
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
-        sut.model.observeForever(modelMock)
-
-        sut.send(CardEntryAction.ScanCard(cardScanningResult))
-
-        verify { modelMock.onChanged(capture(slots)) }
-
-        val formModel = slots[1]
-        assertEquals(CardEntryFragmentModel(mockFormModel), formModel)
-    }
-
     @DisplayName("Given payment widget type is CARD_PAYMENT, when shouldPaymentButtonDisplayAmount is true, then amount should return formatted amount")
     @Test
     fun returnFormattedAmountOnShouldPaymentButtonDisplayAmountTrueWithWidgetTypeCardPayment() {
@@ -506,29 +476,6 @@ internal class CardEntryViewModelTest {
     fun shouldUpdateModelWithDisplayScanButtonVisibleOnSelectedCardNetworkNull() {
         val slots = mutableListOf<CardEntryFragmentModel>()
         selectedCardNetwork = null
-        sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
-        sut.model.observeForever(modelMock)
-
-        sut.send(
-            CardEntryAction.EnableFormFields(
-                listOf(
-                    FormFieldType.NUMBER,
-                    FormFieldType.SECURITY_NUMBER
-                )
-            )
-        )
-
-        verify { modelMock.onChanged(capture(slots)) }
-
-        val formModel = slots[1]
-        assertTrue(formModel.displayScanButton)
-    }
-
-    @DisplayName("Given scan card dependency is not present, then should update model with displayScanButton false")
-    @Test
-    fun shouldUpdateModelWithDisplayScanButtonVisibleOnSelectedCardNetworkNullAndScanCardPresent() {
-        val slots = mutableListOf<CardEntryFragmentModel>()
-        every { isDependencyPresent("cards.pay.paycardsrecognizer.sdk.ScanCardIntent") } returns false
         sut = CardEntryViewModel(judo, service, repository, selectedCardNetwork, application)
         sut.model.observeForever(modelMock)
 
