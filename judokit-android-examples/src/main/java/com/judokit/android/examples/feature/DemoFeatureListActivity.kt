@@ -1,6 +1,10 @@
 package com.judokit.android.examples.feature
 
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -22,7 +26,14 @@ import com.judokit.android.examples.feature.paybybank.PayByBankActivity
 import com.judokit.android.examples.feature.tokenpayment.DemoTokenPaymentActivity
 import com.judokit.android.examples.model.DemoFeature
 import com.judokit.android.examples.settings.SettingsActivity
-import com.judopay.judokit.android.*
+import com.judopay.judokit.android.JUDO_ERROR
+import com.judopay.judokit.android.JUDO_OPTIONS
+import com.judopay.judokit.android.JUDO_RESULT
+import com.judopay.judokit.android.Judo
+import com.judopay.judokit.android.JudoActivity
+import com.judopay.judokit.android.PAYMENT_CANCELLED
+import com.judopay.judokit.android.PAYMENT_ERROR
+import com.judopay.judokit.android.PAYMENT_SUCCESS
 import com.judopay.judokit.android.api.error.toJudoError
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.Authorization
@@ -32,8 +43,20 @@ import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.api.model.response.toJudoResult
-import com.judopay.judokit.android.model.*
+import com.judopay.judokit.android.model.Amount
+import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.Currency
+import com.judopay.judokit.android.model.GooglePayConfiguration
+import com.judopay.judokit.android.model.JudoError
+import com.judopay.judokit.android.model.JudoResult
+import com.judopay.judokit.android.model.NetworkTimeout
+import com.judopay.judokit.android.model.PBBAConfiguration
+import com.judopay.judokit.android.model.PaymentMethod
+import com.judopay.judokit.android.model.PaymentWidgetType
+import com.judopay.judokit.android.model.PrimaryAccountDetails
+import com.judopay.judokit.android.model.Reference
+import com.judopay.judokit.android.model.USER_CANCELLED
+import com.judopay.judokit.android.model.UiConfiguration
 import com.judopay.judokit.android.model.googlepay.GooglePayAddressFormat
 import com.judopay.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayEnvironment
@@ -46,7 +69,7 @@ import kotlinx.android.synthetic.main.dialog_get_transaction.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
+import java.util.UUID
 
 const val JUDO_PAYMENT_WIDGET_REQUEST_CODE = 1
 const val LAST_USED_WIDGET_TYPE_KEY = "LAST_USED_WIDGET_TYPE"
