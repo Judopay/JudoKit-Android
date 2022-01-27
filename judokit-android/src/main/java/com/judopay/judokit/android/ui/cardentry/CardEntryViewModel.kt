@@ -37,9 +37,7 @@ import com.judopay.judokit.android.ui.paymentmethods.toTokenizedCardEntity
 import kotlinx.coroutines.launch
 import retrofit2.await
 
-private const val PAY_CARDS_DEPENDENCY = "cards.pay.paycardsrecognizer.sdk.ScanCardIntent"
-
-data class CardEntryFragmentModel(val formModel: FormModel, val displayScanButton: Boolean = true)
+data class CardEntryFragmentModel(val formModel: FormModel, val displayScanButton: Boolean = false)
 
 sealed class CardEntryAction {
     data class ValidationStatusChanged(val input: InputModel, val isFormValid: Boolean) : CardEntryAction()
@@ -309,7 +307,7 @@ class CardEntryViewModel(
             cardNetwork
         )
 
-        val shouldDisplayScanButton = cardNetwork == null && isDependencyPresent(PAY_CARDS_DEPENDENCY)
+        val shouldDisplayScanButton = cardNetwork == null && isDependencyPresent("")
         model.postValue(CardEntryFragmentModel(formModel, shouldDisplayScanButton))
     }
 

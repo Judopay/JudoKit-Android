@@ -13,13 +13,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
-import cards.pay.paycardsrecognizer.sdk.ScanCardIntent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.judopay.judokit.android.JudoSharedViewModel
 import com.judopay.judokit.android.R
-import com.judopay.judokit.android.SCAN_CARD_REQUEST_CODE
 import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
@@ -80,13 +78,6 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
                 findNavController().popBackStack()
             }
         )
-
-        sharedViewModel.scanCardResult.observe(
-            viewLifecycleOwner,
-            {
-                viewModel.send(CardEntryAction.ScanCard(it))
-            }
-        )
     }
 
     // present it always expanded
@@ -105,7 +96,6 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         super.onViewCreated(view, savedInstanceState)
 
         cancelButton.setOnClickListener(this::onUserCancelled)
-        scanCardButton.setOnClickListener { handleScanCardButtonClicks() }
 
         formView.apply {
             onFormValidationStatusListener = { model, isValid ->
@@ -142,11 +132,11 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
     }
 
     private fun updateWithModel(model: CardEntryFragmentModel) {
-        if (model.displayScanButton) {
-            scanCardButton.visibility = View.VISIBLE
-        } else {
-            scanCardButton.visibility = View.GONE
-        }
+//        if (model.displayScanButton) {
+//            scanCardButton.visibility = View.VISIBLE
+//        } else {
+//            scanCardButton.visibility = View.GONE
+//        }
         formView.model = model.formModel
     }
 
@@ -189,12 +179,6 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         } else {
             sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult(resources))
         }
-    }
-
-    private fun handleScanCardButtonClicks() {
-        val activity = requireActivity()
-        val intent = ScanCardIntent.Builder(activity).build()
-        activity.startActivityForResult(intent, SCAN_CARD_REQUEST_CODE)
     }
 
     private fun unSubscribeFromInsetsChanges() = requireDialog().window?.apply {

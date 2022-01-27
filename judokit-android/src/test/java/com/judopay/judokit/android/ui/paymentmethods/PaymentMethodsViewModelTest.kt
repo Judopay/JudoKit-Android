@@ -31,7 +31,6 @@ import com.judopay.judokit.android.ui.paymentmethods.model.GooglePayPaymentMetho
 import com.judopay.judokit.android.ui.paymentmethods.model.IdealPaymentCardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.IdealPaymentMethodModel
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
-import com.zapp.library.merchant.util.PBBAAppUtils
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -79,8 +78,6 @@ internal class PaymentMethodsViewModelTest {
     internal fun setUp() {
         Dispatchers.setMain(testDispatcher)
         mockkStatic("retrofit2.KotlinExtensions")
-        mockkStatic("com.zapp.library.merchant.util.PBBAAppUtils")
-        every { PBBAAppUtils.isCFIAppAvailable(application) } returns false
         coEvery { repository.findWithId(0) } returns mockk(relaxed = true)
         coEvery { repository.allCardsSync.value } returns null
         coEvery {

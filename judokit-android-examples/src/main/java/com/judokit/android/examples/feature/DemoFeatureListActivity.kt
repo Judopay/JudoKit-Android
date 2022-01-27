@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.chuckerteam.chucker.api.ChuckerCollector
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.judokit.android.examples.R
@@ -62,7 +64,6 @@ import com.judopay.judokit.android.model.googlepay.GooglePayShippingAddressParam
 import com.judopay.judokit.android.ui.common.BR_PBBA_RESULT
 import com.judopay.judokit.android.ui.common.PBBA_RESULT
 import com.judopay.judokit.android.ui.common.isBankingAppAvailable
-import com.readystatesoftware.chuck.ChuckInterceptor
 import kotlinx.android.synthetic.main.activity_demo_feature_list.*
 import kotlinx.android.synthetic.main.dialog_get_transaction.view.*
 import retrofit2.Call
@@ -93,7 +94,14 @@ class DemoFeatureListActivity : AppCompatActivity() {
             IntentFilter(BR_PBBA_RESULT)
         )
 
-        JudoApiServiceFactory.externalInterceptors = listOf(ChuckInterceptor(this))
+        JudoApiServiceFactory.externalInterceptors = listOf(
+            ChuckerInterceptor.Builder(this)
+                .collector(ChuckerCollector(this))
+                .maxContentLength(250000L)
+                .redactHeaders(emptySet())
+                .alwaysReadResponseBody(false)
+                .build()
+        )
 
         setContentView(R.layout.activity_demo_feature_list)
         setupRecyclerView()
@@ -342,7 +350,9 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     .setLine3(sharedPreferences.getString("address_line_3", null))
                     .setTown(sharedPreferences.getString("address_town", null))
                     .setPostCode(sharedPreferences.getString("address_post_code", null))
-                    .setCountryCode(sharedPreferences.getString("address_billing_country", null)?.toIntOrNull())
+                    .setCountryCode(
+                        sharedPreferences.getString("address_billing_country", null)?.toIntOrNull()
+                    )
                     .build()
             }
 
@@ -464,12 +474,23 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     private val primaryAccountDetails: PrimaryAccountDetails?
         get() {
-            val isPrimaryAccountDetailsEnabled = sharedPreferences.getBoolean("is_primary_account_details_enabled", false)
+            val isPrimaryAccountDetailsEnabled =
+                sharedPreferences.getBoolean("is_primary_account_details_enabled", false)
             if (isPrimaryAccountDetailsEnabled) {
                 return PrimaryAccountDetails.Builder()
                     .setName(sharedPreferences.getString("primary_account_name", null))
-                    .setAccountNumber(sharedPreferences.getString("primary_account_account_number", null))
-                    .setDateOfBirth(sharedPreferences.getString("primary_account_date_of_birth", null))
+                    .setAccountNumber(
+                        sharedPreferences.getString(
+                            "primary_account_account_number",
+                            null
+                        )
+                    )
+                    .setDateOfBirth(
+                        sharedPreferences.getString(
+                            "primary_account_date_of_birth",
+                            null
+                        )
+                    )
                     .setPostCode(sharedPreferences.getString("primary_account_post_code", null))
                     .build()
             }

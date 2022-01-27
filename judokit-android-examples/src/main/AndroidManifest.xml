@@ -23,21 +23,24 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name="com.judokit.android.examples.SplashActivity"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.judokit.android.examples.feature.tokenpayment.DemoTokenPaymentActivity" />
+        <activity android:name="com.judokit.android.examples.feature.tokenpayment.DemoTokenPaymentActivity"
+            android:exported="false"/>
         <activity
             android:name="com.judokit.android.examples.result.ResultActivity"
-            android:theme="@style/Theme.DemoApp" />
+            android:theme="@style/Theme.DemoApp" android:exported="false"/>
         <activity
             android:name="com.judokit.android.examples.settings.SettingsActivity"
             android:label="@string/title_settings"
             android:parentActivityName="com.judokit.android.examples.feature.DemoFeatureListActivity"
-            android:theme="@style/Theme.DemoApp">
+            android:theme="@style/Theme.DemoApp"
+            android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.judokit.android.examples.feature.DemoFeatureListActivity" />
@@ -46,7 +49,8 @@
             android:name="com.judokit.android.examples.feature.DemoFeatureListActivity"
             android:label="@string/title_activity_demo_feature_list"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.DemoApp">
+            android:theme="@style/Theme.DemoApp"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -65,7 +69,8 @@
         <activity
             android:name="com.judokit.android.examples.feature.paybybank.PayByBankActivity"
             android:label="@string/title_activity_pay_by_bank"
-            android:theme="@style/Theme.DemoApp" />
+            android:theme="@style/Theme.DemoApp"
+            android:exported="false"/>
 
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"

@@ -22,7 +22,6 @@
 
 -keep class com.judopay.judokit.** { *; }
 -keepnames class com.judopay.judokit.** { *; }
--keep class cards.pay.paycardsrecognizer.sdk.** { *; }
 
 #-keep class com.judopay.judokit.android.api.model.** { *; }
 #-keepnames class com.judopay.judokit.android.api.model.** { *; }

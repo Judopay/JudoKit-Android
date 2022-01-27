@@ -28,6 +28,7 @@ import com.judopay.judokit.android.model.paymentButtonType
 import com.judopay.judokit.android.model.typeId
 import com.judopay.judokit.android.toMap
 import com.judopay.judokit.android.ui.common.ButtonState
+import com.judopay.judokit.android.ui.common.isBankingAppAvailable
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.IdealBank
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.IdealBankItem
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
@@ -49,7 +50,6 @@ import com.judopay.judokit.android.ui.paymentmethods.model.IdealPaymentMethodMod
 import com.judopay.judokit.android.ui.paymentmethods.model.PayByBankPaymentMethodModel
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentMethodModel
-import com.zapp.library.merchant.util.PBBAAppUtils
 import kotlinx.coroutines.launch
 import retrofit2.await
 import java.util.Date
@@ -411,7 +411,7 @@ class PaymentMethodsViewModel(
         if (judo.amount.currency != Currency.EUR) {
             paymentMethods = judo.paymentMethods.filter { it != PaymentMethod.IDEAL }
         }
-        if (judo.amount.currency != Currency.GBP || !PBBAAppUtils.isCFIAppAvailable(context)) {
+        if (judo.amount.currency != Currency.GBP || !isBankingAppAvailable(context)) {
             paymentMethods = paymentMethods.filter { it != PaymentMethod.PAY_BY_BANK }
         }
         return paymentMethods

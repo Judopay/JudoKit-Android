@@ -8,15 +8,11 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
-import cards.pay.paycardsrecognizer.sdk.Card
-import cards.pay.paycardsrecognizer.sdk.ScanCardIntent
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.WalletConstants
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
-import com.judopay.judokit.android.model.CardScanResultType
-import com.judopay.judokit.android.model.CardScanningResult
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.code
 import com.judopay.judokit.android.model.googlepay.GooglePayEnvironment
@@ -24,13 +20,11 @@ import com.judopay.judokit.android.model.isExposed
 import com.judopay.judokit.android.model.isGooglePayWidget
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
 import com.judopay.judokit.android.model.navigationGraphId
-import com.judopay.judokit.android.model.toCardScanningResult
 import com.judopay.judokit.android.model.toIntent
 import com.judopay.judokit.android.service.JudoGooglePayService
 import com.judopay.judokit.android.ui.common.showAlert
 
 internal const val LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE = Activity.RESULT_FIRST_USER + 1
-internal const val SCAN_CARD_REQUEST_CODE = Activity.RESULT_FIRST_USER + 2
 
 /**
  * Entry point for invoking Judo SDK to make any of the defined
@@ -94,7 +88,6 @@ class JudoActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE -> dispatchGPayResult(resultCode, data)
-            SCAN_CARD_REQUEST_CODE -> dispatchScanCardResult(resultCode, data)
             else -> Log.i("JudoActivity", "Received unsupported requestCode: $requestCode")
         }
 
@@ -127,19 +120,6 @@ class JudoActivity : AppCompatActivity() {
         }
 
         viewModel.send(action)
-    }
-
-    private fun dispatchScanCardResult(resultCode: Int, data: Intent?) {
-        val card = data?.getParcelableExtra<Card>(ScanCardIntent.RESULT_PAYCARDS_CARD)
-
-        val resultType = when (resultCode) {
-            Activity.RESULT_OK -> CardScanResultType.SUCCESS
-            Activity.RESULT_CANCELED -> CardScanResultType.CANCELLED
-            else -> CardScanResultType.ERROR
-        }
-
-        val result = card?.toCardScanningResult() ?: CardScanningResult(resultType)
-        viewModel.send(JudoSharedAction.ScanCardResult(result))
     }
 
     private fun dispatchPaymentResult(result: JudoPaymentResult) {

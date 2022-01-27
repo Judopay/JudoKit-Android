@@ -12,7 +12,6 @@ import com.judopay.judokit.android.api.model.request.toJudoResult
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
-import com.judopay.judokit.android.model.CardScanningResult
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.JudoResult
@@ -60,7 +59,6 @@ internal class JudoSharedViewModelTest {
 
     private val paymentResult = spyk<Observer<JudoPaymentResult>>()
     private val paymentMethodsGooglePayResult = spyk<Observer<JudoPaymentResult>>()
-    private val scanCardResult = spyk<Observer<CardScanningResult>>()
 
     @BeforeEach
     internal fun setUp() {
@@ -73,7 +71,6 @@ internal class JudoSharedViewModelTest {
 
         sut.paymentResult.observeForever(paymentResult)
         sut.paymentMethodsResult.observeForever(paymentMethodsGooglePayResult)
-        sut.scanCardResult.observeForever(scanCardResult)
     }
 
     @AfterEach
@@ -421,19 +418,6 @@ internal class JudoSharedViewModelTest {
             )
         )
         assertEquals(expectedPaymentResult, actualPaymentResult)
-    }
-
-    @DisplayName("Given send is called with ScanCardResult action, then update scanCardResult")
-    @Test
-    fun updateScanCardResultOnScanCardResultAction() {
-        val slots = mutableListOf<CardScanningResult>()
-        val expectedCardScanResult: CardScanningResult = mockk(relaxed = true)
-
-        sut.send(JudoSharedAction.ScanCardResult(expectedCardScanResult))
-
-        verify { scanCardResult.onChanged(capture(slots)) }
-        val actualScanCardResult = slots[0]
-        assertEquals(expectedCardScanResult, actualScanCardResult)
     }
 
     @DisplayName("Given send is called with LoadGPayPaymentDataUserCancelled action, then update paymentResult with UserCancelled")
