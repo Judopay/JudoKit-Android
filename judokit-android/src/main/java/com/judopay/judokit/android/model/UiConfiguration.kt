@@ -11,8 +11,9 @@ class UiConfiguration internal constructor(
     val avsEnabled: Boolean,
     val shouldPaymentMethodsDisplayAmount: Boolean,
     val shouldPaymentButtonDisplayAmount: Boolean,
-    val shouldPaymentMethodsVerifySecurityCode: Boolean
-) : Parcelable {
+    val shouldPaymentMethodsVerifySecurityCode: Boolean,
+    val shouldAskForBillingInformation: Boolean
+    ) : Parcelable {
 
     /**
      * Builder class for creating an instance of [UiConfiguration]
@@ -22,6 +23,7 @@ class UiConfiguration internal constructor(
         private var shouldPaymentMethodsDisplayAmount: Boolean? = true
         private var shouldPaymentMethodsVerifySecurityCode: Boolean? = true
         private var shouldPaymentButtonDisplayAmount: Boolean? = false
+        private var shouldAskForBillingInformation: Boolean? = false
 
         /**
          * Sets additional fields in card entry screen to provide address verification data,
@@ -53,6 +55,13 @@ class UiConfiguration internal constructor(
             apply { this.shouldPaymentButtonDisplayAmount = shouldPaymentButtonDisplayAmount }
 
         /**
+         * Sets whether Billing Information should be enabled or disabled.
+         * @param shouldAskForBillingInformation property that toggles billing information screen.
+         */
+        fun setShouldAskForBillingInformation(shouldAskForBillingInformation: Boolean?) =
+            apply { this.shouldAskForBillingInformation = shouldAskForBillingInformation }
+
+        /**
          * Creates an instance of [UiConfiguration] based on provided data in setters.
          * @throws IllegalArgumentException If avsEnabled, shouldPaymentMethodsDisplayAmount, shouldPaymentMethodsVerifySecurityCode or shouldPaymentButtonDisplayAmount is null.
          */
@@ -64,17 +73,19 @@ class UiConfiguration internal constructor(
                 requireNotNull(this.shouldPaymentMethodsVerifySecurityCode)
             val shouldPaymentButtonDisplayAmount =
                 requireNotNull(this.shouldPaymentButtonDisplayAmount)
+            val shouldAskForBillingInformation = requireNotNull(this.shouldAskForBillingInformation)
 
             return UiConfiguration(
                 avsEnabled,
                 shouldPaymentMethodsDisplayAmount,
                 shouldPaymentButtonDisplayAmount,
-                shouldPaymentMethodsVerifySecurityCode
+                shouldPaymentMethodsVerifySecurityCode,
+                shouldAskForBillingInformation
             )
         }
     }
 
     override fun toString(): String {
-        return "UiConfiguration(avsEnabled=$avsEnabled, shouldDisplayAmount=$shouldPaymentMethodsDisplayAmount, shouldEnterSecurityCode=$shouldPaymentMethodsVerifySecurityCode)"
+        return "UiConfiguration(avsEnabled=$avsEnabled, shouldPaymentMethodsDisplayAmount=$shouldPaymentMethodsDisplayAmount, shouldPaymentMethodsVerifySecurityCode=$shouldPaymentMethodsVerifySecurityCode, shouldPaymentButtonDisplayAmount=$shouldPaymentButtonDisplayAmount, shouldAskForBillingInformation=$shouldAskForBillingInformation)"
     }
 }

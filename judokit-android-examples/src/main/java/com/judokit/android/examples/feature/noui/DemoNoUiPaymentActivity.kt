@@ -23,11 +23,12 @@ import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.JudoResult
 import com.judopay.judokit.android.model.PaymentWidgetType
-import com.judopay.judokit.android.model.TransactionDetail
+import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.code
 import com.judopay.judokit.android.model.toIntent
-import com.judopay.judokit.android.service.CardTransactionCallback
-import com.judopay.judokit.android.service.CardTransactionService
+import com.judopay.judokit.android.service.CardTransactionManager
+import com.judopay.judokit.android.service.CardTransactionManagerResultListener
+import com.judopay.judokit.android.ui.cardentry.CardEntryViewModel
 import com.judopay.judokit.android.ui.common.ButtonState
 import kotlinx.android.synthetic.main.activity_demo_no_ui_payment.*
 
@@ -40,16 +41,19 @@ sealed class ActivityState {
     object PayWithCard : ActivityState()
 }
 
-class DemoNoUiPaymentActivity : AppCompatActivity() {
+class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResultListener {
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var service: JudoApiService
-    private lateinit var transactionDetailsBuilder: TransactionDetail.Builder
-    private var cardTransactionService: CardTransactionService? = null
+    private lateinit var transactionDetailsBuilder: TransactionDetails.Builder
+    private lateinit var cardTransactionManager: CardTransactionManager
+    private val caller = DemoNoUiPaymentActivity::class.java.name
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_demo_no_ui_payment)
+
+        cardTransactionManager = CardTransactionManager.getInstance(this)
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val judo = intent.getParcelableExtra<Judo>(JUDO_OPTIONS)
@@ -58,7 +62,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
         service = JudoApiServiceFactory.createApiService(this, judo)
         tokenPaymentButton.state = ButtonState.Disabled(R.string.token_payment)
         preAuthTokenPaymentButton.state = ButtonState.Disabled(R.string.preauth_token_payment)
-        transactionDetailsBuilder = TransactionDetail.Builder()
+        transactionDetailsBuilder = TransactionDetails.Builder()
             .setSecurityNumber("452")
             .setEmail(judo.emailAddress)
             .setCountryCode(judo.address?.countryCode.toString())
@@ -71,25 +75,12 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
             .setPostalCode(judo.address?.postCode)
 
         cardPaymentButton.setOnClickListener {
-            cardTransactionService = CardTransactionService(
-                this,
-                getJudo(judo, PaymentWidgetType.CARD_PAYMENT),
-                service
-            )
             handleState(ActivityState.PayWithCard)
-            cardTransactionService?.makeTransaction(
-                transactionDetailsBuilder
-                    .setCardNumber("4000023104662535")
-                    .setExpirationDate("12/25")
-                    .setCardHolderName("CHALLENGE")
-                    .build(),
-                object : CardTransactionCallback {
-                    override fun onFinish(result: JudoPaymentResult) {
-                        setResult(result.code, result.toIntent())
-                        finish()
-                    }
-                }
-            )
+            cardTransactionManager.payment(transactionDetailsBuilder
+                .setCardNumber("4000023104662535")
+                .setExpirationDate("12/25")
+                .setCardHolderName("CHALLENGE")
+                .build(), caller)
         }
 
         createCardTokenButton.setOnClickListener {
@@ -98,42 +89,16 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
             startActivityForResult(intent, REGISTER_CARD_REQUEST_CODE)
         }
         tokenPaymentButton.setOnClickListener {
-            cardTransactionService = CardTransactionService(
-                this,
-                getJudo(judo, PaymentWidgetType.CARD_PAYMENT),
-                service
-            )
             handleState(ActivityState.PayWithToken)
-            cardTransactionService?.tokenPayment(
-                transactionDetailsBuilder.build(),
-                object : CardTransactionCallback {
-                    override fun onFinish(result: JudoPaymentResult) {
-                        handleState(ActivityState.Idle)
-                        setResult(result.code, result.toIntent())
-                        finish()
-                    }
-                }
-            )
+            cardTransactionManager.paymentWithToken(transactionDetailsBuilder.setCardHolderName("CHALLENGE").build(), caller)
         }
 
         preAuthTokenPaymentButton.setOnClickListener {
-            cardTransactionService = CardTransactionService(
-                this,
-                getJudo(judo, PaymentWidgetType.PRE_AUTH),
-                service
-            )
             handleState(ActivityState.PayWithPreAuthToken)
-            cardTransactionService?.tokenPayment(
-                transactionDetailsBuilder.build(),
-                object : CardTransactionCallback {
-                    override fun onFinish(result: JudoPaymentResult) {
-                        handleState(ActivityState.Idle)
-                        setResult(result.code, result.toIntent())
-                        finish()
-                    }
-                }
-            )
+            cardTransactionManager.preAuthWithToken(transactionDetailsBuilder.setCardHolderName("CHALLENGE").build(), caller)
         }
+
+        cardTransactionManager.registerResultListener(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -171,8 +136,14 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        cardTransactionService?.destroy()
+        cardTransactionManager.unRegisterResultListener(this)
         super.onDestroy()
+    }
+
+    override fun onCardTransactionResult(result: JudoPaymentResult) {
+        runOnUiThread { handleState(ActivityState.Idle) }
+        setResult(result.code, result.toIntent())
+        finish()
     }
 
     private fun handleState(state: ActivityState) {
@@ -235,7 +206,6 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
             .setPBBAConfiguration(pbbaConfiguration)
             .setScaExemption(scaExemption)
             .setChallengeRequestIndicator(challengeRequestIndicator)
-            .set3DS2Enabled(is3DS2Enabled)
             .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
             .build()
     }

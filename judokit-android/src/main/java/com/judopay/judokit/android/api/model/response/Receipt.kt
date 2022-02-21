@@ -1,6 +1,11 @@
 package com.judopay.judokit.android.api.model.response
 
+import android.util.Base64
+import android.util.Log
+import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.google.gson.JsonSyntaxException
+import com.judopay.judo3ds2.transaction.challenge.ChallengeParameters
 import com.judopay.judokit.android.isNoneNullOrEmpty
 import com.judopay.judokit.android.model.CardVerificationModel
 import com.judopay.judokit.android.model.JudoResult
@@ -45,10 +50,10 @@ class Receipt(
     val cReq: String? = null
 ) {
 
-    val is3dSecureRequired: Boolean
+    val isThreeDSecureOneRequired: Boolean
         get() = isNoneNullOrEmpty(acsUrl, md, paReq)
 
-    val is3dSecure2Required: Boolean
+    val isThreeDSecureTwoRequired: Boolean
         get() = message == CHALLENGE_REQUIRED_MESSAGE
 
     override fun toString(): String {
@@ -89,3 +94,23 @@ data class CReqParameters(
     val threeDSServerTransID: String,
     val acsTransID: String
 )
+
+fun Receipt.getCReqParameters(): CReqParameters? = try {
+    Gson().fromJson(
+        String(Base64.decode(cReq, Base64.NO_WRAP)),
+        CReqParameters::class.java
+    )
+} catch (exception: JsonSyntaxException) {
+    Log.e("getCReqParameters", exception.toString())
+    null
+}
+
+fun Receipt.getChallengeParameters(cReqParams: CReqParameters? = getCReqParameters()): ChallengeParameters {
+    return ChallengeParameters(
+        cReqParams?.threeDSServerTransID,
+        cReqParams?.acsTransID,
+        acsReferenceNumber,
+        acsSignedContent,
+        null
+    )
+}

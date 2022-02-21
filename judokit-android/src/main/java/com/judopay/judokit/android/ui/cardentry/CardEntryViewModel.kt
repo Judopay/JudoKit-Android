@@ -15,23 +15,20 @@ import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.CardScanningResult
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentWidgetType
-import com.judopay.judokit.android.model.TransactionDetail
+import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.formatted
 import com.judopay.judokit.android.model.toInputModel
-import com.judopay.judokit.android.service.CardTransactionCallback
-import com.judopay.judokit.android.service.CardTransactionService
+import com.judopay.judokit.android.service.CardTransactionManager
+import com.judopay.judokit.android.service.CardTransactionManagerResultListener
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.FormModel
 import com.judopay.judokit.android.ui.common.ButtonState
-import com.judopay.judokit.android.ui.common.isDependencyPresent
 import com.judopay.judokit.android.ui.paymentmethods.toTokenizedCardEntity
 import com.judopay.judokit.android.withWhitespacesRemoved
 import kotlinx.coroutines.launch
-
-private const val PAY_CARDS_DEPENDENCY = "cards.pay.paycardsrecognizer.sdk.ScanCardIntent"
 
 sealed class CardEntryNavigation {
     object Card : CardEntryNavigation()
@@ -60,11 +57,13 @@ sealed class CardEntryAction {
     object SubmitCardEntryForm : CardEntryAction()
     object SubmitBillingDetailsForm : CardEntryAction()
     object PressBackButton : CardEntryAction()
+    object SubscribeToCardTransactionManagerResults: CardEntryAction()
+    object UnSubscribeToCardTransactionManagerResults: CardEntryAction()
 }
 
 internal class CardEntryViewModelFactory(
     private val judo: Judo,
-    private val cardTransactionService: CardTransactionService,
+    private val cardTransactionManager: CardTransactionManager,
     private val cardRepository: TokenizedCardRepository,
     private val cardEntryOptions: CardEntryOptions?,
     private val application: Application
@@ -74,7 +73,7 @@ internal class CardEntryViewModelFactory(
         return if (modelClass == CardEntryViewModel::class.java) {
             CardEntryViewModel(
                 judo,
-                cardTransactionService,
+                cardTransactionManager,
                 cardRepository,
                 cardEntryOptions!!,
                 application
@@ -85,15 +84,15 @@ internal class CardEntryViewModelFactory(
 
 class CardEntryViewModel(
     private val judo: Judo,
-    private val cardTransactionService: CardTransactionService,
+    private val cardTransactionManager: CardTransactionManager,
     private val cardRepository: TokenizedCardRepository,
     private val cardEntryOptions: CardEntryOptions,
     application: Application
-) : AndroidViewModel(application) {
+) : AndroidViewModel(application), CardTransactionManagerResultListener {
 
     val model = MutableLiveData<CardEntryFragmentModel>()
     val judoPaymentResult = MutableLiveData<JudoPaymentResult>()
-    val cardEntryToPaymentMethodResult = MutableLiveData<TransactionDetail.Builder>()
+    val cardEntryToPaymentMethodResult = MutableLiveData<TransactionDetails.Builder>()
     val navigationObserver = MutableLiveData<CardEntryNavigation>()
 
     private val context = application
@@ -115,7 +114,7 @@ class CardEntryViewModel(
                 CardDetailsFieldType.EXPIRATION_DATE,
                 CardDetailsFieldType.SECURITY_NUMBER
             )
-            if (judo.uiConfiguration.avsEnabled && !judo.is3DS2Enabled) {
+            if (judo.uiConfiguration.avsEnabled && !judo.uiConfiguration.shouldAskForBillingInformation) {
                 fields.add(CardDetailsFieldType.COUNTRY)
                 fields.add(CardDetailsFieldType.POST_CODE)
             }
@@ -181,11 +180,18 @@ class CardEntryViewModel(
                 navigation = CardEntryNavigation.Billing
             }
         }
+
         buildModel(isLoading = false, isFormValid = false)
     }
 
     fun send(action: CardEntryAction) {
         when (action) {
+            is CardEntryAction.SubscribeToCardTransactionManagerResults -> {
+                cardTransactionManager.registerResultListener(this)
+            }
+            is CardEntryAction.UnSubscribeToCardTransactionManagerResults -> {
+                cardTransactionManager.unRegisterResultListener(this)
+            }
             is CardEntryAction.InsertCard -> {
                 val entity = action.tokenizedCard.toTokenizedCardEntity(context)
                 insert(entity)
@@ -251,11 +257,17 @@ class CardEntryViewModel(
         }
     }
 
+    // CardTransactionManagerResultListener
+    override fun onCardTransactionResult(result: JudoPaymentResult) {
+        judoPaymentResult.postValue(result)
+        buildModel(isLoading = false, isFormValid = true)
+    }
+
     private fun sendRequest() = viewModelScope.launch {
         if (cardEntryOptions.fromPaymentMethods && !cardEntryOptions.addCardPressed) {
             with(billingDetailsModel) {
                 cardEntryToPaymentMethodResult.postValue(
-                    TransactionDetail.Builder()
+                    TransactionDetails.Builder()
                         .setSecurityNumber(inputModel.securityNumber)
                         .setEmail(email)
                         .setCountryCode(countryCode)
@@ -271,13 +283,8 @@ class CardEntryViewModel(
             return@launch
         }
 
-        val cardTransactionCallback = object : CardTransactionCallback {
-            override fun onFinish(result: JudoPaymentResult) {
-                judoPaymentResult.postValue(result)
-                buildModel(isLoading = false, isFormValid = true)
-            }
-        }
-        val transactionDetailBuilder = TransactionDetail.Builder()
+        val transactionDetailBuilder = TransactionDetails.Builder()
+
         with(inputModel) {
             transactionDetailBuilder
                 .setCardNumber(cardNumber)
@@ -285,6 +292,7 @@ class CardEntryViewModel(
                 .setExpirationDate(expirationDate)
                 .setSecurityNumber(securityNumber)
         }
+
         with(billingDetailsModel) {
             transactionDetailBuilder
                 .setEmail(email)
@@ -297,10 +305,21 @@ class CardEntryViewModel(
                 .setCity(city)
                 .setPostalCode(postalCode)
         }
-        cardTransactionService.makeTransaction(
-            transactionDetailBuilder.build(),
-            cardTransactionCallback
-        )
+
+        val details = transactionDetailBuilder.build()
+
+        when (judo.paymentWidgetType) {
+            PaymentWidgetType.CARD_PAYMENT -> cardTransactionManager.payment(details, CardEntryViewModel::class.java.name)
+            PaymentWidgetType.PRE_AUTH -> cardTransactionManager.preAuth(details, CardEntryViewModel::class.java.name)
+            PaymentWidgetType.REGISTER_CARD -> cardTransactionManager.register(details, CardEntryViewModel::class.java.name)
+            PaymentWidgetType.CHECK_CARD -> cardTransactionManager.check(details, CardEntryViewModel::class.java.name)
+            PaymentWidgetType.PAYMENT_METHODS,
+            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
+            PaymentWidgetType.CREATE_CARD_TOKEN -> cardTransactionManager.save(details, CardEntryViewModel::class.java.name)
+            else -> {
+                throw IllegalStateException("Unsupported PaymentWidgetType")
+            }
+        }
     }
 
     private fun buildModel(
@@ -309,7 +328,7 @@ class CardEntryViewModel(
         isBillingFormValid: Boolean = false,
         cardNetwork: CardNetwork? = null
     ) {
-        if (judo.is3DS2Enabled) {
+        if (judo.uiConfiguration.shouldAskForBillingInformation) {
             inputModel.buttonState = when {
                 isFormValid -> ButtonState.Enabled(continueButtonText, amount)
                 else -> ButtonState.Disabled(continueButtonText, amount)
@@ -335,8 +354,7 @@ class CardEntryViewModel(
             inputModel, // Model to pre fill the form
             billingDetailsModel
         )
-        val shouldDisplayScanButton =
-            cardNetwork == null && isDependencyPresent(PAY_CARDS_DEPENDENCY) && navigation == CardEntryNavigation.Card
+        val shouldDisplayScanButton = false
         val shouldDisplayBackButton =
             (cardEntryOptions.fromPaymentMethods && cardEntryOptions.shouldDisplaySecurityCode != null) || !cardEntryOptions.fromPaymentMethods
         model.postValue(

@@ -24,7 +24,8 @@ import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.judo
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentWidgetType
-import com.judopay.judokit.android.service.CardTransactionService
+import com.judopay.judokit.android.service.CardTransactionManager
+import com.judopay.judokit.android.ui.cardentry.CardEntryAction
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
 import com.judopay.judokit.android.ui.ideal.JUDO_IDEAL_BANK
@@ -54,7 +55,7 @@ class PaymentMethodsFragment : Fragment() {
 
     private lateinit var viewModel: PaymentMethodsViewModel
     private lateinit var service: JudoApiService
-    private lateinit var cardTransactionService: CardTransactionService
+    private lateinit var cardTransactionManager: CardTransactionManager
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -85,88 +86,77 @@ class PaymentMethodsFragment : Fragment() {
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
         service = JudoApiServiceFactory.createApiService(application, judo)
-        cardTransactionService = CardTransactionService(requireActivity(), judo, service)
+        cardTransactionManager = CardTransactionManager.getInstance(requireActivity())
+        cardTransactionManager.configureWith(judo)
 
         val factory =
             PaymentMethodsViewModelFactory(
                 cardDate,
                 cardRepository,
-                cardTransactionService,
+                cardTransactionManager,
                 application,
                 judo
             )
 
         viewModel = ViewModelProvider(this, factory).get(PaymentMethodsViewModel::class.java)
-        viewModel.model.observe(viewLifecycleOwner, { updateWithModel(it) })
+        viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
 
         viewModel.judoPaymentResult.observe(
-            viewLifecycleOwner,
-            { sharedViewModel.paymentResult.postValue((it)) }
-        )
+            viewLifecycleOwner
+        ) { sharedViewModel.paymentResult.postValue((it)) }
 
         // TODO: to be refactored
         viewModel.allCardsSync.observe(
-            viewLifecycleOwner,
-            {
-                viewModel.send(PaymentMethodsAction.Update)
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            viewModel.send(PaymentMethodsAction.Update)
+        }
 
         viewModel.payWithIdealObserver.observe(
-            viewLifecycleOwner,
-            {
-                it.getContentIfNotHandled()?.let { bic ->
-                    findNavController().navigate(
-                        R.id.action_paymentMethodsFragment_to_idealFragment,
-                        bundleOf(
-                            JUDO_IDEAL_BANK to bic
-                        )
+            viewLifecycleOwner
+        ) {
+            it.getContentIfNotHandled()?.let { bic ->
+                findNavController().navigate(
+                    R.id.action_paymentMethodsFragment_to_idealFragment,
+                    bundleOf(
+                        JUDO_IDEAL_BANK to bic
                     )
-                }
+                )
             }
-        )
+        }
 
         viewModel.payWithPayByBankObserver.observe(
-            viewLifecycleOwner,
-            {
-                if (!it.hasBeenHandled()) {
-                    navigateToPollingStatus()
-                }
+            viewLifecycleOwner
+        ) {
+            if (!it.hasBeenHandled()) {
+                navigateToPollingStatus()
             }
-        )
+        }
 
         viewModel.displayCardEntryObserver.observe(
-            viewLifecycleOwner,
-            {
-                it.getContentIfNotHandled()?.let { cardEntryOptions ->
-                    findNavController().navigate(
-                        R.id.action_paymentMethodsFragment_to_cardEntryFragment,
-                        bundleOf(
-                            CARD_ENTRY_OPTIONS to cardEntryOptions
-                        )
+            viewLifecycleOwner
+        ) {
+            it.getContentIfNotHandled()?.let { cardEntryOptions ->
+                findNavController().navigate(
+                    R.id.action_paymentMethodsFragment_to_cardEntryFragment,
+                    bundleOf(
+                        CARD_ENTRY_OPTIONS to cardEntryOptions
                     )
-                }
+                )
             }
-        )
+        }
 
         sharedViewModel.paymentMethodsResult.observe(
-            viewLifecycleOwner,
-            { result ->
-                viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
-                sharedViewModel.paymentResult.postValue(result)
-            }
-        )
+            viewLifecycleOwner
+        ) { result ->
+            viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
+            sharedViewModel.paymentResult.postValue(result)
+        }
         sharedViewModel.cardEntryToPaymentMethodResult.observe(
-            viewLifecycleOwner,
-            { transactionDetailBuilder ->
-                viewModel.send(PaymentMethodsAction.PayWithCard(transactionDetailBuilder))
-            }
-        )
-    }
-
-    override fun onDestroy() {
-        cardTransactionService.destroy()
-        super.onDestroy()
+            viewLifecycleOwner
+        ) { transactionDetailBuilder ->
+            viewModel.send(PaymentMethodsAction.PayWithCard(transactionDetailBuilder))
+        }
     }
 
     private fun navigateToPollingStatus() {
@@ -301,5 +291,15 @@ class PaymentMethodsFragment : Fragment() {
 
         // post the event
         sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled())
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.send(PaymentMethodsAction.SubscribeToCardTransactionManagerResults)
+    }
+
+    override fun onDestroy() {
+        viewModel.send(PaymentMethodsAction.UnSubscribeToCardTransactionManagerResults)
+        super.onDestroy()
     }
 }

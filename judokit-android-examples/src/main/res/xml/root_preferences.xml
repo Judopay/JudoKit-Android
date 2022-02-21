@@ -64,7 +64,7 @@
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:iconSpaceReserved="false"
-            app:key="is_3DS2_enabled"
+            app:key="should_ask_for_billing_information"
             app:summary="@string/is_3ds2_enabled_summary"
             app:title="@string/is_3ds2_enabled_title" />
 

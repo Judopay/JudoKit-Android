@@ -29,7 +29,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 32
         versionCode 220
-        versionName "2.2.0 (6) -" + getGitHash()
+        versionName "2.2.0 (11) -" + getGitHash()
         multiDexEnabled true
 
         testInstrumentationRunner "com.judokit.android.examples.test.CucumberRunner"
@@ -88,7 +88,6 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     implementation 'androidx.preference:preference:1.1.1'
     implementation "com.github.chuckerteam.chucker:library:3.5.2"
-    implementation 'cards.pay:paycardsrecognizer:1.1.0'
     ktlint 'com.pinterest:ktlint:0.41.0'
 
     implementation platform('com.google.firebase:firebase-bom:29.0.3')

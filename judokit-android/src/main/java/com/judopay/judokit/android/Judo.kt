@@ -71,8 +71,7 @@ class Judo internal constructor(
     val mobileNumber: String?,
     val phoneCountryCode: String?,
     val emailAddress: String?,
-    val threeDSTwoMaxTimeout: Int,
-    val is3DS2Enabled: Boolean
+    val threeDSTwoMaxTimeout: Int
 ) : Parcelable {
 
     /**
@@ -100,7 +99,6 @@ class Judo internal constructor(
         private var phoneCountryCode: String? = null
         private var emailAddress: String? = null
         private var threeDSTwoMaxTimeout: Int? = null
-        private var is3DS2Enabled: Boolean? = null
 
         /**
          * Sets the unique merchant ID
@@ -255,12 +253,6 @@ class Judo internal constructor(
             apply { this.phoneCountryCode = phoneCountryCode }
 
         /**
-         * Sets whether 3DS 2.0 flow should be enabled or disabled.
-         * @param is3DS2Enabled property that toggles 3DS 2.0 flow.
-         */
-        fun set3DS2Enabled(is3DS2Enabled: Boolean?) = apply { this.is3DS2Enabled = is3DS2Enabled }
-
-        /**
          * Method that initializes Judo configuration object that can be used for
          * processing a payment.
          * @return A new Judo object that can be added to an intent with [JUDO_OPTIONS] key
@@ -318,8 +310,6 @@ class Judo internal constructor(
                     .build()
             else pbbaConfiguration
 
-            val my3DS2Enabled = is3DS2Enabled ?: false
-
             return Judo(
                 id,
                 myAuthorization,
@@ -341,8 +331,7 @@ class Judo internal constructor(
                 mobileNumber,
                 phoneCountryCode,
                 emailAddress,
-                threeDSTwoMaxTimeout ?: DEFAULT_MAX_TIMEOUT,
-                my3DS2Enabled
+                threeDSTwoMaxTimeout ?: DEFAULT_MAX_TIMEOUT
             )
         }
 

@@ -11,9 +11,11 @@ import com.judopay.judokit.android.*
 import com.judopay.judokit.android.ui.cardentry.formatting.PhoneCountryCodeTextWatcher
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsInputModel
+import com.judopay.judokit.android.ui.cardentry.model.CountryInfo
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.model.fieldHintResId
 import com.judopay.judokit.android.ui.cardentry.model.valueOfBillingDetailsFieldWithType
+import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
 import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.AddressLineValidator
 import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.BillingDetailsPostCodeValidator
 import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.CityValidator
@@ -22,8 +24,6 @@ import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.Mobile
 import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.PhoneCountryCodeValidator
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.CountryValidator
 import kotlinx.android.synthetic.main.billing_details_form_view.view.*
-import com.judopay.judokit.android.ui.cardentry.model.CountryInfo
-import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
 
 internal typealias BillingDetailsFormValidationStatus = (model: BillingDetailsInputModel, isValid: Boolean) -> Unit
 internal typealias BillingDetailsSubmitButtonClickListener = () -> Unit
@@ -81,6 +81,26 @@ class BillingDetailsFormView @JvmOverloads constructor(
         setupPhoneCountryCodeFormatter()
         setupMobileNumberFormatter()
         setupCountrySpinner()
+
+        setupOnFocusChangeListener()
+    }
+
+    private fun setupOnFocusChangeListener() {
+        val topFields = arrayListOf(BillingDetailsFieldType.EMAIL, BillingDetailsFieldType.COUNTRY, BillingDetailsFieldType.PHONE_COUNTRY_CODE, BillingDetailsFieldType.MOBILE_NUMBER)
+        val bottomFields = arrayListOf(BillingDetailsFieldType.ADDRESS_LINE_3, BillingDetailsFieldType.CITY, BillingDetailsFieldType.POST_CODE)
+
+        BillingDetailsFieldType.values().forEach {
+            editTextForType(it).setOnFocusChangeListener { view, hasFocus ->
+                if (!hasFocus || view == null) return@setOnFocusChangeListener
+                handler.postDelayed({
+                    when {
+                        topFields.contains(it) -> billingDetailsScrollView.smoothScrollTo(view.left, 0)
+                        bottomFields.contains(it) -> billingDetailsScrollView.smoothScrollTo(view.left, 500)
+                        else -> billingDetailsScrollView.smoothScrollTo(view.left, view.bottom)
+                    }
+                }, 200)
+            }
+        }
     }
 
     private fun setupCountrySpinner() = countryTextInputEditText.apply {

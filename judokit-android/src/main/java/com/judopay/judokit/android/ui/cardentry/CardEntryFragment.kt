@@ -9,24 +9,18 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.view.WindowManager
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.transition.AutoTransition
-import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
-import cards.pay.paycardsrecognizer.sdk.ScanCardIntent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.judopay.judokit.android.JudoSharedViewModel
 import com.judopay.judokit.android.R
-import com.judopay.judokit.android.SCAN_CARD_REQUEST_CODE
-import com.judopay.judokit.android.api.JudoApiService
-import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.db.JudoRoomDatabase
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.dismissKeyboard
@@ -34,7 +28,7 @@ import com.judopay.judokit.android.judo
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.isCardPaymentWidget
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
-import com.judopay.judokit.android.service.CardTransactionService
+import com.judopay.judokit.android.service.CardTransactionManager
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
 import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
@@ -54,8 +48,6 @@ private const val BOTTOM_APP_BAR_ELEVATION_CHANGE_DURATION = 200L
 class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallback {
 
     private lateinit var viewModel: CardEntryViewModel
-    private lateinit var service: JudoApiService
-    private lateinit var cardTransactionService: CardTransactionService
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
 
     override fun getTheme(): Int = R.style.JudoTheme_BottomSheetDialogTheme
@@ -66,14 +58,13 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         val application = requireActivity().application
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
-        service = JudoApiServiceFactory.createApiService(application, judo)
         val cardEntryOptions = arguments?.getParcelable<CardEntryOptions>(CARD_ENTRY_OPTIONS)
+        val cardTransactionManager = CardTransactionManager.getInstance(requireActivity())
+        cardTransactionManager.configureWith(judo)
 
-        cardTransactionService =
-            CardTransactionService(requireActivity(), judo, service)
         val factory = CardEntryViewModelFactory(
             judo,
-            cardTransactionService,
+            cardTransactionManager,
             cardRepository,
             cardEntryOptions,
             application
@@ -85,40 +76,37 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
             viewModel.send(CardEntryAction.EnableFormFields(listOf(CardDetailsFieldType.SECURITY_NUMBER)))
         }
 
-        viewModel.model.observe(viewLifecycleOwner, { updateWithModel(it) })
-        viewModel.judoPaymentResult.observe(viewLifecycleOwner, { dispatchResult(it) })
+        viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
+        viewModel.judoPaymentResult.observe(viewLifecycleOwner) { dispatchResult(it) }
         viewModel.cardEntryToPaymentMethodResult.observe(
-            viewLifecycleOwner,
-            {
-                sharedViewModel.cardEntryToPaymentMethodResult.postValue(it)
-                findNavController().popBackStack()
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            sharedViewModel.cardEntryToPaymentMethodResult.postValue(it)
+            findNavController().popBackStack()
+        }
 
         viewModel.navigationObserver.observe(
-            viewLifecycleOwner,
-            {
-                bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            viewLifecycleOwner
+        ) {
+            bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-                Handler(Looper.getMainLooper()).postDelayed(
-                    {
-                        when (it) {
-                            is CardEntryNavigation.Card -> cardEntryViewAnimator.displayedChild = 0
-                            is CardEntryNavigation.Billing -> cardEntryViewAnimator.displayedChild = 1
-                        }
-                        bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                    },
-                    BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME
-                )
-            }
-        )
+            Handler(Looper.getMainLooper()).postDelayed(
+                {
+                    when (it) {
+                        is CardEntryNavigation.Card -> cardEntryViewAnimator.displayedChild = 0
+                        is CardEntryNavigation.Billing -> cardEntryViewAnimator.displayedChild = 1
+                    }
+                    bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                },
+                BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME
+            )
+        }
 
         sharedViewModel.scanCardResult.observe(
-            viewLifecycleOwner,
-            {
-                viewModel.send(CardEntryAction.ScanCard(it))
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            viewModel.send(CardEntryAction.ScanCard(it))
+        }
     }
 
     // present it always expanded
@@ -196,6 +184,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
     override fun onStart() {
         super.onStart()
         subscribeToInsetsChanges()
+        viewModel.send(CardEntryAction.SubscribeToCardTransactionManagerResults)
     }
 
     override fun onStop() {
@@ -209,14 +198,13 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
     }
 
     override fun onDestroy() {
-        cardTransactionService.destroy()
+        viewModel.send(CardEntryAction.UnSubscribeToCardTransactionManagerResults)
         super.onDestroy()
     }
 
     private fun onUserCancelled() {
         // disable the button
         cancelButton.isEnabled = false
-
         if (judo.paymentWidgetType.isPaymentMethodsWidget) {
             findNavController().popBackStack()
         } else {
@@ -287,9 +275,6 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
     }
 
     private fun handleScanCardButtonClicks() {
-        val activity = requireActivity()
-        val intent = ScanCardIntent.Builder(activity).build()
-        activity.startActivityForResult(intent, SCAN_CARD_REQUEST_CODE)
     }
 
     private fun unSubscribeFromInsetsChanges() = requireDialog().window?.apply {
@@ -301,20 +286,14 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
     // Animating view position based on the keyboard show/hide state
     private fun subscribeToInsetsChanges() = requireDialog().window?.apply {
         setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val sceneRoot =
-                decorView.findViewById<View>(Window.ID_ANDROID_CONTENT)?.parent as? ViewGroup
-
-            val insetsListener = View.OnApplyWindowInsetsListener { view, insets ->
-                sceneRoot?.let { TransitionManager.beginDelayedTransition(it, ChangeBounds()) }
+            val insetsListener = View.OnApplyWindowInsetsListener { view, windowInsets ->
                 return@OnApplyWindowInsetsListener if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    view.onApplyWindowInsets(insets)
+                    view.onApplyWindowInsets(windowInsets)
                 } else {
                     return@OnApplyWindowInsetsListener null
                 }
             }
-
             decorView.setOnApplyWindowInsetsListener(insetsListener)
         }
     }

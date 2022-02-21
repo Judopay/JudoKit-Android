@@ -182,8 +182,8 @@
 
 
     <string name="three_ds2_header">3DS 2.0</string>
-    <string name="is_3ds2_enabled_title">Enable 3DS 2.0</string>
-    <string name="is_3ds2_enabled_summary">Enables 3D Secure 2.0 flow</string>
+    <string name="is_3ds2_enabled_title">Enable billing information screen</string>
+    <string name="is_3ds2_enabled_summary">Asks user for billing information</string>
 
     <string name="challenge_request_indicator_summary">Select challenge request indicator</string>
     <string name="challenge_request_indicator_title">Challenge request indicator</string>

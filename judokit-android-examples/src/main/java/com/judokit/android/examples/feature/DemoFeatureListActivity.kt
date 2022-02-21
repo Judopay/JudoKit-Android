@@ -323,7 +323,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val challengeRequestIndicator = sharedPreferences.getString("challengeRequestIndicator", null)?.let { ChallengeRequestIndicator.valueOf(it) }
         val scaExemption = sharedPreferences.getString("scaExemption", null)?.let { ScaExemption.valueOf(it) }
         val threeDSTwoMaxTimeout = sharedPreferences.getString("threeDSTwoMaxTimeout", null)?.toInt()
-        val is3DS2Enabled = sharedPreferences.getBoolean("is_3DS2_enabled", false)
         val address = cardAddress
         val accountDetails = primaryAccountDetails
 
@@ -345,7 +344,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setChallengeRequestIndicator(challengeRequestIndicator)
             .setScaExemption(scaExemption)
             .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
-            .set3DS2Enabled(is3DS2Enabled)
             .setNetworkTimeout(networkTimeout)
 
         if (address != null) {
@@ -385,11 +383,14 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 sharedPreferences.getBoolean("should_payment_methods_verify_security_code", true)
             val shouldPaymentButtonDisplayAmount =
                 sharedPreferences.getBoolean("should_payment_button_display_amount", false)
+            val shouldAskForBillingInformation = sharedPreferences.getBoolean("should_ask_for_billing_information", false)
+
             return UiConfiguration.Builder()
                 .setAvsEnabled(isAVSEnabled)
                 .setShouldPaymentMethodsDisplayAmount(shouldDisplayAmount)
                 .setShouldPaymentMethodsVerifySecurityCode(shouldPaymentMethodsVerifySecurityCode)
                 .setShouldPaymentButtonDisplayAmount(shouldPaymentButtonDisplayAmount)
+                .setShouldAskForBillingInformation(shouldAskForBillingInformation)
                 .build()
         }
 

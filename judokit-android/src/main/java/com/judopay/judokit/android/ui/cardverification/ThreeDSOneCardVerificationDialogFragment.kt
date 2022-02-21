@@ -67,17 +67,16 @@ class ThreeDSOneCardVerificationDialogFragment constructor(
             ViewModelProvider(this, factory).get(ThreeDSOneCardVerificationViewModel::class.java)
 
         viewModel.judoApiCallResult.observe(
-            viewLifecycleOwner,
-            {
-                when (it) {
-                    is JudoApiCallResult.Success ->
-                        completionCallback.onSuccess(it.toJudoPaymentResult(resources))
-                    is JudoApiCallResult.Failure ->
-                        completionCallback.onFailure(it.toJudoPaymentResult(resources))
-                }
-                dismiss()
+            viewLifecycleOwner
+        ) {
+            when (it) {
+                is JudoApiCallResult.Success ->
+                    completionCallback.onSuccess(it.toJudoPaymentResult(resources))
+                is JudoApiCallResult.Failure ->
+                    completionCallback.onFailure(it.toJudoPaymentResult(resources))
             }
-        )
+            dismiss()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

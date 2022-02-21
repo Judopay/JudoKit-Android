@@ -24,8 +24,9 @@ class TokenRequest private constructor(
     private var phoneCountryCode: String?,
     private var primaryAccountDetails: PrimaryAccountDetails?,
     private var initialRecurringPayment: Boolean?,
-    private var threeDSecure: ThreeDSecureTwo?
-) {
+    private var threeDSecure: ThreeDSecureTwo?,
+    private var cardHolderName: String?
+    ) {
     class Builder {
         private var uniqueRequest: Boolean? = false
         private var yourPaymentReference: String? = null
@@ -46,6 +47,7 @@ class TokenRequest private constructor(
         private var primaryAccountDetails: PrimaryAccountDetails? = null
         private var initialRecurringPayment: Boolean? = null
         private var threeDSecure: ThreeDSecureTwo? = null
+        private var cardHolderName: String? = null
 
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
@@ -92,6 +94,9 @@ class TokenRequest private constructor(
         fun setPhoneCountryCode(phoneCountryCode: String?) =
             apply { this.phoneCountryCode = phoneCountryCode }
 
+        fun setCardHolderName(cardHolderName: String?) =
+            apply { this.cardHolderName = cardHolderName }
+
         fun build(): TokenRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myAmount = requireNotNullOrEmpty(amount, "amount")
@@ -123,7 +128,8 @@ class TokenRequest private constructor(
                 phoneCountryCode,
                 primaryAccountDetails,
                 initialRecurringPayment,
-                myThreeDSecure
+                myThreeDSecure,
+                cardHolderName
             )
         }
     }
