@@ -116,7 +116,6 @@ class PaymentRequest private constructor(
             val myExpiryDate = requireNotNullOrEmpty(expiryDate, "expiryDate")
             val paymentReference =
                 requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
-            val myAddress = requireNotNull(address, "address")
             val myThreeDSecure = requireNotNull(threeDSecure, "threeDSecure")
 
             return PaymentRequest(
@@ -127,7 +126,7 @@ class PaymentRequest private constructor(
                 id,
                 consumerReference,
                 yourPaymentMetaData,
-                myAddress,
+                address,
                 myCardNumber,
                 myCv2,
                 myExpiryDate,

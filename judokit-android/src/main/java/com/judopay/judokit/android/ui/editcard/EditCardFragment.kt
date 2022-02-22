@@ -54,7 +54,7 @@ class EditCardFragment : Fragment() {
         val factory = EditCardViewModelFactory(cardId, cardRepository, application)
 
         viewModel = ViewModelProvider(this, factory).get(EditCardViewModel::class.java)
-        viewModel.model.observe(viewLifecycleOwner, { updateWithModel(it) })
+        viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

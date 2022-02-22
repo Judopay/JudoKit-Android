@@ -205,6 +205,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
     private fun onUserCancelled() {
         // disable the button
         cancelButton.isEnabled = false
+        findNavController().previousBackStackEntry?.savedStateHandle?.set("user-cancelled", true)
         if (judo.paymentWidgetType.isPaymentMethodsWidget) {
             findNavController().popBackStack()
         } else {

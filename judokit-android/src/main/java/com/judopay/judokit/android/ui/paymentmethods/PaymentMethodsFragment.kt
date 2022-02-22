@@ -157,6 +157,13 @@ class PaymentMethodsFragment : Fragment() {
         ) { transactionDetailBuilder ->
             viewModel.send(PaymentMethodsAction.PayWithCard(transactionDetailBuilder))
         }
+
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("user-cancelled")
+            ?.observe(viewLifecycleOwner) {
+                if (it) {
+                    viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
+                }
+            }
     }
 
     private fun navigateToPollingStatus() {

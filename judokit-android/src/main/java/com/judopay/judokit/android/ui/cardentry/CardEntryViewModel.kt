@@ -328,7 +328,8 @@ class CardEntryViewModel(
         isBillingFormValid: Boolean = false,
         cardNetwork: CardNetwork? = null
     ) {
-        if (judo.uiConfiguration.shouldAskForBillingInformation) {
+        val isInvokedFromPaymentMethods = cardEntryOptions.fromPaymentMethods && cardEntryOptions.addCardPressed
+        if (judo.uiConfiguration.shouldAskForBillingInformation && !isInvokedFromPaymentMethods) {
             inputModel.buttonState = when {
                 isFormValid -> ButtonState.Enabled(continueButtonText, amount)
                 else -> ButtonState.Disabled(continueButtonText, amount)

@@ -1,6 +1,7 @@
 package com.judopay.judokit.android.ui.cardentry.components
 
 import android.content.Context
+import android.graphics.Point
 import android.text.InputFilter
 import android.util.AttributeSet
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.core.widget.addTextChangedListener
 import com.judopay.judokit.android.R
+import com.judopay.judokit.android.getDeepChildOffset
 import com.judopay.judokit.android.inflate
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.Country
@@ -17,9 +19,11 @@ import com.judopay.judokit.android.model.asCountry
 import com.judopay.judokit.android.model.postcodeMaxLength
 import com.judopay.judokit.android.model.translatableName
 import com.judopay.judokit.android.parentOfType
+import com.judopay.judokit.android.smoothScrollToView
 import com.judopay.judokit.android.ui.cardentry.formatting.CardNumberInputMaskTextWatcher
 import com.judopay.judokit.android.ui.cardentry.formatting.InputMaskTextWatcher
 import com.judopay.judokit.android.ui.cardentry.formatting.SecurityCodeInputMaskTextWatcher
+import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
@@ -82,6 +86,7 @@ class CardEntryFormView @JvmOverloads constructor(
         super.onFinishInflate()
         setupFieldsContent()
         setupFieldsFormatting()
+        setupOnFocusChangeListeners()
     }
 
     private fun setupFieldsFormatting() {
@@ -89,6 +94,15 @@ class CardEntryFormView @JvmOverloads constructor(
         setupCountryFormatter()
         setupSecurityCodeFormatter()
         setupNumberFormatter()
+    }
+
+    private fun setupOnFocusChangeListeners() {
+        CardDetailsFieldType.values().forEach {
+            editTextForType(it).setOnFocusChangeListener { view, hasFocus ->
+                if (!hasFocus) return@setOnFocusChangeListener
+                formScrollView.smoothScrollToView(view)
+            }
+        }
     }
 
     private fun setupCountryFormatter() {

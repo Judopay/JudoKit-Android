@@ -1,8 +1,12 @@
 package com.judopay.judokit.android.ui.cardentry.components
 
 import android.content.Context
+import android.graphics.Point
 import android.telephony.PhoneNumberFormattingTextWatcher
 import android.util.AttributeSet
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewParent
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -24,6 +28,8 @@ import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.Mobile
 import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.PhoneCountryCodeValidator
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.CountryValidator
 import kotlinx.android.synthetic.main.billing_details_form_view.view.*
+import kotlinx.android.synthetic.main.billing_details_form_view.view.countryTextInputEditText
+import kotlinx.android.synthetic.main.card_entry_form_view.view.*
 
 internal typealias BillingDetailsFormValidationStatus = (model: BillingDetailsInputModel, isValid: Boolean) -> Unit
 internal typealias BillingDetailsSubmitButtonClickListener = () -> Unit
@@ -82,23 +88,14 @@ class BillingDetailsFormView @JvmOverloads constructor(
         setupMobileNumberFormatter()
         setupCountrySpinner()
 
-        setupOnFocusChangeListener()
+        setupOnFocusChangeListeners()
     }
 
-    private fun setupOnFocusChangeListener() {
-        val topFields = arrayListOf(BillingDetailsFieldType.EMAIL, BillingDetailsFieldType.COUNTRY, BillingDetailsFieldType.PHONE_COUNTRY_CODE, BillingDetailsFieldType.MOBILE_NUMBER)
-        val bottomFields = arrayListOf(BillingDetailsFieldType.ADDRESS_LINE_3, BillingDetailsFieldType.CITY, BillingDetailsFieldType.POST_CODE)
-
+    private fun setupOnFocusChangeListeners() {
         BillingDetailsFieldType.values().forEach {
             editTextForType(it).setOnFocusChangeListener { view, hasFocus ->
-                if (!hasFocus || view == null) return@setOnFocusChangeListener
-                handler.postDelayed({
-                    when {
-                        topFields.contains(it) -> billingDetailsScrollView.smoothScrollTo(view.left, 0)
-                        bottomFields.contains(it) -> billingDetailsScrollView.smoothScrollTo(view.left, 500)
-                        else -> billingDetailsScrollView.smoothScrollTo(view.left, view.bottom)
-                    }
-                }, 200)
+                if (!hasFocus) return@setOnFocusChangeListener
+                billingDetailsScrollView.smoothScrollToView(view)
             }
         }
     }

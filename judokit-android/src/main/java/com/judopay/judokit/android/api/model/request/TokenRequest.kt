@@ -106,7 +106,6 @@ class TokenRequest private constructor(
             val paymentReference =
                 requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
             val myCardToken = requireNotNullOrEmpty(cardToken, "cardToken")
-            val myAddress = requireNotNull(address, "address")
             val myThreeDSecure = requireNotNull(threeDSecure, "threeDSecure")
 
             return TokenRequest(
@@ -122,7 +121,7 @@ class TokenRequest private constructor(
                 myCardToken,
                 cardType,
                 cv2,
-                myAddress,
+                address,
                 emailAddress,
                 mobileNumber,
                 phoneCountryCode,

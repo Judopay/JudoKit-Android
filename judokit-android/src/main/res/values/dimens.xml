@@ -26,6 +26,7 @@
     <dimen name="height_8">8dp</dimen>
     <dimen name="height_60">60dp</dimen>
     <dimen name="height_250">250dp</dimen>
+    <dimen name="height_100">100dp</dimen>
     <dimen name="width_60">60dp</dimen>
     <dimen name="width_200">200dp</dimen>
     <dimen name="width_350">350dp</dimen>

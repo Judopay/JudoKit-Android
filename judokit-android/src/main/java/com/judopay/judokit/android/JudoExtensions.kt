@@ -2,15 +2,18 @@ package com.judopay.judokit.android
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewParent
 import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.children
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
@@ -29,6 +32,7 @@ import com.judopay.judokit.android.model.ApiEnvironment
 import com.judopay.judokit.android.model.googlepay.GooglePayAddress
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_500
 import com.judopay.judokit.android.ui.error.JudoNotProvidedError
+import kotlinx.android.synthetic.main.card_entry_form_view.view.*
 
 internal val Judo.apiBaseUrl: String
     get() = if (isSandboxed) ApiEnvironment.SANDBOX.host else ApiEnvironment.LIVE.host
@@ -300,4 +304,27 @@ internal fun isAnyNullOrEmpty(vararg elements: String?): Boolean {
 
 internal fun isNoneNullOrEmpty(vararg elements: String?): Boolean {
     return !isAnyNullOrEmpty(*elements)
+}
+
+internal fun NestedScrollView.smoothScrollToView(view: View) {
+    val childOffset = Point()
+    getDeepChildOffset(this, view.parent, view, childOffset)
+    smoothScrollTo(0, childOffset.y)
+}
+
+internal fun ViewGroup.getDeepChildOffset(
+    mainParent: ViewGroup,
+    parent: ViewParent,
+    child: View,
+    accumulatedOffset: Point
+) {
+    val parentGroup = parent as ViewGroup
+    accumulatedOffset.x += child.left
+    accumulatedOffset.y += child.top
+
+    if (parentGroup == mainParent) {
+        return
+    }
+
+    getDeepChildOffset(mainParent, parentGroup.parent, parentGroup, accumulatedOffset)
 }
