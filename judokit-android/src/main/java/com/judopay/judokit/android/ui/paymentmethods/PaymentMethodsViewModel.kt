@@ -13,6 +13,7 @@ import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentMethod
+import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.formatted
 import com.judopay.judokit.android.model.paymentButtonType
@@ -223,7 +224,11 @@ class PaymentMethodsViewModel(
                 .setCardType(entity.network)
                 .setExpirationDate(entity.expireDate)
 
-            cardTransactionManager.paymentWithToken(transactionDetailBuilder.build(), PaymentMethodsViewModel::class.java.name)
+            if (judo.paymentWidgetType == PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS) {
+                cardTransactionManager.preAuthWithToken(transactionDetailBuilder.build(), PaymentMethodsViewModel::class.java.name)
+            } else {
+                cardTransactionManager.paymentWithToken(transactionDetailBuilder.build(), PaymentMethodsViewModel::class.java.name)
+            }
         }
     }
 

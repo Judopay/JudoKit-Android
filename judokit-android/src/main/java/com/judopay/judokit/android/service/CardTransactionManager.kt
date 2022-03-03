@@ -44,28 +44,30 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import retrofit2.await
 import java.util.*
-import java.util.concurrent.locks.ReadWriteLock
 import kotlin.collections.HashMap
-import kotlin.properties.ReadOnlyProperty
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
 
-open class SingletonHolder<out T : Any, in A>(creator: (A) -> T) {
+interface ActivityAwareComponent {
+    fun updateActivity(activity: FragmentActivity)
+}
 
-    private var creator: ((A) -> T)? = creator
+open class SingletonHolder<out T : ActivityAwareComponent>(creator: (FragmentActivity) -> T) {
+
+    private var creator: ((FragmentActivity) -> T)? = creator
 
     @Volatile
     private var instance: T? = null
 
-    fun getInstance(arg: A): T {
+    fun getInstance(arg: FragmentActivity): T {
         val checkInstance = instance
         if (checkInstance != null) {
+            checkInstance.updateActivity(arg)
             return checkInstance
         }
 
         return synchronized(this) {
             val checkInstanceAgain = instance
             if (checkInstanceAgain != null) {
+                checkInstanceAgain.updateActivity(arg)
                 checkInstanceAgain
             } else {
                 val created = creator!!(arg)
@@ -95,7 +97,7 @@ enum class TransactionType {
 private const val THREE_DS_TWO_MIN_TIMEOUT = 5
 private const val THREE_DS_TWO_MESSAGE_VERSION = "2.1.0"
 
-class CardTransactionManager private constructor(private val context: FragmentActivity) {
+class CardTransactionManager private constructor(private var context: FragmentActivity): ActivityAwareComponent{
 
     private lateinit var judo: Judo
     private lateinit var apiService: JudoApiService
@@ -113,8 +115,11 @@ class CardTransactionManager private constructor(private val context: FragmentAc
     private val listenerMap = WeakHashMap<String, CardTransactionManagerResultListener>()
     private val results = HashMap<String, JudoPaymentResult>()
 
-    companion object :
-        SingletonHolder<CardTransactionManager, FragmentActivity>(::CardTransactionManager)
+    companion object : SingletonHolder<CardTransactionManager>(::CardTransactionManager)
+
+    override fun updateActivity(activity: FragmentActivity) {
+        context = activity
+    }
 
     init {
         threeDS2Service.initialize(context, parameters, locale, null)
@@ -259,6 +264,7 @@ class CardTransactionManager private constructor(private val context: FragmentAc
         }
 
     private fun handleThreeDSecureOne(receipt: Receipt, caller: String) {
+        Log.d("Manager1", context.supportFragmentManager.toString())
         val cardVerificationModel = receipt.toCardVerificationModel()
         val threeDSOneCompletionCallback = object : ThreeDSOneCompletionCallback {
 

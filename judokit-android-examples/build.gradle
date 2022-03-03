@@ -28,13 +28,11 @@ android {
         applicationId "com.judokit.android.examples"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 232
-        versionName "2.2.0 (12) -" + getGitHash()
+        versionCode 235
+        versionName "2.2.0 (15) -" + getGitHash()
         multiDexEnabled true
-
         testInstrumentationRunner "com.judokit.android.examples.test.CucumberRunner"
     }
-
     signingConfigs {
         config {
             keyAlias keystoreProperties['keyAlias']
@@ -43,7 +41,6 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
-
     buildTypes {
         release {
             minifyEnabled true
@@ -56,7 +53,6 @@ android {
             manifestPlaceholders = [crashlyticsCollectionEnabled: "false"]
         }
     }
-
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }

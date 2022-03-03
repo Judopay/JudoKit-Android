@@ -3,9 +3,20 @@ package com.judokit.android.examples.feature.noui
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.InputType
+import android.text.method.PasswordTransformationMethod
+import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.preference.PreferenceManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textview.MaterialTextView
 import com.judokit.android.examples.R
 import com.judokit.android.examples.feature.JUDO_PAYMENT_WIDGET_REQUEST_CODE
 import com.judopay.judokit.android.JUDO_OPTIONS
@@ -30,7 +41,9 @@ import com.judopay.judokit.android.service.CardTransactionManager
 import com.judopay.judokit.android.service.CardTransactionManagerResultListener
 import com.judopay.judokit.android.ui.cardentry.CardEntryViewModel
 import com.judopay.judokit.android.ui.common.ButtonState
+import com.judopay.judokit.android.ui.paymentmethods.PaymentMethodsAction
 import kotlinx.android.synthetic.main.activity_demo_no_ui_payment.*
+import kotlinx.android.synthetic.main.view_security_code_input.view.*
 
 private const val REGISTER_CARD_REQUEST_CODE = 2
 
@@ -46,14 +59,11 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var service: JudoApiService
     private lateinit var transactionDetailsBuilder: TransactionDetails.Builder
-    private lateinit var cardTransactionManager: CardTransactionManager
     private val caller = DemoNoUiPaymentActivity::class.java.name
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_demo_no_ui_payment)
-
-        cardTransactionManager = CardTransactionManager.getInstance(this)
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val judo = intent.getParcelableExtra<Judo>(JUDO_OPTIONS)
@@ -76,7 +86,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
 
         cardPaymentButton.setOnClickListener {
             handleState(ActivityState.PayWithCard)
-            cardTransactionManager.payment(transactionDetailsBuilder
+            CardTransactionManager.getInstance(this).payment(transactionDetailsBuilder
                 .setCardNumber("4000023104662535")
                 .setExpirationDate("12/25")
                 .setCardHolderName("CHALLENGE")
@@ -88,17 +98,53 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
             intent.putExtra(JUDO_OPTIONS, getJudo(judo, PaymentWidgetType.CREATE_CARD_TOKEN))
             startActivityForResult(intent, REGISTER_CARD_REQUEST_CODE)
         }
+
         tokenPaymentButton.setOnClickListener {
-            handleState(ActivityState.PayWithToken)
-            cardTransactionManager.paymentWithToken(transactionDetailsBuilder.setCardHolderName("CHALLENGE").build(), caller)
+            askForSecurityCode { code, name ->
+                if (code.isNullOrEmpty() && name.isNullOrEmpty()) {
+                    return@askForSecurityCode
+                }
+
+                transactionDetailsBuilder.setSecurityNumber(code)
+                transactionDetailsBuilder.setCardHolderName(name)
+                handleState(ActivityState.PayWithToken)
+                CardTransactionManager.getInstance(this).paymentWithToken(transactionDetailsBuilder.build(), caller)
+            }
         }
 
         preAuthTokenPaymentButton.setOnClickListener {
-            handleState(ActivityState.PayWithPreAuthToken)
-            cardTransactionManager.preAuthWithToken(transactionDetailsBuilder.setCardHolderName("CHALLENGE").build(), caller)
+            askForSecurityCode { code, name ->
+                if (code.isNullOrEmpty() && name.isNullOrEmpty()) {
+                    return@askForSecurityCode
+                }
+
+                transactionDetailsBuilder.setSecurityNumber(code)
+                transactionDetailsBuilder.setCardHolderName(name)
+                handleState(ActivityState.PayWithPreAuthToken)
+                CardTransactionManager.getInstance(this).preAuthWithToken(transactionDetailsBuilder.build(), caller)
+            }
         }
 
-        cardTransactionManager.registerResultListener(this)
+        CardTransactionManager.getInstance(this).registerResultListener(this)
+    }
+
+    private fun askForSecurityCode(completionCallback: (String?, String?) -> Unit) {
+        val inflater = LayoutInflater.from(this)
+        val view = inflater.inflate(R.layout.view_security_code_input, null)
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Enter your security code")
+            .setView(view)
+            .setNegativeButton("Cancel") { _, _ ->
+                completionCallback(null, null)
+            }
+            .setPositiveButton("Proceed") { _, _ ->
+                val code = view.securityCodeEditText.text.toString()
+                val name = view.cardHolderEditText.text.toString()
+
+                completionCallback(code, name)
+            }
+            .show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -136,7 +182,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
     }
 
     override fun onDestroy() {
-        cardTransactionManager.unRegisterResultListener(this)
+        CardTransactionManager.getInstance(this).unRegisterResultListener(this)
         super.onDestroy()
     }
 
