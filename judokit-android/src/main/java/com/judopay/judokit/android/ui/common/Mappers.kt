@@ -30,7 +30,6 @@ internal fun GooglePayConfiguration.toGooglePayPaymentMethod(judo: Judo): Google
 
     val cardParameters = GooglePayCardParameters(
         allowedAuthMethods = arrayOf(
-            GooglePayAuthMethod.PAN_ONLY,
             GooglePayAuthMethod.CRYPTOGRAM_3DS
         ),
         allowedCardNetworks = networks.toTypedArray(),
