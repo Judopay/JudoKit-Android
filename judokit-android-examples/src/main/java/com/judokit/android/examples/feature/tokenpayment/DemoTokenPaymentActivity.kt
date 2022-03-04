@@ -74,7 +74,7 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
         tokenPaymentButton.setOnClickListener {
             handleState(ActivityState.PayWithToken)
             service.tokenPayment(
-                getJudo(judo).toTokenRequest(cardToken, "452")
+                getJudo(judo).toTokenRequest(cardToken)
             )
                 .enqueue(this@DemoTokenPaymentActivity)
         }
@@ -82,7 +82,7 @@ class DemoTokenPaymentActivity : AppCompatActivity(), Callback<JudoApiCallResult
         preAuthTokenPaymentButton.setOnClickListener {
             handleState(ActivityState.PayWithPreAuthToken)
             service.preAuthTokenPayment(
-                getJudo(judo).toTokenRequest(cardToken, "452")
+                getJudo(judo).toTokenRequest(cardToken)
             )
                 .enqueue(this@DemoTokenPaymentActivity)
         }
