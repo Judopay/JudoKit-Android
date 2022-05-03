@@ -23,6 +23,7 @@ import com.judopay.judokit.android.api.model.response.getCReqParameters
 import com.judopay.judokit.android.api.model.response.getChallengeParameters
 import com.judopay.judokit.android.api.model.response.toCardVerificationModel
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
+import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.REQUEST_FAILED
@@ -205,8 +206,17 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                 Log.w(CardTransactionManager::class.java.name, "3DS2 Service already initialized.")
             }
 
+            val network = CardNetwork.ofNumber(details.cardNumber ?: "")
+
+            val directoryServerID = when {
+                judo.isSandboxed -> "F000000000"
+                network == CardNetwork.VISA -> "A000000003"
+                network == CardNetwork.MASTERCARD -> "A000000004"
+                else -> "unknown-id"
+            }
+
             val myTransaction =
-                threeDS2Service.createTransaction("F000000000", THREE_DS_TWO_MESSAGE_VERSION)
+                threeDS2Service.createTransaction(directoryServerID, THREE_DS_TWO_MESSAGE_VERSION)
             val apiResult = performApiRequest(type, details, myTransaction).await()
 
             transactionDetails = details
