@@ -68,11 +68,11 @@ class TransactionDetails private constructor(
             apply { this.securityNumber = securityNumber }
 
         fun setCountryCode(countryCode: String?) = apply { this.countryCode = countryCode }
-        fun setEmail(email: String?) = apply { this.email = email }
+        fun setEmail(email: String?) = apply { this.email = if (email.isNullOrBlank()) null else email }
         fun setPhoneCountryCode(phoneCountryCode: String?) =
-            apply { this.phoneCountryCode = phoneCountryCode }
+            apply { this.phoneCountryCode = if (phoneCountryCode.isNullOrBlank()) null else phoneCountryCode }
 
-        fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = mobileNumber }
+        fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = if (mobileNumber.isNullOrBlank()) null else mobileNumber }
         fun setAddressLine1(addressLine1: String?) = apply { this.addressLine1 = addressLine1 }
         fun setAddressLine2(addressLine2: String?) = apply { this.addressLine2 = addressLine2 }
         fun setAddressLine3(addressLine3: String?) = apply { this.addressLine3 = addressLine3 }

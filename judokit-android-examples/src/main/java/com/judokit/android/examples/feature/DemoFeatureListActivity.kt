@@ -326,6 +326,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val address = cardAddress
         val accountDetails = primaryAccountDetails
 
+
         val builder = Judo.Builder(widgetType)
             .setJudoId(judoId)
             .setAuthorization(authorization)
@@ -338,9 +339,9 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setGooglePayConfiguration(googlePayConfiguration)
             .setPBBAConfiguration(pbbaConfiguration)
             .setInitialRecurringPayment(initialRecurringPayment)
-            .setMobileNumber(mobileNumber)
-            .setPhoneCountryCode(phoneCountryCode)
-            .setEmailAddress(emailAddress)
+            .setMobileNumber(if (mobileNumber.isNullOrBlank()) null else mobileNumber)
+            .setPhoneCountryCode(if (phoneCountryCode.isNullOrBlank()) null else phoneCountryCode)
+            .setEmailAddress(if (emailAddress.isNullOrBlank()) null else emailAddress)
             .setChallengeRequestIndicator(challengeRequestIndicator)
             .setScaExemption(scaExemption)
             .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
