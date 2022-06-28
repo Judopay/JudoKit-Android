@@ -13,7 +13,7 @@ class UiConfiguration internal constructor(
     val shouldPaymentButtonDisplayAmount: Boolean,
     val shouldPaymentMethodsVerifySecurityCode: Boolean,
     val shouldAskForBillingInformation: Boolean
-    ) : Parcelable {
+) : Parcelable {
 
     /**
      * Builder class for creating an instance of [UiConfiguration]

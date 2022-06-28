@@ -4,8 +4,8 @@ import com.judopay.judokit.android.R
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.cardNumberMaxLength
 import com.judopay.judokit.android.model.notSupportedErrorMessageResId
-import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
+import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
 import com.judopay.judokit.android.ui.cardentry.validation.Validator
 import com.judopay.judokit.android.ui.common.isValidLuhnNumber

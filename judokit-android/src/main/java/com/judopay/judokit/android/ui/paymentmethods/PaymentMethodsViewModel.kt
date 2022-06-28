@@ -19,7 +19,6 @@ import com.judopay.judokit.android.model.formatted
 import com.judopay.judokit.android.model.paymentButtonType
 import com.judopay.judokit.android.service.CardTransactionManager
 import com.judopay.judokit.android.service.CardTransactionManagerResultListener
-import com.judopay.judokit.android.ui.cardentry.CardEntryAction
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.common.ButtonState
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.IdealBank

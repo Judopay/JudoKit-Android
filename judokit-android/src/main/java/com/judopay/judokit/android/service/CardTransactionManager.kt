@@ -44,8 +44,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import retrofit2.await
-import java.util.*
 import kotlin.collections.HashMap
+import java.util.WeakHashMap
 
 interface ActivityAwareComponent {
     fun updateActivity(activity: FragmentActivity)
@@ -78,7 +78,6 @@ open class SingletonHolder<out T : ActivityAwareComponent>(creator: (FragmentAct
             }
         }
     }
-
 }
 
 interface CardTransactionManagerResultListener {
@@ -99,7 +98,7 @@ private const val THREE_DS_TWO_MIN_TIMEOUT = 5
 private const val THREE_DS_TWO_MESSAGE_VERSION_1 = "2.1.0"
 private const val THREE_DS_TWO_MESSAGE_VERSION_2 = "2.2.0"
 
-class CardTransactionManager private constructor(private var context: FragmentActivity): ActivityAwareComponent{
+class CardTransactionManager private constructor(private var context: FragmentActivity) : ActivityAwareComponent {
 
     private lateinit var judo: Judo
     private lateinit var apiService: JudoApiService
@@ -144,13 +143,17 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         apiService = JudoApiServiceFactory.createApiService(context, config)
     }
 
-    public fun unRegisterResultListener(listener: CardTransactionManagerResultListener,
-                                        caller: String = listener::class.java.name) {
+    public fun unRegisterResultListener(
+        listener: CardTransactionManagerResultListener,
+        caller: String = listener::class.java.name
+    ) {
         listenerMap.remove(caller)
     }
 
-    public fun registerResultListener(listener: CardTransactionManagerResultListener,
-                                      caller: String = listener::class.java.name) {
+    public fun registerResultListener(
+        listener: CardTransactionManagerResultListener,
+        caller: String = listener::class.java.name
+    ) {
         listenerMap[caller] = listener
 
         results[caller]?.let {
@@ -388,7 +391,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         try {
             threeDS2Service.cleanup(context)
         } catch (exception: SDKNotInitializedException) {
-            Log.w(CardTransactionManager::class.java.name , exception.toString())
+            Log.w(CardTransactionManager::class.java.name, exception.toString())
         }
     }
 

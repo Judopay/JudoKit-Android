@@ -19,7 +19,7 @@ import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.api.model.response.Consumer
 import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.toMap
-import java.util.*
+import java.util.Date
 
 class TransactionDetails private constructor(
     val cardNumber: String?,

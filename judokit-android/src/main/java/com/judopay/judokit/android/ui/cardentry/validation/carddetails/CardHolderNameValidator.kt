@@ -1,7 +1,7 @@
 package com.judopay.judokit.android.ui.cardentry.validation.carddetails
 
-import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
+import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
 import com.judopay.judokit.android.ui.cardentry.validation.Validator
 

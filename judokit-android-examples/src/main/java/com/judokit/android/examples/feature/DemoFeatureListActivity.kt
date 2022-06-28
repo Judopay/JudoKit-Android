@@ -326,7 +326,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val address = cardAddress
         val accountDetails = primaryAccountDetails
 
-
         val builder = Judo.Builder(widgetType)
             .setJudoId(judoId)
             .setAuthorization(authorization)
@@ -494,12 +493,23 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     private val primaryAccountDetails: PrimaryAccountDetails?
         get() {
-            val isPrimaryAccountDetailsEnabled = sharedPreferences.getBoolean("is_primary_account_details_enabled", false)
+            val isPrimaryAccountDetailsEnabled =
+                sharedPreferences.getBoolean("is_primary_account_details_enabled", false)
             if (isPrimaryAccountDetailsEnabled) {
                 return PrimaryAccountDetails.Builder()
                     .setName(sharedPreferences.getString("primary_account_name", null))
-                    .setAccountNumber(sharedPreferences.getString("primary_account_account_number", null))
-                    .setDateOfBirth(sharedPreferences.getString("primary_account_date_of_birth", null))
+                    .setAccountNumber(
+                        sharedPreferences.getString(
+                            "primary_account_account_number",
+                            null
+                        )
+                    )
+                    .setDateOfBirth(
+                        sharedPreferences.getString(
+                            "primary_account_date_of_birth",
+                            null
+                        )
+                    )
                     .setPostCode(sharedPreferences.getString("primary_account_post_code", null))
                     .build()
             }

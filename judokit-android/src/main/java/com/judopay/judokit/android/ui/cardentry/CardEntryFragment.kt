@@ -29,8 +29,8 @@ import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.isCardPaymentWidget
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
 import com.judopay.judokit.android.service.CardTransactionManager
-import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
+import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
 import com.judopay.judokit.android.ui.paymentmethods.CARD_ENTRY_OPTIONS
 import kotlinx.android.synthetic.main.billing_details_form_view.*
@@ -100,12 +100,6 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
                 },
                 BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME
             )
-        }
-
-        sharedViewModel.scanCardResult.observe(
-            viewLifecycleOwner
-        ) {
-            viewModel.send(CardEntryAction.ScanCard(it))
         }
     }
 

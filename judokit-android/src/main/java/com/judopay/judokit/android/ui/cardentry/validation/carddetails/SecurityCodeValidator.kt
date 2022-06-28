@@ -4,8 +4,8 @@ import com.judopay.judokit.android.R
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.securityCodeInvalidResId
 import com.judopay.judokit.android.model.securityCodeLength
-import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
+import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
 import com.judopay.judokit.android.ui.cardentry.validation.Validator
 

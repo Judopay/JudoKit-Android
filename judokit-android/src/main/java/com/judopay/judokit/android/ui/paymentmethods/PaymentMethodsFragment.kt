@@ -25,7 +25,6 @@ import com.judopay.judokit.android.judo
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.service.CardTransactionManager
-import com.judopay.judokit.android.ui.cardentry.CardEntryAction
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
 import com.judopay.judokit.android.ui.ideal.JUDO_IDEAL_BANK

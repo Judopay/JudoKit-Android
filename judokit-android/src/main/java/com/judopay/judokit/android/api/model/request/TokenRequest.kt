@@ -26,7 +26,7 @@ class TokenRequest private constructor(
     private var initialRecurringPayment: Boolean?,
     private var threeDSecure: ThreeDSecureTwo?,
     private var cardHolderName: String?
-    ) {
+) {
     class Builder {
         private var uniqueRequest: Boolean? = false
         private var yourPaymentReference: String? = null

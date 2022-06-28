@@ -1,7 +1,6 @@
 package com.judopay.judokit.android.ui.cardentry.components
 
 import android.content.Context
-import android.graphics.Point
 import android.text.InputFilter
 import android.util.AttributeSet
 import android.view.View
@@ -11,7 +10,6 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.core.widget.addTextChangedListener
 import com.judopay.judokit.android.R
-import com.judopay.judokit.android.getDeepChildOffset
 import com.judopay.judokit.android.inflate
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.Country
@@ -23,10 +21,9 @@ import com.judopay.judokit.android.smoothScrollToView
 import com.judopay.judokit.android.ui.cardentry.formatting.CardNumberInputMaskTextWatcher
 import com.judopay.judokit.android.ui.cardentry.formatting.InputMaskTextWatcher
 import com.judopay.judokit.android.ui.cardentry.formatting.SecurityCodeInputMaskTextWatcher
-import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
+import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
-import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.fieldHintResId
 import com.judopay.judokit.android.ui.cardentry.model.valueOfFieldWithType
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.CardHolderNameValidator

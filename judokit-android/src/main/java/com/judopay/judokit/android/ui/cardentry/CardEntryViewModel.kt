@@ -21,9 +21,9 @@ import com.judopay.judokit.android.model.toInputModel
 import com.judopay.judokit.android.service.CardTransactionManager
 import com.judopay.judokit.android.service.CardTransactionManagerResultListener
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsInputModel
+import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
-import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.FormModel
 import com.judopay.judokit.android.ui.common.ButtonState
 import com.judopay.judokit.android.ui.paymentmethods.toTokenizedCardEntity
@@ -57,8 +57,8 @@ sealed class CardEntryAction {
     object SubmitCardEntryForm : CardEntryAction()
     object SubmitBillingDetailsForm : CardEntryAction()
     object PressBackButton : CardEntryAction()
-    object SubscribeToCardTransactionManagerResults: CardEntryAction()
-    object UnSubscribeToCardTransactionManagerResults: CardEntryAction()
+    object SubscribeToCardTransactionManagerResults : CardEntryAction()
+    object UnSubscribeToCardTransactionManagerResults : CardEntryAction()
 }
 
 internal class CardEntryViewModelFactory(
