@@ -96,7 +96,8 @@ enum class TransactionType {
 }
 
 private const val THREE_DS_TWO_MIN_TIMEOUT = 5
-private const val THREE_DS_TWO_MESSAGE_VERSION = "2.1.0"
+private const val THREE_DS_TWO_MESSAGE_VERSION_1 = "2.1.0"
+private const val THREE_DS_TWO_MESSAGE_VERSION_2 = "2.2.0"
 
 class CardTransactionManager private constructor(private var context: FragmentActivity): ActivityAwareComponent{
 
@@ -115,6 +116,13 @@ class CardTransactionManager private constructor(private var context: FragmentAc
 
     private val listenerMap = WeakHashMap<String, CardTransactionManagerResultListener>()
     private val results = HashMap<String, JudoPaymentResult>()
+
+    private val messageVersion: String
+        get() = if (judo.isSandboxed) {
+            THREE_DS_TWO_MESSAGE_VERSION_1
+        } else {
+            THREE_DS_TWO_MESSAGE_VERSION_2
+        }
 
     companion object : SingletonHolder<CardTransactionManager>(::CardTransactionManager)
 
@@ -216,7 +224,8 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             }
 
             val myTransaction =
-                threeDS2Service.createTransaction(directoryServerID, THREE_DS_TWO_MESSAGE_VERSION)
+                threeDS2Service.createTransaction(directoryServerID, messageVersion)
+
             val apiResult = performApiRequest(type, details, myTransaction).await()
 
             transactionDetails = details
@@ -246,7 +255,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
 
     private fun performComplete3ds2(receipt: Receipt, caller: String) {
         val receiptId = receipt.receiptId ?: ""
-        val version = receipt.getCReqParameters()?.messageVersion ?: THREE_DS_TWO_MESSAGE_VERSION
+        val version = receipt.getCReqParameters()?.messageVersion ?: messageVersion
         val cv2 = transactionDetails?.securityNumber ?: ""
 
         applicationScope.launch {

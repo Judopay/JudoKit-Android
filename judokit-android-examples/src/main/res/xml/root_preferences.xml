@@ -69,7 +69,7 @@
             app:title="@string/is_3ds2_enabled_title" />
 
         <ListPreference
-            app:defaultValue="NO_PREFERENCE"
+            app:defaultValue="CHALLENGE_AS_MANDATE"
             app:entries="@array/three_ds_two_challenge_request_indicator_entries"
             app:entryValues="@array/three_ds_two_challenge_request_indicator_values"
             app:iconSpaceReserved="false"

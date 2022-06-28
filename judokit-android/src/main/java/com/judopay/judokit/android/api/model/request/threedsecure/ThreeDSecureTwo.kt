@@ -13,7 +13,7 @@ class ThreeDSecureTwo private constructor(
     private val authenticationSource: String = "MOBILE_SDK"
 ) {
     class Builder {
-        private var challengeRequestIndicator: ChallengeRequestIndicator? = null
+        private var challengeRequestIndicator: ChallengeRequestIndicator? = ChallengeRequestIndicator.CHALLENGE_AS_MANDATE
         private var scaExemption: ScaExemption? = null
         private var sdkParameters: SdkParameters? = null
 
