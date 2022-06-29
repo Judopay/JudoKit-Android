@@ -280,7 +280,7 @@ publishing {
                 // A slightly hacky fix so that your POM will include any transitive dependencies
                 // that your library builds upon
                 withXml {
-                    def dependenciesNode = asNode.appendNode('dependencies')
+                    def dependenciesNode = asNode().appendNode('dependencies')
 
                     project.configurations.implementation.allDependencies.each {
                         def dependencyNode = dependenciesNode.appendNode('dependency')
