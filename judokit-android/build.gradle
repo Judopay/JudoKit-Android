@@ -10,6 +10,12 @@ apply plugin: 'signing'
 
 apply from: '../ktlint.gradle'
 
+allprojects {
+    jacoco {
+        toolVersion = "0.8.7"
+    }
+}
+
 dokka {
     includeNonPublic = false
 }
