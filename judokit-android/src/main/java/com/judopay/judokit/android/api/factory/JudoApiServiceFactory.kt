@@ -34,6 +34,7 @@ import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
+import kotlin.collections.forEach as kForEach
 
 private const val HOSTNAME_WILDCARD_PATTERN = "*.judopay.com"
 
@@ -145,7 +146,7 @@ object JudoApiServiceFactory {
         add(ApiHeadersInterceptor(judo.authorization, AppMetaDataProvider(context)))
         add(PayLoadInterceptor(context))
 
-        externalInterceptors?.forEach {
+        externalInterceptors?.kForEach {
             add(it)
         }
     }

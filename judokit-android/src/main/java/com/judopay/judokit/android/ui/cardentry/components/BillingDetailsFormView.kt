@@ -1,6 +1,7 @@
 package com.judopay.judokit.android.ui.cardentry.components
 
 import android.content.Context
+import android.os.Build
 import android.telephony.PhoneNumberFormattingTextWatcher
 import android.util.AttributeSet
 import android.widget.ArrayAdapter
@@ -119,12 +120,14 @@ class BillingDetailsFormView @JvmOverloads constructor(
             if (mobileNumberFormatter != null) {
                 removeTextChangedListener(mobileNumberFormatter)
             }
-            mobileNumberFormatter = PhoneNumberFormattingTextWatcher(
-                countries.find {
-                    it.name == editTextForType(BillingDetailsFieldType.COUNTRY).text.toString()
-                }?.alpha2Code ?: ""
-            )
-            addTextChangedListener(mobileNumberFormatter)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mobileNumberFormatter = PhoneNumberFormattingTextWatcher(
+                    countries.find {
+                        it.name == editTextForType(BillingDetailsFieldType.COUNTRY).text.toString()
+                    }?.alpha2Code ?: ""
+                )
+                addTextChangedListener(mobileNumberFormatter)
+            }
         }
 
     private fun setupFieldsContent() {

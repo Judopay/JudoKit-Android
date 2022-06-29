@@ -36,6 +36,7 @@ import com.judopay.judokit.android.ui.common.PATTERN_CARD_EXPIRATION_DATE
 import kotlinx.android.synthetic.main.billing_details_form_view.view.*
 import kotlinx.android.synthetic.main.card_entry_form_view.view.*
 import kotlinx.android.synthetic.main.card_entry_form_view.view.countryTextInputEditText
+import kotlin.collections.forEach as kForEach
 
 internal typealias FormValidationStatus = (model: CardDetailsInputModel, isValid: Boolean) -> Unit
 internal typealias CardEntryButtonClickListener = () -> Unit
@@ -94,8 +95,8 @@ class CardEntryFormView @JvmOverloads constructor(
     }
 
     private fun setupOnFocusChangeListeners() {
-        CardDetailsFieldType.values().forEach {
-            editTextForType(it).setOnFocusChangeListener { view, hasFocus ->
+        CardDetailsFieldType.values().kForEach { fieldType ->
+            editTextForType(fieldType).setOnFocusChangeListener { view, hasFocus ->
                 if (!hasFocus) return@setOnFocusChangeListener
                 formScrollView.smoothScrollToView(view)
             }
@@ -145,7 +146,7 @@ class CardEntryFormView @JvmOverloads constructor(
     private fun setupFieldsContent() {
         cardEntrySubmitButton.setOnClickListener { onCardEntryButtonClickListener?.invoke() }
 
-        CardDetailsFieldType.values().forEach { type ->
+        CardDetailsFieldType.values().kForEach { type ->
             editTextForType(type).apply {
                 setHint(type.fieldHintResId)
 
@@ -250,11 +251,11 @@ class CardEntryFormView @JvmOverloads constructor(
         preFillFields()
     }
 
-    private fun preFillFields() = model.enabledFields.forEach {
-        val valueToFrom = valueOfEditTextWithType(it)
-        val valueToUpdateTo = model.valueOfFieldWithType(it)
+    private fun preFillFields() = model.enabledFields.kForEach { field ->
+        val valueToFrom = valueOfEditTextWithType(field)
+        val valueToUpdateTo = model.valueOfFieldWithType(field)
         if (valueToFrom != valueToUpdateTo) {
-            with(editTextForType(it).text) {
+            with(editTextForType(field).text) {
                 clear()
                 append(valueToUpdateTo)
             }
@@ -277,7 +278,7 @@ class CardEntryFormView @JvmOverloads constructor(
     }
 
     private fun updateFieldsVisibility() {
-        CardDetailsFieldType.values().forEach { fieldType ->
+        CardDetailsFieldType.values().kForEach { fieldType ->
             textInputLayoutForType(fieldType)?.let { layout ->
                 val isEnabled = model.enabledFields.contains(fieldType)
                 layout.visibility = if (isEnabled) View.VISIBLE else View.GONE

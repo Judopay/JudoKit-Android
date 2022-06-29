@@ -21,7 +21,7 @@ task ktlint(type: JavaExec, group: "verification") {
     ]
 }
 
-//check.dependsOn ktlint
+check.dependsOn ktlint
 
 task ktlintFormat(type: JavaExec, group: "formatting") {
     description = "Fix Kotlin code style deviations."
