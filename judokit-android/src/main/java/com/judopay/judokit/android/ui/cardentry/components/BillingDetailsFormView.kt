@@ -8,10 +8,10 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.core.widget.addTextChangedListener
 import com.judopay.judokit.android.R
+import com.judopay.judokit.android.dismissKeyboard
 import com.judopay.judokit.android.inflate
 import com.judopay.judokit.android.parentOfType
 import com.judopay.judokit.android.smoothScrollToView
-import com.judopay.judokit.android.dismissKeyboard
 import com.judopay.judokit.android.ui.cardentry.formatting.PhoneCountryCodeTextWatcher
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsInputModel

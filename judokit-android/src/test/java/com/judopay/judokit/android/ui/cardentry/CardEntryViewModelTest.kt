@@ -1,53 +1,53 @@
 package com.judopay.judokit.android.ui.cardentry
 
-//import android.app.Application
-//import androidx.lifecycle.Observer
-//import com.judopay.judokit.android.InstantExecutorExtension
-//import com.judopay.judokit.android.Judo
-//import com.judopay.judokit.android.R
-//import com.judopay.judokit.android.api.model.response.CardToken
-//import com.judopay.judokit.android.db.repository.TokenizedCardRepository
-//import com.judopay.judokit.android.model.Amount
-//import com.judopay.judokit.android.model.CardNetwork
-//import com.judopay.judokit.android.model.CardScanningResult
-//import com.judopay.judokit.android.model.Currency
-//import com.judopay.judokit.android.model.JudoPaymentResult
-//import com.judopay.judokit.android.model.PaymentWidgetType
-//import com.judopay.judokit.android.model.Reference
-//import com.judopay.judokit.android.model.formatted
-//import com.judopay.judokit.android.model.toInputModel
-//import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsInputModel
-//import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
-//import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
-//import com.judopay.judokit.android.ui.cardentry.model.FormModel
-//import com.judopay.judokit.android.ui.common.ButtonState
-//import com.judopay.judokit.android.ui.paymentmethods.toTokenizedCardEntity
-//import io.mockk.coEvery
-//import io.mockk.coVerify
-//import io.mockk.every
-//import io.mockk.mockk
-//import io.mockk.mockkStatic
-//import io.mockk.slot
-//import io.mockk.spyk
-//import io.mockk.verify
-//import kotlinx.coroutines.Dispatchers
-//import kotlinx.coroutines.ExperimentalCoroutinesApi
-//import kotlinx.coroutines.test.TestCoroutineDispatcher
-//import kotlinx.coroutines.test.resetMain
-//import kotlinx.coroutines.test.setMain
-//import org.junit.jupiter.api.AfterEach
-//import org.junit.jupiter.api.Assertions.assertEquals
-//import org.junit.jupiter.api.Assertions.assertFalse
-//import org.junit.jupiter.api.Assertions.assertTrue
-//import org.junit.jupiter.api.BeforeEach
-//import org.junit.jupiter.api.DisplayName
-//import org.junit.jupiter.api.Test
-//import org.junit.jupiter.api.extension.ExtendWith
+// import android.app.Application
+// import androidx.lifecycle.Observer
+// import com.judopay.judokit.android.InstantExecutorExtension
+// import com.judopay.judokit.android.Judo
+// import com.judopay.judokit.android.R
+// import com.judopay.judokit.android.api.model.response.CardToken
+// import com.judopay.judokit.android.db.repository.TokenizedCardRepository
+// import com.judopay.judokit.android.model.Amount
+// import com.judopay.judokit.android.model.CardNetwork
+// import com.judopay.judokit.android.model.CardScanningResult
+// import com.judopay.judokit.android.model.Currency
+// import com.judopay.judokit.android.model.JudoPaymentResult
+// import com.judopay.judokit.android.model.PaymentWidgetType
+// import com.judopay.judokit.android.model.Reference
+// import com.judopay.judokit.android.model.formatted
+// import com.judopay.judokit.android.model.toInputModel
+// import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsInputModel
+// import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
+// import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
+// import com.judopay.judokit.android.ui.cardentry.model.FormModel
+// import com.judopay.judokit.android.ui.common.ButtonState
+// import com.judopay.judokit.android.ui.paymentmethods.toTokenizedCardEntity
+// import io.mockk.coEvery
+// import io.mockk.coVerify
+// import io.mockk.every
+// import io.mockk.mockk
+// import io.mockk.mockkStatic
+// import io.mockk.slot
+// import io.mockk.spyk
+// import io.mockk.verify
+// import kotlinx.coroutines.Dispatchers
+// import kotlinx.coroutines.ExperimentalCoroutinesApi
+// import kotlinx.coroutines.test.TestCoroutineDispatcher
+// import kotlinx.coroutines.test.resetMain
+// import kotlinx.coroutines.test.setMain
+// import org.junit.jupiter.api.AfterEach
+// import org.junit.jupiter.api.Assertions.assertEquals
+// import org.junit.jupiter.api.Assertions.assertFalse
+// import org.junit.jupiter.api.Assertions.assertTrue
+// import org.junit.jupiter.api.BeforeEach
+// import org.junit.jupiter.api.DisplayName
+// import org.junit.jupiter.api.Test
+// import org.junit.jupiter.api.extension.ExtendWith
 //
-//@ExperimentalCoroutinesApi
-//@ExtendWith(InstantExecutorExtension::class)
-//@DisplayName("Testing CardEntryViewModel logic")
-//internal class CardEntryViewModelTest {
+// @ExperimentalCoroutinesApi
+// @ExtendWith(InstantExecutorExtension::class)
+// @DisplayName("Testing CardEntryViewModel logic")
+// internal class CardEntryViewModelTest {
 //
 //    private val testDispatcher = TestCoroutineDispatcher()
 //
@@ -523,4 +523,4 @@ package com.judopay.judokit.android.ui.cardentry
 //        every { amount } returns Amount("1", Currency.EUR)
 //        every { reference } returns Reference("consumer", "payment")
 //    }
-//}
+// }

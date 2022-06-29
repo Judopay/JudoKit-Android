@@ -44,8 +44,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import retrofit2.await
-import kotlin.collections.HashMap
 import java.util.WeakHashMap
+import kotlin.collections.HashMap
 
 interface ActivityAwareComponent {
     fun updateActivity(activity: FragmentActivity)
