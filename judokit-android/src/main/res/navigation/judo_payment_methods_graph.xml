@@ -17,7 +17,7 @@
             app:destination="@id/cardEntryFragment">
             <argument
                 android:name="com.judopay.judokit.android.model.shouldVerifySecurityCode"
-                app:argType="com.judopay.judokit.android.model.CardNetwork" />
+                app:argType="com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions" />
         </action>
 
         <action

@@ -1,6 +1,7 @@
 package com.judopay.judokit.android.api.model.request
 
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -8,12 +9,13 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 class Address internal constructor(
-    var line1: String?,
-    var line2: String?,
-    var line3: String?,
+    @SerializedName("address1") var line1: String?,
+    @SerializedName("address2") var line2: String?,
+    @SerializedName("address3") var line3: String?,
     var town: String?,
-    var countryCode: Int?,
-    var postCode: String?
+    var billingCountry: String?,
+    var postCode: String?,
+    var countryCode: Int?
 ) : Parcelable {
 
     class Builder {
@@ -22,6 +24,7 @@ class Address internal constructor(
         private var line3: String? = null
         private var postCode: String? = null
         private var town: String? = null
+        private var billingCountry: String? = null
         private var countryCode: Int? = null
 
         /**
@@ -47,6 +50,11 @@ class Address internal constructor(
         /**
          *  Sets billing country of the address.
          */
+        fun setBillingCountry(country: String?) = apply { this.billingCountry = country }
+
+        /**
+         * Sets country code of the address.
+         */
         fun setCountryCode(code: Int?) = apply { this.countryCode = code }
 
         /**
@@ -59,7 +67,7 @@ class Address internal constructor(
          * @return An instance of [Address]
          */
         fun build(): Address {
-            return Address(line1, line2, line3, town, countryCode, postCode)
+            return Address(line1, line2, line3, town, billingCountry, postCode, countryCode)
         }
     }
 }

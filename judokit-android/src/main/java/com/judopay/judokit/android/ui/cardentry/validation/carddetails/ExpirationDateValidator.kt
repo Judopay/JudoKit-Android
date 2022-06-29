@@ -1,12 +1,14 @@
-package com.judopay.judokit.android.ui.cardentry.validation
+package com.judopay.judokit.android.ui.cardentry.validation.carddetails
 
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.model.response.CardDate
+import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
-import com.judopay.judokit.android.ui.cardentry.model.FormFieldType
+import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
+import com.judopay.judokit.android.ui.cardentry.validation.Validator
 
 class ExpirationDateValidator(
-    override val fieldType: FormFieldType = FormFieldType.EXPIRATION_DATE,
+    override val fieldType: String = CardDetailsFieldType.EXPIRATION_DATE.name,
     val cardDate: CardDate = CardDate()
 ) : Validator {
 

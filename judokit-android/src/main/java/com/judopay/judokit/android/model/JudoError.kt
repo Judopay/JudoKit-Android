@@ -9,7 +9,8 @@ const val USER_CANCELLED = -1
 const val RESPONSE_PARSING = -2
 const val GOOGLE_PAY_NOT_SUPPORTED = -3
 const val REQUEST_FAILED = -4
-const val NETWORK_ERROR = -5
+const val EXCEPTION_CAUGHT = -5
+const val NETWORK_ERROR = -6
 
 internal const val USER_CANCELLED_MSG =
     "The transaction was cancelled by the user. The user closed the transaction flow without completing the transaction."
@@ -95,6 +96,7 @@ data class JudoError(
                 )
             )
         )
+
         /**
          * Utility function that creates a JudoError object with poor internet connectivity
          * error code and message. Used when a SocketTimeoutException is thrown.
@@ -108,6 +110,14 @@ data class JudoError(
                     throwable.localizedMessage ?: resources.getString(R.string.error_poor_connectivity_reason)
                 )
             )
+        )
+
+        /**
+         * Utility function that creates a JudoError object with thrown exception error code and message.
+         */
+        fun judoInternalError(message: String?) = JudoError(
+            EXCEPTION_CAUGHT,
+            message ?: "Unknown error"
         )
     }
 }

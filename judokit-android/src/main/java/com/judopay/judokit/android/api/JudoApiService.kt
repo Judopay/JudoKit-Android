@@ -2,6 +2,7 @@ package com.judopay.judokit.android.api
 
 import com.judopay.judokit.android.api.model.request.BankSaleRequest
 import com.judopay.judokit.android.api.model.request.CheckCardRequest
+import com.judopay.judokit.android.api.model.request.Complete3DS2Request
 import com.judopay.judokit.android.api.model.request.GooglePayRequest
 import com.judopay.judokit.android.api.model.request.IdealSaleRequest
 import com.judopay.judokit.android.api.model.request.PaymentRequest
@@ -74,6 +75,12 @@ interface JudoApiService {
     fun complete3dSecure(
         @Path("receiptId") receiptId: String,
         @Body cardVerificationResult: CardVerificationResult
+    ): Call<JudoApiCallResult<Receipt>>
+
+    @PUT("transactions/{receiptId}/complete3ds")
+    fun complete3ds2(
+        @Path("receiptId") receiptId: String,
+        @Body complete3DS2Request: Complete3DS2Request
     ): Call<JudoApiCallResult<Receipt>>
 
     /**

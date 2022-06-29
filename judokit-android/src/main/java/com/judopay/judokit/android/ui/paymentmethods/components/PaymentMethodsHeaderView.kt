@@ -72,10 +72,12 @@ class PaymentMethodsHeaderView @JvmOverloads constructor(
             is PaymentCardViewModel -> {
                 if (mainDisplayed) {
                     cardModel.layoutId = R.id.secondaryPaymentCardView
-                    secondaryPaymentCardView.model = cardModel
+                    val myCardView = secondaryPaymentCardView.children.first()
+                    (myCardView as PaymentCardView).model = cardModel
                 } else {
                     cardModel.layoutId = R.id.cardView
-                    cardView.model = cardModel
+                    val myCardView = cardView.children.first()
+                    (myCardView as PaymentCardView).model = cardModel
                 }
                 mainDisplayed = !mainDisplayed
                 currentPaymentMethod = PaymentMethod.CARD

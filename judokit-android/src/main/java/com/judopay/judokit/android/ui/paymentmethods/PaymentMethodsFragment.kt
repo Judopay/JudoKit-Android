@@ -19,19 +19,13 @@ import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.response.CardDate
-import com.judopay.judokit.android.api.model.response.JudoApiCallResult
-import com.judopay.judokit.android.api.model.response.Receipt
-import com.judopay.judokit.android.api.model.response.toCardVerificationModel
-import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
-import com.judopay.judokit.android.api.model.response.toJudoResult
 import com.judopay.judokit.android.db.JudoRoomDatabase
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.judo
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentWidgetType
-import com.judopay.judokit.android.ui.cardverification.THREE_DS_ONE_DIALOG_FRAGMENT_TAG
-import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCardVerificationDialogFragment
-import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
+import com.judopay.judokit.android.service.CardTransactionManager
+import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
 import com.judopay.judokit.android.ui.ideal.JUDO_IDEAL_BANK
 import com.judopay.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapter
@@ -49,7 +43,7 @@ import kotlinx.android.synthetic.main.payment_methods_fragment.*
 import kotlinx.android.synthetic.main.payment_methods_header_view.*
 
 internal const val PAYMENT_WIDGET_TYPE = "com.judopay.judokit.android.model.paymentWidgetType"
-internal const val CARD_NETWORK = "com.judopay.judokit.android.cardNetwork"
+internal const val CARD_ENTRY_OPTIONS = "com.judopay.judokit.android.cardEntryOptions"
 
 data class PaymentMethodsModel(
     val headerModel: PaymentMethodsHeaderViewModel,
@@ -60,6 +54,7 @@ class PaymentMethodsFragment : Fragment() {
 
     private lateinit var viewModel: PaymentMethodsViewModel
     private lateinit var service: JudoApiService
+    private lateinit var cardTransactionManager: CardTransactionManager
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -90,82 +85,84 @@ class PaymentMethodsFragment : Fragment() {
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
         service = JudoApiServiceFactory.createApiService(application, judo)
+        cardTransactionManager = CardTransactionManager.getInstance(requireActivity())
+        cardTransactionManager.configureWith(judo)
+
         val factory =
-            PaymentMethodsViewModelFactory(cardDate, cardRepository, service, application, judo)
+            PaymentMethodsViewModelFactory(
+                cardDate,
+                cardRepository,
+                cardTransactionManager,
+                application,
+                judo
+            )
 
         viewModel = ViewModelProvider(this, factory).get(PaymentMethodsViewModel::class.java)
-        viewModel.model.observe(viewLifecycleOwner, { updateWithModel(it) })
+        viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
 
-        viewModel.judoApiCallResult.observe(
-            viewLifecycleOwner,
-            {
-                it.getContentIfNotHandled()?.let { result ->
-                    when (result) {
-                        is JudoApiCallResult.Success -> handleSuccess(result.data)
-                        is JudoApiCallResult.Failure -> handleFail(result)
-                    }
-                }
-            }
-        )
+        viewModel.judoPaymentResult.observe(
+            viewLifecycleOwner
+        ) { sharedViewModel.paymentResult.postValue((it)) }
 
         // TODO: to be refactored
         viewModel.allCardsSync.observe(
-            viewLifecycleOwner,
-            {
-                viewModel.send(PaymentMethodsAction.Update)
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            viewModel.send(PaymentMethodsAction.Update)
+        }
 
         viewModel.payWithIdealObserver.observe(
-            viewLifecycleOwner,
-            {
-                it.getContentIfNotHandled()?.let { bic ->
-                    findNavController().navigate(
-                        R.id.action_paymentMethodsFragment_to_idealFragment,
-                        bundleOf(
-                            JUDO_IDEAL_BANK to bic
-                        )
+            viewLifecycleOwner
+        ) {
+            it.getContentIfNotHandled()?.let { bic ->
+                findNavController().navigate(
+                    R.id.action_paymentMethodsFragment_to_idealFragment,
+                    bundleOf(
+                        JUDO_IDEAL_BANK to bic
                     )
-                }
+                )
             }
-        )
+        }
 
         viewModel.payWithPayByBankObserver.observe(
-            viewLifecycleOwner,
-            {
-                if (!it.hasBeenHandled()) {
-                    navigateToPollingStatus()
-                }
+            viewLifecycleOwner
+        ) {
+            if (!it.hasBeenHandled()) {
+                navigateToPollingStatus()
             }
-        )
+        }
 
-        viewModel.selectedCardNetworkObserver.observe(
-            viewLifecycleOwner,
-            {
-                it.getContentIfNotHandled()?.let { cardNetwork ->
-                    findNavController().navigate(
-                        R.id.action_paymentMethodsFragment_to_cardEntryFragment,
-                        bundleOf(
-                            CARD_NETWORK to cardNetwork
-                        )
+        viewModel.displayCardEntryObserver.observe(
+            viewLifecycleOwner
+        ) {
+            it.getContentIfNotHandled()?.let { cardEntryOptions ->
+                findNavController().navigate(
+                    R.id.action_paymentMethodsFragment_to_cardEntryFragment,
+                    bundleOf(
+                        CARD_ENTRY_OPTIONS to cardEntryOptions
                     )
-                }
+                )
             }
-        )
+        }
 
         sharedViewModel.paymentMethodsResult.observe(
-            viewLifecycleOwner,
-            { result ->
-                viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
-                sharedViewModel.paymentResult.postValue(result)
+            viewLifecycleOwner
+        ) { result ->
+            viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
+            sharedViewModel.paymentResult.postValue(result)
+        }
+        sharedViewModel.cardEntryToPaymentMethodResult.observe(
+            viewLifecycleOwner
+        ) { transactionDetailBuilder ->
+            viewModel.send(PaymentMethodsAction.PayWithCard(transactionDetailBuilder))
+        }
+
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("user-cancelled")
+            ?.observe(viewLifecycleOwner) {
+                if (it) {
+                    viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
+                }
             }
-        )
-        sharedViewModel.securityCodeResult.observe(
-            viewLifecycleOwner,
-            { securityCode ->
-                viewModel.send(PaymentMethodsAction.PayWithSelectedStoredCard(securityCode))
-            }
-        )
     }
 
     private fun navigateToPollingStatus() {
@@ -175,35 +172,6 @@ class PaymentMethodsFragment : Fragment() {
                 PAYMENT_WIDGET_TYPE to PaymentWidgetType.PAY_BY_BANK_APP
             )
         )
-    }
-
-    private fun handleFail(result: JudoApiCallResult.Failure) {
-        sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult(resources))
-    }
-
-    private fun handleSuccess(receipt: Receipt?) {
-        if (receipt != null)
-            if (receipt.is3dSecureRequired) {
-
-                val callback = object :
-                    ThreeDSOneCompletionCallback {
-                    override fun onSuccess(success: JudoPaymentResult) {
-                        sharedViewModel.paymentResult.postValue((success))
-                    }
-
-                    override fun onFailure(error: JudoPaymentResult) {
-                        sharedViewModel.paymentResult.postValue((error))
-                    }
-                }
-
-                ThreeDSOneCardVerificationDialogFragment(
-                    service,
-                    receipt.toCardVerificationModel(),
-                    callback
-                ).show(childFragmentManager, THREE_DS_ONE_DIALOG_FRAGMENT_TAG)
-            } else {
-                sharedViewModel.paymentResult.postValue(JudoPaymentResult.Success(receipt.toJudoResult()))
-            }
     }
 
     // handle callbacks from the recycler view elements
@@ -260,7 +228,17 @@ class PaymentMethodsFragment : Fragment() {
     }
 
     private fun onAddCard() =
-        findNavController().navigate(R.id.action_paymentMethodsFragment_to_cardEntryFragment)
+        findNavController().navigate(
+            R.id.action_paymentMethodsFragment_to_cardEntryFragment,
+            bundleOf(
+                CARD_ENTRY_OPTIONS to CardEntryOptions(
+                    fromPaymentMethods = true,
+                    shouldDisplayBillingDetails = false,
+                    shouldDisplaySecurityCode = null,
+                    addCardPressed = true
+                )
+            )
+        )
 
     private fun updateWithModel(model: PaymentMethodsModel) {
         headerView.paymentMethods = judo.paymentMethods.toList()
@@ -297,7 +275,7 @@ class PaymentMethodsFragment : Fragment() {
         paymentCallToActionView.callbackListener = {
             when (it) {
                 PaymentCallToActionType.PAY_WITH_CARD -> {
-                    viewModel.send(PaymentMethodsAction.PayWithSelectedStoredCard())
+                    viewModel.send(PaymentMethodsAction.InitiateSelectedCardPayment)
                 }
                 PaymentCallToActionType.PAY_WITH_GOOGLE_PAY -> {
                     sharedViewModel.send(JudoSharedAction.LoadGPayPaymentData)
@@ -319,5 +297,15 @@ class PaymentMethodsFragment : Fragment() {
 
         // post the event
         sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled())
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.send(PaymentMethodsAction.SubscribeToCardTransactionManagerResults)
+    }
+
+    override fun onDestroy() {
+        viewModel.send(PaymentMethodsAction.UnSubscribeToCardTransactionManagerResults)
+        super.onDestroy()
     }
 }

@@ -1,5 +1,6 @@
 package com.judopay.judokit.android.api.model.request
 
+import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
 import com.judopay.judokit.android.model.PrimaryAccountDetails
 import com.judopay.judokit.android.requireNotNull
 import com.judopay.judokit.android.requireNotNullOrEmpty
@@ -20,8 +21,11 @@ class TokenRequest private constructor(
     private var cardAddress: Address?,
     private var emailAddress: String?,
     private var mobileNumber: String?,
+    private var phoneCountryCode: String?,
     private var primaryAccountDetails: PrimaryAccountDetails?,
-    private var initialRecurringPayment: Boolean?
+    private var initialRecurringPayment: Boolean?,
+    private var threeDSecure: ThreeDSecureTwo?,
+    private var cardHolderName: String?
 ) {
     class Builder {
         private var uniqueRequest: Boolean? = false
@@ -39,8 +43,11 @@ class TokenRequest private constructor(
         private var address: Address? = null
         private var emailAddress: String? = null
         private var mobileNumber: String? = null
+        private var phoneCountryCode: String? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
         private var initialRecurringPayment: Boolean? = null
+        private var threeDSecure: ThreeDSecureTwo? = null
+        private var cardHolderName: String? = null
 
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
@@ -81,6 +88,15 @@ class TokenRequest private constructor(
         fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
             apply { this.initialRecurringPayment = initialRecurringPayment }
 
+        fun setThreeDSecure(threeDSecureTwo: ThreeDSecureTwo?) =
+            apply { this.threeDSecure = threeDSecureTwo }
+
+        fun setPhoneCountryCode(phoneCountryCode: String?) =
+            apply { this.phoneCountryCode = phoneCountryCode }
+
+        fun setCardHolderName(cardHolderName: String?) =
+            apply { this.cardHolderName = cardHolderName }
+
         fun build(): TokenRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myAmount = requireNotNullOrEmpty(amount, "amount")
@@ -90,7 +106,7 @@ class TokenRequest private constructor(
             val paymentReference =
                 requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
             val myCardToken = requireNotNullOrEmpty(cardToken, "cardToken")
-            val myAddress = requireNotNull(address, "address")
+            val myThreeDSecure = requireNotNull(threeDSecure, "threeDSecure")
 
             return TokenRequest(
                 uniqueRequest,
@@ -105,11 +121,14 @@ class TokenRequest private constructor(
                 myCardToken,
                 cardType,
                 cv2,
-                myAddress,
+                address,
                 emailAddress,
                 mobileNumber,
+                phoneCountryCode,
                 primaryAccountDetails,
-                initialRecurringPayment
+                initialRecurringPayment,
+                myThreeDSecure,
+                cardHolderName
             )
         }
     }

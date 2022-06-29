@@ -2,44 +2,68 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:maxHeight="@dimen/app_bar_layout_height">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <ViewAnimator
         android:background="@android:color/transparent"
         android:id="@+id/viewAnimator"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/space_24"
         android:animateFirstView="false"
         android:clipChildren="false"
         android:clipToPadding="false"
         app:layout_constraintBottom_toTopOf="@+id/paymentCallToActionView"
-        app:layout_constraintDimensionRatio="W,3.2:2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <com.judopay.judokit.android.ui.paymentmethods.components.PaymentCardView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/space_16"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/card_corner_radius"
-            app:cardElevation="@dimen/card_elevation_8dp" />
+            android:padding="@dimen/space_16"
+            android:clipToPadding="false">
 
-        <com.judopay.judokit.android.ui.paymentmethods.components.PaymentCardView
+            <com.judopay.judokit.android.ui.paymentmethods.components.PaymentCardView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="2:1"
+                android:layout_marginTop="@dimen/space_16"
+                android:layout_marginBottom="@dimen/height_100"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="@dimen/card_elevation_8dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/secondaryPaymentCardView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/space_16"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/card_corner_radius"
-            app:cardElevation="@dimen/card_elevation_8dp" />
+            android:padding="@dimen/space_16"
+            android:clipToPadding="false">
+
+            <com.judopay.judokit.android.ui.paymentmethods.components.PaymentCardView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="2:1"
+                android:layout_marginTop="@dimen/space_16"
+                android:layout_marginBottom="@dimen/height_100"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="@dimen/card_elevation_8dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.judopay.judokit.android.ui.paymentmethods.components.GooglePayCardView
             android:id="@+id/googlePayCardView"

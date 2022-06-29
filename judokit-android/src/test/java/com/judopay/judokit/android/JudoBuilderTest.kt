@@ -40,7 +40,7 @@ internal class JudoBuilderTest {
             .setPrimaryAccountDetails(mockk())
             .setGooglePayConfiguration(mockk())
             .setAddress(mockk())
-            .setPBBAConfiguration(mockk())
+            .setPBBAConfiguration(mockk(relaxed = true))
             .setInitialRecurringPayment(false)
     }
 

@@ -36,9 +36,6 @@
     <string name="feature_title_pay_by_bank_app">Pay by Bank app</string>
     <string name="feature_subtitle_pay_by_bank_app">by using your existing Bank app</string>
 
-    <string name="feature_title_token_payment">Token payments</string>
-    <string name="feature_subtitle_token_payment">Token payments (no UI)</string>
-
     <string name="feature_title_get_transaction_details">Get transaction details</string>
     <string name="feature_subtitle_get_transaction_details">Get transaction for receipt ID</string>
 
@@ -182,4 +179,21 @@
     <string name="token_payment">Token payment</string>
     <string name="preauth_token_payment">PreAuth token payment</string>
     <string name="token_payment_description">To make a token or preauth token payment, first you have to create a card token</string>
+
+
+    <string name="three_ds2_header">3DS 2.0</string>
+    <string name="is_3ds2_enabled_title">Enable billing information screen</string>
+    <string name="is_3ds2_enabled_summary">Asks user for billing information</string>
+
+    <string name="challenge_request_indicator_summary">Select challenge request indicator</string>
+    <string name="challenge_request_indicator_title">Challenge request indicator</string>
+
+    <string name="sca_exemption_summary">Select SCA exemption</string>
+    <string name="sca_exemption_title">SCA exemption</string>
+
+    <string name="three_ds2_max_timeout_summary">Max timeout for 3DS 2.0 transaction</string>
+    <string name="three_ds2_max_timeout_title">3DS 2.0 max timeout</string>
+
+    <string name="feature_title_payment_no_ui">Card payments no UI</string>
+    <string name="feature_subtitle_payment_no_ui">Card payments using card transaction service</string>
 </resources>

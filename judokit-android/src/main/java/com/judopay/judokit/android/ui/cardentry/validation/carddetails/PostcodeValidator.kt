@@ -1,13 +1,15 @@
-package com.judopay.judokit.android.ui.cardentry.validation
+package com.judopay.judokit.android.ui.cardentry.validation.carddetails
 
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.model.Country
+import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
-import com.judopay.judokit.android.ui.cardentry.model.FormFieldType
+import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
+import com.judopay.judokit.android.ui.cardentry.validation.Validator
 
 data class PostcodeValidator(
     var country: Country? = null,
-    override val fieldType: FormFieldType = FormFieldType.POST_CODE
+    override val fieldType: String = BillingDetailsFieldType.POST_CODE.name
 ) : Validator {
 
     private val regExGBPostcode =

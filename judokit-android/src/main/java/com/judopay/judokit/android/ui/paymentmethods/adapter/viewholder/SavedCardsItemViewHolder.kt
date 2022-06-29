@@ -83,9 +83,9 @@ class SavedCardsItemViewHolder(view: View) :
                         append("${model.ending} ${resources.getString(R.string.is_expired)}")
                         val expiredIndex =
                             if (boldString.indexOf(
-                                resources.getString(R.string.expired),
-                                ignoreCase = true
-                            ) == -1
+                                    resources.getString(R.string.expired),
+                                    ignoreCase = true
+                                ) == -1
                             ) {
                                 0
                             } else {
@@ -113,9 +113,9 @@ class SavedCardsItemViewHolder(view: View) :
                         append("${model.ending} ${resources.getString(R.string.will_expire_soon)}")
                         val expireIndex =
                             if (boldString.indexOf(
-                                resources.getString(R.string.expire_soon),
-                                ignoreCase = true
-                            ) == -1
+                                    resources.getString(R.string.expire_soon),
+                                    ignoreCase = true
+                                ) == -1
                             ) {
                                 0
                             } else {

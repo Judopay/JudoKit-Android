@@ -1,6 +1,6 @@
 package com.judopay.judokit.android.model
 
-import com.judopay.judokit.android.ui.cardentry.model.InputModel
+import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
 
 enum class CardScanResultType {
     SUCCESS,
@@ -15,7 +15,7 @@ data class CardScanningResult(
     val expirationDate: String? = null
 )
 
-fun CardScanningResult.toInputModel() = InputModel(
+fun CardScanningResult.toInputModel() = CardDetailsInputModel(
     cardNumber = cardNumber,
     cardHolderName = cardHolder ?: "",
     expirationDate = expirationDate ?: ""

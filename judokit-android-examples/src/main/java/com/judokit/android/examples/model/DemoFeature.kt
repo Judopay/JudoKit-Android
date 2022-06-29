@@ -18,6 +18,6 @@ enum class DemoFeature(
     PREAUTH_PAYMENT_METHODS(R.string.feature_title_preauth_payment_methods, R.string.feature_surtitle_preauth_payment_methods),
     SERVER_TO_SERVER_PAYMENT_METHODS(R.string.feature_title_server_to_server_payment_methods, R.string.feature_subtitle_server_to_server_payment_methods),
     PAY_BY_BANK_APP(R.string.feature_title_pay_by_bank_app, R.string.feature_subtitle_pay_by_bank_app),
-    TOKEN_PAYMENT(R.string.feature_title_token_payment, R.string.feature_subtitle_token_payment),
+    NO_UI(R.string.feature_title_payment_no_ui, R.string.feature_subtitle_payment_no_ui),
     GET_TRANSACTION_DETAILS(R.string.feature_title_get_transaction_details, R.string.feature_subtitle_get_transaction_details),
 }

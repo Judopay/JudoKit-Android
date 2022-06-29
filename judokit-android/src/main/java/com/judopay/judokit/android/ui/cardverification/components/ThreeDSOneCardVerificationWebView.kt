@@ -56,16 +56,13 @@ internal class CardVerificationWebView @JvmOverloads constructor(
     /**
      * @param model Model that contains all the necessary parameters to pass 3D-Secure authentication.
      */
-    fun authorize(model: CardVerificationModel?) {
-        if (model == null) {
-            throw Show3dSecureWebViewError(Throwable("CardVerificationModel is null"))
-        }
+    fun authorize(model: CardVerificationModel) {
         try {
             val postData: String = format(
                 Locale.ENGLISH, "MD=%s&TermUrl=%s&PaReq=%s",
                 encode(model.md, CHARSET), encode(REDIRECT_URL, CHARSET), encode(model.paReq, CHARSET)
             )
-            this.receiptId = model.receiptId ?: ""
+            this.receiptId = model.receiptId
             val webViewClient = ThreeDSOneCardVerificationWebViewClient(JS_NAMESPACE, REDIRECT_URL)
             setWebViewClient(webViewClient)
             postUrl(model.acsUrl, postData.toByteArray(StandardCharsets.UTF_8))

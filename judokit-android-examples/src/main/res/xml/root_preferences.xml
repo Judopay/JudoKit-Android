@@ -59,7 +59,42 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:title="@string/network_timeouts_header">
+        app:title="@string/three_ds2_header">
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"
+            app:key="should_ask_for_billing_information"
+            app:summary="@string/is_3ds2_enabled_summary"
+            app:title="@string/is_3ds2_enabled_title" />
+
+        <ListPreference
+            app:defaultValue="CHALLENGE_AS_MANDATE"
+            app:entries="@array/three_ds_two_challenge_request_indicator_entries"
+            app:entryValues="@array/three_ds_two_challenge_request_indicator_values"
+            app:iconSpaceReserved="false"
+            app:key="challengeRequestIndicator"
+            app:summary="@string/challenge_request_indicator_summary"
+            app:title="@string/challenge_request_indicator_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="LOW_VALUE"
+            app:entries="@array/three_ds_two_sca_exemption_entries"
+            app:entryValues="@array/three_ds_two_sca_exemption_values"
+            app:iconSpaceReserved="false"
+            app:key="scaExemption"
+            app:summary="@string/sca_exemption_summary"
+            app:title="@string/sca_exemption_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="30"
+            app:iconSpaceReserved="false"
+            app:key="threeDSTwoMaxTimeout"
+            app:summary="@string/three_ds2_max_timeout_summary"
+            app:title="@string/three_ds2_max_timeout_title"
+            app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             android:inputType="number"
@@ -165,6 +200,42 @@
             app:key="address_billing_country"
             app:summary="@string/address_billing_country_summary"
             app:title="@string/address_billing_country_title" />
+
+        <EditTextPreference
+            app:defaultValue="826"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="address_country_code"
+            app:summary="Your country code"
+            app:title="Country code"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="44"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="phone_country_code"
+            app:summary="Your phone country code"
+            app:title="Phone country code"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="0799999999"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="mobile_number"
+            app:summary="Your mobile number"
+            app:title="Mobile number"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="email@address.com"
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="email_address"
+            app:summary="Your email address"
+            app:title="Email address"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 

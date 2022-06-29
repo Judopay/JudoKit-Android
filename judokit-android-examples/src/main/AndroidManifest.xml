@@ -23,18 +23,20 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name="com.judokit.android.examples.SplashActivity"
-            android:theme="@style/SplashTheme"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.judokit.android.examples.feature.tokenpayment.DemoTokenPaymentActivity"
-            android:exported="false"/>
+        <activity
+            android:name="com.judokit.android.examples.feature.noui.DemoNoUiPaymentActivity"
+            android:exported="false" />
         <activity
             android:name="com.judokit.android.examples.result.ResultActivity"
-            android:theme="@style/Theme.DemoApp" android:exported="false"/>
+            android:exported="false"
+            android:theme="@style/Theme.DemoApp" />
         <activity
             android:name="com.judokit.android.examples.settings.SettingsActivity"
             android:label="@string/title_settings"
@@ -47,10 +49,10 @@
         </activity>
         <activity
             android:name="com.judokit.android.examples.feature.DemoFeatureListActivity"
+            android:exported="true"
             android:label="@string/title_activity_demo_feature_list"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.DemoApp"
-            android:exported="true">
+            android:theme="@style/Theme.DemoApp">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -68,9 +70,9 @@
         </activity>
         <activity
             android:name="com.judokit.android.examples.feature.paybybank.PayByBankActivity"
+            android:exported="false"
             android:label="@string/title_activity_pay_by_bank"
-            android:theme="@style/Theme.DemoApp"
-            android:exported="false"/>
+            android:theme="@style/Theme.DemoApp"/>
 
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"

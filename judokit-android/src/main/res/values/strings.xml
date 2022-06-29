@@ -25,6 +25,13 @@
     <string name="card_holder_hint">Cardholder Name</string>
     <string name="country_hint">Country</string>
     <string name="post_code_hint">Postcode</string>
+    <string name="email_hint">Email</string>
+    <string name="phone_country_code_hint">+()</string>
+    <string name="mobile_number_hint">Mobile number</string>
+    <string name="address_line_1_hint">Address line 1</string>
+    <string name="address_line_2_hint">Address line 2</string>
+    <string name="address_line_3_hint">Address line 3</string>
+    <string name="city_hint">City</string>
     <string name="check_card_number">Invalid card number</string>
     <string name="error_unknown_not_supported">Unknown Card Network is not supported</string>
     <string name="error_visa_not_supported">Visa is not supported</string>
@@ -50,6 +57,11 @@
     <string name="expire_soon">expire soon</string>
     <string name="invalid_postcode">Invalid postcode entered</string>
     <string name="invalid_zip_code">Invalid ZIP code entered</string>
+    <string name="invalid_email_address">Please enter a valid email</string>
+    <string name="invalid_address">Please enter a valid address</string>
+    <string name="invalid_phone_country_code">Please enter a valid country code</string>
+    <string name="invalid_mobile_number">Please enter a valid mobile number</string>
+    <string name="invalid_city">Please enter a valid city</string>
 
     <string name="transaction_unsuccessful">Transaction unsuccessful - please try again</string>
     <string name="close">Close</string>
@@ -134,4 +146,9 @@
     <string name="country_usa">USA</string>
     <string name="country_canada">Canada</string>
     <string name="country_other">Other</string>
+
+    <string name="continue_text">Continue</string>
+    <string name="add_address_line">Add address line %1$d (optional)</string>
+    <string name="billing_details_title">Billing Details</string>
+    <string name="back">Back</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.judopay.judokit.android.ui.cardentry.validation
 
 import com.judopay.judokit.android.R
+import com.judopay.judokit.android.ui.cardentry.validation.carddetails.CountryValidator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

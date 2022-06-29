@@ -15,6 +15,7 @@ import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentWidgetType
+import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.isGooglePayWidget
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
 import com.judopay.judokit.android.service.JudoGooglePayService
@@ -59,7 +60,7 @@ class JudoSharedViewModel(
     val bankPaymentResult = MutableLiveData<JudoPaymentResult>()
     val paymentMethodsResult = MutableLiveData<JudoPaymentResult>()
     // used to pass security code from card entry to payment methods screen
-    val securityCodeResult = MutableLiveData<String>()
+    val cardEntryToPaymentMethodResult = MutableLiveData<TransactionDetails.Builder>()
     // used to share the GooglePay payment result between this activity and the payment methods fragment
     val paymentMethodsGooglePayResult = MutableLiveData<JudoPaymentResult>()
 

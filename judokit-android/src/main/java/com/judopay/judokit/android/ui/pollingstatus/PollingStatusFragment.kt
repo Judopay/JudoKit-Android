@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import com.judopay.judokit.android.JudoSharedViewModel
 import com.judopay.judokit.android.R
@@ -34,9 +35,11 @@ import com.judopay.judokit.android.ui.common.getLocale
 import com.judopay.judokit.android.ui.paymentmethods.PAYMENT_WIDGET_TYPE
 import com.judopay.judokit.android.ui.paymentmethods.components.PollingStatusViewAction
 import com.judopay.judokit.android.ui.paymentmethods.components.PollingStatusViewState
+import com.zapp.library.merchant.ui.PBBAPopupCallback
+import com.zapp.library.merchant.util.PBBAAppUtils
 import kotlinx.android.synthetic.main.polling_status_fragment.*
 
-class PollingStatusFragment : DialogFragment() /*, PBBAPopupCallback*/ {
+class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
 
     private lateinit var viewModel: PollingStatusViewModel
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
@@ -79,30 +82,28 @@ class PollingStatusFragment : DialogFragment() /*, PBBAPopupCallback*/ {
         viewModel.send(PollingAction.Initialise(sharedViewModel.error.details.isEmpty()))
 
         viewModel.payByBankResult.observe(
-            viewLifecycleOwner,
-            { result ->
-                handlePayByBankResult(result)
-            }
-        )
+            viewLifecycleOwner
+        ) { result ->
+            handlePayByBankResult(result)
+        }
         viewModel.saleStatusResult.observe(
-            viewLifecycleOwner,
-            { result ->
-                handleSaleStatusResult(result)
-            }
-        )
+            viewLifecycleOwner
+        ) { result ->
+            handleSaleStatusResult(result)
+        }
         pollingStatusView.onButtonClickListener = { handlePollingStatusViewButtonClick(it) }
 
         pollingStatusView.animateWithAlpha(1.0f)
     }
 
     // PBBAPopupCallback
-//    override fun onRetryPaymentRequest() {
-//        viewModel.send(PollingAction.RetryPolling)
-//    }
-//
-//    override fun onDismissPopup() {
-//        viewModel.send(PollingAction.CancelPolling)
-//    }
+    override fun onRetryPaymentRequest() {
+        viewModel.send(PollingAction.RetryPolling)
+    }
+
+    override fun onDismissPopup() {
+        viewModel.send(PollingAction.CancelPolling)
+    }
 
     private fun handlePayByBankResult(result: JudoApiCallResult<BankSaleResponse>?) {
         when (result) {
@@ -123,8 +124,8 @@ class PollingStatusFragment : DialogFragment() /*, PBBAPopupCallback*/ {
                 PBBA_RESULT,
                 data.toJudoResult()
             )
-//            LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
-//            PBBAAppUtils.openBankingApp(requireActivity(), data.secureToken)
+            LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
+            PBBAAppUtils.openBankingApp(requireActivity(), data.secureToken)
         } else {
             sharedViewModel.bankPaymentResult.postValue(JudoPaymentResult.Error(JudoError.judoResponseParseError(resources)))
             findNavController().popBackStack()

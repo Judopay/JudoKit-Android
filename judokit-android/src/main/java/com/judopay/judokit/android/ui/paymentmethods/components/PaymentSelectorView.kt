@@ -18,6 +18,7 @@ import com.judopay.judokit.android.model.icon
 import com.judopay.judokit.android.model.text
 import com.judopay.judokit.android.subViewsWithType
 import kotlinx.android.synthetic.main.view_payment_selector.view.*
+import kotlin.collections.forEach as kForEach
 
 private const val MARGIN_12 = 12
 private const val MARGIN_54 = 54
@@ -43,7 +44,7 @@ class PaymentSelectorView @JvmOverloads constructor(
         currentSelected: PaymentMethod?,
         onClick: PaymentSelectorViewSelectionListener
     ) {
-        paymentSelectorContainer.subViewsWithType(PaymentSelectorItemView::class.java).forEach {
+        paymentSelectorContainer.subViewsWithType(PaymentSelectorItemView::class.java).kForEach {
             paymentSelectorContainer.removeView(it)
         }
 
@@ -52,7 +53,7 @@ class PaymentSelectorView @JvmOverloads constructor(
         val ids: MutableList<Int> = mutableListOf()
         overScrollMode = View.OVER_SCROLL_NEVER
 
-        paymentMethods.forEach { paymentMethod ->
+        paymentMethods.kForEach { paymentMethod ->
             val itemView = PaymentSelectorItemView(context).apply {
                 if (paymentMethods.size < 3) {
                     layoutParams = ViewGroup.LayoutParams(

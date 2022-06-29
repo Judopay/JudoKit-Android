@@ -2,15 +2,18 @@ package com.judopay.judokit.android
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewParent
 import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.children
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
@@ -24,10 +27,12 @@ import com.judopay.judokit.android.api.model.request.PaymentRequest
 import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
+import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
 import com.judopay.judokit.android.model.ApiEnvironment
 import com.judopay.judokit.android.model.googlepay.GooglePayAddress
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_500
 import com.judopay.judokit.android.ui.error.JudoNotProvidedError
+import kotlinx.android.synthetic.main.card_entry_form_view.view.*
 
 internal val Judo.apiBaseUrl: String
     get() = if (isSandboxed) ApiEnvironment.SANDBOX.host else ApiEnvironment.LIVE.host
@@ -139,7 +144,8 @@ internal fun Window.applyDialogStyling() {
 fun Judo.toPaymentRequest(
     cardNumber: String,
     expiryDate: String,
-    securityCode: String
+    securityCode: String,
+    threeDSecureTwo: ThreeDSecureTwo?
 ) = PaymentRequest.Builder()
     .setUniqueRequest(false)
     .setYourPaymentReference(reference.paymentReference)
@@ -154,12 +160,14 @@ fun Judo.toPaymentRequest(
     .setExpiryDate(expiryDate)
     .setPrimaryAccountDetails(primaryAccountDetails)
     .setInitialRecurringPayment(initialRecurringPayment)
+    .setThreeDSecure(threeDSecureTwo)
     .build()
 
 fun Judo.toRegisterCardRequest(
     cardNumber: String,
     expirationDate: String,
-    securityCode: String
+    securityCode: String,
+    threeDSecureTwo: ThreeDSecureTwo?
 ) =
     RegisterCardRequest.Builder()
         .setUniqueRequest(false)
@@ -175,6 +183,7 @@ fun Judo.toRegisterCardRequest(
         .setPrimaryAccountDetails(primaryAccountDetails)
         .setAmount(amount.amount)
         .setInitialRecurringPayment(initialRecurringPayment)
+        .setThreeDSecure(threeDSecureTwo)
         .build()
 
 fun Judo.toSaveCardRequest(
@@ -199,7 +208,8 @@ fun Judo.toSaveCardRequest(
 fun Judo.toCheckCardRequest(
     cardNumber: String,
     expirationDate: String,
-    securityCode: String
+    securityCode: String,
+    threeDSecureTwo: ThreeDSecureTwo?
 ) =
     CheckCardRequest.Builder()
         .setUniqueRequest(false)
@@ -214,6 +224,7 @@ fun Judo.toCheckCardRequest(
         .setCv2(securityCode)
         .setPrimaryAccountDetails(primaryAccountDetails)
         .setInitialRecurringPayment(initialRecurringPayment)
+        .setThreeDSecure(threeDSecureTwo)
         .build()
 
 fun Judo.toGooglePayRequest(
@@ -265,7 +276,7 @@ fun Judo.toBankSaleRequest() =
         .setMerchantRedirectUrl(pbbaConfiguration?.deepLinkScheme)
         .build()
 
-fun Judo.toTokenRequest(cardToken: String, securityCode: String? = null) =
+fun Judo.toTokenRequest(cardToken: String, threeDSecureTwo: ThreeDSecureTwo? = null, securityCode: String? = null) =
     TokenRequest.Builder()
         .setAmount(amount.amount)
         .setCurrency(amount.currency.name)
@@ -278,4 +289,42 @@ fun Judo.toTokenRequest(cardToken: String, securityCode: String? = null) =
         .setPrimaryAccountDetails(primaryAccountDetails)
         .setAddress(address ?: Address.Builder().build())
         .setInitialRecurringPayment(initialRecurringPayment)
+        .setThreeDSecure(threeDSecureTwo)
         .build()
+
+internal fun isAnyNullOrEmpty(vararg elements: String?): Boolean {
+    elements.forEach {
+        if (it.isNullOrEmpty()) {
+            return true
+        }
+    }
+
+    return false
+}
+
+internal fun isNoneNullOrEmpty(vararg elements: String?): Boolean {
+    return !isAnyNullOrEmpty(*elements)
+}
+
+internal fun NestedScrollView.smoothScrollToView(view: View) {
+    val childOffset = Point()
+    getDeepChildOffset(this, view.parent, view, childOffset)
+    smoothScrollTo(0, childOffset.y)
+}
+
+internal fun ViewGroup.getDeepChildOffset(
+    mainParent: ViewGroup,
+    parent: ViewParent,
+    child: View,
+    accumulatedOffset: Point
+) {
+    val parentGroup = parent as ViewGroup
+    accumulatedOffset.x += child.left
+    accumulatedOffset.y += child.top
+
+    if (parentGroup == mainParent) {
+        return
+    }
+
+    getDeepChildOffset(mainParent, parentGroup.parent, parentGroup, accumulatedOffset)
+}

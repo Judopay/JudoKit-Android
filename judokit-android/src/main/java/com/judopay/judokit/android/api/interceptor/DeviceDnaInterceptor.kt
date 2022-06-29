@@ -6,7 +6,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.judopay.devicedna.DeviceDNA
 import okhttp3.Interceptor
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
@@ -15,7 +15,7 @@ import java.io.IOException
 
 private const val CLIENT_DETAILS = "clientDetails"
 private const val METHOD_POST = "POST"
-private val MEDIA_TYPE_APPLICATION_JSON = MediaType.parse("application/json")
+private val MEDIA_TYPE_APPLICATION_JSON = "application/json".toMediaTypeOrNull()
 
 internal class DeviceDnaInterceptor(context: Context) : Interceptor {
 
@@ -24,7 +24,7 @@ internal class DeviceDnaInterceptor(context: Context) : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        val body = request.body()
+        val body = request.body
 
         if (request.isPost && body != null) {
             val bodyJson = getJsonRequestBody(body)
@@ -66,4 +66,4 @@ internal class DeviceDnaInterceptor(context: Context) : Interceptor {
 }
 
 private val Request.isPost: Boolean
-    get() = METHOD_POST == method()
+    get() = METHOD_POST == method

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.gms.wallet.AutoResolveHelper
@@ -14,6 +15,7 @@ import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.WalletConstants
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.model.JudoPaymentResult
+import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.code
 import com.judopay.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judopay.judokit.android.model.isExposed
@@ -22,7 +24,9 @@ import com.judopay.judokit.android.model.isPaymentMethodsWidget
 import com.judopay.judokit.android.model.navigationGraphId
 import com.judopay.judokit.android.model.toIntent
 import com.judopay.judokit.android.service.JudoGooglePayService
+import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.common.showAlert
+import com.judopay.judokit.android.ui.paymentmethods.CARD_ENTRY_OPTIONS
 
 internal const val LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE = Activity.RESULT_FIRST_USER + 1
 
@@ -54,21 +58,25 @@ class JudoActivity : AppCompatActivity() {
 
         // setup shared view-model & response callbacks
         val judoApiService = JudoApiServiceFactory.createApiService(applicationContext, judo)
-        val factory = JudoSharedViewModelFactory(judo, buildJudoGooglePayService(), judoApiService, application)
+        val factory = JudoSharedViewModelFactory(
+            judo,
+            buildJudoGooglePayService(),
+            judoApiService,
+            application
+        )
 
         viewModel = ViewModelProvider(this, factory).get(JudoSharedViewModel::class.java)
-        viewModel.paymentResult.observe(this, { dispatchPaymentResult(it) })
+        viewModel.paymentResult.observe(this) { dispatchPaymentResult(it) }
 
         viewModel.bankPaymentResult.observe(
-            this,
-            {
-                if (judo.paymentWidgetType.isPaymentMethodsWidget) {
-                    viewModel.paymentMethodsResult.postValue(it)
-                } else {
-                    viewModel.paymentResult.postValue(it)
-                }
+            this
+        ) {
+            if (judo.paymentWidgetType.isPaymentMethodsWidget) {
+                viewModel.paymentMethodsResult.postValue(it)
+            } else {
+                viewModel.paymentResult.postValue(it)
             }
-        )
+        }
 
         if (judo.paymentWidgetType.isGooglePayWidget) {
             viewModel.send(JudoSharedAction.LoadGPayPaymentData)
@@ -77,7 +85,13 @@ class JudoActivity : AppCompatActivity() {
 
         // setup navigation graph
         val graphId = judo.paymentWidgetType.navigationGraphId
-        val navigationHost = NavHostFragment.create(graphId)
+        val bundle = if (graphId == R.navigation.judo_card_input_graph) {
+            // Card entry fragment parameters
+            bundleOf(
+                CARD_ENTRY_OPTIONS to CardEntryOptions(shouldDisplayBillingDetails = judo.uiConfiguration.shouldAskForBillingInformation && judo.paymentWidgetType != PaymentWidgetType.CREATE_CARD_TOKEN)
+            )
+        } else null
+        val navigationHost = NavHostFragment.create(graphId, bundle)
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, navigationHost)
@@ -141,7 +155,9 @@ class JudoActivity : AppCompatActivity() {
                     return
                 }
 
-                showAlert(this, result.error.message)
+                if (!isFinishing && !isDestroyed) {
+                    showAlert(this, result.error.message)
+                }
             }
             is JudoPaymentResult.UserCancelled -> {
                 with(viewModel.error) {

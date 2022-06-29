@@ -36,9 +36,8 @@ class PaymentMethodsAdapter(
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val type = PaymentMethodItemType.values().firstOrNull { it.ordinal == viewType }
 
-        return when (type) {
+        return when (PaymentMethodItemType.values().firstOrNull { it.ordinal == viewType }) {
             PaymentMethodItemType.SELECTOR -> MethodSelectorViewHolder(parent.inflate(R.layout.payment_methods_selector_item))
             PaymentMethodItemType.SAVED_CARDS_HEADER -> SavedCardsHeaderViewHolder(parent.inflate(R.layout.saved_card_header_item))
             PaymentMethodItemType.SAVED_CARDS_ITEM -> SavedCardsItemViewHolder(parent.inflate(R.layout.saved_card_item))
