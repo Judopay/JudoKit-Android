@@ -29,7 +29,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 32
         versionCode 333
-        versionName "3.0.1 (1) -" + getGitHash()
+        versionName "3.0.2 (1) -" + getGitHash()
         multiDexEnabled true
         testInstrumentationRunner "com.judokit.android.examples.test.CucumberRunner"
     }
