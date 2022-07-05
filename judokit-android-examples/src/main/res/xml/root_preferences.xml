@@ -115,6 +115,13 @@
             app:summary="@string/write_timeout_summary"
             app:title="@string/write_timeout_title" />
 
+        <EditTextPreference
+            app:defaultValue=""
+            app:iconSpaceReserved="false"
+            app:key="threeDSTwoMessageVersion"
+            app:summary="@string/three_ds2_protocol_message_version_summary"
+            app:title="@string/three_ds2_protocol_message_version_title" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

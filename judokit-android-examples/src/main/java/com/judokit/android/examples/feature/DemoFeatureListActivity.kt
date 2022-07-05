@@ -323,6 +323,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val challengeRequestIndicator = sharedPreferences.getString("challengeRequestIndicator", null)?.let { ChallengeRequestIndicator.valueOf(it) }
         val scaExemption = sharedPreferences.getString("scaExemption", null)?.let { ScaExemption.valueOf(it) }
         val threeDSTwoMaxTimeout = sharedPreferences.getString("threeDSTwoMaxTimeout", null)?.toInt()
+        val messageVersion = sharedPreferences.getString("threeDSTwoMessageVersion", null)
         val address = cardAddress
         val accountDetails = primaryAccountDetails
 
@@ -345,6 +346,10 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setScaExemption(scaExemption)
             .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
             .setNetworkTimeout(networkTimeout)
+
+        if (!messageVersion.isNullOrBlank()) {
+            builder.setThreeDSTwoMessageVersion(messageVersion)
+        }
 
         if (address != null) {
             builder.setAddress(address)

@@ -46,6 +46,9 @@ const val PAYMENT_ERROR = Activity.RESULT_FIRST_USER + 3
 /** Default 3DS 2.0 maximum timeout value */
 private const val DEFAULT_MAX_TIMEOUT = 120
 
+/** Default 3DS 2.0 protocol message version */
+private const val THREE_DS_TWO_MESSAGE_VERSION_TWO_DOT_TWO = "2.2.0"
+
 /**
  * Judo configuration object that is required for initiating a payment.
  */
@@ -71,7 +74,8 @@ class Judo internal constructor(
     val mobileNumber: String?,
     val phoneCountryCode: String?,
     val emailAddress: String?,
-    val threeDSTwoMaxTimeout: Int
+    val threeDSTwoMaxTimeout: Int,
+    val threeDSTwoMessageVersion: String
 ) : Parcelable {
 
     /**
@@ -99,6 +103,7 @@ class Judo internal constructor(
         private var phoneCountryCode: String? = null
         private var emailAddress: String? = null
         private var threeDSTwoMaxTimeout: Int? = null
+        private var threeDSTwoMessageVersion: String? = null
 
         /**
          * Sets the unique merchant ID
@@ -247,6 +252,13 @@ class Judo internal constructor(
             apply { this.threeDSTwoMaxTimeout = maxTimeout }
 
         /**
+         * Sets the protocol message version for 3DS 2.0 transactions.
+         * @param messageVersion 3DS 2.0 protocol message version.
+         */
+        fun setThreeDSTwoMessageVersion(messageVersion: String?) =
+            apply { this.threeDSTwoMessageVersion = messageVersion }
+
+        /**
          * Sets phone country code.
          */
         fun setPhoneCountryCode(phoneCountryCode: String?) =
@@ -331,7 +343,8 @@ class Judo internal constructor(
                 mobileNumber,
                 phoneCountryCode,
                 emailAddress,
-                threeDSTwoMaxTimeout ?: DEFAULT_MAX_TIMEOUT
+                threeDSTwoMaxTimeout ?: DEFAULT_MAX_TIMEOUT,
+                threeDSTwoMessageVersion ?: THREE_DS_TWO_MESSAGE_VERSION_TWO_DOT_TWO
             )
         }
 
