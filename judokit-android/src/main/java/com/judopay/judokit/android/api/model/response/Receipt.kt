@@ -111,6 +111,7 @@ fun Receipt.getChallengeParameters(cReqParams: CReqParameters? = getCReqParamete
         cReqParams?.acsTransID,
         acsReferenceNumber,
         acsSignedContent,
-        null
+        null,
+        cReqParams?.messageVersion
     )
 }
