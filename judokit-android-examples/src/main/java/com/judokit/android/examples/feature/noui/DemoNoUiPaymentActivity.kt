@@ -245,6 +245,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
             .setScaExemption(scaExemption)
             .setChallengeRequestIndicator(challengeRequestIndicator)
             .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
+            .setThreeDSTwoMessageVersion(threeDSTwoMessageVersion)
             .build()
     }
 }
