@@ -214,6 +214,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                 judo.isSandboxed -> "F000000000"
                 network == CardNetwork.VISA -> "A000000003"
                 network == CardNetwork.MASTERCARD -> "A000000004"
+                network == CardNetwork.AMEX -> "A000000025"
                 else -> "unknown-id"
             }
 
