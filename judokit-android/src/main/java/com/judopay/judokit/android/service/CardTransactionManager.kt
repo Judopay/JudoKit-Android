@@ -208,7 +208,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                 Log.w(CardTransactionManager::class.java.name, "3DS2 Service already initialized.")
             }
 
-            val network = CardNetwork.ofNumber(details.cardNumber ?: "")
+            val network = details.cardType ?: CardNetwork.OTHER
 
             val directoryServerID = when {
                 judo.isSandboxed -> "F000000000"

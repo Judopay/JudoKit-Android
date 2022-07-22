@@ -82,24 +82,30 @@ class TransactionDetails private constructor(
         fun setCardType(cardType: CardNetwork?) = apply { this.cardType = cardType }
         fun setCardLastFour(cardLastFour: String?) = apply { this.cardLastFour = cardLastFour }
 
-        fun build() = TransactionDetails(
-            cardNumber,
-            cardHolderName,
-            expirationDate,
-            securityNumber,
-            countryCode,
-            email,
-            phoneCountryCode,
-            mobileNumber,
-            addressLine1,
-            addressLine2,
-            addressLine3,
-            city,
-            postalCode,
-            cardToken,
-            cardType,
-            cardLastFour
-        )
+        fun build(): TransactionDetails {
+            if (cardType == null) {
+                cardType = CardNetwork.ofNumber(cardNumber ?: "")
+            }
+
+            return TransactionDetails(
+                cardNumber,
+                cardHolderName,
+                expirationDate,
+                securityNumber,
+                countryCode,
+                email,
+                phoneCountryCode,
+                mobileNumber,
+                addressLine1,
+                addressLine2,
+                addressLine3,
+                city,
+                postalCode,
+                cardToken,
+                cardType,
+                cardLastFour
+            )
+        }
     }
 }
 
