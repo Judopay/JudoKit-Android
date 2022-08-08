@@ -10,7 +10,7 @@ class BillingDetailsPostCodeValidator(
     override val fieldType: String = BillingDetailsFieldType.POST_CODE.name
 ) : Validator {
 
-    private val regex = Regex("^[a-zA-Z0-9]+\$")
+    private val regex = Regex("^[a-zA-Z0-9 ]+\$")
 
     override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult {
         val shouldDisplayMessage = formFieldEvent == FormFieldEvent.FOCUS_CHANGED
