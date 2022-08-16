@@ -6,36 +6,49 @@ import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
 import com.judopay.judokit.android.ui.cardentry.validation.Validator
+import com.judopay.judokit.android.ui.common.POSTAL_CODE_MAX_LENGTH
+import com.judopay.judokit.android.ui.common.REG_EX_CA_POST_CODE
+import com.judopay.judokit.android.ui.common.REG_EX_GB_POST_CODE
+import com.judopay.judokit.android.ui.common.REG_EX_US_POST_CODE
 
-data class PostcodeValidator(
-    var country: Country? = null,
+open class PostcodeValidator(
+    open var country: Country? = null,
     override val fieldType: String = BillingDetailsFieldType.POST_CODE.name
 ) : Validator {
 
-    private val regExGBPostcode =
-        "(GIR 0AA)|((([A-Z-[QVX]][0-9][0-9]?)|(([A-Z-[QVX]][A-Z-[IJZ]][0-9][0-9]?)|(([A-Z-[QVX‌​]][0-9][A-HJKSTUW])|([A-Z-[QVX]][A-Z-[IJZ]][0-9][ABEHMNPRVWXY]))))\\s?[0-9][A-Z-[C‌​IKMOV]]{2})".toRegex()
-    private val regExUSPostcode = "(^\\d{5}$)|(^\\d{5}-\\d{4}$)".toRegex()
-    private val regExCAPostcode =
-        "[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ][0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]".toRegex()
+    private val postCodeGBRegEx = REG_EX_GB_POST_CODE.toRegex()
+    private val postCodeUSRegEx = REG_EX_US_POST_CODE.toRegex()
+    private val postCodeCARegEx = REG_EX_CA_POST_CODE.toRegex()
 
     override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult {
         val isValid = isPostCodeValid(input)
-        val message = if (isValid) R.string.empty else errorString()
+        val shouldDisplayMessage = formFieldEvent == FormFieldEvent.FOCUS_CHANGED
+
+        val message = if (shouldDisplayMessage) {
+            if (isValid) R.string.empty else errorString()
+        } else {
+            R.string.empty
+        }
+
         return ValidationResult(isValid, message)
     }
 
     private fun errorString(): Int = when (country) {
-        Country.GB,
-        Country.CA -> R.string.invalid_postcode
         Country.US -> R.string.invalid_zip_code
-        else -> R.string.empty
+        else -> R.string.invalid_postcode
     }
 
-    private fun isPostCodeValid(input: String): Boolean = when (country) {
-        Country.GB -> input.matches(regExGBPostcode)
-        Country.US -> input.matches(regExUSPostcode)
-        Country.CA -> input.matches(regExCAPostcode)
-        Country.OTHER -> input.isNotBlank()
-        else -> false
+    private fun isPostCodeValid(input: String): Boolean {
+        if (input.replace("\\s".toRegex(), "").length > POSTAL_CODE_MAX_LENGTH) {
+            return false
+        }
+
+        return when (country) {
+            Country.GB -> input.matches(postCodeGBRegEx)
+            Country.US -> input.matches(postCodeUSRegEx)
+            Country.CA -> input.matches(postCodeCARegEx)
+            Country.OTHER -> input.isNotBlank()
+            else -> false
+        }
     }
 }

@@ -13,8 +13,8 @@ buildscript {
     ext.androidx_test_version = '1.3.0'
 
     // Set the SDK version here
-    ext.versionCode = 3004
-    ext.versionName = '3.0.4'
+    ext.versionCode = 3005
+    ext.versionName = '3.0.5'
 
     repositories {
         mavenLocal()

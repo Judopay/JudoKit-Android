@@ -63,6 +63,10 @@
     <string name="invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="invalid_city">Please enter a valid city</string>
 
+    <string name="card_holder_name_required">Cardholder Name is required</string>
+    <string name="card_holder_name_too_short">Cardholder Name can\'t be less than 4 characters</string>
+    <string name="card_holder_name_special_chars">Cardholder Name can\'t contain numbers or special characters</string>
+
     <string name="transaction_unsuccessful">Transaction unsuccessful - please try again</string>
     <string name="close">Close</string>
 

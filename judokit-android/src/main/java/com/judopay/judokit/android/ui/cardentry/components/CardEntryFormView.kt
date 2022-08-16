@@ -84,7 +84,6 @@ class CardEntryFormView @JvmOverloads constructor(
         super.onFinishInflate()
         setupFieldsContent()
         setupFieldsFormatting()
-        setupOnFocusChangeListeners()
     }
 
     private fun setupFieldsFormatting() {
@@ -92,15 +91,6 @@ class CardEntryFormView @JvmOverloads constructor(
         setupCountryFormatter()
         setupSecurityCodeFormatter()
         setupNumberFormatter()
-    }
-
-    private fun setupOnFocusChangeListeners() {
-        CardDetailsFieldType.values().kForEach { fieldType ->
-            editTextForType(fieldType).setOnFocusChangeListener { view, hasFocus ->
-                if (!hasFocus) return@setOnFocusChangeListener
-                formScrollView.smoothScrollToView(view)
-            }
-        }
     }
 
     private fun setupCountryFormatter() {
@@ -144,6 +134,7 @@ class CardEntryFormView @JvmOverloads constructor(
     }
 
     private fun setupFieldsContent() {
+        val scrollView = formScrollView
         cardEntrySubmitButton.setOnClickListener { onCardEntryButtonClickListener?.invoke() }
 
         CardDetailsFieldType.values().kForEach { type ->
@@ -156,10 +147,12 @@ class CardEntryFormView @JvmOverloads constructor(
                     textDidChange(type, this, FormFieldEvent.TEXT_CHANGED)
                 }
 
-                if (type == CardDetailsFieldType.SECURITY_NUMBER) {
-                    setOnFocusChangeListener { _, hasFocus ->
-                        val text = valueOfEditTextWithType(type)
-                        if (!hasFocus) textDidChange(type, text, FormFieldEvent.FOCUS_CHANGED)
+                setOnFocusChangeListener { _, hasFocus ->
+                    val text = valueOfEditTextWithType(type)
+                    if (!hasFocus) {
+                        textDidChange(type, text, FormFieldEvent.FOCUS_CHANGED)
+                    } else {
+                        scrollView.smoothScrollToView(editTextForType(type))
                     }
                 }
                 addTextChangedListener {

@@ -10,7 +10,7 @@ data class AddressLineValidator(
     override val fieldType: String = BillingDetailsFieldType.ADDRESS_LINE_1.name
 ) : Validator {
 
-    private val regex = Regex("^[a-zA-Z0-9,./ ]+\$")
+    private val regex = Regex("^[a-zA-Z0-9,./'\\- ]+\$")
 
     override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult {
         val shouldDisplayMessage = formFieldEvent == FormFieldEvent.FOCUS_CHANGED
