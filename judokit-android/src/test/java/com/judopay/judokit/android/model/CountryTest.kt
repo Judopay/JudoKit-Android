@@ -68,15 +68,15 @@ internal class CountryTest {
         assertEquals(6, Country.CA.postcodeMaxLength)
     }
 
-    @DisplayName("Given postCodeMaxLength is called, when country is GB, then return 8")
+    @DisplayName("Given postCodeMaxLength is called, when country is GB, then return 10")
     @Test
     fun returnEightOnPostCodeMaxLengthCallWithGB() {
-        assertEquals(8, Country.GB.postcodeMaxLength)
+        assertEquals(10, Country.GB.postcodeMaxLength)
     }
 
-    @DisplayName("Given postCodeMaxLength is called, when country is OTHER, then return 8")
+    @DisplayName("Given postCodeMaxLength is called, when country is OTHER, then return 10")
     @Test
     fun returnEightOnPostCodeMaxLengthCallWithOther() {
-        assertEquals(8, Country.OTHER.postcodeMaxLength)
+        assertEquals(10, Country.OTHER.postcodeMaxLength)
     }
 }

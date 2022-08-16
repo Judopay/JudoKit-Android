@@ -27,3 +27,13 @@ const val JUDO_KIT_VERSION = "3.0.4"
  *  Constant to store the Judo API version, injected in every Judo API request headers
  */
 const val JUDO_API_VERSION = "6.15.0"
+
+const val POSTAL_CODE_MAX_LENGTH = 10
+
+const val REG_EX_GB_POST_CODE = "(GIR 0AA)|((([A-Z-[QVX]][0-9][0-9]?)|(([A-Z-[QVX]][A-Z-[IJZ]][0-9][0-9]?)|(([A-Z-[QVX‌​]][0-9][A-HJKSTUW])|([A-Z-[QVX]][A-Z-[IJZ]][0-9][ABEHMNPRVWXY]))))\\s?[0-9][A-Z-[C‌​IKMOV]]{2})"
+const val REG_EX_US_POST_CODE = "(^\\d{5}$)|(^\\d{5}-\\d{4}$)"
+const val REG_EX_CA_POST_CODE = "[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ][0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]"
+const val REG_EX_CARDHOLDER_NAME = "^[A-Za-z ]+\$"
+const val REG_EX_CITY = "^[A-Za-z.'\\- ]+\$"
+const val REG_EX_MOBILE_NUMBER = "^.{10,}\$"
+const val REG_EX_ADDRESS_LINE = "^[a-zA-Z0-9,./'\\- ]+\$"

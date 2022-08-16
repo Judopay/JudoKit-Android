@@ -5,12 +5,13 @@ import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
 import com.judopay.judokit.android.ui.cardentry.validation.Validator
+import com.judopay.judokit.android.ui.common.REG_EX_CITY
 
 data class CityValidator(
     override val fieldType: String = BillingDetailsFieldType.CITY.name
 ) : Validator {
 
-    private val regex = Regex("^[A-Za-z]+\$")
+    private val cityNameRegEx = REG_EX_CITY.toRegex()
 
     override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult {
         val shouldDisplayMessage = formFieldEvent == FormFieldEvent.FOCUS_CHANGED
@@ -19,6 +20,6 @@ data class CityValidator(
         } else {
             R.string.empty
         }
-        return ValidationResult(regex.matches(input), message)
+        return ValidationResult(cityNameRegEx.matches(input), message)
     }
 }

@@ -73,7 +73,7 @@
                     style="@style/JudoTheme.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="textCapWords"
                     android:padding="@dimen/space_7"
                     tools:ignore="LabelFor"
                     tools:text="United Kingdom" />
@@ -140,7 +140,7 @@
                     style="@style/JudoTheme.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="textPostalAddress|textCapWords"
                     tools:text="Line 1" />
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
@@ -156,7 +156,7 @@
                     style="@style/JudoTheme.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="textPostalAddress|textCapWords"
                     tools:text="Line 2" />
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
@@ -172,7 +172,7 @@
                     style="@style/JudoTheme.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="textPostalAddress|textCapWords"
                     tools:text="Line 3" />
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
@@ -196,7 +196,7 @@
                     style="@style/JudoTheme.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="textCapWords"
                     tools:text="London" />
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
@@ -210,7 +210,7 @@
                     style="@style/JudoTheme.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="textCapCharacters"
                     tools:text="S60 5NX" />
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>

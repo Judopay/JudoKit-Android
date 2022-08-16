@@ -2,6 +2,7 @@ package com.judopay.judokit.android.ui.cardentry.validation
 
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.model.CardNetwork
+import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.model.FormModel
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.CardNumberValidator
 import io.mockk.every
@@ -27,7 +28,7 @@ internal class CardNumberValidatorTest {
     @DisplayName("Given that card number is unsupported, then a validation error should return with unknown card network not supported string")
     fun unsupportedCardNumber() {
         assertEquals(
-            validator.validate("1111 1111 1111 1111"),
+            validator.validate("1111 1111 1111 1111", FormFieldEvent.FOCUS_CHANGED),
             ValidationResult(false, R.string.error_unknown_not_supported)
         )
     }
@@ -45,7 +46,7 @@ internal class CardNumberValidatorTest {
     @DisplayName("Given that card number is unsupported with valid length and invalid luhn number, then a validation error should return with check card number string")
     fun unsupportedAndInvalidLengthCardNumber() {
         assertEquals(
-            validator.validate("4111 1111 1111 1112"),
+            validator.validate("4111 1111 1111 1112", FormFieldEvent.FOCUS_CHANGED),
             ValidationResult(false, R.string.check_card_number)
         )
     }
@@ -67,7 +68,7 @@ internal class CardNumberValidatorTest {
         validator = CardNumberValidator(supportedNetworks = formModel.cardDetailsInputModel.supportedNetworks)
 
         assertEquals(
-            validator.validate("4111 1111 1111 1111"),
+            validator.validate("4111 1111 1111 1111", FormFieldEvent.FOCUS_CHANGED),
             ValidationResult(false, R.string.error_visa_not_supported)
         )
     }

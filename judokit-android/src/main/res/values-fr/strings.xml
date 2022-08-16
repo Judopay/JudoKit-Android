@@ -65,6 +65,10 @@
     <string name="invalid_postcode">code postal invalide</string>
     <string name="invalid_zip_code">code postal invalide</string>
 
+    <string name="card_holder_name_required">Cardholder Name is required</string>
+    <string name="card_holder_name_too_short">Cardholder Name can\'t be less than 4 characters</string>
+    <string name="card_holder_name_special_chars">Cardholder Name can\'t contain numbers or special characters</string>
+
     <string name="transaction_unsuccessful">La transaction a échoué - veuillez réessayer </string>
     <string name="close">Fermer</string>
 

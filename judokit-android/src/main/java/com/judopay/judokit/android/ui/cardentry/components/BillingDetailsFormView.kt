@@ -11,6 +11,7 @@ import androidx.core.widget.addTextChangedListener
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.dismissKeyboard
 import com.judopay.judokit.android.inflate
+import com.judopay.judokit.android.model.Country
 import com.judopay.judokit.android.parentOfType
 import com.judopay.judokit.android.smoothScrollToView
 import com.judopay.judokit.android.ui.cardentry.formatting.PhoneCountryCodeTextWatcher
@@ -22,12 +23,12 @@ import com.judopay.judokit.android.ui.cardentry.model.fieldHintResId
 import com.judopay.judokit.android.ui.cardentry.model.valueOfBillingDetailsFieldWithType
 import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
 import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.AddressLineValidator
-import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.BillingDetailsPostCodeValidator
 import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.CityValidator
 import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.EmailValidator
 import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.MobileNumberValidator
 import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.PhoneCountryCodeValidator
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.CountryValidator
+import com.judopay.judokit.android.ui.cardentry.validation.carddetails.PostcodeValidator
 import kotlinx.android.synthetic.main.billing_details_form_view.view.*
 import kotlinx.android.synthetic.main.billing_details_form_view.view.countryTextInputEditText
 import kotlinx.android.synthetic.main.card_entry_form_view.view.*
@@ -64,7 +65,7 @@ class BillingDetailsFormView @JvmOverloads constructor(
         PhoneCountryCodeValidator(),
         MobileNumberValidator(),
         CityValidator(),
-        BillingDetailsPostCodeValidator(),
+        PostcodeValidator(),
         AddressLineValidator()
     )
 
@@ -81,6 +82,20 @@ class BillingDetailsFormView @JvmOverloads constructor(
 
     private var mobileNumberFormatter: PhoneNumberFormattingTextWatcher? = null
     private var selectedCountry: CountryInfo? = null
+        set(value) {
+            field = value
+
+            val dialCode = value?.dialCode ?: ""
+            val country = Country.values().firstOrNull { it.name == selectedCountry?.alpha2Code } ?: Country.OTHER
+
+            textInputLayoutForType(BillingDetailsFieldType.PHONE_COUNTRY_CODE)?.let {
+                it.editText?.setText(dialCode)
+            }
+
+            validatorInstance<PostcodeValidator>()?.let {
+                it.country = country
+            }
+        }
 
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -88,17 +103,6 @@ class BillingDetailsFormView @JvmOverloads constructor(
         setupPhoneCountryCodeFormatter()
         setupMobileNumberFormatter()
         setupCountrySpinner()
-
-        setupOnFocusChangeListeners()
-    }
-
-    private fun setupOnFocusChangeListeners() {
-        BillingDetailsFieldType.values().forEach {
-            editTextForType(it).setOnFocusChangeListener { view, hasFocus ->
-                if (!hasFocus) return@setOnFocusChangeListener
-                billingDetailsScrollView.smoothScrollToView(view)
-            }
-        }
     }
 
     private fun setupCountrySpinner() = countryTextInputEditText.apply {
@@ -131,6 +135,8 @@ class BillingDetailsFormView @JvmOverloads constructor(
         }
 
     private fun setupFieldsContent() {
+        val scrollView = billingDetailsScrollView
+
         setAddAddressButtonClickListener()
         billingDetailsBackButton.setOnClickListener { onBillingDetailsBackButtonClickListener?.invoke() }
         billingDetailsSubmitButton.setOnClickListener {
@@ -152,6 +158,7 @@ class BillingDetailsFormView @JvmOverloads constructor(
                     setOnFocusChangeListener { _, hasFocus ->
                         if (hasFocus) {
                             setupMobileNumberFormatter()
+                            scrollView.smoothScrollToView(editTextForType(type))
                         } else {
                             val text = valueOfEditTextWithType(type)
                             textDidChange(type, text, FormFieldEvent.FOCUS_CHANGED)
@@ -160,7 +167,11 @@ class BillingDetailsFormView @JvmOverloads constructor(
                 } else {
                     setOnFocusChangeListener { _, hasFocus ->
                         val text = valueOfEditTextWithType(type)
-                        if (!hasFocus) textDidChange(type, text, FormFieldEvent.FOCUS_CHANGED)
+                        if (!hasFocus) {
+                            textDidChange(type, text, FormFieldEvent.FOCUS_CHANGED)
+                        } else {
+                            scrollView.smoothScrollToView(editTextForType(type))
+                        }
                     }
                 }
 
@@ -268,5 +279,9 @@ class BillingDetailsFormView @JvmOverloads constructor(
         )
 
         onFormValidationStatusListener?.invoke(inputModel, isFormValid)
+    }
+
+    private inline fun <reified V> validatorInstance(): V? {
+        return validators.firstOrNull { it is V } as V?
     }
 }

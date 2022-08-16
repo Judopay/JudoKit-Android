@@ -15,11 +15,14 @@ class ExpirationDateValidator(
     override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult {
         val date = cardDate.apply { cardDate = input }
         val isValid = date.isAfterToday && date.isInsideAllowedDateRange
-        val showError = input.length == 5
+        val shouldNotDisplayMessage = formFieldEvent != FormFieldEvent.FOCUS_CHANGED
 
-        return ValidationResult(
-            isValid,
-            if (isValid || !showError) R.string.empty else R.string.check_expiry_date
-        )
+        val message = when {
+            shouldNotDisplayMessage -> R.string.empty
+            !isValid -> R.string.check_expiry_date
+            else -> R.string.empty
+        }
+
+        return ValidationResult(isValid, message)
     }
 }

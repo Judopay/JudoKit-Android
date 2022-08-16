@@ -2,6 +2,7 @@ package com.judopay.judokit.android.ui.cardentry.validation
 
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.model.response.CardDate
+import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.ExpirationDateValidator
 import io.mockk.every
 import io.mockk.mockk
@@ -21,7 +22,7 @@ internal class ExpirationDateValidatorTest {
         every { cardDate.isAfterToday } returns false
         every { cardDate.isInsideAllowedDateRange } returns true
 
-        assertEquals(ValidationResult(false, R.string.check_expiry_date), sut.validate("12/20"))
+        assertEquals(ValidationResult(false, R.string.check_expiry_date), sut.validate("12/20", FormFieldEvent.FOCUS_CHANGED))
     }
 
     @DisplayName("Given date is not inside allowed date range, then return isValid false")
@@ -30,7 +31,7 @@ internal class ExpirationDateValidatorTest {
         every { cardDate.isAfterToday } returns true
         every { cardDate.isInsideAllowedDateRange } returns false
 
-        assertEquals(ValidationResult(false, R.string.check_expiry_date), sut.validate("12/20"))
+        assertEquals(ValidationResult(false, R.string.check_expiry_date), sut.validate("12/20", FormFieldEvent.FOCUS_CHANGED))
     }
 
     @DisplayName("Given date is valid, then return isValid true")

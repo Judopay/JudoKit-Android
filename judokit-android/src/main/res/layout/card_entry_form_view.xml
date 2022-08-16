@@ -64,7 +64,7 @@
                     style="@style/JudoTheme.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
+                    android:inputType="textPersonName|textCapWords"
                     tools:text="Endava Recruit" />
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
