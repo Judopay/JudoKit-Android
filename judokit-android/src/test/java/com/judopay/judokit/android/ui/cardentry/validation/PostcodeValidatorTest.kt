@@ -2,6 +2,7 @@ package com.judopay.judokit.android.ui.cardentry.validation
 
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.model.Country
+import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.PostcodeValidator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
@@ -15,7 +16,7 @@ internal class PostcodeValidatorTest {
     fun invalidateWrongGBPostCode() {
         validator.country = Country.GB
         assertEquals(
-            validator.validate("postcode"),
+            validator.validate("postcode", FormFieldEvent.FOCUS_CHANGED),
             ValidationResult(false, R.string.invalid_postcode)
         )
     }
@@ -35,7 +36,7 @@ internal class PostcodeValidatorTest {
     fun invalidateWrongCAPostCode() {
         validator.country = Country.CA
         assertEquals(
-            validator.validate("post code"),
+            validator.validate("post code", FormFieldEvent.FOCUS_CHANGED),
             ValidationResult(false, R.string.invalid_postcode)
         )
     }
@@ -58,7 +59,7 @@ internal class PostcodeValidatorTest {
     fun invalidateWrongUSZipCode() {
         validator.country = Country.US
         assertEquals(
-            validator.validate("zipcode"),
+            validator.validate("zipcode", FormFieldEvent.FOCUS_CHANGED),
             ValidationResult(false, R.string.invalid_zip_code)
         )
     }
