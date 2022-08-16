@@ -5,12 +5,13 @@ import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
 import com.judopay.judokit.android.ui.cardentry.validation.Validator
+import com.judopay.judokit.android.ui.common.REG_EX_MOBILE_NUMBER
 
 data class MobileNumberValidator(
     override val fieldType: String = BillingDetailsFieldType.MOBILE_NUMBER.name
 ) : Validator {
 
-    private val regex = Regex("^.{10,}\$")
+    private val mobileNumberRegEx = REG_EX_MOBILE_NUMBER.toRegex()
 
     override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult {
         val shouldDisplayMessage = formFieldEvent == FormFieldEvent.FOCUS_CHANGED
@@ -19,6 +20,6 @@ data class MobileNumberValidator(
         } else {
             R.string.empty
         }
-        return ValidationResult(regex.matches(input), message)
+        return ValidationResult(mobileNumberRegEx.matches(input), message)
     }
 }

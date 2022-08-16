@@ -43,11 +43,13 @@ open class PostcodeValidator(
             return false
         }
 
+        val code = input.uppercase()
+
         return when (country) {
-            Country.GB -> input.matches(postCodeGBRegEx)
-            Country.US -> input.matches(postCodeUSRegEx)
-            Country.CA -> input.matches(postCodeCARegEx)
-            Country.OTHER -> input.isNotBlank()
+            Country.GB -> code.matches(postCodeGBRegEx)
+            Country.US -> code.matches(postCodeUSRegEx)
+            Country.CA -> code.matches(postCodeCARegEx)
+            Country.OTHER -> code.isNotBlank()
             else -> false
         }
     }

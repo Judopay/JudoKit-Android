@@ -82,6 +82,20 @@ class BillingDetailsFormView @JvmOverloads constructor(
 
     private var mobileNumberFormatter: PhoneNumberFormattingTextWatcher? = null
     private var selectedCountry: CountryInfo? = null
+    set(value) {
+        field = value
+
+        val dialCode = value?.dialCode ?: ""
+        val country = Country.values().firstOrNull { it.name == selectedCountry?.alpha2Code } ?: Country.OTHER
+
+        textInputLayoutForType(BillingDetailsFieldType.PHONE_COUNTRY_CODE)?.let {
+            it.editText?.setText(dialCode)
+        }
+
+        validatorInstance<PostcodeValidator>()?.let {
+            it.country = country
+        }
+    }
 
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -97,7 +111,6 @@ class BillingDetailsFormView @JvmOverloads constructor(
         setAdapter(adapter)
         setOnItemClickListener { parent, _, index, _ ->
             selectedCountry = parent.getItemAtPosition(index) as CountryInfo
-            validatorInstance<PostcodeValidator>()?.country = Country.values().firstOrNull { it.name == selectedCountry?.alpha2Code } ?: Country.OTHER
         }
     }
 
