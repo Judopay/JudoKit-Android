@@ -28,8 +28,8 @@ android {
         applicationId "com.judokit.android.examples"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 338
-        versionName "3.0.5 (2) -" + getGitHash()
+        versionCode 339
+        versionName "3.0.6 (1) -" + getGitHash()
         multiDexEnabled true
         testInstrumentationRunner "com.judokit.android.examples.test.CucumberRunner"
     }
