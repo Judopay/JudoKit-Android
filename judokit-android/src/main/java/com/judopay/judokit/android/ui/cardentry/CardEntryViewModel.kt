@@ -1,30 +1,16 @@
 package com.judopay.judokit.android.ui.cardentry
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.db.entity.TokenizedCardEntity
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
-import com.judopay.judokit.android.model.CardNetwork
-import com.judopay.judokit.android.model.CardScanningResult
-import com.judopay.judokit.android.model.JudoPaymentResult
-import com.judopay.judokit.android.model.PaymentWidgetType
-import com.judopay.judokit.android.model.TransactionDetails
-import com.judopay.judokit.android.model.formatted
-import com.judopay.judokit.android.model.toInputModel
+import com.judopay.judokit.android.model.*
 import com.judopay.judokit.android.service.CardTransactionManager
 import com.judopay.judokit.android.service.CardTransactionManagerResultListener
-import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsInputModel
-import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
-import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
-import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
-import com.judopay.judokit.android.ui.cardentry.model.FormModel
+import com.judopay.judokit.android.ui.cardentry.model.*
 import com.judopay.judokit.android.ui.common.ButtonState
 import com.judopay.judokit.android.ui.paymentmethods.toTokenizedCardEntity
 import com.judopay.judokit.android.withWhitespacesRemoved
@@ -193,7 +179,7 @@ class CardEntryViewModel(
                 cardTransactionManager.unRegisterResultListener(this)
             }
             is CardEntryAction.InsertCard -> {
-                val entity = action.tokenizedCard.toTokenizedCardEntity(context)
+                val entity = action.tokenizedCard.toTokenizedCardEntity(context, inputModel.cardHolderName)
                 insert(entity)
             }
             is CardEntryAction.ValidationStatusChanged -> {

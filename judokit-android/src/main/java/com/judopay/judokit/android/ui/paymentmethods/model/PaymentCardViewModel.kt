@@ -12,7 +12,8 @@ data class PaymentCardViewModel(
     val name: String = "",
     val maskedNumber: String = "",
     val expireDate: String = "",
-    val pattern: CardPattern = CardPattern.BLACK
+    val pattern: CardPattern = CardPattern.BLACK,
+    val cardholderName: String = ""
 ) : CardViewModel {
 
     override fun equals(other: Any?): Boolean {
@@ -28,6 +29,7 @@ data class PaymentCardViewModel(
         if (maskedNumber != other.maskedNumber) return false
         if (expireDate != other.expireDate) return false
         if (pattern != other.pattern) return false
+        if (cardholderName != other.cardholderName) return false
 
         return true
     }
@@ -40,6 +42,7 @@ data class PaymentCardViewModel(
         result = 31 * result + maskedNumber.hashCode()
         result = 31 * result + expireDate.hashCode()
         result = 31 * result + pattern.hashCode()
+        result = 31 * result + cardholderName.hashCode()
         return result
     }
 }

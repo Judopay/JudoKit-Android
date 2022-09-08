@@ -10,38 +10,14 @@ import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.model.response.CardDate
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
-import com.judopay.judokit.android.model.Currency
-import com.judopay.judokit.android.model.JudoPaymentResult
-import com.judopay.judokit.android.model.PaymentMethod
-import com.judopay.judokit.android.model.PaymentWidgetType
-import com.judopay.judokit.android.model.TransactionDetails
-import com.judopay.judokit.android.model.formatted
-import com.judopay.judokit.android.model.paymentButtonType
+import com.judopay.judokit.android.model.*
 import com.judopay.judokit.android.service.CardTransactionManager
 import com.judopay.judokit.android.service.CardTransactionManagerResultListener
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.common.ButtonState
-import com.judopay.judokit.android.ui.paymentmethods.adapter.model.IdealBank
-import com.judopay.judokit.android.ui.paymentmethods.adapter.model.IdealBankItem
-import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
-import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItem
-import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItemType
-import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodSavedCardItem
-import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodSelectorItem
-import com.judopay.judokit.android.ui.paymentmethods.components.GooglePayCardViewModel
-import com.judopay.judokit.android.ui.paymentmethods.components.NoPaymentMethodSelectedViewModel
-import com.judopay.judokit.android.ui.paymentmethods.components.PayByBankCardViewModel
-import com.judopay.judokit.android.ui.paymentmethods.components.PaymentCallToActionViewModel
-import com.judopay.judokit.android.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
-import com.judopay.judokit.android.ui.paymentmethods.model.CardPaymentMethodModel
-import com.judopay.judokit.android.ui.paymentmethods.model.CardViewModel
-import com.judopay.judokit.android.ui.paymentmethods.model.Event
-import com.judopay.judokit.android.ui.paymentmethods.model.GooglePayPaymentMethodModel
-import com.judopay.judokit.android.ui.paymentmethods.model.IdealPaymentCardViewModel
-import com.judopay.judokit.android.ui.paymentmethods.model.IdealPaymentMethodModel
-import com.judopay.judokit.android.ui.paymentmethods.model.PayByBankPaymentMethodModel
-import com.judopay.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
-import com.judopay.judokit.android.ui.paymentmethods.model.PaymentMethodModel
+import com.judopay.judokit.android.ui.paymentmethods.adapter.model.*
+import com.judopay.judokit.android.ui.paymentmethods.components.*
+import com.judopay.judokit.android.ui.paymentmethods.model.*
 import com.zapp.library.merchant.util.PBBAAppUtils
 import kotlinx.coroutines.launch
 
@@ -222,11 +198,18 @@ class PaymentMethodsViewModel(
                 .setCardLastFour(entity.ending)
                 .setCardType(entity.network)
                 .setExpirationDate(entity.expireDate)
+                .setCardHolderName(entity.cardholderName)
 
             if (judo.paymentWidgetType == PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS) {
-                cardTransactionManager.preAuthWithToken(transactionDetailBuilder.build(), PaymentMethodsViewModel::class.java.name)
+                cardTransactionManager.preAuthWithToken(
+                    transactionDetailBuilder.build(),
+                    PaymentMethodsViewModel::class.java.name
+                )
             } else {
-                cardTransactionManager.paymentWithToken(transactionDetailBuilder.build(), PaymentMethodsViewModel::class.java.name)
+                cardTransactionManager.paymentWithToken(
+                    transactionDetailBuilder.build(),
+                    PaymentMethodsViewModel::class.java.name
+                )
             }
         }
     }
