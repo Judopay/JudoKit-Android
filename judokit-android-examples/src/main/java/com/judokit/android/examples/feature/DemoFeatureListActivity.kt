@@ -320,8 +320,20 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val mobileNumber = sharedPreferences.getString("mobile_number", null)
         val phoneCountryCode = sharedPreferences.getString("phone_country_code", null)
         val emailAddress = sharedPreferences.getString("email_address", null)
-        val challengeRequestIndicator = sharedPreferences.getString("challengeRequestIndicator", null)?.let { ChallengeRequestIndicator.valueOf(it) }
-        val scaExemption = sharedPreferences.getString("scaExemption", null)?.let { ScaExemption.valueOf(it) }
+        val challengeRequestIndicator = sharedPreferences.getString("challengeRequestIndicator", null)?.let {
+            try {
+                ChallengeRequestIndicator.valueOf(it)
+            } catch (throwable: Throwable) {
+                null
+            }
+        }
+        val scaExemption = sharedPreferences.getString("scaExemption", null)?.let {
+            try {
+                ScaExemption.valueOf(it)
+            } catch (throwable: Throwable) {
+                null
+            }
+        }
         val threeDSTwoMaxTimeout = sharedPreferences.getString("threeDSTwoMaxTimeout", null)?.toInt()
         val messageVersion = sharedPreferences.getString("threeDSTwoMessageVersion", null)
         val address = cardAddress
