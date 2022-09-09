@@ -11,6 +11,7 @@ data class PaymentMethodSavedCardItem(
     val ending: String,
     val token: String,
     val expireDate: String,
+    val cardholderName: String,
     var isSelected: Boolean = false,
     var isInEditMode: Boolean = false,
     val pattern: CardPattern = CardPattern.BLACK
@@ -28,6 +29,7 @@ data class PaymentMethodSavedCardItem(
         if (ending != other.ending) return false
         if (token != other.token) return false
         if (expireDate != other.expireDate) return false
+        if (cardholderName != other.cardholderName) return false
         if (isSelected != other.isSelected) return false
         if (isInEditMode != other.isInEditMode) return false
         if (pattern != other.pattern) return false
@@ -43,6 +45,7 @@ data class PaymentMethodSavedCardItem(
         result = 31 * result + ending.hashCode()
         result = 31 * result + token.hashCode()
         result = 31 * result + expireDate.hashCode()
+        result = 31 * result + cardholderName.hashCode()
         result = 31 * result + isSelected.hashCode()
         result = 31 * result + isInEditMode.hashCode()
         result = 31 * result + pattern.hashCode()

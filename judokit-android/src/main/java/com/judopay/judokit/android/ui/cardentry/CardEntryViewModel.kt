@@ -193,7 +193,7 @@ class CardEntryViewModel(
                 cardTransactionManager.unRegisterResultListener(this)
             }
             is CardEntryAction.InsertCard -> {
-                val entity = action.tokenizedCard.toTokenizedCardEntity(context)
+                val entity = action.tokenizedCard.toTokenizedCardEntity(context, inputModel.cardHolderName)
                 insert(entity)
             }
             is CardEntryAction.ValidationStatusChanged -> {

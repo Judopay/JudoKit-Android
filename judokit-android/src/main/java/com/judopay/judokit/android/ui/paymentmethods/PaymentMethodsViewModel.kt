@@ -222,11 +222,18 @@ class PaymentMethodsViewModel(
                 .setCardLastFour(entity.ending)
                 .setCardType(entity.network)
                 .setExpirationDate(entity.expireDate)
+                .setCardHolderName(entity.cardholderName)
 
             if (judo.paymentWidgetType == PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS) {
-                cardTransactionManager.preAuthWithToken(transactionDetailBuilder.build(), PaymentMethodsViewModel::class.java.name)
+                cardTransactionManager.preAuthWithToken(
+                    transactionDetailBuilder.build(),
+                    PaymentMethodsViewModel::class.java.name
+                )
             } else {
-                cardTransactionManager.paymentWithToken(transactionDetailBuilder.build(), PaymentMethodsViewModel::class.java.name)
+                cardTransactionManager.paymentWithToken(
+                    transactionDetailBuilder.build(),
+                    PaymentMethodsViewModel::class.java.name
+                )
             }
         }
     }

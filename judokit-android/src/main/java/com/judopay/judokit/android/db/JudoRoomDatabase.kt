@@ -10,7 +10,7 @@ import com.judopay.judokit.android.db.entity.TokenizedCardEntity
 
 @Database(
     entities = [TokenizedCardEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(JudoTypeConverters::class)

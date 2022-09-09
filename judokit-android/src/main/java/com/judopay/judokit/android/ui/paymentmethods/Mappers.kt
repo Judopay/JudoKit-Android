@@ -17,7 +17,8 @@ fun TokenizedCardEntity.toPaymentMethodSavedCardItem() = PaymentMethodSavedCardI
     ending = ending,
     token = token,
     expireDate = expireDate,
-    pattern = pattern
+    pattern = pattern,
+    cardholderName = cardholderName
 )
 
 fun PaymentMethodSavedCardItem.toPaymentCardViewModel() = PaymentCardViewModel(
@@ -26,10 +27,11 @@ fun PaymentMethodSavedCardItem.toPaymentCardViewModel() = PaymentCardViewModel(
     name = title,
     maskedNumber = ending,
     expireDate = expireDate,
-    pattern = pattern
+    pattern = pattern,
+    cardholderName = cardholderName
 )
 
-fun CardToken.toTokenizedCardEntity(context: Context): TokenizedCardEntity {
+fun CardToken.toTokenizedCardEntity(context: Context, cardholderName: String): TokenizedCardEntity {
     val network = CardNetwork.withIdentifier(type)
     val patterns = CardPattern.values()
     return TokenizedCardEntity(
@@ -38,6 +40,7 @@ fun CardToken.toTokenizedCardEntity(context: Context): TokenizedCardEntity {
         expireDate = formattedEndDate,
         ending = lastFour ?: "",
         network = network,
-        pattern = patterns[Random.nextInt(patterns.size)]
+        pattern = patterns[Random.nextInt(patterns.size)],
+        cardholderName = cardholderName
     )
 }
