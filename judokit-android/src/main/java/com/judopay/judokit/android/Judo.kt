@@ -97,7 +97,7 @@ class Judo internal constructor(
         private var pbbaConfiguration: PBBAConfiguration? = null
         private var initialRecurringPayment: Boolean? = null
         private var networkTimeout: NetworkTimeout? = null
-        private var challengeRequestIndicator: ChallengeRequestIndicator? = ChallengeRequestIndicator.CHALLENGE_AS_MANDATE
+        private var challengeRequestIndicator: ChallengeRequestIndicator? = null
         private var scaExemption: ScaExemption? = null
         private var mobileNumber: String? = null
         private var phoneCountryCode: String? = null
@@ -338,8 +338,8 @@ class Judo internal constructor(
                 pbbaConfiguration,
                 initialRecurringPayment,
                 myNetworkTimeout,
-                challengeRequestIndicator ?: ChallengeRequestIndicator.CHALLENGE_AS_MANDATE,
-                scaExemption ?: ScaExemption.LOW_VALUE,
+                challengeRequestIndicator,
+                scaExemption,
                 mobileNumber,
                 phoneCountryCode,
                 emailAddress,

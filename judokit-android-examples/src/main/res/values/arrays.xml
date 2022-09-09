@@ -160,6 +160,7 @@
     </string-array>
 
     <string-array name="three_ds_two_challenge_request_indicator_values">
+        <item>DON_T_SET</item>
         <item>NO_PREFERENCE</item>
         <item>NO_CHALLENGE</item>
         <item>CHALLENGE_PREFERRED</item>
@@ -167,6 +168,7 @@
     </string-array>
 
     <string-array name="three_ds_two_challenge_request_indicator_entries">
+        <item>Don\'t set</item>
         <item>No preference</item>
         <item>No challenge</item>
         <item>Challenge preferred</item>
@@ -174,6 +176,7 @@
     </string-array>
 
     <string-array name="three_ds_two_sca_exemption_values">
+        <item>DON_T_SET</item>
         <item>LOW_VALUE</item>
         <item>SECURE_CORPORATE</item>
         <item>TRUSTED_BENEFICIARY</item>
@@ -181,6 +184,7 @@
     </string-array>
 
     <string-array name="three_ds_two_sca_exemption_entries">
+        <item>Don\'t set</item>
         <item>Low value</item>
         <item>Secure corporate</item>
         <item>Trusted beneficiary</item>
