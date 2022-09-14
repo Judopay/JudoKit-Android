@@ -198,7 +198,7 @@ jobs:
           name: Release SDK to Maven Central
           command: |
             export ORG_GRADLE_PROJECT_signingKey=$(echo "$ORG_GRADLE_PROJECT_signingKey_base64" | base64 -d)
-            ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository --debug
+            ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
   report_to_jira:
     docker:
       - image: europe-docker.pkg.dev/opnf-management/docker/deployer:latest
