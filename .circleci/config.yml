@@ -22,7 +22,7 @@ commands:
 executors:
   android:
     docker:
-      - image: circleci/android:api-30
+      - image: circleci/android:api-29
 
 jobs:
   build_sdk:
