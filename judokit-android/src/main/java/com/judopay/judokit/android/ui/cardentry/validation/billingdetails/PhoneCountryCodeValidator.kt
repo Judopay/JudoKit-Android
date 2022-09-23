@@ -10,7 +10,7 @@ data class PhoneCountryCodeValidator(
 ) : Validator {
 
     override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult {
-        val isValid = input.length > 4
+        val isValid = input.length >= 4
 
         return ValidationResult(isValid)
     }
