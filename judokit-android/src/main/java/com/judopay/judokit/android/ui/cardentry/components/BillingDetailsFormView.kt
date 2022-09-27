@@ -317,7 +317,7 @@ class BillingDetailsFormView @JvmOverloads constructor(
     private fun onValidationPassed(isFormValid: Boolean) {
         val inputModel = BillingDetailsInputModel(
             countryCode = selectedCountry?.numericCode ?: "",
-            state = selectedState?.ISOCode ?: "",
+            state = selectedState?.isoCode ?: "",
             postalCode = valueOfEditTextWithType(BillingDetailsFieldType.POST_CODE),
             email = valueOfEditTextWithType(BillingDetailsFieldType.EMAIL),
             addressLine1 = valueOfEditTextWithType(BillingDetailsFieldType.ADDRESS_LINE_1),
