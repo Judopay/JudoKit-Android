@@ -79,7 +79,7 @@ class TransactionDetails private constructor(
         fun setAddressLine3(addressLine3: String?) = apply { this.addressLine3 = addressLine3 }
         fun setCity(city: String?) = apply { this.city = city }
         fun setPostalCode(postalCode: String?) = apply { this.postalCode = postalCode }
-        fun setState(state: String?) = apply { this.state = state}
+        fun setState(state: String?) = apply { this.state = state }
         fun setCardToken(cardToken: String?) = apply { this.cardToken = cardToken }
         fun setCardType(cardType: CardNetwork?) = apply { this.cardType = cardType }
         fun setCardLastFour(cardLastFour: String?) = apply { this.cardLastFour = cardLastFour }
