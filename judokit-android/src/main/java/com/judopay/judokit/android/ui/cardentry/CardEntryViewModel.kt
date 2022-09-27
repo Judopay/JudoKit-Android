@@ -278,6 +278,7 @@ class CardEntryViewModel(
                         .setAddressLine3(addressLine3)
                         .setCity(city)
                         .setPostalCode(postalCode)
+                        .setState(state)
                 )
             }
             return@launch
@@ -304,6 +305,7 @@ class CardEntryViewModel(
                 .setAddressLine3(addressLine3)
                 .setCity(city)
                 .setPostalCode(postalCode)
+                .setState(state)
         }
 
         val details = transactionDetailBuilder.build()

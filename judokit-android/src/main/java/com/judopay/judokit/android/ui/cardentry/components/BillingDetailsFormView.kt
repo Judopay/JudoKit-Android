@@ -7,11 +7,15 @@ import android.util.AttributeSet
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.FrameLayout
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.dismissKeyboard
 import com.judopay.judokit.android.inflate
 import com.judopay.judokit.android.model.Country
+import com.judopay.judokit.android.model.State
+import com.judopay.judokit.android.model.canadaProvincesAndTerritories
+import com.judopay.judokit.android.model.usStates
 import com.judopay.judokit.android.parentOfType
 import com.judopay.judokit.android.smoothScrollToView
 import com.judopay.judokit.android.ui.cardentry.formatting.PhoneCountryCodeTextWatcher
@@ -29,9 +33,8 @@ import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.Mobile
 import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.PhoneCountryCodeValidator
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.CountryValidator
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.PostcodeValidator
+import com.judopay.judokit.android.ui.cardentry.validation.carddetails.StateValidator
 import kotlinx.android.synthetic.main.billing_details_form_view.view.*
-import kotlinx.android.synthetic.main.billing_details_form_view.view.countryTextInputEditText
-import kotlinx.android.synthetic.main.card_entry_form_view.view.*
 
 internal typealias BillingDetailsFormValidationStatus = (model: BillingDetailsInputModel, isValid: Boolean) -> Unit
 internal typealias BillingDetailsSubmitButtonClickListener = () -> Unit
@@ -62,6 +65,7 @@ class BillingDetailsFormView @JvmOverloads constructor(
     private var validators = mutableListOf(
         EmailValidator(),
         CountryValidator(),
+        StateValidator(),
         PhoneCountryCodeValidator(),
         MobileNumberValidator(),
         CityValidator(),
@@ -69,7 +73,8 @@ class BillingDetailsFormView @JvmOverloads constructor(
         AddressLineValidator()
     )
 
-    private val phoneNumberFields = arrayListOf(BillingDetailsFieldType.PHONE_COUNTRY_CODE.name, BillingDetailsFieldType.MOBILE_NUMBER.name)
+    private val phoneNumberFields =
+        arrayListOf(BillingDetailsFieldType.PHONE_COUNTRY_CODE.name, BillingDetailsFieldType.MOBILE_NUMBER.name)
 
     private val countries: Array<CountryInfo>
         get() = CountryInfo.list(context)
@@ -81,6 +86,7 @@ class BillingDetailsFormView @JvmOverloads constructor(
     }
 
     private var mobileNumberFormatter: PhoneNumberFormattingTextWatcher? = null
+    private var selectedState: State? = null
     private var selectedCountry: CountryInfo? = null
         set(value) {
             field = value
@@ -95,6 +101,13 @@ class BillingDetailsFormView @JvmOverloads constructor(
             validatorInstance<PostcodeValidator>()?.let {
                 it.country = country
             }
+
+            validatorInstance<StateValidator>()?.let {
+                it.country = country
+            }
+
+            setupStateSpinner(country)
+            updateSubmitButtonState()
         }
 
     override fun onFinishInflate() {
@@ -103,15 +116,47 @@ class BillingDetailsFormView @JvmOverloads constructor(
         setupPhoneCountryCodeFormatter()
         setupMobileNumberFormatter()
         setupCountrySpinner()
+        setupStateSpinner(Country.OTHER)
     }
 
     private fun setupCountrySpinner() = countryTextInputEditText.apply {
-        val adapter =
-            ArrayAdapter(context, R.layout.country_select_dialog_item, countries)
+        val adapter = ArrayAdapter(context, R.layout.country_select_dialog_item, countries)
         setAdapter(adapter)
         setOnItemClickListener { parent, _, index, _ ->
             selectedCountry = parent.getItemAtPosition(index) as CountryInfo
         }
+    }
+
+    private fun setupStateSpinner(country: Country) {
+        var states = emptyList<State>()
+        var hint = R.string.empty
+        when (country) {
+            Country.US -> {
+                states = usStates
+                hint = R.string.us_state_hint
+            }
+            Country.CA -> {
+                states = canadaProvincesAndTerritories
+                hint = R.string.ca_province_hint
+            }
+            else -> {
+                validationResultsCache[BillingDetailsFieldType.STATE] = true
+            }
+        }
+        val hasStates = states.isNotEmpty()
+        if (hasStates) {
+            validationResultsCache[BillingDetailsFieldType.STATE] = false
+            stateTextInputEditText.apply {
+                setHint(hint)
+                setAdapter(ArrayAdapter(context, R.layout.country_select_dialog_item, states))
+                setOnItemClickListener { parent, _, position, _ ->
+                    selectedState = parent.getItemAtPosition(position) as State
+                }
+            }
+        }
+        selectedState = null
+        stateTextInputEditText.setText("")
+        stateTextInputLayout.isVisible = hasStates
     }
 
     private fun setupPhoneCountryCodeFormatter() =
@@ -198,6 +243,7 @@ class BillingDetailsFormView @JvmOverloads constructor(
 
     private fun editTextForType(type: BillingDetailsFieldType): EditText = when (type) {
         BillingDetailsFieldType.COUNTRY -> countryTextInputEditText
+        BillingDetailsFieldType.STATE -> stateTextInputEditText
         BillingDetailsFieldType.POST_CODE -> postalCodeTextInputEditText
         BillingDetailsFieldType.EMAIL -> emailTextInputEditText
         BillingDetailsFieldType.PHONE_COUNTRY_CODE -> phoneCountryCodeTextInputEditText
@@ -217,7 +263,10 @@ class BillingDetailsFormView @JvmOverloads constructor(
                     when {
                         // in case country code is empty, don't apply the phone validation
                         code.isEmpty() && number.isEmpty() -> return@mapNotNull null
-                        code.isEmpty() && number.isNotEmpty() -> return@mapNotNull ValidationResult(false, R.string.invalid_phone_country_code)
+                        code.isEmpty() && number.isNotEmpty() -> return@mapNotNull ValidationResult(
+                            false,
+                            R.string.invalid_phone_country_code
+                        )
                     }
                 }
 
@@ -268,6 +317,7 @@ class BillingDetailsFormView @JvmOverloads constructor(
     private fun onValidationPassed(isFormValid: Boolean) {
         val inputModel = BillingDetailsInputModel(
             countryCode = selectedCountry?.numericCode ?: "",
+            state = selectedState?.ISOCode ?: "",
             postalCode = valueOfEditTextWithType(BillingDetailsFieldType.POST_CODE),
             email = valueOfEditTextWithType(BillingDetailsFieldType.EMAIL),
             addressLine1 = valueOfEditTextWithType(BillingDetailsFieldType.ADDRESS_LINE_1),

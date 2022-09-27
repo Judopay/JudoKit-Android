@@ -24,6 +24,8 @@
     <string name="card_number_hint">Card number</string>
     <string name="card_holder_hint">Cardholder Name</string>
     <string name="country_hint">Country</string>
+    <string name="us_state_hint">State</string>
+    <string name="ca_province_hint">Province or territory</string>
     <string name="post_code_hint">Postcode</string>
     <string name="email_hint">Email</string>
     <string name="phone_country_code_hint">+()</string>
@@ -50,6 +52,8 @@
     <string name="check_mastercard_security_code">Check your CVC2</string>
     <string name="check_china_union_pay_security_code">Check your CVN2</string>
     <string name="error_country_should_not_be_empty">Please select a country</string>
+    <string name="error_state_should_not_be_empty">Please select a state</string>
+    <string name="error_province_territory_should_not_be_empty">Please select a province or territory</string>
     <string name="card_subtitle">%1$s Ending</string>
     <string name="expired">Expired</string>
     <string name="is_expired">is Expired</string>

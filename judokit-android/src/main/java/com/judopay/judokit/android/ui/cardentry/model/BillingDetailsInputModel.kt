@@ -13,5 +13,6 @@ data class BillingDetailsInputModel(
     val city: String = "",
     val countryCode: String = "",
     val postalCode: String = "",
+    val state: String = "",
     var buttonState: ButtonState = ButtonState.Disabled(R.string.pay_now)
 )
