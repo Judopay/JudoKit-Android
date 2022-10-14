@@ -74,7 +74,16 @@ class Address internal constructor(
          * @return An instance of [Address]
          */
         fun build(): Address {
-            return Address(line1, line2, line3, town, billingCountry, postCode, countryCode, state)
+            return Address(
+                line1 = line1,
+                line2 = line2,
+                line3 = line3,
+                town = town,
+                billingCountry = billingCountry,
+                postCode = postCode,
+                countryCode = countryCode,
+                state = if (state.isNullOrBlank()) null else state
+            )
         }
     }
 }
