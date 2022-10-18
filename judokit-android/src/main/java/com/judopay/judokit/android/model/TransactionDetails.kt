@@ -37,7 +37,8 @@ class TransactionDetails private constructor(
     val postalCode: String?,
     val cardToken: String?,
     val cardType: CardNetwork?,
-    val cardLastFour: String?
+    val cardLastFour: String?,
+    val state: String?
 ) {
     class Builder {
         private var cardNumber: String? = null
@@ -45,6 +46,7 @@ class TransactionDetails private constructor(
         private var expirationDate: String? = null
         private var securityNumber: String? = null
         private var countryCode: String? = null
+        private var state: String? = null
         private var email: String? = null
         private var phoneCountryCode: String? = null
         private var mobileNumber: String? = null
@@ -58,26 +60,26 @@ class TransactionDetails private constructor(
         private var cardLastFour: String? = null
 
         fun setCardNumber(cardNumber: String?) = apply { this.cardNumber = cardNumber }
-        fun setCardHolderName(cardHolderName: String?) =
-            apply { this.cardHolderName = cardHolderName }
+        fun setCardHolderName(cardHolderName: String?) = apply { this.cardHolderName = cardHolderName }
 
-        fun setExpirationDate(expirationDate: String?) =
-            apply { this.expirationDate = expirationDate }
+        fun setExpirationDate(expirationDate: String?) = apply { this.expirationDate = expirationDate }
 
-        fun setSecurityNumber(securityNumber: String?) =
-            apply { this.securityNumber = securityNumber }
+        fun setSecurityNumber(securityNumber: String?) = apply { this.securityNumber = securityNumber }
 
         fun setCountryCode(countryCode: String?) = apply { this.countryCode = countryCode }
         fun setEmail(email: String?) = apply { this.email = if (email.isNullOrBlank()) null else email }
         fun setPhoneCountryCode(phoneCountryCode: String?) =
             apply { this.phoneCountryCode = if (phoneCountryCode.isNullOrBlank()) null else phoneCountryCode }
 
-        fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = if (mobileNumber.isNullOrBlank()) null else mobileNumber }
+        fun setMobileNumber(mobileNumber: String?) =
+            apply { this.mobileNumber = if (mobileNumber.isNullOrBlank()) null else mobileNumber }
+
         fun setAddressLine1(addressLine1: String?) = apply { this.addressLine1 = addressLine1 }
         fun setAddressLine2(addressLine2: String?) = apply { this.addressLine2 = addressLine2 }
         fun setAddressLine3(addressLine3: String?) = apply { this.addressLine3 = addressLine3 }
         fun setCity(city: String?) = apply { this.city = city }
         fun setPostalCode(postalCode: String?) = apply { this.postalCode = postalCode }
+        fun setState(state: String?) = apply { this.state = state }
         fun setCardToken(cardToken: String?) = apply { this.cardToken = cardToken }
         fun setCardType(cardType: CardNetwork?) = apply { this.cardType = cardType }
         fun setCardLastFour(cardLastFour: String?) = apply { this.cardLastFour = cardLastFour }
@@ -88,22 +90,23 @@ class TransactionDetails private constructor(
             }
 
             return TransactionDetails(
-                cardNumber,
-                cardHolderName,
-                expirationDate,
-                securityNumber,
-                countryCode,
-                email,
-                phoneCountryCode,
-                mobileNumber,
-                addressLine1,
-                addressLine2,
-                addressLine3,
-                city,
-                postalCode,
-                cardToken,
-                cardType,
-                cardLastFour
+                cardNumber = cardNumber,
+                cardHolderName = cardHolderName,
+                expirationDate = expirationDate,
+                securityNumber = securityNumber,
+                country = countryCode,
+                email = email,
+                phoneCountryCode = phoneCountryCode,
+                mobileNumber = mobileNumber,
+                addressLine1 = addressLine1,
+                addressLine2 = addressLine2,
+                addressLine3 = addressLine3,
+                city = city,
+                postalCode = postalCode,
+                cardToken = cardToken,
+                cardType = cardType,
+                cardLastFour = cardLastFour,
+                state = state
             )
         }
     }
@@ -118,6 +121,7 @@ fun TransactionDetails.getAddress(judo: Judo): Address? {
             .setTown(city)
             .setPostCode(postalCode)
             .setCountryCode(country?.toIntOrNull())
+            .setState(state)
             .build()
     }
 

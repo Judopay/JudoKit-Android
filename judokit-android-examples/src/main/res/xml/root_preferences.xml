@@ -218,6 +218,15 @@
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
+            app:defaultValue=""
+            app:dependency="is_address_enabled"
+            app:iconSpaceReserved="false"
+            app:key="address_state"
+            app:summary="Your state"
+            app:title="State"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
             app:defaultValue="44"
             app:dependency="is_address_enabled"
             app:iconSpaceReserved="false"

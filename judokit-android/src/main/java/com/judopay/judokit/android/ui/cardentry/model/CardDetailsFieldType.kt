@@ -14,6 +14,7 @@ enum class CardDetailsFieldType {
 enum class BillingDetailsFieldType {
     EMAIL,
     COUNTRY,
+    STATE,
     PHONE_COUNTRY_CODE,
     MOBILE_NUMBER,
     ADDRESS_LINE_1,
@@ -36,6 +37,7 @@ val CardDetailsFieldType.fieldHintResId: Int
 val BillingDetailsFieldType.fieldHintResId: Int
     get() = when (this) {
         BillingDetailsFieldType.COUNTRY -> R.string.country_hint
+        BillingDetailsFieldType.STATE -> R.string.us_state_hint
         BillingDetailsFieldType.POST_CODE -> R.string.post_code_hint
         BillingDetailsFieldType.EMAIL -> R.string.email_hint
         BillingDetailsFieldType.PHONE_COUNTRY_CODE -> R.string.phone_country_code_hint

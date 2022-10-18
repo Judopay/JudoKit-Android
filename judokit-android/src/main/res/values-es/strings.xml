@@ -21,6 +21,8 @@
     <string name="card_number_hint">Numero de tarjeta</string>
     <string name="card_holder_hint">Nombre del titular de la tarejeta</string>
     <string name="country_hint">País</string>
+    <string name="us_state_hint">Estado</string>
+    <string name="ca_province_hint">Provincia o territorio</string>
     <string name="post_code_hint">Código postal</string>
     <string name="check_card_number">Compruebe el número de tarjeta</string>
     <string name="error_unknown_not_supported">Tarjeta no es compatible</string>
@@ -58,6 +60,8 @@
     <string name="check_mastercard_security_code">Compruebe el código de seguridad CVC2</string>
     <string name="check_china_union_pay_security_code">Compruebe el código de seguridad CVN2</string>
     <string name="error_country_should_not_be_empty">Por favor seleccione un país</string>
+    <string name="error_state_should_not_be_empty">Por favor seleccione un estado</string>
+    <string name="error_province_territory_should_not_be_empty">Por favor seleccione una provincia o territorio</string>
     <string name="expired">expirado</string>
     <string name="is_expired">es expirado</string>
     <string name="will_expire_soon">expirará pronto</string>

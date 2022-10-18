@@ -67,7 +67,7 @@ class JudoEditTextInputLayout @JvmOverloads constructor(
     @DrawableRes
     var accessoryImage: Int? = null
         set(value) {
-            field = if (value ?: 0 > 0) value else null
+            field = if ((value ?: 0) > 0) value else null
             updateAccessoryViewState()
         }
 

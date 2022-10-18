@@ -17,6 +17,7 @@ fun CardDetailsInputModel.valueOfFieldWithType(type: CardDetailsFieldType): Stri
 fun BillingDetailsInputModel.valueOfBillingDetailsFieldWithType(type: BillingDetailsFieldType): String =
     when (type) {
         BillingDetailsFieldType.COUNTRY -> countryCode
+        BillingDetailsFieldType.STATE -> state
         BillingDetailsFieldType.POST_CODE -> postalCode
         BillingDetailsFieldType.EMAIL -> email
         BillingDetailsFieldType.PHONE_COUNTRY_CODE -> phoneCountryCode

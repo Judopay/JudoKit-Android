@@ -15,7 +15,8 @@ class Address internal constructor(
     var town: String?,
     var billingCountry: String?,
     var postCode: String?,
-    var countryCode: Int?
+    var countryCode: Int?,
+    var state: String?
 ) : Parcelable {
 
     class Builder {
@@ -26,6 +27,7 @@ class Address internal constructor(
         private var town: String? = null
         private var billingCountry: String? = null
         private var countryCode: Int? = null
+        private var state: String? = null
 
         /**
          * Sets line one of the address.
@@ -63,11 +65,25 @@ class Address internal constructor(
         fun setPostCode(postCode: String?) = apply { this.postCode = postCode }
 
         /**
+         * Sets state of the address.
+         */
+        fun setState(state: String?) = apply { this.state = state }
+
+        /**
          * Creates an instance of [Address] based on provided data in setters.
          * @return An instance of [Address]
          */
         fun build(): Address {
-            return Address(line1, line2, line3, town, billingCountry, postCode, countryCode)
+            return Address(
+                line1 = line1,
+                line2 = line2,
+                line3 = line3,
+                town = town,
+                billingCountry = billingCountry,
+                postCode = postCode,
+                countryCode = countryCode,
+                state = if (state.isNullOrBlank()) null else state
+            )
         }
     }
 }

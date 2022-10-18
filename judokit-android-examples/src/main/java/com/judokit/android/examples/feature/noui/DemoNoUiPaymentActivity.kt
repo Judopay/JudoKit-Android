@@ -72,6 +72,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
             .setAddressLine3(judo.address?.line3)
             .setCity(judo.address?.town)
             .setPostalCode(judo.address?.postCode)
+            .setState(judo.address?.state)
 
         cardPaymentButton.setOnClickListener {
             handleState(ActivityState.PayWithCard)
