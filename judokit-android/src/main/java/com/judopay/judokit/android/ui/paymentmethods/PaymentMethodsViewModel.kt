@@ -165,7 +165,7 @@ class PaymentMethodsViewModel(
             is PaymentMethodsAction.SelectIdealBank -> {
                 buildModel(isLoading = false, selectedBank = action.idealBank)
             }
-            is PaymentMethodsAction.Update -> buildModel()
+            is PaymentMethodsAction.Update -> buildModel(isLoading = model.value?.headerModel?.callToActionModel?.paymentButtonState == ButtonState.Loading)
             is PaymentMethodsAction.SelectPaymentMethod -> {
                 if (selectedPaymentMethod != action.method) buildModel(action.method, false)
             }
