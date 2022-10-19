@@ -1,6 +1,7 @@
 package com.judopay.judokit.android.model
 
 import android.os.Parcelable
+import com.judopay.judo3ds2.customization.UiCustomization
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -12,7 +13,8 @@ class UiConfiguration internal constructor(
     val shouldPaymentMethodsDisplayAmount: Boolean,
     val shouldPaymentButtonDisplayAmount: Boolean,
     val shouldPaymentMethodsVerifySecurityCode: Boolean,
-    val shouldAskForBillingInformation: Boolean
+    val shouldAskForBillingInformation: Boolean,
+    val threeDSUiCustomization: UiCustomization?
 ) : Parcelable {
 
     /**
@@ -24,6 +26,7 @@ class UiConfiguration internal constructor(
         private var shouldPaymentMethodsVerifySecurityCode: Boolean? = true
         private var shouldPaymentButtonDisplayAmount: Boolean? = false
         private var shouldAskForBillingInformation: Boolean? = false
+        private var threeDSUiCustomization: UiCustomization? = null
 
         /**
          * Sets additional fields in card entry screen to provide address verification data,
@@ -61,6 +64,9 @@ class UiConfiguration internal constructor(
         fun setShouldAskForBillingInformation(shouldAskForBillingInformation: Boolean?) =
             apply { this.shouldAskForBillingInformation = shouldAskForBillingInformation }
 
+        fun setThreeDSUiCustomization(threeDSUiCustomization: UiCustomization?) =
+            apply { this.threeDSUiCustomization = threeDSUiCustomization }
+
         /**
          * Creates an instance of [UiConfiguration] based on provided data in setters.
          * @throws IllegalArgumentException If avsEnabled, shouldPaymentMethodsDisplayAmount, shouldPaymentMethodsVerifySecurityCode or shouldPaymentButtonDisplayAmount is null.
@@ -80,12 +86,13 @@ class UiConfiguration internal constructor(
                 shouldPaymentMethodsDisplayAmount,
                 shouldPaymentButtonDisplayAmount,
                 shouldPaymentMethodsVerifySecurityCode,
-                shouldAskForBillingInformation
+                shouldAskForBillingInformation,
+                threeDSUiCustomization
             )
         }
     }
 
     override fun toString(): String {
-        return "UiConfiguration(avsEnabled=$avsEnabled, shouldPaymentMethodsDisplayAmount=$shouldPaymentMethodsDisplayAmount, shouldPaymentMethodsVerifySecurityCode=$shouldPaymentMethodsVerifySecurityCode, shouldPaymentButtonDisplayAmount=$shouldPaymentButtonDisplayAmount, shouldAskForBillingInformation=$shouldAskForBillingInformation)"
+        return "UiConfiguration(avsEnabled=$avsEnabled, shouldPaymentMethodsDisplayAmount=$shouldPaymentMethodsDisplayAmount, shouldPaymentMethodsVerifySecurityCode=$shouldPaymentMethodsVerifySecurityCode, shouldPaymentButtonDisplayAmount=$shouldPaymentButtonDisplayAmount, shouldAskForBillingInformation=$shouldAskForBillingInformation, threeDSUiCustomization=$threeDSUiCustomization)"
     }
 }

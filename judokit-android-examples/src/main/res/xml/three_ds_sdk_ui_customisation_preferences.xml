@@ -1,0 +1,317 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="3DS SDK UI config">
+
+    <SwitchPreferenceCompat
+        app:defaultValue="false"
+        app:iconSpaceReserved="false"
+        app:key="three_ds_is_ui_customisation_enabled"
+        app:title="Enable" />
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="Toolbar customization">
+
+        <EditTextPreference
+            app:defaultValue="Helvetica"
+            app:iconSpaceReserved="false"
+            app:key="three_ds_toolbar_text_font_name"
+            app:title="Text font name" />
+
+        <EditTextPreference
+            app:defaultValue="#FFFFFF"
+            app:iconSpaceReserved="false"
+            app:key="three_ds_toolbar_text_color"
+            app:title="Text color" />
+
+        <EditTextPreference
+            app:defaultValue="16"
+            app:iconSpaceReserved="false"
+            app:key="three_ds_toolbar_text_font_size"
+            app:title="Text font size" />
+
+        <EditTextPreference
+            app:defaultValue="#6A4EE1"
+            app:iconSpaceReserved="false"
+            app:key="three_ds_toolbar_background_color"
+            app:title="Background color" />
+
+        <EditTextPreference
+            app:defaultValue="SECURE CHECKOUT"
+            app:iconSpaceReserved="false"
+            app:key="three_ds_toolbar_header_text"
+            app:title="Header text" />
+
+        <EditTextPreference
+            app:defaultValue="Cancel"
+            app:iconSpaceReserved="false"
+            app:key="three_ds_toolbar_button_text"
+            app:title="Button text" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="Label customization">
+
+        <EditTextPreference
+            app:title="Text font name"
+            app:key="three_ds_label_text_font_name"
+            app:defaultValue="Helvetica"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Text color"
+            app:key="three_ds_label_text_color"
+            app:defaultValue="#262626"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Text font size"
+            app:key="three_ds_label_text_font_size"
+            app:defaultValue="16"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Heading text font name"
+            app:key="three_ds_label_heading_text_font_name"
+            app:defaultValue="Helvetica"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Heading text color"
+            app:key="three_ds_label_heading_text_color"
+            app:defaultValue="#262626"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Heading text font size"
+            app:key="three_ds_label_heading_text_font_size"
+            app:defaultValue="24"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="Text box customization">
+
+        <EditTextPreference
+            app:title="Text font name"
+            app:key="three_ds_text_box_text_font_name"
+            app:defaultValue="Helvetica"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Text color"
+            app:key="three_ds_text_box_text_color"
+            app:defaultValue="#262626"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Text font size"
+            app:key="three_ds_text_box_text_font_size"
+            app:defaultValue="16"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Border width"
+            app:key="three_ds_text_box_border_width"
+            app:defaultValue="0"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Border color"
+            app:key="three_ds_text_box_border_color"
+            app:defaultValue="#F6F6F6"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Corner radius"
+            app:key="three_ds_text_box_corner_radius"
+            app:defaultValue="6"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="Submit button customization">
+
+        <EditTextPreference
+            app:title="Text font name"
+            app:key="three_ds_submit_button_text_font_name"
+            app:defaultValue="Helvetica"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Text color"
+            app:key="three_ds_submit_button_text_color"
+            app:defaultValue="#FFFFFF"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Text font size"
+            app:key="three_ds_submit_button_text_font_size"
+            app:defaultValue="16"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Background color"
+            app:key="three_ds_submit_button_background_color"
+            app:defaultValue="#262626"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Corner radius"
+            app:key="three_ds_submit_button_corner_radius"
+            app:defaultValue="4"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="Next button customization">
+
+        <EditTextPreference
+            app:title="Text font name"
+            app:key="three_ds_next_button_text_font_name"
+            app:defaultValue="Helvetica"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Text color"
+            app:key="three_ds_next_button_text_color"
+            app:defaultValue="#FFFFFF"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Text font size"
+            app:key="three_ds_next_button_text_font_size"
+            app:defaultValue="16"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Background color"
+            app:key="three_ds_next_button_background_color"
+            app:defaultValue="#262626"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Corner radius"
+            app:key="three_ds_next_button_corner_radius"
+            app:defaultValue="4"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="Continue button customization">
+
+        <EditTextPreference
+            app:title="Text font name"
+            app:key="three_ds_continue_button_text_font_name"
+            app:defaultValue="Helvetica"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Text color"
+            app:key="three_ds_continue_button_text_color"
+            app:defaultValue="#FFFFFF"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Text font size"
+            app:key="three_ds_continue_button_text_font_size"
+            app:defaultValue="16"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Background color"
+            app:key="three_ds_continue_button_background_color"
+            app:defaultValue="#262626"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Corner radius"
+            app:key="three_ds_continue_button_corner_radius"
+            app:defaultValue="4"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="Cancel button customization">
+
+        <EditTextPreference
+            app:title="Text font name"
+            app:key="three_ds_cancel_button_text_font_name"
+            app:defaultValue="Helvetica"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Text color"
+            app:key="three_ds_cancel_button_text_color"
+            app:defaultValue="#FFFFFF"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Text font size"
+            app:key="three_ds_cancel_button_text_font_size"
+            app:defaultValue="16"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Background color"
+            app:key="three_ds_cancel_button_background_color"
+            app:defaultValue="#262626"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Corner radius"
+            app:key="three_ds_cancel_button_corner_radius"
+            app:defaultValue="4"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="Resend button customization">
+
+        <EditTextPreference
+            app:title="Text font name"
+            app:key="three_ds_resend_button_text_font_name"
+            app:defaultValue="Helvetica"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Text color"
+            app:key="three_ds_resend_button_text_color"
+            app:defaultValue="#FFFFFF"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Text font size"
+            app:key="three_ds_resend_button_text_font_size"
+            app:defaultValue="16"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Background color"
+            app:key="three_ds_resend_button_background_color"
+            app:defaultValue="#262626"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:title="Corner radius"
+            app:key="three_ds_resend_button_corner_radius"
+            app:defaultValue="4"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

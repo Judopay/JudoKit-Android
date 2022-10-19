@@ -122,6 +122,11 @@
             app:summary="@string/three_ds2_protocol_message_version_summary"
             app:title="@string/three_ds2_protocol_message_version_title" />
 
+        <Preference
+            app:fragment="com.judokit.android.examples.settings.fragments.ThreeDSSDKUICustomisationFragment"
+            app:iconSpaceReserved="false"
+            app:summary="Customize UI elements of the challenge screen"
+            app:title="UI customization" />
     </PreferenceCategory>
 
     <PreferenceCategory
