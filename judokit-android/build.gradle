@@ -115,6 +115,8 @@ dependencies {
     testImplementation 'io.mockk:mockk:1.12.1'
     testImplementation 'android.arch.core:core-testing:1.1.1'
 
+    testImplementation project(path: ':judokit-android')
+
     ktlint 'com.pinterest:ktlint:0.41.0'
 }
 
