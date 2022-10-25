@@ -76,8 +76,7 @@ class BillingDetailsFormView @JvmOverloads constructor(
     private val phoneNumberFields =
         arrayListOf(BillingDetailsFieldType.PHONE_COUNTRY_CODE.name, BillingDetailsFieldType.MOBILE_NUMBER.name)
 
-    private val countries: Array<CountryInfo>
-        get() = CountryInfo.list(context)
+    private val countries = CountryInfo.list(context)
 
     private val validationResultsCache = mutableMapOf<BillingDetailsFieldType, Boolean>()
 
@@ -272,6 +271,20 @@ class BillingDetailsFormView @JvmOverloads constructor(
 
                 it.validate(value, event)
             } else null
+        }
+        if (type == BillingDetailsFieldType.COUNTRY && event == FormFieldEvent.TEXT_CHANGED) {
+            val typedCountry = countries.firstOrNull { it.name.lowercase() == value.lowercase() }
+            if (selectedCountry != typedCountry) {
+                selectedCountry = typedCountry
+            }
+        }
+        if (type == BillingDetailsFieldType.STATE && event == FormFieldEvent.TEXT_CHANGED) {
+            val typedState = when (selectedCountry?.alpha2Code) {
+                "CA" -> canadaProvincesAndTerritories.firstOrNull { it.name.lowercase() == value.lowercase() }
+                "US" -> usStates.firstOrNull { it.name.lowercase() == value.lowercase() }
+                else -> null
+            }
+            selectedState = typedState
         }
 
         val result = validationResults.firstOrNull()
