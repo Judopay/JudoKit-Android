@@ -18,7 +18,10 @@ internal class PhoneCountryCodeTextWatcher : TextWatcher {
 
         isSelfFormatting = true
 
-        if (s.isNullOrEmpty()) return
+        if (s.isNullOrEmpty()) {
+            isSelfFormatting = false
+            return
+        }
 
         val formatted = "+(${s.filter { it.isDigit() }})"
         s.replace(0, s.length, formatted, 0, formatted.length)
