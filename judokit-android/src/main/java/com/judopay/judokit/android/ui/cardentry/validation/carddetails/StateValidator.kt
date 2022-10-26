@@ -2,6 +2,8 @@ package com.judopay.judokit.android.ui.cardentry.validation.carddetails
 
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.model.Country
+import com.judopay.judokit.android.model.canadaProvincesAndTerritories
+import com.judopay.judokit.android.model.usStates
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
@@ -16,9 +18,10 @@ data class StateValidator(
         if (country != Country.CA && country != Country.US) {
             return ValidationResult(true, R.string.empty)
         }
-        val isValid = input.isNotBlank()
+        val validStates = if (country == Country.CA) canadaProvincesAndTerritories else usStates
+        val isValid = validStates.map { it.name.lowercase() }.contains(input.lowercase())
         val message = when {
-            isValid -> R.string.empty
+            isValid || formFieldEvent == FormFieldEvent.TEXT_CHANGED -> R.string.empty
             country == Country.CA -> R.string.error_province_territory_should_not_be_empty
             else -> R.string.error_state_should_not_be_empty
         }
