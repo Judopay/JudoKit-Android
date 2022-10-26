@@ -120,10 +120,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         context = activity
     }
 
-    init {
-        threeDS2Service.initialize(context, parameters, locale, null)
-    }
-
     fun configureWith(config: Judo) = takeIf {
         if (this::judo.isInitialized.not()) {
             return@takeIf true
@@ -132,6 +128,18 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     }?.apply {
         judo = config
         apiService = JudoApiServiceFactory.createApiService(context, config)
+
+        try {
+            threeDS2Service.cleanup(context)
+        } catch (e: SDKNotInitializedException) {
+            Log.w(CardTransactionManager::class.java.name, "3DS2 Service not initialized.")
+        }
+
+        try {
+            threeDS2Service.initialize(context, parameters, locale, judo.uiConfiguration.threeDSUiCustomization)
+        } catch (e: SDKAlreadyInitializedException) {
+            Log.w(CardTransactionManager::class.java.name, "3DS2 Service already initialized.")
+        }
     }
 
     public fun unRegisterResultListener(
@@ -202,7 +210,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         applicationScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
             try {
                 Log.d(CardTransactionManager::class.java.name, "initialize 3DS2 SDK")
-                threeDS2Service.initialize(context, parameters, locale, null)
+                threeDS2Service.initialize(context, parameters, locale, judo.uiConfiguration.threeDSUiCustomization)
             } catch (e: SDKAlreadyInitializedException) {
                 // This shouldn't cause any side effect.
                 Log.w(CardTransactionManager::class.java.name, "3DS2 Service already initialized.")
@@ -278,7 +286,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         }
 
     private fun handleThreeDSecureOne(receipt: Receipt, caller: String) {
-        Log.d("Manager1", context.supportFragmentManager.toString())
         val cardVerificationModel = receipt.toCardVerificationModel()
         val threeDSOneCompletionCallback = object : ThreeDSOneCompletionCallback {
 

@@ -13,7 +13,7 @@
         app:title="Toolbar customization">
 
         <EditTextPreference
-            app:defaultValue="Helvetica"
+            app:defaultValue="Helvetica-Regular.ttf"
             app:iconSpaceReserved="false"
             app:key="three_ds_toolbar_text_font_name"
             app:title="Text font name" />
@@ -57,7 +57,7 @@
         <EditTextPreference
             app:title="Text font name"
             app:key="three_ds_label_text_font_name"
-            app:defaultValue="Helvetica"
+            app:defaultValue="Helvetica-Regular.ttf"
             app:iconSpaceReserved="false" />
 
         <EditTextPreference
@@ -75,7 +75,7 @@
         <EditTextPreference
             app:title="Heading text font name"
             app:key="three_ds_label_heading_text_font_name"
-            app:defaultValue="Helvetica"
+            app:defaultValue="Helvetica-Regular.ttf"
             app:iconSpaceReserved="false" />
 
         <EditTextPreference
@@ -99,7 +99,7 @@
         <EditTextPreference
             app:title="Text font name"
             app:key="three_ds_text_box_text_font_name"
-            app:defaultValue="Helvetica"
+            app:defaultValue="Helvetica-Regular.ttf"
             app:iconSpaceReserved="false" />
 
         <EditTextPreference
@@ -141,7 +141,7 @@
         <EditTextPreference
             app:title="Text font name"
             app:key="three_ds_submit_button_text_font_name"
-            app:defaultValue="Helvetica"
+            app:defaultValue="Helvetica-Regular.ttf"
             app:iconSpaceReserved="false" />
 
         <EditTextPreference
@@ -177,7 +177,7 @@
         <EditTextPreference
             app:title="Text font name"
             app:key="three_ds_next_button_text_font_name"
-            app:defaultValue="Helvetica"
+            app:defaultValue="Helvetica-Regular.ttf"
             app:iconSpaceReserved="false" />
 
         <EditTextPreference
@@ -213,7 +213,7 @@
         <EditTextPreference
             app:title="Text font name"
             app:key="three_ds_continue_button_text_font_name"
-            app:defaultValue="Helvetica"
+            app:defaultValue="Helvetica-Regular.ttf"
             app:iconSpaceReserved="false" />
 
         <EditTextPreference
@@ -249,7 +249,7 @@
         <EditTextPreference
             app:title="Text font name"
             app:key="three_ds_cancel_button_text_font_name"
-            app:defaultValue="Helvetica"
+            app:defaultValue="Helvetica-Regular.ttf"
             app:iconSpaceReserved="false" />
 
         <EditTextPreference
@@ -285,7 +285,7 @@
         <EditTextPreference
             app:title="Text font name"
             app:key="three_ds_resend_button_text_font_name"
-            app:defaultValue="Helvetica"
+            app:defaultValue="Helvetica-Regular.ttf"
             app:iconSpaceReserved="false" />
 
         <EditTextPreference

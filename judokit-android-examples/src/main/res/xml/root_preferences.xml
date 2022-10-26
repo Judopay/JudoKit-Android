@@ -62,7 +62,7 @@
         app:title="@string/three_ds2_header">
 
         <SwitchPreferenceCompat
-            app:defaultValue="true"
+            app:defaultValue="false"
             app:iconSpaceReserved="false"
             app:key="should_ask_for_billing_information"
             app:summary="@string/is_3ds2_enabled_summary"
@@ -158,7 +158,7 @@
         app:title="@string/address_header">
 
         <SwitchPreference
-            app:defaultValue="false"
+            app:defaultValue="true"
             app:iconSpaceReserved="false"
             app:key="is_address_enabled"
             app:summary="@string/is_address_enabled_summary"
