@@ -311,8 +311,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     private fun handleThreeDSecureTwo(receipt: Receipt, caller: String) {
         val challengeStatusReceiver = object : ChallengeStatusReceiver {
             override fun cancelled() {
-                val result = JudoPaymentResult.UserCancelled()
-                onResult(result, caller)
+                performComplete3ds2(receipt, caller)
             }
 
             override fun completed(completionEvent: CompletionEvent) {
@@ -320,30 +319,15 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             }
 
             override fun protocolError(protocolErrorEvent: ProtocolErrorEvent) {
-                val result = JudoPaymentResult.Error(
-                    JudoError(
-                        protocolErrorEvent.errorMessage.errorCode.toIntOrNull()
-                            ?: REQUEST_FAILED,
-                        protocolErrorEvent.errorMessage.errorDescription
-                    )
-                )
-
-                onResult(result, caller)
+                performComplete3ds2(receipt, caller)
             }
 
             override fun runtimeError(runtimeErrorEvent: RuntimeErrorEvent) {
-                val result = JudoPaymentResult.Error(
-                    JudoError(
-                        runtimeErrorEvent.errorCode?.toIntOrNull() ?: REQUEST_FAILED,
-                        runtimeErrorEvent.errorMessage
-                    )
-                )
-
-                onResult(result, caller)
+                performComplete3ds2(receipt, caller)
             }
 
             override fun timedout() {
-                onResult(JudoPaymentResult.Error(JudoError(REQUEST_FAILED, "Request timed out.")), caller)
+                performComplete3ds2(receipt, caller)
             }
         }
 
