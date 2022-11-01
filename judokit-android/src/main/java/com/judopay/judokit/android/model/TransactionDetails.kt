@@ -274,6 +274,7 @@ fun TransactionDetails.toTokenRequest(judo: Judo, transaction: Transaction): Tok
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
         .setAddress(getAddress(judo))
+        .setPrimaryAccountDetails(judo.primaryAccountDetails)
         .build()
 }
 

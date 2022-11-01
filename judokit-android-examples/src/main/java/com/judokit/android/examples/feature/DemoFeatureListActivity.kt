@@ -26,6 +26,11 @@ import com.judokit.android.examples.feature.noui.DemoNoUiPaymentActivity
 import com.judokit.android.examples.feature.paybybank.PayByBankActivity
 import com.judokit.android.examples.model.DemoFeature
 import com.judokit.android.examples.settings.SettingsActivity
+import com.judopay.judo3ds2.customization.ButtonCustomization
+import com.judopay.judo3ds2.customization.LabelCustomization
+import com.judopay.judo3ds2.customization.TextBoxCustomization
+import com.judopay.judo3ds2.customization.ToolbarCustomization
+import com.judopay.judo3ds2.customization.UiCustomization
 import com.judopay.judokit.android.JUDO_ERROR
 import com.judopay.judokit.android.JUDO_OPTIONS
 import com.judopay.judokit.android.JUDO_RESULT
@@ -256,7 +261,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
     }
 
     private fun toast(message: String) =
-        Snackbar.make(sampleAppConstraintLayout, message, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(sampleAppConstraintLayout, message, Snackbar.LENGTH_LONG).show()
 
     private fun setupRecyclerView() {
         val dividerItemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
@@ -403,13 +408,20 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 sharedPreferences.getBoolean("should_payment_button_display_amount", false)
             val shouldAskForBillingInformation = sharedPreferences.getBoolean("should_ask_for_billing_information", false)
 
-            return UiConfiguration.Builder()
+            val builder = UiConfiguration.Builder()
                 .setAvsEnabled(isAVSEnabled)
                 .setShouldPaymentMethodsDisplayAmount(shouldDisplayAmount)
                 .setShouldPaymentMethodsVerifySecurityCode(shouldPaymentMethodsVerifySecurityCode)
                 .setShouldPaymentButtonDisplayAmount(shouldPaymentButtonDisplayAmount)
                 .setShouldAskForBillingInformation(shouldAskForBillingInformation)
-                .build()
+
+            try {
+                builder.setThreeDSUiCustomization(threeDSSDKUiCustomization)
+            } catch (exception: Throwable) {
+                toast("Error: ${exception.message}")
+            }
+
+            return builder.build()
         }
 
     private val networks: Array<CardNetwork>?
@@ -570,5 +582,82 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 .setReadTimeout(readTimeout?.toLongOrNull())
                 .setWriteTimeout(writeTimeout?.toLongOrNull())
                 .build()
+        }
+
+    private val threeDSSDKUiCustomization: UiCustomization?
+        get() {
+            if (sharedPreferences.getBoolean("three_ds_is_ui_customisation_enabled", false)) {
+                val customization = UiCustomization()
+
+                val toolbarCustomization = ToolbarCustomization()
+                toolbarCustomization.setTextFontName(sharedPreferences.getString("three_ds_toolbar_text_font_name", null))
+                toolbarCustomization.setTextColor(sharedPreferences.getString("three_ds_toolbar_text_color", null))
+                toolbarCustomization.setTextFontSize(sharedPreferences.getString("three_ds_toolbar_text_font_size", null)?.toInt())
+                toolbarCustomization.setBackgroundColor(sharedPreferences.getString("three_ds_toolbar_background_color", null))
+                toolbarCustomization.setHeaderText(sharedPreferences.getString("three_ds_toolbar_header_text", null))
+                toolbarCustomization.setButtonText(sharedPreferences.getString("three_ds_toolbar_button_text", null))
+                customization.setToolbarCustomization(toolbarCustomization)
+
+                val labelCustomization = LabelCustomization()
+                labelCustomization.setTextFontName(sharedPreferences.getString("three_ds_label_text_font_name", null))
+                labelCustomization.setTextColor(sharedPreferences.getString("three_ds_label_text_color", null))
+                labelCustomization.setTextFontSize(sharedPreferences.getString("three_ds_label_text_font_size", null)?.toInt())
+                labelCustomization.setHeadingTextFontName(sharedPreferences.getString("three_ds_label_heading_text_font_name", null))
+                labelCustomization.setHeadingTextColor(sharedPreferences.getString("three_ds_label_heading_text_color", null))
+                labelCustomization.setHeadingTextFontSize(sharedPreferences.getString("three_ds_label_heading_text_font_size", null)?.toInt())
+                customization.setLabelCustomization(labelCustomization)
+
+                val textBoxCustomization = TextBoxCustomization()
+                textBoxCustomization.setTextFontName(sharedPreferences.getString("three_ds_text_box_text_font_name", null))
+                textBoxCustomization.setTextColor(sharedPreferences.getString("three_ds_text_box_text_color", null))
+                textBoxCustomization.setTextFontSize(sharedPreferences.getString("three_ds_text_box_text_font_size", null)?.toInt())
+                textBoxCustomization.setBorderWidth(sharedPreferences.getString("three_ds_text_box_border_width", null)?.toInt())
+                textBoxCustomization.setBorderColor(sharedPreferences.getString("three_ds_text_box_border_color", null))
+                textBoxCustomization.setCornerRadius(sharedPreferences.getString("three_ds_text_box_corner_radius", null)?.toInt())
+                customization.setTextBoxCustomization(textBoxCustomization)
+
+                val submitButtonCustomization = ButtonCustomization()
+                submitButtonCustomization.setTextFontName(sharedPreferences.getString("three_ds_submit_button_text_font_name", null))
+                submitButtonCustomization.setTextColor(sharedPreferences.getString("three_ds_submit_button_text_color", null))
+                submitButtonCustomization.setTextFontSize(sharedPreferences.getString("three_ds_submit_button_text_font_size", null)?.toInt())
+                submitButtonCustomization.setBackgroundColor(sharedPreferences.getString("three_ds_submit_button_background_color", null))
+                submitButtonCustomization.setCornerRadius(sharedPreferences.getString("three_ds_submit_button_corner_radius", null)?.toInt())
+                customization.setButtonCustomization(submitButtonCustomization, UiCustomization.ButtonType.SUBMIT)
+
+                val nextButtonCustomization = ButtonCustomization()
+                nextButtonCustomization.setTextFontName(sharedPreferences.getString("three_ds_next_button_text_font_name", null))
+                nextButtonCustomization.setTextColor(sharedPreferences.getString("three_ds_next_button_text_color", null))
+                nextButtonCustomization.setTextFontSize(sharedPreferences.getString("three_ds_next_button_text_font_size", null)?.toInt())
+                nextButtonCustomization.setBackgroundColor(sharedPreferences.getString("three_ds_next_button_background_color", null))
+                nextButtonCustomization.setCornerRadius(sharedPreferences.getString("three_ds_next_button_corner_radius", null)?.toInt())
+                customization.setButtonCustomization(nextButtonCustomization, UiCustomization.ButtonType.NEXT)
+
+                val continueButtonCustomization = ButtonCustomization()
+                continueButtonCustomization.setTextFontName(sharedPreferences.getString("three_ds_continue_button_text_font_name", null))
+                continueButtonCustomization.setTextColor(sharedPreferences.getString("three_ds_continue_button_text_color", null))
+                continueButtonCustomization.setTextFontSize(sharedPreferences.getString("three_ds_continue_button_text_font_size", null)?.toInt())
+                continueButtonCustomization.setBackgroundColor(sharedPreferences.getString("three_ds_continue_button_background_color", null))
+                continueButtonCustomization.setCornerRadius(sharedPreferences.getString("three_ds_continue_button_corner_radius", null)?.toInt())
+                customization.setButtonCustomization(continueButtonCustomization, UiCustomization.ButtonType.CONTINUE)
+
+                val cancelButtonCustomization = ButtonCustomization()
+                cancelButtonCustomization.setTextFontName(sharedPreferences.getString("three_ds_cancel_button_text_font_name", null))
+                cancelButtonCustomization.setTextColor(sharedPreferences.getString("three_ds_cancel_button_text_color", null))
+                cancelButtonCustomization.setTextFontSize(sharedPreferences.getString("three_ds_cancel_button_text_font_size", null)?.toInt())
+                cancelButtonCustomization.setBackgroundColor(sharedPreferences.getString("three_ds_cancel_button_background_color", null))
+                cancelButtonCustomization.setCornerRadius(sharedPreferences.getString("three_ds_cancel_button_corner_radius", null)?.toInt())
+                customization.setButtonCustomization(cancelButtonCustomization, UiCustomization.ButtonType.CANCEL)
+
+                val resendButtonCustomization = ButtonCustomization()
+                resendButtonCustomization.setTextFontName(sharedPreferences.getString("three_ds_resend_button_text_font_name", null))
+                resendButtonCustomization.setTextColor(sharedPreferences.getString("three_ds_resend_button_text_color", null))
+                resendButtonCustomization.setTextFontSize(sharedPreferences.getString("three_ds_resend_button_text_font_size", null)?.toInt())
+                resendButtonCustomization.setBackgroundColor(sharedPreferences.getString("three_ds_resend_button_background_color", null))
+                resendButtonCustomization.setCornerRadius(sharedPreferences.getString("three_ds_resend_button_corner_radius", null)?.toInt())
+                customization.setButtonCustomization(resendButtonCustomization, UiCustomization.ButtonType.RESEND)
+
+                return customization
+            }
+            return null
         }
 }
