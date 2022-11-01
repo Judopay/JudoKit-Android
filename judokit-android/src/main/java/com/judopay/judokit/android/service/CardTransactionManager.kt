@@ -26,7 +26,6 @@ import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
-import com.judopay.judokit.android.model.REQUEST_FAILED
 import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.toCheckCardRequest
 import com.judopay.judokit.android.model.toPaymentRequest
