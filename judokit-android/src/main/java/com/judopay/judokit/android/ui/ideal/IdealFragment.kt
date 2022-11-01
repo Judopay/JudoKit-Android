@@ -99,6 +99,7 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
                 sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult(resources))
                 findNavController().popBackStack()
             }
+            null -> {}
         }
     }
 
@@ -156,6 +157,7 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
                 val result = JudoPaymentResult.Error(error)
                 sharedViewModel.paymentResult.postValue(result)
             }
+            null -> {}
         }
     }
 }

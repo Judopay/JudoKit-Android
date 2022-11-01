@@ -34,11 +34,7 @@ import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
 import com.judopay.judokit.android.ui.paymentmethods.CARD_ENTRY_OPTIONS
 import kotlinx.android.synthetic.main.billing_details_form_view.*
-import kotlinx.android.synthetic.main.card_entry_form_view.*
 import kotlinx.android.synthetic.main.card_entry_fragment.*
-import kotlinx.android.synthetic.main.card_entry_fragment.view.*
-import kotlinx.android.synthetic.main.payment_methods_header_view.*
-import kotlinx.android.synthetic.main.payment_methods_header_view.view.*
 
 private const val BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME = 300L
 private const val BOTTOM_SHEET_PEEK_HEIGHT = 200
@@ -286,7 +282,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
                 return@OnApplyWindowInsetsListener if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     view.onApplyWindowInsets(windowInsets)
                 } else {
-                    return@OnApplyWindowInsetsListener null
+                    return@OnApplyWindowInsetsListener windowInsets
                 }
             }
             decorView.setOnApplyWindowInsetsListener(insetsListener)

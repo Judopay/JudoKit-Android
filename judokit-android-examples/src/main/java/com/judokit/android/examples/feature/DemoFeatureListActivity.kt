@@ -290,6 +290,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
                                 is JudoApiCallResult.Failure -> {
                                     processPaymentError(result.error?.toJudoError())
                                 }
+                                null -> {}
                             }
                             dialog.dismiss()
                         }

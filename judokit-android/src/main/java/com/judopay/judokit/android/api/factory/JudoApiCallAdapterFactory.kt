@@ -5,13 +5,11 @@ import com.google.gson.JsonSyntaxException
 import com.judopay.judokit.android.api.error.ApiError
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import okhttp3.Request
-import retrofit2.Call
-import retrofit2.CallAdapter
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
+import okio.Timeout
+import retrofit2.*
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import java.util.concurrent.TimeUnit
 
 abstract class CallDelegate<TypeIn, TypeOut>(protected val proxy: Call<TypeIn>) : Call<TypeOut> {
 
@@ -61,6 +59,8 @@ class ResultCall<T>(proxy: Call<T>) : CallDelegate<T, JudoApiCallResult<T>>(prox
     })
 
     override fun cloneImpl() = ResultCall(proxy.clone())
+
+    override fun timeout(): Timeout = Timeout().timeout(30, TimeUnit.SECONDS)
 }
 
 class ResultAdapter(private val type: Type) : CallAdapter<Type, Call<JudoApiCallResult<Type>>> {

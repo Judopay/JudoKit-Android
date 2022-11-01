@@ -69,7 +69,7 @@ internal class CardEntryViewModelFactory(
     private val application: Application
 ) : ViewModelProvider.NewInstanceFactory() {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == CardEntryViewModel::class.java) {
             CardEntryViewModel(
                 judo,

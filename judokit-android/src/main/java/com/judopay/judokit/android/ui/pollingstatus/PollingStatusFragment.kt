@@ -105,6 +105,12 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
         viewModel.send(PollingAction.CancelPolling)
     }
 
+    override fun onStartTimer() {
+    }
+
+    override fun onEndTimer() {
+    }
+
     private fun handlePayByBankResult(result: JudoApiCallResult<BankSaleResponse>?) {
         when (result) {
             is JudoApiCallResult.Success -> handleBankSaleResponse(result)
@@ -112,6 +118,7 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
                 sharedViewModel.bankPaymentResult.postValue(result.toJudoPaymentResult(resources))
                 findNavController().popBackStack()
             }
+            null -> {}
         }
     }
 

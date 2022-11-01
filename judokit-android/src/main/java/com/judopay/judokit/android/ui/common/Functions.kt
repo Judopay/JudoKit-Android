@@ -62,7 +62,7 @@ fun toDate(
 }
 
 fun getLocale(resources: Resources): Locale =
-    ConfigurationCompat.getLocales(resources.configuration)[0]
+    ConfigurationCompat.getLocales(resources.configuration)[0] ?: Locale.getDefault()
 
 fun showAlert(context: Context, message: String) {
     MaterialAlertDialogBuilder(context)
