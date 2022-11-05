@@ -3,6 +3,7 @@ package com.judopay.judokit.android.ui.cardentry.components
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -13,9 +14,8 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
 import com.judopay.judokit.android.R
-import com.judopay.judokit.android.inflate
+import com.judopay.judokit.android.databinding.JudoEditTextInputLayoutBinding
 import com.judopay.judokit.android.subViewsWithType
-import kotlinx.android.synthetic.main.judo_edit_text_input_layout.view.*
 
 private const val TEXT_SIZE_VALID = 16f
 private const val TEXT_SIZE_INVALID = 14f
@@ -26,13 +26,11 @@ class JudoEditTextInputLayout @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyle: Int = 0
 ) : FrameLayout(context, attrs, defStyle) {
-
     private var mDisableLeftCornerRadius = false
     private var mDisableRightCornerRadius = false
+    private val binding = JudoEditTextInputLayoutBinding.inflate(LayoutInflater.from(context), this, true)
 
     init {
-        inflate(R.layout.judo_edit_text_input_layout, true)
-
         context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.JudoEditTextInputLayout,
@@ -61,7 +59,7 @@ class JudoEditTextInputLayout @JvmOverloads constructor(
     var error: String? = null
         set(value) {
             field = value
-            errorTextView.text = value
+            binding.errorTextView.text = value
         }
 
     @DrawableRes
@@ -88,7 +86,7 @@ class JudoEditTextInputLayout @JvmOverloads constructor(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT
             )
-            containerLayout.addView(it, layoutParams)
+            binding.containerLayout.addView(it, layoutParams)
         }
 
         background = when {
@@ -109,7 +107,7 @@ class JudoEditTextInputLayout @JvmOverloads constructor(
 
     private fun updateErrorView() {
         if (isAttachedToWindow) {
-            errorTextView.visibility = if (isErrorEnabled) View.VISIBLE else View.GONE
+            binding.errorTextView.visibility = if (isErrorEnabled) View.VISIBLE else View.GONE
         }
 
         val textColor = if (isErrorEnabled) R.color.tomato_red else R.color.black
@@ -134,7 +132,7 @@ class JudoEditTextInputLayout @JvmOverloads constructor(
         }
     }
 
-    private fun updateAccessoryViewState() = with(accessoryImageView) {
+    private fun updateAccessoryViewState() = with(binding.accessoryImageView) {
         val image = accessoryImage ?: 0
 
         visibility = if (image > 0) {

@@ -2,21 +2,17 @@ package com.judopay.judokit.android.ui.paymentmethods.components
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import androidx.cardview.widget.CardView
-import com.judopay.judokit.android.R
-import com.judopay.judokit.android.inflate
+import com.judopay.judokit.android.databinding.IdealPaymentCardViewBinding
 import com.judopay.judokit.android.ui.paymentmethods.model.IdealPaymentCardViewModel
-import kotlinx.android.synthetic.main.ideal_payment_card_view.view.*
 
 class IdealPaymentCardView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
 ) : CardView(context, attrs, defStyle) {
-
-    init {
-        inflate(R.layout.ideal_payment_card_view, true)
-    }
+    private val binding = IdealPaymentCardViewBinding.inflate(LayoutInflater.from(context), this, true)
 
     var model = IdealPaymentCardViewModel()
         set(value) {
@@ -25,7 +21,7 @@ class IdealPaymentCardView @JvmOverloads constructor(
         }
 
     private fun update() {
-        bankNameTextView.text = model.idealBank.title
-        bankLogoImageView.setImageResource(model.idealBank.drawableResId)
+        binding.bankNameTextView.text = model.idealBank.title
+        binding.bankLogoImageView.setImageResource(model.idealBank.drawableResId)
     }
 }

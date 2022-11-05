@@ -3,27 +3,26 @@ package com.judokit.android.examples.result.adapter
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.judokit.android.examples.common.BindableRecyclerViewHolder
+import com.judokit.android.examples.databinding.ItemResultPropertyBinding
 import com.judokit.android.examples.model.ResultItem
-import kotlinx.android.synthetic.main.item_result_property.view.*
 
-class ResultActivityItemViewHolder(view: View) :
-    RecyclerView.ViewHolder(view),
-    BindableRecyclerViewHolder<ResultItem> {
+class ResultActivityItemViewHolder(private val binding: ItemResultPropertyBinding) :
+    RecyclerView.ViewHolder(binding.root), BindableRecyclerViewHolder<ResultItem> {
 
     override fun bind(model: ResultItem, listener: ((ResultItem) -> Unit)?) = with(itemView) {
-        nameTextView.text = model.title
-        valueTextView.tag = model.title
-        valueTextView.text = model.value
+        binding.nameTextView.text = model.title
+        binding.valueTextView.tag = model.title
+        binding.valueTextView.text = model.value
 
         if (model.subResult != null) {
-            arrowIcon.visibility = View.VISIBLE
-            valueTextView.visibility = View.GONE
+            binding.arrowIcon.visibility = View.VISIBLE
+            binding.valueTextView.visibility = View.GONE
 
             setOnLongClickListener(null)
             setOnClickListener { listener?.invoke(model) }
         } else {
-            arrowIcon.visibility = View.GONE
-            valueTextView.visibility = View.VISIBLE
+            binding.arrowIcon.visibility = View.GONE
+            binding.valueTextView.visibility = View.VISIBLE
 
             setOnClickListener(null)
             setOnLongClickListener {

@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.judokit.android.examples.R
+import com.judokit.android.examples.databinding.ActivityDemoNoUiPaymentBinding
+import com.judokit.android.examples.databinding.ViewSecurityCodeInputBinding
 import com.judokit.android.examples.feature.JUDO_PAYMENT_WIDGET_REQUEST_CODE
 import com.judopay.judokit.android.JUDO_OPTIONS
 import com.judopay.judokit.android.JUDO_RESULT
@@ -31,8 +33,6 @@ import com.judopay.judokit.android.model.toIntent
 import com.judopay.judokit.android.service.CardTransactionManager
 import com.judopay.judokit.android.service.CardTransactionManagerResultListener
 import com.judopay.judokit.android.ui.common.ButtonState
-import kotlinx.android.synthetic.main.activity_demo_no_ui_payment.*
-import kotlinx.android.synthetic.main.view_security_code_input.view.*
 
 private const val REGISTER_CARD_REQUEST_CODE = 2
 
@@ -49,18 +49,20 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
     private lateinit var service: JudoApiService
     private lateinit var transactionDetailsBuilder: TransactionDetails.Builder
     private val caller = DemoNoUiPaymentActivity::class.java.name
+    private lateinit var binding: ActivityDemoNoUiPaymentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_demo_no_ui_payment)
+        binding = ActivityDemoNoUiPaymentBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val judo = intent.getParcelableExtra<Judo>(JUDO_OPTIONS)
             ?: throw IllegalStateException("Judo object is required")
 
         service = JudoApiServiceFactory.createApiService(this, judo)
-        tokenPaymentButton.state = ButtonState.Disabled(R.string.token_payment)
-        preAuthTokenPaymentButton.state = ButtonState.Disabled(R.string.preauth_token_payment)
+        binding.tokenPaymentButton.state = ButtonState.Disabled(R.string.token_payment)
+        binding.preAuthTokenPaymentButton.state = ButtonState.Disabled(R.string.preauth_token_payment)
         transactionDetailsBuilder = TransactionDetails.Builder()
             .setSecurityNumber("452")
             .setEmail(judo.emailAddress)
@@ -74,7 +76,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
             .setPostalCode(judo.address?.postCode)
             .setState(judo.address?.state)
 
-        cardPaymentButton.setOnClickListener {
+        binding.cardPaymentButton.setOnClickListener {
             handleState(ActivityState.PayWithCard)
             CardTransactionManager.getInstance(this).payment(
                 transactionDetailsBuilder
@@ -86,13 +88,13 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
             )
         }
 
-        createCardTokenButton.setOnClickListener {
+        binding.createCardTokenButton.setOnClickListener {
             val intent = Intent(this@DemoNoUiPaymentActivity, JudoActivity::class.java)
             intent.putExtra(JUDO_OPTIONS, getJudo(judo, PaymentWidgetType.CREATE_CARD_TOKEN))
             startActivityForResult(intent, REGISTER_CARD_REQUEST_CODE)
         }
 
-        tokenPaymentButton.setOnClickListener {
+        binding.tokenPaymentButton.setOnClickListener {
             askForSecurityCode { code, name ->
                 if (code.isNullOrEmpty() && name.isNullOrEmpty()) {
                     return@askForSecurityCode
@@ -105,7 +107,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
             }
         }
 
-        preAuthTokenPaymentButton.setOnClickListener {
+        binding.preAuthTokenPaymentButton.setOnClickListener {
             askForSecurityCode { code, name ->
                 if (code.isNullOrEmpty() && name.isNullOrEmpty()) {
                     return@askForSecurityCode
@@ -123,17 +125,17 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
 
     private fun askForSecurityCode(completionCallback: (String?, String?) -> Unit) {
         val inflater = LayoutInflater.from(this)
-        val view = inflater.inflate(R.layout.view_security_code_input, null)
+        val securityCodeInputBinding = ViewSecurityCodeInputBinding.inflate(inflater)
 
         MaterialAlertDialogBuilder(this)
             .setTitle("Enter your security code")
-            .setView(view)
+            .setView(securityCodeInputBinding.root)
             .setNegativeButton("Cancel") { _, _ ->
                 completionCallback(null, null)
             }
             .setPositiveButton("Proceed") { _, _ ->
-                val code = view.securityCodeEditText.text.toString()
-                val name = view.cardHolderEditText.text.toString()
+                val code = securityCodeInputBinding.securityCodeEditText.text.toString()
+                val name = securityCodeInputBinding.cardHolderEditText.text.toString()
 
                 completionCallback(code, name)
             }
@@ -143,7 +145,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REGISTER_CARD_REQUEST_CODE) {
-            createCardTokenButton.state = ButtonState.Enabled(R.string.create_card_token)
+            binding.createCardTokenButton.state = ButtonState.Enabled(R.string.create_card_token)
             when (resultCode) {
                 PAYMENT_SUCCESS -> {
                     val result = data?.getParcelableExtra<JudoResult>(JUDO_RESULT)
@@ -188,29 +190,24 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
     private fun handleState(state: ActivityState) {
         when (state) {
             is ActivityState.Idle -> {
-                tokenPaymentButton.state = ButtonState.Enabled(R.string.token_payment)
-                preAuthTokenPaymentButton.state =
-                    ButtonState.Enabled(R.string.preauth_token_payment)
-                cardPaymentButton.state =
-                    ButtonState.Enabled(R.string.feature_title_payment)
+                binding.tokenPaymentButton.state = ButtonState.Enabled(R.string.token_payment)
+                binding.preAuthTokenPaymentButton.state = ButtonState.Enabled(R.string.preauth_token_payment)
+                binding.cardPaymentButton.state = ButtonState.Enabled(R.string.feature_title_payment)
             }
             is ActivityState.PayWithToken -> {
-                tokenPaymentButton.state = ButtonState.Loading
-                cardPaymentButton.state =
-                    ButtonState.Disabled(R.string.feature_title_payment)
-                preAuthTokenPaymentButton.state =
-                    ButtonState.Disabled(R.string.preauth_token_payment)
+                binding.tokenPaymentButton.state = ButtonState.Loading
+                binding.cardPaymentButton.state = ButtonState.Disabled(R.string.feature_title_payment)
+                binding.preAuthTokenPaymentButton.state = ButtonState.Disabled(R.string.preauth_token_payment)
             }
             is ActivityState.PayWithPreAuthToken -> {
-                tokenPaymentButton.state = ButtonState.Disabled(R.string.token_payment)
-                cardPaymentButton.state = ButtonState.Disabled(R.string.feature_title_payment)
-                preAuthTokenPaymentButton.state = ButtonState.Loading
+                binding.tokenPaymentButton.state = ButtonState.Disabled(R.string.token_payment)
+                binding.cardPaymentButton.state = ButtonState.Disabled(R.string.feature_title_payment)
+                binding.preAuthTokenPaymentButton.state = ButtonState.Loading
             }
             is ActivityState.PayWithCard -> {
-                cardPaymentButton.state = ButtonState.Loading
-                tokenPaymentButton.state = ButtonState.Disabled(R.string.token_payment)
-                preAuthTokenPaymentButton.state =
-                    ButtonState.Disabled(R.string.preauth_token_payment)
+                binding.cardPaymentButton.state = ButtonState.Loading
+                binding.tokenPaymentButton.state = ButtonState.Disabled(R.string.token_payment)
+                binding.preAuthTokenPaymentButton.state = ButtonState.Disabled(R.string.preauth_token_payment)
             }
         }
     }

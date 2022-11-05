@@ -3,6 +3,7 @@ package com.judopay.judokit.android.ui.cardentry.components
 import android.content.Context
 import android.text.InputFilter
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -10,7 +11,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.core.widget.addTextChangedListener
 import com.judopay.judokit.android.R
-import com.judopay.judokit.android.inflate
+import com.judopay.judokit.android.databinding.CardEntryFormViewBinding
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.Country
 import com.judopay.judokit.android.model.asCountry
@@ -33,7 +34,6 @@ import com.judopay.judokit.android.ui.cardentry.validation.carddetails.Expiratio
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.PostcodeValidator
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.SecurityCodeValidator
 import com.judopay.judokit.android.ui.common.PATTERN_CARD_EXPIRATION_DATE
-import kotlinx.android.synthetic.main.card_entry_form_view.view.*
 import kotlin.collections.forEach as kForEach
 
 internal typealias FormValidationStatus = (model: CardDetailsInputModel, isValid: Boolean) -> Unit
@@ -44,10 +44,7 @@ class CardEntryFormView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyle: Int = 0
 ) : FrameLayout(context, attrs, defStyle) {
-
-    init {
-        inflate(R.layout.card_entry_form_view, true)
-    }
+    private val binding = CardEntryFormViewBinding.inflate(LayoutInflater.from(context), this, true)
 
     internal var model = CardDetailsInputModel()
         set(value) {
@@ -132,8 +129,8 @@ class CardEntryFormView @JvmOverloads constructor(
     }
 
     private fun setupFieldsContent() {
-        val scrollView = formScrollView
-        cardEntrySubmitButton.setOnClickListener { onCardEntryButtonClickListener?.invoke() }
+        val scrollView = binding.formScrollView
+        binding.cardEntrySubmitButton.setOnClickListener { onCardEntryButtonClickListener?.invoke() }
 
         CardDetailsFieldType.values().kForEach { type ->
             editTextForType(type).apply {
@@ -236,7 +233,7 @@ class CardEntryFormView @JvmOverloads constructor(
             setupCountrySpinner()
         }
 
-        cardEntrySubmitButton.state = model.buttonState
+        binding.cardEntrySubmitButton.state = model.buttonState
 
         preFillFields()
     }
@@ -276,7 +273,7 @@ class CardEntryFormView @JvmOverloads constructor(
         }
     }
 
-    private fun setupCountrySpinner() = countryTextInputEditText.apply {
+    private fun setupCountrySpinner() = binding.countryTextInputEditText.apply {
         setAdapter(countriesAdapter)
         setOnClickListener { showDropDown() }
         setOnItemClickListener { _, _, _, id ->
@@ -286,12 +283,12 @@ class CardEntryFormView @JvmOverloads constructor(
     }
 
     private fun editTextForType(type: CardDetailsFieldType): EditText = when (type) {
-        CardDetailsFieldType.NUMBER -> numberTextInputEditText
-        CardDetailsFieldType.HOLDER_NAME -> nameTextInputEditText
-        CardDetailsFieldType.EXPIRATION_DATE -> expirationDateTextInputEditText
-        CardDetailsFieldType.SECURITY_NUMBER -> securityNumberTextInputEditText
-        CardDetailsFieldType.COUNTRY -> countryTextInputEditText
-        CardDetailsFieldType.POST_CODE -> postcodeTextInputEditText
+        CardDetailsFieldType.NUMBER -> binding.numberTextInputEditText
+        CardDetailsFieldType.HOLDER_NAME -> binding.nameTextInputEditText
+        CardDetailsFieldType.EXPIRATION_DATE -> binding.expirationDateTextInputEditText
+        CardDetailsFieldType.SECURITY_NUMBER -> binding.securityNumberTextInputEditText
+        CardDetailsFieldType.COUNTRY -> binding.countryTextInputEditText
+        CardDetailsFieldType.POST_CODE -> binding.postcodeTextInputEditText
     }
 
     private fun textInputLayoutForType(type: CardDetailsFieldType): JudoEditTextInputLayout? {

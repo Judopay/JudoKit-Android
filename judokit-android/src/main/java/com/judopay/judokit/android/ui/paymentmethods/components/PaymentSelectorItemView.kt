@@ -2,26 +2,21 @@ package com.judopay.judokit.android.ui.paymentmethods.components
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatImageView
-import com.judopay.judokit.android.R
-import com.judopay.judokit.android.inflate
+import com.judopay.judokit.android.databinding.PaymentSelectorItemBinding
 import com.judopay.judokit.android.model.PaymentMethod
-import kotlinx.android.synthetic.main.payment_selector_item.view.*
 
 class PaymentSelectorItemView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
-
 ) : LinearLayout(context, attrs, defStyle) {
-
-    init {
-        inflate(R.layout.payment_selector_item, true)
-    }
+    private val binding = PaymentSelectorItemBinding.inflate(LayoutInflater.from(context), this, true)
 
     private lateinit var paymentMethod: PaymentMethod
 
@@ -32,20 +27,20 @@ class PaymentSelectorItemView @JvmOverloads constructor(
     fun getPaymentMethod() = paymentMethod
 
     fun setImage(@DrawableRes resource: Int) {
-        paymentImageView.setImageResource(resource)
+        binding.paymentImageView.setImageResource(resource)
     }
 
     fun setText(@StringRes text: Int) {
-        paymentTextView.text = context.getString(text)
+        binding.paymentTextView.text = context.getString(text)
     }
 
     fun setTextVisibility(visibility: Int) {
-        paymentTextView.visibility = visibility
+        binding.paymentTextView.visibility = visibility
     }
 
-    fun isTextEmpty(): Boolean = paymentTextView.text.isEmpty()
+    fun isTextEmpty(): Boolean = binding.paymentTextView.text.isEmpty()
 
-    fun getTextView(): TextView = paymentTextView
+    fun getTextView(): TextView = binding.paymentTextView
 
-    fun getImageView(): AppCompatImageView = paymentImageView
+    fun getImageView(): AppCompatImageView = binding.paymentImageView
 }

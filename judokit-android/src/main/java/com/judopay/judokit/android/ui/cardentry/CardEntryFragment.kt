@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -21,6 +22,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.judopay.judokit.android.JudoSharedViewModel
 import com.judopay.judokit.android.R
+import com.judopay.judokit.android.databinding.CardEntryFragmentBinding
 import com.judopay.judokit.android.db.JudoRoomDatabase
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.dismissKeyboard
@@ -33,8 +35,6 @@ import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
 import com.judopay.judokit.android.ui.paymentmethods.CARD_ENTRY_OPTIONS
-import kotlinx.android.synthetic.main.billing_details_form_view.*
-import kotlinx.android.synthetic.main.card_entry_fragment.*
 
 private const val BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME = 300L
 private const val BOTTOM_SHEET_PEEK_HEIGHT = 200
@@ -42,9 +42,10 @@ private const val KEYBOARD_DISMISS_TIMEOUT = 500L
 private const val BOTTOM_APP_BAR_ELEVATION_CHANGE_DURATION = 200L
 
 class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallback {
-
     private lateinit var viewModel: CardEntryViewModel
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
+    private var _binding: CardEntryFragmentBinding? = null
+    private val binding get() = _binding!!
 
     override fun getTheme(): Int = R.style.JudoTheme_BottomSheetDialogTheme
 
@@ -66,7 +67,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
             application
         )
 
-        viewModel = ViewModelProvider(this, factory).get(CardEntryViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory)[CardEntryViewModel::class.java]
 
         if (cardEntryOptions?.shouldDisplaySecurityCode != null) {
             viewModel.send(CardEntryAction.EnableFormFields(listOf(CardDetailsFieldType.SECURITY_NUMBER)))
@@ -89,8 +90,8 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
             Handler(Looper.getMainLooper()).postDelayed(
                 {
                     when (it) {
-                        is CardEntryNavigation.Card -> cardEntryViewAnimator.displayedChild = 0
-                        is CardEntryNavigation.Billing -> cardEntryViewAnimator.displayedChild = 1
+                        is CardEntryNavigation.Card -> binding.cardEntryViewAnimator.displayedChild = 0
+                        is CardEntryNavigation.Billing -> binding.cardEntryViewAnimator.displayedChild = 1
                     }
                     bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 },
@@ -107,17 +108,21 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
             isCancelable = false
         }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.card_entry_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = CardEntryFragmentBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        cancelButton.setOnClickListener { onUserCancelled() }
-        scanCardButton.setOnClickListener { handleScanCardButtonClicks() }
-        formView.apply {
+        binding.cancelButton.setOnClickListener { onUserCancelled() }
+        binding.scanCardButton.setOnClickListener { handleScanCardButtonClicks() }
+        binding.formView.apply {
             onFormValidationStatusListener = { model, isValid ->
                 viewModel.send(
                     CardEntryAction.ValidationStatusChanged(
@@ -136,7 +141,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
                 )
             }
         }
-        billingDetailsFormView.apply {
+        binding.billingDetailsFormView.apply {
             onFormValidationStatusListener = { model, isValid ->
                 viewModel.send(
                     CardEntryAction.BillingDetailsValidationStatusChanged(
@@ -152,15 +157,16 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         }
 
         // sets bottomAppBar elevation based on scroll
-        billingDetailsScrollView.setOnScrollChangeListener(
+        val billingBinding = binding.billingDetailsFormView.binding
+        billingBinding.billingDetailsScrollView.setOnScrollChangeListener(
             NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
                 val autoTransition = AutoTransition()
                 autoTransition.duration = BOTTOM_APP_BAR_ELEVATION_CHANGE_DURATION
-                TransitionManager.beginDelayedTransition(billingContainer, autoTransition)
+                TransitionManager.beginDelayedTransition(billingBinding.billingContainer, autoTransition)
                 if (v.canScrollVertically(1)) {
-                    billingDetailsBottomAppBar.elevation = resources.getDimension(R.dimen.elevation_4)
+                    billingBinding.billingDetailsBottomAppBar.elevation = resources.getDimension(R.dimen.elevation_4)
                 } else {
-                    billingDetailsBottomAppBar.elevation = resources.getDimension(R.dimen.elevation_0)
+                    billingBinding.billingDetailsBottomAppBar.elevation = resources.getDimension(R.dimen.elevation_0)
                 }
             }
         )
@@ -168,7 +174,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         // Prevents bottom sheet dialog to jump around when animating.
         val transition = LayoutTransition()
         transition.setAnimateParentHierarchy(false)
-        bottomSheetContainer.layoutTransition = transition
+        binding.bottomSheetContainer.layoutTransition = transition
     }
 
     override fun onStart() {
@@ -194,7 +200,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
 
     private fun onUserCancelled() {
         // disable the button
-        cancelButton.isEnabled = false
+        binding.cancelButton.isEnabled = false
         findNavController().previousBackStackEntry?.savedStateHandle?.set("user-cancelled", true)
         if (judo.paymentWidgetType.isPaymentMethodsWidget) {
             findNavController().popBackStack()
@@ -204,18 +210,10 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
     }
 
     private fun updateWithModel(model: CardEntryFragmentModel) {
-        if (model.displayScanButton) {
-            scanCardButton.visibility = View.VISIBLE
-        } else {
-            scanCardButton.visibility = View.GONE
-        }
-        if (model.displayBackButton) {
-            billingDetailsBackButton.visibility = View.VISIBLE
-        } else {
-            billingDetailsBackButton.visibility = View.GONE
-        }
-        formView.model = model.formModel.cardDetailsInputModel
-        billingDetailsFormView.model = model.formModel.billingDetailsInputModel
+        binding.scanCardButton.isVisible = model.displayScanButton
+        binding.billingDetailsFormView.binding.billingDetailsBackButton.isVisible = model.displayBackButton
+        binding.formView.model = model.formModel.cardDetailsInputModel
+        binding.billingDetailsFormView.model = model.formModel.billingDetailsInputModel
     }
 
     private fun dispatchResult(result: JudoPaymentResult) {

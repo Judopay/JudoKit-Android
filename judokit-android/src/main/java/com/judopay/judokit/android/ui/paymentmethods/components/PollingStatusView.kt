@@ -2,16 +2,16 @@ package com.judopay.judokit.android.ui.paymentmethods.components
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.judopay.judokit.android.R
-import com.judopay.judokit.android.inflate
+import com.judopay.judokit.android.databinding.PollingStatusViewBinding
 import com.judopay.judokit.android.ui.paymentmethods.components.PollingStatusViewState.DELAY
 import com.judopay.judokit.android.ui.paymentmethods.components.PollingStatusViewState.FAIL
 import com.judopay.judokit.android.ui.paymentmethods.components.PollingStatusViewState.PROCESSING
 import com.judopay.judokit.android.ui.paymentmethods.components.PollingStatusViewState.RETRY
 import com.judopay.judokit.android.ui.paymentmethods.components.PollingStatusViewState.SUCCESS
-import kotlinx.android.synthetic.main.polling_status_view.view.*
 
 enum class PollingStatusViewState {
     PROCESSING,
@@ -39,6 +39,7 @@ class PollingStatusView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyle: Int = 0
 ) : ConstraintLayout(context, attrs, defStyle) {
+    val binding = PollingStatusViewBinding.inflate(LayoutInflater.from(context), this, true)
 
     internal var state: PollingStatusViewState? = null
         set(value) {
@@ -77,9 +78,7 @@ class PollingStatusView @JvmOverloads constructor(
         }
 
     init {
-        inflate(R.layout.polling_status_view, true)
-
-        pollingButton.setOnClickListener { handleButtonClick() }
+        binding.pollingButton.setOnClickListener { handleButtonClick() }
     }
 
     private fun updateState() {
@@ -89,10 +88,10 @@ class PollingStatusView @JvmOverloads constructor(
 
         visibility = View.VISIBLE
 
-        pollingProgressBar.visibility = progressBarVisibility
-        pollingTextView.text = resources.getString(pollingTextResId)
+        binding.pollingProgressBar.visibility = progressBarVisibility
+        binding.pollingTextView.text = resources.getString(pollingTextResId)
 
-        pollingButton.apply {
+        binding.pollingButton.apply {
             visibility = pollingButtonVisibility
             text = resources.getString(pollingButtonTextResId)
         }

@@ -2,13 +2,13 @@ package com.judopay.judokit.android.ui.paymentmethods.components
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import androidx.core.view.children
 import com.judopay.judokit.android.R
-import com.judopay.judokit.android.inflate
+import com.judopay.judokit.android.databinding.PaymentCallToActionViewBinding
 import com.judopay.judokit.android.ui.common.ButtonState
-import kotlinx.android.synthetic.main.payment_call_to_action_view.view.*
 
 enum class PaymentButtonType {
     PLAIN,
@@ -38,14 +38,13 @@ class PaymentCallToActionView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyle: Int = 0
 ) : FrameLayout(context, attrs, defStyle) {
-
+    val binding = PaymentCallToActionViewBinding.inflate(LayoutInflater.from(context), this, true)
     var callbackListener: PaymentCallToActionViewListener? = null
 
     init {
-        inflate(R.layout.payment_call_to_action_view, true)
-        payButton.setOnClickListener { onPaymentButtonClick() }
-        googlePayButton.setOnClickListener { onPaymentButtonClick() }
-        payByBankButton.setOnClickListener { onPaymentButtonClick() }
+        binding.payButton.setOnClickListener { onPaymentButtonClick() }
+        binding.googlePayButton.setOnClickListener { onPaymentButtonClick() }
+        binding.payByBankButton.setOnClickListener { onPaymentButtonClick() }
     }
 
     var model = PaymentCallToActionViewModel()
@@ -55,30 +54,30 @@ class PaymentCallToActionView @JvmOverloads constructor(
         }
 
     private fun update() = with(model) {
-        amountTextView.text = amount
+        binding.amountTextView.text = amount
         val visibility = if (shouldDisplayAmount) View.VISIBLE else View.GONE
-        youWillPayTextView.visibility = visibility
-        amountTextView.visibility = visibility
+        binding.youWillPayTextView.visibility = visibility
+        binding.amountTextView.visibility = visibility
 
         when (buttonType) {
             PaymentButtonType.PLAIN,
-            PaymentButtonType.IDEAL -> payButton.state = paymentButtonState
+            PaymentButtonType.IDEAL -> binding.payButton.state = paymentButtonState
             PaymentButtonType.GOOGLE_PAY ->
-                googlePayButton.isEnabled =
+                binding.googlePayButton.isEnabled =
                     paymentButtonState is ButtonState.Enabled
             PaymentButtonType.PAY_BY_BANK ->
-                payByBankButton.isEnabled =
+                binding.payByBankButton.isEnabled =
                     paymentButtonState is ButtonState.Enabled
         }
 
         val buttonToShow = when (buttonType) {
             PaymentButtonType.PLAIN,
-            PaymentButtonType.IDEAL -> payButton
-            PaymentButtonType.GOOGLE_PAY -> googlePayButton
-            PaymentButtonType.PAY_BY_BANK -> payByBankButton
+            PaymentButtonType.IDEAL -> binding.payButton
+            PaymentButtonType.GOOGLE_PAY -> binding.googlePayButton
+            PaymentButtonType.PAY_BY_BANK -> binding.payByBankButton
         }
 
-        with(buttonsAnimator) {
+        with(binding.buttonsAnimator) {
             if (currentView != buttonToShow)
                 children.forEachIndexed { index, view ->
                     if (view == buttonToShow) {
