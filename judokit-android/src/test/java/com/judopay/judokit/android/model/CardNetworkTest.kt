@@ -147,13 +147,13 @@ internal class CardNetworkTest {
     @DisplayName("Given withIdentifier is called, when id is 12, then return DISCOVER")
     @Test
     fun returnVisaWhenIdIsTwelve() {
-        assertEquals(CardNetwork.DISCOVER, CardNetwork.withIdentifier(12))
+        assertEquals(CardNetwork.MASTERCARD, CardNetwork.withIdentifier(12))
     }
 
-    @DisplayName("Given withIdentifier is called, when id is 13, then return DINERS_CLUB")
+    @DisplayName("Given withIdentifier is called, when id is 13, then return VISA")
     @Test
     fun returnVisaWhenIdIsThirteen() {
-        assertEquals(CardNetwork.DINERS_CLUB, CardNetwork.withIdentifier(13))
+        assertEquals(CardNetwork.VISA, CardNetwork.withIdentifier(13))
     }
 
     @DisplayName("Given withIdentifier is called, when id is 0, then return OTHER")

@@ -220,7 +220,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             val directoryServerID = when {
                 judo.isSandboxed -> "F000000000"
                 network == CardNetwork.VISA -> "A000000003"
-                network == CardNetwork.MASTERCARD -> "A000000004"
+                network == CardNetwork.MASTERCARD || network == CardNetwork.MAESTRO -> "A000000004"
                 network == CardNetwork.AMEX -> "A000000025"
                 else -> "unknown-id"
             }
