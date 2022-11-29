@@ -9,12 +9,13 @@ buildscript {
     ext.lifecycle_version = '2.5.1'
     ext.junit_version = '5.9.1'
     ext.room_version = '2.4.3'
-    ext.espresso_version = '3.4.0'
-    ext.androidx_test_version = '1.4.0'
+    ext.androidx_test_version = '1.5.0'
+    ext.androidx_test_runner_version = '1.5.1'
+    ext.espresso_version = '3.5.0'
 
     // Set the SDK version here
-    ext.versionCode = 3012
-    ext.versionName = '3.0.12'
+    ext.versionCode = 4000
+    ext.versionName = '4.0.0'
 
     repositories {
         mavenLocal()

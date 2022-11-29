@@ -64,7 +64,7 @@ dependencies {
 
     implementation project(":judokit-android")
 
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.20"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation "androidx.core:core-ktx:$androidx_core_version"
     implementation 'com.google.android.material:material:1.7.0'
@@ -78,8 +78,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
     androidTestImplementation "androidx.test:core-ktx:$androidx_test_version"
-    androidTestImplementation "androidx.test:runner:$androidx_test_version"
     androidTestImplementation "androidx.test:rules:$androidx_test_version"
+    androidTestImplementation "androidx.test:runner:$androidx_test_runner_version"
     androidTestImplementation 'com.google.code.gson:gson:2.9.1'
 
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
