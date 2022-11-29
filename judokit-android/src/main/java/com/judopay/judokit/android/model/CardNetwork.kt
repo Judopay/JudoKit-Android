@@ -58,19 +58,21 @@ enum class CardNetwork : Parcelable {
          * A method that returns the card network type based on the identifier provided.
          * @param id - The provided card network identifier.
          * @return One of the predefined card network type.
+         * https://docs.judopay.com/Content/Developer%20Tools/Codes.htm
          */
         fun withIdentifier(id: Int): CardNetwork = when (id) {
-            1 /*VISA*/,
-            3 /*VISA_ELECTRON*/,
-            11 /*VISA_DEBIT*/ -> VISA
-            2 -> MASTERCARD
+            1, /* VISA */
+            3, /* VISA_ELECTRON */
+            11, /* VISA_DEBIT */
+            13 /* VISA_PURCHASING */ -> VISA
+            2, /* MASTERCARD */
+            12 /* MASTERCARD_DEBIT */ -> MASTERCARD
             10 -> MAESTRO
             8 -> AMEX
             7 -> CHINA_UNION_PAY
             9 -> JCB
-            12,
             14 -> DISCOVER
-            13 -> DINERS_CLUB
+            17 -> DINERS_CLUB
             else -> OTHER
         }
     }
