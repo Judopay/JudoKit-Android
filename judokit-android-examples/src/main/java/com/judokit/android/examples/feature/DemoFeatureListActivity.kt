@@ -322,6 +322,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val judoId = sharedPreferences.getString("judo_id", null)
         val initialRecurringPayment =
             sharedPreferences.getBoolean("is_initial_recurring_payment", false)
+        val delayedAuthorisation =
+            sharedPreferences.getBoolean("is_delayed_authorisation_on", false)
         val mobileNumber = sharedPreferences.getString("mobile_number", null)
         val phoneCountryCode = sharedPreferences.getString("phone_country_code", null)
         val emailAddress = sharedPreferences.getString("email_address", null)
@@ -356,6 +358,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setGooglePayConfiguration(googlePayConfiguration)
             .setPBBAConfiguration(pbbaConfiguration)
             .setInitialRecurringPayment(initialRecurringPayment)
+            .setDelayedAuthorisation(delayedAuthorisation)
             .setMobileNumber(if (mobileNumber.isNullOrBlank()) null else mobileNumber)
             .setPhoneCountryCode(if (phoneCountryCode.isNullOrBlank()) null else phoneCountryCode)
             .setEmailAddress(if (emailAddress.isNullOrBlank()) null else emailAddress)

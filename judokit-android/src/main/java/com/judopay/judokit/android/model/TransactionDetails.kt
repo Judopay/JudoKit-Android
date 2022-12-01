@@ -8,6 +8,8 @@ import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.request.CheckCardRequest
 import com.judopay.judokit.android.api.model.request.PaymentRequest
+import com.judopay.judokit.android.api.model.request.PreAuthPaymentRequest
+import com.judopay.judokit.android.api.model.request.PreAuthTokenRequest
 import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
@@ -182,6 +184,34 @@ fun TransactionDetails.toPaymentRequest(judo: Judo, transaction: Transaction): P
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
+fun TransactionDetails.toPreAuthPaymentRequest(judo: Judo, transaction: Transaction): PreAuthPaymentRequest {
+    val myAmount = judo.amount
+    val myReference = judo.reference
+
+    return PreAuthPaymentRequest.Builder()
+        .setUniqueRequest(false)
+        .setYourPaymentReference(myReference.paymentReference)
+        .setAmount(myAmount.amount)
+        .setCurrency(myAmount.currency.name)
+        .setJudoId(judo.judoId)
+        .setYourConsumerReference(myReference.consumerReference)
+        .setYourPaymentMetaData(myReference.metaData?.toMap())
+        .setAddress(getAddress(judo))
+        .setCardNumber(cardNumber)
+        .setCv2(securityNumber)
+        .setExpiryDate(expirationDate)
+        .setPrimaryAccountDetails(judo.primaryAccountDetails)
+        .setInitialRecurringPayment(judo.initialRecurringPayment)
+        .setDelayedAuthorisation(judo.delayedAuthorisation ?: false)
+        .setCardHolderName(cardHolderName)
+        .setMobileNumber(mobileNumber)
+        .setEmailAddress(email)
+        .setPhoneCountryCode(phoneCountryCode)
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
+        .build()
+}
+
+@Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
 fun TransactionDetails.toCheckCardRequest(judo: Judo, transaction: Transaction): CheckCardRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
@@ -219,6 +249,7 @@ fun TransactionDetails.toSaveCardRequest(judo: Judo, transaction: Transaction): 
         .setCardNumber(cardNumber)
         .setExpiryDate(expirationDate)
         .setCv2(securityNumber)
+        .setCardHolderName(cardHolderName)
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
         .setAddress(judo.address)
         .build()
@@ -275,6 +306,34 @@ fun TransactionDetails.toTokenRequest(judo: Judo, transaction: Transaction): Tok
         .setPhoneCountryCode(phoneCountryCode)
         .setAddress(getAddress(judo))
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
+        .build()
+}
+
+@Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
+fun TransactionDetails.toPreAuthTokenRequest(judo: Judo, transaction: Transaction): PreAuthTokenRequest {
+    val myAmount = judo.amount
+    val myReference = judo.reference
+
+    return PreAuthTokenRequest.Builder()
+        .setJudoId(judo.judoId)
+        .setAmount(myAmount.amount)
+        .setCurrency(myAmount.currency.name)
+        .setYourPaymentReference(myReference.paymentReference)
+        .setYourConsumerReference(myReference.consumerReference)
+        .setYourPaymentMetaData(myReference.metaData?.toMap())
+        .setCardLastFour(cardLastFour)
+        .setCardToken(cardToken)
+        .setCardHolderName(cardHolderName)
+        .setCardType(cardType?.typeId ?: 0)
+        .setCv2(securityNumber)
+        .setInitialRecurringPayment(judo.initialRecurringPayment)
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
+        .setMobileNumber(mobileNumber)
+        .setEmailAddress(email)
+        .setPhoneCountryCode(phoneCountryCode)
+        .setAddress(getAddress(judo))
+        .setPrimaryAccountDetails(judo.primaryAccountDetails)
+        .setDelayedAuthorisation(judo.delayedAuthorisation ?: false)
         .build()
 }
 

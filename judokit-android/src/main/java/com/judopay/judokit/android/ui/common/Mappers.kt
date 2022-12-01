@@ -8,6 +8,7 @@ import com.google.gson.JsonSyntaxException
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.model.request.GooglePayRequest
 import com.judopay.judokit.android.api.model.request.GooglePayWallet
+import com.judopay.judokit.android.api.model.request.PreAuthGooglePayRequest
 import com.judopay.judokit.android.model.GooglePayConfiguration
 import com.judopay.judokit.android.model.googlepay.GPayPaymentGatewayParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayAuthMethod
@@ -115,5 +116,30 @@ internal fun PaymentData.toGooglePayRequest(judo: Judo): GooglePayRequest {
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
         .setCardAddress(judo.address)
         .setGooglePayWallet(wallet)
+        .build()
+}
+
+@Throws(IllegalArgumentException::class, JsonSyntaxException::class)
+internal fun PaymentData.toPreAuthGooglePayRequest(judo: Judo): PreAuthGooglePayRequest {
+    val gPayPaymentData = Gson().fromJson(toJson(), GooglePayPaymentData::class.java)
+
+    val wallet = GooglePayWallet.Builder()
+        .setGooglePayPaymentData(gPayPaymentData)
+        .build()
+
+    val amount = judo.amount
+    val reference = judo.reference
+
+    return PreAuthGooglePayRequest.Builder()
+        .setJudoId(judo.judoId)
+        .setAmount(amount.amount)
+        .setCurrency(amount.currency.name)
+        .setYourPaymentReference(reference.paymentReference)
+        .setYourConsumerReference(reference.consumerReference)
+        .setYourPaymentMetaData(reference.metaData?.toMap())
+        .setPrimaryAccountDetails(judo.primaryAccountDetails)
+        .setCardAddress(judo.address)
+        .setGooglePayWallet(wallet)
+        .setDelayedAuthorisation(judo.delayedAuthorisation ?: false)
         .build()
 }

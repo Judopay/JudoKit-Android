@@ -6,6 +6,9 @@ import com.judopay.judokit.android.api.model.request.Complete3DS2Request
 import com.judopay.judokit.android.api.model.request.GooglePayRequest
 import com.judopay.judokit.android.api.model.request.IdealSaleRequest
 import com.judopay.judokit.android.api.model.request.PaymentRequest
+import com.judopay.judokit.android.api.model.request.PreAuthGooglePayRequest
+import com.judopay.judokit.android.api.model.request.PreAuthPaymentRequest
+import com.judopay.judokit.android.api.model.request.PreAuthTokenRequest
 import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
@@ -44,7 +47,7 @@ interface JudoApiService {
      * @return the receipt for the pre-auth with the status of the transaction
      */
     @POST("transactions/preauths")
-    fun preAuthPayment(@Body paymentRequest: PaymentRequest): Call<JudoApiCallResult<Receipt>>
+    fun preAuthPayment(@Body paymentRequest: PreAuthPaymentRequest): Call<JudoApiCallResult<Receipt>>
 
     /**
      * Perform a token payment using a tokenised card
@@ -62,7 +65,7 @@ interface JudoApiService {
      * @return the receipt for the pre-auth with the status of the transaction
      */
     @POST("transactions/preauths")
-    fun preAuthTokenPayment(@Body tokenRequest: TokenRequest): Call<JudoApiCallResult<Receipt>>
+    fun preAuthTokenPayment(@Body tokenRequest: PreAuthTokenRequest): Call<JudoApiCallResult<Receipt>>
 
     /**
      * Complete a transaction that required 3D-Secure verification by providing the 3D-Secure response data.
@@ -126,7 +129,7 @@ interface JudoApiService {
      * @return The receipt of the Google Pay transaction.
      */
     @POST("transactions/preauths")
-    fun preAuthGooglePayPayment(@Body googlePayRequest: GooglePayRequest): Call<JudoApiCallResult<Receipt>>
+    fun preAuthGooglePayPayment(@Body googlePayRequest: PreAuthGooglePayRequest): Call<JudoApiCallResult<Receipt>>
 
     /**
      * A method that invokes a Bank transaction, used for completing transactions via iDEAL Bank apps.
