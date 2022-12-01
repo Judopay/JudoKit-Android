@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.wallet.PaymentData
 import com.judopay.judokit.android.api.JudoApiService
-import com.judopay.judokit.android.api.model.request.GooglePayRequest
 import com.judopay.judokit.android.api.model.request.toJudoResult
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
 import com.judopay.judokit.android.model.JudoError
@@ -20,6 +19,7 @@ import com.judopay.judokit.android.model.isGooglePayWidget
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
 import com.judopay.judokit.android.service.JudoGooglePayService
 import com.judopay.judokit.android.ui.common.toGooglePayRequest
+import com.judopay.judokit.android.ui.common.toPreAuthGooglePayRequest
 import kotlinx.coroutines.launch
 import retrofit2.await
 
@@ -101,11 +101,11 @@ class JudoSharedViewModel(
 
     private fun onLoadGPayPaymentDataSuccess(paymentData: PaymentData) {
         try {
-            val googlePayRequest = paymentData.toGooglePayRequest(judo)
             if (judo.paymentWidgetType == PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS) {
+                val googlePayRequest = paymentData.toGooglePayRequest(judo)
                 dispatchResult(JudoPaymentResult.Success(googlePayRequest.toJudoResult()))
             } else {
-                sendRequest(googlePayRequest)
+                sendGPayRequest(paymentData)
             }
         } catch (exception: Throwable) {
             onLoadGPayPaymentDataError(exception.message ?: "Unknown error")
@@ -117,15 +117,15 @@ class JudoSharedViewModel(
     }
 
     @Throws(IllegalStateException::class)
-    private fun sendRequest(googlePayRequest: GooglePayRequest) = viewModelScope.launch {
+    private fun sendGPayRequest(paymentData: PaymentData) = viewModelScope.launch {
         val result = when (judo.paymentWidgetType) {
             PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
             PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> judoApiService.preAuthGooglePayPayment(
-                googlePayRequest
+                paymentData.toPreAuthGooglePayRequest(judo)
             ).await()
             PaymentWidgetType.GOOGLE_PAY,
             PaymentWidgetType.PAYMENT_METHODS -> judoApiService.googlePayPayment(
-                googlePayRequest
+                paymentData.toGooglePayRequest(judo)
             ).await()
             else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
         }

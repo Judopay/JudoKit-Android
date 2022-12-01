@@ -22,15 +22,6 @@
         android:theme="@style/Theme.DemoApp"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name="com.judokit.android.examples.SplashActivity"
-            android:exported="true"
-            android:theme="@style/SplashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name="com.judokit.android.examples.feature.noui.DemoNoUiPaymentActivity"
             android:exported="false" />
         <activity
@@ -50,16 +41,16 @@
         <activity
             android:name="com.judokit.android.examples.feature.DemoFeatureListActivity"
             android:exported="true"
-            android:label="@string/title_activity_demo_feature_list"
             android:launchMode="singleTask"
             android:theme="@style/Theme.DemoApp">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 

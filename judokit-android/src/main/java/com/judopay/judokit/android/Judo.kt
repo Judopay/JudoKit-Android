@@ -75,7 +75,8 @@ class Judo internal constructor(
     val phoneCountryCode: String?,
     val emailAddress: String?,
     val threeDSTwoMaxTimeout: Int,
-    val threeDSTwoMessageVersion: String
+    val threeDSTwoMessageVersion: String,
+    val delayedAuthorisation: Boolean? = null
 ) : Parcelable {
 
     /**
@@ -104,6 +105,7 @@ class Judo internal constructor(
         private var emailAddress: String? = null
         private var threeDSTwoMaxTimeout: Int? = null
         private var threeDSTwoMessageVersion: String? = null
+        private var delayedAuthorisation: Boolean? = null
 
         /**
          * Sets the unique merchant ID
@@ -208,6 +210,13 @@ class Judo internal constructor(
          */
         fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
             apply { this.initialRecurringPayment = initialRecurringPayment }
+
+        /**
+         * Sets the flag for initial delayed authorization.
+         * @param delayedAuthorisation Boolean value that toggles delayed authorization payment.
+         */
+        fun setDelayedAuthorisation(delayedAuthorisation: Boolean?) =
+            apply { this.delayedAuthorisation = delayedAuthorisation }
 
         /**
          * Sets the network timeout.
@@ -344,7 +353,8 @@ class Judo internal constructor(
                 phoneCountryCode,
                 emailAddress,
                 threeDSTwoMaxTimeout ?: DEFAULT_MAX_TIMEOUT,
-                threeDSTwoMessageVersion ?: THREE_DS_TWO_MESSAGE_VERSION_TWO_DOT_TWO
+                threeDSTwoMessageVersion ?: THREE_DS_TWO_MESSAGE_VERSION_TWO_DOT_TWO,
+                delayedAuthorisation
             )
         }
 
@@ -375,6 +385,6 @@ class Judo internal constructor(
     }
 
     override fun toString(): String {
-        return "Judo(judoId='$judoId', authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration, initialRecurringPayment=$initialRecurringPayment, challengeRequestIndicator=$challengeRequestIndicator, scaExemption=$scaExemption)"
+        return "Judo(judoId='$judoId', authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration, initialRecurringPayment=$initialRecurringPayment, challengeRequestIndicator=$challengeRequestIndicator, scaExemption=$scaExemption, delayedAuthorisation=$delayedAuthorisation)"
     }
 }

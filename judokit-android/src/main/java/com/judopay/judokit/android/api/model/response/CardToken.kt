@@ -18,6 +18,7 @@ class CardToken(
     @SerializedName("cardFunding") var funding: String? = null,
     @SerializedName("cardCategory") var category: String? = null,
     @SerializedName("cardCountry") var country: String? = null,
+    @SerializedName("cardHolderName") var cardHolderName: String? = null,
     var bank: String? = null,
     var endDate: String? = null
 ) : Parcelable {

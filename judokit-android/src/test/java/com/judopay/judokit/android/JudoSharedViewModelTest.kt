@@ -8,6 +8,7 @@ import com.google.android.gms.common.api.Status
 import com.google.android.gms.wallet.PaymentData
 import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.model.request.GooglePayRequest
+import com.judopay.judokit.android.api.model.request.PreAuthGooglePayRequest
 import com.judopay.judokit.android.api.model.request.toJudoResult
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.Receipt
@@ -18,6 +19,7 @@ import com.judopay.judokit.android.model.JudoResult
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.service.JudoGooglePayService
 import com.judopay.judokit.android.ui.common.toGooglePayRequest
+import com.judopay.judokit.android.ui.common.toPreAuthGooglePayRequest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -271,6 +273,7 @@ internal class JudoSharedViewModelTest {
     @Test
     fun callToGooglePayRequestOnSendWithLoadGPayPaymentDataSuccessAction() {
         val paymentData: PaymentData = mockk(relaxed = true)
+        every { judo.paymentWidgetType } returns PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS
 
         sut.send(JudoSharedAction.LoadGPayPaymentDataSuccess(paymentData))
 
@@ -316,26 +319,26 @@ internal class JudoSharedViewModelTest {
     @Test
     fun callPreAuthGooglePayPaymentOnLoadGpayPaymentDataSuccessWithPreAuthGooglePayPaymentMethod() {
         val paymentData: PaymentData = mockk(relaxed = true)
-        val googlePayRequest: GooglePayRequest = mockk(relaxed = true)
+        val preAuthGooglePayRequest: PreAuthGooglePayRequest = mockk(relaxed = true)
         every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH_GOOGLE_PAY
-        every { paymentData.toGooglePayRequest(judo) } returns googlePayRequest
+        every { paymentData.toPreAuthGooglePayRequest(judo) } returns preAuthGooglePayRequest
 
         sut.send(JudoSharedAction.LoadGPayPaymentDataSuccess(paymentData))
 
-        coVerify { judoApiService.preAuthGooglePayPayment(googlePayRequest) }
+        coVerify { judoApiService.preAuthGooglePayPayment(preAuthGooglePayRequest) }
     }
 
     @DisplayName("Given send is called with LoadGPayPaymentDataSuccess action, when paymentWidgetType is PRE_AUTH_PAYMENT_METHODS, then call judoApiService.preAuthGooglePayPayment")
     @Test
     fun callPreAuthGooglePayPaymentOnLoadGpayPaymentDataSuccessWithPreAuthPaymentMethod() {
         val paymentData: PaymentData = mockk(relaxed = true)
-        val googlePayRequest: GooglePayRequest = mockk(relaxed = true)
+        val preAuthGooglePayRequest: PreAuthGooglePayRequest = mockk(relaxed = true)
         every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS
-        every { paymentData.toGooglePayRequest(judo) } returns googlePayRequest
+        every { paymentData.toPreAuthGooglePayRequest(judo) } returns preAuthGooglePayRequest
 
         sut.send(JudoSharedAction.LoadGPayPaymentDataSuccess(paymentData))
 
-        coVerify { judoApiService.preAuthGooglePayPayment(googlePayRequest) }
+        coVerify { judoApiService.preAuthGooglePayPayment(preAuthGooglePayRequest) }
     }
 
     @DisplayName("Given send is called with LoadGPayPaymentDataSuccess action, when paymentWidgetType is GOOGLE_PAY, then call judoApiService.googlePayPayment")

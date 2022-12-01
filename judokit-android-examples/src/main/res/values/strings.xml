@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Judopay Sample App</string>
+    <string name="app_name">JudoKit</string>
     <string name="title_activity_demo_feature_list">Judo Examples</string>
     <string name="title_activity_pay_by_bank">Pay by Bank App</string>
 
@@ -171,6 +171,9 @@
 
     <string name="is_initial_recurring_payment_title">Initial recurring payment</string>
     <string name="is_initial_recurring_payment_summary">Turn on to set initialRecurringPayment flag to true.</string>
+
+    <string name="is_delayed_authorisation_on_title">Delayed authorisation</string>
+    <string name="is_delayed_authorisation_on_summary">Turn on to set delayedAuthorisation flag to true.</string>
 
     <string name="sdk_version_title">SDK version</string>
     <string name="judo_api_version_title">Judo API version</string>
