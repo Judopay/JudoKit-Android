@@ -4,7 +4,7 @@ import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTw
 import com.judopay.judokit.android.model.PrimaryAccountDetails
 import com.judopay.judokit.android.requireNotNullOrEmpty
 
-class PreAuthTokenRequest  private constructor(
+class PreAuthTokenRequest private constructor(
     private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String?,
     private var amount: String?,

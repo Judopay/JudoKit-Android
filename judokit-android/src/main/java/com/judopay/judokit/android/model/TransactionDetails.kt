@@ -8,7 +8,7 @@ import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.request.CheckCardRequest
 import com.judopay.judokit.android.api.model.request.PaymentRequest
-import com.judopay.judokit.android.api.model.request.PreAuthPaymentRequest
+import com.judopay.judokit.android.api.model.request.PreAuthRequest
 import com.judopay.judokit.android.api.model.request.PreAuthTokenRequest
 import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
@@ -184,11 +184,11 @@ fun TransactionDetails.toPaymentRequest(judo: Judo, transaction: Transaction): P
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun TransactionDetails.toPreAuthPaymentRequest(judo: Judo, transaction: Transaction): PreAuthPaymentRequest {
+fun TransactionDetails.toPreAuthRequest(judo: Judo, transaction: Transaction): PreAuthRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
 
-    return PreAuthPaymentRequest.Builder()
+    return PreAuthRequest.Builder()
         .setUniqueRequest(false)
         .setYourPaymentReference(myReference.paymentReference)
         .setAmount(myAmount.amount)

@@ -6,7 +6,7 @@ import com.judopay.judokit.android.model.PrimaryAccountDetails
 import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.requireNotNullOrEmpty
 
-class PreAuthPaymentRequest private constructor(
+class PreAuthRequest private constructor(
     private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String?,
     private var amount: String?,
@@ -109,7 +109,7 @@ class PreAuthPaymentRequest private constructor(
         fun setDelayedAuthorisation(delayedAuthorisation: Boolean) =
             apply { this.delayedAuthorisation = delayedAuthorisation }
 
-        fun build(): PreAuthPaymentRequest {
+        fun build(): PreAuthRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myAmount = requireNotNullOrEmpty(amount, "amount")
             val myCurrency = requireNotNullOrEmpty(currency, "currency")
@@ -123,7 +123,7 @@ class PreAuthPaymentRequest private constructor(
             val myThreeDSecure =
                 com.judopay.judokit.android.requireNotNull(threeDSecure, "threeDSecure")
 
-            return PreAuthPaymentRequest(
+            return PreAuthRequest(
                 uniqueRequest,
                 paymentReference,
                 myAmount,

@@ -29,7 +29,7 @@ import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.toCheckCardRequest
 import com.judopay.judokit.android.model.toPaymentRequest
-import com.judopay.judokit.android.model.toPreAuthPaymentRequest
+import com.judopay.judokit.android.model.toPreAuthRequest
 import com.judopay.judokit.android.model.toPreAuthTokenRequest
 import com.judopay.judokit.android.model.toRegisterCardRequest
 import com.judopay.judokit.android.model.toSaveCardRequest
@@ -172,7 +172,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             apiService.payment(request)
         }
         TransactionType.PRE_AUTH -> {
-            val request = details.toPreAuthPaymentRequest(judo, transaction)
+            val request = details.toPreAuthRequest(judo, transaction)
             apiService.preAuthPayment(request)
         }
         TransactionType.PAYMENT_WITH_TOKEN -> {

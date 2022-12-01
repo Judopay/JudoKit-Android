@@ -7,7 +7,7 @@ import com.judopay.judokit.android.api.model.request.GooglePayRequest
 import com.judopay.judokit.android.api.model.request.IdealSaleRequest
 import com.judopay.judokit.android.api.model.request.PaymentRequest
 import com.judopay.judokit.android.api.model.request.PreAuthGooglePayRequest
-import com.judopay.judokit.android.api.model.request.PreAuthPaymentRequest
+import com.judopay.judokit.android.api.model.request.PreAuthRequest
 import com.judopay.judokit.android.api.model.request.PreAuthTokenRequest
 import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
@@ -43,11 +43,11 @@ interface JudoApiService {
     /**
      * Perform a pre-auth transaction
      *
-     * @param paymentRequest the details for the pre-auth, including the payment method, amount and Judo ID
+     * @param preAuthRequest the details for the pre-auth, including the payment method, amount and Judo ID
      * @return the receipt for the pre-auth with the status of the transaction
      */
     @POST("transactions/preauths")
-    fun preAuthPayment(@Body paymentRequest: PreAuthPaymentRequest): Call<JudoApiCallResult<Receipt>>
+    fun preAuthPayment(@Body preAuthRequest: PreAuthRequest): Call<JudoApiCallResult<Receipt>>
 
     /**
      * Perform a token payment using a tokenised card
@@ -61,11 +61,11 @@ interface JudoApiService {
     /**
      * Perform a token pre-auth using a tokenised card
      *
-     * @param tokenRequest the token card details
+     * @param preAuthTokenRequest the token card details
      * @return the receipt for the pre-auth with the status of the transaction
      */
     @POST("transactions/preauths")
-    fun preAuthTokenPayment(@Body tokenRequest: PreAuthTokenRequest): Call<JudoApiCallResult<Receipt>>
+    fun preAuthTokenPayment(@Body preAuthTokenRequest: PreAuthTokenRequest): Call<JudoApiCallResult<Receipt>>
 
     /**
      * Complete a transaction that required 3D-Secure verification by providing the 3D-Secure response data.
@@ -125,11 +125,11 @@ interface JudoApiService {
     /**
      * A method that invokes a Google Pay pre-auth transaction.
      *
-     * @param googlePayRequest - an instance of [GooglePayRequest] describing the Google Pay request.
+     * @param preAuthGooglePayRequest - an instance of [GooglePayRequest] describing the Google Pay request.
      * @return The receipt of the Google Pay transaction.
      */
     @POST("transactions/preauths")
-    fun preAuthGooglePayPayment(@Body googlePayRequest: PreAuthGooglePayRequest): Call<JudoApiCallResult<Receipt>>
+    fun preAuthGooglePayPayment(@Body preAuthGooglePayRequest: PreAuthGooglePayRequest): Call<JudoApiCallResult<Receipt>>
 
     /**
      * A method that invokes a Bank transaction, used for completing transactions via iDEAL Bank apps.
