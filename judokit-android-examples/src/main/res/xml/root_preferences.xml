@@ -403,6 +403,13 @@
             app:summary="@string/is_initial_recurring_payment_summary"
             app:title="@string/is_initial_recurring_payment_title" />
 
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="is_delayed_authorisation_on"
+            app:summary="@string/is_delayed_authorisation_on_summary"
+            app:title="@string/is_delayed_authorisation_on_title" />
+
         <MultiSelectListPreference
             app:defaultValue="@array/default_card_networks_values"
             app:entries="@array/card_networks_entries"

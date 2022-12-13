@@ -188,7 +188,8 @@ fun Judo.toRegisterCardRequest(
 fun Judo.toSaveCardRequest(
     cardNumber: String,
     expirationDate: String,
-    securityCode: String
+    securityCode: String,
+    cardHolderName: String? = null
 ) =
     SaveCardRequest.Builder()
         .setUniqueRequest(false)
@@ -200,6 +201,7 @@ fun Judo.toSaveCardRequest(
         .setAddress(address ?: Address.Builder().build())
         .setCardNumber(cardNumber)
         .setExpiryDate(expirationDate)
+        .setCardHolderName(cardHolderName)
         .setCv2(securityCode)
         .setPrimaryAccountDetails(primaryAccountDetails)
         .build()
