@@ -3,7 +3,7 @@
 buildscript {
     ext.kotlin_version = '1.7.20'
     ext.coroutines_version = '1.6.4'
-    ext.androidx_core_version = '1.7.0'
+    ext.androidx_core_version = '1.9.0'
     ext.retrofit_version = '2.9.0'
     ext.navigation_version = '2.5.3'
     ext.lifecycle_version = '2.5.1'
