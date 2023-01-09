@@ -1,14 +1,17 @@
 package com.judokit.android.examples.feature
 
+import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -19,6 +22,7 @@ import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.judokit.android.examples.R
+import com.judokit.android.examples.common.NotificationPermissionLauncher
 import com.judokit.android.examples.common.startResultActivity
 import com.judokit.android.examples.common.toResult
 import com.judokit.android.examples.databinding.ActivityDemoFeatureListBinding
@@ -87,6 +91,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
     private var deepLinkIntent = intent
     private lateinit var binding: ActivityDemoFeatureListBinding
 
+    private lateinit var notificationPermissionLauncher: NotificationPermissionLauncher
+
     private val orderIdReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             @Suppress("UNUSED_VARIABLE")
@@ -97,6 +103,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        notificationPermissionLauncher = NotificationPermissionLauncher(this)
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
             orderIdReceiver,
@@ -120,6 +128,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
         deepLinkIfNeeded()
+        notificationPermissionLauncher.requestPermissionIfNeeded()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
