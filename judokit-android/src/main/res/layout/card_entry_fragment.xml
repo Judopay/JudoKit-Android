@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottomSheetContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/bottomSheetContainer"
     android:clipChildren="false">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -15,12 +15,12 @@
         app:liftOnScroll="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:clipToPadding="true"
-            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:layout_marginTop="@dimen/negative_space_4"
-            android:layout_marginBottom="@dimen/space_4">
+            android:layout_marginBottom="@dimen/space_4"
+            android:background="@color/white"
+            android:clipToPadding="true">
 
             <Button
                 android:id="@+id/cancelButton"
@@ -49,14 +49,14 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <ViewAnimator
-        android:inAnimation="@anim/fade_in"
-        android:outAnimation="@anim/fade_out"
-        android:clipToPadding="false"
         android:id="@+id/cardEntryViewAnimator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_80"
-        android:measureAllChildren="false">
+        android:clipToPadding="false"
+        android:inAnimation="@anim/fade_in"
+        android:measureAllChildren="false"
+        android:outAnimation="@anim/fade_out">
 
         <com.judopay.judokit.android.ui.cardentry.components.CardEntryFormView
             android:id="@+id/formView"

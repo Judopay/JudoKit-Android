@@ -89,7 +89,9 @@ class JudoActivity : AppCompatActivity() {
             bundleOf(
                 CARD_ENTRY_OPTIONS to CardEntryOptions(shouldDisplayBillingDetails = config.uiConfiguration.shouldAskForBillingInformation && config.paymentWidgetType != PaymentWidgetType.CREATE_CARD_TOKEN)
             )
-        } else null
+        } else {
+            null
+        }
         val navigationHost = NavHostFragment.create(graphId, bundle)
 
         supportFragmentManager.beginTransaction()

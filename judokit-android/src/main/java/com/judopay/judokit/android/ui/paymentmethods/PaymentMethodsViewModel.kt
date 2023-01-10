@@ -74,7 +74,7 @@ internal class PaymentMethodsViewModelFactory(
     private val judo: Judo
 ) : NewInstanceFactory() {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == PaymentMethodsViewModel::class.java) {
             PaymentMethodsViewModel(
                 cardDate,
@@ -83,7 +83,9 @@ internal class PaymentMethodsViewModelFactory(
                 application,
                 judo
             ) as T
-        } else super.create(modelClass)
+        } else {
+            super.create(modelClass)
+        }
     }
 }
 
@@ -190,7 +192,9 @@ class PaymentMethodsViewModel(
             val cardNetwork = if (isSecurityCodeRequired) {
                 val card = paymentMethod.selectedCard
                 card?.network
-            } else null
+            } else {
+                null
+            }
             if (judo.uiConfiguration.shouldAskForBillingInformation || isSecurityCodeRequired) {
                 val cardEntryOptions = CardEntryOptions(
                     fromPaymentMethods = true,
@@ -375,11 +379,17 @@ class PaymentMethodsViewModel(
     ): ButtonState = when (method) {
         PaymentMethod.CARD -> payWithCardButtonState(isLoading, cardModel)
         PaymentMethod.PAY_BY_BANK,
-        PaymentMethod.GOOGLE_PAY -> if (isLoading) ButtonState.Disabled(R.string.empty) else ButtonState.Enabled(
-            R.string.empty
-        )
+        PaymentMethod.GOOGLE_PAY -> if (isLoading) {
+            ButtonState.Disabled(R.string.empty)
+        } else {
+            ButtonState.Enabled(R.string.empty)
+        }
         PaymentMethod.IDEAL ->
-            if (isLoading) ButtonState.Loading else ButtonState.Enabled(R.string.pay_now)
+            if (isLoading) {
+                ButtonState.Loading
+            } else {
+                ButtonState.Enabled(R.string.pay_now)
+            }
     }
 
     private fun payWithCardButtonState(

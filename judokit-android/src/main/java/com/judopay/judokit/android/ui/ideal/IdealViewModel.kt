@@ -33,10 +33,12 @@ internal class IdealViewModelFactory(
     private val application: Application
 ) : ViewModelProvider.NewInstanceFactory() {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == IdealViewModel::class.java) {
             IdealViewModel(judo, service, pollingService, application) as T
-        } else super.create(modelClass)
+        } else {
+            super.create(modelClass)
+        }
     }
 }
 

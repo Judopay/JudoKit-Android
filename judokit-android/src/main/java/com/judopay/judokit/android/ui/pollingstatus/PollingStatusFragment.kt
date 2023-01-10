@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import com.judopay.judokit.android.JudoSharedViewModel
-import com.judopay.judokit.android.R
 import com.judopay.judokit.android.animateWithAlpha
 import com.judopay.judokit.android.api.error.toJudoError
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
@@ -22,6 +21,7 @@ import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
 import com.judopay.judokit.android.api.model.response.toJudoResult
 import com.judopay.judokit.android.applyDialogStyling
+import com.judopay.judokit.android.databinding.PollingStatusFragmentBinding
 import com.judopay.judokit.android.judo
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
@@ -37,13 +37,13 @@ import com.judopay.judokit.android.ui.paymentmethods.components.PollingStatusVie
 import com.judopay.judokit.android.ui.paymentmethods.components.PollingStatusViewState
 import com.zapp.library.merchant.ui.PBBAPopupCallback
 import com.zapp.library.merchant.util.PBBAAppUtils
-import kotlinx.android.synthetic.main.polling_status_fragment.*
 
 class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
-
     private lateinit var viewModel: PollingStatusViewModel
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
     var result: JudoPaymentResult = JudoPaymentResult.UserCancelled()
+    private var _binding: PollingStatusFragmentBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = object : Dialog(requireContext(), theme) {
@@ -56,11 +56,15 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
         return dialog
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.polling_status_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = PollingStatusFragmentBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -77,7 +81,7 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
             judo,
             paymentWidgetType
         )
-        viewModel = ViewModelProvider(this, factory).get(PollingStatusViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory)[PollingStatusViewModel::class.java]
 
         viewModel.send(PollingAction.Initialise(sharedViewModel.error.details.isEmpty()))
 
@@ -91,9 +95,9 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
         ) { result ->
             handleSaleStatusResult(result)
         }
-        pollingStatusView.onButtonClickListener = { handlePollingStatusViewButtonClick(it) }
+        binding.pollingStatusView.onButtonClickListener = { handlePollingStatusViewButtonClick(it) }
 
-        pollingStatusView.animateWithAlpha(1.0f)
+        binding.pollingStatusView.animateWithAlpha(1.0f)
     }
 
     // PBBAPopupCallback
@@ -105,6 +109,12 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
         viewModel.send(PollingAction.CancelPolling)
     }
 
+    override fun onStartTimer() {
+    }
+
+    override fun onEndTimer() {
+    }
+
     private fun handlePayByBankResult(result: JudoApiCallResult<BankSaleResponse>?) {
         when (result) {
             is JudoApiCallResult.Success -> handleBankSaleResponse(result)
@@ -112,6 +122,7 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
                 sharedViewModel.bankPaymentResult.postValue(result.toJudoPaymentResult(resources))
                 findNavController().popBackStack()
             }
+            null -> {}
         }
     }
 
@@ -135,7 +146,7 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
     private fun handlePollingStatusViewButtonClick(action: PollingStatusViewAction) {
         when (action) {
             PollingStatusViewAction.RETRY -> {
-                when (pollingStatusView.state) {
+                when (binding.pollingStatusView.state) {
                     PollingStatusViewState.DELAY -> viewModel.send(PollingAction.ResetPolling)
                     PollingStatusViewState.RETRY -> viewModel.send(PollingAction.RetryPolling)
                     else -> {
@@ -143,11 +154,11 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
                     }
                 }
 
-                pollingStatusView.state = PollingStatusViewState.PROCESSING
+                binding.pollingStatusView.state = PollingStatusViewState.PROCESSING
             }
 
             PollingStatusViewAction.CLOSE -> {
-                when (pollingStatusView.state) {
+                when (binding.pollingStatusView.state) {
                     PollingStatusViewState.FAIL,
                     PollingStatusViewState.SUCCESS -> {
                         findNavController().popBackStack()
@@ -164,7 +175,7 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
     }
 
     private fun handleSaleStatusResult(pollingResult: PollingResult<BankSaleStatusResponse>?) {
-        pollingStatusView.state = when (pollingResult) {
+        binding.pollingStatusView.state = when (pollingResult) {
             is PollingResult.Processing -> PollingStatusViewState.PROCESSING
             is PollingResult.Delay -> PollingStatusViewState.DELAY
             is PollingResult.Retry -> PollingStatusViewState.RETRY

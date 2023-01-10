@@ -2,16 +2,16 @@ package com.judopay.judokit.android.ui.paymentmethods.components
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.animateWithAlpha
 import com.judopay.judokit.android.animateWithTranslation
-import com.judopay.judokit.android.inflate
+import com.judopay.judokit.android.databinding.NoPaymentMethodSelectedViewBinding
 import com.judopay.judokit.android.ui.paymentmethods.model.CardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.CardViewType
-import kotlinx.android.synthetic.main.payment_methods_header_view.view.*
 
 private const val TRANSLATE_120 = 120f
 
@@ -25,17 +25,14 @@ class NoPaymentMethodSelectedView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyle: Int = 0
 ) : FrameLayout(context, attrs, defStyle) {
-
-    init {
-        inflate(R.layout.no_payment_method_selected_view, true)
-    }
+    private val binding = NoPaymentMethodSelectedViewBinding.inflate(LayoutInflater.from(context), this, true)
 
     fun show(placeholderImage: ImageView) {
         placeholderImage.apply {
             visibility = View.VISIBLE
             animateWithAlpha(alpha = 1.0f)
         }
-        noPaymentMethodSelectedView.apply {
+        binding.root.apply {
             visibility = View.VISIBLE
             animateWithTranslation(translationY = 0.0f, alpha = 1.0f)
         }
@@ -46,7 +43,7 @@ class NoPaymentMethodSelectedView @JvmOverloads constructor(
             visibility = View.GONE
             animateWithAlpha(alpha = 0.0f)
         }
-        noPaymentMethodSelectedView.apply {
+        binding.root.apply {
             visibility = View.GONE
             animateWithTranslation(
                 translationY = TRANSLATE_120,

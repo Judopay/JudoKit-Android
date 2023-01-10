@@ -22,7 +22,6 @@ import java.util.Locale
  * @return `true` if and only if the input value is a valid Luhn number
  */
 internal fun isValidLuhnNumber(cardNumber: String): Boolean {
-
     var isOdd = true
     var sum = 0
 
@@ -62,7 +61,7 @@ fun toDate(
 }
 
 fun getLocale(resources: Resources): Locale =
-    ConfigurationCompat.getLocales(resources.configuration)[0]
+    ConfigurationCompat.getLocales(resources.configuration)[0] ?: Locale.getDefault()
 
 fun showAlert(context: Context, message: String) {
     MaterialAlertDialogBuilder(context)

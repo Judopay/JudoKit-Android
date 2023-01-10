@@ -58,7 +58,8 @@ data class JudoError(
          * or redirect url.
          */
         fun judoResponseParseError(resources: Resources) = JudoError(
-            RESPONSE_PARSING, resources.getString(R.string.error_response_parse_desc),
+            RESPONSE_PARSING,
+            resources.getString(R.string.error_response_parse_desc),
             mutableListOf(
                 JudoError(
                     RESPONSE_PARSING,

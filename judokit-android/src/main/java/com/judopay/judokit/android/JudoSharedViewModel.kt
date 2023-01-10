@@ -39,10 +39,12 @@ internal class JudoSharedViewModelFactory(
     private val application: Application
 ) : ViewModelProvider.NewInstanceFactory() {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == JudoSharedViewModel::class.java) {
             JudoSharedViewModel(judo, googlePayService, judoApiService, application) as T
-        } else super.create(modelClass)
+        } else {
+            super.create(modelClass)
+        }
     }
 }
 
@@ -54,13 +56,16 @@ class JudoSharedViewModel(
 ) : AndroidViewModel(application) {
 
     private val resources = application.resources
+
     // used to share a card payment result between fragments (card input / payment methods)
     val paymentResult = MutableLiveData<JudoPaymentResult>()
 
     val bankPaymentResult = MutableLiveData<JudoPaymentResult>()
     val paymentMethodsResult = MutableLiveData<JudoPaymentResult>()
+
     // used to pass security code from card entry to payment methods screen
     val cardEntryToPaymentMethodResult = MutableLiveData<TransactionDetails.Builder>()
+
     // used to share the GooglePay payment result between this activity and the payment methods fragment
     val paymentMethodsGooglePayResult = MutableLiveData<JudoPaymentResult>()
 

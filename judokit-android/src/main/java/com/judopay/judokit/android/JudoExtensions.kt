@@ -32,7 +32,6 @@ import com.judopay.judokit.android.model.ApiEnvironment
 import com.judopay.judokit.android.model.googlepay.GooglePayAddress
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_500
 import com.judopay.judokit.android.ui.error.JudoNotProvidedError
-import kotlinx.android.synthetic.main.card_entry_form_view.view.*
 
 internal val Judo.apiBaseUrl: String
     get() = if (isSandboxed) ApiEnvironment.SANDBOX.host else ApiEnvironment.LIVE.host
@@ -46,9 +45,11 @@ internal fun requireNotNullOrEmpty(value: String?, propertyName: String, message
 }
 
 internal fun <T : Any> requireNotNull(value: T?, propertyName: String, message: String? = null): T {
-    if (value == null)
+    if (value == null) {
         throw IllegalArgumentException(message ?: "$propertyName cannot be null")
-    else return value
+    } else {
+        return value
+    }
 }
 
 internal fun validateTimeout(
@@ -58,9 +59,11 @@ internal fun validateTimeout(
     maxTimeout: Long
 ): Long {
     return timeout?.let {
-        if (it !in minTimeout..maxTimeout)
+        if (it !in minTimeout..maxTimeout) {
             throw IllegalArgumentException("$propertyName should be greater than $minTimeout seconds and less than $maxTimeout seconds")
-        else it
+        } else {
+            it
+        }
     } ?: minTimeout
 }
 

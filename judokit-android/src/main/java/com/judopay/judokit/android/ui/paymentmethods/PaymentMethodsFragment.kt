@@ -19,6 +19,7 @@ import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.response.CardDate
+import com.judopay.judokit.android.databinding.PaymentMethodsFragmentBinding
 import com.judopay.judokit.android.db.JudoRoomDatabase
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.judo
@@ -39,8 +40,6 @@ import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethod
 import com.judopay.judokit.android.ui.paymentmethods.components.PaymentCallToActionType
 import com.judopay.judokit.android.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentMethodModel
-import kotlinx.android.synthetic.main.payment_methods_fragment.*
-import kotlinx.android.synthetic.main.payment_methods_header_view.*
 
 internal const val PAYMENT_WIDGET_TYPE = "com.judopay.judokit.android.model.paymentWidgetType"
 internal const val CARD_ENTRY_OPTIONS = "com.judopay.judokit.android.cardEntryOptions"
@@ -56,18 +55,22 @@ class PaymentMethodsFragment : Fragment() {
     private lateinit var service: JudoApiService
     private lateinit var cardTransactionManager: CardTransactionManager
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
+    private var _binding: PaymentMethodsFragmentBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.payment_methods_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = PaymentMethodsFragmentBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        headerView.fromEditMode = true
+        binding.headerView.fromEditMode = true
         setupRecyclerView()
         setupButtonCallbacks()
     }
@@ -97,7 +100,7 @@ class PaymentMethodsFragment : Fragment() {
                 judo
             )
 
-        viewModel = ViewModelProvider(this, factory).get(PaymentMethodsViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory)[PaymentMethodsViewModel::class.java]
         viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
 
         viewModel.judoPaymentResult.observe(
@@ -192,18 +195,23 @@ class PaymentMethodsFragment : Fragment() {
                     onEdit(item.id)
                     viewModel.send(PaymentMethodsAction.SelectStoredCard(item.id))
                 }
-                if (action == PaymentMethodItemAction.DELETE_CARD)
+                if (action == PaymentMethodItemAction.DELETE_CARD) {
                     onDeleteCardItem(item)
-                if (action == PaymentMethodItemAction.PICK_CARD)
+                }
+                if (action == PaymentMethodItemAction.PICK_CARD) {
                     viewModel.send(PaymentMethodsAction.SelectStoredCard(item.id))
+                }
             }
             is PaymentMethodGenericItem -> {
-                if (action == PaymentMethodItemAction.ADD_CARD)
+                if (action == PaymentMethodItemAction.ADD_CARD) {
                     onAddCard()
-                if (action == PaymentMethodItemAction.EDIT)
+                }
+                if (action == PaymentMethodItemAction.EDIT) {
                     viewModel.send(PaymentMethodsAction.EditMode(true))
-                if (action == PaymentMethodItemAction.DONE)
+                }
+                if (action == PaymentMethodItemAction.DONE) {
                     viewModel.send(PaymentMethodsAction.EditMode(false))
+                }
             }
             is IdealBankItem -> viewModel.send(PaymentMethodsAction.SelectIdealBank(item.idealBank))
         }
@@ -241,22 +249,22 @@ class PaymentMethodsFragment : Fragment() {
         )
 
     private fun updateWithModel(model: PaymentMethodsModel) {
-        headerView.paymentMethods = judo.paymentMethods.toList()
-        headerView.model = model.headerModel
+        binding.headerView.paymentMethods = judo.paymentMethods.toList()
+        binding.headerView.model = model.headerModel
 
-        val adapter = recyclerView.adapter as? PaymentMethodsAdapter
+        val adapter = binding.recyclerView.adapter as? PaymentMethodsAdapter
         adapter?.items = model.currentPaymentMethod.items
     }
 
     private fun setupRecyclerView() {
-        recyclerView.adapter = PaymentMethodsAdapter(
+        binding.recyclerView.adapter = PaymentMethodsAdapter(
             listener = ::dispatchRecyclerViewAction
         )
 
         val swipeHandler = object : SwipeToDeleteCallback() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val adapter = recyclerView.adapter as PaymentMethodsAdapter
+                val adapter = binding.recyclerView.adapter as PaymentMethodsAdapter
                 val item = adapter.items[viewHolder.adapterPosition]
                 (item as? PaymentMethodSavedCardItem)?.let {
                     onDeleteCardItem(it)
@@ -266,13 +274,13 @@ class PaymentMethodsFragment : Fragment() {
         }
 
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }
 
     private fun setupButtonCallbacks() {
-        backButton.setOnClickListener(::onUserCancelled)
+        binding.backButton.setOnClickListener(::onUserCancelled)
 
-        paymentCallToActionView.callbackListener = {
+        binding.headerView.binding.paymentCallToActionView.callbackListener = {
             when (it) {
                 PaymentCallToActionType.PAY_WITH_CARD -> {
                     viewModel.send(PaymentMethodsAction.InitiateSelectedCardPayment)

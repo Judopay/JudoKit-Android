@@ -15,12 +15,10 @@ internal class DeDuplicationInterceptor : Interceptor {
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
-
         val request = chain.request()
         val body = request.body
 
         if (body != null) {
-
             val parser = JsonParser()
 
             val bodAsString = bodyToString(body)

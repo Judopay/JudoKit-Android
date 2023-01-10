@@ -16,7 +16,6 @@ class LengthFilter(
         dstart: Int,
         dend: Int
     ): CharSequence? {
-
         var keep = max - (dest.length - (dend - dstart))
 
         return when {

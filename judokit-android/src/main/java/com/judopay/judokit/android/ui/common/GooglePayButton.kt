@@ -2,11 +2,11 @@ package com.judopay.judokit.android.ui.common
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import com.judopay.judokit.android.R
-import com.judopay.judokit.android.inflate
-import kotlinx.android.synthetic.main.google_pay_button.view.*
+import com.judopay.judokit.android.databinding.GooglePayButtonBinding
 
 enum class GooglePayButtonStyle {
     BLACK,
@@ -28,10 +28,9 @@ class GooglePayButton @JvmOverloads constructor(
             field = value
             update()
         }
+    private val binding = GooglePayButtonBinding.inflate(LayoutInflater.from(context), this, true)
 
     init {
-        inflate(R.layout.google_pay_button, true)
-
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.GooglePayButton)
 
         for (i in 0 until typedArray.indexCount) {
@@ -48,19 +47,17 @@ class GooglePayButton @JvmOverloads constructor(
     }
 
     private fun update() {
-
         fun visibility(style: GooglePayButtonStyle): Int {
             return if (style == this.style) View.VISIBLE else View.GONE
         }
 
-        blackButton.visibility = visibility(GooglePayButtonStyle.BLACK)
-        blackBuyWithButton.visibility = visibility(GooglePayButtonStyle.BLACK_BUY_WITH)
+        binding.blackButton.root.visibility = visibility(GooglePayButtonStyle.BLACK)
+        binding.blackBuyWithButton.root.visibility = visibility(GooglePayButtonStyle.BLACK_BUY_WITH)
 
-        whiteButton.visibility = visibility(GooglePayButtonStyle.WHITE)
-        whiteButtonNoShadow.visibility = visibility(GooglePayButtonStyle.WHITE_NO_SHADOW)
+        binding.whiteButton.root.visibility = visibility(GooglePayButtonStyle.WHITE)
+        binding.whiteButtonNoShadow.root.visibility = visibility(GooglePayButtonStyle.WHITE_NO_SHADOW)
 
-        whiteBuyWithButton.visibility = visibility(GooglePayButtonStyle.WHITE_BUY_WITH)
-        whiteBuyWithButtonNoShadow.visibility =
-            visibility(GooglePayButtonStyle.WHITE_BUY_WITH_NO_SHADOW)
+        binding.whiteBuyWithButton.root.visibility = visibility(GooglePayButtonStyle.WHITE_BUY_WITH)
+        binding.whiteBuyWithButtonNoShadow.root.visibility = visibility(GooglePayButtonStyle.WHITE_BUY_WITH_NO_SHADOW)
     }
 }

@@ -5,5 +5,5 @@ enum class SdkUiType {
     SINGLE_SELECT,
     MULTI_SELECT,
     OOB,
-    HTML_OTHER,
+    HTML_OTHER
 }

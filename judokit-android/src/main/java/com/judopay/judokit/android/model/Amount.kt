@@ -40,9 +40,9 @@ class Amount internal constructor(val amount: String, val currency: Currency) : 
          */
         fun build(): Amount {
             val myAmount: String?
-            if (amount.isNullOrEmpty())
+            if (amount.isNullOrEmpty()) {
                 myAmount = ""
-            else {
+            } else {
                 myAmount = requireNotNullOrEmpty(amount, "amount")
                 check(myAmount.matches("^[0-9]+(\\.[0-9][0-9])?\$".toRegex())) { "The amount specified should be a positive number. The amount parameter has either not been set or has an incorrect format." }
             }

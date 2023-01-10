@@ -25,10 +25,12 @@ internal class EditCardViewModelFactory(
     private val application: Application
 ) : ViewModelProvider.NewInstanceFactory() {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == EditCardViewModel::class.java) {
             EditCardViewModel(cardId, cardRepository, application) as T
-        } else super.create(modelClass)
+        } else {
+            super.create(modelClass)
+        }
     }
 }
 

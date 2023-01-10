@@ -1,29 +1,27 @@
 package com.judopay.judokit.android.ui.paymentmethods.adapter.viewholder
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.judopay.judokit.android.R
+import com.judopay.judokit.android.databinding.SavedCardHeaderItemBinding
 import com.judopay.judokit.android.ui.paymentmethods.adapter.BindableRecyclerViewHolder
 import com.judopay.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapterListener
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItemAction
-import kotlinx.android.synthetic.main.saved_card_header_item.view.editButton
 
-class SavedCardsHeaderViewHolder(view: View) :
-    RecyclerView.ViewHolder(view),
-    BindableRecyclerViewHolder<PaymentMethodGenericItem, PaymentMethodItemAction> {
-    override fun bind(model: PaymentMethodGenericItem, listener: PaymentMethodsAdapterListener?) =
-        with(itemView) {
-            if (model.isInEditMode) {
-                editButton.text = resources.getString(R.string.button_done)
-                editButton.setOnClickListener {
-                    listener?.invoke(PaymentMethodItemAction.DONE, model)
-                }
-            } else {
-                editButton.text = resources.getString(R.string.button_edit)
-                editButton.setOnClickListener {
-                    listener?.invoke(PaymentMethodItemAction.EDIT, model)
-                }
+class SavedCardsHeaderViewHolder(private val binding: SavedCardHeaderItemBinding) :
+    RecyclerView.ViewHolder(binding.root), BindableRecyclerViewHolder<PaymentMethodGenericItem, PaymentMethodItemAction> {
+
+    override fun bind(model: PaymentMethodGenericItem, listener: PaymentMethodsAdapterListener?) = with(binding.root) {
+        if (model.isInEditMode) {
+            binding.editButton.text = resources.getString(R.string.button_done)
+            binding.editButton.setOnClickListener {
+                listener?.invoke(PaymentMethodItemAction.DONE, model)
+            }
+        } else {
+            binding.editButton.text = resources.getString(R.string.button_edit)
+            binding.editButton.setOnClickListener {
+                listener?.invoke(PaymentMethodItemAction.EDIT, model)
             }
         }
+    }
 }

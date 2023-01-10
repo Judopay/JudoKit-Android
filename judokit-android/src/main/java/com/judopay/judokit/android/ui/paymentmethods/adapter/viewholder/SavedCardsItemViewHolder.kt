@@ -10,61 +10,54 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.model.response.CardDate
+import com.judopay.judokit.android.databinding.SavedCardItemBinding
 import com.judopay.judokit.android.model.displayName
 import com.judopay.judokit.android.model.iconImageResId
 import com.judopay.judokit.android.ui.paymentmethods.adapter.BindableRecyclerViewHolder
 import com.judopay.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapterListener
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItemAction
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodSavedCardItem
-import kotlinx.android.synthetic.main.saved_card_item.view.arrowIcon
-import kotlinx.android.synthetic.main.saved_card_item.view.networkIconContainer
-import kotlinx.android.synthetic.main.saved_card_item.view.networkIconImageView
-import kotlinx.android.synthetic.main.saved_card_item.view.radioIconImageView
-import kotlinx.android.synthetic.main.saved_card_item.view.removeCardIcon
-import kotlinx.android.synthetic.main.saved_card_item.view.subTitle
-import kotlinx.android.synthetic.main.saved_card_item.view.title
 
-class SavedCardsItemViewHolder(view: View) :
-    RecyclerView.ViewHolder(view),
-    BindableRecyclerViewHolder<PaymentMethodSavedCardItem, PaymentMethodItemAction> {
-    override fun bind(model: PaymentMethodSavedCardItem, listener: PaymentMethodsAdapterListener?) =
-        with(itemView) {
-            val params = networkIconContainer.layoutParams as ViewGroup.MarginLayoutParams
-            if (model.isInEditMode) {
-                removeCardIcon.visibility = View.VISIBLE
-                arrowIcon.visibility = View.VISIBLE
-                radioIconImageView.visibility = View.GONE
-                params.setMargins(resources.getDimension(R.dimen.space_24).toInt(), 0, 0, 0)
-                networkIconContainer.layoutParams = params
-                removeCardIcon.setOnClickListener {
-                    listener?.invoke(
-                        PaymentMethodItemAction.DELETE_CARD,
-                        model
-                    )
-                }
-                setOnClickListener { listener?.invoke(PaymentMethodItemAction.EDIT_CARD, model) }
-            } else {
-                removeCardIcon.visibility = View.GONE
-                arrowIcon.visibility = View.GONE
-                params.setMargins(0, 0, 0, 0)
-                networkIconContainer.layoutParams = params
-                val checkMark =
-                    if (model.isSelected) R.drawable.ic_radio_on else R.drawable.ic_radio_off
-                radioIconImageView.tag = model.isSelected.toString()
-                radioIconImageView.visibility = View.VISIBLE
-                radioIconImageView.setImageResource(checkMark)
-                setOnClickListener { listener?.invoke(PaymentMethodItemAction.PICK_CARD, model) }
-            }
-            subTitle.text = createBoldSubtitle(model)
-            title.text = model.title
+class SavedCardsItemViewHolder(private val binding: SavedCardItemBinding) :
+    RecyclerView.ViewHolder(binding.root), BindableRecyclerViewHolder<PaymentMethodSavedCardItem, PaymentMethodItemAction> {
 
-            val image = model.network.iconImageResId
-            if (image > 0) {
-                networkIconImageView.setImageResource(image)
-            } else {
-                networkIconImageView.setImageDrawable(null)
+    override fun bind(model: PaymentMethodSavedCardItem, listener: PaymentMethodsAdapterListener?) = with(binding.root) {
+        val params = binding.networkIconContainer.layoutParams as ViewGroup.MarginLayoutParams
+        if (model.isInEditMode) {
+            binding.removeCardIcon.visibility = View.VISIBLE
+            binding.arrowIcon.visibility = View.VISIBLE
+            binding.radioIconImageView.visibility = View.GONE
+            params.setMargins(resources.getDimension(R.dimen.space_24).toInt(), 0, 0, 0)
+            binding.networkIconContainer.layoutParams = params
+            binding.removeCardIcon.setOnClickListener {
+                listener?.invoke(
+                    PaymentMethodItemAction.DELETE_CARD,
+                    model
+                )
             }
+            setOnClickListener { listener?.invoke(PaymentMethodItemAction.EDIT_CARD, model) }
+        } else {
+            binding.removeCardIcon.visibility = View.GONE
+            binding.arrowIcon.visibility = View.GONE
+            params.setMargins(0, 0, 0, 0)
+            binding.networkIconContainer.layoutParams = params
+            val checkMark =
+                if (model.isSelected) R.drawable.ic_radio_on else R.drawable.ic_radio_off
+            binding.radioIconImageView.tag = model.isSelected.toString()
+            binding.radioIconImageView.visibility = View.VISIBLE
+            binding.radioIconImageView.setImageResource(checkMark)
+            setOnClickListener { listener?.invoke(PaymentMethodItemAction.PICK_CARD, model) }
         }
+        binding.subTitle.text = createBoldSubtitle(model)
+        binding.title.text = model.title
+
+        val image = model.network.iconImageResId
+        if (image > 0) {
+            binding.networkIconImageView.setImageResource(image)
+        } else {
+            binding.networkIconImageView.setImageDrawable(null)
+        }
+    }
 
     private fun createBoldSubtitle(model: PaymentMethodSavedCardItem): SpannableStringBuilder {
         val boldString = SpannableStringBuilder()
@@ -78,7 +71,7 @@ class SavedCardsItemViewHolder(view: View) :
             val date = CardDate(model.expireDate)
             when {
                 !date.isAfterToday -> {
-                    subTitle.setTextColor(ContextCompat.getColor(context, R.color.tomato_red))
+                    binding.subTitle.setTextColor(ContextCompat.getColor(context, R.color.tomato_red))
                     boldString.apply {
                         append("${model.ending} ${resources.getString(R.string.is_expired)}")
                         val expiredIndex =
@@ -137,7 +130,7 @@ class SavedCardsItemViewHolder(view: View) :
                             Spannable.SPAN_INCLUSIVE_INCLUSIVE
                         )
                     }
-                    subTitle.setTextColor(ContextCompat.getColor(context, R.color.warm_grey))
+                    binding.subTitle.setTextColor(ContextCompat.getColor(context, R.color.warm_grey))
                 }
                 else -> boldString.apply {
                     append(model.ending)
@@ -147,7 +140,7 @@ class SavedCardsItemViewHolder(view: View) :
                         boldString.length,
                         Spannable.SPAN_INCLUSIVE_INCLUSIVE
                     )
-                    subTitle.setTextColor(ContextCompat.getColor(context, R.color.warm_grey))
+                    binding.subTitle.setTextColor(ContextCompat.getColor(context, R.color.warm_grey))
                 }
             }
 

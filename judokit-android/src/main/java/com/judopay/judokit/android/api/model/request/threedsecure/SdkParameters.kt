@@ -12,7 +12,7 @@ class SdkParameters private constructor(
     private val transactionId: String,
     private val deviceRenderOptions: DeviceRenderOptions,
     @SerializedName("ephemeral_public_key")
-    private val ephemeralPublicKey: EphemeralPublicKey,
+    private val ephemeralPublicKey: EphemeralPublicKey
 ) {
     class Builder {
         private var applicationId: String? = null

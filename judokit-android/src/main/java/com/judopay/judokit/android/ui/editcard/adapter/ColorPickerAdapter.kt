@@ -1,9 +1,9 @@
 package com.judopay.judokit.android.ui.editcard.adapter
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.judopay.judokit.android.R
-import com.judopay.judokit.android.inflate
+import com.judopay.judokit.android.databinding.ColorPickerItemBinding
 import com.judopay.judokit.android.ui.editcard.CardPattern
 
 data class ColorPickerItem(
@@ -31,6 +31,6 @@ class ColorPickerAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ColorPickerViewHolder {
-        return ColorPickerViewHolder(parent.inflate(R.layout.color_picker_item))
+        return ColorPickerViewHolder(ColorPickerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 }

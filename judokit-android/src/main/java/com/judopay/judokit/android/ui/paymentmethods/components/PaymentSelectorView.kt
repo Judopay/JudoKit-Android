@@ -6,18 +6,17 @@ import android.graphics.Rect
 import android.os.Build
 import android.util.AttributeSet
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.HorizontalScrollView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.transition.TransitionManager
-import com.judopay.judokit.android.R
-import com.judopay.judokit.android.inflate
+import com.judopay.judokit.android.databinding.ViewPaymentSelectorBinding
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.icon
 import com.judopay.judokit.android.model.text
 import com.judopay.judokit.android.subViewsWithType
-import kotlinx.android.synthetic.main.view_payment_selector.view.*
 import kotlin.collections.forEach as kForEach
 
 private const val MARGIN_12 = 12
@@ -30,10 +29,7 @@ class PaymentSelectorView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyle: Int = 0
 ) : HorizontalScrollView(context, attrs, defStyle) {
-
-    init {
-        inflate(R.layout.view_payment_selector, true)
-    }
+    private val binding = ViewPaymentSelectorBinding.inflate(LayoutInflater.from(context), this, true)
 
     private var currentSelected: PaymentMethod? = null
     private var previousSelected: PaymentSelectorItemView? = null
@@ -44,8 +40,8 @@ class PaymentSelectorView @JvmOverloads constructor(
         currentSelected: PaymentMethod?,
         onClick: PaymentSelectorViewSelectionListener
     ) {
-        paymentSelectorContainer.subViewsWithType(PaymentSelectorItemView::class.java).kForEach {
-            paymentSelectorContainer.removeView(it)
+        binding.paymentSelectorContainer.subViewsWithType(PaymentSelectorItemView::class.java).kForEach {
+            binding.paymentSelectorContainer.removeView(it)
         }
 
         this.currentSelected = currentSelected
@@ -72,13 +68,13 @@ class PaymentSelectorView @JvmOverloads constructor(
                 }
                 tag = paymentMethod.name
             }
-            paymentSelectorContainer.addView(itemView)
+            binding.paymentSelectorContainer.addView(itemView)
             itemViews.add(itemView)
             ids.add(itemView.id)
         }
 
         val set = ConstraintSet()
-        set.clone(paymentSelectorContainer)
+        set.clone(binding.paymentSelectorContainer)
 
         itemViews.forEachIndexed { index, itemView ->
             if (currentSelected != null && paymentMethods.contains(currentSelected)) {
@@ -104,8 +100,8 @@ class PaymentSelectorView @JvmOverloads constructor(
                 if (previousSelected != itemView || !lastUsedSelected) {
                     previousSelected?.setTextVisibility(View.GONE)
                     selectItem(set, itemView)
-                    set.applyTo(paymentSelectorContainer)
-                    TransitionManager.beginDelayedTransition(paymentSelectorContainer)
+                    set.applyTo(binding.paymentSelectorContainer)
+                    TransitionManager.beginDelayedTransition(binding.paymentSelectorContainer)
                     scrollToView(itemView)
                     onClick.invoke(itemView.getPaymentMethod())
                     previousSelected = itemView
@@ -113,7 +109,7 @@ class PaymentSelectorView @JvmOverloads constructor(
             }
         }
         chainViews(ids, set)
-        set.applyTo(paymentSelectorContainer)
+        set.applyTo(binding.paymentSelectorContainer)
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -129,10 +125,10 @@ class PaymentSelectorView @JvmOverloads constructor(
             itemView.setTextVisibility(View.VISIBLE)
         }
         set.apply {
-            connect(selector.id, ConstraintSet.TOP, itemView.id, ConstraintSet.TOP)
-            connect(selector.id, ConstraintSet.BOTTOM, itemView.id, ConstraintSet.BOTTOM)
-            connect(selector.id, ConstraintSet.START, itemView.id, ConstraintSet.START)
-            connect(selector.id, ConstraintSet.END, itemView.id, ConstraintSet.END)
+            connect(binding.selector.id, ConstraintSet.TOP, itemView.id, ConstraintSet.TOP)
+            connect(binding.selector.id, ConstraintSet.BOTTOM, itemView.id, ConstraintSet.BOTTOM)
+            connect(binding.selector.id, ConstraintSet.START, itemView.id, ConstraintSet.START)
+            connect(binding.selector.id, ConstraintSet.END, itemView.id, ConstraintSet.END)
         }
     }
 

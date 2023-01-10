@@ -2,7 +2,7 @@ package com.judopay.judokit.android.api.model.response
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * The tokenized card data from registering a card, allowing for token payments and token pre-auths

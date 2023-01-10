@@ -42,11 +42,9 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import retrofit2.await
 import java.util.WeakHashMap
-import kotlin.collections.HashMap
 
 interface ActivityAwareComponent {
     fun updateActivity(activity: FragmentActivity)
@@ -104,7 +102,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     private var threeDS2Service: ThreeDS2Service = ThreeDS2ServiceImpl()
 
     private var transaction: Transaction? = null
-    private var receipt: Receipt? = null
     private var transactionDetails: TransactionDetails? = null
 
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -143,14 +140,14 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         }
     }
 
-    public fun unRegisterResultListener(
+    fun unRegisterResultListener(
         listener: CardTransactionManagerResultListener,
         caller: String = listener::class.java.name
     ) {
         listenerMap.remove(caller)
     }
 
-    public fun registerResultListener(
+    fun registerResultListener(
         listener: CardTransactionManagerResultListener,
         caller: String = listener::class.java.name
     ) {
@@ -202,7 +199,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         details: TransactionDetails,
         caller: String
     ) = try {
-
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
             Log.d(CardTransactionManager::class.java.name, "Uncaught 3DS2 Exception", throwable)
             dispatchException(throwable, caller)
@@ -377,10 +373,5 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         } catch (exception: SDKNotInitializedException) {
             Log.w(CardTransactionManager::class.java.name, exception.toString())
         }
-    }
-
-    fun cleanup() {
-        threeDS2Service.cleanup(context)
-        applicationScope.coroutineContext.cancel()
     }
 }

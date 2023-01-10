@@ -10,7 +10,7 @@ data class CountryInfo(
     val name: String,
     val dialCode: String,
     val numericCode: String,
-    val phoneNumberFormat: String?,
+    val phoneNumberFormat: String?
 ) {
 
     override fun toString() = name

@@ -2,11 +2,12 @@ package com.judopay.judokit.android.ui.paymentmethods.components
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import com.judopay.judokit.android.R
-import com.judopay.judokit.android.inflate
+import com.judopay.judokit.android.databinding.PaymentMethodsHeaderViewBinding
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.ui.paymentmethods.model.CardAnimationType
 import com.judopay.judokit.android.ui.paymentmethods.model.CardViewModel
@@ -14,7 +15,6 @@ import com.judopay.judokit.android.ui.paymentmethods.model.IdealPaymentCardViewM
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.inAnimation
 import com.judopay.judokit.android.ui.paymentmethods.model.outAnimation
-import kotlinx.android.synthetic.main.payment_methods_header_view.view.*
 
 class PaymentMethodsHeaderViewModel(
     val cardModel: CardViewModel = NoPaymentMethodSelectedViewModel(),
@@ -26,10 +26,7 @@ class PaymentMethodsHeaderView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyle: Int = 0
 ) : ConstraintLayout(context, attrs, defStyle) {
-
-    init {
-        inflate(R.layout.payment_methods_header_view, true)
-    }
+    val binding = PaymentMethodsHeaderViewBinding.inflate(LayoutInflater.from(context), this, true)
 
     var model = PaymentMethodsHeaderViewModel()
         set(value) {
@@ -42,6 +39,7 @@ class PaymentMethodsHeaderView @JvmOverloads constructor(
     private var previousSelected: CardViewModel? = null
 
     var paymentMethods: List<PaymentMethod> = listOf(PaymentMethod.CARD, PaymentMethod.GOOGLE_PAY)
+
     /**
      * Variable used to disable animations when navigating from edit screen to payment methods screen
      * set to true in [com.judopay.judokit.android.ui.paymentmethods.PaymentMethodsFragment.onViewCreated]
@@ -54,7 +52,7 @@ class PaymentMethodsHeaderView @JvmOverloads constructor(
 
     private fun update() {
         updatePreviewHeader()
-        paymentCallToActionView.model = model.callToActionModel
+        binding.paymentCallToActionView.model = model.callToActionModel
     }
 
     private fun updatePreviewHeader() {
@@ -62,21 +60,21 @@ class PaymentMethodsHeaderView @JvmOverloads constructor(
 
         val cardModel = model.cardModel
 
-        viewAnimator.visibility = View.GONE
-        noPaymentMethodSelectedView.hide(placeholderBackgroundImageView)
+        binding.viewAnimator.visibility = View.GONE
+        binding.noPaymentMethodSelectedView.hide(binding.placeholderBackgroundImageView)
         when (cardModel) {
             is NoPaymentMethodSelectedViewModel -> {
-                noPaymentMethodSelectedView.show(placeholderBackgroundImageView)
+                binding.noPaymentMethodSelectedView.show(binding.placeholderBackgroundImageView)
                 currentPaymentMethod = null
             }
             is PaymentCardViewModel -> {
                 if (mainDisplayed) {
                     cardModel.layoutId = R.id.secondaryPaymentCardView
-                    val myCardView = secondaryPaymentCardView.children.first()
+                    val myCardView = binding.secondaryPaymentCardView.children.first()
                     (myCardView as PaymentCardView).model = cardModel
                 } else {
                     cardModel.layoutId = R.id.cardView
-                    val myCardView = cardView.children.first()
+                    val myCardView = binding.cardView.children.first()
                     (myCardView as PaymentCardView).model = cardModel
                 }
                 mainDisplayed = !mainDisplayed
@@ -85,10 +83,10 @@ class PaymentMethodsHeaderView @JvmOverloads constructor(
             is IdealPaymentCardViewModel -> {
                 if (mainDisplayed) {
                     cardModel.layoutId = R.id.secondaryIdealPaymentCardView
-                    secondaryIdealPaymentCardView.model = cardModel
+                    binding.secondaryIdealPaymentCardView.model = cardModel
                 } else {
                     cardModel.layoutId = R.id.idealPaymentCardView
-                    idealPaymentCardView.model = cardModel
+                    binding.idealPaymentCardView.model = cardModel
                 }
                 mainDisplayed = !mainDisplayed
                 currentPaymentMethod = PaymentMethod.IDEAL
@@ -102,10 +100,10 @@ class PaymentMethodsHeaderView @JvmOverloads constructor(
 
     private fun show(cardModel: CardViewModel) {
         setAnimationType()
-        viewAnimator.visibility = View.VISIBLE
-        viewAnimator.children.forEachIndexed { index, view ->
+        binding.viewAnimator.visibility = View.VISIBLE
+        binding.viewAnimator.children.forEachIndexed { index, view ->
             if (view.id == cardModel.layoutId) {
-                viewAnimator.displayedChild = index
+                binding.viewAnimator.displayedChild = index
             }
         }
     }
@@ -115,30 +113,30 @@ class PaymentMethodsHeaderView @JvmOverloads constructor(
         val indexOfPrevious = paymentMethods.indexOf(previousPaymentMethod)
         when {
             previousPaymentMethod == null && !fromEditMode -> {
-                viewAnimator.animateFirstView = true
-                viewAnimator.inAnimation = CardAnimationType.BOTTOM_IN.inAnimation(context)
-                viewAnimator.outAnimation = CardAnimationType.BOTTOM_IN.outAnimation(context)
+                binding.viewAnimator.animateFirstView = true
+                binding.viewAnimator.inAnimation = CardAnimationType.BOTTOM_IN.inAnimation(context)
+                binding.viewAnimator.outAnimation = CardAnimationType.BOTTOM_IN.outAnimation(context)
             }
             indexOfPrevious > indexOfCurrent -> {
-                viewAnimator.inAnimation = CardAnimationType.LEFT.inAnimation(context)
-                viewAnimator.outAnimation = CardAnimationType.LEFT.outAnimation(context)
+                binding.viewAnimator.inAnimation = CardAnimationType.LEFT.inAnimation(context)
+                binding.viewAnimator.outAnimation = CardAnimationType.LEFT.outAnimation(context)
             }
             indexOfPrevious < indexOfCurrent -> {
-                viewAnimator.inAnimation = CardAnimationType.RIGHT.inAnimation(context)
-                viewAnimator.outAnimation = CardAnimationType.RIGHT.outAnimation(context)
+                binding.viewAnimator.inAnimation = CardAnimationType.RIGHT.inAnimation(context)
+                binding.viewAnimator.outAnimation = CardAnimationType.RIGHT.outAnimation(context)
             }
             indexOfPrevious == indexOfCurrent && previousCard != model.cardModel -> {
                 if (currentPaymentMethod == PaymentMethod.CARD || currentPaymentMethod == PaymentMethod.IDEAL) {
-                    viewAnimator.inAnimation = CardAnimationType.BOTTOM.inAnimation(context)
-                    viewAnimator.outAnimation = CardAnimationType.BOTTOM.outAnimation(context)
+                    binding.viewAnimator.inAnimation = CardAnimationType.BOTTOM.inAnimation(context)
+                    binding.viewAnimator.outAnimation = CardAnimationType.BOTTOM.outAnimation(context)
                 } else {
-                    viewAnimator.inAnimation = CardAnimationType.NONE.inAnimation(context)
-                    viewAnimator.outAnimation = CardAnimationType.NONE.outAnimation(context)
+                    binding.viewAnimator.inAnimation = CardAnimationType.NONE.inAnimation(context)
+                    binding.viewAnimator.outAnimation = CardAnimationType.NONE.outAnimation(context)
                 }
             }
             indexOfPrevious == indexOfCurrent && previousCard == model.cardModel -> {
-                viewAnimator.inAnimation = CardAnimationType.NONE.inAnimation(context)
-                viewAnimator.outAnimation = CardAnimationType.NONE.outAnimation(context)
+                binding.viewAnimator.inAnimation = CardAnimationType.NONE.inAnimation(context)
+                binding.viewAnimator.outAnimation = CardAnimationType.NONE.outAnimation(context)
                 fromEditMode = false
             }
         }

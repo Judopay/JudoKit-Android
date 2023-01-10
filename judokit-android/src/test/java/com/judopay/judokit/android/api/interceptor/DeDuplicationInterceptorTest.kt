@@ -22,7 +22,6 @@ internal class DeDuplicationInterceptorTest {
     @DisplayName("Given intercept is called twice with same data, then throw DuplicateTransactionException")
     @Test
     fun shouldThrowDuplicateTransactionExceptionWhenDuplicate() {
-
         val mediaType = "application/json".toMediaTypeOrNull()
 
         val json =

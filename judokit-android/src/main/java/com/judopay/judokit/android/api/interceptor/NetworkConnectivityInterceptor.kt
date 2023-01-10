@@ -8,8 +8,9 @@ import okhttp3.Response
 
 class NetworkConnectivityInterceptor(private val context: Context) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        if (!isInternetAvailable(context))
+        if (!isInternetAvailable(context)) {
             throw NetworkConnectivityException()
+        }
         return chain.proceed(chain.request())
     }
 }

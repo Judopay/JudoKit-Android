@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.judopay.judokit.android.R
+import com.judopay.judokit.android.databinding.EditCardFragmentBinding
 import com.judopay.judokit.android.db.JudoRoomDatabase
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.dismissKeyboard
@@ -17,7 +18,6 @@ import com.judopay.judokit.android.ui.common.LengthFilter
 import com.judopay.judokit.android.ui.editcard.adapter.ColorPickerAdapter
 import com.judopay.judokit.android.ui.editcard.adapter.ColorPickerItem
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
-import kotlinx.android.synthetic.main.edit_card_fragment.*
 
 const val JUDO_TOKENIZED_CARD_ID = "com.judopay.judokit.android.judo-tokenized-card-id"
 
@@ -32,15 +32,18 @@ data class EditCardModel(
 private const val CARD_TITLE_MAX_CHARACTERS = 28
 
 class EditCardFragment : Fragment() {
-
     private lateinit var viewModel: EditCardViewModel
+    private var _binding: EditCardFragmentBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.edit_card_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = EditCardFragmentBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -65,11 +68,11 @@ class EditCardFragment : Fragment() {
 
     private fun updateWithModel(model: EditCardModel) {
         // setup colors
-        (colorPickerRecyclerView.adapter as? ColorPickerAdapter)?.items = model.colorOptions
+        (binding.colorPickerRecyclerView.adapter as? ColorPickerAdapter)?.items = model.colorOptions
 
-        saveButton.isEnabled = model.isSaveButtonEnabled
+        binding.saveButton.isEnabled = model.isSaveButtonEnabled
 
-        titleEditText.apply {
+        binding.titleEditText.apply {
             if (text.toString() != model.title) {
                 setText(model.title)
                 setSelection(text.length)
@@ -77,39 +80,39 @@ class EditCardFragment : Fragment() {
         }
 
         val checkMark = if (model.isDefault) R.drawable.ic_radio_on else R.drawable.ic_radio_off
-        saveAsDefaultTextView.setCompoundDrawablesWithIntrinsicBounds(checkMark, 0, 0, 0)
+        binding.saveAsDefaultTextView.setCompoundDrawablesWithIntrinsicBounds(checkMark, 0, 0, 0)
 
-        cardView.model = model.card
+        binding.cardView.model = model.card
     }
 
     private fun setupCallbackListeners() {
-        backButton.setOnClickListener(::dismiss)
+        binding.backButton.setOnClickListener(::dismiss)
 
-        cancelButton.setOnClickListener(::dismiss)
+        binding.cancelButton.setOnClickListener(::dismiss)
 
-        saveButton.setOnClickListener {
+        binding.saveButton.setOnClickListener {
             viewModel.send(EditCardAction.Save)
-            dismiss(saveButton)
+            dismiss(binding.saveButton)
         }
 
-        saveAsDefaultTextView.setOnClickListener { viewModel.send(EditCardAction.ToggleDefaultCardState) }
+        binding.saveAsDefaultTextView.setOnClickListener { viewModel.send(EditCardAction.ToggleDefaultCardState) }
 
-        titleTextInputLayout.error =
+        binding.titleTextInputLayout.error =
             getString(R.string.error_card_title_too_long, CARD_TITLE_MAX_CHARACTERS)
 
-        titleEditText.doAfterTextChanged {
+        binding.titleEditText.doAfterTextChanged {
             viewModel.send(EditCardAction.ChangeTitle(it.toString()))
         }
 
-        titleEditText.filters = arrayOf(
+        binding.titleEditText.filters = arrayOf(
             LengthFilter(CARD_TITLE_MAX_CHARACTERS) {
-                titleTextInputLayout.isErrorEnabled = it
+                binding.titleTextInputLayout.isErrorEnabled = it
             }
         )
 
-        titleEditText.setOnFocusChangeListener { _, hasFocus ->
+        binding.titleEditText.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                titleTextInputLayout.isErrorEnabled = false
+                binding.titleTextInputLayout.isErrorEnabled = false
             }
         }
     }
@@ -130,7 +133,7 @@ class EditCardFragment : Fragment() {
 
         val manager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        colorPickerRecyclerView.apply {
+        binding.colorPickerRecyclerView.apply {
             adapter = colorPickerAdapter
             layoutManager = manager
         }
