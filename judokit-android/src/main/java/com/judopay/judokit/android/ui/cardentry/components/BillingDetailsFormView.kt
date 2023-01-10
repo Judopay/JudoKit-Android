@@ -267,7 +267,9 @@ class BillingDetailsFormView @JvmOverloads constructor(
                 }
 
                 it.validate(value, event)
-            } else null
+            } else {
+                null
+            }
         }
         if (type == BillingDetailsFieldType.COUNTRY && event == FormFieldEvent.TEXT_CHANGED) {
             val typedCountry = countries.firstOrNull { it.name.lowercase() == value.lowercase() }

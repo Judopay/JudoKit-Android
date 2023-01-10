@@ -52,8 +52,12 @@ class Reference internal constructor(
                 "consumerReference",
                 "The consumer reference entered is invalid. The consumer reference parameter has either not been set or has an incorrect format."
             )
-            val myPaymentReference = if (paymentReference.isNullOrEmpty()) UUID.randomUUID()
-                .toString() else paymentReference!!
+            val myPaymentReference = if (paymentReference.isNullOrEmpty()) {
+                UUID.randomUUID()
+                    .toString()
+            } else {
+                paymentReference!!
+            }
 
             return Reference(myConsumerReference, myPaymentReference, metaData)
         }

@@ -78,12 +78,13 @@ class PaymentCallToActionView @JvmOverloads constructor(
         }
 
         with(binding.buttonsAnimator) {
-            if (currentView != buttonToShow)
+            if (currentView != buttonToShow) {
                 children.forEachIndexed { index, view ->
                     if (view == buttonToShow) {
                         displayedChild = index
                     }
                 }
+            }
         }
     }
 

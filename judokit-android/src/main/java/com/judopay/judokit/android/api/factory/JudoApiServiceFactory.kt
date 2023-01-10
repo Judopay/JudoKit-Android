@@ -139,7 +139,6 @@ object JudoApiServiceFactory {
         context: Context,
         judo: Judo
     ) = client.interceptors().apply {
-
         add(NetworkConnectivityInterceptor(context))
         add(DeDuplicationInterceptor())
         add(DeviceDnaInterceptor(context))

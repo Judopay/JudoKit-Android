@@ -78,7 +78,9 @@ internal class CardEntryViewModelFactory(
                 cardEntryOptions!!,
                 application
             ) as T
-        } else super.create(modelClass)
+        } else {
+            super.create(modelClass)
+        }
     }
 }
 
@@ -154,19 +156,25 @@ class CardEntryViewModel(
             PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
             PaymentWidgetType.PAYMENT_METHODS,
             PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS ->
-                if (cardEntryOptions.addCardPressed) R.string.save_card
-                else R.string.pay_now
-            else -> R.string.empty
+                if (cardEntryOptions.addCardPressed) {
+                    R.string.save_card
+                } else {
+                    R.string.pay_now
+                }
+            else -> {
+                R.string.empty
+            }
         }
 
     val amount: String?
         get() = when (judo.paymentWidgetType) {
             PaymentWidgetType.CARD_PAYMENT,
             PaymentWidgetType.PRE_AUTH ->
-                if (judo.uiConfiguration.shouldPaymentButtonDisplayAmount)
+                if (judo.uiConfiguration.shouldPaymentButtonDisplayAmount) {
                     judo.amount.formatted
-                else
+                } else {
                     null
+                }
             else -> null
         }
 

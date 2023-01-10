@@ -195,18 +195,23 @@ class PaymentMethodsFragment : Fragment() {
                     onEdit(item.id)
                     viewModel.send(PaymentMethodsAction.SelectStoredCard(item.id))
                 }
-                if (action == PaymentMethodItemAction.DELETE_CARD)
+                if (action == PaymentMethodItemAction.DELETE_CARD) {
                     onDeleteCardItem(item)
-                if (action == PaymentMethodItemAction.PICK_CARD)
+                }
+                if (action == PaymentMethodItemAction.PICK_CARD) {
                     viewModel.send(PaymentMethodsAction.SelectStoredCard(item.id))
+                }
             }
             is PaymentMethodGenericItem -> {
-                if (action == PaymentMethodItemAction.ADD_CARD)
+                if (action == PaymentMethodItemAction.ADD_CARD) {
                     onAddCard()
-                if (action == PaymentMethodItemAction.EDIT)
+                }
+                if (action == PaymentMethodItemAction.EDIT) {
                     viewModel.send(PaymentMethodsAction.EditMode(true))
-                if (action == PaymentMethodItemAction.DONE)
+                }
+                if (action == PaymentMethodItemAction.DONE) {
                     viewModel.send(PaymentMethodsAction.EditMode(false))
+                }
             }
             is IdealBankItem -> viewModel.send(PaymentMethodsAction.SelectIdealBank(item.idealBank))
         }

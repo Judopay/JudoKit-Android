@@ -199,7 +199,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         details: TransactionDetails,
         caller: String
     ) = try {
-
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
             Log.d(CardTransactionManager::class.java.name, "Uncaught 3DS2 Exception", throwable)
             dispatchException(throwable, caller)

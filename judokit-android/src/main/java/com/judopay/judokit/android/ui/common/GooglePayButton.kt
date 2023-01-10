@@ -47,7 +47,6 @@ class GooglePayButton @JvmOverloads constructor(
     }
 
     private fun update() {
-
         fun visibility(style: GooglePayButtonStyle): Int {
             return if (style == this.style) View.VISIBLE else View.GONE
         }

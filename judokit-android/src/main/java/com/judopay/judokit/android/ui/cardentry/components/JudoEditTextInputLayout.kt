@@ -34,7 +34,8 @@ class JudoEditTextInputLayout @JvmOverloads constructor(
         context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.JudoEditTextInputLayout,
-            0, 0
+            0,
+            0
         ).apply {
             try {
                 mDisableLeftCornerRadius =
@@ -110,11 +111,19 @@ class JudoEditTextInputLayout @JvmOverloads constructor(
             binding.errorTextView.visibility = if (isErrorEnabled) View.VISIBLE else View.GONE
         }
 
-        val textColor = if (isErrorEnabled) R.color.tomato_red else R.color.black
-        val fromToValues = if (isErrorEnabled) Pair(
-            TEXT_SIZE_VALID,
-            TEXT_SIZE_INVALID
-        ) else Pair(TEXT_SIZE_INVALID, TEXT_SIZE_VALID)
+        val textColor = if (isErrorEnabled) {
+            R.color.tomato_red
+        } else {
+            R.color.black
+        }
+        val fromToValues = if (isErrorEnabled) {
+            Pair(
+                TEXT_SIZE_VALID,
+                TEXT_SIZE_INVALID
+            )
+        } else {
+            Pair(TEXT_SIZE_INVALID, TEXT_SIZE_VALID)
+        }
 
         editText?.let { editTextView ->
             ObjectAnimator.ofFloat(

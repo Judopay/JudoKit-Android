@@ -59,8 +59,11 @@ internal class CardVerificationWebView @JvmOverloads constructor(
     fun authorize(model: CardVerificationModel) {
         try {
             val postData: String = format(
-                Locale.ENGLISH, "MD=%s&TermUrl=%s&PaReq=%s",
-                encode(model.md, CHARSET), encode(REDIRECT_URL, CHARSET), encode(model.paReq, CHARSET)
+                Locale.ENGLISH,
+                "MD=%s&TermUrl=%s&PaReq=%s",
+                encode(model.md, CHARSET),
+                encode(REDIRECT_URL, CHARSET),
+                encode(model.paReq, CHARSET)
             )
             this.receiptId = model.receiptId
             val webViewClient = ThreeDSOneCardVerificationWebViewClient(JS_NAMESPACE, REDIRECT_URL)

@@ -131,7 +131,6 @@ class GooglePayConfiguration internal constructor(
          * @return An instance of [GooglePayConfiguration]
          */
         fun build(): GooglePayConfiguration {
-
             val env = requireNotNull(environment, "environment")
             val countryCode = requireNotNull(transactionCountryCode, "transactionCountryCode")
 

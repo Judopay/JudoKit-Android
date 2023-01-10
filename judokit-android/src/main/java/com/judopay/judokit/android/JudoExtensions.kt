@@ -45,9 +45,11 @@ internal fun requireNotNullOrEmpty(value: String?, propertyName: String, message
 }
 
 internal fun <T : Any> requireNotNull(value: T?, propertyName: String, message: String? = null): T {
-    if (value == null)
+    if (value == null) {
         throw IllegalArgumentException(message ?: "$propertyName cannot be null")
-    else return value
+    } else {
+        return value
+    }
 }
 
 internal fun validateTimeout(
@@ -57,9 +59,11 @@ internal fun validateTimeout(
     maxTimeout: Long
 ): Long {
     return timeout?.let {
-        if (it !in minTimeout..maxTimeout)
+        if (it !in minTimeout..maxTimeout) {
             throw IllegalArgumentException("$propertyName should be greater than $minTimeout seconds and less than $maxTimeout seconds")
-        else it
+        } else {
+            it
+        }
     } ?: minTimeout
 }
 

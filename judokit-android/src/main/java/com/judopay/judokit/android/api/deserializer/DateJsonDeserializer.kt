@@ -15,7 +15,6 @@ internal class DateJsonDeserializer : JsonDeserializer<Date?> {
         typeOfT: Type,
         context: JsonDeserializationContext
     ): Date? {
-
         val string = json.asString
 
         if (string.isNotEmpty()) {

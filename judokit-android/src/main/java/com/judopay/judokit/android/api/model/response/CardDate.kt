@@ -16,13 +16,17 @@ class CardDate(cardDate: String = "") {
     private fun getYear(year: String): Int {
         return if (isDateInvalid(year)) {
             0
-        } else 2000 + year.substring(2, 4).toInt()
+        } else {
+            2000 + year.substring(2, 4).toInt()
+        }
     }
 
     private fun getMonth(month: String): Int {
         return if (isDateInvalid(month)) {
             0
-        } else month.substring(0, 2).toInt()
+        } else {
+            month.substring(0, 2).toInt()
+        }
     }
 
     val isBeforeToday: Boolean

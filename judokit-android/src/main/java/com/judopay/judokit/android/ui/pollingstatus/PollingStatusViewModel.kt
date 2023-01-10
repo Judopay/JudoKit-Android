@@ -46,7 +46,9 @@ internal class PollingStatusViewModelFactory(
                 judo,
                 paymentWidgetType
             ) as T
-        } else super.create(modelClass)
+        } else {
+            super.create(modelClass)
+        }
     }
 }
 

@@ -22,7 +22,6 @@ import java.util.Locale
  * @return `true` if and only if the input value is a valid Luhn number
  */
 internal fun isValidLuhnNumber(cardNumber: String): Boolean {
-
     var isOdd = true
     var sum = 0
 

@@ -321,7 +321,7 @@ class Judo internal constructor(
             val isPbbaAddressConfigMissing =
                 (pbbaConfiguration?.emailAddress.isNullOrEmpty() && !emailAddress.isNullOrEmpty()) || (pbbaConfiguration?.mobileNumber.isNullOrEmpty() || !mobileNumber.isNullOrEmpty())
 
-            val myPBBAConfiguration = if (pbbaConfiguration != null && isPbbaAddressConfigMissing)
+            val myPBBAConfiguration = if (pbbaConfiguration != null && isPbbaAddressConfigMissing) {
                 PBBAConfiguration.Builder()
                     .setAppearsOnStatementAs(pbbaConfiguration?.appearsOnStatement)
                     .setDeepLinkScheme(pbbaConfiguration?.deepLinkScheme)
@@ -329,7 +329,9 @@ class Judo internal constructor(
                     .setEmailAddress(pbbaConfiguration?.emailAddress ?: emailAddress)
                     .setMobileNumber(pbbaConfiguration?.mobileNumber ?: mobileNumber)
                     .build()
-            else pbbaConfiguration
+            } else {
+                pbbaConfiguration
+            }
 
             return Judo(
                 id,
@@ -377,10 +379,11 @@ class Judo internal constructor(
         @Throws(IllegalArgumentException::class)
         private fun requireJudoId(judoId: String?, message: String?): String {
             val id = requireNotNullOrEmpty(judoId, "judoId", message)
-            if (id.matches(REGEX_JUDO_ID.toRegex()))
+            if (id.matches(REGEX_JUDO_ID.toRegex())) {
                 return id
-            else
+            } else {
                 throw IllegalArgumentException("The Judo ID entered is invalid. The specified Judo ID parameter has an incorrect format.")
+            }
         }
     }
 

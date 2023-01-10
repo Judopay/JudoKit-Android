@@ -20,8 +20,12 @@ class ColorPickerViewHolder(private val binding: ColorPickerItemBinding) : Recyc
     fun bind(model: ColorPickerItem, listener: ColorPickerAdapterListener?) = with(itemView) {
         val cornerRadius = context.resources.getDimension(R.dimen.corner_radius_2_8dp)
         val scale = if (model.isSelected) SCALE_SELECTED else SCALE_UNSELECTED
-        val padding = if (model.isSelected) resources.getDimension(R.dimen.space_12)
-            .toInt() else resources.getDimension(R.dimen.space_4).toInt()
+        val padding = if (model.isSelected) {
+            resources.getDimension(R.dimen.space_12)
+                .toInt()
+        } else {
+            resources.getDimension(R.dimen.space_4).toInt()
+        }
 
         ValueAnimator.ofInt(binding.colorContainer.paddingStart, padding).apply {
             addUpdateListener {

@@ -168,7 +168,9 @@ class CardEntryFormView @JvmOverloads constructor(
         val validationResults = validators.mapNotNull {
             if (it.fieldType == type.name) {
                 it.validate(value, event)
-            } else null
+            } else {
+                null
+            }
         }
 
         val result = validationResults.firstOrNull()
@@ -180,8 +182,9 @@ class CardEntryFormView @JvmOverloads constructor(
         val message = context.getString(result?.message ?: R.string.empty)
         val errorEnabled = value.isNotBlank() && !isValidResult && message.isNotEmpty()
 
-        if (event == FormFieldEvent.TEXT_CHANGED)
+        if (event == FormFieldEvent.TEXT_CHANGED) {
             autoTab(isValidResult, type)
+        }
 
         layout?.let {
             it.isErrorEnabled = errorEnabled

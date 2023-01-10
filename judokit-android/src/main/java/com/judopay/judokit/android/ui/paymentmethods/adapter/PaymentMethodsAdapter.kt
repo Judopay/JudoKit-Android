@@ -41,7 +41,6 @@ class PaymentMethodsAdapter(
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
         return when (PaymentMethodItemType.values().firstOrNull { it.ordinal == viewType }) {
             PaymentMethodItemType.SELECTOR -> MethodSelectorViewHolder(
                 PaymentMethodsSelectorItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)

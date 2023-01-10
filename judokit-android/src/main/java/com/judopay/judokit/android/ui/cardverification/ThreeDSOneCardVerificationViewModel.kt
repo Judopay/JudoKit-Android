@@ -21,7 +21,9 @@ internal class ThreeDSOneCardVerificationViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == ThreeDSOneCardVerificationViewModel::class.java) {
             ThreeDSOneCardVerificationViewModel(service, application) as T
-        } else super.create(modelClass)
+        } else {
+            super.create(modelClass)
+        }
     }
 }
 
