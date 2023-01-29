@@ -4,7 +4,7 @@ import android.os.Parcelable
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.model.CardNetwork.Companion.DEFAULT_CARD_NUMBER_MASK
 import com.judopay.judokit.android.withWhitespacesRemoved
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * A set of available card networks to choose from when initiating the Judo SDK

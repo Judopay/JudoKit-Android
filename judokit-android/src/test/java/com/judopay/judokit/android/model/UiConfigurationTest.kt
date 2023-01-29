@@ -67,4 +67,24 @@ internal class UiConfigurationTest {
     fun setDefaultValueOnShouldPaymentMethodsVerifySecurityCodeNotSet() {
         assertTrue(sut.build().shouldPaymentMethodsVerifySecurityCode)
     }
+
+    @Test
+    fun `Given shouldAskForCSC is null then build() should throw`() {
+        assertThrows<IllegalArgumentException> { sut.setShouldAskForCSC(null).build() }
+    }
+
+    @Test
+    fun `Given shouldAskForCSC is not set then the default value should be set`() {
+        assertFalse(sut.build().shouldAskForCSC)
+    }
+
+    @Test
+    fun `Given shouldAskForCardholderName is null then build() should throw`() {
+        assertThrows<IllegalArgumentException> { sut.setShouldAskForCardholderName(null).build() }
+    }
+
+    @Test
+    fun `(Given shouldAskForCardholderName is not set then the default value should be set`() {
+        assertFalse(sut.build().shouldAskForCardholderName)
+    }
 }

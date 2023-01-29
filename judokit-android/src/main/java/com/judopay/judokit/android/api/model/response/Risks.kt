@@ -1,7 +1,7 @@
 package com.judopay.judokit.android.api.model.response
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class Risks(val postCodeCheck: String? = null) : Parcelable {

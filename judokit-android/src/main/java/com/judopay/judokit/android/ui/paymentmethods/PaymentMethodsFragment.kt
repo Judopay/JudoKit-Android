@@ -75,6 +75,7 @@ class PaymentMethodsFragment : Fragment() {
         setupButtonCallbacks()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

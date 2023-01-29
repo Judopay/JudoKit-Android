@@ -3,7 +3,7 @@ package com.judopay.judokit.android.model
 import android.net.Uri
 import android.os.Parcelable
 import com.judopay.judokit.android.requireNotNull
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * A configuration class responsible for setting additional parameters for

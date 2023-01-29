@@ -205,8 +205,8 @@
             app:title="@string/address_post_code_title" />
 
         <EditTextPreference
-            app:defaultValue="826"
             android:inputType="number"
+            app:defaultValue="826"
             app:dependency="is_address_enabled"
             app:iconSpaceReserved="false"
             app:key="address_billing_country"
@@ -261,48 +261,48 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:summary="@string/primary_account_details_summary"
         app:iconSpaceReserved="false"
-        app:title="@string/primary_account_details_header"
-        android:summary="@string/primary_account_details_summary">
+        app:title="@string/primary_account_details_header">
 
         <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
             app:key="is_primary_account_details_enabled"
-            app:title="@string/is_primary_account_details_enabled_title"
-            app:summary="@string/is_primary_account_details_enabled_summary" />
+            app:summary="@string/is_primary_account_details_enabled_summary"
+            app:title="@string/is_primary_account_details_enabled_title" />
 
         <EditTextPreference
             app:defaultValue="test-account-name"
             app:dependency="is_primary_account_details_enabled"
             app:iconSpaceReserved="false"
             app:key="primary_account_name"
-            app:title="@string/primary_account_name_title"
-            app:summary="@string/primary_account_name_summary" />
+            app:summary="@string/primary_account_name_summary"
+            app:title="@string/primary_account_name_title" />
 
         <EditTextPreference
             app:defaultValue="4015434234"
             app:dependency="is_primary_account_details_enabled"
             app:iconSpaceReserved="false"
             app:key="primary_account_account_number"
-            app:title="@string/primary_account_account_number_title"
-            app:summary="@string/primary_account_account_number_summary" />
+            app:summary="@string/primary_account_account_number_summary"
+            app:title="@string/primary_account_account_number_title" />
 
         <EditTextPreference
             app:defaultValue="1970-10-11"
             app:dependency="is_primary_account_details_enabled"
             app:iconSpaceReserved="false"
             app:key="primary_account_date_of_birth"
-            app:title="@string/primary_account_date_of_birth_title"
-            app:summary="@string/primary_account_date_of_birth_summary" />
+            app:summary="@string/primary_account_date_of_birth_summary"
+            app:title="@string/primary_account_date_of_birth_title" />
 
         <EditTextPreference
             app:defaultValue="EC2A"
             app:dependency="is_primary_account_details_enabled"
             app:iconSpaceReserved="false"
             app:key="primary_account_post_code"
-            app:title="@string/primary_account_post_code_title"
-            app:summary="@string/primary_account_post_code_summary" />
+            app:summary="@string/primary_account_post_code_summary"
+            app:title="@string/primary_account_post_code_title" />
 
     </PreferenceCategory>
 
@@ -434,19 +434,39 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
+        app:title="@string/token_payments">
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="should_ask_for_csc"
+            app:summary="@string/should_ask_for_csc_summary"
+            app:title="@string/should_ask_for_csc_title" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="should_ask_for_cardholder_name"
+            app:summary="@string/should_ask_for_cardholder_name_summary"
+            app:title="@string/should_ask_for_cardholder_name_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
         app:title="@string/sdk_info_header">
 
         <com.judokit.android.examples.settings.preferences.SDKInfoPreference
-            app:key="sdk_version"
             app:enableCopying="true"
             app:iconSpaceReserved="false"
-            app:title="@string/sdk_version_title"/>
+            app:key="sdk_version"
+            app:title="@string/sdk_version_title" />
 
         <com.judokit.android.examples.settings.preferences.SDKInfoPreference
-            app:key="judo_api_version"
             app:enableCopying="true"
             app:iconSpaceReserved="false"
-            app:title="@string/judo_api_version_title"/>
+            app:key="judo_api_version"
+            app:title="@string/judo_api_version_title" />
 
     </PreferenceCategory>
 

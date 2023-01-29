@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.snackbar.Snackbar
+import com.judokit.android.examples.common.parcelable
 import com.judokit.android.examples.common.startResultActivity
 import com.judokit.android.examples.databinding.ActivityResultBinding
 import com.judokit.android.examples.model.Result
@@ -26,7 +27,7 @@ class ResultActivity : AppCompatActivity() {
 
         clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
-        val result = intent.getParcelableExtra<Result>(RESULT)
+        val result = intent.parcelable<Result>(RESULT)
         if (result != null) {
             setupRecyclerView(result)
         } else {
@@ -64,7 +65,7 @@ class ResultActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
         return true
     }
 }

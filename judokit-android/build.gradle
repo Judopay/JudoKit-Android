@@ -5,6 +5,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'jacoco'
 apply plugin: "org.jetbrains.dokka-android"
+apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
@@ -78,7 +79,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
     implementation "androidx.core:core-ktx:$androidx_core_version"
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.annotation:annotation:1.5.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
@@ -92,7 +93,7 @@ dependencies {
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'com.google.android.gms:play-services-wallet:19.1.0'
 
     // Room and Kotlin Extensions and Coroutines support for Room

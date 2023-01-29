@@ -76,6 +76,7 @@ internal class PaymentMethodsViewModelFactory(
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == PaymentMethodsViewModel::class.java) {
+            @Suppress("UNCHECKED_CAST")
             PaymentMethodsViewModel(
                 cardDate,
                 cardRepository,
@@ -188,14 +189,14 @@ class PaymentMethodsViewModel(
     private fun payWithSelectedCard(paymentMethod: PaymentMethodModel?) {
         if (paymentMethod is CardPaymentMethodModel) {
             val isSecurityCodeRequired =
-                judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode
+                judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode || judo.uiConfiguration.shouldAskForCSC
             val cardNetwork = if (isSecurityCodeRequired) {
                 val card = paymentMethod.selectedCard
                 card?.network
             } else {
                 null
             }
-            if (judo.uiConfiguration.shouldAskForBillingInformation || isSecurityCodeRequired) {
+            if (judo.uiConfiguration.shouldAskForBillingInformation || isSecurityCodeRequired || judo.uiConfiguration.shouldAskForCardholderName) {
                 val cardEntryOptions = CardEntryOptions(
                     fromPaymentMethods = true,
                     shouldDisplayBillingDetails = judo.uiConfiguration.shouldAskForBillingInformation,
@@ -226,7 +227,9 @@ class PaymentMethodsViewModel(
                 .setCardLastFour(entity.ending)
                 .setCardType(entity.network)
                 .setExpirationDate(entity.expireDate)
-                .setCardHolderName(entity.cardholderName)
+            if (!judo.uiConfiguration.shouldAskForCardholderName) {
+                transactionDetailBuilder.setCardHolderName(entity.cardholderName)
+            }
 
             if (judo.paymentWidgetType == PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS) {
                 cardTransactionManager.preAuthWithToken(

@@ -32,6 +32,7 @@ import com.judopay.judokit.android.service.polling.PollingService
 import com.judopay.judokit.android.ui.common.BR_PBBA_RESULT
 import com.judopay.judokit.android.ui.common.PBBA_RESULT
 import com.judopay.judokit.android.ui.common.getLocale
+import com.judopay.judokit.android.ui.common.parcelable
 import com.judopay.judokit.android.ui.paymentmethods.PAYMENT_WIDGET_TYPE
 import com.judopay.judokit.android.ui.paymentmethods.components.PollingStatusViewAction
 import com.judopay.judokit.android.ui.paymentmethods.components.PollingStatusViewState
@@ -69,7 +70,7 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val paymentWidgetType = arguments?.getParcelable<PaymentWidgetType>(PAYMENT_WIDGET_TYPE)
+        val paymentWidgetType = arguments?.parcelable<PaymentWidgetType>(PAYMENT_WIDGET_TYPE)
 
         val application = requireActivity().application
         val service = JudoApiServiceFactory.createApiService(application, judo)

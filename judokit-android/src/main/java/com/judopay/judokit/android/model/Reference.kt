@@ -3,7 +3,7 @@ package com.judopay.judokit.android.model
 import android.os.Bundle
 import android.os.Parcelable
 import com.judopay.judokit.android.requireNotNullOrEmpty
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
 /**

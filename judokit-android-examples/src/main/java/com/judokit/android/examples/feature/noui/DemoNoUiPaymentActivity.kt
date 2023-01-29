@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.judokit.android.examples.R
+import com.judokit.android.examples.common.parcelable
 import com.judokit.android.examples.databinding.ActivityDemoNoUiPaymentBinding
 import com.judokit.android.examples.databinding.ViewSecurityCodeInputBinding
 import com.judokit.android.examples.feature.JUDO_PAYMENT_WIDGET_REQUEST_CODE
@@ -57,7 +58,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
         setContentView(binding.root)
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val judo = intent.getParcelableExtra<Judo>(JUDO_OPTIONS)
+        val judo = intent.parcelable<Judo>(JUDO_OPTIONS)
             ?: throw IllegalStateException("Judo object is required")
 
         service = JudoApiServiceFactory.createApiService(this, judo)
@@ -148,7 +149,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
             binding.createCardTokenButton.state = ButtonState.Enabled(R.string.create_card_token)
             when (resultCode) {
                 PAYMENT_SUCCESS -> {
-                    val result = data?.getParcelableExtra<JudoResult>(JUDO_RESULT)
+                    val result = data?.parcelable<JudoResult>(JUDO_RESULT)
                     val token = result?.cardDetails?.token
                     val type = result?.cardDetails?.type
                     val lastFour = result?.cardDetails?.lastFour

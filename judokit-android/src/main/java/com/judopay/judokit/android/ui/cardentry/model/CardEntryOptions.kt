@@ -2,7 +2,7 @@ package com.judopay.judokit.android.ui.cardentry.model
 
 import android.os.Parcelable
 import com.judopay.judokit.android.model.CardNetwork
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CardEntryOptions(

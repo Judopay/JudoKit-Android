@@ -2,7 +2,7 @@ package com.judopay.judokit.android.api.model.request
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * An Address linked to a card payment, used when address verification is performed.

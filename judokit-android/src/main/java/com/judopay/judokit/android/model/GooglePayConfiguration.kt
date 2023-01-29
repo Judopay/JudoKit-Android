@@ -7,7 +7,7 @@ import com.judopay.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judopay.judokit.android.model.googlepay.GooglePayPriceStatus
 import com.judopay.judokit.android.model.googlepay.GooglePayShippingAddressParameters
 import com.judopay.judokit.android.requireNotNull
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 /**
@@ -156,7 +156,7 @@ class GooglePayConfiguration internal constructor(
                 isBillingAddressRequired = isBillingAddressRequired ?: billingAddressParameters != null,
                 billingAddressParameters = billingAddressParameters,
                 isShippingAddressRequired = isShippingAddressRequired
-                    ?: shippingAddressParameters != null,
+                        ?: shippingAddressParameters != null,
                 shippingAddressParameters = shippingAddressParameters
             )
         }

@@ -3,7 +3,7 @@ package com.judopay.judokit.android.model
 import android.os.Parcelable
 import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.api.model.response.Consumer
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 import java.util.Date
 

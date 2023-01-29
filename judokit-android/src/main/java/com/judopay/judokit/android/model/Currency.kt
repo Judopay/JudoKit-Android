@@ -1,7 +1,7 @@
 package com.judopay.judokit.android.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * Represents all the currencies that can be used when performing transactions with the judo API.

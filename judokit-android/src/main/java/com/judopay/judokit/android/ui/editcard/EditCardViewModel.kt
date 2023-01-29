@@ -27,6 +27,7 @@ internal class EditCardViewModelFactory(
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == EditCardViewModel::class.java) {
+            @Suppress("UNCHECKED_CAST")
             EditCardViewModel(cardId, cardRepository, application) as T
         } else {
             super.create(modelClass)

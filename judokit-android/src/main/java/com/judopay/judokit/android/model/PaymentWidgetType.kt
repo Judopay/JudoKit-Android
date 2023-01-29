@@ -2,7 +2,7 @@ package com.judopay.judokit.android.model
 
 import android.os.Parcelable
 import com.judopay.judokit.android.R
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * A set of values that is used to invoke any of the defined payment flows. It is a mandatory
@@ -69,7 +69,17 @@ enum class PaymentWidgetType : Parcelable {
      * currency [com.judopay.judokit.android.Judo.Builder.setAmount] when building Judo configuration object
      * to be able to start Pay by Bank app journey.
      */
-    PAY_BY_BANK_APP
+    PAY_BY_BANK_APP,
+
+    /*
+     * Starts a token payment with optionally asking the user to enter their CSC and/or cardholder name.
+     */
+    TOKEN_PAYMENT,
+
+    /*
+     * Starts a pre-auth token payment with optionally asking the user to enter their CSC and/or cardholder name.
+     */
+    TOKEN_PRE_AUTH
 }
 
 val PaymentWidgetType.navigationGraphId: Int
@@ -79,7 +89,9 @@ val PaymentWidgetType.navigationGraphId: Int
         PaymentWidgetType.PRE_AUTH,
         PaymentWidgetType.REGISTER_CARD,
         PaymentWidgetType.CREATE_CARD_TOKEN,
-        PaymentWidgetType.CHECK_CARD -> R.navigation.judo_card_input_graph
+        PaymentWidgetType.CHECK_CARD,
+        PaymentWidgetType.TOKEN_PAYMENT,
+        PaymentWidgetType.TOKEN_PRE_AUTH -> R.navigation.judo_card_input_graph
         PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
         PaymentWidgetType.PAYMENT_METHODS,
         PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> R.navigation.judo_payment_methods_graph
@@ -98,3 +110,6 @@ val PaymentWidgetType.isGooglePayWidget: Boolean
 
 val PaymentWidgetType.isExposed: Boolean
     get() = this == PaymentWidgetType.PAY_BY_BANK_APP || isGooglePayWidget
+
+val PaymentWidgetType.isTokenPayment: Boolean
+    get() = this == PaymentWidgetType.TOKEN_PAYMENT || this == PaymentWidgetType.TOKEN_PRE_AUTH
