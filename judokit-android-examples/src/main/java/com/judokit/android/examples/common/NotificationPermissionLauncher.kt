@@ -72,5 +72,4 @@ class NotificationPermissionLauncher(activity: AppCompatActivity) {
                 .show()
         }
     }
-
 }

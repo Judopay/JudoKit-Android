@@ -155,8 +155,7 @@ class GooglePayConfiguration internal constructor(
                 isEmailRequired = isEmailRequired,
                 isBillingAddressRequired = isBillingAddressRequired ?: billingAddressParameters != null,
                 billingAddressParameters = billingAddressParameters,
-                isShippingAddressRequired = isShippingAddressRequired
-                        ?: shippingAddressParameters != null,
+                isShippingAddressRequired = isShippingAddressRequired ?: shippingAddressParameters != null,
                 shippingAddressParameters = shippingAddressParameters
             )
         }

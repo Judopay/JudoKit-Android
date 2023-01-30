@@ -219,7 +219,9 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
             val currency = sharedPreferences.getString("currency", null)
             val myCurrency = if (!currency.isNullOrEmpty()) {
                 Currency.valueOf(currency)
-            } else Currency.GBP
+            } else {
+                Currency.GBP
+            }
 
             return Amount.Builder()
                 .setAmount(amountValue)

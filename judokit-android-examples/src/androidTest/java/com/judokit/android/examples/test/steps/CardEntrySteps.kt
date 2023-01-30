@@ -39,14 +39,16 @@ class CardEntrySteps {
                 fieldName
             )
             "CARDHOLDER NAME" -> robot.enterTextIntoField(
-                card?.cardHolder ?: defaultCard?.cardHolder, fieldName
+                card?.cardHolder ?: defaultCard?.cardHolder,
+                fieldName
             )
             "EXPIRY DATE" -> robot.enterTextIntoField(
                 card?.expiryDate ?: defaultCard?.expiryDate,
                 fieldName
             )
             "SECURE CODE" -> robot.enterTextIntoField(
-                card?.securityCode ?: defaultCard?.securityCode, fieldName
+                card?.securityCode ?: defaultCard?.securityCode,
+                fieldName
             )
             "POST CODE" -> {
                 val avs = scenarioData?.avs?.find { it.country == identifier }

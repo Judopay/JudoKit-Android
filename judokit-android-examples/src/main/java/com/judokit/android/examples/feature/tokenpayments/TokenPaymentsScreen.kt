@@ -57,7 +57,8 @@ fun TokenPaymentsScreen(
                 navigationIcon = { IconButton(onClick = { onClose() }) { Icon(Icons.Filled.ArrowBack, "") } },
                 elevation = 4.dp
             )
-        }) { paddingValues ->
+        }
+    ) { paddingValues ->
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier

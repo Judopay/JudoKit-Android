@@ -331,7 +331,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     @Throws(IllegalArgumentException::class, IllegalStateException::class)
     private fun getJudo(widgetType: PaymentWidgetType): Judo {
-
         val isSandboxed = sharedPreferences.getBoolean("is_sandboxed", true)
         val judoId = sharedPreferences.getString("judo_id", null)
         val initialRecurringPayment =
@@ -485,7 +484,9 @@ class DemoFeatureListActivity : AppCompatActivity() {
             val currency = sharedPreferences.getString("currency", null)
             val myCurrency = if (!currency.isNullOrEmpty()) {
                 Currency.valueOf(currency)
-            } else Currency.GBP
+            } else {
+                Currency.GBP
+            }
 
             return Amount.Builder()
                 .setAmount(amountValue)
