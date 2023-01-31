@@ -407,6 +407,6 @@ class Judo internal constructor(
     }
 
     override fun toString(): String {
-        return "Judo(judoId='$judoId', authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration, initialRecurringPayment=$initialRecurringPayment, challengeRequestIndicator=$challengeRequestIndicator, scaExemption=$scaExemption, delayedAuthorisation=$delayedAuthorisation) cardToken=$cardToken"
+        return "Judo(judoId='$judoId', authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration, initialRecurringPayment=$initialRecurringPayment, challengeRequestIndicator=$challengeRequestIndicator, scaExemption=$scaExemption, delayedAuthorisation=$delayedAuthorisation, cardToken=$cardToken)"
     }
 }

@@ -1,5 +1,7 @@
 package com.judopay.judokit.android
 
+import com.google.common.truth.Truth.assertThat
+import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.model.Amount
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.Currency
@@ -270,5 +272,28 @@ internal class JudoBuilderTest {
         assertEquals(connectTimeout, judoBuilder.build().networkTimeout.connectTimeout)
         assertEquals(readTimeout, judoBuilder.build().networkTimeout.readTimeout)
         assertEquals(writeTimeout, judoBuilder.build().networkTimeout.writeTimeout)
+    }
+
+    @Test
+    fun `Given setCardToken is called with a non-null value, then apply that value during build`() {
+        val cardToken = CardToken()
+        judoBuilder.setCardToken(cardToken)
+
+        val judo = judoBuilder.build()
+        assertThat(judo.cardToken).isEqualTo(cardToken)
+    }
+
+    @Test
+    fun `Given setCardSecurityCode is called with a non-null value, then apply that value during build`() {
+        judoBuilder.setCardSecurityCode("security code")
+        assertThat(judoBuilder.build().cardSecurityCode).isEqualTo("security code")
+    }
+
+    @Test
+    fun `Given cardToken is set, toString contains the token data`() {
+        val cardToken = CardToken(lastFour = "1234", token = "token", type = 2)
+        judoBuilder.setCardToken(cardToken)
+
+        assertThat(judoBuilder.build().toString()).contains(", cardToken=CardToken(cardLastfour=1234, cardToken=token, cardType=2)")
     }
 }

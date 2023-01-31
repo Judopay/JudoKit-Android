@@ -197,7 +197,7 @@ class CardEntryViewModel(
                 enableFormFields.add(CardDetailsFieldType.HOLDER_NAME)
             }
             if (enableFormFields.isNotEmpty()) {
-                send(CardEntryAction.EnableFormFields(listOf(CardDetailsFieldType.HOLDER_NAME)))
+                send(CardEntryAction.EnableFormFields(enableFormFields))
             } else if (cardEntryOptions.shouldDisplayBillingDetails) {
                 navigationObserver.postValue(CardEntryNavigation.Billing)
                 navigation = CardEntryNavigation.Billing

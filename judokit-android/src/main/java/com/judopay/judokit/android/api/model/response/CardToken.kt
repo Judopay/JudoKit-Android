@@ -28,4 +28,8 @@ class CardToken(
             val data = endDate ?: ""
             return if (data.length != 4) "" else "${data.substring(0, 2)}/${data.substring(2, 4)}"
         }
+
+    override fun toString(): String {
+        return "CardToken(cardLastfour=$lastFour, cardToken=$token, cardType=$type"
+    }
 }

@@ -1,5 +1,6 @@
 package com.judopay.judokit.android.model
 
+import com.google.common.truth.Truth.assertThat
 import com.judopay.judokit.android.R
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -181,5 +182,17 @@ internal class PaymentWidgetTypeKtTest {
     @Test
     fun returnFalseOnIsExposedCallWithPaymentMethodsType() {
         assertFalse(PaymentWidgetType.PAYMENT_METHODS.isExposed)
+    }
+
+    @Test
+    fun `Given widget type is GOOGLE_PAY, isExposed is true`() {
+        assertThat(PaymentWidgetType.GOOGLE_PAY.isExposed).isTrue()
+    }
+
+    @Test
+    fun `Given widget type is TOKEN_PAYMENT or TOKEN_PRE_AUTH, isTokenPayment is true`() {
+        assertThat(PaymentWidgetType.TOKEN_PAYMENT.isTokenPayment).isTrue()
+        assertThat(PaymentWidgetType.TOKEN_PRE_AUTH.isTokenPayment).isTrue()
+        assertThat(PaymentWidgetType.CARD_PAYMENT.isTokenPayment).isFalse()
     }
 }
