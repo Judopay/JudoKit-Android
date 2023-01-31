@@ -250,7 +250,6 @@ class CardEntryViewModel(
                 )
                 sendRequest()
             }
-
             is CardEntryAction.ScanCard -> {
                 inputModel = action.result.toInputModel()
                 buildModel(isLoading = false, isFormValid = false)
@@ -263,7 +262,7 @@ class CardEntryViewModel(
                     cardNetwork = cardEntryOptions.shouldDisplaySecurityCode
                 )
             }
-            CardEntryAction.PressBackButton -> {
+            is CardEntryAction.PressBackButton -> {
                 navigation = CardEntryNavigation.Card
                 buildModel(isLoading = false, isFormValid = true)
                 navigationObserver.postValue(CardEntryNavigation.Card)
