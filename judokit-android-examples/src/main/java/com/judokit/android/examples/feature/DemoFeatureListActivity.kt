@@ -514,6 +514,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 sharedPreferences.getBoolean("is_billing_address_phone_number_required", false)
             val isEmailAddressRequired =
                 sharedPreferences.getBoolean("is_email_address_required", false)
+            val allowPrepaidCards = sharedPreferences.getBoolean("allow_prepaid_cards", true)
+            val allowCreditCards = sharedPreferences.getBoolean("allow_credit_cards", true)
             val countryCode =
                 sharedPreferences.getString("google_pay_country_code", "GB")
 
@@ -540,6 +542,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 .setBillingAddressParameters(billingAddressParams)
                 .setIsShippingAddressRequired(isShippingAddressRequired)
                 .setShippingAddressParameters(shippingAddressParams)
+                .setAllowPrepaidCards(allowPrepaidCards)
+                .setAllowCreditCards(allowCreditCards)
                 .build()
         }
 

@@ -9,6 +9,7 @@ data class GooglePayCardParameters(
     val allowedAuthMethods: Array<GooglePayAuthMethod>,
     val allowedCardNetworks: Array<CardNetwork>,
     val allowPrepaidCards: Boolean?,
+    val allowCreditCards: Boolean?,
     val billingAddressRequired: Boolean?,
     val billingAddressParameters: GooglePayBillingAddressParameters?
 ) : Parcelable

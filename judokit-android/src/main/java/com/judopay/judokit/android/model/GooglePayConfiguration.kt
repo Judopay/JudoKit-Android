@@ -27,7 +27,9 @@ class GooglePayConfiguration internal constructor(
     val isBillingAddressRequired: Boolean,
     val billingAddressParameters: GooglePayBillingAddressParameters?,
     val isShippingAddressRequired: Boolean,
-    val shippingAddressParameters: GooglePayShippingAddressParameters?
+    val shippingAddressParameters: GooglePayShippingAddressParameters?,
+    val allowPrepaidCards: Boolean?,
+    val allowCreditCards: Boolean?
 ) : Parcelable {
 
     class Builder {
@@ -49,6 +51,9 @@ class GooglePayConfiguration internal constructor(
 
         private var isShippingAddressRequired: Boolean? = null
         private var shippingAddressParameters: GooglePayShippingAddressParameters? = null
+
+        private var allowPrepaidCards: Boolean? = null
+        private var allowCreditCards: Boolean? = null
 
         /**
          * Sets the environment.
@@ -124,6 +129,16 @@ class GooglePayConfiguration internal constructor(
         fun setShippingAddressParameters(parameters: GooglePayShippingAddressParameters?) =
             apply { this.shippingAddressParameters = parameters }
 
+        /*
+         * Set to false if you don't support prepaid cards.
+         */
+        fun setAllowPrepaidCards(allowPrepaidCards: Boolean?) = apply { this.allowPrepaidCards = allowPrepaidCards }
+
+        /*
+         * Set to false if you don't support credit cards.
+         */
+        fun setAllowCreditCards(allowCreditCards: Boolean?) = apply { this.allowCreditCards = allowCreditCards }
+
         /**
          * Creates an instance of [GooglePayConfiguration] based on provided data in setters.
          * @throws IllegalArgumentException If environment or country code is null.
@@ -156,7 +171,9 @@ class GooglePayConfiguration internal constructor(
                 isBillingAddressRequired = isBillingAddressRequired ?: billingAddressParameters != null,
                 billingAddressParameters = billingAddressParameters,
                 isShippingAddressRequired = isShippingAddressRequired ?: shippingAddressParameters != null,
-                shippingAddressParameters = shippingAddressParameters
+                shippingAddressParameters = shippingAddressParameters,
+                allowPrepaidCards = allowPrepaidCards,
+                allowCreditCards = allowCreditCards
             )
         }
     }

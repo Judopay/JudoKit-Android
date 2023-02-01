@@ -362,6 +362,20 @@
             app:summary="@string/email_address_summary"
             app:title="@string/email_address_title" />
 
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"
+            app:key="allow_prepaid_cards"
+            app:summary="@string/google_pay_allow_prepaid_cards_summary"
+            app:title="@string/google_pay_allow_prepaid_cards_title" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"
+            app:key="allow_credit_cards"
+            app:summary="@string/google_pay_allow_credit_cards_summary"
+            app:title="@string/google_pay_allow_credit_cards_title" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
