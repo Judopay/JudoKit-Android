@@ -159,9 +159,14 @@ class CardEntryFormView @JvmOverloads constructor(
     }
 
     private fun textDidChange(type: CardDetailsFieldType, value: String, event: FormFieldEvent) {
+        var hasCardNetworkChanged = false
         if (type == CardDetailsFieldType.NUMBER) {
             validatorInstance<SecurityCodeValidator>()?.let {
-                it.cardNetwork = model.cardNetwork ?: CardNetwork.ofNumber(value)
+                val newCardNetwork = model.cardNetwork ?: CardNetwork.ofNumber(value)
+                hasCardNetworkChanged = it.cardNetwork != newCardNetwork
+                if (hasCardNetworkChanged) {
+                    it.cardNetwork = newCardNetwork
+                }
             }
         }
 
@@ -191,6 +196,14 @@ class CardEntryFormView @JvmOverloads constructor(
             it.error = message
         }
         updateSubmitButtonState()
+
+        if (hasCardNetworkChanged) {
+            textDidChange(
+                CardDetailsFieldType.SECURITY_NUMBER,
+                valueOfEditTextWithType(CardDetailsFieldType.SECURITY_NUMBER),
+                FormFieldEvent.FOCUS_CHANGED
+            )
+        }
     }
 
     private fun autoTab(isValidResult: Boolean, type: CardDetailsFieldType) {
