@@ -161,6 +161,12 @@
     <string name="email_address_title">Email address</string>
     <string name="email_address_summary">Turn on to request a email address.</string>
 
+    <string name="google_pay_allow_prepaid_cards_title">Allow Prepaid Cards</string>
+    <string name="google_pay_allow_prepaid_cards_summary">Set to false if you don\'t support prepaid cards.</string>
+
+    <string name="google_pay_allow_credit_cards_title">Allow Credit Cards</string>
+    <string name="google_pay_allow_credit_cards_summary">Set to false if you don\'t support credit cards.</string>
+
     <string name="avs_title">Address Verification Service</string>
     <string name="avs_summary">Turn on to enable Address Verification Service.</string>
 
