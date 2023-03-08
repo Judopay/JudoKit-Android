@@ -17,6 +17,7 @@ import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTw
 import com.judopay.judokit.android.model.ApiEnvironment
 import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.PrimaryAccountDetails
+import com.judopay.judokit.android.ui.common.parcelable
 import com.judopay.judokit.android.ui.error.JudoNotProvidedError
 import io.mockk.every
 import io.mockk.mockk
@@ -139,7 +140,7 @@ internal class JudoExtensionsTest {
     fun getJudoObjectOnFragmentActivityJudoCall() {
         val expectedJudoObject: Judo = mockk(relaxed = true)
         val fragment: FragmentActivity = mockk(relaxed = true) {
-            every { intent.getParcelableExtra<Judo>(JUDO_OPTIONS) } returns expectedJudoObject
+            every { intent.parcelable<Judo>(JUDO_OPTIONS) } returns expectedJudoObject
         }
 
         assertEquals(expectedJudoObject, fragment.judo)
@@ -149,7 +150,7 @@ internal class JudoExtensionsTest {
     @Test
     fun throwJudoNotProvidedErrorOnJudoObjectNull() {
         val fragment: FragmentActivity = mockk(relaxed = true) {
-            every { intent.getParcelableExtra<Judo>(JUDO_OPTIONS) } returns null
+            every { intent.parcelable<Judo>(JUDO_OPTIONS) } returns null
         }
 
         assertThrows<JudoNotProvidedError> { fragment.judo }
@@ -159,8 +160,11 @@ internal class JudoExtensionsTest {
     @Test
     fun getJudoObjectOnFragmentJudoCall() {
         val expectedJudoObject: Judo = mockk(relaxed = true)
+        val fragmentActivity: FragmentActivity = mockk(relaxed = true) {
+            every { intent.parcelable<Judo>(JUDO_OPTIONS) } returns expectedJudoObject
+        }
         val fragment: Fragment = mockk(relaxed = true) {
-            every { requireActivity().judo } returns expectedJudoObject
+            every { requireActivity() } returns fragmentActivity
         }
 
         assertEquals(expectedJudoObject, fragment.judo)

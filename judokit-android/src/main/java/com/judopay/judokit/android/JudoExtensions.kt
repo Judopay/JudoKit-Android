@@ -31,6 +31,7 @@ import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTw
 import com.judopay.judokit.android.model.ApiEnvironment
 import com.judopay.judokit.android.model.googlepay.GooglePayAddress
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_500
+import com.judopay.judokit.android.ui.common.parcelable
 import com.judopay.judokit.android.ui.error.JudoNotProvidedError
 
 internal val Judo.apiBaseUrl: String
@@ -97,7 +98,7 @@ fun ViewGroup.inflate(resource: Int, attachToRoot: Boolean = false): View {
 }
 
 val FragmentActivity.judo: Judo
-    get() = intent.getParcelableExtra(JUDO_OPTIONS)
+    get() = intent.parcelable(JUDO_OPTIONS)
         ?: throw JudoNotProvidedError()
 
 val Fragment.judo: Judo

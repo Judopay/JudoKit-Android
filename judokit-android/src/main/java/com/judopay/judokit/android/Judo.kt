@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Parcelable
 import com.judopay.judokit.android.api.model.Authorization
 import com.judopay.judokit.android.api.model.request.Address
+import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.model.Amount
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.ChallengeRequestIndicator
@@ -18,7 +19,7 @@ import com.judopay.judokit.android.model.Reference
 import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.model.UiConfiguration
 import com.judopay.judokit.android.ui.common.REGEX_JUDO_ID
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * The wrapper for providing data to Activity and Fragments classes in the SDK (e.g. JudopayActivity).
@@ -76,7 +77,9 @@ class Judo internal constructor(
     val emailAddress: String?,
     val threeDSTwoMaxTimeout: Int,
     val threeDSTwoMessageVersion: String,
-    val delayedAuthorisation: Boolean? = null
+    val delayedAuthorisation: Boolean? = null,
+    val cardToken: CardToken? = null,
+    val cardSecurityCode: String? = null
 ) : Parcelable {
 
     /**
@@ -106,6 +109,8 @@ class Judo internal constructor(
         private var threeDSTwoMaxTimeout: Int? = null
         private var threeDSTwoMessageVersion: String? = null
         private var delayedAuthorisation: Boolean? = null
+        private var cardToken: CardToken? = null
+        private var cardSecurityCode: String? = null
 
         /**
          * Sets the unique merchant ID
@@ -273,6 +278,18 @@ class Judo internal constructor(
         fun setPhoneCountryCode(phoneCountryCode: String?) =
             apply { this.phoneCountryCode = phoneCountryCode }
 
+        /*
+         * Sets card token details for token payment.
+         */
+        fun setCardToken(cardToken: CardToken?) =
+            apply { this.cardToken = cardToken }
+
+        /*
+         * Sets the card security code for token payment.
+         */
+        fun setCardSecurityCode(cardSecurityCode: String?) =
+            apply { this.cardSecurityCode = cardSecurityCode }
+
         /**
          * Method that initializes Judo configuration object that can be used for
          * processing a payment.
@@ -334,29 +351,31 @@ class Judo internal constructor(
             }
 
             return Judo(
-                id,
-                myAuthorization,
-                mySandboxed,
-                myAmount,
-                myReference,
-                myUiConfiguration,
-                myPaymentMethods,
-                mySupportedCardNetworks,
-                primaryAccountDetails,
-                googlePayConfiguration,
-                paymentWidgetType,
-                address,
-                pbbaConfiguration,
-                initialRecurringPayment,
-                myNetworkTimeout,
-                challengeRequestIndicator,
-                scaExemption,
-                mobileNumber,
-                phoneCountryCode,
-                emailAddress,
-                threeDSTwoMaxTimeout ?: DEFAULT_MAX_TIMEOUT,
-                threeDSTwoMessageVersion ?: THREE_DS_TWO_MESSAGE_VERSION_TWO_DOT_TWO,
-                delayedAuthorisation
+                judoId = id,
+                authorization = myAuthorization,
+                isSandboxed = mySandboxed,
+                amount = myAmount,
+                reference = myReference,
+                uiConfiguration = myUiConfiguration,
+                paymentMethods = myPaymentMethods,
+                supportedCardNetworks = mySupportedCardNetworks,
+                primaryAccountDetails = primaryAccountDetails,
+                googlePayConfiguration = googlePayConfiguration,
+                paymentWidgetType = paymentWidgetType,
+                address = address,
+                pbbaConfiguration = pbbaConfiguration,
+                initialRecurringPayment = initialRecurringPayment,
+                networkTimeout = myNetworkTimeout,
+                challengeRequestIndicator = challengeRequestIndicator,
+                scaExemption = scaExemption,
+                mobileNumber = mobileNumber,
+                phoneCountryCode = phoneCountryCode,
+                emailAddress = emailAddress,
+                threeDSTwoMaxTimeout = threeDSTwoMaxTimeout ?: DEFAULT_MAX_TIMEOUT,
+                threeDSTwoMessageVersion = threeDSTwoMessageVersion ?: THREE_DS_TWO_MESSAGE_VERSION_TWO_DOT_TWO,
+                delayedAuthorisation = delayedAuthorisation,
+                cardToken = cardToken,
+                cardSecurityCode = cardSecurityCode
             )
         }
 
@@ -388,6 +407,6 @@ class Judo internal constructor(
     }
 
     override fun toString(): String {
-        return "Judo(judoId='$judoId', authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration, initialRecurringPayment=$initialRecurringPayment, challengeRequestIndicator=$challengeRequestIndicator, scaExemption=$scaExemption, delayedAuthorisation=$delayedAuthorisation)"
+        return "Judo(judoId='$judoId', authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration, initialRecurringPayment=$initialRecurringPayment, challengeRequestIndicator=$challengeRequestIndicator, scaExemption=$scaExemption, delayedAuthorisation=$delayedAuthorisation, cardToken=$cardToken)"
     }
 }

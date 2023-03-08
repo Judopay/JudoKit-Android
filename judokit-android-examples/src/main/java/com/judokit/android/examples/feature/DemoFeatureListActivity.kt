@@ -1,17 +1,14 @@
 package com.judokit.android.examples.feature
 
-import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -23,6 +20,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.judokit.android.examples.R
 import com.judokit.android.examples.common.NotificationPermissionLauncher
+import com.judokit.android.examples.common.parcelable
 import com.judokit.android.examples.common.startResultActivity
 import com.judokit.android.examples.common.toResult
 import com.judokit.android.examples.databinding.ActivityDemoFeatureListBinding
@@ -30,6 +28,7 @@ import com.judokit.android.examples.databinding.DialogGetTransactionBinding
 import com.judokit.android.examples.feature.adapter.DemoFeaturesAdapter
 import com.judokit.android.examples.feature.noui.DemoNoUiPaymentActivity
 import com.judokit.android.examples.feature.paybybank.PayByBankActivity
+import com.judokit.android.examples.feature.tokenpayments.TokenPaymentsActivity
 import com.judokit.android.examples.model.DemoFeature
 import com.judokit.android.examples.settings.SettingsActivity
 import com.judopay.judo3ds2.customization.ButtonCustomization
@@ -96,7 +95,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
     private val orderIdReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             @Suppress("UNUSED_VARIABLE")
-            val result = intent?.getParcelableExtra<JudoResult>(PBBA_RESULT)
+            val result = intent?.parcelable<JudoResult>(PBBA_RESULT)
             // Handle result
         }
     }
@@ -152,13 +151,13 @@ class DemoFeatureListActivity : AppCompatActivity() {
         if (requestCode == JUDO_PAYMENT_WIDGET_REQUEST_CODE) {
             when (resultCode) {
                 PAYMENT_SUCCESS -> {
-                    val result = data?.getParcelableExtra<JudoResult>(JUDO_RESULT)
+                    val result = data?.parcelable<JudoResult>(JUDO_RESULT)
                     processSuccessfulPayment(result)
                 }
 
                 PAYMENT_CANCELLED,
                 PAYMENT_ERROR -> {
-                    val error = data?.getParcelableExtra<JudoError>(JUDO_ERROR)
+                    val error = data?.parcelable<JudoError>(JUDO_ERROR)
                     processPaymentError(error)
                 }
             }
@@ -236,6 +235,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
                         throw IllegalStateException("Banking app not available")
                     }
                 }
+                DemoFeature.TOKEN_PAYMENTS -> PaymentWidgetType.TOKEN_PAYMENT
             }
             val judoConfig = getJudo(widgetType)
             navigateToJudoPaymentWidgetWithConfigurations(judoConfig, feature)
@@ -264,6 +264,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
                         JudoActivity::class.java
                     }
                 PaymentWidgetType.PAY_BY_BANK_APP -> PayByBankActivity::class.java
+                PaymentWidgetType.TOKEN_PAYMENT -> TokenPaymentsActivity::class.java
                 else -> JudoActivity::class.java
             }
             val intent = Intent(this, myClass)
@@ -330,7 +331,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     @Throws(IllegalArgumentException::class, IllegalStateException::class)
     private fun getJudo(widgetType: PaymentWidgetType): Judo {
-
         val isSandboxed = sharedPreferences.getBoolean("is_sandboxed", true)
         val judoId = sharedPreferences.getString("judo_id", null)
         val initialRecurringPayment =
@@ -420,6 +420,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
             val shouldDisplayAmount = sharedPreferences.getBoolean("should_display_amount", true)
             val shouldPaymentMethodsVerifySecurityCode =
                 sharedPreferences.getBoolean("should_payment_methods_verify_security_code", true)
+            val shouldAskForCSC = sharedPreferences.getBoolean("should_ask_for_csc", false)
+            val shouldAskForCardholderName = sharedPreferences.getBoolean("should_ask_for_cardholder_name", false)
             val shouldPaymentButtonDisplayAmount =
                 sharedPreferences.getBoolean("should_payment_button_display_amount", false)
             val shouldAskForBillingInformation = sharedPreferences.getBoolean("should_ask_for_billing_information", false)
@@ -428,6 +430,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 .setAvsEnabled(isAVSEnabled)
                 .setShouldPaymentMethodsDisplayAmount(shouldDisplayAmount)
                 .setShouldPaymentMethodsVerifySecurityCode(shouldPaymentMethodsVerifySecurityCode)
+                .setShouldAskForCSC(shouldAskForCSC)
+                .setShouldAskForCardholderName(shouldAskForCardholderName)
                 .setShouldPaymentButtonDisplayAmount(shouldPaymentButtonDisplayAmount)
                 .setShouldAskForBillingInformation(shouldAskForBillingInformation)
 
@@ -480,7 +484,9 @@ class DemoFeatureListActivity : AppCompatActivity() {
             val currency = sharedPreferences.getString("currency", null)
             val myCurrency = if (!currency.isNullOrEmpty()) {
                 Currency.valueOf(currency)
-            } else Currency.GBP
+            } else {
+                Currency.GBP
+            }
 
             return Amount.Builder()
                 .setAmount(amountValue)
@@ -508,6 +514,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 sharedPreferences.getBoolean("is_billing_address_phone_number_required", false)
             val isEmailAddressRequired =
                 sharedPreferences.getBoolean("is_email_address_required", false)
+            val allowPrepaidCards = sharedPreferences.getBoolean("allow_prepaid_cards", true)
+            val allowCreditCards = sharedPreferences.getBoolean("allow_credit_cards", true)
             val countryCode =
                 sharedPreferences.getString("google_pay_country_code", "GB")
 
@@ -534,6 +542,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 .setBillingAddressParameters(billingAddressParams)
                 .setIsShippingAddressRequired(isShippingAddressRequired)
                 .setShippingAddressParameters(shippingAddressParams)
+                .setAllowPrepaidCards(allowPrepaidCards)
+                .setAllowCreditCards(allowCreditCards)
                 .build()
         }
 

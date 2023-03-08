@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="false"
@@ -21,6 +21,9 @@
         android:theme="@style/Theme.DemoApp"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".feature.tokenpayments.TokenPaymentsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name="com.judokit.android.examples.feature.noui.DemoNoUiPaymentActivity"
             android:exported="false" />
         <activity
@@ -29,10 +32,10 @@
             android:theme="@style/Theme.DemoApp" />
         <activity
             android:name="com.judokit.android.examples.settings.SettingsActivity"
+            android:exported="false"
             android:label="@string/title_settings"
             android:parentActivityName="com.judokit.android.examples.feature.DemoFeatureListActivity"
-            android:theme="@style/Theme.DemoApp"
-            android:exported="false">
+            android:theme="@style/Theme.DemoApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.judokit.android.examples.feature.DemoFeatureListActivity" />
@@ -50,6 +53,7 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -62,7 +66,7 @@
             android:name="com.judokit.android.examples.feature.paybybank.PayByBankActivity"
             android:exported="false"
             android:label="@string/title_activity_pay_by_bank"
-            android:theme="@style/Theme.DemoApp"/>
+            android:theme="@style/Theme.DemoApp" />
 
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"

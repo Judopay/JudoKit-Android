@@ -2,6 +2,9 @@ package com.judokit.android.examples.common
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
+import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -81,4 +84,20 @@ fun List<*>.toResultItemList(propName: String): List<ResultItem> {
     }
 
     return items
+}
+
+inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelable(key, T::class.java)
+    else -> {
+        @Suppress("deprecation")
+        getParcelable(key) as? T
+    }
+}
+
+inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableExtra(key, T::class.java)
+    else -> {
+        @Suppress("DEPRECATION")
+        getParcelableExtra(key) as? T
+    }
 }

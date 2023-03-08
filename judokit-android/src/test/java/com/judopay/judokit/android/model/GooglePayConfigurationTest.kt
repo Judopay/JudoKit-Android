@@ -1,5 +1,6 @@
 package com.judopay.judokit.android.model
 
+import com.google.common.truth.Truth.assertThat
 import com.judopay.judokit.android.model.googlepay.GooglePayAddressFormat
 import com.judopay.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayCheckoutOption
@@ -96,5 +97,25 @@ internal class GooglePayConfigurationTest {
         val expectedTotalPriceStatus = GooglePayPriceStatus.FINAL
 
         assertEquals(expectedTotalPriceStatus, actualTotalPriceStatus)
+    }
+
+    @Test
+    fun `Given allowPrepaidCards is set, then build() should use this value`() {
+        val sut = googlePayConfigurationBuilder
+            .setEnvironment(GooglePayEnvironment.TEST)
+            .setTransactionCountryCode("US")
+        assertThat(sut.setAllowPrepaidCards(true).build().allowPrepaidCards).isTrue()
+        assertThat(sut.setAllowPrepaidCards(false).build().allowPrepaidCards).isFalse()
+        assertThat(sut.setAllowPrepaidCards(null).build().allowPrepaidCards).isNull()
+    }
+
+    @Test
+    fun `Given allowCreditCards is set, then build() should use this value`() {
+        val sut = googlePayConfigurationBuilder
+            .setEnvironment(GooglePayEnvironment.TEST)
+            .setTransactionCountryCode("US")
+        assertThat(sut.setAllowCreditCards(true).build().allowCreditCards).isTrue()
+        assertThat(sut.setAllowCreditCards(false).build().allowCreditCards).isFalse()
+        assertThat(sut.setAllowCreditCards(null).build().allowCreditCards).isNull()
     }
 }

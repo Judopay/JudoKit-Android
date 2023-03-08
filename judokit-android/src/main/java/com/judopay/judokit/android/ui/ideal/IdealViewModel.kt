@@ -35,6 +35,7 @@ internal class IdealViewModelFactory(
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == IdealViewModel::class.java) {
+            @Suppress("UNCHECKED_CAST")
             IdealViewModel(judo, service, pollingService, application) as T
         } else {
             super.create(modelClass)

@@ -22,7 +22,9 @@ commands:
 executors:
   android:
     docker:
-      - image: circleci/android:api-29
+      - image: cimg/android:2022.12
+    environment:
+      GRADLE_OPTS: -Xmx2g -XX:+HeapDumpOnOutOfMemoryError -Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false
 
 jobs:
   build_sdk:
@@ -48,7 +50,6 @@ jobs:
   build_sample:
     executor: android
     steps:
-      - disable_predex
       - checkout
       - restore_cache:
           keys:

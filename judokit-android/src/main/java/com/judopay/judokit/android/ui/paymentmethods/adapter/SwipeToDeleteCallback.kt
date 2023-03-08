@@ -33,7 +33,11 @@ abstract class SwipeToDeleteCallback(
         return makeMovementFlags(0, if (viewHolder is SavedCardsItemViewHolder) ItemTouchHelper.LEFT else 0)
     }
 
-    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+    override fun onMove(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ): Boolean {
         return false
     }
 
@@ -52,7 +56,13 @@ abstract class SwipeToDeleteCallback(
         val isCanceled = dX == 0f && !isCurrentlyActive
 
         if (isCanceled) {
-            canvas.drawRect(itemView.right + dX, itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat(), clearPaint)
+            canvas.drawRect(
+                itemView.right + dX,
+                itemView.top.toFloat(),
+                itemView.right.toFloat(),
+                itemView.bottom.toFloat(),
+                clearPaint
+            )
             super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             return
         }
@@ -73,7 +83,7 @@ abstract class SwipeToDeleteCallback(
         paint.textSize = resources.getDimension(textSize)
         paint.typeface = ResourcesCompat.getFont(itemView.context, textFont)
 
-        val textToDraw = itemView.context.getString(text).toUpperCase(Locale.getDefault())
+        val textToDraw = itemView.context.getString(text).uppercase(Locale.getDefault())
 
         val bounds = Rect()
         paint.getTextBounds(textToDraw, 0, textToDraw.length, bounds)

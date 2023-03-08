@@ -2,7 +2,7 @@ package com.judopay.judokit.android.model
 
 import android.os.Parcelable
 import com.judopay.judo3ds2.customization.UiCustomization
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * Configuration object to change some UI parameters on card entry and payment methods screens
@@ -13,6 +13,8 @@ class UiConfiguration internal constructor(
     val shouldPaymentMethodsDisplayAmount: Boolean,
     val shouldPaymentButtonDisplayAmount: Boolean,
     val shouldPaymentMethodsVerifySecurityCode: Boolean,
+    val shouldAskForCSC: Boolean,
+    val shouldAskForCardholderName: Boolean,
     val shouldAskForBillingInformation: Boolean,
     val threeDSUiCustomization: UiCustomization?
 ) : Parcelable {
@@ -24,6 +26,8 @@ class UiConfiguration internal constructor(
         private var avsEnabled: Boolean? = false
         private var shouldPaymentMethodsDisplayAmount: Boolean? = true
         private var shouldPaymentMethodsVerifySecurityCode: Boolean? = true
+        private var shouldAskForCSC: Boolean? = false
+        private var shouldAskForCardholderName: Boolean? = false
         private var shouldPaymentButtonDisplayAmount: Boolean? = false
         private var shouldAskForBillingInformation: Boolean? = false
         private var threeDSUiCustomization: UiCustomization? = null
@@ -46,9 +50,19 @@ class UiConfiguration internal constructor(
          * with a card in the payment methods screen.
          */
         fun setShouldPaymentMethodsVerifySecurityCode(shouldPaymentMethodsVerifySecurityCode: Boolean?) =
-            apply {
-                this.shouldPaymentMethodsVerifySecurityCode = shouldPaymentMethodsVerifySecurityCode
-            }
+            apply { this.shouldPaymentMethodsVerifySecurityCode = shouldPaymentMethodsVerifySecurityCode }
+
+        /**
+         * Sets a boolean property that defines if the SDK should ask for the card security code when paying with card token
+         */
+        fun setShouldAskForCSC(shouldAskForCSC: Boolean?) =
+            apply { this.shouldAskForCSC = shouldAskForCSC }
+
+        /**
+         * Sets a boolean property that defines if the SDK should aks for the cardholder name when paying with card token
+         */
+        fun setShouldAskForCardholderName(shouldAskForCardholderName: Boolean?) =
+            apply { this.shouldAskForCardholderName = shouldAskForCardholderName }
 
         /**
          * Sets boolean property that defines if the amount should be displayed on the
@@ -77,17 +91,21 @@ class UiConfiguration internal constructor(
                 requireNotNull(this.shouldPaymentMethodsDisplayAmount)
             val shouldPaymentMethodsVerifySecurityCode =
                 requireNotNull(this.shouldPaymentMethodsVerifySecurityCode)
+            val shouldAskForCSC = requireNotNull(this.shouldAskForCSC)
+            val shouldAskForCardholderName = requireNotNull(this.shouldAskForCardholderName)
             val shouldPaymentButtonDisplayAmount =
                 requireNotNull(this.shouldPaymentButtonDisplayAmount)
             val shouldAskForBillingInformation = requireNotNull(this.shouldAskForBillingInformation)
 
             return UiConfiguration(
-                avsEnabled,
-                shouldPaymentMethodsDisplayAmount,
-                shouldPaymentButtonDisplayAmount,
-                shouldPaymentMethodsVerifySecurityCode,
-                shouldAskForBillingInformation,
-                threeDSUiCustomization
+                avsEnabled = avsEnabled,
+                shouldPaymentMethodsDisplayAmount = shouldPaymentMethodsDisplayAmount,
+                shouldPaymentButtonDisplayAmount = shouldPaymentButtonDisplayAmount,
+                shouldPaymentMethodsVerifySecurityCode = shouldPaymentMethodsVerifySecurityCode,
+                shouldAskForCSC = shouldAskForCSC,
+                shouldAskForCardholderName = shouldAskForCardholderName,
+                shouldAskForBillingInformation = shouldAskForBillingInformation,
+                threeDSUiCustomization = threeDSUiCustomization
             )
         }
     }

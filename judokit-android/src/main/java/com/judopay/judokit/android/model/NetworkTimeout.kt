@@ -2,7 +2,7 @@ package com.judopay.judokit.android.model
 
 import android.os.Parcelable
 import com.judopay.judokit.android.validateTimeout
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 private const val MIN_CONNECT_TIMEOUT = 5L
 private const val MAX_CONNECT_TIMEOUT = 30L

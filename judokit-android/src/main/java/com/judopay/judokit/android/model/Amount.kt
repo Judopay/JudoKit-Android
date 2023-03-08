@@ -1,9 +1,10 @@
 package com.judopay.judokit.android.model
 
 import android.os.Parcelable
+import com.judopay.judokit.android.model.Amount.Builder
 import com.judopay.judokit.android.requireNotNull
 import com.judopay.judokit.android.requireNotNullOrEmpty
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.text.NumberFormat
 import java.util.Locale
 

@@ -2,7 +2,6 @@ package com.judopay.judokit.android.ui.cardentry
 
 import android.animation.LayoutTransition
 import android.content.DialogInterface
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -30,10 +29,12 @@ import com.judopay.judokit.android.judo
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.isCardPaymentWidget
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
+import com.judopay.judokit.android.model.isTokenPayment
 import com.judopay.judokit.android.service.CardTransactionManager
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
+import com.judopay.judokit.android.ui.common.parcelable
 import com.judopay.judokit.android.ui.paymentmethods.CARD_ENTRY_OPTIONS
 
 private const val BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME = 300L
@@ -49,13 +50,14 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
 
     override fun getTheme(): Int = R.style.JudoTheme_BottomSheetDialogTheme
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         val application = requireActivity().application
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
-        val cardEntryOptions = arguments?.getParcelable<CardEntryOptions>(CARD_ENTRY_OPTIONS)
+        val cardEntryOptions = arguments?.parcelable<CardEntryOptions>(CARD_ENTRY_OPTIONS)
         val cardTransactionManager = CardTransactionManager.getInstance(requireActivity())
         cardTransactionManager.configureWith(judo)
 
@@ -69,8 +71,18 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
 
         viewModel = ViewModelProvider(this, factory)[CardEntryViewModel::class.java]
 
-        if (cardEntryOptions?.shouldDisplaySecurityCode != null) {
-            viewModel.send(CardEntryAction.EnableFormFields(listOf(CardDetailsFieldType.SECURITY_NUMBER)))
+        if ((judo.paymentWidgetType.isTokenPayment || (cardEntryOptions != null && cardEntryOptions.fromPaymentMethods && !cardEntryOptions.addCardPressed)) && (cardEntryOptions?.shouldDisplaySecurityCode != null || judo.uiConfiguration.shouldAskForCSC || judo.uiConfiguration.shouldAskForCardholderName)) {
+            val fieldsToDisplay = mutableListOf<CardDetailsFieldType>()
+            if (cardEntryOptions?.shouldDisplaySecurityCode != null || judo.uiConfiguration.shouldAskForCSC) {
+                fieldsToDisplay.add(CardDetailsFieldType.SECURITY_NUMBER)
+            }
+            if (judo.uiConfiguration.shouldAskForCardholderName) {
+                fieldsToDisplay.add(CardDetailsFieldType.HOLDER_NAME)
+            }
+            viewModel.send(CardEntryAction.EnableFormFields(fieldsToDisplay))
+        } else if (judo.paymentWidgetType.isTokenPayment && !judo.uiConfiguration.shouldAskForCSC && !judo.uiConfiguration.shouldAskForCardholderName) {
+            viewModel.send(CardEntryAction.EnableFormFields(emptyList()))
+            viewModel.send(CardEntryAction.SubmitCardEntryForm)
         }
 
         viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
@@ -267,24 +279,16 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
     }
 
     private fun unSubscribeFromInsetsChanges() = requireDialog().window?.apply {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            decorView.setOnApplyWindowInsetsListener(null)
-        }
+        decorView.setOnApplyWindowInsetsListener(null)
     }
 
     // Animating view position based on the keyboard show/hide state
     private fun subscribeToInsetsChanges() = requireDialog().window?.apply {
         setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val insetsListener = View.OnApplyWindowInsetsListener { view, windowInsets ->
-                return@OnApplyWindowInsetsListener if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    view.onApplyWindowInsets(windowInsets)
-                } else {
-                    return@OnApplyWindowInsetsListener windowInsets
-                }
-            }
-            decorView.setOnApplyWindowInsetsListener(insetsListener)
+        val insetsListener = View.OnApplyWindowInsetsListener { view, windowInsets ->
+            return@OnApplyWindowInsetsListener view.onApplyWindowInsets(windowInsets)
         }
+        decorView.setOnApplyWindowInsetsListener(insetsListener)
     }
 
     override fun onSuccess(success: JudoPaymentResult) {

@@ -41,6 +41,7 @@ internal class JudoSharedViewModelFactory(
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == JudoSharedViewModel::class.java) {
+            @Suppress("UNCHECKED_CAST")
             JudoSharedViewModel(judo, googlePayService, judoApiService, application) as T
         } else {
             super.create(modelClass)
@@ -63,7 +64,7 @@ class JudoSharedViewModel(
     val bankPaymentResult = MutableLiveData<JudoPaymentResult>()
     val paymentMethodsResult = MutableLiveData<JudoPaymentResult>()
 
-    // used to pass security code from card entry to payment methods screen
+    // used to pass security code and/or cardholder name from card entry to payment methods screen
     val cardEntryToPaymentMethodResult = MutableLiveData<TransactionDetails.Builder>()
 
     // used to share the GooglePay payment result between this activity and the payment methods fragment

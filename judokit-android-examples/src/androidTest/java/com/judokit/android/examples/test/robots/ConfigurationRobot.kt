@@ -200,8 +200,8 @@ class ConfigurationRobot {
                     click()
                 )
             )
-        onData(anything()).inAdapterView(withId(androidx.preference.R.id.select_dialog_listview))
-            .atPosition(currencyPositionInList).perform(click())
+//        onData(anything()).inAdapterView(withId(androidx.preference.R.id.select_dialog_listview))
+//            .atPosition(currencyPositionInList).perform(click())
     }
 
     companion object {

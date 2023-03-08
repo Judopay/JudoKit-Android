@@ -1,7 +1,7 @@
 package com.judopay.judokit.android.api.model
 
 import com.judopay.judokit.android.requireNotNullOrEmpty
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import okhttp3.Headers
 
 private const val API_TOKEN_HEADER = "Api-Token"

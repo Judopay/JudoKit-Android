@@ -1,7 +1,7 @@
 package com.judopay.judokit.android.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * Object that contains information about the account details provided by the merchant.

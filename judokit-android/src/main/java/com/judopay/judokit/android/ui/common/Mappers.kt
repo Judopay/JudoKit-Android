@@ -34,7 +34,8 @@ internal fun GooglePayConfiguration.toGooglePayPaymentMethod(judo: Judo): Google
             GooglePayAuthMethod.CRYPTOGRAM_3DS
         ),
         allowedCardNetworks = networks.toTypedArray(),
-        allowPrepaidCards = true,
+        allowPrepaidCards = allowPrepaidCards,
+        allowCreditCards = allowCreditCards,
         billingAddressRequired = isBillingAddressRequired,
         billingAddressParameters = billingAddressParameters
     )

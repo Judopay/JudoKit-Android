@@ -3,7 +3,7 @@ package com.judopay.judokit.android.model
 import android.os.Parcelable
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.ui.paymentmethods.components.PaymentButtonType
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * A set of available payment methods to use in payment methods screen.

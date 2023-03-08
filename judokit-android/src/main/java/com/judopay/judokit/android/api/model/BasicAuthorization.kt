@@ -2,8 +2,8 @@ package com.judopay.judokit.android.api.model
 
 import android.util.Base64
 import com.judopay.judokit.android.requireNotNullOrEmpty
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import okhttp3.Headers
 import java.nio.charset.StandardCharsets
 

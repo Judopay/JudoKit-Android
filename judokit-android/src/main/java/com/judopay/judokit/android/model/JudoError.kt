@@ -3,7 +3,7 @@ package com.judopay.judokit.android.model
 import android.content.res.Resources
 import android.os.Parcelable
 import com.judopay.judokit.android.R
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 const val USER_CANCELLED = -1
 const val RESPONSE_PARSING = -2

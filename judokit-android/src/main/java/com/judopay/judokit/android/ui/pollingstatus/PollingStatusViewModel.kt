@@ -39,6 +39,7 @@ internal class PollingStatusViewModelFactory(
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == PollingStatusViewModel::class.java) {
+            @Suppress("UNCHECKED_CAST")
             PollingStatusViewModel(
                 service,
                 pollingService,

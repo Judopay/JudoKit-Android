@@ -4,31 +4,31 @@
     <string name="title_activity_pay_by_bank">Pay by Bank App</string>
 
     <string name="feature_title_payment">Pay with card</string>
-    <string name="feature_surtitle_payment">by entering card details</string>
+    <string name="feature_subtitle_payment">by entering card details</string>
 
     <string name="feature_title_preauth">Pre-auth with card</string>
-    <string name="feature_surtitle_preauth">pre-auth by entering card details</string>
+    <string name="feature_subtitle_preauth">pre-auth by entering card details</string>
 
     <string name="feature_title_create_card_token">Register card</string>
-    <string name="feature_surtitle_create_card_token">to be stored for future transactions</string>
+    <string name="feature_subtitle_create_card_token">to be stored for future transactions</string>
 
     <string name="feature_title_save_card">Save card</string>
-    <string name="feature_surtitle_save_card">to be stored for future transactions</string>
+    <string name="feature_subtitle_save_card">to be stored for future transactions</string>
 
     <string name="feature_title_check_card">Check card</string>
-    <string name="feature_surtitle_check_card">to validate a card</string>
+    <string name="feature_subtitle_check_card">to validate a card</string>
 
     <string name="feature_title_google_pay_payment">Google Pay payment</string>
-    <string name="feature_surtitle_google_pay_payment">with a wallet card</string>
+    <string name="feature_subtitle_google_pay_payment">with a wallet card</string>
 
     <string name="feature_title_google_pay_preauth">Google Pay pre-auth</string>
-    <string name="feature_surtitle_google_pay_preauth">pre-auth with a wallet card</string>
+    <string name="feature_subtitle_google_pay_preauth">pre-auth with a wallet card</string>
 
     <string name="feature_title_payment_methods">Payment methods</string>
-    <string name="feature_surtitle_payment_methods">with default payment methods</string>
+    <string name="feature_subtitle_payment_methods">with default payment methods</string>
 
     <string name="feature_title_preauth_payment_methods">Pre-auth payment methods</string>
-    <string name="feature_surtitle_preauth_payment_methods">with default pre-auth payment methods</string>
+    <string name="feature_subtitle_preauth_payment_methods">with default pre-auth payment methods</string>
 
     <string name="feature_title_server_to_server_payment_methods">Server-to-Server payment methods</string>
     <string name="feature_subtitle_server_to_server_payment_methods">with default Server-to-Server payment methods</string>
@@ -47,6 +47,7 @@
     <string name="amount_header">Amount</string>
     <string name="address_header">Address</string>
     <string name="others_header">Others</string>
+    <string name="token_payments">Token payments</string>
     <string name="sdk_info_header">JudoKit information</string>
 
     <!-- Messages Preferences -->
@@ -160,11 +161,23 @@
     <string name="email_address_title">Email address</string>
     <string name="email_address_summary">Turn on to request a email address.</string>
 
+    <string name="google_pay_allow_prepaid_cards_title">Allow Prepaid Cards</string>
+    <string name="google_pay_allow_prepaid_cards_summary">Set to false if you don\'t support prepaid cards.</string>
+
+    <string name="google_pay_allow_credit_cards_title">Allow Credit Cards</string>
+    <string name="google_pay_allow_credit_cards_summary">Set to false if you don\'t support credit cards.</string>
+
     <string name="avs_title">Address Verification Service</string>
     <string name="avs_summary">Turn on to enable Address Verification Service.</string>
 
     <string name="security_code_title">Security code</string>
     <string name="security_code_summary">Turn on to enable security code verification in the payment methods screen.</string>
+
+    <string name="should_ask_for_csc_title">Should ask for CSC</string>
+    <string name="should_ask_for_csc_summary">Turn on to enable asking for the CSC when making a token payment</string>
+
+    <string name="should_ask_for_cardholder_name_title">Should ask for cardholder name</string>
+    <string name="should_ask_for_cardholder_name_summary">Turn on to enable asking for the cardholder name when making a token payment</string>
 
     <string name="should_payment_button_display_amount_title">Display amount on button</string>
     <string name="should_payment_button_display_amount_summary">Turn on to show amount on the Pay button.</string>
@@ -202,4 +215,7 @@
 
     <string name="feature_title_payment_no_ui">Card payments no UI</string>
     <string name="feature_subtitle_payment_no_ui">Card payments using card transaction service</string>
+
+    <string name="feature_title_token_payments">Token payments</string>
+    <string name="feature_subtitle_token_payments">with optionally asking for CSC and/or cardholder name</string>
 </resources>
