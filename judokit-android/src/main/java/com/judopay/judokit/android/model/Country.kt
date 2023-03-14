@@ -1,7 +1,10 @@
 package com.judopay.judokit.android.model
 
 import com.judopay.judokit.android.R
-import com.judopay.judokit.android.ui.common.POSTAL_CODE_MAX_LENGTH
+import com.judopay.judokit.android.ui.common.POSTAL_CODE_MAX_LENGTH_CA
+import com.judopay.judokit.android.ui.common.POSTAL_CODE_MAX_LENGTH_OTHER
+import com.judopay.judokit.android.ui.common.POSTAL_CODE_MAX_LENGTH_UK
+import com.judopay.judokit.android.ui.common.POSTAL_CODE_MAX_LENGTH_USA
 
 // ISO 3166-2 list of supported card form countries
 enum class Country {
@@ -41,8 +44,8 @@ val Country.translatableName: Int
 
 val Country.postcodeMaxLength: Int
     get() = when (this) {
-        Country.US -> 5
-        Country.CA -> 6
-        Country.GB,
-        Country.OTHER -> POSTAL_CODE_MAX_LENGTH
+        Country.US -> POSTAL_CODE_MAX_LENGTH_USA
+        Country.CA -> POSTAL_CODE_MAX_LENGTH_CA
+        Country.GB -> POSTAL_CODE_MAX_LENGTH_UK
+        Country.OTHER -> POSTAL_CODE_MAX_LENGTH_OTHER
     }

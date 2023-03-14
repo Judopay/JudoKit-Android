@@ -28,11 +28,19 @@ const val JUDO_KIT_VERSION = "4.1.0"
  */
 const val JUDO_API_VERSION = "6.18.0"
 
-const val POSTAL_CODE_MAX_LENGTH = 10
+const val POSTAL_CODE_MIN_LENGTH_CA = 6
+const val POSTAL_CODE_MAX_LENGTH_CA = 7
+const val POSTAL_CODE_MIN_LENGTH_UK = 5
+const val POSTAL_CODE_MAX_LENGTH_UK = 8
+const val POSTAL_CODE_MIN_LENGTH_USA = 5
+const val POSTAL_CODE_MAX_LENGTH_USA = 10
+const val POSTAL_CODE_MIN_LENGTH_OTHER = 1
+const val POSTAL_CODE_MAX_LENGTH_OTHER = 16
 
-const val REG_EX_GB_POST_CODE = "(GIR 0AA)|((([A-Z-[QVX]][0-9][0-9]?)|(([A-Z-[QVX]][A-Z-[IJZ]][0-9][0-9]?)|(([A-Z-[QVX‌​]][0-9][A-HJKSTUW])|([A-Z-[QVX]][A-Z-[IJZ]][0-9][ABEHMNPRVWXY]))))\\s?[0-9][A-Z-[C‌​IKMOV]]{2})"
-const val REG_EX_US_POST_CODE = "(^\\d{5}$)|(^\\d{5}-\\d{4}$)"
-const val REG_EX_CA_POST_CODE = "[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ][0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]"
+const val REG_EX_GB_POST_CODE = "^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}\$"
+const val REG_EX_US_POST_CODE = "^(\\d{5}(?:-\\d{4})?)\$"
+const val REG_EX_CA_POST_CODE = "^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]\$"
+const val REG_EX_OTHER_POST_CODE = "^[A-Z0-9 -]{1,16}\$"
 const val REG_EX_CARDHOLDER_NAME = "^[A-Za-z.\\-'\\s?]+\$"
 const val REG_EX_CITY = "^[A-Za-z.'\\- ]+\$"
 const val REG_EX_MOBILE_NUMBER = "^.{10,}\$"
