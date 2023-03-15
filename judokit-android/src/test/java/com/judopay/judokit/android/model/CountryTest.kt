@@ -1,6 +1,10 @@
 package com.judopay.judokit.android.model
 
 import com.judopay.judokit.android.R
+import com.judopay.judokit.android.ui.common.POSTAL_CODE_MAX_LENGTH_CA
+import com.judopay.judokit.android.ui.common.POSTAL_CODE_MAX_LENGTH_OTHER
+import com.judopay.judokit.android.ui.common.POSTAL_CODE_MAX_LENGTH_UK
+import com.judopay.judokit.android.ui.common.POSTAL_CODE_MAX_LENGTH_USA
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -56,27 +60,27 @@ internal class CountryTest {
         assertEquals(R.string.country_other, Country.OTHER.translatableName)
     }
 
-    @DisplayName("Given postCodeMaxLength is called, when country is US, then return 5")
+    @DisplayName("Given postCodeMaxLength is called, when country is US, then return 10")
     @Test
     fun returnFiveOnPostCodeMaxLengthCallWithUS() {
-        assertEquals(5, Country.US.postcodeMaxLength)
+        assertEquals(POSTAL_CODE_MAX_LENGTH_USA, Country.US.postcodeMaxLength)
     }
 
-    @DisplayName("Given postCodeMaxLength is called, when country is CA, then return 6")
+    @DisplayName("Given postCodeMaxLength is called, when country is CA, then return 7")
     @Test
     fun returnSixOnPostCodeMaxLengthCallWithCA() {
-        assertEquals(6, Country.CA.postcodeMaxLength)
+        assertEquals(POSTAL_CODE_MAX_LENGTH_CA, Country.CA.postcodeMaxLength)
     }
 
-    @DisplayName("Given postCodeMaxLength is called, when country is GB, then return 10")
+    @DisplayName("Given postCodeMaxLength is called, when country is GB, then return 8")
     @Test
     fun returnEightOnPostCodeMaxLengthCallWithGB() {
-        assertEquals(10, Country.GB.postcodeMaxLength)
+        assertEquals(POSTAL_CODE_MAX_LENGTH_UK, Country.GB.postcodeMaxLength)
     }
 
-    @DisplayName("Given postCodeMaxLength is called, when country is OTHER, then return 10")
+    @DisplayName("Given postCodeMaxLength is called, when country is OTHER, then return 16")
     @Test
     fun returnEightOnPostCodeMaxLengthCallWithOther() {
-        assertEquals(10, Country.OTHER.postcodeMaxLength)
+        assertEquals(POSTAL_CODE_MAX_LENGTH_OTHER, Country.OTHER.postcodeMaxLength)
     }
 }
