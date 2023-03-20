@@ -39,6 +39,7 @@ class Receipt(
     var acsUrl: String? = null,
     val result: String? = null,
     val message: String? = null,
+    var yourPaymentMetaData: Map<String, String>? = null,
     val acsReferenceNumber: String? = null,
     val acsSignedContent: String? = null,
     val acsRenderingType: JsonObject? = null,
@@ -78,7 +79,8 @@ fun Receipt.toJudoResult() = JudoResult(
     cardDetails,
     consumer,
     result,
-    message
+    message,
+    yourPaymentMetaData
 )
 
 fun Receipt.toCardVerificationModel() = CardVerificationModel.Builder()

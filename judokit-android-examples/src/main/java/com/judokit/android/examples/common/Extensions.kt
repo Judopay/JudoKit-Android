@@ -68,7 +68,12 @@ fun <T : Any> KProperty1<T, *>.toResultItem(classInstance: Any?): ResultItem {
         // complex objects,
         // needs to be extracted in a separate `Result` wrapper
         else -> {
-            subResult = getter.call(classInstance)?.toResult()
+            subResult = if (name == "yourPaymentMetaData") {
+                val value = getter.call(classInstance) as? Map<*, *>
+                Result(name, value?.toResultItemList(name) ?: emptyList())
+            } else {
+                getter.call(classInstance)?.toResult()
+            }
         }
     }
 
@@ -81,6 +86,16 @@ fun List<*>.toResultItemList(propName: String): List<ResultItem> {
     for (item in this) {
         val myName = "$propName ${indexOf(item)}"
         items.add(ResultItem(myName, "", item?.toResult()))
+    }
+
+    return items
+}
+
+fun Map<*, *>.toResultItemList(propName: String): List<ResultItem> {
+    val items = mutableListOf<ResultItem>()
+
+    for (item in this.entries) {
+        items.add(ResultItem(item.key as? String ?: "", item.value as? String ?: "", null))
     }
 
     return items

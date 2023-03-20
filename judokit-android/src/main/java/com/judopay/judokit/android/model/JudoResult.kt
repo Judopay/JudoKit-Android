@@ -28,5 +28,6 @@ data class JudoResult(
     val cardDetails: CardToken? = null,
     val consumer: Consumer? = null,
     val result: String? = null,
-    val message: String? = null
+    val message: String? = null,
+    val yourPaymentMetaData: Map<String, String>? = null
 ) : Parcelable
