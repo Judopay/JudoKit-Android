@@ -37,6 +37,12 @@ fun <T : Any> KProperty1<T, *>.toResultItem(classInstance: Any?): ResultItem {
     var subResult: Result? = null
     var propValue = ""
 
+    fun getPropValuePlaceholder(value: Any?) = if (value != null) {
+        "(0 elements)"
+    } else {
+        "null"
+    }
+
     when (returnType.classifier) {
         String::class,
         Date::class,
@@ -55,13 +61,20 @@ fun <T : Any> KProperty1<T, *>.toResultItem(classInstance: Any?): ResultItem {
             val items = value?.toResultItemList(propName)
 
             if (items.isNullOrEmpty()) {
-                propValue = if (items != null) {
-                    "(0 elements)"
-                } else {
-                    "null"
-                }
+                propValue = getPropValuePlaceholder(value)
             } else {
                 subResult = Result(propName, items)
+            }
+        }
+
+        Map::class -> {
+            val value = getter.call(classInstance) as? Map<*, *>
+            val items = value?.toResultItemList(name)
+
+            if (items.isNullOrEmpty()) {
+                propValue = getPropValuePlaceholder(value)
+            } else {
+                subResult = Result(name, items)
             }
         }
 
@@ -81,6 +94,18 @@ fun List<*>.toResultItemList(propName: String): List<ResultItem> {
     for (item in this) {
         val myName = "$propName ${indexOf(item)}"
         items.add(ResultItem(myName, "", item?.toResult()))
+    }
+
+    return items
+}
+
+fun Map<*, *>.toResultItemList(propName: String): List<ResultItem> {
+    val items = mutableListOf<ResultItem>()
+
+    for (item in this.entries) {
+        val key = item.key as? String ?: ""
+        val value = item.value as? String ?: ""
+        items.add(ResultItem(key, value))
     }
 
     return items

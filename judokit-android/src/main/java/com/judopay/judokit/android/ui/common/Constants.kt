@@ -26,7 +26,7 @@ const val JUDO_KIT_VERSION = "4.1.0"
 /**
  *  Constant to store the Judo API version, injected in every Judo API request headers
  */
-const val JUDO_API_VERSION = "6.18.0"
+const val JUDO_API_VERSION = "6.19.0"
 
 const val POSTAL_CODE_MIN_LENGTH_CA = 6
 const val POSTAL_CODE_MAX_LENGTH_CA = 7
