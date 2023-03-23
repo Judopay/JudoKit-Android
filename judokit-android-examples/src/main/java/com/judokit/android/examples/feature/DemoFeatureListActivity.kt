@@ -475,7 +475,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             return Reference.Builder()
                 .setConsumerReference("my-unique-ref")
                 .setPaymentReference(paymentReference)
-                .setMetaData(Bundle().apply { this.putString("exampleMetaKey", "exampleMetaValue") })
+                .setMetaData(Bundle().apply { putString("exampleMetaKey", "exampleMetaValue") })
                 .build()
         }
 

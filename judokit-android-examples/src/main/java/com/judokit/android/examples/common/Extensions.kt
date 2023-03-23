@@ -37,6 +37,12 @@ fun <T : Any> KProperty1<T, *>.toResultItem(classInstance: Any?): ResultItem {
     var subResult: Result? = null
     var propValue = ""
 
+    fun getPropValuePlaceholder(value: Any?) = if (value != null) {
+        "(0 elements)"
+    } else {
+        "null"
+    }
+
     when (returnType.classifier) {
         String::class,
         Date::class,
@@ -55,25 +61,27 @@ fun <T : Any> KProperty1<T, *>.toResultItem(classInstance: Any?): ResultItem {
             val items = value?.toResultItemList(propName)
 
             if (items.isNullOrEmpty()) {
-                propValue = if (items != null) {
-                    "(0 elements)"
-                } else {
-                    "null"
-                }
+                propValue = getPropValuePlaceholder(value)
             } else {
                 subResult = Result(propName, items)
+            }
+        }
+
+        Map::class -> {
+            val value = getter.call(classInstance) as? Map<*, *>
+            val items = value?.toResultItemList(name)
+
+            if (items.isNullOrEmpty()) {
+                propValue = getPropValuePlaceholder(value)
+            } else {
+                subResult = Result(name, items)
             }
         }
 
         // complex objects,
         // needs to be extracted in a separate `Result` wrapper
         else -> {
-            subResult = if (name == "yourPaymentMetaData") {
-                val value = getter.call(classInstance) as? Map<*, *>
-                Result(name, value?.toResultItemList(name) ?: emptyList())
-            } else {
-                getter.call(classInstance)?.toResult()
-            }
+            subResult = getter.call(classInstance)?.toResult()
         }
     }
 
@@ -95,7 +103,9 @@ fun Map<*, *>.toResultItemList(propName: String): List<ResultItem> {
     val items = mutableListOf<ResultItem>()
 
     for (item in this.entries) {
-        items.add(ResultItem(item.key as? String ?: "", item.value as? String ?: "", null))
+        val key = item.key as? String ?: ""
+        val value = item.value as? String ?: ""
+        items.add(ResultItem(key, value))
     }
 
     return items
