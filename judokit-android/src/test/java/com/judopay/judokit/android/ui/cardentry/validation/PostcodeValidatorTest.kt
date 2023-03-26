@@ -92,7 +92,7 @@ internal class PostcodeValidatorTest {
     }
 
     @Test
-    @DisplayName("validate post code for CA")
+    @DisplayName("Given the country selected is CA and zipcode is valid, then validation passes")
     fun validateCAPostCode() {
         validator.country = Country.CA
         assertEquals(
