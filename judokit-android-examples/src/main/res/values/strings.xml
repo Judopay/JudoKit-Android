@@ -146,6 +146,9 @@
     <string name="google_pay_country_code_title">Country code</string>
     <string name="google_pay_country_code_summary">A country code in ISO 3166–1 alpha-2 format</string>
 
+    <string name="google_pay_merchant_name_title">Merchant name</string>
+    <string name="google_pay_merchant_name_summary">The Google Pay merchant name.</string>
+
     <string name="billing_address_title">Billing address</string>
     <string name="billing_address_summary">Billing address format required to complete the transaction.</string>
 

@@ -318,6 +318,13 @@
             app:title="@string/google_pay_is_production_title" />
 
         <EditTextPreference
+            app:defaultValue=""
+            app:iconSpaceReserved="false"
+            app:key="google_pay_merchant_name"
+            app:summary="@string/google_pay_merchant_name_summary"
+            app:title="@string/google_pay_merchant_name_title" />
+
+        <EditTextPreference
             app:defaultValue="GB"
             app:iconSpaceReserved="false"
             app:key="google_pay_country_code"

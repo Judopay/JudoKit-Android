@@ -506,6 +506,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             val gPayEnv =
                 if (isProductionGooglePayEnv) GooglePayEnvironment.PRODUCTION else GooglePayEnvironment.TEST
 
+            val merchantName = sharedPreferences.getString("google_pay_merchant_name", null)
             val billingAddress = sharedPreferences.getString("billing_address", "NONE")
             val isShippingAddressRequired =
                 sharedPreferences.getBoolean("is_shipping_address_required", false)
@@ -545,6 +546,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 .setShippingAddressParameters(shippingAddressParams)
                 .setAllowPrepaidCards(allowPrepaidCards)
                 .setAllowCreditCards(allowCreditCards)
+                .setMerchantName(merchantName?.ifBlank { null })
                 .build()
         }
 
