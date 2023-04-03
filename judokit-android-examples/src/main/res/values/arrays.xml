@@ -159,6 +159,28 @@
         <item>FULL: Name, street address, locality, region, country code, and postal code.</item>
     </string-array>
 
+    <string-array name="google_pay_total_price_status_values">
+        <item>FINAL</item>
+        <item>ESTIMATED</item>
+        <item>NOT_CURRENTLY_KNOWN</item>
+    </string-array>
+
+    <string-array name="google_pay_total_price_status_entries">
+        <item>Final</item>
+        <item>Estimated</item>
+        <item>Not currently known</item>
+    </string-array>
+
+    <string-array name="google_pay_checkout_option_values">
+        <item>DEFAULT</item>
+        <item>COMPLETE_IMMEDIATE_PURCHASE</item>
+    </string-array>
+
+    <string-array name="google_pay_checkout_option_entries">
+        <item>Default</item>
+        <item>Complete immediate purchase</item>
+    </string-array>
+
     <string-array name="three_ds_two_challenge_request_indicator_values">
         <item>DON_T_SET</item>
         <item>NO_PREFERENCE</item>

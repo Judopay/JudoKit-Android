@@ -71,7 +71,9 @@ import com.judopay.judokit.android.model.USER_CANCELLED
 import com.judopay.judokit.android.model.UiConfiguration
 import com.judopay.judokit.android.model.googlepay.GooglePayAddressFormat
 import com.judopay.judokit.android.model.googlepay.GooglePayBillingAddressParameters
+import com.judopay.judokit.android.model.googlepay.GooglePayCheckoutOption
 import com.judopay.judokit.android.model.googlepay.GooglePayEnvironment
+import com.judopay.judokit.android.model.googlepay.GooglePayPriceStatus
 import com.judopay.judokit.android.model.googlepay.GooglePayShippingAddressParameters
 import com.judopay.judokit.android.ui.common.BR_PBBA_RESULT
 import com.judopay.judokit.android.ui.common.PBBA_RESULT
@@ -518,27 +520,38 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 sharedPreferences.getBoolean("is_email_address_required", false)
             val allowPrepaidCards = sharedPreferences.getBoolean("allow_prepaid_cards", true)
             val allowCreditCards = sharedPreferences.getBoolean("allow_credit_cards", true)
-            val countryCode =
-                sharedPreferences.getString("google_pay_country_code", "GB")
+            val countryCode = sharedPreferences.getString("google_pay_country_code", "GB")
+            val transactionId = sharedPreferences.getString("google_pay_transaction_id", null)
+            val totalPriceStatus = sharedPreferences.getString("google_pay_total_price_status", "FINAL")
+            val totalPriceLabel = sharedPreferences.getString("google_pay_total_price_label", null)
+            val checkoutOption = sharedPreferences.getString("google_pay_checkout_option", null)
+            val shippingAddressAllowedCountries =
+                sharedPreferences.getString("google_pay_shipping_address_allowed_countries", null)?.split(",")?.toTypedArray()
 
             val isBillingAddressRequired = billingAddress != null && billingAddress != "NONE"
 
             if (isBillingAddressRequired) {
                 billingAddressParams = GooglePayBillingAddressParameters(
-                    format = GooglePayAddressFormat.valueOf(billingAddress!!),
+                    format = GooglePayAddressFormat.valueOf(billingAddress ?: "FULL"),
                     phoneNumberRequired = isBillingAddressPhoneNumberRequired
                 )
             }
 
             if (isShippingAddressRequired) {
                 shippingAddressParams = GooglePayShippingAddressParameters(
+                    allowedCountryCodes = shippingAddressAllowedCountries,
                     phoneNumberRequired = isShippingAddressPhoneNumberRequired
                 )
             }
 
             return GooglePayConfiguration.Builder()
-                .setTransactionCountryCode(countryCode)
                 .setEnvironment(gPayEnv)
+                .setMerchantName(merchantName?.ifBlank { null })
+                .setTransactionCountryCode(countryCode)
+                .setTransactionId(transactionId)
+                .setTotalPriceStatus(if (totalPriceStatus != null) GooglePayPriceStatus.valueOf(totalPriceStatus) else null)
+                .setTotalPriceLabel(totalPriceLabel)
+                .setCheckoutOption(if (checkoutOption != null) GooglePayCheckoutOption.valueOf(checkoutOption) else null)
                 .setIsEmailRequired(isEmailAddressRequired)
                 .setIsBillingAddressRequired(isBillingAddressRequired)
                 .setBillingAddressParameters(billingAddressParams)
@@ -546,7 +559,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 .setShippingAddressParameters(shippingAddressParams)
                 .setAllowPrepaidCards(allowPrepaidCards)
                 .setAllowCreditCards(allowCreditCards)
-                .setMerchantName(merchantName?.ifBlank { null })
                 .build()
         }
 
