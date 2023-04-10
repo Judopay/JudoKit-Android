@@ -34,6 +34,16 @@ enum class CardNetwork : Parcelable {
         private val REGEX_JCB = "^(?:35\\d{0,2})\\d{0,12}".toRegex()
         private val REGEX_CHINA_UNION_PAY = "^(62|81)\\d{0,14}".toRegex()
 
+        // The card scheme for a card number. This is the name of the card scheme as it appears on the card.
+        // As it is returned by the API in the cardDetails object, it is not localized.
+        private const val CARD_SCHEME_VISA = "Visa"
+        private const val CARD_SCHEME_MASTERCARD = "Mastercard"
+        private const val CARD_SCHEME_MAESTRO = "Maestro"
+        private const val CARD_SCHEME_AMEX = "AMEX"
+        private const val CARD_SCHEME_CHINA_UNION_PAY = "China Union Pay"
+        private const val CARD_SCHEME_JCB = "JCB"
+        private const val CARD_SCHEME_DISCOVER = "Discover"
+
         /**
          * A method that returns the card network based on the provided card number.
          * @param number - the provided card number
@@ -60,7 +70,7 @@ enum class CardNetwork : Parcelable {
          * @return One of the predefined card network type.
          * https://docs.judopay.com/Content/Developer%20Tools/Codes.htm
          */
-        fun withIdentifier(id: Int): CardNetwork = when (id) {
+        fun withIdentifier(id: Int, scheme: String? = null): CardNetwork = when (id) {
             1, /* VISA */
             3, /* VISA_ELECTRON */
             11, /* VISA_DEBIT */
@@ -73,7 +83,18 @@ enum class CardNetwork : Parcelable {
             9 -> JCB
             14 -> DISCOVER
             17 -> DINERS_CLUB
-            else -> OTHER
+
+            // As a fallback, if the card scheme is provided, use it to determine the card network.
+            else -> when (scheme) {
+                CARD_SCHEME_VISA -> VISA
+                CARD_SCHEME_MASTERCARD -> MASTERCARD
+                CARD_SCHEME_AMEX -> AMEX
+                CARD_SCHEME_MAESTRO -> MAESTRO
+                CARD_SCHEME_CHINA_UNION_PAY -> CHINA_UNION_PAY
+                CARD_SCHEME_JCB -> JCB
+                CARD_SCHEME_DISCOVER -> DISCOVER
+                else -> OTHER
+            }
         }
     }
 }

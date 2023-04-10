@@ -152,13 +152,14 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
                     val result = data?.parcelable<JudoResult>(JUDO_RESULT)
                     val token = result?.cardDetails?.token
                     val type = result?.cardDetails?.type
+                    val scheme = result?.cardDetails?.scheme
                     val lastFour = result?.cardDetails?.lastFour
                     if (token.isNullOrBlank()) {
                         Toast.makeText(this, "Card token not found", Toast.LENGTH_SHORT).show()
                     } else {
                         transactionDetailsBuilder
                             .setCardToken(token)
-                            .setCardType(CardNetwork.withIdentifier(type ?: 0))
+                            .setCardType(CardNetwork.withIdentifier(type ?: 0, scheme))
                             .setCardLastFour(lastFour)
                     }
                     handleState(ActivityState.Idle)

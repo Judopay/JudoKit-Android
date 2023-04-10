@@ -6,8 +6,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CardEntryOptions(
-    val fromPaymentMethods: Boolean = false,
+    val isPresentedFromPaymentMethods: Boolean = false,
     val shouldDisplayBillingDetails: Boolean = false,
-    val shouldDisplaySecurityCode: CardNetwork? = null,
-    val addCardPressed: Boolean = false
+    val shouldDisplaySecurityCode: Boolean = false,
+    val cardNetwork: CardNetwork? = null,
+    val isAddingNewCard: Boolean = false
 ) : Parcelable

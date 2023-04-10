@@ -32,7 +32,7 @@ fun PaymentMethodSavedCardItem.toPaymentCardViewModel() = PaymentCardViewModel(
 )
 
 fun CardToken.toTokenizedCardEntity(context: Context, cardholderName: String): TokenizedCardEntity {
-    val network = CardNetwork.withIdentifier(type)
+    val network = CardNetwork.withIdentifier(type, scheme)
     val patterns = CardPattern.values()
     return TokenizedCardEntity(
         token = token ?: "",

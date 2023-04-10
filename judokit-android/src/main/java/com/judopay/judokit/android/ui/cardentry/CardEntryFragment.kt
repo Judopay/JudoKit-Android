@@ -71,20 +71,6 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
 
         viewModel = ViewModelProvider(this, factory)[CardEntryViewModel::class.java]
 
-        if ((judo.paymentWidgetType.isTokenPayment || (cardEntryOptions != null && cardEntryOptions.fromPaymentMethods && !cardEntryOptions.addCardPressed)) && (cardEntryOptions?.shouldDisplaySecurityCode != null || judo.uiConfiguration.shouldAskForCSC || judo.uiConfiguration.shouldAskForCardholderName)) {
-            val fieldsToDisplay = mutableListOf<CardDetailsFieldType>()
-            if (cardEntryOptions?.shouldDisplaySecurityCode != null || judo.uiConfiguration.shouldAskForCSC) {
-                fieldsToDisplay.add(CardDetailsFieldType.SECURITY_NUMBER)
-            }
-            if (judo.uiConfiguration.shouldAskForCardholderName) {
-                fieldsToDisplay.add(CardDetailsFieldType.HOLDER_NAME)
-            }
-            viewModel.send(CardEntryAction.EnableFormFields(fieldsToDisplay))
-        } else if (judo.paymentWidgetType.isTokenPayment && !judo.uiConfiguration.shouldAskForCSC && !judo.uiConfiguration.shouldAskForCardholderName) {
-            viewModel.send(CardEntryAction.EnableFormFields(emptyList()))
-            viewModel.send(CardEntryAction.SubmitCardEntryForm)
-        }
-
         viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
         viewModel.judoPaymentResult.observe(viewLifecycleOwner) { dispatchResult(it) }
         viewModel.cardEntryToPaymentMethodResult.observe(

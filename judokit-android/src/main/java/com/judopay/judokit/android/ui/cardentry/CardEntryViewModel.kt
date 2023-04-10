@@ -17,6 +17,7 @@ import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.formatted
+import com.judopay.judokit.android.model.isTokenPayment
 import com.judopay.judokit.android.model.toInputModel
 import com.judopay.judokit.android.service.CardTransactionManager
 import com.judopay.judokit.android.service.CardTransactionManagerResultListener
@@ -108,7 +109,7 @@ class CardEntryViewModel(
     private var navigation: CardEntryNavigation = CardEntryNavigation.Card
 
     private var enabledCardDetailsFields: List<CardDetailsFieldType> =
-        if (cardEntryOptions.shouldDisplaySecurityCode != null) {
+        if (cardEntryOptions.shouldDisplaySecurityCode) {
             mutableListOf(CardDetailsFieldType.SECURITY_NUMBER)
         } else {
             val fields = mutableListOf(
@@ -163,7 +164,7 @@ class CardEntryViewModel(
             PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
             PaymentWidgetType.PAYMENT_METHODS,
             PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS ->
-                if (cardEntryOptions.addCardPressed) {
+                if (cardEntryOptions.isAddingNewCard) {
                     R.string.save_card
                 } else {
                     R.string.pay_now
@@ -188,20 +189,34 @@ class CardEntryViewModel(
         }
 
     init {
-        if (cardEntryOptions.fromPaymentMethods) {
-            val enableFormFields = mutableListOf<CardDetailsFieldType>()
-            if (cardEntryOptions.shouldDisplaySecurityCode != null || judo.uiConfiguration.shouldAskForCSC) {
-                enableFormFields.add(CardDetailsFieldType.SECURITY_NUMBER)
+
+        val uiConfiguration = judo.uiConfiguration
+        val isTokenPayment = judo.paymentWidgetType.isTokenPayment
+
+        val cardholderNameAndOrCSCFields = listOfNotNull(
+            CardDetailsFieldType.SECURITY_NUMBER.takeIf { uiConfiguration.shouldAskForCSC || cardEntryOptions.shouldDisplaySecurityCode },
+            CardDetailsFieldType.HOLDER_NAME.takeIf { uiConfiguration.shouldAskForCardholderName }
+        )
+
+        // The form is invoked from Payment Methods Screen
+        // hence the user is either saving a card or
+        // the user may be asked to provide CSC and/or Cardholder Name and/or Billing information
+        if (cardEntryOptions.isPresentedFromPaymentMethods && !cardEntryOptions.isAddingNewCard) {
+            // ask user for CSC and/or Cardholder Name
+            if (cardholderNameAndOrCSCFields.isNotEmpty()) {
+                send(CardEntryAction.EnableFormFields(cardholderNameAndOrCSCFields))
             }
-            if (judo.uiConfiguration.shouldAskForCardholderName) {
-                enableFormFields.add(CardDetailsFieldType.HOLDER_NAME)
-            }
-            if (enableFormFields.isNotEmpty()) {
-                send(CardEntryAction.EnableFormFields(enableFormFields))
-            } else if (cardEntryOptions.shouldDisplayBillingDetails) {
+            // Ask user for Billing Information
+            else if (cardEntryOptions.shouldDisplayBillingDetails) {
                 navigationObserver.postValue(CardEntryNavigation.Billing)
                 navigation = CardEntryNavigation.Billing
             }
+        }
+        // The form is invoked from outside Payment Methods Screen
+        // hence the user will be presented with card details input form
+        // and/or Billing information form
+        else if (isTokenPayment && cardholderNameAndOrCSCFields.isNotEmpty()) {
+            send(CardEntryAction.EnableFormFields(cardholderNameAndOrCSCFields))
         }
 
         buildModel(isLoading = false, isFormValid = false)
@@ -225,7 +240,7 @@ class CardEntryViewModel(
                     isLoading = false,
                     isFormValid = action.isFormValid,
                     isBillingFormValid = isBillingFormValid,
-                    cardNetwork = cardEntryOptions.shouldDisplaySecurityCode
+                    cardNetwork = cardEntryOptions.cardNetwork
                 )
             }
             is CardEntryAction.SubmitCardEntryForm -> {
@@ -259,7 +274,7 @@ class CardEntryViewModel(
                 buildModel(
                     isLoading = false,
                     isFormValid = false,
-                    cardNetwork = cardEntryOptions.shouldDisplaySecurityCode
+                    cardNetwork = cardEntryOptions.cardNetwork
                 )
             }
             is CardEntryAction.PressBackButton -> {
@@ -286,7 +301,7 @@ class CardEntryViewModel(
     }
 
     private fun sendRequest() = viewModelScope.launch {
-        if (cardEntryOptions.fromPaymentMethods && !cardEntryOptions.addCardPressed) {
+        if (cardEntryOptions.isPresentedFromPaymentMethods && !cardEntryOptions.isAddingNewCard) {
             with(billingDetailsModel) {
                 cardEntryToPaymentMethodResult.postValue(
                     TransactionDetails.Builder()
@@ -376,7 +391,7 @@ class CardEntryViewModel(
             .setPostalCode(judo.address?.postCode)
             .setState(judo.address?.state)
             .setCardToken(judo.cardToken?.token)
-            .setCardType(CardNetwork.withIdentifier(judo.cardToken?.type ?: 0))
+            .setCardType(CardNetwork.withIdentifier(judo.cardToken?.type ?: 0, judo.cardToken?.scheme))
             .setCardLastFour(judo.cardToken?.lastFour)
             .setSecurityNumber(securityNumber)
             .setCardHolderName(cardholderName)
@@ -389,7 +404,7 @@ class CardEntryViewModel(
         isBillingFormValid: Boolean = false,
         cardNetwork: CardNetwork? = null
     ) {
-        val isInvokedFromPaymentMethods = cardEntryOptions.fromPaymentMethods && cardEntryOptions.addCardPressed
+        val isInvokedFromPaymentMethods = cardEntryOptions.isPresentedFromPaymentMethods && cardEntryOptions.isAddingNewCard
         if (judo.uiConfiguration.shouldAskForBillingInformation && !isInvokedFromPaymentMethods) {
             inputModel.buttonState = when {
                 isFormValid -> ButtonState.Enabled(continueButtonText, amount)
@@ -418,7 +433,7 @@ class CardEntryViewModel(
         )
         val shouldDisplayScanButton = false
         val shouldDisplayBackButton =
-            (cardEntryOptions.fromPaymentMethods && (cardEntryOptions.shouldDisplaySecurityCode != null || judo.uiConfiguration.shouldAskForCardholderName)) || !cardEntryOptions.fromPaymentMethods
+            (cardEntryOptions.isPresentedFromPaymentMethods && (cardEntryOptions.shouldDisplaySecurityCode || judo.uiConfiguration.shouldAskForCardholderName)) || !cardEntryOptions.isPresentedFromPaymentMethods
         model.postValue(
             CardEntryFragmentModel(
                 formModel,

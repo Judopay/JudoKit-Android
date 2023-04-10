@@ -276,7 +276,7 @@ internal class CardEntryViewModelTest {
                 getJudo(PaymentWidgetType.PAYMENT_METHODS),
                 cardTransactionManager,
                 repository,
-                CardEntryOptions(fromPaymentMethods = true, shouldDisplaySecurityCode = CardNetwork.VISA),
+                CardEntryOptions(isPresentedFromPaymentMethods = true, shouldDisplaySecurityCode = true, cardNetwork = CardNetwork.VISA),
                 application
             )
             sut.cardEntryToPaymentMethodResult.observeForever(cardEntryToPaymentMethodResultSpy)
@@ -296,7 +296,7 @@ internal class CardEntryViewModelTest {
             getJudo(PaymentWidgetType.PAYMENT_METHODS),
             cardTransactionManager,
             repository,
-            CardEntryOptions(fromPaymentMethods = true, addCardPressed = true),
+            CardEntryOptions(isPresentedFromPaymentMethods = true, isAddingNewCard = true),
             application
         )
         sut.model.observeForever(modelSpy)
@@ -314,7 +314,7 @@ internal class CardEntryViewModelTest {
             getJudo(PaymentWidgetType.GOOGLE_PAY),
             cardTransactionManager,
             repository,
-            CardEntryOptions(fromPaymentMethods = true, addCardPressed = true),
+            CardEntryOptions(isPresentedFromPaymentMethods = true, isAddingNewCard = true),
             application
         )
         sut.model.observeForever(modelSpy)
@@ -332,7 +332,7 @@ internal class CardEntryViewModelTest {
             getJudo(PaymentWidgetType.PRE_AUTH_GOOGLE_PAY),
             cardTransactionManager,
             repository,
-            CardEntryOptions(fromPaymentMethods = true, addCardPressed = true),
+            CardEntryOptions(isPresentedFromPaymentMethods = true, isAddingNewCard = true),
             application
         )
         sut.model.observeForever(modelSpy)
@@ -350,7 +350,7 @@ internal class CardEntryViewModelTest {
             getJudo(PaymentWidgetType.PAY_BY_BANK_APP),
             cardTransactionManager,
             repository,
-            CardEntryOptions(fromPaymentMethods = true, addCardPressed = true),
+            CardEntryOptions(isPresentedFromPaymentMethods = true, isAddingNewCard = true),
             application
         )
         sut.model.observeForever(modelSpy)
@@ -480,7 +480,7 @@ internal class CardEntryViewModelTest {
             PaymentWidgetType.CARD_PAYMENT,
             UiConfiguration.Builder().setShouldAskForCSC(true).setShouldAskForCardholderName(true).build()
         )
-        sut = CardEntryViewModel(judo, cardTransactionManager, repository, CardEntryOptions(fromPaymentMethods = true), application)
+        sut = CardEntryViewModel(judo, cardTransactionManager, repository, CardEntryOptions(isPresentedFromPaymentMethods = true), application)
         sut.model.observeForever(modelSpy)
 
         val slots = mutableListOf<CardEntryFragmentModel>()
@@ -517,7 +517,7 @@ internal class CardEntryViewModelTest {
             getJudo(PaymentWidgetType.GOOGLE_PAY),
             cardTransactionManager,
             repository,
-            CardEntryOptions(fromPaymentMethods = true, shouldDisplaySecurityCode = CardNetwork.VISA),
+            CardEntryOptions(isPresentedFromPaymentMethods = true, shouldDisplaySecurityCode = true, cardNetwork = CardNetwork.VISA),
             application
         )
         sut.model.observeForever(modelSpy)
