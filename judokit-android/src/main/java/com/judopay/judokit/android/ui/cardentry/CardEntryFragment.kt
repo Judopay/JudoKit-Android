@@ -29,9 +29,7 @@ import com.judopay.judokit.android.judo
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.isCardPaymentWidget
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
-import com.judopay.judokit.android.model.isTokenPayment
 import com.judopay.judokit.android.service.CardTransactionManager
-import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
 import com.judopay.judokit.android.ui.common.parcelable
