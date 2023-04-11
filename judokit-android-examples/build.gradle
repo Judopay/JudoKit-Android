@@ -29,8 +29,8 @@ android {
         applicationId "com.judokit.android.examples"
         minSdk 21
         targetSdk 33
-        versionCode 4101
-        versionName "4.1.0 (1) -" + getGitHash()
+        versionCode 4102
+        versionName "4.1.0 (2) -" + getGitHash()
         testInstrumentationRunner "com.judokit.android.examples.test.CucumberRunner"
         vectorDrawables {
             useSupportLibrary true
@@ -81,7 +81,7 @@ dependencies {
     implementation project(":judokit-android")
 
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation "androidx.core:core-ktx:$androidx_core_version"
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

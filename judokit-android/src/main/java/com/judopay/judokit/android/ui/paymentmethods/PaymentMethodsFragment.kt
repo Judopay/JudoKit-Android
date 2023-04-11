@@ -241,10 +241,10 @@ class PaymentMethodsFragment : Fragment() {
             R.id.action_paymentMethodsFragment_to_cardEntryFragment,
             bundleOf(
                 CARD_ENTRY_OPTIONS to CardEntryOptions(
-                    fromPaymentMethods = true,
+                    isPresentedFromPaymentMethods = true,
                     shouldDisplayBillingDetails = false,
-                    shouldDisplaySecurityCode = null,
-                    addCardPressed = true
+                    shouldDisplaySecurityCode = false,
+                    isAddingNewCard = true
                 )
             )
         )

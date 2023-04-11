@@ -1,7 +1,6 @@
 package com.judokit.android.examples.test.robots
 
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
@@ -16,7 +15,6 @@ import com.judokit.android.examples.test.model.TestConfiguration
 import com.judokit.android.examples.test.model.TestData
 import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.PaymentMethod
-import org.hamcrest.CoreMatchers.anything
 
 private const val TAG_REQUIRE_3DS = "@require-3ds-config"
 private const val TAG_REQUIRE_NON_3DS = "@require-non-3ds-config"
