@@ -8,6 +8,7 @@ import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
+import com.judopay.judokit.android.model.SubProductInfo
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
@@ -295,5 +296,22 @@ internal class JudoBuilderTest {
         judoBuilder.setCardToken(cardToken)
 
         assertThat(judoBuilder.build().toString()).contains(", cardToken=CardToken(cardLastfour=1234, cardToken=token, cardType=2)")
+    }
+
+    @Test
+    fun `Given subProductInfo is not set, then apply Unknown value during build`() {
+        val judo = judoBuilder.build()
+        assertThat(judo.subProductInfo).isNotNull()
+        assertThat(judo.subProductInfo).isInstanceOf(SubProductInfo.Unknown::class.java)
+    }
+
+    @Test
+    fun `Given subProductInfo is set to ReactNative, then apply that value during build`() {
+        judoBuilder.setSubProductInfo(SubProductInfo.ReactNative("4.0.0"))
+
+        val judo = judoBuilder.build()
+        assertThat(judo.subProductInfo).isNotNull()
+        assertThat(judo.subProductInfo).isInstanceOf(SubProductInfo.ReactNative::class.java)
+        assertThat((judo.subProductInfo as SubProductInfo.ReactNative).version).isEqualTo("4.0.0")
     }
 }

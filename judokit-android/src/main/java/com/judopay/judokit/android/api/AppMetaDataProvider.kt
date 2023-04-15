@@ -10,9 +10,9 @@ import com.judopay.judokit.android.ui.common.JUDO_KIT_VERSION
 class AppMetaDataProvider(context: Context, subProductInfo: SubProductInfo) {
 
     object SystemInfo {
-        val androidVersionString = Build.VERSION.RELEASE ?: ""
-        val deviceManufacturer = Build.MANUFACTURER ?: ""
-        val deviceModel = Build.MODEL ?: ""
+        val androidVersionString: String? = Build.VERSION.RELEASE
+        val deviceManufacturer: String? = Build.MANUFACTURER
+        val deviceModel: String? = Build.MODEL
     }
 
     private val applicationContext = context.applicationContext
