@@ -1,11 +1,17 @@
 package com.judopay.judokit.android.api.interceptor
 
+import android.content.Context
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.util.Base64
 import com.judopay.judokit.android.api.AppMetaDataProvider
 import com.judopay.judokit.android.api.model.BasicAuthorization
+import com.judopay.judokit.android.model.SubProductInfo
+import com.judopay.judokit.android.ui.common.JUDO_API_VERSION
 import com.judopay.judokit.android.ui.common.JUDO_KIT_VERSION
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -20,10 +26,7 @@ import org.junit.jupiter.api.Test
 import java.nio.charset.StandardCharsets
 
 internal class ApiHeadersInterceptorTest {
-
-    private val authorization =
-        BasicAuthorization.Builder().setApiToken("token").setApiSecret("secret")
-    private val appMetadataProvider = mockk<AppMetaDataProvider>(relaxed = true)
+    private val authorization = BasicAuthorization.Builder().setApiToken("token").setApiSecret("secret")
     private val okHttpClient = OkHttpClient.Builder()
     private val mockWebServer = MockWebServer()
 
@@ -39,8 +42,23 @@ internal class ApiHeadersInterceptorTest {
 
         mockWebServer.start()
         mockWebServer.enqueue(MockResponse())
-        val sut = ApiHeadersInterceptor(authorization.build(), appMetadataProvider)
+
+        mockkObject(AppMetaDataProvider.SystemInfo)
+        every { AppMetaDataProvider.SystemInfo.androidVersionString } returns "13.0"
+        every { AppMetaDataProvider.SystemInfo.deviceManufacturer } returns "Google"
+        every { AppMetaDataProvider.SystemInfo.deviceModel } returns "Pixel 7"
+
+        val sut = ApiHeadersInterceptor(authorization.build(), createAppMetadataProvider())
         okHttpClient.addInterceptor(sut)
+    }
+
+    private fun createAppMetadataProvider(subProductInfo: SubProductInfo = SubProductInfo.Unknown): AppMetaDataProvider {
+        val packageManagerMock = mockk<PackageManager>(relaxed = true)
+        every { packageManagerMock.getApplicationLabel(any()) } returns "Test application"
+        every { packageManagerMock.getPackageInfo(any<String>(), 0) } returns PackageInfo().apply { this.versionName = "1.0" }
+        val mockContext = mockk<Context>(relaxed = true)
+        every { mockContext.applicationContext.packageManager } returns packageManagerMock
+        return AppMetaDataProvider(mockContext, subProductInfo)
     }
 
     @AfterEach
@@ -89,18 +107,18 @@ internal class ApiHeadersInterceptorTest {
 
     @DisplayName("Given request is intercepted, when resource is transactions, then add api version header")
     @Test
-    fun add560ApiVersionHeader() {
-//        val recordedRequest = makeRequest("/")
-//
-//        assertEquals(
-//            "5.7.0",
-//            recordedRequest.getHeader("Api-Version")
-//        )
+    fun addJudoApiVersionHeader() {
+        val recordedRequest = makeRequest("/")
+
+        assertEquals(
+            JUDO_API_VERSION,
+            recordedRequest.getHeader("Api-Version")
+        )
     }
 
     @DisplayName("Given request is intercepted, when resource is bank, then add api version header")
     @Test
-    fun add2000ApiVersionHeader() {
+    fun addBankApiVersionHeader() {
         val recordedRequest = makeRequest("/order/bank/sale")
 
         assertEquals(
@@ -131,15 +149,28 @@ internal class ApiHeadersInterceptorTest {
         )
     }
 
-    @DisplayName("Given request is intercepted, then add user agent header")
+    @DisplayName("Given request is intercepted, then add user agent header with no sub product")
     @Test
-    fun addUserAgentHeader() {
-        every { appMetadataProvider.userAgent } returns "userAgent"
+    fun addUserAgentHeaderNoSubProduct() {
+        val recordedRequest = makeRequest("/")
+
+        assertEquals(
+            "JudoKit-Android/$JUDO_KIT_VERSION Android/13.0 Test application/1.0 Google Pixel 7",
+            recordedRequest.getHeader("User-Agent")
+        )
+    }
+
+    @DisplayName("Given request is intercepted, then add user agent header with ReactNative sub product")
+    @Test
+    fun addUserAgentHeaderWithReactNativeSubProduct() {
+        val appMetadataProvider = createAppMetadataProvider(SubProductInfo.ReactNative("4.0.0"))
+        okHttpClient.interceptors().clear()
+        okHttpClient.addInterceptor(ApiHeadersInterceptor(authorization.build(), appMetadataProvider))
 
         val recordedRequest = makeRequest("/")
 
         assertEquals(
-            appMetadataProvider.userAgent,
+            "JudoKit-Android/$JUDO_KIT_VERSION (JudoKit-ReactNative/4.0.0) Android/13.0 Test application/1.0 Google Pixel 7",
             recordedRequest.getHeader("User-Agent")
         )
     }

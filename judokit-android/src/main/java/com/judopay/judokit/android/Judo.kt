@@ -17,6 +17,7 @@ import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.PrimaryAccountDetails
 import com.judopay.judokit.android.model.Reference
 import com.judopay.judokit.android.model.ScaExemption
+import com.judopay.judokit.android.model.SubProductInfo
 import com.judopay.judokit.android.model.UiConfiguration
 import com.judopay.judokit.android.ui.common.REGEX_JUDO_ID
 import kotlinx.parcelize.Parcelize
@@ -79,7 +80,8 @@ class Judo internal constructor(
     val threeDSTwoMessageVersion: String,
     val delayedAuthorisation: Boolean? = null,
     val cardToken: CardToken? = null,
-    val cardSecurityCode: String? = null
+    val cardSecurityCode: String? = null,
+    val subProductInfo: SubProductInfo = SubProductInfo.Unknown
 ) : Parcelable {
 
     /**
@@ -111,6 +113,7 @@ class Judo internal constructor(
         private var delayedAuthorisation: Boolean? = null
         private var cardToken: CardToken? = null
         private var cardSecurityCode: String? = null
+        private var subProductInfo: SubProductInfo = SubProductInfo.Unknown
 
         /**
          * Sets the unique merchant ID
@@ -290,6 +293,10 @@ class Judo internal constructor(
         fun setCardSecurityCode(cardSecurityCode: String?) =
             apply { this.cardSecurityCode = cardSecurityCode }
 
+        fun setSubProductInfo(subProductInfo: SubProductInfo) {
+            apply { this.subProductInfo = subProductInfo }
+        }
+
         /**
          * Method that initializes Judo configuration object that can be used for
          * processing a payment.
@@ -375,7 +382,8 @@ class Judo internal constructor(
                 threeDSTwoMessageVersion = threeDSTwoMessageVersion ?: THREE_DS_TWO_MESSAGE_VERSION_TWO_DOT_TWO,
                 delayedAuthorisation = delayedAuthorisation,
                 cardToken = cardToken,
-                cardSecurityCode = cardSecurityCode
+                cardSecurityCode = cardSecurityCode,
+                subProductInfo = subProductInfo
             )
         }
 
