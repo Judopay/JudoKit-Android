@@ -155,6 +155,9 @@
     <string name="shipping_address_title">Shipping address</string>
     <string name="shipping_address_summary">Turn on to request a full shipping address.</string>
 
+    <string name="google_pay_shipping_address_allowed_countries_title">Shipping address allowed countries</string>
+    <string name="google_pay_shipping_address_allowed_countries_summary">Comma separated ISO 3166-1 alpha-2 country code values of the countries where shipping is allowed.</string>
+
     <string name="shipping_address_phone_number_title">Shipping address phone number</string>
     <string name="shipping_address_phone_number_summary">Turn on to request a shipping address phone number.</string>
 
@@ -169,6 +172,18 @@
 
     <string name="google_pay_allow_credit_cards_title">Allow Credit Cards</string>
     <string name="google_pay_allow_credit_cards_summary">Set to false if you don\'t support credit cards.</string>
+
+    <string name="google_pay_transaction_id_title">Transaction ID</string>
+    <string name="google_pay_transaction_id_summary">A unique ID that identifies a transaction attempt.</string>
+
+    <string name="google_pay_total_price_status_title">Total price status</string>
+    <string name="google_pay_total_price_status_summary">The status of the total price used</string>
+
+    <string name="google_pay_total_price_label_title">Total price label</string>
+    <string name="google_pay_total_price_label_summary">Custom label for the total price within the display items.</string>
+
+    <string name="google_pay_checkout_option_title">Checkout option</string>
+    <string name="google_pay_checkout_option_summary">Affects the submit button text displayed in the Google Pay payment sheet.</string>
 
     <string name="avs_title">Address Verification Service</string>
     <string name="avs_summary">Turn on to enable Address Verification Service.</string>

@@ -355,6 +355,13 @@
             app:summary="@string/shipping_address_summary"
             app:title="@string/shipping_address_title" />
 
+        <EditTextPreference
+            app:defaultValue=""
+            app:iconSpaceReserved="false"
+            app:key="google_pay_shipping_address_allowed_countries"
+            app:summary="@string/google_pay_shipping_address_allowed_countries_summary"
+            app:title="@string/google_pay_shipping_address_allowed_countries_title" />
+
         <SwitchPreferenceCompat
             app:defaultValue="false"
             app:iconSpaceReserved="false"
@@ -382,6 +389,40 @@
             app:key="allow_credit_cards"
             app:summary="@string/google_pay_allow_credit_cards_summary"
             app:title="@string/google_pay_allow_credit_cards_title" />
+
+        <EditTextPreference
+            app:defaultValue=""
+            app:iconSpaceReserved="false"
+            app:key="google_pay_transaction_id"
+            app:summary="@string/google_pay_transaction_id_summary"
+            app:title="@string/google_pay_transaction_id_title" />
+
+        <ListPreference
+            app:defaultValue="FINAL"
+            app:entries="@array/google_pay_total_price_status_entries"
+            app:entryValues="@array/google_pay_total_price_status_values"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_total_price_status"
+            app:summary="@string/google_pay_total_price_status_summary"
+            app:title="@string/google_pay_total_price_status_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue=""
+            app:iconSpaceReserved="false"
+            app:key="google_pay_total_price_label"
+            app:summary="@string/google_pay_total_price_label_summary"
+            app:title="@string/google_pay_total_price_label_title" />
+
+        <ListPreference
+            app:defaultValue="DEFAULT"
+            app:entries="@array/google_pay_checkout_option_entries"
+            app:entryValues="@array/google_pay_checkout_option_values"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_checkout_option"
+            app:summary="@string/google_pay_checkout_option_summary"
+            app:title="@string/google_pay_checkout_option_title"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
