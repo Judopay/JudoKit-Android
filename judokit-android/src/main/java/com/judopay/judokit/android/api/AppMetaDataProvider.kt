@@ -4,11 +4,19 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
+import com.judopay.judokit.android.model.SubProductInfo
 import com.judopay.judokit.android.ui.common.JUDO_KIT_VERSION
 
-class AppMetaDataProvider(context: Context) {
+class AppMetaDataProvider(context: Context, subProductInfo: SubProductInfo) {
+
+    object SystemInfo {
+        val androidVersionString: String? = Build.VERSION.RELEASE
+        val deviceManufacturer: String? = Build.MANUFACTURER
+        val deviceModel: String? = Build.MODEL
+    }
 
     private val applicationContext = context.applicationContext
+
     private val appVersion: String
         get() = try {
             val packageInfo = applicationContext.packageManager.getPackageInfo(applicationContext.packageName, 0)
@@ -26,10 +34,15 @@ class AppMetaDataProvider(context: Context) {
                 applicationInfo = packageManager.getApplicationInfo(applicationContext.applicationInfo.packageName, 0)
             } catch (ignore: PackageManager.NameNotFoundException) {
             }
-            return (if (applicationInfo != null) packageManager.getApplicationLabel(applicationInfo) else "Unknown") as String
+            return if (applicationInfo != null) packageManager.getApplicationLabel(applicationInfo) as String else "Unknown"
         }
+
+    private val subProductAndVersion = when (subProductInfo) {
+        is SubProductInfo.Unknown -> ""
+        is SubProductInfo.ReactNative -> "(JudoKit-ReactNative/${subProductInfo.version}) "
+    }
 
     val userAgent: String
         get() =
-            """Android/$JUDO_KIT_VERSION ${Build.MANUFACTURER} ${Build.MODEL} $appName $appVersion""".trimMargin()
+            "JudoKit-Android/$JUDO_KIT_VERSION ${subProductAndVersion}Android/${SystemInfo.androidVersionString} $appName/$appVersion ${SystemInfo.deviceManufacturer} ${SystemInfo.deviceModel}"
 }

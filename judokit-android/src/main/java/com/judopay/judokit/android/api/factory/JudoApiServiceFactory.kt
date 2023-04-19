@@ -142,7 +142,7 @@ object JudoApiServiceFactory {
         add(NetworkConnectivityInterceptor(context))
         add(DeDuplicationInterceptor())
         add(DeviceDnaInterceptor(context))
-        add(ApiHeadersInterceptor(judo.authorization, AppMetaDataProvider(context)))
+        add(ApiHeadersInterceptor(judo.authorization, AppMetaDataProvider(context, judo.subProductInfo)))
         add(PayLoadInterceptor(context))
 
         externalInterceptors?.kForEach {
