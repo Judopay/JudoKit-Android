@@ -508,7 +508,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             val gPayEnv =
                 if (isProductionGooglePayEnv) GooglePayEnvironment.PRODUCTION else GooglePayEnvironment.TEST
 
-            val merchantName = sharedPreferences.getString("google_pay_merchant_name", null)
+            val merchantName = sharedPreferences.getString("google_pay_merchant_name", null)?.trim()
             val billingAddress = sharedPreferences.getString("billing_address", "NONE")
             val isShippingAddressRequired =
                 sharedPreferences.getBoolean("is_shipping_address_required", false)
@@ -523,10 +523,13 @@ class DemoFeatureListActivity : AppCompatActivity() {
             val countryCode = sharedPreferences.getString("google_pay_country_code", "GB")
             val transactionId = sharedPreferences.getString("google_pay_transaction_id", null)
             val totalPriceStatus = sharedPreferences.getString("google_pay_total_price_status", "FINAL")
-            val totalPriceLabel = sharedPreferences.getString("google_pay_total_price_label", null)
+            val totalPriceLabel = sharedPreferences.getString("google_pay_total_price_label", null)?.ifEmpty { null }
             val checkoutOption = sharedPreferences.getString("google_pay_checkout_option", null)
             val shippingAddressAllowedCountries =
-                sharedPreferences.getString("google_pay_shipping_address_allowed_countries", null)?.split(",")?.toTypedArray()
+                sharedPreferences.getString("google_pay_shipping_address_allowed_countries", null)
+                    ?.ifEmpty { null }
+                    ?.split(",")
+                    ?.toTypedArray()
 
             val isBillingAddressRequired = billingAddress != null && billingAddress != "NONE"
 
