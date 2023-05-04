@@ -95,6 +95,7 @@ class JudoSharedViewModel(
                     is ApiException -> {
                         onLoadGPayPaymentDataError(exception.message ?: "Unknown error")
                     }
+
                     else -> throw exception
                 }
             }
@@ -122,21 +123,26 @@ class JudoSharedViewModel(
         dispatchResult(JudoPaymentResult.UserCancelled())
     }
 
-    @Throws(IllegalStateException::class)
+    @Throws(IllegalStateException::class, IllegalArgumentException::class)
     private fun sendGPayRequest(paymentData: PaymentData) = viewModelScope.launch {
-        val result = when (judo.paymentWidgetType) {
-            PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
-            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> judoApiService.preAuthGooglePayPayment(
-                paymentData.toPreAuthGooglePayRequest(judo)
-            ).await()
-            PaymentWidgetType.GOOGLE_PAY,
-            PaymentWidgetType.PAYMENT_METHODS -> judoApiService.googlePayPayment(
-                paymentData.toGooglePayRequest(judo)
-            ).await()
-            else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
-        }
+        try {
+            val result = when (judo.paymentWidgetType) {
+                PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
+                PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> judoApiService.preAuthGooglePayPayment(
+                    paymentData.toPreAuthGooglePayRequest(judo)
+                ).await()
 
-        dispatchResult(result.toJudoPaymentResult(resources))
+                PaymentWidgetType.GOOGLE_PAY,
+                PaymentWidgetType.PAYMENT_METHODS -> judoApiService.googlePayPayment(
+                    paymentData.toGooglePayRequest(judo)
+                ).await()
+
+                else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
+            }
+            dispatchResult(result.toJudoPaymentResult(resources))
+        } catch (exception: Throwable) {
+            onLoadGPayPaymentDataError(exception.message ?: "Unknown error")
+        }
     }
 
     private fun dispatchResult(result: JudoPaymentResult) {
