@@ -293,9 +293,8 @@ class Judo internal constructor(
         fun setCardSecurityCode(cardSecurityCode: String?) =
             apply { this.cardSecurityCode = cardSecurityCode }
 
-        fun setSubProductInfo(subProductInfo: SubProductInfo) {
+        fun setSubProductInfo(subProductInfo: SubProductInfo) =
             apply { this.subProductInfo = subProductInfo }
-        }
 
         /**
          * Method that initializes Judo configuration object that can be used for
