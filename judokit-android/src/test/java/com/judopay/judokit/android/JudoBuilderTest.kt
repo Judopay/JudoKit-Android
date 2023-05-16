@@ -307,9 +307,7 @@ internal class JudoBuilderTest {
 
     @Test
     fun `Given subProductInfo is set to ReactNative, then apply that value during build`() {
-        judoBuilder.setSubProductInfo(SubProductInfo.ReactNative("4.0.0"))
-
-        val judo = judoBuilder.build()
+        val judo = judoBuilder.setSubProductInfo(SubProductInfo.ReactNative("4.0.0")).build()
         assertThat(judo.subProductInfo).isNotNull()
         assertThat(judo.subProductInfo).isInstanceOf(SubProductInfo.ReactNative::class.java)
         assertThat((judo.subProductInfo as SubProductInfo.ReactNative).version).isEqualTo("4.0.0")
