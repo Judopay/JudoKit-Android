@@ -249,7 +249,7 @@ class CardEntryFormView @JvmOverloads constructor(
             setupCountrySpinner()
         }
 
-        binding.cardEntrySubmitButton.state = model.buttonState
+        binding.cardEntrySubmitButton.state = model.actionButtonState
 
         preFillFields()
     }

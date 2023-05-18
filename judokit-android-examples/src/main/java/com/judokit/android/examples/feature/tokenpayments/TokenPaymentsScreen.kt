@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.judokit.android.examples.R
@@ -116,24 +117,24 @@ fun TokenPaymentsScreen(
 
             Button(
                 onClick = { onTokenizeNewCard() },
-                modifier = Modifier.fillMaxWidth()
-            ) { Text("Tokenize a new card") }
+                modifier = Modifier.fillMaxWidth().height(48.dp)
+            ) { Text("Tokenize a new card".uppercase()) }
 
             Spacer(Modifier.height(32.dp))
 
             Button(
                 onClick = { onTokenPayment() },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().height(48.dp),
                 enabled = isFormValid
             ) {
-                Text("Payment")
+                Text("Payment".uppercase())
             }
             Button(
                 onClick = { onTokenPreAuth() },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().height(48.dp),
                 enabled = isFormValid
             ) {
-                Text("Pre-auth")
+                Text("Pre-auth".uppercase())
             }
         }
     }

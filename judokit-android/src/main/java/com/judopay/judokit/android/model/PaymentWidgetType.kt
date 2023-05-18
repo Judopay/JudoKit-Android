@@ -71,12 +71,12 @@ enum class PaymentWidgetType : Parcelable {
      */
     PAY_BY_BANK_APP,
 
-    /*
+    /**
      * Starts a token payment with optionally asking the user to enter their CSC and/or cardholder name.
      */
     TOKEN_PAYMENT,
 
-    /*
+    /**
      * Starts a pre-auth token payment with optionally asking the user to enter their CSC and/or cardholder name.
      */
     TOKEN_PRE_AUTH

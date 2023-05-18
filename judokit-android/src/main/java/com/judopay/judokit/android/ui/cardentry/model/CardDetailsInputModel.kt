@@ -13,8 +13,9 @@ data class CardDetailsInputModel(
     val securityNumber: String = "",
     val country: String = Country.GB.displayName,
     val postCode: String = "",
-    var buttonState: ButtonState = ButtonState.Disabled(R.string.add_card),
+    var actionButtonState: ButtonState = ButtonState.Disabled(R.string.add_card),
     var enabledFields: List<CardDetailsFieldType> = emptyList(),
     var supportedNetworks: List<CardNetwork> = emptyList(),
-    var cardNetwork: CardNetwork? = null
+    var cardNetwork: CardNetwork? = null,
+    var isValid: Boolean = false
 )

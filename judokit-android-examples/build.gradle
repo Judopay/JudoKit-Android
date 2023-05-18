@@ -29,8 +29,8 @@ android {
         applicationId "com.judokit.android.examples"
         minSdk 21
         targetSdk 33
-        versionCode 4102
-        versionName "4.1.0 (2) -" + getGitHash()
+        versionCode 4104
+        versionName "4.1.0 (4) -" + getGitHash()
         testInstrumentationRunner "com.judokit.android.examples.test.CucumberRunner"
         vectorDrawables {
             useSupportLibrary true

@@ -91,16 +91,3 @@ internal open class InputMaskTextWatcher(
         return if (position < textLength) position else textLength
     }
 }
-
-internal fun String.unformatted(formatMask: String): String {
-    if (formatMask.isEmpty()) return this
-
-    return StringBuilder().apply {
-        formatMask.forEachIndexed { index, char ->
-            if (index >= length) return@forEachIndexed
-            if (char.isPlaceHolder()) {
-                append(this[index])
-            }
-        }
-    }.toString()
-}

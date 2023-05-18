@@ -20,7 +20,6 @@ import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.Reference
 import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.UiConfiguration
-import com.judopay.judokit.android.model.formatted
 import com.judopay.judokit.android.model.typeId
 import com.judopay.judokit.android.service.CardTransactionManager
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
@@ -84,7 +83,7 @@ internal class CardEntryViewModelTest {
         val slots = mutableListOf<CardEntryFragmentModel>()
         verify { modelSpy.onChanged(capture(slots)) }
         val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.buttonState).isEqualTo(ButtonState.Disabled(R.string.pay_now))
+        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.pay_now))
     }
 
     @Test
@@ -111,7 +110,7 @@ internal class CardEntryViewModelTest {
 
         verify { modelSpy.onChanged(capture(slots)) }
         val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.buttonState).isEqualTo(ButtonState.Enabled(R.string.pay_now))
+        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Enabled(R.string.pay_now))
     }
 
     @Test
@@ -121,7 +120,7 @@ internal class CardEntryViewModelTest {
 
         verify { modelSpy.onChanged(capture(slots)) }
         val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.buttonState).isEqualTo(ButtonState.Loading)
+        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Loading)
     }
 
     @Test
@@ -276,7 +275,7 @@ internal class CardEntryViewModelTest {
                 getJudo(PaymentWidgetType.PAYMENT_METHODS),
                 cardTransactionManager,
                 repository,
-                CardEntryOptions(isPresentedFromPaymentMethods = true, shouldDisplaySecurityCode = true, cardNetwork = CardNetwork.VISA),
+                CardEntryOptions(isPresentedFromPaymentMethods = true, cardNetwork = CardNetwork.VISA),
                 application
             )
             sut.cardEntryToPaymentMethodResult.observeForever(cardEntryToPaymentMethodResultSpy)
@@ -304,7 +303,7 @@ internal class CardEntryViewModelTest {
         val slots = mutableListOf<CardEntryFragmentModel>()
         verify { modelSpy.onChanged(capture(slots)) }
         val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.buttonState).isEqualTo(ButtonState.Disabled(R.string.save_card))
+        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.save_card))
     }
 
     @Test
@@ -322,7 +321,7 @@ internal class CardEntryViewModelTest {
         val slots = mutableListOf<CardEntryFragmentModel>()
         verify { modelSpy.onChanged(capture(slots)) }
         val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.buttonState).isEqualTo(ButtonState.Disabled(R.string.empty))
+        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.empty))
     }
 
     @Test
@@ -340,7 +339,7 @@ internal class CardEntryViewModelTest {
         val slots = mutableListOf<CardEntryFragmentModel>()
         verify { modelSpy.onChanged(capture(slots)) }
         val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.buttonState).isEqualTo(ButtonState.Disabled(R.string.empty))
+        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.empty))
     }
 
     @Test
@@ -358,7 +357,7 @@ internal class CardEntryViewModelTest {
         val slots = mutableListOf<CardEntryFragmentModel>()
         verify { modelSpy.onChanged(capture(slots)) }
         val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.buttonState).isEqualTo(ButtonState.Disabled(R.string.empty))
+        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.empty))
     }
 
     @Test
@@ -372,105 +371,6 @@ internal class CardEntryViewModelTest {
         assertThat(inputModel.cardNumber).isEqualTo(cardScanningResult.cardNumber)
         assertThat(inputModel.cardHolderName).isEqualTo(cardScanningResult.cardHolder)
         assertThat(inputModel.expirationDate).isEqualTo(cardScanningResult.expirationDate)
-    }
-
-    @Test
-    fun `Given payment widget type is CARD_PAYMENT, when shouldPaymentButtonDisplayAmount is true, then button should say formatted amount`() {
-        sut.model.removeObserver(modelSpy)
-        val uiConfiguration = UiConfiguration.Builder().setShouldPaymentButtonDisplayAmount(true).build()
-        val judo = getJudo(PaymentWidgetType.CARD_PAYMENT, uiConfiguration)
-        sut = CardEntryViewModel(judo, cardTransactionManager, repository, CardEntryOptions(), application)
-        sut.model.observeForever(modelSpy)
-
-        assertThat(sut.amount).isEqualTo(judo.amount.formatted)
-        val slots = mutableListOf<CardEntryFragmentModel>()
-        verify { modelSpy.onChanged(capture(slots)) }
-        val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.buttonState).isEqualTo(ButtonState.Disabled(R.string.pay_amount, judo.amount.formatted))
-    }
-
-    @Test
-    fun `Given payment widget type is CARD_PAYMENT, when shouldPaymentButtonDisplayAmount is false, then button should not say formatted amount`() {
-        sut.model.removeObserver(modelSpy)
-        val uiConfiguration = UiConfiguration.Builder().setShouldPaymentButtonDisplayAmount(false).build()
-        val judo = getJudo(PaymentWidgetType.CARD_PAYMENT, uiConfiguration)
-        sut = CardEntryViewModel(judo, cardTransactionManager, repository, CardEntryOptions(), application)
-        sut.model.observeForever(modelSpy)
-
-        assertThat(sut.amount).isNull()
-        val slots = mutableListOf<CardEntryFragmentModel>()
-        verify { modelSpy.onChanged(capture(slots)) }
-        val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.buttonState).isEqualTo(ButtonState.Disabled(R.string.pay_now))
-    }
-
-    @Test
-    fun `Given payment widget type is PRE_AUTH, when shouldPaymentButtonDisplayAmount is true, then button should say formatted amount`() {
-        sut.model.removeObserver(modelSpy)
-        val uiConfiguration = UiConfiguration.Builder().setShouldPaymentButtonDisplayAmount(true).build()
-        val judo = getJudo(PaymentWidgetType.PRE_AUTH, uiConfiguration)
-        sut = CardEntryViewModel(judo, cardTransactionManager, repository, CardEntryOptions(), application)
-        sut.model.observeForever(modelSpy)
-
-        assertThat(sut.amount).isEqualTo(judo.amount.formatted)
-        val slots = mutableListOf<CardEntryFragmentModel>()
-        verify { modelSpy.onChanged(capture(slots)) }
-        val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.buttonState).isEqualTo(ButtonState.Disabled(R.string.pay_amount, judo.amount.formatted))
-    }
-
-    @Test
-    fun `Given payment widget type is PRE_AUTH, when shouldPaymentButtonDisplayAmount is false, then button should not say formatted amount`() {
-        sut.model.removeObserver(modelSpy)
-        val uiConfiguration = UiConfiguration.Builder().setShouldPaymentButtonDisplayAmount(false).build()
-        val judo = getJudo(PaymentWidgetType.PRE_AUTH, uiConfiguration)
-        sut = CardEntryViewModel(judo, cardTransactionManager, repository, CardEntryOptions(), application)
-        sut.model.observeForever(modelSpy)
-
-        assertThat(sut.amount).isNull()
-        val slots = mutableListOf<CardEntryFragmentModel>()
-        verify { modelSpy.onChanged(capture(slots)) }
-        val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.buttonState).isEqualTo(ButtonState.Disabled(R.string.pay_now))
-    }
-
-    @Test
-    fun `Given payment widget type is PAYMENT_METHODS, when shouldPaymentButtonDisplayAmount is false, then button should not say formatted amount`() {
-        sut.model.removeObserver(modelSpy)
-        val judo = getJudo(PaymentWidgetType.PAYMENT_METHODS)
-        sut = CardEntryViewModel(judo, cardTransactionManager, repository, CardEntryOptions(), application)
-        sut.model.observeForever(modelSpy)
-
-        assertThat(sut.amount).isNull()
-        val slots = mutableListOf<CardEntryFragmentModel>()
-        verify { modelSpy.onChanged(capture(slots)) }
-        val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.buttonState).isEqualTo(ButtonState.Disabled(R.string.pay_now))
-    }
-
-    @Test
-    fun `Given payment widget type is TOKEN_PRE_AUTH, when shouldAskForBillingInformation, then the continue button says Continue`() {
-        sut.model.removeObserver(modelSpy)
-        val judo =
-            getJudo(PaymentWidgetType.TOKEN_PRE_AUTH, UiConfiguration.Builder().setShouldAskForBillingInformation(true).build())
-        sut = CardEntryViewModel(judo, cardTransactionManager, repository, CardEntryOptions(), application)
-        sut.model.observeForever(modelSpy)
-
-        val slots = mutableListOf<CardEntryFragmentModel>()
-        verify { modelSpy.onChanged(capture(slots)) }
-        val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.buttonState).isEqualTo(ButtonState.Disabled(R.string.continue_text))
-    }
-
-    @Test
-    fun `Given send is called with EnableFormFields action, then should update model with specified enabled fields`() {
-        val enabledFields = listOf(CardDetailsFieldType.NUMBER, CardDetailsFieldType.SECURITY_NUMBER)
-        sut.send(CardEntryAction.EnableFormFields(enabledFields))
-
-        val slots = mutableListOf<CardEntryFragmentModel>()
-        verify { modelSpy.onChanged(capture(slots)) }
-        val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.enabledFields).isEqualTo(enabledFields)
     }
 
     @Test
@@ -508,23 +408,6 @@ internal class CardEntryViewModelTest {
         val slots = mutableListOf<CardEntryFragmentModel>()
         verify { modelSpy.onChanged(capture(slots)) }
         assertThat(slots.last().displayScanButton).isFalse()
-    }
-
-    @Test
-    fun `Given CardEntryViewModel initialises, shouldDisplayBackButton is true if fromPaymentMethods and shouldDisplaySecurityCode is not null`() {
-        sut.model.removeObserver(modelSpy)
-        sut = CardEntryViewModel(
-            getJudo(PaymentWidgetType.GOOGLE_PAY),
-            cardTransactionManager,
-            repository,
-            CardEntryOptions(isPresentedFromPaymentMethods = true, shouldDisplaySecurityCode = true, cardNetwork = CardNetwork.VISA),
-            application
-        )
-        sut.model.observeForever(modelSpy)
-
-        val slots = mutableListOf<CardEntryFragmentModel>()
-        verify { modelSpy.onChanged(capture(slots)) }
-        assertThat(slots.last().displayBackButton).isTrue()
     }
 
     private fun getJudo(widgetType: PaymentWidgetType, uiConfiguration: UiConfiguration = UiConfiguration.Builder().build()) =
