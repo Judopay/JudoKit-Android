@@ -7,6 +7,7 @@ import android.text.Spanned
 import android.text.style.DynamicDrawableSpan
 import android.util.AttributeSet
 import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.google.android.material.button.MaterialButton
 import com.judopay.judokit.android.R
@@ -15,6 +16,7 @@ sealed class ButtonState {
     data class Enabled(@StringRes val text: Int, val amount: String? = null) : ButtonState()
     data class Disabled(@StringRes val text: Int, val amount: String? = null) : ButtonState()
     object Loading : ButtonState()
+    object Hidden : ButtonState()
 }
 
 class ProgressButton @JvmOverloads constructor(
@@ -64,6 +66,8 @@ class ProgressButton @JvmOverloads constructor(
 
         val isAnimating = state is ButtonState.Loading
         setIsAnimatingText(isAnimating)
+
+        isVisible = state !is ButtonState.Hidden
     }
 
     private fun setIsAnimatingText(isAnimating: Boolean) = if (isAnimating) {

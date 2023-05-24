@@ -199,8 +199,6 @@ class PaymentMethodsViewModel(
             if (judo.uiConfiguration.shouldAskForBillingInformation || isSecurityCodeRequired || judo.uiConfiguration.shouldAskForCardholderName) {
                 val cardEntryOptions = CardEntryOptions(
                     isPresentedFromPaymentMethods = true,
-                    shouldDisplayBillingDetails = judo.uiConfiguration.shouldAskForBillingInformation,
-                    shouldDisplaySecurityCode = cardNetwork != null,
                     cardNetwork = cardNetwork
                 )
                 displayCardEntryObserver.postValue(Event(cardEntryOptions))

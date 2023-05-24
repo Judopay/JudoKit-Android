@@ -87,7 +87,7 @@ class JudoActivity : AppCompatActivity() {
         val bundle = if (graphId == R.navigation.judo_card_input_graph) {
             // Card entry fragment parameters
             bundleOf(
-                CARD_ENTRY_OPTIONS to CardEntryOptions(shouldDisplayBillingDetails = config.uiConfiguration.shouldAskForBillingInformation && config.paymentWidgetType != PaymentWidgetType.CREATE_CARD_TOKEN)
+                CARD_ENTRY_OPTIONS to CardEntryOptions()
             )
         } else {
             null

@@ -59,12 +59,12 @@
         android:outAnimation="@anim/fade_out">
 
         <com.judopay.judokit.android.ui.cardentry.components.CardEntryFormView
-            android:id="@+id/formView"
+            android:id="@+id/card_details_form_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <com.judopay.judokit.android.ui.cardentry.components.BillingDetailsFormView
-            android:id="@+id/billingDetailsFormView"
+            android:id="@+id/billing_address_form_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </ViewAnimator>

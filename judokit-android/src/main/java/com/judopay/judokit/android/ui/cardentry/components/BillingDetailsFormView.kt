@@ -56,7 +56,8 @@ class BillingDetailsFormView @JvmOverloads constructor(
     internal var model = BillingDetailsInputModel()
         set(value) {
             field = value
-            binding.billingDetailsSubmitButton.state = model.buttonState
+            binding.billingDetailsSubmitButton.state = model.submitButtonState
+            binding.billingDetailsBackButton.state = model.backButtonState
         }
 
     private var validators = mutableListOf(

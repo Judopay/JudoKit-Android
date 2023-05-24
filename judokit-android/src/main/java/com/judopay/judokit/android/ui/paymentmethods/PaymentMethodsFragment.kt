@@ -242,8 +242,6 @@ class PaymentMethodsFragment : Fragment() {
             bundleOf(
                 CARD_ENTRY_OPTIONS to CardEntryOptions(
                     isPresentedFromPaymentMethods = true,
-                    shouldDisplayBillingDetails = false,
-                    shouldDisplaySecurityCode = false,
                     isAddingNewCard = true
                 )
             )

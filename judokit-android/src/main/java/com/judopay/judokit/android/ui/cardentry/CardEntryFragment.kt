@@ -118,7 +118,8 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         super.onViewCreated(view, savedInstanceState)
         binding.cancelButton.setOnClickListener { onUserCancelled() }
         binding.scanCardButton.setOnClickListener { handleScanCardButtonClicks() }
-        binding.formView.apply {
+
+        binding.cardDetailsFormView.apply {
             onFormValidationStatusListener = { model, isValid ->
                 viewModel.send(
                     CardEntryAction.ValidationStatusChanged(
@@ -137,7 +138,8 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
                 )
             }
         }
-        binding.billingDetailsFormView.apply {
+
+        binding.billingAddressFormView.apply {
             onFormValidationStatusListener = { model, isValid ->
                 viewModel.send(
                     CardEntryAction.BillingDetailsValidationStatusChanged(
@@ -153,7 +155,7 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
         }
 
         // sets bottomAppBar elevation based on scroll
-        val billingBinding = binding.billingDetailsFormView.binding
+        val billingBinding = binding.billingAddressFormView.binding
         billingBinding.billingDetailsScrollView.setOnScrollChangeListener(
             NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
                 val autoTransition = AutoTransition()
@@ -206,10 +208,15 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
     }
 
     private fun updateWithModel(model: CardEntryFragmentModel) {
-        binding.scanCardButton.isVisible = model.displayScanButton
-        binding.billingDetailsFormView.binding.billingDetailsBackButton.isVisible = model.displayBackButton
-        binding.formView.model = model.formModel.cardDetailsInputModel
-        binding.billingDetailsFormView.model = model.formModel.billingDetailsInputModel
+        val formModel = model.formModel
+
+        binding.apply {
+            scanCardButton.isVisible = model.displayScanButton
+            bottomSheetContainer.isVisible = model.isUserInputRequired
+
+            cardDetailsFormView.model = formModel.cardDetailsInputModel
+            billingAddressFormView.model = formModel.billingDetailsInputModel
+        }
     }
 
     private fun dispatchResult(result: JudoPaymentResult) {
