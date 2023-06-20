@@ -72,7 +72,9 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        awaitActivityThenRun(ResultActivity::class.java) {
+
+        val activityName = "com.judokit.android.examples.result.ResultActivity" // or ResultActivity::class.java.name
+        awaitActivityThenRun(activityName) {
             onView(withId(R.id.recyclerView))
                 .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(2))
                 .check(matches(hasDescendant(withText("code"))))

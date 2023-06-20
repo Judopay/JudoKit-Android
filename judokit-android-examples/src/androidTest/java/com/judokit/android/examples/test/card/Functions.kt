@@ -7,10 +7,10 @@ import androidx.test.espresso.IdlingResource
 /*
 * Wait for an activity to be resumed before running a function
 */
-fun <A: Activity>awaitActivityThenRun(activityClass: Class<A>, func: () -> Unit) {
+fun awaitActivityThenRun(activityClassName: String, func: () -> Unit) {
     val idlingResource = ActivityResumeIdlingResource(
-        customName = "[activity-check-idling-resource]-${activityClass.packageName}",
-        activityClass = activityClass)
+        customName = "[activity-check-idling-resource]-${activityClassName}",
+        activityClassName = activityClassName)
 
     awaitIdlingResourceThenRun(idlingResource, func)
 }

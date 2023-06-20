@@ -6,8 +6,8 @@ import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage
 
 
-class ActivityResumeIdlingResource<A: Activity>(val customName: String = "activity-resume-idling-resource",
-                                                val activityClass: Class<A>): IdlingResource {
+class ActivityResumeIdlingResource(val customName: String = "activity-resume-idling-resource",
+                                   val activityClassName: String): IdlingResource {
 
     private var resourceCallback: IdlingResource.ResourceCallback? = null
     private val isIdle = false
@@ -23,7 +23,7 @@ class ActivityResumeIdlingResource<A: Activity>(val customName: String = "activi
     override fun isIdleNow(): Boolean {
         if (isIdle) return true
         val activity = currentActivity ?: return false
-        val isIdle = activity.javaClass == activityClass
+        val isIdle = activity.javaClass.name == activityClassName
 
         if (isIdle) {
             resourceCallback!!.onTransitionToIdle()
