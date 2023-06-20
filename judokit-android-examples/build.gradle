@@ -107,6 +107,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
     androidTestImplementation "androidx.test:runner:$androidx_test_runner_version"
     androidTestImplementation "androidx.test:rules:$androidx_test_version"
+    androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
 
     androidTestImplementation "androidx.room:room-runtime:$room_version"
 }

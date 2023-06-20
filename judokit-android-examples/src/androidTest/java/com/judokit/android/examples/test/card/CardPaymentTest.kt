@@ -1,11 +1,16 @@
 package com.judokit.android.examples.test.card
 
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -15,6 +20,7 @@ import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import com.judopay.judokit.android.R
 import com.judokit.android.examples.feature.DemoFeatureListActivity
+import com.judokit.android.examples.result.ResultActivity
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -64,5 +70,12 @@ class CardPaymentTest {
 
         onView(withId(R.id.cardEntrySubmitButton))
             .check(matches(isEnabled()))
+            .perform(click())
+
+        awaitActivityThenRun(ResultActivity::class.java) {
+            onView(withId(R.id.recyclerView))
+                .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(2))
+                .check(matches(hasDescendant(withText("code"))))
+        }
     }
 }
