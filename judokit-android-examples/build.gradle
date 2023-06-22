@@ -34,6 +34,9 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        buildConfigField "String", "JUDO_ID", "\"" + System.getenv("JUDO_ID") + "\""
+        buildConfigField "String", "API_TEST_TOKEN", "\"" + System.getenv("API_TEST_TOKEN") + "\""
+        buildConfigField "String", "API_TEST_SECRET", "\"" + System.getenv("API_TEST_SECRET") + "\""
     }
     signingConfigs {
         config {
@@ -108,6 +111,9 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$androidx_test_runner_version"
     androidTestImplementation "androidx.test:rules:$androidx_test_version"
     androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
-
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.3.3"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:1.3.3"
+    androidTestImplementation "androidx.test.espresso:espresso-web:3.5.1"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
     androidTestImplementation "androidx.room:room-runtime:$room_version"
 }
