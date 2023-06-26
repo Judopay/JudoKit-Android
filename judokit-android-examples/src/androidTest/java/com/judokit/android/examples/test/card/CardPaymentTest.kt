@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.action.ViewActions.swipeUp
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
@@ -36,10 +38,6 @@ import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
-
-// https://github.com/android/testing-samples
-// https://developer.android.com/training/testing/espresso
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -393,8 +391,14 @@ class CardPaymentTest {
     }
 
     @Test
-    @Ignore("Skip until empty CV2 issue is addressed")
     fun onSuccessfulPaymentMethodsCardPaymentReceiptObjectContainsRelevantInfo() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putBoolean("should_payment_methods_verify_security_code", true)
+            }
+            .commit()
+
         onView(withText("Payment methods"))
             .perform(click())
 
@@ -421,12 +425,26 @@ class CardPaymentTest {
             onView(withId(R.id.payButton))
                 .perform(click())
 
+            onView(withId(R.id.securityNumberTextInputEditText))
+                .perform(clearText(), typeText("341"))
+
+            onView(withId(R.id.cardEntrySubmitButton))
+                .check(matches(isEnabled()))
+                .perform(click())
+
             clickCompleteOn3DS2Screen()
 
             assertReceiptObject("", "", "Success", "Payment")
 
         } catch (e: NoMatchingViewException) {
             onView(withId(R.id.payButton))
+                .perform(click())
+
+            onView(withId(R.id.securityNumberTextInputEditText))
+                .perform(clearText(), typeText("341"))
+
+            onView(withId(R.id.cardEntrySubmitButton))
+                .check(matches(isEnabled()))
                 .perform(click())
 
             clickCompleteOn3DS2Screen()
@@ -436,7 +454,6 @@ class CardPaymentTest {
     }
 
     @Test
-    @Ignore("Skip until empty CV2 issue is addressed")
     fun onSuccessfulPaymentMethodsPreauthReceiptObjectContainsRelevantInfo() {
         onView(withText("Pre-auth payment methods"))
             .perform(click())
@@ -464,17 +481,31 @@ class CardPaymentTest {
             onView(withId(R.id.payButton))
                 .perform(click())
 
+            onView(withId(R.id.securityNumberTextInputEditText))
+                .perform(clearText(), typeText("341"))
+
+            onView(withId(R.id.cardEntrySubmitButton))
+                .check(matches(isEnabled()))
+                .perform(click())
+
             clickCompleteOn3DS2Screen()
 
-            assertReceiptObject("", "", "Success", "Payment")
+            assertReceiptObject("", "", "Success", "PreAuth")
 
         } catch (e: NoMatchingViewException) {
             onView(withId(R.id.payButton))
                 .perform(click())
 
+            onView(withId(R.id.securityNumberTextInputEditText))
+                .perform(clearText(), typeText("341"))
+
+            onView(withId(R.id.cardEntrySubmitButton))
+                .check(matches(isEnabled()))
+                .perform(click())
+
             clickCompleteOn3DS2Screen()
 
-            assertReceiptObject("", "", "Success", "Payment")
+            assertReceiptObject("", "", "Success", "PreAuth")
         }
     }
 }
