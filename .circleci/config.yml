@@ -156,7 +156,9 @@ jobs:
               --results-bucket $FIREBASE_TEST_RESULTS_BUCKET \
               --timeout=30m \
               --device-ids=oriole \
-              --os-version-ids=33
+              --os-version-ids=33 \
+              --use-orchestrator \
+              --client-details=matrixLabel="E2E Tests"
 
   sonar_scan:
     docker:
