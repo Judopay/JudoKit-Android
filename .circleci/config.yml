@@ -148,7 +148,9 @@ jobs:
               --app judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk \
               --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk \
               --results-bucket $FIREBASE_TEST_RESULTS_BUCKET \
-              --timeout=30m
+              --timeout=30m \
+              --device-ids=oriole \
+              --os-version-ids=33
 
   sonar_scan:
     docker:

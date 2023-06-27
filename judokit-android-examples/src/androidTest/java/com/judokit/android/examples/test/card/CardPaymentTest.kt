@@ -455,6 +455,16 @@ class CardPaymentTest {
 
     @Test
     fun onSuccessfulPaymentMethodsPreauthReceiptObjectContainsRelevantInfo() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putBoolean("should_payment_methods_verify_security_code", true)
+            }
+            .commit()
+
+        onView(withId(R.id.recyclerView))
+            .perform(swipeUp())
+
         onView(withText("Pre-auth payment methods"))
             .perform(click())
 

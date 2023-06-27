@@ -1,0 +1,35 @@
+apiVersion: v1alpha
+kind: espresso
+sauce:
+  region: eu-central-1
+  concurrency: 2
+  metadata:
+    tags:
+      - e2e
+    build: e2e-runs
+espresso:
+  app: ./judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk
+  testApp: ./judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk
+suites:
+  - name: "E2E Test Suite"
+    testOptions:
+      class:
+        - com.judokit.android.examples.test.card.CardPaymentTest
+      size: large
+      clearPackageData: true
+      useTestOrchestrator: true
+    # emulators:
+    #   - name: "Android GoogleAPI Emulator"
+    #     platformVersions:
+    #       - "13.0"
+    devices:
+      - id: Samsung_Galaxy_S9_Plus_real
+        platformVersion: "13.0"
+
+# Controls what artifacts to fetch when the suite on Sauce Cloud has finished.
+artifacts:
+  download:
+    when: always
+    match:
+      - junit.xml
+    directory: ./artifacts/
