@@ -157,8 +157,7 @@ jobs:
               --timeout=30m \
               --device-ids=oriole \
               --os-version-ids=33 \
-              --use-orchestrator \
-              --client-details=matrixLabel="E2E Tests"
+              --use-orchestrator
 
   sonar_scan:
     docker:
