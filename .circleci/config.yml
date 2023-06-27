@@ -157,8 +157,7 @@ jobs:
               --timeout=30m \
               --device-ids=oriole \
               --os-version-ids=33 \
-              --client-details matrixLabel="E2E Tests" \
-              --environment-variables
+              --client-details matrixLabel="E2E Tests"
 
   sonar_scan:
     docker:
