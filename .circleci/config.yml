@@ -157,7 +157,7 @@ jobs:
               --timeout=30m \
               --device-ids=oriole \
               --os-version-ids=33 \
-              --use-orchestrator
+              --num-flaky-test-attempts=1
 
   sonar_scan:
     docker:
