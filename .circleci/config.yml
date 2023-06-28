@@ -229,6 +229,8 @@ jobs:
 workflows:
   version: 2
   build:
+    when:
+      not: << pipeline.parameters.e2e-test-run-schedule >>
     jobs:
       - build_sdk:
           filters:
@@ -282,3 +284,16 @@ workflows:
           environment: prod
           requires:
             - release_sdk
+  e2e-nightly:
+    when: << pipeline.parameters.e2e-test-run-schedule >>
+    jobs:
+      - build_sample:
+          context: shared-secrets
+      - instrumented_test_sample:
+          context: shared-secrets
+          requires:
+            - build_sample
+          filters:
+            branches:
+              only:
+                - feature/QA-60-ui-tests-on-ci
