@@ -391,6 +391,37 @@ class CardPaymentTest {
     }
 
     @Test
+    fun onFrictionlessAuthFailedPaymentReceiptObjectContainsRelevantInfo() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putString("challengeRequestIndicator", "NO_PREFERENCE")
+            }
+            .commit()
+
+        onView(withText("Pay with card"))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            ValidCardDetails.CARD_NUMBER,
+            "Frictionless AuthFailed",
+            ValidCardDetails.CARD_EXPIRY,
+            ValidCardDetails.CARD_SECURITY_CODE
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        awaitActivityThenRun(ResultActivity::class.java.name) {
+            onView(withId(R.id.recyclerView))
+                .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(2))
+                .check(matches(hasDescendant(withText("Unable to process transaction. Card authentication failed with 3DS Server."))))
+        }
+    }
+
+    @Test
     fun onSuccessfulPaymentMethodsCardPaymentReceiptObjectContainsRelevantInfo() {
         sharedPrefs
             .edit()
@@ -455,6 +486,16 @@ class CardPaymentTest {
 
     @Test
     fun onSuccessfulPaymentMethodsPreauthReceiptObjectContainsRelevantInfo() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putBoolean("should_payment_methods_verify_security_code", true)
+            }
+            .commit()
+
+        onView(withId(R.id.recyclerView))
+            .perform(swipeUp())
+
         onView(withText("Pre-auth payment methods"))
             .perform(click())
 

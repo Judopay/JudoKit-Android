@@ -49,6 +49,10 @@ fun clickCompleteOn3DS2Screen() {
             Espresso.onView(ViewMatchers.withText("COMPLETE"))
                 .perform(ViewActions.longClick())
 
+            Thread.sleep(1000)
+            Espresso.onView(ViewMatchers.withText("COMPLETE"))
+                .perform(ViewActions.longClick())
+
         } catch (e: IdlingResourceTimeoutException) {
             println("Global Pay screen unable to continue")
         }
