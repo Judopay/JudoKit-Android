@@ -2,8 +2,8 @@ version: 2.1
 
 parameters:
   e2e-test-run-schedule:
-      type: boolean
-      default: false
+    type: boolean
+    default: false
 
 commands:
   disable_predex:
