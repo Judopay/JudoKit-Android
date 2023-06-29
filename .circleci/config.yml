@@ -26,6 +26,11 @@ executors:
     environment:
       GRADLE_OPTS: -Xmx2g -XX:+HeapDumpOnOutOfMemoryError -Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false
 
+parameters:
+  nightly:
+    type: boolean
+    default: false
+
 jobs:
   build_sdk:
     executor: android
@@ -226,16 +231,11 @@ jobs:
             ENVIRONMENT: << parameters.environment >>
           command: /resources/scripts/report-status-to-jira.sh
 
-parameters:
-  e2e-test-run-schedule:
-    type: boolean
-    default: false
-
 workflows:
   version: 2
   build:
     when:
-      not: << pipeline.parameters.e2e-test-run-schedule >>
+      not: << pipeline.parameters.nightly >>
     jobs:
       - build_sdk:
           filters:
@@ -290,7 +290,7 @@ workflows:
           requires:
             - release_sdk
   e2e-nightly:
-    when: << pipeline.parameters.e2e-test-run-schedule >>
+    when: << pipeline.parameters.nightly >>
     jobs:
       - build_sample:
           context: shared-secrets
