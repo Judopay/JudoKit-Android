@@ -1,10 +1,5 @@
 version: 2.1
 
-parameters:
-  e2e-test-run-schedule:
-    type: boolean
-    default: false
-
 commands:
   disable_predex:
     steps:
@@ -245,6 +240,10 @@ workflows:
       - build_sample:
           context: shared-secrets
       - instrumented_test_sample:
+          parameters:
+            e2e-test-run-schedule:
+              type: boolean
+              default: false
           context: shared-secrets
           requires:
             - build_sample
@@ -295,6 +294,10 @@ workflows:
       - build_sample:
           context: shared-secrets
       - instrumented_test_sample:
+          parameters:
+            e2e-test-run-schedule:
+              type: boolean
+              default: false          
           context: shared-secrets
           requires:
             - build_sample
