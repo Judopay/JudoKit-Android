@@ -1,5 +1,10 @@
 version: 2.1
 
+parameters:
+  e2e-test-run-schedule:
+      type: boolean
+      default: false
+
 commands:
   disable_predex:
     steps:
@@ -225,11 +230,6 @@ jobs:
           environment:
             ENVIRONMENT: << parameters.environment >>
           command: /resources/scripts/report-status-to-jira.sh
-
-parameters:
-  e2e-test-run-schedule:
-      type: boolean
-      default: false
 
 workflows:
   version: 2
