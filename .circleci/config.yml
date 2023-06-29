@@ -251,7 +251,7 @@ workflows:
           filters:
             branches:
               only:
-                - feature/QA-60-ui-tests-on-ci
+                - master
       - unit_test_sdk:
           requires:
             - build_sdk
@@ -301,4 +301,4 @@ workflows:
           filters:
             branches:
               only:
-                - feature/QA-60-ui-tests-on-ci
+                - master
