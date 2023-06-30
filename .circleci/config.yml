@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  slack: circleci/slack@4.12.5
+
 commands:
   disable_predex:
     steps:
@@ -18,6 +21,17 @@ commands:
                           }
                       }
                   }' > ~/.gradle/init.gradle
+  notify_slack_error:
+    steps:
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+  notify_slack_pass:
+    steps:
+      - slack/notify:
+          event: pass
+          template: basic_success_1
 
 executors:
   android:
@@ -163,6 +177,8 @@ jobs:
               --device-ids=oriole \
               --os-version-ids=33 \
               --num-flaky-test-attempts=1
+      - notify_slack_error
+      - notify_slack_pass
 
   sonar_scan:
     docker:
