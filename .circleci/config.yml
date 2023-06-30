@@ -60,7 +60,7 @@ commands:
                   "type": "actions",
                   "elements": [
                     {
-                      "type": "button"
+                      "type": "button",
                       "text": {
                         "type": "plain_text",
                         "emoji": true,
@@ -111,7 +111,7 @@ commands:
                   "type": "actions",
                   "elements": [
                     {
-                      "type": "button"
+                      "type": "button",
                       "text": {
                         "type": "plain_text",
                         "emoji": true,
