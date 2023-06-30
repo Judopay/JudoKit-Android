@@ -25,13 +25,105 @@ commands:
     steps:
       - slack/notify:
           event: fail
-          template: basic_fail_1
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "CircleCI run the :android: E2E mobile tests but they failed, here are the results:\n*<${CIRCLE_BUILD_URL}|CircleCI Build>*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n$CIRCLE_BRANCH"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n$CIRCLE_SHA1"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author:*\n$CIRCLE_USERNAME"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "url": "{$FIREBASE_TEST_RESULTS_BUCKET}",
+                      "text": {
+                        "type": "plain_text",
+                        "emoji": true,
+                        "text": "Firebase Results"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
 
   notify_slack_pass:
     steps:
       - slack/notify:
           event: pass
-          template: basic_success_1
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "CircleCI has just successfully run the :android: E2E mobile tests, here are the results:\n*<${CIRCLE_BUILD_URL}|CircleCI Build>*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n$CIRCLE_BRANCH"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n$CIRCLE_SHA1"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author:*\n$CIRCLE_USERNAME"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "url": "{$FIREBASE_TEST_RESULTS_BUCKET}",
+                      "text": {
+                        "type": "plain_text",
+                        "emoji": true,
+                        "text": "Firebase Results"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }  
 
 executors:
   android:
