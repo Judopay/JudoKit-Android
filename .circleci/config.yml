@@ -32,7 +32,7 @@ commands:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "CircleCI run the :android: E2E mobile tests but they failed, here are the results: \n *<$CIRCLE_BUILD_URL | CircleCI Build>*"
+                    "text": "CircleCI ran the :android: E2E mobile tests but they *failed*, here are the results: \n *<$CIRCLE_BUILD_URL | Open build>*"
                   }
                 },
                 {
@@ -61,6 +61,8 @@ commands:
                   "elements": [
                     {
                       "type": "button",
+                      "style": "danger",
+                      "url": "$FIREBASE_TEST_RESULTS_BUCKET",
                       "text": {
                         "type": "plain_text",
                         "emoji": true,
@@ -83,7 +85,7 @@ commands:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "CircleCI has just successfully run the :android: E2E mobile tests, here are the results: \n *<$CIRCLE_BUILD_URL | CircleCI Build>*"
+                    "text": "CircleCI has just *successfully* ran the :android: E2E mobile tests, here are the results: \n *<$CIRCLE_BUILD_URL | Open build>*"
                   }
                 },
                 {
@@ -112,6 +114,8 @@ commands:
                   "elements": [
                     {
                       "type": "button",
+                      "style": "primary",
+                      "url": "$FIREBASE_TEST_RESULTS_BUCKET",
                       "text": {
                         "type": "plain_text",
                         "emoji": true,
