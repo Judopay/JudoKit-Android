@@ -32,7 +32,7 @@ commands:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "CircleCI ran the :android: E2E mobile tests but they *failed*, here are the results: \n *<$CIRCLE_BUILD_URL | Open build>* \n *<$FIREBASE_TEST_RESULTS_BUCKET | Firebase results>*"
+                    "text": "CircleCI ran the :android: E2E mobile tests but they *failed*, here are the results: \n *<$CIRCLE_BUILD_URL | Open build>* \n *<$FIREBASE_TEST_RESULTS_BUCKET | :firebase: Firebase results>*"
                   }
                 },
                 {
@@ -70,7 +70,7 @@ commands:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "CircleCI has just *successfully* ran the :android: E2E mobile tests, here are the results: \n *<$CIRCLE_BUILD_URL | Open build>* \n *<$FIREBASE_TEST_RESULTS_BUCKET | Firebase results"
+                    "text": "CircleCI has just *successfully* ran the :android: E2E mobile tests, here are the results: \n *<$CIRCLE_BUILD_URL | Open build>* \n *<$FIREBASE_TEST_RESULTS_BUCKET | :firebase: Firebase results>*"
                   }
                 },
                 {
@@ -91,20 +91,6 @@ commands:
                     {
                       "type": "mrkdwn",
                       "text": "*Author:*\n$CIRCLE_USERNAME"
-                    }
-                  ]
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "action_id": "basic_success_view",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "View Job"
-                      },
-                      "url": "${FIREBASE_TEST_RESULTS_BUCKET}"
                     }
                   ]
                 }
