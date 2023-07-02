@@ -32,7 +32,7 @@ commands:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "CircleCI ran the :android: E2E mobile tests but they *failed*, here are the results: \n *<$CIRCLE_BUILD_URL | Open build>*"
+                    "text": "CircleCI ran the :android: E2E mobile tests but they *failed*, here are the results: \n *<$CIRCLE_BUILD_URL | Open build>* \n *<$FIREBASE_TEST_RESULTS_BUCKET | Firebase results>*"
                   }
                 },
                 {
@@ -53,21 +53,6 @@ commands:
                     {
                       "type": "mrkdwn",
                       "text": "*Author:*\n$CIRCLE_USERNAME"
-                    }
-                  ]
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "style": "danger",
-                      "url": "${FIREBASE_TEST_RESULTS_BUCKET}",
-                      "text": {
-                        "type": "plain_text",
-                        "emoji": true,
-                        "text": "Firebase Results"
-                      }
                     }
                   ]
                 }
@@ -85,7 +70,7 @@ commands:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "CircleCI has just *successfully* ran the :android: E2E mobile tests, here are the results: \n *<$CIRCLE_BUILD_URL | Open build>*"
+                    "text": "CircleCI has just *successfully* ran the :android: E2E mobile tests, here are the results: \n *<$CIRCLE_BUILD_URL | Open build>* \n *<$FIREBASE_TEST_RESULTS_BUCKET | Firebase results"
                   }
                 },
                 {
@@ -114,13 +99,12 @@ commands:
                   "elements": [
                     {
                       "type": "button",
-                      "style": "primary",
-                      "url": "${FIREBASE_TEST_RESULTS_BUCKET}",
+                      "action_id": "basic_success_view",
                       "text": {
                         "type": "plain_text",
-                        "emoji": true,
-                        "text": "Firebase Results"
-                      }
+                        "text": "View Job"
+                      },
+                      "url": "${FIREBASE_TEST_RESULTS_BUCKET}"
                     }
                   ]
                 }
