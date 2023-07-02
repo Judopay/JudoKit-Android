@@ -62,7 +62,7 @@ commands:
                     {
                       "type": "button",
                       "style": "danger",
-                      "url": "$FIREBASE_TEST_RESULTS_BUCKET",
+                      "url": "${FIREBASE_TEST_RESULTS_BUCKET}",
                       "text": {
                         "type": "plain_text",
                         "emoji": true,
@@ -115,7 +115,7 @@ commands:
                     {
                       "type": "button",
                       "style": "primary",
-                      "url": "$FIREBASE_TEST_RESULTS_BUCKET",
+                      "url": "${FIREBASE_TEST_RESULTS_BUCKET}",
                       "text": {
                         "type": "plain_text",
                         "emoji": true,
