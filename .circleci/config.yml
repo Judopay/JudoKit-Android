@@ -32,7 +32,7 @@ commands:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "CircleCI ran the :android: E2E mobile tests but they *failed*, here are the results: \n *<$CIRCLE_BUILD_URL | :circleci: Open build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
+                    "text": "CircleCI ran the :android: Android E2E mobile tests but they *failed*, here are the results: \n *<$CIRCLE_BUILD_URL | :circleci: Open build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
                   }
                 },
                 {
@@ -70,7 +70,7 @@ commands:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "CircleCI has just *successfully* ran the :android: E2E mobile tests, here are the results: \n *<$CIRCLE_BUILD_URL | :circleci: Open build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
+                    "text": "CircleCI has just *successfully* ran the :android: Android E2E mobile tests, here are the results: \n *<$CIRCLE_BUILD_URL | :circleci: Open build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
                   }
                 },
                 {
