@@ -224,12 +224,6 @@ jobs:
             gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
             gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
       - run:
-          name: Export environment variables
-          command: |
-            export JUDO_ID=${JUDO_ID} \
-            export API_TEST_TOKEN=${API_TEST_TOKEN} \
-            export API_TEST_SECRET=${API_TEST_SECRET} \
-      - run:
           name: Test with Firebase Test Lab
           no_output_timeout: 30m
           command: >
