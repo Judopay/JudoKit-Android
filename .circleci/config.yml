@@ -48,7 +48,7 @@ commands:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Commit:*\n$CIRCLE_SHA1"
+                      "text": "*Commit:* \n <https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>"
                     },
                     {
                       "type": "mrkdwn",
@@ -86,7 +86,7 @@ commands:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Commit:*\n$CIRCLE_SHA1"
+                      "text": "*Commit:* \n <https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>"
                     },
                     {
                       "type": "mrkdwn",
