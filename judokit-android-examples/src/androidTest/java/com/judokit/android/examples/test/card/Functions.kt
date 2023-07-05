@@ -1,5 +1,6 @@
 package com.judokit.android.examples.test.card
 
+import androidx.annotation.IdRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
@@ -87,15 +88,16 @@ fun assertReceiptObject(message: String, receiptId: String, result: String, type
  * Fill card payment sheet
  */
 fun enterPaymentSheetDetails(cardNumber: String, cardHolder: String, cardExpiry: String, cardSecurityCode: String) {
-    Espresso.onView(ViewMatchers.withId(R.id.numberTextInputEditText))
-        .perform(ViewActions.clearText(), ViewActions.typeText(cardNumber))
+    fillTextField(R.id.numberTextInputEditText, cardNumber)
 
-    Espresso.onView(ViewMatchers.withId(R.id.nameTextInputEditText))
-        .perform(ViewActions.clearText(), ViewActions.typeText(cardHolder))
+    fillTextField(R.id.nameTextInputEditText, cardHolder)
 
-    Espresso.onView(ViewMatchers.withId(R.id.expirationDateTextInputEditText))
-        .perform(ViewActions.clearText(), ViewActions.typeText(cardExpiry))
+    fillTextField(R.id.expirationDateTextInputEditText, cardExpiry)
 
-    Espresso.onView(ViewMatchers.withId(R.id.securityNumberTextInputEditText))
-        .perform(ViewActions.clearText(), ViewActions.typeText(cardSecurityCode))
+    fillTextField(R.id.securityNumberTextInputEditText, cardSecurityCode)
+}
+
+private fun fillTextField(@IdRes textFieldId: Int, text: String) {
+    Espresso.onView((ViewMatchers.withId(textFieldId)))
+        .perform(ViewActions.clearText(), ViewActions.typeText(text))
 }
