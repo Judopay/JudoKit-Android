@@ -256,7 +256,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     private fun performComplete3ds2(receipt: Receipt, caller: String) {
         val receiptId = receipt.receiptId ?: ""
         val version = receipt.getCReqParameters()?.messageVersion ?: judo.threeDSTwoMessageVersion
-        val cv2 = transactionDetails?.securityNumber ?: ""
+        val cv2 = transactionDetails?.securityNumber
 
         applicationScope.launch {
             val result =
