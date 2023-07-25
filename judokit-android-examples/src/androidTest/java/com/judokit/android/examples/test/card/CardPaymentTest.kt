@@ -16,6 +16,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.action.ViewActions.swipeUp
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
@@ -583,5 +584,49 @@ class CardPaymentTest {
 
             assertReceiptObject("", "", "Success", "PreAuth")
         }
+    }
+
+    @Test
+    fun onUserCanSuccessfullyRemoveCardInPaymentMethods() {
+        onView(withText(PAYMENT_METHODS_LABEL))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        onView(withId(R.id.addButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            "4222 0000 0122 7408",
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(2000)
+
+        onView(withId(R.id.subTitle))
+            .check(matches(withText("Visa Ending 7408")))
+
+        onView(withId(R.id.editButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        onView(withId(R.id.removeCardIcon))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        onView(withText("Delete"))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        onView(withText("Visa Ending 7408"))
+            .check(doesNotExist())
     }
 }
