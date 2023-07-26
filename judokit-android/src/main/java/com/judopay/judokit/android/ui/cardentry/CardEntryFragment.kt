@@ -31,7 +31,6 @@ import com.judopay.judokit.android.model.isCardPaymentWidget
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
 import com.judopay.judokit.android.service.CardTransactionManager
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
-import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
 import com.judopay.judokit.android.ui.common.parcelable
 import com.judopay.judokit.android.ui.paymentmethods.CARD_ENTRY_OPTIONS
 
@@ -40,7 +39,7 @@ private const val BOTTOM_SHEET_PEEK_HEIGHT = 200
 private const val KEYBOARD_DISMISS_TIMEOUT = 500L
 private const val BOTTOM_APP_BAR_ELEVATION_CHANGE_DURATION = 200L
 
-class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallback {
+class CardEntryFragment : BottomSheetDialogFragment() {
     private lateinit var viewModel: CardEntryViewModel
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
     private var _binding: CardEntryFragmentBinding? = null
@@ -280,14 +279,6 @@ class CardEntryFragment : BottomSheetDialogFragment(), ThreeDSOneCompletionCallb
             return@OnApplyWindowInsetsListener view.onApplyWindowInsets(windowInsets)
         }
         decorView.setOnApplyWindowInsetsListener(insetsListener)
-    }
-
-    override fun onSuccess(success: JudoPaymentResult) {
-        sharedViewModel.paymentResult.postValue((success))
-    }
-
-    override fun onFailure(error: JudoPaymentResult) {
-        sharedViewModel.paymentResult.postValue((error))
     }
 
     private val bottomSheetDialog: BottomSheetDialog

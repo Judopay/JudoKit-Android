@@ -2,8 +2,6 @@ package com.judopay.judokit.android.api.model.response
 
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
@@ -11,48 +9,6 @@ import java.util.Date
 
 @DisplayName("Testing Receipt model")
 internal class ReceiptTest {
-
-    @DisplayName("Given is3dSecureRequired is called, when acsUrl is null, return false")
-    @Test
-    fun returnFalseOnIs3dSecureRequiredWithAcsUrlNull() {
-        assertFalse(Receipt().isThreeDSecureOneRequired)
-    }
-
-    @DisplayName("Given is3dSecureRequired is called, when acsUrl is empty, return false")
-    @Test
-    fun returnFalseOnIs3dSecureRequiredWithAcsUrlEmpty() {
-        assertFalse(Receipt(acsUrl = "").isThreeDSecureOneRequired)
-    }
-
-    @DisplayName("Given is3dSecureRequired is called, when md is null, return false")
-    @Test
-    fun returnFalseOnIs3dSecureRequiredWithMdNull() {
-        assertFalse(Receipt().isThreeDSecureOneRequired)
-    }
-
-    @DisplayName("Given is3dSecureRequired is called, when md is empty, return false")
-    @Test
-    fun returnFalseOnIs3dSecureRequiredWithMdEmpty() {
-        assertFalse(Receipt(md = "").isThreeDSecureOneRequired)
-    }
-
-    @DisplayName("Given is3dSecureRequired is called, when paReq is null, return false")
-    @Test
-    fun returnFalseOnIs3dSecureRequiredWithPaReqNull() {
-        assertFalse(Receipt().isThreeDSecureOneRequired)
-    }
-
-    @DisplayName("Given is3dSecureRequired is called, when paReq is empty, return false")
-    @Test
-    fun returnFalseOnIs3dSecureRequiredWithPaReqEmpty() {
-        assertFalse(Receipt(paReq = "").isThreeDSecureOneRequired)
-    }
-
-    @DisplayName("Given is3dSecureRequired is called, when all 3d secure fields are valid, then return true")
-    @Test
-    fun returnTrueOnIs3dSecureRequiredWithAll3dSecureFieldsValid() {
-        assertTrue(Receipt(acsUrl = "1", md = "2", paReq = "3").isThreeDSecureOneRequired)
-    }
 
     @DisplayName("Given toJudoResult is called, then map receiptId to JudoResult receiptId")
     @Test
