@@ -88,7 +88,26 @@ class PaymentRequest private constructor(
 
         fun setEmailAddress(emailAddress: String?) = apply { this.emailAddress = emailAddress }
 
-        fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = mobileNumber }
+        fun setMobileNumber(phoneCountryCode: String?, mobileNumber: String?) = apply {
+            // PAPI will only allow dial codes length 3 or less.
+            // Therefore logic has been added to re format dial codes of length 4 (which are always of format: 1(XXX)), when sending to BE.
+            //
+            // For example, when: dialCode = "1(345)", mobileNumber = "123456"
+            // The following is sent to BE: phoneCountryCode = "1", mobileNumber = "3451234567"
+
+            if (mobileNumber != null) {
+                if (phoneCountryCode != null && phoneCountryCode.length > 3) {
+                    this.phoneCountryCode = phoneCountryCode.substring(0, 1)
+                    this.mobileNumber = phoneCountryCode.substring(2, 5) + mobileNumber
+                } else {
+                    this.phoneCountryCode = phoneCountryCode
+                    this.mobileNumber = mobileNumber
+                }
+            } else {
+                this.phoneCountryCode = null
+                this.mobileNumber = null
+            }
+        }
 
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
             apply { this.primaryAccountDetails = primaryAccountDetails }
@@ -101,9 +120,6 @@ class PaymentRequest private constructor(
 
         fun setCardHolderName(cardHolderName: String?) =
             apply { this.cardHolderName = cardHolderName }
-
-        fun setPhoneCountryCode(phoneCountryCode: String?) =
-            apply { this.phoneCountryCode = phoneCountryCode }
 
         fun build(): PaymentRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")

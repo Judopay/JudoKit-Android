@@ -176,9 +176,8 @@ fun TransactionDetails.toPaymentRequest(judo: Judo, transaction: Transaction): P
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
         .setCardHolderName(cardHolderName)
-        .setMobileNumber(mobileNumber)
+        .setMobileNumber(phoneCountryCode, mobileNumber)
         .setEmailAddress(email)
-        .setPhoneCountryCode(phoneCountryCode)
         .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
         .build()
 }
