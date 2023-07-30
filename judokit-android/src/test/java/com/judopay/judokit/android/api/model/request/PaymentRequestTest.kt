@@ -13,7 +13,7 @@ internal class PaymentRequestTest {
         .setExpiryDate("1220")
         .setSaveCardOnly("123")
         .setEmailAddress("email@mail.com")
-        .setMobileNumber(null, "1234567")
+        .setMobileNumber("1234", "1234567")
 
     @Test
     @DisplayName("Should throw exception on providing null judo id")
