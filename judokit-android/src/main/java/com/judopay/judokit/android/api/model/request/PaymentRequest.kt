@@ -95,13 +95,16 @@ class PaymentRequest private constructor(
             // For example, when: dialCode = "1(345)", mobileNumber = "123456"
             // The following is sent to BE: phoneCountryCode = "1", mobileNumber = "3451234567"
 
-            if (mobileNumber != null) {
-                if (phoneCountryCode != null && phoneCountryCode.length > 3) {
-                    this.phoneCountryCode = phoneCountryCode.substring(0, 1)
-                    this.mobileNumber = phoneCountryCode.substring(2, 5) + mobileNumber
+            val filteredMobileNumber = mobileNumber?.filter { it.isDigit() }
+            val filteredPhoneCountryCode = phoneCountryCode?.filter { it.isDigit() }
+
+            if (filteredMobileNumber != null) {
+                if (filteredPhoneCountryCode != null && filteredPhoneCountryCode.length > 3) {
+                    this.phoneCountryCode = filteredPhoneCountryCode.substring(0, 1)
+                    this.mobileNumber = filteredPhoneCountryCode.substring(1, 4) + filteredMobileNumber
                 } else {
-                    this.phoneCountryCode = phoneCountryCode
-                    this.mobileNumber = mobileNumber
+                    this.phoneCountryCode = filteredPhoneCountryCode
+                    this.mobileNumber = filteredMobileNumber
                 }
             } else {
                 this.phoneCountryCode = null
