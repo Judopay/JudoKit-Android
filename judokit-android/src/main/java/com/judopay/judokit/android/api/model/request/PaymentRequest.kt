@@ -128,15 +128,13 @@ class PaymentRequest private constructor(
             val filteredPhoneCountryCode = phoneCountryCode?.filter { it.isDigit() }
             if (filteredMobileNumber != null) {
                 this.phoneCountryCode =
-                    if (filteredPhoneCountryCode != null && filteredPhoneCountryCode.length > 3)
+                    if (filteredPhoneCountryCode != null && filteredPhoneCountryCode.length > 3) {
                         filteredPhoneCountryCode.substring(0, 1)
-                    else
-                        filteredPhoneCountryCode
+                    } else filteredPhoneCountryCode
                 this.mobileNumber =
-                    if (filteredPhoneCountryCode != null && filteredPhoneCountryCode.length > 3)
+                    if (filteredPhoneCountryCode != null && filteredPhoneCountryCode.length > 3) {
                         filteredPhoneCountryCode.substring(1, 4) + filteredMobileNumber
-                    else
-                        filteredMobileNumber
+                    } else filteredMobileNumber
             }
 
             return PaymentRequest(
