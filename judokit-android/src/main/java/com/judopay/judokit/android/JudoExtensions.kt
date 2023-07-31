@@ -149,7 +149,9 @@ fun Judo.toPaymentRequest(
     cardNumber: String,
     expiryDate: String,
     securityCode: String,
-    threeDSecureTwo: ThreeDSecureTwo?
+    threeDSecureTwo: ThreeDSecureTwo?,
+    mobileNumber: String,
+    phoneCountryCode: String
 ) = PaymentRequest.Builder()
     .setUniqueRequest(false)
     .setYourPaymentReference(reference.paymentReference)
@@ -165,6 +167,8 @@ fun Judo.toPaymentRequest(
     .setPrimaryAccountDetails(primaryAccountDetails)
     .setInitialRecurringPayment(initialRecurringPayment)
     .setThreeDSecure(threeDSecureTwo)
+    .setMobileNumber(mobileNumber)
+    .setPhoneCountryCode(phoneCountryCode)
     .build()
 
 fun Judo.toRegisterCardRequest(
