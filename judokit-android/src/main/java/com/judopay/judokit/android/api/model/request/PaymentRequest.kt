@@ -88,29 +88,10 @@ class PaymentRequest private constructor(
 
         fun setEmailAddress(emailAddress: String?) = apply { this.emailAddress = emailAddress }
 
-        fun setMobileNumber(phoneCountryCode: String?, mobileNumber: String?) = apply {
-            // PAPI will only allow dial codes length 3 or less.
-            // Therefore logic has been added to re format dial codes of length 4 (which are always of format: 1(XXX)), when sending to BE.
-            //
-            // For example, when: dialCode = "1(345)", mobileNumber = "123456"
-            // The following is sent to BE: phoneCountryCode = "1", mobileNumber = "3451234567"
+        fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = mobileNumber }
 
-            val filteredMobileNumber = mobileNumber?.filter { it.isDigit() }
-            val filteredPhoneCountryCode = phoneCountryCode?.filter { it.isDigit() }
-
-            if (filteredMobileNumber != null) {
-                if (filteredPhoneCountryCode != null && filteredPhoneCountryCode.length > 3) {
-                    this.phoneCountryCode = filteredPhoneCountryCode.substring(0, 1)
-                    this.mobileNumber = filteredPhoneCountryCode.substring(1, 4) + filteredMobileNumber
-                } else {
-                    this.phoneCountryCode = filteredPhoneCountryCode
-                    this.mobileNumber = filteredMobileNumber
-                }
-            } else {
-                this.phoneCountryCode = null
-                this.mobileNumber = null
-            }
-        }
+        fun setPhoneCountryCode(phoneCountryCode: String?) =
+            apply { this.phoneCountryCode = phoneCountryCode }
 
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
             apply { this.primaryAccountDetails = primaryAccountDetails }
@@ -136,6 +117,27 @@ class PaymentRequest private constructor(
             val paymentReference =
                 requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
             val myThreeDSecure = requireNotNull(threeDSecure, "threeDSecure")
+
+            // PAPI will only allow dial codes length 3 or less.
+            // Therefore logic has been added to re format dial codes of length 4 (which are always
+            // of format: 1(XXX)), when sending to BE.
+            //
+            // For example, when: dialCode = "1(345)", mobileNumber = "123456"
+            // The following is sent to BE: phoneCountryCode = "1", mobileNumber = "3451234567"
+            val filteredMobileNumber = mobileNumber?.filter { it.isDigit() }
+            val filteredPhoneCountryCode = phoneCountryCode?.filter { it.isDigit() }
+            if (filteredMobileNumber != null) {
+                this.phoneCountryCode =
+                    if (filteredPhoneCountryCode != null && filteredPhoneCountryCode.length > 3)
+                        filteredPhoneCountryCode.substring(0, 1)
+                    else
+                        filteredPhoneCountryCode
+                this.mobileNumber =
+                    if (filteredPhoneCountryCode != null && filteredPhoneCountryCode.length > 3)
+                        filteredPhoneCountryCode.substring(1, 4) + filteredMobileNumber
+                    else
+                        filteredMobileNumber
+            }
 
             return PaymentRequest(
                 uniqueRequest,
