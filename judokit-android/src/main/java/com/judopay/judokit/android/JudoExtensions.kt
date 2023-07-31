@@ -151,7 +151,7 @@ fun Judo.toPaymentRequest(
     securityCode: String,
     threeDSecureTwo: ThreeDSecureTwo?,
     mobileNumber: String,
-    phoneCountryCode: String
+    phoneCountryCode: String? = null
 ) = PaymentRequest.Builder()
     .setUniqueRequest(false)
     .setYourPaymentReference(reference.paymentReference)

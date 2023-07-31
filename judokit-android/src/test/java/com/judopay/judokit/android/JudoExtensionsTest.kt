@@ -233,7 +233,6 @@ internal class JudoExtensionsTest {
             .setInitialRecurringPayment(false)
             .setThreeDSecure(mockThreeDSecureTwo)
             .setMobileNumber("321321321")
-            .setPhoneCountryCode("+44")
             .build()
 
         val actual = judo.toPaymentRequest(
@@ -241,8 +240,7 @@ internal class JudoExtensionsTest {
             "1229",
             "452",
             mockThreeDSecureTwo,
-            "321321321",
-            "44"
+            "321321321"
         )
 
         val gson = Gson()
