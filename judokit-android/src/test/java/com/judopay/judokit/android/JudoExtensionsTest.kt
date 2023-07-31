@@ -249,8 +249,7 @@ internal class JudoExtensionsTest {
         assertEquals(gson.toJson(expected), gson.toJson(actual))
     }
 
-    @DisplayName("Given Judo.toPaymentRequest is called with unusual phone details, " +
-            "then map Judo to PaymentRequest with phone details parsed correctly")
+    @DisplayName("Given Judo.toPaymentRequest is called with unusual phone details, then map Judo to PaymentRequest with phone details parsed correctly")
     @Test
     fun mapJudoToPaymentRequestWithUnusualPhoneDetails() {
         val expected = PaymentRequest.Builder()
