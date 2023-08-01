@@ -158,51 +158,6 @@ class PaymentRequest private constructor(
                 myThreeDSecure,
                 cardHolderName
             )
-            // Therefore logic has been added to re format dial codes of length 4 (which are always
-            // of format: 1(XXX)), when sending to BE.
-            //
-            // For example, when: dialCode = "1(345)", mobileNumber = "123456"
-            // The following is sent to BE: phoneCountryCode = "1", mobileNumber = "3451234567"
-            val filteredMobileNumber = mobileNumber?.filter { it.isDigit() }
-            val filteredPhoneCountryCode = phoneCountryCode?.filter { it.isDigit() }
-            if (filteredMobileNumber != null) {
-                this.phoneCountryCode =
-                    if (filteredPhoneCountryCode != null && filteredPhoneCountryCode.length > 3) {
-                        filteredPhoneCountryCode.substring(0, 1)
-                    } else {
-                        filteredPhoneCountryCode
-                    }
-                this.mobileNumber =
-                    if (filteredPhoneCountryCode != null && filteredPhoneCountryCode.length > 3) {
-                        filteredPhoneCountryCode.substring(1, 4) + filteredMobileNumber
-                    } else {
-                        filteredMobileNumber
-                    }
-            }
-
-            return PaymentRequest(
-                uniqueRequest,
-                paymentReference,
-                myAmount,
-                myCurrency,
-                id,
-                consumerReference,
-                yourPaymentMetaData,
-                address,
-                myCardNumber,
-                myCv2,
-                myExpiryDate,
-                startDate,
-                issueNumber,
-                saveCardOnly,
-                emailAddress,
-                mobileNumber,
-                phoneCountryCode,
-                primaryAccountDetails,
-                initialRecurringPayment,
-                myThreeDSecure,
-                cardHolderName
-            )
         }
     }
 }
