@@ -54,9 +54,6 @@ class CardPaymentTest {
     }
 
     @get:Rule
-    var permissionNotifications: GrantPermissionRule = GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS)
-
-    @get:Rule
     val activityRule = ActivityScenarioRule(DemoFeatureListActivity::class.java)
 
     @get:Rule
