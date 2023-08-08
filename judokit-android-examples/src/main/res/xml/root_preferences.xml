@@ -59,6 +59,19 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
+        app:title="@string/ravelin_settings_header">
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="is_ravelin_encryption_enabled"
+            app:summary="@string/is_ravelin_encryption_enabled_summary"
+            app:title="@string/is_ravelin_encryption_enabled_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
         app:title="@string/three_ds2_header">
 
         <SwitchPreferenceCompat

@@ -44,7 +44,7 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
             ?: throw NullPointerException(BIC_NOT_NULL)
 
         val application = requireActivity().application
-        val service = JudoApiServiceFactory.createApiService(application, judo)
+        val service = JudoApiServiceFactory.createJudoApiService(application, judo)
         val pollingService = PollingService(service)
         val factory = IdealViewModelFactory(judo, service, pollingService, application)
         viewModel = ViewModelProvider(this, factory)[IdealViewModel::class.java]

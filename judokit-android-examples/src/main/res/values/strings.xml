@@ -214,6 +214,9 @@
     <string name="preauth_token_payment">PreAuth token payment</string>
     <string name="token_payment_description">To make a token or preauth token payment, first you have to create a card token</string>
 
+    <string name="ravelin_settings_header">Ravelin Settings</string>
+    <string name="is_ravelin_encryption_enabled_title">Enable Ravelin Encryption</string>
+    <string name="is_ravelin_encryption_enabled_summary">Turn on to encrypt the card</string>
 
     <string name="three_ds2_header">3DS 2.0</string>
     <string name="is_3ds2_enabled_title">Enable billing information screen</string>

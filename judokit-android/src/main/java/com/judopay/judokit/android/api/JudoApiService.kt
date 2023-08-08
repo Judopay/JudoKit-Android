@@ -27,7 +27,7 @@ import retrofit2.http.Path
 
 /**
  * Judo interface with Retrofit annotated list of judo API calls that can be performed.
- * Use the [createApiService][com.judopay.judokit.android.api.factory.JudoApiServiceFactory.createApiService]
+ * Use the [createApiService][com.judopay.judokit.android.api.factory.JudoApiServiceFactory.createJudoApiService]
  * method to obtain an instance. See [GitHub](https://github.com/square/retrofit) for details.
  */
 interface JudoApiService {

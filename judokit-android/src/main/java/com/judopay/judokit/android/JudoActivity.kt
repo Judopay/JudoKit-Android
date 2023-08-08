@@ -15,7 +15,6 @@ import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.WalletConstants
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.model.JudoPaymentResult
-import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.code
 import com.judopay.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judopay.judokit.android.model.isGooglePayWidget
@@ -56,7 +55,7 @@ class JudoActivity : AppCompatActivity() {
 
         val config = judo
         // setup shared view-model & response callbacks
-        val judoApiService = JudoApiServiceFactory.createApiService(applicationContext, config)
+        val judoApiService = JudoApiServiceFactory.createJudoApiService(applicationContext, config)
         val factory = JudoSharedViewModelFactory(
             config,
             buildJudoGooglePayService(),

@@ -73,7 +73,7 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
         val paymentWidgetType = arguments?.parcelable<PaymentWidgetType>(PAYMENT_WIDGET_TYPE)
 
         val application = requireActivity().application
-        val service = JudoApiServiceFactory.createApiService(application, judo)
+        val service = JudoApiServiceFactory.createJudoApiService(application, judo)
         val pollingService = PollingService(service)
         val factory = PollingStatusViewModelFactory(
             service,

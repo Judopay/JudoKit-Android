@@ -61,7 +61,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
         val judo = intent.parcelable<Judo>(JUDO_OPTIONS)
             ?: throw IllegalStateException("Judo object is required")
 
-        service = JudoApiServiceFactory.createApiService(this, judo)
+        service = JudoApiServiceFactory.createJudoApiService(this, judo)
         binding.tokenPaymentButton.state = ButtonState.Disabled(R.string.token_payment)
         binding.preAuthTokenPaymentButton.state = ButtonState.Disabled(R.string.preauth_token_payment)
         transactionDetailsBuilder = TransactionDetails.Builder()

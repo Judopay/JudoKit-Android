@@ -88,7 +88,7 @@ class PaymentMethodsFragment : Fragment() {
         val cardDate = CardDate()
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
         val cardRepository = TokenizedCardRepository(tokenizedCardDao)
-        service = JudoApiServiceFactory.createApiService(application, judo)
+        service = JudoApiServiceFactory.createJudoApiService(application, judo)
         cardTransactionManager = CardTransactionManager.getInstance(requireActivity())
         cardTransactionManager.configureWith(judo)
 

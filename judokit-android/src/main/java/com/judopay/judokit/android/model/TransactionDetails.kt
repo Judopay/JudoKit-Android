@@ -7,6 +7,7 @@ import com.judopay.judo3ds2.transaction.Transaction
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.request.CheckCardRequest
+import com.judopay.judokit.android.api.model.request.EncryptCardRequest
 import com.judopay.judokit.android.api.model.request.PaymentRequest
 import com.judopay.judokit.android.api.model.request.PreAuthRequest
 import com.judopay.judokit.android.api.model.request.PreAuthTokenRequest
@@ -279,6 +280,33 @@ fun TransactionDetails.toRegisterCardRequest(judo: Judo, transaction: Transactio
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
+        .build()
+}
+
+@Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
+fun TransactionDetails.toEncryptCardRequest(judo: Judo): EncryptCardRequest {
+    val myAesKeyCipherText = ""
+    val myAlgorithm = ""
+    val myCardCipherText = ""
+    val myKeyIndex = 0
+    val myKeySignature = ""
+    val myMethodType = ""
+    val myRavelinSdkVersion = ""
+
+    return EncryptCardRequest.Builder()
+        .setPaymentMethod(
+            PaymentMethodRavelinModel(
+                PaymentMethodCipher(
+                    aesKeyCipherText = myAesKeyCipherText,
+                    algorithm = myAlgorithm,
+                    cardCipherText = myCardCipherText,
+                    keyIndex = myKeyIndex,
+                    keySignature = myKeySignature,
+                    methodType = myMethodType,
+                    ravelinSDKVersion = myRavelinSdkVersion
+                )
+            )
+        )
         .build()
 }
 

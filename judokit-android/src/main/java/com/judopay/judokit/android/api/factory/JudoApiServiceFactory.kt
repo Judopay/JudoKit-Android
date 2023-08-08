@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.AppMetaDataProvider
 import com.judopay.judokit.android.api.JudoApiService
+import com.judopay.judokit.android.api.RavelinApiService
 import com.judopay.judokit.android.api.deserializer.ChallengeRequestIndicatorSerializer
 import com.judopay.judokit.android.api.deserializer.DateJsonDeserializer
 import com.judopay.judokit.android.api.deserializer.FormattedBigDecimalDeserializer
@@ -53,13 +54,24 @@ object JudoApiServiceFactory {
      * for interacting with the judoPay REST API.
      */
     @JvmStatic
-    fun createApiService(context: Context, judo: Judo): JudoApiService =
+    fun createJudoApiService(context: Context, judo: Judo): JudoApiService =
         createRetrofit(context.applicationContext, judo).create(JudoApiService::class.java)
+
+    /**
+     * @param context the calling Context
+     * @param judo the judo instance
+     * @return the Retrofit API service implementation containing the methods used
+     * for interacting with the Ravelin (card encryption) REST API.
+     */
+    @JvmStatic
+    fun createRavelinApiService(context: Context, judo: Judo): RavelinApiService =
+        createRetrofit(context.applicationContext, judo).create(RavelinApiService::class.java)
 
     @JvmStatic
     var externalInterceptors: List<Interceptor>? = null
 
     private fun createRetrofit(context: Context, judo: Judo): Retrofit = Retrofit.Builder()
+        // Todo: change base URL for Ravelin!
         .baseUrl(judo.apiBaseUrl)
         .client(getOkHttpClient(context, judo))
         .addConverterFactory(gsonConverterFactory)

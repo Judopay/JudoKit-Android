@@ -15,9 +15,11 @@ import com.judopay.judo3ds2.transaction.Transaction
 import com.judopay.judo3ds2.transaction.challenge.ChallengeStatusReceiver
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.JudoApiService
+import com.judopay.judokit.android.api.RavelinApiService
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.request.Complete3DS2Request
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
+import com.judopay.judokit.android.api.model.response.RavelinEncryptionResponse
 import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.api.model.response.getCReqParameters
 import com.judopay.judokit.android.api.model.response.getChallengeParameters
@@ -27,6 +29,7 @@ import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.toCheckCardRequest
+import com.judopay.judokit.android.model.toEncryptCardRequest
 import com.judopay.judokit.android.model.toPaymentRequest
 import com.judopay.judokit.android.model.toPreAuthRequest
 import com.judopay.judokit.android.model.toPreAuthTokenRequest
@@ -39,6 +42,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import retrofit2.Call
 import retrofit2.await
 import java.util.WeakHashMap
 
@@ -94,7 +98,8 @@ private const val THREE_DS_TWO_MIN_TIMEOUT = 5
 class CardTransactionManager private constructor(private var context: FragmentActivity) : ActivityAwareComponent {
 
     private lateinit var judo: Judo
-    private lateinit var apiService: JudoApiService
+    private lateinit var judoApiService: JudoApiService
+    private lateinit var ravelinApiService: RavelinApiService
     private var threeDS2Service: ThreeDS2Service = ThreeDS2ServiceImpl()
 
     private var transaction: Transaction? = null
@@ -121,7 +126,8 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         config != judo
     }?.apply {
         judo = config
-        apiService = JudoApiServiceFactory.createApiService(context, config)
+        judoApiService = JudoApiServiceFactory.createJudoApiService(context, config)
+        ravelinApiService = JudoApiServiceFactory.createRavelinApiService(context, config)
 
         try {
             threeDS2Service.cleanup(context)
@@ -155,39 +161,46 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         }
     }
 
-    private fun performApiRequest(
+    private fun performJudoApiRequest(
         type: TransactionType,
         details: TransactionDetails,
         transaction: Transaction
     ) = when (type) {
         TransactionType.PAYMENT -> {
             val request = details.toPaymentRequest(judo, transaction)
-            apiService.payment(request)
+            judoApiService.payment(request)
         }
         TransactionType.PRE_AUTH -> {
             val request = details.toPreAuthRequest(judo, transaction)
-            apiService.preAuthPayment(request)
+            judoApiService.preAuthPayment(request)
         }
         TransactionType.PAYMENT_WITH_TOKEN -> {
             val request = details.toTokenRequest(judo, transaction)
-            apiService.tokenPayment(request)
+            judoApiService.tokenPayment(request)
         }
         TransactionType.PRE_AUTH_WITH_TOKEN -> {
             val request = details.toPreAuthTokenRequest(judo, transaction)
-            apiService.preAuthTokenPayment(request)
+            judoApiService.preAuthTokenPayment(request)
         }
         TransactionType.SAVE -> {
             val request = details.toSaveCardRequest(judo, transaction)
-            apiService.saveCard(request)
+            judoApiService.saveCard(request)
         }
         TransactionType.CHECK -> {
             val request = details.toCheckCardRequest(judo, transaction)
-            apiService.checkCard(request)
+            judoApiService.checkCard(request)
         }
         TransactionType.REGISTER -> {
             val request = details.toRegisterCardRequest(judo, transaction)
-            apiService.registerCard(request)
+            judoApiService.registerCard(request)
         }
+    }
+
+    private fun performRavelinApiRequest(
+        details: TransactionDetails
+    ): Call<JudoApiCallResult<RavelinEncryptionResponse>> {
+        val request = details.toEncryptCardRequest(judo)
+        return ravelinApiService.encryptCard("", request)
     }
 
     private fun performTransaction(
@@ -201,6 +214,13 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         }
 
         applicationScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
+
+            // Todo: Update this check for all types that require Ravelin encryption.
+            if (judo.isRavelinEncryptionEnabled && type == TransactionType.PAYMENT) {
+                val cardEncryptionApiResult = performRavelinApiRequest(details).await()
+                Log.d("TESTO", "TESTO")
+            }
+
             try {
                 Log.d(CardTransactionManager::class.java.name, "initialize 3DS2 SDK")
                 threeDS2Service.initialize(context, parameters, locale, judo.uiConfiguration.threeDSUiCustomization)
@@ -222,7 +242,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             val myTransaction =
                 threeDS2Service.createTransaction(directoryServerID, judo.threeDSTwoMessageVersion)
 
-            val apiResult = performApiRequest(type, details, myTransaction).await()
+            val apiResult = performJudoApiRequest(type, details, myTransaction).await()
 
             transactionDetails = details
             transaction = myTransaction
@@ -256,7 +276,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
 
         applicationScope.launch {
             val result =
-                apiService.complete3ds2(receiptId, Complete3DS2Request(version, cv2)).await()
+                judoApiService.complete3ds2(receiptId, Complete3DS2Request(version, cv2)).await()
             onResult(result.toJudoPaymentResult(context.resources), caller)
         }
     }

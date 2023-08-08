@@ -81,7 +81,8 @@ class Judo internal constructor(
     val delayedAuthorisation: Boolean? = null,
     val cardToken: CardToken? = null,
     val cardSecurityCode: String? = null,
-    val subProductInfo: SubProductInfo = SubProductInfo.Unknown
+    val subProductInfo: SubProductInfo = SubProductInfo.Unknown,
+    val isRavelinEncryptionEnabled: Boolean
 ) : Parcelable {
 
     /**
@@ -114,6 +115,7 @@ class Judo internal constructor(
         private var cardToken: CardToken? = null
         private var cardSecurityCode: String? = null
         private var subProductInfo: SubProductInfo = SubProductInfo.Unknown
+        private var isRavelinEncryptionEnabled: Boolean? = null
 
         /**
          * Sets the unique merchant ID
@@ -296,6 +298,9 @@ class Judo internal constructor(
         fun setSubProductInfo(subProductInfo: SubProductInfo) =
             apply { this.subProductInfo = subProductInfo }
 
+        fun setIsRavelinEncryptionEnabled(ravelinEncryptionEnabled: Boolean?) =
+            apply { this.isRavelinEncryptionEnabled = ravelinEncryptionEnabled }
+
         /**
          * Method that initializes Judo configuration object that can be used for
          * processing a payment.
@@ -356,6 +361,8 @@ class Judo internal constructor(
                 pbbaConfiguration
             }
 
+            val myRavelinEncryptionEnabled = isRavelinEncryptionEnabled ?: false
+
             return Judo(
                 judoId = id,
                 authorization = myAuthorization,
@@ -382,7 +389,8 @@ class Judo internal constructor(
                 delayedAuthorisation = delayedAuthorisation,
                 cardToken = cardToken,
                 cardSecurityCode = cardSecurityCode,
-                subProductInfo = subProductInfo
+                subProductInfo = subProductInfo,
+                isRavelinEncryptionEnabled = myRavelinEncryptionEnabled
             )
         }
 
