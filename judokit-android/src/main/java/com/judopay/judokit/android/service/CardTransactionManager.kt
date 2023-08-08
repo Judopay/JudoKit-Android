@@ -21,7 +21,6 @@ import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.api.model.response.getCReqParameters
 import com.judopay.judokit.android.api.model.response.getChallengeParameters
-import com.judopay.judokit.android.api.model.response.toCardVerificationModel
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.JudoError
@@ -34,9 +33,6 @@ import com.judopay.judokit.android.model.toPreAuthTokenRequest
 import com.judopay.judokit.android.model.toRegisterCardRequest
 import com.judopay.judokit.android.model.toSaveCardRequest
 import com.judopay.judokit.android.model.toTokenRequest
-import com.judopay.judokit.android.ui.cardverification.THREE_DS_ONE_DIALOG_FRAGMENT_TAG
-import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCardVerificationDialogFragment
-import com.judopay.judokit.android.ui.cardverification.ThreeDSOneCompletionCallback
 import com.judopay.judokit.android.ui.common.getLocale
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -256,7 +252,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     private fun performComplete3ds2(receipt: Receipt, caller: String) {
         val receiptId = receipt.receiptId ?: ""
         val version = receipt.getCReqParameters()?.messageVersion ?: judo.threeDSTwoMessageVersion
-        val cv2 = transactionDetails?.securityNumber ?: ""
+        val cv2 = transactionDetails?.securityNumber
 
         applicationScope.launch {
             val result =
@@ -273,7 +269,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             is JudoApiCallResult.Success -> if (result.data != null) {
                 val receipt = result.data
                 when {
-                    receipt.isThreeDSecureOneRequired -> handleThreeDSecureOne(receipt, caller)
                     receipt.isThreeDSecureTwoRequired -> handleThreeDSecureTwo(receipt, caller)
                     else -> onResult(result.toJudoPaymentResult(context.resources), caller)
                 }
@@ -281,29 +276,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                 onResult(result.toJudoPaymentResult(context.resources), caller)
             }
         }
-
-    private fun handleThreeDSecureOne(receipt: Receipt, caller: String) {
-        val cardVerificationModel = receipt.toCardVerificationModel()
-        val threeDSOneCompletionCallback = object : ThreeDSOneCompletionCallback {
-
-            override fun onSuccess(success: JudoPaymentResult) {
-                val result = success as JudoPaymentResult.Success
-                onResult(result, caller)
-            }
-
-            override fun onFailure(error: JudoPaymentResult) {
-                onResult(error, caller)
-            }
-        }
-
-        val fragment = ThreeDSOneCardVerificationDialogFragment(
-            apiService,
-            cardVerificationModel,
-            threeDSOneCompletionCallback
-        )
-
-        fragment.show(context.supportFragmentManager, THREE_DS_ONE_DIALOG_FRAGMENT_TAG)
-    }
 
     private fun handleThreeDSecureTwo(receipt: Receipt, caller: String) {
         val challengeStatusReceiver = object : ChallengeStatusReceiver {

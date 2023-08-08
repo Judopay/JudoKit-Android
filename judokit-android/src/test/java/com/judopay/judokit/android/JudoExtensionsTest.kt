@@ -232,9 +232,52 @@ internal class JudoExtensionsTest {
             .setPrimaryAccountDetails(mockPrimaryAccountDetails)
             .setInitialRecurringPayment(false)
             .setThreeDSecure(mockThreeDSecureTwo)
+            .setMobileNumber("321321321")
             .build()
 
-        val actual = judo.toPaymentRequest("4111111111111111", "1229", "452", mockThreeDSecureTwo)
+        val actual = judo.toPaymentRequest(
+            "4111111111111111",
+            "1229",
+            "452",
+            mockThreeDSecureTwo,
+            "321321321"
+        )
+
+        val gson = Gson()
+        assertEquals(gson.toJson(expected), gson.toJson(actual))
+    }
+
+    @DisplayName("Given Judo.toPaymentRequest is called with unusual phone details, then map Judo to PaymentRequest with phone details parsed correctly")
+    @Test
+    fun mapJudoToPaymentRequestWithUnusualPhoneDetails() {
+        val expected = PaymentRequest.Builder()
+            .setUniqueRequest(false)
+            .setYourPaymentReference("ref")
+            .setJudoId("123456789")
+            .setYourPaymentMetaData(emptyMap())
+            .setAmount("1")
+            .setCurrency(Currency.GBP.name)
+            .setJudoId("123456789")
+            .setYourConsumerReference("ref")
+            .setAddress(mockAddress)
+            .setCardNumber("4111111111111111")
+            .setCv2("452")
+            .setExpiryDate("1229")
+            .setPrimaryAccountDetails(mockPrimaryAccountDetails)
+            .setInitialRecurringPayment(false)
+            .setThreeDSecure(mockThreeDSecureTwo)
+            .setMobileNumber("(321)321-321")
+            .setPhoneCountryCode("+1754")
+            .build()
+
+        val actual = judo.toPaymentRequest(
+            "4111111111111111",
+            "1229",
+            "452",
+            mockThreeDSecureTwo,
+            "754321321321",
+            "1"
+        )
 
         val gson = Gson()
         assertEquals(gson.toJson(expected), gson.toJson(actual))

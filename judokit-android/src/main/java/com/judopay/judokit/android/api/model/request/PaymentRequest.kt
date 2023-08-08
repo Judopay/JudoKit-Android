@@ -90,6 +90,9 @@ class PaymentRequest private constructor(
 
         fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = mobileNumber }
 
+        fun setPhoneCountryCode(phoneCountryCode: String?) =
+            apply { this.phoneCountryCode = phoneCountryCode }
+
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
             apply { this.primaryAccountDetails = primaryAccountDetails }
 
@@ -101,9 +104,6 @@ class PaymentRequest private constructor(
 
         fun setCardHolderName(cardHolderName: String?) =
             apply { this.cardHolderName = cardHolderName }
-
-        fun setPhoneCountryCode(phoneCountryCode: String?) =
-            apply { this.phoneCountryCode = phoneCountryCode }
 
         fun build(): PaymentRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
@@ -117,6 +117,23 @@ class PaymentRequest private constructor(
             val paymentReference =
                 requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
             val myThreeDSecure = requireNotNull(threeDSecure, "threeDSecure")
+
+            // PAPI will only allow dial codes length 3 or less.
+            // Therefore logic has been added to re format dial codes of length 4 (which are always
+            // of format: 1(XXX)), when sending to BE.
+            //
+            // For example, when: dialCode = "1(345)", mobileNumber = "123456"
+            // The following is sent to BE: phoneCountryCode = "1", mobileNumber = "3451234567"
+            var filteredMobileNumber = mobileNumber?.filter { it.isDigit() }
+            var filteredPhoneCountryCode = phoneCountryCode?.filter { it.isDigit() }
+
+            if (filteredMobileNumber != null && filteredPhoneCountryCode != null && filteredPhoneCountryCode.length > 3) {
+                val code = filteredPhoneCountryCode.substring(0, 1)
+                val rest = filteredPhoneCountryCode.substring(1, filteredPhoneCountryCode.length)
+
+                filteredPhoneCountryCode = code
+                filteredMobileNumber = rest + filteredMobileNumber
+            }
 
             return PaymentRequest(
                 uniqueRequest,
@@ -134,8 +151,8 @@ class PaymentRequest private constructor(
                 issueNumber,
                 saveCardOnly,
                 emailAddress,
-                mobileNumber,
-                phoneCountryCode,
+                filteredMobileNumber,
+                filteredPhoneCountryCode,
                 primaryAccountDetails,
                 initialRecurringPayment,
                 myThreeDSecure,

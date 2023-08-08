@@ -18,7 +18,7 @@ class ActivityResumeIdlingResource(val customName: String = "activity-resume-idl
             return registry.getActivitiesInStage(Stage.RESUMED).firstOrNull()
         }
 
-    override fun getName(): String = customName
+    override fun getName() = customName
 
     override fun isIdleNow(): Boolean {
         if (isIdle) return true

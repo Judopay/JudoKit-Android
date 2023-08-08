@@ -6,7 +6,6 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
 import com.judopay.judo3ds2.transaction.challenge.ChallengeParameters
-import com.judopay.judokit.android.isNoneNullOrEmpty
 import com.judopay.judokit.android.model.CardVerificationModel
 import com.judopay.judokit.android.model.JudoResult
 import java.math.BigDecimal
@@ -50,10 +49,6 @@ class Receipt(
     val acsThreeDSRequestorAppURL: String? = null,
     val cReq: String? = null
 ) {
-
-    val isThreeDSecureOneRequired: Boolean
-        get() = isNoneNullOrEmpty(acsUrl, md, paReq)
-
     val isThreeDSecureTwoRequired: Boolean
         get() = message == CHALLENGE_REQUIRED_MESSAGE
 

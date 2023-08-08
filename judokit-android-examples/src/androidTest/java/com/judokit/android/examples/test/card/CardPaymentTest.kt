@@ -16,6 +16,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.action.ViewActions.swipeUp
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
@@ -42,6 +43,8 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class CardPaymentTest {
+    @get:Rule
+    var permissionNotifications = GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS)
 
     object ValidCardDetails {
         const val CARD_NUMBER = "4976 3500 0000 6891"
@@ -81,14 +84,14 @@ class CardPaymentTest {
 
     @Test
     fun onValidCardDetailsInputSubmitButtonShouldBeEnabled() {
-        onView(withText("Pay with card"))
+        onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
         enterPaymentSheetDetails(
-            ValidCardDetails.CARD_NUMBER,
-            ValidCardDetails.CARDHOLDER_NAME,
-            ValidCardDetails.CARD_EXPIRY,
-            ValidCardDetails.CARD_SECURITY_CODE
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -97,27 +100,27 @@ class CardPaymentTest {
 
     @Test
     fun onCancelledTransactionErrorPopupShouldBeDisplayed() {
-        onView(withText("Pay with card"))
+        onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
-        onView(withText("Cancel"))
+        onView(withText(CANCEL_BUTTON))
             .perform(click())
 
         Thread.sleep(500)
 
-        onView(withText("User cancelled the payment.")).check(matches(isDisplayed()))
+        onView(withText(CANCELLED_PAYMENT_TOAST)).check(matches(isDisplayed()))
     }
 
     @Test
     fun onSuccessfulTransactionReceiptObjectShouldContainRelevantInfo() {
-        onView(withText("Pay with card"))
+        onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
         enterPaymentSheetDetails(
-            ValidCardDetails.CARD_NUMBER,
-            ValidCardDetails.CARDHOLDER_NAME,
-            ValidCardDetails.CARD_EXPIRY,
-            ValidCardDetails.CARD_SECURITY_CODE
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -131,12 +134,12 @@ class CardPaymentTest {
 
     @Test
     fun onDeclinedTransactionReceiptObjectShouldContainRelevantInfo() {
-        onView(withText("Pay with card"))
+        onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
         enterPaymentSheetDetails(
-            ValidCardDetails.CARD_NUMBER,
-            ValidCardDetails.CARDHOLDER_NAME,
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
             "12/30",
             "123"
         )
@@ -152,13 +155,13 @@ class CardPaymentTest {
 
     @Test
     fun onFailedTransactionReceiptObjectShouldContainRelevantInfo() {
-        onView(withText("Pay with card"))
+        onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
         enterPaymentSheetDetails(
             "4111 1111 1111 1111",
-            ValidCardDetails.CARDHOLDER_NAME,
-            ValidCardDetails.CARD_EXPIRY,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
             "123"
         )
 
@@ -173,14 +176,14 @@ class CardPaymentTest {
 
     @Test
     fun onCancel3DS2ChallengeScreenReceiptObjectShouldContainRelevantInfo() {
-        onView(withText("Pay with card"))
+        onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
         enterPaymentSheetDetails(
-            ValidCardDetails.CARD_NUMBER,
-            ValidCardDetails.CARDHOLDER_NAME,
-            ValidCardDetails.CARD_EXPIRY,
-            ValidCardDetails.CARD_SECURITY_CODE
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -209,14 +212,14 @@ class CardPaymentTest {
             }
             .commit()
 
-        onView(withText("Pay with card"))
+        onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
         enterPaymentSheetDetails(
-            ValidCardDetails.CARD_NUMBER,
-            ValidCardDetails.CARDHOLDER_NAME,
-            ValidCardDetails.CARD_EXPIRY,
-            ValidCardDetails.CARD_SECURITY_CODE
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -232,14 +235,14 @@ class CardPaymentTest {
 
     @Test
     fun onSuccessfulPreauthTransactionReceiptObjectContainsRelevantInfo() {
-        onView(withText("Pre-auth with card"))
+        onView(withText(PREAUTH_WITH_CARD_LABEL))
             .perform(click())
 
         enterPaymentSheetDetails(
-            ValidCardDetails.CARD_NUMBER,
-            ValidCardDetails.CARDHOLDER_NAME,
-            ValidCardDetails.CARD_EXPIRY,
-            ValidCardDetails.CARD_SECURITY_CODE
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -253,14 +256,14 @@ class CardPaymentTest {
 
     @Test
     fun onSuccessfulRegisterCardTransactionReceiptObjectContainsRelevantInfo() {
-        onView(withText("Register card"))
+        onView(withText(REGISTER_CARD_LABEL))
             .perform(click())
 
         enterPaymentSheetDetails(
-            ValidCardDetails.CARD_NUMBER,
-            ValidCardDetails.CARDHOLDER_NAME,
-            ValidCardDetails.CARD_EXPIRY,
-            ValidCardDetails.CARD_SECURITY_CODE
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -274,14 +277,14 @@ class CardPaymentTest {
 
     @Test
     fun onSuccessfulCheckCardTransactionReceiptObjectContainsRelevantInfo() {
-        onView(withText("Check card"))
+        onView(withText(CHECK_CARD_LABEL))
             .perform(click())
 
         enterPaymentSheetDetails(
-            ValidCardDetails.CARD_NUMBER,
-            ValidCardDetails.CARDHOLDER_NAME,
-            ValidCardDetails.CARD_EXPIRY,
-            ValidCardDetails.CARD_SECURITY_CODE
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -298,7 +301,7 @@ class CardPaymentTest {
         onView(withId(R.id.recyclerView))
             .perform(swipeUp())
 
-        onView(withText("Token payments"))
+        onView(withText(TOKEN_PAYMENTS_LABEL))
             .perform(scrollTo())
             .perform(click())
 
@@ -309,10 +312,10 @@ class CardPaymentTest {
         Thread.sleep(500)
 
         enterPaymentSheetDetails(
-            ValidCardDetails.CARD_NUMBER,
-            ValidCardDetails.CARDHOLDER_NAME,
-            ValidCardDetails.CARD_EXPIRY,
-            ValidCardDetails.CARD_SECURITY_CODE
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -322,7 +325,7 @@ class CardPaymentTest {
         awaitActivityThenRun(TokenPaymentsActivity::class.java.name) {
             composeTestRule.onNodeWithText("Security code")
                 .assertIsEnabled()
-                .performTextInput(ValidCardDetails.CARD_SECURITY_CODE)
+                .performTextInput(CARD_SECURITY_CODE)
 
             closeSoftKeyboard()
 
@@ -337,6 +340,49 @@ class CardPaymentTest {
     }
 
     @Test
+    fun onSuccessfulTokenPreauthReceiptObjectContainsRelevantInfo() {
+        onView(withId(R.id.recyclerView))
+            .perform(swipeUp())
+
+        onView(withText(TOKEN_PAYMENTS_LABEL))
+            .perform(scrollTo())
+            .perform(click())
+
+        composeTestRule.onNodeWithText("TOKENIZE A NEW CARD")
+            .assertIsEnabled()
+            .performClick()
+
+        Thread.sleep(500)
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        awaitActivityThenRun(TokenPaymentsActivity::class.java.name) {
+            composeTestRule.onNodeWithText("Security code")
+                .assertIsEnabled()
+                .performTextInput(CARD_SECURITY_CODE)
+
+            closeSoftKeyboard()
+
+            composeTestRule.onNodeWithText("PRE-AUTH")
+                .assertIsEnabled()
+                .performClick()
+        }
+
+        clickCompleteOn3DS2Screen()
+
+        assertReceiptObject("AuthCode: ", "", "Success", "PreAuth")
+    }
+
+    @Test
     fun onSuccessfulFrictionlessPaymentReceiptObjectContainsRelevantInfo() {
         sharedPrefs
             .edit()
@@ -345,15 +391,15 @@ class CardPaymentTest {
             }
             .commit()
 
-        onView(withText("Pay with card"))
+        onView(withText(PAY_WITH_CARD_LABEL))
             .check(matches(isEnabled()))
             .perform(click())
 
         enterPaymentSheetDetails(
-            ValidCardDetails.CARD_NUMBER,
+            CARD_NUMBER,
             "Frictionless Successful",
-            ValidCardDetails.CARD_EXPIRY,
-            ValidCardDetails.CARD_SECURITY_CODE
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -372,15 +418,15 @@ class CardPaymentTest {
             }
             .commit()
 
-        onView(withText("Pay with card"))
+        onView(withText(PAY_WITH_CARD_LABEL))
             .check(matches(isEnabled()))
             .perform(click())
 
         enterPaymentSheetDetails(
-            ValidCardDetails.CARD_NUMBER,
+            CARD_NUMBER,
             "Frictionless NoMethod",
-            ValidCardDetails.CARD_EXPIRY,
-            ValidCardDetails.CARD_SECURITY_CODE
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -399,15 +445,15 @@ class CardPaymentTest {
             }
             .commit()
 
-        onView(withText("Pay with card"))
+        onView(withText(PAY_WITH_CARD_LABEL))
             .check(matches(isEnabled()))
             .perform(click())
 
         enterPaymentSheetDetails(
-            ValidCardDetails.CARD_NUMBER,
+            CARD_NUMBER,
             "Frictionless AuthFailed",
-            ValidCardDetails.CARD_EXPIRY,
-            ValidCardDetails.CARD_SECURITY_CODE
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -430,7 +476,7 @@ class CardPaymentTest {
             }
             .commit()
 
-        onView(withText("Payment methods"))
+        onView(withText(PAYMENT_METHODS_LABEL))
             .perform(click())
 
         Thread.sleep(1000)
@@ -441,10 +487,10 @@ class CardPaymentTest {
                 .perform(click())
 
             enterPaymentSheetDetails(
-                ValidCardDetails.CARD_NUMBER,
-                ValidCardDetails.CARDHOLDER_NAME,
-                ValidCardDetails.CARD_EXPIRY,
-                ValidCardDetails.CARD_SECURITY_CODE
+                CARD_NUMBER,
+                CARDHOLDER_NAME,
+                CARD_EXPIRY,
+                CARD_SECURITY_CODE
             )
 
             onView(withId(R.id.cardEntrySubmitButton))
@@ -457,7 +503,7 @@ class CardPaymentTest {
                 .perform(click())
 
             onView(withId(R.id.securityNumberTextInputEditText))
-                .perform(clearText(), typeText("341"))
+                .perform(clearText(), typeText(CARD_SECURITY_CODE))
 
             onView(withId(R.id.cardEntrySubmitButton))
                 .check(matches(isEnabled()))
@@ -472,7 +518,7 @@ class CardPaymentTest {
                 .perform(click())
 
             onView(withId(R.id.securityNumberTextInputEditText))
-                .perform(clearText(), typeText("341"))
+                .perform(clearText(), typeText(CARD_SECURITY_CODE))
 
             onView(withId(R.id.cardEntrySubmitButton))
                 .check(matches(isEnabled()))
@@ -496,7 +542,7 @@ class CardPaymentTest {
         onView(withId(R.id.recyclerView))
             .perform(swipeUp())
 
-        onView(withText("Pre-auth payment methods"))
+        onView(withText(PREAUTH_METHODS_LABEL))
             .perform(click())
 
         Thread.sleep(1000)
@@ -507,10 +553,10 @@ class CardPaymentTest {
                 .perform(click())
 
             enterPaymentSheetDetails(
-                ValidCardDetails.CARD_NUMBER,
-                ValidCardDetails.CARDHOLDER_NAME,
-                ValidCardDetails.CARD_EXPIRY,
-                ValidCardDetails.CARD_SECURITY_CODE
+                CARD_NUMBER,
+                CARDHOLDER_NAME,
+                CARD_EXPIRY,
+                CARD_SECURITY_CODE
             )
 
             onView(withId(R.id.cardEntrySubmitButton))
@@ -523,7 +569,7 @@ class CardPaymentTest {
                 .perform(click())
 
             onView(withId(R.id.securityNumberTextInputEditText))
-                .perform(clearText(), typeText("341"))
+                .perform(clearText(), typeText(CARD_SECURITY_CODE))
 
             onView(withId(R.id.cardEntrySubmitButton))
                 .check(matches(isEnabled()))
@@ -538,7 +584,7 @@ class CardPaymentTest {
                 .perform(click())
 
             onView(withId(R.id.securityNumberTextInputEditText))
-                .perform(clearText(), typeText("341"))
+                .perform(clearText(), typeText(CARD_SECURITY_CODE))
 
             onView(withId(R.id.cardEntrySubmitButton))
                 .check(matches(isEnabled()))
@@ -548,5 +594,49 @@ class CardPaymentTest {
 
             assertReceiptObject("", "", "Success", "PreAuth")
         }
+    }
+
+    @Test
+    fun onUserCanSuccessfullyRemoveCardInPaymentMethods() {
+        onView(withText(PAYMENT_METHODS_LABEL))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        onView(withId(R.id.addButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            "4222 0000 0122 7408",
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(2000)
+
+        onView(withId(R.id.subTitle))
+            .check(matches(withText("Visa Ending 7408")))
+
+        onView(withId(R.id.editButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        onView(withId(R.id.removeCardIcon))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        onView(withText("Delete"))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        onView(withText("Visa Ending 7408"))
+            .check(doesNotExist())
     }
 }

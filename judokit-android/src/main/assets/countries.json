@@ -194,7 +194,7 @@
     { "alpha2Code": "BL", "name": "Saint Barthélemy", "dialCode": "590", "numericCode": "652" }, 
     { "alpha2Code": "SH", "name": "Saint Helena", "dialCode": "290", "numericCode": "654" }, 
     { "alpha2Code": "KN", "name": "Saint Kitts and Nevis", "dialCode": "1869", "numericCode": "659" }, 
-    { "alpha2Code": "LC", "name": "Saint Lucia", "dialCode": "1758", "numericCode": "659" }, 
+    { "alpha2Code": "LC", "name": "Saint Lucia", "dialCode": "1758", "numericCode": "662" },
     { "alpha2Code": "MF", "name": "Saint Martin (French part)", "dialCode": "590", "numericCode": "663" }, 
     { "alpha2Code": "PM", "name": "Saint Pierre and Miquelon", "dialCode": "508", "numericCode": "666" }, 
     { "alpha2Code": "VC", "name": "Saint Vincent and the Grenadines", "dialCode": "1784", "numericCode": "670" }, 
