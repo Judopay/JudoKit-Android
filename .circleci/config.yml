@@ -311,11 +311,6 @@ jobs:
             ENVIRONMENT: << parameters.environment >>
           command: /resources/scripts/report-status-to-jira.sh
 
-parameters:
-  e2e-test-run-schedule:
-      type: boolean
-      default: false
-
 workflows:
   version: 2
   build:
