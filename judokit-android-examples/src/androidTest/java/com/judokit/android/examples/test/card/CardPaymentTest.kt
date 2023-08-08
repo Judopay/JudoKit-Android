@@ -46,6 +46,16 @@ class CardPaymentTest {
     @get:Rule
     var permissionNotifications = GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS)
 
+    object ValidCardDetails {
+        const val CARD_NUMBER = "4976 3500 0000 6891"
+        const val CARDHOLDER_NAME = "Test User"
+        const val CARD_EXPIRY = "12/25"
+        const val CARD_SECURITY_CODE = "341"
+    }
+
+    @get:Rule
+    var permissionNotifications: GrantPermissionRule = GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS)
+
     @get:Rule
     val activityRule = ActivityScenarioRule(DemoFeatureListActivity::class.java)
 
