@@ -68,6 +68,13 @@
             app:summary="@string/is_ravelin_encryption_enabled_summary"
             app:title="@string/is_ravelin_encryption_enabled_title" />
 
+        <EditTextPreference
+            app:dependency="is_ravelin_encryption_enabled"
+            app:iconSpaceReserved="false"
+            app:key="rsa_key"
+            app:summary="@string/rsa_key_summary"
+            app:title="@string/rsa_key_title" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

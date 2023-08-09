@@ -1,6 +1,5 @@
 package com.judopay.judokit.android.api
 
-import com.judopay.judokit.android.api.model.request.EncryptCardRequest
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.RavelinEncryptionResponse
 import retrofit2.Call
@@ -23,9 +22,9 @@ interface RavelinApiService {
      * @param receiptId - a string which contains the receipt ID of a transaction.
      * @return the receipt object that corresponds to the passed receipt ID
      */
-    @POST("{ravelinEncryptionEndpointUrl}")
-    fun encryptCard(
-        @Path("ravelinEncryptionEndpointUrl") ravelinEncryptionEndpointUrl: String,
-        @Body encryptCardRequest: EncryptCardRequest
-    ): Call<JudoApiCallResult<RavelinEncryptionResponse>>
+//    @POST("{ravelinEncryptionEndpointUrl}")
+//    fun encryptCard(
+//        @Path("ravelinEncryptionEndpointUrl") ravelinEncryptionEndpointUrl: String,
+//        @Body encryptCardRequest: EncryptCardRequest
+//    ): Call<JudoApiCallResult<RavelinEncryptionResponse>>
 }

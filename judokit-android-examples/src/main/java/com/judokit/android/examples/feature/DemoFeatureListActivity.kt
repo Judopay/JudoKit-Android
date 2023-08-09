@@ -360,6 +360,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val messageVersion = sharedPreferences.getString("threeDSTwoMessageVersion", null)
         val address = cardAddress
         val accountDetails = primaryAccountDetails
+        val isRavelinEncryptionEnabled = sharedPreferences.getBoolean("is_ravelin_encryption_enabled", true)
+        val rsaKey = sharedPreferences.getString("rsa_key", null)
 
         val builder = Judo.Builder(widgetType)
             .setJudoId(judoId)
@@ -381,6 +383,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setScaExemption(scaExemption)
             .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
             .setNetworkTimeout(networkTimeout)
+            .setIsRavelinEncryptionEnabled(isRavelinEncryptionEnabled)
+            .setRsaKey(rsaKey)
 
         if (!messageVersion.isNullOrBlank()) {
             builder.setThreeDSTwoMessageVersion(messageVersion)

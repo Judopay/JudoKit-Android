@@ -218,6 +218,9 @@
     <string name="is_ravelin_encryption_enabled_title">Enable Ravelin Encryption</string>
     <string name="is_ravelin_encryption_enabled_summary">Turn on to encrypt the card</string>
 
+    <string name="rsa_key_summary">Provide RSA Key for card encryption</string>
+    <string name="rsa_key_title">RSA Key</string>
+
     <string name="three_ds2_header">3DS 2.0</string>
     <string name="is_3ds2_enabled_title">Enable billing information screen</string>
     <string name="is_3ds2_enabled_summary">Asks user for billing information</string>

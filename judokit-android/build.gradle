@@ -119,6 +119,8 @@ dependencies {
     testImplementation project(path: ':judokit-android')
 
     ktlint 'com.pinterest:ktlint:0.47.1'
+
+    implementation 'com.ravelin.sdk:ravelin-encrypt:3.1.0'
 }
 
 task generateCodeAnalysisReport {

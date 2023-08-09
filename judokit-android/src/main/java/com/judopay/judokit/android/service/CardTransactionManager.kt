@@ -37,6 +37,11 @@ import com.judopay.judokit.android.model.toRegisterCardRequest
 import com.judopay.judokit.android.model.toSaveCardRequest
 import com.judopay.judokit.android.model.toTokenRequest
 import com.judopay.judokit.android.ui.common.getLocale
+import com.ravelin.cardEncryption.RavelinEncrypt
+import com.ravelin.cardEncryption.callback.EncryptCallback
+import com.ravelin.cardEncryption.model.CardDetails
+import com.ravelin.cardEncryption.model.EncryptError
+import com.ravelin.cardEncryption.model.EncryptedCard
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -196,12 +201,27 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         }
     }
 
-    private fun performRavelinApiRequest(
-        details: TransactionDetails
-    ): Call<JudoApiCallResult<RavelinEncryptionResponse>> {
-        val request = details.toEncryptCardRequest(judo)
-        return ravelinApiService.encryptCard("", request)
+    private fun performCardEncryption(details: TransactionDetails, rsaKey: String?): EncryptedCard? {
+        if (judo.rsaKey == null) throw IllegalStateException("RSA key is required")
+        val cardDetails = details.toEncryptCardRequest()
+
+        val result = RavelinEncrypt().encryptCard(cardDetails, rsaKey!!,
+            object : EncryptCallback<EncryptedCard>() {
+                override fun failure(error: EncryptError) {
+                    // Todo
+                    Log.d("TESTO", error.message.toString())
+                }
+                override fun success(result: EncryptedCard?) {}
+            })
+        return result
     }
+
+//    private fun performRavelinApiRequest(
+//        details: TransactionDetails
+//    ): Call<JudoApiCallResult<RavelinEncryptionResponse>> {
+//        val request = details.toEncryptCardRequest(judo)
+//        return ravelinApiService.encryptCard("", request)
+//    }
 
     private fun performTransaction(
         type: TransactionType,
@@ -217,8 +237,8 @@ class CardTransactionManager private constructor(private var context: FragmentAc
 
             // Todo: Update this check for all types that require Ravelin encryption.
             if (judo.isRavelinEncryptionEnabled && type == TransactionType.PAYMENT) {
-                val cardEncryptionApiResult = performRavelinApiRequest(details).await()
-                Log.d("TESTO", "TESTO")
+                val encryptedCardDetails = performCardEncryption(details, judo.rsaKey)
+                Log.d("TESTO 2", encryptedCardDetails.toString())
             }
 
             try {

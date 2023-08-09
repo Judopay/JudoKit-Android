@@ -46,7 +46,12 @@ allprojects {
         mavenLocal()
         google()
         mavenCentral()
-        maven { url 'https://vocalinkzapp.jfrog.io/artifactory/merchant-library-maven/' }
+        maven {
+            url 'https://vocalinkzapp.jfrog.io/artifactory/merchant-library-maven/'
+        }
+        maven {
+            url 'https://maven.ravelin.com/public/repositories/core-android/'
+        }
     }
     group = 'com.judopay'
     version = versionName

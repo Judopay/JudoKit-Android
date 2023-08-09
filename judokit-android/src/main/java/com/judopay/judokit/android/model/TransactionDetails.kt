@@ -7,7 +7,6 @@ import com.judopay.judo3ds2.transaction.Transaction
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.request.CheckCardRequest
-import com.judopay.judokit.android.api.model.request.EncryptCardRequest
 import com.judopay.judokit.android.api.model.request.PaymentRequest
 import com.judopay.judokit.android.api.model.request.PreAuthRequest
 import com.judopay.judokit.android.api.model.request.PreAuthTokenRequest
@@ -22,6 +21,7 @@ import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.api.model.response.Consumer
 import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.toMap
+import com.ravelin.cardEncryption.model.CardDetails
 import java.util.Date
 
 class TransactionDetails private constructor(
@@ -284,31 +284,43 @@ fun TransactionDetails.toRegisterCardRequest(judo: Judo, transaction: Transactio
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun TransactionDetails.toEncryptCardRequest(judo: Judo): EncryptCardRequest {
-    val myAesKeyCipherText = ""
-    val myAlgorithm = ""
-    val myCardCipherText = ""
-    val myKeyIndex = 0
-    val myKeySignature = ""
-    val myMethodType = ""
-    val myRavelinSdkVersion = ""
+fun TransactionDetails.toEncryptCardRequest(): CardDetails {
+    if (cardNumber == null) throw IllegalStateException("Card number is required")
+    if (expirationDate == null) throw IllegalStateException("Expiration date is required")
+    if (expirationDate.length != 5) throw IllegalStateException("Expiration date length is not correct")
 
-    return EncryptCardRequest.Builder()
-        .setPaymentMethod(
-            PaymentMethodRavelinModel(
-                PaymentMethodCipher(
-                    aesKeyCipherText = myAesKeyCipherText,
-                    algorithm = myAlgorithm,
-                    cardCipherText = myCardCipherText,
-                    keyIndex = myKeyIndex,
-                    keySignature = myKeySignature,
-                    methodType = myMethodType,
-                    ravelinSDKVersion = myRavelinSdkVersion
-                )
-            )
-        )
-        .build()
+    val expiryMonth = expirationDate.substring(0, 2)
+    val expiryYear = expirationDate.substring(3, 5)
+
+    return CardDetails(cardNumber, expiryMonth, expiryYear, cardHolderName)
 }
+
+//@Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
+//fun TransactionDetails.toEncryptCardRequest(judo: Judo): EncryptCardRequest {
+//    val myAesKeyCipherText = ""
+//    val myAlgorithm = ""
+//    val myCardCipherText = ""
+//    val myKeyIndex = 0
+//    val myKeySignature = ""
+//    val myMethodType = ""
+//    val myRavelinSdkVersion = ""
+//
+//    return EncryptCardRequest.Builder()
+//        .setPaymentMethod(
+//            PaymentMethodRavelinModel(
+//                PaymentMethodCipher(
+//                    aesKeyCipherText = myAesKeyCipherText,
+//                    algorithm = myAlgorithm,
+//                    cardCipherText = myCardCipherText,
+//                    keyIndex = myKeyIndex,
+//                    keySignature = myKeySignature,
+//                    methodType = myMethodType,
+//                    ravelinSDKVersion = myRavelinSdkVersion
+//                )
+//            )
+//        )
+//        .build()
+//}
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
 fun TransactionDetails.toTokenRequest(judo: Judo, transaction: Transaction): TokenRequest {
