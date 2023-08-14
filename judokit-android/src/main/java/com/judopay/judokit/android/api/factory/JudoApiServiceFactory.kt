@@ -6,7 +6,7 @@ import com.google.gson.GsonBuilder
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.AppMetaDataProvider
 import com.judopay.judokit.android.api.JudoApiService
-import com.judopay.judokit.android.api.RavelinApiService
+import com.judopay.judokit.android.api.RecommendationApiService
 import com.judopay.judokit.android.api.deserializer.ChallengeRequestIndicatorSerializer
 import com.judopay.judokit.android.api.deserializer.DateJsonDeserializer
 import com.judopay.judokit.android.api.deserializer.FormattedBigDecimalDeserializer
@@ -55,7 +55,7 @@ object JudoApiServiceFactory {
      */
     @JvmStatic
     fun createJudoApiService(context: Context, judo: Judo): JudoApiService =
-        createRetrofit(context.applicationContext, judo).create(JudoApiService::class.java)
+        createRetrofit(context.applicationContext, judo, null, ApiServiceType.JUDO_API_SERVICE).create(JudoApiService::class.java)
 
     /**
      * @param context the calling Context
@@ -64,16 +64,24 @@ object JudoApiServiceFactory {
      * for interacting with the Ravelin (card encryption) REST API.
      */
     @JvmStatic
-    fun createRavelinApiService(context: Context, judo: Judo): RavelinApiService =
-        createRetrofit(context.applicationContext, judo).create(RavelinApiService::class.java)
+    fun createRecommendationApiService(context: Context, judo: Judo): RecommendationApiService =
+        // Todo: Update when the form of URL is known (is it one URL or split into 'base' and 'endpoint').
+        createRetrofit(context.applicationContext, judo,
+            "https://recommendation-server.vercel.app/",
+            ApiServiceType.RECOMMENDATION_API_SERVICE
+        ).create(RecommendationApiService::class.java)
 
     @JvmStatic
     var externalInterceptors: List<Interceptor>? = null
 
-    private fun createRetrofit(context: Context, judo: Judo): Retrofit = Retrofit.Builder()
-        // Todo: change base URL for Ravelin!
-        .baseUrl(judo.apiBaseUrl)
-        .client(getOkHttpClient(context, judo))
+    private fun createRetrofit(
+        context: Context,
+        judo: Judo,
+        baseUrl: String? = null,
+        apiServiceType: ApiServiceType
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(baseUrl ?: judo.apiBaseUrl)
+        .client(getOkHttpClient(context, judo, apiServiceType))
         .addConverterFactory(gsonConverterFactory)
         .addCallAdapterFactory(JudoApiCallAdapterFactory())
         .build()
@@ -90,7 +98,7 @@ object JudoApiServiceFactory {
             .registerTypeAdapter(ChallengeRequestIndicator::class.java, ChallengeRequestIndicatorSerializer())
             .create()
 
-    private fun getOkHttpClient(context: Context, judo: Judo): OkHttpClient {
+    private fun getOkHttpClient(context: Context, judo: Judo, apiServiceType: ApiServiceType): OkHttpClient {
         return try {
             val sslContext = SSLContext.getInstance("TLSv1.2")
             sslContext.init(null, null, null)
@@ -161,4 +169,8 @@ object JudoApiServiceFactory {
             add(it)
         }
     }
+}
+
+enum class ApiServiceType {
+    JUDO_API_SERVICE, RECOMMENDATION_API_SERVICE
 }

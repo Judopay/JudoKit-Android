@@ -15,11 +15,11 @@ import com.judopay.judo3ds2.transaction.Transaction
 import com.judopay.judo3ds2.transaction.challenge.ChallengeStatusReceiver
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.JudoApiService
-import com.judopay.judokit.android.api.RavelinApiService
+import com.judopay.judokit.android.api.RecommendationApiService
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.request.Complete3DS2Request
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
-import com.judopay.judokit.android.api.model.response.RavelinEncryptionResponse
+import com.judopay.judokit.android.api.model.response.RecommendationResponse
 import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.api.model.response.getCReqParameters
 import com.judopay.judokit.android.api.model.response.getChallengeParameters
@@ -33,13 +33,13 @@ import com.judopay.judokit.android.model.toEncryptCardRequest
 import com.judopay.judokit.android.model.toPaymentRequest
 import com.judopay.judokit.android.model.toPreAuthRequest
 import com.judopay.judokit.android.model.toPreAuthTokenRequest
+import com.judopay.judokit.android.model.toRecommendationRequest
 import com.judopay.judokit.android.model.toRegisterCardRequest
 import com.judopay.judokit.android.model.toSaveCardRequest
 import com.judopay.judokit.android.model.toTokenRequest
 import com.judopay.judokit.android.ui.common.getLocale
 import com.ravelin.cardEncryption.RavelinEncrypt
 import com.ravelin.cardEncryption.callback.EncryptCallback
-import com.ravelin.cardEncryption.model.CardDetails
 import com.ravelin.cardEncryption.model.EncryptError
 import com.ravelin.cardEncryption.model.EncryptedCard
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -104,7 +104,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
 
     private lateinit var judo: Judo
     private lateinit var judoApiService: JudoApiService
-    private lateinit var ravelinApiService: RavelinApiService
+    private lateinit var recommendationApiService: RecommendationApiService
     private var threeDS2Service: ThreeDS2Service = ThreeDS2ServiceImpl()
 
     private var transaction: Transaction? = null
@@ -132,7 +132,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     }?.apply {
         judo = config
         judoApiService = JudoApiServiceFactory.createJudoApiService(context, config)
-        ravelinApiService = JudoApiServiceFactory.createRavelinApiService(context, config)
+        recommendationApiService = JudoApiServiceFactory.createRecommendationApiService(context, config)
 
         try {
             threeDS2Service.cleanup(context)
@@ -216,12 +216,12 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         return result
     }
 
-//    private fun performRavelinApiRequest(
-//        details: TransactionDetails
-//    ): Call<JudoApiCallResult<RavelinEncryptionResponse>> {
-//        val request = details.toEncryptCardRequest(judo)
-//        return ravelinApiService.encryptCard("", request)
-//    }
+    private fun performRecommendationApiRequest(
+        encryptedCardDetails: EncryptedCard
+    ): Call<JudoApiCallResult<RecommendationResponse>> {
+        val request = encryptedCardDetails.toRecommendationRequest()
+        return recommendationApiService.requestRecommendation(request)
+    }
 
     private fun performTransaction(
         type: TransactionType,
@@ -237,8 +237,14 @@ class CardTransactionManager private constructor(private var context: FragmentAc
 
             // Todo: Update this check for all types that require Ravelin encryption.
             if (judo.isRavelinEncryptionEnabled && type == TransactionType.PAYMENT) {
+
+                // Encrypt card details with Ravelin SDK.
                 val encryptedCardDetails = performCardEncryption(details, judo.rsaKey)
-                Log.d("TESTO 2", encryptedCardDetails.toString())
+                if (encryptedCardDetails == null) // Todo: throw an error
+                else {
+                    // Make an API call to Recommendation endpoint.
+                    val recommendationApiResult = performRecommendationApiRequest(encryptedCardDetails).await()
+                }
             }
 
             try {

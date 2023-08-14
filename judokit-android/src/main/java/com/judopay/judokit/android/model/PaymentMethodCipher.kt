@@ -9,7 +9,7 @@ data class PaymentMethodCipher internal constructor(
     var aesKeyCipherText: String,
     var algorithm: String,
     var cardCipherText: String,
-    var keyIndex: Int,
+    var keyIndex: String,
     var keySignature: String,
     var methodType: String,
     var ravelinSDKVersion: String,
@@ -18,7 +18,7 @@ data class PaymentMethodCipher internal constructor(
         private var aesKeyCipherText: String? = null
         private var algorithm: String? = null
         private var cardCipherText: String? = null
-        private var keyIndex: Int? = null
+        private var keyIndex: String? = null
         private var keySignature: String? = null
         private var methodType: String? = null
         private var ravelinSDKVersion: String? = null
@@ -26,7 +26,7 @@ data class PaymentMethodCipher internal constructor(
         fun setAesKeyCipherText(aesKeyCipherText: String?) = apply { this.aesKeyCipherText = aesKeyCipherText }
         fun setAlgorithm(algorithm: String?) = apply { this.algorithm = algorithm }
         fun setCardCipherText(cardCipherText: String?) = apply { this.cardCipherText = cardCipherText }
-        fun setKeyIndex(keyIndex: Int?) = apply { this.keyIndex = keyIndex }
+        fun setKeyIndex(keyIndex: String?) = apply { this.keyIndex = keyIndex }
         fun setKeySignature(keySignature: String?) = apply { this.keySignature = keySignature }
         fun setMethodType(methodType: String?) = apply { this.methodType = methodType }
         fun setRavelinSDKVersion(ravelinSDKVersion: String?) = apply { this.ravelinSDKVersion = ravelinSDKVersion }

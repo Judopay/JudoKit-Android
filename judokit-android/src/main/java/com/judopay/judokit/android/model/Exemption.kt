@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class PaymentMethodRavelinModel(
-    val paymentMethodCipher: PaymentMethodCipher? = null,
-) : Parcelable
+enum class Exemption : Parcelable {
+    LOW_VALUE,
+    TRANSACTION_RISK_ANALYSIS
+}

@@ -295,33 +295,6 @@ fun TransactionDetails.toEncryptCardRequest(): CardDetails {
     return CardDetails(cardNumber, expiryMonth, expiryYear, cardHolderName)
 }
 
-//@Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-//fun TransactionDetails.toEncryptCardRequest(judo: Judo): EncryptCardRequest {
-//    val myAesKeyCipherText = ""
-//    val myAlgorithm = ""
-//    val myCardCipherText = ""
-//    val myKeyIndex = 0
-//    val myKeySignature = ""
-//    val myMethodType = ""
-//    val myRavelinSdkVersion = ""
-//
-//    return EncryptCardRequest.Builder()
-//        .setPaymentMethod(
-//            PaymentMethodRavelinModel(
-//                PaymentMethodCipher(
-//                    aesKeyCipherText = myAesKeyCipherText,
-//                    algorithm = myAlgorithm,
-//                    cardCipherText = myCardCipherText,
-//                    keyIndex = myKeyIndex,
-//                    keySignature = myKeySignature,
-//                    methodType = myMethodType,
-//                    ravelinSDKVersion = myRavelinSdkVersion
-//                )
-//            )
-//        )
-//        .build()
-//}
-
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
 fun TransactionDetails.toTokenRequest(judo: Judo, transaction: Transaction): TokenRequest {
     val myAmount = judo.amount

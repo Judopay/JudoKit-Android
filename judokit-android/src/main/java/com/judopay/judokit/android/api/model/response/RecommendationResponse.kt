@@ -1,14 +1,13 @@
 package com.judopay.judokit.android.api.model.response
 
 import com.judopay.judokit.android.model.JudoResult
-import com.judopay.judokit.android.ui.common.toDate
 import java.util.Locale
 
-data class RavelinEncryptionResponse(
-    val data: RavelinEncryptionData
+data class RecommendationResponse(
+    val data: RecommendationData
 )
 
-fun RavelinEncryptionResponse.toJudoResult(locale: Locale) = JudoResult(
+fun RecommendationResponse.toJudoResult(locale: Locale) = JudoResult(
 //    receiptId = orderDetails.orderId,
 //    result = orderDetails.orderStatus.name,
 //    createdAt = toDate(orderDetails.timestamp, locale),
