@@ -96,6 +96,12 @@ class PaymentRequest private constructor(
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
             apply { this.primaryAccountDetails = primaryAccountDetails }
 
+        fun setChallengeRequestIndicator(challengeRequestIndicator: ChallengeRequestIndicator?) =
+            apply { this.challengeRequestIndicator = challengeRequestIndicator }
+
+        fun setScaExemption(scaExemption: ScaExemption?) =
+            apply { this.scaExemption = scaExemption }
+
         fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
             apply { this.initialRecurringPayment = initialRecurringPayment }
 

@@ -158,7 +158,12 @@ fun Transaction.toThreeDSecureTwo(judo: Judo): ThreeDSecureTwo {
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun TransactionDetails.toPaymentRequest(judo: Judo, transaction: Transaction): PaymentRequest {
+fun TransactionDetails.toPaymentRequest(
+    judo: Judo,
+    transaction: Transaction,
+    exemption: Exemption? = null,
+    threeDSChallengePreference: ThreeDSChallengePreference? = null
+): PaymentRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
 
@@ -181,6 +186,9 @@ fun TransactionDetails.toPaymentRequest(judo: Judo, transaction: Transaction): P
         .setPhoneCountryCode(phoneCountryCode)
         .setEmailAddress(email)
         .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
+            // Todo: clarify type with Stefan!
+//        .setChallengeRequestIndicator(threeDSChallengePreference)
+//        .setScaExemption(exemption)
         .build()
 }
 

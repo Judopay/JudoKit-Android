@@ -21,12 +21,15 @@ import com.judopay.judokit.android.api.model.request.Complete3DS2Request
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.RecommendationResponse
 import com.judopay.judokit.android.api.model.response.Receipt
+import com.judopay.judokit.android.api.model.response.RecommendationAction
 import com.judopay.judokit.android.api.model.response.getCReqParameters
 import com.judopay.judokit.android.api.model.response.getChallengeParameters
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
 import com.judopay.judokit.android.model.CardNetwork
+import com.judopay.judokit.android.model.Exemption
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
+import com.judopay.judokit.android.model.ThreeDSChallengePreference
 import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.toCheckCardRequest
 import com.judopay.judokit.android.model.toEncryptCardRequest
@@ -169,10 +172,18 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     private fun performJudoApiRequest(
         type: TransactionType,
         details: TransactionDetails,
-        transaction: Transaction
+        transaction: Transaction,
+        exemption: Exemption? = null,
+        threeDSChallengePreference: ThreeDSChallengePreference? = null
     ) = when (type) {
         TransactionType.PAYMENT -> {
-            val request = details.toPaymentRequest(judo, transaction)
+            // Todo for other 2 Transaction Types!
+            val request = details.toPaymentRequest(
+                judo,
+                transaction,
+                exemption,
+                threeDSChallengePreference
+            )
             judoApiService.payment(request)
         }
         TransactionType.PRE_AUTH -> {
@@ -209,7 +220,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             object : EncryptCallback<EncryptedCard>() {
                 override fun failure(error: EncryptError) {
                     // Todo
-                    Log.d("TESTO", error.message.toString())
                 }
                 override fun success(result: EncryptedCard?) {}
             })
@@ -228,25 +238,39 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         details: TransactionDetails,
         caller: String
     ) = try {
+            if (isCardEncryptionRequired(type)) {
+                val encryptedCardDetails = performCardEncryption(details, judo.rsaKey)
+                if (encryptedCardDetails == null) {
+                    // Todo: throw an error
+                }
+                // Todo: perform the Judo API call in this case
+                else performRecommendationApiCall(
+                    encryptedCardDetails,
+                    caller
+                ) { result -> handleRecommendationApiResult(result, caller, type, details) }
+            } else {
+                performJudoApiCall(type, details, caller)
+            }
+    } catch (exception: Throwable) {
+        dispatchException(exception, caller)
+    }
+
+    private fun isCardEncryptionRequired(type: TransactionType) = judo.isRavelinEncryptionEnabled
+            && (type == TransactionType.PAYMENT || type == TransactionType.CHECK || type == TransactionType.PRE_AUTH)
+
+    private fun performJudoApiCall(
+        type: TransactionType,
+        details: TransactionDetails,
+        caller: String,
+        exemption: Exemption? = null,
+        threeDSChallengePreference: ThreeDSChallengePreference? = null
+    ) {
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
             Log.d(CardTransactionManager::class.java.name, "Uncaught 3DS2 Exception", throwable)
             dispatchException(throwable, caller)
         }
 
         applicationScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
-
-            // Todo: Update this check for all types that require Ravelin encryption.
-            if (judo.isRavelinEncryptionEnabled && type == TransactionType.PAYMENT) {
-
-                // Encrypt card details with Ravelin SDK.
-                val encryptedCardDetails = performCardEncryption(details, judo.rsaKey)
-                if (encryptedCardDetails == null) // Todo: throw an error
-                else {
-                    // Make an API call to Recommendation endpoint.
-                    val recommendationApiResult = performRecommendationApiRequest(encryptedCardDetails).await()
-                }
-            }
-
             try {
                 Log.d(CardTransactionManager::class.java.name, "initialize 3DS2 SDK")
                 threeDS2Service.initialize(context, parameters, locale, judo.uiConfiguration.threeDSUiCustomization)
@@ -268,15 +292,33 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             val myTransaction =
                 threeDS2Service.createTransaction(directoryServerID, judo.threeDSTwoMessageVersion)
 
-            val apiResult = performJudoApiRequest(type, details, myTransaction).await()
+            val apiResult = performJudoApiRequest(
+                type,
+                details,
+                myTransaction,
+                exemption,
+                threeDSChallengePreference
+            ).await()
 
             transactionDetails = details
             transaction = myTransaction
 
-            handleApiResult(apiResult, caller)
+            handleJudoApiResult(apiResult, caller)
         }
-    } catch (exception: Throwable) {
-        dispatchException(exception, caller)
+    }
+
+    private fun performRecommendationApiCall(
+        encryptedCardDetails: EncryptedCard,
+        caller: String,
+        resultsHandler: (response: JudoApiCallResult<RecommendationResponse>) -> Unit
+    ) {
+        val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+            Log.d(CardTransactionManager::class.java.name, "Uncaught 3DS2 Exception", throwable)
+            dispatchException(throwable, caller)
+        }
+        applicationScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
+            resultsHandler.invoke(performRecommendationApiRequest(encryptedCardDetails).await())
+        }
     }
 
     private fun onResult(result: JudoPaymentResult, caller: String) {
@@ -307,7 +349,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         }
     }
 
-    private fun handleApiResult(result: JudoApiCallResult<Receipt>, caller: String) =
+    private fun handleJudoApiResult(result: JudoApiCallResult<Receipt>, caller: String) =
         when (result) {
             is JudoApiCallResult.Failure -> {
                 onResult(result.toJudoPaymentResult(context.resources), caller)
@@ -320,6 +362,46 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                 }
             } else {
                 onResult(result.toJudoPaymentResult(context.resources), caller)
+            }
+        }
+
+    private fun handleRecommendationApiResult(
+        result: JudoApiCallResult<RecommendationResponse>,
+        caller: String,
+        type: TransactionType,
+        details: TransactionDetails
+    ) =
+        when (result) {
+            is JudoApiCallResult.Failure -> {
+//                onResult(result.toJudoPaymentResult(context.resources), caller)
+            }
+            is JudoApiCallResult.Success -> if (result.data != null) {
+
+                // Todo: Add logic and data from Ravelin!
+
+                when (result.data.data.action) {
+                    RecommendationAction.ALLOW, RecommendationAction.REVIEW -> {
+
+                        val exemption = result.data.data.transactionOptimisation.exemption
+                        val threeDSChallengePreference = result.data.data.transactionOptimisation.threeDSChallengePreference
+
+                        // Todo: It's taken from web, but is it correct for sure?
+                        if (exemption == null || threeDSChallengePreference == null) {
+                            // Set challengeAsMandate
+                        }
+
+                        performJudoApiCall(
+                            type,
+                            details,
+                            caller,
+                            exemption,
+                            threeDSChallengePreference
+                        )
+                    }
+                    RecommendationAction.PREVENT -> { /* Todo */ }
+                }
+            } else {
+//                onResult(result.toJudoPaymentResult(context.resources), caller)
             }
         }
 

@@ -479,7 +479,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             }
 
             return Reference.Builder()
-                .setConsumerReference("my-unique-ref")
+                .setConsumerReference("adas213sdsa")
                 .setPaymentReference(paymentReference)
                 .setMetaData(Bundle().apply { putString("exampleMetaKey", "exampleMetaValue") })
                 .build()
