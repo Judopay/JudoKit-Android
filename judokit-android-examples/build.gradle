@@ -98,6 +98,9 @@ dependencies {
     implementation 'androidx.test.espresso:espresso-contrib:3.5.1'
     debugImplementation 'androidx.compose.ui:ui-tooling'
 
+    api "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+
     ktlint 'com.pinterest:ktlint:0.47.1'
 
     implementation platform('com.google.firebase:firebase-bom:31.1.0')

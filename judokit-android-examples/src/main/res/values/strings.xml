@@ -236,4 +236,8 @@
 
     <string name="feature_title_token_payments">Token payments</string>
     <string name="feature_subtitle_token_payments">with optionally asking for CSC and/or cardholder name</string>
+
+    <string name="generate_payment_session_title">Generate payment session</string>
+    <string name="generate_payment_session_summary">Tap to generate a new payment session using the token/secret pair from the above.</string>
+
 </resources>
