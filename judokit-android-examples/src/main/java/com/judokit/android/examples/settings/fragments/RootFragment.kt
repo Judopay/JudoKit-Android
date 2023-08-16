@@ -84,7 +84,7 @@ class RootFragment : PreferenceFragmentCompat() {
 
             override fun onResponse(call: Call<CreatePaymentSessionResponse>, response: Response<CreatePaymentSessionResponse>) {
                 progressButton.state = ButtonState.Enabled(R.string.generate_payment_session_title)
-                updatePaymentSession(response.body()?.reference ?: "")
+                updatePaymentSession(response.body()?.reference)
             }
         })
     }
