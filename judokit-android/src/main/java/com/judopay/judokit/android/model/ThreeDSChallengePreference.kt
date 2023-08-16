@@ -10,3 +10,13 @@ enum class ThreeDSChallengePreference : Parcelable {
     CHALLENGE_REQUESTED,
     CHALLENGE_REQUESTED_AS_MANDATE
 }
+
+fun ThreeDSChallengePreference.toChallengeRequestIndicator(): ChallengeRequestIndicator {
+    return when (this) {
+        ThreeDSChallengePreference.NO_PREFERENCE -> ChallengeRequestIndicator.NO_PREFERENCE
+        ThreeDSChallengePreference.NO_CHALLENGE_REQUESTED -> ChallengeRequestIndicator.NO_CHALLENGE
+        // Todo: Confirm this one with Stefan (CHALLENGE_REQUESTED is CHALLENGE_PREFERRED)?
+        ThreeDSChallengePreference.CHALLENGE_REQUESTED -> ChallengeRequestIndicator.CHALLENGE_PREFERRED
+        ThreeDSChallengePreference.CHALLENGE_REQUESTED_AS_MANDATE -> ChallengeRequestIndicator.CHALLENGE_AS_MANDATE
+    }
+}

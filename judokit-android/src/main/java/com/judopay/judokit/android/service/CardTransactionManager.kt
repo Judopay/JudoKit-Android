@@ -26,9 +26,9 @@ import com.judopay.judokit.android.api.model.response.getCReqParameters
 import com.judopay.judokit.android.api.model.response.getChallengeParameters
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
 import com.judopay.judokit.android.model.CardNetwork
-import com.judopay.judokit.android.model.Exemption
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
+import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.model.ThreeDSChallengePreference
 import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.toCheckCardRequest
@@ -173,11 +173,10 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         type: TransactionType,
         details: TransactionDetails,
         transaction: Transaction,
-        exemption: Exemption? = null,
+        exemption: ScaExemption? = null,
         threeDSChallengePreference: ThreeDSChallengePreference? = null
     ) = when (type) {
         TransactionType.PAYMENT -> {
-            // Todo for other 2 Transaction Types!
             val request = details.toPaymentRequest(
                 judo,
                 transaction,
@@ -187,7 +186,12 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             judoApiService.payment(request)
         }
         TransactionType.PRE_AUTH -> {
-            val request = details.toPreAuthRequest(judo, transaction)
+            val request = details.toPreAuthRequest(
+                judo,
+                transaction,
+                exemption,
+                threeDSChallengePreference
+            )
             judoApiService.preAuthPayment(request)
         }
         TransactionType.PAYMENT_WITH_TOKEN -> {
@@ -203,7 +207,12 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             judoApiService.saveCard(request)
         }
         TransactionType.CHECK -> {
-            val request = details.toCheckCardRequest(judo, transaction)
+            val request = details.toCheckCardRequest(
+                judo,
+                transaction,
+                exemption,
+                threeDSChallengePreference
+            )
             judoApiService.checkCard(request)
         }
         TransactionType.REGISTER -> {
@@ -215,15 +224,13 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     private fun performCardEncryption(details: TransactionDetails, rsaKey: String?): EncryptedCard? {
         if (judo.rsaKey == null) throw IllegalStateException("RSA key is required")
         val cardDetails = details.toEncryptCardRequest()
-
-        val result = RavelinEncrypt().encryptCard(cardDetails, rsaKey!!,
+        return RavelinEncrypt().encryptCard(cardDetails, rsaKey!!,
             object : EncryptCallback<EncryptedCard>() {
                 override fun failure(error: EncryptError) {
                     // Todo
                 }
                 override fun success(result: EncryptedCard?) {}
             })
-        return result
     }
 
     private fun performRecommendationApiRequest(
@@ -243,7 +250,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                 if (encryptedCardDetails == null) {
                     // Todo: throw an error
                 }
-                // Todo: perform the Judo API call in this case
                 else performRecommendationApiCall(
                     encryptedCardDetails,
                     caller
@@ -262,7 +268,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         type: TransactionType,
         details: TransactionDetails,
         caller: String,
-        exemption: Exemption? = null,
+        exemption: ScaExemption? = null,
         threeDSChallengePreference: ThreeDSChallengePreference? = null
     ) {
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -352,7 +358,8 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     private fun handleJudoApiResult(result: JudoApiCallResult<Receipt>, caller: String) =
         when (result) {
             is JudoApiCallResult.Failure -> {
-                onResult(result.toJudoPaymentResult(context.resources), caller)
+                onResult((result as JudoApiCallResult<Receipt>)
+                    .toJudoPaymentResult(context.resources), caller)
             }
             is JudoApiCallResult.Success -> if (result.data != null) {
                 val receipt = result.data
@@ -373,21 +380,20 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     ) =
         when (result) {
             is JudoApiCallResult.Failure -> {
-//                onResult(result.toJudoPaymentResult(context.resources), caller)
+                onResult((result as JudoApiCallResult<RecommendationResponse>)
+                    .toJudoPaymentResult(context.resources), caller)
             }
             is JudoApiCallResult.Success -> if (result.data != null) {
-
-                // Todo: Add logic and data from Ravelin!
-
                 when (result.data.data.action) {
+
                     RecommendationAction.ALLOW, RecommendationAction.REVIEW -> {
-
                         val exemption = result.data.data.transactionOptimisation.exemption
-                        val threeDSChallengePreference = result.data.data.transactionOptimisation.threeDSChallengePreference
+                        var threeDSChallengePreference = result.data.data.transactionOptimisation.threeDSChallengePreference
 
-                        // Todo: It's taken from web, but is it correct for sure?
+                        // Todo: It's taken from web, but is it correct for sure? It should handle
+                        //  incorrect enum values for these two properties, but will they be null (won't app crash?)
                         if (exemption == null || threeDSChallengePreference == null) {
-                            // Set challengeAsMandate
+                            threeDSChallengePreference = ThreeDSChallengePreference.CHALLENGE_REQUESTED_AS_MANDATE
                         }
 
                         performJudoApiCall(
@@ -398,10 +404,13 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                             threeDSChallengePreference
                         )
                     }
-                    RecommendationAction.PREVENT -> { /* Todo */ }
+                    RecommendationAction.PREVENT -> {
+                        // Todo: throw new Error(recommendationPreventErrorMessage)
+                        //onResult(result.toJudoPaymentResult(context.resources), caller)
+                    }
                 }
             } else {
-//                onResult(result.toJudoPaymentResult(context.resources), caller)
+                onResult(result.toJudoPaymentResult(context.resources), caller)
             }
         }
 

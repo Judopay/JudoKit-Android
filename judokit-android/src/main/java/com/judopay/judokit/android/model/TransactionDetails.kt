@@ -161,7 +161,7 @@ fun Transaction.toThreeDSecureTwo(judo: Judo): ThreeDSecureTwo {
 fun TransactionDetails.toPaymentRequest(
     judo: Judo,
     transaction: Transaction,
-    exemption: Exemption? = null,
+    exemption: ScaExemption? = null,
     threeDSChallengePreference: ThreeDSChallengePreference? = null
 ): PaymentRequest {
     val myAmount = judo.amount
@@ -186,14 +186,18 @@ fun TransactionDetails.toPaymentRequest(
         .setPhoneCountryCode(phoneCountryCode)
         .setEmailAddress(email)
         .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
-            // Todo: clarify type with Stefan!
-//        .setChallengeRequestIndicator(threeDSChallengePreference)
-//        .setScaExemption(exemption)
+        .setChallengeRequestIndicator(threeDSChallengePreference?.toChallengeRequestIndicator())
+        .setScaExemption(exemption)
         .build()
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun TransactionDetails.toPreAuthRequest(judo: Judo, transaction: Transaction): PreAuthRequest {
+fun TransactionDetails.toPreAuthRequest(
+    judo: Judo,
+    transaction: Transaction,
+    exemption: ScaExemption? = null,
+    threeDSChallengePreference: ThreeDSChallengePreference? = null
+): PreAuthRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
 
@@ -217,11 +221,18 @@ fun TransactionDetails.toPreAuthRequest(judo: Judo, transaction: Transaction): P
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
         .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
+        .setChallengeRequestIndicator(threeDSChallengePreference?.toChallengeRequestIndicator())
+        .setScaExemption(exemption)
         .build()
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun TransactionDetails.toCheckCardRequest(judo: Judo, transaction: Transaction): CheckCardRequest {
+fun TransactionDetails.toCheckCardRequest(
+    judo: Judo,
+    transaction: Transaction,
+    exemption: ScaExemption? = null,
+    threeDSChallengePreference: ThreeDSChallengePreference? = null
+): CheckCardRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
 
@@ -243,6 +254,8 @@ fun TransactionDetails.toCheckCardRequest(judo: Judo, transaction: Transaction):
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
+        .setChallengeRequestIndicator(threeDSChallengePreference?.toChallengeRequestIndicator())
+        .setScaExemption(exemption)
         .build()
 }
 

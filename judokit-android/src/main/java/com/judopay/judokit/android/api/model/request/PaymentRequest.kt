@@ -28,7 +28,9 @@ class PaymentRequest private constructor(
     private var primaryAccountDetails: PrimaryAccountDetails?,
     private var initialRecurringPayment: Boolean?,
     private var threeDSecure: ThreeDSecureTwo?,
-    private var cardHolderName: String?
+    private var cardHolderName: String?,
+    private var challengeRequestIndicator: ChallengeRequestIndicator?,
+    private var scaExemption: ScaExemption?
 ) {
     class Builder {
         private var uniqueRequest: Boolean? = null
@@ -162,7 +164,9 @@ class PaymentRequest private constructor(
                 primaryAccountDetails,
                 initialRecurringPayment,
                 myThreeDSecure,
-                cardHolderName
+                cardHolderName,
+                challengeRequestIndicator,
+                scaExemption
             )
         }
     }
