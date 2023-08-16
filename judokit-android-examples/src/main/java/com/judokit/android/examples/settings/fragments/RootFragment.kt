@@ -99,6 +99,7 @@ class RootFragment : PreferenceFragmentCompat() {
         sharedPreferences.edit().putString("payment_session", session).apply()
 
         Toast.makeText(activity, "Payment session created!", Toast.LENGTH_LONG).show()
+        requireActivity().finish()
     }
 
     private fun createApiClient(): ApiClient {
