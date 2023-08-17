@@ -224,13 +224,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     private fun performCardEncryption(details: TransactionDetails, rsaKey: String?): EncryptedCard? {
         if (judo.rsaKey == null) throw IllegalStateException("RSA key is required")
         val cardDetails = details.toEncryptCardRequest()
-        return RavelinEncrypt().encryptCard(cardDetails, rsaKey!!,
-            object : EncryptCallback<EncryptedCard>() {
-                override fun failure(error: EncryptError) {
-                    // Todo
-                }
-                override fun success(result: EncryptedCard?) {}
-            })
+        return RavelinEncrypt().encryptCard(cardDetails, rsaKey!!)
     }
 
     private fun performRecommendationApiRequest(

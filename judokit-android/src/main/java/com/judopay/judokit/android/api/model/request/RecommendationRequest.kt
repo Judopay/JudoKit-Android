@@ -2,14 +2,10 @@ package com.judopay.judokit.android.api.model.request
 
 import com.judopay.judokit.android.model.RecommendationPaymentMethod
 
-// Todo: Update comment.
 /**
- * Represents the data needed to perform the encryption card transaction with the judo API.
- * Use the [EncryptCardRequest.Builder] for object construction.
+ * Represents the data needed to perform the recommendation request with the Recommendation API.
+ * Use the [RecommendationRequest.Builder] for object construction.
  *
- *
- * When creating a [EncryptCardRequest] the [EncryptCardRequest.judoId]
- * must be provided.
  */
 class RecommendationRequest private constructor(
     var paymentMethod: RecommendationPaymentMethod?
