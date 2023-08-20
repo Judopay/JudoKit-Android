@@ -162,7 +162,7 @@ fun TransactionDetails.toPaymentRequest(
     judo: Judo,
     transaction: Transaction,
     exemption: ScaExemption? = null,
-    threeDSChallengePreference: ThreeDSChallengePreference? = null
+    challengeRequestIndicator: ChallengeRequestIndicator? = null
 ): PaymentRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
@@ -186,7 +186,7 @@ fun TransactionDetails.toPaymentRequest(
         .setPhoneCountryCode(phoneCountryCode)
         .setEmailAddress(email)
         .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
-        .setChallengeRequestIndicator(threeDSChallengePreference?.toChallengeRequestIndicator())
+        .setChallengeRequestIndicator(challengeRequestIndicator)
         .setScaExemption(exemption)
         .build()
 }
@@ -196,7 +196,7 @@ fun TransactionDetails.toPreAuthRequest(
     judo: Judo,
     transaction: Transaction,
     exemption: ScaExemption? = null,
-    threeDSChallengePreference: ThreeDSChallengePreference? = null
+    challengeRequestIndicator: ChallengeRequestIndicator? = null
 ): PreAuthRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
@@ -221,7 +221,7 @@ fun TransactionDetails.toPreAuthRequest(
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
         .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
-        .setChallengeRequestIndicator(threeDSChallengePreference?.toChallengeRequestIndicator())
+        .setChallengeRequestIndicator(challengeRequestIndicator)
         .setScaExemption(exemption)
         .build()
 }
@@ -231,7 +231,7 @@ fun TransactionDetails.toCheckCardRequest(
     judo: Judo,
     transaction: Transaction,
     exemption: ScaExemption? = null,
-    threeDSChallengePreference: ThreeDSChallengePreference? = null
+    challengeRequestIndicator: ChallengeRequestIndicator? = null
 ): CheckCardRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
@@ -254,7 +254,7 @@ fun TransactionDetails.toCheckCardRequest(
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
-        .setChallengeRequestIndicator(threeDSChallengePreference?.toChallengeRequestIndicator())
+        .setChallengeRequestIndicator(challengeRequestIndicator)
         .setScaExemption(exemption)
         .build()
 }

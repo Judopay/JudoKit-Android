@@ -26,11 +26,12 @@ import com.judopay.judokit.android.api.model.response.getCReqParameters
 import com.judopay.judokit.android.api.model.response.getChallengeParameters
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
 import com.judopay.judokit.android.model.CardNetwork
+import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.ScaExemption
-import com.judopay.judokit.android.model.ThreeDSChallengePreference
 import com.judopay.judokit.android.model.TransactionDetails
+import com.judopay.judokit.android.model.toChallengeRequestIndicator
 import com.judopay.judokit.android.model.toCheckCardRequest
 import com.judopay.judokit.android.model.toEncryptCardRequest
 import com.judopay.judokit.android.model.toPaymentRequest
@@ -42,8 +43,6 @@ import com.judopay.judokit.android.model.toSaveCardRequest
 import com.judopay.judokit.android.model.toTokenRequest
 import com.judopay.judokit.android.ui.common.getLocale
 import com.ravelin.cardEncryption.RavelinEncrypt
-import com.ravelin.cardEncryption.callback.EncryptCallback
-import com.ravelin.cardEncryption.model.EncryptError
 import com.ravelin.cardEncryption.model.EncryptedCard
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -174,14 +173,14 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         details: TransactionDetails,
         transaction: Transaction,
         exemption: ScaExemption? = null,
-        threeDSChallengePreference: ThreeDSChallengePreference? = null
+        challengeRequestIndicator: ChallengeRequestIndicator? = null
     ) = when (type) {
         TransactionType.PAYMENT -> {
             val request = details.toPaymentRequest(
                 judo,
                 transaction,
                 exemption,
-                threeDSChallengePreference
+                challengeRequestIndicator
             )
             judoApiService.payment(request)
         }
@@ -190,7 +189,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                 judo,
                 transaction,
                 exemption,
-                threeDSChallengePreference
+                challengeRequestIndicator
             )
             judoApiService.preAuthPayment(request)
         }
@@ -211,7 +210,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                 judo,
                 transaction,
                 exemption,
-                threeDSChallengePreference
+                challengeRequestIndicator
             )
             judoApiService.checkCard(request)
         }
@@ -263,7 +262,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         details: TransactionDetails,
         caller: String,
         exemption: ScaExemption? = null,
-        threeDSChallengePreference: ThreeDSChallengePreference? = null
+        challengeRequestIndicator: ChallengeRequestIndicator? = null
     ) {
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
             Log.d(CardTransactionManager::class.java.name, "Uncaught 3DS2 Exception", throwable)
@@ -297,7 +296,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                 details,
                 myTransaction,
                 exemption,
-                threeDSChallengePreference
+                challengeRequestIndicator
             ).await()
 
             transactionDetails = details
@@ -374,37 +373,36 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     ) =
         when (result) {
             is JudoApiCallResult.Failure -> {
-                onResult((result as JudoApiCallResult<RecommendationResponse>)
-                    .toJudoPaymentResult(context.resources), caller)
+                // We allow Judo API call in this case, as the API will perform its own checks anyway.
+                performJudoApiCall(type, details, caller, judo.scaExemption, judo.challengeRequestIndicator)
             }
             is JudoApiCallResult.Success -> if (result.data != null) {
-                when (result.data.data.action) {
+                // Todo: Check whether anything else here may be null.
+                when (result.data.data?.action) {
 
                     RecommendationAction.ALLOW, RecommendationAction.REVIEW -> {
-                        val exemption = result.data.data.transactionOptimisation.exemption
-                        var threeDSChallengePreference = result.data.data.transactionOptimisation.threeDSChallengePreference
+                        val transactionOptimisation = result.data.data.transactionOptimisation
+                        val exemption = transactionOptimisation?.exemption ?: judo.scaExemption
+                        val challengeRequestIndicator = transactionOptimisation
+                            ?.threeDSChallengePreference
+                            ?.toChallengeRequestIndicator()
+                            ?: judo.challengeRequestIndicator
 
-                        // Todo: It's taken from web, but is it correct for sure? It should handle
-                        //  incorrect enum values for these two properties, but will they be null (won't app crash?)
-                        if (exemption == null || threeDSChallengePreference == null) {
-                            threeDSChallengePreference = ThreeDSChallengePreference.CHALLENGE_REQUESTED_AS_MANDATE
-                        }
-
-                        performJudoApiCall(
-                            type,
-                            details,
-                            caller,
-                            exemption,
-                            threeDSChallengePreference
-                        )
+                        performJudoApiCall(type, details, caller, exemption, challengeRequestIndicator)
                     }
                     RecommendationAction.PREVENT -> {
-                        // Todo: throw new Error(recommendationPreventErrorMessage)
+                        // Todo: Return error state
+                        // throw new Error(recommendationPreventErrorMessage)
                         //onResult(result.toJudoPaymentResult(context.resources), caller)
+                    }
+                    null -> {
+                        // We allow Judo API call in this case, as the API will perform its own checks anyway.
+                        performJudoApiCall(type, details, caller, judo.scaExemption, judo.challengeRequestIndicator)
                     }
                 }
             } else {
-                onResult(result.toJudoPaymentResult(context.resources), caller)
+                // We allow Judo API call in this case, as the API will perform its own checks anyway.
+                performJudoApiCall(type, details, caller, judo.scaExemption, judo.challengeRequestIndicator)
             }
         }
 
