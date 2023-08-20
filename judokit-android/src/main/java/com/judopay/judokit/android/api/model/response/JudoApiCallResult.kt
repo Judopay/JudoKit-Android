@@ -24,10 +24,7 @@ inline fun <reified T> JudoApiCallResult<T>.toJudoPaymentResult(resources: Resou
         is JudoApiCallResult.Success ->
             if (data != null) {
                 when (T::class) {
-                    Receipt::class ->
-                        JudoPaymentResult.Success((data as Receipt).toJudoResult())
-                    RecommendationResponse::class ->
-                        JudoPaymentResult.Success((data as RecommendationResponse).toJudoResult())
+                    Receipt::class -> JudoPaymentResult.Success((data as Receipt).toJudoResult())
                     else -> JudoPaymentResult.Error(fallbackError)
                 }
             } else {

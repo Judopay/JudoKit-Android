@@ -221,7 +221,9 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     }
 
     private fun performCardEncryption(details: TransactionDetails, rsaKey: String?): EncryptedCard? {
-        if (judo.rsaKey == null) throw IllegalStateException("RSA key is required")
+        if (judo.rsaKey == null) throw IllegalStateException(
+            "The RSAPublicKey field in the ravelin recommendation configuration is required"
+        )
         val cardDetails = details.toEncryptCardRequest()
         return RavelinEncrypt().encryptCard(cardDetails, rsaKey!!)
     }
@@ -372,14 +374,8 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         details: TransactionDetails
     ) =
         when (result) {
-            is JudoApiCallResult.Failure -> {
-                // We allow Judo API call in this case, as the API will perform its own checks anyway.
-                performJudoApiCall(type, details, caller, judo.scaExemption, judo.challengeRequestIndicator)
-            }
-            is JudoApiCallResult.Success -> if (result.data != null) {
-                // Todo: Check whether anything else here may be null.
-                when (result.data.data?.action) {
-
+            is JudoApiCallResult.Success ->
+                when (result.data?.data?.action) {
                     RecommendationAction.ALLOW, RecommendationAction.REVIEW -> {
                         val transactionOptimisation = result.data.data.transactionOptimisation
                         val exemption = transactionOptimisation?.exemption ?: judo.scaExemption
@@ -391,16 +387,17 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                         performJudoApiCall(type, details, caller, exemption, challengeRequestIndicator)
                     }
                     RecommendationAction.PREVENT -> {
-                        // Todo: Return error state
-                        // throw new Error(recommendationPreventErrorMessage)
-                        //onResult(result.toJudoPaymentResult(context.resources), caller)
+                        onResult(
+                            JudoPaymentResult.Error(JudoError.judoRecommendationError(context.resources)),
+                            caller
+                        )
                     }
                     null -> {
                         // We allow Judo API call in this case, as the API will perform its own checks anyway.
                         performJudoApiCall(type, details, caller, judo.scaExemption, judo.challengeRequestIndicator)
                     }
                 }
-            } else {
+            else -> {
                 // We allow Judo API call in this case, as the API will perform its own checks anyway.
                 performJudoApiCall(type, details, caller, judo.scaExemption, judo.challengeRequestIndicator)
             }

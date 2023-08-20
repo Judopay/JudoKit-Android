@@ -150,6 +150,10 @@
     <string name="error_poor_connectivity_desc" translatable="false">Device has poor internet connectivity.</string>
     <string name="error_poor_connectivity_reason" translatable="false">The request took too much time.</string>
 
+    <!--    Ravelin Recommendation failed-->
+    <string name="ravelin_recommendation_failed_desc" translatable="false">Ravelin Recommendation fail.</string>
+    <string name="ravelin_recommendation_failed_reason" translatable="false">The ravelin recommendation has prevented this transaction.</string>
+
     <string name="country_uk">UK</string>
     <string name="country_usa">USA</string>
     <string name="country_canada">Canada</string>
