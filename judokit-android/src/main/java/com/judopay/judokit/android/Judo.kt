@@ -83,7 +83,8 @@ class Judo internal constructor(
     val cardSecurityCode: String? = null,
     val subProductInfo: SubProductInfo = SubProductInfo.Unknown,
     val isRavelinEncryptionEnabled: Boolean,
-    val rsaKey: String?
+    val rsaKey: String?,
+    val recommendationUrl: String?
 ) : Parcelable {
 
     /**
@@ -118,6 +119,7 @@ class Judo internal constructor(
         private var subProductInfo: SubProductInfo = SubProductInfo.Unknown
         private var isRavelinEncryptionEnabled: Boolean? = null
         private var rsaKey: String? = null
+        private var recommendationUrl: String? = null
 
         /**
          * Sets the unique merchant ID
@@ -306,6 +308,9 @@ class Judo internal constructor(
         fun setRsaKey(rsaKey: String?) =
             apply { this.rsaKey = rsaKey }
 
+        fun setRecommendationUrl(recommendationUrl: String?) =
+            apply { this.recommendationUrl = recommendationUrl }
+
         /**
          * Method that initializes Judo configuration object that can be used for
          * processing a payment.
@@ -396,7 +401,8 @@ class Judo internal constructor(
                 cardSecurityCode = cardSecurityCode,
                 subProductInfo = subProductInfo,
                 isRavelinEncryptionEnabled = myRavelinEncryptionEnabled,
-                rsaKey = rsaKey
+                rsaKey = rsaKey,
+                recommendationUrl = recommendationUrl
             )
         }
 

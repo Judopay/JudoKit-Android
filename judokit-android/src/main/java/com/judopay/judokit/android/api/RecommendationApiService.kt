@@ -6,6 +6,7 @@ import com.judopay.judokit.android.api.model.response.RecommendationResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
+import retrofit2.http.Url
 
 /**
  * Recommendation interface with Retrofit annotated list of recommendation API calls that can be performed.
@@ -16,9 +17,10 @@ interface RecommendationApiService {
 
     /**
      * A method used to fetch the recommendation status, based on provided encrypted card details.
-     *
-     * @return the receipt object that corresponds to the passed receipt ID
      */
-    @POST("ALLOW/LOW_VALUE/NO_PREFERENCE")
-    fun requestRecommendation(@Body recommendationRequest: RecommendationRequest): Call<JudoApiCallResult<RecommendationResponse>>
+    @POST()
+    fun requestRecommendation(
+        @Url url: String,
+        @Body recommendationRequest: RecommendationRequest
+    ): Call<JudoApiCallResult<RecommendationResponse>>
 }

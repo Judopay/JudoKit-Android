@@ -362,6 +362,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val accountDetails = primaryAccountDetails
         val isRavelinEncryptionEnabled = sharedPreferences.getBoolean("is_ravelin_encryption_enabled", true)
         val rsaKey = sharedPreferences.getString("rsa_key", null)
+        val recommendationUrl = sharedPreferences.getString("recommendation_url", null)
 
         val builder = Judo.Builder(widgetType)
             .setJudoId(judoId)
@@ -385,6 +386,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setNetworkTimeout(networkTimeout)
             .setIsRavelinEncryptionEnabled(isRavelinEncryptionEnabled)
             .setRsaKey(rsaKey)
+            .setRecommendationUrl(recommendationUrl)
 
         if (!messageVersion.isNullOrBlank()) {
             builder.setThreeDSTwoMessageVersion(messageVersion)

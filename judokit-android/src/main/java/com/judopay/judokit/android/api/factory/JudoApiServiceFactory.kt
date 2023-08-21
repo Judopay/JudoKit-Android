@@ -55,7 +55,8 @@ object JudoApiServiceFactory {
      */
     @JvmStatic
     fun createJudoApiService(context: Context, judo: Judo): JudoApiService =
-        createRetrofit(context.applicationContext, judo, null, ApiServiceType.JUDO_API_SERVICE).create(JudoApiService::class.java)
+        createRetrofit(context.applicationContext, judo, judo.apiBaseUrl)
+            .create(JudoApiService::class.java)
 
     /**
      * @param context the calling Context
@@ -65,11 +66,9 @@ object JudoApiServiceFactory {
      */
     @JvmStatic
     fun createRecommendationApiService(context: Context, judo: Judo): RecommendationApiService =
-        // Todo: Update when the form of URL is known (is it one URL or split into 'base' and 'endpoint').
-        createRetrofit(context.applicationContext, judo,
-            "https://recommendation-server.vercel.app/",
-            ApiServiceType.RECOMMENDATION_API_SERVICE
-        ).create(RecommendationApiService::class.java)
+        // This base URL is never used later on, but is required by Retrofit to be provided.
+        createRetrofit(context.applicationContext, judo, "http://localhost/")
+            .create(RecommendationApiService::class.java)
 
     @JvmStatic
     var externalInterceptors: List<Interceptor>? = null
@@ -77,11 +76,10 @@ object JudoApiServiceFactory {
     private fun createRetrofit(
         context: Context,
         judo: Judo,
-        baseUrl: String? = null,
-        apiServiceType: ApiServiceType
+        baseUrl: String?
     ): Retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl ?: judo.apiBaseUrl)
-        .client(getOkHttpClient(context, judo, apiServiceType))
+        .baseUrl(baseUrl)
+        .client(getOkHttpClient(context, judo))
         .addConverterFactory(gsonConverterFactory)
         .addCallAdapterFactory(JudoApiCallAdapterFactory())
         .build()
@@ -98,7 +96,7 @@ object JudoApiServiceFactory {
             .registerTypeAdapter(ChallengeRequestIndicator::class.java, ChallengeRequestIndicatorSerializer())
             .create()
 
-    private fun getOkHttpClient(context: Context, judo: Judo, apiServiceType: ApiServiceType): OkHttpClient {
+    private fun getOkHttpClient(context: Context, judo: Judo): OkHttpClient {
         return try {
             val sslContext = SSLContext.getInstance("TLSv1.2")
             sslContext.init(null, null, null)
@@ -169,8 +167,4 @@ object JudoApiServiceFactory {
             add(it)
         }
     }
-}
-
-enum class ApiServiceType {
-    JUDO_API_SERVICE, RECOMMENDATION_API_SERVICE
 }

@@ -229,10 +229,14 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     }
 
     private fun performRecommendationApiRequest(
-        encryptedCardDetails: EncryptedCard
+        encryptedCardDetails: EncryptedCard,
+        recommendationEndpointUrl: String
     ): Call<JudoApiCallResult<RecommendationResponse>> {
         val request = encryptedCardDetails.toRecommendationRequest()
-        return recommendationApiService.requestRecommendation(request)
+        return recommendationApiService.requestRecommendation(
+            recommendationEndpointUrl,
+            request
+        )
     }
 
     private fun performTransaction(
@@ -241,13 +245,16 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         caller: String
     ) = try {
             if (isCardEncryptionRequired(type)) {
+                // Todo: better validation of url and rsa key
                 val encryptedCardDetails = performCardEncryption(details, judo.rsaKey)
-                if (encryptedCardDetails == null) {
-                    // Todo: throw an error
+                val recommendationEndpointUrl = judo.recommendationUrl
+                if (encryptedCardDetails == null || recommendationEndpointUrl == null) {
+                    // Todo: Confirm: either error state (it's already throwing exc atm) or performJudoApiCall.
                 }
                 else performRecommendationApiCall(
                     encryptedCardDetails,
-                    caller
+                    caller,
+                    recommendationEndpointUrl,
                 ) { result -> handleRecommendationApiResult(result, caller, type, details) }
             } else {
                 performJudoApiCall(type, details, caller)
@@ -311,6 +318,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     private fun performRecommendationApiCall(
         encryptedCardDetails: EncryptedCard,
         caller: String,
+        recommendationEndpointUrl: String,
         resultsHandler: (response: JudoApiCallResult<RecommendationResponse>) -> Unit
     ) {
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -318,7 +326,10 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             dispatchException(throwable, caller)
         }
         applicationScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
-            resultsHandler.invoke(performRecommendationApiRequest(encryptedCardDetails).await())
+            resultsHandler.invoke(performRecommendationApiRequest(
+                encryptedCardDetails,
+                recommendationEndpointUrl
+            ).await())
         }
     }
 
