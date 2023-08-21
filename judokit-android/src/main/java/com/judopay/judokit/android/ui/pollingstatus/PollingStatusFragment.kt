@@ -121,8 +121,8 @@ class PollingStatusFragment : DialogFragment(), PBBAPopupCallback {
             is JudoApiCallResult.Success -> handleBankSaleResponse(result)
             is JudoApiCallResult.Failure -> {
                 sharedViewModel.bankPaymentResult
-                    .postValue((result as JudoApiCallResult<BankSaleResponse>)
-                        .toJudoPaymentResult(resources)
+                    .postValue(
+                        (result as JudoApiCallResult<BankSaleResponse>).toJudoPaymentResult(resources)
                     )
                 findNavController().popBackStack()
             }

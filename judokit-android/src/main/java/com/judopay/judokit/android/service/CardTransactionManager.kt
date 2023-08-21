@@ -381,10 +381,12 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             dispatchException(throwable, caller)
         }
         applicationScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
-            resultsHandler.invoke(performRecommendationApiRequest(
-                encryptedCardDetails,
-                recommendationEndpointUrl
-            ).await())
+            resultsHandler.invoke(
+                performRecommendationApiRequest(
+                    encryptedCardDetails,
+                    recommendationEndpointUrl
+                ).await()
+            )
         }
     }
 
@@ -419,8 +421,10 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     private fun handleJudoApiResult(result: JudoApiCallResult<Receipt>, caller: String) =
         when (result) {
             is JudoApiCallResult.Failure -> {
-                onResult((result as JudoApiCallResult<Receipt>)
-                    .toJudoPaymentResult(context.resources), caller)
+                onResult(
+                    (result as JudoApiCallResult<Receipt>).toJudoPaymentResult(context.resources),
+                    caller
+                )
             }
             is JudoApiCallResult.Success -> if (result.data != null) {
                 val receipt = result.data
