@@ -271,7 +271,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                     performRecommendationApiCall(
                         encryptedCardDetails!!,
                         caller,
-                        recommendationEndpointUrl!!,
+                        recommendationEndpointUrl!!
                     ) { result -> handleRecommendationApiResult(result, caller, type, details) }
                 }
             }
@@ -282,8 +282,8 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         dispatchException(exception, caller)
     }
 
-    private fun isCardEncryptionRequired(type: TransactionType) = judo.isRavelinEncryptionEnabled
-            && (type == TransactionType.PAYMENT || type == TransactionType.CHECK || type == TransactionType.PRE_AUTH)
+    private fun isCardEncryptionRequired(type: TransactionType) = judo.isRavelinEncryptionEnabled &&
+        (type == TransactionType.PAYMENT || type == TransactionType.CHECK || type == TransactionType.PRE_AUTH)
 
     private fun areEncryptionArgumentsValid(
         cardNumber: String?,

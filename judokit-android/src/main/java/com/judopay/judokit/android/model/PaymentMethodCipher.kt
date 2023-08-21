@@ -12,7 +12,7 @@ data class PaymentMethodCipher internal constructor(
     var keyIndex: String,
     var keySignature: String,
     var methodType: String,
-    var ravelinSDKVersion: String,
+    var ravelinSDKVersion: String
 ) : Parcelable {
     class Builder {
         private var aesKeyCipherText: String? = null

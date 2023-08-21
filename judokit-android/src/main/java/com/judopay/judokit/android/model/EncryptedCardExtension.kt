@@ -8,18 +8,18 @@ import com.ravelin.cardEncryption.model.EncryptedCard
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
 fun EncryptedCard.toRecommendationRequest() = RecommendationRequest
     .Builder()
-    // Todo: Validation!
     .setPaymentMethod(
         paymentMethod = RecommendationPaymentMethod(
             paymentMethodCipher = PaymentMethodCipher(
-            aesKeyCipherText = aesKeyCiphertext,
-            algorithm = algorithm,
-            cardCipherText = cardCiphertext,
-            keyIndex = keyIndex,
-            // Todo: What about these two properties below?
-            keySignature = "key-signature",
-            methodType = "paymentMethodCipher",
-            ravelinSDKVersion = ravelinSDKVersion
-        ))
+                aesKeyCipherText = aesKeyCiphertext,
+                algorithm = algorithm,
+                cardCipherText = cardCiphertext,
+                keyIndex = keyIndex,
+                // Todo: What about these two properties below?
+                keySignature = "key-signature",
+                methodType = "paymentMethodCipher",
+                ravelinSDKVersion = ravelinSDKVersion
+            )
+        )
     )
     .build()
