@@ -1,6 +1,5 @@
 package com.judopay.judokit.android.model
 
-
 import com.google.gson.JsonSyntaxException
 import com.judopay.judo3ds2.exception.SDKRuntimeException
 import com.judopay.judokit.android.api.model.request.RecommendationRequest
