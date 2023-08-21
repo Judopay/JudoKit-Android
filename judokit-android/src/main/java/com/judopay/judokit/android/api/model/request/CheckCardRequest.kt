@@ -27,9 +27,9 @@ class CheckCardRequest private constructor(
     private var phoneCountryCode: String?,
     private var threeDSecure: ThreeDSecureTwo?,
     private var cardHolderName: String?,
-    private var amount: String = "0",
     private var challengeRequestIndicator: ChallengeRequestIndicator?,
-    private var scaExemption: ScaExemption?
+    private var scaExemption: ScaExemption?,
+    private var amount: String = "0",
 ) {
     class Builder {
         private var uniqueRequest: Boolean? = null
@@ -137,8 +137,6 @@ class CheckCardRequest private constructor(
                 phoneCountryCode,
                 myThreeDSecure,
                 cardHolderName,
-                // Todo: confirm amount default value.
-                amount = "0",
                 challengeRequestIndicator,
                 scaExemption
             )
