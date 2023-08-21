@@ -21,7 +21,6 @@ import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.api.model.response.Consumer
 import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.toMap
-import com.ravelin.cardEncryption.model.CardDetails
 import java.util.Date
 
 class TransactionDetails private constructor(
@@ -302,18 +301,6 @@ fun TransactionDetails.toRegisterCardRequest(judo: Judo, transaction: Transactio
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
         .build()
-}
-
-@Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun TransactionDetails.toEncryptCardRequest(): CardDetails {
-    if (cardNumber == null) throw IllegalStateException("Card number is required")
-    if (expirationDate == null) throw IllegalStateException("Expiration date is required")
-    if (expirationDate.length != 5) throw IllegalStateException("Expiration date length is not correct")
-
-    val expiryMonth = expirationDate.substring(0, 2)
-    val expiryYear = expirationDate.substring(3, 5)
-
-    return CardDetails(cardNumber, expiryMonth, expiryYear, cardHolderName)
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)

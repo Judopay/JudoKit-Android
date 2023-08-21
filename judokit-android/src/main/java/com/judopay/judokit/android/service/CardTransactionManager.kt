@@ -33,7 +33,6 @@ import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.toChallengeRequestIndicator
 import com.judopay.judokit.android.model.toCheckCardRequest
-import com.judopay.judokit.android.model.toEncryptCardRequest
 import com.judopay.judokit.android.model.toPaymentRequest
 import com.judopay.judokit.android.model.toPreAuthRequest
 import com.judopay.judokit.android.model.toPreAuthTokenRequest
@@ -43,6 +42,7 @@ import com.judopay.judokit.android.model.toSaveCardRequest
 import com.judopay.judokit.android.model.toTokenRequest
 import com.judopay.judokit.android.ui.common.getLocale
 import com.ravelin.cardEncryption.RavelinEncrypt
+import com.ravelin.cardEncryption.model.CardDetails
 import com.ravelin.cardEncryption.model.EncryptedCard
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -220,12 +220,16 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         }
     }
 
-    private fun performCardEncryption(details: TransactionDetails, rsaKey: String?): EncryptedCard? {
-        if (judo.rsaKey == null) throw IllegalStateException(
-            "The RSAPublicKey field in the ravelin recommendation configuration is required"
-        )
-        val cardDetails = details.toEncryptCardRequest()
-        return RavelinEncrypt().encryptCard(cardDetails, rsaKey!!)
+    private fun performCardEncryption(
+        cardNumber: String,
+        cardHolderName: String?,
+        expirationDate: String,
+        rsaKey: String
+    ): EncryptedCard? {
+        val expiryMonth = expirationDate.substring(0, 2)
+        val expiryYear = expirationDate.substring(3, 5)
+        val cardDetails = CardDetails(cardNumber, expiryMonth, expiryYear, cardHolderName)
+        return RavelinEncrypt().encryptCard(cardDetails, rsaKey)
     }
 
     private fun performRecommendationApiRequest(
@@ -245,17 +249,32 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         caller: String
     ) = try {
             if (isCardEncryptionRequired(type)) {
-                // Todo: better validation of url and rsa key
-                val encryptedCardDetails = performCardEncryption(details, judo.rsaKey)
-                val recommendationEndpointUrl = judo.recommendationUrl
-                if (encryptedCardDetails == null || recommendationEndpointUrl == null) {
-                    // Todo: Confirm: either error state (it's already throwing exc atm) or performJudoApiCall.
+                val cardNumber = details.cardNumber
+                val cardHolderName = details.cardHolderName
+                val expirationDate = details.expirationDate
+                val rsaKey = judo.rsaKey
+                if (!areEncryptionArgumentsValid(cardNumber, expirationDate, rsaKey)) {
+                    // We allow Judo API call in this case, as the API will perform its own checks anyway.
+                    performJudoApiCall(type, details, caller)
+                } else {
+                    val encryptedCardDetails = performCardEncryption(
+                        cardNumber!!,
+                        cardHolderName,
+                        expirationDate!!,
+                        rsaKey!!
+                    )
+                    val recommendationEndpointUrl = judo.recommendationUrl
+                    if (!areRecommendationArgumentsValid(encryptedCardDetails, recommendationEndpointUrl)) {
+                        // We allow Judo API call in this case, as the API will perform its own checks anyway.
+                        performJudoApiCall(type, details, caller)
+                    } else {
+                        performRecommendationApiCall(
+                            encryptedCardDetails!!,
+                            caller,
+                            recommendationEndpointUrl!!,
+                        ) { result -> handleRecommendationApiResult(result, caller, type, details) }
+                    }
                 }
-                else performRecommendationApiCall(
-                    encryptedCardDetails,
-                    caller,
-                    recommendationEndpointUrl,
-                ) { result -> handleRecommendationApiResult(result, caller, type, details) }
             } else {
                 performJudoApiCall(type, details, caller)
             }
@@ -265,6 +284,42 @@ class CardTransactionManager private constructor(private var context: FragmentAc
 
     private fun isCardEncryptionRequired(type: TransactionType) = judo.isRavelinEncryptionEnabled
             && (type == TransactionType.PAYMENT || type == TransactionType.CHECK || type == TransactionType.PRE_AUTH)
+
+    private fun areEncryptionArgumentsValid(
+        cardNumber: String?,
+        expirationDate: String?,
+        rsaKey: String?
+    ): Boolean {
+        if (cardNumber.isNullOrEmpty()) {
+            // Todo Logging "Card number is required"
+            return false
+        }
+        if (expirationDate.isNullOrEmpty()) {
+            // Todo Logging "Expiration date is required"
+            return false
+        }
+        if (expirationDate.length != 5) {
+            // Todo Logging "Expiration date length is not correct"
+            return false
+        }
+        if (rsaKey.isNullOrEmpty()) {
+            // Todo Logging "The RSAPublicKey field in the ravelin recommendation configuration is required"
+            return false
+        }
+        return true
+    }
+
+    private fun areRecommendationArgumentsValid(encryptedCardDetails: EncryptedCard?, recommendationEndpointUrl: String?): Boolean {
+        if (encryptedCardDetails == null) {
+            // Todo Logging
+            return false
+        }
+        if (recommendationEndpointUrl.isNullOrEmpty()) {
+            // Todo Logging
+            return false
+        }
+        return true
+    }
 
     private fun performJudoApiCall(
         type: TransactionType,
