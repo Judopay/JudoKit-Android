@@ -19,9 +19,9 @@ import com.judopay.judokit.android.api.RecommendationApiService
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.request.Complete3DS2Request
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
-import com.judopay.judokit.android.api.model.response.RecommendationResponse
 import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.api.model.response.RecommendationAction
+import com.judopay.judokit.android.api.model.response.RecommendationResponse
 import com.judopay.judokit.android.api.model.response.getCReqParameters
 import com.judopay.judokit.android.api.model.response.getChallengeParameters
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
@@ -248,36 +248,36 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         details: TransactionDetails,
         caller: String
     ) = try {
-            if (isCardEncryptionRequired(type)) {
-                val cardNumber = details.cardNumber
-                val cardHolderName = details.cardHolderName
-                val expirationDate = details.expirationDate
-                val rsaKey = judo.rsaKey
-                if (!areEncryptionArgumentsValid(cardNumber, expirationDate, rsaKey)) {
+        if (isCardEncryptionRequired(type)) {
+            val cardNumber = details.cardNumber
+            val cardHolderName = details.cardHolderName
+            val expirationDate = details.expirationDate
+            val rsaKey = judo.rsaKey
+            if (!areEncryptionArgumentsValid(cardNumber, expirationDate, rsaKey)) {
+                // We allow Judo API call in this case, as the API will perform its own checks anyway.
+                performJudoApiCall(type, details, caller)
+            } else {
+                val encryptedCardDetails = performCardEncryption(
+                    cardNumber!!,
+                    cardHolderName,
+                    expirationDate!!,
+                    rsaKey!!
+                )
+                val recommendationEndpointUrl = judo.recommendationUrl
+                if (!areRecommendationArgumentsValid(encryptedCardDetails, recommendationEndpointUrl)) {
                     // We allow Judo API call in this case, as the API will perform its own checks anyway.
                     performJudoApiCall(type, details, caller)
                 } else {
-                    val encryptedCardDetails = performCardEncryption(
-                        cardNumber!!,
-                        cardHolderName,
-                        expirationDate!!,
-                        rsaKey!!
-                    )
-                    val recommendationEndpointUrl = judo.recommendationUrl
-                    if (!areRecommendationArgumentsValid(encryptedCardDetails, recommendationEndpointUrl)) {
-                        // We allow Judo API call in this case, as the API will perform its own checks anyway.
-                        performJudoApiCall(type, details, caller)
-                    } else {
-                        performRecommendationApiCall(
-                            encryptedCardDetails!!,
-                            caller,
-                            recommendationEndpointUrl!!,
-                        ) { result -> handleRecommendationApiResult(result, caller, type, details) }
-                    }
+                    performRecommendationApiCall(
+                        encryptedCardDetails!!,
+                        caller,
+                        recommendationEndpointUrl!!,
+                    ) { result -> handleRecommendationApiResult(result, caller, type, details) }
                 }
-            } else {
-                performJudoApiCall(type, details, caller)
             }
+        } else {
+            performJudoApiCall(type, details, caller)
+        }
     } catch (exception: Throwable) {
         dispatchException(exception, caller)
     }

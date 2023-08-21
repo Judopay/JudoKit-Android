@@ -29,7 +29,7 @@ class CheckCardRequest private constructor(
     private var cardHolderName: String?,
     private var challengeRequestIndicator: ChallengeRequestIndicator?,
     private var scaExemption: ScaExemption?,
-    private var amount: String = "0",
+    private var amount: String = "0"
 ) {
     class Builder {
         private var uniqueRequest: Boolean? = null
