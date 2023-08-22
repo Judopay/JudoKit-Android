@@ -1,7 +1,9 @@
 package com.judopay.judokit.android.service
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import com.judopay.judo3ds2.exception.SDKAlreadyInitializedException
 import com.judopay.judo3ds2.exception.SDKNotInitializedException
@@ -220,6 +222,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         }
     }
 
+    @RequiresApi(22)
     private fun performCardEncryption(
         cardNumber: String,
         cardHolderName: String?,
@@ -257,12 +260,15 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                 // We allow Judo API call in this case, as the API will perform its own checks anyway.
                 performJudoApiCall(type, details, caller)
             } else {
-                val encryptedCardDetails = performCardEncryption(
-                    cardNumber!!,
-                    cardHolderName,
-                    expirationDate!!,
-                    rsaKey!!
-                )
+                val encryptedCardDetails = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    performCardEncryption(
+                        cardNumber!!,
+                        cardHolderName,
+                        expirationDate!!,
+                        rsaKey!!
+                    )
+                } else null
+
                 val recommendationEndpointUrl = judo.recommendationUrl
                 if (!areRecommendationArgumentsValid(encryptedCardDetails, recommendationEndpointUrl)) {
                     // We allow Judo API call in this case, as the API will perform its own checks anyway.
