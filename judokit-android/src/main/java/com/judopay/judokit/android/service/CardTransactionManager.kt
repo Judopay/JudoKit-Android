@@ -42,6 +42,8 @@ import com.judopay.judokit.android.model.toRecommendationRequest
 import com.judopay.judokit.android.model.toRegisterCardRequest
 import com.judopay.judokit.android.model.toSaveCardRequest
 import com.judopay.judokit.android.model.toTokenRequest
+import com.judopay.judokit.android.ui.common.REGEX_JUDO_ID
+import com.judopay.judokit.android.ui.common.REGEX_RECOMMENDATION_URL
 import com.judopay.judokit.android.ui.common.getLocale
 import com.ravelin.cardEncryption.RavelinEncrypt
 import com.ravelin.cardEncryption.model.CardDetails
@@ -270,7 +272,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                 } else {
                     null
                 }
-
                 val recommendationEndpointUrl = judo.recommendationUrl
                 if (!areRecommendationArgumentsValid(encryptedCardDetails, recommendationEndpointUrl)) {
                     // We allow Judo API call in this case, as the API will perform its own checks anyway.
@@ -342,6 +343,13 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             Log.e(
                 CardTransactionManager::class.java.name,
                 "Recommendation arguments validation: The URL field in the ravelin recommendation configuration is required."
+            )
+            return false
+        }
+        if (!recommendationEndpointUrl.matches(REGEX_RECOMMENDATION_URL.toRegex())) {
+            Log.e(
+                CardTransactionManager::class.java.name,
+                "Recommendation arguments validation: The URL value provided in the ravelin recommendation configuration is invalid."
             )
             return false
         }
