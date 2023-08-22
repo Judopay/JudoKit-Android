@@ -290,20 +290,33 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         expirationDate: String?,
         rsaKey: String?
     ): Boolean {
+        // Todo: Confirm with Stefan that form of logging is correct.
         if (cardNumber.isNullOrEmpty()) {
-            // Todo Logging "Card number is required"
+            Log.e(
+                CardTransactionManager::class.java.name,
+                "Encryption arguments validation: Card number is required."
+            )
             return false
         }
         if (expirationDate.isNullOrEmpty()) {
-            // Todo Logging "Expiration date is required"
+            Log.e(
+                CardTransactionManager::class.java.name,
+                "Encryption arguments validation: Expiration date is required."
+            )
             return false
         }
         if (expirationDate.length != 5) {
-            // Todo Logging "Expiration date length is not correct"
+            Log.e(
+                CardTransactionManager::class.java.name,
+                "Encryption arguments validation: Expiration date length is not correct."
+            )
             return false
         }
         if (rsaKey.isNullOrEmpty()) {
-            // Todo Logging "The RSAPublicKey field in the ravelin recommendation configuration is required"
+            Log.e(
+                CardTransactionManager::class.java.name,
+                "Encryption arguments validation: The RSAPublicKey field in the ravelin recommendation configuration is required."
+            )
             return false
         }
         return true
@@ -311,11 +324,17 @@ class CardTransactionManager private constructor(private var context: FragmentAc
 
     private fun areRecommendationArgumentsValid(encryptedCardDetails: EncryptedCard?, recommendationEndpointUrl: String?): Boolean {
         if (encryptedCardDetails == null) {
-            // Todo Logging
+            Log.e(
+                CardTransactionManager::class.java.name,
+                "Recommendation arguments validation: Encrypted card details are missing."
+            )
             return false
         }
         if (recommendationEndpointUrl.isNullOrEmpty()) {
-            // Todo Logging
+            Log.e(
+                CardTransactionManager::class.java.name,
+                "Recommendation arguments validation: The URL field in the ravelin recommendation configuration is required."
+            )
             return false
         }
         return true
