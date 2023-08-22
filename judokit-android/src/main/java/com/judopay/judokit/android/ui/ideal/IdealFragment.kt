@@ -99,10 +99,7 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
                 }
             }
             is JudoApiCallResult.Failure -> {
-                sharedViewModel.paymentResult
-                    .postValue(
-                        (result as JudoApiCallResult<IdealSaleResponse>).toJudoPaymentResult(resources)
-                    )
+                sharedViewModel.paymentResult.postValue(result.toJudoPaymentResult(resources))
                 findNavController().popBackStack()
             }
             null -> {}
