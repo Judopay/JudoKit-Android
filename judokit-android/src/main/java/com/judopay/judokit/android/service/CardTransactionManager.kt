@@ -267,7 +267,9 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                         expirationDate!!,
                         rsaKey!!
                     )
-                } else null
+                } else {
+                    null
+                }
 
                 val recommendationEndpointUrl = judo.recommendationUrl
                 if (!areRecommendationArgumentsValid(encryptedCardDetails, recommendationEndpointUrl)) {
