@@ -17,16 +17,13 @@ sealed class JudoApiCallResult<out T> {
     ) : JudoApiCallResult<Nothing>()
 }
 
-inline fun <reified T> JudoApiCallResult<T>.toJudoPaymentResult(resources: Resources): JudoPaymentResult {
+fun JudoApiCallResult<Receipt>.toJudoPaymentResult(resources: Resources): JudoPaymentResult {
     val fallbackError = JudoError.judoRequestFailedError(resources)
 
     return when (this) {
         is JudoApiCallResult.Success ->
             if (data != null) {
-                when (T::class) {
-                    Receipt::class -> JudoPaymentResult.Success((data as Receipt).toJudoResult())
-                    else -> JudoPaymentResult.Error(fallbackError)
-                }
+                JudoPaymentResult.Success(data.toJudoResult())
             } else {
                 JudoPaymentResult.Error(fallbackError)
             }
