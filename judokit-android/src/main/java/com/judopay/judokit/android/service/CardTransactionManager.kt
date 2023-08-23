@@ -42,7 +42,6 @@ import com.judopay.judokit.android.model.toRecommendationRequest
 import com.judopay.judokit.android.model.toRegisterCardRequest
 import com.judopay.judokit.android.model.toSaveCardRequest
 import com.judopay.judokit.android.model.toTokenRequest
-import com.judopay.judokit.android.ui.common.REGEX_JUDO_ID
 import com.judopay.judokit.android.ui.common.REGEX_RECOMMENDATION_URL
 import com.judopay.judokit.android.ui.common.getLocale
 import com.ravelin.cardEncryption.RavelinEncrypt
