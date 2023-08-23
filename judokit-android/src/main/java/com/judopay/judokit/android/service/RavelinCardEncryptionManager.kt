@@ -8,8 +8,14 @@ import com.ravelin.cardEncryption.model.EncryptedCard
 
 class RavelinCardEncryptionManager {
 
-    fun isCardEncryptionRequired(type: TransactionType, isRavelinEncryptionEnabled: Boolean)
-            = isRavelinEncryptionEnabled && (type == TransactionType.PAYMENT || type == TransactionType.CHECK || type == TransactionType.PRE_AUTH)
+    fun isCardEncryptionRequired(
+        type: TransactionType,
+        isRavelinEncryptionEnabled: Boolean
+    ) = isRavelinEncryptionEnabled && (
+            type == TransactionType.PAYMENT ||
+            type == TransactionType.CHECK ||
+            type == TransactionType.PRE_AUTH
+    )
 
     fun areEncryptionArgumentsValid(
         cardNumber: String?,
