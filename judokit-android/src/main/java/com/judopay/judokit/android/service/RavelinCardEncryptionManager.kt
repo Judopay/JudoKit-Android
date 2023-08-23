@@ -12,10 +12,10 @@ class RavelinCardEncryptionManager {
         type: TransactionType,
         isRavelinEncryptionEnabled: Boolean
     ) = isRavelinEncryptionEnabled && (
-            type == TransactionType.PAYMENT ||
+        type == TransactionType.PAYMENT ||
             type == TransactionType.CHECK ||
             type == TransactionType.PRE_AUTH
-    )
+        )
 
     fun areEncryptionArgumentsValid(
         cardNumber: String?,
