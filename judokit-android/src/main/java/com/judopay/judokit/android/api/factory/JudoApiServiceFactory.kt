@@ -20,6 +20,7 @@ import com.judopay.judokit.android.apiBaseUrl
 import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.ScaExemption
+import com.judopay.judokit.android.ui.common.RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
 import okhttp3.Interceptor
@@ -65,10 +66,16 @@ object JudoApiServiceFactory {
      * for interacting with the Ravelin (card encryption) REST API.
      */
     @JvmStatic
-    fun createRecommendationApiService(context: Context, judo: Judo): RecommendationApiService =
-        // This base URL is never used later on, but is required by Retrofit to be provided.
-        createRetrofit(context.applicationContext, judo, "http://localhost/")
-            .create(RecommendationApiService::class.java)
+    fun createRecommendationApiService(context: Context, judo: Judo): RecommendationApiService {
+        val timeout = judo.recommendationTimeout ?: RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
+        return createRetrofit(
+            context.applicationContext,
+            judo,
+            // This base URL is never used later on, but is required by Retrofit to be provided.
+            "http://localhost/",
+            timeout
+        ).create(RecommendationApiService::class.java)
+    }
 
     @JvmStatic
     var externalInterceptors: List<Interceptor>? = null
@@ -76,10 +83,11 @@ object JudoApiServiceFactory {
     private fun createRetrofit(
         context: Context,
         judo: Judo,
-        baseUrl: String?
+        baseUrl: String?,
+        recommendationApiTimeout: Int? = null
     ): Retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
-        .client(getOkHttpClient(context, judo))
+        .client(getOkHttpClient(context, judo, recommendationApiTimeout))
         .addConverterFactory(gsonConverterFactory)
         .addCallAdapterFactory(JudoApiCallAdapterFactory())
         .build()
@@ -96,7 +104,11 @@ object JudoApiServiceFactory {
             .registerTypeAdapter(ChallengeRequestIndicator::class.java, ChallengeRequestIndicatorSerializer())
             .create()
 
-    private fun getOkHttpClient(context: Context, judo: Judo): OkHttpClient {
+    private fun getOkHttpClient(
+        context: Context,
+        judo: Judo,
+        recommendationApiTimeout: Int?
+    ): OkHttpClient {
         return try {
             val sslContext = SSLContext.getInstance("TLSv1.2")
             sslContext.init(null, null, null)
@@ -136,8 +148,8 @@ object JudoApiServiceFactory {
             )
 
             setTimeouts(builder, judo.networkTimeout)
+            recommendationApiTimeout?.let { setRecommendationCustomTimeout(builder, it.toLong()) }
             addInterceptors(builder, context, judo)
-
             builder.build()
         } catch (e: Exception) {
             throw RuntimeException(e)
@@ -150,6 +162,11 @@ object JudoApiServiceFactory {
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
                 .writeTimeout(writeTimeout, TimeUnit.SECONDS)
         }
+    }
+
+    private fun setRecommendationCustomTimeout(builder: OkHttpClient.Builder, recommendationApiTimeout: Long) {
+        // Todo: Confirm with Stefan how to consider Recommendation timeout (what about readTimeout, writeTimeout).
+        builder.connectTimeout(recommendationApiTimeout, TimeUnit.SECONDS)
     }
 
     private fun addInterceptors(

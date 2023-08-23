@@ -46,3 +46,5 @@ const val REG_EX_CARDHOLDER_NAME = "^[A-Za-z.\\-'\\s?]+\$"
 const val REG_EX_CITY = "^[A-Za-z.'\\- ]+\$"
 const val REG_EX_MOBILE_NUMBER = "^.{10,}\$"
 const val REG_EX_ADDRESS_LINE = "^[a-zA-Z0-9,./'\\- ]+\$"
+
+const val RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS = 30

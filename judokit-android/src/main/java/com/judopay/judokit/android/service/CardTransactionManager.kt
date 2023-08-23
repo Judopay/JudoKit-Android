@@ -41,6 +41,7 @@ import com.judopay.judokit.android.model.toRecommendationRequest
 import com.judopay.judokit.android.model.toRegisterCardRequest
 import com.judopay.judokit.android.model.toSaveCardRequest
 import com.judopay.judokit.android.model.toTokenRequest
+import com.judopay.judokit.android.ui.common.RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
 import com.judopay.judokit.android.ui.common.REGEX_RECOMMENDATION_URL
 import com.judopay.judokit.android.ui.common.getLocale
 import com.ravelin.cardEncryption.model.EncryptedCard
@@ -223,7 +224,8 @@ class CardTransactionManager private constructor(private var context: FragmentAc
 
     private fun performRecommendationApiRequest(
         encryptedCardDetails: EncryptedCard,
-        recommendationEndpointUrl: String
+        recommendationEndpointUrl: String,
+        recommendationTimeout: Int?
     ): Call<JudoApiCallResult<RecommendationResponse>> {
         val request = encryptedCardDetails.toRecommendationRequest()
         return recommendationApiService.requestRecommendation(
@@ -257,6 +259,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                     null
                 }
                 val recommendationEndpointUrl = judo.recommendationUrl
+                val recommendationTimeout = judo.recommendationTimeout ?: RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
                 if (!areRecommendationArgumentsValid(encryptedCardDetails, recommendationEndpointUrl)) {
                     // We allow Judo API call in this case, as the API will perform its own checks anyway.
                     performJudoApiCall(type, details, caller)
@@ -264,7 +267,8 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                     performRecommendationApiCall(
                         encryptedCardDetails!!,
                         caller,
-                        recommendationEndpointUrl!!
+                        recommendationEndpointUrl!!,
+                        recommendationTimeout
                     ) { result -> handleRecommendationApiResult(result, caller, type, details) }
                 }
             }
@@ -353,6 +357,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         encryptedCardDetails: EncryptedCard,
         caller: String,
         recommendationEndpointUrl: String,
+        recommendationTimeout: Int?,
         resultsHandler: (response: JudoApiCallResult<RecommendationResponse>) -> Unit
     ) {
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -363,7 +368,8 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             resultsHandler.invoke(
                 performRecommendationApiRequest(
                     encryptedCardDetails,
-                    recommendationEndpointUrl
+                    recommendationEndpointUrl,
+                    recommendationTimeout
                 ).await()
             )
         }

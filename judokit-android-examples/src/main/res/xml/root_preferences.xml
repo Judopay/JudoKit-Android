@@ -82,6 +82,15 @@
             app:summary="@string/reccomendation_url_key_summary"
             app:title="@string/reccomendation_url_title" />
 
+        <EditTextPreference
+            app:dependency="is_ravelin_encryption_enabled"
+            app:defaultValue="30"
+            app:iconSpaceReserved="false"
+            app:key="ravelin_timeout"
+            app:summary="@string/recommendation_timeout_summary"
+            app:title="@string/recommendation_timeout_title"
+            app:useSimpleSummaryProvider="true" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
