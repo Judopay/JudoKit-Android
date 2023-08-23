@@ -3,7 +3,6 @@ package com.judopay.judokit.android.service
 import android.content.Context
 import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import com.judopay.judo3ds2.exception.SDKAlreadyInitializedException
 import com.judopay.judo3ds2.exception.SDKNotInitializedException
@@ -44,8 +43,6 @@ import com.judopay.judokit.android.model.toSaveCardRequest
 import com.judopay.judokit.android.model.toTokenRequest
 import com.judopay.judokit.android.ui.common.REGEX_RECOMMENDATION_URL
 import com.judopay.judokit.android.ui.common.getLocale
-import com.ravelin.cardEncryption.RavelinEncrypt
-import com.ravelin.cardEncryption.model.CardDetails
 import com.ravelin.cardEncryption.model.EncryptedCard
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -111,6 +108,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     private lateinit var judoApiService: JudoApiService
     private lateinit var recommendationApiService: RecommendationApiService
     private var threeDS2Service: ThreeDS2Service = ThreeDS2ServiceImpl()
+    private var cardEncryptionManager = RavelinCardEncryptionManager()
 
     private var transaction: Transaction? = null
     private var transactionDetails: TransactionDetails? = null
@@ -223,19 +221,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         }
     }
 
-    @RequiresApi(22)
-    private fun performCardEncryption(
-        cardNumber: String,
-        cardHolderName: String?,
-        expirationDate: String,
-        rsaKey: String
-    ): EncryptedCard? {
-        val expiryMonth = expirationDate.substring(0, 2)
-        val expiryYear = expirationDate.substring(3, 5)
-        val cardDetails = CardDetails(cardNumber, expiryMonth, expiryYear, cardHolderName)
-        return RavelinEncrypt().encryptCard(cardDetails, rsaKey)
-    }
-
     private fun performRecommendationApiRequest(
         encryptedCardDetails: EncryptedCard,
         recommendationEndpointUrl: String
@@ -252,17 +237,17 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         details: TransactionDetails,
         caller: String
     ) = try {
-        if (isCardEncryptionRequired(type)) {
+        if (cardEncryptionManager.isCardEncryptionRequired(type, judo.isRavelinEncryptionEnabled)) {
             val cardNumber = details.cardNumber
             val cardHolderName = details.cardHolderName
             val expirationDate = details.expirationDate
             val rsaKey = judo.rsaKey
-            if (!areEncryptionArgumentsValid(cardNumber, expirationDate, rsaKey)) {
+            if (!cardEncryptionManager.areEncryptionArgumentsValid(cardNumber, expirationDate, rsaKey)) {
                 // We allow Judo API call in this case, as the API will perform its own checks anyway.
                 performJudoApiCall(type, details, caller)
             } else {
                 val encryptedCardDetails = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                    performCardEncryption(
+                    cardEncryptionManager.performCardEncryption(
                         cardNumber!!,
                         cardHolderName,
                         expirationDate!!,
@@ -288,46 +273,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         }
     } catch (exception: Throwable) {
         dispatchException(exception, caller)
-    }
-
-    private fun isCardEncryptionRequired(type: TransactionType) = judo.isRavelinEncryptionEnabled &&
-        (type == TransactionType.PAYMENT || type == TransactionType.CHECK || type == TransactionType.PRE_AUTH)
-
-    private fun areEncryptionArgumentsValid(
-        cardNumber: String?,
-        expirationDate: String?,
-        rsaKey: String?
-    ): Boolean {
-        // Todo: Confirm with Stefan that form of logging is correct.
-        if (cardNumber.isNullOrEmpty()) {
-            Log.e(
-                CardTransactionManager::class.java.name,
-                "Encryption arguments validation: Card number is required."
-            )
-            return false
-        }
-        if (expirationDate.isNullOrEmpty()) {
-            Log.e(
-                CardTransactionManager::class.java.name,
-                "Encryption arguments validation: Expiration date is required."
-            )
-            return false
-        }
-        if (expirationDate.length != 5) {
-            Log.e(
-                CardTransactionManager::class.java.name,
-                "Encryption arguments validation: Expiration date length is not correct."
-            )
-            return false
-        }
-        if (rsaKey.isNullOrEmpty()) {
-            Log.e(
-                CardTransactionManager::class.java.name,
-                "Encryption arguments validation: The RSAPublicKey field in the ravelin recommendation configuration is required."
-            )
-            return false
-        }
-        return true
     }
 
     private fun areRecommendationArgumentsValid(encryptedCardDetails: EncryptedCard?, recommendationEndpointUrl: String?): Boolean {
