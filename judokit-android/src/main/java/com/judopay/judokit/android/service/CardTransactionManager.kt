@@ -42,7 +42,7 @@ import com.judopay.judokit.android.model.toRegisterCardRequest
 import com.judopay.judokit.android.model.toSaveCardRequest
 import com.judopay.judokit.android.model.toTokenRequest
 import com.judopay.judokit.android.ui.common.RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
-import com.judopay.judokit.android.ui.common.REGEX_RECOMMENDATION_URL
+import com.judopay.judokit.android.ui.common.REG_EX_RECOMMENDATION_URL
 import com.judopay.judokit.android.ui.common.getLocale
 import com.ravelin.cardEncryption.model.EncryptedCard
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -294,7 +294,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             )
             return false
         }
-        if (!recommendationEndpointUrl.matches(REGEX_RECOMMENDATION_URL.toRegex())) {
+        if (!recommendationEndpointUrl.matches(REG_EX_RECOMMENDATION_URL.toRegex())) {
             Log.e(
                 CardTransactionManager::class.java.name,
                 "Recommendation arguments validation: The URL value provided in the ravelin recommendation configuration is invalid."
