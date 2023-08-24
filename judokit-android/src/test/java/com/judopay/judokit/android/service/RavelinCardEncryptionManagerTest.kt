@@ -1,6 +1,5 @@
 package com.judopay.judokit.android.service
 
-import org.junit.Assert
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -36,7 +35,9 @@ internal class RavelinCardEncryptionManagerTest {
         val rsaKey = "123456778910ABCDE"
         Assertions.assertFalse(
             sut.areEncryptionArgumentsValid(
-                cardNumber, expirationDate, rsaKey
+                cardNumber,
+                expirationDate,
+                rsaKey
             )
         )
     }
@@ -49,7 +50,9 @@ internal class RavelinCardEncryptionManagerTest {
         val rsaKey = "123456778910ABCDE"
         Assertions.assertFalse(
             sut.areEncryptionArgumentsValid(
-                cardNumber, expirationDate, rsaKey
+                cardNumber,
+                expirationDate,
+                rsaKey
             )
         )
     }
