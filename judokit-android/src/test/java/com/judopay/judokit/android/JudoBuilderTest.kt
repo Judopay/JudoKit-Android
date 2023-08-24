@@ -4,10 +4,12 @@ import com.google.common.truth.Truth.assertThat
 import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.model.Amount
 import com.judopay.judokit.android.model.CardNetwork
+import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
+import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.model.SubProductInfo
 import io.mockk.every
 import io.mockk.mockk
@@ -254,6 +256,36 @@ internal class JudoBuilderTest {
         assertEquals(5L, judoBuilder.build().networkTimeout.connectTimeout)
         assertEquals(180L, judoBuilder.build().networkTimeout.readTimeout)
         assertEquals(30L, judoBuilder.build().networkTimeout.writeTimeout)
+    }
+
+    @Test
+    @DisplayName("Given setChallengeRequestIndicator is called with non-null value, then challengeRequestIndicator should return equal non-null value")
+    fun testThatChallengeRequestIndicatorIsCorrectlyAssignedAndAccessed() {
+        judoBuilder.setChallengeRequestIndicator(ChallengeRequestIndicator.CHALLENGE_PREFERRED)
+        assertEquals(ChallengeRequestIndicator.CHALLENGE_PREFERRED, judoBuilder.build().challengeRequestIndicator)
+    }
+
+    @Test
+    @DisplayName("Given setScaExemption is called with non-null value, then scaExemption should return equal non-null value")
+    fun testThatScaExemptionIsCorrectlyAssignedAndAccessed() {
+        judoBuilder.setScaExemption(ScaExemption.LOW_VALUE)
+        assertEquals(ScaExemption.LOW_VALUE, judoBuilder.build().scaExemption)
+    }
+
+    @Test
+    @DisplayName("Given setMobileNumber is called with non-null value, then mobileNumber should return equal non-null value")
+    fun testThatMobileNumberIsCorrectlyAssignedAndAccessed() {
+        val fakePhoneNumber = "+44 1234 5678"
+        judoBuilder.setMobileNumber(fakePhoneNumber)
+        assertEquals(fakePhoneNumber, judoBuilder.build().mobileNumber)
+    }
+
+    @Test
+    @DisplayName("Given setEmailAddress is called with non-null value, then emailAddress should return equal non-null value")
+    fun testThatEmailAddressIsCorrectlyAssignedAndAccessed() {
+        val fakeEmailAddress = "johnsmith@gmail.co.uk"
+        judoBuilder.setEmailAddress(fakeEmailAddress)
+        assertEquals(fakeEmailAddress, judoBuilder.build().emailAddress)
     }
 
     @Test
