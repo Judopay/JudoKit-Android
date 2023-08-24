@@ -12,18 +12,18 @@ internal class RavelinCardEncryptionManagerTest {
     @DisplayName("Given Ravelin encryption is enabled, when the transaction type is Payment, then return True")
     @Test
     fun returnTrueOnPaymentTypeIfRavelinIsEnabled() {
-        Assertions.assertTrue(sut.isCardEncryptionRequired(TransactionType.PAYMENT,true))
+        Assertions.assertTrue(sut.isCardEncryptionRequired(TransactionType.PAYMENT, true))
     }
 
     @DisplayName("Given Ravelin encryption is enabled, when the transaction type is Check, then return True")
     @Test
     fun returnTrueOnCheckTypeIfRavelinIsEnabled() {
-        Assertions.assertTrue(sut.isCardEncryptionRequired(TransactionType.CHECK,true))
+        Assertions.assertTrue(sut.isCardEncryptionRequired(TransactionType.CHECK, true))
     }
 
     @DisplayName("Given Ravelin encryption is enabled, when the transaction type is PreAuth, then return True")
     @Test
     fun returnTrueOnPreAuthTypeIfRavelinIsEnabled() {
-        Assertions.assertTrue(sut.isCardEncryptionRequired(TransactionType.PRE_AUTH,true))
+        Assertions.assertTrue(sut.isCardEncryptionRequired(TransactionType.PRE_AUTH, true))
     }
 }
