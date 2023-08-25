@@ -88,8 +88,7 @@
             app:iconSpaceReserved="false"
             app:key="ravelin_timeout"
             app:summary="@string/recommendation_timeout_summary"
-            app:title="@string/recommendation_timeout_title"
-            app:useSimpleSummaryProvider="true" />
+            app:title="@string/recommendation_timeout_title" />
 
     </PreferenceCategory>
 
