@@ -275,7 +275,7 @@ internal class JudoBuilderTest {
     @Test
     @DisplayName("Given setMobileNumber is called with non-null value, then mobileNumber should return equal non-null value")
     fun testThatMobileNumberIsCorrectlyAssignedAndAccessed() {
-        val fakePhoneNumber = "+44 1234 5678"
+        val fakePhoneNumber = "7732 1234 5678"
         judoBuilder.setMobileNumber(fakePhoneNumber)
         assertEquals(fakePhoneNumber, judoBuilder.build().mobileNumber)
     }
@@ -286,6 +286,14 @@ internal class JudoBuilderTest {
         val fakeEmailAddress = "johnsmith@gmail.co.uk"
         judoBuilder.setEmailAddress(fakeEmailAddress)
         assertEquals(fakeEmailAddress, judoBuilder.build().emailAddress)
+    }
+
+    @Test
+    @DisplayName("Given setPhoneCountryCode is called with non-null value, then phoneCountryCode should return equal non-null value")
+    fun testThatPhoneCountryCodeIsCorrectlyAssignedAndAccessed() {
+        val fakePhoneCountryCode = "+44"
+        judoBuilder.setPhoneCountryCode(fakePhoneCountryCode)
+        assertEquals(fakePhoneCountryCode, judoBuilder.build().phoneCountryCode)
     }
 
     @Test
