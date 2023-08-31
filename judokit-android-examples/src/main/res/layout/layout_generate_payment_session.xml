@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="72dp"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <com.judopay.judokit.android.ui.common.ProgressButton
+        android:id="@+id/generatePaymentSessionButton"
+        style="@style/JudoTheme.BlackRoundedButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:minWidth="@dimen/min_touch_target_size"
+        android:text="@string/generate_payment_session_title"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/generate_payment_session_summary"/>
+
+</LinearLayout>
+

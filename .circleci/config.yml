@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  slack: circleci/slack@4.12.5
+
 commands:
   disable_predex:
     steps:
@@ -18,6 +21,81 @@ commands:
                           }
                       }
                   }' > ~/.gradle/init.gradle
+  notify_slack_error:
+    steps:
+      - slack/notify:
+          event: fail
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "CircleCI ran the :android: Android E2E mobile tests but they *failed*, here are the results: \n *<$CIRCLE_BUILD_URL | :circleci: Open build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n$CIRCLE_BRANCH"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:* \n <https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author:*\n$CIRCLE_USERNAME"
+                    }
+                  ]
+                }
+              ]
+            }
+
+  notify_slack_pass:
+    steps:
+      - slack/notify:
+          event: pass
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "CircleCI has just *successfully* ran the :android: Android E2E mobile tests, here are the results: \n *<$CIRCLE_BUILD_URL | :circleci: Open build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n$CIRCLE_BRANCH"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:* \n <https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author:*\n$CIRCLE_USERNAME"
+                    }
+                  ]
+                }
+              ]
+            }  
 
 executors:
   android:
@@ -25,6 +103,11 @@ executors:
       - image: cimg/android:2022.12
     environment:
       GRADLE_OPTS: -Xmx2g -XX:+HeapDumpOnOutOfMemoryError -Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false
+
+parameters:
+  nightly:
+    type: boolean
+    default: false
 
 jobs:
   build_sdk:
@@ -141,6 +224,12 @@ jobs:
             gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
             gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
       - run:
+          name: Export environment variables
+          command: |
+            export JUDO_ID=${JUDO_ID} \
+            export API_TEST_TOKEN=${API_TEST_TOKEN} \
+            export API_TEST_SECRET=${API_TEST_SECRET} \
+      - run:
           name: Test with Firebase Test Lab
           no_output_timeout: 30m
           command: >
@@ -148,7 +237,12 @@ jobs:
               --app judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk \
               --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk \
               --results-bucket $FIREBASE_TEST_RESULTS_BUCKET \
-              --timeout=30m
+              --timeout=30m \
+              --device-ids=oriole \
+              --os-version-ids=33 \
+              --num-flaky-test-attempts=1
+      - notify_slack_error
+      - notify_slack_pass
 
   sonar_scan:
     docker:
@@ -220,6 +314,8 @@ jobs:
 workflows:
   version: 2
   build:
+    when:
+      not: << pipeline.parameters.nightly >>
     jobs:
       - build_sdk:
           filters:
@@ -273,3 +369,16 @@ workflows:
           environment: prod
           requires:
             - release_sdk
+  e2e-nightly:
+    when: << pipeline.parameters.nightly >>
+    jobs:
+      - build_sample:
+          context: shared-secrets
+      - instrumented_test_sample:        
+          context: shared-secrets
+          requires:
+            - build_sample
+          filters:
+            branches:
+              only:
+                - master

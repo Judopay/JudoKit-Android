@@ -41,6 +41,12 @@
             app:summary="@string/is_payment_session_enabled_summary"
             app:title="@string/is_payment_session_enabled_title" />
 
+        <com.judokit.android.examples.settings.fragments.CustomPreference
+            app:iconSpaceReserved="false"
+            app:dependency="is_payment_session_enabled"
+            android:layout="@layout/layout_generate_payment_session"
+            android:key="generate_payment_session"/>
+
         <EditTextPreference
             app:dependency="is_payment_session_enabled"
             app:iconSpaceReserved="false"
