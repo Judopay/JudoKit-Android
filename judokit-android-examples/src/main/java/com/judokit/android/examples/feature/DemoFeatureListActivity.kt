@@ -44,6 +44,7 @@ import com.judopay.judokit.android.JudoActivity
 import com.judopay.judokit.android.PAYMENT_CANCELLED
 import com.judopay.judokit.android.PAYMENT_ERROR
 import com.judopay.judokit.android.PAYMENT_SUCCESS
+import com.judopay.judokit.android.RecommendationConfiguration
 import com.judopay.judokit.android.api.error.toJudoError
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.Authorization
@@ -360,10 +361,20 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val messageVersion = sharedPreferences.getString("threeDSTwoMessageVersion", null)
         val address = cardAddress
         val accountDetails = primaryAccountDetails
-        val isRavelinEncryptionEnabled = sharedPreferences.getBoolean("is_ravelin_encryption_enabled", true)
         val rsaKey = sharedPreferences.getString("rsa_key", null)
         val recommendationUrl = sharedPreferences.getString("recommendation_url", null)
         val recommendationTimeout = sharedPreferences.getString("recommendation_timeout", null)?.toInt()
+
+        // Todo: Confirm with Stefan that this validation is enough (including validation in RecommendationConfiguration).
+        val recommendationConfiguration = if (rsaKey != null && recommendationUrl != null) {
+            RecommendationConfiguration.Builder()
+                .setRsaKey(rsaKey)
+                .setRecommendationUrl(recommendationUrl)
+                .setRecommendationTimeout(recommendationTimeout)
+                .build()
+        } else {
+            null
+        }
 
         val builder = Judo.Builder(widgetType)
             .setJudoId(judoId)
@@ -385,10 +396,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setScaExemption(scaExemption)
             .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
             .setNetworkTimeout(networkTimeout)
-            .setIsRavelinEncryptionEnabled(isRavelinEncryptionEnabled)
-            .setRsaKey(rsaKey)
-            .setRecommendationUrl(recommendationUrl)
-            .setRecommendationTimeout(recommendationTimeout)
+            .setRecommendationConfiguration(recommendationConfiguration)
 
         if (!messageVersion.isNullOrBlank()) {
             builder.setThreeDSTwoMessageVersion(messageVersion)

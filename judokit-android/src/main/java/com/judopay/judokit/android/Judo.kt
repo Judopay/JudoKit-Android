@@ -82,10 +82,7 @@ class Judo internal constructor(
     val cardToken: CardToken? = null,
     val cardSecurityCode: String? = null,
     val subProductInfo: SubProductInfo = SubProductInfo.Unknown,
-    val isRavelinEncryptionEnabled: Boolean,
-    val rsaKey: String?,
-    val recommendationUrl: String?,
-    val recommendationTimeout: Int?
+    val recommendationConfiguration: RecommendationConfiguration?
 ) : Parcelable {
 
     /**
@@ -118,10 +115,7 @@ class Judo internal constructor(
         private var cardToken: CardToken? = null
         private var cardSecurityCode: String? = null
         private var subProductInfo: SubProductInfo = SubProductInfo.Unknown
-        private var isRavelinEncryptionEnabled: Boolean? = null
-        private var rsaKey: String? = null
-        private var recommendationUrl: String? = null
-        private var recommendationTimeout: Int? = null
+        private var recommendationConfiguration: RecommendationConfiguration? = null
 
         /**
          * Sets the unique merchant ID
@@ -304,17 +298,8 @@ class Judo internal constructor(
         fun setSubProductInfo(subProductInfo: SubProductInfo) =
             apply { this.subProductInfo = subProductInfo }
 
-        fun setIsRavelinEncryptionEnabled(ravelinEncryptionEnabled: Boolean?) =
-            apply { this.isRavelinEncryptionEnabled = ravelinEncryptionEnabled }
-
-        fun setRsaKey(rsaKey: String?) =
-            apply { this.rsaKey = rsaKey }
-
-        fun setRecommendationUrl(recommendationUrl: String?) =
-            apply { this.recommendationUrl = recommendationUrl }
-
-        fun setRecommendationTimeout(recommendationTimeout: Int?) =
-            apply { this.recommendationTimeout = recommendationTimeout }
+        fun setRecommendationConfiguration(recommendationConfiguration: RecommendationConfiguration?) =
+            apply { this.recommendationConfiguration = recommendationConfiguration }
 
         /**
          * Method that initializes Judo configuration object that can be used for
@@ -376,8 +361,6 @@ class Judo internal constructor(
                 pbbaConfiguration
             }
 
-            val myRavelinEncryptionEnabled = isRavelinEncryptionEnabled ?: false
-
             return Judo(
                 judoId = id,
                 authorization = myAuthorization,
@@ -405,10 +388,7 @@ class Judo internal constructor(
                 cardToken = cardToken,
                 cardSecurityCode = cardSecurityCode,
                 subProductInfo = subProductInfo,
-                isRavelinEncryptionEnabled = myRavelinEncryptionEnabled,
-                rsaKey = rsaKey,
-                recommendationUrl = recommendationUrl,
-                recommendationTimeout = recommendationTimeout
+                recommendationConfiguration = recommendationConfiguration
             )
         }
 

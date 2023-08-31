@@ -239,11 +239,11 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         details: TransactionDetails,
         caller: String
     ) = try {
-        if (cardEncryptionManager.isCardEncryptionRequired(type, judo.isRavelinEncryptionEnabled)) {
+        if (cardEncryptionManager.isCardEncryptionRequired(type, judo.recommendationConfiguration)) {
             val cardNumber = details.cardNumber
             val cardHolderName = details.cardHolderName
             val expirationDate = details.expirationDate
-            val rsaKey = judo.rsaKey
+            val rsaKey = judo.recommendationConfiguration?.rsaKey
             if (!cardEncryptionManager.areEncryptionArgumentsValid(cardNumber, expirationDate, rsaKey)) {
                 // We allow Judo API call in this case, as the API will perform its own checks anyway.
                 performJudoApiCall(type, details, caller)
@@ -258,8 +258,8 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                 } else {
                     null
                 }
-                val recommendationEndpointUrl = judo.recommendationUrl
-                val recommendationTimeout = judo.recommendationTimeout ?: RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
+                val recommendationEndpointUrl = judo.recommendationConfiguration?.recommendationUrl
+                val recommendationTimeout = judo.recommendationConfiguration?.recommendationTimeout ?: RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
                 if (!areRecommendationArgumentsValid(encryptedCardDetails, recommendationEndpointUrl)) {
                     // We allow Judo API call in this case, as the API will perform its own checks anyway.
                     performJudoApiCall(type, details, caller)

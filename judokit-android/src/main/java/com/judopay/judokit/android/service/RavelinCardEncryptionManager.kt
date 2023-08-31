@@ -2,16 +2,18 @@ package com.judopay.judokit.android.service
 
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.judopay.judokit.android.RecommendationConfiguration
 import com.ravelin.cardEncryption.RavelinEncrypt
 import com.ravelin.cardEncryption.model.CardDetails
 import com.ravelin.cardEncryption.model.EncryptedCard
 
 class RavelinCardEncryptionManager {
 
+    // Todo: Remake it according to my & Stefan call.
     fun isCardEncryptionRequired(
         type: TransactionType,
-        isRavelinEncryptionEnabled: Boolean
-    ) = isRavelinEncryptionEnabled && (
+        recommendationConfiguration: RecommendationConfiguration?
+    ) = recommendationConfiguration != null && (
         type == TransactionType.PAYMENT ||
             type == TransactionType.CHECK ||
             type == TransactionType.PRE_AUTH

@@ -67,7 +67,7 @@ object JudoApiServiceFactory {
      */
     @JvmStatic
     fun createRecommendationApiService(context: Context, judo: Judo): RecommendationApiService {
-        val timeout = judo.recommendationTimeout ?: RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
+        val timeout = judo.recommendationConfiguration?.recommendationTimeout ?: RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
         return createRetrofit(
             context.applicationContext,
             judo,
