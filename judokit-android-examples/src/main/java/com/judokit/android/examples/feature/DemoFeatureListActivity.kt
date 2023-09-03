@@ -295,7 +295,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     private fun showGetTransactionDialog(judo: Judo) {
         val dialogBinding = DialogGetTransactionBinding.inflate(layoutInflater)
-        val service = JudoApiServiceFactory.createJudoApiService(this, judo)
+        val service = JudoApiServiceFactory.create(this, judo)
         AlertDialog.Builder(this).setTitle(R.string.feature_title_get_transaction_details)
             .setView(dialogBinding.root)
             .setPositiveButton(

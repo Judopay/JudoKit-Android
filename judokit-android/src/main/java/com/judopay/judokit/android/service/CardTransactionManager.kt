@@ -42,7 +42,6 @@ import com.judopay.judokit.android.model.toRecommendationRequest
 import com.judopay.judokit.android.model.toRegisterCardRequest
 import com.judopay.judokit.android.model.toSaveCardRequest
 import com.judopay.judokit.android.model.toTokenRequest
-import com.judopay.judokit.android.ui.common.RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
 import com.judopay.judokit.android.ui.common.REG_EX_RECOMMENDATION_URL
 import com.judopay.judokit.android.ui.common.getLocale
 import com.ravelin.cardEncryption.model.EncryptedCard
@@ -136,8 +135,8 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         config != judo
     }?.apply {
         judo = config
-        judoApiService = JudoApiServiceFactory.createJudoApiService(context, config)
-        recommendationApiService = RecommendationApiServiceFactory.createRecommendationApiService(context, config)
+        judoApiService = JudoApiServiceFactory.create(context, config)
+        recommendationApiService = RecommendationApiServiceFactory.create(context, config)
 
         try {
             threeDS2Service.cleanup(context)

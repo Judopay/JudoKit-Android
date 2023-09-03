@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.judopay.judokit.android.Judo
+import com.judopay.judokit.android.api.ApiService
 import com.judopay.judokit.android.api.AppMetaDataProvider
 import com.judopay.judokit.android.api.deserializer.ChallengeRequestIndicatorSerializer
 import com.judopay.judokit.android.api.deserializer.DateJsonDeserializer
@@ -38,7 +39,7 @@ private const val HOSTNAME_WILDCARD_PATTERN = "*.judopay.com"
 /**
  * Abstract, base class for ApiService factories.
  */
-open class ApiServiceFactory {
+abstract class ApiServiceFactory {
 
     companion object {
         val gson: Gson
@@ -54,6 +55,8 @@ open class ApiServiceFactory {
     }
 
     var externalInterceptors: List<Interceptor>? = null
+
+    abstract fun create(context: Context, judo: Judo): ApiService
 
     protected fun createRetrofit(
         context: Context,

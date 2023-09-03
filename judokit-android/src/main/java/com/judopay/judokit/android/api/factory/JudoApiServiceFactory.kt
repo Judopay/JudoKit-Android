@@ -19,8 +19,7 @@ object JudoApiServiceFactory: ApiServiceFactory() {
      * @return the Retrofit API service implementation containing the methods used
      * for interacting with the judoPay REST API.
      */
-    @JvmStatic
-    fun createJudoApiService(context: Context, judo: Judo): JudoApiService =
+    override fun create(context: Context, judo: Judo): JudoApiService =
         createRetrofit(context.applicationContext, judo, judo.apiBaseUrl)
             .create(JudoApiService::class.java)
 }

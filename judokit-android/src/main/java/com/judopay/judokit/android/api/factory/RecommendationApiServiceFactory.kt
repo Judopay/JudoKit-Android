@@ -18,8 +18,7 @@ object RecommendationApiServiceFactory: ApiServiceFactory() {
      * @return the Retrofit API service implementation containing the methods used
      * for interacting with the Recommendation REST API.
      */
-    @JvmStatic
-    fun createRecommendationApiService(context: Context, judo: Judo): RecommendationApiService {
+    override fun create(context: Context, judo: Judo): RecommendationApiService {
         return createRetrofit(
             context.applicationContext,
             judo,

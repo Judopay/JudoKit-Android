@@ -55,7 +55,7 @@ class JudoActivity : AppCompatActivity() {
 
         val config = judo
         // setup shared view-model & response callbacks
-        val judoApiService = JudoApiServiceFactory.createJudoApiService(applicationContext, config)
+        val judoApiService = JudoApiServiceFactory.create(applicationContext, config)
         val factory = JudoSharedViewModelFactory(
             config,
             buildJudoGooglePayService(),
