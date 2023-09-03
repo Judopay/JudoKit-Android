@@ -367,8 +367,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val rsaKey = sharedPreferences.getString("rsa_key", null)
         val recommendationUrl = sharedPreferences.getString("recommendation_url", null)
         val recommendationTimeout = sharedPreferences.getString("recommendation_timeout", null)?.toInt()
-
-        // Todo: Confirm with Stefan that this validation is enough (including validation in RecommendationConfiguration).
         val recommendationConfiguration = if (rsaKey != null && recommendationUrl != null) {
             RecommendationConfiguration.Builder()
                 .setRsaKey(rsaKey)

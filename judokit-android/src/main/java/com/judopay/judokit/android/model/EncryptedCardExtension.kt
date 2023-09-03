@@ -18,7 +18,7 @@ fun EncryptedCard.toRecommendationRequest() = RecommendationRequest
                 // Todo: What about these two properties below?
                 keySignature = "key-signature",
                 methodType = "paymentMethodCipher",
-                ravelinSDKVersion = ravelinSDKVersion
+                recommendationFeatureProviderSDKVersion = ravelinSDKVersion
             )
         )
     )

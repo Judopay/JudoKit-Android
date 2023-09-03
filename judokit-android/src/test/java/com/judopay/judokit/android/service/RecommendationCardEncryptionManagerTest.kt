@@ -4,26 +4,26 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-@DisplayName("Testing RavelinCardEncryptionManager class")
-internal class RavelinCardEncryptionManagerTest {
+@DisplayName("Testing RecommendationCardEncryptionManagerTest class")
+internal class RecommendationCardEncryptionManagerTest {
 
-    private val sut = RavelinCardEncryptionManager()
+    private val sut = RecommendationCardEncryptionManager()
 
-    @DisplayName("Given Ravelin encryption is enabled, when the transaction type is Payment, then return true")
+    @DisplayName("Given Recommendation Feature is enabled, when the transaction type is Payment, then return true")
     @Test
-    fun returnTrueOnPaymentTypeIfRavelinIsEnabled() {
+    fun returnTrueOnPaymentTypeIfRecommendationIsEnabled() {
         Assertions.assertTrue(sut.isCardEncryptionRequired(TransactionType.PAYMENT, true))
     }
 
-    @DisplayName("Given Ravelin encryption is enabled, when the transaction type is Check, then return true")
+    @DisplayName("Given Recommendation Feature is enabled, when the transaction type is Check, then return true")
     @Test
-    fun returnTrueOnCheckTypeIfRavelinIsEnabled() {
+    fun returnTrueOnCheckTypeIfRecommendationIsEnabled() {
         Assertions.assertTrue(sut.isCardEncryptionRequired(TransactionType.CHECK, true))
     }
 
-    @DisplayName("Given Ravelin encryption is enabled, when the transaction type is PreAuth, then return true")
+    @DisplayName("Given Recommendation Feature is enabled, when the transaction type is PreAuth, then return true")
     @Test
-    fun returnTrueOnPreAuthTypeIfRavelinIsEnabled() {
+    fun returnTrueOnPreAuthTypeIfRecommendationIsEnabled() {
         Assertions.assertTrue(sut.isCardEncryptionRequired(TransactionType.PRE_AUTH, true))
     }
 

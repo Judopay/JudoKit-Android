@@ -1,6 +1,7 @@
 package com.judopay.judokit.android.model
 
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import com.judopay.judokit.android.requireNotNullOrEmpty
 import kotlinx.parcelize.Parcelize
 
@@ -12,7 +13,8 @@ data class PaymentMethodCipher internal constructor(
     var keyIndex: String,
     var keySignature: String,
     var methodType: String,
-    var ravelinSDKVersion: String
+    @SerializedName("ravelinSDKVersion")
+    var recommendationFeatureProviderSDKVersion: String
 ) : Parcelable {
     class Builder {
         private var aesKeyCipherText: String? = null
@@ -21,7 +23,7 @@ data class PaymentMethodCipher internal constructor(
         private var keyIndex: String? = null
         private var keySignature: String? = null
         private var methodType: String? = null
-        private var ravelinSDKVersion: String? = null
+        private var recommendationFeatureProviderSDKVersion: String? = null
 
         fun setAesKeyCipherText(aesKeyCipherText: String?) = apply { this.aesKeyCipherText = aesKeyCipherText }
         fun setAlgorithm(algorithm: String?) = apply { this.algorithm = algorithm }
@@ -29,7 +31,9 @@ data class PaymentMethodCipher internal constructor(
         fun setKeyIndex(keyIndex: String?) = apply { this.keyIndex = keyIndex }
         fun setKeySignature(keySignature: String?) = apply { this.keySignature = keySignature }
         fun setMethodType(methodType: String?) = apply { this.methodType = methodType }
-        fun setRavelinSDKVersion(ravelinSDKVersion: String?) = apply { this.ravelinSDKVersion = ravelinSDKVersion }
+        fun setRecommendationFeatureProviderSDKVersion(recommendationFeatureProviderSDKVersion: String?) = apply {
+            this.recommendationFeatureProviderSDKVersion = recommendationFeatureProviderSDKVersion
+        }
 
         @Throws(IllegalArgumentException::class)
         fun build(): PaymentMethodCipher {
@@ -39,7 +43,10 @@ data class PaymentMethodCipher internal constructor(
             val myKeyIndex = requireNotNull(keyIndex)
             val myKeySignature = requireNotNullOrEmpty(keySignature, "keySignature")
             val myMethodType = requireNotNullOrEmpty(methodType, "methodType")
-            val myRavelinSDKVersion = requireNotNullOrEmpty(ravelinSDKVersion, "ravelinSDKVersion")
+            val myRecommendationFeatureProviderSDKVersion = requireNotNullOrEmpty(
+                recommendationFeatureProviderSDKVersion,
+                "recommendationFeatureProviderSDKVersion"
+            )
 
             return PaymentMethodCipher(
                 myAesKeyCipherText,
@@ -48,7 +55,7 @@ data class PaymentMethodCipher internal constructor(
                 myKeyIndex,
                 myKeySignature,
                 myMethodType,
-                myRavelinSDKVersion
+                myRecommendationFeatureProviderSDKVersion
             )
         }
     }

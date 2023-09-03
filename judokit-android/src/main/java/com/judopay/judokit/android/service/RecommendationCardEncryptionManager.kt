@@ -7,7 +7,7 @@ import com.ravelin.cardEncryption.RavelinEncrypt
 import com.ravelin.cardEncryption.model.CardDetails
 import com.ravelin.cardEncryption.model.EncryptedCard
 
-class RavelinCardEncryptionManager {
+class RecommendationCardEncryptionManager {
 
     // Todo: Remake it according to my & Stefan call.
     fun isCardEncryptionRequired(
@@ -49,7 +49,7 @@ class RavelinCardEncryptionManager {
         if (rsaKey.isNullOrEmpty()) {
             Log.e(
                 CardTransactionManager::class.java.name,
-                "Encryption arguments validation: The RSAPublicKey field in the ravelin recommendation configuration is required."
+                "Encryption arguments validation: The RSAPublicKey field in the recommendation configuration is required."
             )
             return false
         }

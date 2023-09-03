@@ -23,7 +23,7 @@ internal class RecommendationRequestTest {
             .setKeyIndex("keyIndex")
             .setKeySignature("keySignature")
             .setMethodType("methodType")
-            .setRavelinSDKVersion("ravelinSDKVersion")
+            .setRecommendationFeatureProviderSDKVersion("recommendationFeatureProviderSDKVersion")
             .build()
 
         val recommendationPaymentMethod = RecommendationPaymentMethod(paymentMethodCipher)
@@ -56,8 +56,8 @@ internal class RecommendationRequestTest {
             receivedRequestObject.paymentMethod?.paymentMethodCipher?.methodType
         )
         assertEquals(
-            "ravelinSDKVersion",
-            receivedRequestObject.paymentMethod?.paymentMethodCipher?.ravelinSDKVersion
+            "recommendationFeatureProviderSDKVersion",
+            receivedRequestObject.paymentMethod?.paymentMethodCipher?.recommendationFeatureProviderSDKVersion
         )
     }
 

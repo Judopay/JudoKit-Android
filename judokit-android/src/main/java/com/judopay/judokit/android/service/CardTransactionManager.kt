@@ -110,7 +110,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     private lateinit var judoApiService: JudoApiService
     private lateinit var recommendationApiService: RecommendationApiService
     private var threeDS2Service: ThreeDS2Service = ThreeDS2ServiceImpl()
-    private var cardEncryptionManager = RavelinCardEncryptionManager()
+    private var cardEncryptionManager = RecommendationCardEncryptionManager()
 
     private var transaction: Transaction? = null
     private var transactionDetails: TransactionDetails? = null
@@ -225,8 +225,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
 
     private fun performRecommendationApiRequest(
         encryptedCardDetails: EncryptedCard,
-        recommendationEndpointUrl: String,
-        recommendationTimeout: Int?
+        recommendationEndpointUrl: String
     ): Call<JudoApiCallResult<RecommendationResponse>> {
         val request = encryptedCardDetails.toRecommendationRequest()
         return recommendationApiService.requestRecommendation(
@@ -260,7 +259,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                     null
                 }
                 val recommendationEndpointUrl = judo.recommendationConfiguration?.recommendationUrl
-                val recommendationTimeout = judo.recommendationConfiguration?.recommendationTimeout ?: RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
                 if (!areRecommendationArgumentsValid(encryptedCardDetails, recommendationEndpointUrl)) {
                     // We allow Judo API call in this case, as the API will perform its own checks anyway.
                     performJudoApiCall(type, details, caller)
@@ -268,8 +266,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                     performRecommendationApiCall(
                         encryptedCardDetails!!,
                         caller,
-                        recommendationEndpointUrl!!,
-                        recommendationTimeout
+                        recommendationEndpointUrl!!
                     ) { result -> handleRecommendationApiResult(result, caller, type, details) }
                 }
             }
@@ -291,14 +288,14 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         if (recommendationEndpointUrl.isNullOrEmpty()) {
             Log.e(
                 CardTransactionManager::class.java.name,
-                "Recommendation arguments validation: The URL field in the ravelin recommendation configuration is required."
+                "Recommendation arguments validation: The URL field in the recommendation configuration is required."
             )
             return false
         }
         if (!recommendationEndpointUrl.matches(REG_EX_RECOMMENDATION_URL.toRegex())) {
             Log.e(
                 CardTransactionManager::class.java.name,
-                "Recommendation arguments validation: The URL value provided in the ravelin recommendation configuration is invalid."
+                "Recommendation arguments validation: The URL value provided in the recommendation configuration is invalid."
             )
             return false
         }
@@ -358,7 +355,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         encryptedCardDetails: EncryptedCard,
         caller: String,
         recommendationEndpointUrl: String,
-        recommendationTimeout: Int?,
         resultsHandler: (response: JudoApiCallResult<RecommendationResponse>) -> Unit
     ) {
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -369,8 +365,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             resultsHandler.invoke(
                 performRecommendationApiRequest(
                     encryptedCardDetails,
-                    recommendationEndpointUrl,
-                    recommendationTimeout
+                    recommendationEndpointUrl
                 ).await()
             )
         }

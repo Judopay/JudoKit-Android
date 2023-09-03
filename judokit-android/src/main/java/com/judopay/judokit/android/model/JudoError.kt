@@ -124,11 +124,11 @@ data class JudoError(
         // Todo: Ensure REQUEST_FAILED is correct Error type.
         fun judoRecommendationError(resources: Resources): JudoError = JudoError(
             REQUEST_FAILED,
-            resources.getString(R.string.ravelin_recommendation_failed_desc),
+            resources.getString(R.string.recommendation_request_failed_desc),
             mutableListOf(
                 JudoError(
                     REQUEST_FAILED,
-                    resources.getString(R.string.ravelin_recommendation_failed_reason)
+                    resources.getString(R.string.recommendation_request_failed_reason)
                 )
             )
         )

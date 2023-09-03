@@ -214,9 +214,9 @@
     <string name="preauth_token_payment">PreAuth token payment</string>
     <string name="token_payment_description">To make a token or preauth token payment, first you have to create a card token</string>
 
-    <string name="ravelin_settings_header">Ravelin Settings</string>
-    <string name="is_ravelin_encryption_enabled_title">Enable Ravelin Encryption</string>
-    <string name="is_ravelin_encryption_enabled_summary">Turn on to encrypt the card</string>
+    <string name="recommendation_feature_settings_header">Recommendation Feature Settings</string>
+    <string name="is_recommendation_feature_encryption_enabled_title">Enable Recommendation</string>
+    <string name="is_recommendation_feature_enabled_summary">Turn on to enable Recommendation Feature</string>
 
     <string name="rsa_key_summary">Provide RSA Key for card encryption</string>
     <string name="rsa_key_title">RSA Key</string>
