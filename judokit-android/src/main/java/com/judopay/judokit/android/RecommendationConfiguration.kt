@@ -32,15 +32,15 @@ class RecommendationConfiguration internal constructor(
 
         /**
          * Method that initializes Recommendation configuration object that can be used for
-         * processing a payment.
+         * card verification.
          * @return A new RecommendationConfiguration object that can be added to Judo config object
-         * in order to start a payment flow.
+         * in order to start the recommendation flow.
          * @throws IllegalArgumentException If any of the required fields are empty/null or invalid
          */
         @Throws(IllegalArgumentException::class)
         fun build(): RecommendationConfiguration {
-            val myRsaKey = requireNotNull(rsaKey, "rsaKey")
-            val myRecommendationUrl = requireNotNull(rsaKey, "recommendationUrl")
+            val myRsaKey = requireNotNull(rsaKey, "rsa_key")
+            val myRecommendationUrl = requireNotNull(recommendationUrl, "recommendation_url")
             return RecommendationConfiguration(
                 rsaKey = myRsaKey,
                 recommendationUrl = myRecommendationUrl,

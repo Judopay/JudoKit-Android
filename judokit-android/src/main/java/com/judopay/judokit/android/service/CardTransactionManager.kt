@@ -18,6 +18,7 @@ import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.RecommendationApiService
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
+import com.judopay.judokit.android.api.factory.RecommendationApiServiceFactory
 import com.judopay.judokit.android.api.model.request.Complete3DS2Request
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.Receipt
@@ -136,7 +137,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     }?.apply {
         judo = config
         judoApiService = JudoApiServiceFactory.createJudoApiService(context, config)
-        recommendationApiService = JudoApiServiceFactory.createRecommendationApiService(context, config)
+        recommendationApiService = RecommendationApiServiceFactory.createRecommendationApiService(context, config)
 
         try {
             threeDS2Service.cleanup(context)

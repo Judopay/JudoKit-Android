@@ -47,6 +47,7 @@ import com.judopay.judokit.android.PAYMENT_SUCCESS
 import com.judopay.judokit.android.RecommendationConfiguration
 import com.judopay.judokit.android.api.error.toJudoError
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
+import com.judopay.judokit.android.api.factory.RecommendationApiServiceFactory
 import com.judopay.judokit.android.api.model.Authorization
 import com.judopay.judokit.android.api.model.BasicAuthorization
 import com.judopay.judokit.android.api.model.PaymentSessionAuthorization
@@ -113,7 +114,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             IntentFilter(BR_PBBA_RESULT)
         )
 
-        JudoApiServiceFactory.externalInterceptors = listOf(
+        val externalInterceptors = listOf(
             ChuckerInterceptor.Builder(this)
                 .collector(ChuckerCollector(this))
                 .maxContentLength(250000L)
@@ -121,6 +122,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 .alwaysReadResponseBody(false)
                 .build()
         )
+        JudoApiServiceFactory.externalInterceptors = externalInterceptors
+        RecommendationApiServiceFactory.externalInterceptors = externalInterceptors
 
         binding = ActivityDemoFeatureListBinding.inflate(layoutInflater)
         setContentView(binding.root)
