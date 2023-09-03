@@ -15,6 +15,7 @@ import com.judopay.judo3ds2.service.ThreeDS2ServiceImpl
 import com.judopay.judo3ds2.transaction.Transaction
 import com.judopay.judo3ds2.transaction.challenge.ChallengeStatusReceiver
 import com.judopay.judokit.android.Judo
+import com.judopay.judokit.android.RecommendationConfiguration
 import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.RecommendationApiService
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
@@ -238,7 +239,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         details: TransactionDetails,
         caller: String
     ) = try {
-        if (cardEncryptionManager.isCardEncryptionRequired(type, judo.recommendationConfiguration)) {
+        if (isCardEncryptionRequired(type, judo.recommendationConfiguration)) {
             val cardNumber = details.cardNumber
             val cardHolderName = details.cardHolderName
             val expirationDate = details.expirationDate
@@ -522,4 +523,14 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             Log.w(CardTransactionManager::class.java.name, exception.toString())
         }
     }
+
+    // Todo: Confirm with Stefan it is the correct place for this function.
+    private fun isCardEncryptionRequired(
+        type: TransactionType,
+        recommendationConfiguration: RecommendationConfiguration?
+    ) = recommendationConfiguration != null && (
+            type == TransactionType.PAYMENT ||
+                    type == TransactionType.CHECK ||
+                    type == TransactionType.PRE_AUTH
+            )
 }
