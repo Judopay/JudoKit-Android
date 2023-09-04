@@ -18,6 +18,7 @@ import com.judopay.judokit.android.api.interceptor.PayLoadInterceptor
 import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.ScaExemption
+import com.judopay.judokit.android.ui.common.RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
 import okhttp3.Interceptor
@@ -115,9 +116,10 @@ abstract class ApiServiceFactory {
             )
 
             setTimeouts(builder, judo.networkTimeout)
-            // Todo: Recommendation timeout: first clarify with Stefan how to consider Recommendation timeout (what about readTimeout, writeTimeout).
-            // val timeout = judo.recommendationConfiguration?.recommendationTimeout ?: RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
-            // setRecommendationCustomTimeout(builder, timeout.toLong())
+            judo.recommendationConfiguration?.let { 
+                val timeout = it.recommendationTimeout ?: RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
+                setRecommendationCallTimeout(builder, timeout.toLong())
+            }
             addInterceptors(builder, context, judo)
             builder.build()
         } catch (e: Exception) {
@@ -133,8 +135,8 @@ abstract class ApiServiceFactory {
         }
     }
 
-    private fun setRecommendationCustomTimeout(builder: OkHttpClient.Builder, recommendationApiTimeout: Long) {
-        builder.connectTimeout(recommendationApiTimeout, TimeUnit.SECONDS)
+    private fun setRecommendationCallTimeout(builder: OkHttpClient.Builder, recommendationApiTimeout: Long) {
+        builder.callTimeout(recommendationApiTimeout, TimeUnit.SECONDS)
     }
 
     private fun addInterceptors(
