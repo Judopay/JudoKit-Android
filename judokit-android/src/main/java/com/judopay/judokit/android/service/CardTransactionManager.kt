@@ -43,7 +43,6 @@ import com.judopay.judokit.android.model.toRecommendationRequest
 import com.judopay.judokit.android.model.toRegisterCardRequest
 import com.judopay.judokit.android.model.toSaveCardRequest
 import com.judopay.judokit.android.model.toTokenRequest
-import com.judopay.judokit.android.ui.common.REG_EX_RECOMMENDATION_URL
 import com.judopay.judokit.android.ui.common.getLocale
 import com.ravelin.cardEncryption.model.EncryptedCard
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -259,15 +258,15 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                     null
                 }
                 val recommendationEndpointUrl = judo.recommendationConfiguration?.recommendationUrl
-                if (!areRecommendationArgumentsValid(encryptedCardDetails, recommendationEndpointUrl)) {
+                if (encryptedCardDetails != null && recommendationEndpointUrl != null) {
+                    performRecommendationApiCall(
+                        encryptedCardDetails,
+                        caller,
+                        recommendationEndpointUrl
+                    ) { result -> handleRecommendationApiResult(result, caller, type, details) }
+                } else {
                     // We allow Judo API call in this case, as the API will perform its own checks anyway.
                     performJudoApiCall(type, details, caller)
-                } else {
-                    performRecommendationApiCall(
-                        encryptedCardDetails!!,
-                        caller,
-                        recommendationEndpointUrl!!
-                    ) { result -> handleRecommendationApiResult(result, caller, type, details) }
                 }
             }
         } else {
@@ -275,31 +274,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         }
     } catch (exception: Throwable) {
         dispatchException(exception, caller)
-    }
-
-    private fun areRecommendationArgumentsValid(encryptedCardDetails: EncryptedCard?, recommendationEndpointUrl: String?): Boolean {
-        if (encryptedCardDetails == null) {
-            Log.e(
-                CardTransactionManager::class.java.name,
-                "Recommendation arguments validation: Encrypted card details are missing."
-            )
-            return false
-        }
-        if (recommendationEndpointUrl.isNullOrEmpty()) {
-            Log.e(
-                CardTransactionManager::class.java.name,
-                "Recommendation arguments validation: The URL field in the recommendation configuration is required."
-            )
-            return false
-        }
-        if (!recommendationEndpointUrl.matches(REG_EX_RECOMMENDATION_URL.toRegex())) {
-            Log.e(
-                CardTransactionManager::class.java.name,
-                "Recommendation arguments validation: The URL value provided in the recommendation configuration is invalid."
-            )
-            return false
-        }
-        return true
     }
 
     private fun performJudoApiCall(
