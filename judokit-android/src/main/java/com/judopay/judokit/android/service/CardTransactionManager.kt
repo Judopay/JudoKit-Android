@@ -399,30 +399,45 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         details: TransactionDetails
     ) =
         when (result) {
-            is JudoApiCallResult.Success ->
-                when (result.data?.data?.action) {
-                    RecommendationAction.ALLOW, RecommendationAction.REVIEW -> {
-                        val transactionOptimisation = result.data.data.transactionOptimisation
-                        val exemption = transactionOptimisation?.exemption ?: judo.scaExemption
-                        val challengeRequestIndicator = transactionOptimisation
-                            ?.threeDSChallengePreference
-                            ?.toChallengeRequestIndicator()
-                            ?: judo.challengeRequestIndicator
+            is JudoApiCallResult.Success -> {
+                val recommendationAction = result.data?.data?.action
+                val transactionOptimisation = result.data?.data?.transactionOptimisation
+                val exemptionReceived = transactionOptimisation?.exemption
+                val threeDSChallengePreferenceReceived = transactionOptimisation?.threeDSChallengePreference
 
-                        performJudoApiCall(type, details, caller, exemption, challengeRequestIndicator)
-                    }
-                    RecommendationAction.PREVENT -> {
-                        onResult(
-                            JudoPaymentResult.Error(JudoError.judoRecommendationError(context.resources)),
-                            caller
-                        )
-                    }
-                    null -> {
-                        // We allow Judo API call in this case, as the API will perform its own checks anyway.
-                        performJudoApiCall(type, details, caller, judo.scaExemption, judo.challengeRequestIndicator)
+                if (recommendationAction == null || transactionOptimisation == null) {
+                    // We allow Judo API call in this case, as the API will perform its own checks anyway.
+                    performJudoApiCall(type, details, caller, judo.scaExemption, judo.challengeRequestIndicator)
+                } else {
+                    when (recommendationAction) {
+                        RecommendationAction.ALLOW, RecommendationAction.REVIEW -> {
+                            val exemption: ScaExemption?
+                            val challengeRequestIndicator: ChallengeRequestIndicator?
+                            if (transactionOptimisation.action == null) {
+                                exemption = judo.scaExemption
+                                challengeRequestIndicator = judo.challengeRequestIndicator
+                            } else {
+                                if (exemptionReceived == null &&
+                                    threeDSChallengePreferenceReceived == null) {
+                                    exemption = judo.scaExemption
+                                    challengeRequestIndicator = judo.challengeRequestIndicator
+                                } else {
+                                    exemption = exemptionReceived
+                                    challengeRequestIndicator = threeDSChallengePreferenceReceived
+                                        ?.toChallengeRequestIndicator()
+                                }
+                            }
+                            performJudoApiCall(type, details, caller, exemption, challengeRequestIndicator)
+                        }
+                        RecommendationAction.PREVENT -> {
+                            onResult(
+                                JudoPaymentResult.Error(JudoError.judoRecommendationError(context.resources)),
+                                caller
+                            )
+                        }
                     }
                 }
-            else -> {
+            } else -> {
                 // We allow Judo API call in this case, as the API will perform its own checks anyway.
                 performJudoApiCall(type, details, caller, judo.scaExemption, judo.challengeRequestIndicator)
             }
