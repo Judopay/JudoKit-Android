@@ -29,6 +29,7 @@ import com.judopay.judokit.android.api.model.request.SaveCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
 import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
 import com.judopay.judokit.android.model.ApiEnvironment
+import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.googlepay.GooglePayAddress
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_500
 import com.judopay.judokit.android.ui.common.parcelable
@@ -106,6 +107,16 @@ val Fragment.judo: Judo
 
 val String.withWhitespacesRemoved: String
     get() = replace("\\s".toRegex(), "")
+
+fun String.toChallengeRequestIndicator(): ChallengeRequestIndicator? {
+    return when (this) {
+        "NO_PREFERENCE" -> ChallengeRequestIndicator.NO_PREFERENCE
+        "NO_CHALLENGE_REQUESTED" -> ChallengeRequestIndicator.NO_CHALLENGE
+        "CHALLENGE_REQUESTED" -> ChallengeRequestIndicator.CHALLENGE_PREFERRED
+        "CHALLENGE_REQUESTED_AS_MANDATE" -> ChallengeRequestIndicator.CHALLENGE_AS_MANDATE
+        else -> null
+    }
+}
 
 fun Bundle.toMap(): Map<String, String> = keySet().mapNotNull {
     val value = getString(it)

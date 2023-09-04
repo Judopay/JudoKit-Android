@@ -34,7 +34,6 @@ import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.model.TransactionDetails
-import com.judopay.judokit.android.model.toChallengeRequestIndicator
 import com.judopay.judokit.android.model.toCheckCardRequest
 import com.judopay.judokit.android.model.toPaymentRequest
 import com.judopay.judokit.android.model.toPreAuthRequest
@@ -43,6 +42,7 @@ import com.judopay.judokit.android.model.toRecommendationRequest
 import com.judopay.judokit.android.model.toRegisterCardRequest
 import com.judopay.judokit.android.model.toSaveCardRequest
 import com.judopay.judokit.android.model.toTokenRequest
+import com.judopay.judokit.android.toChallengeRequestIndicator
 import com.judopay.judokit.android.ui.common.getLocale
 import com.ravelin.cardEncryption.model.EncryptedCard
 import kotlinx.coroutines.CoroutineExceptionHandler
