@@ -30,7 +30,7 @@ import retrofit2.http.Path
  * Use the [create][com.judopay.judokit.android.api.factory.JudoApiServiceFactory.create]
  * method to obtain an instance. See [GitHub](https://github.com/square/retrofit) for details.
  */
-interface JudoApiService: ApiService {
+interface JudoApiService : ApiService {
     /**
      * Perform a payment transaction
      *

@@ -479,8 +479,10 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         if (data.action == null || data.transactionOptimisation == null) return false
         if (data.action == RecommendationAction.ALLOW || data.action == RecommendationAction.REVIEW) {
             if (data.transactionOptimisation.action == null) return false
-            if (data.transactionOptimisation.exemption == null &&
-                data.transactionOptimisation.threeDSChallengePreference == null) return false
+            if (
+                data.transactionOptimisation.exemption == null &&
+                data.transactionOptimisation.threeDSChallengePreference == null
+            ) return false
         }
         return true
     }

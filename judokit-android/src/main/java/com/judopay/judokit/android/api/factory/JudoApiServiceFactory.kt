@@ -4,13 +4,11 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.judopay.judokit.android.Judo
-import com.judopay.judokit.android.api.AppMetaDataProvider
 import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.deserializer.ChallengeRequestIndicatorSerializer
 import com.judopay.judokit.android.api.deserializer.DateJsonDeserializer
 import com.judopay.judokit.android.api.deserializer.FormattedBigDecimalDeserializer
 import com.judopay.judokit.android.api.deserializer.ScaExemptionSerializer
-import com.judopay.judokit.android.api.interceptor.ApiHeadersInterceptor
 import com.judopay.judokit.android.api.interceptor.DeDuplicationInterceptor
 import com.judopay.judokit.android.api.interceptor.DeviceDnaInterceptor
 import com.judopay.judokit.android.api.interceptor.PayLoadInterceptor
@@ -38,7 +36,7 @@ import javax.net.ssl.X509TrustManager
  * to use a shared instance than create a new instance per request, so this class ensures that only
  * one instance is used in the application.
  */
-object JudoApiServiceFactory: ApiServiceFactory() {
+object JudoApiServiceFactory : ApiServiceFactory() {
 
     private const val HOSTNAME_WILDCARD_PATTERN = "*.judopay.com"
 

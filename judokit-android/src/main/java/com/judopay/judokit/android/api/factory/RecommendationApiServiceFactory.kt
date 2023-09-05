@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
  * to use a shared instance than create a new instance per request, so this class ensures that only
  * one instance is used in the application.
  */
-object RecommendationApiServiceFactory: ApiServiceFactory() {
+object RecommendationApiServiceFactory : ApiServiceFactory() {
 
     private const val LOCALHOST_URL = "http://localhost/"
 

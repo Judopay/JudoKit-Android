@@ -120,10 +120,10 @@ fun String.toChallengeRequestIndicator(): ChallengeRequestIndicator? {
 }
 
 fun Judo.isCardEncryptionRequired(transactionType: TransactionType) = recommendationConfiguration != null && (
-        transactionType == TransactionType.PAYMENT ||
-                transactionType == TransactionType.CHECK ||
-                transactionType == TransactionType.PRE_AUTH
-        )
+    transactionType == TransactionType.PAYMENT ||
+        transactionType == TransactionType.CHECK ||
+        transactionType == TransactionType.PRE_AUTH
+    )
 
 fun Bundle.toMap(): Map<String, String> = keySet().mapNotNull {
     val value = getString(it)
