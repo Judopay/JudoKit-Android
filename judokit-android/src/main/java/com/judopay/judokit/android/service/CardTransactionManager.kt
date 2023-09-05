@@ -482,7 +482,9 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             if (
                 data.transactionOptimisation.exemption == null &&
                 data.transactionOptimisation.threeDSChallengePreference == null
-            ) return false
+            ) {
+                return false
+            }
         }
         return true
     }
