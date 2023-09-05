@@ -121,7 +121,6 @@ data class JudoError(
             message ?: "Unknown error"
         )
 
-        // Todo: Ensure REQUEST_FAILED is correct Error type.
         fun judoRecommendationError(resources: Resources): JudoError = JudoError(
             REQUEST_FAILED,
             resources.getString(R.string.recommendation_request_failed_desc),

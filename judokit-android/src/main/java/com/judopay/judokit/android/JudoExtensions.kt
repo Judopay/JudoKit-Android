@@ -31,6 +31,7 @@ import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTw
 import com.judopay.judokit.android.model.ApiEnvironment
 import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.googlepay.GooglePayAddress
+import com.judopay.judokit.android.service.TransactionType
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_500
 import com.judopay.judokit.android.ui.common.parcelable
 import com.judopay.judokit.android.ui.error.JudoNotProvidedError
@@ -117,6 +118,12 @@ fun String.toChallengeRequestIndicator(): ChallengeRequestIndicator? {
         else -> null
     }
 }
+
+fun Judo.isCardEncryptionRequired(transactionType: TransactionType) = recommendationConfiguration != null && (
+        transactionType == TransactionType.PAYMENT ||
+                transactionType == TransactionType.CHECK ||
+                transactionType == TransactionType.PRE_AUTH
+        )
 
 fun Bundle.toMap(): Map<String, String> = keySet().mapNotNull {
     val value = getString(it)

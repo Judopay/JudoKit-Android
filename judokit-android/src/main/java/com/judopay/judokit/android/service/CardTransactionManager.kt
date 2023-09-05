@@ -15,7 +15,6 @@ import com.judopay.judo3ds2.service.ThreeDS2ServiceImpl
 import com.judopay.judo3ds2.transaction.Transaction
 import com.judopay.judo3ds2.transaction.challenge.ChallengeStatusReceiver
 import com.judopay.judokit.android.Judo
-import com.judopay.judokit.android.RecommendationConfiguration
 import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.RecommendationApiService
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
@@ -28,6 +27,7 @@ import com.judopay.judokit.android.api.model.response.RecommendationResponse
 import com.judopay.judokit.android.api.model.response.getCReqParameters
 import com.judopay.judokit.android.api.model.response.getChallengeParameters
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
+import com.judopay.judokit.android.isCardEncryptionRequired
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.JudoError
@@ -238,7 +238,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         details: TransactionDetails,
         caller: String
     ) = try {
-        if (isCardEncryptionRequired(type, judo.recommendationConfiguration)) {
+        if (judo.isCardEncryptionRequired(type)) {
             val cardNumber = details.cardNumber
             val cardHolderName = details.cardHolderName
             val expirationDate = details.expirationDate
@@ -507,14 +507,4 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             Log.w(CardTransactionManager::class.java.name, exception.toString())
         }
     }
-
-    // Todo: Confirm with Stefan it is the correct place for this function.
-    private fun isCardEncryptionRequired(
-        type: TransactionType,
-        recommendationConfiguration: RecommendationConfiguration?
-    ) = recommendationConfiguration != null && (
-            type == TransactionType.PAYMENT ||
-                    type == TransactionType.CHECK ||
-                    type == TransactionType.PRE_AUTH
-            )
 }
