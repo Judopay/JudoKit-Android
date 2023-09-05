@@ -12,6 +12,8 @@ import com.judopay.judokit.android.api.RecommendationApiService
  */
 object RecommendationApiServiceFactory: ApiServiceFactory() {
 
+    private const val LOCALHOST_URL = "http://localhost/"
+
     /**
      * @param context the calling Context
      * @param judo the judo instance
@@ -23,7 +25,7 @@ object RecommendationApiServiceFactory: ApiServiceFactory() {
             context.applicationContext,
             judo,
             // This base URL is never used later on, but is required by Retrofit to be provided.
-            "http://localhost/"
+            LOCALHOST_URL
         ).create(RecommendationApiService::class.java)
     }
 }
