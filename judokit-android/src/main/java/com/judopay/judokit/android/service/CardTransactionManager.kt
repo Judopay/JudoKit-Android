@@ -225,7 +225,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     private fun performRecommendationApiRequest(
         encryptedCardDetails: EncryptedCard,
         recommendationEndpointUrl: String
-    ): Call<JudoApiCallResult<RecommendationResponse>> {
+    ): Call<RecommendationResponse> {
         val request = encryptedCardDetails.toRecommendationRequest()
         return recommendationApiService.requestRecommendation(
             recommendationEndpointUrl,
@@ -324,7 +324,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         encryptedCardDetails: EncryptedCard,
         caller: String,
         recommendationEndpointUrl: String,
-        resultsHandler: (response: JudoApiCallResult<RecommendationResponse>) -> Unit
+        resultsHandler: (response: RecommendationResponse) -> Unit
     ) {
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
             Log.d(CardTransactionManager::class.java.name, "Uncaught 3DS2 Exception", throwable)
@@ -388,55 +388,51 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         }
 
     private fun handleRecommendationApiResult(
-        result: JudoApiCallResult<RecommendationResponse>,
+        result: RecommendationResponse,
         caller: String,
         type: TransactionType,
         details: TransactionDetails
-    ) =
-        when (result) {
-            is JudoApiCallResult.Success -> {
-                val recommendationAction = result.data?.data?.action
-                val transactionOptimisation = result.data?.data?.transactionOptimisation
-                val exemptionReceived = transactionOptimisation?.exemption
-                val threeDSChallengePreferenceReceived = transactionOptimisation?.threeDSChallengePreference
+    ) {
+        val recommendationAction = result.data?.action
+        val transactionOptimisation = result.data?.transactionOptimisation
+        val exemptionReceived = transactionOptimisation?.exemption
+        val threeDSChallengePreferenceReceived = transactionOptimisation?.threeDSChallengePreference
 
-                if (recommendationAction == null || transactionOptimisation == null) {
-                    // We allow Judo API call in this case, as the API will perform its own checks anyway.
-                    performJudoApiCall(type, details, caller, judo.scaExemption, judo.challengeRequestIndicator)
-                } else {
-                    when (recommendationAction) {
-                        RecommendationAction.ALLOW, RecommendationAction.REVIEW -> {
-                            val exemption: ScaExemption?
-                            val challengeRequestIndicator: ChallengeRequestIndicator?
-                            if (transactionOptimisation.action == null) {
-                                exemption = judo.scaExemption
-                                challengeRequestIndicator = judo.challengeRequestIndicator
-                            } else {
-                                if (exemptionReceived == null &&
-                                    threeDSChallengePreferenceReceived == null) {
-                                    exemption = judo.scaExemption
-                                    challengeRequestIndicator = judo.challengeRequestIndicator
-                                } else {
-                                    exemption = exemptionReceived
-                                    challengeRequestIndicator = threeDSChallengePreferenceReceived
-                                        ?.toChallengeRequestIndicator()
-                                }
-                            }
-                            performJudoApiCall(type, details, caller, exemption, challengeRequestIndicator)
-                        }
-                        RecommendationAction.PREVENT -> {
-                            onResult(
-                                JudoPaymentResult.Error(JudoError.judoRecommendationError(context.resources)),
-                                caller
-                            )
+        validateRecommendationResult(result)
+
+        if (recommendationAction == null || transactionOptimisation == null) {
+            // We allow Judo API call in this case, as the API will perform its own checks anyway.
+            performJudoApiCall(type, details, caller, judo.scaExemption, judo.challengeRequestIndicator)
+        } else {
+            when (recommendationAction) {
+                RecommendationAction.ALLOW, RecommendationAction.REVIEW -> {
+                    val exemption: ScaExemption?
+                    val challengeRequestIndicator: ChallengeRequestIndicator?
+                    if (transactionOptimisation.action == null) {
+                        exemption = judo.scaExemption
+                        challengeRequestIndicator = judo.challengeRequestIndicator
+                    } else {
+                        if (exemptionReceived == null &&
+                            threeDSChallengePreferenceReceived == null) {
+                            exemption = judo.scaExemption
+                            challengeRequestIndicator = judo.challengeRequestIndicator
+                        } else {
+                            exemption = exemptionReceived
+                            challengeRequestIndicator = threeDSChallengePreferenceReceived
+                                ?.toChallengeRequestIndicator()
                         }
                     }
+                    performJudoApiCall(type, details, caller, exemption, challengeRequestIndicator)
                 }
-            } else -> {
-                // We allow Judo API call in this case, as the API will perform its own checks anyway.
-                performJudoApiCall(type, details, caller, judo.scaExemption, judo.challengeRequestIndicator)
+                RecommendationAction.PREVENT -> {
+                    onResult(
+                        JudoPaymentResult.Error(JudoError.judoRecommendationError(context.resources)),
+                        caller
+                    )
+                }
             }
         }
+    }
 
     private fun handleThreeDSecureTwo(receipt: Receipt, caller: String) {
         val challengeStatusReceiver = object : ChallengeStatusReceiver {
@@ -495,6 +491,10 @@ class CardTransactionManager private constructor(private var context: FragmentAc
 
     fun register(details: TransactionDetails, caller: String) {
         performTransaction(TransactionType.REGISTER, details, caller)
+    }
+
+    private fun validateRecommendationResult(recommendationResult: RecommendationResponse) {
+
     }
 
     private fun closeTransaction(context: Context) {

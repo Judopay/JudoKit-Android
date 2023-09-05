@@ -1,7 +1,6 @@
 package com.judopay.judokit.android.api
 
 import com.judopay.judokit.android.api.model.request.RecommendationRequest
-import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.RecommendationResponse
 import retrofit2.Call
 import retrofit2.http.Body
@@ -22,5 +21,5 @@ interface RecommendationApiService: ApiService {
     fun requestRecommendation(
         @Url url: String,
         @Body recommendationRequest: RecommendationRequest
-    ): Call<JudoApiCallResult<RecommendationResponse>>
+    ): Call<RecommendationResponse>
 }
