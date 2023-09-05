@@ -396,41 +396,21 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         val recommendationAction = result.data?.action
         val transactionOptimisation = result.data?.transactionOptimisation
         val exemptionReceived = transactionOptimisation?.exemption
-        val threeDSChallengePreferenceReceived = transactionOptimisation?.threeDSChallengePreference
+        val threeDSChallengePreferenceReceived = transactionOptimisation?.threeDSChallengePreference?.toChallengeRequestIndicator()
 
-        validateRecommendationResult(result)
-
-        if (recommendationAction == null || transactionOptimisation == null) {
+        val isRecommendationResultValid = validateRecommendationResult(result)
+        if (isRecommendationResultValid) {
+            if (recommendationAction == RecommendationAction.ALLOW || recommendationAction == RecommendationAction.REVIEW) {
+                performJudoApiCall(type, details, caller, exemptionReceived, threeDSChallengePreferenceReceived)
+            } else if (recommendationAction == RecommendationAction.PREVENT) {
+                onResult(
+                    JudoPaymentResult.Error(JudoError.judoRecommendationError(context.resources)),
+                    caller
+                )
+            }
+        } else {
             // We allow Judo API call in this case, as the API will perform its own checks anyway.
             performJudoApiCall(type, details, caller, judo.scaExemption, judo.challengeRequestIndicator)
-        } else {
-            when (recommendationAction) {
-                RecommendationAction.ALLOW, RecommendationAction.REVIEW -> {
-                    val exemption: ScaExemption?
-                    val challengeRequestIndicator: ChallengeRequestIndicator?
-                    if (transactionOptimisation.action == null) {
-                        exemption = judo.scaExemption
-                        challengeRequestIndicator = judo.challengeRequestIndicator
-                    } else {
-                        if (exemptionReceived == null &&
-                            threeDSChallengePreferenceReceived == null) {
-                            exemption = judo.scaExemption
-                            challengeRequestIndicator = judo.challengeRequestIndicator
-                        } else {
-                            exemption = exemptionReceived
-                            challengeRequestIndicator = threeDSChallengePreferenceReceived
-                                ?.toChallengeRequestIndicator()
-                        }
-                    }
-                    performJudoApiCall(type, details, caller, exemption, challengeRequestIndicator)
-                }
-                RecommendationAction.PREVENT -> {
-                    onResult(
-                        JudoPaymentResult.Error(JudoError.judoRecommendationError(context.resources)),
-                        caller
-                    )
-                }
-            }
         }
     }
 
@@ -493,8 +473,16 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         performTransaction(TransactionType.REGISTER, details, caller)
     }
 
-    private fun validateRecommendationResult(recommendationResult: RecommendationResponse) {
-
+    private fun validateRecommendationResult(result: RecommendationResponse): Boolean {
+        if (result.data == null) return false
+        val data = result.data
+        if (data.action == null || data.transactionOptimisation == null) return false
+        if (data.action == RecommendationAction.ALLOW || data.action == RecommendationAction.REVIEW) {
+            if (data.transactionOptimisation.action == null) return false
+            if (data.transactionOptimisation.exemption == null &&
+                data.transactionOptimisation.threeDSChallengePreference == null) return false
+        }
+        return true
     }
 
     private fun closeTransaction(context: Context) {
