@@ -367,7 +367,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val rsaKey = sharedPreferences.getString("rsa_key", null)
         val recommendationUrl = sharedPreferences.getString("recommendation_url", null)
         val recommendationTimeout = sharedPreferences.getString("recommendation_timeout", null)?.toInt()
-        val recommendationConfiguration = if (rsaKey != null && recommendationUrl != null) {
+        val isRecommendationFeatureEnabled = sharedPreferences.getBoolean("is_recommendation_feature_enabled", false)
+        val recommendationConfiguration = if (isRecommendationFeatureEnabled) {
             RecommendationConfiguration.Builder()
                 .setRsaKey(rsaKey)
                 .setRecommendationUrl(recommendationUrl)
