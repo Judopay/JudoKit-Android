@@ -298,6 +298,7 @@ class Judo internal constructor(
         fun setSubProductInfo(subProductInfo: SubProductInfo) =
             apply { this.subProductInfo = subProductInfo }
 
+        // Recommendation Feature works only on Android API 22 (or higher).
         fun setRecommendationConfiguration(recommendationConfiguration: RecommendationConfiguration?) =
             apply { this.recommendationConfiguration = recommendationConfiguration }
 
