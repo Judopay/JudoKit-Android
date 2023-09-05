@@ -72,7 +72,7 @@ class ResultAdapter(private val type: Type) : CallAdapter<Type, Call<JudoApiCall
     override fun adapt(call: Call<Type>): Call<JudoApiCallResult<Type>> = ResultCall(call)
 }
 
-class JudoApiCallAdapterFactory : CallAdapter.Factory() {
+class ApiCallAdapterFactory : CallAdapter.Factory() {
     override fun get(
         returnType: Type,
         annotations: Array<Annotation>,
