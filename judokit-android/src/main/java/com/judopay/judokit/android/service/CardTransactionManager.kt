@@ -243,31 +243,26 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             val cardHolderName = details.cardHolderName
             val expirationDate = details.expirationDate
             val rsaKey = judo.recommendationConfiguration?.rsaKey
-            if (!cardEncryptionManager.areEncryptionArgumentsValid(cardNumber, expirationDate, rsaKey)) {
+
+            val encryptedCardDetails = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                cardEncryptionManager.performCardEncryption(
+                    cardNumber!!,
+                    cardHolderName,
+                    expirationDate!!,
+                    rsaKey!!
+                )
+            } else {
+                null
+            }
+            if (encryptedCardDetails != null) {
+                performRecommendationApiCall(
+                    encryptedCardDetails,
+                    caller,
+                    judo.recommendationConfiguration!!.recommendationUrl
+                ) { result -> handleRecommendationApiResult(result, caller, type, details) }
+            } else {
                 // We allow Judo API call in this case, as the API will perform its own checks anyway.
                 performJudoApiCall(type, details, caller)
-            } else {
-                val encryptedCardDetails = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                    cardEncryptionManager.performCardEncryption(
-                        cardNumber!!,
-                        cardHolderName,
-                        expirationDate!!,
-                        rsaKey!!
-                    )
-                } else {
-                    null
-                }
-                val recommendationEndpointUrl = judo.recommendationConfiguration?.recommendationUrl
-                if (encryptedCardDetails != null && recommendationEndpointUrl != null) {
-                    performRecommendationApiCall(
-                        encryptedCardDetails,
-                        caller,
-                        recommendationEndpointUrl
-                    ) { result -> handleRecommendationApiResult(result, caller, type, details) }
-                } else {
-                    // We allow Judo API call in this case, as the API will perform its own checks anyway.
-                    performJudoApiCall(type, details, caller)
-                }
             }
         } else {
             performJudoApiCall(type, details, caller)
