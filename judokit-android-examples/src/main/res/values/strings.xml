@@ -214,12 +214,12 @@
     <string name="preauth_token_payment">PreAuth token payment</string>
     <string name="token_payment_description">To make a token or preauth token payment, first you have to create a card token</string>
 
-    <string name="recommendation_feature_settings_header">Recommendation Feature Settings</string>
+    <string name="recommendation_feature_settings_header">Recommendation Feature</string>
     <string name="is_recommendation_feature_encryption_enabled_title">Enable Recommendation</string>
     <string name="is_recommendation_feature_enabled_summary">Turn on to enable Recommendation Feature</string>
 
     <string name="rsa_key_summary">Provide RSA Key for card encryption</string>
-    <string name="rsa_key_title">RSA Key</string>
+    <string name="rsa_key_title">RSA key</string>
 
     <string name="reccomendation_url_key_summary">Provide Recommendation server URL</string>
     <string name="reccomendation_url_title">Recommendation URL</string>
@@ -235,7 +235,7 @@
     <string name="sca_exemption_title">SCA exemption</string>
 
     <string name="recommendation_timeout_summary">Max timeout for Recommendation call</string>
-    <string name="recommendation_timeout_title">Recommendation API max timeout</string>
+    <string name="recommendation_timeout_title">Recommendation API timeout</string>
 
     <string name="three_ds2_max_timeout_summary">Max timeout for 3DS 2.0 transaction</string>
     <string name="three_ds2_max_timeout_title">3DS 2.0 max timeout</string>
