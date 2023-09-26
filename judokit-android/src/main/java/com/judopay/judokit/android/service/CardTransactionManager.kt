@@ -410,7 +410,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             }
         } else {
             // We allow Judo API call in this case, as the API will perform its own checks anyway.
-            performJudoApiCall(type, details, caller, judo.scaExemption, judo.challengeRequestIndicator)
+            performJudoApiCall(type, details, caller)
         }
     }
 

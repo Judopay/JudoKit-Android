@@ -1,9 +1,7 @@
 package com.judopay.judokit.android.api.model.request
 
 import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
-import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.PrimaryAccountDetails
-import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.requireNotNullOrEmpty
 
 class PreAuthRequest private constructor(
@@ -28,9 +26,7 @@ class PreAuthRequest private constructor(
     private var initialRecurringPayment: Boolean?,
     private var threeDSecure: ThreeDSecureTwo?,
     private var cardHolderName: String?,
-    private var delayedAuthorisation: Boolean = false,
-    private var challengeRequestIndicator: ChallengeRequestIndicator?,
-    private var scaExemption: ScaExemption?
+    private var delayedAuthorisation: Boolean = false
 ) {
     class Builder {
         private var uniqueRequest: Boolean? = null
@@ -55,8 +51,6 @@ class PreAuthRequest private constructor(
         private var phoneCountryCode: String? = null
         private var threeDSecure: ThreeDSecureTwo? = null
         private var delayedAuthorisation: Boolean = false
-        private var challengeRequestIndicator: ChallengeRequestIndicator? = null
-        private var scaExemption: ScaExemption? = null
 
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
@@ -111,12 +105,6 @@ class PreAuthRequest private constructor(
         fun setDelayedAuthorisation(delayedAuthorisation: Boolean) =
             apply { this.delayedAuthorisation = delayedAuthorisation }
 
-        fun setChallengeRequestIndicator(challengeRequestIndicator: ChallengeRequestIndicator?) =
-            apply { this.challengeRequestIndicator = challengeRequestIndicator }
-
-        fun setScaExemption(scaExemption: ScaExemption?) =
-            apply { this.scaExemption = scaExemption }
-
         fun build(): PreAuthRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myAmount = requireNotNullOrEmpty(amount, "amount")
@@ -153,9 +141,7 @@ class PreAuthRequest private constructor(
                 initialRecurringPayment,
                 myThreeDSecure,
                 cardHolderName,
-                delayedAuthorisation,
-                challengeRequestIndicator,
-                scaExemption
+                delayedAuthorisation
             )
         }
     }

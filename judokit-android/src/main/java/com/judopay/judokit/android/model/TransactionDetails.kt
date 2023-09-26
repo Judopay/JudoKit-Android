@@ -131,7 +131,11 @@ fun TransactionDetails.getAddress(judo: Judo): Address? {
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun Transaction.toThreeDSecureTwo(judo: Judo): ThreeDSecureTwo {
+fun Transaction.toThreeDSecureTwo(
+    judo: Judo,
+    recommendationScaExemption: ScaExemption? = null,
+    recommendationChallengeRequestIndicator: ChallengeRequestIndicator? = null
+): ThreeDSecureTwo {
     val parameters = getAuthenticationRequestParameters()
     val sdkParameters = with(parameters) {
         SdkParameters.Builder()
@@ -149,9 +153,11 @@ fun Transaction.toThreeDSecureTwo(judo: Judo): ThreeDSecureTwo {
             .setDeviceRenderOptions(DeviceRenderOptions())
             .build()
     }
+    val myScaExemption = recommendationScaExemption ?: judo.scaExemption
+    val myChallengeRequestIndicator = recommendationChallengeRequestIndicator ?: judo.challengeRequestIndicator
     return ThreeDSecureTwo.Builder()
-        .setChallengeRequestIndicator(judo.challengeRequestIndicator)
-        .setScaExemption(judo.scaExemption)
+        .setChallengeRequestIndicator(myChallengeRequestIndicator)
+        .setScaExemption(myScaExemption)
         .setSdkParameters(sdkParameters)
         .build()
 }
@@ -160,12 +166,13 @@ fun Transaction.toThreeDSecureTwo(judo: Judo): ThreeDSecureTwo {
 fun TransactionDetails.toPaymentRequest(
     judo: Judo,
     transaction: Transaction,
-    exemption: ScaExemption? = null,
-    challengeRequestIndicator: ChallengeRequestIndicator? = null
+    recommendationScaExemption: ScaExemption? = null,
+    recommendationChallengeRequestIndicator: ChallengeRequestIndicator? = null
 ): PaymentRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
-
+    val myScaExemption = recommendationScaExemption ?: judo.scaExemption
+    val myChallengeRequestIndicator = recommendationChallengeRequestIndicator ?: judo.challengeRequestIndicator
     return PaymentRequest.Builder()
         .setUniqueRequest(false)
         .setYourPaymentReference(myReference.paymentReference)
@@ -184,9 +191,7 @@ fun TransactionDetails.toPaymentRequest(
         .setMobileNumber(mobileNumber)
         .setPhoneCountryCode(phoneCountryCode)
         .setEmailAddress(email)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
-        .setChallengeRequestIndicator(challengeRequestIndicator)
-        .setScaExemption(exemption)
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, myScaExemption, myChallengeRequestIndicator))
         .build()
 }
 
@@ -194,12 +199,13 @@ fun TransactionDetails.toPaymentRequest(
 fun TransactionDetails.toPreAuthRequest(
     judo: Judo,
     transaction: Transaction,
-    exemption: ScaExemption? = null,
-    challengeRequestIndicator: ChallengeRequestIndicator? = null
+    recommendationScaExemption: ScaExemption? = null,
+    recommendationChallengeRequestIndicator: ChallengeRequestIndicator? = null
 ): PreAuthRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
-
+    val myScaExemption = recommendationScaExemption ?: judo.scaExemption
+    val myChallengeRequestIndicator = recommendationChallengeRequestIndicator ?: judo.challengeRequestIndicator
     return PreAuthRequest.Builder()
         .setUniqueRequest(false)
         .setYourPaymentReference(myReference.paymentReference)
@@ -219,9 +225,7 @@ fun TransactionDetails.toPreAuthRequest(
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
-        .setChallengeRequestIndicator(challengeRequestIndicator)
-        .setScaExemption(exemption)
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, myScaExemption, myChallengeRequestIndicator))
         .build()
 }
 
@@ -229,12 +233,13 @@ fun TransactionDetails.toPreAuthRequest(
 fun TransactionDetails.toCheckCardRequest(
     judo: Judo,
     transaction: Transaction,
-    exemption: ScaExemption? = null,
-    challengeRequestIndicator: ChallengeRequestIndicator? = null
+    recommendationScaExemption: ScaExemption? = null,
+    recommendationChallengeRequestIndicator: ChallengeRequestIndicator? = null
 ): CheckCardRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
-
+    val myScaExemption = recommendationScaExemption ?: judo.scaExemption
+    val myChallengeRequestIndicator = recommendationChallengeRequestIndicator ?: judo.challengeRequestIndicator
     return CheckCardRequest.Builder()
         .setUniqueRequest(false)
         .setYourPaymentReference(myReference.paymentReference)
@@ -248,13 +253,11 @@ fun TransactionDetails.toCheckCardRequest(
         .setCv2(securityNumber)
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, myScaExemption, myChallengeRequestIndicator))
         .setCardHolderName(cardHolderName)
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
-        .setChallengeRequestIndicator(challengeRequestIndicator)
-        .setScaExemption(exemption)
         .build()
 }
 

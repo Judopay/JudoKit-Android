@@ -1,9 +1,7 @@
 package com.judopay.judokit.android.api.model.request
 
 import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
-import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.PrimaryAccountDetails
-import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.requireNotNull
 import com.judopay.judokit.android.requireNotNullOrEmpty
 
@@ -28,9 +26,7 @@ class PaymentRequest private constructor(
     private var primaryAccountDetails: PrimaryAccountDetails?,
     private var initialRecurringPayment: Boolean?,
     private var threeDSecure: ThreeDSecureTwo?,
-    private var cardHolderName: String?,
-    private var challengeRequestIndicator: ChallengeRequestIndicator?,
-    private var scaExemption: ScaExemption?
+    private var cardHolderName: String?
 ) {
     class Builder {
         private var uniqueRequest: Boolean? = null
@@ -51,8 +47,6 @@ class PaymentRequest private constructor(
         private var mobileNumber: String? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
         private var initialRecurringPayment: Boolean? = null
-        private var challengeRequestIndicator: ChallengeRequestIndicator? = null
-        private var scaExemption: ScaExemption? = null
         private var cardHolderName: String? = null
         private var phoneCountryCode: String? = null
         private var threeDSecure: ThreeDSecureTwo? = null
@@ -97,12 +91,6 @@ class PaymentRequest private constructor(
 
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
             apply { this.primaryAccountDetails = primaryAccountDetails }
-
-        fun setChallengeRequestIndicator(challengeRequestIndicator: ChallengeRequestIndicator?) =
-            apply { this.challengeRequestIndicator = challengeRequestIndicator }
-
-        fun setScaExemption(scaExemption: ScaExemption?) =
-            apply { this.scaExemption = scaExemption }
 
         fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
             apply { this.initialRecurringPayment = initialRecurringPayment }
@@ -164,9 +152,7 @@ class PaymentRequest private constructor(
                 primaryAccountDetails,
                 initialRecurringPayment,
                 myThreeDSecure,
-                cardHolderName,
-                challengeRequestIndicator,
-                scaExemption
+                cardHolderName
             )
         }
     }

@@ -1,9 +1,7 @@
 package com.judopay.judokit.android.api.model.request
 
 import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
-import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.PrimaryAccountDetails
-import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.requireNotNull
 import com.judopay.judokit.android.requireNotNullOrEmpty
 
@@ -27,8 +25,6 @@ class CheckCardRequest private constructor(
     private var phoneCountryCode: String?,
     private var threeDSecure: ThreeDSecureTwo?,
     private var cardHolderName: String?,
-    private var challengeRequestIndicator: ChallengeRequestIndicator?,
-    private var scaExemption: ScaExemption?,
     private var amount: String = "0"
 ) {
     class Builder {
@@ -49,8 +45,6 @@ class CheckCardRequest private constructor(
         private var threeDSecure: ThreeDSecureTwo? = null
         private var cardHolderName: String? = null
         private var phoneCountryCode: String? = null
-        private var challengeRequestIndicator: ChallengeRequestIndicator? = null
-        private var scaExemption: ScaExemption? = null
         private var emailAddress: String? = null
         private var mobileNumber: String? = null
 
@@ -95,12 +89,6 @@ class CheckCardRequest private constructor(
         fun setPhoneCountryCode(phoneCountryCode: String?) =
             apply { this.phoneCountryCode = phoneCountryCode }
 
-        fun setChallengeRequestIndicator(challengeRequestIndicator: ChallengeRequestIndicator?) =
-            apply { this.challengeRequestIndicator = challengeRequestIndicator }
-
-        fun setScaExemption(scaExemption: ScaExemption?) =
-            apply { this.scaExemption = scaExemption }
-
         fun setEmailAddress(emailAddress: String?) = apply { this.emailAddress = emailAddress }
 
         fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = mobileNumber }
@@ -136,9 +124,7 @@ class CheckCardRequest private constructor(
                 mobileNumber,
                 phoneCountryCode,
                 myThreeDSecure,
-                cardHolderName,
-                challengeRequestIndicator,
-                scaExemption
+                cardHolderName
             )
         }
     }
