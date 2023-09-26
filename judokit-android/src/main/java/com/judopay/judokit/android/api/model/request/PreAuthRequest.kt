@@ -1,7 +1,9 @@
 package com.judopay.judokit.android.api.model.request
 
 import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
+import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.PrimaryAccountDetails
+import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.requireNotNullOrEmpty
 
 class PreAuthRequest private constructor(
@@ -47,6 +49,8 @@ class PreAuthRequest private constructor(
         private var mobileNumber: String? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
         private var initialRecurringPayment: Boolean? = null
+        private var challengeRequestIndicator: ChallengeRequestIndicator? = null
+        private var scaExemption: ScaExemption? = null
         private var cardHolderName: String? = null
         private var phoneCountryCode: String? = null
         private var threeDSecure: ThreeDSecureTwo? = null
