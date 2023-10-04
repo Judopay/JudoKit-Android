@@ -1,7 +1,6 @@
 package com.judopay.judokit.android.service
 
 import com.judopay.judokit.android.api.JudoApiService
-import com.judopay.judokit.android.api.model.request.BankSaleRequest
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.Receipt
 import io.mockk.coEvery
@@ -48,6 +47,5 @@ internal class CardTransactionServiceTest {
         coEvery {
             service.preAuthTokenPayment(any()).await()
         } returns mockk(relaxed = true)
-        coEvery { service.sale(any<BankSaleRequest>()).await() } returns mockk(relaxed = true)
     }
 }

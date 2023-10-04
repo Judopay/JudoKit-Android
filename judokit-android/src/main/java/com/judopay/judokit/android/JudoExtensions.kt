@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
 import com.judopay.judokit.android.api.model.request.Address
-import com.judopay.judokit.android.api.model.request.BankSaleRequest
 import com.judopay.judokit.android.api.model.request.CheckCardRequest
 import com.judopay.judokit.android.api.model.request.GooglePayRequest
 import com.judopay.judokit.android.api.model.request.GooglePayWallet
@@ -271,19 +270,6 @@ fun Judo.toIdealSaleRequest(bic: String) =
         .setPaymentMetadata(reference.metaData?.toMap())
         .setJudoId(judoId)
         .setBic(bic)
-        .build()
-
-fun Judo.toBankSaleRequest() =
-    BankSaleRequest.Builder()
-        .setAmount(amount.amount)
-        .setMerchantPaymentReference(reference.paymentReference)
-        .setMerchantConsumerReference(reference.consumerReference)
-        .setJudoId(judoId)
-        .setMobileNumber(pbbaConfiguration?.mobileNumber)
-        .setEmailAddress(pbbaConfiguration?.emailAddress)
-        .setAppearsOnStatement(pbbaConfiguration?.appearsOnStatement)
-        .setPaymentMetadata(reference.metaData?.toMap())
-        .setMerchantRedirectUrl(pbbaConfiguration?.deepLinkScheme)
         .build()
 
 fun Judo.toTokenRequest(cardToken: String, threeDSecureTwo: ThreeDSecureTwo? = null, securityCode: String? = null) =

@@ -25,14 +25,7 @@ enum class PaymentMethod : Parcelable {
      * Adds iDEAL payment method.
      * [Currency] must also be set to EUR to use this payment method.
      */
-    IDEAL,
-
-    /**
-     * Adds Pay by Bank app payment method.
-     * PbBa payment method will not be activated if no banking app is installed on consumer device.
-     * [Currency] must also be set to GBP to use this payment method.
-     */
-    PAY_BY_BANK
+    IDEAL
 }
 
 internal val PaymentMethod.icon
@@ -40,21 +33,18 @@ internal val PaymentMethod.icon
         PaymentMethod.CARD -> R.drawable.ic_cards
         PaymentMethod.GOOGLE_PAY -> R.drawable.ic_google_pay
         PaymentMethod.IDEAL -> R.drawable.ic_ideal
-        PaymentMethod.PAY_BY_BANK -> R.drawable.ic_pay_by_bank_app_logo
     }
 
 internal val PaymentMethod.text
     get() = when (this) {
         PaymentMethod.CARD -> R.string.cards
         PaymentMethod.IDEAL -> R.string.ideal_payment
-        PaymentMethod.GOOGLE_PAY,
-        PaymentMethod.PAY_BY_BANK -> R.string.empty
+        PaymentMethod.GOOGLE_PAY -> R.string.empty
     }
 
 internal val PaymentMethod.paymentButtonType: PaymentButtonType
     get() = when (this) {
         PaymentMethod.IDEAL -> PaymentButtonType.IDEAL
         PaymentMethod.GOOGLE_PAY -> PaymentButtonType.GOOGLE_PAY
-        PaymentMethod.PAY_BY_BANK -> PaymentButtonType.PAY_BY_BANK
         else -> PaymentButtonType.PLAIN
     }

@@ -9,7 +9,6 @@ import android.util.Log
 import androidx.core.os.ConfigurationCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.judopay.judokit.android.R
-import com.zapp.library.merchant.util.PBBAAppUtils
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -70,13 +69,6 @@ fun showAlert(context: Context, message: String) {
         .setNegativeButton(R.string.close, null)
         .show()
 }
-
-/**
- * Checks whether banking application is installed on user's phone or not.
- * @param context context of the application.
- * @return True if there is at least one PBBA enabled CFI App available, false otherwise.
- */
-fun isBankingAppAvailable(context: Context) = PBBAAppUtils.isCFIAppAvailable(context)
 
 /**
  * Helper function to check if a dependency is present using reflection.

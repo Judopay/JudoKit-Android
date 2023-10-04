@@ -103,7 +103,6 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
 
     implementation 'com.judopay:device-dna:1.1.0'
-    implementation "com.mastercard.pbba:merchant-sdk:3.1.0"
 
     // JUnit 5 framework
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
@@ -182,19 +181,16 @@ def addJacocoTask(variant) {
             '**/model/JudoResult.*',
             '**/model/PrimaryAccountDetails.*',
             '**/model/Event.*',
-            '**/model/PBBAConfiguration.*',
             '**/model/UiConfiguration.*',
             '**/model/JudoError.*',
             '**/api/factory/**',
             '**/api/AppMetaDataProvider.*',
             '**/api/model/request/Address.*',
-            '**/api/model/request/BankSaleRequest.*',
             '**/api/model/request/IdealSaleRequest.*',
             '**/api/model/response/CardVerificationResult.*',
             '**/api/model/response/Consumer.*',
             '**/api/model/response/OrderDetails.*',
             '**/api/model/response/Receipts.*',
-            '**/api/model/response/BankSaleResponse.*',
             '**/api/model/EnhancedPaymentDetail.*',
             '**/api/model/ConsumerDevice.*',
             '**/api/model/Browser.*',
@@ -206,7 +202,6 @@ def addJacocoTask(variant) {
             '**/api/error/TokenSecretError.*',
             '**/ui/common/ProgressButton.*',
             '**/ui/common/GooglePayButton.*',
-            '**/ui/common/PayByBankButton.*',
             '**/service/polling/PollingResult.*'
     ]
 

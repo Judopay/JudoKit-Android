@@ -110,12 +110,9 @@
     <string name="scan_card_no_permission_message">Permiso requerido para utilizar la funcionalidad de escaneo. Por favor vaya a configuración y habilite su cámara</string>
     <string name="scan_card_confirm">Recibido</string>
     <string name="scan_card_go_to_settings">Vaya a configuración</string>
-    <string name="wocr_hint_position_card_in_frame">Posicione la tarjeta en el marco</string>
-    <string name="wocr_automatically_scan">Haremos lo posible para escanearla</string>
 
     <string name="retry">Reintentar</string>
     <string name="transaction_successful">Transacción completa</string>
-    <string name="pay_by_bank_transaction">Transacción Pay by Bank app</string>
 
     <string name="country_uk">UK</string>
     <string name="country_usa">USA</string>

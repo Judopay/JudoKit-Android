@@ -13,15 +13,13 @@ import com.judopay.judokit.android.ui.common.ButtonState
 enum class PaymentButtonType {
     PLAIN,
     IDEAL,
-    GOOGLE_PAY,
-    PAY_BY_BANK
+    GOOGLE_PAY
 }
 
 enum class PaymentCallToActionType {
     PAY_WITH_CARD,
     PAY_WITH_GOOGLE_PAY,
-    PAY_WITH_IDEAL,
-    PAY_WITH_PAY_BY_BANK
+    PAY_WITH_IDEAL
 }
 
 typealias PaymentCallToActionViewListener = (action: PaymentCallToActionType) -> Unit
@@ -44,7 +42,6 @@ class PaymentCallToActionView @JvmOverloads constructor(
     init {
         binding.payButton.setOnClickListener { onPaymentButtonClick() }
         binding.googlePayButton.setOnClickListener { onPaymentButtonClick() }
-        binding.payByBankButton.setOnClickListener { onPaymentButtonClick() }
     }
 
     var model = PaymentCallToActionViewModel()
@@ -65,16 +62,12 @@ class PaymentCallToActionView @JvmOverloads constructor(
             PaymentButtonType.GOOGLE_PAY ->
                 binding.googlePayButton.isEnabled =
                     paymentButtonState is ButtonState.Enabled
-            PaymentButtonType.PAY_BY_BANK ->
-                binding.payByBankButton.isEnabled =
-                    paymentButtonState is ButtonState.Enabled
         }
 
         val buttonToShow = when (buttonType) {
             PaymentButtonType.PLAIN,
             PaymentButtonType.IDEAL -> binding.payButton
             PaymentButtonType.GOOGLE_PAY -> binding.googlePayButton
-            PaymentButtonType.PAY_BY_BANK -> binding.payByBankButton
         }
 
         with(binding.buttonsAnimator) {
@@ -93,7 +86,6 @@ class PaymentCallToActionView @JvmOverloads constructor(
             PaymentButtonType.PLAIN -> PaymentCallToActionType.PAY_WITH_CARD
             PaymentButtonType.GOOGLE_PAY -> PaymentCallToActionType.PAY_WITH_GOOGLE_PAY
             PaymentButtonType.IDEAL -> PaymentCallToActionType.PAY_WITH_IDEAL
-            PaymentButtonType.PAY_BY_BANK -> PaymentCallToActionType.PAY_WITH_PAY_BY_BANK
         }
 
         callbackListener?.invoke(actionType)

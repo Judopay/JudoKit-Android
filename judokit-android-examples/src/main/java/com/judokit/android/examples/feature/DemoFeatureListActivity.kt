@@ -27,7 +27,6 @@ import com.judokit.android.examples.databinding.ActivityDemoFeatureListBinding
 import com.judokit.android.examples.databinding.DialogGetTransactionBinding
 import com.judokit.android.examples.feature.adapter.DemoFeaturesAdapter
 import com.judokit.android.examples.feature.noui.DemoNoUiPaymentActivity
-import com.judokit.android.examples.feature.paybybank.PayByBankActivity
 import com.judokit.android.examples.feature.tokenpayments.TokenPaymentsActivity
 import com.judokit.android.examples.model.DemoFeature
 import com.judokit.android.examples.settings.SettingsActivity
@@ -61,7 +60,6 @@ import com.judopay.judokit.android.model.GooglePayConfiguration
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoResult
 import com.judopay.judokit.android.model.NetworkTimeout
-import com.judopay.judokit.android.model.PBBAConfiguration
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.PrimaryAccountDetails
@@ -75,9 +73,6 @@ import com.judopay.judokit.android.model.googlepay.GooglePayCheckoutOption
 import com.judopay.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judopay.judokit.android.model.googlepay.GooglePayPriceStatus
 import com.judopay.judokit.android.model.googlepay.GooglePayShippingAddressParameters
-import com.judopay.judokit.android.ui.common.BR_PBBA_RESULT
-import com.judopay.judokit.android.ui.common.PBBA_RESULT
-import com.judopay.judokit.android.ui.common.isBankingAppAvailable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -94,23 +89,10 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     private lateinit var notificationPermissionLauncher: NotificationPermissionLauncher
 
-    private val orderIdReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            @Suppress("UNUSED_VARIABLE")
-            val result = intent?.parcelable<JudoResult>(PBBA_RESULT)
-            // Handle result
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         notificationPermissionLauncher = NotificationPermissionLauncher(this)
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-            orderIdReceiver,
-            IntentFilter(BR_PBBA_RESULT)
-        )
 
         JudoApiServiceFactory.externalInterceptors = listOf(
             ChuckerInterceptor.Builder(this)
@@ -230,13 +212,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 DemoFeature.SERVER_TO_SERVER_PAYMENT_METHODS -> PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS
                 DemoFeature.GOOGLE_PAY_PAYMENT -> PaymentWidgetType.GOOGLE_PAY
                 DemoFeature.GOOGLE_PAY_PREAUTH -> PaymentWidgetType.PRE_AUTH_GOOGLE_PAY
-                DemoFeature.PAY_BY_BANK_APP -> {
-                    if (isBankingAppAvailable(this)) {
-                        PaymentWidgetType.PAY_BY_BANK_APP
-                    } else {
-                        throw IllegalStateException("Banking app not available")
-                    }
-                }
                 DemoFeature.TOKEN_PAYMENTS -> PaymentWidgetType.TOKEN_PAYMENT
             }
             val judoConfig = getJudo(widgetType)
@@ -265,7 +240,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     } else {
                         JudoActivity::class.java
                     }
-                PaymentWidgetType.PAY_BY_BANK_APP -> PayByBankActivity::class.java
                 PaymentWidgetType.TOKEN_PAYMENT -> TokenPaymentsActivity::class.java
                 else -> JudoActivity::class.java
             }
@@ -371,7 +345,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setPaymentMethods(paymentMethods)
             .setUiConfiguration(uiConfiguration)
             .setGooglePayConfiguration(googlePayConfiguration)
-            .setPBBAConfiguration(pbbaConfiguration)
             .setInitialRecurringPayment(initialRecurringPayment)
             .setDelayedAuthorisation(delayedAuthorisation)
             .setMobileNumber(if (mobileNumber.isNullOrBlank()) null else mobileNumber)
@@ -589,10 +562,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
             }
             return null
         }
-
-    private val pbbaConfiguration: PBBAConfiguration
-        get() = PBBAConfiguration.Builder().setDeepLinkScheme("judo://pay")
-            .setDeepLinkURL(deepLinkIntent?.data).build()
 
     private val authorization: Authorization
         get() {

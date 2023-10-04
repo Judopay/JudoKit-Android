@@ -54,7 +54,7 @@ data class JudoError(
 
         /**
          * Utility function that creates a JudoError object with response parsing
-         * error code and message. Used when iDEAL or PBBA responses don't contain secure token
+         * error code and message. Used when iDEAL response doesn't contain secure token
          * or redirect url.
          */
         fun judoResponseParseError(resources: Resources) = JudoError(

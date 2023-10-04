@@ -343,24 +343,6 @@ internal class CardEntryViewModelTest {
     }
 
     @Test
-    fun `Given payment widget type is PAY_BY_BANK_APP, then button text should be empty string`() {
-        sut.model.removeObserver(modelSpy)
-        sut = CardEntryViewModel(
-            getJudo(PaymentWidgetType.PAY_BY_BANK_APP),
-            cardTransactionManager,
-            repository,
-            CardEntryOptions(isPresentedFromPaymentMethods = true, isAddingNewCard = true),
-            application
-        )
-        sut.model.observeForever(modelSpy)
-
-        val slots = mutableListOf<CardEntryFragmentModel>()
-        verify { modelSpy.onChanged(capture(slots)) }
-        val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.empty))
-    }
-
-    @Test
     fun `Given send is called with ScanCard action, then set model properties accordingly and buttonState is Disabled`() {
         val cardScanningResult = CardScanningResult(cardNumber = "1234123412341234", cardHolder = "Bob", expirationDate = "12/25")
         sut.send(CardEntryAction.ScanCard(cardScanningResult))

@@ -30,7 +30,6 @@ import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethod
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodSelectorItem
 import com.judopay.judokit.android.ui.paymentmethods.components.GooglePayCardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.components.NoPaymentMethodSelectedViewModel
-import com.judopay.judokit.android.ui.paymentmethods.components.PayByBankCardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.components.PaymentCallToActionViewModel
 import com.judopay.judokit.android.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.CardPaymentMethodModel
@@ -39,10 +38,8 @@ import com.judopay.judokit.android.ui.paymentmethods.model.Event
 import com.judopay.judokit.android.ui.paymentmethods.model.GooglePayPaymentMethodModel
 import com.judopay.judokit.android.ui.paymentmethods.model.IdealPaymentCardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.IdealPaymentMethodModel
-import com.judopay.judokit.android.ui.paymentmethods.model.PayByBankPaymentMethodModel
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentMethodModel
-import com.zapp.library.merchant.util.PBBAAppUtils
 import kotlinx.coroutines.launch
 
 // view-model actions
@@ -59,7 +56,6 @@ sealed class PaymentMethodsAction {
     object InitiateSelectedCardPayment : PaymentMethodsAction()
     data class PayWithCard(val transactionDetail: TransactionDetails.Builder) : PaymentMethodsAction()
     object PayWithSelectedIdealBank : PaymentMethodsAction()
-    object PayWithPayByBank : PaymentMethodsAction()
     object Update : PaymentMethodsAction() // TODO: temporary
     object SubscribeToCardTransactionManagerResults : PaymentMethodsAction()
     object UnSubscribeToCardTransactionManagerResults : PaymentMethodsAction()
@@ -101,10 +97,7 @@ class PaymentMethodsViewModel(
     val model = MutableLiveData<PaymentMethodsModel>()
     val judoPaymentResult = MutableLiveData<JudoPaymentResult>()
     val payWithIdealObserver = MutableLiveData<Event<String>>()
-    val payWithPayByBankObserver = MutableLiveData<Event<Nothing>>()
     val displayCardEntryObserver = MutableLiveData<Event<CardEntryOptions>>()
-
-    private val context = application
 
     val allCardsSync = cardRepository.allCardsSync
 
@@ -157,10 +150,6 @@ class PaymentMethodsViewModel(
             is PaymentMethodsAction.PayWithSelectedIdealBank -> {
                 buildModel(isLoading = true)
                 payWithSelectedIdealBank()
-            }
-            is PaymentMethodsAction.PayWithPayByBank -> {
-                buildModel(isLoading = true)
-                payWithPayByBankObserver.postValue(Event())
             }
             is PaymentMethodsAction.SelectStoredCard -> {
                 buildModel(isLoading = false, selectedCardId = action.id)
@@ -345,11 +334,6 @@ class PaymentMethodsViewModel(
                 GooglePayPaymentMethodModel(items = recyclerViewData)
             }
 
-            PaymentMethod.PAY_BY_BANK -> {
-                cardModel = PayByBankCardViewModel()
-                PayByBankPaymentMethodModel(items = recyclerViewData)
-            }
-
             PaymentMethod.IDEAL -> {
                 val bankItems = IdealBank.values().map {
                     IdealBankItem(idealBank = it).apply { isSelected = it == selectedBank }
@@ -380,7 +364,6 @@ class PaymentMethodsViewModel(
         cardModel: CardViewModel
     ): ButtonState = when (method) {
         PaymentMethod.CARD -> payWithCardButtonState(isLoading, cardModel)
-        PaymentMethod.PAY_BY_BANK,
         PaymentMethod.GOOGLE_PAY -> if (isLoading) {
             ButtonState.Disabled(R.string.empty)
         } else {
@@ -410,9 +393,6 @@ class PaymentMethodsViewModel(
         var paymentMethods = allMethods
         if (judo.amount.currency != Currency.EUR) {
             paymentMethods = judo.paymentMethods.filter { it != PaymentMethod.IDEAL }
-        }
-        if (judo.amount.currency != Currency.GBP || !PBBAAppUtils.isCFIAppAvailable(context)) {
-            paymentMethods = paymentMethods.filter { it != PaymentMethod.PAY_BY_BANK }
         }
         return paymentMethods
     }

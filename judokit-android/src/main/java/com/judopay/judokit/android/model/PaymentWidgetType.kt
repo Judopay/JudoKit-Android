@@ -47,13 +47,13 @@ enum class PaymentWidgetType : Parcelable {
     PRE_AUTH_GOOGLE_PAY,
 
     /**
-     * Starts the payment methods widget to perform card, GooglePay, Pay by Bank app and iDEAL
+     * Starts the payment methods widget to perform card, GooglePay, and iDEAL
      * payments.
      */
     PAYMENT_METHODS,
 
     /**
-     * Starts the payment methods widget to perform card, GooglePay, Pay by Bank app and iDEAL
+     * Starts the payment methods widget to perform card, GooglePay, and iDEAL
      * pre-auth payments.
      */
     PRE_AUTH_PAYMENT_METHODS,
@@ -63,13 +63,6 @@ enum class PaymentWidgetType : Parcelable {
      * make payments outside of Judo SDK. Works for card payments only.
      */
     SERVER_TO_SERVER_PAYMENT_METHODS,
-
-    /**
-     * Starts Pay by Bank app payment flow outside of payment method screen. You must set GBP
-     * currency [com.judopay.judokit.android.Judo.Builder.setAmount] when building Judo configuration object
-     * to be able to start Pay by Bank app journey.
-     */
-    PAY_BY_BANK_APP,
 
     /**
      * Starts a token payment with optionally asking the user to enter their CSC and/or cardholder name.
@@ -95,7 +88,6 @@ val PaymentWidgetType.navigationGraphId: Int
         PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
         PaymentWidgetType.PAYMENT_METHODS,
         PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> R.navigation.judo_payment_methods_graph
-        PaymentWidgetType.PAY_BY_BANK_APP -> R.navigation.judo_polling_status_graph
         else -> throw UnsupportedOperationException("Payment Widget of Type: $this not supported")
     }
 
@@ -109,7 +101,7 @@ val PaymentWidgetType.isGooglePayWidget: Boolean
     get() = this == PaymentWidgetType.GOOGLE_PAY || this == PaymentWidgetType.PRE_AUTH_GOOGLE_PAY
 
 val PaymentWidgetType.isExposed: Boolean
-    get() = this == PaymentWidgetType.PAY_BY_BANK_APP || isGooglePayWidget
+    get() = isGooglePayWidget
 
 val PaymentWidgetType.isTokenPayment: Boolean
     get() = this == PaymentWidgetType.TOKEN_PAYMENT || this == PaymentWidgetType.TOKEN_PRE_AUTH
