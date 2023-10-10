@@ -122,13 +122,9 @@
     <string name="scan_card_no_permission_message">Permissions must be granted in order to use the scan card functionality. Please go to Settings and toggle Camera on</string>
     <string name="scan_card_confirm">Got it</string>
     <string name="scan_card_go_to_settings">Go to Settings</string>
-    <string name="wocr_hint_position_card_in_frame">Position card in this frame</string>
-    <string name="wocr_automatically_scan">We will automatically scan it</string>
 
-    <string name="pay_by_bank" translatable="false">Pay by Bank app</string>
     <string name="retry">Retry</string>
     <string name="transaction_successful">Transaction success!</string>
-    <string name="pay_by_bank_transaction">Pay by Bank app transaction</string>
 
     <!--    Google Pay not supported on device-->
     <string name="error_google_pay_not_supported_desc" translatable="false">Google Pay is not supported on this device.</string>
@@ -138,7 +134,7 @@
     <string name="error_request_failed_desc" translatable="false">The request has failed or responded without data.</string>
     <string name="error_request_failed_reason" translatable="false">The transaction response returned without any data or there was an error while forming the request.</string>
 
-    <!--    Unexpected response format (when PBBA/iDEAL does not have the necessary properties)-->
+    <!--    Unexpected response format (when iDEAL does not have the necessary properties)-->
     <string name="error_response_parse_desc" translatable="false">Unexpected response format returned.</string>
     <string name="error_response_parse_reason" translatable="false">The response did not contain some of the required parameters needed to complete the transaction.</string>
 

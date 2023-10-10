@@ -26,8 +26,3 @@ data class IdealPaymentMethodModel(
     override val items: List<PaymentMethodItem>,
     val selectedBank: IdealBank
 ) : PaymentMethodModel
-
-data class PayByBankPaymentMethodModel(
-    override val type: PaymentMethod = PaymentMethod.PAY_BY_BANK,
-    override val items: List<PaymentMethodItem>
-) : PaymentMethodModel

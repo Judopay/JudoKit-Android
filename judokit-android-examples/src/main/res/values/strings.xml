@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">JudoKit</string>
     <string name="title_activity_demo_feature_list">Judo Examples</string>
-    <string name="title_activity_pay_by_bank">Pay by Bank App</string>
 
     <string name="feature_title_payment">Pay with card</string>
     <string name="feature_subtitle_payment">by entering card details</string>
@@ -32,9 +31,6 @@
 
     <string name="feature_title_server_to_server_payment_methods">Server-to-Server payment methods</string>
     <string name="feature_subtitle_server_to_server_payment_methods">with default Server-to-Server payment methods</string>
-
-    <string name="feature_title_pay_by_bank_app">Pay by Bank app</string>
-    <string name="feature_subtitle_pay_by_bank_app">by using your existing Bank app</string>
 
     <string name="feature_title_get_transaction_details">Get transaction details</string>
     <string name="feature_subtitle_get_transaction_details">Get transaction for receipt ID</string>

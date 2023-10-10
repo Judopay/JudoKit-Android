@@ -110,12 +110,9 @@
     <string name="scan_card_no_permission_message">Vous devez accorder les permisions pour pouvoir utiliser la fonctionnalité de scan de carte. Veuillez activer la caméra dans les options.</string>
     <string name="scan_card_confirm">Reçue</string>
     <string name="scan_card_go_to_settings">Allez dans les options</string>
-    <string name="wocr_hint_position_card_in_frame">Positionnez la carte dans ce cadre</string>
-    <string name="wocr_automatically_scan">Nous ferons notre possible pour la scanner</string>
 
     <string name="retry">Réessayer</string>
     <string name="transaction_successful">Transaction terminée !</string>
-    <string name="pay_by_bank_transaction">TransactionPay by Bank app</string>
 
     <string name="country_uk">RU (Royaume-Uni)</string>
     <string name="country_usa">USA</string>

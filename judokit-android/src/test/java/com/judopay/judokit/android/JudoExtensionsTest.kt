@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
 import com.judopay.judokit.android.api.model.request.Address
-import com.judopay.judokit.android.api.model.request.BankSaleRequest
 import com.judopay.judokit.android.api.model.request.CheckCardRequest
 import com.judopay.judokit.android.api.model.request.IdealSaleRequest
 import com.judopay.judokit.android.api.model.request.PaymentRequest
@@ -45,12 +44,6 @@ internal class JudoExtensionsTest {
         every { primaryAccountDetails } returns mockPrimaryAccountDetails
         every { address } returns mockAddress
         every { initialRecurringPayment } returns false
-        every { pbbaConfiguration } returns mockk(relaxed = true) {
-            every { mobileNumber } returns "1"
-            every { emailAddress } returns "email"
-            every { appearsOnStatement } returns "appearsOnStatement"
-            every { deepLinkScheme } returns "redirectUrl"
-        }
     }
 
     @DisplayName("Given judo.isSandboxed is true, then return ApiEnvironment.SANDBOX.host")
@@ -190,25 +183,6 @@ internal class JudoExtensionsTest {
             .build()
 
         val actual = judo.toIdealSaleRequest("bic")
-
-        assertEquals(expected, actual)
-    }
-
-    @DisplayName("Given Judo.toBankSaleRequest is called, then map Judo to BankSaleRequest")
-    @Test
-    fun mapJudoToBankSaleRequest() {
-        val expected = BankSaleRequest.Builder().setAmount("1")
-            .setMerchantConsumerReference("ref")
-            .setMerchantPaymentReference("ref")
-            .setJudoId("123456789")
-            .setPaymentMetadata(emptyMap())
-            .setMobileNumber("1")
-            .setEmailAddress("email")
-            .setAppearsOnStatement("appearsOnStatement")
-            .setMerchantRedirectUrl("redirectUrl")
-            .build()
-
-        val actual = judo.toBankSaleRequest()
 
         assertEquals(expected, actual)
     }

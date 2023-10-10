@@ -83,15 +83,6 @@ internal class PaymentWidgetTypeKtTest {
         )
     }
 
-    @DisplayName("Given navigationGraphId is called, when widget type is PAY_BY_BANK, then return judo_polling_status_graph resource id")
-    @Test
-    fun returnJudoPollingStatusGraphOnPayByBank() {
-        assertEquals(
-            R.navigation.judo_polling_status_graph,
-            PaymentWidgetType.PAY_BY_BANK_APP.navigationGraphId
-        )
-    }
-
     @DisplayName("Given navigationGraphId is called, when widget type is GOOGLE_PAY, then throw UnsupportedOperationException")
     @Test
     fun throwExceptionOnGooglePay() {
@@ -170,12 +161,6 @@ internal class PaymentWidgetTypeKtTest {
     @Test
     fun returnFalseOnIsGooglePayWidgetCallWithPaymentMethodsType() {
         assertFalse(PaymentWidgetType.PAYMENT_METHODS.isGooglePayWidget)
-    }
-
-    @DisplayName("Given isExposed is called, when widget type is PAY_BY_BANK, then return true")
-    @Test
-    fun returnTrueOnIsExposedCallWithPayByBankType() {
-        assertTrue(PaymentWidgetType.PAY_BY_BANK_APP.isExposed)
     }
 
     @DisplayName("Given isExposed is called, when widget type is PAYMENT_METHODS, then return false")

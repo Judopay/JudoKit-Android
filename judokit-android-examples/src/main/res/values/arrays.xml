@@ -132,7 +132,6 @@
         <item>Card</item>
         <item>iDeal</item>
         <item>Google Pay</item>
-        <item>Pay by Bank App</item>
     </string-array>
 
     <string-array name="payment_methods_values">

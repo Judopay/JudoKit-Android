@@ -48,25 +48,11 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
+                <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="pay"
-                    android:scheme="judo" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.judokit.android.examples.feature.paybybank.PayByBankActivity"
-            android:exported="false"
-            android:label="@string/title_activity_pay_by_bank"
-            android:theme="@style/Theme.DemoApp" />
 
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
