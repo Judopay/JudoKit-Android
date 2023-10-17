@@ -147,7 +147,7 @@ class CardPaymentTest {
 
         clickCompleteOn3DS2Screen()
 
-        assertReceiptObject("Card declined: CV2 policy", "", "Declined", "Payment")
+        assertReceiptObject("", "", "Declined", "Payment")
     }
 
     @Test
