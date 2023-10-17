@@ -147,7 +147,7 @@ class CardPaymentTest {
 
         clickCompleteOn3DS2Screen()
 
-        assertReceiptObject("3D secure authorisation declined", "", "Declined", "Payment")
+        assertReceiptObject("Card declined: CV2 policy", "", "Declined", "Payment")
     }
 
     @Test

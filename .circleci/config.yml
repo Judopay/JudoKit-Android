@@ -332,6 +332,7 @@ workflows:
             branches:
               only:
                 - master
+                - UI-test-adjustment
       - unit_test_sdk:
           requires:
             - build_sdk
