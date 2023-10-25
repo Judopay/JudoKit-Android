@@ -155,4 +155,8 @@
     <string name="add_address_line">Add address line %1$d (optional)</string>
     <string name="billing_details_title">Billing Details</string>
     <string name="back">Back</string>
+    <string name="cardnumberentryfield" translatable="false">cardNumberEntryField</string>
+    <string name="cardholdernameentryfield" translatable="false">cardHolderNameEntryField</string>
+    <string name="expirydateentryfield" translatable="false">expiryDateEntryField</string>
+    <string name="securitycodeentryfield" translatable="false">securityCodeEntryField</string>
 </resources>

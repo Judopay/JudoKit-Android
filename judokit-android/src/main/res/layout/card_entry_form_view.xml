@@ -42,7 +42,8 @@
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/numberTextInputLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:tag="@string/cardnumberentryfield">
 
                 <EditText
                     android:id="@+id/numberTextInputEditText"
@@ -50,14 +51,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
-                    tools:text="1234 5678 9012 3456" />
+                    tools:text="1234 5678 9012 3456"
+                    android:tag="@string/cardnumberentryfield"/>
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/nameTextInputLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:tag="@string/cardholdernameentryfield">
 
                 <EditText
                     android:id="@+id/nameTextInputEditText"
@@ -65,7 +68,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName|textCapWords"
-                    tools:text="Endava Recruit" />
+                    tools:text="Endava Recruit"
+                    android:tag="@string/cardholdernameentryfield"/>
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
             <androidx.constraintlayout.helper.widget.Flow
@@ -88,7 +92,8 @@
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/expirationDateTextInputLayout"
                 android:layout_width="@dimen/width_0"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:tag="@string/expirydateentryfield">
 
                 <EditText
                     android:id="@+id/expirationDateTextInputEditText"
@@ -96,13 +101,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
-                    tools:text="11/20" />
+                    tools:text="11/20"
+                    android:tag="@string/expirydateentryfield"/>
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/securityNumberTextInputLayout"
                 android:layout_width="@dimen/width_0"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:tag="@string/securitycodeentryfield">
 
                 <EditText
                     android:id="@+id/securityNumberTextInputEditText"
@@ -110,7 +117,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
-                    tools:text="123" />
+                    tools:text="123"
+                    android:tag="@string/securitycodeentryfield"/>
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
