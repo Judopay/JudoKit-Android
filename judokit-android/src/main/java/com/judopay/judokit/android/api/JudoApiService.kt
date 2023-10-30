@@ -1,6 +1,5 @@
 package com.judopay.judokit.android.api
 
-import com.judopay.judokit.android.api.model.request.BankSaleRequest
 import com.judopay.judokit.android.api.model.request.CheckCardRequest
 import com.judopay.judokit.android.api.model.request.Complete3DS2Request
 import com.judopay.judokit.android.api.model.request.GooglePayRequest
@@ -12,7 +11,6 @@ import com.judopay.judokit.android.api.model.request.PreAuthTokenRequest
 import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
-import com.judopay.judokit.android.api.model.response.BankSaleResponse
 import com.judopay.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judopay.judokit.android.api.model.response.CardVerificationResult
 import com.judopay.judokit.android.api.model.response.IdealSaleResponse
@@ -142,15 +140,6 @@ interface JudoApiService : ApiService {
 
     @GET("order/bank/statusrequest/{orderID}")
     fun status(@Path("orderID") orderId: String): Call<JudoApiCallResult<BankSaleStatusResponse>>
-
-    /**
-     * A method that invokes a Bank transaction, used for completing transactions via PayByBankApp.
-     *
-     * @param saleRequest - an instance of [BankSaleRequest] describing the Bank request.
-     * @return the receipt of the PayByBankApp transaction.
-     */
-    @POST("order/bank/sale")
-    fun sale(@Body saleRequest: BankSaleRequest): Call<JudoApiCallResult<BankSaleResponse>>
 
     /**
      * A method used to fetch the details of a transaction based on a provided receipt ID

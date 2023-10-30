@@ -1,6 +1,5 @@
 package com.judopay.judokit.android.ui.paymentmethods
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +23,6 @@ import com.judopay.judokit.android.db.JudoRoomDatabase
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.judo
 import com.judopay.judokit.android.model.JudoPaymentResult
-import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.service.CardTransactionManager
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
@@ -41,7 +39,6 @@ import com.judopay.judokit.android.ui.paymentmethods.components.PaymentCallToAct
 import com.judopay.judokit.android.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentMethodModel
 
-internal const val PAYMENT_WIDGET_TYPE = "com.judopay.judokit.android.model.paymentWidgetType"
 internal const val CARD_ENTRY_OPTIONS = "com.judopay.judokit.android.cardEntryOptions"
 
 data class PaymentMethodsModel(
@@ -79,11 +76,6 @@ class PaymentMethodsFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        judo.pbbaConfiguration?.deepLinkURL?.let {
-            if (it != Uri.EMPTY) {
-                navigateToPollingStatus()
-            }
-        }
         val application = requireActivity().application
         val cardDate = CardDate()
         val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
@@ -128,14 +120,6 @@ class PaymentMethodsFragment : Fragment() {
             }
         }
 
-        viewModel.payWithPayByBankObserver.observe(
-            viewLifecycleOwner
-        ) {
-            if (!it.hasBeenHandled()) {
-                navigateToPollingStatus()
-            }
-        }
-
         viewModel.displayCardEntryObserver.observe(
             viewLifecycleOwner
         ) {
@@ -167,15 +151,6 @@ class PaymentMethodsFragment : Fragment() {
                     viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
                 }
             }
-    }
-
-    private fun navigateToPollingStatus() {
-        findNavController().navigate(
-            R.id.action_paymentMethodsFragment_to_PollingStatusFragment,
-            bundleOf(
-                PAYMENT_WIDGET_TYPE to PaymentWidgetType.PAY_BY_BANK_APP
-            )
-        )
     }
 
     // handle callbacks from the recycler view elements
@@ -291,9 +266,6 @@ class PaymentMethodsFragment : Fragment() {
 
                 PaymentCallToActionType.PAY_WITH_IDEAL ->
                     viewModel.send(PaymentMethodsAction.PayWithSelectedIdealBank)
-
-                PaymentCallToActionType.PAY_WITH_PAY_BY_BANK ->
-                    viewModel.send(PaymentMethodsAction.PayWithPayByBank)
             }
         }
     }

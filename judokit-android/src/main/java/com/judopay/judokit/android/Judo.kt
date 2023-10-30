@@ -11,7 +11,6 @@ import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.GooglePayConfiguration
 import com.judopay.judokit.android.model.NetworkTimeout
-import com.judopay.judokit.android.model.PBBAConfiguration
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.PrimaryAccountDetails
@@ -68,7 +67,6 @@ class Judo internal constructor(
     val googlePayConfiguration: GooglePayConfiguration?,
     val paymentWidgetType: PaymentWidgetType,
     val address: Address?,
-    val pbbaConfiguration: PBBAConfiguration?,
     val initialRecurringPayment: Boolean?,
     val networkTimeout: NetworkTimeout,
     val challengeRequestIndicator: ChallengeRequestIndicator?,
@@ -101,7 +99,6 @@ class Judo internal constructor(
         private var primaryAccountDetails: PrimaryAccountDetails? = null
         private var googlePayConfiguration: GooglePayConfiguration? = null
         private var address: Address? = null
-        private var pbbaConfiguration: PBBAConfiguration? = null
         private var initialRecurringPayment: Boolean? = null
         private var networkTimeout: NetworkTimeout? = null
         private var challengeRequestIndicator: ChallengeRequestIndicator? = null
@@ -204,15 +201,6 @@ class Judo internal constructor(
          */
         fun setAddress(address: Address?) =
             apply { this.address = address }
-
-        /**
-         * Sets Pay by Bank app configuration.
-         * @param pbbaConfiguration An instance of PBBAConfiguration required for PbBA
-         * Pay-related transactions.
-         * @see PBBAConfiguration
-         */
-        fun setPBBAConfiguration(pbbaConfiguration: PBBAConfiguration?) =
-            apply { this.pbbaConfiguration = pbbaConfiguration }
 
         /**
          * Sets the flag for initial recurring payment.
@@ -347,20 +335,6 @@ class Judo internal constructor(
             }
 
             val myNetworkTimeout = networkTimeout ?: NetworkTimeout.Builder().build()
-            val isPbbaAddressConfigMissing =
-                (pbbaConfiguration?.emailAddress.isNullOrEmpty() && !emailAddress.isNullOrEmpty()) || (pbbaConfiguration?.mobileNumber.isNullOrEmpty() || !mobileNumber.isNullOrEmpty())
-
-            val myPBBAConfiguration = if (pbbaConfiguration != null && isPbbaAddressConfigMissing) {
-                PBBAConfiguration.Builder()
-                    .setAppearsOnStatementAs(pbbaConfiguration?.appearsOnStatement)
-                    .setDeepLinkScheme(pbbaConfiguration?.deepLinkScheme)
-                    .setDeepLinkURL(pbbaConfiguration?.deepLinkURL)
-                    .setEmailAddress(pbbaConfiguration?.emailAddress ?: emailAddress)
-                    .setMobileNumber(pbbaConfiguration?.mobileNumber ?: mobileNumber)
-                    .build()
-            } else {
-                pbbaConfiguration
-            }
 
             return Judo(
                 judoId = id,
@@ -375,7 +349,6 @@ class Judo internal constructor(
                 googlePayConfiguration = googlePayConfiguration,
                 paymentWidgetType = paymentWidgetType,
                 address = address,
-                pbbaConfiguration = pbbaConfiguration,
                 initialRecurringPayment = initialRecurringPayment,
                 networkTimeout = myNetworkTimeout,
                 challengeRequestIndicator = challengeRequestIndicator,
@@ -400,7 +373,6 @@ class Judo internal constructor(
                 val method = methods.first()
                 val expectedCurrency = when (method) {
                     PaymentMethod.IDEAL -> Currency.EUR
-                    PaymentMethod.PAY_BY_BANK -> Currency.GBP
                     else -> null
                 }
                 if (expectedCurrency != null && currency != expectedCurrency) {
@@ -421,6 +393,6 @@ class Judo internal constructor(
     }
 
     override fun toString(): String {
-        return "Judo(judoId='$judoId', authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, pbbaConfiguration=$pbbaConfiguration, initialRecurringPayment=$initialRecurringPayment, challengeRequestIndicator=$challengeRequestIndicator, scaExemption=$scaExemption, delayedAuthorisation=$delayedAuthorisation, cardToken=$cardToken)"
+        return "Judo(judoId='$judoId', authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, initialRecurringPayment=$initialRecurringPayment, challengeRequestIndicator=$challengeRequestIndicator, scaExemption=$scaExemption, delayedAuthorisation=$delayedAuthorisation, cardToken=$cardToken)"
     }
 }

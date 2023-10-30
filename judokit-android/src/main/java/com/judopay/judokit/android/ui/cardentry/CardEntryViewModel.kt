@@ -275,8 +275,7 @@ class CardEntryViewModel(
             }
             PaymentWidgetType.GOOGLE_PAY,
             PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
-            PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
-            PaymentWidgetType.PAY_BY_BANK_APP -> throw IllegalStateException("Unsupported PaymentWidgetType")
+            PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS -> throw IllegalStateException("Unsupported PaymentWidgetType")
         }
     }
 
@@ -407,8 +406,7 @@ private fun Judo.submitButtonText(options: CardEntryOptions): Int = when (paymen
             R.string.pay_now
         }
     PaymentWidgetType.GOOGLE_PAY,
-    PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
-    PaymentWidgetType.PAY_BY_BANK_APP -> R.string.empty
+    PaymentWidgetType.PRE_AUTH_GOOGLE_PAY -> R.string.empty
 }
 
 private val Judo.continueButtonText: Int
@@ -429,8 +427,7 @@ private val Judo.continueButtonText: Int
                 R.string.save_card
             }
         PaymentWidgetType.GOOGLE_PAY,
-        PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
-        PaymentWidgetType.PAY_BY_BANK_APP -> R.string.empty
+        PaymentWidgetType.PRE_AUTH_GOOGLE_PAY -> R.string.empty
     }
 
 private fun Judo.isTokenPayment(options: CardEntryOptions): Boolean {

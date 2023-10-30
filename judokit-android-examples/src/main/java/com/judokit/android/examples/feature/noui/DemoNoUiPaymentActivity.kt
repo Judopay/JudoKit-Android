@@ -243,7 +243,6 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
             .setPrimaryAccountDetails(primaryAccountDetails)
             .setGooglePayConfiguration(googlePayConfiguration)
             .setAddress(address)
-            .setPBBAConfiguration(pbbaConfiguration)
             .setScaExemption(scaExemption)
             .setChallengeRequestIndicator(challengeRequestIndicator)
             .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
