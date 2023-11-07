@@ -11,6 +11,9 @@ import com.judopay.judokit.android.model.JudoResult
 import java.math.BigDecimal
 import java.util.Date
 
+// Todo: Confirm with Stefan whether maybe there is a better place for this constant.
+private const val TRANSACTION_SOFTLY_DECLINED_STATUS = "Declined"
+
 private const val CHALLENGE_REQUIRED_MESSAGE = "Issuer ACS has responded with a Challenge URL"
 
 /**
@@ -51,6 +54,9 @@ class Receipt(
 ) {
     val isThreeDSecureTwoRequired: Boolean
         get() = message == CHALLENGE_REQUIRED_MESSAGE
+
+    val isTransactionSoftlyDeclined: Boolean
+        get() = result?.lowercase() == TRANSACTION_SOFTLY_DECLINED_STATUS.lowercase()
 
     override fun toString(): String {
         return "Receipt(judoId=$judoId, receiptId=$receiptId, originalReceiptId=$originalReceiptId, partnerServiceFee=$partnerServiceFee, yourPaymentReference=$yourPaymentReference, type=$type, createdAt=$createdAt, merchantName=$merchantName, appearsOnStatementAs=$appearsOnStatementAs, originalAmount=$originalAmount, netAmount=$netAmount, amount=$amount, currency=$currency, cardDetails=$cardDetails, consumer=$consumer, risks=$risks, md=$md, paReq=$paReq, acsUrl=$acsUrl, result=$result, message=$message)"
