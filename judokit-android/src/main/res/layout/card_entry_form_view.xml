@@ -50,7 +50,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
-                    tools:text="1234 5678 9012 3456" />
+                    android:autofillHints="creditCardNumber"
+                    tools:text="1234 5678 9012 3456"/>
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
@@ -65,7 +66,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName|textCapWords"
-                    tools:text="Endava Recruit" />
+                    android:autofillHints="name"
+                    tools:text="John Doe"/>
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
             <androidx.constraintlayout.helper.widget.Flow
@@ -96,6 +98,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
+                    android:autofillHints="creditCardExpirationDate"
                     tools:text="11/20" />
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
@@ -110,6 +113,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
+                    android:autofillHints="creditCardSecurityCode"
                     tools:text="123" />
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
@@ -129,6 +133,7 @@
                     android:longClickable="false"
                     android:maxLines="1"
                     android:padding="@dimen/space_7"
+                    android:autofillHints="addressCountry"
                     tools:ignore="LabelFor"
                     tools:text="Country" />
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
@@ -145,6 +150,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textCapCharacters"
+                    android:autofillHints="postalCode"
                     tools:text="Postcode" />
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
