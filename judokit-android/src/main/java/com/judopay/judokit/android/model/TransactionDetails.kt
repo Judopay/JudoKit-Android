@@ -132,7 +132,7 @@ fun TransactionDetails.getAddress(judo: Judo): Address? {
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun Transaction.toThreeDSecureTwo(judo: Judo, stepUpFlowDetails: StepUpFlowDetails?): ThreeDSecureTwo {
+fun Transaction.toThreeDSecureTwo(judo: Judo, stepUpFlowDetails: StepUpFlowDetails? = null): ThreeDSecureTwo {
     val parameters = getAuthenticationRequestParameters()
     val sdkParameters = with(parameters) {
         SdkParameters.Builder()
@@ -162,7 +162,7 @@ fun Transaction.toThreeDSecureTwo(judo: Judo, stepUpFlowDetails: StepUpFlowDetai
 fun TransactionDetails.toPaymentRequest(
     judo: Judo,
     transaction: Transaction,
-    stepUpFlowDetails: StepUpFlowDetails?
+    stepUpFlowDetails: StepUpFlowDetails? = null
 ): PaymentRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
@@ -193,7 +193,7 @@ fun TransactionDetails.toPaymentRequest(
 fun TransactionDetails.toPreAuthRequest(
     judo: Judo,
     transaction: Transaction,
-    stepUpFlowDetails: StepUpFlowDetails?
+    stepUpFlowDetails: StepUpFlowDetails? = null
 ): PreAuthRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
@@ -225,7 +225,7 @@ fun TransactionDetails.toPreAuthRequest(
 fun TransactionDetails.toCheckCardRequest(
     judo: Judo,
     transaction: Transaction,
-    stepUpFlowDetails: StepUpFlowDetails?
+    stepUpFlowDetails: StepUpFlowDetails? = null
 ): CheckCardRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
@@ -273,7 +273,7 @@ fun TransactionDetails.toSaveCardRequest(judo: Judo, transaction: Transaction): 
 fun TransactionDetails.toRegisterCardRequest(
     judo: Judo,
     transaction: Transaction,
-    stepUpFlowDetails: StepUpFlowDetails?
+    stepUpFlowDetails: StepUpFlowDetails? = null
 ): RegisterCardRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
@@ -318,7 +318,7 @@ fun TransactionDetails.toTokenRequest(judo: Judo, transaction: Transaction): Tok
         .setCardType(cardType?.typeId ?: 0)
         .setCv2(securityNumber)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, null))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
@@ -345,7 +345,7 @@ fun TransactionDetails.toPreAuthTokenRequest(judo: Judo, transaction: Transactio
         .setCardType(cardType?.typeId ?: 0)
         .setCv2(securityNumber)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, null))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)

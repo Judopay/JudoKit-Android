@@ -24,7 +24,6 @@ import com.judopay.judokit.android.api.model.response.getCReqParameters
 import com.judopay.judokit.android.api.model.response.getChallengeParameters
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
 import com.judopay.judokit.android.model.CardNetwork
-import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.TransactionDetails
@@ -90,6 +89,9 @@ enum class TransactionType {
     CHECK,
     REGISTER
 }
+
+private val TransactionType.canBeSoftDeclined: Boolean
+    get() = arrayOf(TransactionType.PAYMENT, TransactionType.PRE_AUTH, TransactionType.REGISTER).contains(this)
 
 private const val THREE_DS_TWO_MIN_TIMEOUT = 5
 
@@ -184,7 +186,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             apiService.saveCard(request)
         }
         TransactionType.CHECK -> {
-            val request = details.toCheckCardRequest(judo, transaction, stepUpFlowDetails)
+            val request = details.toCheckCardRequest(judo, transaction)
             apiService.checkCard(request)
         }
         TransactionType.REGISTER -> {
@@ -291,9 +293,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             is JudoApiCallResult.Success -> if (result.data != null) {
                 val receipt = result.data
                 when {
-                    receipt.isTransactionSoftlyDeclined -> {
-                        performStepUpFlow(type, details, caller, receipt.receiptId)
-                    }
+                    type.canBeSoftDeclined && receipt.isSoftDeclined -> handleStepUpFlow(type, details, caller, receipt.receiptId!!)
                     receipt.isThreeDSecureTwoRequired -> handleThreeDSecureTwo(receipt, caller)
                     else -> onResult(result.toJudoPaymentResult(context.resources), caller)
                 }
@@ -372,16 +372,15 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         }
     }
 
-    private fun performStepUpFlow(
+    private fun handleStepUpFlow(
         type: TransactionType,
         details: TransactionDetails,
         caller: String,
-        softDeclineReceiptId: String?
+        softDeclineReceiptId: String
     ) {
-        val stepUpFlowDetails = StepUpFlowDetails(
-            ChallengeRequestIndicator.CHALLENGE_AS_MANDATE,
-            softDeclineReceiptId
-        )
+        closeTransaction(context)
+
+        val stepUpFlowDetails = StepUpFlowDetails(softDeclineReceiptId)
         performTransaction(type, details, caller, stepUpFlowDetails)
     }
 }
