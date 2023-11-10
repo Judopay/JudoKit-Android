@@ -19,6 +19,7 @@ import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.request.Complete3DS2Request
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.Receipt
+import com.judopay.judokit.android.api.model.response.StepUpFlowDetails
 import com.judopay.judokit.android.api.model.response.getCReqParameters
 import com.judopay.judokit.android.api.model.response.getChallengeParameters
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
@@ -89,6 +90,9 @@ enum class TransactionType {
     REGISTER
 }
 
+private val TransactionType.canBeSoftDeclined: Boolean
+    get() = arrayOf(TransactionType.PAYMENT, TransactionType.PRE_AUTH, TransactionType.REGISTER).contains(this)
+
 private const val THREE_DS_TWO_MIN_TIMEOUT = 5
 
 class CardTransactionManager private constructor(private var context: FragmentActivity) : ActivityAwareComponent {
@@ -158,14 +162,15 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     private fun performApiRequest(
         type: TransactionType,
         details: TransactionDetails,
-        transaction: Transaction
+        transaction: Transaction,
+        stepUpFlowDetails: StepUpFlowDetails?
     ) = when (type) {
         TransactionType.PAYMENT -> {
-            val request = details.toPaymentRequest(judo, transaction)
+            val request = details.toPaymentRequest(judo, transaction, stepUpFlowDetails)
             apiService.payment(request)
         }
         TransactionType.PRE_AUTH -> {
-            val request = details.toPreAuthRequest(judo, transaction)
+            val request = details.toPreAuthRequest(judo, transaction, stepUpFlowDetails)
             apiService.preAuthPayment(request)
         }
         TransactionType.PAYMENT_WITH_TOKEN -> {
@@ -185,7 +190,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             apiService.checkCard(request)
         }
         TransactionType.REGISTER -> {
-            val request = details.toRegisterCardRequest(judo, transaction)
+            val request = details.toRegisterCardRequest(judo, transaction, stepUpFlowDetails)
             apiService.registerCard(request)
         }
     }
@@ -193,44 +198,58 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     private fun performTransaction(
         type: TransactionType,
         details: TransactionDetails,
-        caller: String
-    ) = try {
-        val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-            Log.d(CardTransactionManager::class.java.name, "Uncaught 3DS2 Exception", throwable)
-            dispatchException(throwable, caller)
-        }
-
-        applicationScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
-            try {
-                Log.d(CardTransactionManager::class.java.name, "initialize 3DS2 SDK")
-                threeDS2Service.initialize(context, parameters, locale, judo.uiConfiguration.threeDSUiCustomization)
-            } catch (e: SDKAlreadyInitializedException) {
-                // This shouldn't cause any side effect.
-                Log.w(CardTransactionManager::class.java.name, "3DS2 Service already initialized.")
+        caller: String,
+        stepUpFlowDetails: StepUpFlowDetails? = null
+    ) {
+        try {
+            val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+                Log.d(CardTransactionManager::class.java.name, "Uncaught 3DS2 Exception", throwable)
+                dispatchException(throwable, caller)
             }
 
-            val network = details.cardType ?: CardNetwork.OTHER
+            applicationScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
+                try {
+                    Log.d(CardTransactionManager::class.java.name, "initialize 3DS2 SDK")
+                    threeDS2Service.initialize(
+                        context,
+                        parameters,
+                        locale,
+                        judo.uiConfiguration.threeDSUiCustomization
+                    )
+                } catch (e: SDKAlreadyInitializedException) {
+                    // This shouldn't cause any side effect.
+                    Log.w(
+                        CardTransactionManager::class.java.name,
+                        "3DS2 Service already initialized."
+                    )
+                }
 
-            val directoryServerID = when {
-                judo.isSandboxed -> "F000000000"
-                network == CardNetwork.VISA -> "A000000003"
-                network == CardNetwork.MASTERCARD || network == CardNetwork.MAESTRO -> "A000000004"
-                network == CardNetwork.AMEX -> "A000000025"
-                else -> "unknown-id"
+                val network = details.cardType ?: CardNetwork.OTHER
+
+                val directoryServerID = when {
+                    judo.isSandboxed -> "F000000000"
+                    network == CardNetwork.VISA -> "A000000003"
+                    network == CardNetwork.MASTERCARD || network == CardNetwork.MAESTRO -> "A000000004"
+                    network == CardNetwork.AMEX -> "A000000025"
+                    else -> "unknown-id"
+                }
+
+                val myTransaction =
+                    threeDS2Service.createTransaction(
+                        directoryServerID,
+                        judo.threeDSTwoMessageVersion
+                    )
+
+                val apiResult = performApiRequest(type, details, myTransaction, stepUpFlowDetails).await()
+
+                transactionDetails = details
+                transaction = myTransaction
+
+                handleApiResult(type, details, caller, apiResult)
             }
-
-            val myTransaction =
-                threeDS2Service.createTransaction(directoryServerID, judo.threeDSTwoMessageVersion)
-
-            val apiResult = performApiRequest(type, details, myTransaction).await()
-
-            transactionDetails = details
-            transaction = myTransaction
-
-            handleApiResult(apiResult, caller)
+        } catch (exception: Throwable) {
+            dispatchException(exception, caller)
         }
-    } catch (exception: Throwable) {
-        dispatchException(exception, caller)
     }
 
     private fun onResult(result: JudoPaymentResult, caller: String) {
@@ -261,7 +280,12 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         }
     }
 
-    private fun handleApiResult(result: JudoApiCallResult<Receipt>, caller: String) =
+    private fun handleApiResult(
+        type: TransactionType,
+        details: TransactionDetails,
+        caller: String,
+        result: JudoApiCallResult<Receipt>
+    ) =
         when (result) {
             is JudoApiCallResult.Failure -> {
                 onResult(result.toJudoPaymentResult(context.resources), caller)
@@ -269,6 +293,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             is JudoApiCallResult.Success -> if (result.data != null) {
                 val receipt = result.data
                 when {
+                    type.canBeSoftDeclined && receipt.isSoftDeclined -> handleStepUpFlow(type, details, caller, receipt.receiptId!!)
                     receipt.isThreeDSecureTwoRequired -> handleThreeDSecureTwo(receipt, caller)
                     else -> onResult(result.toJudoPaymentResult(context.resources), caller)
                 }
@@ -345,5 +370,17 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         } catch (exception: SDKNotInitializedException) {
             Log.w(CardTransactionManager::class.java.name, exception.toString())
         }
+    }
+
+    private fun handleStepUpFlow(
+        type: TransactionType,
+        details: TransactionDetails,
+        caller: String,
+        softDeclineReceiptId: String
+    ) {
+        closeTransaction(context)
+
+        val stepUpFlowDetails = StepUpFlowDetails(softDeclineReceiptId)
+        performTransaction(type, details, caller, stepUpFlowDetails)
     }
 }
