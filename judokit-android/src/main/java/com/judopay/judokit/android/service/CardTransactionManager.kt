@@ -91,7 +91,12 @@ enum class TransactionType {
 }
 
 private val TransactionType.canBeSoftDeclined: Boolean
-    get() = arrayOf(TransactionType.PAYMENT, TransactionType.PRE_AUTH, TransactionType.REGISTER).contains(this)
+    get() = arrayOf(
+        TransactionType.PAYMENT,
+        TransactionType.PRE_AUTH,
+        TransactionType.REGISTER,
+        TransactionType.PAYMENT_WITH_TOKEN,
+        TransactionType.PRE_AUTH_WITH_TOKEN).contains(this)
 
 private const val THREE_DS_TWO_MIN_TIMEOUT = 5
 
