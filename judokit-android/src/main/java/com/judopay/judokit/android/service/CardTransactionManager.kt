@@ -91,7 +91,13 @@ enum class TransactionType {
 }
 
 private val TransactionType.canBeSoftDeclined: Boolean
-    get() = arrayOf(TransactionType.PAYMENT, TransactionType.PRE_AUTH, TransactionType.REGISTER).contains(this)
+    get() = arrayOf(
+        TransactionType.PAYMENT,
+        TransactionType.PRE_AUTH,
+        TransactionType.REGISTER,
+        TransactionType.PAYMENT_WITH_TOKEN,
+        TransactionType.PRE_AUTH_WITH_TOKEN
+    ).contains(this)
 
 private const val THREE_DS_TWO_MIN_TIMEOUT = 5
 
@@ -174,11 +180,11 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             apiService.preAuthPayment(request)
         }
         TransactionType.PAYMENT_WITH_TOKEN -> {
-            val request = details.toTokenRequest(judo, transaction)
+            val request = details.toTokenRequest(judo, transaction, stepUpFlowDetails)
             apiService.tokenPayment(request)
         }
         TransactionType.PRE_AUTH_WITH_TOKEN -> {
-            val request = details.toPreAuthTokenRequest(judo, transaction)
+            val request = details.toPreAuthTokenRequest(judo, transaction, stepUpFlowDetails)
             apiService.preAuthTokenPayment(request)
         }
         TransactionType.SAVE -> {
