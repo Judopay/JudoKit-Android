@@ -289,6 +289,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         type: TransactionType,
         details: TransactionDetails,
         caller: String,
+        stepUpFlowDetails: StepUpFlowDetails? = null,
         exemption: ScaExemption? = null,
         challengeRequestIndicator: ChallengeRequestIndicator? = null
     ) {
@@ -331,14 +332,14 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                         judo.threeDSTwoMessageVersion
                     )
 
-            val apiResult = performJudoApiRequest(
-                type,
-                details,
-                myTransaction,
-                stepUpFlowDetails,
-                exemption,
-                challengeRequestIndicator
-            ).await()
+                val apiResult = performJudoApiRequest(
+                    type,
+                    details,
+                    myTransaction,
+                    stepUpFlowDetails,
+                    exemption,
+                    challengeRequestIndicator
+                ).await()
 
                 transactionDetails = details
                 transaction = myTransaction
@@ -437,7 +438,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         val isRecommendationResultValid = validateRecommendationResult(result)
         if (isRecommendationResultValid) {
             if (recommendationAction == RecommendationAction.ALLOW || recommendationAction == RecommendationAction.REVIEW) {
-                performJudoApiCall(type, details, caller, exemptionReceived, threeDSChallengePreferenceReceived)
+                performJudoApiCall(type, details, caller, null, exemptionReceived, threeDSChallengePreferenceReceived)
             } else if (recommendationAction == RecommendationAction.PREVENT) {
                 onResult(
                     JudoPaymentResult.Error(JudoError.judoRecommendationError(context.resources)),
