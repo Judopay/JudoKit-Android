@@ -301,7 +301,11 @@ fun TransactionDetails.toRegisterCardRequest(
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun TransactionDetails.toTokenRequest(judo: Judo, transaction: Transaction): TokenRequest {
+fun TransactionDetails.toTokenRequest(
+    judo: Judo,
+    transaction: Transaction,
+    stepUpFlowDetails: StepUpFlowDetails? = null
+): TokenRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
 
@@ -318,7 +322,7 @@ fun TransactionDetails.toTokenRequest(judo: Judo, transaction: Transaction): Tok
         .setCardType(cardType?.typeId ?: 0)
         .setCv2(securityNumber)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, stepUpFlowDetails))
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
@@ -328,7 +332,11 @@ fun TransactionDetails.toTokenRequest(judo: Judo, transaction: Transaction): Tok
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun TransactionDetails.toPreAuthTokenRequest(judo: Judo, transaction: Transaction): PreAuthTokenRequest {
+fun TransactionDetails.toPreAuthTokenRequest(
+    judo: Judo,
+    transaction: Transaction,
+    stepUpFlowDetails: StepUpFlowDetails? = null
+): PreAuthTokenRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
 
@@ -345,7 +353,7 @@ fun TransactionDetails.toPreAuthTokenRequest(judo: Judo, transaction: Transactio
         .setCardType(cardType?.typeId ?: 0)
         .setCv2(securityNumber)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, stepUpFlowDetails))
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
