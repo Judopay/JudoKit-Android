@@ -238,7 +238,6 @@ fun TransactionDetails.toPreAuthRequest(
 fun TransactionDetails.toCheckCardRequest(
     judo: Judo,
     transaction: Transaction,
-    stepUpFlowDetails: StepUpFlowDetails? = null,
     recommendationScaExemption: ScaExemption? = null,
     recommendationChallengeRequestIndicator: ChallengeRequestIndicator? = null
 ): CheckCardRequest {
@@ -259,7 +258,7 @@ fun TransactionDetails.toCheckCardRequest(
         .setCv2(securityNumber)
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, stepUpFlowDetails, myScaExemption, myChallengeRequestIndicator))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, null, myScaExemption, myChallengeRequestIndicator))
         .setCardHolderName(cardHolderName)
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
