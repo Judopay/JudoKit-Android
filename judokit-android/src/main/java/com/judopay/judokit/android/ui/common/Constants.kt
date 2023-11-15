@@ -10,12 +10,12 @@ const val REGEX_JUDO_ID = "^(([0-9]{9})|([0-9]{3}-[0-9]{3}-[0-9]{3})|([0-9]{6}))
 /**
  *  Constant to store the sdk version, injected in every Judo API request headers/body
  */
-const val JUDO_KIT_VERSION = "4.1.3"
+const val JUDO_KIT_VERSION = "4.1.4"
 
 /**
  *  Constant to store the Judo API version, injected in every Judo API request headers
  */
-const val JUDO_API_VERSION = "6.19.0"
+const val JUDO_API_VERSION = "6.20.0"
 
 const val POSTAL_CODE_MIN_LENGTH_CA = 6
 const val POSTAL_CODE_MAX_LENGTH_CA = 7

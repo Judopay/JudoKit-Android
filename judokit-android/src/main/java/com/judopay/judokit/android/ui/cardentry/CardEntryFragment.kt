@@ -1,14 +1,19 @@
 package com.judopay.judokit.android.ui.cardentry
 
 import android.animation.LayoutTransition
+import android.content.Context
 import android.content.DialogInterface
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.IBinder
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.autofill.AutofillManager
+import androidx.annotation.StyleRes
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.activityViewModels
@@ -38,6 +43,41 @@ private const val BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME = 300L
 private const val BOTTOM_SHEET_PEEK_HEIGHT = 200
 private const val KEYBOARD_DISMISS_TIMEOUT = 500L
 private const val BOTTOM_APP_BAR_ELEVATION_CHANGE_DURATION = 200L
+
+class JudoBottomSheetDialog(context: Context, @StyleRes theme: Int) : BottomSheetDialog(context, theme) {
+
+    // Used to store the dialog window parameters.
+    private var token: IBinder? = null
+
+    private val isDialogResizedWorkaroundRequired: Boolean
+        get() {
+            if (Build.VERSION.SDK_INT != Build.VERSION_CODES.O || Build.VERSION.SDK_INT != Build.VERSION_CODES.O_MR1) {
+                return false
+            }
+            val autofillManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                context.getSystemService(AutofillManager::class.java)
+            } else {
+                null
+            }
+            return autofillManager?.isEnabled ?: false
+        }
+
+    override fun onWindowAttributesChanged(params: WindowManager.LayoutParams) {
+        if (params.token == null && token != null) {
+            params.token = token
+        }
+
+        super.onWindowAttributesChanged(params)
+    }
+
+    override fun onAttachedToWindow() {
+        if (isDialogResizedWorkaroundRequired) {
+            token = ownerActivity!!.window.attributes.token
+        }
+
+        super.onAttachedToWindow()
+    }
+}
 
 class CardEntryFragment : BottomSheetDialogFragment() {
     private lateinit var viewModel: CardEntryViewModel
@@ -97,7 +137,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
 
     // present it always expanded
     override fun onCreateDialog(savedInstanceState: Bundle?) =
-        BottomSheetDialog(requireContext(), theme).apply {
+        JudoBottomSheetDialog(requireContext(), theme).apply {
             behavior.state = BottomSheetBehavior.STATE_EXPANDED
             behavior.peekHeight = BOTTOM_SHEET_PEEK_HEIGHT
             isCancelable = false
@@ -281,6 +321,6 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         decorView.setOnApplyWindowInsetsListener(insetsListener)
     }
 
-    private val bottomSheetDialog: BottomSheetDialog
-        get() = dialog as BottomSheetDialog
+    private val bottomSheetDialog: JudoBottomSheetDialog
+        get() = dialog as JudoBottomSheetDialog
 }

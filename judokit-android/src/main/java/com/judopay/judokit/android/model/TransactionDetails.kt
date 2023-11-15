@@ -20,6 +20,7 @@ import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTw
 import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.api.model.response.Consumer
 import com.judopay.judokit.android.api.model.response.Receipt
+import com.judopay.judokit.android.api.model.response.StepUpFlowDetails
 import com.judopay.judokit.android.toMap
 import java.util.Date
 
@@ -133,6 +134,7 @@ fun TransactionDetails.getAddress(judo: Judo): Address? {
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
 fun Transaction.toThreeDSecureTwo(
     judo: Judo,
+    stepUpFlowDetails: StepUpFlowDetails? = null,
     recommendationScaExemption: ScaExemption? = null,
     recommendationChallengeRequestIndicator: ChallengeRequestIndicator? = null
 ): ThreeDSecureTwo {
@@ -154,11 +156,12 @@ fun Transaction.toThreeDSecureTwo(
             .build()
     }
     val myScaExemption = recommendationScaExemption ?: judo.scaExemption
-    val myChallengeRequestIndicator = recommendationChallengeRequestIndicator ?: judo.challengeRequestIndicator
+    val myChallengeRequestIndicator = stepUpFlowDetails?.challengeRequestIndicator ?: recommendationChallengeRequestIndicator ?: judo.challengeRequestIndicator
     return ThreeDSecureTwo.Builder()
         .setChallengeRequestIndicator(myChallengeRequestIndicator)
         .setScaExemption(myScaExemption)
         .setSdkParameters(sdkParameters)
+        .setSoftDeclineReceiptId(stepUpFlowDetails?.softDeclineReceiptId)
         .build()
 }
 
@@ -166,6 +169,7 @@ fun Transaction.toThreeDSecureTwo(
 fun TransactionDetails.toPaymentRequest(
     judo: Judo,
     transaction: Transaction,
+    stepUpFlowDetails: StepUpFlowDetails? = null,
     recommendationScaExemption: ScaExemption? = null,
     recommendationChallengeRequestIndicator: ChallengeRequestIndicator? = null
 ): PaymentRequest {
@@ -191,7 +195,7 @@ fun TransactionDetails.toPaymentRequest(
         .setMobileNumber(mobileNumber)
         .setPhoneCountryCode(phoneCountryCode)
         .setEmailAddress(email)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, myScaExemption, myChallengeRequestIndicator))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, stepUpFlowDetails, myScaExemption, myChallengeRequestIndicator))
         .build()
 }
 
@@ -199,6 +203,7 @@ fun TransactionDetails.toPaymentRequest(
 fun TransactionDetails.toPreAuthRequest(
     judo: Judo,
     transaction: Transaction,
+    stepUpFlowDetails: StepUpFlowDetails? = null,
     recommendationScaExemption: ScaExemption? = null,
     recommendationChallengeRequestIndicator: ChallengeRequestIndicator? = null
 ): PreAuthRequest {
@@ -225,7 +230,7 @@ fun TransactionDetails.toPreAuthRequest(
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, myScaExemption, myChallengeRequestIndicator))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, stepUpFlowDetails, myScaExemption, myChallengeRequestIndicator))
         .build()
 }
 
@@ -233,6 +238,7 @@ fun TransactionDetails.toPreAuthRequest(
 fun TransactionDetails.toCheckCardRequest(
     judo: Judo,
     transaction: Transaction,
+    stepUpFlowDetails: StepUpFlowDetails? = null,
     recommendationScaExemption: ScaExemption? = null,
     recommendationChallengeRequestIndicator: ChallengeRequestIndicator? = null
 ): CheckCardRequest {
@@ -253,7 +259,7 @@ fun TransactionDetails.toCheckCardRequest(
         .setCv2(securityNumber)
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, myScaExemption, myChallengeRequestIndicator))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, stepUpFlowDetails, myScaExemption, myChallengeRequestIndicator))
         .setCardHolderName(cardHolderName)
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
@@ -280,7 +286,11 @@ fun TransactionDetails.toSaveCardRequest(judo: Judo, transaction: Transaction): 
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun TransactionDetails.toRegisterCardRequest(judo: Judo, transaction: Transaction): RegisterCardRequest {
+fun TransactionDetails.toRegisterCardRequest(
+    judo: Judo,
+    transaction: Transaction,
+    stepUpFlowDetails: StepUpFlowDetails? = null
+): RegisterCardRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
 
@@ -298,7 +308,7 @@ fun TransactionDetails.toRegisterCardRequest(judo: Judo, transaction: Transactio
         .setCv2(securityNumber)
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, stepUpFlowDetails))
         .setCardHolderName(cardHolderName)
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)

@@ -11,6 +11,8 @@ import com.judopay.judokit.android.model.JudoResult
 import java.math.BigDecimal
 import java.util.Date
 
+private const val DECLINED_RESULT = "Declined"
+private const val SOFT_DECLINED_MESSAGE = "Card declined: Additional customer authentication required"
 private const val CHALLENGE_REQUIRED_MESSAGE = "Issuer ACS has responded with a Challenge URL"
 
 /**
@@ -50,7 +52,10 @@ class Receipt(
     val cReq: String? = null
 ) {
     val isThreeDSecureTwoRequired: Boolean
-        get() = message == CHALLENGE_REQUIRED_MESSAGE
+        get() = message.equals(CHALLENGE_REQUIRED_MESSAGE, true)
+
+    val isSoftDeclined: Boolean
+        get() = result.equals(DECLINED_RESULT, true) && message.equals(SOFT_DECLINED_MESSAGE, true) && !receiptId.isNullOrEmpty()
 
     override fun toString(): String {
         return "Receipt(judoId=$judoId, receiptId=$receiptId, originalReceiptId=$originalReceiptId, partnerServiceFee=$partnerServiceFee, yourPaymentReference=$yourPaymentReference, type=$type, createdAt=$createdAt, merchantName=$merchantName, appearsOnStatementAs=$appearsOnStatementAs, originalAmount=$originalAmount, netAmount=$netAmount, amount=$amount, currency=$currency, cardDetails=$cardDetails, consumer=$consumer, risks=$risks, md=$md, paReq=$paReq, acsUrl=$acsUrl, result=$result, message=$message)"
