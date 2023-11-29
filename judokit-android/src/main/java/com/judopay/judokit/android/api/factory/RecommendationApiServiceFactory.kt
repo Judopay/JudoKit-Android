@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.RecommendationApiService
+import com.judopay.judokit.android.api.interceptor.RecommendationHeadersInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
@@ -34,6 +35,11 @@ object RecommendationApiServiceFactory : ServiceFactory<RecommendationApiService
             // This base URL is never used later on, but is required by Retrofit to be provided.
             LOCALHOST_URL
         ).create(RecommendationApiService::class.java)
+    }
+
+    override fun addInterceptors(client: OkHttpClient.Builder, context: Context, judo: Judo) {
+        super.addInterceptors(client, context, judo)
+        client.interceptors().add(RecommendationHeadersInterceptor(judo.authorization))
     }
 
     override fun getOkHttpClient(

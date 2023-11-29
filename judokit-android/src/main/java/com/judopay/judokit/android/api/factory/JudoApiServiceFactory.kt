@@ -4,11 +4,13 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.judopay.judokit.android.Judo
+import com.judopay.judokit.android.api.AppMetaDataProvider
 import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.deserializer.ChallengeRequestIndicatorSerializer
 import com.judopay.judokit.android.api.deserializer.DateJsonDeserializer
 import com.judopay.judokit.android.api.deserializer.FormattedBigDecimalDeserializer
 import com.judopay.judokit.android.api.deserializer.ScaExemptionSerializer
+import com.judopay.judokit.android.api.interceptor.ApiHeadersInterceptor
 import com.judopay.judokit.android.api.interceptor.DeDuplicationInterceptor
 import com.judopay.judokit.android.api.interceptor.DeviceDnaInterceptor
 import com.judopay.judokit.android.api.interceptor.PayLoadInterceptor
@@ -124,6 +126,12 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
     ) {
         super.addInterceptors(client, context, judo)
         client.interceptors().apply {
+            add(
+                ApiHeadersInterceptor(
+                    judo.authorization,
+                    AppMetaDataProvider(context, judo.subProductInfo)
+                )
+            )
             add(DeDuplicationInterceptor())
             add(DeviceDnaInterceptor(context))
             add(PayLoadInterceptor(context))

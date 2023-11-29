@@ -50,12 +50,6 @@ abstract class ServiceFactory<T> {
     ) {
         client.interceptors().apply {
             add(NetworkConnectivityInterceptor(context))
-            add(
-                ApiHeadersInterceptor(
-                    judo.authorization,
-                    AppMetaDataProvider(context, judo.subProductInfo)
-                )
-            )
             externalInterceptors?.forEach {
                 add(it)
             }

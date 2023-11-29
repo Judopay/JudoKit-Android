@@ -1,6 +1,7 @@
 package com.judopay.judokit.android
 
 import android.app.Activity
+import android.os.Build
 import android.os.Parcelable
 import androidx.annotation.RequiresApi
 import com.judopay.judokit.android.api.model.Authorization
@@ -338,6 +339,11 @@ class Judo internal constructor(
             }
 
             val myNetworkTimeout = networkTimeout ?: NetworkTimeout.Builder().build()
+
+            if (recommendationConfiguration != null
+                && authorization !is com.judopay.judokit.android.api.model.PaymentSessionAuthorization) {
+                throw IllegalArgumentException("Payment session is required for using the recommendation feature.")
+            }
 
             return Judo(
                 judoId = id,
