@@ -1,7 +1,7 @@
 package com.judopay.judokit.android.api
 
-import com.judopay.judokit.android.api.model.request.RecommendationRequest
-import com.judopay.judokit.android.api.model.response.RecommendationResponse
+import com.judopay.judokit.android.api.model.request.recommendation.RecommendationRequest
+import com.judopay.judokit.android.api.model.response.recommendation.RecommendationResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -12,12 +12,12 @@ import retrofit2.http.Url
  * Use the [create][com.judopay.judokit.android.api.factory.RecommendationApiServiceFactory.create
  * method to obtain an instance. See [GitHub](https://github.com/square/retrofit) for details.
  */
-interface RecommendationApiService : ApiService {
+interface RecommendationApiService {
 
     /**
      * A method used to fetch the recommendation status, based on provided encrypted card details.
      */
-    @POST()
+    @POST
     fun requestRecommendation(
         @Url url: String,
         @Body recommendationRequest: RecommendationRequest

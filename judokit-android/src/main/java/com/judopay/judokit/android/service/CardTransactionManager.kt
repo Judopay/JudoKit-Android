@@ -1,7 +1,6 @@
 package com.judopay.judokit.android.service
 
 import android.content.Context
-import android.os.Build
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import com.judopay.judo3ds2.exception.SDKAlreadyInitializedException
@@ -16,42 +15,33 @@ import com.judopay.judo3ds2.transaction.Transaction
 import com.judopay.judo3ds2.transaction.challenge.ChallengeStatusReceiver
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.JudoApiService
-import com.judopay.judokit.android.api.RecommendationApiService
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
-import com.judopay.judokit.android.api.factory.RecommendationApiServiceFactory
 import com.judopay.judokit.android.api.model.request.Complete3DS2Request
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.Receipt
-import com.judopay.judokit.android.api.model.response.RecommendationAction
-import com.judopay.judokit.android.api.model.response.RecommendationResponse
-import com.judopay.judokit.android.api.model.response.StepUpFlowDetails
 import com.judopay.judokit.android.api.model.response.getCReqParameters
 import com.judopay.judokit.android.api.model.response.getChallengeParameters
+import com.judopay.judokit.android.api.model.response.recommendation.RecommendationAction
+import com.judopay.judokit.android.api.model.response.recommendation.toTransactionDetailsOverrides
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
-import com.judopay.judokit.android.isCardEncryptionRequired
 import com.judopay.judokit.android.model.CardNetwork
-import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
-import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.model.TransactionDetails
+import com.judopay.judokit.android.model.TransactionDetailsOverrides
 import com.judopay.judokit.android.model.toCheckCardRequest
 import com.judopay.judokit.android.model.toPaymentRequest
 import com.judopay.judokit.android.model.toPreAuthRequest
 import com.judopay.judokit.android.model.toPreAuthTokenRequest
-import com.judopay.judokit.android.model.toRecommendationRequest
 import com.judopay.judokit.android.model.toRegisterCardRequest
 import com.judopay.judokit.android.model.toSaveCardRequest
 import com.judopay.judokit.android.model.toTokenRequest
-import com.judopay.judokit.android.toChallengeRequestIndicator
 import com.judopay.judokit.android.ui.common.getLocale
-import com.ravelin.cardEncryption.model.EncryptedCard
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import retrofit2.Call
 import retrofit2.await
 import java.util.WeakHashMap
 
@@ -117,9 +107,9 @@ class CardTransactionManager private constructor(private var context: FragmentAc
 
     private lateinit var judo: Judo
     private lateinit var judoApiService: JudoApiService
-    private lateinit var recommendationApiService: RecommendationApiService
+    private lateinit var recommendationService: RecommendationService
+
     private var threeDS2Service: ThreeDS2Service = ThreeDS2ServiceImpl()
-    private var cardEncryptionManager = RecommendationCardEncryptionManager()
 
     private var transaction: Transaction? = null
     private var transactionDetails: TransactionDetails? = null
@@ -146,7 +136,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     }?.apply {
         judo = config
         judoApiService = JudoApiServiceFactory.create(context, config)
-        recommendationApiService = RecommendationApiServiceFactory.create(context, config)
+        recommendationService = RecommendationService(context, config)
 
         try {
             threeDS2Service.cleanup(context)
@@ -184,17 +174,13 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         type: TransactionType,
         details: TransactionDetails,
         transaction: Transaction,
-        stepUpFlowDetails: StepUpFlowDetails?,
-        exemption: ScaExemption? = null,
-        challengeRequestIndicator: ChallengeRequestIndicator? = null
+        overrides: TransactionDetailsOverrides?
     ) = when (type) {
         TransactionType.PAYMENT -> {
             val request = details.toPaymentRequest(
                 judo,
                 transaction,
-                stepUpFlowDetails,
-                exemption,
-                challengeRequestIndicator
+                overrides
             )
             judoApiService.payment(request)
         }
@@ -202,18 +188,16 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             val request = details.toPreAuthRequest(
                 judo,
                 transaction,
-                stepUpFlowDetails,
-                exemption,
-                challengeRequestIndicator
+                overrides
             )
             judoApiService.preAuthPayment(request)
         }
         TransactionType.PAYMENT_WITH_TOKEN -> {
-            val request = details.toTokenRequest(judo, transaction, stepUpFlowDetails)
+            val request = details.toTokenRequest(judo, transaction, overrides)
             judoApiService.tokenPayment(request)
         }
         TransactionType.PRE_AUTH_WITH_TOKEN -> {
-            val request = details.toPreAuthTokenRequest(judo, transaction, stepUpFlowDetails)
+            val request = details.toPreAuthTokenRequest(judo, transaction, overrides)
             judoApiService.preAuthTokenPayment(request)
         }
         TransactionType.SAVE -> {
@@ -224,74 +208,65 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             val request = details.toCheckCardRequest(
                 judo,
                 transaction,
-                exemption,
-                challengeRequestIndicator
+                overrides
             )
             judoApiService.checkCard(request)
         }
         TransactionType.REGISTER -> {
-            val request = details.toRegisterCardRequest(judo, transaction, stepUpFlowDetails)
+            val request = details.toRegisterCardRequest(judo, transaction, overrides)
             judoApiService.registerCard(request)
         }
-    }
-
-    private fun performRecommendationApiRequest(
-        encryptedCardDetails: EncryptedCard,
-        recommendationEndpointUrl: String
-    ): Call<RecommendationResponse> {
-        val request = encryptedCardDetails.toRecommendationRequest()
-        return recommendationApiService.requestRecommendation(
-            recommendationEndpointUrl,
-            request
-        )
     }
 
     private fun performTransaction(
         type: TransactionType,
         details: TransactionDetails,
         caller: String,
-        stepUpFlowDetails: StepUpFlowDetails? = null
+        overrides: TransactionDetailsOverrides? = null
     ) = try {
-        if (judo.isCardEncryptionRequired(type)) {
-            val cardNumber = details.cardNumber
-            val cardHolderName = details.cardHolderName
-            val expirationDate = details.expirationDate
-            val rsaKey = judo.recommendationConfiguration?.rsaKey
-
-            val encryptedCardDetails = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                cardEncryptionManager.performCardEncryption(
-                    cardNumber!!,
-                    cardHolderName,
-                    expirationDate!!,
-                    rsaKey!!
-                )
-            } else {
-                null
-            }
-            if (encryptedCardDetails != null) {
-                performRecommendationApiCall(
-                    encryptedCardDetails,
-                    caller,
-                    judo.recommendationConfiguration!!.recommendationUrl
-                ) { result -> handleRecommendationApiResult(result, caller, type, details) }
-            } else {
-                // We allow Judo API call in this case, as the API will perform its own checks anyway.
-                performJudoApiCall(type, details, caller)
-            }
-        } else {
-            performJudoApiCall(type, details, caller)
+        when {
+            overrides != null -> performJudoApiCall(type, details, caller, overrides) // soft decline case - we don't need to call recommendation service
+            recommendationService.isRecommendationFeatureAvailable(type) -> apply3DS2Optimisations(type, details, caller) // recommendation service is available, attempt to call it
+            else -> performJudoApiCall(type, details, caller) // fallback to default Judo API call
         }
     } catch (exception: Throwable) {
         dispatchException(exception, caller)
+    }
+
+    private fun apply3DS2Optimisations(
+        type: TransactionType,
+        details: TransactionDetails,
+        caller: String
+    ) = try {
+        val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+            Log.d(CardTransactionManager::class.java.name, "Uncaught Recommendation service exception", throwable)
+            performJudoApiCall(type, details, caller) // in case of any error, we fallback to Judo API call
+        }
+
+        applicationScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
+            val result = recommendationService.fetchOptimizationData(details, type).await()
+
+            if (result.isValid) {
+                when (result.data?.action) {
+                    RecommendationAction.PREVENT -> onResult(
+                        JudoPaymentResult.Error(JudoError.judoRecommendationError(context.resources)),
+                        caller
+                    )
+                    else -> performJudoApiCall(type, details, caller, result.toTransactionDetailsOverrides())
+                }
+            } else {
+                performJudoApiCall(type, details, caller) // in case of any error, we fallback to Judo API call
+            }
+        }
+    } catch (exception: Throwable) {
+        performJudoApiCall(type, details, caller) // in case of any error, we fallback to Judo API call
     }
 
     private fun performJudoApiCall(
         type: TransactionType,
         details: TransactionDetails,
         caller: String,
-        stepUpFlowDetails: StepUpFlowDetails? = null,
-        exemption: ScaExemption? = null,
-        challengeRequestIndicator: ChallengeRequestIndicator? = null
+        overrides: TransactionDetailsOverrides? = null
     ) {
         try {
             val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -336,9 +311,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                     type,
                     details,
                     myTransaction,
-                    stepUpFlowDetails,
-                    exemption,
-                    challengeRequestIndicator
+                    overrides
                 ).await()
 
                 transactionDetails = details
@@ -348,26 +321,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             }
         } catch (exception: Throwable) {
             dispatchException(exception, caller)
-        }
-    }
-
-    private fun performRecommendationApiCall(
-        encryptedCardDetails: EncryptedCard,
-        caller: String,
-        recommendationEndpointUrl: String,
-        resultsHandler: (response: RecommendationResponse) -> Unit
-    ) {
-        val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-            Log.d(CardTransactionManager::class.java.name, "Uncaught 3DS2 Exception", throwable)
-            dispatchException(throwable, caller)
-        }
-        applicationScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
-            resultsHandler.invoke(
-                performRecommendationApiRequest(
-                    encryptedCardDetails,
-                    recommendationEndpointUrl
-                ).await()
-            )
         }
     }
 
@@ -423,33 +376,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                 onResult(result.toJudoPaymentResult(context.resources), caller)
             }
         }
-
-    private fun handleRecommendationApiResult(
-        result: RecommendationResponse,
-        caller: String,
-        type: TransactionType,
-        details: TransactionDetails
-    ) {
-        val recommendationAction = result.data?.action
-        val transactionOptimisation = result.data?.transactionOptimisation
-        val exemptionReceived = transactionOptimisation?.exemption
-        val threeDSChallengePreferenceReceived = transactionOptimisation?.threeDSChallengePreference?.toChallengeRequestIndicator()
-
-        val isRecommendationResultValid = validateRecommendationResult(result)
-        if (isRecommendationResultValid) {
-            if (recommendationAction == RecommendationAction.ALLOW || recommendationAction == RecommendationAction.REVIEW) {
-                performJudoApiCall(type, details, caller, null, exemptionReceived, threeDSChallengePreferenceReceived)
-            } else if (recommendationAction == RecommendationAction.PREVENT) {
-                onResult(
-                    JudoPaymentResult.Error(JudoError.judoRecommendationError(context.resources)),
-                    caller
-                )
-            }
-        } else {
-            // We allow Judo API call in this case, as the API will perform its own checks anyway.
-            performJudoApiCall(type, details, caller)
-        }
-    }
 
     private fun handleThreeDSecureTwo(receipt: Receipt, caller: String) {
         val challengeStatusReceiver = object : ChallengeStatusReceiver {
@@ -510,22 +436,6 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         performTransaction(TransactionType.REGISTER, details, caller)
     }
 
-    private fun validateRecommendationResult(result: RecommendationResponse): Boolean {
-        if (result.data == null) return false
-        val data = result.data
-        if (data.action == null || data.transactionOptimisation == null) return false
-        if (data.action == RecommendationAction.ALLOW || data.action == RecommendationAction.REVIEW) {
-            if (data.transactionOptimisation.action == null) return false
-            if (
-                data.transactionOptimisation.exemption == null &&
-                data.transactionOptimisation.threeDSChallengePreference == null
-            ) {
-                return false
-            }
-        }
-        return true
-    }
-
     private fun closeTransaction(context: Context) {
         transaction?.close()
         transaction = null
@@ -545,7 +455,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     ) {
         closeTransaction(context)
 
-        val stepUpFlowDetails = StepUpFlowDetails(softDeclineReceiptId)
-        performTransaction(type, details, caller, stepUpFlowDetails)
+        val overrides = TransactionDetailsOverrides(softDeclineReceiptId)
+        performTransaction(type, details, caller, overrides)
     }
 }

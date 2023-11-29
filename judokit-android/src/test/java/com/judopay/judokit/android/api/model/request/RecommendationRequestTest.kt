@@ -1,7 +1,8 @@
 package com.judopay.judokit.android.api.model.request
 
-import com.judopay.judokit.android.model.PaymentMethodCipher
-import com.judopay.judokit.android.model.RecommendationPaymentMethod
+import com.judopay.judokit.android.api.model.request.recommendation.PaymentMethodCipher
+import com.judopay.judokit.android.api.model.request.recommendation.RecommendationPaymentMethod
+import com.judopay.judokit.android.api.model.request.recommendation.RecommendationRequest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.DisplayName

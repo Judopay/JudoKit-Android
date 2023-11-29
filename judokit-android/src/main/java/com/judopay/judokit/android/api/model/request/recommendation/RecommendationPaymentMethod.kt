@@ -1,4 +1,4 @@
-package com.judopay.judokit.android.model
+package com.judopay.judokit.android.api.model.request.recommendation
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

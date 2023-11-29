@@ -6,6 +6,7 @@ const val GOOGLE_PAY_API_VERSION_MINOR = 0
 const val ANIMATION_DURATION_500 = 500L
 const val PATTERN_CARD_EXPIRATION_DATE = "##/##"
 const val REGEX_JUDO_ID = "^(([0-9]{9})|([0-9]{3}-[0-9]{3}-[0-9]{3})|([0-9]{6}))?\$"
+const val REGEX_URL = "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)\$"
 
 /**
  *  Constant to store the sdk version, injected in every Judo API request headers/body
@@ -34,5 +35,3 @@ const val REG_EX_CARDHOLDER_NAME = "^[A-Za-z.\\-'\\s?]+\$"
 const val REG_EX_CITY = "^[A-Za-z.'\\- ]+\$"
 const val REG_EX_MOBILE_NUMBER = "^.{10,}\$"
 const val REG_EX_ADDRESS_LINE = "^[a-zA-Z0-9,./'\\- ]+\$"
-
-const val RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS = 30

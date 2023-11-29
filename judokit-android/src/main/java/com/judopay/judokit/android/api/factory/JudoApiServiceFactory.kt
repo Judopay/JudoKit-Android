@@ -36,7 +36,7 @@ import javax.net.ssl.X509TrustManager
  * to use a shared instance than create a new instance per request, so this class ensures that only
  * one instance is used in the application.
  */
-object JudoApiServiceFactory : ApiServiceFactory() {
+object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
 
     private const val HOSTNAME_WILDCARD_PATTERN = "*.judopay.com"
 
@@ -59,6 +59,10 @@ object JudoApiServiceFactory : ApiServiceFactory() {
      * @return the Retrofit API service implementation containing the methods used
      * for interacting with the judoPay REST API.
      */
+
+    @Deprecated("Use create instead", replaceWith = ReplaceWith("create(context, judo)"))
+    override fun createApiService(context: Context, judo: Judo): JudoApiService = create(context, judo)
+
     override fun create(context: Context, judo: Judo): JudoApiService =
         createRetrofit(context.applicationContext, judo, judo.apiBaseUrl)
             .create(JudoApiService::class.java)

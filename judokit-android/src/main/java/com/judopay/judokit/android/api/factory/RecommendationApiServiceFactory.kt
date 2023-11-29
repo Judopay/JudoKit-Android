@@ -5,18 +5,17 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.RecommendationApiService
-import com.judopay.judokit.android.ui.common.RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
+private const val RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS = 30
+
 /**
  * Factory that provides the [RecommendationApiService] used for performing all HTTP requests to the
- * Recommendation APIs. As implementation of the ApiService requires some configuration, it is better
- * to use a shared instance than create a new instance per request, so this class ensures that only
- * one instance is used in the application.
+ * Recommendation API.
  */
-object RecommendationApiServiceFactory : ApiServiceFactory() {
+object RecommendationApiServiceFactory : ServiceFactory<RecommendationApiService>() {
 
     private const val LOCALHOST_URL = "http://localhost/"
 
@@ -25,12 +24,9 @@ object RecommendationApiServiceFactory : ApiServiceFactory() {
 
     override var externalInterceptors: List<Interceptor>? = null
 
-    /**
-     * @param context the calling Context
-     * @param judo the judo instance
-     * @return the Retrofit API service implementation containing the methods used
-     * for interacting with the Recommendation REST API.
-     */
+    @Deprecated("Use create instead", replaceWith = ReplaceWith("create(context, judo)"))
+    override fun createApiService(context: Context, judo: Judo): RecommendationApiService = create(context, judo)
+
     override fun create(context: Context, judo: Judo): RecommendationApiService {
         return createRetrofit(
             context.applicationContext,
@@ -44,18 +40,15 @@ object RecommendationApiServiceFactory : ApiServiceFactory() {
         context: Context,
         judo: Judo
     ): OkHttpClient {
-        return try {
-            val builder = OkHttpClient.Builder()
-            setRecommendationCallTimeout(builder, judo)
-            addInterceptors(builder, context, judo)
-            builder.build()
-        } catch (e: Exception) {
-            throw RuntimeException(e)
-        }
+        val builder = OkHttpClient.Builder()
+        setRecommendationCallTimeout(builder, judo)
+        addInterceptors(builder, context, judo)
+
+        return builder.build()
     }
 
     private fun setRecommendationCallTimeout(builder: OkHttpClient.Builder, judo: Judo) {
-        val timeout = judo.recommendationConfiguration?.recommendationTimeout ?: RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
+        val timeout = judo.recommendationConfiguration?.timeout ?: RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
         builder.callTimeout(timeout.toLong(), TimeUnit.SECONDS)
     }
 }

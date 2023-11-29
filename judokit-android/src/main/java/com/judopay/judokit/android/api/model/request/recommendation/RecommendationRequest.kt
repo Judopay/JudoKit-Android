@@ -1,6 +1,4 @@
-package com.judopay.judokit.android.api.model.request
-
-import com.judopay.judokit.android.model.RecommendationPaymentMethod
+package com.judopay.judokit.android.api.model.request.recommendation
 
 /**
  * Represents the data needed to perform the recommendation request with the Recommendation API.
@@ -15,6 +13,7 @@ class RecommendationRequest private constructor(
 
         fun setPaymentMethod(paymentMethod: RecommendationPaymentMethod?) = apply { this.paymentMethod = paymentMethod }
 
+        @Throws(IllegalArgumentException::class)
         fun build(): RecommendationRequest {
             val myPaymentMethod = requireNotNull(paymentMethod)
             return RecommendationRequest(myPaymentMethod)

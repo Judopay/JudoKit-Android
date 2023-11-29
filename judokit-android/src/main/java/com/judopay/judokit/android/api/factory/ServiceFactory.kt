@@ -3,7 +3,6 @@ package com.judopay.judokit.android.api.factory
 import android.content.Context
 import com.google.gson.Gson
 import com.judopay.judokit.android.Judo
-import com.judopay.judokit.android.api.ApiService
 import com.judopay.judokit.android.api.AppMetaDataProvider
 import com.judopay.judokit.android.api.interceptor.ApiHeadersInterceptor
 import com.judopay.judokit.android.api.interceptor.NetworkConnectivityInterceptor
@@ -13,20 +12,22 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 /**
- * Abstract, base class for ApiService factories.
+ * Base class for Service factories.
  */
-abstract class ApiServiceFactory {
+abstract class ServiceFactory<T> {
 
     abstract val gson: Gson
 
     abstract var externalInterceptors: List<Interceptor>?
 
-    abstract fun create(context: Context, judo: Judo): ApiService
+    @Deprecated("Use create instead", ReplaceWith("create(context, judo)"))
+    abstract fun createApiService(context: Context, judo: Judo): T
+    abstract fun create(context: Context, judo: Judo): T
 
     protected fun createRetrofit(
         context: Context,
         judo: Judo,
-        baseUrl: String?
+        baseUrl: String
     ): Retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
         .client(getOkHttpClient(context, judo))

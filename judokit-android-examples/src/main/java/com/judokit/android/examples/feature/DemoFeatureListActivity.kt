@@ -1,9 +1,6 @@
 package com.judokit.android.examples.feature
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
@@ -11,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.chuckerteam.chucker.api.ChuckerCollector
@@ -43,7 +39,7 @@ import com.judopay.judokit.android.JudoActivity
 import com.judopay.judokit.android.PAYMENT_CANCELLED
 import com.judopay.judokit.android.PAYMENT_ERROR
 import com.judopay.judokit.android.PAYMENT_SUCCESS
-import com.judopay.judokit.android.RecommendationConfiguration
+import com.judopay.judokit.android.model.RecommendationConfiguration
 import com.judopay.judokit.android.api.error.toJudoError
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.factory.RecommendationApiServiceFactory
@@ -269,7 +265,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     private fun showGetTransactionDialog(judo: Judo) {
         val dialogBinding = DialogGetTransactionBinding.inflate(layoutInflater)
-        val service = JudoApiServiceFactory.create(this, judo)
+        val service = JudoApiServiceFactory.createApiService(this, judo)
         AlertDialog.Builder(this).setTitle(R.string.feature_title_get_transaction_details)
             .setView(dialogBinding.root)
             .setPositiveButton(
@@ -344,9 +340,9 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val isRecommendationFeatureEnabled = sharedPreferences.getBoolean("is_recommendation_feature_enabled", false)
         val recommendationConfiguration = if (isRecommendationFeatureEnabled) {
             RecommendationConfiguration.Builder()
-                .setRsaKey(rsaKey)
-                .setRecommendationUrl(recommendationUrl)
-                .setRecommendationTimeout(recommendationTimeout)
+                .setRsaPublicKey(rsaKey)
+                .setUrl(recommendationUrl)
+                .setTimeout(recommendationTimeout)
                 .build()
         } else {
             null

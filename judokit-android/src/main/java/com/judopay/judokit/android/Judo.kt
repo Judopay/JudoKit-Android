@@ -2,6 +2,7 @@ package com.judopay.judokit.android
 
 import android.app.Activity
 import android.os.Parcelable
+import androidx.annotation.RequiresApi
 import com.judopay.judokit.android.api.model.Authorization
 import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.response.CardToken
@@ -14,6 +15,7 @@ import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.PrimaryAccountDetails
+import com.judopay.judokit.android.model.RecommendationConfiguration
 import com.judopay.judokit.android.model.Reference
 import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.model.SubProductInfo
@@ -80,7 +82,7 @@ class Judo internal constructor(
     val cardToken: CardToken? = null,
     val cardSecurityCode: String? = null,
     val subProductInfo: SubProductInfo = SubProductInfo.Unknown,
-    val recommendationConfiguration: RecommendationConfiguration?
+    val recommendationConfiguration: RecommendationConfiguration? = null
 ) : Parcelable {
 
     /**
@@ -287,6 +289,7 @@ class Judo internal constructor(
             apply { this.subProductInfo = subProductInfo }
 
         // Recommendation Feature works only on Android API 22 (or higher).
+        @RequiresApi(22)
         fun setRecommendationConfiguration(recommendationConfiguration: RecommendationConfiguration?) =
             apply { this.recommendationConfiguration = recommendationConfiguration }
 
