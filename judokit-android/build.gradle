@@ -103,6 +103,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
 
     implementation 'com.judopay:device-dna:1.1.0'
+    compileOnly 'com.ravelin.sdk:ravelin-encrypt:3.1.0'
 
     // JUnit 5 framework
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
@@ -187,7 +188,6 @@ def addJacocoTask(variant) {
             '**/api/AppMetaDataProvider.*',
             '**/api/model/request/Address.*',
             '**/api/model/request/IdealSaleRequest.*',
-            '**/api/model/response/CardVerificationResult.*',
             '**/api/model/response/Consumer.*',
             '**/api/model/response/OrderDetails.*',
             '**/api/model/response/Receipts.*',

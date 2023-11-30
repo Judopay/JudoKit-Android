@@ -1,9 +1,6 @@
 package com.judokit.android.examples.feature
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
@@ -11,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.chuckerteam.chucker.api.ChuckerCollector
@@ -43,8 +39,10 @@ import com.judopay.judokit.android.JudoActivity
 import com.judopay.judokit.android.PAYMENT_CANCELLED
 import com.judopay.judokit.android.PAYMENT_ERROR
 import com.judopay.judokit.android.PAYMENT_SUCCESS
+import com.judopay.judokit.android.model.RecommendationConfiguration
 import com.judopay.judokit.android.api.error.toJudoError
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
+import com.judopay.judokit.android.api.factory.RecommendationApiServiceFactory
 import com.judopay.judokit.android.api.model.Authorization
 import com.judopay.judokit.android.api.model.BasicAuthorization
 import com.judopay.judokit.android.api.model.PaymentSessionAuthorization
@@ -94,7 +92,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
         notificationPermissionLauncher = NotificationPermissionLauncher(this)
 
-        JudoApiServiceFactory.externalInterceptors = listOf(
+        val externalInterceptors = listOf(
             ChuckerInterceptor.Builder(this)
                 .collector(ChuckerCollector(this))
                 .maxContentLength(250000L)
@@ -102,6 +100,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 .alwaysReadResponseBody(false)
                 .build()
         )
+        JudoApiServiceFactory.externalInterceptors = externalInterceptors
+        RecommendationApiServiceFactory.externalInterceptors = externalInterceptors
 
         binding = ActivityDemoFeatureListBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -334,6 +334,19 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val messageVersion = sharedPreferences.getString("threeDSTwoMessageVersion", null)
         val address = cardAddress
         val accountDetails = primaryAccountDetails
+        val rsaKey = sharedPreferences.getString("rsa_key", null)
+        val recommendationUrl = sharedPreferences.getString("recommendation_url", null)
+        val recommendationTimeout = sharedPreferences.getString("recommendation_timeout", null)?.toInt()
+        val isRecommendationFeatureEnabled = sharedPreferences.getBoolean("is_recommendation_feature_enabled", false)
+        val recommendationConfiguration = if (isRecommendationFeatureEnabled) {
+            RecommendationConfiguration.Builder()
+                .setRsaPublicKey(rsaKey)
+                .setUrl(recommendationUrl)
+                .setTimeout(recommendationTimeout)
+                .build()
+        } else {
+            null
+        }
 
         val builder = Judo.Builder(widgetType)
             .setJudoId(judoId)
@@ -354,6 +367,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .setScaExemption(scaExemption)
             .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
             .setNetworkTimeout(networkTimeout)
+            .setRecommendationConfiguration(recommendationConfiguration)
 
         if (!messageVersion.isNullOrBlank()) {
             builder.setThreeDSTwoMessageVersion(messageVersion)

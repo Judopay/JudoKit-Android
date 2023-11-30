@@ -81,10 +81,6 @@ class CheckCardRequest private constructor(
         fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
             apply { this.initialRecurringPayment = initialRecurringPayment }
 
-        fun setEmailAddress(emailAddress: String?) = apply { this.emailAddress = emailAddress }
-
-        fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = mobileNumber }
-
         fun setThreeDSecure(threeDSecureTwo: ThreeDSecureTwo?) = apply { this.threeDSecure = threeDSecureTwo }
 
         fun setCardHolderName(cardHolderName: String?) =
@@ -92,6 +88,10 @@ class CheckCardRequest private constructor(
 
         fun setPhoneCountryCode(phoneCountryCode: String?) =
             apply { this.phoneCountryCode = phoneCountryCode }
+
+        fun setEmailAddress(emailAddress: String?) = apply { this.emailAddress = emailAddress }
+
+        fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = mobileNumber }
 
         fun build(): CheckCardRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")

@@ -52,7 +52,7 @@ class PollingStatusFragment : DialogFragment() {
         super.onActivityCreated(savedInstanceState)
 
         val application = requireActivity().application
-        val service = JudoApiServiceFactory.createApiService(application, judo)
+        val service = JudoApiServiceFactory.create(application, judo)
         val pollingService = PollingService(service)
         val factory = PollingStatusViewModelFactory(pollingService, application)
         viewModel = ViewModelProvider(this, factory)[PollingStatusViewModel::class.java]

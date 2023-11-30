@@ -46,6 +46,9 @@ allprojects {
         mavenLocal()
         google()
         mavenCentral()
+
+        // Ravelin - optional - only required if you are using Ravelin
+        maven { url 'https://maven.ravelin.com/public/repositories/core-android/' }
     }
     group = 'com.judopay'
     version = versionName

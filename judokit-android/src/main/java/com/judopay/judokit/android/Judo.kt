@@ -2,6 +2,7 @@ package com.judopay.judokit.android
 
 import android.app.Activity
 import android.os.Parcelable
+import androidx.annotation.RequiresApi
 import com.judopay.judokit.android.api.model.Authorization
 import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.response.CardToken
@@ -14,6 +15,7 @@ import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.PrimaryAccountDetails
+import com.judopay.judokit.android.model.RecommendationConfiguration
 import com.judopay.judokit.android.model.Reference
 import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.model.SubProductInfo
@@ -79,7 +81,8 @@ class Judo internal constructor(
     val delayedAuthorisation: Boolean? = null,
     val cardToken: CardToken? = null,
     val cardSecurityCode: String? = null,
-    val subProductInfo: SubProductInfo = SubProductInfo.Unknown
+    val subProductInfo: SubProductInfo = SubProductInfo.Unknown,
+    val recommendationConfiguration: RecommendationConfiguration? = null
 ) : Parcelable {
 
     /**
@@ -111,6 +114,7 @@ class Judo internal constructor(
         private var cardToken: CardToken? = null
         private var cardSecurityCode: String? = null
         private var subProductInfo: SubProductInfo = SubProductInfo.Unknown
+        private var recommendationConfiguration: RecommendationConfiguration? = null
 
         /**
          * Sets the unique merchant ID
@@ -284,6 +288,11 @@ class Judo internal constructor(
         fun setSubProductInfo(subProductInfo: SubProductInfo) =
             apply { this.subProductInfo = subProductInfo }
 
+        // Recommendation Feature works only on Android API 22 (or higher).
+        @RequiresApi(22)
+        fun setRecommendationConfiguration(recommendationConfiguration: RecommendationConfiguration?) =
+            apply { this.recommendationConfiguration = recommendationConfiguration }
+
         /**
          * Method that initializes Judo configuration object that can be used for
          * processing a payment.
@@ -330,6 +339,15 @@ class Judo internal constructor(
 
             val myNetworkTimeout = networkTimeout ?: NetworkTimeout.Builder().build()
 
+            require(
+                !(
+                    recommendationConfiguration != null &&
+                        authorization !is com.judopay.judokit.android.api.model.PaymentSessionAuthorization
+                    )
+            ) {
+                "Payment session is required for using the recommendation feature."
+            }
+
             return Judo(
                 judoId = id,
                 authorization = myAuthorization,
@@ -355,7 +373,8 @@ class Judo internal constructor(
                 delayedAuthorisation = delayedAuthorisation,
                 cardToken = cardToken,
                 cardSecurityCode = cardSecurityCode,
-                subProductInfo = subProductInfo
+                subProductInfo = subProductInfo,
+                recommendationConfiguration = recommendationConfiguration
             )
         }
 

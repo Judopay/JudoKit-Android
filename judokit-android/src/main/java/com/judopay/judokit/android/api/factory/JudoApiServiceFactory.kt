@@ -13,7 +13,6 @@ import com.judopay.judokit.android.api.deserializer.ScaExemptionSerializer
 import com.judopay.judokit.android.api.interceptor.ApiHeadersInterceptor
 import com.judopay.judokit.android.api.interceptor.DeDuplicationInterceptor
 import com.judopay.judokit.android.api.interceptor.DeviceDnaInterceptor
-import com.judopay.judokit.android.api.interceptor.NetworkConnectivityInterceptor
 import com.judopay.judokit.android.api.interceptor.PayLoadInterceptor
 import com.judopay.judokit.android.apiBaseUrl
 import com.judopay.judokit.android.model.ChallengeRequestIndicator
@@ -24,8 +23,6 @@ import okhttp3.ConnectionSpec
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.TlsVersion
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.math.BigDecimal
 import java.security.KeyStore
 import java.util.Arrays
@@ -34,17 +31,29 @@ import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
-import kotlin.collections.forEach as kForEach
-
-private const val HOSTNAME_WILDCARD_PATTERN = "*.judopay.com"
 
 /**
  * Factory that provides the [JudoApiService] used for performing all HTTP requests to the
- * judoPay APIs. As creating the JudoApiService requires lots of setup, it is better to use a shared
- * instance than create a new instance per request, so this class ensures that only one instance is
- * used in the application.
+ * judoPay APIs. As implementation of the ApiService requires some configuration, it is better
+ * to use a shared instance than create a new instance per request, so this class ensures that only
+ * one instance is used in the application.
  */
-object JudoApiServiceFactory {
+object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
+
+    private const val HOSTNAME_WILDCARD_PATTERN = "*.judopay.com"
+
+    override val gson: Gson
+        get() = GsonBuilder()
+            .registerTypeAdapter(Date::class.java, DateJsonDeserializer())
+            .registerTypeAdapter(BigDecimal::class.java, FormattedBigDecimalDeserializer())
+            .registerTypeAdapter(ScaExemption::class.java, ScaExemptionSerializer())
+            .registerTypeAdapter(
+                ChallengeRequestIndicator::class.java,
+                ChallengeRequestIndicatorSerializer()
+            )
+            .create()
+
+    override var externalInterceptors: List<Interceptor>? = null
 
     /**
      * @param context the calling Context
@@ -52,33 +61,18 @@ object JudoApiServiceFactory {
      * @return the Retrofit API service implementation containing the methods used
      * for interacting with the judoPay REST API.
      */
-    @JvmStatic
-    fun createApiService(context: Context, judo: Judo): JudoApiService =
-        createRetrofit(context.applicationContext, judo).create(JudoApiService::class.java)
 
-    @JvmStatic
-    var externalInterceptors: List<Interceptor>? = null
+    @Deprecated("Use create instead", replaceWith = ReplaceWith("create(context, judo)"))
+    override fun createApiService(context: Context, judo: Judo): JudoApiService = create(context, judo)
 
-    private fun createRetrofit(context: Context, judo: Judo): Retrofit = Retrofit.Builder()
-        .baseUrl(judo.apiBaseUrl)
-        .client(getOkHttpClient(context, judo))
-        .addConverterFactory(gsonConverterFactory)
-        .addCallAdapterFactory(JudoApiCallAdapterFactory())
-        .build()
+    override fun create(context: Context, judo: Judo): JudoApiService =
+        createRetrofit(context.applicationContext, judo, judo.apiBaseUrl)
+            .create(JudoApiService::class.java)
 
-    private val gsonConverterFactory: GsonConverterFactory
-        get() = GsonConverterFactory.create(gson)
-
-    @JvmStatic
-    val gson: Gson
-        get() = GsonBuilder()
-            .registerTypeAdapter(Date::class.java, DateJsonDeserializer())
-            .registerTypeAdapter(BigDecimal::class.java, FormattedBigDecimalDeserializer())
-            .registerTypeAdapter(ScaExemption::class.java, ScaExemptionSerializer())
-            .registerTypeAdapter(ChallengeRequestIndicator::class.java, ChallengeRequestIndicatorSerializer())
-            .create()
-
-    private fun getOkHttpClient(context: Context, judo: Judo): OkHttpClient {
+    override fun getOkHttpClient(
+        context: Context,
+        judo: Judo
+    ): OkHttpClient {
         return try {
             val sslContext = SSLContext.getInstance("TLSv1.2")
             sslContext.init(null, null, null)
@@ -119,10 +113,28 @@ object JudoApiServiceFactory {
 
             setTimeouts(builder, judo.networkTimeout)
             addInterceptors(builder, context, judo)
-
             builder.build()
         } catch (e: Exception) {
             throw RuntimeException(e)
+        }
+    }
+
+    override fun addInterceptors(
+        client: OkHttpClient.Builder,
+        context: Context,
+        judo: Judo
+    ) {
+        super.addInterceptors(client, context, judo)
+        client.interceptors().apply {
+            add(
+                ApiHeadersInterceptor(
+                    judo.authorization,
+                    AppMetaDataProvider(context, judo.subProductInfo)
+                )
+            )
+            add(DeDuplicationInterceptor())
+            add(DeviceDnaInterceptor(context))
+            add(PayLoadInterceptor(context))
         }
     }
 
@@ -131,22 +143,6 @@ object JudoApiServiceFactory {
             builder.connectTimeout(connectTimeout, TimeUnit.SECONDS)
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
                 .writeTimeout(writeTimeout, TimeUnit.SECONDS)
-        }
-    }
-
-    private fun addInterceptors(
-        client: OkHttpClient.Builder,
-        context: Context,
-        judo: Judo
-    ) = client.interceptors().apply {
-        add(NetworkConnectivityInterceptor(context))
-        add(DeDuplicationInterceptor())
-        add(DeviceDnaInterceptor(context))
-        add(ApiHeadersInterceptor(judo.authorization, AppMetaDataProvider(context, judo.subProductInfo)))
-        add(PayLoadInterceptor(context))
-
-        externalInterceptors?.kForEach {
-            add(it)
         }
     }
 }

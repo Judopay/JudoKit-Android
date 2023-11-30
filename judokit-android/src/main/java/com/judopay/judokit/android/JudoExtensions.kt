@@ -288,20 +288,6 @@ fun Judo.toTokenRequest(cardToken: String, threeDSecureTwo: ThreeDSecureTwo? = n
         .setThreeDSecure(threeDSecureTwo)
         .build()
 
-internal fun isAnyNullOrEmpty(vararg elements: String?): Boolean {
-    elements.forEach {
-        if (it.isNullOrEmpty()) {
-            return true
-        }
-    }
-
-    return false
-}
-
-internal fun isNoneNullOrEmpty(vararg elements: String?): Boolean {
-    return !isAnyNullOrEmpty(*elements)
-}
-
 internal fun NestedScrollView.smoothScrollToView(view: View) {
     val childOffset = Point()
     getDeepChildOffset(this, view.parent, view, childOffset)

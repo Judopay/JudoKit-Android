@@ -20,7 +20,6 @@ import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTw
 import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.api.model.response.Consumer
 import com.judopay.judokit.android.api.model.response.Receipt
-import com.judopay.judokit.android.api.model.response.StepUpFlowDetails
 import com.judopay.judokit.android.toMap
 import java.util.Date
 
@@ -132,7 +131,10 @@ fun TransactionDetails.getAddress(judo: Judo): Address? {
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun Transaction.toThreeDSecureTwo(judo: Judo, stepUpFlowDetails: StepUpFlowDetails? = null): ThreeDSecureTwo {
+fun Transaction.toThreeDSecureTwo(
+    judo: Judo,
+    overrides: TransactionDetailsOverrides? = null
+): ThreeDSecureTwo {
     val parameters = getAuthenticationRequestParameters()
     val sdkParameters = with(parameters) {
         SdkParameters.Builder()
@@ -150,11 +152,15 @@ fun Transaction.toThreeDSecureTwo(judo: Judo, stepUpFlowDetails: StepUpFlowDetai
             .setDeviceRenderOptions(DeviceRenderOptions())
             .build()
     }
+
+    val myScaExemption = overrides?.exemption ?: judo.scaExemption
+    val myChallengeRequestIndicator = overrides?.challengeRequestIndicator ?: judo.challengeRequestIndicator
+
     return ThreeDSecureTwo.Builder()
-        .setChallengeRequestIndicator(stepUpFlowDetails?.challengeRequestIndicator ?: judo.challengeRequestIndicator)
-        .setScaExemption(judo.scaExemption)
+        .setChallengeRequestIndicator(myChallengeRequestIndicator)
+        .setScaExemption(myScaExemption)
         .setSdkParameters(sdkParameters)
-        .setSoftDeclineReceiptId(stepUpFlowDetails?.softDeclineReceiptId)
+        .setSoftDeclineReceiptId(overrides?.softDeclineReceiptId)
         .build()
 }
 
@@ -162,11 +168,10 @@ fun Transaction.toThreeDSecureTwo(judo: Judo, stepUpFlowDetails: StepUpFlowDetai
 fun TransactionDetails.toPaymentRequest(
     judo: Judo,
     transaction: Transaction,
-    stepUpFlowDetails: StepUpFlowDetails? = null
+    overrides: TransactionDetailsOverrides? = null
 ): PaymentRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
-
     return PaymentRequest.Builder()
         .setUniqueRequest(false)
         .setYourPaymentReference(myReference.paymentReference)
@@ -185,7 +190,7 @@ fun TransactionDetails.toPaymentRequest(
         .setMobileNumber(mobileNumber)
         .setPhoneCountryCode(phoneCountryCode)
         .setEmailAddress(email)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, stepUpFlowDetails))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, overrides))
         .build()
 }
 
@@ -193,11 +198,10 @@ fun TransactionDetails.toPaymentRequest(
 fun TransactionDetails.toPreAuthRequest(
     judo: Judo,
     transaction: Transaction,
-    stepUpFlowDetails: StepUpFlowDetails? = null
+    overrides: TransactionDetailsOverrides? = null
 ): PreAuthRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
-
     return PreAuthRequest.Builder()
         .setUniqueRequest(false)
         .setYourPaymentReference(myReference.paymentReference)
@@ -217,7 +221,7 @@ fun TransactionDetails.toPreAuthRequest(
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, stepUpFlowDetails))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, overrides))
         .build()
 }
 
@@ -225,11 +229,10 @@ fun TransactionDetails.toPreAuthRequest(
 fun TransactionDetails.toCheckCardRequest(
     judo: Judo,
     transaction: Transaction,
-    stepUpFlowDetails: StepUpFlowDetails? = null
+    overrides: TransactionDetailsOverrides? = null
 ): CheckCardRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
-
     return CheckCardRequest.Builder()
         .setUniqueRequest(false)
         .setYourPaymentReference(myReference.paymentReference)
@@ -243,7 +246,7 @@ fun TransactionDetails.toCheckCardRequest(
         .setCv2(securityNumber)
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, stepUpFlowDetails))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, overrides))
         .setCardHolderName(cardHolderName)
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
@@ -273,7 +276,7 @@ fun TransactionDetails.toSaveCardRequest(judo: Judo, transaction: Transaction): 
 fun TransactionDetails.toRegisterCardRequest(
     judo: Judo,
     transaction: Transaction,
-    stepUpFlowDetails: StepUpFlowDetails? = null
+    overrides: TransactionDetailsOverrides? = null
 ): RegisterCardRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
@@ -292,7 +295,7 @@ fun TransactionDetails.toRegisterCardRequest(
         .setCv2(securityNumber)
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, stepUpFlowDetails))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, overrides))
         .setCardHolderName(cardHolderName)
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
@@ -304,7 +307,7 @@ fun TransactionDetails.toRegisterCardRequest(
 fun TransactionDetails.toTokenRequest(
     judo: Judo,
     transaction: Transaction,
-    stepUpFlowDetails: StepUpFlowDetails? = null
+    overrides: TransactionDetailsOverrides? = null
 ): TokenRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
@@ -322,7 +325,7 @@ fun TransactionDetails.toTokenRequest(
         .setCardType(cardType?.typeId ?: 0)
         .setCv2(securityNumber)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, stepUpFlowDetails))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, overrides))
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
@@ -335,7 +338,7 @@ fun TransactionDetails.toTokenRequest(
 fun TransactionDetails.toPreAuthTokenRequest(
     judo: Judo,
     transaction: Transaction,
-    stepUpFlowDetails: StepUpFlowDetails? = null
+    overrides: TransactionDetailsOverrides? = null
 ): PreAuthTokenRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
@@ -353,7 +356,7 @@ fun TransactionDetails.toPreAuthTokenRequest(
         .setCardType(cardType?.typeId ?: 0)
         .setCv2(securityNumber)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, stepUpFlowDetails))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, overrides))
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
