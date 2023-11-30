@@ -48,7 +48,6 @@ private fun EncryptedCard.toRecommendationRequest() = RecommendationRequest.Buil
                 algorithm = algorithm,
                 cardCipherText = cardCiphertext,
                 keyIndex = keyIndex,
-                // Todo: What about these two properties below?
                 keySignature = "key-signature",
                 methodType = "paymentMethodCipher",
                 recommendationFeatureProviderSDKVersion = ravelinSDKVersion
@@ -73,9 +72,7 @@ class RecommendationService(private val context: Context, private val judo: Judo
     }
 
     fun fetchOptimizationData(details: TransactionDetails, type: TransactionType): Call<RecommendationResponse> {
-        if (!isRecommendationFeatureAvailable(type)) {
-            throw IllegalStateException("Recommendation feature is not available.")
-        }
+        check(isRecommendationFeatureAvailable(type)) { "Recommendation feature is not available." }
 
         val config = judo.recommendationConfiguration
             ?: throw IllegalStateException("Recommendation configuration is not set. Cannot create recommendation request.")

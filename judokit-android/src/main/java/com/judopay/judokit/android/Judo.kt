@@ -339,10 +339,13 @@ class Judo internal constructor(
 
             val myNetworkTimeout = networkTimeout ?: NetworkTimeout.Builder().build()
 
-            if (recommendationConfiguration != null &&
-                authorization !is com.judopay.judokit.android.api.model.PaymentSessionAuthorization
+            require(
+                !(
+                    recommendationConfiguration != null &&
+                        authorization !is com.judopay.judokit.android.api.model.PaymentSessionAuthorization
+                    )
             ) {
-                throw IllegalArgumentException("Payment session is required for using the recommendation feature.")
+                "Payment session is required for using the recommendation feature."
             }
 
             return Judo(

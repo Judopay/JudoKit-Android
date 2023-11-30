@@ -12,7 +12,7 @@ import retrofit2.http.Url
  * Use the [create][com.judopay.judokit.android.api.factory.RecommendationApiServiceFactory.create
  * method to obtain an instance. See [GitHub](https://github.com/square/retrofit) for details.
  */
-interface RecommendationApiService {
+fun interface RecommendationApiService {
 
     /**
      * A method used to fetch the recommendation status, based on provided encrypted card details.
