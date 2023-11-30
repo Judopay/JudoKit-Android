@@ -21,7 +21,7 @@ import retrofit2.Call
 const val RAVELIN_ENCRYPT_CLASS_NAME = "com.ravelin.cardEncryption.RavelinEncrypt"
 
 private fun TransactionDetails.toRavelinEncryptedCard(rsaPublicKey: String): EncryptedCard? {
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
         return null
     }
 
