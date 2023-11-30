@@ -3,8 +3,6 @@ package com.judopay.judokit.android.api.factory
 import android.content.Context
 import com.google.gson.Gson
 import com.judopay.judokit.android.Judo
-import com.judopay.judokit.android.api.AppMetaDataProvider
-import com.judopay.judokit.android.api.interceptor.ApiHeadersInterceptor
 import com.judopay.judokit.android.api.interceptor.NetworkConnectivityInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
