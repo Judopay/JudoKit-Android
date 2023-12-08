@@ -15,8 +15,8 @@ buildscript {
     ext.espresso_version = '3.5.1'
 
     // Set the SDK version here
-    ext.versionCode = 4105
-    ext.versionName = '4.1.5'
+    ext.versionCode = 4200
+    ext.versionName = '4.2.0'
 
     repositories {
         mavenLocal()
