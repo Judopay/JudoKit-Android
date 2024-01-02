@@ -47,7 +47,7 @@ const val PAYMENT_CANCELLED = Activity.RESULT_FIRST_USER + 2
 const val PAYMENT_ERROR = Activity.RESULT_FIRST_USER + 3
 
 /** Default 3DS 2.0 maximum timeout value */
-private const val DEFAULT_MAX_TIMEOUT = 120
+private const val DEFAULT_MAX_TIMEOUT = 60
 
 /** Default 3DS 2.0 protocol message version */
 private const val THREE_DS_TWO_MESSAGE_VERSION_TWO_DOT_TWO = "2.2.0"
