@@ -97,6 +97,82 @@ commands:
               ]
             }  
 
+  notify_slack_error_weekly:
+    steps:
+      - slack/notify:
+          event: fail
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "CircleCI ran the :android: Android E2E backward compatibility mobile tests but they *failed*, here are the results: \n *<$CIRCLE_BUILD_URL | :circleci: Open build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n$CIRCLE_BRANCH"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:* \n <https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author:*\n$CIRCLE_USERNAME"
+                    }
+                  ]
+                }
+              ]
+            }
+
+  notify_slack_pass_weekly:
+    steps:
+      - slack/notify:
+          event: pass
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "CircleCI has just *successfully* ran the :android: Android E2E backward compatibility mobile tests, here are the results: \n *<$CIRCLE_BUILD_URL | :circleci: Open build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n$CIRCLE_BRANCH"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:* \n <https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author:*\n$CIRCLE_USERNAME"
+                    }
+                  ]
+                }
+              ]
+            }  
+
 executors:
   android:
     docker:
@@ -238,11 +314,45 @@ jobs:
               --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk \
               --results-bucket $FIREBASE_TEST_RESULTS_BUCKET \
               --timeout=30m \
-              --device-ids=oriole \
-              --os-version-ids=33 \
+              --device-ids=shiba \
+              --os-version-ids=34 \
               --num-flaky-test-attempts=1
       - notify_slack_error
       - notify_slack_pass
+
+  instrumented_test_sample_weekly:
+    executor: android
+    steps:
+      - attach_workspace:
+          at: /home/circleci/project
+      - run:
+          name: Store Google Service Account
+          command: echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+      - run:
+          name: Authorize gcloud and set config defaults
+          command: |
+            gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+      - run:
+          name: Export environment variables
+          command: |
+            export JUDO_ID=${JUDO_ID} \
+            export API_TEST_TOKEN=${API_TEST_TOKEN} \
+            export API_TEST_SECRET=${API_TEST_SECRET} \
+      - run:
+          name: Test with Firebase Test Lab
+          no_output_timeout: 30m
+          command: >
+            gcloud firebase test android run \
+              --app judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk \
+              --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk \
+              --results-bucket $FIREBASE_TEST_RESULTS_BUCKET \
+              --timeout=30m \
+              --device-ids=oriole,bluejay,a12 \
+              --os-version-ids=33,32,31 \
+              --num-flaky-test-attempts=1
+      - notify_slack_error_weekly
+      - notify_slack_pass_weekly
 
   sonar_scan:
     docker:
@@ -369,16 +479,16 @@ workflows:
           environment: prod
           requires:
             - release_sdk
-  e2e-nightly:
-    when: << pipeline.parameters.nightly >>
+  e2e-backward-compat-weekly:
+    when: << pipeline.parameters.weekly >>
     jobs:
       - build_sample:
           context: shared-secrets
-      - instrumented_test_sample:        
+      - instrumented_test_sample_weekly:        
           context: shared-secrets
           requires:
             - build_sample
           filters:
             branches:
               only:
-                - master
+                - CT-2856-backward-compat-testing
