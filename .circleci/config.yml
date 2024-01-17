@@ -347,9 +347,9 @@ jobs:
               --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk \
               --results-bucket $FIREBASE_TEST_RESULTS_BUCKET \
               --timeout=30m \
-              --device model=panther \
-              --device model=bluejay \
-              --device model=a51 \
+              --device model=panther,version=33 \
+              --device model=bluejay,version=32 \
+              --device model=a51,version=31 \
               --num-flaky-test-attempts=1
       - notify_slack_error_weekly
       - notify_slack_pass_weekly
