@@ -425,7 +425,7 @@ workflows:
   version: 2
   build:
     when:
-      not: << pipeline.parameters.nightly >>
+      not: << pipeline.parameters.weekly >>
     jobs:
       - build_sdk:
           filters:
