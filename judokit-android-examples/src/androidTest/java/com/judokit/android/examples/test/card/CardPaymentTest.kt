@@ -44,7 +44,8 @@ import org.junit.runner.RunWith
 @LargeTest
 class CardPaymentTest {
     @get:Rule
-    var permissionNotifications = GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS)
+    var permissionNotifications = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS) else null
 
     object ValidCardDetails {
         const val CARD_NUMBER = "4976 3500 0000 6891"
