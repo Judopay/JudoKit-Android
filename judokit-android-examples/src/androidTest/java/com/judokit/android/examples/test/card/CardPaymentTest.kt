@@ -1,6 +1,7 @@
 package com.judokit.android.examples.test.card
 
 import android.Manifest
+import android.os.Build
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.compose.ui.test.onNodeWithText
@@ -44,7 +45,8 @@ import org.junit.runner.RunWith
 @LargeTest
 class CardPaymentTest {
     @get:Rule
-    var permissionNotifications = GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS)
+    var permissionNotifications = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS) else null
 
     object ValidCardDetails {
         const val CARD_NUMBER = "4976 3500 0000 6891"
@@ -67,11 +69,11 @@ class CardPaymentTest {
         sharedPrefs
             .edit()
             .apply {
-                putString("judo_id", BuildConfig.JUDO_ID)
+//                putString("judo_id", BuildConfig.JUDO_ID)
                 putString("challengeRequestIndicator", "CHALLENGE_AS_MANDATE")
-                putBoolean("is_payment_session_enabled", false)
-                putString("token", BuildConfig.API_TEST_TOKEN)
-                putString("secret", BuildConfig.API_TEST_SECRET)
+//                putBoolean("is_payment_session_enabled", false)
+//                putString("token", BuildConfig.API_TEST_TOKEN)
+//                putString("secret", BuildConfig.API_TEST_SECRET)
                 putString("amount", "0.15")
                 putString("currency", "GBP")
                 putBoolean("should_ask_for_csc", false)
