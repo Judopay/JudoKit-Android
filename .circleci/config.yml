@@ -491,4 +491,4 @@ workflows:
           filters:
             branches:
               only:
-                - CT-2856-backward-compat-testing
+                - master
