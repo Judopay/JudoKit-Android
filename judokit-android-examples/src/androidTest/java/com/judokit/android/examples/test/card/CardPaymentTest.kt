@@ -39,12 +39,16 @@ import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import android.os.Build
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class CardPaymentTest {
-    @get:Rule
-    var permissionNotifications = GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS)
+    init {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
 
     object ValidCardDetails {
         const val CARD_NUMBER = "4976 3500 0000 6891"
