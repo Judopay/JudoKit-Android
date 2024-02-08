@@ -15,6 +15,7 @@ private const val AUTHORIZATION_HEADER = "Authorization"
  * @param apiSecret Secret provided by JudoPay.
  */
 @Parcelize
+@Deprecated("This authentication method is deprecated, please use payment session instead.", ReplaceWith("PaymentSessionAuthorization"))
 class BasicAuthorization internal constructor(
     private val apiToken: String,
     private val apiSecret: String
