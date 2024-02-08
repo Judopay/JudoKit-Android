@@ -53,7 +53,7 @@ class RavelinIntegrationTest {
                 putString("secret", BuildConfig.API_TEST_SECRET)
                 putString("amount", "0.15")
                 putString("currency", "GBP")
-                putBoolean("should_ask_for_csc", false)
+                putBoolean("should_ask`_for_csc", false)
                 putBoolean("is_recommendation_feature_enabled", true)
                 putString("rsa_key", BuildConfig.RSA_KEY)
             }
