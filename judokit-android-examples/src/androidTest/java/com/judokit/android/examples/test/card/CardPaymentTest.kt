@@ -79,6 +79,7 @@ class CardPaymentTest {
                 putString("amount", "0.15")
                 putString("currency", "GBP")
                 putBoolean("should_ask_for_csc", false)
+                putBoolean("is_recommendation_feature_enabled", false)
             }
             .commit()
     }

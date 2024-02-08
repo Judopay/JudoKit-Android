@@ -16,6 +16,7 @@ const val PREAUTH_METHODS_LABEL = "Pre-auth payment methods"
 const val CANCEL_BUTTON = "Cancel"
 
 const val CANCELLED_PAYMENT_TOAST = "User cancelled the payment."
+const val TRANSACTION_PREVENTED = "The recommendation server has prevented this transaction."
 
 const val ALLOW = "ALLOW"
 const val PREVENT = "PREVENT"
