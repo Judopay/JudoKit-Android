@@ -60,7 +60,7 @@ class RecommendationConfiguration internal constructor(
 
         @Throws(IllegalArgumentException::class)
         private fun requireUrl(url: String?): String {
-            val myUrl = requireNotNullOrEmpty(url, "judoId", "The URL field in the recommendation configuration is required.")
+            val myUrl = requireNotNullOrEmpty(url, "url", "The URL field in the recommendation configuration is required.")
             if (myUrl.matches(REGEX_URL.toRegex())) {
                 return myUrl
             } else {
@@ -70,6 +70,6 @@ class RecommendationConfiguration internal constructor(
     }
 
     override fun toString(): String {
-        return "RecommendationConfiguration(recommendationUrl=$url, rsaKey='$rsaPublicKey', recommendationTimeout=$timeout)"
+        return "RecommendationConfiguration(url=$url, rsaPublicKey='$rsaPublicKey', timeout=$timeout)"
     }
 }
