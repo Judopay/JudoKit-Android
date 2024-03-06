@@ -316,7 +316,7 @@ jobs:
               --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk \
               --results-bucket $FIREBASE_TEST_RESULTS_BUCKET \
               --timeout=30m \
-              --device-ids=shiba \
+              --device model=shiba,version=34 \
               --num-flaky-test-attempts=1
       - notify_slack_error
       - notify_slack_pass
