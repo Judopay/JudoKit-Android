@@ -305,6 +305,8 @@ jobs:
             export JUDO_ID=${JUDO_ID} \
             export API_TEST_TOKEN=${API_TEST_TOKEN} \
             export API_TEST_SECRET=${API_TEST_SECRET} \
+            export RECOMMENDATION_URL=${RECOMMENDATION_URL} \
+            export RSA_KEY=${RSA_KEY}
       - run:
           name: Test with Firebase Test Lab
           no_output_timeout: 30m
@@ -338,6 +340,8 @@ jobs:
             export JUDO_ID=${JUDO_ID} \
             export API_TEST_TOKEN=${API_TEST_TOKEN} \
             export API_TEST_SECRET=${API_TEST_SECRET} \
+            export RECOMMENDATION_URL=${RECOMMENDATION_URL} \
+            export RSA_KEY=${RSA_KEY}
       - run:
           name: Test with Firebase Test Lab
           no_output_timeout: 30m
