@@ -28,8 +28,8 @@ android {
         applicationId "com.judokit.android.examples"
         minSdk 21
         targetSdk 33
-        versionCode 4108
-        versionName "4.1.4 (1) -" + getGitHash()
+        versionCode 4210
+        versionName "4.2.1 (1) -" + getGitHash()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
@@ -37,6 +37,8 @@ android {
         buildConfigField "String", "JUDO_ID", "\"" + System.getenv("JUDO_ID") + "\""
         buildConfigField "String", "API_TEST_TOKEN", "\"" + System.getenv("API_TEST_TOKEN") + "\""
         buildConfigField "String", "API_TEST_SECRET", "\"" + System.getenv("API_TEST_SECRET") + "\""
+        buildConfigField "String", "RECOMMENDATION_URL", "\"" + System.getenv("RECOMMENDATION_URL") + "\""
+        buildConfigField "String", "RSA_KEY", "\"" + System.getenv("RSA_KEY") + "\""
     }
     signingConfigs {
         config {
@@ -100,6 +102,7 @@ dependencies {
 
     api "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation 'com.ravelin.sdk:ravelin-encrypt:3.1.0'
 
     ktlint 'com.pinterest:ktlint:0.47.1'
 

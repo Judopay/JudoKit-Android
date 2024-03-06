@@ -120,5 +120,16 @@ data class JudoError(
             EXCEPTION_CAUGHT,
             message ?: "Unknown error"
         )
+
+        fun judoRecommendationError(resources: Resources): JudoError = JudoError(
+            REQUEST_FAILED,
+            resources.getString(R.string.recommendation_request_failed_desc),
+            mutableListOf(
+                JudoError(
+                    REQUEST_FAILED,
+                    resources.getString(R.string.recommendation_request_failed_reason)
+                )
+            )
+        )
     }
 }

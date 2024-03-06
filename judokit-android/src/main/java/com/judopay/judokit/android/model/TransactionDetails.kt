@@ -131,7 +131,10 @@ fun TransactionDetails.getAddress(judo: Judo): Address? {
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun Transaction.toThreeDSecureTwo(judo: Judo): ThreeDSecureTwo {
+fun Transaction.toThreeDSecureTwo(
+    judo: Judo,
+    overrides: TransactionDetailsOverrides? = null
+): ThreeDSecureTwo {
     val parameters = getAuthenticationRequestParameters()
     val sdkParameters = with(parameters) {
         SdkParameters.Builder()
@@ -149,18 +152,26 @@ fun Transaction.toThreeDSecureTwo(judo: Judo): ThreeDSecureTwo {
             .setDeviceRenderOptions(DeviceRenderOptions())
             .build()
     }
+
+    val myScaExemption = overrides?.exemption ?: judo.scaExemption
+    val myChallengeRequestIndicator = overrides?.challengeRequestIndicator ?: judo.challengeRequestIndicator
+
     return ThreeDSecureTwo.Builder()
-        .setChallengeRequestIndicator(judo.challengeRequestIndicator)
-        .setScaExemption(judo.scaExemption)
+        .setChallengeRequestIndicator(myChallengeRequestIndicator)
+        .setScaExemption(myScaExemption)
         .setSdkParameters(sdkParameters)
+        .setSoftDeclineReceiptId(overrides?.softDeclineReceiptId)
         .build()
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun TransactionDetails.toPaymentRequest(judo: Judo, transaction: Transaction): PaymentRequest {
+fun TransactionDetails.toPaymentRequest(
+    judo: Judo,
+    transaction: Transaction,
+    overrides: TransactionDetailsOverrides? = null
+): PaymentRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
-
     return PaymentRequest.Builder()
         .setUniqueRequest(false)
         .setYourPaymentReference(myReference.paymentReference)
@@ -179,15 +190,18 @@ fun TransactionDetails.toPaymentRequest(judo: Judo, transaction: Transaction): P
         .setMobileNumber(mobileNumber)
         .setPhoneCountryCode(phoneCountryCode)
         .setEmailAddress(email)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, overrides))
         .build()
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun TransactionDetails.toPreAuthRequest(judo: Judo, transaction: Transaction): PreAuthRequest {
+fun TransactionDetails.toPreAuthRequest(
+    judo: Judo,
+    transaction: Transaction,
+    overrides: TransactionDetailsOverrides? = null
+): PreAuthRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
-
     return PreAuthRequest.Builder()
         .setUniqueRequest(false)
         .setYourPaymentReference(myReference.paymentReference)
@@ -207,15 +221,18 @@ fun TransactionDetails.toPreAuthRequest(judo: Judo, transaction: Transaction): P
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, overrides))
         .build()
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun TransactionDetails.toCheckCardRequest(judo: Judo, transaction: Transaction): CheckCardRequest {
+fun TransactionDetails.toCheckCardRequest(
+    judo: Judo,
+    transaction: Transaction,
+    overrides: TransactionDetailsOverrides? = null
+): CheckCardRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
-
     return CheckCardRequest.Builder()
         .setUniqueRequest(false)
         .setYourPaymentReference(myReference.paymentReference)
@@ -229,7 +246,7 @@ fun TransactionDetails.toCheckCardRequest(judo: Judo, transaction: Transaction):
         .setCv2(securityNumber)
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, overrides))
         .setCardHolderName(cardHolderName)
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
@@ -256,7 +273,11 @@ fun TransactionDetails.toSaveCardRequest(judo: Judo, transaction: Transaction): 
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun TransactionDetails.toRegisterCardRequest(judo: Judo, transaction: Transaction): RegisterCardRequest {
+fun TransactionDetails.toRegisterCardRequest(
+    judo: Judo,
+    transaction: Transaction,
+    overrides: TransactionDetailsOverrides? = null
+): RegisterCardRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
 
@@ -274,7 +295,7 @@ fun TransactionDetails.toRegisterCardRequest(judo: Judo, transaction: Transactio
         .setCv2(securityNumber)
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, overrides))
         .setCardHolderName(cardHolderName)
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
@@ -283,7 +304,11 @@ fun TransactionDetails.toRegisterCardRequest(judo: Judo, transaction: Transactio
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun TransactionDetails.toTokenRequest(judo: Judo, transaction: Transaction): TokenRequest {
+fun TransactionDetails.toTokenRequest(
+    judo: Judo,
+    transaction: Transaction,
+    overrides: TransactionDetailsOverrides? = null
+): TokenRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
 
@@ -300,7 +325,7 @@ fun TransactionDetails.toTokenRequest(judo: Judo, transaction: Transaction): Tok
         .setCardType(cardType?.typeId ?: 0)
         .setCv2(securityNumber)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, overrides))
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
@@ -310,7 +335,11 @@ fun TransactionDetails.toTokenRequest(judo: Judo, transaction: Transaction): Tok
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun TransactionDetails.toPreAuthTokenRequest(judo: Judo, transaction: Transaction): PreAuthTokenRequest {
+fun TransactionDetails.toPreAuthTokenRequest(
+    judo: Judo,
+    transaction: Transaction,
+    overrides: TransactionDetailsOverrides? = null
+): PreAuthTokenRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
 
@@ -327,7 +356,7 @@ fun TransactionDetails.toPreAuthTokenRequest(judo: Judo, transaction: Transactio
         .setCardType(cardType?.typeId ?: 0)
         .setCv2(securityNumber)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo))
+        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, overrides))
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)

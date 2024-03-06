@@ -15,8 +15,8 @@ buildscript {
     ext.espresso_version = '3.5.1'
 
     // Set the SDK version here
-    ext.versionCode = 4104
-    ext.versionName = '4.1.4'
+    ext.versionCode = 4210
+    ext.versionName = '4.2.1'
 
     repositories {
         mavenLocal()
@@ -46,6 +46,9 @@ allprojects {
         mavenLocal()
         google()
         mavenCentral()
+
+        // Ravelin - optional - only required if you are using Ravelin
+        maven { url 'https://maven.ravelin.com/public/repositories/core-android/' }
     }
     group = 'com.judopay'
     version = versionName

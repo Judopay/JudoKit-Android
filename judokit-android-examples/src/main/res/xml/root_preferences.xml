@@ -65,6 +65,41 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
+        app:title="@string/recommendation_feature_settings_header">
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="is_recommendation_feature_enabled"
+            app:summary="@string/is_recommendation_feature_enabled_summary"
+            app:title="@string/is_recommendation_feature_encryption_enabled_title" />
+
+        <EditTextPreference
+            app:dependency="is_recommendation_feature_enabled"
+            app:iconSpaceReserved="false"
+            app:key="recommendation_url"
+            app:summary="@string/reccomendation_url_key_summary"
+            app:title="@string/reccomendation_url_title" />
+
+        <EditTextPreference
+            app:dependency="is_recommendation_feature_enabled"
+            app:iconSpaceReserved="false"
+            app:key="rsa_key"
+            app:summary="@string/rsa_key_summary"
+            app:title="@string/rsa_key_title" />
+
+        <EditTextPreference
+            app:dependency="is_recommendation_feature_enabled"
+            app:defaultValue="30"
+            app:iconSpaceReserved="false"
+            app:key="recommendation_timeout"
+            app:summary="@string/recommendation_timeout_summary"
+            app:title="@string/recommendation_timeout_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
         app:title="@string/three_ds2_header">
 
         <SwitchPreferenceCompat

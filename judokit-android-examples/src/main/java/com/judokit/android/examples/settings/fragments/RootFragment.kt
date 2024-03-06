@@ -138,7 +138,7 @@ class RootFragment : PreferenceFragmentCompat() {
                     .header("User-Agent", "JudoKit-Android Examples")
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/json")
-                    .header("Api-Version", "6.19.0")
+                    .header("Api-Version", "6.20.0")
                     .header("Cache-Control", "no-cache")
                     .header("Authorization", "Basic $encodedCredentials")
                     .build()

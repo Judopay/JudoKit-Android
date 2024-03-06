@@ -35,16 +35,19 @@ import com.judokit.android.examples.result.ResultActivity
 import com.judokit.android.examples.test.BuildConfig
 import com.judopay.judokit.android.R
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import android.os.Build
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class CardPaymentTest {
-    @get:Rule
-    var permissionNotifications = GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS)
+    init {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
 
     object ValidCardDetails {
         const val CARD_NUMBER = "4976 3500 0000 6891"
@@ -75,6 +78,7 @@ class CardPaymentTest {
                 putString("amount", "0.15")
                 putString("currency", "GBP")
                 putBoolean("should_ask_for_csc", false)
+                putBoolean("is_recommendation_feature_enabled", false)
             }
             .commit()
     }
@@ -197,37 +201,6 @@ class CardPaymentTest {
                 .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(2))
                 .check(matches(hasDescendant(withText("Unable to process transaction. Card authentication failed with 3DS Server."))))
         }
-    }
-
-    @Test
-    @Ignore("Skip until we can figure out how to assert PAD details are sent")
-    fun primaryAccountDetailsSentWhenToggledOn() {
-        sharedPrefs
-            .edit()
-            .apply {
-                putBoolean("is_primary_account_details_enabled", true)
-            }
-            .commit()
-
-        onView(withText(PAY_WITH_CARD_LABEL))
-            .perform(click())
-
-        enterPaymentSheetDetails(
-            CARD_NUMBER,
-            CARDHOLDER_NAME,
-            CARD_EXPIRY,
-            CARD_SECURITY_CODE
-        )
-
-        onView(withId(R.id.cardEntrySubmitButton))
-            .check(matches(isEnabled()))
-            .perform(click())
-
-        Thread.sleep(5000)
-
-        onView(withId(R.id.recyclerView))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(2))
-            .check(matches(hasDescendant(withText("Sorry, but your card authentication has failed."))))
     }
 
     @Test

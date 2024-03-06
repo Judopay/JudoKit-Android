@@ -12,7 +12,6 @@ import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
 import com.judopay.judokit.android.api.model.response.BankSaleStatusResponse
-import com.judopay.judokit.android.api.model.response.CardVerificationResult
 import com.judopay.judokit.android.api.model.response.IdealSaleResponse
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.Receipt
@@ -25,7 +24,7 @@ import retrofit2.http.Path
 
 /**
  * Judo interface with Retrofit annotated list of judo API calls that can be performed.
- * Use the [createApiService][com.judopay.judokit.android.api.factory.JudoApiServiceFactory.createApiService]
+ * Use the [create][com.judopay.judokit.android.api.factory.JudoApiServiceFactory.create]
  * method to obtain an instance. See [GitHub](https://github.com/square/retrofit) for details.
  */
 interface JudoApiService {
@@ -64,19 +63,6 @@ interface JudoApiService {
      */
     @POST("transactions/preauths")
     fun preAuthTokenPayment(@Body preAuthTokenRequest: PreAuthTokenRequest): Call<JudoApiCallResult<Receipt>>
-
-    /**
-     * Complete a transaction that required 3D-Secure verification by providing the 3D-Secure response data.
-     *
-     * @param receiptId the receipt ID from the original transaction
-     * @param cardVerificationResult the 3D-Secure details returned from successfully validating the card with the merchant bank
-     * @return the receipt for the transaction
-     */
-    @PUT("transactions/{receiptId}")
-    fun complete3dSecure(
-        @Path("receiptId") receiptId: String,
-        @Body cardVerificationResult: CardVerificationResult
-    ): Call<JudoApiCallResult<Receipt>>
 
     @PUT("transactions/{receiptId}/complete3ds")
     fun complete3ds2(
