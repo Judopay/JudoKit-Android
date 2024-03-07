@@ -50,6 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
+                    android:autofillHints="creditCardNumber"
                     tools:text="1234 5678 9012 3456"
                     android:tag="@string/card_number_entry_field"/>
 
@@ -66,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName|textCapWords"
-                    tools:text="Endava Recruit"
+                    tools:text="John Doe"
                     android:tag="@string/cardholder_name_entry_field"/>
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
@@ -98,6 +99,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
+                    android:autofillHints="creditCardExpirationDate"
                     tools:text="11/20"
                     android:tag="@string/expiry_date_entry_field"/>
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
@@ -113,6 +115,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
+                    android:autofillHints="creditCardSecurityCode"
                     tools:text="123"
                     android:tag="@string/security_code_entry_field"/>
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
