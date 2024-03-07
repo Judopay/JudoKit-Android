@@ -159,4 +159,10 @@
     <string name="add_address_line">Add address line %1$d (optional)</string>
     <string name="billing_details_title">Billing Details</string>
     <string name="back">Back</string>
+    <string name="card_number_entry_field" translatable="false">cardNumberInputField</string>
+    <string name="cardholder_name_entry_field" translatable="false">cardHolderNameField</string>
+    <string name="expiry_date_entry_field" translatable="false">expiryDateField</string>
+    <string name="security_code_entry_field" translatable="false">securityCodeField</string>
+    <string name="payment_methods_pay_button" translatable="false">paymentMethodsPayNowButton</string>
+    <string name="pay_now_button" translatable="false">cardEntrySubmitButton</string>
 </resources>
