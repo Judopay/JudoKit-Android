@@ -42,8 +42,7 @@
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/numberTextInputLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:tag="@string/cardnumberentryfield">
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/numberTextInputEditText"
@@ -52,15 +51,14 @@
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     tools:text="1234 5678 9012 3456"
-                    android:tag="@string/cardnumberentryfield"/>
+                    android:tag="@string/card_number_entry_field"/>
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/nameTextInputLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:tag="@string/cardholdernameentryfield">
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/nameTextInputEditText"
@@ -69,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName|textCapWords"
                     tools:text="Endava Recruit"
-                    android:tag="@string/cardholdernameentryfield"/>
+                    android:tag="@string/cardholder_name_entry_field"/>
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
             <androidx.constraintlayout.helper.widget.Flow
@@ -92,8 +90,7 @@
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/expirationDateTextInputLayout"
                 android:layout_width="@dimen/width_0"
-                android:layout_height="wrap_content"
-                android:tag="@string/expirydateentryfield">
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/expirationDateTextInputEditText"
@@ -102,14 +99,13 @@
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     tools:text="11/20"
-                    android:tag="@string/expirydateentryfield"/>
+                    android:tag="@string/expiry_date_entry_field"/>
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/securityNumberTextInputLayout"
                 android:layout_width="@dimen/width_0"
-                android:layout_height="wrap_content"
-                android:tag="@string/securitycodeentryfield">
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/securityNumberTextInputEditText"
@@ -118,7 +114,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     tools:text="123"
-                    android:tag="@string/securitycodeentryfield"/>
+                    android:tag="@string/security_code_entry_field"/>
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
@@ -196,7 +192,8 @@
                 style="@style/JudoTheme.BlackRoundedButton"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
-                android:text="@string/pay_now"/>
+                android:text="@string/pay_now"
+                android:tag="@string/pay_now_button"/>
 
             <TextView
                 android:id="@+id/secureTransmissionTextView"

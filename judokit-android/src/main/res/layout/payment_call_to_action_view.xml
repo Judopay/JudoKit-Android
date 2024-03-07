@@ -53,7 +53,8 @@
             style="@style/JudoTheme.BlackRoundedButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/pay_now" />
+            android:text="@string/pay_now"
+            android:tag="@string/payment_methods_pay_button" />
 
         <com.judopay.judokit.android.ui.common.GooglePayButton
             android:id="@+id/googlePayButton"
