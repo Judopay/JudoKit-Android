@@ -337,12 +337,14 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val rsaKey = sharedPreferences.getString("rsa_key", null)
         val recommendationUrl = sharedPreferences.getString("recommendation_url", null)
         val recommendationTimeout = sharedPreferences.getString("recommendation_timeout", null)?.toInt()
+        val haltTransactionInAnyCase = sharedPreferences.getBoolean("halt_transaction_in_case_of_any_error_enabled", false)
         val isRecommendationFeatureEnabled = sharedPreferences.getBoolean("is_recommendation_feature_enabled", false)
         val recommendationConfiguration = if (isRecommendationFeatureEnabled) {
             RecommendationConfiguration.Builder()
                 .setRsaPublicKey(rsaKey)
                 .setUrl(recommendationUrl)
                 .setTimeout(recommendationTimeout)
+                .setShouldHaltTransactionInCaseOfAnyError(haltTransactionInAnyCase)
                 .build()
         } else {
             null

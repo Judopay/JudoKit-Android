@@ -14,7 +14,8 @@ import kotlinx.parcelize.Parcelize
 class RecommendationConfiguration internal constructor(
     val url: String,
     val rsaPublicKey: String,
-    val timeout: Int?
+    val timeout: Int?,
+    val shouldHaltTransactionInCaseOfAnyError: Boolean
 ) : Parcelable {
 
     /**
@@ -24,6 +25,7 @@ class RecommendationConfiguration internal constructor(
         private var rsaPublicKey: String? = null
         private var url: String? = null
         private var timeout: Int? = null
+        private var shouldHaltTransactionInCaseOfAnyError: Boolean = false
 
         fun setRsaPublicKey(rsaKey: String?) =
             apply { this.rsaPublicKey = rsaKey }
@@ -33,6 +35,9 @@ class RecommendationConfiguration internal constructor(
 
         fun setTimeout(recommendationTimeout: Int?) =
             apply { this.timeout = recommendationTimeout }
+
+        fun setShouldHaltTransactionInCaseOfAnyError(haltTransaction: Boolean) =
+            apply { this.shouldHaltTransactionInCaseOfAnyError = haltTransaction }
 
         /**
          * Method that initializes Recommendation configuration object that can be used for
@@ -48,13 +53,12 @@ class RecommendationConfiguration internal constructor(
                 "rsaPublicKey",
                 "The RSAPublicKey field in the ravelin recommendation configuration is required."
             )
-
             val myRecommendationUrl = requireUrl(url)
-
             return RecommendationConfiguration(
                 rsaPublicKey = myRsaKey,
                 url = myRecommendationUrl,
-                timeout = timeout
+                timeout = timeout,
+                shouldHaltTransactionInCaseOfAnyError = shouldHaltTransactionInCaseOfAnyError
             )
         }
 

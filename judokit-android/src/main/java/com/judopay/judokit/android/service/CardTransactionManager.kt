@@ -249,17 +249,32 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             if (result.isValid) {
                 when (result.data?.action) {
                     RecommendationAction.PREVENT -> onResult(
-                        JudoPaymentResult.Error(JudoError.judoRecommendationError(context.resources)),
+                        JudoPaymentResult.Error(JudoError.judoRecommendationFailedError(context.resources)),
                         caller
                     )
                     else -> performJudoApiCall(type, details, caller, result.toTransactionDetailsOverrides())
                 }
             } else {
-                performJudoApiCall(type, details, caller) // in case of any error, we fallback to Judo API call
+                handleRecommendationError(type, details, caller)
             }
         }
     } catch (exception: Throwable) {
-        performJudoApiCall(type, details, caller) // in case of any error, we fallback to Judo API call
+        handleRecommendationError(type, details, caller)
+    }
+
+    private fun handleRecommendationError(
+        type: TransactionType,
+        details: TransactionDetails,
+        caller: String
+    ) {
+        if (judo.recommendationConfiguration?.shouldHaltTransactionInCaseOfAnyError == true) {
+            onResult(
+                JudoPaymentResult.Error(JudoError.judoRecommendationRetrievingError(context.resources)),
+                caller
+            )
+        } else {
+            performJudoApiCall(type, details, caller) // in case of any other error, we fallback to Judo API call
+        }
     }
 
     private fun performJudoApiCall(

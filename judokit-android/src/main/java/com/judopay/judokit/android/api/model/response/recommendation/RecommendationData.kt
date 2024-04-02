@@ -6,7 +6,6 @@ data class RecommendationData(
 ) {
     val isValid: Boolean
         get() {
-            if (action == null || transactionOptimisation == null) return false
-            return transactionOptimisation.isValid
+            return (action != null)
         }
 }

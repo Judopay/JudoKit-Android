@@ -220,6 +220,9 @@
     <string name="reccomendation_url_key_summary">Provide Recommendation server URL</string>
     <string name="reccomendation_url_title">Recommendation URL</string>
 
+    <string name="reccomendation_halt_transaction_in_case_of_any_error_summary">Halt transaction in any case</string>
+    <string name="reccomendation_halt_transaction_in_case_of_any_error_title">Halt transaction</string>
+
     <string name="three_ds2_header">3DS 2.0</string>
     <string name="is_3ds2_enabled_title">Enable billing information screen</string>
     <string name="is_3ds2_enabled_summary">Asks user for billing information</string>

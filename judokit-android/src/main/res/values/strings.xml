@@ -149,6 +149,8 @@
     <!--   Recommendation Feature fail-->
     <string name="recommendation_request_failed_desc" translatable="false">The recommendation server has prevented this transaction.</string>
     <string name="recommendation_request_failed_reason" translatable="false">It appears that the transaction you attempted to make has been blocked by the recommendation server."</string>
+    <string name="issue_retrieving_recommendation_response_desc" translatable="false">There was an error when retrieving the recommendation response.</string>
+    <string name="issue_retrieving_recommendation_response_reason" translatable="false">We are unable to process this request as there was an error when retrieving the recommendation response</string>
 
     <string name="country_uk">UK</string>
     <string name="country_usa">USA</string>

@@ -121,13 +121,24 @@ data class JudoError(
             message ?: "Unknown error"
         )
 
-        fun judoRecommendationError(resources: Resources): JudoError = JudoError(
+        fun judoRecommendationFailedError(resources: Resources): JudoError = JudoError(
             REQUEST_FAILED,
             resources.getString(R.string.recommendation_request_failed_desc),
             mutableListOf(
                 JudoError(
                     REQUEST_FAILED,
                     resources.getString(R.string.recommendation_request_failed_reason)
+                )
+            )
+        )
+
+        fun judoRecommendationRetrievingError(resources: Resources): JudoError = JudoError(
+            REQUEST_FAILED,
+            resources.getString(R.string.issue_retrieving_recommendation_response_desc),
+            mutableListOf(
+                JudoError(
+                    REQUEST_FAILED,
+                    resources.getString(R.string.issue_retrieving_recommendation_response_reason)
                 )
             )
         )
