@@ -240,7 +240,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     ) = try {
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
             Log.d(CardTransactionManager::class.java.name, "Uncaught Recommendation service exception", throwable)
-            performJudoApiCall(type, details, caller) // in case of any error, we fallback to Judo API call
+            handleRecommendationError(type, details, caller)
         }
 
         applicationScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
