@@ -1,5 +1,6 @@
 package com.judopay.judokit.android.api.model.response.recommendation
 
+import com.judopay.judokit.android.model.RecommendationOverrides
 import com.judopay.judokit.android.model.TransactionDetailsOverrides
 
 data class RecommendationResponse(
@@ -14,11 +15,12 @@ fun RecommendationResponse.toTransactionDetailsOverrides(): TransactionDetailsOv
 
     val exemption = data?.transactionOptimisation?.exemption?.toScaExemption()
     val challengeRequestIndicator = data?.transactionOptimisation?.threeDSChallengePreference?.toChallengeRequestIndicator()
-
-    if (exemption == null && challengeRequestIndicator == null) return null
+    // if (exemption == null && challengeRequestIndicator == null) return null
 
     return TransactionDetailsOverrides(
-        exemption = exemption,
-        challengeRequestIndicator = challengeRequestIndicator
+        recommendationOverrides = RecommendationOverrides(
+            exemption = exemption,
+            challengeRequestIndicator = challengeRequestIndicator
+        )
     )
 }

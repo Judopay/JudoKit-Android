@@ -153,8 +153,17 @@ fun Transaction.toThreeDSecureTwo(
             .build()
     }
 
-    val myScaExemption = overrides?.exemption ?: judo.scaExemption
-    val myChallengeRequestIndicator = overrides?.challengeRequestIndicator ?: judo.challengeRequestIndicator
+    val recommendationOverrides = overrides?.recommendationOverrides
+    val myScaExemption = if (recommendationOverrides != null) {
+        recommendationOverrides.exemption
+    } else {
+        judo.scaExemption
+    }
+    val myChallengeRequestIndicator = if (recommendationOverrides != null) {
+        recommendationOverrides.challengeRequestIndicator
+    } else {
+        judo.challengeRequestIndicator
+    }
 
     return ThreeDSecureTwo.Builder()
         .setChallengeRequestIndicator(myChallengeRequestIndicator)

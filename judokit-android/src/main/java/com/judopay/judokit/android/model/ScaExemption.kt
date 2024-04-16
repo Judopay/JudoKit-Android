@@ -8,5 +8,6 @@ enum class ScaExemption(val value: String) : Parcelable {
     LOW_VALUE("lowValue"),
     SECURE_CORPORATE("secureCorporate"),
     TRUSTED_BENEFICIARY("trustedBeneficiary"),
-    TRANSACTION_RISK_ANALYSIS("transactionRiskAnalysis")
+    TRANSACTION_RISK_ANALYSIS("transactionRiskAnalysis"),
+    ERROR_EXEMPTION_NOT_RECOGNIZED("ERROR_EXEMPTION_NOT_RECOGNIZED")
 }

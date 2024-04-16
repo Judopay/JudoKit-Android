@@ -8,5 +8,6 @@ enum class ChallengeRequestIndicator(val value: String) : Parcelable {
     NO_PREFERENCE("noPreference"),
     NO_CHALLENGE("noChallenge"),
     CHALLENGE_PREFERRED("challengePreferred"),
-    CHALLENGE_AS_MANDATE("challengeAsMandate")
+    CHALLENGE_AS_MANDATE("challengeAsMandate"),
+    ERROR_CHALLENGE_NOT_RECOGNIZED("ERROR_CHALLENGE_NOT_RECOGNIZED")
 }

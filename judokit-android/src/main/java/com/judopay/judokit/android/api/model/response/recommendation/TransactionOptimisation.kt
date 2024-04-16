@@ -17,7 +17,8 @@ fun String?.toChallengeRequestIndicator(): ChallengeRequestIndicator? {
         NO_CHALLENGE_REQUESTED -> ChallengeRequestIndicator.NO_CHALLENGE
         CHALLENGE_REQUESTED -> ChallengeRequestIndicator.CHALLENGE_PREFERRED
         CHALLENGE_REQUESTED_AS_MANDATE -> ChallengeRequestIndicator.CHALLENGE_AS_MANDATE
-        else -> null
+        null -> null
+        else -> ChallengeRequestIndicator.ERROR_CHALLENGE_NOT_RECOGNIZED
     }
 }
 
@@ -25,11 +26,19 @@ fun String?.toScaExemption(): ScaExemption? {
     return when (this?.uppercase()) {
         LOW_VALUE -> ScaExemption.LOW_VALUE
         TRANSACTION_RISK_ANALYSIS -> ScaExemption.TRANSACTION_RISK_ANALYSIS
-        else -> null
+        null -> null
+        else -> ScaExemption.ERROR_EXEMPTION_NOT_RECOGNIZED
     }
 }
 
 data class TransactionOptimisation(
     val exemption: String?,
     val threeDSChallengePreference: String?
-)
+) {
+    val isValid: Boolean
+        get() {
+            return (exemption.toScaExemption() != ScaExemption.ERROR_EXEMPTION_NOT_RECOGNIZED
+                    && threeDSChallengePreference.toChallengeRequestIndicator()
+                    != ChallengeRequestIndicator.ERROR_CHALLENGE_NOT_RECOGNIZED)
+        }
+}

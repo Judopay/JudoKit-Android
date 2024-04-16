@@ -22,6 +22,7 @@ import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.api.model.response.getCReqParameters
 import com.judopay.judokit.android.api.model.response.getChallengeParameters
 import com.judopay.judokit.android.api.model.response.recommendation.RecommendationAction
+import com.judopay.judokit.android.api.model.response.recommendation.toRecommendationAction
 import com.judopay.judokit.android.api.model.response.recommendation.toTransactionDetailsOverrides
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
 import com.judopay.judokit.android.model.CardNetwork
@@ -247,7 +248,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             val result = recommendationService.fetchOptimizationData(details, type).await()
 
             if (result.isValid) {
-                when (result.data?.action) {
+                when (result.data?.action.toRecommendationAction()) {
                     RecommendationAction.PREVENT -> onResult(
                         JudoPaymentResult.Error(JudoError.judoRecommendationFailedError(context.resources)),
                         caller
