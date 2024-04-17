@@ -6,7 +6,6 @@ import com.judopay.judokit.android.ui.editcard.CardPattern
 import java.sql.Date
 
 class JudoTypeConverters {
-
     @TypeConverter
     fun fromString(value: String?): CardNetwork? {
         return if (value != null) CardNetwork.valueOf(value) else null

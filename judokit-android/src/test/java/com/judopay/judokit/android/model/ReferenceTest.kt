@@ -8,11 +8,11 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Test Reference builder")
 internal class ReferenceTest {
-
-    private val sut = Reference.Builder()
-        .setConsumerReference("consumerRef")
-        .setPaymentReference("PaymentRef")
-        .setMetaData(mockk())
+    private val sut =
+        Reference.Builder()
+            .setConsumerReference("consumerRef")
+            .setPaymentReference("PaymentRef")
+            .setMetaData(mockk())
 
     @DisplayName("Given build is called, when consumerReference is null, then throw exception")
     @Test

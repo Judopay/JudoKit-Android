@@ -6,9 +6,8 @@ import com.judopay.judokit.android.ui.paymentmethods.adapter.model.IdealBank
 open class IdealPaymentCardViewModel(
     override val type: CardViewType = CardViewType.IDEAL,
     override var layoutId: Int = R.id.idealPaymentCardView,
-    val idealBank: IdealBank = IdealBank.ING_BANK
+    val idealBank: IdealBank = IdealBank.ING_BANK,
 ) : CardViewModel {
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

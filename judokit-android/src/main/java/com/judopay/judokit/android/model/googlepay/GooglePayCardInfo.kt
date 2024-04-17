@@ -7,5 +7,5 @@ import kotlinx.parcelize.Parcelize
 data class GooglePayCardInfo(
     val cardDetails: String,
     val cardNetwork: String,
-    val billingAddress: GooglePayAddress?
+    val billingAddress: GooglePayAddress?,
 ) : Parcelable

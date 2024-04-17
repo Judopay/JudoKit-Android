@@ -16,7 +16,6 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Testing the GooglePay configuration object builder logic")
 internal class GooglePayConfigurationTest {
-
     private lateinit var googlePayConfigurationBuilder: GooglePayConfiguration.Builder
 
     @BeforeEach
@@ -47,10 +46,11 @@ internal class GooglePayConfigurationTest {
     fun returnGooglePayConfigurationObjectWhenAllRequiredFieldsSpecified() {
         val billingAddressParameters =
             GooglePayBillingAddressParameters(GooglePayAddressFormat.MIN, false)
-        val shippingAddressParams = GooglePayShippingAddressParameters(
-            allowedCountryCodes = arrayOf("US"),
-            phoneNumberRequired = true
-        )
+        val shippingAddressParams =
+            GooglePayShippingAddressParameters(
+                allowedCountryCodes = arrayOf("US"),
+                phoneNumberRequired = true,
+            )
 
         assertDoesNotThrow {
             googlePayConfigurationBuilder
@@ -73,10 +73,11 @@ internal class GooglePayConfigurationTest {
     @Test
     @DisplayName("When a invalid allowed shipping country code is specified, build() should throw a IllegalArgumentException")
     fun testThatBuildThrowsWhenWrongShippingCountryCodeIsSpecified() {
-        val shippingAddressParams = GooglePayShippingAddressParameters(
-            allowedCountryCodes = arrayOf("USA"),
-            phoneNumberRequired = true
-        )
+        val shippingAddressParams =
+            GooglePayShippingAddressParameters(
+                allowedCountryCodes = arrayOf("USA"),
+                phoneNumberRequired = true,
+            )
 
         assertThrows<IllegalArgumentException> {
             googlePayConfigurationBuilder
@@ -90,10 +91,11 @@ internal class GooglePayConfigurationTest {
     @Test
     @DisplayName("Given totalPriceStatus is null, then use FINAL default value")
     fun useFinalDefaultValueOnTotalPriceStatusNull() {
-        val actualTotalPriceStatus = googlePayConfigurationBuilder
-            .setEnvironment(GooglePayEnvironment.TEST)
-            .setTransactionCountryCode("US")
-            .build().totalPriceStatus
+        val actualTotalPriceStatus =
+            googlePayConfigurationBuilder
+                .setEnvironment(GooglePayEnvironment.TEST)
+                .setTransactionCountryCode("US")
+                .build().totalPriceStatus
         val expectedTotalPriceStatus = GooglePayPriceStatus.FINAL
 
         assertEquals(expectedTotalPriceStatus, actualTotalPriceStatus)
@@ -101,9 +103,10 @@ internal class GooglePayConfigurationTest {
 
     @Test
     fun `Given allowPrepaidCards is set, then build() should use this value`() {
-        val sut = googlePayConfigurationBuilder
-            .setEnvironment(GooglePayEnvironment.TEST)
-            .setTransactionCountryCode("US")
+        val sut =
+            googlePayConfigurationBuilder
+                .setEnvironment(GooglePayEnvironment.TEST)
+                .setTransactionCountryCode("US")
         assertThat(sut.setAllowPrepaidCards(true).build().allowPrepaidCards).isTrue()
         assertThat(sut.setAllowPrepaidCards(false).build().allowPrepaidCards).isFalse()
         assertThat(sut.setAllowPrepaidCards(null).build().allowPrepaidCards).isNull()
@@ -111,9 +114,10 @@ internal class GooglePayConfigurationTest {
 
     @Test
     fun `Given allowCreditCards is set, then build() should use this value`() {
-        val sut = googlePayConfigurationBuilder
-            .setEnvironment(GooglePayEnvironment.TEST)
-            .setTransactionCountryCode("US")
+        val sut =
+            googlePayConfigurationBuilder
+                .setEnvironment(GooglePayEnvironment.TEST)
+                .setTransactionCountryCode("US")
         assertThat(sut.setAllowCreditCards(true).build().allowCreditCards).isTrue()
         assertThat(sut.setAllowCreditCards(false).build().allowCreditCards).isFalse()
         assertThat(sut.setAllowCreditCards(null).build().allowCreditCards).isNull()

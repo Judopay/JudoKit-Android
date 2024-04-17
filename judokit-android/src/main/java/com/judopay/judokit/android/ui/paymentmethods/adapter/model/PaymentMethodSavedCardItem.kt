@@ -14,7 +14,7 @@ data class PaymentMethodSavedCardItem(
     val cardholderName: String,
     var isSelected: Boolean = false,
     var isInEditMode: Boolean = false,
-    val pattern: CardPattern = CardPattern.BLACK
+    val pattern: CardPattern = CardPattern.BLACK,
 ) : PaymentMethodItem {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

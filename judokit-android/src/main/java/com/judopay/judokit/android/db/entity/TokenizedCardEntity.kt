@@ -20,5 +20,5 @@ data class TokenizedCardEntity(
     val network: CardNetwork,
     val timestamp: Date = Date(Calendar.getInstance().timeInMillis),
     val cardholderName: String,
-    var isLastUsed: Boolean = true
+    var isLastUsed: Boolean = true,
 )

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test
 
 @DisplayName("Testing IdealBank extension functions")
 internal class IdealBankTest {
-
     @DisplayName("Given bankResId is called, when value is RABOBANK, return RABOBANK string")
     @Test
     fun returnRabobankStringResourceWhenRabobank() {

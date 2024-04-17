@@ -11,5 +11,5 @@ data class GooglePayCardParameters(
     val allowPrepaidCards: Boolean?,
     val allowCreditCards: Boolean?,
     val billingAddressRequired: Boolean?,
-    val billingAddressParameters: GooglePayBillingAddressParameters?
+    val billingAddressParameters: GooglePayBillingAddressParameters?,
 ) : Parcelable

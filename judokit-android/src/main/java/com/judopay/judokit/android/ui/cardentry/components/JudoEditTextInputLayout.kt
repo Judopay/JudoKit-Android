@@ -21,135 +21,145 @@ private const val TEXT_SIZE_VALID = 16f
 private const val TEXT_SIZE_INVALID = 14f
 private const val TEXT_SIZE_ANIMATION_DURATION = 100L
 
-class JudoEditTextInputLayout @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyle: Int = 0
-) : FrameLayout(context, attrs, defStyle) {
-    private var mDisableLeftCornerRadius = false
-    private var mDisableRightCornerRadius = false
-    private val binding = JudoEditTextInputLayoutBinding.inflate(LayoutInflater.from(context), this, true)
+class JudoEditTextInputLayout
+    @JvmOverloads
+    constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyle: Int = 0,
+    ) : FrameLayout(context, attrs, defStyle) {
+        private var mDisableLeftCornerRadius = false
+        private var mDisableRightCornerRadius = false
+        private val binding = JudoEditTextInputLayoutBinding.inflate(LayoutInflater.from(context), this, true)
 
-    init {
-        context.theme.obtainStyledAttributes(
-            attrs,
-            R.styleable.JudoEditTextInputLayout,
-            0,
-            0
-        ).apply {
-            try {
-                mDisableLeftCornerRadius =
-                    getBoolean(R.styleable.JudoEditTextInputLayout_disableLeftCornerRadius, false)
-                mDisableRightCornerRadius =
-                    getBoolean(R.styleable.JudoEditTextInputLayout_disableRightCornerRadius, false)
-            } finally {
-                recycle()
-            }
-        }
-    }
-
-    var isErrorEnabled: Boolean = false
-        set(value) {
-            val oldState = field
-            field = value
-            if (oldState != value) {
-                updateErrorView()
-            }
-        }
-
-    var error: String? = null
-        set(value) {
-            field = value
-            binding.errorTextView.text = value
-        }
-
-    @DrawableRes
-    var accessoryImage: Int? = null
-        set(value) {
-            field = if ((value ?: 0) > 0) value else null
-            updateAccessoryViewState()
-        }
-
-    var editText: EditText? = null
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-
-        // TODO: to rethink this
-        editText = subViewsWithType(AppCompatAutoCompleteTextView::class.java).firstOrNull()
-        if (editText == null) {
-            editText = subViewsWithType(AppCompatEditText::class.java).firstOrNull()
-        }
-
-        editText?.let {
-            removeView(it)
-            val layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-            )
-            binding.containerLayout.addView(it, layoutParams)
-        }
-
-        background = when {
-            mDisableLeftCornerRadius -> ContextCompat.getDrawable(
-                context,
-                R.drawable.edit_text_input_layout_background_shape_corners_right
-            )
-            mDisableRightCornerRadius -> ContextCompat.getDrawable(
-                context,
-                R.drawable.edit_text_input_layout_background_shape_corners_left
-            )
-            else -> ContextCompat.getDrawable(
-                context,
-                R.drawable.edit_text_input_layout_background_shape
-            )
-        }
-    }
-
-    private fun updateErrorView() {
-        if (isAttachedToWindow) {
-            binding.errorTextView.visibility = if (isErrorEnabled) View.VISIBLE else View.GONE
-        }
-
-        val textColor = if (isErrorEnabled) {
-            R.color.tomato_red
-        } else {
-            R.color.black
-        }
-        val fromToValues = if (isErrorEnabled) {
-            Pair(
-                TEXT_SIZE_VALID,
-                TEXT_SIZE_INVALID
-            )
-        } else {
-            Pair(TEXT_SIZE_INVALID, TEXT_SIZE_VALID)
-        }
-
-        editText?.let { editTextView ->
-            ObjectAnimator.ofFloat(
-                editTextView,
-                "textSize",
-                fromToValues.first,
-                fromToValues.second
+        init {
+            context.theme.obtainStyledAttributes(
+                attrs,
+                R.styleable.JudoEditTextInputLayout,
+                0,
+                0,
             ).apply {
-                doOnEnd {
-                    editTextView.textSize = fromToValues.second
-                    editTextView.setTextColor(ContextCompat.getColor(context, textColor))
+                try {
+                    mDisableLeftCornerRadius =
+                        getBoolean(R.styleable.JudoEditTextInputLayout_disableLeftCornerRadius, false)
+                    mDisableRightCornerRadius =
+                        getBoolean(R.styleable.JudoEditTextInputLayout_disableRightCornerRadius, false)
+                } finally {
+                    recycle()
                 }
-                duration = TEXT_SIZE_ANIMATION_DURATION
-            }.start()
+            }
         }
-    }
 
-    private fun updateAccessoryViewState() = with(binding.accessoryImageView) {
-        val image = accessoryImage ?: 0
+        var isErrorEnabled: Boolean = false
+            set(value) {
+                val oldState = field
+                field = value
+                if (oldState != value) {
+                    updateErrorView()
+                }
+            }
 
-        visibility = if (image > 0) {
-            setImageResource(image)
-            View.VISIBLE
-        } else {
-            setImageDrawable(null)
-            View.GONE
+        var error: String? = null
+            set(value) {
+                field = value
+                binding.errorTextView.text = value
+            }
+
+        @DrawableRes
+        var accessoryImage: Int? = null
+            set(value) {
+                field = if ((value ?: 0) > 0) value else null
+                updateAccessoryViewState()
+            }
+
+        var editText: EditText? = null
+
+        override fun onAttachedToWindow() {
+            super.onAttachedToWindow()
+
+            editText = subViewsWithType(AppCompatAutoCompleteTextView::class.java).firstOrNull()
+            if (editText == null) {
+                editText = subViewsWithType(AppCompatEditText::class.java).firstOrNull()
+            }
+
+            editText?.let {
+                removeView(it)
+                val layoutParams =
+                    LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                    )
+                binding.containerLayout.addView(it, layoutParams)
+            }
+
+            background =
+                when {
+                    mDisableLeftCornerRadius ->
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.edit_text_input_layout_background_shape_corners_right,
+                        )
+                    mDisableRightCornerRadius ->
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.edit_text_input_layout_background_shape_corners_left,
+                        )
+                    else ->
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.edit_text_input_layout_background_shape,
+                        )
+                }
         }
+
+        private fun updateErrorView() {
+            if (isAttachedToWindow) {
+                binding.errorTextView.visibility = if (isErrorEnabled) View.VISIBLE else View.GONE
+            }
+
+            val textColor =
+                if (isErrorEnabled) {
+                    R.color.tomato_red
+                } else {
+                    R.color.black
+                }
+            val fromToValues =
+                if (isErrorEnabled) {
+                    Pair(
+                        TEXT_SIZE_VALID,
+                        TEXT_SIZE_INVALID,
+                    )
+                } else {
+                    Pair(TEXT_SIZE_INVALID, TEXT_SIZE_VALID)
+                }
+
+            editText?.let { editTextView ->
+                ObjectAnimator.ofFloat(
+                    editTextView,
+                    "textSize",
+                    fromToValues.first,
+                    fromToValues.second,
+                ).apply {
+                    doOnEnd {
+                        editTextView.textSize = fromToValues.second
+                        editTextView.setTextColor(ContextCompat.getColor(context, textColor))
+                    }
+                    duration = TEXT_SIZE_ANIMATION_DURATION
+                }.start()
+            }
+        }
+
+        private fun updateAccessoryViewState() =
+            with(binding.accessoryImageView) {
+                val image = accessoryImage ?: 0
+
+                visibility =
+                    if (image > 0) {
+                        setImageResource(image)
+                        View.VISIBLE
+                    } else {
+                        setImageDrawable(null)
+                        View.GONE
+                    }
+            }
     }
-}

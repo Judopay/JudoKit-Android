@@ -113,7 +113,10 @@ class IdealViewModelTest {
     }
 
     @Test
-    @DisplayName("Given send method is called with action Initialise, when sale request is successful and data not null, then update saleCallResult observer")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given send method is called with action Initialise, when sale request is successful and data not null, then update saleCallResult observer",
+    )
     fun postSaleResponseAfterSaleRequestFinished() {
         val slots = mutableListOf<JudoApiCallResult<IdealSaleResponse>>()
 
@@ -126,7 +129,10 @@ class IdealViewModelTest {
     }
 
     @Test
-    @DisplayName("Given send method is called with action Initialise, when sale request is successful and data is null, then update saleCallResult observer with JudoApiCallResult failure")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given send method is called with action Initialise, when sale request is successful and data is null, then update saleCallResult observer with JudoApiCallResult failure",
+    )
     fun updateSaleCallResultWithFailure() {
         val emptySaleCallResult = JudoApiCallResult.Success(null)
         val slots = mutableListOf<JudoApiCallResult<IdealSaleResponse>>()
@@ -144,7 +150,10 @@ class IdealViewModelTest {
     }
 
     @Test
-    @DisplayName("Given send method is called with action Initialise, when sale request is failed, then update saleCallResult observer with JudoApiCallResult failure")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given send method is called with action Initialise, when sale request is failed, then update saleCallResult observer with JudoApiCallResult failure",
+    )
     fun updateSaleCallResultWithFailureWHenRequestFailed() {
         val failedSaleCallResult = JudoApiCallResult.Failure()
         val slots = mutableListOf<JudoApiCallResult<IdealSaleResponse>>()
@@ -206,19 +215,21 @@ class IdealViewModelTest {
         coVerify { pollingService.retry() }
     }
 
-    private fun getJudo() = Judo.Builder(PaymentWidgetType.CARD_PAYMENT)
-        .setJudoId("111111111")
-        .setAuthorization(mockk(relaxed = true))
-        .setAmount(Amount("1", Currency.EUR))
-        .setReference(Reference("consumer", "payment"))
-        .build()
+    private fun getJudo() =
+        Judo.Builder(PaymentWidgetType.CARD_PAYMENT)
+            .setJudoId("111111111")
+            .setAuthorization(mockk(relaxed = true))
+            .setAmount(Amount("1", Currency.EUR))
+            .setReference(Reference("consumer", "payment"))
+            .build()
 
-    private fun buildSaleRequest() = IdealSaleRequest.Builder()
-        .setAmount(judo.amount.amount)
-        .setMerchantConsumerReference(judo.reference.consumerReference)
-        .setMerchantPaymentReference(judo.reference.paymentReference)
-        .setPaymentMetadata(judo.reference.metaData?.toMap())
-        .setJudoId(judo.judoId)
-        .setBic(BIC)
-        .build()
+    private fun buildSaleRequest() =
+        IdealSaleRequest.Builder()
+            .setAmount(judo.amount.amount)
+            .setMerchantConsumerReference(judo.reference.consumerReference)
+            .setMerchantPaymentReference(judo.reference.paymentReference)
+            .setPaymentMetadata(judo.reference.metaData?.toMap())
+            .setJudoId(judo.judoId)
+            .setBic(BIC)
+            .build()
 }

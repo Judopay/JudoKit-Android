@@ -28,17 +28,22 @@ class PollingStatusFragment : DialogFragment() {
     private val binding get() = _binding!!
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = object : Dialog(requireContext(), theme) {
-            override fun onBackPressed() {
-                sharedViewModel.bankPaymentResult.postValue(result)
-                super.onBackPressed()
+        val dialog =
+            object : Dialog(requireContext(), theme) {
+                override fun onBackPressed() {
+                    sharedViewModel.bankPaymentResult.postValue(result)
+                    super.onBackPressed()
+                }
             }
-        }
         dialog.window?.applyDialogStyling()
         return dialog
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
         _binding = PollingStatusFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -77,7 +82,8 @@ class PollingStatusFragment : DialogFragment() {
             PollingStatusViewAction.CLOSE -> {
                 when (binding.pollingStatusView.state) {
                     PollingStatusViewState.FAIL,
-                    PollingStatusViewState.SUCCESS -> {
+                    PollingStatusViewState.SUCCESS,
+                    -> {
                         findNavController().popBackStack()
                         sharedViewModel.bankPaymentResult.postValue(result)
                     }

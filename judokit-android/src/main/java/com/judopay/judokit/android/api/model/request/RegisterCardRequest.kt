@@ -7,6 +7,7 @@ import com.judopay.judokit.android.requireNotNullOrEmpty
 
 private const val DEFAULT_AMOUNT = "0.01"
 
+@Suppress("LongParameterList")
 class RegisterCardRequest private constructor(
     private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String,
@@ -27,8 +28,9 @@ class RegisterCardRequest private constructor(
     private var amount: String,
     private var initialRecurringPayment: Boolean?,
     private var threeDSecure: ThreeDSecureTwo?,
-    private var cardHolderName: String?
+    private var cardHolderName: String?,
 ) {
+    @Suppress("TooManyFunctions")
     class Builder {
         private var uniqueRequest: Boolean? = null
         private var yourPaymentReference: String? = null
@@ -53,18 +55,15 @@ class RegisterCardRequest private constructor(
 
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
-        fun setYourPaymentReference(yourPaymentReference: String?) =
-            apply { this.yourPaymentReference = yourPaymentReference }
+        fun setYourPaymentReference(yourPaymentReference: String?) = apply { this.yourPaymentReference = yourPaymentReference }
 
         fun setCurrency(currency: String?) = apply { this.currency = currency }
 
         fun setJudoId(judoId: String?) = apply { this.judoId = judoId }
 
-        fun setYourConsumerReference(yourConsumerReference: String?) =
-            apply { this.yourConsumerReference = yourConsumerReference }
+        fun setYourConsumerReference(yourConsumerReference: String?) = apply { this.yourConsumerReference = yourConsumerReference }
 
-        fun setYourPaymentMetaData(yourPaymentMetaData: Map<String, String>?) =
-            apply { this.yourPaymentMetaData = yourPaymentMetaData }
+        fun setYourPaymentMetaData(yourPaymentMetaData: Map<String, String>?) = apply { this.yourPaymentMetaData = yourPaymentMetaData }
 
         fun setAddress(address: Address?) = apply { this.address = address }
 
@@ -85,19 +84,15 @@ class RegisterCardRequest private constructor(
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
             apply { this.primaryAccountDetails = primaryAccountDetails }
 
-        fun setAmount(amount: String?) =
-            apply { this.amount = amount }
+        fun setAmount(amount: String?) = apply { this.amount = amount }
 
-        fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
-            apply { this.initialRecurringPayment = initialRecurringPayment }
+        fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) = apply { this.initialRecurringPayment = initialRecurringPayment }
 
         fun setThreeDSecure(threeDSecureTwo: ThreeDSecureTwo?) = apply { this.threeDSecure = threeDSecureTwo }
 
-        fun setCardHolderName(cardHolderName: String?) =
-            apply { this.cardHolderName = cardHolderName }
+        fun setCardHolderName(cardHolderName: String?) = apply { this.cardHolderName = cardHolderName }
 
-        fun setPhoneCountryCode(phoneCountryCode: String?) =
-            apply { this.phoneCountryCode = phoneCountryCode }
+        fun setPhoneCountryCode(phoneCountryCode: String?) = apply { this.phoneCountryCode = phoneCountryCode }
 
         fun build(): RegisterCardRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
@@ -132,7 +127,7 @@ class RegisterCardRequest private constructor(
                 myAmount,
                 initialRecurringPayment,
                 myThreeDSecure,
-                cardHolderName
+                cardHolderName,
             )
         }
     }

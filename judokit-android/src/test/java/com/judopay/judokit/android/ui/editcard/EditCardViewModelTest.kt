@@ -33,16 +33,16 @@ private const val NEW_TITLE = "NEW_TITLE"
 @ExtendWith(com.judopay.judokit.android.InstantExecutorExtension::class)
 @DisplayName("Testing edit card view model logic")
 internal class EditCardViewModelTest {
-
     private val testDispatcher = TestCoroutineDispatcher()
 
     private val application: Application = mockk(relaxed = true)
     private val cardRepository: TokenizedCardRepository = mockk(relaxed = true)
     private val editCardModelMock = spyk<Observer<EditCardModel>>()
-    private val tokenizedCardEntity: TokenizedCardEntity = mockk(relaxed = true) {
-        every { network } returns CardNetwork.VISA
-        every { pattern } returns CardPattern.BLACK
-    }
+    private val tokenizedCardEntity: TokenizedCardEntity =
+        mockk(relaxed = true) {
+            every { network } returns CardNetwork.VISA
+            every { pattern } returns CardPattern.BLACK
+        }
 
     @BeforeEach
     internal fun setUp() {
@@ -154,7 +154,7 @@ internal class EditCardViewModelTest {
     private fun getEditCardModel(
         onChanged: Boolean = false,
         isDefault: Boolean = false,
-        title: String = ""
+        title: String = "",
     ): EditCardModel {
         patterns.forEach { it.isSelected = it.pattern == CardPattern.BLACK }
 
@@ -163,7 +163,7 @@ internal class EditCardViewModelTest {
             isSaveButtonEnabled = onChanged,
             card = PaymentCardViewModel(name = title),
             title = title,
-            isDefault = isDefault
+            isDefault = isDefault,
         )
     }
 }

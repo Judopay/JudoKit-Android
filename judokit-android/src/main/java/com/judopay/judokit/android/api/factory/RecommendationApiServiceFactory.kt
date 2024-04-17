@@ -17,7 +17,6 @@ private const val RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS = 30
  * Recommendation API.
  */
 object RecommendationApiServiceFactory : ServiceFactory<RecommendationApiService>() {
-
     private const val LOCALHOST_URL = "http://localhost/"
 
     override val gson: Gson
@@ -26,25 +25,35 @@ object RecommendationApiServiceFactory : ServiceFactory<RecommendationApiService
     override var externalInterceptors: List<Interceptor>? = null
 
     @Deprecated("Use create instead", replaceWith = ReplaceWith("create(context, judo)"))
-    override fun createApiService(context: Context, judo: Judo): RecommendationApiService = create(context, judo)
+    override fun createApiService(
+        context: Context,
+        judo: Judo,
+    ): RecommendationApiService = create(context, judo)
 
-    override fun create(context: Context, judo: Judo): RecommendationApiService {
+    override fun create(
+        context: Context,
+        judo: Judo,
+    ): RecommendationApiService {
         return createRetrofit(
             context.applicationContext,
             judo,
             // This base URL is never used later on, but is required by Retrofit to be provided.
-            LOCALHOST_URL
+            LOCALHOST_URL,
         ).create(RecommendationApiService::class.java)
     }
 
-    override fun addInterceptors(client: OkHttpClient.Builder, context: Context, judo: Judo) {
+    override fun addInterceptors(
+        client: OkHttpClient.Builder,
+        context: Context,
+        judo: Judo,
+    ) {
         super.addInterceptors(client, context, judo)
         client.interceptors().add(RecommendationHeadersInterceptor(judo.authorization))
     }
 
     override fun getOkHttpClient(
         context: Context,
-        judo: Judo
+        judo: Judo,
     ): OkHttpClient {
         val builder = OkHttpClient.Builder()
         setRecommendationCallTimeout(builder, judo)
@@ -53,7 +62,10 @@ object RecommendationApiServiceFactory : ServiceFactory<RecommendationApiService
         return builder.build()
     }
 
-    private fun setRecommendationCallTimeout(builder: OkHttpClient.Builder, judo: Judo) {
+    private fun setRecommendationCallTimeout(
+        builder: OkHttpClient.Builder,
+        judo: Judo,
+    ) {
         val timeout = judo.recommendationConfiguration?.timeout ?: RECOMMENDATION_API_DEFAULT_TIMEOUT_SECONDS
         builder.callTimeout(timeout.toLong(), TimeUnit.SECONDS)
     }

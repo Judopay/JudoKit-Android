@@ -12,32 +12,41 @@ internal class PostcodeValidatorTest {
     private val validator = PostcodeValidator()
 
     @Test
-    @DisplayName("Given the country selected is GB and postcode is invalid, then a validation error should be returned with invalid postcode entered string")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given the country selected is GB and postcode is invalid, then a validation error should be returned with invalid postcode entered string",
+    )
     fun invalidateWrongGBPostCode() {
         validator.country = Country.GB
         assertEquals(
             validator.validate("postcode", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.invalid_postcode)
+            ValidationResult(false, R.string.invalid_postcode),
         )
     }
 
     @Test
-    @DisplayName("Given the country selected is GB and postcode is too short, then a validation error should be returned with invalid postcode entered string")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given the country selected is GB and postcode is too short, then a validation error should be returned with invalid postcode entered string",
+    )
     fun validateTooShortGBPostCode() {
         validator.country = Country.GB
         assertEquals(
             validator.validate("SW1Z", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.invalid_postcode)
+            ValidationResult(false, R.string.invalid_postcode),
         )
     }
 
     @Test
-    @DisplayName("Given the country selected is GB and postcode is too long, then a validation error should be returned with invalid postcode entered string")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given the country selected is GB and postcode is too long, then a validation error should be returned with invalid postcode entered string",
+    )
     fun validateTooLongGBPostCode() {
         validator.country = Country.GB
         assertEquals(
             validator.validate("SW1Z 1EE ", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.invalid_postcode)
+            ValidationResult(false, R.string.invalid_postcode),
         )
     }
 
@@ -47,7 +56,7 @@ internal class PostcodeValidatorTest {
         validator.country = Country.GB
         assertEquals(
             validator.validate("SW15 5PU"),
-            ValidationResult(true, R.string.empty)
+            ValidationResult(true, R.string.empty),
         )
     }
 
@@ -57,37 +66,46 @@ internal class PostcodeValidatorTest {
         validator.country = Country.GB
         assertEquals(
             validator.validate("SW15 5PU", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(true, R.string.empty)
+            ValidationResult(true, R.string.empty),
         )
     }
 
     @Test
-    @DisplayName("Given the country selected is CA and postcode is invalid, then a validation error should be returned with invalid postcode entered string")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given the country selected is CA and postcode is invalid, then a validation error should be returned with invalid postcode entered string",
+    )
     fun invalidateWrongCAPostCode() {
         validator.country = Country.CA
         assertEquals(
             validator.validate("post code", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.invalid_postcode)
+            ValidationResult(false, R.string.invalid_postcode),
         )
     }
 
     @Test
-    @DisplayName("Given the country selected is CA and postcode is too short, then a validation error should be returned with invalid postcode entered string")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given the country selected is CA and postcode is too short, then a validation error should be returned with invalid postcode entered string",
+    )
     fun validateTooShortCAPostCode() {
         validator.country = Country.CA
         assertEquals(
             validator.validate("A1A1A", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.invalid_postcode)
+            ValidationResult(false, R.string.invalid_postcode),
         )
     }
 
     @Test
-    @DisplayName("Given the country selected is CA and postcode is too long, then a validation error should be returned with invalid postcode entered string")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given the country selected is CA and postcode is too long, then a validation error should be returned with invalid postcode entered string",
+    )
     fun validateTooLongCAPostCode() {
         validator.country = Country.CA
         assertEquals(
             validator.validate("A1A 1A1 ", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.invalid_postcode)
+            ValidationResult(false, R.string.invalid_postcode),
         )
     }
 
@@ -97,37 +115,46 @@ internal class PostcodeValidatorTest {
         validator.country = Country.CA
         assertEquals(
             validator.validate("A1A 1A1"),
-            ValidationResult(true, R.string.empty)
+            ValidationResult(true, R.string.empty),
         )
     }
 
     @Test
-    @DisplayName("Given the country selected is US and zipcode is invalid, then a validation error should be returned with invalid postcode entered string")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given the country selected is US and zipcode is invalid, then a validation error should be returned with invalid postcode entered string",
+    )
     fun invalidateWrongUSZipCode() {
         validator.country = Country.US
         assertEquals(
             validator.validate("zipcode", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.invalid_zip_code)
+            ValidationResult(false, R.string.invalid_zip_code),
         )
     }
 
     @Test
-    @DisplayName("Given the country selected is US and postcode is too short, then a validation error should be returned with invalid postcode entered string")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given the country selected is US and postcode is too short, then a validation error should be returned with invalid postcode entered string",
+    )
     fun validateTooShortUSPostCode() {
         validator.country = Country.US
         assertEquals(
             validator.validate("1234", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.invalid_zip_code)
+            ValidationResult(false, R.string.invalid_zip_code),
         )
     }
 
     @Test
-    @DisplayName("Given the country selected is US and postcode is too long, then a validation error should be returned with invalid postcode entered string")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given the country selected is US and postcode is too long, then a validation error should be returned with invalid postcode entered string",
+    )
     fun validateTooLongUSPostCode() {
         validator.country = Country.US
         assertEquals(
             validator.validate("12345-1234 ", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.invalid_zip_code)
+            ValidationResult(false, R.string.invalid_zip_code),
         )
     }
 
@@ -137,7 +164,7 @@ internal class PostcodeValidatorTest {
         validator.country = Country.US
         assertEquals(
             validator.validate("99524"),
-            ValidationResult(true, R.string.empty)
+            ValidationResult(true, R.string.empty),
         )
     }
 
@@ -147,7 +174,7 @@ internal class PostcodeValidatorTest {
         validator.country = Country.OTHER
         assertEquals(
             validator.validate(""),
-            ValidationResult(false, R.string.empty)
+            ValidationResult(false, R.string.empty),
         )
     }
 
@@ -157,17 +184,20 @@ internal class PostcodeValidatorTest {
         validator.country = Country.OTHER
         assertEquals(
             validator.validate("postcode"),
-            ValidationResult(true, R.string.empty)
+            ValidationResult(true, R.string.empty),
         )
     }
 
     @Test
-    @DisplayName("Given the country selected is OTHER and postcode is too long, then a validation error should be returned with invalid postcode entered string")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given the country selected is OTHER and postcode is too long, then a validation error should be returned with invalid postcode entered string",
+    )
     fun validateTooLongOtherPostCode() {
         validator.country = Country.OTHER
         assertEquals(
             validator.validate("12345678901234567", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.invalid_postcode)
+            ValidationResult(false, R.string.invalid_postcode),
         )
     }
 
@@ -177,7 +207,7 @@ internal class PostcodeValidatorTest {
         validator.country = null
         assertEquals(
             validator.validate("postcode"),
-            ValidationResult(false, R.string.empty)
+            ValidationResult(false, R.string.empty),
         )
     }
 }

@@ -3,6 +3,7 @@ package com.judopay.judokit.android.api.model.request
 import com.judopay.judokit.android.model.PrimaryAccountDetails
 import com.judopay.judokit.android.requireNotNullOrEmpty
 
+@Suppress("LongParameterList")
 class PreAuthGooglePayRequest private constructor(
     internal var judoId: String?,
     internal var amount: String?,
@@ -13,9 +14,9 @@ class PreAuthGooglePayRequest private constructor(
     private var primaryAccountDetails: PrimaryAccountDetails?,
     private var cardAddress: Address?,
     internal val googlePayWallet: GooglePayWallet,
-    private var delayedAuthorisation: Boolean = false
+    private var delayedAuthorisation: Boolean = false,
 ) {
-
+    @Suppress("TooManyFunctions")
     class Builder {
         private var judoId: String? = null
         private var amount: String? = null
@@ -34,26 +35,20 @@ class PreAuthGooglePayRequest private constructor(
 
         fun setCurrency(currency: String?) = apply { this.currency = currency }
 
-        fun setYourPaymentReference(yourPaymentReference: String?) =
-            apply { this.yourPaymentReference = yourPaymentReference }
+        fun setYourPaymentReference(yourPaymentReference: String?) = apply { this.yourPaymentReference = yourPaymentReference }
 
-        fun setYourConsumerReference(yourConsumerReference: String?) =
-            apply { this.yourConsumerReference = yourConsumerReference }
+        fun setYourConsumerReference(yourConsumerReference: String?) = apply { this.yourConsumerReference = yourConsumerReference }
 
-        fun setYourPaymentMetaData(yourPaymentMetaData: Map<String, String>?) =
-            apply { this.yourPaymentMetaData = yourPaymentMetaData }
+        fun setYourPaymentMetaData(yourPaymentMetaData: Map<String, String>?) = apply { this.yourPaymentMetaData = yourPaymentMetaData }
 
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
             apply { this.primaryAccountDetails = primaryAccountDetails }
 
-        fun setCardAddress(cardAddress: Address?) =
-            apply { this.cardAddress = cardAddress }
+        fun setCardAddress(cardAddress: Address?) = apply { this.cardAddress = cardAddress }
 
-        fun setGooglePayWallet(wallet: GooglePayWallet?) =
-            apply { this.googlePayWallet = wallet }
+        fun setGooglePayWallet(wallet: GooglePayWallet?) = apply { this.googlePayWallet = wallet }
 
-        fun setDelayedAuthorisation(delayedAuthorisation: Boolean) =
-            apply { this.delayedAuthorisation = delayedAuthorisation }
+        fun setDelayedAuthorisation(delayedAuthorisation: Boolean) = apply { this.delayedAuthorisation = delayedAuthorisation }
 
         fun build(): PreAuthGooglePayRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
@@ -76,7 +71,7 @@ class PreAuthGooglePayRequest private constructor(
                 primaryAccountDetails,
                 cardAddress,
                 myWallet,
-                delayedAuthorisation
+                delayedAuthorisation,
             )
         }
     }

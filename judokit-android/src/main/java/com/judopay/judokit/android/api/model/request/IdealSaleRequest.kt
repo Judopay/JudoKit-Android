@@ -13,7 +13,7 @@ data class IdealSaleRequest(
     val currency: String = Currency.EUR.name,
     val country: String = "NL",
     val paymentMethod: String = "IDEAL",
-    val accountHolderName: String = "iDEAL User"
+    val accountHolderName: String = "iDEAL User",
 ) {
     class Builder {
         private var amount: String? = null
@@ -28,8 +28,7 @@ data class IdealSaleRequest(
         fun setMerchantPaymentReference(merchantPaymentReference: String?) =
             apply { this.merchantPaymentReference = merchantPaymentReference }
 
-        fun setPaymentMetadata(paymentMetadata: Map<String, String>?) =
-            apply { this.paymentMetadata = paymentMetadata }
+        fun setPaymentMetadata(paymentMetadata: Map<String, String>?) = apply { this.paymentMetadata = paymentMetadata }
 
         fun setMerchantConsumerReference(merchantConsumerReference: String?) =
             apply { this.merchantConsumerReference = merchantConsumerReference }
@@ -53,7 +52,7 @@ data class IdealSaleRequest(
                 paymentMetadata,
                 myMerchantConsumerReference,
                 myJudoId,
-                myBic
+                myBic,
             )
         }
     }

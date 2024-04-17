@@ -9,5 +9,5 @@ enum class PaymentMethodItemAction {
     PICK_BANK,
     EDIT_CARD,
     DELETE_CARD,
-    SELECT_PAYMENT_METHOD
+    SELECT_PAYMENT_METHOD,
 }

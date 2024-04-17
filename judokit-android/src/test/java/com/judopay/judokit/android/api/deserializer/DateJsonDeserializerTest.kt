@@ -11,7 +11,6 @@ import java.lang.reflect.Type
 
 @DisplayName("Testing DateJsonDeserializer")
 internal class DateJsonDeserializerTest {
-
     private val jsonElement: JsonElement = mockk(relaxed = true)
     private val type: Type = mockk(relaxed = true)
     private val jsonDeserializationContext: JsonDeserializationContext = mockk(relaxed = true)

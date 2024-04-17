@@ -6,5 +6,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class GooglePayShippingAddressParameters(
     val allowedCountryCodes: Array<String>? = null,
-    val phoneNumberRequired: Boolean?
+    val phoneNumberRequired: Boolean?,
 ) : Parcelable

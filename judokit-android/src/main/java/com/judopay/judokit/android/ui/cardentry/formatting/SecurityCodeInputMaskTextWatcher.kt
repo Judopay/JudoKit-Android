@@ -7,9 +7,8 @@ import com.judopay.judokit.android.model.securityCodeNumberMask
 import com.judopay.judokit.android.model.securityCodeNumberMaskOfCardNetwork
 
 internal class SecurityCodeInputMaskTextWatcher(
-    private val editText: EditText
+    private val editText: EditText,
 ) : InputMaskTextWatcher(editText, CardNetwork.OTHER.securityCodeNumberMask) {
-
     var cardNetwork: CardNetwork? = null
         set(value) {
             field = value

@@ -10,15 +10,15 @@ data class CountryInfo(
     val name: String,
     val dialCode: String,
     val numericCode: String,
-    val phoneNumberFormat: String?
+    val phoneNumberFormat: String?,
 ) {
-
     override fun toString() = name
 
     companion object {
-        fun list(context: Context): Array<CountryInfo> = Gson().fromJson(
-            context.assets.open(COUNTRIES_JSON_FILE_NAME).bufferedReader().use { it.readText() },
-            Array<CountryInfo>::class.java
-        )
+        fun list(context: Context): Array<CountryInfo> =
+            Gson().fromJson(
+                context.assets.open(COUNTRIES_JSON_FILE_NAME).bufferedReader().use { it.readText() },
+                Array<CountryInfo>::class.java,
+            )
     }
 }

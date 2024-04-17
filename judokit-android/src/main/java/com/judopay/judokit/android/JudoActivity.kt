@@ -39,7 +39,6 @@ internal const val LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE = Activity.RESULT_FIRST_U
  * ```
  */
 class JudoActivity : AppCompatActivity() {
-
     private lateinit var viewModel: JudoSharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,18 +55,19 @@ class JudoActivity : AppCompatActivity() {
         val config = judo
         // setup shared view-model & response callbacks
         val judoApiService = JudoApiServiceFactory.create(applicationContext, config)
-        val factory = JudoSharedViewModelFactory(
-            config,
-            buildJudoGooglePayService(),
-            judoApiService,
-            application
-        )
+        val factory =
+            JudoSharedViewModelFactory(
+                config,
+                buildJudoGooglePayService(),
+                judoApiService,
+                application,
+            )
 
         viewModel = ViewModelProvider(this, factory).get(JudoSharedViewModel::class.java)
         viewModel.paymentResult.observe(this) { dispatchPaymentResult(it) }
 
         viewModel.bankPaymentResult.observe(
-            this
+            this,
         ) {
             if (config.paymentWidgetType.isPaymentMethodsWidget) {
                 viewModel.paymentMethodsResult.postValue(it)
@@ -83,14 +83,15 @@ class JudoActivity : AppCompatActivity() {
 
         // setup navigation graph
         val graphId = config.paymentWidgetType.navigationGraphId
-        val bundle = if (graphId == R.navigation.judo_card_input_graph) {
-            // Card entry fragment parameters
-            bundleOf(
-                CARD_ENTRY_OPTIONS to CardEntryOptions()
-            )
-        } else {
-            null
-        }
+        val bundle =
+            if (graphId == R.navigation.judo_card_input_graph) {
+                // Card entry fragment parameters
+                bundleOf(
+                    CARD_ENTRY_OPTIONS to CardEntryOptions(),
+                )
+            } else {
+                null
+            }
         val navigationHost = NavHostFragment.create(graphId, bundle)
 
         supportFragmentManager.beginTransaction()
@@ -99,7 +100,11 @@ class JudoActivity : AppCompatActivity() {
             .commit()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+    ) {
         when (requestCode) {
             LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE -> dispatchGPayResult(resultCode, data)
             else -> Log.i("JudoActivity", "Received unsupported requestCode: $requestCode")
@@ -108,30 +113,34 @@ class JudoActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun dispatchGPayResult(resultCode: Int, data: Intent?) {
-        val action = when (resultCode) {
-            Activity.RESULT_OK -> {
-                val paymentData = if (data != null) PaymentData.getFromIntent(data) else null
+    private fun dispatchGPayResult(
+        resultCode: Int,
+        data: Intent?,
+    ) {
+        val action =
+            when (resultCode) {
+                Activity.RESULT_OK -> {
+                    val paymentData = if (data != null) PaymentData.getFromIntent(data) else null
 
-                if (paymentData != null) {
-                    JudoSharedAction.LoadGPayPaymentDataSuccess(paymentData)
-                } else {
-                    JudoSharedAction.LoadGPayPaymentDataError("Null response data.")
+                    if (paymentData != null) {
+                        JudoSharedAction.LoadGPayPaymentDataSuccess(paymentData)
+                    } else {
+                        JudoSharedAction.LoadGPayPaymentDataError("Null response data.")
+                    }
+                }
+
+                AutoResolveHelper.RESULT_ERROR -> {
+                    val status = AutoResolveHelper.getStatusFromIntent(data)
+                    val message = status?.statusMessage ?: "Unknown error"
+                    JudoSharedAction.LoadGPayPaymentDataError(message)
+                }
+
+                Activity.RESULT_CANCELED -> JudoSharedAction.LoadGPayPaymentDataUserCancelled
+
+                else -> {
+                    JudoSharedAction.LoadGPayPaymentDataError("Unknown error")
                 }
             }
-
-            AutoResolveHelper.RESULT_ERROR -> {
-                val status = AutoResolveHelper.getStatusFromIntent(data)
-                val message = status?.statusMessage ?: "Unknown error"
-                JudoSharedAction.LoadGPayPaymentDataError(message)
-            }
-
-            Activity.RESULT_CANCELED -> JudoSharedAction.LoadGPayPaymentDataUserCancelled
-
-            else -> {
-                JudoSharedAction.LoadGPayPaymentDataError("Unknown error")
-            }
-        }
 
         viewModel.send(action)
     }
@@ -164,10 +173,11 @@ class JudoActivity : AppCompatActivity() {
     }
 
     private fun buildJudoGooglePayService(): JudoGooglePayService {
-        val environment = when (judo.googlePayConfiguration?.environment) {
-            GooglePayEnvironment.PRODUCTION -> WalletConstants.ENVIRONMENT_PRODUCTION
-            else -> WalletConstants.ENVIRONMENT_TEST
-        }
+        val environment =
+            when (judo.googlePayConfiguration?.environment) {
+                GooglePayEnvironment.PRODUCTION -> WalletConstants.ENVIRONMENT_PRODUCTION
+                else -> WalletConstants.ENVIRONMENT_TEST
+            }
 
         val walletOptions = Wallet.WalletOptions.Builder().setEnvironment(environment).build()
         val client = Wallet.getPaymentsClient(this, walletOptions)

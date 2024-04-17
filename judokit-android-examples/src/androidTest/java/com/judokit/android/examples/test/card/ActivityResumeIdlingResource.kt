@@ -5,10 +5,10 @@ import androidx.test.espresso.IdlingResource
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage
 
-
-class ActivityResumeIdlingResource(val customName: String = "activity-resume-idling-resource",
-                                   val activityClassName: String): IdlingResource {
-
+class ActivityResumeIdlingResource(
+    val customName: String = "activity-resume-idling-resource",
+    val activityClassName: String,
+) : IdlingResource {
     private var resourceCallback: IdlingResource.ResourceCallback? = null
     private val isIdle = false
 

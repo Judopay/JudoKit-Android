@@ -4,5 +4,5 @@ data class EphemeralPublicKey(
     val kty: String,
     val crv: String,
     val x: String,
-    val y: String
+    val y: String,
 )

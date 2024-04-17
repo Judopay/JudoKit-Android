@@ -18,7 +18,7 @@ class NotificationPermissionLauncher(activity: AppCompatActivity) {
     private var activityReference: WeakReference<AppCompatActivity> = WeakReference(activity)
     var hasNotificationPermissionGranted = false
 
-    private val notificationPermissionLauncher =
+    private val permissionLauncher =
         activityReference.get()!!.registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             hasNotificationPermissionGranted = isGranted
 
@@ -26,7 +26,7 @@ class NotificationPermissionLauncher(activity: AppCompatActivity) {
                 return@registerForActivityResult
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT >= 33) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (activity.shouldShowRequestPermissionRationale(android.Manifest.permission.POST_NOTIFICATIONS)) {
                     showPermissionRationaleDialog()
                 } else {
@@ -36,8 +36,8 @@ class NotificationPermissionLauncher(activity: AppCompatActivity) {
         }
 
     fun requestPermissionIfNeeded() {
-        if (Build.VERSION.SDK_INT >= 33) {
-            notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
         } else {
             hasNotificationPermissionGranted = true
         }
@@ -64,8 +64,8 @@ class NotificationPermissionLauncher(activity: AppCompatActivity) {
                 .setTitle(NOTIFICATION_PERMISSION_IS_REQUIRED_TITLE)
                 .setMessage(NOTIFICATION_PERMISSION_IS_REQUIRED_MESSAGE)
                 .setPositiveButton(BUTTON_OK) { _, _ ->
-                    if (Build.VERSION.SDK_INT >= 33) {
-                        notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
                     }
                 }
                 .setNegativeButton(BUTTON_CANCEL, null)

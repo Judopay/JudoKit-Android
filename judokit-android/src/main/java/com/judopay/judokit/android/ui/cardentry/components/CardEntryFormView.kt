@@ -39,298 +39,315 @@ import kotlin.collections.forEach as kForEach
 internal typealias FormValidationStatus = (model: CardDetailsInputModel, isValid: Boolean) -> Unit
 internal typealias CardEntryButtonClickListener = () -> Unit
 
-class CardEntryFormView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyle: Int = 0
-) : FrameLayout(context, attrs, defStyle) {
-    private val binding = CardEntryFormViewBinding.inflate(LayoutInflater.from(context), this, true)
+class CardEntryFormView
+    @JvmOverloads
+    constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyle: Int = 0,
+    ) : FrameLayout(context, attrs, defStyle) {
+        private val binding = CardEntryFormViewBinding.inflate(LayoutInflater.from(context), this, true)
 
-    internal var model = CardDetailsInputModel()
-        set(value) {
-            field = value
-            update()
-        }
+        internal var model = CardDetailsInputModel()
+            set(value) {
+                field = value
+                update()
+            }
 
-    internal var onFormValidationStatusListener: FormValidationStatus? = null
-    internal var onCardEntryButtonClickListener: CardEntryButtonClickListener? = null
+        internal var onFormValidationStatusListener: FormValidationStatus? = null
+        internal var onCardEntryButtonClickListener: CardEntryButtonClickListener? = null
 
-    private val validationResultsCache = mutableMapOf<CardDetailsFieldType, Boolean>()
-    private var validators = mutableListOf(
-        CardNumberValidator(supportedNetworks = model.supportedNetworks),
-        CardHolderNameValidator(),
-        ExpirationDateValidator(),
-        SecurityCodeValidator(model.cardNetwork),
-        CountryValidator(),
-        PostcodeValidator()
-    )
-
-    private val countriesAdapter: ArrayAdapter<String> by lazy {
-        val countries = Country.values().map { context.getString(it.translatableName) }
-        ArrayAdapter(context, android.R.layout.simple_list_item_1, countries)
-    }
-
-    private val securityCodeFormatter: SecurityCodeInputMaskTextWatcher by lazy {
-        val editText = editTextForType(CardDetailsFieldType.SECURITY_NUMBER)
-        SecurityCodeInputMaskTextWatcher(editText).also { it.cardNetwork = model.cardNetwork }
-    }
-
-    override fun onFinishInflate() {
-        super.onFinishInflate()
-        setupFieldsContent()
-        setupFieldsFormatting()
-    }
-
-    private fun setupFieldsFormatting() {
-        setupExpirationDateFormatter()
-        setupCountryFormatter()
-        setupSecurityCodeFormatter()
-        setupNumberFormatter()
-    }
-
-    private fun setupCountryFormatter() {
-        val country = model.valueOfFieldWithType(CardDetailsFieldType.COUNTRY).asCountry()
-        onCountryDidSelect(country ?: Country.OTHER)
-    }
-
-    private fun setupNumberFormatter() =
-        with(editTextForType(CardDetailsFieldType.NUMBER)) {
-            val mask = CardNumberInputMaskTextWatcher(
-                this,
-                securityCodeFormatter,
-                model.cardNetwork
+        private val validationResultsCache = mutableMapOf<CardDetailsFieldType, Boolean>()
+        private var validators =
+            mutableListOf(
+                CardNumberValidator(supportedNetworks = model.supportedNetworks),
+                CardHolderNameValidator(),
+                ExpirationDateValidator(),
+                SecurityCodeValidator(model.cardNetwork),
+                CountryValidator(),
+                PostcodeValidator(),
             )
-            addTextChangedListener(mask)
+
+        private val countriesAdapter: ArrayAdapter<String> by lazy {
+            val countries = Country.values().map { context.getString(it.translatableName) }
+            ArrayAdapter(context, android.R.layout.simple_list_item_1, countries)
         }
 
-    private fun setupSecurityCodeFormatter() =
-        with(editTextForType(CardDetailsFieldType.SECURITY_NUMBER)) {
-            addTextChangedListener(securityCodeFormatter)
+        private val securityCodeFormatter: SecurityCodeInputMaskTextWatcher by lazy {
+            val editText = editTextForType(CardDetailsFieldType.SECURITY_NUMBER)
+            SecurityCodeInputMaskTextWatcher(editText).also { it.cardNetwork = model.cardNetwork }
         }
 
-    private fun setupExpirationDateFormatter() =
-        with(editTextForType(CardDetailsFieldType.EXPIRATION_DATE)) {
-            val mask = InputMaskTextWatcher(this, PATTERN_CARD_EXPIRATION_DATE)
-            addTextChangedListener(mask)
+        override fun onFinishInflate() {
+            super.onFinishInflate()
+            setupFieldsContent()
+            setupFieldsFormatting()
         }
 
-    private fun onCountryDidSelect(country: Country) {
-        val previousSelected =
-            model.valueOfFieldWithType(CardDetailsFieldType.COUNTRY).asCountry()
-        val postCodeEditText = editTextForType(CardDetailsFieldType.POST_CODE)
-
-        postCodeEditText.filters = arrayOf(InputFilter.LengthFilter(country.postcodeMaxLength))
-
-        if (country != previousSelected) {
-            postCodeEditText.text.clear()
+        private fun setupFieldsFormatting() {
+            setupExpirationDateFormatter()
+            setupCountryFormatter()
+            setupSecurityCodeFormatter()
+            setupNumberFormatter()
         }
 
-        validatorInstance<PostcodeValidator>()?.country = country
-    }
+        private fun setupCountryFormatter() {
+            val country = model.valueOfFieldWithType(CardDetailsFieldType.COUNTRY).asCountry()
+            onCountryDidSelect(country ?: Country.OTHER)
+        }
 
-    private fun setupFieldsContent() {
-        val scrollView = binding.formScrollView
-        binding.cardEntrySubmitButton.setOnClickListener { onCardEntryButtonClickListener?.invoke() }
+        private fun setupNumberFormatter() =
+            with(editTextForType(CardDetailsFieldType.NUMBER)) {
+                val mask =
+                    CardNumberInputMaskTextWatcher(
+                        this,
+                        securityCodeFormatter,
+                        model.cardNetwork,
+                    )
+                addTextChangedListener(mask)
+            }
 
-        CardDetailsFieldType.values().kForEach { type ->
-            editTextForType(type).apply {
-                setHint(type.fieldHintResId)
+        private fun setupSecurityCodeFormatter() =
+            with(editTextForType(CardDetailsFieldType.SECURITY_NUMBER)) {
+                addTextChangedListener(securityCodeFormatter)
+            }
 
-                // setup state, and validate it
-                with(model.valueOfFieldWithType(type)) {
-                    setText(this)
-                    textDidChange(type, this, FormFieldEvent.TEXT_CHANGED)
-                }
+        private fun setupExpirationDateFormatter() =
+            with(editTextForType(CardDetailsFieldType.EXPIRATION_DATE)) {
+                val mask = InputMaskTextWatcher(this, PATTERN_CARD_EXPIRATION_DATE)
+                addTextChangedListener(mask)
+            }
 
-                setOnFocusChangeListener { _, hasFocus ->
-                    val text = valueOfEditTextWithType(type)
-                    if (!hasFocus) {
-                        textDidChange(type, text, FormFieldEvent.FOCUS_CHANGED)
-                    } else {
-                        scrollView.smoothScrollToView(editTextForType(type))
+        private fun onCountryDidSelect(country: Country) {
+            val previousSelected =
+                model.valueOfFieldWithType(CardDetailsFieldType.COUNTRY).asCountry()
+            val postCodeEditText = editTextForType(CardDetailsFieldType.POST_CODE)
+
+            postCodeEditText.filters = arrayOf(InputFilter.LengthFilter(country.postcodeMaxLength))
+
+            if (country != previousSelected) {
+                postCodeEditText.text.clear()
+            }
+
+            validatorInstance<PostcodeValidator>()?.country = country
+        }
+
+        private fun setupFieldsContent() {
+            val scrollView = binding.formScrollView
+            binding.cardEntrySubmitButton.setOnClickListener { onCardEntryButtonClickListener?.invoke() }
+
+            CardDetailsFieldType.values().kForEach { type ->
+                editTextForType(type).apply {
+                    setHint(type.fieldHintResId)
+
+                    // setup state, and validate it
+                    with(model.valueOfFieldWithType(type)) {
+                        setText(this)
+                        textDidChange(type, this, FormFieldEvent.TEXT_CHANGED)
                     }
-                }
-                addTextChangedListener {
-                    val text = it.toString()
-                    textDidChange(type, text, FormFieldEvent.TEXT_CHANGED)
-                }
-            }
-        }
-    }
 
-    private fun textDidChange(type: CardDetailsFieldType, value: String, event: FormFieldEvent) {
-        var hasCardNetworkChanged = false
-        if (type == CardDetailsFieldType.NUMBER) {
-            validatorInstance<SecurityCodeValidator>()?.let {
-                val newCardNetwork = model.cardNetwork ?: CardNetwork.ofNumber(value)
-                hasCardNetworkChanged = it.cardNetwork != newCardNetwork
-                if (hasCardNetworkChanged) {
-                    it.cardNetwork = newCardNetwork
-                }
-            }
-        }
-
-        val validationResults = validators.mapNotNull {
-            if (it.fieldType == type.name) {
-                it.validate(value, event)
-            } else {
-                null
-            }
-        }
-
-        val result = validationResults.firstOrNull()
-
-        validationResultsCache[type] = result?.isValid ?: true
-
-        val layout = textInputLayoutForType(type)
-        val isValidResult = result?.isValid ?: true
-        val message = context.getString(result?.message ?: R.string.empty)
-        val errorEnabled = value.isNotBlank() && !isValidResult && message.isNotEmpty()
-
-        if (event == FormFieldEvent.TEXT_CHANGED) {
-            autoTab(isValidResult, type)
-        }
-
-        layout?.let {
-            it.isErrorEnabled = errorEnabled
-            it.error = message
-        }
-        updateSubmitButtonState()
-
-        if (hasCardNetworkChanged) {
-            textDidChange(
-                CardDetailsFieldType.SECURITY_NUMBER,
-                valueOfEditTextWithType(CardDetailsFieldType.SECURITY_NUMBER),
-                FormFieldEvent.FOCUS_CHANGED
-            )
-        }
-    }
-
-    private fun autoTab(isValidResult: Boolean, type: CardDetailsFieldType) {
-        if (isValidResult && type != CardDetailsFieldType.HOLDER_NAME && type != CardDetailsFieldType.COUNTRY) {
-            val types = CardDetailsFieldType.values().toList()
-            val nextFormFieldType = types.indexOf(type) + 1
-            if (types.size > nextFormFieldType && model.enabledFields.contains(types[nextFormFieldType])) {
-                when (val field = editTextForType(types[nextFormFieldType])) {
-                    is AutoCompleteTextView -> {
-                        editTextForType(type).clearFocus()
-                        field.showDropDown()
-                        field.setOnItemClickListener { _, _, _, _ ->
-                            editTextForType(CardDetailsFieldType.POST_CODE).requestFocus()
+                    setOnFocusChangeListener { _, hasFocus ->
+                        val text = valueOfEditTextWithType(type)
+                        if (!hasFocus) {
+                            textDidChange(type, text, FormFieldEvent.FOCUS_CHANGED)
+                        } else {
+                            scrollView.smoothScrollToView(editTextForType(type))
                         }
                     }
-                    else -> {
-                        field.requestFocus()
+                    addTextChangedListener {
+                        val text = it.toString()
+                        textDidChange(type, text, FormFieldEvent.TEXT_CHANGED)
                     }
                 }
             }
         }
-    }
 
-    private fun updateSubmitButtonState() {
-        val validationResults = model.enabledFields.map {
-            validationResultsCache[it] ?: false
-        }
+        private fun textDidChange(
+            type: CardDetailsFieldType,
+            value: String,
+            event: FormFieldEvent,
+        ) {
+            var hasCardNetworkChanged = false
+            if (type == CardDetailsFieldType.NUMBER) {
+                validatorInstance<SecurityCodeValidator>()?.let {
+                    val newCardNetwork = model.cardNetwork ?: CardNetwork.ofNumber(value)
+                    hasCardNetworkChanged = it.cardNetwork != newCardNetwork
+                    if (hasCardNetworkChanged) {
+                        it.cardNetwork = newCardNetwork
+                    }
+                }
+            }
 
-        var isFormValid = false
-        if (validationResults.isNotEmpty()) {
-            isFormValid = validationResults.reduce { acc, b -> acc && b }
-        }
+            val validationResults =
+                validators.mapNotNull {
+                    if (it.fieldType == type.name) {
+                        it.validate(value, event)
+                    } else {
+                        null
+                    }
+                }
 
-        onValidationPassed(isFormValid)
-    }
+            val result = validationResults.firstOrNull()
 
-    private fun update() {
-        updateValidators()
-        updateFieldsVisibility()
-        updateFormatters()
+            validationResultsCache[type] = result?.isValid ?: true
 
-        if (model.enabledFields.contains(CardDetailsFieldType.COUNTRY)) {
-            setupCountrySpinner()
-        }
+            val layout = textInputLayoutForType(type)
+            val isValidResult = result?.isValid ?: true
+            val message = context.getString(result?.message ?: R.string.empty)
+            val errorEnabled = value.isNotBlank() && !isValidResult && message.isNotEmpty()
 
-        binding.cardEntrySubmitButton.state = model.actionButtonState
+            if (event == FormFieldEvent.TEXT_CHANGED) {
+                autoTab(isValidResult, type)
+            }
 
-        preFillFields()
-    }
+            layout?.let {
+                it.isErrorEnabled = errorEnabled
+                it.error = message
+            }
+            updateSubmitButtonState()
 
-    private fun preFillFields() = model.enabledFields.kForEach { field ->
-        val valueToFrom = valueOfEditTextWithType(field)
-        val valueToUpdateTo = model.valueOfFieldWithType(field)
-        if (valueToFrom != valueToUpdateTo) {
-            with(editTextForType(field).text) {
-                clear()
-                append(valueToUpdateTo)
+            if (hasCardNetworkChanged) {
+                textDidChange(
+                    CardDetailsFieldType.SECURITY_NUMBER,
+                    valueOfEditTextWithType(CardDetailsFieldType.SECURITY_NUMBER),
+                    FormFieldEvent.FOCUS_CHANGED,
+                )
             }
         }
-    }
 
-    private fun updateValidators() {
-        validatorInstance<CardNumberValidator>()?.let {
-            it.supportedNetworks = model.supportedNetworks
+        private fun autoTab(
+            isValidResult: Boolean,
+            type: CardDetailsFieldType,
+        ) {
+            if (isValidResult && type != CardDetailsFieldType.HOLDER_NAME && type != CardDetailsFieldType.COUNTRY) {
+                val types = CardDetailsFieldType.values().toList()
+                val nextFormFieldType = types.indexOf(type) + 1
+                if (types.size > nextFormFieldType && model.enabledFields.contains(types[nextFormFieldType])) {
+                    when (val field = editTextForType(types[nextFormFieldType])) {
+                        is AutoCompleteTextView -> {
+                            editTextForType(type).clearFocus()
+                            field.showDropDown()
+                            field.setOnItemClickListener { _, _, _, _ ->
+                                editTextForType(CardDetailsFieldType.POST_CODE).requestFocus()
+                            }
+                        }
+                        else -> {
+                            field.requestFocus()
+                        }
+                    }
+                }
+            }
         }
-        validatorInstance<SecurityCodeValidator>()?.let {
+
+        private fun updateSubmitButtonState() {
+            val validationResults =
+                model.enabledFields.map {
+                    validationResultsCache[it] ?: false
+                }
+
+            var isFormValid = false
+            if (validationResults.isNotEmpty()) {
+                isFormValid = validationResults.reduce { acc, b -> acc && b }
+            }
+
+            onValidationPassed(isFormValid)
+        }
+
+        private fun update() {
+            updateValidators()
+            updateFieldsVisibility()
+            updateFormatters()
+
+            if (model.enabledFields.contains(CardDetailsFieldType.COUNTRY)) {
+                setupCountrySpinner()
+            }
+
+            binding.cardEntrySubmitButton.state = model.actionButtonState
+
+            preFillFields()
+        }
+
+        private fun preFillFields() =
+            model.enabledFields.kForEach { field ->
+                val valueToFrom = valueOfEditTextWithType(field)
+                val valueToUpdateTo = model.valueOfFieldWithType(field)
+                if (valueToFrom != valueToUpdateTo) {
+                    with(editTextForType(field).text) {
+                        clear()
+                        append(valueToUpdateTo)
+                    }
+                }
+            }
+
+        private fun updateValidators() {
+            validatorInstance<CardNumberValidator>()?.let {
+                it.supportedNetworks = model.supportedNetworks
+            }
+            validatorInstance<SecurityCodeValidator>()?.let {
+                val cardNumber = model.valueOfFieldWithType(CardDetailsFieldType.NUMBER)
+                it.cardNetwork = model.cardNetwork ?: CardNetwork.ofNumber(cardNumber)
+            }
+        }
+
+        private fun updateFormatters() {
             val cardNumber = model.valueOfFieldWithType(CardDetailsFieldType.NUMBER)
-            it.cardNetwork = model.cardNetwork ?: CardNetwork.ofNumber(cardNumber)
+            securityCodeFormatter.cardNetwork = model.cardNetwork ?: CardNetwork.ofNumber(cardNumber)
         }
-    }
 
-    private fun updateFormatters() {
-        val cardNumber = model.valueOfFieldWithType(CardDetailsFieldType.NUMBER)
-        securityCodeFormatter.cardNetwork = model.cardNetwork ?: CardNetwork.ofNumber(cardNumber)
-    }
-
-    private fun updateFieldsVisibility() {
-        CardDetailsFieldType.values().kForEach { fieldType ->
-            textInputLayoutForType(fieldType)?.let { layout ->
-                val isEnabled = model.enabledFields.contains(fieldType)
-                layout.visibility = if (isEnabled) View.VISIBLE else View.GONE
+        private fun updateFieldsVisibility() {
+            CardDetailsFieldType.values().kForEach { fieldType ->
+                textInputLayoutForType(fieldType)?.let { layout ->
+                    val isEnabled = model.enabledFields.contains(fieldType)
+                    layout.visibility = if (isEnabled) View.VISIBLE else View.GONE
+                }
             }
         }
-    }
 
-    private fun setupCountrySpinner() = binding.countryTextInputEditText.apply {
-        setAdapter(countriesAdapter)
-        setOnClickListener { showDropDown() }
-        setOnItemClickListener { _, _, _, id ->
-            val selected = Country.values()[id.toInt()]
-            onCountryDidSelect(selected)
+        private fun setupCountrySpinner() =
+            binding.countryTextInputEditText.apply {
+                setAdapter(countriesAdapter)
+                setOnClickListener { showDropDown() }
+                setOnItemClickListener { _, _, _, id ->
+                    val selected = Country.values()[id.toInt()]
+                    onCountryDidSelect(selected)
+                }
+            }
+
+        private fun editTextForType(type: CardDetailsFieldType): EditText =
+            when (type) {
+                CardDetailsFieldType.NUMBER -> binding.numberTextInputEditText
+                CardDetailsFieldType.HOLDER_NAME -> binding.nameTextInputEditText
+                CardDetailsFieldType.EXPIRATION_DATE -> binding.expirationDateTextInputEditText
+                CardDetailsFieldType.SECURITY_NUMBER -> binding.securityNumberTextInputEditText
+                CardDetailsFieldType.COUNTRY -> binding.countryTextInputEditText
+                CardDetailsFieldType.POST_CODE -> binding.postcodeTextInputEditText
+            }
+
+        private fun textInputLayoutForType(type: CardDetailsFieldType): JudoEditTextInputLayout? {
+            val editText = editTextForType(type)
+            return editText.parentOfType(JudoEditTextInputLayout::class.java)
+        }
+
+        private fun valueOfEditTextWithType(type: CardDetailsFieldType): String {
+            val editText = editTextForType(type)
+            return editText.text.toString()
+        }
+
+        private fun onValidationPassed(isFormValid: Boolean) {
+            val inputModel =
+                CardDetailsInputModel(
+                    valueOfEditTextWithType(CardDetailsFieldType.NUMBER),
+                    valueOfEditTextWithType(CardDetailsFieldType.HOLDER_NAME),
+                    valueOfEditTextWithType(CardDetailsFieldType.EXPIRATION_DATE),
+                    valueOfEditTextWithType(CardDetailsFieldType.SECURITY_NUMBER),
+                    valueOfEditTextWithType(CardDetailsFieldType.COUNTRY),
+                    valueOfEditTextWithType(CardDetailsFieldType.POST_CODE),
+                )
+
+            onFormValidationStatusListener?.invoke(inputModel, isFormValid)
+        }
+
+        private inline fun <reified V> validatorInstance(): V? {
+            return validators.firstOrNull { it is V } as V?
         }
     }
-
-    private fun editTextForType(type: CardDetailsFieldType): EditText = when (type) {
-        CardDetailsFieldType.NUMBER -> binding.numberTextInputEditText
-        CardDetailsFieldType.HOLDER_NAME -> binding.nameTextInputEditText
-        CardDetailsFieldType.EXPIRATION_DATE -> binding.expirationDateTextInputEditText
-        CardDetailsFieldType.SECURITY_NUMBER -> binding.securityNumberTextInputEditText
-        CardDetailsFieldType.COUNTRY -> binding.countryTextInputEditText
-        CardDetailsFieldType.POST_CODE -> binding.postcodeTextInputEditText
-    }
-
-    private fun textInputLayoutForType(type: CardDetailsFieldType): JudoEditTextInputLayout? {
-        val editText = editTextForType(type)
-        return editText.parentOfType(JudoEditTextInputLayout::class.java)
-    }
-
-    private fun valueOfEditTextWithType(type: CardDetailsFieldType): String {
-        val editText = editTextForType(type)
-        return editText.text.toString()
-    }
-
-    private fun onValidationPassed(isFormValid: Boolean) {
-        val inputModel = CardDetailsInputModel(
-            valueOfEditTextWithType(CardDetailsFieldType.NUMBER),
-            valueOfEditTextWithType(CardDetailsFieldType.HOLDER_NAME),
-            valueOfEditTextWithType(CardDetailsFieldType.EXPIRATION_DATE),
-            valueOfEditTextWithType(CardDetailsFieldType.SECURITY_NUMBER),
-            valueOfEditTextWithType(CardDetailsFieldType.COUNTRY),
-            valueOfEditTextWithType(CardDetailsFieldType.POST_CODE)
-        )
-
-        onFormValidationStatusListener?.invoke(inputModel, isFormValid)
-    }
-
-    private inline fun <reified V> validatorInstance(): V? {
-        return validators.firstOrNull { it is V } as V?
-    }
-}

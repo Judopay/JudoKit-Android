@@ -14,24 +14,25 @@ private const val CACHE_CONTROL = "no-cache"
 private const val PAYMENT_SESSION_HEADER = "Payment-Session"
 
 internal class RecommendationHeadersInterceptor(
-    private val authorization: Authorization
+    private val authorization: Authorization,
 ) : Interceptor {
-
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val session = authorization.headers[PAYMENT_SESSION_HEADER]
 
-        val headers = Headers.Builder()
-            .add(PAYMENT_SESSION_HEADER.lowercase(), session ?: "")
-            .add(CONTENT_TYPE_HEADER, JSON_MIME_TYPE)
-            .add(ACCEPT_HEADER, JSON_MIME_TYPE)
-            .add(CACHE_CONTROL_HEADER, CACHE_CONTROL)
-            .build()
+        val headers =
+            Headers.Builder()
+                .add(PAYMENT_SESSION_HEADER.lowercase(), session ?: "")
+                .add(CONTENT_TYPE_HEADER, JSON_MIME_TYPE)
+                .add(ACCEPT_HEADER, JSON_MIME_TYPE)
+                .add(CACHE_CONTROL_HEADER, CACHE_CONTROL)
+                .build()
 
-        val request = chain.request()
-            .newBuilder()
-            .headers(headers)
-            .build()
+        val request =
+            chain.request()
+                .newBuilder()
+                .headers(headers)
+                .build()
 
         return chain.proceed(request)
     }

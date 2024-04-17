@@ -2,12 +2,14 @@ package com.judopay.judokit.android.model
 
 import android.os.Parcelable
 import com.judopay.judo3ds2.customization.UiCustomization
+import com.judopay.judokit.android.trimIndent
 import kotlinx.parcelize.Parcelize
 
 /**
  * Configuration object to change some UI parameters on card entry and payment methods screens
  */
 @Parcelize
+@Suppress("LongParameterList")
 class UiConfiguration internal constructor(
     val avsEnabled: Boolean,
     val shouldPaymentMethodsDisplayAmount: Boolean,
@@ -16,9 +18,8 @@ class UiConfiguration internal constructor(
     val shouldAskForCSC: Boolean,
     val shouldAskForCardholderName: Boolean,
     val shouldAskForBillingInformation: Boolean,
-    val threeDSUiCustomization: UiCustomization?
+    val threeDSUiCustomization: UiCustomization?,
 ) : Parcelable {
-
     /**
      * Builder class for creating an instance of [UiConfiguration]
      */
@@ -55,8 +56,7 @@ class UiConfiguration internal constructor(
         /**
          * Sets a boolean property that defines if the SDK should ask for the card security code when paying with card token
          */
-        fun setShouldAskForCSC(shouldAskForCSC: Boolean?) =
-            apply { this.shouldAskForCSC = shouldAskForCSC }
+        fun setShouldAskForCSC(shouldAskForCSC: Boolean?) = apply { this.shouldAskForCSC = shouldAskForCSC }
 
         /**
          * Sets a boolean property that defines if the SDK should aks for the cardholder name when paying with card token
@@ -83,7 +83,8 @@ class UiConfiguration internal constructor(
 
         /**
          * Creates an instance of [UiConfiguration] based on provided data in setters.
-         * @throws IllegalArgumentException If avsEnabled, shouldPaymentMethodsDisplayAmount, shouldPaymentMethodsVerifySecurityCode or shouldPaymentButtonDisplayAmount is null.
+         * @throws IllegalArgumentException If avsEnabled, shouldPaymentMethodsDisplayAmount,
+         * shouldPaymentMethodsVerifySecurityCode or shouldPaymentButtonDisplayAmount is null.
          */
         fun build(): UiConfiguration {
             val avsEnabled = requireNotNull(this.avsEnabled)
@@ -105,12 +106,21 @@ class UiConfiguration internal constructor(
                 shouldAskForCSC = shouldAskForCSC,
                 shouldAskForCardholderName = shouldAskForCardholderName,
                 shouldAskForBillingInformation = shouldAskForBillingInformation,
-                threeDSUiCustomization = threeDSUiCustomization
+                threeDSUiCustomization = threeDSUiCustomization,
             )
         }
     }
 
     override fun toString(): String {
-        return "UiConfiguration(avsEnabled=$avsEnabled, shouldPaymentMethodsDisplayAmount=$shouldPaymentMethodsDisplayAmount, shouldPaymentMethodsVerifySecurityCode=$shouldPaymentMethodsVerifySecurityCode, shouldPaymentButtonDisplayAmount=$shouldPaymentButtonDisplayAmount, shouldAskForBillingInformation=$shouldAskForBillingInformation, threeDSUiCustomization=$threeDSUiCustomization)"
+        return """
+            UiConfiguration(
+                avsEnabled=$avsEnabled,
+                shouldPaymentMethodsDisplayAmount=$shouldPaymentMethodsDisplayAmount,
+                shouldPaymentMethodsVerifySecurityCode=$shouldPaymentMethodsVerifySecurityCode,
+                shouldPaymentButtonDisplayAmount=$shouldPaymentButtonDisplayAmount,
+                shouldAskForBillingInformation=$shouldAskForBillingInformation,
+                threeDSUiCustomization=$threeDSUiCustomization
+            )
+            """.trimIndent(true)
     }
 }

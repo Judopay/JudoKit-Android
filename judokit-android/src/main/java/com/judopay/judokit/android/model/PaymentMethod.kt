@@ -25,26 +25,29 @@ enum class PaymentMethod : Parcelable {
      * Adds iDEAL payment method.
      * [Currency] must also be set to EUR to use this payment method.
      */
-    IDEAL
+    IDEAL,
 }
 
 internal val PaymentMethod.icon
-    get() = when (this) {
-        PaymentMethod.CARD -> R.drawable.ic_cards
-        PaymentMethod.GOOGLE_PAY -> R.drawable.ic_google_pay
-        PaymentMethod.IDEAL -> R.drawable.ic_ideal
-    }
+    get() =
+        when (this) {
+            PaymentMethod.CARD -> R.drawable.ic_cards
+            PaymentMethod.GOOGLE_PAY -> R.drawable.ic_google_pay
+            PaymentMethod.IDEAL -> R.drawable.ic_ideal
+        }
 
 internal val PaymentMethod.text
-    get() = when (this) {
-        PaymentMethod.CARD -> R.string.cards
-        PaymentMethod.IDEAL -> R.string.ideal_payment
-        PaymentMethod.GOOGLE_PAY -> R.string.empty
-    }
+    get() =
+        when (this) {
+            PaymentMethod.CARD -> R.string.cards
+            PaymentMethod.IDEAL -> R.string.ideal_payment
+            PaymentMethod.GOOGLE_PAY -> R.string.empty
+        }
 
 internal val PaymentMethod.paymentButtonType: PaymentButtonType
-    get() = when (this) {
-        PaymentMethod.IDEAL -> PaymentButtonType.IDEAL
-        PaymentMethod.GOOGLE_PAY -> PaymentButtonType.GOOGLE_PAY
-        else -> PaymentButtonType.PLAIN
-    }
+    get() =
+        when (this) {
+            PaymentMethod.IDEAL -> PaymentButtonType.IDEAL
+            PaymentMethod.GOOGLE_PAY -> PaymentButtonType.GOOGLE_PAY
+            else -> PaymentButtonType.PLAIN
+        }

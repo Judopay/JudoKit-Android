@@ -5,5 +5,5 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class GooglePayMerchantInfo(
-    val merchantName: String?
+    val merchantName: String?,
 ) : Parcelable

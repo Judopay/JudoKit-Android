@@ -52,5 +52,5 @@ enum class Currency : Parcelable {
     RSD,
     RON,
     MXN,
-    UAH
+    UAH,
 }

@@ -8,8 +8,8 @@ import android.location.LocationManager
 import android.util.DisplayMetrics
 import android.view.WindowManager
 import android.webkit.WebSettings
+import androidx.core.content.PermissionChecker
 import com.judopay.devicedna.DeviceDNA
-import com.judopay.devicedna.PermissionUtil
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.model.Browser
 import com.judopay.judokit.android.api.model.ClientDetails
@@ -27,25 +27,32 @@ import java.util.Enumeration
 import java.util.Locale
 import java.util.TimeZone
 
+fun isPermissionGranted(
+    context: Context,
+    permission: String,
+): Boolean {
+    return PermissionChecker.checkSelfPermission(context, permission) == PermissionChecker.PERMISSION_GRANTED
+}
+
 class PayloadService(private val context: Context) {
-    fun getEnhancedPaymentDetail(): EnhancedPaymentDetail =
-        EnhancedPaymentDetail(getSdkInfo(), getConsumerDevice())
+    fun getEnhancedPaymentDetail(): EnhancedPaymentDetail = EnhancedPaymentDetail(getSdkInfo(), getConsumerDevice())
 
     private fun getSdkInfo(): SDKInfo {
         return SDKInfo(JUDO_KIT_VERSION, context.getString(R.string.judokit_android))
     }
 
-    private fun getConsumerDevice(): ConsumerDevice = ConsumerDevice(
-        getIPAddress(),
-        getClientDetails(),
-        getGeolocation(),
-        getThreeDSecureInfo()
-    )
+    private fun getConsumerDevice(): ConsumerDevice =
+        ConsumerDevice(
+            getIPAddress(),
+            getClientDetails(),
+            getGeolocation(),
+            getThreeDSecureInfo(),
+        )
 
     private fun getClientDetails(): ClientDetails {
         val deviceDNA = DeviceDNA(context)
         val mapDeviceDna =
-            deviceDNA.deviceDNA
+            deviceDNA.dna
         return ClientDetails(mapDeviceDna["key"], mapDeviceDna["value"])
     }
 
@@ -59,20 +66,23 @@ class PayloadService(private val context: Context) {
     }
 
     @SuppressLint("MissingPermission")
+    @Suppress("NestedBlockDepth")
     private fun getLastKnownLocation(): Location? {
         val manager =
             context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val providers = manager.getProviders(true)
         var lastKnownLocation: Location? = null
         for (provider in providers) {
-            val accessFineLocation = PermissionUtil.isPermissionGranted(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-            val accessCoarseLocation = PermissionUtil.isPermissionGranted(
-                context,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
+            val accessFineLocation =
+                isPermissionGranted(
+                    context,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                )
+            val accessCoarseLocation =
+                isPermissionGranted(
+                    context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                )
             if (accessCoarseLocation || accessFineLocation) {
                 if (lastKnownLocation == null) {
                     lastKnownLocation = manager.getLastKnownLocation(provider)
@@ -105,6 +115,7 @@ class PayloadService(private val context: Context) {
         return Browser(deviceLanguage, screenHeight, screenWidth, timeZone, userAgent)
     }
 
+    @Suppress("NestedBlockDepth", "SwallowedException")
     private fun getIPAddress(): String {
         try {
             val en: Enumeration<NetworkInterface> = NetworkInterface.getNetworkInterfaces()
@@ -114,12 +125,12 @@ class PayloadService(private val context: Context) {
                 while (enumIpAddr.hasMoreElements()) {
                     val inetAddress: InetAddress = enumIpAddr.nextElement()
                     if (!inetAddress.isLoopbackAddress && inetAddress is Inet4Address) {
-                        return inetAddress.getHostAddress()
+                        return inetAddress.getHostAddress() ?: ""
                     }
                 }
             }
         } catch (ex: SocketException) {
-            ex.printStackTrace()
+            // ignore
         }
         return ""
     }

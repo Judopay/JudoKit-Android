@@ -11,9 +11,8 @@ import com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayo
 internal class CardNumberInputMaskTextWatcher(
     private val editText: EditText,
     private val securityCodeMask: SecurityCodeInputMaskTextWatcher?,
-    private var cardNetwork: CardNetwork? = null
+    private var cardNetwork: CardNetwork? = null,
 ) : InputMaskTextWatcher(editText, CardNetwork.OTHER.cardNumberMask) {
-
     override fun afterTextChanged(s: Editable?) {
         // adjust the mask according to detected card network if any
         val network = cardNetwork ?: CardNetwork.ofNumber(s.toString())

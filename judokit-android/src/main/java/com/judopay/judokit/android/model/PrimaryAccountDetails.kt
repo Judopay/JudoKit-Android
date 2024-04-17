@@ -11,9 +11,8 @@ class PrimaryAccountDetails internal constructor(
     var name: String?,
     var accountNumber: String?,
     var dateOfBirth: String?,
-    var postCode: String?
+    var postCode: String?,
 ) : Parcelable {
-
     /**
      * Builder class for creating a [PrimaryAccountDetails] instance.
      */

@@ -72,30 +72,40 @@ enum class PaymentWidgetType : Parcelable {
     /**
      * Starts a pre-auth token payment with optionally asking the user to enter their CSC and/or cardholder name.
      */
-    TOKEN_PRE_AUTH
+    TOKEN_PRE_AUTH,
 }
 
 val PaymentWidgetType.navigationGraphId: Int
     @Throws(UnsupportedOperationException::class)
-    get() = when (this) {
-        PaymentWidgetType.CARD_PAYMENT,
-        PaymentWidgetType.PRE_AUTH,
-        PaymentWidgetType.REGISTER_CARD,
-        PaymentWidgetType.CREATE_CARD_TOKEN,
-        PaymentWidgetType.CHECK_CARD,
-        PaymentWidgetType.TOKEN_PAYMENT,
-        PaymentWidgetType.TOKEN_PRE_AUTH -> R.navigation.judo_card_input_graph
-        PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
-        PaymentWidgetType.PAYMENT_METHODS,
-        PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> R.navigation.judo_payment_methods_graph
-        else -> throw UnsupportedOperationException("Payment Widget of Type: $this not supported")
-    }
+    get() =
+        when (this) {
+            PaymentWidgetType.CARD_PAYMENT,
+            PaymentWidgetType.PRE_AUTH,
+            PaymentWidgetType.REGISTER_CARD,
+            PaymentWidgetType.CREATE_CARD_TOKEN,
+            PaymentWidgetType.CHECK_CARD,
+            PaymentWidgetType.TOKEN_PAYMENT,
+            PaymentWidgetType.TOKEN_PRE_AUTH,
+            -> R.navigation.judo_card_input_graph
+            PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
+            PaymentWidgetType.PAYMENT_METHODS,
+            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
+            -> R.navigation.judo_payment_methods_graph
+            else -> throw UnsupportedOperationException("Payment Widget of Type: $this not supported")
+        }
 
 val PaymentWidgetType.isPaymentMethodsWidget: Boolean
-    get() = this == PaymentWidgetType.PAYMENT_METHODS || this == PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS || this == PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS
+    get() =
+        this == PaymentWidgetType.PAYMENT_METHODS ||
+            this == PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS ||
+            this == PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS
 
 val PaymentWidgetType.isCardPaymentWidget: Boolean
-    get() = this == PaymentWidgetType.CARD_PAYMENT || this == PaymentWidgetType.PRE_AUTH || this == PaymentWidgetType.REGISTER_CARD || this == PaymentWidgetType.CHECK_CARD
+    get() =
+        this == PaymentWidgetType.CARD_PAYMENT ||
+            this == PaymentWidgetType.PRE_AUTH ||
+            this == PaymentWidgetType.REGISTER_CARD ||
+            this == PaymentWidgetType.CHECK_CARD
 
 val PaymentWidgetType.isGooglePayWidget: Boolean
     get() = this == PaymentWidgetType.GOOGLE_PAY || this == PaymentWidgetType.PRE_AUTH_GOOGLE_PAY

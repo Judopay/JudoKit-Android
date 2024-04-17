@@ -7,11 +7,11 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Testing Google pay wallet builder")
 internal class GooglePayWalletTest {
-
-    private val wallet = GooglePayWallet.Builder()
-        .setCardDetails("cardDetails")
-        .setCardNetwork("network")
-        .setToken("token")
+    private val wallet =
+        GooglePayWallet.Builder()
+            .setCardDetails("cardDetails")
+            .setCardNetwork("network")
+            .setToken("token")
 
     @Test
     @DisplayName("Should throw exception on providing null card network")

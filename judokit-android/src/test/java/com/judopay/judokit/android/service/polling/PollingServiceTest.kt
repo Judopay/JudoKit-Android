@@ -20,18 +20,19 @@ import retrofit2.await
 @ExperimentalCoroutinesApi
 @DisplayName("Testing polling logic")
 internal class PollingServiceTest {
-
     private val service: JudoApiService = mockk(relaxed = true)
     private lateinit var actualResult: PollingResult<BankSaleStatusResponse>
 
-    private val sut = PollingService(service).apply {
-        orderId = "orderId"
-        result = { actualResult = it }
-    }
+    private val sut =
+        PollingService(service).apply {
+            orderId = "orderId"
+            result = { actualResult = it }
+        }
 
-    private val statusResponse = mockk<BankSaleStatusResponse>(relaxed = true) {
-        every { orderDetails.orderStatus } returns OrderStatus.SUCCEEDED
-    }
+    private val statusResponse =
+        mockk<BankSaleStatusResponse>(relaxed = true) {
+            every { orderDetails.orderStatus } returns OrderStatus.SUCCEEDED
+        }
 
     private val statusCallResult: JudoApiCallResult.Success<BankSaleStatusResponse> =
         mockk(relaxed = true) {

@@ -13,11 +13,11 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import com.judokit.android.examples.result.ResultActivity
-import com.judopay.judokit.android.R as SDK
-import com.judokit.android.examples.R as Examples
+import com.judokit.android.examples.test.BuildConfig
 import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.startsWith
-import com.judokit.android.examples.test.BuildConfig
+import com.judokit.android.examples.R as Examples
+import com.judopay.judokit.android.R as SDK
 
 private val context = InstrumentationRegistry.getInstrumentation().targetContext
 private val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
@@ -25,10 +25,15 @@ private val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
 /*
 * Wait for an activity to be resumed before running a function
 */
-fun awaitActivityThenRun(activityClassName: String, func: () -> Unit) {
-    val idlingResource = ActivityResumeIdlingResource(
-        customName = "[activity-check-idling-resource]-${activityClassName}",
-        activityClassName = activityClassName)
+fun awaitActivityThenRun(
+    activityClassName: String,
+    func: () -> Unit,
+) {
+    val idlingResource =
+        ActivityResumeIdlingResource(
+            customName = "[activity-check-idling-resource]-$activityClassName",
+            activityClassName = activityClassName,
+        )
 
     awaitIdlingResourceThenRun(idlingResource, func)
 }
@@ -36,7 +41,10 @@ fun awaitActivityThenRun(activityClassName: String, func: () -> Unit) {
 /*
  * Wait for an idling resource to be idle before running a function
  */
-fun <IR: IdlingResource>awaitIdlingResourceThenRun(idlingResource: IR, func: () -> Unit) = IdlingRegistry.getInstance().apply {
+fun <IR : IdlingResource> awaitIdlingResourceThenRun(
+    idlingResource: IR,
+    func: () -> Unit,
+) = IdlingRegistry.getInstance().apply {
     register(idlingResource)
     func()
     unregister(idlingResource)
@@ -59,18 +67,21 @@ fun clickCompleteOn3DS2Screen() {
             Thread.sleep(1000)
             Espresso.onView(ViewMatchers.withText("COMPLETE"))
                 .perform(ViewActions.longClick())
-
         } catch (e: IdlingResourceTimeoutException) {
             println("Global Pay screen unable to continue")
         }
-
     }
 }
 
 /*
  * Assert receipt object values
  */
-fun assertReceiptObject(message: String, receiptId: String, result: String, type: String) {
+fun assertReceiptObject(
+    message: String,
+    receiptId: String,
+    result: String,
+    type: String,
+) {
     awaitActivityThenRun(ResultActivity::class.java.name) {
         Espresso.onView(ViewMatchers.withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(8))
@@ -93,7 +104,12 @@ fun assertReceiptObject(message: String, receiptId: String, result: String, type
 /*
  * Fill card payment sheet
  */
-fun enterPaymentSheetDetails(cardNumber: String, cardHolder: String, cardExpiry: String, cardSecurityCode: String) {
+fun enterPaymentSheetDetails(
+    cardNumber: String,
+    cardHolder: String,
+    cardExpiry: String,
+    cardSecurityCode: String,
+) {
     fillTextField(SDK.id.numberTextInputEditText, cardNumber)
 
     fillTextField(SDK.id.nameTextInputEditText, cardHolder)
@@ -103,12 +119,20 @@ fun enterPaymentSheetDetails(cardNumber: String, cardHolder: String, cardExpiry:
     fillTextField(SDK.id.securityNumberTextInputEditText, cardSecurityCode)
 }
 
-private fun fillTextField(@IdRes textFieldId: Int, text: String) {
+private fun fillTextField(
+    @IdRes textFieldId: Int,
+    text: String,
+) {
     Espresso.onView((ViewMatchers.withId(textFieldId)))
         .perform(ViewActions.clearText(), ViewActions.typeText(text))
 }
 
-fun setupRavelin(action: String, toa: String, exemption: String, challenge: String) {
+fun setupRavelin(
+    action: String,
+    toa: String,
+    exemption: String,
+    challenge: String,
+) {
     val recommendationURL = BuildConfig.RECOMMENDATION_URL
     val suffix = "$action/$toa/$exemption/$challenge"
     sharedPrefs

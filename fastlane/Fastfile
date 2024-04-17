@@ -1,0 +1,101 @@
+default_platform(:android)
+
+# Check if an environment variable exists and is not empty
+def env_var_valid?(var_name)
+  return ENV.has_key?(var_name) && !ENV[var_name].to_s.empty?
+end
+
+# Create a keystore for the example app
+# The keystore is created from the ANDROID_SIGNING_PRIVATE_KEY, ANDROID_SIGNING_CERTIFICATE, and ANDROID_KEYSTORE_PASSWORD environment variables
+# If any of these environment variables are not set, the example app will not be signed
+def create_example_app_keystore
+    if ['ANDROID_SIGNING_PRIVATE_KEY', 'ANDROID_SIGNING_CERTIFICATE', 'ANDROID_KEYSTORE_PASSWORD'].all? { |var_name| env_var_valid?(var_name) }
+        UI.message("Creating a keystore for the example app")
+
+        sh "echo \"$ANDROID_SIGNING_PRIVATE_KEY\" | base64 -d > signing.key"
+        sh "echo \"$ANDROID_SIGNING_CERTIFICATE\" | base64 -d > signing.crt"
+
+        sh "openssl pkcs12 -export -inkey signing.key -in signing.crt -out signing.p12 -passout \"pass:$ANDROID_KEYSTORE_PASSWORD\""
+        sh "keytool -importkeystore -srckeystore signing.p12 -srcstoretype pkcs12 -srcstorepass \"$ANDROID_KEYSTORE_PASSWORD\" -destkeystore signing.jks -deststoretype JKS -storepass \"$ANDROID_KEYSTORE_PASSWORD\" -noprompt 2>/dev/null"
+
+        File.delete("signing.key", "signing.crt", "signing.p12")
+
+        return {
+           "android.injected.signing.store.file" => "#{Dir.pwd}/signing.jks",
+           "android.injected.signing.store.password" => ENV['ANDROID_KEYSTORE_PASSWORD'],
+           "android.injected.signing.key.alias" => "1",
+           "android.injected.signing.key.password" => ENV['ANDROID_KEYSTORE_PASSWORD'],
+        }
+    end
+
+    UI.important("Code signing environment variables are not set. The example app will not be signed.")
+    return {}
+end
+
+platform :android do
+
+  before_all do
+    prepare_google_services_json
+  end
+
+  desc "Create the google-services.json file for the example app"
+  lane :prepare_google_services_json do
+    if env_var_valid?('ANDROID_GOOGLE_SERVICES_JSON')
+      Dir.chdir('..') do
+        sh "echo \"$ANDROID_GOOGLE_SERVICES_JSON\" | base64 -d > judokit-android-examples/google-services.json"
+      end
+    else
+      UI.abort_with_message!("ANDROID_GOOGLE_SERVICES_JSON environment variable is not set. Unable to build the project.")
+    end
+  end
+
+  desc "Run the pull request checks"
+  lane :pull_request_checks do
+    gradle(task: "clean", print_command: false)
+    gradle(task: "check", print_command: false)
+    gradle(task: "judokit-android:assemble", print_command: false, build_type: "Release")
+    gradle(task: "judokit-android-examples:assemble", print_command: false, build_type: "Release")
+  end
+
+  desc "Build the Example App"
+  lane :build_example_app do
+    latest_release = firebase_app_distribution_get_latest_release app:ENV['ANDROID_FIREBASE_APP_ID']
+    current_version = latest_release.nil? ? 0 : latest_release[:buildVersion].to_i
+
+    properties = create_example_app_keystore
+    properties["android.injected.version.code"] = current_version + 1
+
+    gradle(
+      task: "judokit-android-examples:clean judokit-android-examples:assemble",
+      build_type: "Release",
+      print_command: false,
+      properties: properties
+    )
+  end
+
+  desc "Deploy a new version of the Example App to the Firebase App Distribution"
+  lane :example_app_distribution do
+    firebase_app_distribution_options = {
+      app: ENV['ANDROID_FIREBASE_APP_ID'],
+      groups: 'default-testers',
+      release_notes: changelog_from_git_commits(commits_count: 1)
+    }
+
+    build_example_app
+
+    firebase_app_distribution firebase_app_distribution_options
+  end
+
+  desc "Releases the SDK to Maven Central"
+  lane :release_sdk do
+    if env_var_valid?('ORG_GRADLE_PROJECT_signingKey_base64')
+      sh "export ORG_GRADLE_PROJECT_signingKey=$(echo \"$ORG_GRADLE_PROJECT_signingKey_base64\" | base64 -d)"
+    else
+      UI.abort_with_message!("ORG_GRADLE_PROJECT_signingKey_base64 environment variable is not set. Unable to sign the artifact.")
+    end
+
+    gradle(task: "judokit-android:build judokit-android:dokkaJavadoc")
+    gradle(task: "publishToSonatype closeAndReleaseSonatypeStagingRepository")
+  end
+
+end

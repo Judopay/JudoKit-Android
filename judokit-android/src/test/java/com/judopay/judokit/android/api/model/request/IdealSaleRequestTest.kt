@@ -7,7 +7,6 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Testing Ideal sale request builder")
 internal class IdealSaleRequestTest {
-
     private val request = IdealSaleRequest.Builder()
 
     @Test
@@ -20,7 +19,7 @@ internal class IdealSaleRequestTest {
                 .setJudoId("judo id")
                 .setBic("bic")
                 .build(),
-            getIdealSaleRequest()
+            getIdealSaleRequest(),
         )
     }
 
@@ -90,9 +89,10 @@ internal class IdealSaleRequestTest {
         }
     }
 
-    private fun getIdealSaleRequest() = request.setAmount("1")
-        .setMerchantConsumerReference("reference")
-        .setMerchantPaymentReference("reference")
-        .setJudoId("judo id")
-        .setBic("bic").build()
+    private fun getIdealSaleRequest() =
+        request.setAmount("1")
+            .setMerchantConsumerReference("reference")
+            .setMerchantPaymentReference("reference")
+            .setJudoId("judo id")
+            .setBic("bic").build()
 }

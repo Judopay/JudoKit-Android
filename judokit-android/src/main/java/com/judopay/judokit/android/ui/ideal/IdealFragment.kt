@@ -40,8 +40,9 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val bic = arguments?.getString(JUDO_IDEAL_BANK)
-            ?: throw NullPointerException(BIC_NOT_NULL)
+        val bic =
+            arguments?.getString(JUDO_IDEAL_BANK)
+                ?: throw NullPointerException(BIC_NOT_NULL)
 
         val application = requireActivity().application
         val service = JudoApiServiceFactory.create(application, judo)
@@ -53,7 +54,7 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
         viewModel.saleStatusResult.observe(viewLifecycleOwner) { handleSaleStatusResult(it) }
 
         viewModel.isLoading.observe(
-            viewLifecycleOwner
+            viewLifecycleOwner,
         ) {
             if (it) {
                 binding.idealWebView.visibility = View.GONE
@@ -71,7 +72,11 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
         viewModel.send(IdealAction.Initialise(bic))
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
         _binding = IdealFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -88,13 +93,13 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
                 if (idealSaleResponse?.redirectUrl != null && idealSaleResponse.merchantRedirectUrl != null) {
                     binding.idealWebView.authorize(
                         idealSaleResponse.redirectUrl,
-                        idealSaleResponse.merchantRedirectUrl
+                        idealSaleResponse.merchantRedirectUrl,
                     )
                 } else {
                     sharedViewModel.paymentResult.postValue(
                         JudoPaymentResult.Error(
-                            JudoError.judoResponseParseError(resources)
-                        )
+                            JudoError.judoResponseParseError(resources),
+                        ),
                     )
                 }
             }
@@ -106,7 +111,10 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.backButton.setOnClickListener { sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled()) }
@@ -138,9 +146,10 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
                 }
             }
             is PollingResult.Success -> {
-                val result = JudoPaymentResult.Success(
-                    pollingResult.data?.toJudoResult(getLocale(resources)) ?: JudoResult()
-                )
+                val result =
+                    JudoPaymentResult.Success(
+                        pollingResult.data?.toJudoResult(getLocale(resources)) ?: JudoResult(),
+                    )
                 sharedViewModel.paymentResult.postValue(result)
             }
             is PollingResult.Failure -> {
@@ -149,9 +158,10 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
                 findNavController().popBackStack()
             }
             is PollingResult.CallFailure -> {
-                val result = pollingResult.error?.toJudoError() ?: JudoError.judoRequestFailedError(
-                    resources
-                )
+                val result =
+                    pollingResult.error?.toJudoError() ?: JudoError.judoRequestFailedError(
+                        resources,
+                    )
                 sharedViewModel.paymentResult.postValue(JudoPaymentResult.Error(result))
                 findNavController().popBackStack()
             }

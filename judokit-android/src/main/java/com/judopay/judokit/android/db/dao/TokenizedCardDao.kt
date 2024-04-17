@@ -9,7 +9,6 @@ import com.judopay.judokit.android.db.entity.TokenizedCardEntity
 
 @Dao
 interface TokenizedCardDao {
-
     @Query("SELECT * from tokenized_card ORDER BY isDefault DESC")
     fun getAllSortedByIsDefaultSync(): LiveData<List<TokenizedCardEntity>>
 

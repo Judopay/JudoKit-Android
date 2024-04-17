@@ -20,6 +20,7 @@ import retrofit2.Call
 
 const val RAVELIN_ENCRYPT_CLASS_NAME = "com.ravelin.cardEncryption.RavelinEncrypt"
 
+@Suppress("ReturnCount")
 private fun TransactionDetails.toRavelinEncryptedCard(rsaPublicKey: String): EncryptedCard? {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
         return null
@@ -40,24 +41,26 @@ private fun TransactionDetails.toRavelinEncryptedCard(rsaPublicKey: String): Enc
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-private fun EncryptedCard.toRecommendationRequest() = RecommendationRequest.Builder()
-    .setPaymentMethod(
-        paymentMethod = RecommendationPaymentMethod(
-            paymentMethodCipher = PaymentMethodCipher(
-                aesKeyCipherText = aesKeyCiphertext,
-                algorithm = algorithm,
-                cardCipherText = cardCiphertext,
-                keyIndex = keyIndex,
-                keySignature = "key-signature",
-                methodType = "paymentMethodCipher",
-                recommendationFeatureProviderSDKVersion = ravelinSDKVersion
-            )
+private fun EncryptedCard.toRecommendationRequest() =
+    RecommendationRequest.Builder()
+        .setPaymentMethod(
+            paymentMethod =
+                RecommendationPaymentMethod(
+                    paymentMethodCipher =
+                        PaymentMethodCipher(
+                            aesKeyCipherText = aesKeyCiphertext,
+                            algorithm = algorithm,
+                            cardCipherText = cardCiphertext,
+                            keyIndex = keyIndex,
+                            keySignature = "key-signature",
+                            methodType = "paymentMethodCipher",
+                            recommendationFeatureProviderSDKVersion = ravelinSDKVersion,
+                        ),
+                ),
         )
-    )
-    .build()
+        .build()
 
 class RecommendationService(private val context: Context, private val judo: Judo) {
-
     private val apiService: RecommendationApiService by lazy {
         RecommendationApiServiceFactory.create(context, judo)
     }
@@ -71,15 +74,17 @@ class RecommendationService(private val context: Context, private val judo: Judo
             isSupportedType // recommendation is only supported for payment, check and pre-auth transactions
     }
 
-    fun fetchOptimizationData(details: TransactionDetails, type: TransactionType): Call<RecommendationResponse> {
+    fun fetchOptimizationData(
+        details: TransactionDetails,
+        type: TransactionType,
+    ): Call<RecommendationResponse> {
         check(isRecommendationFeatureAvailable(type)) { "Recommendation feature is not available." }
 
         val config = judo.recommendationConfiguration
-            ?: throw IllegalStateException("Recommendation configuration is not set. Cannot create recommendation request.")
+        check(config != null) { "Recommendation configuration is not set. Cannot create recommendation request." }
 
-        val request = details.toRavelinEncryptedCard(config.rsaPublicKey)
-            ?.toRecommendationRequest()
-            ?: throw IllegalStateException("Invalid transaction details. Cannot create recommendation request.")
+        val request = details.toRavelinEncryptedCard(config.rsaPublicKey)?.toRecommendationRequest()
+        check(request != null) { "Invalid transaction details. Cannot create recommendation request." }
 
         return apiService.requestRecommendation(config.url, request)
     }

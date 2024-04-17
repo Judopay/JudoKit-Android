@@ -16,7 +16,7 @@ internal class PaymentWidgetTypeKtTest {
     fun returnCardInputNavigationGraphOnCardPayment() {
         assertEquals(
             R.navigation.judo_card_input_graph,
-            PaymentWidgetType.CARD_PAYMENT.navigationGraphId
+            PaymentWidgetType.CARD_PAYMENT.navigationGraphId,
         )
     }
 
@@ -25,7 +25,7 @@ internal class PaymentWidgetTypeKtTest {
     fun returnCardInputNavigationGraphOnPreAuth() {
         assertEquals(
             R.navigation.judo_card_input_graph,
-            PaymentWidgetType.PRE_AUTH.navigationGraphId
+            PaymentWidgetType.PRE_AUTH.navigationGraphId,
         )
     }
 
@@ -34,7 +34,7 @@ internal class PaymentWidgetTypeKtTest {
     fun returnCardInputNavigationGraphOnRegisterCard() {
         assertEquals(
             R.navigation.judo_card_input_graph,
-            PaymentWidgetType.REGISTER_CARD.navigationGraphId
+            PaymentWidgetType.REGISTER_CARD.navigationGraphId,
         )
     }
 
@@ -43,7 +43,7 @@ internal class PaymentWidgetTypeKtTest {
     fun returnCardInputNavigationGraphOnCreateCardToken() {
         assertEquals(
             R.navigation.judo_card_input_graph,
-            PaymentWidgetType.CREATE_CARD_TOKEN.navigationGraphId
+            PaymentWidgetType.CREATE_CARD_TOKEN.navigationGraphId,
         )
     }
 
@@ -52,34 +52,42 @@ internal class PaymentWidgetTypeKtTest {
     fun returnCardInputNavigationGraphOnCheckCard() {
         assertEquals(
             R.navigation.judo_card_input_graph,
-            PaymentWidgetType.CHECK_CARD.navigationGraphId
+            PaymentWidgetType.CHECK_CARD.navigationGraphId,
         )
     }
 
-    @DisplayName("Given navigationGraphId is called, when widget type is SERVER_TO_SERVER_PAYMENT_METHODS, then return judo_payment_methods_graph resource id")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given navigationGraphId is called, when widget type is SERVER_TO_SERVER_PAYMENT_METHODS, then return judo_payment_methods_graph resource id",
+    )
     @Test
     fun returnPaymentMethodsNavigationGraphOnServerToServer() {
         assertEquals(
             R.navigation.judo_payment_methods_graph,
-            PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS.navigationGraphId
+            PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS.navigationGraphId,
         )
     }
 
-    @DisplayName("Given navigationGraphId is called, when widget type is PAYMENT_METHODS, then return judo_payment_methods_graph resource id")
+    @DisplayName(
+        "Given navigationGraphId is called, when widget type is PAYMENT_METHODS, then return judo_payment_methods_graph resource id",
+    )
     @Test
     fun returnPaymentMethodsNavigationGraphOnPaymentMethods() {
         assertEquals(
             R.navigation.judo_payment_methods_graph,
-            PaymentWidgetType.PAYMENT_METHODS.navigationGraphId
+            PaymentWidgetType.PAYMENT_METHODS.navigationGraphId,
         )
     }
 
-    @DisplayName("Given navigationGraphId is called, when widget type is PRE_AUTH_PAYMENT_METHODS, then return judo_payment_methods_graph resource id")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given navigationGraphId is called, when widget type is PRE_AUTH_PAYMENT_METHODS, then return judo_payment_methods_graph resource id",
+    )
     @Test
     fun returnPaymentMethodsNavigationGraphOnPreAuthPaymentMethods() {
         assertEquals(
             R.navigation.judo_payment_methods_graph,
-            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS.navigationGraphId
+            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS.navigationGraphId,
         )
     }
 

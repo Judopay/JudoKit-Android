@@ -21,40 +21,46 @@ import com.judopay.judokit.android.ui.common.REG_EX_US_POST_CODE
 
 open class PostcodeValidator(
     open var country: Country? = null,
-    override val fieldType: String = BillingDetailsFieldType.POST_CODE.name
+    override val fieldType: String = BillingDetailsFieldType.POST_CODE.name,
 ) : Validator {
-
     private val postCodeGBRegEx = REG_EX_GB_POST_CODE.toRegex(RegexOption.IGNORE_CASE)
     private val postCodeUSRegEx = REG_EX_US_POST_CODE.toRegex(RegexOption.IGNORE_CASE)
     private val postCodeCARegEx = REG_EX_CA_POST_CODE.toRegex(RegexOption.IGNORE_CASE)
     private val postCodeOtherRegEx = REG_EX_OTHER_POST_CODE.toRegex(RegexOption.IGNORE_CASE)
 
-    override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult {
+    override fun validate(
+        input: String,
+        formFieldEvent: FormFieldEvent,
+    ): ValidationResult {
         val isValid = isPostCodeValid(input)
         val shouldDisplayMessage = formFieldEvent == FormFieldEvent.FOCUS_CHANGED
 
-        val message = if (shouldDisplayMessage) {
-            if (isValid) R.string.empty else errorString()
-        } else {
-            R.string.empty
-        }
+        val message =
+            if (shouldDisplayMessage) {
+                if (isValid) R.string.empty else errorString()
+            } else {
+                R.string.empty
+            }
 
         return ValidationResult(isValid, message)
     }
 
-    private fun errorString(): Int = when (country) {
-        Country.US -> R.string.invalid_zip_code
-        else -> R.string.invalid_postcode
-    }
+    private fun errorString(): Int =
+        when (country) {
+            Country.US -> R.string.invalid_zip_code
+            else -> R.string.invalid_postcode
+        }
 
     private fun isPostCodeValid(input: String): Boolean {
         return when (country) {
             Country.GB -> input.length in POSTAL_CODE_MIN_LENGTH_UK..POSTAL_CODE_MAX_LENGTH_UK && input.matches(postCodeGBRegEx)
             Country.US -> input.length in POSTAL_CODE_MIN_LENGTH_USA..POSTAL_CODE_MAX_LENGTH_USA && input.matches(postCodeUSRegEx)
             Country.CA -> input.length in POSTAL_CODE_MIN_LENGTH_CA..POSTAL_CODE_MAX_LENGTH_CA && input.matches(postCodeCARegEx)
-            Country.OTHER -> input.length in POSTAL_CODE_MIN_LENGTH_OTHER..POSTAL_CODE_MAX_LENGTH_OTHER && input.matches(
-                postCodeOtherRegEx
-            )
+            Country.OTHER ->
+                input.length in POSTAL_CODE_MIN_LENGTH_OTHER..POSTAL_CODE_MAX_LENGTH_OTHER &&
+                    input.matches(
+                        postCodeOtherRegEx,
+                    )
             else -> false
         }
     }

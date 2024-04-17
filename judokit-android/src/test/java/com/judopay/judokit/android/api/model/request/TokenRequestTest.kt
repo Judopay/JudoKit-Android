@@ -7,15 +7,15 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Testing token request builder")
 internal class TokenRequestTest {
-
-    private val request = TokenRequest.Builder()
-        .setUniqueRequest(false)
-        .setEndDate("1220")
-        .setCv2("452")
-        .setEmailAddress("mail@mail.com")
-        .setMobileNumber("1234567")
-        .setPrimaryAccountDetails(mockk(relaxed = true))
-        .setInitialRecurringPayment(false)
+    private val request =
+        TokenRequest.Builder()
+            .setUniqueRequest(false)
+            .setEndDate("1220")
+            .setCv2("452")
+            .setEmailAddress("mail@mail.com")
+            .setMobileNumber("1234567")
+            .setPrimaryAccountDetails(mockk(relaxed = true))
+            .setInitialRecurringPayment(false)
 
     @Test
     @DisplayName("Should throw exception on providing null judo id")

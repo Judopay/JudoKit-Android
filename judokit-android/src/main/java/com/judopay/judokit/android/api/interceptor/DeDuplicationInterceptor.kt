@@ -11,8 +11,8 @@ import java.io.IOException
 private const val PAYMENT_REFERENCE_KEY = "yourPaymentReference"
 private const val UNIQUE_REQUEST_KEY = "uniqueRequest"
 
+@Suppress("NestedBlockDepth", "ComplexCondition")
 internal class DeDuplicationInterceptor : Interceptor {
-
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()

@@ -8,6 +8,7 @@ import com.google.gson.JsonSyntaxException
 import com.judopay.judo3ds2.transaction.challenge.ChallengeParameters
 import com.judopay.judokit.android.model.CardVerificationModel
 import com.judopay.judokit.android.model.JudoResult
+import com.judopay.judokit.android.trimIndent
 import java.math.BigDecimal
 import java.util.Date
 
@@ -18,6 +19,7 @@ private const val CHALLENGE_REQUIRED_MESSAGE = "Issuer ACS has responded with a 
 /**
  * The Receipt of a transaction performed with the judo API.
  */
+@Suppress("LongParameterList")
 class Receipt(
     var judoId: Long? = null,
     var receiptId: String? = null,
@@ -49,7 +51,7 @@ class Receipt(
     val threeDSServerTransactionID: String? = null,
     val acsTransactionId: String? = null,
     val acsThreeDSRequestorAppURL: String? = null,
-    val cReq: String? = null
+    val cReq: String? = null,
 ) {
     val isThreeDSecureTwoRequired: Boolean
         get() = message.equals(CHALLENGE_REQUIRED_MESSAGE, true)
@@ -58,54 +60,81 @@ class Receipt(
         get() = result.equals(DECLINED_RESULT, true) && message.equals(SOFT_DECLINED_MESSAGE, true) && !receiptId.isNullOrEmpty()
 
     override fun toString(): String {
-        return "Receipt(judoId=$judoId, receiptId=$receiptId, originalReceiptId=$originalReceiptId, partnerServiceFee=$partnerServiceFee, yourPaymentReference=$yourPaymentReference, type=$type, createdAt=$createdAt, merchantName=$merchantName, appearsOnStatementAs=$appearsOnStatementAs, originalAmount=$originalAmount, netAmount=$netAmount, amount=$amount, currency=$currency, cardDetails=$cardDetails, consumer=$consumer, risks=$risks, md=$md, paReq=$paReq, acsUrl=$acsUrl, result=$result, message=$message)"
+        return """
+            Receipt(
+                judoId=$judoId,
+                receiptId=$receiptId,
+                originalReceiptId=$originalReceiptId,
+                partnerServiceFee=$partnerServiceFee,
+                yourPaymentReference=$yourPaymentReference,
+                type=$type,
+                createdAt=$createdAt,
+                merchantName=$merchantName,
+                appearsOnStatementAs=$appearsOnStatementAs,
+                originalAmount=$originalAmount,
+                netAmount=$netAmount,
+                amount=$amount,
+                currency=$currency,
+                cardDetails=$cardDetails,
+                consumer=$consumer,
+                risks=$risks,
+                md=$md,
+                paReq=$paReq,
+                acsUrl=$acsUrl,
+                result=$result,
+                message=$message
+            )
+            """.trimIndent(true)
     }
 }
 
-fun Receipt.toJudoResult() = JudoResult(
-    judoId.toString(),
-    receiptId,
-    originalReceiptId,
-    partnerServiceFee,
-    yourPaymentReference,
-    type,
-    createdAt,
-    merchantName,
-    appearsOnStatementAs,
-    originalAmount,
-    netAmount,
-    amount,
-    currency,
-    cardDetails,
-    consumer,
-    result,
-    message,
-    yourPaymentMetaData
-)
+fun Receipt.toJudoResult() =
+    JudoResult(
+        judoId.toString(),
+        receiptId,
+        originalReceiptId,
+        partnerServiceFee,
+        yourPaymentReference,
+        type,
+        createdAt,
+        merchantName,
+        appearsOnStatementAs,
+        originalAmount,
+        netAmount,
+        amount,
+        currency,
+        cardDetails,
+        consumer,
+        result,
+        message,
+        yourPaymentMetaData,
+    )
 
-fun Receipt.toCardVerificationModel() = CardVerificationModel.Builder()
-    .setReceiptId(receiptId)
-    .setMd(md)
-    .setPaReq(paReq)
-    .setAcsUrl(acsUrl)
-    .build()
+fun Receipt.toCardVerificationModel() =
+    CardVerificationModel.Builder()
+        .setReceiptId(receiptId)
+        .setMd(md)
+        .setPaReq(paReq)
+        .setAcsUrl(acsUrl)
+        .build()
 
 data class CReqParameters(
     val messageType: String,
     val messageVersion: String,
     val threeDSServerTransID: String,
-    val acsTransID: String
+    val acsTransID: String,
 )
 
-fun Receipt.getCReqParameters(): CReqParameters? = try {
-    Gson().fromJson(
-        String(Base64.decode(cReq, Base64.NO_WRAP)),
-        CReqParameters::class.java
-    )
-} catch (exception: JsonSyntaxException) {
-    Log.e("getCReqParameters", exception.toString())
-    null
-}
+fun Receipt.getCReqParameters(): CReqParameters? =
+    try {
+        Gson().fromJson(
+            String(Base64.decode(cReq, Base64.NO_WRAP)),
+            CReqParameters::class.java,
+        )
+    } catch (exception: JsonSyntaxException) {
+        Log.e("getCReqParameters", exception.toString())
+        null
+    }
 
 fun Receipt.getChallengeParameters(cReqParams: CReqParameters? = getCReqParameters()): ChallengeParameters {
     return ChallengeParameters(
@@ -114,6 +143,6 @@ fun Receipt.getChallengeParameters(cReqParams: CReqParameters? = getCReqParamete
         acsReferenceNumber,
         acsSignedContent,
         null,
-        cReqParams?.messageVersion
+        cReqParams?.messageVersion,
     )
 }

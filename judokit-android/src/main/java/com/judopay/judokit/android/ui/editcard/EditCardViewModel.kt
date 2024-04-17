@@ -13,18 +13,19 @@ import kotlinx.coroutines.launch
 
 sealed class EditCardAction {
     data class ChangePattern(val pattern: CardPattern) : EditCardAction()
+
     data class ChangeTitle(val newTitle: String) : EditCardAction()
 
     object ToggleDefaultCardState : EditCardAction()
+
     object Save : EditCardAction()
 }
 
 internal class EditCardViewModelFactory(
     private val cardId: Int,
     private val cardRepository: TokenizedCardRepository,
-    private val application: Application
+    private val application: Application,
 ) : ViewModelProvider.NewInstanceFactory() {
-
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == EditCardViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
@@ -35,15 +36,16 @@ internal class EditCardViewModelFactory(
     }
 }
 
+private const val MAX_CARD_TITLE_LENGTH = 28
+
 class EditCardViewModel(
     private val cardId: Int,
     private val cardRepository: TokenizedCardRepository,
-    application: Application
+    application: Application,
 ) : AndroidViewModel(application) {
-
     val model = MutableLiveData<EditCardModel>()
 
-    private val patterns = CardPattern.values()
+    private val patterns = CardPattern.entries.toTypedArray()
     private val cachedPatternItems = patterns.map { ColorPickerItem(it) }
 
     // mutable data
@@ -59,7 +61,7 @@ class EditCardViewModel(
                 selectedPattern != cardEntity.pattern ||
                     isSelectedAsDefault != cardEntity.isDefault ||
                     currentCardTitle != cardEntity.title
-                ) && currentCardTitle.length <= 28
+            ) && currentCardTitle.length <= MAX_CARD_TITLE_LENGTH
         }
 
     init {
@@ -80,7 +82,7 @@ class EditCardViewModel(
 
     private fun buildModel(
         newPattern: CardPattern = this.selectedPattern,
-        newTitle: String = currentCardTitle
+        newTitle: String = currentCardTitle,
     ) {
         selectedPattern = newPattern
         currentCardTitle = newTitle
@@ -93,26 +95,28 @@ class EditCardViewModel(
                 isSaveButtonEnabled,
                 cardEntity.toPaymentCardViewModel(currentCardTitle, selectedPattern),
                 title = newTitle,
-                isDefault = isSelectedAsDefault
+                isDefault = isSelectedAsDefault,
+            ),
+        )
+    }
+
+    private fun loadCardEntity() =
+        viewModelScope.launch {
+            cardEntity = cardRepository.findWithId(cardId)
+            selectedPattern = cardEntity.pattern
+            isSelectedAsDefault = cardEntity.isDefault
+            currentCardTitle = cardEntity.title
+            buildModel()
+        }
+
+    private fun persistChanges() =
+        viewModelScope.launch {
+            cardRepository.insert(
+                cardEntity.apply {
+                    title = currentCardTitle
+                    pattern = selectedPattern
+                    isDefault = isSelectedAsDefault
+                },
             )
-        )
-    }
-
-    private fun loadCardEntity() = viewModelScope.launch {
-        cardEntity = cardRepository.findWithId(cardId)
-        selectedPattern = cardEntity.pattern
-        isSelectedAsDefault = cardEntity.isDefault
-        currentCardTitle = cardEntity.title
-        buildModel()
-    }
-
-    private fun persistChanges() = viewModelScope.launch {
-        cardRepository.insert(
-            cardEntity.apply {
-                title = currentCardTitle
-                pattern = selectedPattern
-                isDefault = isSelectedAsDefault
-            }
-        )
-    }
+        }
 }

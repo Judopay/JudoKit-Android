@@ -8,18 +8,21 @@ import com.judopay.judokit.android.ui.cardentry.validation.Validator
 import com.judopay.judokit.android.ui.common.REG_EX_MOBILE_NUMBER
 
 data class MobileNumberValidator(
-    override val fieldType: String = BillingDetailsFieldType.MOBILE_NUMBER.name
+    override val fieldType: String = BillingDetailsFieldType.MOBILE_NUMBER.name,
 ) : Validator {
-
     private val mobileNumberRegEx = REG_EX_MOBILE_NUMBER.toRegex()
 
-    override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult {
+    override fun validate(
+        input: String,
+        formFieldEvent: FormFieldEvent,
+    ): ValidationResult {
         val shouldDisplayMessage = formFieldEvent == FormFieldEvent.FOCUS_CHANGED
-        val message = if (shouldDisplayMessage) {
-            R.string.invalid_mobile_number
-        } else {
-            R.string.empty
-        }
+        val message =
+            if (shouldDisplayMessage) {
+                R.string.invalid_mobile_number
+            } else {
+                R.string.empty
+            }
         return ValidationResult(mobileNumberRegEx.matches(input), message)
     }
 }

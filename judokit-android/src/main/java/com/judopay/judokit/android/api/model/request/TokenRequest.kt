@@ -5,6 +5,7 @@ import com.judopay.judokit.android.model.PrimaryAccountDetails
 import com.judopay.judokit.android.requireNotNull
 import com.judopay.judokit.android.requireNotNullOrEmpty
 
+@Suppress("LongParameterList")
 class TokenRequest private constructor(
     private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String?,
@@ -25,8 +26,9 @@ class TokenRequest private constructor(
     private var primaryAccountDetails: PrimaryAccountDetails?,
     private var initialRecurringPayment: Boolean?,
     private var threeDSecure: ThreeDSecureTwo?,
-    private var cardHolderName: String?
+    private var cardHolderName: String?,
 ) {
+    @Suppress("TooManyFunctions")
     class Builder {
         private var uniqueRequest: Boolean? = false
         private var yourPaymentReference: String? = null
@@ -51,8 +53,7 @@ class TokenRequest private constructor(
 
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
-        fun setYourPaymentReference(yourPaymentReference: String?) =
-            apply { this.yourPaymentReference = yourPaymentReference }
+        fun setYourPaymentReference(yourPaymentReference: String?) = apply { this.yourPaymentReference = yourPaymentReference }
 
         fun setAmount(amount: String?) = apply { this.amount = amount }
 
@@ -60,11 +61,9 @@ class TokenRequest private constructor(
 
         fun setJudoId(judoId: String?) = apply { this.judoId = judoId }
 
-        fun setYourConsumerReference(yourConsumerReference: String?) =
-            apply { this.yourConsumerReference = yourConsumerReference }
+        fun setYourConsumerReference(yourConsumerReference: String?) = apply { this.yourConsumerReference = yourConsumerReference }
 
-        fun setYourPaymentMetaData(yourPaymentMetaData: Map<String, String>?) =
-            apply { this.yourPaymentMetaData = yourPaymentMetaData }
+        fun setYourPaymentMetaData(yourPaymentMetaData: Map<String, String>?) = apply { this.yourPaymentMetaData = yourPaymentMetaData }
 
         fun setEndDate(endDate: String?) = apply { this.endDate = endDate }
 
@@ -85,17 +84,13 @@ class TokenRequest private constructor(
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
             apply { this.primaryAccountDetails = primaryAccountDetails }
 
-        fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
-            apply { this.initialRecurringPayment = initialRecurringPayment }
+        fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) = apply { this.initialRecurringPayment = initialRecurringPayment }
 
-        fun setThreeDSecure(threeDSecureTwo: ThreeDSecureTwo?) =
-            apply { this.threeDSecure = threeDSecureTwo }
+        fun setThreeDSecure(threeDSecureTwo: ThreeDSecureTwo?) = apply { this.threeDSecure = threeDSecureTwo }
 
-        fun setPhoneCountryCode(phoneCountryCode: String?) =
-            apply { this.phoneCountryCode = phoneCountryCode }
+        fun setPhoneCountryCode(phoneCountryCode: String?) = apply { this.phoneCountryCode = phoneCountryCode }
 
-        fun setCardHolderName(cardHolderName: String?) =
-            apply { this.cardHolderName = cardHolderName }
+        fun setCardHolderName(cardHolderName: String?) = apply { this.cardHolderName = cardHolderName }
 
         fun build(): TokenRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
@@ -128,7 +123,7 @@ class TokenRequest private constructor(
                 primaryAccountDetails,
                 initialRecurringPayment,
                 myThreeDSecure,
-                cardHolderName
+                cardHolderName,
             )
         }
     }

@@ -5,13 +5,13 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 internal class RegisterCardRequestTest {
-
-    private val request = RegisterCardRequest.Builder()
-        .setIssueNumber("123")
-        .setStartDate("1220")
-        .setEmailAddress("email@mail.com")
-        .setMobileNumber("1234567")
-        .setInitialRecurringPayment(false)
+    private val request =
+        RegisterCardRequest.Builder()
+            .setIssueNumber("123")
+            .setStartDate("1220")
+            .setEmailAddress("email@mail.com")
+            .setMobileNumber("1234567")
+            .setInitialRecurringPayment(false)
 
     @Test
     @DisplayName("Should throw exception on providing null judo id")
@@ -50,7 +50,7 @@ internal class RegisterCardRequestTest {
     fun exceptionOnNullConsumerReference() {
         assertThrows<IllegalArgumentException> {
             request.setYourConsumerReference(
-                null
+                null,
             ).build()
         }
     }
@@ -60,7 +60,7 @@ internal class RegisterCardRequestTest {
     fun exceptionOnEmptyConsumerReference() {
         assertThrows<IllegalArgumentException> {
             request.setYourConsumerReference(
-                ""
+                "",
             ).build()
         }
     }
@@ -116,7 +116,7 @@ internal class RegisterCardRequestTest {
     fun exceptionOnNullPaymentReference() {
         assertThrows<IllegalArgumentException> {
             request.setYourPaymentReference(
-                null
+                null,
             ).build()
         }
     }
@@ -126,7 +126,7 @@ internal class RegisterCardRequestTest {
     fun exceptionOnEmptyPaymentReference() {
         assertThrows<IllegalArgumentException> {
             request.setYourPaymentReference(
-                ""
+                "",
             ).build()
         }
     }

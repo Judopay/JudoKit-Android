@@ -16,15 +16,13 @@ private const val PAYMENT_SESSION_HEADER = "Payment-Session"
 @Parcelize
 class PaymentSessionAuthorization internal constructor(
     private val paymentSession: String,
-    private val apiToken: String
+    private val apiToken: String,
 ) : Authorization {
-
     class Builder {
         private var paymentSession: String? = null
         private var apiToken: String? = null
 
-        fun setPaymentSession(paymentSession: String?) =
-            apply { this.paymentSession = paymentSession }
+        fun setPaymentSession(paymentSession: String?) = apply { this.paymentSession = paymentSession }
 
         fun setApiToken(apiToken: String?) = apply { this.apiToken = apiToken }
 
@@ -37,7 +35,8 @@ class PaymentSessionAuthorization internal constructor(
     }
 
     override val headers: Headers
-        get() = Headers.Builder()
-            .add(API_TOKEN_HEADER, apiToken)
-            .add(PAYMENT_SESSION_HEADER, paymentSession).build()
+        get() =
+            Headers.Builder()
+                .add(API_TOKEN_HEADER, apiToken)
+                .add(PAYMENT_SESSION_HEADER, paymentSession).build()
 }

@@ -3,20 +3,13 @@ package com.judopay.judokit.android.ui.pollingstatus
 import android.app.Application
 import androidx.lifecycle.Observer
 import com.judopay.judokit.android.InstantExecutorExtension
-import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
-import com.judopay.judokit.android.model.Amount
-import com.judopay.judokit.android.model.Currency
-import com.judopay.judokit.android.model.PaymentMethod
-import com.judopay.judokit.android.model.PaymentWidgetType
-import com.judopay.judokit.android.model.Reference
 import com.judopay.judokit.android.service.polling.PollingResult
 import com.judopay.judokit.android.service.polling.PollingService
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.spyk
@@ -37,17 +30,17 @@ import retrofit2.await
 @ExtendWith(InstantExecutorExtension::class)
 @DisplayName("Testing PollingStatusViewModel logic")
 internal class PollingStatusViewModelTest {
-
     private val testDispatcher = TestCoroutineDispatcher()
 
     private val service: JudoApiService = mockk(relaxed = true)
     private val pollingService: PollingService = mockk(relaxed = true)
     private val application: Application = mockk(relaxed = true)
 
-    private val sut = PollingStatusViewModel(
-        pollingService,
-        application
-    )
+    private val sut =
+        PollingStatusViewModel(
+            pollingService,
+            application,
+        )
 
     private val saleStatusResult = spyk<Observer<PollingResult<BankSaleStatusResponse>>>()
 
@@ -90,14 +83,5 @@ internal class PollingStatusViewModelTest {
         sut.send(PollingAction.RetryPolling)
 
         coVerify { pollingService.retry() }
-    }
-
-    private fun getJudo() = mockk<Judo>(relaxed = true) {
-        every { paymentWidgetType } returns PaymentWidgetType.PAYMENT_METHODS
-        every { paymentMethods } returns PaymentMethod.values()
-        every { judoId } returns "1"
-        every { authorization } returns mockk(relaxed = true)
-        every { amount } returns Amount("1", Currency.GBP)
-        every { reference } returns Reference("consumer", "payment")
     }
 }

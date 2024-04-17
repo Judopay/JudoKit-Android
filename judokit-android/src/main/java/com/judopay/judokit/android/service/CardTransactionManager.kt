@@ -50,7 +50,6 @@ interface ActivityAwareComponent {
 }
 
 open class SingletonHolder<out T : ActivityAwareComponent>(creator: (FragmentActivity) -> T) {
-
     private var creator: ((FragmentActivity) -> T)? = creator
 
     @Volatile
@@ -89,22 +88,23 @@ enum class TransactionType {
     PRE_AUTH_WITH_TOKEN,
     SAVE,
     CHECK,
-    REGISTER
+    REGISTER,
 }
 
 private val TransactionType.canBeSoftDeclined: Boolean
-    get() = arrayOf(
-        TransactionType.PAYMENT,
-        TransactionType.PRE_AUTH,
-        TransactionType.REGISTER,
-        TransactionType.PAYMENT_WITH_TOKEN,
-        TransactionType.PRE_AUTH_WITH_TOKEN
-    ).contains(this)
+    get() =
+        arrayOf(
+            TransactionType.PAYMENT,
+            TransactionType.PRE_AUTH,
+            TransactionType.REGISTER,
+            TransactionType.PAYMENT_WITH_TOKEN,
+            TransactionType.PRE_AUTH_WITH_TOKEN,
+        ).contains(this)
 
 private const val THREE_DS_TWO_MIN_TIMEOUT = 5
 
+@Suppress("TooManyFunctions", "SwallowedException", "TooGenericExceptionCaught")
 class CardTransactionManager private constructor(private var context: FragmentActivity) : ActivityAwareComponent {
-
     private lateinit var judo: Judo
     private lateinit var judoApiService: JudoApiService
     private lateinit var recommendationService: RecommendationService
@@ -128,39 +128,40 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         context = activity
     }
 
-    fun configureWith(config: Judo) = takeIf {
-        if (this::judo.isInitialized.not()) {
-            return@takeIf true
-        }
-        config != judo
-    }?.apply {
-        judo = config
-        judoApiService = JudoApiServiceFactory.create(context, config)
-        recommendationService = RecommendationService(context, config)
+    fun configureWith(config: Judo) =
+        takeIf {
+            if (this::judo.isInitialized.not()) {
+                return@takeIf true
+            }
+            config != judo
+        }?.apply {
+            judo = config
+            judoApiService = JudoApiServiceFactory.create(context, config)
+            recommendationService = RecommendationService(context, config)
 
-        try {
-            threeDS2Service.cleanup(context)
-        } catch (e: SDKNotInitializedException) {
-            Log.w(CardTransactionManager::class.java.name, "3DS2 Service not initialized.")
-        }
+            try {
+                threeDS2Service.cleanup(context)
+            } catch (e: SDKNotInitializedException) {
+                Log.w(CardTransactionManager::class.java.name, "3DS2 Service not initialized.")
+            }
 
-        try {
-            threeDS2Service.initialize(context, parameters, locale, judo.uiConfiguration.threeDSUiCustomization)
-        } catch (e: SDKAlreadyInitializedException) {
-            Log.w(CardTransactionManager::class.java.name, "3DS2 Service already initialized.")
+            try {
+                threeDS2Service.initialize(context, parameters, locale, judo.uiConfiguration.threeDSUiCustomization)
+            } catch (e: SDKAlreadyInitializedException) {
+                Log.w(CardTransactionManager::class.java.name, "3DS2 Service already initialized.")
+            }
         }
-    }
 
     fun unRegisterResultListener(
         listener: CardTransactionManagerResultListener,
-        caller: String = listener::class.java.name
+        caller: String = listener::class.java.name,
     ) {
         listenerMap.remove(caller)
     }
 
     fun registerResultListener(
         listener: CardTransactionManagerResultListener,
-        caller: String = listener::class.java.name
+        caller: String = listener::class.java.name,
     ) {
         listenerMap[caller] = listener
 
@@ -174,22 +175,24 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         type: TransactionType,
         details: TransactionDetails,
         transaction: Transaction,
-        overrides: TransactionDetailsOverrides?
+        overrides: TransactionDetailsOverrides?,
     ) = when (type) {
         TransactionType.PAYMENT -> {
-            val request = details.toPaymentRequest(
-                judo,
-                transaction,
-                overrides
-            )
+            val request =
+                details.toPaymentRequest(
+                    judo,
+                    transaction,
+                    overrides,
+                )
             judoApiService.payment(request)
         }
         TransactionType.PRE_AUTH -> {
-            val request = details.toPreAuthRequest(
-                judo,
-                transaction,
-                overrides
-            )
+            val request =
+                details.toPreAuthRequest(
+                    judo,
+                    transaction,
+                    overrides,
+                )
             judoApiService.preAuthPayment(request)
         }
         TransactionType.PAYMENT_WITH_TOKEN -> {
@@ -205,11 +208,12 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             judoApiService.saveCard(request)
         }
         TransactionType.CHECK -> {
-            val request = details.toCheckCardRequest(
-                judo,
-                transaction,
-                overrides
-            )
+            val request =
+                details.toCheckCardRequest(
+                    judo,
+                    transaction,
+                    overrides,
+                )
             judoApiService.checkCard(request)
         }
         TransactionType.REGISTER -> {
@@ -218,15 +222,24 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun performTransaction(
         type: TransactionType,
         details: TransactionDetails,
         caller: String,
-        overrides: TransactionDetailsOverrides? = null
+        overrides: TransactionDetailsOverrides? = null,
     ) = try {
         when {
-            overrides != null -> performJudoApiCall(type, details, caller, overrides) // soft decline case - we don't need to call recommendation service
-            recommendationService.isRecommendationFeatureAvailable(type) -> apply3DS2Optimisations(type, details, caller) // recommendation service is available, attempt to call it
+            overrides != null ->
+                performJudoApiCall(
+                    type,
+                    details,
+                    caller,
+                    overrides,
+                ) // soft decline case - we don't need to call recommendation service
+            recommendationService.isRecommendationFeatureAvailable(
+                type,
+            ) -> apply3DS2Optimisations(type, details, caller) // recommendation service is available, attempt to call it
             else -> performJudoApiCall(type, details, caller) // fallback to default Judo API call
         }
     } catch (exception: Throwable) {
@@ -236,22 +249,24 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     private fun apply3DS2Optimisations(
         type: TransactionType,
         details: TransactionDetails,
-        caller: String
+        caller: String,
     ) = try {
-        val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-            Log.d(CardTransactionManager::class.java.name, "Uncaught Recommendation service exception", throwable)
-            performJudoApiCall(type, details, caller) // in case of any error, we fallback to Judo API call
-        }
+        val coroutineExceptionHandler =
+            CoroutineExceptionHandler { _, throwable ->
+                Log.d(CardTransactionManager::class.java.name, "Uncaught Recommendation service exception", throwable)
+                performJudoApiCall(type, details, caller) // in case of any error, we fallback to Judo API call
+            }
 
         applicationScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
             val result = recommendationService.fetchOptimizationData(details, type).await()
 
             if (result.isValid) {
                 when (result.data?.action) {
-                    RecommendationAction.PREVENT -> onResult(
-                        JudoPaymentResult.Error(JudoError.judoRecommendationError(context.resources)),
-                        caller
-                    )
+                    RecommendationAction.PREVENT ->
+                        onResult(
+                            JudoPaymentResult.Error(JudoError.judoRecommendationError(context.resources)),
+                            caller,
+                        )
                     else -> performJudoApiCall(type, details, caller, result.toTransactionDetailsOverrides())
                 }
             } else {
@@ -266,13 +281,14 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         type: TransactionType,
         details: TransactionDetails,
         caller: String,
-        overrides: TransactionDetailsOverrides? = null
+        overrides: TransactionDetailsOverrides? = null,
     ) {
         try {
-            val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-                Log.d(CardTransactionManager::class.java.name, "Uncaught 3DS2 Exception", throwable)
-                dispatchException(throwable, caller)
-            }
+            val coroutineExceptionHandler =
+                CoroutineExceptionHandler { _, throwable ->
+                    Log.d(CardTransactionManager::class.java.name, "Uncaught 3DS2 Exception", throwable)
+                    dispatchException(throwable, caller)
+                }
 
             applicationScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
                 try {
@@ -281,38 +297,40 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                         context,
                         parameters,
                         locale,
-                        judo.uiConfiguration.threeDSUiCustomization
+                        judo.uiConfiguration.threeDSUiCustomization,
                     )
                 } catch (e: SDKAlreadyInitializedException) {
                     // This shouldn't cause any side effect.
                     Log.w(
                         CardTransactionManager::class.java.name,
-                        "3DS2 Service already initialized."
+                        "3DS2 Service already initialized.",
                     )
                 }
 
                 val network = details.cardType ?: CardNetwork.OTHER
 
-                val directoryServerID = when {
-                    judo.isSandboxed -> "F000000000"
-                    network == CardNetwork.VISA -> "A000000003"
-                    network == CardNetwork.MASTERCARD || network == CardNetwork.MAESTRO -> "A000000004"
-                    network == CardNetwork.AMEX -> "A000000025"
-                    else -> "unknown-id"
-                }
+                val directoryServerID =
+                    when {
+                        judo.isSandboxed -> "F000000000"
+                        network == CardNetwork.VISA -> "A000000003"
+                        network == CardNetwork.MASTERCARD || network == CardNetwork.MAESTRO -> "A000000004"
+                        network == CardNetwork.AMEX -> "A000000025"
+                        else -> "unknown-id"
+                    }
 
                 val myTransaction =
                     threeDS2Service.createTransaction(
                         directoryServerID,
-                        judo.threeDSTwoMessageVersion
+                        judo.threeDSTwoMessageVersion,
                     )
 
-                val apiResult = performJudoApiRequest(
-                    type,
-                    details,
-                    myTransaction,
-                    overrides
-                ).await()
+                val apiResult =
+                    performJudoApiRequest(
+                        type,
+                        details,
+                        myTransaction,
+                        overrides,
+                    ).await()
 
                 transactionDetails = details
                 transaction = myTransaction
@@ -324,7 +342,10 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         }
     }
 
-    private fun onResult(result: JudoPaymentResult, caller: String) {
+    private fun onResult(
+        result: JudoPaymentResult,
+        caller: String,
+    ) {
         results[caller] = result
 
         listenerMap[caller]?.let {
@@ -335,12 +356,18 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         closeTransaction(context)
     }
 
-    private fun dispatchException(throwable: Throwable, caller: String) {
+    private fun dispatchException(
+        throwable: Throwable,
+        caller: String,
+    ) {
         val error = JudoError.judoInternalError(throwable.message)
         onResult(JudoPaymentResult.Error(error), caller)
     }
 
-    private fun performComplete3ds2(receipt: Receipt, caller: String) {
+    private fun performComplete3ds2(
+        receipt: Receipt,
+        caller: String,
+    ) {
         val receiptId = receipt.receiptId ?: ""
         val version = receipt.getCReqParameters()?.messageVersion ?: judo.threeDSTwoMessageVersion
         val cv2 = transactionDetails?.securityNumber
@@ -356,16 +383,16 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         type: TransactionType,
         details: TransactionDetails,
         caller: String,
-        result: JudoApiCallResult<Receipt>
-    ) =
-        when (result) {
-            is JudoApiCallResult.Failure -> {
-                onResult(
-                    (result as JudoApiCallResult<Receipt>).toJudoPaymentResult(context.resources),
-                    caller
-                )
-            }
-            is JudoApiCallResult.Success -> if (result.data != null) {
+        result: JudoApiCallResult<Receipt>,
+    ) = when (result) {
+        is JudoApiCallResult.Failure -> {
+            onResult(
+                (result as JudoApiCallResult<Receipt>).toJudoPaymentResult(context.resources),
+                caller,
+            )
+        }
+        is JudoApiCallResult.Success ->
+            if (result.data != null) {
                 val receipt = result.data
                 when {
                     type.canBeSoftDeclined && receipt.isSoftDeclined -> handleStepUpFlow(type, details, caller, receipt.receiptId!!)
@@ -375,64 +402,89 @@ class CardTransactionManager private constructor(private var context: FragmentAc
             } else {
                 onResult(result.toJudoPaymentResult(context.resources), caller)
             }
-        }
+    }
 
-    private fun handleThreeDSecureTwo(receipt: Receipt, caller: String) {
-        val challengeStatusReceiver = object : ChallengeStatusReceiver {
-            override fun cancelled() {
-                performComplete3ds2(receipt, caller)
-            }
+    private fun handleThreeDSecureTwo(
+        receipt: Receipt,
+        caller: String,
+    ) {
+        val challengeStatusReceiver =
+            object : ChallengeStatusReceiver {
+                override fun cancelled() {
+                    performComplete3ds2(receipt, caller)
+                }
 
-            override fun completed(completionEvent: CompletionEvent) {
-                performComplete3ds2(receipt, caller)
-            }
+                override fun completed(completionEvent: CompletionEvent) {
+                    performComplete3ds2(receipt, caller)
+                }
 
-            override fun protocolError(protocolErrorEvent: ProtocolErrorEvent) {
-                performComplete3ds2(receipt, caller)
-            }
+                override fun protocolError(protocolErrorEvent: ProtocolErrorEvent) {
+                    performComplete3ds2(receipt, caller)
+                }
 
-            override fun runtimeError(runtimeErrorEvent: RuntimeErrorEvent) {
-                performComplete3ds2(receipt, caller)
-            }
+                override fun runtimeError(runtimeErrorEvent: RuntimeErrorEvent) {
+                    performComplete3ds2(receipt, caller)
+                }
 
-            override fun timedout() {
-                performComplete3ds2(receipt, caller)
+                override fun timedout() {
+                    performComplete3ds2(receipt, caller)
+                }
             }
-        }
 
         transaction!!.doChallenge(
             context,
             receipt.getChallengeParameters(),
             challengeStatusReceiver,
-            THREE_DS_TWO_MIN_TIMEOUT
+            THREE_DS_TWO_MIN_TIMEOUT,
         )
     }
 
-    fun payment(details: TransactionDetails, caller: String) {
+    fun payment(
+        details: TransactionDetails,
+        caller: String,
+    ) {
         performTransaction(TransactionType.PAYMENT, details, caller)
     }
 
-    fun preAuth(details: TransactionDetails, caller: String) {
+    fun preAuth(
+        details: TransactionDetails,
+        caller: String,
+    ) {
         performTransaction(TransactionType.PRE_AUTH, details, caller)
     }
 
-    fun paymentWithToken(details: TransactionDetails, caller: String) {
+    fun paymentWithToken(
+        details: TransactionDetails,
+        caller: String,
+    ) {
         performTransaction(TransactionType.PAYMENT_WITH_TOKEN, details, caller)
     }
 
-    fun preAuthWithToken(details: TransactionDetails, caller: String) {
+    fun preAuthWithToken(
+        details: TransactionDetails,
+        caller: String,
+    ) {
         performTransaction(TransactionType.PRE_AUTH_WITH_TOKEN, details, caller)
     }
 
-    fun save(details: TransactionDetails, caller: String) {
+    fun save(
+        details: TransactionDetails,
+        caller: String,
+    ) {
         performTransaction(TransactionType.SAVE, details, caller)
     }
 
-    fun check(details: TransactionDetails, caller: String) {
+    fun check(
+        details: TransactionDetails,
+        caller: String,
+    ) {
         performTransaction(TransactionType.CHECK, details, caller)
     }
 
-    fun register(details: TransactionDetails, caller: String) {
+    fun register(
+        details: TransactionDetails,
+        caller: String,
+    ) {
         performTransaction(TransactionType.REGISTER, details, caller)
     }
 
@@ -451,7 +503,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         type: TransactionType,
         details: TransactionDetails,
         caller: String,
-        softDeclineReceiptId: String
+        softDeclineReceiptId: String,
     ) {
         closeTransaction(context)
 

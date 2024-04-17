@@ -18,6 +18,7 @@ import com.judokit.android.examples.theme.JudoKitAndroidTheme
 import com.judopay.judokit.android.JUDO_ERROR
 import com.judopay.judokit.android.JUDO_OPTIONS
 import com.judopay.judokit.android.JUDO_RESULT
+import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.JudoActivity
 import com.judopay.judokit.android.PAYMENT_CANCELLED
 import com.judopay.judokit.android.PAYMENT_ERROR
@@ -29,17 +30,24 @@ import com.judopay.judokit.android.model.USER_CANCELLED
 
 class TokenPaymentsActivity : ComponentActivity() {
     private val viewModel = TokenPaymentsViewModel()
-    private val tokenizeCardLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        handleTokenizeNewCardResult(it)
-    }
-    private val tokenPaymentLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        setResult(it.resultCode, it.data)
-        finish()
-    }
+    private val tokenizeCardLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            handleTokenizeNewCardResult(it)
+        }
+    private val tokenPaymentLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            setResult(it.resultCode, it.data)
+            finish()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.initialJudoConfig = intent.parcelable(JUDO_OPTIONS) ?: throw IllegalStateException("Judo object is required")
+
+        val judo = intent.parcelable<Judo>(JUDO_OPTIONS)
+        check(judo != null) { "Judo object is required" }
+
+        viewModel.initialJudoConfig = judo
+
         setContent {
             JudoKitAndroidTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
@@ -48,7 +56,7 @@ class TokenPaymentsActivity : ComponentActivity() {
                         onTokenizeNewCard = { tokenizeNewCard() },
                         onTokenPayment = { makeTokenPayment(isPreAuth = false) },
                         onTokenPreAuth = { makeTokenPayment(isPreAuth = true) },
-                        onClose = { finish() }
+                        onClose = { finish() },
                     )
                 }
             }
@@ -79,7 +87,8 @@ class TokenPaymentsActivity : ComponentActivity() {
                 }
             }
             PAYMENT_CANCELLED,
-            PAYMENT_ERROR -> {
+            PAYMENT_ERROR,
+            -> {
                 handleError(result)
             }
         }

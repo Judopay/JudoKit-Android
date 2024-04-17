@@ -6,7 +6,7 @@ package com.judopay.judokit.android.api.model.request.recommendation
  *
  */
 class RecommendationRequest private constructor(
-    var paymentMethod: RecommendationPaymentMethod?
+    var paymentMethod: RecommendationPaymentMethod?,
 ) {
     class Builder {
         private var paymentMethod: RecommendationPaymentMethod? = null

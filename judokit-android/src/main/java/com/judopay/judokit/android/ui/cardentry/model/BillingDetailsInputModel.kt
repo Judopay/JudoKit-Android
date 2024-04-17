@@ -16,5 +16,5 @@ data class BillingDetailsInputModel(
     val state: String = "",
     var submitButtonState: ButtonState = ButtonState.Disabled(R.string.pay_now),
     var backButtonState: ButtonState = ButtonState.Enabled(R.string.back),
-    var isValid: Boolean = false
+    var isValid: Boolean = false,
 )

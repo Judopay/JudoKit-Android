@@ -9,7 +9,6 @@ import java.util.Date
 
 @DisplayName("Testing Receipt model")
 internal class ReceiptTest {
-
     @DisplayName("Given toJudoResult is called, then map receiptId to JudoResult receiptId")
     @Test
     fun mapReceiptIdToJudoResultReceiptId() {
@@ -23,7 +22,7 @@ internal class ReceiptTest {
         val originalReceiptId = "originalReceiptId"
         assertEquals(
             originalReceiptId,
-            Receipt(originalReceiptId = originalReceiptId).toJudoResult().originalReceiptId
+            Receipt(originalReceiptId = originalReceiptId).toJudoResult().originalReceiptId,
         )
     }
 
@@ -33,7 +32,7 @@ internal class ReceiptTest {
         val partnerServiceFee = "partnerServiceFee"
         assertEquals(
             partnerServiceFee,
-            Receipt(partnerServiceFee = partnerServiceFee).toJudoResult().partnerServiceFee
+            Receipt(partnerServiceFee = partnerServiceFee).toJudoResult().partnerServiceFee,
         )
     }
 
@@ -43,7 +42,7 @@ internal class ReceiptTest {
         val yourPaymentReference = "yourPaymentReference"
         assertEquals(
             yourPaymentReference,
-            Receipt(yourPaymentReference = yourPaymentReference).toJudoResult().yourPaymentReference
+            Receipt(yourPaymentReference = yourPaymentReference).toJudoResult().yourPaymentReference,
         )
     }
 
@@ -74,7 +73,7 @@ internal class ReceiptTest {
         val appearsOnStatementAs = "appearsOnStatementAs"
         assertEquals(
             appearsOnStatementAs,
-            Receipt(appearsOnStatementAs = appearsOnStatementAs).toJudoResult().appearsOnStatementAs
+            Receipt(appearsOnStatementAs = appearsOnStatementAs).toJudoResult().appearsOnStatementAs,
         )
     }
 
@@ -84,7 +83,7 @@ internal class ReceiptTest {
         val originalAmount = BigDecimal(1)
         assertEquals(
             originalAmount,
-            Receipt(originalAmount = originalAmount).toJudoResult().originalAmount
+            Receipt(originalAmount = originalAmount).toJudoResult().originalAmount,
         )
     }
 

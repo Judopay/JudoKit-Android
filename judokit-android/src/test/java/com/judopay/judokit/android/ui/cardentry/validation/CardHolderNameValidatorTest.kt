@@ -6,7 +6,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 internal class CardHolderNameValidatorTest {
-
     private val validator = CardHolderNameValidator()
 
     @Test

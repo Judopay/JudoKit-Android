@@ -19,7 +19,7 @@ private const val MAX_WRITE_TIMEOUT = 120L
 class NetworkTimeout internal constructor(
     val connectTimeout: Long,
     val readTimeout: Long,
-    val writeTimeout: Long
+    val writeTimeout: Long,
 ) : Parcelable {
     class Builder {
         private var connectTimeout: Long? = null
@@ -30,8 +30,7 @@ class NetworkTimeout internal constructor(
          * Sets the connect timeout.
          * Defaults to 5 seconds if null.
          */
-        fun setConnectTimeout(connectTimeout: Long?) =
-            apply { this.connectTimeout = connectTimeout }
+        fun setConnectTimeout(connectTimeout: Long?) = apply { this.connectTimeout = connectTimeout }
 
         /**
          * Sets the read timeout.

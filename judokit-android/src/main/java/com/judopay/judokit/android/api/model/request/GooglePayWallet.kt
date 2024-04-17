@@ -8,9 +8,8 @@ class GooglePayWallet private constructor(
     internal val cardNetwork: String,
     internal val cardDetails: String,
     internal val token: String,
-    internal val billingAddress: GooglePayAddress?
+    internal val billingAddress: GooglePayAddress?,
 ) {
-
     class Builder {
         private var cardNetwork: String? = null
         private var cardDetails: String? = null

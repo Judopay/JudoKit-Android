@@ -17,7 +17,10 @@ import java.util.Date
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
-fun ViewGroup.inflate(resource: Int, attachToRoot: Boolean = false): View {
+fun ViewGroup.inflate(
+    resource: Int,
+    attachToRoot: Boolean = false,
+): View {
     return LayoutInflater.from(context).inflate(resource, this, attachToRoot)
 }
 
@@ -37,11 +40,12 @@ fun <T : Any> KProperty1<T, *>.toResultItem(classInstance: Any?): ResultItem {
     var subResult: Result? = null
     var propValue = ""
 
-    fun getPropValuePlaceholder(value: Any?) = if (value != null) {
-        "(0 elements)"
-    } else {
-        "null"
-    }
+    fun getPropValuePlaceholder(value: Any?) =
+        if (value != null) {
+            "(0 elements)"
+        } else {
+            "null"
+        }
 
     when (returnType.classifier) {
         String::class,
@@ -51,7 +55,8 @@ fun <T : Any> KProperty1<T, *>.toResultItem(classInstance: Any?): ResultItem {
         Int::class,
         Float::class,
         Double::class,
-        Boolean::class -> {
+        Boolean::class,
+        -> {
             propValue = getter.call(classInstance)?.toString() ?: "null"
         }
 
@@ -111,18 +116,20 @@ fun Map<*, *>.toResultItemList(propName: String): List<ResultItem> {
     return items
 }
 
-inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
-    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelable(key, T::class.java)
-    else -> {
-        @Suppress("deprecation")
-        getParcelable(key) as? T
+inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? =
+    when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelable(key, T::class.java)
+        else -> {
+            @Suppress("deprecation")
+            getParcelable(key) as? T
+        }
     }
-}
 
-inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
-    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableExtra(key, T::class.java)
-    else -> {
-        @Suppress("DEPRECATION")
-        getParcelableExtra(key) as? T
+inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? =
+    when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableExtra(key, T::class.java)
+        else -> {
+            @Suppress("DEPRECATION")
+            getParcelableExtra(key) as? T
+        }
     }
-}

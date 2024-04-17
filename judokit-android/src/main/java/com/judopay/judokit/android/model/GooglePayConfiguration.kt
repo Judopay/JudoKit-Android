@@ -15,6 +15,7 @@ import java.util.Locale
  * GooglePay transaction.
  */
 @Parcelize
+@Suppress("LongParameterList")
 class GooglePayConfiguration internal constructor(
     val environment: GooglePayEnvironment,
     val merchantName: String?,
@@ -29,9 +30,9 @@ class GooglePayConfiguration internal constructor(
     val isShippingAddressRequired: Boolean,
     val shippingAddressParameters: GooglePayShippingAddressParameters?,
     val allowPrepaidCards: Boolean?,
-    val allowCreditCards: Boolean?
+    val allowCreditCards: Boolean?,
 ) : Parcelable {
-
+    @Suppress("TooManyFunctions")
     class Builder {
         private var environment: GooglePayEnvironment? = null
         private var merchantName: String? = null
@@ -59,8 +60,7 @@ class GooglePayConfiguration internal constructor(
          * Sets the environment.
          * @see GooglePayEnvironment
          */
-        fun setEnvironment(environment: GooglePayEnvironment?) =
-            apply { this.environment = environment }
+        fun setEnvironment(environment: GooglePayEnvironment?) = apply { this.environment = environment }
 
         /**
          * Sets the merchant name.
@@ -70,8 +70,7 @@ class GooglePayConfiguration internal constructor(
         /**
          * Sets the transaction country code.
          */
-        fun setTransactionCountryCode(countryCode: String?) =
-            apply { this.transactionCountryCode = countryCode }
+        fun setTransactionCountryCode(countryCode: String?) = apply { this.transactionCountryCode = countryCode }
 
         /**
          * Sets the transaction identifier.
@@ -83,8 +82,7 @@ class GooglePayConfiguration internal constructor(
          * If set to null, [GooglePayPriceStatus.FINAL] will be used.
          * @see GooglePayPriceStatus
          */
-        fun setTotalPriceStatus(status: GooglePayPriceStatus?) =
-            apply { this.totalPriceStatus = status }
+        fun setTotalPriceStatus(status: GooglePayPriceStatus?) = apply { this.totalPriceStatus = status }
 
         /**
          * Sets the total price label.
@@ -95,8 +93,7 @@ class GooglePayConfiguration internal constructor(
          * Sets the checkout option.
          * @see GooglePayCheckoutOption
          */
-        fun setCheckoutOption(option: GooglePayCheckoutOption?) =
-            apply { this.checkoutOption = option }
+        fun setCheckoutOption(option: GooglePayCheckoutOption?) = apply { this.checkoutOption = option }
 
         /**
          * Sets whether the email is required.
@@ -106,8 +103,7 @@ class GooglePayConfiguration internal constructor(
         /**
          * Sets whether the billing address is required.
          */
-        fun setIsBillingAddressRequired(required: Boolean?) =
-            apply { this.isBillingAddressRequired = required }
+        fun setIsBillingAddressRequired(required: Boolean?) = apply { this.isBillingAddressRequired = required }
 
         /**
          * Sets the billing address parameters.
@@ -119,8 +115,7 @@ class GooglePayConfiguration internal constructor(
         /**
          * Sets whether the shipping address is required.
          */
-        fun setIsShippingAddressRequired(required: Boolean?) =
-            apply { this.isShippingAddressRequired = required }
+        fun setIsShippingAddressRequired(required: Boolean?) = apply { this.isShippingAddressRequired = required }
 
         /**
          * Sets shipping address parameters.
@@ -163,8 +158,9 @@ class GooglePayConfiguration internal constructor(
                 merchantName = merchantName,
                 transactionCountryCode = countryCode,
                 transactionId = transactionId,
-                totalPriceStatus = totalPriceStatus
-                    ?: GooglePayPriceStatus.FINAL,
+                totalPriceStatus =
+                    totalPriceStatus
+                        ?: GooglePayPriceStatus.FINAL,
                 totalPriceLabel = totalPriceLabel,
                 checkoutOption = checkoutOption,
                 isEmailRequired = isEmailRequired,
@@ -173,7 +169,7 @@ class GooglePayConfiguration internal constructor(
                 isShippingAddressRequired = isShippingAddressRequired ?: shippingAddressParameters != null,
                 shippingAddressParameters = shippingAddressParameters,
                 allowPrepaidCards = allowPrepaidCards,
-                allowCreditCards = allowCreditCards
+                allowCreditCards = allowCreditCards,
             )
         }
     }

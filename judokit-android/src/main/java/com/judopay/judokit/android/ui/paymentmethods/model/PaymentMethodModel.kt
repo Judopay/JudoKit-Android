@@ -13,16 +13,16 @@ interface PaymentMethodModel {
 data class CardPaymentMethodModel(
     override val type: PaymentMethod = PaymentMethod.CARD,
     override val items: List<PaymentMethodItem>,
-    val selectedCard: PaymentMethodSavedCardItem?
+    val selectedCard: PaymentMethodSavedCardItem?,
 ) : PaymentMethodModel
 
 data class GooglePayPaymentMethodModel(
     override val type: PaymentMethod = PaymentMethod.GOOGLE_PAY,
-    override val items: List<PaymentMethodItem>
+    override val items: List<PaymentMethodItem>,
 ) : PaymentMethodModel
 
 data class IdealPaymentMethodModel(
     override val type: PaymentMethod = PaymentMethod.IDEAL,
     override val items: List<PaymentMethodItem>,
-    val selectedBank: IdealBank
+    val selectedBank: IdealBank,
 ) : PaymentMethodModel

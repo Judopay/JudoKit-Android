@@ -20,9 +20,13 @@ import retrofit2.await
 
 sealed class IdealAction {
     data class Initialise(val bic: String) : IdealAction()
+
     object CancelPolling : IdealAction()
+
     object ResetPolling : IdealAction()
+
     object RetryPolling : IdealAction()
+
     object StartPolling : IdealAction()
 }
 
@@ -30,9 +34,8 @@ internal class IdealViewModelFactory(
     private val judo: Judo,
     private val service: JudoApiService,
     private val pollingService: PollingService,
-    private val application: Application
+    private val application: Application,
 ) : ViewModelProvider.NewInstanceFactory() {
-
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == IdealViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
@@ -47,7 +50,7 @@ class IdealViewModel(
     val judo: Judo,
     val service: JudoApiService,
     private val pollingService: PollingService,
-    application: Application
+    application: Application,
 ) :
     AndroidViewModel(application) {
     val saleCallResult = MutableLiveData<JudoApiCallResult<IdealSaleResponse>>()
@@ -66,31 +69,33 @@ class IdealViewModel(
         }
     }
 
-    private fun payWithSelectedBank(bic: String) = viewModelScope.launch {
-        isLoading.postValue(true)
-        val request = IdealSaleRequest.Builder()
-            .setAmount(judo.amount.amount)
-            .setMerchantConsumerReference(judo.reference.consumerReference)
-            .setMerchantPaymentReference(judo.reference.paymentReference)
-            .setPaymentMetadata(judo.reference.metaData?.toMap())
-            .setJudoId(judo.judoId)
-            .setBic(bic)
-            .build()
+    private fun payWithSelectedBank(bic: String) =
+        viewModelScope.launch {
+            isLoading.postValue(true)
+            val request =
+                IdealSaleRequest.Builder()
+                    .setAmount(judo.amount.amount)
+                    .setMerchantConsumerReference(judo.reference.consumerReference)
+                    .setMerchantPaymentReference(judo.reference.paymentReference)
+                    .setPaymentMetadata(judo.reference.metaData?.toMap())
+                    .setJudoId(judo.judoId)
+                    .setBic(bic)
+                    .build()
 
-        when (val response = service.sale(request).await()) {
-            is JudoApiCallResult.Success -> {
-                if (response.data != null) {
-                    saleCallResult.postValue(response)
-                    myOrderId = response.data.orderId
-                } else {
-                    saleCallResult.postValue(JudoApiCallResult.Failure())
+            when (val response = service.sale(request).await()) {
+                is JudoApiCallResult.Success -> {
+                    if (response.data != null) {
+                        saleCallResult.postValue(response)
+                        myOrderId = response.data.orderId
+                    } else {
+                        saleCallResult.postValue(JudoApiCallResult.Failure())
+                    }
                 }
+                is JudoApiCallResult.Failure -> saleCallResult.postValue(response)
             }
-            is JudoApiCallResult.Failure -> saleCallResult.postValue(response)
-        }
 
-        isLoading.postValue(false)
-    }
+            isLoading.postValue(false)
+        }
 
     private fun startPolling() {
         viewModelScope.launch {

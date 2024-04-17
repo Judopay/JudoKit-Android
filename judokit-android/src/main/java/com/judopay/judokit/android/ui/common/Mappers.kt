@@ -29,37 +29,41 @@ import com.judopay.judokit.android.toMap
 internal fun GooglePayConfiguration.toGooglePayPaymentMethod(judo: Judo): GooglePayPaymentMethod {
     val networks = judo.supportedCardNetworks.filter { it.isSupportedByGooglePay }
 
-    val cardParameters = GooglePayCardParameters(
-        allowedAuthMethods = arrayOf(
-            GooglePayAuthMethod.CRYPTOGRAM_3DS
-        ),
-        allowedCardNetworks = networks.toTypedArray(),
-        allowPrepaidCards = allowPrepaidCards,
-        allowCreditCards = allowCreditCards,
-        billingAddressRequired = isBillingAddressRequired,
-        billingAddressParameters = billingAddressParameters
-    )
+    val cardParameters =
+        GooglePayCardParameters(
+            allowedAuthMethods =
+                arrayOf(
+                    GooglePayAuthMethod.CRYPTOGRAM_3DS,
+                ),
+            allowedCardNetworks = networks.toTypedArray(),
+            allowPrepaidCards = allowPrepaidCards,
+            allowCreditCards = allowCreditCards,
+            billingAddressRequired = isBillingAddressRequired,
+            billingAddressParameters = billingAddressParameters,
+        )
 
-    val tokenizationSpecification = GooglePayPaymentMethodTokenizationSpecification(
-        type = GooglePayTokenizationSpecificationType.PAYMENT_GATEWAY,
-        parameters = GPayPaymentGatewayParameters(gatewayMerchantId = judo.judoId)
-    )
+    val tokenizationSpecification =
+        GooglePayPaymentMethodTokenizationSpecification(
+            type = GooglePayTokenizationSpecificationType.PAYMENT_GATEWAY,
+            parameters = GPayPaymentGatewayParameters(gatewayMerchantId = judo.judoId),
+        )
 
     return GooglePayPaymentMethod(
         type = GooglePayPaymentMethodType.CARD,
         parameters = cardParameters,
-        tokenizationSpecification = tokenizationSpecification
+        tokenizationSpecification = tokenizationSpecification,
     )
 }
 
 internal fun GooglePayConfiguration.toIsReadyToPayRequest(judo: Judo): IsReadyToPayRequest {
     val cardPaymentMethod = toGooglePayPaymentMethod(judo)
 
-    val isReadyToPayRequest = GooglePayIsReadyToPayRequest(
-        apiVersion = GOOGLE_PAY_API_VERSION,
-        apiVersionMinor = GOOGLE_PAY_API_VERSION_MINOR,
-        allowedPaymentMethods = arrayOf(cardPaymentMethod)
-    )
+    val isReadyToPayRequest =
+        GooglePayIsReadyToPayRequest(
+            apiVersion = GOOGLE_PAY_API_VERSION,
+            apiVersionMinor = GOOGLE_PAY_API_VERSION_MINOR,
+            allowedPaymentMethods = arrayOf(cardPaymentMethod),
+        )
 
     val json = isReadyToPayRequest.toJSONString()
     return IsReadyToPayRequest.fromJson(json)
@@ -69,28 +73,30 @@ internal fun GooglePayConfiguration.toPaymentDataRequest(judo: Judo): PaymentDat
     val price = judo.amount.amount
     val currency = judo.amount.currency.name
 
-    val transactionInfo = GooglePayTransactionInfo(
-        currencyCode = currency,
-        countryCode = transactionCountryCode,
-        transactionId = transactionId,
-        totalPriceStatus = totalPriceStatus,
-        totalPrice = price,
-        totalPriceLabel = totalPriceLabel,
-        checkoutOption = checkoutOption
-    )
+    val transactionInfo =
+        GooglePayTransactionInfo(
+            currencyCode = currency,
+            countryCode = transactionCountryCode,
+            transactionId = transactionId,
+            totalPriceStatus = totalPriceStatus,
+            totalPrice = price,
+            totalPriceLabel = totalPriceLabel,
+            checkoutOption = checkoutOption,
+        )
 
     val cardPaymentMethod = toGooglePayPaymentMethod(judo)
 
-    val paymentRequest = GooglePayPaymentDataRequest(
-        apiVersion = GOOGLE_PAY_API_VERSION,
-        apiVersionMinor = GOOGLE_PAY_API_VERSION_MINOR,
-        merchantInfo = GooglePayMerchantInfo(merchantName),
-        allowedPaymentMethods = arrayOf(cardPaymentMethod),
-        transactionInfo = transactionInfo,
-        emailRequired = isEmailRequired,
-        shippingAddressRequired = isShippingAddressRequired,
-        shippingAddressParameters = shippingAddressParameters
-    )
+    val paymentRequest =
+        GooglePayPaymentDataRequest(
+            apiVersion = GOOGLE_PAY_API_VERSION,
+            apiVersionMinor = GOOGLE_PAY_API_VERSION_MINOR,
+            merchantInfo = GooglePayMerchantInfo(merchantName),
+            allowedPaymentMethods = arrayOf(cardPaymentMethod),
+            transactionInfo = transactionInfo,
+            emailRequired = isEmailRequired,
+            shippingAddressRequired = isShippingAddressRequired,
+            shippingAddressParameters = shippingAddressParameters,
+        )
 
     val json = paymentRequest.toJSONString()
     return PaymentDataRequest.fromJson(json)
@@ -100,9 +106,10 @@ internal fun GooglePayConfiguration.toPaymentDataRequest(judo: Judo): PaymentDat
 internal fun PaymentData.toGooglePayRequest(judo: Judo): GooglePayRequest {
     val gPayPaymentData = Gson().fromJson(toJson(), GooglePayPaymentData::class.java)
 
-    val wallet = GooglePayWallet.Builder()
-        .setGooglePayPaymentData(gPayPaymentData)
-        .build()
+    val wallet =
+        GooglePayWallet.Builder()
+            .setGooglePayPaymentData(gPayPaymentData)
+            .build()
 
     val amount = judo.amount
     val reference = judo.reference
@@ -124,9 +131,10 @@ internal fun PaymentData.toGooglePayRequest(judo: Judo): GooglePayRequest {
 internal fun PaymentData.toPreAuthGooglePayRequest(judo: Judo): PreAuthGooglePayRequest {
     val gPayPaymentData = Gson().fromJson(toJson(), GooglePayPaymentData::class.java)
 
-    val wallet = GooglePayWallet.Builder()
-        .setGooglePayPaymentData(gPayPaymentData)
-        .build()
+    val wallet =
+        GooglePayWallet.Builder()
+            .setGooglePayPaymentData(gPayPaymentData)
+            .build()
 
     val amount = judo.amount
     val reference = judo.reference

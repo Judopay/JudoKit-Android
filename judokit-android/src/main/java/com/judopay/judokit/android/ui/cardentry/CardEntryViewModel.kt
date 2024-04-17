@@ -33,13 +33,14 @@ import kotlinx.coroutines.launch
 
 sealed class CardEntryNavigation {
     object Card : CardEntryNavigation()
+
     object Billing : CardEntryNavigation()
 }
 
 data class CardEntryFragmentModel(
     val formModel: FormModel,
     val displayScanButton: Boolean = true,
-    val isUserInputRequired: Boolean = true
+    val isUserInputRequired: Boolean = true,
 )
 
 sealed class CardEntryAction {
@@ -48,16 +49,22 @@ sealed class CardEntryAction {
 
     data class BillingDetailsValidationStatusChanged(
         val input: BillingDetailsInputModel,
-        val isFormValid: Boolean
+        val isFormValid: Boolean,
     ) :
         CardEntryAction()
 
     data class InsertCard(val tokenizedCard: CardToken) : CardEntryAction()
+
     data class ScanCard(val result: CardScanningResult) : CardEntryAction()
+
     object SubmitCardEntryForm : CardEntryAction()
+
     object SubmitBillingDetailsForm : CardEntryAction()
+
     object PressBackButton : CardEntryAction()
+
     object SubscribeToCardTransactionManagerResults : CardEntryAction()
+
     object UnSubscribeToCardTransactionManagerResults : CardEntryAction()
 }
 
@@ -66,9 +73,8 @@ internal class CardEntryViewModelFactory(
     private val cardTransactionManager: CardTransactionManager,
     private val cardRepository: TokenizedCardRepository,
     private val cardEntryOptions: CardEntryOptions?,
-    private val application: Application
+    private val application: Application,
 ) : ViewModelProvider.NewInstanceFactory() {
-
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == CardEntryViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
@@ -77,7 +83,7 @@ internal class CardEntryViewModelFactory(
                 cardTransactionManager,
                 cardRepository,
                 cardEntryOptions!!,
-                application
+                application,
             ) as T
         } else {
             super.create(modelClass)
@@ -90,9 +96,8 @@ class CardEntryViewModel(
     private val cardTransactionManager: CardTransactionManager,
     private val cardRepository: TokenizedCardRepository,
     private val cardEntryOptions: CardEntryOptions,
-    application: Application
+    application: Application,
 ) : AndroidViewModel(application), CardTransactionManagerResultListener {
-
     val model = MutableLiveData<CardEntryFragmentModel>()
     val judoPaymentResult = MutableLiveData<JudoPaymentResult>()
     val cardEntryToPaymentMethodResult = MutableLiveData<TransactionDetails.Builder>()
@@ -112,6 +117,7 @@ class CardEntryViewModel(
         sendTokenRequestIfNeeded()
     }
 
+    @Suppress("LongMethod")
     fun send(action: CardEntryAction) {
         when (action) {
             is CardEntryAction.SubscribeToCardTransactionManagerResults -> {
@@ -129,7 +135,7 @@ class CardEntryViewModel(
                 buildModel(
                     isCardDetailsValid = action.isFormValid,
                     isBillingAddressValid = billingAddressModel.isValid,
-                    network = cardEntryOptions.cardNetwork
+                    network = cardEntryOptions.cardNetwork,
                 )
             }
             is CardEntryAction.SubmitCardEntryForm -> {
@@ -138,13 +144,13 @@ class CardEntryViewModel(
                     navigation = CardEntryNavigation.Billing
                     buildModel(
                         isCardDetailsValid = true,
-                        isBillingAddressValid = billingAddressModel.isValid
+                        isBillingAddressValid = billingAddressModel.isValid,
                     )
                     navigationObserver.postValue(CardEntryNavigation.Billing)
                 } else {
                     buildModel(
                         isLoading = true,
-                        isCardDetailsValid = true
+                        isCardDetailsValid = true,
                     )
                     sendRequest()
                 }
@@ -153,20 +159,20 @@ class CardEntryViewModel(
                 buildModel(
                     isLoading = true,
                     isCardDetailsValid = true,
-                    isBillingAddressValid = billingAddressModel.isValid
+                    isBillingAddressValid = billingAddressModel.isValid,
                 )
                 sendRequest()
             }
             is CardEntryAction.ScanCard -> {
                 cardDetailsModel = action.result.toInputModel()
                 buildModel(
-                    isCardDetailsValid = true
+                    isCardDetailsValid = true,
                 )
             }
             is CardEntryAction.PressBackButton -> {
                 navigation = CardEntryNavigation.Card
                 buildModel(
-                    isCardDetailsValid = true
+                    isCardDetailsValid = true,
                 )
                 navigationObserver.postValue(CardEntryNavigation.Card)
             }
@@ -174,7 +180,7 @@ class CardEntryViewModel(
                 billingAddressModel = action.input
                 buildModel(
                     isCardDetailsValid = true,
-                    isBillingAddressValid = action.isFormValid
+                    isBillingAddressValid = action.isFormValid,
                 )
             }
         }
@@ -205,79 +211,83 @@ class CardEntryViewModel(
         buildModel(isLoading = false)
     }
 
-    private fun sendRequest() = viewModelScope.launch {
-        if (cardEntryOptions.isPresentedFromPaymentMethods && !cardEntryOptions.isAddingNewCard) {
+    @Suppress("LongMethod", "IllegalStateException", "UseCheckOrError")
+    private fun sendRequest() =
+        viewModelScope.launch {
+            if (cardEntryOptions.isPresentedFromPaymentMethods && !cardEntryOptions.isAddingNewCard) {
+                with(billingAddressModel) {
+                    cardEntryToPaymentMethodResult.postValue(
+                        TransactionDetails.Builder()
+                            .setCardHolderName(cardDetailsModel.cardHolderName)
+                            .setSecurityNumber(cardDetailsModel.securityNumber)
+                            .setEmail(email)
+                            .setCountryCode(countryCode)
+                            .setPhoneCountryCode(phoneCountryCode.filter { it.isDigit() })
+                            .setMobileNumber(mobileNumber.withWhitespacesRemoved)
+                            .setAddressLine1(addressLine1)
+                            .setAddressLine2(addressLine2)
+                            .setAddressLine3(addressLine3)
+                            .setCity(city)
+                            .setPostalCode(postalCode)
+                            .setState(state),
+                    )
+                }
+                return@launch
+            }
+
+            val transactionDetailBuilder = TransactionDetails.Builder()
+
+            with(cardDetailsModel) {
+                transactionDetailBuilder
+                    .setCardNumber(cardNumber)
+                    .setCardHolderName(cardHolderName)
+                    .setExpirationDate(expirationDate)
+                    .setSecurityNumber(securityNumber)
+            }
+
             with(billingAddressModel) {
-                cardEntryToPaymentMethodResult.postValue(
-                    TransactionDetails.Builder()
-                        .setCardHolderName(cardDetailsModel.cardHolderName)
-                        .setSecurityNumber(cardDetailsModel.securityNumber)
-                        .setEmail(email)
-                        .setCountryCode(countryCode)
-                        .setPhoneCountryCode(phoneCountryCode.filter { it.isDigit() })
-                        .setMobileNumber(mobileNumber.withWhitespacesRemoved)
-                        .setAddressLine1(addressLine1)
-                        .setAddressLine2(addressLine2)
-                        .setAddressLine3(addressLine3)
-                        .setCity(city)
-                        .setPostalCode(postalCode)
-                        .setState(state)
-                )
+                transactionDetailBuilder
+                    .setEmail(email)
+                    .setCountryCode(countryCode)
+                    .setPhoneCountryCode(phoneCountryCode.filter { it.isDigit() })
+                    .setMobileNumber(mobileNumber.withWhitespacesRemoved)
+                    .setAddressLine1(addressLine1)
+                    .setAddressLine2(addressLine2)
+                    .setAddressLine3(addressLine3)
+                    .setCity(city)
+                    .setPostalCode(postalCode)
+                    .setState(state)
             }
-            return@launch
-        }
 
-        val transactionDetailBuilder = TransactionDetails.Builder()
+            val details = transactionDetailBuilder.build()
 
-        with(cardDetailsModel) {
-            transactionDetailBuilder
-                .setCardNumber(cardNumber)
-                .setCardHolderName(cardHolderName)
-                .setExpirationDate(expirationDate)
-                .setSecurityNumber(securityNumber)
-        }
-
-        with(billingAddressModel) {
-            transactionDetailBuilder
-                .setEmail(email)
-                .setCountryCode(countryCode)
-                .setPhoneCountryCode(phoneCountryCode.filter { it.isDigit() })
-                .setMobileNumber(mobileNumber.withWhitespacesRemoved)
-                .setAddressLine1(addressLine1)
-                .setAddressLine2(addressLine2)
-                .setAddressLine3(addressLine3)
-                .setCity(city)
-                .setPostalCode(postalCode)
-                .setState(state)
-        }
-
-        val details = transactionDetailBuilder.build()
-
-        when (judo.paymentWidgetType) {
-            PaymentWidgetType.CARD_PAYMENT -> cardTransactionManager.payment(details, CardEntryViewModel::class.java.name)
-            PaymentWidgetType.PRE_AUTH -> cardTransactionManager.preAuth(details, CardEntryViewModel::class.java.name)
-            PaymentWidgetType.REGISTER_CARD -> cardTransactionManager.register(details, CardEntryViewModel::class.java.name)
-            PaymentWidgetType.CHECK_CARD -> cardTransactionManager.check(details, CardEntryViewModel::class.java.name)
-            PaymentWidgetType.PAYMENT_METHODS,
-            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
-            PaymentWidgetType.CREATE_CARD_TOKEN -> cardTransactionManager.save(details, CardEntryViewModel::class.java.name)
-            PaymentWidgetType.TOKEN_PAYMENT -> {
-                cardTransactionManager.paymentWithToken(
-                    getTransactionDetailsForTokenPayment(),
-                    CardEntryViewModel::class.java.name
-                )
+            when (judo.paymentWidgetType) {
+                PaymentWidgetType.CARD_PAYMENT -> cardTransactionManager.payment(details, CardEntryViewModel::class.java.name)
+                PaymentWidgetType.PRE_AUTH -> cardTransactionManager.preAuth(details, CardEntryViewModel::class.java.name)
+                PaymentWidgetType.REGISTER_CARD -> cardTransactionManager.register(details, CardEntryViewModel::class.java.name)
+                PaymentWidgetType.CHECK_CARD -> cardTransactionManager.check(details, CardEntryViewModel::class.java.name)
+                PaymentWidgetType.PAYMENT_METHODS,
+                PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
+                PaymentWidgetType.CREATE_CARD_TOKEN,
+                -> cardTransactionManager.save(details, CardEntryViewModel::class.java.name)
+                PaymentWidgetType.TOKEN_PAYMENT -> {
+                    cardTransactionManager.paymentWithToken(
+                        getTransactionDetailsForTokenPayment(),
+                        CardEntryViewModel::class.java.name,
+                    )
+                }
+                PaymentWidgetType.TOKEN_PRE_AUTH -> {
+                    cardTransactionManager.preAuthWithToken(
+                        getTransactionDetailsForTokenPayment(),
+                        CardEntryViewModel::class.java.name,
+                    )
+                }
+                PaymentWidgetType.GOOGLE_PAY,
+                PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
+                PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
+                -> throw IllegalStateException("Unsupported PaymentWidgetType")
             }
-            PaymentWidgetType.TOKEN_PRE_AUTH -> {
-                cardTransactionManager.preAuthWithToken(
-                    getTransactionDetailsForTokenPayment(),
-                    CardEntryViewModel::class.java.name
-                )
-            }
-            PaymentWidgetType.GOOGLE_PAY,
-            PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
-            PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS -> throw IllegalStateException("Unsupported PaymentWidgetType")
         }
-    }
 
     private fun getTransactionDetailsForTokenPayment(): TransactionDetails {
         val securityNumber = if (judo.uiConfiguration.shouldAskForCSC) cardDetailsModel.securityNumber else judo.cardSecurityCode
@@ -302,11 +312,12 @@ class CardEntryViewModel(
             .build()
     }
 
+    @Suppress("CyclomaticComplexMethod")
     private fun buildModel(
         isLoading: Boolean = false,
         isCardDetailsValid: Boolean = false,
         isBillingAddressValid: Boolean = false,
-        network: CardNetwork? = null
+        network: CardNetwork? = null,
     ) {
         val isInvokedFromPaymentMethods = cardEntryOptions.isPresentedFromPaymentMethods && cardEntryOptions.isAddingNewCard
 
@@ -314,18 +325,19 @@ class CardEntryViewModel(
             enabledFields = judo.enabledCardDetailsFields(cardEntryOptions)
             supportedNetworks = judo.supportedCardNetworks.toList()
             cardNetwork = network
-            actionButtonState = if (judo.uiConfiguration.shouldAskForBillingInformation && !isInvokedFromPaymentMethods) {
-                when {
-                    isCardDetailsValid -> ButtonState.Enabled(judo.continueButtonText, judo.formattedAmount)
-                    else -> ButtonState.Disabled(judo.continueButtonText, judo.formattedAmount)
+            actionButtonState =
+                if (judo.uiConfiguration.shouldAskForBillingInformation && !isInvokedFromPaymentMethods) {
+                    when {
+                        isCardDetailsValid -> ButtonState.Enabled(judo.continueButtonText, judo.formattedAmount)
+                        else -> ButtonState.Disabled(judo.continueButtonText, judo.formattedAmount)
+                    }
+                } else {
+                    when {
+                        isLoading -> ButtonState.Loading
+                        isCardDetailsValid -> ButtonState.Enabled(judo.submitButtonText(cardEntryOptions), judo.formattedAmount)
+                        else -> ButtonState.Disabled(judo.submitButtonText(cardEntryOptions), judo.formattedAmount)
+                    }
                 }
-            } else {
-                when {
-                    isLoading -> ButtonState.Loading
-                    isCardDetailsValid -> ButtonState.Enabled(judo.submitButtonText(cardEntryOptions), judo.formattedAmount)
-                    else -> ButtonState.Disabled(judo.submitButtonText(cardEntryOptions), judo.formattedAmount)
-                }
-            }
         }
 
         val shouldDisplayScanButton = false
@@ -333,30 +345,36 @@ class CardEntryViewModel(
 
         billingAddressModel.apply {
             isValid = isBillingAddressValid
-            submitButtonState = when {
-                isLoading -> ButtonState.Loading
-                isBillingAddressValid -> ButtonState.Enabled(judo.submitButtonText(cardEntryOptions), judo.formattedAmount)
-                else -> ButtonState.Disabled(judo.submitButtonText(cardEntryOptions), judo.formattedAmount)
-            }
-            backButtonState = when {
-                shouldDisplayBackButton -> if (isLoading) {
-                    ButtonState.Disabled(R.string.back)
-                } else {
-                    ButtonState.Enabled(R.string.back)
+            submitButtonState =
+                when {
+                    isLoading -> ButtonState.Loading
+                    isBillingAddressValid -> ButtonState.Enabled(judo.submitButtonText(cardEntryOptions), judo.formattedAmount)
+                    else -> ButtonState.Disabled(judo.submitButtonText(cardEntryOptions), judo.formattedAmount)
                 }
-                else -> ButtonState.Hidden
-            }
+            backButtonState =
+                when {
+                    shouldDisplayBackButton ->
+                        if (isLoading) {
+                            ButtonState.Disabled(R.string.back)
+                        } else {
+                            ButtonState.Enabled(R.string.back)
+                        }
+                    else -> ButtonState.Hidden
+                }
         }
 
         val formModel = FormModel(cardDetailsModel, billingAddressModel)
 
-        model.postValue(CardEntryFragmentModel(formModel, shouldDisplayScanButton, isUserInputRequired = judo.isUserInputRequired(cardEntryOptions)))
+        model.postValue(
+            CardEntryFragmentModel(formModel, shouldDisplayScanButton, isUserInputRequired = judo.isUserInputRequired(cardEntryOptions)),
+        )
     }
 
-    private fun insert(card: TokenizedCardEntity) = viewModelScope.launch {
-        cardRepository.updateAllLastUsedToFalse()
-        cardRepository.insert(card)
-    }
+    private fun insert(card: TokenizedCardEntity) =
+        viewModelScope.launch {
+            cardRepository.updateAllLastUsedToFalse()
+            cardRepository.insert(card)
+        }
 }
 
 private fun Judo.shouldAskForAdditionalCardDetails(options: CardEntryOptions): Boolean {
@@ -364,93 +382,108 @@ private fun Judo.shouldAskForAdditionalCardDetails(options: CardEntryOptions): B
     return uiConfiguration.shouldAskForCSC || shouldAskForCSCInPaymentMethods || uiConfiguration.shouldAskForCardholderName
 }
 
-private fun Judo.isUserInputRequired(options: CardEntryOptions): Boolean = if (isTokenPayment(options)) {
-    uiConfiguration.shouldAskForBillingInformation || shouldAskForAdditionalCardDetails(options)
-} else {
-    true
-}
+private fun Judo.isUserInputRequired(options: CardEntryOptions): Boolean =
+    if (isTokenPayment(options)) {
+        uiConfiguration.shouldAskForBillingInformation || shouldAskForAdditionalCardDetails(options)
+    } else {
+        true
+    }
 
 private val Judo.formattedAmount: String?
-    get() = when (paymentWidgetType) {
-        PaymentWidgetType.CARD_PAYMENT,
-        PaymentWidgetType.PRE_AUTH,
-        PaymentWidgetType.TOKEN_PAYMENT,
-        PaymentWidgetType.TOKEN_PRE_AUTH ->
-            if (uiConfiguration.shouldPaymentButtonDisplayAmount) {
-                amount.formatted
-            } else {
-                null
-            }
-        else -> null
-    }
-
-private fun Judo.submitButtonText(options: CardEntryOptions): Int = when (paymentWidgetType) {
-    PaymentWidgetType.REGISTER_CARD -> R.string.register_card
-    PaymentWidgetType.CREATE_CARD_TOKEN -> R.string.save_card
-    PaymentWidgetType.CHECK_CARD -> R.string.check_card
-    PaymentWidgetType.CARD_PAYMENT,
-    PaymentWidgetType.PRE_AUTH,
-    PaymentWidgetType.TOKEN_PAYMENT,
-    PaymentWidgetType.TOKEN_PRE_AUTH ->
-        if (uiConfiguration.shouldPaymentButtonDisplayAmount) {
-            R.string.pay_amount
-        } else {
-            R.string.pay_now
+    get() =
+        when (paymentWidgetType) {
+            PaymentWidgetType.CARD_PAYMENT,
+            PaymentWidgetType.PRE_AUTH,
+            PaymentWidgetType.TOKEN_PAYMENT,
+            PaymentWidgetType.TOKEN_PRE_AUTH,
+            ->
+                if (uiConfiguration.shouldPaymentButtonDisplayAmount) {
+                    amount.formatted
+                } else {
+                    null
+                }
+            else -> null
         }
-    PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
-    PaymentWidgetType.PAYMENT_METHODS,
-    PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS ->
-        if (options.isAddingNewCard) {
-            R.string.save_card
-        } else {
-            R.string.pay_now
-        }
-    PaymentWidgetType.GOOGLE_PAY,
-    PaymentWidgetType.PRE_AUTH_GOOGLE_PAY -> R.string.empty
-}
 
-private val Judo.continueButtonText: Int
-    get() = when (paymentWidgetType) {
+private fun Judo.submitButtonText(options: CardEntryOptions): Int =
+    when (paymentWidgetType) {
+        PaymentWidgetType.REGISTER_CARD -> R.string.register_card
         PaymentWidgetType.CREATE_CARD_TOKEN -> R.string.save_card
-        PaymentWidgetType.REGISTER_CARD,
-        PaymentWidgetType.CHECK_CARD,
+        PaymentWidgetType.CHECK_CARD -> R.string.check_card
         PaymentWidgetType.CARD_PAYMENT,
         PaymentWidgetType.PRE_AUTH,
         PaymentWidgetType.TOKEN_PAYMENT,
-        PaymentWidgetType.TOKEN_PRE_AUTH -> R.string.continue_text
+        PaymentWidgetType.TOKEN_PRE_AUTH,
+        ->
+            if (uiConfiguration.shouldPaymentButtonDisplayAmount) {
+                R.string.pay_amount
+            } else {
+                R.string.pay_now
+            }
         PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
         PaymentWidgetType.PAYMENT_METHODS,
-        PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS ->
-            if (uiConfiguration.shouldAskForBillingInformation) {
-                R.string.continue_text
-            } else {
+        PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
+        ->
+            if (options.isAddingNewCard) {
                 R.string.save_card
+            } else {
+                R.string.pay_now
             }
         PaymentWidgetType.GOOGLE_PAY,
-        PaymentWidgetType.PRE_AUTH_GOOGLE_PAY -> R.string.empty
+        PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
+        -> R.string.empty
     }
+
+private val Judo.continueButtonText: Int
+    get() =
+        when (paymentWidgetType) {
+            PaymentWidgetType.CREATE_CARD_TOKEN -> R.string.save_card
+            PaymentWidgetType.REGISTER_CARD,
+            PaymentWidgetType.CHECK_CARD,
+            PaymentWidgetType.CARD_PAYMENT,
+            PaymentWidgetType.PRE_AUTH,
+            PaymentWidgetType.TOKEN_PAYMENT,
+            PaymentWidgetType.TOKEN_PRE_AUTH,
+            -> R.string.continue_text
+            PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
+            PaymentWidgetType.PAYMENT_METHODS,
+            PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
+            ->
+                if (uiConfiguration.shouldAskForBillingInformation) {
+                    R.string.continue_text
+                } else {
+                    R.string.save_card
+                }
+            PaymentWidgetType.GOOGLE_PAY,
+            PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
+            -> R.string.empty
+        }
 
 private fun Judo.isTokenPayment(options: CardEntryOptions): Boolean {
     val isPaymentMethodsTokenPayment = options.isPresentedFromPaymentMethods && !options.isAddingNewCard
     return paymentWidgetType.isTokenPayment || isPaymentMethodsTokenPayment
 }
-private fun Judo.enabledCardDetailsFields(options: CardEntryOptions): List<CardDetailsFieldType> = if (isTokenPayment(options)) {
-    val shouldAskForCSCInPaymentMethods = options.isPresentedFromPaymentMethods && uiConfiguration.shouldPaymentMethodsVerifySecurityCode
-    val shouldAskForCSC = uiConfiguration.shouldAskForCSC || shouldAskForCSCInPaymentMethods
 
-    listOfNotNull(
-        CardDetailsFieldType.SECURITY_NUMBER.takeIf { shouldAskForCSC },
-        CardDetailsFieldType.HOLDER_NAME.takeIf { uiConfiguration.shouldAskForCardholderName }
-    )
-} else {
-    val avsEnabled = uiConfiguration.avsEnabled && !uiConfiguration.shouldAskForBillingInformation
+private fun Judo.enabledCardDetailsFields(options: CardEntryOptions): List<CardDetailsFieldType> =
+    if (isTokenPayment(options)) {
+        val shouldAskForCSCInPaymentMethods =
+            options.isPresentedFromPaymentMethods &&
+                uiConfiguration.shouldPaymentMethodsVerifySecurityCode
+        val shouldAskForCSC = uiConfiguration.shouldAskForCSC || shouldAskForCSCInPaymentMethods
 
-    listOfNotNull(
-        CardDetailsFieldType.NUMBER,
-        CardDetailsFieldType.HOLDER_NAME,
-        CardDetailsFieldType.EXPIRATION_DATE,
-        CardDetailsFieldType.SECURITY_NUMBER,
-        CardDetailsFieldType.COUNTRY.takeIf { avsEnabled },
-        CardDetailsFieldType.POST_CODE.takeIf { avsEnabled }
-    )
-}
+        listOfNotNull(
+            CardDetailsFieldType.SECURITY_NUMBER.takeIf { shouldAskForCSC },
+            CardDetailsFieldType.HOLDER_NAME.takeIf { uiConfiguration.shouldAskForCardholderName },
+        )
+    } else {
+        val avsEnabled = uiConfiguration.avsEnabled && !uiConfiguration.shouldAskForBillingInformation
+
+        listOfNotNull(
+            CardDetailsFieldType.NUMBER,
+            CardDetailsFieldType.HOLDER_NAME,
+            CardDetailsFieldType.EXPIRATION_DATE,
+            CardDetailsFieldType.SECURITY_NUMBER,
+            CardDetailsFieldType.COUNTRY.takeIf { avsEnabled },
+            CardDetailsFieldType.POST_CODE.takeIf { avsEnabled },
+        )
+    }

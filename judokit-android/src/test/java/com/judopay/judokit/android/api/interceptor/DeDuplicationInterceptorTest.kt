@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 internal class DeDuplicationInterceptorTest {
-
     private val sut = DeDuplicationInterceptor()
 
     @DisplayName("Given intercept is called twice with same data, then throw DuplicateTransactionException")
@@ -28,19 +27,21 @@ internal class DeDuplicationInterceptorTest {
             "{\"yourPaymentReference\": \"uniqueRef\", \"uniqueRequest\": true}"
         val body = json.toRequestBody(mediaType)
 
-        val request = Request.Builder()
-            .url("http://www.judopay.com")
-            .post(body)
-            .build()
+        val request =
+            Request.Builder()
+                .url("http://www.judopay.com")
+                .post(body)
+                .build()
 
         val responseBody = "".toResponseBody(mediaType)
-        val response = Response.Builder()
-            .request(request)
-            .body(responseBody)
-            .code(200)
-            .message("")
-            .protocol(Protocol.HTTP_1_1)
-            .build()
+        val response =
+            Response.Builder()
+                .request(request)
+                .body(responseBody)
+                .code(200)
+                .message("")
+                .protocol(Protocol.HTTP_1_1)
+                .build()
 
         val chain: Interceptor.Chain = mockk(relaxed = true)
 
@@ -57,20 +58,22 @@ internal class DeDuplicationInterceptorTest {
     fun shouldProcessWhenRequestBodyNotJson() {
         val textHtmlMediaType = "text/html".toMediaTypeOrNull()
         val body = "".toRequestBody(textHtmlMediaType)
-        val request = Request.Builder()
-            .url("http://www.judopay.com")
-            .post(body)
-            .build()
+        val request =
+            Request.Builder()
+                .url("http://www.judopay.com")
+                .post(body)
+                .build()
 
         val mediaType = "application/json".toMediaTypeOrNull()
         val responseBody = "".toResponseBody(mediaType)
-        val response = Response.Builder()
-            .request(request)
-            .body(responseBody)
-            .code(200)
-            .message("")
-            .protocol(Protocol.HTTP_1_1)
-            .build()
+        val response =
+            Response.Builder()
+                .request(request)
+                .body(responseBody)
+                .code(200)
+                .message("")
+                .protocol(Protocol.HTTP_1_1)
+                .build()
 
         val chain: Interceptor.Chain = mockk(relaxed = true)
 
@@ -86,19 +89,21 @@ internal class DeDuplicationInterceptorTest {
     @DisplayName("Given request body null, then should proceed request")
     @Test
     fun shouldProceedWhenRequestBodyNull() {
-        val request = Request.Builder()
-            .url("http://www.judopay.com")
-            .build()
+        val request =
+            Request.Builder()
+                .url("http://www.judopay.com")
+                .build()
 
         val mediaType = "application/json".toMediaTypeOrNull()
         val responseBody = "".toResponseBody(mediaType)
-        val response = Response.Builder()
-            .request(request)
-            .body(responseBody)
-            .code(200)
-            .message("")
-            .protocol(Protocol.HTTP_1_1)
-            .build()
+        val response =
+            Response.Builder()
+                .request(request)
+                .body(responseBody)
+                .code(200)
+                .message("")
+                .protocol(Protocol.HTTP_1_1)
+                .build()
 
         val chain: Interceptor.Chain = mockk(relaxed = true)
 

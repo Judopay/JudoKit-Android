@@ -10,8 +10,10 @@ import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethod
 
 class SavedCardsHeaderViewHolder(private val binding: SavedCardHeaderItemBinding) :
     RecyclerView.ViewHolder(binding.root), BindableRecyclerViewHolder<PaymentMethodGenericItem, PaymentMethodItemAction> {
-
-    override fun bind(model: PaymentMethodGenericItem, listener: PaymentMethodsAdapterListener?) = with(binding.root) {
+    override fun bind(
+        model: PaymentMethodGenericItem,
+        listener: PaymentMethodsAdapterListener?,
+    ) = with(binding.root) {
         if (model.isInEditMode) {
             binding.editButton.text = resources.getString(R.string.button_done)
             binding.editButton.setOnClickListener {

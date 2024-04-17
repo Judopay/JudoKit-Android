@@ -40,311 +40,327 @@ internal typealias BillingDetailsFormValidationStatus = (model: BillingDetailsIn
 internal typealias BillingDetailsSubmitButtonClickListener = () -> Unit
 internal typealias BillingDetailsBackButtonClickListener = () -> Unit
 
-class BillingDetailsFormView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyle: Int = 0
-) : FrameLayout(context, attrs, defStyle) {
-    val binding = BillingDetailsFormViewBinding.inflate(LayoutInflater.from(context), this, true)
+class BillingDetailsFormView
+    @JvmOverloads
+    constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyle: Int = 0,
+    ) : FrameLayout(context, attrs, defStyle) {
+        val binding = BillingDetailsFormViewBinding.inflate(LayoutInflater.from(context), this, true)
 
-    internal var onFormValidationStatusListener: BillingDetailsFormValidationStatus? = null
-    internal var onBillingDetailsSubmitButtonClickListener: BillingDetailsSubmitButtonClickListener? =
-        null
-    internal var onBillingDetailsBackButtonClickListener: BillingDetailsBackButtonClickListener? =
-        null
+        internal var onFormValidationStatusListener: BillingDetailsFormValidationStatus? = null
+        internal var onBillingDetailsSubmitButtonClickListener: BillingDetailsSubmitButtonClickListener? =
+            null
+        internal var onBillingDetailsBackButtonClickListener: BillingDetailsBackButtonClickListener? =
+            null
 
-    internal var model = BillingDetailsInputModel()
-        set(value) {
-            field = value
-            binding.billingDetailsSubmitButton.state = model.submitButtonState
-            binding.billingDetailsBackButton.state = model.backButtonState
+        internal var model = BillingDetailsInputModel()
+            set(value) {
+                field = value
+                binding.billingDetailsSubmitButton.state = model.submitButtonState
+                binding.billingDetailsBackButton.state = model.backButtonState
+            }
+
+        private var validators =
+            mutableListOf(
+                EmailValidator(),
+                CountryValidator(),
+                StateValidator(),
+                PhoneCountryCodeValidator(),
+                MobileNumberValidator(),
+                CityValidator(),
+                PostcodeValidator(),
+                AddressLineValidator(),
+            )
+
+        private val phoneNumberFields =
+            arrayListOf(BillingDetailsFieldType.PHONE_COUNTRY_CODE.name, BillingDetailsFieldType.MOBILE_NUMBER.name)
+
+        private val countries = CountryInfo.list(context)
+
+        private val validationResultsCache = mutableMapOf<BillingDetailsFieldType, Boolean>()
+
+        private val phoneCountryCodeFormatter: PhoneCountryCodeTextWatcher by lazy {
+            PhoneCountryCodeTextWatcher()
         }
 
-    private var validators = mutableListOf(
-        EmailValidator(),
-        CountryValidator(),
-        StateValidator(),
-        PhoneCountryCodeValidator(),
-        MobileNumberValidator(),
-        CityValidator(),
-        PostcodeValidator(),
-        AddressLineValidator()
-    )
+        private var mobileNumberFormatter: PhoneNumberFormattingTextWatcher? = null
+        private var selectedState: State? = null
+        private var selectedCountry: CountryInfo? = null
+            set(value) {
+                field = value
 
-    private val phoneNumberFields =
-        arrayListOf(BillingDetailsFieldType.PHONE_COUNTRY_CODE.name, BillingDetailsFieldType.MOBILE_NUMBER.name)
+                val dialCode = value?.dialCode ?: ""
+                val country = Country.entries.firstOrNull { it.name == selectedCountry?.alpha2Code } ?: Country.OTHER
 
-    private val countries = CountryInfo.list(context)
+                textInputLayoutForType(BillingDetailsFieldType.PHONE_COUNTRY_CODE)?.let {
+                    it.editText?.setText(dialCode)
+                }
 
-    private val validationResultsCache = mutableMapOf<BillingDetailsFieldType, Boolean>()
+                validatorInstance<PostcodeValidator>()?.let {
+                    it.country = country
+                }
 
-    private val phoneCountryCodeFormatter: PhoneCountryCodeTextWatcher by lazy {
-        PhoneCountryCodeTextWatcher()
-    }
+                validatorInstance<StateValidator>()?.let {
+                    it.country = country
+                }
 
-    private var mobileNumberFormatter: PhoneNumberFormattingTextWatcher? = null
-    private var selectedState: State? = null
-    private var selectedCountry: CountryInfo? = null
-        set(value) {
-            field = value
-
-            val dialCode = value?.dialCode ?: ""
-            val country = Country.values().firstOrNull { it.name == selectedCountry?.alpha2Code } ?: Country.OTHER
-
-            textInputLayoutForType(BillingDetailsFieldType.PHONE_COUNTRY_CODE)?.let {
-                it.editText?.setText(dialCode)
+                setupStateSpinner(country)
+                updateSubmitButtonState()
             }
 
-            validatorInstance<PostcodeValidator>()?.let {
-                it.country = country
+        override fun onFinishInflate() {
+            super.onFinishInflate()
+            setupFieldsContent()
+            setupPhoneCountryCodeFormatter()
+            setupMobileNumberFormatter()
+            setupCountrySpinner()
+            setupStateSpinner(Country.OTHER)
+        }
+
+        private fun setupCountrySpinner() =
+            binding.countryTextInputEditText.apply {
+                val adapter = ArrayAdapter(context, R.layout.country_select_dialog_item, countries)
+                setAdapter(adapter)
+                setOnItemClickListener { parent, _, index, _ ->
+                    selectedCountry = parent.getItemAtPosition(index) as CountryInfo
+                }
             }
 
-            validatorInstance<StateValidator>()?.let {
-                it.country = country
+        private fun setupStateSpinner(country: Country) {
+            var states = emptyList<State>()
+            var hint = R.string.empty
+            when (country) {
+                Country.US -> {
+                    states = usStates
+                    hint = R.string.us_state_hint
+                }
+                Country.CA -> {
+                    states = canadaProvincesAndTerritories
+                    hint = R.string.ca_province_hint
+                }
+                else -> {
+                    validationResultsCache[BillingDetailsFieldType.STATE] = true
+                }
+            }
+            val hasStates = states.isNotEmpty()
+            if (hasStates) {
+                validationResultsCache[BillingDetailsFieldType.STATE] = false
+                binding.stateTextInputEditText.apply {
+                    setHint(hint)
+                    setAdapter(ArrayAdapter(context, R.layout.country_select_dialog_item, states))
+                    setOnItemClickListener { parent, _, position, _ ->
+                        selectedState = parent.getItemAtPosition(position) as State
+                    }
+                }
+            }
+            selectedState = null
+            binding.stateTextInputEditText.setText("")
+            binding.stateTextInputLayout.isVisible = hasStates
+        }
+
+        private fun setupPhoneCountryCodeFormatter() =
+            with(editTextForType(BillingDetailsFieldType.PHONE_COUNTRY_CODE)) {
+                addTextChangedListener(phoneCountryCodeFormatter)
             }
 
-            setupStateSpinner(country)
+        private fun setupMobileNumberFormatter() =
+            with(editTextForType(BillingDetailsFieldType.MOBILE_NUMBER)) {
+                if (mobileNumberFormatter != null) {
+                    removeTextChangedListener(mobileNumberFormatter)
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mobileNumberFormatter =
+                        PhoneNumberFormattingTextWatcher(
+                            countries.find {
+                                it.name == editTextForType(BillingDetailsFieldType.COUNTRY).text.toString()
+                            }?.alpha2Code ?: "",
+                        )
+                    addTextChangedListener(mobileNumberFormatter)
+                }
+            }
+
+        private fun setupFieldsContent() {
+            val scrollView = binding.billingDetailsScrollView
+
+            setAddAddressButtonClickListener()
+            binding.billingDetailsBackButton.setOnClickListener { onBillingDetailsBackButtonClickListener?.invoke() }
+            binding.billingDetailsSubmitButton.setOnClickListener {
+                dismissKeyboard()
+                onBillingDetailsSubmitButtonClickListener?.invoke()
+            }
+
+            BillingDetailsFieldType.values().forEach { type ->
+                editTextForType(type).apply {
+                    setHint(type.fieldHintResId)
+
+                    // setup state, and validate it
+                    with(model.valueOfBillingDetailsFieldWithType(type)) {
+                        setText(this)
+                        textDidChange(type, this, FormFieldEvent.TEXT_CHANGED)
+                    }
+
+                    if (type == BillingDetailsFieldType.MOBILE_NUMBER) {
+                        setOnFocusChangeListener { _, hasFocus ->
+                            if (hasFocus) {
+                                setupMobileNumberFormatter()
+                                scrollView.smoothScrollToView(editTextForType(type))
+                            } else {
+                                val text = valueOfEditTextWithType(type)
+                                textDidChange(type, text, FormFieldEvent.FOCUS_CHANGED)
+                            }
+                        }
+                    } else {
+                        setOnFocusChangeListener { _, hasFocus ->
+                            val text = valueOfEditTextWithType(type)
+                            if (!hasFocus) {
+                                textDidChange(type, text, FormFieldEvent.FOCUS_CHANGED)
+                            } else {
+                                scrollView.smoothScrollToView(editTextForType(type))
+                            }
+                        }
+                    }
+
+                    addTextChangedListener {
+                        val text = it.toString()
+                        textDidChange(type, text, FormFieldEvent.TEXT_CHANGED)
+                    }
+                }
+            }
+        }
+
+        @Suppress("MagicNumber")
+        private fun setAddAddressButtonClickListener() {
+            binding.addAddressLineButton.text = context.getString(R.string.add_address_line, 2)
+            binding.addAddressLineButton.setOnClickListener {
+                if (binding.addressLine2TextInputLayout.visibility == VISIBLE) {
+                    binding.addressLine3TextInputLayout.visibility = VISIBLE
+                    binding.addAddressLineButton.visibility = GONE
+                } else {
+                    binding.addressLine2TextInputLayout.visibility = VISIBLE
+                    binding.addAddressLineButton.text = context.getString(R.string.add_address_line, 3)
+                }
+            }
+        }
+
+        private fun editTextForType(type: BillingDetailsFieldType): EditText =
+            when (type) {
+                BillingDetailsFieldType.COUNTRY -> binding.countryTextInputEditText
+                BillingDetailsFieldType.STATE -> binding.stateTextInputEditText
+                BillingDetailsFieldType.POST_CODE -> binding.postalCodeTextInputEditText
+                BillingDetailsFieldType.EMAIL -> binding.emailTextInputEditText
+                BillingDetailsFieldType.PHONE_COUNTRY_CODE -> binding.phoneCountryCodeTextInputEditText
+                BillingDetailsFieldType.MOBILE_NUMBER -> binding.mobileNumberTextInputEditText
+                BillingDetailsFieldType.ADDRESS_LINE_1 -> binding.addressLine1TextInputEditText
+                BillingDetailsFieldType.ADDRESS_LINE_2 -> binding.addressLine2TextInputEditText
+                BillingDetailsFieldType.ADDRESS_LINE_3 -> binding.addressLine3TextInputEditText
+                BillingDetailsFieldType.CITY -> binding.cityTextInputEditText
+            }
+
+        @Suppress("CyclomaticComplexMethod")
+        private fun textDidChange(
+            type: BillingDetailsFieldType,
+            value: String,
+            event: FormFieldEvent,
+        ) {
+            val validationResults =
+                validators.mapNotNull {
+                    if (it.fieldType == type.name) {
+                        if (phoneNumberFields.contains(it.fieldType)) {
+                            val code = valueOfEditTextWithType(BillingDetailsFieldType.PHONE_COUNTRY_CODE)
+                            val number = valueOfEditTextWithType(BillingDetailsFieldType.MOBILE_NUMBER)
+                            when {
+                                // in case country code is empty, don't apply the phone validation
+                                code.isEmpty() && number.isEmpty() -> return@mapNotNull null
+                                code.isEmpty() && number.isNotEmpty() -> return@mapNotNull ValidationResult(
+                                    false,
+                                    R.string.invalid_phone_country_code,
+                                )
+                            }
+                        }
+
+                        it.validate(value, event)
+                    } else {
+                        null
+                    }
+                }
+            if (type == BillingDetailsFieldType.COUNTRY && event == FormFieldEvent.TEXT_CHANGED) {
+                val typedCountry = countries.firstOrNull { it.name.lowercase() == value.lowercase() }
+                if (selectedCountry != typedCountry) {
+                    selectedCountry = typedCountry
+                }
+            }
+            if (type == BillingDetailsFieldType.STATE && event == FormFieldEvent.TEXT_CHANGED) {
+                val typedState =
+                    when (selectedCountry?.alpha2Code) {
+                        "CA" -> canadaProvincesAndTerritories.firstOrNull { it.name.lowercase() == value.lowercase() }
+                        "US" -> usStates.firstOrNull { it.name.lowercase() == value.lowercase() }
+                        else -> null
+                    }
+                selectedState = typedState
+            }
+
+            val result = validationResults.firstOrNull()
+
+            validationResultsCache[type] = result?.isValid ?: true
+
+            val layout = textInputLayoutForType(type)
+            val isValidResult = result?.isValid ?: true
+            val message = context.getString(result?.message ?: R.string.empty)
+            val errorEnabled = value.isNotBlank() && !isValidResult && message.isNotEmpty()
+
+            layout?.let {
+                it.isErrorEnabled = errorEnabled
+                it.error = message
+            }
+
             updateSubmitButtonState()
         }
 
-    override fun onFinishInflate() {
-        super.onFinishInflate()
-        setupFieldsContent()
-        setupPhoneCountryCodeFormatter()
-        setupMobileNumberFormatter()
-        setupCountrySpinner()
-        setupStateSpinner(Country.OTHER)
-    }
-
-    private fun setupCountrySpinner() = binding.countryTextInputEditText.apply {
-        val adapter = ArrayAdapter(context, R.layout.country_select_dialog_item, countries)
-        setAdapter(adapter)
-        setOnItemClickListener { parent, _, index, _ ->
-            selectedCountry = parent.getItemAtPosition(index) as CountryInfo
+        private fun textInputLayoutForType(type: BillingDetailsFieldType): JudoEditTextInputLayout? {
+            val editText = editTextForType(type)
+            return editText.parentOfType(JudoEditTextInputLayout::class.java)
         }
-    }
 
-    private fun setupStateSpinner(country: Country) {
-        var states = emptyList<State>()
-        var hint = R.string.empty
-        when (country) {
-            Country.US -> {
-                states = usStates
-                hint = R.string.us_state_hint
-            }
-            Country.CA -> {
-                states = canadaProvincesAndTerritories
-                hint = R.string.ca_province_hint
-            }
-            else -> {
-                validationResultsCache[BillingDetailsFieldType.STATE] = true
-            }
+        private fun valueOfEditTextWithType(type: BillingDetailsFieldType): String {
+            val editText = editTextForType(type)
+            return editText.text.toString()
         }
-        val hasStates = states.isNotEmpty()
-        if (hasStates) {
-            validationResultsCache[BillingDetailsFieldType.STATE] = false
-            binding.stateTextInputEditText.apply {
-                setHint(hint)
-                setAdapter(ArrayAdapter(context, R.layout.country_select_dialog_item, states))
-                setOnItemClickListener { parent, _, position, _ ->
-                    selectedState = parent.getItemAtPosition(position) as State
+
+        private fun updateSubmitButtonState() {
+            val validationResults =
+                BillingDetailsFieldType.values().map {
+                    validationResultsCache[it] ?: false
                 }
-            }
-        }
-        selectedState = null
-        binding.stateTextInputEditText.setText("")
-        binding.stateTextInputLayout.isVisible = hasStates
-    }
 
-    private fun setupPhoneCountryCodeFormatter() =
-        with(editTextForType(BillingDetailsFieldType.PHONE_COUNTRY_CODE)) {
-            addTextChangedListener(phoneCountryCodeFormatter)
+            var isFormValid = false
+            if (validationResults.isNotEmpty()) {
+                isFormValid = validationResults.reduce { acc, b -> acc && b }
+            }
+
+            onValidationPassed(isFormValid)
         }
 
-    private fun setupMobileNumberFormatter() =
-        with(editTextForType(BillingDetailsFieldType.MOBILE_NUMBER)) {
-            if (mobileNumberFormatter != null) {
-                removeTextChangedListener(mobileNumberFormatter)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mobileNumberFormatter = PhoneNumberFormattingTextWatcher(
-                    countries.find {
-                        it.name == editTextForType(BillingDetailsFieldType.COUNTRY).text.toString()
-                    }?.alpha2Code ?: ""
+        private fun onValidationPassed(isFormValid: Boolean) {
+            val inputModel =
+                BillingDetailsInputModel(
+                    countryCode = selectedCountry?.numericCode ?: "",
+                    state = selectedState?.isoCode ?: "",
+                    postalCode = valueOfEditTextWithType(BillingDetailsFieldType.POST_CODE),
+                    email = valueOfEditTextWithType(BillingDetailsFieldType.EMAIL),
+                    addressLine1 = valueOfEditTextWithType(BillingDetailsFieldType.ADDRESS_LINE_1),
+                    addressLine2 = valueOfEditTextWithType(BillingDetailsFieldType.ADDRESS_LINE_2),
+                    addressLine3 = valueOfEditTextWithType(BillingDetailsFieldType.ADDRESS_LINE_3),
+                    phoneCountryCode = valueOfEditTextWithType(BillingDetailsFieldType.PHONE_COUNTRY_CODE),
+                    mobileNumber = valueOfEditTextWithType(BillingDetailsFieldType.MOBILE_NUMBER),
+                    city = valueOfEditTextWithType(BillingDetailsFieldType.CITY),
                 )
-                addTextChangedListener(mobileNumberFormatter)
-            }
+
+            onFormValidationStatusListener?.invoke(inputModel, isFormValid)
         }
 
-    private fun setupFieldsContent() {
-        val scrollView = binding.billingDetailsScrollView
-
-        setAddAddressButtonClickListener()
-        binding.billingDetailsBackButton.setOnClickListener { onBillingDetailsBackButtonClickListener?.invoke() }
-        binding.billingDetailsSubmitButton.setOnClickListener {
-            dismissKeyboard()
-            onBillingDetailsSubmitButtonClickListener?.invoke()
-        }
-
-        BillingDetailsFieldType.values().forEach { type ->
-            editTextForType(type).apply {
-                setHint(type.fieldHintResId)
-
-                // setup state, and validate it
-                with(model.valueOfBillingDetailsFieldWithType(type)) {
-                    setText(this)
-                    textDidChange(type, this, FormFieldEvent.TEXT_CHANGED)
-                }
-
-                if (type == BillingDetailsFieldType.MOBILE_NUMBER) {
-                    setOnFocusChangeListener { _, hasFocus ->
-                        if (hasFocus) {
-                            setupMobileNumberFormatter()
-                            scrollView.smoothScrollToView(editTextForType(type))
-                        } else {
-                            val text = valueOfEditTextWithType(type)
-                            textDidChange(type, text, FormFieldEvent.FOCUS_CHANGED)
-                        }
-                    }
-                } else {
-                    setOnFocusChangeListener { _, hasFocus ->
-                        val text = valueOfEditTextWithType(type)
-                        if (!hasFocus) {
-                            textDidChange(type, text, FormFieldEvent.FOCUS_CHANGED)
-                        } else {
-                            scrollView.smoothScrollToView(editTextForType(type))
-                        }
-                    }
-                }
-
-                addTextChangedListener {
-                    val text = it.toString()
-                    textDidChange(type, text, FormFieldEvent.TEXT_CHANGED)
-                }
-            }
+        private inline fun <reified V> validatorInstance(): V? {
+            return validators.firstOrNull { it is V } as V?
         }
     }
-
-    private fun setAddAddressButtonClickListener() {
-        binding.addAddressLineButton.text = context.getString(R.string.add_address_line, 2)
-        binding.addAddressLineButton.setOnClickListener {
-            if (binding.addressLine2TextInputLayout.visibility == VISIBLE) {
-                binding.addressLine3TextInputLayout.visibility = VISIBLE
-                binding.addAddressLineButton.visibility = GONE
-            } else {
-                binding.addressLine2TextInputLayout.visibility = VISIBLE
-                binding.addAddressLineButton.text = context.getString(R.string.add_address_line, 3)
-            }
-        }
-    }
-
-    private fun editTextForType(type: BillingDetailsFieldType): EditText = when (type) {
-        BillingDetailsFieldType.COUNTRY -> binding.countryTextInputEditText
-        BillingDetailsFieldType.STATE -> binding.stateTextInputEditText
-        BillingDetailsFieldType.POST_CODE -> binding.postalCodeTextInputEditText
-        BillingDetailsFieldType.EMAIL -> binding.emailTextInputEditText
-        BillingDetailsFieldType.PHONE_COUNTRY_CODE -> binding.phoneCountryCodeTextInputEditText
-        BillingDetailsFieldType.MOBILE_NUMBER -> binding.mobileNumberTextInputEditText
-        BillingDetailsFieldType.ADDRESS_LINE_1 -> binding.addressLine1TextInputEditText
-        BillingDetailsFieldType.ADDRESS_LINE_2 -> binding.addressLine2TextInputEditText
-        BillingDetailsFieldType.ADDRESS_LINE_3 -> binding.addressLine3TextInputEditText
-        BillingDetailsFieldType.CITY -> binding.cityTextInputEditText
-    }
-
-    private fun textDidChange(type: BillingDetailsFieldType, value: String, event: FormFieldEvent) {
-        val validationResults = validators.mapNotNull {
-            if (it.fieldType == type.name) {
-                if (phoneNumberFields.contains(it.fieldType)) {
-                    val code = valueOfEditTextWithType(BillingDetailsFieldType.PHONE_COUNTRY_CODE)
-                    val number = valueOfEditTextWithType(BillingDetailsFieldType.MOBILE_NUMBER)
-                    when {
-                        // in case country code is empty, don't apply the phone validation
-                        code.isEmpty() && number.isEmpty() -> return@mapNotNull null
-                        code.isEmpty() && number.isNotEmpty() -> return@mapNotNull ValidationResult(
-                            false,
-                            R.string.invalid_phone_country_code
-                        )
-                    }
-                }
-
-                it.validate(value, event)
-            } else {
-                null
-            }
-        }
-        if (type == BillingDetailsFieldType.COUNTRY && event == FormFieldEvent.TEXT_CHANGED) {
-            val typedCountry = countries.firstOrNull { it.name.lowercase() == value.lowercase() }
-            if (selectedCountry != typedCountry) {
-                selectedCountry = typedCountry
-            }
-        }
-        if (type == BillingDetailsFieldType.STATE && event == FormFieldEvent.TEXT_CHANGED) {
-            val typedState = when (selectedCountry?.alpha2Code) {
-                "CA" -> canadaProvincesAndTerritories.firstOrNull { it.name.lowercase() == value.lowercase() }
-                "US" -> usStates.firstOrNull { it.name.lowercase() == value.lowercase() }
-                else -> null
-            }
-            selectedState = typedState
-        }
-
-        val result = validationResults.firstOrNull()
-
-        validationResultsCache[type] = result?.isValid ?: true
-
-        val layout = textInputLayoutForType(type)
-        val isValidResult = result?.isValid ?: true
-        val message = context.getString(result?.message ?: R.string.empty)
-        val errorEnabled = value.isNotBlank() && !isValidResult && message.isNotEmpty()
-
-        layout?.let {
-            it.isErrorEnabled = errorEnabled
-            it.error = message
-        }
-
-        updateSubmitButtonState()
-    }
-
-    private fun textInputLayoutForType(type: BillingDetailsFieldType): JudoEditTextInputLayout? {
-        val editText = editTextForType(type)
-        return editText.parentOfType(JudoEditTextInputLayout::class.java)
-    }
-
-    private fun valueOfEditTextWithType(type: BillingDetailsFieldType): String {
-        val editText = editTextForType(type)
-        return editText.text.toString()
-    }
-
-    private fun updateSubmitButtonState() {
-        val validationResults = BillingDetailsFieldType.values().map {
-            validationResultsCache[it] ?: false
-        }
-
-        var isFormValid = false
-        if (validationResults.isNotEmpty()) {
-            isFormValid = validationResults.reduce { acc, b -> acc && b }
-        }
-
-        onValidationPassed(isFormValid)
-    }
-
-    private fun onValidationPassed(isFormValid: Boolean) {
-        val inputModel = BillingDetailsInputModel(
-            countryCode = selectedCountry?.numericCode ?: "",
-            state = selectedState?.isoCode ?: "",
-            postalCode = valueOfEditTextWithType(BillingDetailsFieldType.POST_CODE),
-            email = valueOfEditTextWithType(BillingDetailsFieldType.EMAIL),
-            addressLine1 = valueOfEditTextWithType(BillingDetailsFieldType.ADDRESS_LINE_1),
-            addressLine2 = valueOfEditTextWithType(BillingDetailsFieldType.ADDRESS_LINE_2),
-            addressLine3 = valueOfEditTextWithType(BillingDetailsFieldType.ADDRESS_LINE_3),
-            phoneCountryCode = valueOfEditTextWithType(BillingDetailsFieldType.PHONE_COUNTRY_CODE),
-            mobileNumber = valueOfEditTextWithType(BillingDetailsFieldType.MOBILE_NUMBER),
-            city = valueOfEditTextWithType(BillingDetailsFieldType.CITY)
-        )
-
-        onFormValidationStatusListener?.invoke(inputModel, isFormValid)
-    }
-
-    private inline fun <reified V> validatorInstance(): V? {
-        return validators.firstOrNull { it is V } as V?
-    }
-}

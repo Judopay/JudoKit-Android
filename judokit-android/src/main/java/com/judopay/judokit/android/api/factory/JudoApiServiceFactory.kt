@@ -38,20 +38,21 @@ import javax.net.ssl.X509TrustManager
  * to use a shared instance than create a new instance per request, so this class ensures that only
  * one instance is used in the application.
  */
+@Suppress("TooGenericExceptionCaught", "TooGenericExceptionCaught", "TooGenericExceptionThrown")
 object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
-
     private const val HOSTNAME_WILDCARD_PATTERN = "*.judopay.com"
 
     override val gson: Gson
-        get() = GsonBuilder()
-            .registerTypeAdapter(Date::class.java, DateJsonDeserializer())
-            .registerTypeAdapter(BigDecimal::class.java, FormattedBigDecimalDeserializer())
-            .registerTypeAdapter(ScaExemption::class.java, ScaExemptionSerializer())
-            .registerTypeAdapter(
-                ChallengeRequestIndicator::class.java,
-                ChallengeRequestIndicatorSerializer()
-            )
-            .create()
+        get() =
+            GsonBuilder()
+                .registerTypeAdapter(Date::class.java, DateJsonDeserializer())
+                .registerTypeAdapter(BigDecimal::class.java, FormattedBigDecimalDeserializer())
+                .registerTypeAdapter(ScaExemption::class.java, ScaExemptionSerializer())
+                .registerTypeAdapter(
+                    ChallengeRequestIndicator::class.java,
+                    ChallengeRequestIndicatorSerializer(),
+                )
+                .create()
 
     override var externalInterceptors: List<Interceptor>? = null
 
@@ -63,15 +64,21 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
      */
 
     @Deprecated("Use create instead", replaceWith = ReplaceWith("create(context, judo)"))
-    override fun createApiService(context: Context, judo: Judo): JudoApiService = create(context, judo)
+    override fun createApiService(
+        context: Context,
+        judo: Judo,
+    ): JudoApiService = create(context, judo)
 
-    override fun create(context: Context, judo: Judo): JudoApiService =
+    override fun create(
+        context: Context,
+        judo: Judo,
+    ): JudoApiService =
         createRetrofit(context.applicationContext, judo, judo.apiBaseUrl)
             .create(JudoApiService::class.java)
 
     override fun getOkHttpClient(
         context: Context,
-        judo: Judo
+        judo: Judo,
     ): OkHttpClient {
         return try {
             val sslContext = SSLContext.getInstance("TLSv1.2")
@@ -83,9 +90,10 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
 
             val trustManagers = trustManagerFactory.trustManagers
             check(!(trustManagers.size != 1 || trustManagers.first() !is X509TrustManager)) {
-                "Unexpected default trust managers: " + Arrays.toString(
-                    trustManagers
-                )
+                "Unexpected default trust managers: " +
+                    Arrays.toString(
+                        trustManagers,
+                    )
             }
 
             val trustManager = trustManagers.first() as X509TrustManager
@@ -94,21 +102,22 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
             specs.add(
                 ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
                     .tlsVersions(TlsVersion.TLS_1_2)
-                    .build()
+                    .build(),
             )
 
-            val builder = OkHttpClient.Builder()
-                .sslSocketFactory(Tls12SslSocketFactory(sslContext.socketFactory), trustManager)
-                .connectionSpecs(specs)
+            val builder =
+                OkHttpClient.Builder()
+                    .sslSocketFactory(Tls12SslSocketFactory(sslContext.socketFactory), trustManager)
+                    .connectionSpecs(specs)
 
             builder.certificatePinner(
                 CertificatePinner.Builder()
                     .add(
                         HOSTNAME_WILDCARD_PATTERN,
                         "sha256/SuY75QgkSNBlMtHNPeW9AayE7KNDAypMBHlJH9GEhXs=",
-                        "sha256/c4zbAoMygSbepJKqU3322FvFv5unm+TWZROW3FHU1o8="
+                        "sha256/c4zbAoMygSbepJKqU3322FvFv5unm+TWZROW3FHU1o8=",
                     )
-                    .build()
+                    .build(),
             )
 
             setTimeouts(builder, judo.networkTimeout)
@@ -122,15 +131,15 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
     override fun addInterceptors(
         client: OkHttpClient.Builder,
         context: Context,
-        judo: Judo
+        judo: Judo,
     ) {
         super.addInterceptors(client, context, judo)
         client.interceptors().apply {
             add(
                 ApiHeadersInterceptor(
                     judo.authorization,
-                    AppMetaDataProvider(context, judo.subProductInfo)
-                )
+                    AppMetaDataProvider(context, judo.subProductInfo),
+                ),
             )
             add(DeDuplicationInterceptor())
             add(DeviceDnaInterceptor(context))
@@ -138,7 +147,10 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
         }
     }
 
-    private fun setTimeouts(builder: OkHttpClient.Builder, networkTimeout: NetworkTimeout) {
+    private fun setTimeouts(
+        builder: OkHttpClient.Builder,
+        networkTimeout: NetworkTimeout,
+    ) {
         with(networkTimeout) {
             builder.connectTimeout(connectTimeout, TimeUnit.SECONDS)
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
