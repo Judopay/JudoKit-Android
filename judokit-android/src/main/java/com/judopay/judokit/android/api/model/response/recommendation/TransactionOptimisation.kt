@@ -37,8 +37,9 @@ data class TransactionOptimisation(
 ) {
     val isValid: Boolean
         get() {
-            return (exemption.toScaExemption() != ScaExemption.ERROR_EXEMPTION_NOT_RECOGNIZED
-                    && threeDSChallengePreference.toChallengeRequestIndicator()
-                    != ChallengeRequestIndicator.ERROR_CHALLENGE_NOT_RECOGNIZED)
+            return (
+                exemption.toScaExemption() != ScaExemption.ERROR_EXEMPTION_NOT_RECOGNIZED &&
+                    threeDSChallengePreference.toChallengeRequestIndicator() != ChallengeRequestIndicator.ERROR_CHALLENGE_NOT_RECOGNIZED
+                )
         }
 }

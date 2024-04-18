@@ -19,8 +19,10 @@ data class RecommendationData(
 ) {
     val isValid: Boolean
         get() {
-            return (action != null &&
+            return (
+                action != null &&
                     action.toRecommendationAction() != RecommendationAction.ERROR_ACTION_NOT_RECOGNIZED &&
-                    transactionOptimisation?.isValid != false)
+                    transactionOptimisation?.isValid != false
+                )
         }
 }
