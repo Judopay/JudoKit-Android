@@ -8,6 +8,7 @@ import kotlinx.parcelize.Parcelize
  * An Address linked to a card payment, used when address verification is performed.
  */
 @Parcelize
+@Suppress("LongParameterList")
 class Address internal constructor(
     @SerializedName("address1") var line1: String?,
     @SerializedName("address2") var line2: String?,
@@ -16,9 +17,8 @@ class Address internal constructor(
     var billingCountry: String?,
     var postCode: String?,
     var countryCode: Int?,
-    var state: String?
+    var state: String?,
 ) : Parcelable {
-
     class Builder {
         private var line1: String? = null
         private var line2: String? = null
@@ -82,7 +82,7 @@ class Address internal constructor(
                 billingCountry = billingCountry,
                 postCode = postCode,
                 countryCode = countryCode,
-                state = if (state.isNullOrBlank()) null else state
+                state = if (state.isNullOrBlank()) null else state,
             )
         }
     }

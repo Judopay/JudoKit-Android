@@ -7,5 +7,5 @@ import kotlinx.parcelize.Parcelize
 data class GooglePayPaymentMethod(
     val type: GooglePayPaymentMethodType,
     val parameters: GooglePayCardParameters,
-    val tokenizationSpecification: GooglePayPaymentMethodTokenizationSpecification?
+    val tokenizationSpecification: GooglePayPaymentMethodTokenizationSpecification?,
 ) : Parcelable

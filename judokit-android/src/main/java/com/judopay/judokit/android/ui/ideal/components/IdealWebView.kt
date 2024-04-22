@@ -9,35 +9,39 @@ interface IdealWebViewCallback {
     fun onPageStarted(checksum: String)
 }
 
-class IdealWebView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyle: Int = 0
-) : WebView(context, attrs, defStyle), IdealWebViewCallback {
+class IdealWebView
+    @JvmOverloads
+    constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyle: Int = 0,
+    ) : WebView(context, attrs, defStyle), IdealWebViewCallback {
+        lateinit var view: IdealWebViewCallback
 
-    lateinit var view: IdealWebViewCallback
+        init {
+            configureSettings()
+        }
 
-    init {
-        configureSettings()
-    }
+        @SuppressLint("SetJavaScriptEnabled")
+        private fun configureSettings() {
+            settings.apply {
+                javaScriptEnabled = true
+                builtInZoomControls = true
+                useWideViewPort = true
+                loadWithOverviewMode = true
+            }
+        }
 
-    @SuppressLint("SetJavaScriptEnabled")
-    private fun configureSettings() {
-        settings.apply {
-            javaScriptEnabled = true
-            builtInZoomControls = true
-            useWideViewPort = true
-            loadWithOverviewMode = true
+        fun authorize(
+            redirectUrl: String,
+            merchantRedirectUrl: String,
+        ) {
+            loadUrl(redirectUrl)
+            val webViewClient = IdealWebViewClient(merchantRedirectUrl)
+            setWebViewClient(webViewClient)
+        }
+
+        override fun onPageStarted(checksum: String) {
+            view.onPageStarted(checksum)
         }
     }
-
-    fun authorize(redirectUrl: String, merchantRedirectUrl: String) {
-        loadUrl(redirectUrl)
-        val webViewClient = IdealWebViewClient(merchantRedirectUrl)
-        setWebViewClient(webViewClient)
-    }
-
-    override fun onPageStarted(checksum: String) {
-        view.onPageStarted(checksum)
-    }
-}

@@ -6,10 +6,10 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Testing payment request builder")
 internal class CheckCardRequestTest {
-
-    private val request = CheckCardRequest.Builder()
-        .setStartDate("1220")
-        .setIssueNumber("issueNumber")
+    private val request =
+        CheckCardRequest.Builder()
+            .setStartDate("1220")
+            .setIssueNumber("issueNumber")
 
     @Test
     @DisplayName("Should throw exception on providing null judo id")

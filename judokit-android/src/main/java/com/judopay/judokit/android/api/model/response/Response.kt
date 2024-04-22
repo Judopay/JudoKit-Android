@@ -2,14 +2,13 @@ package com.judopay.judokit.android.api.model.response
 
 import com.google.gson.annotations.SerializedName
 import com.judopay.judokit.android.api.error.ApiError
+import com.judopay.judokit.android.trimIndent
 
 /**
  * Base class for all HTTP responses that come back from the Judo API, this contains fields
  * that are common to all responses, such as the result, message and details of any errors that
  * occurred.
  */
-
-// TODO: Refactor the stuff below to a enum class
 const val GENERAL_ERROR = 0
 const val GENERAL_MODEL_ERROR = 1
 const val UNAUTHORIZED = 7
@@ -102,30 +101,22 @@ const val INVALID_RECEIPT_ID = 20026
 private const val RESPONSE_STATUS_SUCCESS = "Success"
 private const val RESPONSE_STATUS_DECLINED = "Declined"
 
+@Suppress("LongParameterList")
 open class Response(
-
     val result: String? = null,
-
     @SerializedName("category")
     val errorCategory: Int? = null,
-
     @SerializedName("explanation")
     val errorExplanation: String? = null,
-
     @SerializedName("resolution")
     val errorResolution: String? = null,
-
     @SerializedName("message")
     val message: String? = null,
-
     @SerializedName("code")
     val errorCode: String? = null,
-
     @SerializedName("details")
-    val errorDetails: List<ApiError>? = null
-
+    val errorDetails: List<ApiError>? = null,
 ) {
-
     val isSuccess: Boolean
         get() = RESPONSE_STATUS_SUCCESS == result
 
@@ -133,6 +124,16 @@ open class Response(
         get() = RESPONSE_STATUS_DECLINED == result
 
     override fun toString(): String {
-        return "Response(result=$result, errorCategory=$errorCategory, errorExplanation=$errorExplanation, errorResolution=$errorResolution, message=$message, errorCode=$errorCode, errorDetails=$errorDetails)"
+        return """
+            Response(
+                result=$result,
+                errorCategory=$errorCategory,
+                errorExplanation=$errorExplanation,
+                errorResolution=$errorResolution,
+                message=$message,
+                errorCode=$errorCode,
+                errorDetails=$errorDetails
+            )
+            """.trimIndent(true)
     }
 }

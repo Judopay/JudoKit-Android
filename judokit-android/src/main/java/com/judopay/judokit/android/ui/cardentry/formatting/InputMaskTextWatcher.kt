@@ -8,9 +8,8 @@ internal fun Char.isPlaceHolder(): Boolean = this == '#'
 
 internal open class InputMaskTextWatcher(
     private val editText: EditText,
-    var mask: String
+    var mask: String,
 ) : TextWatcher {
-
     private var isSelfFormatting = false
 
     override fun afterTextChanged(s: Editable?) {
@@ -21,12 +20,25 @@ internal open class InputMaskTextWatcher(
         isSelfFormatting = false
     }
 
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+    override fun beforeTextChanged(
+        s: CharSequence?,
+        start: Int,
+        count: Int,
+        after: Int,
+    ) {
+        // noop
     }
 
-    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+    override fun onTextChanged(
+        s: CharSequence?,
+        start: Int,
+        before: Int,
+        count: Int,
+    ) {
+        // noop
     }
 
+    @Suppress("NestedBlockDepth")
     fun format(text: Editable?) {
         if (text.isNullOrEmpty()) return
         text.apply {
@@ -39,7 +51,7 @@ internal open class InputMaskTextWatcher(
 
             // apply mask
             mask.forEach { m ->
-                if (list.isNullOrEmpty()) return@forEach
+                if (list.isEmpty()) return@forEach
                 var c = list[0]
                 if (m.isPlaceHolder()) {
                     if (!c.isLetterOrDigit()) {
@@ -51,7 +63,7 @@ internal open class InputMaskTextWatcher(
                             iterator.remove()
                         }
                     }
-                    if (list.isNullOrEmpty()) return@forEach
+                    if (list.isEmpty()) return@forEach
                     formatted.append(c)
                     list.removeAt(0)
                 } else {
@@ -76,7 +88,10 @@ internal open class InputMaskTextWatcher(
         }
     }
 
-    private fun findCursorPosition(text: Editable?, start: Int): Int {
+    private fun findCursorPosition(
+        text: Editable?,
+        start: Int,
+    ): Int {
         if (text.isNullOrEmpty()) return start
         val textLength = text.length
         val maskLength = mask.length

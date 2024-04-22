@@ -12,7 +12,6 @@ import retrofit2.await
 
 @DisplayName("Testing cardTransactionService class")
 internal class CardTransactionServiceTest {
-
     private val service: JudoApiService = mockk(relaxed = true)
     private val judoApiCallResult = JudoApiCallResult.Success(mockk<Receipt>(relaxed = true))
 

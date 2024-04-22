@@ -4,7 +4,6 @@ package com.judopay.judokit.android.ui.paymentmethods.model
  * Used as a wrapper for data that is exposed via a LiveData that represents an event.
  */
 open class Event<out T>(private val content: T? = null) {
-
     var hasBeenHandled = false
         private set // Allow external read but not write
 

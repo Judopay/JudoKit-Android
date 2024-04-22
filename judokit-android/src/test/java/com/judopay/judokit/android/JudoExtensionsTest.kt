@@ -27,40 +27,44 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Test com.judopay.judokit.android.JudoExtensions")
 internal class JudoExtensionsTest {
-
     private val mockAddress: Address = mockk()
     private val mockThreeDSecureTwo: ThreeDSecureTwo = mockk()
     private val mockPrimaryAccountDetails: PrimaryAccountDetails = mockk()
-    val judo: Judo = mockk(relaxed = true) {
-        every { judoId } returns "123456789"
-        every { amount } returns mockk(relaxed = true) {
-            every { currency } returns Currency.GBP
-            every { amount } returns "1"
+    val judo: Judo =
+        mockk(relaxed = true) {
+            every { judoId } returns "123456789"
+            every { amount } returns
+                mockk(relaxed = true) {
+                    every { currency } returns Currency.GBP
+                    every { amount } returns "1"
+                }
+            every { reference } returns
+                mockk(relaxed = true) {
+                    every { consumerReference } returns "ref"
+                    every { paymentReference } returns "ref"
+                }
+            every { primaryAccountDetails } returns mockPrimaryAccountDetails
+            every { address } returns mockAddress
+            every { initialRecurringPayment } returns false
         }
-        every { reference } returns mockk(relaxed = true) {
-            every { consumerReference } returns "ref"
-            every { paymentReference } returns "ref"
-        }
-        every { primaryAccountDetails } returns mockPrimaryAccountDetails
-        every { address } returns mockAddress
-        every { initialRecurringPayment } returns false
-    }
 
     @DisplayName("Given judo.isSandboxed is true, then return ApiEnvironment.SANDBOX.host")
     @Test
     fun returnSandboxHostWhenIsSandboxedTrue() {
-        val judo: Judo = mockk(relaxed = true) {
-            every { isSandboxed } returns true
-        }
+        val judo: Judo =
+            mockk(relaxed = true) {
+                every { isSandboxed } returns true
+            }
         assertEquals(ApiEnvironment.SANDBOX.host, judo.apiBaseUrl)
     }
 
     @DisplayName("Given judo.isSandboxed is false, then return ApiEnvironment.LIVE.host")
     @Test
     fun returnLiveHostWhenIsSandboxedFalse() {
-        val judo: Judo = mockk(relaxed = true) {
-            every { isSandboxed } returns false
-        }
+        val judo: Judo =
+            mockk(relaxed = true) {
+                every { isSandboxed } returns false
+            }
         assertEquals(ApiEnvironment.LIVE.host, judo.apiBaseUrl)
     }
 
@@ -99,9 +103,10 @@ internal class JudoExtensionsTest {
     @Test
     fun returnViewParent() {
         val expectedParent: LinearLayout = mockk(relaxed = true)
-        val view: View = mockk(relaxed = true) {
-            every { parent } returns expectedParent
-        }
+        val view: View =
+            mockk(relaxed = true) {
+                every { parent } returns expectedParent
+            }
 
         assertEquals(expectedParent, view.parentOfType(LinearLayout::class.java))
     }
@@ -110,9 +115,10 @@ internal class JudoExtensionsTest {
     @Test
     fun returnNullOnViewsParentNotParentType() {
         val expectedParent: LinearLayout = mockk(relaxed = true)
-        val view: View = mockk(relaxed = true) {
-            every { parent } returns expectedParent
-        }
+        val view: View =
+            mockk(relaxed = true) {
+                every { parent } returns expectedParent
+            }
 
         assertEquals(null, view.parentOfType(ViewGroup::class.java))
     }
@@ -121,9 +127,10 @@ internal class JudoExtensionsTest {
     @Test
     fun returnNullOnViewsParentNotView() {
         val expectedParent: ViewGroup = mockk(relaxed = true)
-        val view: View = mockk(relaxed = true) {
-            every { parent } returns expectedParent
-        }
+        val view: View =
+            mockk(relaxed = true) {
+                every { parent } returns expectedParent
+            }
 
         assertEquals(null, view.parentOfType(ViewGroup::class.java))
     }
@@ -132,9 +139,10 @@ internal class JudoExtensionsTest {
     @Test
     fun getJudoObjectOnFragmentActivityJudoCall() {
         val expectedJudoObject: Judo = mockk(relaxed = true)
-        val fragment: FragmentActivity = mockk(relaxed = true) {
-            every { intent.parcelable<Judo>(JUDO_OPTIONS) } returns expectedJudoObject
-        }
+        val fragment: FragmentActivity =
+            mockk(relaxed = true) {
+                every { intent.parcelable<Judo>(JUDO_OPTIONS) } returns expectedJudoObject
+            }
 
         assertEquals(expectedJudoObject, fragment.judo)
     }
@@ -142,9 +150,10 @@ internal class JudoExtensionsTest {
     @DisplayName("Given FragmentActivity.judo is called, when judo object is null, then throw JudoNotProvidedError")
     @Test
     fun throwJudoNotProvidedErrorOnJudoObjectNull() {
-        val fragment: FragmentActivity = mockk(relaxed = true) {
-            every { intent.parcelable<Judo>(JUDO_OPTIONS) } returns null
-        }
+        val fragment: FragmentActivity =
+            mockk(relaxed = true) {
+                every { intent.parcelable<Judo>(JUDO_OPTIONS) } returns null
+            }
 
         assertThrows<JudoNotProvidedError> { fragment.judo }
     }
@@ -153,12 +162,14 @@ internal class JudoExtensionsTest {
     @Test
     fun getJudoObjectOnFragmentJudoCall() {
         val expectedJudoObject: Judo = mockk(relaxed = true)
-        val fragmentActivity: FragmentActivity = mockk(relaxed = true) {
-            every { intent.parcelable<Judo>(JUDO_OPTIONS) } returns expectedJudoObject
-        }
-        val fragment: Fragment = mockk(relaxed = true) {
-            every { requireActivity() } returns fragmentActivity
-        }
+        val fragmentActivity: FragmentActivity =
+            mockk(relaxed = true) {
+                every { intent.parcelable<Judo>(JUDO_OPTIONS) } returns expectedJudoObject
+            }
+        val fragment: Fragment =
+            mockk(relaxed = true) {
+                every { requireActivity() } returns fragmentActivity
+            }
 
         assertEquals(expectedJudoObject, fragment.judo)
     }
@@ -174,13 +185,14 @@ internal class JudoExtensionsTest {
     @DisplayName("Given Judo.toIdealSaleRequest is called, then map Judo to IdealSaleRequest")
     @Test
     fun mapJudoToIdealSaleRequest() {
-        val expected = IdealSaleRequest.Builder().setAmount("1")
-            .setMerchantConsumerReference("ref")
-            .setMerchantPaymentReference("ref")
-            .setJudoId("123456789")
-            .setBic("bic")
-            .setPaymentMetadata(emptyMap())
-            .build()
+        val expected =
+            IdealSaleRequest.Builder().setAmount("1")
+                .setMerchantConsumerReference("ref")
+                .setMerchantPaymentReference("ref")
+                .setJudoId("123456789")
+                .setBic("bic")
+                .setPaymentMetadata(emptyMap())
+                .build()
 
         val actual = judo.toIdealSaleRequest("bic")
 
@@ -190,68 +202,75 @@ internal class JudoExtensionsTest {
     @DisplayName("Given Judo.toPaymentRequest is called, then map Judo to PaymentRequest")
     @Test
     fun mapJudoToPaymentRequest() {
-        val expected = PaymentRequest.Builder()
-            .setUniqueRequest(false)
-            .setYourPaymentReference("ref")
-            .setJudoId("123456789")
-            .setYourPaymentMetaData(emptyMap())
-            .setAmount("1")
-            .setCurrency(Currency.GBP.name)
-            .setJudoId("123456789")
-            .setYourConsumerReference("ref")
-            .setAddress(mockAddress)
-            .setCardNumber("4111111111111111")
-            .setCv2("452")
-            .setExpiryDate("1229")
-            .setPrimaryAccountDetails(mockPrimaryAccountDetails)
-            .setInitialRecurringPayment(false)
-            .setThreeDSecure(mockThreeDSecureTwo)
-            .setMobileNumber("321321321")
-            .build()
+        val expected =
+            PaymentRequest.Builder()
+                .setUniqueRequest(false)
+                .setYourPaymentReference("ref")
+                .setJudoId("123456789")
+                .setYourPaymentMetaData(emptyMap())
+                .setAmount("1")
+                .setCurrency(Currency.GBP.name)
+                .setJudoId("123456789")
+                .setYourConsumerReference("ref")
+                .setAddress(mockAddress)
+                .setCardNumber("4111111111111111")
+                .setCv2("452")
+                .setExpiryDate("1229")
+                .setPrimaryAccountDetails(mockPrimaryAccountDetails)
+                .setInitialRecurringPayment(false)
+                .setThreeDSecure(mockThreeDSecureTwo)
+                .setMobileNumber("321321321")
+                .build()
 
-        val actual = judo.toPaymentRequest(
-            "4111111111111111",
-            "1229",
-            "452",
-            mockThreeDSecureTwo,
-            "321321321"
-        )
+        val actual =
+            judo.toPaymentRequest(
+                "4111111111111111",
+                "1229",
+                "452",
+                mockThreeDSecureTwo,
+                "321321321",
+            )
 
         val gson = Gson()
         assertEquals(gson.toJson(expected), gson.toJson(actual))
     }
 
-    @DisplayName("Given Judo.toPaymentRequest is called with unusual phone details, then map Judo to PaymentRequest with phone details parsed correctly")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given Judo.toPaymentRequest is called with unusual phone details, then map Judo to PaymentRequest with phone details parsed correctly",
+    )
     @Test
     fun mapJudoToPaymentRequestWithUnusualPhoneDetails() {
-        val expected = PaymentRequest.Builder()
-            .setUniqueRequest(false)
-            .setYourPaymentReference("ref")
-            .setJudoId("123456789")
-            .setYourPaymentMetaData(emptyMap())
-            .setAmount("1")
-            .setCurrency(Currency.GBP.name)
-            .setJudoId("123456789")
-            .setYourConsumerReference("ref")
-            .setAddress(mockAddress)
-            .setCardNumber("4111111111111111")
-            .setCv2("452")
-            .setExpiryDate("1229")
-            .setPrimaryAccountDetails(mockPrimaryAccountDetails)
-            .setInitialRecurringPayment(false)
-            .setThreeDSecure(mockThreeDSecureTwo)
-            .setMobileNumber("(321)321-321")
-            .setPhoneCountryCode("+1754")
-            .build()
+        val expected =
+            PaymentRequest.Builder()
+                .setUniqueRequest(false)
+                .setYourPaymentReference("ref")
+                .setJudoId("123456789")
+                .setYourPaymentMetaData(emptyMap())
+                .setAmount("1")
+                .setCurrency(Currency.GBP.name)
+                .setJudoId("123456789")
+                .setYourConsumerReference("ref")
+                .setAddress(mockAddress)
+                .setCardNumber("4111111111111111")
+                .setCv2("452")
+                .setExpiryDate("1229")
+                .setPrimaryAccountDetails(mockPrimaryAccountDetails)
+                .setInitialRecurringPayment(false)
+                .setThreeDSecure(mockThreeDSecureTwo)
+                .setMobileNumber("(321)321-321")
+                .setPhoneCountryCode("+1754")
+                .build()
 
-        val actual = judo.toPaymentRequest(
-            "4111111111111111",
-            "1229",
-            "452",
-            mockThreeDSecureTwo,
-            "754321321321",
-            "1"
-        )
+        val actual =
+            judo.toPaymentRequest(
+                "4111111111111111",
+                "1229",
+                "452",
+                mockThreeDSecureTwo,
+                "754321321321",
+                "1",
+            )
 
         val gson = Gson()
         assertEquals(gson.toJson(expected), gson.toJson(actual))
@@ -260,23 +279,24 @@ internal class JudoExtensionsTest {
     @DisplayName("Given Judo.toRegisterCardRequest is called, then map Judo to RegisterCardRequest")
     @Test
     fun mapJudoToRegisterCardRequest() {
-        val expected = RegisterCardRequest.Builder()
-            .setUniqueRequest(false)
-            .setYourPaymentReference("ref")
-            .setJudoId("123456789")
-            .setYourPaymentMetaData(emptyMap())
-            .setAmount("1")
-            .setCurrency(Currency.GBP.name)
-            .setJudoId("123456789")
-            .setYourConsumerReference("ref")
-            .setAddress(mockAddress)
-            .setCardNumber("4111111111111111")
-            .setCv2("452")
-            .setExpiryDate("1229")
-            .setPrimaryAccountDetails(mockPrimaryAccountDetails)
-            .setInitialRecurringPayment(false)
-            .setThreeDSecure(mockThreeDSecureTwo)
-            .build()
+        val expected =
+            RegisterCardRequest.Builder()
+                .setUniqueRequest(false)
+                .setYourPaymentReference("ref")
+                .setJudoId("123456789")
+                .setYourPaymentMetaData(emptyMap())
+                .setAmount("1")
+                .setCurrency(Currency.GBP.name)
+                .setJudoId("123456789")
+                .setYourConsumerReference("ref")
+                .setAddress(mockAddress)
+                .setCardNumber("4111111111111111")
+                .setCv2("452")
+                .setExpiryDate("1229")
+                .setPrimaryAccountDetails(mockPrimaryAccountDetails)
+                .setInitialRecurringPayment(false)
+                .setThreeDSecure(mockThreeDSecureTwo)
+                .build()
 
         val actual = judo.toRegisterCardRequest("4111111111111111", "1229", "452", mockThreeDSecureTwo)
 
@@ -287,22 +307,23 @@ internal class JudoExtensionsTest {
     @DisplayName("Given Judo.toSaveCardRequest is called, then map Judo to CheckCardRequest")
     @Test
     fun mapJudoToCheckCardRequest() {
-        val expected = CheckCardRequest.Builder()
-            .setUniqueRequest(false)
-            .setYourPaymentReference("ref")
-            .setJudoId("123456789")
-            .setYourPaymentMetaData(emptyMap())
-            .setCurrency(Currency.GBP.name)
-            .setJudoId("123456789")
-            .setYourConsumerReference("ref")
-            .setAddress(mockAddress)
-            .setCardNumber("4111111111111111")
-            .setCv2("452")
-            .setExpiryDate("1229")
-            .setPrimaryAccountDetails(mockPrimaryAccountDetails)
-            .setInitialRecurringPayment(false)
-            .setThreeDSecure(mockThreeDSecureTwo)
-            .build()
+        val expected =
+            CheckCardRequest.Builder()
+                .setUniqueRequest(false)
+                .setYourPaymentReference("ref")
+                .setJudoId("123456789")
+                .setYourPaymentMetaData(emptyMap())
+                .setCurrency(Currency.GBP.name)
+                .setJudoId("123456789")
+                .setYourConsumerReference("ref")
+                .setAddress(mockAddress)
+                .setCardNumber("4111111111111111")
+                .setCv2("452")
+                .setExpiryDate("1229")
+                .setPrimaryAccountDetails(mockPrimaryAccountDetails)
+                .setInitialRecurringPayment(false)
+                .setThreeDSecure(mockThreeDSecureTwo)
+                .build()
 
         val actual = judo.toCheckCardRequest("4111111111111111", "1229", "452", mockThreeDSecureTwo)
 
@@ -313,22 +334,23 @@ internal class JudoExtensionsTest {
     @DisplayName("Given Judo.toTokenRequest is called, then map Judo to TokenRequest")
     @Test
     fun mapJudoToTokenRequest() {
-        val expected = TokenRequest.Builder()
-            .setAmount("1")
-            .setUniqueRequest(false)
-            .setYourPaymentReference("ref")
-            .setJudoId("123456789")
-            .setYourPaymentMetaData(emptyMap())
-            .setCurrency(Currency.GBP.name)
-            .setJudoId("123456789")
-            .setYourConsumerReference("ref")
-            .setAddress(mockAddress)
-            .setCardToken("cardToken")
-            .setCv2("452")
-            .setPrimaryAccountDetails(mockPrimaryAccountDetails)
-            .setInitialRecurringPayment(false)
-            .setThreeDSecure(mockThreeDSecureTwo)
-            .build()
+        val expected =
+            TokenRequest.Builder()
+                .setAmount("1")
+                .setUniqueRequest(false)
+                .setYourPaymentReference("ref")
+                .setJudoId("123456789")
+                .setYourPaymentMetaData(emptyMap())
+                .setCurrency(Currency.GBP.name)
+                .setJudoId("123456789")
+                .setYourConsumerReference("ref")
+                .setAddress(mockAddress)
+                .setCardToken("cardToken")
+                .setCv2("452")
+                .setPrimaryAccountDetails(mockPrimaryAccountDetails)
+                .setInitialRecurringPayment(false)
+                .setThreeDSecure(mockThreeDSecureTwo)
+                .build()
 
         val actual = judo.toTokenRequest("cardToken", mockThreeDSecureTwo, "452")
 

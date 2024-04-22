@@ -10,6 +10,7 @@ import kotlinx.parcelize.Parcelize
  */
 
 @Parcelize
+@Suppress("LongParameterList", "MagicNumber")
 class CardToken(
     @SerializedName("cardLastfour") var lastFour: String? = null,
     @SerializedName("cardToken") var token: String? = null,
@@ -20,9 +21,8 @@ class CardToken(
     @SerializedName("cardCountry") var country: String? = null,
     @SerializedName("cardHolderName") var cardHolderName: String? = null,
     var bank: String? = null,
-    var endDate: String? = null
+    var endDate: String? = null,
 ) : Parcelable {
-
     val formattedEndDate: String
         get() {
             val data = endDate ?: ""

@@ -10,28 +10,33 @@ import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethod
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import kotlin.random.Random
 
-fun TokenizedCardEntity.toPaymentMethodSavedCardItem() = PaymentMethodSavedCardItem(
-    id = id,
-    title = title,
-    network = network,
-    ending = ending,
-    token = token,
-    expireDate = expireDate,
-    pattern = pattern,
-    cardholderName = cardholderName
-)
+fun TokenizedCardEntity.toPaymentMethodSavedCardItem() =
+    PaymentMethodSavedCardItem(
+        id = id,
+        title = title,
+        network = network,
+        ending = ending,
+        token = token,
+        expireDate = expireDate,
+        pattern = pattern,
+        cardholderName = cardholderName,
+    )
 
-fun PaymentMethodSavedCardItem.toPaymentCardViewModel() = PaymentCardViewModel(
-    id = id,
-    cardNetwork = network,
-    name = title,
-    maskedNumber = ending,
-    expireDate = expireDate,
-    pattern = pattern,
-    cardholderName = cardholderName
-)
+fun PaymentMethodSavedCardItem.toPaymentCardViewModel() =
+    PaymentCardViewModel(
+        id = id,
+        cardNetwork = network,
+        name = title,
+        maskedNumber = ending,
+        expireDate = expireDate,
+        pattern = pattern,
+        cardholderName = cardholderName,
+    )
 
-fun CardToken.toTokenizedCardEntity(context: Context, cardholderName: String): TokenizedCardEntity {
+fun CardToken.toTokenizedCardEntity(
+    context: Context,
+    cardholderName: String,
+): TokenizedCardEntity {
     val network = CardNetwork.withIdentifier(type, scheme)
     val patterns = CardPattern.values()
     return TokenizedCardEntity(
@@ -41,6 +46,6 @@ fun CardToken.toTokenizedCardEntity(context: Context, cardholderName: String): T
         ending = lastFour ?: "",
         network = network,
         pattern = patterns[Random.nextInt(patterns.size)],
-        cardholderName = cardholderName
+        cardholderName = cardholderName,
     )
 }

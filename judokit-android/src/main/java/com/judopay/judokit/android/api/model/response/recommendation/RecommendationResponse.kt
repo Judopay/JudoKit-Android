@@ -3,12 +3,13 @@ package com.judopay.judokit.android.api.model.response.recommendation
 import com.judopay.judokit.android.model.TransactionDetailsOverrides
 
 data class RecommendationResponse(
-    val data: RecommendationData?
+    val data: RecommendationData?,
 ) {
     val isValid: Boolean
         get() = data?.isValid ?: false
 }
 
+@Suppress("ReturnCount")
 fun RecommendationResponse.toTransactionDetailsOverrides(): TransactionDetailsOverrides? {
     if (!isValid) return null
 
@@ -19,6 +20,6 @@ fun RecommendationResponse.toTransactionDetailsOverrides(): TransactionDetailsOv
 
     return TransactionDetailsOverrides(
         exemption = exemption,
-        challengeRequestIndicator = challengeRequestIndicator
+        challengeRequestIndicator = challengeRequestIndicator,
     )
 }

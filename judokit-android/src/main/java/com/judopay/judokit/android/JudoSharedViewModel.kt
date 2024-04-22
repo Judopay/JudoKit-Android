@@ -26,8 +26,11 @@ import retrofit2.await
 // view-model actions
 sealed class JudoSharedAction {
     data class LoadGPayPaymentDataSuccess(val paymentData: PaymentData) : JudoSharedAction()
+
     data class LoadGPayPaymentDataError(val errorMessage: String) : JudoSharedAction()
+
     object LoadGPayPaymentDataUserCancelled : JudoSharedAction()
+
     object LoadGPayPaymentData : JudoSharedAction()
 }
 
@@ -36,9 +39,8 @@ internal class JudoSharedViewModelFactory(
     private val judo: Judo,
     private val googlePayService: JudoGooglePayService,
     private val judoApiService: JudoApiService,
-    private val application: Application
+    private val application: Application,
 ) : ViewModelProvider.NewInstanceFactory() {
-
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == JudoSharedViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
@@ -53,9 +55,8 @@ class JudoSharedViewModel(
     private val judo: Judo,
     private val googlePayService: JudoGooglePayService,
     private val judoApiService: JudoApiService,
-    application: Application
+    application: Application,
 ) : AndroidViewModel(application) {
-
     private val resources = application.resources
 
     // used to share a card payment result between fragments (card input / payment methods)
@@ -73,13 +74,15 @@ class JudoSharedViewModel(
     // used to persist all captured errors and send to merchant on back press
     val error = JudoError()
 
-    fun send(action: JudoSharedAction) = when (action) {
-        is JudoSharedAction.LoadGPayPaymentData -> onLoadGPayPaymentData()
-        is JudoSharedAction.LoadGPayPaymentDataSuccess -> onLoadGPayPaymentDataSuccess(action.paymentData)
-        is JudoSharedAction.LoadGPayPaymentDataError -> onLoadGPayPaymentDataError(action.errorMessage)
-        is JudoSharedAction.LoadGPayPaymentDataUserCancelled -> onLoadGPayPaymentDataUserCancelled()
-    }
+    fun send(action: JudoSharedAction) =
+        when (action) {
+            is JudoSharedAction.LoadGPayPaymentData -> onLoadGPayPaymentData()
+            is JudoSharedAction.LoadGPayPaymentDataSuccess -> onLoadGPayPaymentDataSuccess(action.paymentData)
+            is JudoSharedAction.LoadGPayPaymentDataError -> onLoadGPayPaymentDataError(action.errorMessage)
+            is JudoSharedAction.LoadGPayPaymentDataUserCancelled -> onLoadGPayPaymentDataUserCancelled()
+        }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun onLoadGPayPaymentData() {
         viewModelScope.launch {
             try {
@@ -92,7 +95,8 @@ class JudoSharedViewModel(
             } catch (exception: Exception) {
                 when (exception) {
                     is IllegalStateException,
-                    is ApiException -> {
+                    is ApiException,
+                    -> {
                         onLoadGPayPaymentDataError(exception.message ?: "Unknown error")
                     }
 
@@ -106,6 +110,7 @@ class JudoSharedViewModel(
         dispatchResult(JudoPaymentResult.Error(JudoError.googlePayNotSupported(resources, errorMessage)))
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun onLoadGPayPaymentDataSuccess(paymentData: PaymentData) {
         try {
             if (judo.paymentWidgetType == PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS) {
@@ -124,35 +129,43 @@ class JudoSharedViewModel(
     }
 
     @Throws(IllegalStateException::class, IllegalArgumentException::class)
-    private fun sendGPayRequest(paymentData: PaymentData) = viewModelScope.launch {
-        try {
-            val result = when (judo.paymentWidgetType) {
-                PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
-                PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS -> judoApiService.preAuthGooglePayPayment(
-                    paymentData.toPreAuthGooglePayRequest(judo)
-                ).await()
+    @Suppress("TooGenericExceptionCaught", "UseCheckOrError")
+    private fun sendGPayRequest(paymentData: PaymentData) =
+        viewModelScope.launch {
+            try {
+                val result =
+                    when (judo.paymentWidgetType) {
+                        PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
+                        PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
+                        ->
+                            judoApiService.preAuthGooglePayPayment(
+                                paymentData.toPreAuthGooglePayRequest(judo),
+                            ).await()
 
-                PaymentWidgetType.GOOGLE_PAY,
-                PaymentWidgetType.PAYMENT_METHODS -> judoApiService.googlePayPayment(
-                    paymentData.toGooglePayRequest(judo)
-                ).await()
+                        PaymentWidgetType.GOOGLE_PAY,
+                        PaymentWidgetType.PAYMENT_METHODS,
+                        ->
+                            judoApiService.googlePayPayment(
+                                paymentData.toGooglePayRequest(judo),
+                            ).await()
 
-                else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
+                        else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
+                    }
+                dispatchResult(result.toJudoPaymentResult(resources))
+            } catch (exception: Throwable) {
+                onLoadGPayPaymentDataError(exception.message ?: "Unknown error")
             }
-            dispatchResult(result.toJudoPaymentResult(resources))
-        } catch (exception: Throwable) {
-            onLoadGPayPaymentDataError(exception.message ?: "Unknown error")
         }
-    }
 
     private fun dispatchResult(result: JudoPaymentResult) {
         val type = judo.paymentWidgetType
 
-        val liveData = when {
-            type.isGooglePayWidget -> paymentResult
-            type.isPaymentMethodsWidget -> paymentMethodsResult
-            else -> null
-        }
+        val liveData =
+            when {
+                type.isGooglePayWidget -> paymentResult
+                type.isPaymentMethodsWidget -> paymentMethodsResult
+                else -> null
+            }
 
         liveData?.postValue(result)
     }

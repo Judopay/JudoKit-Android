@@ -7,6 +7,9 @@ import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.requireNotNull
 import com.judopay.judokit.android.requireNotNullOrEmpty
 
+private const val MAX_PHONE_COUNTRY_CODE_LENGTH = 3
+
+@Suppress("LongParameterList")
 class PaymentRequest private constructor(
     private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String?,
@@ -28,8 +31,9 @@ class PaymentRequest private constructor(
     private var primaryAccountDetails: PrimaryAccountDetails?,
     private var initialRecurringPayment: Boolean?,
     private var threeDSecure: ThreeDSecureTwo?,
-    private var cardHolderName: String?
+    private var cardHolderName: String?,
 ) {
+    @Suppress("TooManyFunctions")
     class Builder {
         private var uniqueRequest: Boolean? = null
         private var yourPaymentReference: String? = null
@@ -57,8 +61,7 @@ class PaymentRequest private constructor(
 
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
-        fun setYourPaymentReference(yourPaymentReference: String?) =
-            apply { this.yourPaymentReference = yourPaymentReference }
+        fun setYourPaymentReference(yourPaymentReference: String?) = apply { this.yourPaymentReference = yourPaymentReference }
 
         fun setAmount(amount: String?) = apply { this.amount = amount }
 
@@ -66,11 +69,9 @@ class PaymentRequest private constructor(
 
         fun setJudoId(judoId: String?) = apply { this.judoId = judoId }
 
-        fun setYourConsumerReference(yourConsumerReference: String?) =
-            apply { this.yourConsumerReference = yourConsumerReference }
+        fun setYourConsumerReference(yourConsumerReference: String?) = apply { this.yourConsumerReference = yourConsumerReference }
 
-        fun setYourPaymentMetaData(yourPaymentMetaData: Map<String, String>?) =
-            apply { this.yourPaymentMetaData = yourPaymentMetaData }
+        fun setYourPaymentMetaData(yourPaymentMetaData: Map<String, String>?) = apply { this.yourPaymentMetaData = yourPaymentMetaData }
 
         fun setAddress(address: Address?) = apply { this.address = address }
 
@@ -90,20 +91,16 @@ class PaymentRequest private constructor(
 
         fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = mobileNumber }
 
-        fun setPhoneCountryCode(phoneCountryCode: String?) =
-            apply { this.phoneCountryCode = phoneCountryCode }
+        fun setPhoneCountryCode(phoneCountryCode: String?) = apply { this.phoneCountryCode = phoneCountryCode }
 
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
             apply { this.primaryAccountDetails = primaryAccountDetails }
 
-        fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
-            apply { this.initialRecurringPayment = initialRecurringPayment }
+        fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) = apply { this.initialRecurringPayment = initialRecurringPayment }
 
-        fun setThreeDSecure(threeDSecureTwo: ThreeDSecureTwo?) =
-            apply { this.threeDSecure = threeDSecureTwo }
+        fun setThreeDSecure(threeDSecureTwo: ThreeDSecureTwo?) = apply { this.threeDSecure = threeDSecureTwo }
 
-        fun setCardHolderName(cardHolderName: String?) =
-            apply { this.cardHolderName = cardHolderName }
+        fun setCardHolderName(cardHolderName: String?) = apply { this.cardHolderName = cardHolderName }
 
         fun build(): PaymentRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
@@ -127,7 +124,10 @@ class PaymentRequest private constructor(
             var filteredMobileNumber = mobileNumber?.filter { it.isDigit() }
             var filteredPhoneCountryCode = phoneCountryCode?.filter { it.isDigit() }
 
-            if (filteredMobileNumber != null && filteredPhoneCountryCode != null && filteredPhoneCountryCode.length > 3) {
+            if (filteredMobileNumber != null &&
+                filteredPhoneCountryCode != null &&
+                filteredPhoneCountryCode.length > MAX_PHONE_COUNTRY_CODE_LENGTH
+            ) {
                 val code = filteredPhoneCountryCode.substring(0, 1)
                 val rest = filteredPhoneCountryCode.substring(1, filteredPhoneCountryCode.length)
 
@@ -156,7 +156,7 @@ class PaymentRequest private constructor(
                 primaryAccountDetails,
                 initialRecurringPayment,
                 myThreeDSecure,
-                cardHolderName
+                cardHolderName,
             )
         }
     }

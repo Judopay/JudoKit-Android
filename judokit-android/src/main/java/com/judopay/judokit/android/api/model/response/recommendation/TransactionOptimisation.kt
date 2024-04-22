@@ -32,10 +32,11 @@ fun String?.toScaExemption(): ScaExemption? {
 data class TransactionOptimisation(
     val action: TransactionOptimisationAction?,
     val exemption: String?,
-    val threeDSChallengePreference: String?
+    val threeDSChallengePreference: String?,
 ) {
     val isValid: Boolean
-        get() = action != null &&
-            exemption.toScaExemption() != null &&
-            threeDSChallengePreference.toChallengeRequestIndicator() != null
+        get() =
+            action != null &&
+                exemption.toScaExemption() != null &&
+                threeDSChallengePreference.toChallengeRequestIndicator() != null
 }

@@ -14,7 +14,7 @@ data class PaymentMethodCipher internal constructor(
     var keySignature: String,
     var methodType: String,
     @SerializedName("ravelinSDKVersion")
-    var recommendationFeatureProviderSDKVersion: String
+    var recommendationFeatureProviderSDKVersion: String,
 ) : Parcelable {
     class Builder {
         private var aesKeyCipherText: String? = null
@@ -26,14 +26,21 @@ data class PaymentMethodCipher internal constructor(
         private var recommendationFeatureProviderSDKVersion: String? = null
 
         fun setAesKeyCipherText(aesKeyCipherText: String?) = apply { this.aesKeyCipherText = aesKeyCipherText }
+
         fun setAlgorithm(algorithm: String?) = apply { this.algorithm = algorithm }
+
         fun setCardCipherText(cardCipherText: String?) = apply { this.cardCipherText = cardCipherText }
+
         fun setKeyIndex(keyIndex: String?) = apply { this.keyIndex = keyIndex }
+
         fun setKeySignature(keySignature: String?) = apply { this.keySignature = keySignature }
+
         fun setMethodType(methodType: String?) = apply { this.methodType = methodType }
-        fun setRecommendationFeatureProviderSDKVersion(recommendationFeatureProviderSDKVersion: String?) = apply {
-            this.recommendationFeatureProviderSDKVersion = recommendationFeatureProviderSDKVersion
-        }
+
+        fun setRecommendationFeatureProviderSDKVersion(recommendationFeatureProviderSDKVersion: String?) =
+            apply {
+                this.recommendationFeatureProviderSDKVersion = recommendationFeatureProviderSDKVersion
+            }
 
         @Throws(IllegalArgumentException::class)
         fun build(): PaymentMethodCipher {
@@ -43,10 +50,11 @@ data class PaymentMethodCipher internal constructor(
             val myKeyIndex = requireNotNull(keyIndex)
             val myKeySignature = requireNotNullOrEmpty(keySignature, "keySignature")
             val myMethodType = requireNotNullOrEmpty(methodType, "methodType")
-            val myRecommendationFeatureProviderSDKVersion = requireNotNullOrEmpty(
-                recommendationFeatureProviderSDKVersion,
-                "recommendationFeatureProviderSDKVersion"
-            )
+            val myRecommendationFeatureProviderSDKVersion =
+                requireNotNullOrEmpty(
+                    recommendationFeatureProviderSDKVersion,
+                    "recommendationFeatureProviderSDKVersion",
+                )
 
             return PaymentMethodCipher(
                 myAesKeyCipherText,
@@ -55,7 +63,7 @@ data class PaymentMethodCipher internal constructor(
                 myKeyIndex,
                 myKeySignature,
                 myMethodType,
-                myRecommendationFeatureProviderSDKVersion
+                myRecommendationFeatureProviderSDKVersion,
             )
         }
     }

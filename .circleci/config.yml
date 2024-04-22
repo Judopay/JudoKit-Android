@@ -1,26 +1,11 @@
 version: 2.1
 
 orbs:
+  android: circleci/android@2.5.0
   slack: circleci/slack@4.12.5
+  ruby: circleci/ruby@2.1.0
 
 commands:
-  disable_predex:
-    steps:
-      - run:
-          name: Disable Pre-Dexing # https://www.littlerobots.nl/blog/disable-android-pre-dexing-on-ci-builds/
-          command: |
-            mkdir -p ~/.gradle
-            echo 'allprojects {
-                  project.plugins.whenPluginAdded { plugin ->
-                          if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
-                              println "Disable pre dexing for module ${project.name}"
-                              project.android.dexOptions.preDexLibraries = false
-                          } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
-                              println "Disable pre dexing for module ${project.name}"
-                              project.android.dexOptions.preDexLibraries = false
-                          }
-                      }
-                  }' > ~/.gradle/init.gradle
   notify_slack_error:
     steps:
       - slack/notify:
@@ -95,7 +80,7 @@ commands:
                   ]
                 }
               ]
-            }  
+            }
 
   notify_slack_error_weekly:
     steps:
@@ -171,126 +156,22 @@ commands:
                   ]
                 }
               ]
-            }  
+            }
 
-executors:
-  android:
-    docker:
-      - image: cimg/android:2022.12
-    environment:
-      GRADLE_OPTS: -Xmx2g -XX:+HeapDumpOnOutOfMemoryError -Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false
-
-parameters:
-  weekly:
-    type: boolean
-    default: false
-
-jobs:
-  build_sdk:
-    executor: android
-    steps:
-      - disable_predex
-      - checkout
-      - restore_cache:
-          keys:
-            - judokit-android-{{ checksum "judokit-android/build.gradle" }}
-      - run:
-          name: Build SDK
-          command: ./gradlew :judokit-android:build
-      - save_cache:
-          key: judokit-android-{{ checksum "judokit-android/build.gradle" }}
-          paths:
-            - ./build/cache
-      - persist_to_workspace:
-          root: .
-          paths:
-            - judokit-android/build
-
-  build_sample:
-    executor: android
+  checkout_project:
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - judokit-android-examples-{{ checksum "judokit-android-examples/build.gradle" }}
-      - run:
-          name: Prepare Google Services Json
-          command: echo "$ANDROID_GOOGLE_SERVICES_JSON" | base64 -d > judokit-android-examples/google-services.json
-      - run:
-          name: Prepare Signing Key
-          command: |
-            echo "$ANDROID_SIGNING_PRIVATE_KEY" | base64 -d > signing.key
-            echo "$ANDROID_SIGNING_CERTIFICATE" | base64 -d > signing.crt
-            openssl pkcs12 -export -inkey signing.key -in signing.crt -out signing.p12 -passout "pass:$ANDROID_KEYSTORE_PASSWORD"
-            keytool -importkeystore -srckeystore signing.p12 -srcstoretype pkcs12 -srcstorepass "$ANDROID_KEYSTORE_PASSWORD" -destkeystore signing.jks -deststoretype JKS -storepass "$ANDROID_KEYSTORE_PASSWORD" -noprompt 2>/dev/null
-            echo "storeFile=${PWD}/signing.jks" > ./judokit-android-examples/keystore.properties
-            echo "storePassword=${ANDROID_KEYSTORE_PASSWORD}" >> ./judokit-android-examples/keystore.properties
-            echo "keyAlias=1" >> ./judokit-android-examples/keystore.properties
-            echo "keyPassword=${ANDROID_KEYSTORE_PASSWORD}" >> ./judokit-android-examples/keystore.properties
-      - run:
-          name: Clone JudoKit-Automation-Scenarios
-          command: |
-            echo "$GITHUB_SSH_KEY" | base64 -d > ~/.ssh/id_rsa_judoci
-            chmod 600 ~/.ssh/id_rsa_judoci
-            export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_judoci -o IdentitiesOnly=yes"
-            git clone git@github.com:Judopay/JudoKit-Automation-Scenarios.git \
-              judokit-android-examples/src/androidTest/assets
-      - run:
-          name: Inject Test Credentials
-          command: |
-            sed -i "s/YOUR-JUDO-ID/$TEST_JUDO_API_ID/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
-            sed -i "s/YOUR-TOKEN/$TEST_JUDO_API_TOKEN/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
-            sed -i "s/YOUR-SECRET/$TEST_JUDO_API_SECRET/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
-            sed -i "s/YOUR-3DS-TOKEN/$TEST_JUDO_API_3DS_TOKEN/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
-            sed -i "s/YOUR-3DS-SECRET/$TEST_JUDO_API_3DS_SECRET/g" judokit-android-examples/src/androidTest/assets/test-input-data.json
-      - run:
-          name: Build Sample App APK
-          command: |
-            ./gradlew :judokit-android-examples:assemble
-      - run:
-          name: Build Test Package
-          command: |
-            ./gradlew :judokit-android-examples:assembleAndroidTest
-      - save_cache:
-          key: judokit-android-examples-{{ checksum "judokit-android-examples/build.gradle" }}
-          paths:
-            - ./build/cache
-      - persist_to_workspace:
-          root: .
-          paths:
-            - judokit-android-examples/build
-
-  unit_test_sdk:
-    executor: android
+      - ruby/install-deps
+      - android/accept-licenses
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+  persist_project_cache:
     steps:
-      - checkout
-      - attach_workspace:
-          at: /home/circleci/project
-      - disable_predex
-      - run:
-          name: Run SDK Unit Tests
-          command: ./gradlew :judokit-android:test generateCodeAnalysisReport
-      - persist_to_workspace:
-          root: .
-          paths:
-            - judokit-android/build
-
-  # Below step not currently used as no unit tests have been written
-  unit_test_sample:
-    executor: android
+      - android/save-build-cache
+      - android/save-gradle-cache
+  prepare_instrumented_tests:
     steps:
-      - attach_workspace:
-          at: /home/circleci/project
-      - disable_predex
-      - run:
-          name: Run Sample App Unit Tests
-          command: ./gradlew :judokit-android-examples:test
-
-  instrumented_test_sample:
-    executor: android
-    steps:
-      - attach_workspace:
-          at: /home/circleci/project
+      - checkout_project
       - run:
           name: Store Google Service Account
           command: echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
@@ -307,6 +188,54 @@ jobs:
             export API_TEST_SECRET=${API_TEST_SECRET} \
             export RECOMMENDATION_URL=${RECOMMENDATION_URL} \
             export RSA_KEY=${RSA_KEY}
+      - run:
+          name: Build Example App and Android Test APK
+          command: bundle exec fastlane build_example_app with_android_test:true
+
+aliases:
+  android-docker-executor: &android-docker-executor
+    executor:
+      name: android/android-docker
+      tag: 2024.01.1
+      resource-class: xlarge
+
+parameters:
+  weekly:
+    type: boolean
+    default: false
+
+jobs:
+  check_pull_request:
+    <<: *android-docker-executor
+    steps:
+      - checkout_project
+      - run:
+          name: Run pull request checks
+          command: bundle exec fastlane pull_request_checks
+      - persist_project_cache
+
+  example_app_distribution:
+    <<: *android-docker-executor
+    steps:
+      - checkout_project
+      - run:
+          name: Distribute Example App to Testers
+          command: bundle exec fastlane example_app_distribution
+      - persist_project_cache
+
+  release_sdk:
+    <<: *android-docker-executor
+    steps:
+      - checkout_project
+      - run:
+          name: Release SDK
+          command: bundle exec fastlane release_sdk
+      - persist_project_cache
+
+  instrumented_test_sample:
+    <<: *android-docker-executor
+    steps:
+      - prepare_instrumented_tests
       - run:
           name: Test with Firebase Test Lab
           no_output_timeout: 30m
@@ -322,26 +251,9 @@ jobs:
       - notify_slack_pass
 
   instrumented_test_sample_weekly:
-    executor: android
+    <<: *android-docker-executor
     steps:
-      - attach_workspace:
-          at: /home/circleci/project
-      - run:
-          name: Store Google Service Account
-          command: echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-      - run:
-          name: Authorize gcloud and set config defaults
-          command: |
-            gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-      - run:
-          name: Export environment variables
-          command: |
-            export JUDO_ID=${JUDO_ID} \
-            export API_TEST_TOKEN=${API_TEST_TOKEN} \
-            export API_TEST_SECRET=${API_TEST_SECRET} \
-            export RECOMMENDATION_URL=${RECOMMENDATION_URL} \
-            export RSA_KEY=${RSA_KEY}
+      - prepare_instrumented_tests
       - run:
           name: Test with Firebase Test Lab
           no_output_timeout: 30m
@@ -371,43 +283,6 @@ jobs:
           at: /home/circleci/project
       - run: /opt/run-scan.sh
 
-  release_sample:
-    executor: android
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /home/circleci/project
-      - run:
-          name: Install Firebase CLI
-          command: curl -sL https://firebase.tools | bash
-      - run:
-          name: Store Google Service Account
-          command: |
-            echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-      - run:
-          name: Create Release Notes
-          command: echo "$(git log -1 --pretty=format:"%b")" > ./notes.txt
-      - run:
-          name: Distribute Sample App
-          command: |
-            export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-service-key.json
-            firebase appdistribution:distribute \
-              judokit-android-examples/build/outputs/apk/release/judokit-android-examples-release.apk \
-              --app "$ANDROID_FIREBASE_APP_ID" \
-              --groups "default-testers" \
-              --release-notes-file ./notes.txt
-
-  release_sdk:
-    executor: android
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /home/circleci/project
-      - run:
-          name: Release SDK to Maven Central
-          command: |
-            export ORG_GRADLE_PROJECT_signingKey=$(echo "$ORG_GRADLE_PROJECT_signingKey_base64" | base64 -d)
-            ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
   report_to_jira:
     docker:
       - image: europe-docker.pkg.dev/opnf-management/docker/deployer:latest
@@ -427,37 +302,20 @@ jobs:
 
 workflows:
   version: 2
-  build:
-    when:
-      not: << pipeline.parameters.weekly >>
+
+  pull_request_checks:
     jobs:
-      - build_sdk:
-          filters:
-            tags:
-              only:
-                - /^v[0-9]+(\.[0-9]+)*$/
-      - build_sample:
+      - check_pull_request:
           context: shared-secrets
-      - instrumented_test_sample:
-          context: shared-secrets
-          requires:
-            - build_sample
           filters:
             branches:
-              only:
+              ignore:
                 - master
-      - unit_test_sdk:
-          requires:
-            - build_sdk
-      - sonar_scan:
+
+  distribute_example_apps:
+    jobs:
+      - example_app_distribution:
           context: shared-secrets
-          requires:
-            - unit_test_sdk
-      - release_sample:
-          context: shared-secrets
-          requires:
-            - build_sample
-            - unit_test_sdk
           filters:
             branches:
               only:
@@ -466,11 +324,23 @@ workflows:
           context: shared-secrets
           environment: staging
           requires:
-            - release_sample
+            - example_app_distribution
+
+  instrumented_test:
+    when:
+      not: << pipeline.parameters.weekly >>
+    jobs:
+      - instrumented_test_sample:
+          context: shared-secrets
+          filters:
+            branches:
+              only:
+                - master
+
+  publish_sdk:
+    jobs:
       - release_sdk:
           context: shared-secrets
-          requires:
-            - build_sdk
           filters:
             branches:
               ignore:
@@ -483,15 +353,19 @@ workflows:
           environment: prod
           requires:
             - release_sdk
+          filters:
+            branches:
+              ignore:
+                - /.*/
+            tags:
+              only:
+                - /^v[0-9]+(\.[0-9]+)*$/
+
   e2e-backward-compat-weekly:
     when: << pipeline.parameters.weekly >>
     jobs:
-      - build_sample:
+      - instrumented_test_sample_weekly:
           context: shared-secrets
-      - instrumented_test_sample_weekly:        
-          context: shared-secrets
-          requires:
-            - build_sample
           filters:
             branches:
               only:

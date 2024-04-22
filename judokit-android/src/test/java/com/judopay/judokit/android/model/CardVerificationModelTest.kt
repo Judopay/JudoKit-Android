@@ -7,12 +7,12 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Testing CardVerificationModel builder")
 internal class CardVerificationModelTest {
-
-    private val sut = CardVerificationModel.Builder()
-        .setAcsUrl("acs")
-        .setMd("md")
-        .setPaReq("pareq")
-        .setReceiptId("id")
+    private val sut =
+        CardVerificationModel.Builder()
+            .setAcsUrl("acs")
+            .setMd("md")
+            .setPaReq("pareq")
+            .setReceiptId("id")
 
     @DisplayName("Given build is called, when receiptId is null, then throw exception")
     @Test

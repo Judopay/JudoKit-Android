@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 
 @DisplayName("Testing CardToken model logic")
 internal class CardTokenTest {
-
     @DisplayName("Given formattedEndDate is called, when endDate is not 4 characters, then return empty string")
     @Test
     fun returnEmptyStringOnFormattedEndDateCallWithEndDateNotFourCharacters() {

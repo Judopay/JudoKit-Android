@@ -9,5 +9,5 @@ data class GooglePayPaymentData(
     val apiVersionMinor: Number,
     val paymentMethodData: GooglePayPaymentMethodData,
     val email: String?,
-    val shippingAddress: GooglePayAddress?
+    val shippingAddress: GooglePayAddress?,
 ) : Parcelable

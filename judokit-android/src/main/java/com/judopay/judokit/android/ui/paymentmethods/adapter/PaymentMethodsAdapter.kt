@@ -22,16 +22,18 @@ import com.judopay.judokit.android.ui.paymentmethods.adapter.viewholder.SavedCar
 import com.judopay.judokit.android.ui.paymentmethods.adapter.viewholder.SavedCardsItemViewHolder
 
 internal interface BindableRecyclerViewHolder<V, A> {
-    fun bind(model: V, listener: PaymentMethodsAdapterListener? = null)
+    fun bind(
+        model: V,
+        listener: PaymentMethodsAdapterListener? = null,
+    )
 }
 
 typealias PaymentMethodsAdapterListener = (action: PaymentMethodItemAction, item: PaymentMethodItem) -> Unit
 
 class PaymentMethodsAdapter(
     items: List<PaymentMethodItem> = emptyList(),
-    private val listener: PaymentMethodsAdapterListener
+    private val listener: PaymentMethodsAdapterListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
     var items: List<PaymentMethodItem> = items
         set(value) {
             val diffCallback = PaymentMethodDiffUtil(field, value)
@@ -40,33 +42,45 @@ class PaymentMethodsAdapter(
             diffResult.dispatchUpdatesTo(this)
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
         return when (PaymentMethodItemType.values().firstOrNull { it.ordinal == viewType }) {
-            PaymentMethodItemType.SELECTOR -> MethodSelectorViewHolder(
-                PaymentMethodsSelectorItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            )
-            PaymentMethodItemType.SAVED_CARDS_HEADER -> SavedCardsHeaderViewHolder(
-                SavedCardHeaderItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            )
-            PaymentMethodItemType.SAVED_CARDS_ITEM -> SavedCardsItemViewHolder(
-                SavedCardItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            )
-            PaymentMethodItemType.SAVED_CARDS_FOOTER -> SavedCardsFooterViewHolder(
-                SavedCardFooterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            )
-            PaymentMethodItemType.NO_SAVED_CARDS_PLACEHOLDER -> NoSavedCardsPlaceholderViewHolder(
-                NoSavedCardsPlaceholderItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            )
-            PaymentMethodItemType.IDEAL_BANK_ITEM -> IdealBankItemViewHolder(
-                IdealBankItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            )
+            PaymentMethodItemType.SELECTOR ->
+                MethodSelectorViewHolder(
+                    PaymentMethodsSelectorItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                )
+            PaymentMethodItemType.SAVED_CARDS_HEADER ->
+                SavedCardsHeaderViewHolder(
+                    SavedCardHeaderItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                )
+            PaymentMethodItemType.SAVED_CARDS_ITEM ->
+                SavedCardsItemViewHolder(
+                    SavedCardItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                )
+            PaymentMethodItemType.SAVED_CARDS_FOOTER ->
+                SavedCardsFooterViewHolder(
+                    SavedCardFooterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                )
+            PaymentMethodItemType.NO_SAVED_CARDS_PLACEHOLDER ->
+                NoSavedCardsPlaceholderViewHolder(
+                    NoSavedCardsPlaceholderItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                )
+            PaymentMethodItemType.IDEAL_BANK_ITEM ->
+                IdealBankItemViewHolder(
+                    IdealBankItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                )
             else -> {
                 throw NotImplementedError("Unsupported or null type")
             }
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         @Suppress("UNCHECKED_CAST")
         val viewHolder = holder as? BindableRecyclerViewHolder<PaymentMethodItem, PaymentMethodItemAction>
         viewHolder?.bind(items[position], listener)

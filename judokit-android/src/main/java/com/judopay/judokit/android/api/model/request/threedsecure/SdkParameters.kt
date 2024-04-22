@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName
 import com.judopay.judokit.android.requireNotNull
 import com.judopay.judokit.android.requireNotNullOrEmpty
 
+@Suppress("LongParameterList")
 class SdkParameters private constructor(
     private val applicationId: String,
     private val encodedData: String,
@@ -12,7 +13,7 @@ class SdkParameters private constructor(
     private val transactionId: String,
     private val deviceRenderOptions: DeviceRenderOptions,
     @SerializedName("ephemeral_public_key")
-    private val ephemeralPublicKey: EphemeralPublicKey
+    private val ephemeralPublicKey: EphemeralPublicKey,
 ) {
     class Builder {
         private var applicationId: String? = null
@@ -23,23 +24,19 @@ class SdkParameters private constructor(
         private var transactionId: String? = null
         private var deviceRenderOptions: DeviceRenderOptions? = null
 
-        fun setApplicationId(applicationId: String?) =
-            apply { this.applicationId = applicationId }
+        fun setApplicationId(applicationId: String?) = apply { this.applicationId = applicationId }
 
         fun setEncodedData(encodedData: String?) = apply { this.encodedData = encodedData }
 
-        fun setEphemeralPublicKey(ephemeralPublicKey: EphemeralPublicKey?) =
-            apply { this.ephemeralPublicKey = ephemeralPublicKey }
+        fun setEphemeralPublicKey(ephemeralPublicKey: EphemeralPublicKey?) = apply { this.ephemeralPublicKey = ephemeralPublicKey }
 
         fun setMaxTimeout(maxTimeout: Int?) = apply { this.maxTimeout = maxTimeout }
 
-        fun setReferenceNumber(referenceNumber: String?) =
-            apply { this.referenceNumber = referenceNumber }
+        fun setReferenceNumber(referenceNumber: String?) = apply { this.referenceNumber = referenceNumber }
 
         fun setTransactionId(transactionId: String?) = apply { this.transactionId = transactionId }
 
-        fun setDeviceRenderOptions(deviceRenderOptions: DeviceRenderOptions?) =
-            apply { this.deviceRenderOptions = deviceRenderOptions }
+        fun setDeviceRenderOptions(deviceRenderOptions: DeviceRenderOptions?) = apply { this.deviceRenderOptions = deviceRenderOptions }
 
         fun build(): SdkParameters {
             val myApplicationId = requireNotNullOrEmpty(applicationId, "applicationId")
@@ -57,7 +54,7 @@ class SdkParameters private constructor(
                 myReferenceNumber,
                 myTransactionId,
                 myDeviceRenderOptions,
-                myEphemeralPublicKey
+                myEphemeralPublicKey,
             )
         }
     }

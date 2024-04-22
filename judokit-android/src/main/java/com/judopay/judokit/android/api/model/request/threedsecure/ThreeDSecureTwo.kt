@@ -11,7 +11,7 @@ class ThreeDSecureTwo private constructor(
     @SerializedName("sdk")
     private val sdkParameters: SdkParameters,
     private val authenticationSource: String = "MOBILE_SDK",
-    private val softDeclineReceiptId: String?
+    private val softDeclineReceiptId: String?,
 ) {
     class Builder {
         private var challengeRequestIndicator: ChallengeRequestIndicator? = null
@@ -22,14 +22,11 @@ class ThreeDSecureTwo private constructor(
         fun setChallengeRequestIndicator(challengeRequestIndicator: ChallengeRequestIndicator?) =
             apply { this.challengeRequestIndicator = challengeRequestIndicator }
 
-        fun setScaExemption(scaExemption: ScaExemption?) =
-            apply { this.scaExemption = scaExemption }
+        fun setScaExemption(scaExemption: ScaExemption?) = apply { this.scaExemption = scaExemption }
 
-        fun setSdkParameters(sdkParameters: SdkParameters?) =
-            apply { this.sdkParameters = sdkParameters }
+        fun setSdkParameters(sdkParameters: SdkParameters?) = apply { this.sdkParameters = sdkParameters }
 
-        fun setSoftDeclineReceiptId(softDeclineReceiptId: String?) =
-            apply { this.softDeclineReceiptId = softDeclineReceiptId }
+        fun setSoftDeclineReceiptId(softDeclineReceiptId: String?) = apply { this.softDeclineReceiptId = softDeclineReceiptId }
 
         fun build(): ThreeDSecureTwo {
             val myChallengeRequestIndicator = challengeRequestIndicator
@@ -41,7 +38,7 @@ class ThreeDSecureTwo private constructor(
                 myChallengeRequestIndicator,
                 myScaExemption,
                 mySdkParameters,
-                softDeclineReceiptId = mySoftDeclineReceiptId
+                softDeclineReceiptId = mySoftDeclineReceiptId,
             )
         }
     }

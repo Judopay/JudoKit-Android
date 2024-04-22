@@ -8,18 +8,21 @@ import com.judopay.judokit.android.ui.cardentry.validation.Validator
 import com.judopay.judokit.android.ui.common.REG_EX_ADDRESS_LINE
 
 data class AddressLineValidator(
-    override val fieldType: String = BillingDetailsFieldType.ADDRESS_LINE_1.name
+    override val fieldType: String = BillingDetailsFieldType.ADDRESS_LINE_1.name,
 ) : Validator {
-
     private val addressLineRegEx = REG_EX_ADDRESS_LINE.toRegex()
 
-    override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult {
+    override fun validate(
+        input: String,
+        formFieldEvent: FormFieldEvent,
+    ): ValidationResult {
         val shouldDisplayMessage = formFieldEvent == FormFieldEvent.FOCUS_CHANGED
-        val message = if (shouldDisplayMessage) {
-            R.string.invalid_address
-        } else {
-            R.string.empty
-        }
+        val message =
+            if (shouldDisplayMessage) {
+                R.string.invalid_address
+            } else {
+                R.string.empty
+            }
         return ValidationResult(addressLineRegEx.matches(input), message)
     }
 }

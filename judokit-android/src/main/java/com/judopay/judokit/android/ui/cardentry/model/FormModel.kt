@@ -2,17 +2,18 @@ package com.judopay.judokit.android.ui.cardentry.model
 
 data class FormModel(
     val cardDetailsInputModel: CardDetailsInputModel,
-    val billingDetailsInputModel: BillingDetailsInputModel
+    val billingDetailsInputModel: BillingDetailsInputModel,
 )
 
-fun CardDetailsInputModel.valueOfFieldWithType(type: CardDetailsFieldType): String = when (type) {
-    CardDetailsFieldType.NUMBER -> cardNumber
-    CardDetailsFieldType.HOLDER_NAME -> cardHolderName
-    CardDetailsFieldType.EXPIRATION_DATE -> expirationDate
-    CardDetailsFieldType.SECURITY_NUMBER -> securityNumber
-    CardDetailsFieldType.COUNTRY -> country
-    CardDetailsFieldType.POST_CODE -> postCode
-}
+fun CardDetailsInputModel.valueOfFieldWithType(type: CardDetailsFieldType): String =
+    when (type) {
+        CardDetailsFieldType.NUMBER -> cardNumber
+        CardDetailsFieldType.HOLDER_NAME -> cardHolderName
+        CardDetailsFieldType.EXPIRATION_DATE -> expirationDate
+        CardDetailsFieldType.SECURITY_NUMBER -> securityNumber
+        CardDetailsFieldType.COUNTRY -> country
+        CardDetailsFieldType.POST_CODE -> postCode
+    }
 
 fun BillingDetailsInputModel.valueOfBillingDetailsFieldWithType(type: BillingDetailsFieldType): String =
     when (type) {

@@ -1,6 +1,7 @@
 package com.judokit.android.examples.test.card
 
 import android.Manifest
+import android.os.Build
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.preference.PreferenceManager
 import androidx.test.espresso.Espresso.onView
@@ -17,12 +18,11 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import com.judokit.android.examples.feature.DemoFeatureListActivity
 import com.judokit.android.examples.test.BuildConfig
+import com.judopay.judokit.android.R
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import android.os.Build
-import com.judopay.judokit.android.R
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -71,7 +71,7 @@ class RavelinIntegrationTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -92,7 +92,7 @@ class RavelinIntegrationTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -115,7 +115,7 @@ class RavelinIntegrationTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -138,7 +138,7 @@ class RavelinIntegrationTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -159,7 +159,7 @@ class RavelinIntegrationTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -182,7 +182,7 @@ class RavelinIntegrationTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -205,7 +205,7 @@ class RavelinIntegrationTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -226,7 +226,7 @@ class RavelinIntegrationTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -249,7 +249,7 @@ class RavelinIntegrationTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -270,7 +270,7 @@ class RavelinIntegrationTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -293,7 +293,7 @@ class RavelinIntegrationTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -316,7 +316,7 @@ class RavelinIntegrationTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -340,7 +340,7 @@ class RavelinIntegrationTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -363,7 +363,7 @@ class RavelinIntegrationTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -387,7 +387,7 @@ class RavelinIntegrationTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))

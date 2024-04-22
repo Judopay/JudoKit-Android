@@ -13,38 +13,45 @@ import retrofit2.converter.gson.GsonConverterFactory
  * Base class for Service factories.
  */
 abstract class ServiceFactory<T> {
-
     abstract val gson: Gson
 
     abstract var externalInterceptors: List<Interceptor>?
 
     @Deprecated("Use create instead", ReplaceWith("create(context, judo)"))
-    abstract fun createApiService(context: Context, judo: Judo): T
-    abstract fun create(context: Context, judo: Judo): T
+    abstract fun createApiService(
+        context: Context,
+        judo: Judo,
+    ): T
+
+    abstract fun create(
+        context: Context,
+        judo: Judo,
+    ): T
 
     protected fun createRetrofit(
         context: Context,
         judo: Judo,
-        baseUrl: String
-    ): Retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .client(getOkHttpClient(context, judo))
-        .addConverterFactory(gsonConverterFactory)
-        .addCallAdapterFactory(ApiCallAdapterFactory())
-        .build()
+        baseUrl: String,
+    ): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(getOkHttpClient(context, judo))
+            .addConverterFactory(gsonConverterFactory)
+            .addCallAdapterFactory(ApiCallAdapterFactory())
+            .build()
 
     private val gsonConverterFactory: GsonConverterFactory
         get() = GsonConverterFactory.create(gson)
 
     abstract fun getOkHttpClient(
         context: Context,
-        judo: Judo
+        judo: Judo,
     ): OkHttpClient
 
     open fun addInterceptors(
         client: OkHttpClient.Builder,
         context: Context,
-        judo: Judo
+        judo: Judo,
     ) {
         client.interceptors().apply {
             add(NetworkConnectivityInterceptor(context))

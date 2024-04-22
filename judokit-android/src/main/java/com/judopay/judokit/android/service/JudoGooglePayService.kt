@@ -15,39 +15,39 @@ import kotlin.coroutines.resumeWithException
 class JudoGooglePayService(
     private val paymentsClient: PaymentsClient,
     private val callbackActivity: AppCompatActivity,
-    private val judo: Judo
+    private val judo: Judo,
 ) {
-
     fun loadGooglePayPaymentData() {
         judo.googlePayConfiguration?.let {
             val request = it.toPaymentDataRequest(judo)
             AutoResolveHelper.resolveTask(
                 paymentsClient.loadPaymentData(request),
                 callbackActivity,
-                LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE
+                LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE,
             )
         }
     }
 
-    suspend fun checkIfGooglePayIsAvailable(): Boolean = suspendCancellableCoroutine { cont ->
-        if (judo.googlePayConfiguration != null) {
-            val isReadyToPayRequest = judo.googlePayConfiguration.toIsReadyToPayRequest(judo)
-            paymentsClient.isReadyToPay(isReadyToPayRequest).addOnCompleteListener { task ->
-                try {
-                    val isGooglePayAvailable = task.isSuccessful
-                    val exception = task.exception
+    suspend fun checkIfGooglePayIsAvailable(): Boolean =
+        suspendCancellableCoroutine { cont ->
+            if (judo.googlePayConfiguration != null) {
+                val isReadyToPayRequest = judo.googlePayConfiguration.toIsReadyToPayRequest(judo)
+                paymentsClient.isReadyToPay(isReadyToPayRequest).addOnCompleteListener { task ->
+                    try {
+                        val isGooglePayAvailable = task.isSuccessful
+                        val exception = task.exception
 
-                    if (exception != null) {
+                        if (exception != null) {
+                            cont.resumeWithException(exception)
+                        } else {
+                            cont.resume(isGooglePayAvailable)
+                        }
+                    } catch (exception: ApiException) {
                         cont.resumeWithException(exception)
-                    } else {
-                        cont.resume(isGooglePayAvailable)
                     }
-                } catch (exception: ApiException) {
-                    cont.resumeWithException(exception)
                 }
+            } else {
+                cont.resumeWithException(IllegalStateException("Invalid GooglePay configuration object."))
             }
-        } else {
-            cont.resumeWithException(IllegalStateException("Invalid GooglePay configuration object."))
         }
-    }
 }

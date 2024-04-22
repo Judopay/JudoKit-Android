@@ -10,8 +10,10 @@ import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethod
 
 class MethodSelectorViewHolder(private val binding: PaymentMethodsSelectorItemBinding) :
     RecyclerView.ViewHolder(binding.root), BindableRecyclerViewHolder<PaymentMethodItem, PaymentMethodItemAction> {
-
-    override fun bind(model: PaymentMethodItem, listener: PaymentMethodsAdapterListener?) {
+    override fun bind(
+        model: PaymentMethodItem,
+        listener: PaymentMethodsAdapterListener?,
+    ) {
         (model as? PaymentMethodSelectorItem)?.let { item ->
             binding.slider.setPaymentMethods(item.paymentMethods, item.currentSelected) { method ->
                 item.currentSelected = method

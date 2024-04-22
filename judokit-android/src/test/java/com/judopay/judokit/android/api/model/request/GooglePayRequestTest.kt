@@ -11,22 +11,22 @@ import java.math.BigDecimal
 
 @DisplayName("Testing Google pay request builder")
 internal class GooglePayRequestTest {
-
-    private val request = GooglePayRequest.Builder()
-        .setJudoId("id")
-        .setAmount("1")
-        .setCurrency("GBP")
-        .setYourConsumerReference("consumerRef")
-        .setYourPaymentReference("paymentRef")
-        .setGooglePayWallet(
-            mockk(relaxed = true) {
-                every { token } returns "token"
-                every { cardNetwork } returns "Visa"
-            }
-        )
-        .setYourPaymentMetaData(mockk(relaxed = true))
-        .setPrimaryAccountDetails(mockk(relaxed = true))
-        .setCardAddress(mockk(relaxed = true))
+    private val request =
+        GooglePayRequest.Builder()
+            .setJudoId("id")
+            .setAmount("1")
+            .setCurrency("GBP")
+            .setYourConsumerReference("consumerRef")
+            .setYourPaymentReference("paymentRef")
+            .setGooglePayWallet(
+                mockk(relaxed = true) {
+                    every { token } returns "token"
+                    every { cardNetwork } returns "Visa"
+                },
+            )
+            .setYourPaymentMetaData(mockk(relaxed = true))
+            .setPrimaryAccountDetails(mockk(relaxed = true))
+            .setCardAddress(mockk(relaxed = true))
 
     @Test
     @DisplayName("Should throw an exception on providing null judo id")

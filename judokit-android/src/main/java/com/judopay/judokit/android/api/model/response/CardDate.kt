@@ -3,8 +3,9 @@ package com.judopay.judokit.android.api.model.response
 import java.util.Calendar
 import java.util.Date
 
-class CardDate(cardDate: String = "") {
-    var cardDate: String = cardDate
+@Suppress("MagicNumber")
+class CardDate(date: String = "") {
+    var date: String = date
         set(value) {
             field = value
             splitCardDate(field)
@@ -74,9 +75,10 @@ class CardDate(cardDate: String = "") {
             val cardDate = Calendar.getInstance()
             cardDate[year, month] = 2
 
-            val now = Calendar.getInstance().apply {
-                time = Date()
-            }
+            val now =
+                Calendar.getInstance().apply {
+                    time = Date()
+                }
             now[Calendar.MONTH] = now[Calendar.MONTH] - 2
             return cardDate.after(now) && cardDate.before(maxDate)
         }
@@ -92,6 +94,6 @@ class CardDate(cardDate: String = "") {
     }
 
     init {
-        splitCardDate(cardDate)
+        splitCardDate(date)
     }
 }

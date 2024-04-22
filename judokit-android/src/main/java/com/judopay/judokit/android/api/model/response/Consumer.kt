@@ -6,5 +6,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class Consumer(
     var consumerToken: String? = null,
-    val yourConsumerReference: String?
+    val yourConsumerReference: String?,
 ) : Parcelable

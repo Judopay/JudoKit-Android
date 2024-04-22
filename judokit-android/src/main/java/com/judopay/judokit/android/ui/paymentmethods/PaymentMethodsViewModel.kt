@@ -45,19 +45,28 @@ import kotlinx.coroutines.launch
 // view-model actions
 sealed class PaymentMethodsAction {
     data class DeleteCard(val cardId: Int) : PaymentMethodsAction()
+
     data class SelectPaymentMethod(val method: PaymentMethod) : PaymentMethodsAction()
+
     data class SelectStoredCard(val id: Int) : PaymentMethodsAction()
+
     data class UpdateButtonState(val buttonEnabled: Boolean) :
         PaymentMethodsAction()
 
     data class EditMode(val isInEditMode: Boolean) : PaymentMethodsAction()
+
     data class SelectIdealBank(val idealBank: IdealBank) : PaymentMethodsAction()
 
     object InitiateSelectedCardPayment : PaymentMethodsAction()
+
     data class PayWithCard(val transactionDetail: TransactionDetails.Builder) : PaymentMethodsAction()
+
     object PayWithSelectedIdealBank : PaymentMethodsAction()
-    object Update : PaymentMethodsAction() // TODO: temporary
+
+    object Update : PaymentMethodsAction()
+
     object SubscribeToCardTransactionManagerResults : PaymentMethodsAction()
+
     object UnSubscribeToCardTransactionManagerResults : PaymentMethodsAction()
 }
 
@@ -67,9 +76,8 @@ internal class PaymentMethodsViewModelFactory(
     private val cardRepository: TokenizedCardRepository,
     private val cardTransactionManager: CardTransactionManager,
     private val application: Application,
-    private val judo: Judo
+    private val judo: Judo,
 ) : NewInstanceFactory() {
-
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == PaymentMethodsViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
@@ -78,7 +86,7 @@ internal class PaymentMethodsViewModelFactory(
                 cardRepository,
                 cardTransactionManager,
                 application,
-                judo
+                judo,
             ) as T
         } else {
             super.create(modelClass)
@@ -91,9 +99,8 @@ class PaymentMethodsViewModel(
     private val cardRepository: TokenizedCardRepository,
     private val cardTransactionManager: CardTransactionManager,
     application: Application,
-    private val judo: Judo
+    private val judo: Judo,
 ) : AndroidViewModel(application), CardTransactionManagerResultListener {
-
     val model = MutableLiveData<PaymentMethodsModel>()
     val judoPaymentResult = MutableLiveData<JudoPaymentResult>()
     val payWithIdealObserver = MutableLiveData<Event<String>>()
@@ -130,6 +137,7 @@ class PaymentMethodsViewModel(
         buildModel()
     }
 
+    @Suppress("CyclomaticComplexMethod")
     fun send(action: PaymentMethodsAction) {
         when (action) {
             is PaymentMethodsAction.SubscribeToCardTransactionManagerResults -> {
@@ -157,13 +165,17 @@ class PaymentMethodsViewModel(
             is PaymentMethodsAction.SelectIdealBank -> {
                 buildModel(isLoading = false, selectedBank = action.idealBank)
             }
-            is PaymentMethodsAction.Update -> buildModel(isLoading = model.value?.headerModel?.callToActionModel?.paymentButtonState == ButtonState.Loading)
+            is PaymentMethodsAction.Update ->
+                buildModel(
+                    isLoading = model.value?.headerModel?.callToActionModel?.paymentButtonState == ButtonState.Loading,
+                )
             is PaymentMethodsAction.SelectPaymentMethod -> {
                 if (selectedPaymentMethod != action.method) buildModel(action.method, false)
             }
-            is PaymentMethodsAction.UpdateButtonState -> buildModel(
-                isLoading = !action.buttonEnabled
-            )
+            is PaymentMethodsAction.UpdateButtonState ->
+                buildModel(
+                    isLoading = !action.buttonEnabled,
+                )
             is PaymentMethodsAction.EditMode -> buildModel(isInEditMode = action.isInEditMode)
             is PaymentMethodsAction.PayWithCard -> {
                 buildModel(isLoading = true)
@@ -179,17 +191,22 @@ class PaymentMethodsViewModel(
         if (paymentMethod is CardPaymentMethodModel) {
             val isSecurityCodeRequired =
                 judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode || judo.uiConfiguration.shouldAskForCSC
-            val cardNetwork = if (isSecurityCodeRequired) {
-                val card = paymentMethod.selectedCard
-                card?.network
-            } else {
-                null
-            }
-            if (judo.uiConfiguration.shouldAskForBillingInformation || isSecurityCodeRequired || judo.uiConfiguration.shouldAskForCardholderName) {
-                val cardEntryOptions = CardEntryOptions(
-                    isPresentedFromPaymentMethods = true,
-                    cardNetwork = cardNetwork
-                )
+            val cardNetwork =
+                if (isSecurityCodeRequired) {
+                    val card = paymentMethod.selectedCard
+                    card?.network
+                } else {
+                    null
+                }
+            if (judo.uiConfiguration.shouldAskForBillingInformation ||
+                isSecurityCodeRequired ||
+                judo.uiConfiguration.shouldAskForCardholderName
+            ) {
+                val cardEntryOptions =
+                    CardEntryOptions(
+                        isPresentedFromPaymentMethods = true,
+                        cardNetwork = cardNetwork,
+                    )
                 displayCardEntryObserver.postValue(Event(cardEntryOptions))
             } else {
                 sendCardPaymentRequest(paymentMethod, TransactionDetails.Builder())
@@ -200,7 +217,7 @@ class PaymentMethodsViewModel(
     @Throws(IllegalStateException::class)
     private fun sendCardPaymentRequest(
         paymentMethod: CardPaymentMethodModel,
-        transactionDetailBuilder: TransactionDetails.Builder
+        transactionDetailBuilder: TransactionDetails.Builder,
     ) = viewModelScope.launch {
         val card = paymentMethod.selectedCard
         card?.let {
@@ -222,12 +239,12 @@ class PaymentMethodsViewModel(
             if (judo.paymentWidgetType == PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS) {
                 cardTransactionManager.preAuthWithToken(
                     transactionDetailBuilder.build(),
-                    PaymentMethodsViewModel::class.java.name
+                    PaymentMethodsViewModel::class.java.name,
                 )
             } else {
                 cardTransactionManager.paymentWithToken(
                     transactionDetailBuilder.build(),
-                    PaymentMethodsViewModel::class.java.name
+                    PaymentMethodsViewModel::class.java.name,
                 )
             }
         }
@@ -239,29 +256,31 @@ class PaymentMethodsViewModel(
         judoPaymentResult.postValue(result)
     }
 
-    private fun payWithSelectedIdealBank() = viewModelScope.launch {
-        model.value?.let { methodModel ->
-            if (methodModel.currentPaymentMethod is IdealPaymentMethodModel) {
-                payWithIdealObserver.postValue(
-                    Event(
-                        methodModel.currentPaymentMethod.selectedBank.bic
+    private fun payWithSelectedIdealBank() =
+        viewModelScope.launch {
+            model.value?.let { methodModel ->
+                if (methodModel.currentPaymentMethod is IdealPaymentMethodModel) {
+                    payWithIdealObserver.postValue(
+                        Event(
+                            methodModel.currentPaymentMethod.selectedBank.bic,
+                        ),
                     )
-                )
+                }
             }
         }
-    }
 
-    private fun deleteCardWithId(id: Int) = viewModelScope.launch {
-        cardRepository.deleteCardWithId(id)
-    }
+    private fun deleteCardWithId(id: Int) =
+        viewModelScope.launch {
+            cardRepository.deleteCardWithId(id)
+        }
 
-    // TODO: needs to be refactored
+    @Suppress("LongMethod", "CyclomaticComplexMethod")
     private fun buildModel(
         selectedMethod: PaymentMethod = selectedPaymentMethod,
         isLoading: Boolean = false,
         selectedCardId: Int = selectedCardIdentifier,
         isInEditMode: Boolean = false,
-        selectedBank: IdealBank = this.selectedBank
+        selectedBank: IdealBank = this.selectedBank,
     ) = viewModelScope.launch {
         val cardModel: CardViewModel
 
@@ -276,83 +295,88 @@ class PaymentMethodsViewModel(
                 PaymentMethodSelectorItem(
                     PaymentMethodItemType.SELECTOR,
                     allMethods,
-                    selectedMethod
-                )
+                    selectedMethod,
+                ),
             )
         }
 
-        val method: PaymentMethodModel = when (selectedMethod) {
-            PaymentMethod.CARD -> {
-                var selectedCard: PaymentMethodSavedCardItem? = null
-                if (cards.isNullOrEmpty()) {
-                    // placeholder
-                    recyclerViewData.add(
-                        PaymentMethodGenericItem(
-                            PaymentMethodItemType.NO_SAVED_CARDS_PLACEHOLDER,
-                            isInEditMode
+        val method: PaymentMethodModel =
+            when (selectedMethod) {
+                PaymentMethod.CARD -> {
+                    var selectedCard: PaymentMethodSavedCardItem? = null
+                    if (cards.isNullOrEmpty()) {
+                        // placeholder
+                        recyclerViewData.add(
+                            PaymentMethodGenericItem(
+                                PaymentMethodItemType.NO_SAVED_CARDS_PLACEHOLDER,
+                                isInEditMode,
+                            ),
                         )
-                    )
-                    cardModel = NoPaymentMethodSelectedViewModel()
-                } else {
-                    recyclerViewData.add(
-                        PaymentMethodGenericItem(
-                            PaymentMethodItemType.SAVED_CARDS_HEADER,
-                            isInEditMode
+                        cardModel = NoPaymentMethodSelectedViewModel()
+                    } else {
+                        recyclerViewData.add(
+                            PaymentMethodGenericItem(
+                                PaymentMethodItemType.SAVED_CARDS_HEADER,
+                                isInEditMode,
+                            ),
                         )
-                    )
 
-                    // cards
-                    val defaultSelected = cards.map { it.isDefault }.contains(true)
-                    val cardItems = cards.map { entity ->
-                        entity.toPaymentMethodSavedCardItem().apply {
-                            isSelected = when {
-                                selectedCardId > -1 -> id == selectedCardId
-                                defaultSelected -> entity.isDefault
-                                else -> entity.isLastUsed
+                        // cards
+                        val defaultSelected = cards.map { it.isDefault }.contains(true)
+                        val cardItems =
+                            cards.map { entity ->
+                                entity.toPaymentMethodSavedCardItem().apply {
+                                    isSelected =
+                                        when {
+                                            selectedCardId > -1 -> id == selectedCardId
+                                            defaultSelected -> entity.isDefault
+                                            else -> entity.isLastUsed
+                                        }
+                                    this.isInEditMode = isInEditMode
+                                }
                             }
-                            this.isInEditMode = isInEditMode
-                        }
-                    }
-                    recyclerViewData.addAll(cardItems)
+                        recyclerViewData.addAll(cardItems)
 
-                    // footer
-                    recyclerViewData.add(
-                        PaymentMethodGenericItem(
-                            PaymentMethodItemType.SAVED_CARDS_FOOTER,
-                            isInEditMode
+                        // footer
+                        recyclerViewData.add(
+                            PaymentMethodGenericItem(
+                                PaymentMethodItemType.SAVED_CARDS_FOOTER,
+                                isInEditMode,
+                            ),
                         )
-                    )
 
-                    selectedCard = cardItems.firstOrNull { it.isSelected } ?: cardItems.first()
-                    cardModel = selectedCard.toPaymentCardViewModel()
-                }
-                CardPaymentMethodModel(selectedCard = selectedCard, items = recyclerViewData)
-            }
-
-            PaymentMethod.GOOGLE_PAY -> {
-                cardModel = GooglePayCardViewModel()
-                GooglePayPaymentMethodModel(items = recyclerViewData)
-            }
-
-            PaymentMethod.IDEAL -> {
-                val bankItems = IdealBank.values().map {
-                    IdealBankItem(idealBank = it).apply { isSelected = it == selectedBank }
+                        selectedCard = cardItems.firstOrNull { it.isSelected } ?: cardItems.first()
+                        cardModel = selectedCard.toPaymentCardViewModel()
+                    }
+                    CardPaymentMethodModel(selectedCard = selectedCard, items = recyclerViewData)
                 }
 
-                recyclerViewData.addAll(bankItems)
+                PaymentMethod.GOOGLE_PAY -> {
+                    cardModel = GooglePayCardViewModel()
+                    GooglePayPaymentMethodModel(items = recyclerViewData)
+                }
 
-                cardModel = IdealPaymentCardViewModel(idealBank = selectedBank)
+                PaymentMethod.IDEAL -> {
+                    val bankItems =
+                        IdealBank.values().map {
+                            IdealBankItem(idealBank = it).apply { isSelected = it == selectedBank }
+                        }
 
-                IdealPaymentMethodModel(selectedBank = selectedBank, items = recyclerViewData)
+                    recyclerViewData.addAll(bankItems)
+
+                    cardModel = IdealPaymentCardViewModel(idealBank = selectedBank)
+
+                    IdealPaymentMethodModel(selectedBank = selectedBank, items = recyclerViewData)
+                }
             }
-        }
 
-        val callToActionModel = PaymentCallToActionViewModel(
-            amount = judo.amount.formatted,
-            buttonType = method.type.paymentButtonType,
-            paymentButtonState = buildPaymentButtonState(method.type, isLoading, cardModel),
-            shouldDisplayAmount = judo.uiConfiguration.shouldPaymentMethodsDisplayAmount
-        )
+        val callToActionModel =
+            PaymentCallToActionViewModel(
+                amount = judo.amount.formatted,
+                buttonType = method.type.paymentButtonType,
+                paymentButtonState = buildPaymentButtonState(method.type, isLoading, cardModel),
+                shouldDisplayAmount = judo.uiConfiguration.shouldPaymentMethodsDisplayAmount,
+            )
 
         val headerViewModel = PaymentMethodsHeaderViewModel(cardModel, callToActionModel)
         model.postValue(PaymentMethodsModel(headerViewModel, method))
@@ -361,33 +385,38 @@ class PaymentMethodsViewModel(
     private fun buildPaymentButtonState(
         method: PaymentMethod,
         isLoading: Boolean,
-        cardModel: CardViewModel
-    ): ButtonState = when (method) {
-        PaymentMethod.CARD -> payWithCardButtonState(isLoading, cardModel)
-        PaymentMethod.GOOGLE_PAY -> if (isLoading) {
-            ButtonState.Disabled(R.string.empty)
-        } else {
-            ButtonState.Enabled(R.string.empty)
+        cardModel: CardViewModel,
+    ): ButtonState =
+        when (method) {
+            PaymentMethod.CARD -> payWithCardButtonState(isLoading, cardModel)
+            PaymentMethod.GOOGLE_PAY ->
+                if (isLoading) {
+                    ButtonState.Disabled(R.string.empty)
+                } else {
+                    ButtonState.Enabled(R.string.empty)
+                }
+            PaymentMethod.IDEAL ->
+                if (isLoading) {
+                    ButtonState.Loading
+                } else {
+                    ButtonState.Enabled(R.string.pay_now)
+                }
         }
-        PaymentMethod.IDEAL ->
-            if (isLoading) {
-                ButtonState.Loading
-            } else {
-                ButtonState.Enabled(R.string.pay_now)
-            }
-    }
 
     private fun payWithCardButtonState(
         isLoading: Boolean,
-        cardModel: CardViewModel
-    ): ButtonState = when {
-        isLoading -> ButtonState.Loading
-        cardModel is PaymentCardViewModel && cardDate.apply {
-            cardDate = cardModel.expireDate
-        }.isAfterToday ->
-            ButtonState.Enabled(R.string.pay_now)
-        else -> ButtonState.Disabled(R.string.pay_now)
-    }
+        cardModel: CardViewModel,
+    ): ButtonState =
+        when {
+            isLoading -> ButtonState.Loading
+            cardModel is PaymentCardViewModel &&
+                cardDate.apply {
+                    date = cardModel.expireDate
+                }.isAfterToday
+            ->
+                ButtonState.Enabled(R.string.pay_now)
+            else -> ButtonState.Disabled(R.string.pay_now)
+        }
 
     private fun filterPaymentMethods(allMethods: List<PaymentMethod>): List<PaymentMethod> {
         var paymentMethods = allMethods

@@ -44,8 +44,10 @@ private const val BOTTOM_SHEET_PEEK_HEIGHT = 200
 private const val KEYBOARD_DISMISS_TIMEOUT = 500L
 private const val BOTTOM_APP_BAR_ELEVATION_CHANGE_DURATION = 200L
 
-class JudoBottomSheetDialog(context: Context, @StyleRes theme: Int) : BottomSheetDialog(context, theme) {
-
+class JudoBottomSheetDialog(
+    context: Context,
+    @StyleRes theme: Int,
+) : BottomSheetDialog(context, theme) {
     // Used to store the dialog window parameters.
     private var token: IBinder? = null
 
@@ -54,11 +56,12 @@ class JudoBottomSheetDialog(context: Context, @StyleRes theme: Int) : BottomShee
             if (Build.VERSION.SDK_INT != Build.VERSION_CODES.O || Build.VERSION.SDK_INT != Build.VERSION_CODES.O_MR1) {
                 return false
             }
-            val autofillManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                context.getSystemService(AutofillManager::class.java)
-            } else {
-                null
-            }
+            val autofillManager =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    context.getSystemService(AutofillManager::class.java)
+                } else {
+                    null
+                }
             return autofillManager?.isEnabled ?: false
         }
 
@@ -98,27 +101,28 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         val cardTransactionManager = CardTransactionManager.getInstance(requireActivity())
         cardTransactionManager.configureWith(judo)
 
-        val factory = CardEntryViewModelFactory(
-            judo,
-            cardTransactionManager,
-            cardRepository,
-            cardEntryOptions,
-            application
-        )
+        val factory =
+            CardEntryViewModelFactory(
+                judo,
+                cardTransactionManager,
+                cardRepository,
+                cardEntryOptions,
+                application,
+            )
 
         viewModel = ViewModelProvider(this, factory)[CardEntryViewModel::class.java]
 
         viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
         viewModel.judoPaymentResult.observe(viewLifecycleOwner) { dispatchResult(it) }
         viewModel.cardEntryToPaymentMethodResult.observe(
-            viewLifecycleOwner
+            viewLifecycleOwner,
         ) {
             sharedViewModel.cardEntryToPaymentMethodResult.postValue(it)
             findNavController().popBackStack()
         }
 
         viewModel.navigationObserver.observe(
-            viewLifecycleOwner
+            viewLifecycleOwner,
         ) {
             bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
@@ -130,7 +134,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
                     }
                     bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 },
-                BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME
+                BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME,
             )
         }
     }
@@ -143,7 +147,11 @@ class CardEntryFragment : BottomSheetDialogFragment() {
             isCancelable = false
         }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
         _binding = CardEntryFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -153,7 +161,10 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         _binding = null
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         binding.cancelButton.setOnClickListener { onUserCancelled() }
         binding.scanCardButton.setOnClickListener { handleScanCardButtonClicks() }
@@ -163,8 +174,8 @@ class CardEntryFragment : BottomSheetDialogFragment() {
                 viewModel.send(
                     CardEntryAction.ValidationStatusChanged(
                         model,
-                        isValid
-                    )
+                        isValid,
+                    ),
                 )
             }
             onCardEntryButtonClickListener = {
@@ -173,7 +184,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
                     {
                         viewModel.send(CardEntryAction.SubmitCardEntryForm)
                     },
-                    KEYBOARD_DISMISS_TIMEOUT
+                    KEYBOARD_DISMISS_TIMEOUT,
                 )
             }
         }
@@ -183,8 +194,8 @@ class CardEntryFragment : BottomSheetDialogFragment() {
                 viewModel.send(
                     CardEntryAction.BillingDetailsValidationStatusChanged(
                         model,
-                        isValid
-                    )
+                        isValid,
+                    ),
                 )
             }
             onBillingDetailsBackButtonClickListener =
@@ -205,7 +216,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
                 } else {
                     billingBinding.billingDetailsBottomAppBar.elevation = resources.getDimension(R.dimen.elevation_0)
                 }
-            }
+            },
         )
 
         // Prevents bottom sheet dialog to jump around when animating.
@@ -278,11 +289,12 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     private fun dispatchCardPaymentApiResult(result: JudoPaymentResult) {
         when (result) {
             is JudoPaymentResult.Success -> sharedViewModel.paymentResult.postValue(result)
-            is JudoPaymentResult.Error -> sharedViewModel.paymentResult.postValue(
-                JudoPaymentResult.Error(
-                    result.error
+            is JudoPaymentResult.Error ->
+                sharedViewModel.paymentResult.postValue(
+                    JudoPaymentResult.Error(
+                        result.error,
+                    ),
                 )
-            )
             is JudoPaymentResult.UserCancelled -> onUserCancelled()
         }
     }
@@ -306,20 +318,24 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     }
 
     private fun handleScanCardButtonClicks() {
+        // noop
     }
 
-    private fun unSubscribeFromInsetsChanges() = requireDialog().window?.apply {
-        decorView.setOnApplyWindowInsetsListener(null)
-    }
+    private fun unSubscribeFromInsetsChanges() =
+        requireDialog().window?.apply {
+            decorView.setOnApplyWindowInsetsListener(null)
+        }
 
     // Animating view position based on the keyboard show/hide state
-    private fun subscribeToInsetsChanges() = requireDialog().window?.apply {
-        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        val insetsListener = View.OnApplyWindowInsetsListener { view, windowInsets ->
-            return@OnApplyWindowInsetsListener view.onApplyWindowInsets(windowInsets)
+    private fun subscribeToInsetsChanges() =
+        requireDialog().window?.apply {
+            setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+            val insetsListener =
+                View.OnApplyWindowInsetsListener { view, windowInsets ->
+                    return@OnApplyWindowInsetsListener view.onApplyWindowInsets(windowInsets)
+                }
+            decorView.setOnApplyWindowInsetsListener(insetsListener)
         }
-        decorView.setOnApplyWindowInsetsListener(insetsListener)
-    }
 
     private val bottomSheetDialog: JudoBottomSheetDialog
         get() = dialog as JudoBottomSheetDialog

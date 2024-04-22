@@ -9,8 +9,11 @@ private const val CHECKSUM_DELIMITER = "cs="
 
 class IdealWebViewClient(private val merchantRedirectUrl: String) :
     WebViewClient() {
-
-    override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+    override fun onPageStarted(
+        view: WebView?,
+        url: String?,
+        favicon: Bitmap?,
+    ) {
         super.onPageStarted(view, url, favicon)
         val merchantRedirectHost = merchantRedirectUrl.toUri().host
         if (!url.isNullOrEmpty()) {

@@ -10,7 +10,6 @@ import com.judokit.android.examples.settings.fragments.RootFragment
 import com.judokit.android.examples.settings.fragments.ThreeDSSDKUICustomisationFragment
 
 class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
@@ -28,7 +27,10 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onPreferenceStartFragment(caller: PreferenceFragmentCompat, pref: Preference): Boolean {
+    override fun onPreferenceStartFragment(
+        caller: PreferenceFragmentCompat,
+        pref: Preference,
+    ): Boolean {
         // Instantiate the new Fragment
         val args = pref.extras
         val fragment = ThreeDSSDKUICustomisationFragment()

@@ -16,7 +16,6 @@ import com.judokit.android.examples.result.adapter.ResultActivityAdapter
 const val RESULT = "com.judopay.judokit.android.examples.result"
 
 class ResultActivity : AppCompatActivity() {
-
     private lateinit var clipboardManager: ClipboardManager
     private lateinit var binding: ActivityResultBinding
 
@@ -48,20 +47,21 @@ class ResultActivity : AppCompatActivity() {
         binding.recyclerView.addItemDecoration(
             DividerItemDecoration(
                 this,
-                DividerItemDecoration.VERTICAL
-            )
+                DividerItemDecoration.VERTICAL,
+            ),
         )
 
-        binding.recyclerView.adapter = ResultActivityAdapter(result.items) { item ->
-            if (item.subResult != null) {
-                startResultActivity(item.subResult)
-            } else {
-                val data = ClipData.newPlainText("text", item.value)
-                clipboardManager.setPrimaryClip(data)
-                Snackbar.make(binding.coordinatorLayout, "Value of '${item.title}' copied to clipboard.", Snackbar.LENGTH_SHORT)
-                    .show()
+        binding.recyclerView.adapter =
+            ResultActivityAdapter(result.items) { item ->
+                if (item.subResult != null) {
+                    startResultActivity(item.subResult)
+                } else {
+                    val data = ClipData.newPlainText("text", item.value)
+                    clipboardManager.setPrimaryClip(data)
+                    Snackbar.make(binding.coordinatorLayout, "Value of '${item.title}' copied to clipboard.", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
             }
-        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

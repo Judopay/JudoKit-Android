@@ -14,5 +14,5 @@ data class GooglePayAddress(
     val address3: String?,
     val locality: String?,
     val administrativeArea: String?,
-    val sortingCode: String?
+    val sortingCode: String?,
 ) : Parcelable

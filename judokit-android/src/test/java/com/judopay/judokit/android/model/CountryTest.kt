@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test
 
 @DisplayName("Testing Country extension functions")
 internal class CountryTest {
-
     @DisplayName("Given asCountry is called, when string is UK, then return GB")
     @Test
     fun returnGBOnAsCountryCall() {

@@ -8,5 +8,5 @@ data class OrderDetails(
     val timestamp: String,
     val currency: String,
     val amount: BigDecimal,
-    val refundedAmount: BigDecimal
+    val refundedAmount: BigDecimal,
 )

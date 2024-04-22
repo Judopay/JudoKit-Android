@@ -39,19 +39,22 @@ private const val REGISTER_CARD_REQUEST_CODE = 2
 
 sealed class ActivityState {
     object Idle : ActivityState()
+
     object PayWithToken : ActivityState()
+
     object PayWithPreAuthToken : ActivityState()
+
     object PayWithCard : ActivityState()
 }
 
 class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResultListener {
-
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var service: JudoApiService
     private lateinit var transactionDetailsBuilder: TransactionDetails.Builder
     private val caller = DemoNoUiPaymentActivity::class.java.name
     private lateinit var binding: ActivityDemoNoUiPaymentBinding
 
+    @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDemoNoUiPaymentBinding.inflate(layoutInflater)
@@ -59,23 +62,24 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val judo = intent.parcelable<Judo>(JUDO_OPTIONS)
-            ?: throw IllegalStateException("Judo object is required")
+        check(judo != null) { "Judo object is required" }
 
         service = JudoApiServiceFactory.create(this, judo)
         binding.tokenPaymentButton.state = ButtonState.Disabled(R.string.token_payment)
         binding.preAuthTokenPaymentButton.state = ButtonState.Disabled(R.string.preauth_token_payment)
-        transactionDetailsBuilder = TransactionDetails.Builder()
-            .setSecurityNumber("452")
-            .setEmail(judo.emailAddress)
-            .setCountryCode(judo.address?.countryCode.toString())
-            .setPhoneCountryCode(judo.phoneCountryCode)
-            .setMobileNumber(judo.mobileNumber)
-            .setAddressLine1(judo.address?.line1)
-            .setAddressLine2(judo.address?.line2)
-            .setAddressLine3(judo.address?.line3)
-            .setCity(judo.address?.town)
-            .setPostalCode(judo.address?.postCode)
-            .setState(judo.address?.state)
+        transactionDetailsBuilder =
+            TransactionDetails.Builder()
+                .setSecurityNumber("452")
+                .setEmail(judo.emailAddress)
+                .setCountryCode(judo.address?.countryCode.toString())
+                .setPhoneCountryCode(judo.phoneCountryCode)
+                .setMobileNumber(judo.mobileNumber)
+                .setAddressLine1(judo.address?.line1)
+                .setAddressLine2(judo.address?.line2)
+                .setAddressLine3(judo.address?.line3)
+                .setCity(judo.address?.town)
+                .setPostalCode(judo.address?.postCode)
+                .setState(judo.address?.state)
 
         binding.cardPaymentButton.setOnClickListener {
             handleState(ActivityState.PayWithCard)
@@ -85,7 +89,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
                     .setExpirationDate("12/25")
                     .setCardHolderName("CHALLENGE")
                     .build(),
-                caller
+                caller,
             )
         }
 
@@ -143,7 +147,11 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
             .show()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+    ) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REGISTER_CARD_REQUEST_CODE) {
             binding.createCardTokenButton.state = ButtonState.Enabled(R.string.create_card_token)
@@ -166,7 +174,8 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
                 }
 
                 PAYMENT_CANCELLED,
-                PAYMENT_ERROR -> {
+                PAYMENT_ERROR,
+                -> {
                     setResult(resultCode, data)
                     finish()
                 }
@@ -218,11 +227,12 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
         get() {
             val amountValue = sharedPreferences.getString("amount", null)
             val currency = sharedPreferences.getString("currency", null)
-            val myCurrency = if (!currency.isNullOrEmpty()) {
-                Currency.valueOf(currency)
-            } else {
-                Currency.GBP
-            }
+            val myCurrency =
+                if (!currency.isNullOrEmpty()) {
+                    Currency.valueOf(currency)
+                } else {
+                    Currency.GBP
+                }
 
             return Amount.Builder()
                 .setAmount(amountValue)
@@ -230,24 +240,28 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
                 .build()
         }
 
-    private fun getJudo(judo: Judo, widgetType: PaymentWidgetType): Judo = with(judo) {
-        Judo.Builder(widgetType)
-            .setJudoId(judoId)
-            .setAuthorization(authorization)
-            .setIsSandboxed(isSandboxed)
-            .setAmount(this@DemoNoUiPaymentActivity.amount)
-            .setReference(reference)
-            .setUiConfiguration(uiConfiguration)
-            .setPaymentMethods(paymentMethods)
-            .setSupportedCardNetworks(supportedCardNetworks)
-            .setPrimaryAccountDetails(primaryAccountDetails)
-            .setGooglePayConfiguration(googlePayConfiguration)
-            .setAddress(address)
-            .setScaExemption(scaExemption)
-            .setChallengeRequestIndicator(challengeRequestIndicator)
-            .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
-            .setThreeDSTwoMessageVersion(threeDSTwoMessageVersion)
-            .setDelayedAuthorisation(delayedAuthorisation)
-            .build()
-    }
+    private fun getJudo(
+        judo: Judo,
+        widgetType: PaymentWidgetType,
+    ): Judo =
+        with(judo) {
+            Judo.Builder(widgetType)
+                .setJudoId(judoId)
+                .setAuthorization(authorization)
+                .setIsSandboxed(isSandboxed)
+                .setAmount(this@DemoNoUiPaymentActivity.amount)
+                .setReference(reference)
+                .setUiConfiguration(uiConfiguration)
+                .setPaymentMethods(paymentMethods)
+                .setSupportedCardNetworks(supportedCardNetworks)
+                .setPrimaryAccountDetails(primaryAccountDetails)
+                .setGooglePayConfiguration(googlePayConfiguration)
+                .setAddress(address)
+                .setScaExemption(scaExemption)
+                .setChallengeRequestIndicator(challengeRequestIndicator)
+                .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
+                .setThreeDSTwoMessageVersion(threeDSTwoMessageVersion)
+                .setDelayedAuthorisation(delayedAuthorisation)
+                .build()
+        }
 }

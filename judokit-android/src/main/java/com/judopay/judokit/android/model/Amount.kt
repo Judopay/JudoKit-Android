@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.judopay.judokit.android.model.Amount.Builder
 import com.judopay.judokit.android.requireNotNull
 import com.judopay.judokit.android.requireNotNullOrEmpty
+import com.judopay.judokit.android.trimIndent
 import kotlinx.parcelize.Parcelize
 import java.text.NumberFormat
 import java.util.Locale
@@ -14,7 +15,6 @@ import java.util.Locale
  */
 @Parcelize
 class Amount internal constructor(val amount: String, val currency: Currency) : Parcelable {
-
     /**
      * Builder class for creating an instance of [Amount].
      */
@@ -45,14 +45,20 @@ class Amount internal constructor(val amount: String, val currency: Currency) : 
                 myAmount = ""
             } else {
                 myAmount = requireNotNullOrEmpty(amount, "amount")
-                check(myAmount.matches("^[0-9]+(\\.[0-9][0-9])?\$".toRegex())) { "The amount specified should be a positive number. The amount parameter has either not been set or has an incorrect format." }
+                check(myAmount.matches("^[0-9]+(\\.[0-9][0-9])?\$".toRegex())) {
+                    """
+                    The amount specified should be a positive number.
+                    The amount parameter has either not been set or has an incorrect format.
+                    """.trimIndent(true)
+                }
             }
 
-            val myCurrency = requireNotNull(
-                currency,
-                "currency",
-                "Currency cannot be null or empty. The required Currency parameter has not been set in the Judo configuration."
-            )
+            val myCurrency =
+                requireNotNull(
+                    currency,
+                    "currency",
+                    "Currency cannot be null or empty. The required Currency parameter has not been set in the Judo configuration.",
+                )
 
             return Amount(myAmount, myCurrency)
         }
@@ -63,6 +69,7 @@ class Amount internal constructor(val amount: String, val currency: Currency) : 
     }
 }
 
+@Suppress("SwallowedException")
 val Amount.formatted: String
     get() {
         return try {
@@ -71,7 +78,6 @@ val Amount.formatted: String
             format.currency = java.util.Currency.getInstance(currency.name)
             format.format(amount.toBigDecimal())
         } catch (exception: IllegalArgumentException) {
-            exception.printStackTrace()
             "${currency.name} $amount"
         }
     }

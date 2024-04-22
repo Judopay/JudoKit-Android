@@ -17,38 +17,40 @@ private const val TRANSLATE_120 = 120f
 
 data class NoPaymentMethodSelectedViewModel(
     override val type: CardViewType = CardViewType.PLACEHOLDER,
-    override var layoutId: Int = R.id.noPaymentMethodSelectedView
+    override var layoutId: Int = R.id.noPaymentMethodSelectedView,
 ) : CardViewModel
 
-class NoPaymentMethodSelectedView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyle: Int = 0
-) : FrameLayout(context, attrs, defStyle) {
-    private val binding = NoPaymentMethodSelectedViewBinding.inflate(LayoutInflater.from(context), this, true)
+class NoPaymentMethodSelectedView
+    @JvmOverloads
+    constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyle: Int = 0,
+    ) : FrameLayout(context, attrs, defStyle) {
+        private val binding = NoPaymentMethodSelectedViewBinding.inflate(LayoutInflater.from(context), this, true)
 
-    fun show(placeholderImage: ImageView) {
-        placeholderImage.apply {
-            visibility = View.VISIBLE
-            animateWithAlpha(alpha = 1.0f)
+        fun show(placeholderImage: ImageView) {
+            placeholderImage.apply {
+                visibility = View.VISIBLE
+                animateWithAlpha(alpha = 1.0f)
+            }
+            binding.root.apply {
+                visibility = View.VISIBLE
+                animateWithTranslation(translationY = 0.0f, alpha = 1.0f)
+            }
         }
-        binding.root.apply {
-            visibility = View.VISIBLE
-            animateWithTranslation(translationY = 0.0f, alpha = 1.0f)
+
+        fun hide(placeholderImage: ImageView) {
+            placeholderImage.apply {
+                visibility = View.GONE
+                animateWithAlpha(alpha = 0.0f)
+            }
+            binding.root.apply {
+                visibility = View.GONE
+                animateWithTranslation(
+                    translationY = TRANSLATE_120,
+                    alpha = 0.0f,
+                )
+            }
         }
     }
-
-    fun hide(placeholderImage: ImageView) {
-        placeholderImage.apply {
-            visibility = View.GONE
-            animateWithAlpha(alpha = 0.0f)
-        }
-        binding.root.apply {
-            visibility = View.GONE
-            animateWithTranslation(
-                translationY = TRANSLATE_120,
-                alpha = 0.0f
-            )
-        }
-    }
-}

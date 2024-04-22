@@ -8,12 +8,11 @@ import java.lang.reflect.Type
 import java.util.Date
 
 internal class DateJsonDeserializer : JsonDeserializer<Date?> {
-
     @Throws(JsonParseException::class)
     override fun deserialize(
         json: JsonElement,
         typeOfT: Type,
-        context: JsonDeserializationContext
+        context: JsonDeserializationContext,
     ): Date? {
         val string = json.asString
 

@@ -8,7 +8,6 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Testing UiConfiguration builder")
 internal class UiConfigurationTest {
-
     val sut = UiConfiguration.Builder()
 
     @DisplayName("Given shouldPaymentMethodsDisplayAmount is null, then build should throw exception")

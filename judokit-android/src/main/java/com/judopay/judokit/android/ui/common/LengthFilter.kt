@@ -5,16 +5,15 @@ import android.text.Spanned
 
 class LengthFilter(
     private val max: Int,
-    private val onLengthChanged: (reachedMaxLength: Boolean) -> Unit
+    private val onLengthChanged: (reachedMaxLength: Boolean) -> Unit,
 ) : InputFilter {
-
     override fun filter(
         source: CharSequence,
         start: Int,
         end: Int,
         dest: Spanned,
         dstart: Int,
-        dend: Int
+        dend: Int,
     ): CharSequence? {
         var keep = max - (dest.length - (dend - dstart))
 

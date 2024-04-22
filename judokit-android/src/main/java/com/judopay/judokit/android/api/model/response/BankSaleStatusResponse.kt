@@ -9,15 +9,16 @@ data class BankSaleStatusResponse(
     val judoId: String,
     val orderDetails: OrderDetails,
     val merchantPaymentReference: String,
-    val merchantConsumerReference: String
+    val merchantConsumerReference: String,
 )
 
-fun BankSaleStatusResponse.toJudoResult(locale: Locale) = JudoResult(
-    receiptId = orderDetails.orderId,
-    result = orderDetails.orderStatus.name,
-    createdAt = toDate(orderDetails.timestamp, locale),
-    currency = orderDetails.currency,
-    amount = orderDetails.amount,
-    yourPaymentReference = merchantPaymentReference,
-    consumer = Consumer(yourConsumerReference = merchantConsumerReference)
-)
+fun BankSaleStatusResponse.toJudoResult(locale: Locale) =
+    JudoResult(
+        receiptId = orderDetails.orderId,
+        result = orderDetails.orderStatus.name,
+        createdAt = toDate(orderDetails.timestamp, locale),
+        currency = orderDetails.currency,
+        amount = orderDetails.amount,
+        yourPaymentReference = merchantPaymentReference,
+        consumer = Consumer(yourConsumerReference = merchantConsumerReference),
+    )

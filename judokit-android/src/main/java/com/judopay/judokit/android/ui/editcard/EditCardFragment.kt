@@ -26,7 +26,7 @@ data class EditCardModel(
     val isSaveButtonEnabled: Boolean,
     val card: PaymentCardViewModel,
     var title: String,
-    val isDefault: Boolean
+    val isDefault: Boolean,
 )
 
 private const val CARD_TITLE_MAX_CHARACTERS = 28
@@ -36,7 +36,11 @@ class EditCardFragment : Fragment() {
     private var _binding: EditCardFragmentBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
         _binding = EditCardFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -60,7 +64,10 @@ class EditCardFragment : Fragment() {
         viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         setupColorPicker()
         setupCallbackListeners()
@@ -104,11 +111,12 @@ class EditCardFragment : Fragment() {
             viewModel.send(EditCardAction.ChangeTitle(it.toString()))
         }
 
-        binding.titleEditText.filters = arrayOf(
-            LengthFilter(CARD_TITLE_MAX_CHARACTERS) {
-                binding.titleTextInputLayout.isErrorEnabled = it
-            }
-        )
+        binding.titleEditText.filters =
+            arrayOf(
+                LengthFilter(CARD_TITLE_MAX_CHARACTERS) {
+                    binding.titleTextInputLayout.isErrorEnabled = it
+                },
+            )
 
         binding.titleEditText.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
@@ -125,9 +133,10 @@ class EditCardFragment : Fragment() {
 
     private fun setupColorPicker() {
         val context = requireContext()
-        val colorPickerAdapter = ColorPickerAdapter(emptyList()) {
-            viewModel.send(EditCardAction.ChangePattern(it.pattern))
-        }
+        val colorPickerAdapter =
+            ColorPickerAdapter(emptyList()) {
+                viewModel.send(EditCardAction.ChangePattern(it.pattern))
+            }
 
         colorPickerAdapter.setHasStableIds(true)
 

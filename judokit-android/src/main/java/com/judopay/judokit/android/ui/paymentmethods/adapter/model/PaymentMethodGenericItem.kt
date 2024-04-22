@@ -2,9 +2,8 @@ package com.judopay.judokit.android.ui.paymentmethods.adapter.model
 
 data class PaymentMethodGenericItem(
     override val type: PaymentMethodItemType,
-    val isInEditMode: Boolean
+    val isInEditMode: Boolean,
 ) : PaymentMethodItem {
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

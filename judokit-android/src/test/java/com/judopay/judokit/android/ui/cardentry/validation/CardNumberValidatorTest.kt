@@ -13,7 +13,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 internal class CardNumberValidatorTest {
-
     private val formModel: FormModel = mockk(relaxed = true)
     private lateinit var validator: CardNumberValidator
 
@@ -25,43 +24,57 @@ internal class CardNumberValidatorTest {
     }
 
     @Test
-    @DisplayName("Given that card number is unsupported, then a validation error should return with unknown card network not supported string")
+    @DisplayName(
+        "Given that card number is unsupported, then a validation error should return with unknown card network not supported string",
+    )
     fun unsupportedCardNumber() {
         assertEquals(
             validator.validate("1111 1111 1111 1111", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.error_unknown_not_supported)
+            ValidationResult(false, R.string.error_unknown_not_supported),
         )
     }
 
     @Test
-    @DisplayName("Given that card number is supported with invalid length and invalid luhn number, then a validation error should return with empty string")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given that card number is supported with invalid length and invalid luhn number, then a validation error should return with empty string",
+    )
     fun supportedAndInvalidCardNumber() {
         assertEquals(
             validator.validate("4111"),
-            ValidationResult(false, R.string.empty)
+            ValidationResult(false, R.string.empty),
         )
     }
 
     @Test
-    @DisplayName("Given that card number is unsupported with valid length and invalid luhn number, then a validation error should return with check card number string")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given that card number is unsupported with valid length and invalid luhn number, then a validation error should return with check card number string",
+    )
     fun unsupportedAndInvalidLengthCardNumber() {
         assertEquals(
             validator.validate("4111 1111 1111 1112", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.check_card_number)
+            ValidationResult(false, R.string.check_card_number),
         )
     }
 
     @Test
-    @DisplayName("Given that card number is unsupported with invalid length and valid luhn number, then a validation error should return empty string")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given that card number is unsupported with invalid length and valid luhn number, then a validation error should return empty string",
+    )
     fun unsupportedAndInvalidLuhnCardNumber() {
         assertEquals(
             validator.validate("4111 1111 1111 111"),
-            ValidationResult(false, R.string.empty)
+            ValidationResult(false, R.string.empty),
         )
     }
 
     @Test
-    @DisplayName("Given that card number is unsupported with valid length and valid luhn number, then a validation error should return with error_visa_not_supported string")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given that card number is unsupported with valid length and valid luhn number, then a validation error should return with error_visa_not_supported string",
+    )
     fun unsupportedAndValidCardNumber() {
         every { formModel.cardDetailsInputModel.supportedNetworks } returns listOf(CardNetwork.AMEX)
 
@@ -69,7 +82,7 @@ internal class CardNumberValidatorTest {
 
         assertEquals(
             validator.validate("4111 1111 1111 1111", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.error_visa_not_supported)
+            ValidationResult(false, R.string.error_visa_not_supported),
         )
     }
 
@@ -78,7 +91,7 @@ internal class CardNumberValidatorTest {
     fun supportedAndValidCardNumber() {
         assertEquals(
             validator.validate("4111 1111 1111 1111"),
-            ValidationResult(true, R.string.empty)
+            ValidationResult(true, R.string.empty),
         )
     }
 }

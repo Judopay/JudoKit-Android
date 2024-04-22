@@ -20,6 +20,7 @@ import java.util.Locale
  * @param cardNumber a String that may or may not represent a valid Luhn number
  * @return `true` if and only if the input value is a valid Luhn number
  */
+@Suppress("MagicNumber")
 internal fun isValidLuhnNumber(cardNumber: String): Boolean {
     var isOdd = true
     var sum = 0
@@ -50,19 +51,22 @@ internal fun isValidLuhnNumber(cardNumber: String): Boolean {
 fun toDate(
     timestamp: String,
     locale: Locale,
-    pattern: String = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-): Date = try {
-    val sdf = SimpleDateFormat(pattern, locale)
-    sdf.parse(timestamp) ?: Date()
-} catch (exception: ParseException) {
-    Log.e("toDate", exception.toString())
-    Date()
-}
+    pattern: String = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+): Date =
+    try {
+        val sdf = SimpleDateFormat(pattern, locale)
+        sdf.parse(timestamp) ?: Date()
+    } catch (exception: ParseException) {
+        Log.e("toDate", exception.toString())
+        Date()
+    }
 
-fun getLocale(resources: Resources): Locale =
-    ConfigurationCompat.getLocales(resources.configuration)[0] ?: Locale.getDefault()
+fun getLocale(resources: Resources): Locale = ConfigurationCompat.getLocales(resources.configuration)[0] ?: Locale.getDefault()
 
-fun showAlert(context: Context, message: String) {
+fun showAlert(
+    context: Context,
+    message: String,
+) {
     MaterialAlertDialogBuilder(context)
         .setTitle(R.string.unable_to_process_request_error_title)
         .setMessage(message)
@@ -75,6 +79,7 @@ fun showAlert(context: Context, message: String) {
  * @param className name of a class in a dependency package.
  * @return true if present, otherwise false
  */
+@Suppress("TooGenericExceptionCaught")
 internal fun isDependencyPresent(className: String) =
     try {
         Class.forName(className)
@@ -84,6 +89,7 @@ internal fun isDependencyPresent(className: String) =
         false
     }
 
+@Suppress("NestedBlockDepth", "ReturnCount")
 internal fun isInternetAvailable(context: Context): Boolean {
     var result = false
     val connectivityManager =
@@ -92,21 +98,23 @@ internal fun isInternetAvailable(context: Context): Boolean {
         val networkCapabilities = connectivityManager.activeNetwork ?: return false
         val actNw =
             connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
-        result = when {
-            actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-            actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            else -> false
-        }
+        result =
+            when {
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
     } else {
         connectivityManager.run {
             connectivityManager.activeNetworkInfo?.run {
-                result = when (type) {
-                    ConnectivityManager.TYPE_WIFI -> true
-                    ConnectivityManager.TYPE_MOBILE -> true
-                    ConnectivityManager.TYPE_ETHERNET -> true
-                    else -> false
-                }
+                result =
+                    when (type) {
+                        ConnectivityManager.TYPE_WIFI -> true
+                        ConnectivityManager.TYPE_MOBILE -> true
+                        ConnectivityManager.TYPE_ETHERNET -> true
+                        else -> false
+                    }
             }
         }
     }

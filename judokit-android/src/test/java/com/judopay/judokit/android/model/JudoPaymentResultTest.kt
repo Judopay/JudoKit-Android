@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test
 
 @DisplayName("Testing JudoPaymentResult")
 internal class JudoPaymentResultTest {
-
     @DisplayName("Given code is called, when result is UserCancelled, then return PAYMENT_CANCELLED")
     @Test
     fun returnPaymentCancelledOnCodeWithUserCancelled() {

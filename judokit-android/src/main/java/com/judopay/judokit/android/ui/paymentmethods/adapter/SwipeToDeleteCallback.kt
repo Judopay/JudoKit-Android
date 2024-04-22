@@ -23,20 +23,22 @@ abstract class SwipeToDeleteCallback(
     @StringRes val text: Int = R.string.delete,
     @ColorRes val textColor: Int = R.color.white,
     @FontRes val textFont: Int = R.font.sf_pro_display_regular,
-    @DimenRes val textSize: Int = R.dimen.body
+    @DimenRes val textSize: Int = R.dimen.body,
 ) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-
     private val background = ColorDrawable()
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
 
-    override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+    override fun getMovementFlags(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+    ): Int {
         return makeMovementFlags(0, if (viewHolder is SavedCardsItemViewHolder) ItemTouchHelper.LEFT else 0)
     }
 
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
-        target: RecyclerView.ViewHolder
+        target: RecyclerView.ViewHolder,
     ): Boolean {
         return false
     }
@@ -48,7 +50,7 @@ abstract class SwipeToDeleteCallback(
         dX: Float,
         dY: Float,
         actionState: Int,
-        isCurrentlyActive: Boolean
+        isCurrentlyActive: Boolean,
     ) {
         val itemView = viewHolder.itemView
         val itemHeight = itemView.bottom - itemView.top
@@ -61,7 +63,7 @@ abstract class SwipeToDeleteCallback(
                 itemView.top.toFloat(),
                 itemView.right.toFloat(),
                 itemView.bottom.toFloat(),
-                clearPaint
+                clearPaint,
             )
             super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             return
