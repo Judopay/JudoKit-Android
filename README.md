@@ -1,8 +1,8 @@
 # JudoKit-Android
 
-![Maven Central Version](https://img.shields.io/maven-central/v/com.judopay/judokit-android)
-![GitHub License](https://img.shields.io/github/license/Judopay/JudoKit-Android)
-![CircleCI (branch)](https://img.shields.io/circleci/build/github/Judopay/JudoKit-Android/master)
+[![Maven Central Version](https://img.shields.io/maven-central/v/com.judopay/judokit-android)](https://mvnrepository.com/artifact/com.judopay/judokit-android)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/Judopay/JudoKit-Android/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Judopay/JudoKit-Android/tree/master)
 
 An SDK to assist Android app developers to process payments on Android.
 
