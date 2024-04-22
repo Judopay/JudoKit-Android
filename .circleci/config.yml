@@ -188,6 +188,7 @@ commands:
             export API_TEST_SECRET=${API_TEST_SECRET} \
             export RECOMMENDATION_URL=${RECOMMENDATION_URL} \
             export RSA_KEY=${RSA_KEY}
+            export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-service-key.json
       - run:
           name: Build Example App and Android Test APK
           command: bundle exec fastlane build_example_app with_android_test:true
@@ -219,8 +220,14 @@ jobs:
     steps:
       - checkout_project
       - run:
+          name: Store Google Service Account
+          command: |
+            echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+      - run:
           name: Distribute Example App to Testers
-          command: bundle exec fastlane example_app_distribution
+          command: |
+            export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-service-key.json
+            bundle exec fastlane example_app_distribution
       - persist_project_cache
 
   release_sdk:
