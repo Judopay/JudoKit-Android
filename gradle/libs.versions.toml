@@ -49,7 +49,7 @@ androidxComposeCompiler = "1.5.11"
 binaryCompatibilityValidator = "0.13.2"
 junitKtx = "1.1.5"
 androidJunit5 = "1.10.0.0"
-firebaseBom = "32.8.0"
+firebaseBom = "32.8.1"
 googleServices = "4.4.1"
 crashlytics = "2.9.9"
 

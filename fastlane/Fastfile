@@ -9,7 +9,13 @@ end
 # The keystore is created from the ANDROID_SIGNING_PRIVATE_KEY, ANDROID_SIGNING_CERTIFICATE, and ANDROID_KEYSTORE_PASSWORD environment variables
 # If any of these environment variables are not set, the example app will not be signed
 def create_example_app_keystore
-    if ['ANDROID_SIGNING_PRIVATE_KEY', 'ANDROID_SIGNING_CERTIFICATE', 'ANDROID_KEYSTORE_PASSWORD'].all? { |var_name| env_var_valid?(var_name) }
+    expected_env_vars =[
+           "ANDROID_SIGNING_PRIVATE_KEY",
+           "ANDROID_SIGNING_CERTIFICATE",
+           "ANDROID_KEYSTORE_PASSWORD",
+        ]
+
+    if expected_env_vars.all? { |var_name| env_var_valid?(var_name) }
         UI.message("Creating a keystore for the example app")
 
         sh "echo \"$ANDROID_SIGNING_PRIVATE_KEY\" | base64 -d > signing.key"
@@ -32,6 +38,27 @@ def create_example_app_keystore
     return {}
 end
 
+def create_signing_properties
+    expected_env_vars = [
+        "ORG_GRADLE_PROJECT_signingKey_base64",
+        "ORG_GRADLE_PROJECT_signingPassword",
+        "ORG_GRADLE_PROJECT_sonatypePassword",
+        "ORG_GRADLE_PROJECT_sonatypeUsername",
+    ]
+
+    if expected_env_vars.all? { |var_name| env_var_valid?(var_name) }
+        return {
+            "signingKey" => Base64.decode64(ENV["ORG_GRADLE_PROJECT_signingKey_base64"]),
+            "signingPassword" => ENV["ORG_GRADLE_PROJECT_signingPassword"],
+            "sonatypePassword" => ENV["ORG_GRADLE_PROJECT_sonatypePassword"],
+            "sonatypeUsername" => ENV["ORG_GRADLE_PROJECT_sonatypeUsername"],
+        }
+    end
+
+    UI.important("Code signing environment variables are not set. The SDK will not be signed.")
+    return {}
+end
+
 platform :android do
 
   before_all do
@@ -51,24 +78,23 @@ platform :android do
 
   desc "Run the pull request checks"
   lane :pull_request_checks do
-    gradle(task: "clean", print_command: false)
-    gradle(task: "check", print_command: false)
-    gradle(task: "judokit-android:assemble", print_command: false, build_type: "Release")
-    gradle(task: "judokit-android-examples:assemble", print_command: false, build_type: "Release")
+    gradle(task: "clean check judokit-android:assemble judokit-android-examples:assemble")
   end
 
   desc "Build the Example App"
-  lane :build_example_app do
+  lane :build_example_app do |options|
     latest_release = firebase_app_distribution_get_latest_release app:ENV['ANDROID_FIREBASE_APP_ID']
     current_version = latest_release.nil? ? 0 : latest_release[:buildVersion].to_i
 
     properties = create_example_app_keystore
     properties["android.injected.version.code"] = current_version + 1
 
+    # For the instrumented tests
+    assemble_android_test = options[:with_android_test].nil? ? false : options[:with_android_test]
+    assemble_android_test_task = assemble_android_test ? "judokit-android-examples:assembleAndroidTest" : ""
+
     gradle(
-      task: "judokit-android-examples:clean judokit-android-examples:assemble",
-      build_type: "Release",
-      print_command: false,
+      task: "clean judokit-android-examples:assemble #{assemble_android_test_task}",
       properties: properties
     )
   end
@@ -82,20 +108,15 @@ platform :android do
     }
 
     build_example_app
-
     firebase_app_distribution firebase_app_distribution_options
   end
 
   desc "Releases the SDK to Maven Central"
   lane :release_sdk do
-    if env_var_valid?('ORG_GRADLE_PROJECT_signingKey_base64')
-      sh "export ORG_GRADLE_PROJECT_signingKey=$(echo \"$ORG_GRADLE_PROJECT_signingKey_base64\" | base64 -d)"
-    else
-      UI.abort_with_message!("ORG_GRADLE_PROJECT_signingKey_base64 environment variable is not set. Unable to sign the artifact.")
-    end
-
-    gradle(task: "judokit-android:build judokit-android:dokkaJavadoc")
-    gradle(task: "publishToSonatype closeAndReleaseSonatypeStagingRepository")
+    gradle(
+       task: "clean judokit-android:build judokit-android:dokkaJavadoc publishToSonatype closeAndReleaseSonatypeStagingRepository",
+       properties: create_signing_properties
+    )
   end
 
 end

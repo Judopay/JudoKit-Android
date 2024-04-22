@@ -1,3 +1,6 @@
+import com.judopay.judokit.Namespaces
+import com.judopay.judokit.Versions
+
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
@@ -15,4 +18,9 @@ plugins {
     // sample app crash reporting
     alias(libs.plugins.google.services) apply false
     alias(libs.plugins.firebase.crashlytics) apply false
+}
+
+allprojects {
+    group = Namespaces.GROUP
+    version = Versions.VERSION_NAME
 }

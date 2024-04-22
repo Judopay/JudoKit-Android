@@ -13,7 +13,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        mavenLocal()
 
         // Ravelin - optional - only required if you are using Ravelin
         maven("https://maven.ravelin.com/public/repositories/core-android/")
