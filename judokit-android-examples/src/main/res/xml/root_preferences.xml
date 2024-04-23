@@ -96,6 +96,14 @@
             app:summary="@string/recommendation_timeout_summary"
             app:title="@string/recommendation_timeout_title" />
 
+        <SwitchPreferenceCompat
+            app:dependency="is_recommendation_feature_enabled"
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="halt_transaction_in_case_of_any_error_enabled"
+            app:summary="@string/recommendation_halt_transaction_in_case_of_any_error_summary"
+            app:title="@string/recommendation_halt_transaction_in_case_of_any_error_title" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

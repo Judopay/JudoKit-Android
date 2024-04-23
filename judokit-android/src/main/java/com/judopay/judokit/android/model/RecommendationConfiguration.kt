@@ -16,6 +16,7 @@ class RecommendationConfiguration internal constructor(
     val url: String,
     val rsaPublicKey: String,
     val timeout: Int?,
+    val shouldHaltTransactionInCaseOfAnyError: Boolean,
 ) : Parcelable {
     /**
      * Builder class to create a [RecommendationConfiguration] object since it's constructor is private
@@ -24,12 +25,16 @@ class RecommendationConfiguration internal constructor(
         private var rsaPublicKey: String? = null
         private var url: String? = null
         private var timeout: Int? = null
+        private var shouldHaltTransactionInCaseOfAnyError: Boolean = false
 
         fun setRsaPublicKey(rsaKey: String?) = apply { this.rsaPublicKey = rsaKey }
 
         fun setUrl(recommendationUrl: String?) = apply { this.url = recommendationUrl }
 
         fun setTimeout(recommendationTimeout: Int?) = apply { this.timeout = recommendationTimeout }
+
+        fun setShouldHaltTransactionInCaseOfAnyError(haltTransaction: Boolean) =
+            apply { this.shouldHaltTransactionInCaseOfAnyError = haltTransaction }
 
         /**
          * Method that initializes Recommendation configuration object that can be used for
@@ -53,6 +58,7 @@ class RecommendationConfiguration internal constructor(
                 rsaPublicKey = myRsaKey,
                 url = myRecommendationUrl,
                 timeout = timeout,
+                shouldHaltTransactionInCaseOfAnyError = shouldHaltTransactionInCaseOfAnyError,
             )
         }
 

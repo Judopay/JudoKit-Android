@@ -1390,27 +1390,17 @@ public final class com/judopay/judokit/android/api/model/response/recommendation
 }
 
 public final class com/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisation {
-	public fun <init> (Lcom/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisationAction;Ljava/lang/String;Ljava/lang/String;)V
-	public final fun component1 ()Lcom/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisationAction;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Ljava/lang/String;
-	public final fun copy (Lcom/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisationAction;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisation;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisation;Lcom/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisationAction;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisation;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisation;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisation;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisation;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAction ()Lcom/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisationAction;
 	public final fun getExemption ()Ljava/lang/String;
 	public final fun getThreeDSChallengePreference ()Ljava/lang/String;
 	public fun hashCode ()I
 	public final fun isValid ()Z
 	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisationAction : java/lang/Enum {
-	public static final field AUTHENTICATE Lcom/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisationAction;
-	public static final field AUTHORISE Lcom/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisationAction;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisationAction;
-	public static fun values ()[Lcom/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisationAction;
 }
 
 public final class com/judopay/judokit/android/api/model/response/recommendation/TransactionOptimisationKt {
@@ -2261,7 +2251,8 @@ public final class com/judopay/judokit/android/model/JudoError$Companion {
 	public final fun judoInternalError (Ljava/lang/String;)Lcom/judopay/judokit/android/model/JudoError;
 	public final fun judoNetworkError (Landroid/content/res/Resources;Ljava/lang/Throwable;)Lcom/judopay/judokit/android/model/JudoError;
 	public final fun judoPoorConnectivityError (Landroid/content/res/Resources;Ljava/lang/Throwable;)Lcom/judopay/judokit/android/model/JudoError;
-	public final fun judoRecommendationError (Landroid/content/res/Resources;)Lcom/judopay/judokit/android/model/JudoError;
+	public final fun judoRecommendationRetrievingError (Landroid/content/res/Resources;)Lcom/judopay/judokit/android/model/JudoError;
+	public final fun judoRecommendationTransactionPreventedError (Landroid/content/res/Resources;)Lcom/judopay/judokit/android/model/JudoError;
 	public final fun judoRequestFailedError (Landroid/content/res/Resources;)Lcom/judopay/judokit/android/model/JudoError;
 	public final fun judoResponseParseError (Landroid/content/res/Resources;)Lcom/judopay/judokit/android/model/JudoError;
 	public final fun userCancelled ()Lcom/judopay/judokit/android/model/JudoError;
@@ -2505,6 +2496,7 @@ public final class com/judopay/judokit/android/model/RecommendationConfiguration
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public fun describeContents ()I
 	public final fun getRsaPublicKey ()Ljava/lang/String;
+	public final fun getShouldHaltTransactionInCaseOfAnyError ()Z
 	public final fun getTimeout ()Ljava/lang/Integer;
 	public final fun getUrl ()Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
@@ -2515,6 +2507,7 @@ public final class com/judopay/judokit/android/model/RecommendationConfiguration
 	public fun <init> ()V
 	public final fun build ()Lcom/judopay/judokit/android/model/RecommendationConfiguration;
 	public final fun setRsaPublicKey (Ljava/lang/String;)Lcom/judopay/judokit/android/model/RecommendationConfiguration$Builder;
+	public final fun setShouldHaltTransactionInCaseOfAnyError (Z)Lcom/judopay/judokit/android/model/RecommendationConfiguration$Builder;
 	public final fun setTimeout (Ljava/lang/Integer;)Lcom/judopay/judokit/android/model/RecommendationConfiguration$Builder;
 	public final fun setUrl (Ljava/lang/String;)Lcom/judopay/judokit/android/model/RecommendationConfiguration$Builder;
 }

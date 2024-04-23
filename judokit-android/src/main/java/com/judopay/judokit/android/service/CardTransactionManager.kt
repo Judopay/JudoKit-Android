@@ -254,27 +254,44 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         val coroutineExceptionHandler =
             CoroutineExceptionHandler { _, throwable ->
                 Log.d(CardTransactionManager::class.java.name, "Uncaught Recommendation service exception", throwable)
-                performJudoApiCall(type, details, caller) // in case of any error, we fallback to Judo API call
+                handleRecommendationError(type, details, caller)
             }
 
         applicationScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
-            val result = recommendationService.fetchOptimizationData(details, type).await()
+            val recommendation = recommendationService.fetchOptimizationData(details, type).await()
 
-            if (result.isValid) {
-                when (result.data?.action) {
-                    RecommendationAction.PREVENT ->
-                        onResult(
-                            JudoPaymentResult.Error(JudoError.judoRecommendationError(context.resources)),
-                            caller,
-                        )
-                    else -> performJudoApiCall(type, details, caller, result.toTransactionDetailsOverrides())
+            if (recommendation.isValid) {
+                when (recommendation.data?.action) {
+                    RecommendationAction.PREVENT -> {
+                        val error = JudoError.judoRecommendationTransactionPreventedError(context.resources)
+                        val paymentResult = JudoPaymentResult.Error(error)
+
+                        onResult(paymentResult, caller)
+                    }
+                    else -> performJudoApiCall(type, details, caller, recommendation.toTransactionDetailsOverrides())
                 }
             } else {
-                performJudoApiCall(type, details, caller) // in case of any error, we fallback to Judo API call
+                handleRecommendationError(type, details, caller)
             }
         }
     } catch (exception: Throwable) {
-        performJudoApiCall(type, details, caller) // in case of any error, we fallback to Judo API call
+        handleRecommendationError(type, details, caller)
+    }
+
+    private fun handleRecommendationError(
+        type: TransactionType,
+        details: TransactionDetails,
+        caller: String,
+    ) {
+        val shouldHaltTransaction = judo.recommendationConfiguration?.shouldHaltTransactionInCaseOfAnyError ?: false
+        if (shouldHaltTransaction) {
+            val error = JudoError.judoRecommendationRetrievingError(context.resources)
+            val result = JudoPaymentResult.Error(error)
+
+            onResult(result, caller)
+        } else {
+            performJudoApiCall(type, details, caller)
+        }
     }
 
     private fun performJudoApiCall(
