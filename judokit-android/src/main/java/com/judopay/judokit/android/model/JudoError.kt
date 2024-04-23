@@ -135,7 +135,19 @@ data class JudoError(
                 message ?: "Unknown error",
             )
 
-        fun judoRecommendationError(resources: Resources): JudoError =
+        fun judoRecommendationTransactionPreventedError(resources: Resources): JudoError =
+            JudoError(
+                REQUEST_FAILED,
+                resources.getString(R.string.recommendation_transaction_prevented_desc),
+                mutableListOf(
+                    JudoError(
+                        REQUEST_FAILED,
+                        resources.getString(R.string.recommendation_transaction_prevented_reason),
+                    ),
+                ),
+            )
+
+        fun judoRecommendationRetrievingError(resources: Resources): JudoError =
             JudoError(
                 REQUEST_FAILED,
                 resources.getString(R.string.recommendation_request_failed_desc),

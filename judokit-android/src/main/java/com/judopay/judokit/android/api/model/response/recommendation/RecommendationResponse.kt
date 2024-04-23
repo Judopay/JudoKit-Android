@@ -9,14 +9,23 @@ data class RecommendationResponse(
         get() = data?.isValid ?: false
 }
 
-@Suppress("ReturnCount")
+@Suppress("ReturnCount", "SwallowedException")
 fun RecommendationResponse.toTransactionDetailsOverrides(): TransactionDetailsOverrides? {
     if (!isValid) return null
 
-    val exemption = data?.transactionOptimisation?.exemption?.toScaExemption()
-    val challengeRequestIndicator = data?.transactionOptimisation?.threeDSChallengePreference?.toChallengeRequestIndicator()
+    val exemption =
+        try {
+            data?.transactionOptimisation?.exemption?.toScaExemption()
+        } catch (e: IllegalArgumentException) {
+            null
+        }
 
-    if (exemption == null && challengeRequestIndicator == null) return null
+    val challengeRequestIndicator =
+        try {
+            data?.transactionOptimisation?.threeDSChallengePreference?.toChallengeRequestIndicator()
+        } catch (e: IllegalArgumentException) {
+            null
+        }
 
     return TransactionDetailsOverrides(
         exemption = exemption,
