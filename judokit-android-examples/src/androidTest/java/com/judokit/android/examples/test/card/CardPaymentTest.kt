@@ -32,13 +32,32 @@ import androidx.test.rule.GrantPermissionRule
 import com.judokit.android.examples.feature.DemoFeatureListActivity
 import com.judokit.android.examples.feature.tokenpayments.TokenPaymentsActivity
 import com.judokit.android.examples.result.ResultActivity
-import com.judokit.android.examples.test.BuildConfig
 import com.judopay.judokit.android.R
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import android.os.Build
+import com.judokit.android.examples.test.card.BillingInfo.VALID_ADDRESS
+import com.judokit.android.examples.test.card.BillingInfo.VALID_CITY
+import com.judokit.android.examples.test.card.BillingInfo.VALID_COUNTRY
+import com.judokit.android.examples.test.card.BillingInfo.VALID_EMAIL
+import com.judokit.android.examples.test.card.BillingInfo.VALID_MOBILE
+import com.judokit.android.examples.test.card.BillingInfo.VALID_PHONE_CODE
+import com.judokit.android.examples.test.card.BillingInfo.VALID_POSTCODE
+import com.judokit.android.examples.test.card.CardDetails.CARD_EXPIRY
+import com.judokit.android.examples.test.card.CardDetails.CARD_NUMBER
+import com.judokit.android.examples.test.card.CardDetails.CARD_SECURITY_CODE
+import com.judokit.android.examples.test.card.CardPaymentTest.ValidCardDetails.CARDHOLDER_NAME
+import com.judokit.android.examples.test.card.FeaturesList.CHECK_CARD_LABEL
+import com.judokit.android.examples.test.card.FeaturesList.PAYMENT_METHODS_LABEL
+import com.judokit.android.examples.test.card.FeaturesList.PAY_WITH_CARD_LABEL
+import com.judokit.android.examples.test.card.FeaturesList.PREAUTH_METHODS_LABEL
+import com.judokit.android.examples.test.card.FeaturesList.PREAUTH_WITH_CARD_LABEL
+import com.judokit.android.examples.test.card.FeaturesList.REGISTER_CARD_LABEL
+import com.judokit.android.examples.test.card.FeaturesList.TOKEN_PAYMENTS_LABEL
+import com.judokit.android.examples.test.card.Other.CANCELLED_PAYMENT_TOAST
+import com.judokit.android.examples.test.card.Other.CANCEL_BUTTON
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -608,5 +627,48 @@ class CardPaymentTest {
 
         onView(withText("Visa Ending 7408"))
             .check(doesNotExist())
+    }
+
+    @Test
+    fun testSuccessfulPaymentWithBillingDetails() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putBoolean("should_ask_for_billing_information", true)
+            }
+            .commit()
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(500)
+
+        fillBillingDetails(
+            VALID_EMAIL,
+            VALID_COUNTRY,
+            VALID_MOBILE,
+            VALID_ADDRESS,
+            VALID_CITY,
+            VALID_POSTCODE
+        )
+
+        onView(withId(R.id.billingDetailsSubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        clickCompleteOn3DS2Screen()
+
+        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
     }
 }

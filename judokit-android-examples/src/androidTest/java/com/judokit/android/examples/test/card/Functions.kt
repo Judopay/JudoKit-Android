@@ -1,23 +1,34 @@
 package com.judokit.android.examples.test.card
 
+import android.view.View
 import androidx.annotation.IdRes
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.IdlingResourceTimeoutException
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
 import com.judokit.android.examples.result.ResultActivity
-import com.judopay.judokit.android.R as SDK
-import com.judokit.android.examples.R as Examples
-import org.hamcrest.CoreMatchers
-import org.hamcrest.CoreMatchers.startsWith
 import com.judokit.android.examples.test.BuildConfig
+import com.judopay.judokit.android.R
+import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.startsWith
+import org.hamcrest.Matchers
+import java.util.regex.Matcher
+import com.judokit.android.examples.R as Examples
+import com.judopay.judokit.android.R as SDK
+
 
 private val context = InstrumentationRegistry.getInstrumentation().targetContext
 private val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
@@ -72,19 +83,19 @@ fun clickCompleteOn3DS2Screen() {
  */
 fun assertReceiptObject(message: String, receiptId: String, result: String, type: String) {
     awaitActivityThenRun(ResultActivity::class.java.name) {
-        Espresso.onView(ViewMatchers.withId(SDK.id.recyclerView))
+        Espresso.onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(8))
             .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(startsWith(message)))))
 
-        Espresso.onView(ViewMatchers.withId(SDK.id.recyclerView))
+        Espresso.onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(13))
             .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(CoreMatchers.not(receiptId)))))
 
-        Espresso.onView(ViewMatchers.withId(SDK.id.recyclerView))
+        Espresso.onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(14))
             .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(result))))
 
-        Espresso.onView(ViewMatchers.withId(SDK.id.recyclerView))
+        Espresso.onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(15))
             .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(type))))
     }
@@ -104,7 +115,7 @@ fun enterPaymentSheetDetails(cardNumber: String, cardHolder: String, cardExpiry:
 }
 
 private fun fillTextField(@IdRes textFieldId: Int, text: String) {
-    Espresso.onView((ViewMatchers.withId(textFieldId)))
+    Espresso.onView((withId(textFieldId)))
         .perform(ViewActions.clearText(), ViewActions.typeText(text))
 }
 
@@ -118,11 +129,46 @@ fun setupRavelin(action: String, toa: String, exemption: String, challenge: Stri
         }
         .commit()
 
-    Espresso.onView(ViewMatchers.withId(Examples.id.action_settings))
+    Espresso.onView(withId(Examples.id.action_settings))
         .perform(ViewActions.click())
 
     Espresso.onView(ViewMatchers.withText("Generate payment session"))
         .perform(ViewActions.click())
 
     Thread.sleep(1000)
+}
+
+fun fillBillingDetails(email: String,
+                       country: String,
+                       phone: String,
+                       addressLineOne: String,
+                       city: String,
+                       postcode: String) {
+    fillTextField(SDK.id.emailTextInputEditText, email)
+
+    selectFromMultipleAndEnterText(SDK.id.countryTextInputEditText, country)
+
+    onView(withText(country)).perform(click())
+
+    Thread.sleep(500)
+
+    fillTextField(SDK.id.mobileNumberTextInputEditText, phone)
+
+    onView(withId(R.id.constraintLayout))
+        .perform(ViewActions.swipeUp())
+
+    fillTextField(SDK.id.addressLine1TextInputEditText, addressLineOne)
+
+    fillTextField(SDK.id.cityTextInputEditText, city)
+
+    fillTextField(SDK.id.postalCodeTextInputEditText, postcode)
+}
+
+fun selectFromMultipleAndEnterText(@IdRes textFieldId: Int, text: String) {
+    onView(
+        Matchers.allOf(
+            withId(textFieldId),
+            ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)
+        )
+    ).perform(ViewActions.clearText(), ViewActions.typeText(text))
 }

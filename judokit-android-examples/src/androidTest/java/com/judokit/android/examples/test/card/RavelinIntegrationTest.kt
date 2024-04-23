@@ -22,6 +22,25 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import android.os.Build
+import com.judokit.android.examples.test.card.CardDetails.CARDHOLDER_NAME
+import com.judokit.android.examples.test.card.CardDetails.CARD_EXPIRY
+import com.judokit.android.examples.test.card.CardDetails.CARD_NUMBER
+import com.judokit.android.examples.test.card.CardDetails.CARD_SECURITY_CODE
+import com.judokit.android.examples.test.card.FeaturesList.CHECK_CARD_LABEL
+import com.judokit.android.examples.test.card.FeaturesList.PAY_WITH_CARD_LABEL
+import com.judokit.android.examples.test.card.FeaturesList.PREAUTH_WITH_CARD_LABEL
+import com.judokit.android.examples.test.card.Other.TRANSACTION_PREVENTED
+import com.judokit.android.examples.test.card.Ravelin.ALLOW
+import com.judokit.android.examples.test.card.Ravelin.AUTHENTICATE
+import com.judokit.android.examples.test.card.Ravelin.AUTHORISE
+import com.judokit.android.examples.test.card.Ravelin.CHALLENGE_MANDATE
+import com.judokit.android.examples.test.card.Ravelin.CHALLENGE_REQUESTED
+import com.judokit.android.examples.test.card.Ravelin.LOW_VALUE
+import com.judokit.android.examples.test.card.Ravelin.NO_CHALLENGE
+import com.judokit.android.examples.test.card.Ravelin.NO_PREFERENCE
+import com.judokit.android.examples.test.card.Ravelin.PREVENT
+import com.judokit.android.examples.test.card.Ravelin.REVIEW
+import com.judokit.android.examples.test.card.Ravelin.TRA
 import com.judopay.judokit.android.R
 
 @RunWith(AndroidJUnit4::class)
