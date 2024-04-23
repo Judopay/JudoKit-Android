@@ -41,6 +41,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // https://issuetracker.google.com/issues/122321150
+    debugImplementation(libs.androidx.junit.ktx)
+    debugImplementation(libs.androidx.espresso.contrib)
+
     androidTestImplementation(libs.gson)
     androidTestImplementation(libs.bundles.androidx.espresso)
     androidTestImplementation(libs.bundles.androidx.test)
