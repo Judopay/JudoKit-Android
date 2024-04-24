@@ -1,6 +1,5 @@
 package com.judokit.android.examples.feature.tokenpayments
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -28,21 +27,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.toUpperCase
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.judokit.android.examples.R
-import com.judokit.android.examples.theme.JudoKitAndroidTheme
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.securityCodeLength
 
 @Composable
+@Suppress("LongParameterList", "LongMethod", "MagicNumber")
 fun TokenPaymentsScreen(
     viewModel: TokenPaymentsViewModel,
     onTokenizeNewCard: () -> Unit,
     onTokenPayment: () -> Unit,
     onTokenPreAuth: () -> Unit,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val isFormValid by remember {
         derivedStateOf { viewModel.scheme.isNotBlank() && viewModel.token.isNotBlank() && viewModel.lastFour.isNotBlank() }
@@ -52,21 +50,23 @@ fun TokenPaymentsScreen(
     }
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.feature_title_token_payments)) },
                 navigationIcon = { IconButton(onClick = { onClose() }) { Icon(Icons.Filled.ArrowBack, "") } },
-                elevation = 4.dp
+                elevation = 4.dp,
             )
-        }
+        },
     ) { paddingValues ->
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(paddingValues)
-                .padding(16.dp)
-                .fillMaxWidth()
+            modifier =
+                Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(paddingValues)
+                    .padding(16.dp)
+                    .fillMaxWidth(),
         ) {
             Text("Please fill in the fields below with a tokenized card's details or tokenize a new card below")
             OutlinedTextField(
@@ -76,7 +76,7 @@ fun TokenPaymentsScreen(
                 label = { Text("Scheme") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
                 enabled = !viewModel.isBusy,
-                singleLine = true
+                singleLine = true,
             )
             OutlinedTextField(
                 value = viewModel.token,
@@ -85,7 +85,7 @@ fun TokenPaymentsScreen(
                 label = { Text("Token") },
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
                 enabled = !viewModel.isBusy,
-                singleLine = true
+                singleLine = true,
             )
             OutlinedTextField(
                 value = viewModel.lastFour,
@@ -94,7 +94,7 @@ fun TokenPaymentsScreen(
                 label = { Text("Last 4 digits") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
                 enabled = !viewModel.isBusy,
-                singleLine = true
+                singleLine = true,
             )
             OutlinedTextField(
                 value = viewModel.securityCode,
@@ -103,7 +103,7 @@ fun TokenPaymentsScreen(
                 label = { Text("Security code") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
                 enabled = !viewModel.isBusy,
-                singleLine = true
+                singleLine = true,
             )
             OutlinedTextField(
                 value = viewModel.cardholderName,
@@ -112,12 +112,12 @@ fun TokenPaymentsScreen(
                 label = { Text("Cardholder name") },
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                 enabled = !viewModel.isBusy,
-                singleLine = true
+                singleLine = true,
             )
 
             Button(
                 onClick = { onTokenizeNewCard() },
-                modifier = Modifier.fillMaxWidth().height(48.dp)
+                modifier = Modifier.fillMaxWidth().height(48.dp),
             ) { Text("Tokenize a new card".uppercase()) }
 
             Spacer(Modifier.height(32.dp))
@@ -125,26 +125,17 @@ fun TokenPaymentsScreen(
             Button(
                 onClick = { onTokenPayment() },
                 modifier = Modifier.fillMaxWidth().height(48.dp),
-                enabled = isFormValid
+                enabled = isFormValid,
             ) {
                 Text("Payment".uppercase())
             }
             Button(
                 onClick = { onTokenPreAuth() },
                 modifier = Modifier.fillMaxWidth().height(48.dp),
-                enabled = isFormValid
+                enabled = isFormValid,
             ) {
                 Text("Pre-auth".uppercase())
             }
         }
-    }
-}
-
-@Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun DefaultPreview() {
-    JudoKitAndroidTheme {
-        TokenPaymentsScreen(TokenPaymentsViewModel(), {}, {}, {}, {})
     }
 }

@@ -11,41 +11,46 @@ enum class Country {
     GB,
     US,
     CA,
-    OTHER
+    OTHER,
 }
 
 fun String.asCountry() = Country.values().firstOrNull { it.displayName.equals(this, true) }
 
 fun Int.asCountry() = Country.values().firstOrNull { it.ISONumericCode == this }
 
+@Suppress("MagicNumber")
 val Country.ISONumericCode: Int?
-    get() = when (this) {
-        Country.GB -> 826
-        Country.US -> 840
-        Country.CA -> 124
-        Country.OTHER -> null
-    }
+    get() =
+        when (this) {
+            Country.GB -> 826
+            Country.US -> 840
+            Country.CA -> 124
+            Country.OTHER -> null
+        }
 
 val Country.displayName: String
-    get() = when (this) {
-        Country.GB -> "UK"
-        Country.US -> "USA"
-        Country.CA -> "Canada"
-        Country.OTHER -> "Other"
-    }
+    get() =
+        when (this) {
+            Country.GB -> "UK"
+            Country.US -> "USA"
+            Country.CA -> "Canada"
+            Country.OTHER -> "Other"
+        }
 
 val Country.translatableName: Int
-    get() = when (this) {
-        Country.GB -> R.string.country_uk
-        Country.US -> R.string.country_usa
-        Country.CA -> R.string.country_canada
-        Country.OTHER -> R.string.country_other
-    }
+    get() =
+        when (this) {
+            Country.GB -> R.string.country_uk
+            Country.US -> R.string.country_usa
+            Country.CA -> R.string.country_canada
+            Country.OTHER -> R.string.country_other
+        }
 
 val Country.postcodeMaxLength: Int
-    get() = when (this) {
-        Country.US -> POSTAL_CODE_MAX_LENGTH_USA
-        Country.CA -> POSTAL_CODE_MAX_LENGTH_CA
-        Country.GB -> POSTAL_CODE_MAX_LENGTH_UK
-        Country.OTHER -> POSTAL_CODE_MAX_LENGTH_OTHER
-    }
+    get() =
+        when (this) {
+            Country.US -> POSTAL_CODE_MAX_LENGTH_USA
+            Country.CA -> POSTAL_CODE_MAX_LENGTH_CA
+            Country.GB -> POSTAL_CODE_MAX_LENGTH_UK
+            Country.OTHER -> POSTAL_CODE_MAX_LENGTH_OTHER
+        }

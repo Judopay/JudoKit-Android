@@ -29,25 +29,31 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.nio.charset.StandardCharsets
 import java.util.UUID
 
-class CustomPreference @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet,
-    defStyleAttr: Int = 0
-) : Preference(context, attrs, defStyleAttr) {
+const val CHUCKER_MAX_CONTENT_LENGTH = 250000L
 
-    var onGeneratePaymentSessionClickListener: View.OnClickListener? = null
+class CustomPreference
+    @JvmOverloads
+    constructor(
+        context: Context,
+        attrs: AttributeSet,
+        defStyleAttr: Int = 0,
+    ) : Preference(context, attrs, defStyleAttr) {
+        var onGeneratePaymentSessionClickListener: View.OnClickListener? = null
 
-    override fun onBindViewHolder(holder: PreferenceViewHolder) {
-        super.onBindViewHolder(holder)
-        with(holder.itemView) {
-            findViewById<ProgressButton>(R.id.generatePaymentSessionButton)
-                .setOnClickListener(onGeneratePaymentSessionClickListener)
+        override fun onBindViewHolder(holder: PreferenceViewHolder) {
+            super.onBindViewHolder(holder)
+            with(holder.itemView) {
+                findViewById<ProgressButton>(R.id.generatePaymentSessionButton)
+                    .setOnClickListener(onGeneratePaymentSessionClickListener)
+            }
         }
     }
-}
 
 class RootFragment : PreferenceFragmentCompat() {
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+    override fun onCreatePreferences(
+        savedInstanceState: Bundle?,
+        rootKey: String?,
+    ) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
     }
 
@@ -56,9 +62,10 @@ class RootFragment : PreferenceFragmentCompat() {
 
         val preference = findPreference<CustomPreference>("generate_payment_session")!!
 
-        preference.onGeneratePaymentSessionClickListener = View.OnClickListener {
-            createPaymentSession(it as ProgressButton)
-        }
+        preference.onGeneratePaymentSessionClickListener =
+            View.OnClickListener {
+                createPaymentSession(it as ProgressButton)
+            }
     }
 
     private fun createPaymentSession(progressButton: ProgressButton) {
@@ -69,27 +76,39 @@ class RootFragment : PreferenceFragmentCompat() {
         val randomReference = UUID.randomUUID().toString()
         sharedPreferences.edit().putString("payment_reference", randomReference).apply()
 
-        createApiClient().createPaymentSession(CreatePaymentSessionRequest(
-            judoId = sharedPreferences.getString("judo_id", "") ?: "",
-            amount = sharedPreferences.getString("amount", "") ?: "",
-            currency = sharedPreferences.getString("currency", "") ?: "",
-            yourPaymentReference = sharedPreferences.getString("payment_reference", "") ?: "",
-            yourConsumerReference = "my-unique-ref"
-        )).enqueue(object : Callback<CreatePaymentSessionResponse> {
+        createApiClient().createPaymentSession(
+            CreatePaymentSessionRequest(
+                judoId = sharedPreferences.getString("judo_id", "") ?: "",
+                amount = sharedPreferences.getString("amount", "") ?: "",
+                currency = sharedPreferences.getString("currency", "") ?: "",
+                yourPaymentReference = sharedPreferences.getString("payment_reference", "") ?: "",
+                yourConsumerReference = "my-unique-ref",
+            ),
+        ).enqueue(
+            object : Callback<CreatePaymentSessionResponse> {
+                override fun onFailure(
+                    call: Call<CreatePaymentSessionResponse>,
+                    t: Throwable,
+                ) {
+                    progressButton.state = ButtonState.Enabled(R.string.generate_payment_session_title)
+                    updatePaymentSession(null, t)
+                }
 
-            override fun onFailure(call: Call<CreatePaymentSessionResponse>, t: Throwable) {
-                progressButton.state = ButtonState.Enabled(R.string.generate_payment_session_title)
-                updatePaymentSession(null, t)
-            }
-
-            override fun onResponse(call: Call<CreatePaymentSessionResponse>, response: Response<CreatePaymentSessionResponse>) {
-                progressButton.state = ButtonState.Enabled(R.string.generate_payment_session_title)
-                updatePaymentSession(response.body()?.reference)
-            }
-        })
+                override fun onResponse(
+                    call: Call<CreatePaymentSessionResponse>,
+                    response: Response<CreatePaymentSessionResponse>,
+                ) {
+                    progressButton.state = ButtonState.Enabled(R.string.generate_payment_session_title)
+                    updatePaymentSession(response.body()?.reference)
+                }
+            },
+        )
     }
 
-    private fun updatePaymentSession(session: String?, error: Throwable? = null) {
+    private fun updatePaymentSession(
+        session: String?,
+        error: Throwable? = null,
+    ) {
         if (session.isNullOrBlank()) {
             Toast.makeText(activity, error?.localizedMessage ?: "Failed to generate payment session.", Toast.LENGTH_LONG).show()
             return
@@ -106,52 +125,58 @@ class RootFragment : PreferenceFragmentCompat() {
         val activity = requireActivity()
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
 
-        val baseUrl = if (sharedPreferences.getBoolean("is_sandboxed", false)) {
-            ApiEnvironment.SANDBOX.host
-        } else {
-            ApiEnvironment.LIVE.host
-        }
+        val baseUrl =
+            if (sharedPreferences.getBoolean("is_sandboxed", false)) {
+                ApiEnvironment.SANDBOX.host
+            } else {
+                ApiEnvironment.LIVE.host
+            }
 
         val apiToken = sharedPreferences.getString("token", "") ?: ""
         val apiSecret = sharedPreferences.getString("secret", "") ?: ""
 
-        val encodedCredentials = Base64.encodeToString(
-            "$apiToken:$apiSecret".toByteArray(StandardCharsets.UTF_8),
-            Base64.NO_WRAP
-        )
+        val encodedCredentials =
+            Base64.encodeToString(
+                "$apiToken:$apiSecret".toByteArray(StandardCharsets.UTF_8),
+                Base64.NO_WRAP,
+            )
 
         val gson = GsonBuilder().create()
 
-        val chuck = ChuckerInterceptor.Builder(activity)
-            .collector(ChuckerCollector(activity))
-            .maxContentLength(250000L)
-            .redactHeaders(emptySet())
-            .alwaysReadResponseBody(false)
-            .build()
+        val chuck =
+            ChuckerInterceptor.Builder(activity)
+                .collector(ChuckerCollector(activity))
+                .maxContentLength(CHUCKER_MAX_CONTENT_LENGTH)
+                .redactHeaders(emptySet())
+                .alwaysReadResponseBody(false)
+                .build()
 
-        val client = OkHttpClient.Builder()
-            .addInterceptor(chuck)
-            .addInterceptor { chain ->
-                val original = chain.request()
+        val client =
+            OkHttpClient.Builder()
+                .addInterceptor(chuck)
+                .addInterceptor { chain ->
+                    val original = chain.request()
 
-                val request = original.newBuilder()
-                    .header("User-Agent", "JudoKit-Android Examples")
-                    .header("Accept", "application/json")
-                    .header("Content-Type", "application/json")
-                    .header("Api-Version", "6.20.0")
-                    .header("Cache-Control", "no-cache")
-                    .header("Authorization", "Basic $encodedCredentials")
-                    .build()
+                    val request =
+                        original.newBuilder()
+                            .header("User-Agent", "JudoKit-Android Examples")
+                            .header("Accept", "application/json")
+                            .header("Content-Type", "application/json")
+                            .header("Api-Version", "6.20.0")
+                            .header("Cache-Control", "no-cache")
+                            .header("Authorization", "Basic $encodedCredentials")
+                            .build()
 
-                chain.proceed(request)
-            }
-            .build()
+                    chain.proceed(request)
+                }
+                .build()
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
+        val retrofit =
+            Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build()
 
         return retrofit.create(ApiClient::class.java)
     }

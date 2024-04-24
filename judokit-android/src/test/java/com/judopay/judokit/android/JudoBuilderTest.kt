@@ -22,28 +22,28 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Testing the Judo configuration object builder logic")
 internal class JudoBuilderTest {
-
     private lateinit var judoBuilder: Judo.Builder
 
     @BeforeEach
     fun setUp() {
-        judoBuilder = Judo.Builder(PaymentWidgetType.CARD_PAYMENT)
-            .setJudoId("111111111")
-            .setAuthorization(mockk(relaxed = true))
-            .setAmount(Amount("1", Currency.GBP))
-            .setReference(
-                mockk(relaxed = true) {
-                    every { consumerReference } returns "consumer"
-                    every { paymentReference } returns "payment"
-                }
-            )
-            .setPaymentMethods(PaymentMethod.values())
-            .setIsSandboxed(true)
-            .setSupportedCardNetworks(CardNetwork.values())
-            .setPrimaryAccountDetails(mockk())
-            .setGooglePayConfiguration(mockk())
-            .setAddress(mockk())
-            .setInitialRecurringPayment(false)
+        judoBuilder =
+            Judo.Builder(PaymentWidgetType.CARD_PAYMENT)
+                .setJudoId("111111111")
+                .setAuthorization(mockk(relaxed = true))
+                .setAmount(Amount("1", Currency.GBP))
+                .setReference(
+                    mockk(relaxed = true) {
+                        every { consumerReference } returns "consumer"
+                        every { paymentReference } returns "payment"
+                    },
+                )
+                .setPaymentMethods(PaymentMethod.values())
+                .setIsSandboxed(true)
+                .setSupportedCardNetworks(CardNetwork.values())
+                .setPrimaryAccountDetails(mockk())
+                .setGooglePayConfiguration(mockk())
+                .setAddress(mockk())
+                .setInitialRecurringPayment(false)
     }
 
     @Test
@@ -113,7 +113,10 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("Given paymentMethods size is 1 and paymentMethod is iDEAL and currency is not EUR, then build() should throw a IllegalArgumentException")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "Given paymentMethods size is 1 and paymentMethod is iDEAL and currency is not EUR, then build() should throw a IllegalArgumentException",
+    )
     fun testThatBuildThrowsOnPaymentMethodsIdealNotSupported() {
         assertThrows<IllegalArgumentException> {
             judoBuilder.setPaymentMethods(arrayOf(PaymentMethod.IDEAL)).build()
@@ -145,7 +148,9 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @DisplayName("Given paymentMethods size is 1 and includes iDEAL and currency is EUR, then build() should not throw a IllegalArgumentException")
+    @DisplayName(
+        "Given paymentMethods size is 1 and includes iDEAL and currency is EUR, then build() should not throw a IllegalArgumentException",
+    )
     fun testThatBuildDoesNotThsrowsOnPaymentMethodsSizeOneIncludesIdealAndCurrencyEur() {
         assertDoesNotThrow {
             judoBuilder.setPaymentMethods(arrayOf(PaymentMethod.IDEAL))
@@ -180,9 +185,9 @@ internal class JudoBuilderTest {
                     CardNetwork.VISA,
                     CardNetwork.MASTERCARD,
                     CardNetwork.AMEX,
-                    CardNetwork.MAESTRO
-                )
-            )
+                    CardNetwork.MAESTRO,
+                ),
+            ),
         )
     }
 
@@ -197,9 +202,9 @@ internal class JudoBuilderTest {
                     CardNetwork.VISA,
                     CardNetwork.MASTERCARD,
                     CardNetwork.AMEX,
-                    CardNetwork.MAESTRO
-                )
-            )
+                    CardNetwork.MAESTRO,
+                ),
+            ),
         )
     }
 
@@ -256,7 +261,7 @@ internal class JudoBuilderTest {
                 .setConnectTimeout(connectTimeout)
                 .setReadTimeout(readTimeout)
                 .setWriteTimeout(writeTimeout)
-                .build()
+                .build(),
         )
 
         assertEquals(connectTimeout, judoBuilder.build().networkTimeout.connectTimeout)
@@ -284,7 +289,7 @@ internal class JudoBuilderTest {
         val cardToken = CardToken(lastFour = "1234", token = "token", type = 2)
         judoBuilder.setCardToken(cardToken)
 
-        assertThat(judoBuilder.build().toString()).contains(", cardToken=CardToken(cardLastfour=1234, cardToken=token, cardType=2)")
+        assertThat(judoBuilder.build().toString()).contains(", cardToken=CardToken(cardLastfour=1234, cardToken=token, cardType=2 )")
     }
 
     @Test

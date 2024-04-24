@@ -12,5 +12,5 @@ data class GooglePayPaymentDataRequest(
     val transactionInfo: GooglePayTransactionInfo,
     val emailRequired: Boolean?,
     val shippingAddressRequired: Boolean?,
-    val shippingAddressParameters: GooglePayShippingAddressParameters?
+    val shippingAddressParameters: GooglePayShippingAddressParameters?,
 ) : Parcelable

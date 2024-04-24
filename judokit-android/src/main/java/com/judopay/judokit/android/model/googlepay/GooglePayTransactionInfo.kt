@@ -11,5 +11,5 @@ data class GooglePayTransactionInfo(
     val totalPriceStatus: GooglePayPriceStatus,
     val totalPrice: String?,
     val totalPriceLabel: String?,
-    val checkoutOption: GooglePayCheckoutOption?
+    val checkoutOption: GooglePayCheckoutOption?,
 ) : Parcelable

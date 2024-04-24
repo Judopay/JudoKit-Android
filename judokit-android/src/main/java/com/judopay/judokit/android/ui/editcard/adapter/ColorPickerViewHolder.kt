@@ -17,15 +17,19 @@ private const val SCALE_SELECTED = 1.4f
 private const val SCALE_UNSELECTED = 1f
 
 class ColorPickerViewHolder(private val binding: ColorPickerItemBinding) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(model: ColorPickerItem, listener: ColorPickerAdapterListener?) = with(itemView) {
+    fun bind(
+        model: ColorPickerItem,
+        listener: ColorPickerAdapterListener?,
+    ) = with(itemView) {
         val cornerRadius = context.resources.getDimension(R.dimen.corner_radius_2_8dp)
         val scale = if (model.isSelected) SCALE_SELECTED else SCALE_UNSELECTED
-        val padding = if (model.isSelected) {
-            resources.getDimension(R.dimen.space_12)
-                .toInt()
-        } else {
-            resources.getDimension(R.dimen.space_4).toInt()
-        }
+        val padding =
+            if (model.isSelected) {
+                resources.getDimension(R.dimen.space_12)
+                    .toInt()
+            } else {
+                resources.getDimension(R.dimen.space_4).toInt()
+            }
 
         ValueAnimator.ofInt(binding.colorContainer.paddingStart, padding).apply {
             addUpdateListener {
@@ -44,15 +48,20 @@ class ColorPickerViewHolder(private val binding: ColorPickerItemBinding) : Recyc
     }
 }
 
-private fun drawableWith(fillColor: Int, cornerRadius: Float): Drawable {
-    val shapeModel = ShapeAppearanceModel.Builder()
-        .setAllCorners(CornerFamily.ROUNDED, cornerRadius)
-        .build()
+private fun drawableWith(
+    fillColor: Int,
+    cornerRadius: Float,
+): Drawable {
+    val shapeModel =
+        ShapeAppearanceModel.Builder()
+            .setAllCorners(CornerFamily.ROUNDED, cornerRadius)
+            .build()
 
-    val fillColorStateList = ColorStateList(
-        arrayOf(intArrayOf(-android.R.attr.state_enabled)),
-        intArrayOf(fillColor)
-    )
+    val fillColorStateList =
+        ColorStateList(
+            arrayOf(intArrayOf(-android.R.attr.state_enabled)),
+            intArrayOf(fillColor),
+        )
 
     val shape = MaterialShapeDrawable(shapeModel)
     shape.fillColor = fillColorStateList

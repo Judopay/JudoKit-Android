@@ -8,8 +8,10 @@ import com.judokit.android.examples.model.ResultItem
 
 class ResultActivityItemViewHolder(private val binding: ItemResultPropertyBinding) :
     RecyclerView.ViewHolder(binding.root), BindableRecyclerViewHolder<ResultItem> {
-
-    override fun bind(model: ResultItem, listener: ((ResultItem) -> Unit)?) = with(itemView) {
+    override fun bind(
+        model: ResultItem,
+        listener: ((ResultItem) -> Unit)?,
+    ) = with(itemView) {
         binding.nameTextView.text = model.title
         binding.valueTextView.tag = model.title
         binding.valueTextView.text = model.value

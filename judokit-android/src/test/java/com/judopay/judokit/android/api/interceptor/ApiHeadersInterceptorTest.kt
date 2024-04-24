@@ -36,7 +36,7 @@ internal class ApiHeadersInterceptorTest {
         every {
             Base64.encodeToString(
                 "token:secret".toByteArray(StandardCharsets.UTF_8),
-                Base64.NO_WRAP
+                Base64.NO_WRAP,
             )
         } returns "credentials"
 
@@ -73,7 +73,7 @@ internal class ApiHeadersInterceptorTest {
 
         assertEquals(
             authorization.build().headers["Authorization"],
-            recordedRequest.getHeader("Authorization")
+            recordedRequest.getHeader("Authorization"),
         )
     }
 
@@ -90,7 +90,7 @@ internal class ApiHeadersInterceptorTest {
 
         assertEquals(
             "application/json",
-            recordedRequest.getHeader("Content-Type")
+            recordedRequest.getHeader("Content-Type"),
         )
     }
 
@@ -101,7 +101,7 @@ internal class ApiHeadersInterceptorTest {
 
         assertEquals(
             "application/json",
-            recordedRequest.getHeader("Accept")
+            recordedRequest.getHeader("Accept"),
         )
     }
 
@@ -112,7 +112,7 @@ internal class ApiHeadersInterceptorTest {
 
         assertEquals(
             JUDO_API_VERSION,
-            recordedRequest.getHeader("Api-Version")
+            recordedRequest.getHeader("Api-Version"),
         )
     }
 
@@ -123,7 +123,7 @@ internal class ApiHeadersInterceptorTest {
 
         assertEquals(
             "2.0.0.0",
-            recordedRequest.getHeader("Api-Version")
+            recordedRequest.getHeader("Api-Version"),
         )
     }
 
@@ -134,7 +134,7 @@ internal class ApiHeadersInterceptorTest {
 
         assertEquals(
             "no-cache",
-            recordedRequest.getHeader("Cache-Control")
+            recordedRequest.getHeader("Cache-Control"),
         )
     }
 
@@ -145,7 +145,7 @@ internal class ApiHeadersInterceptorTest {
 
         assertEquals(
             "Android-$JUDO_KIT_VERSION",
-            recordedRequest.getHeader("Sdk-Version")
+            recordedRequest.getHeader("Sdk-Version"),
         )
     }
 
@@ -156,7 +156,7 @@ internal class ApiHeadersInterceptorTest {
 
         assertEquals(
             "JudoKit-Android/$JUDO_KIT_VERSION Android/13.0 Test application/1.0 Google Pixel 7",
-            recordedRequest.getHeader("User-Agent")
+            recordedRequest.getHeader("User-Agent"),
         )
     }
 
@@ -171,7 +171,7 @@ internal class ApiHeadersInterceptorTest {
 
         assertEquals(
             "JudoKit-Android/$JUDO_KIT_VERSION (JudoKit-ReactNative/4.0.0) Android/13.0 Test application/1.0 Google Pixel 7",
-            recordedRequest.getHeader("User-Agent")
+            recordedRequest.getHeader("User-Agent"),
         )
     }
 
@@ -182,7 +182,7 @@ internal class ApiHeadersInterceptorTest {
 
         assertEquals(
             "Custom-UI",
-            recordedRequest.getHeader("UI-Client-Mode")
+            recordedRequest.getHeader("UI-Client-Mode"),
         )
     }
 }

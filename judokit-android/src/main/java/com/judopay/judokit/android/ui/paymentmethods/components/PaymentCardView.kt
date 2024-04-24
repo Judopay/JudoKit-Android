@@ -16,46 +16,48 @@ import com.judopay.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 
 private const val CARD_MASK = "•••• •••• ••••"
 
-class PaymentCardView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyle: Int = 0
-) : CardView(context, attrs, defStyle) {
-    private val binding = PaymentCardViewBinding.inflate(LayoutInflater.from(context), this, true)
+class PaymentCardView
+    @JvmOverloads
+    constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyle: Int = 0,
+    ) : CardView(context, attrs, defStyle) {
+        private val binding = PaymentCardViewBinding.inflate(LayoutInflater.from(context), this, true)
 
-    var model = PaymentCardViewModel()
-        set(value) {
-            field = value
-            update()
-        }
+        var model = PaymentCardViewModel()
+            set(value) {
+                field = value
+                update()
+            }
 
-    @SuppressLint("SetTextI18n")
-    private fun update() {
-        binding.cardNameTextView.text = model.name
-        binding.cardNumberMaskTextView.text = "$CARD_MASK ${model.maskedNumber}"
-        binding.expireDateTextView.text = model.expireDate
+        @SuppressLint("SetTextI18n")
+        private fun update() {
+            binding.cardNameTextView.text = model.name
+            binding.cardNumberMaskTextView.text = "$CARD_MASK ${model.maskedNumber}"
+            binding.expireDateTextView.text = model.expireDate
 
-        val image = model.cardNetwork.lightIconImageResId
-        if (image > 0) {
-            binding.networkIconImageView.setImageResource(image)
-        } else {
-            binding.networkIconImageView.setImageDrawable(null)
-        }
+            val image = model.cardNetwork.lightIconImageResId
+            if (image > 0) {
+                binding.networkIconImageView.setImageResource(image)
+            } else {
+                binding.networkIconImageView.setImageDrawable(null)
+            }
 
-        val date = CardDate(model.expireDate)
-        if (date.isAfterToday) {
-            binding.isExpiredTextView.visibility = View.GONE
-            binding.expireDateTextView.setTextColor(ContextCompat.getColor(context, R.color.white_opaque))
-            binding.paymentCardViewContainer.background = model.pattern.drawableRes(context)
-        } else {
-            binding.isExpiredTextView.visibility = View.VISIBLE
-            binding.expireDateTextView.setTextColor(ContextCompat.getColor(context, R.color.tomato_red))
-            binding.paymentCardViewContainer.setBackgroundColor(
-                ContextCompat.getColor(
-                    context,
-                    R.color.greyish
+            val date = CardDate(model.expireDate)
+            if (date.isAfterToday) {
+                binding.isExpiredTextView.visibility = View.GONE
+                binding.expireDateTextView.setTextColor(ContextCompat.getColor(context, R.color.white_opaque))
+                binding.paymentCardViewContainer.background = model.pattern.drawableRes(context)
+            } else {
+                binding.isExpiredTextView.visibility = View.VISIBLE
+                binding.expireDateTextView.setTextColor(ContextCompat.getColor(context, R.color.tomato_red))
+                binding.paymentCardViewContainer.setBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.greyish,
+                    ),
                 )
-            )
+            }
         }
     }
-}

@@ -6,7 +6,7 @@ data class ApiError(
     val code: Int,
     val category: Int,
     val message: String,
-    val details: List<ApiErrorDetail>? = emptyList()
+    val details: List<ApiErrorDetail>? = emptyList(),
 ) {
     override fun toString(): String {
         return "ApiError(code=$code, category=$category, message='$message', details=$details)"
@@ -16,7 +16,7 @@ data class ApiError(
 data class ApiErrorDetail(
     val code: Int,
     val message: String,
-    val fieldName: String
+    val fieldName: String,
 ) {
     override fun toString(): String {
         return "ApiErrorDetail(code=$code, message='$message', fieldName='$fieldName')"

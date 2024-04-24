@@ -5,5 +5,5 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class RecommendationPaymentMethod(
-    val paymentMethodCipher: PaymentMethodCipher? = null
+    val paymentMethodCipher: PaymentMethodCipher? = null,
 ) : Parcelable

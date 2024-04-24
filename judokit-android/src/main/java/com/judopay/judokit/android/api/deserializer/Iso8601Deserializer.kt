@@ -5,8 +5,8 @@ import java.util.Date
 import java.util.GregorianCalendar
 import java.util.TimeZone
 
+@Suppress("MagicNumber")
 object Iso8601Deserializer {
-
     fun toDate(toParse: String): Date {
         return toCalendar(toParse).time
     }
@@ -20,7 +20,10 @@ object Iso8601Deserializer {
         return parseHour(result, toParse.substring(indexOfT + 1))
     }
 
-    private fun parseHour(result: Calendar, hourStr: String): Calendar {
+    private fun parseHour(
+        result: Calendar,
+        hourStr: String,
+    ): Calendar {
         val basicFormatHour = hourStr.replace(":", "")
         val indexOfZ = basicFormatHour.indexOf('Z')
         if (indexOfZ != -1) {
@@ -43,7 +46,10 @@ object Iso8601Deserializer {
         return if (index != -1) index else str.indexOf('-')
     }
 
-    private fun parseHourWithoutHandlingTimeZone(calendar: Calendar, basicFormatHour: String) {
+    private fun parseHourWithoutHandlingTimeZone(
+        calendar: Calendar,
+        basicFormatHour: String,
+    ) {
         var formatHour = basicFormatHour
 
         formatHour = formatHour.replace(',', '.')
@@ -75,7 +81,10 @@ object Iso8601Deserializer {
         calendar[Calendar.MILLISECOND] = (fractionalPart * 1000).toInt()
     }
 
-    private fun buildCalendarWithDateOnly(dateStr: String, originalDate: String): Calendar {
+    private fun buildCalendarWithDateOnly(
+        dateStr: String,
+        originalDate: String,
+    ): Calendar {
         val result: Calendar = GregorianCalendar(TimeZone.getTimeZone("UTC"))
         result.minimalDaysInFirstWeek = 4
         result.firstDayOfWeek = Calendar.MONDAY
@@ -92,7 +101,11 @@ object Iso8601Deserializer {
         }
     }
 
-    private fun parseCalendarDate(result: Calendar, basicFormatDate: String, originalDate: String): Calendar {
+    private fun parseCalendarDate(
+        result: Calendar,
+        basicFormatDate: String,
+        originalDate: String,
+    ): Calendar {
         return when (basicFormatDate.length) {
             2 -> parseCalendarDateWithCenturyOnly(result, basicFormatDate)
             4 -> parseCalendarDateWithYearOnly(result, basicFormatDate)
@@ -100,17 +113,27 @@ object Iso8601Deserializer {
         }
     }
 
-    private fun parseCalendarDateWithCenturyOnly(result: Calendar, basicFormatDate: String): Calendar {
+    private fun parseCalendarDateWithCenturyOnly(
+        result: Calendar,
+        basicFormatDate: String,
+    ): Calendar {
         result[basicFormatDate.toInt() * 100, 0] = 1
         return result
     }
 
-    private fun parseCalendarDateWithYearOnly(result: Calendar, basicFormatDate: String): Calendar {
+    private fun parseCalendarDateWithYearOnly(
+        result: Calendar,
+        basicFormatDate: String,
+    ): Calendar {
         result[basicFormatDate.toInt(), 0] = 1
         return result
     }
 
-    private fun parseCalendarDateWithPrecisionGreaterThanYear(result: Calendar, basicFormatDate: String, originalDate: String): Calendar {
+    private fun parseCalendarDateWithPrecisionGreaterThanYear(
+        result: Calendar,
+        basicFormatDate: String,
+        originalDate: String,
+    ): Calendar {
         val year = basicFormatDate.substring(0, 4).toInt()
         val month = basicFormatDate.substring(4, 6).toInt() - 1
         if (basicFormatDate.length == 6) {
@@ -121,17 +144,28 @@ object Iso8601Deserializer {
             result[year, month] = basicFormatDate.substring(6).toInt()
             return result
         }
-        throw RuntimeException("Can't parse $originalDate")
+        throw IllegalArgumentException("Can't parse $originalDate")
     }
 
-    private fun parseWeekDate(result: Calendar, basicFormatDate: String): Calendar {
+    private fun parseWeekDate(
+        result: Calendar,
+        basicFormatDate: String,
+    ): Calendar {
         result[Calendar.YEAR] = basicFormatDate.substring(0, 4).toInt()
         result[Calendar.WEEK_OF_YEAR] = basicFormatDate.substring(5, 7).toInt()
-        result[Calendar.DAY_OF_WEEK] = if (basicFormatDate.length == 7) Calendar.MONDAY else Calendar.SUNDAY + basicFormatDate.substring(7).toInt()
+        result[Calendar.DAY_OF_WEEK] =
+            if (basicFormatDate.length == 7) {
+                Calendar.MONDAY
+            } else {
+                Calendar.SUNDAY + basicFormatDate.substring(7).toInt()
+            }
         return result
     }
 
-    private fun parseOrdinalDate(calendar: Calendar, basicFormatOrdinalDate: String): Calendar {
+    private fun parseOrdinalDate(
+        calendar: Calendar,
+        basicFormatOrdinalDate: String,
+    ): Calendar {
         calendar[Calendar.YEAR] = basicFormatOrdinalDate.substring(0, 4).toInt()
         calendar[Calendar.DAY_OF_YEAR] = basicFormatOrdinalDate.substring(4).toInt()
         return calendar

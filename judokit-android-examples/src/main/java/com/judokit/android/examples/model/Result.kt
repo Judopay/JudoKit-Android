@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class ResultItem(
     val title: String,
     val value: String,
-    val subResult: Result? = null
+    val subResult: Result? = null,
 ) : Parcelable {
     override fun toString(): String {
         return "ResultItem(title='$title', value='$value', subResult=$subResult)"
@@ -17,7 +17,7 @@ data class ResultItem(
 @Parcelize
 data class Result(
     val title: String,
-    val items: List<ResultItem>
+    val items: List<ResultItem>,
 ) : Parcelable {
     override fun toString(): String {
         return "Result(title='$title', items=$items)"

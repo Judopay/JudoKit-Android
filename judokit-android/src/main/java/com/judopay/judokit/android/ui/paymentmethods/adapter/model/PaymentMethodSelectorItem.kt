@@ -5,9 +5,8 @@ import com.judopay.judokit.android.model.PaymentMethod
 data class PaymentMethodSelectorItem(
     override val type: PaymentMethodItemType = PaymentMethodItemType.SELECTOR,
     val paymentMethods: List<PaymentMethod>,
-    var currentSelected: PaymentMethod
+    var currentSelected: PaymentMethod,
 ) : PaymentMethodItem {
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

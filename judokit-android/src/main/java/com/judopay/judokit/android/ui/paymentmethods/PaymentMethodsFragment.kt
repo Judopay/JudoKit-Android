@@ -43,11 +43,10 @@ internal const val CARD_ENTRY_OPTIONS = "com.judopay.judokit.android.cardEntryOp
 
 data class PaymentMethodsModel(
     val headerModel: PaymentMethodsHeaderViewModel,
-    val currentPaymentMethod: PaymentMethodModel
+    val currentPaymentMethod: PaymentMethodModel,
 )
 
 class PaymentMethodsFragment : Fragment() {
-
     private lateinit var viewModel: PaymentMethodsViewModel
     private lateinit var service: JudoApiService
     private lateinit var cardTransactionManager: CardTransactionManager
@@ -55,7 +54,11 @@ class PaymentMethodsFragment : Fragment() {
     private var _binding: PaymentMethodsFragmentBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
         _binding = PaymentMethodsFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -65,7 +68,10 @@ class PaymentMethodsFragment : Fragment() {
         _binding = null
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         binding.headerView.fromEditMode = true
         setupRecyclerView()
@@ -73,6 +79,7 @@ class PaymentMethodsFragment : Fragment() {
     }
 
     @Deprecated("Deprecated in Java")
+    @Suppress("LongMethod")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -90,57 +97,56 @@ class PaymentMethodsFragment : Fragment() {
                 cardRepository,
                 cardTransactionManager,
                 application,
-                judo
+                judo,
             )
 
         viewModel = ViewModelProvider(this, factory)[PaymentMethodsViewModel::class.java]
         viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
 
         viewModel.judoPaymentResult.observe(
-            viewLifecycleOwner
+            viewLifecycleOwner,
         ) { sharedViewModel.paymentResult.postValue((it)) }
 
-        // TODO: to be refactored
         viewModel.allCardsSync.observe(
-            viewLifecycleOwner
+            viewLifecycleOwner,
         ) {
             viewModel.send(PaymentMethodsAction.Update)
         }
 
         viewModel.payWithIdealObserver.observe(
-            viewLifecycleOwner
+            viewLifecycleOwner,
         ) {
             it.getContentIfNotHandled()?.let { bic ->
                 findNavController().navigate(
                     R.id.action_paymentMethodsFragment_to_idealFragment,
                     bundleOf(
-                        JUDO_IDEAL_BANK to bic
-                    )
+                        JUDO_IDEAL_BANK to bic,
+                    ),
                 )
             }
         }
 
         viewModel.displayCardEntryObserver.observe(
-            viewLifecycleOwner
+            viewLifecycleOwner,
         ) {
             it.getContentIfNotHandled()?.let { cardEntryOptions ->
                 findNavController().navigate(
                     R.id.action_paymentMethodsFragment_to_cardEntryFragment,
                     bundleOf(
-                        CARD_ENTRY_OPTIONS to cardEntryOptions
-                    )
+                        CARD_ENTRY_OPTIONS to cardEntryOptions,
+                    ),
                 )
             }
         }
 
         sharedViewModel.paymentMethodsResult.observe(
-            viewLifecycleOwner
+            viewLifecycleOwner,
         ) { result ->
             viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
             sharedViewModel.paymentResult.postValue(result)
         }
         sharedViewModel.cardEntryToPaymentMethodResult.observe(
-            viewLifecycleOwner
+            viewLifecycleOwner,
         ) { transactionDetailBuilder ->
             viewModel.send(PaymentMethodsAction.PayWithCard(transactionDetailBuilder))
         }
@@ -156,14 +162,14 @@ class PaymentMethodsFragment : Fragment() {
     // handle callbacks from the recycler view elements
     private fun dispatchRecyclerViewAction(
         action: PaymentMethodItemAction,
-        item: PaymentMethodItem
+        item: PaymentMethodItem,
     ) {
         when (item) {
             is PaymentMethodSelectorItem -> {
                 viewModel.send(
                     PaymentMethodsAction.SelectPaymentMethod(
-                        item.currentSelected
-                    )
+                        item.currentSelected,
+                    ),
                 )
             }
             is PaymentMethodSavedCardItem -> {
@@ -207,7 +213,7 @@ class PaymentMethodsFragment : Fragment() {
     private fun onEdit(cardId: Int) {
         findNavController().navigate(
             R.id.action_paymentMethodsFragment_to_editCardFragment,
-            bundleOf(JUDO_TOKENIZED_CARD_ID to cardId)
+            bundleOf(JUDO_TOKENIZED_CARD_ID to cardId),
         )
     }
 
@@ -215,11 +221,12 @@ class PaymentMethodsFragment : Fragment() {
         findNavController().navigate(
             R.id.action_paymentMethodsFragment_to_cardEntryFragment,
             bundleOf(
-                CARD_ENTRY_OPTIONS to CardEntryOptions(
-                    isPresentedFromPaymentMethods = true,
-                    isAddingNewCard = true
-                )
-            )
+                CARD_ENTRY_OPTIONS to
+                    CardEntryOptions(
+                        isPresentedFromPaymentMethods = true,
+                        isAddingNewCard = true,
+                    ),
+            ),
         )
 
     private fun updateWithModel(model: PaymentMethodsModel) {
@@ -231,21 +238,25 @@ class PaymentMethodsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        binding.recyclerView.adapter = PaymentMethodsAdapter(
-            listener = ::dispatchRecyclerViewAction
-        )
+        binding.recyclerView.adapter =
+            PaymentMethodsAdapter(
+                listener = ::dispatchRecyclerViewAction,
+            )
 
-        val swipeHandler = object : SwipeToDeleteCallback() {
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val adapter = binding.recyclerView.adapter as PaymentMethodsAdapter
-                val item = adapter.items[viewHolder.adapterPosition]
-                (item as? PaymentMethodSavedCardItem)?.let {
-                    onDeleteCardItem(it)
+        val swipeHandler =
+            object : SwipeToDeleteCallback() {
+                override fun onSwiped(
+                    viewHolder: RecyclerView.ViewHolder,
+                    direction: Int,
+                ) {
+                    val adapter = binding.recyclerView.adapter as PaymentMethodsAdapter
+                    val item = adapter.items[viewHolder.adapterPosition]
+                    (item as? PaymentMethodSavedCardItem)?.let {
+                        onDeleteCardItem(it)
+                    }
+                    adapter.notifyItemChanged(viewHolder.adapterPosition)
                 }
-                adapter.notifyItemChanged(viewHolder.adapterPosition)
             }
-        }
 
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)

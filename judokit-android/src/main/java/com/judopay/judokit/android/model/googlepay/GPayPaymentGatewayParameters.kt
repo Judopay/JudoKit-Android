@@ -8,5 +8,5 @@ private const val JUDOPAY = "judopay"
 @Parcelize
 data class GPayPaymentGatewayParameters(
     val gateway: String = JUDOPAY,
-    val gatewayMerchantId: String
+    val gatewayMerchantId: String,
 ) : Parcelable

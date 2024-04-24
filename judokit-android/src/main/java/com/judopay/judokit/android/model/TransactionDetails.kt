@@ -23,6 +23,7 @@ import com.judopay.judokit.android.api.model.response.Receipt
 import com.judopay.judokit.android.toMap
 import java.util.Date
 
+@Suppress("LongParameterList")
 class TransactionDetails private constructor(
     val cardNumber: String?,
     val cardHolderName: String?,
@@ -40,8 +41,9 @@ class TransactionDetails private constructor(
     val cardToken: String?,
     val cardType: CardNetwork?,
     val cardLastFour: String?,
-    val state: String?
+    val state: String?,
 ) {
+    @Suppress("TooManyFunctions")
     class Builder {
         private var cardNumber: String? = null
         private var cardHolderName: String? = null
@@ -62,6 +64,7 @@ class TransactionDetails private constructor(
         private var cardLastFour: String? = null
 
         fun setCardNumber(cardNumber: String?) = apply { this.cardNumber = cardNumber }
+
         fun setCardHolderName(cardHolderName: String?) = apply { this.cardHolderName = cardHolderName }
 
         fun setExpirationDate(expirationDate: String?) = apply { this.expirationDate = expirationDate }
@@ -69,21 +72,30 @@ class TransactionDetails private constructor(
         fun setSecurityNumber(securityNumber: String?) = apply { this.securityNumber = securityNumber }
 
         fun setCountryCode(countryCode: String?) = apply { this.countryCode = countryCode }
+
         fun setEmail(email: String?) = apply { this.email = if (email.isNullOrBlank()) null else email }
+
         fun setPhoneCountryCode(phoneCountryCode: String?) =
             apply { this.phoneCountryCode = if (phoneCountryCode.isNullOrBlank()) null else phoneCountryCode }
 
-        fun setMobileNumber(mobileNumber: String?) =
-            apply { this.mobileNumber = if (mobileNumber.isNullOrBlank()) null else mobileNumber }
+        fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = if (mobileNumber.isNullOrBlank()) null else mobileNumber }
 
         fun setAddressLine1(addressLine1: String?) = apply { this.addressLine1 = addressLine1 }
+
         fun setAddressLine2(addressLine2: String?) = apply { this.addressLine2 = addressLine2 }
+
         fun setAddressLine3(addressLine3: String?) = apply { this.addressLine3 = addressLine3 }
+
         fun setCity(city: String?) = apply { this.city = city }
+
         fun setPostalCode(postalCode: String?) = apply { this.postalCode = postalCode }
+
         fun setState(state: String?) = apply { this.state = state }
+
         fun setCardToken(cardToken: String?) = apply { this.cardToken = cardToken }
+
         fun setCardType(cardType: CardNetwork?) = apply { this.cardType = cardType }
+
         fun setCardLastFour(cardLastFour: String?) = apply { this.cardLastFour = cardLastFour }
 
         fun build(): TransactionDetails {
@@ -108,7 +120,7 @@ class TransactionDetails private constructor(
                 cardToken = cardToken,
                 cardType = cardType,
                 cardLastFour = cardLastFour,
-                state = state
+                state = state,
             )
         }
     }
@@ -133,28 +145,37 @@ fun TransactionDetails.getAddress(judo: Judo): Address? {
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
 fun Transaction.toThreeDSecureTwo(
     judo: Judo,
-    overrides: TransactionDetailsOverrides? = null
+    overrides: TransactionDetailsOverrides? = null,
 ): ThreeDSecureTwo {
     val parameters = getAuthenticationRequestParameters()
-    val sdkParameters = with(parameters) {
-        SdkParameters.Builder()
-            .setApplicationId(getSDKAppID())
-            .setEncodedData(getDeviceData())
-            .setEphemeralPublicKey(
-                Gson().fromJson(
-                    getSDKEphemeralPublicKey(),
-                    EphemeralPublicKey::class.java
+    val sdkParameters =
+        with(parameters) {
+            SdkParameters.Builder()
+                .setApplicationId(getSDKAppID())
+                .setEncodedData(getDeviceData())
+                .setEphemeralPublicKey(
+                    Gson().fromJson(
+                        getSDKEphemeralPublicKey(),
+                        EphemeralPublicKey::class.java,
+                    ),
                 )
-            )
-            .setMaxTimeout(judo.threeDSTwoMaxTimeout)
-            .setReferenceNumber(getSDKReferenceNumber())
-            .setTransactionId(getSDKTransactionID())
-            .setDeviceRenderOptions(DeviceRenderOptions())
-            .build()
+                .setMaxTimeout(judo.threeDSTwoMaxTimeout)
+                .setReferenceNumber(getSDKReferenceNumber())
+                .setTransactionId(getSDKTransactionID())
+                .setDeviceRenderOptions(DeviceRenderOptions())
+                .build()
+        }
+
+    var myScaExemption = judo.scaExemption
+    var myChallengeRequestIndicator = judo.challengeRequestIndicator
+
+    if (overrides != null) {
+        myScaExemption = overrides.exemption
     }
 
-    val myScaExemption = overrides?.exemption ?: judo.scaExemption
-    val myChallengeRequestIndicator = overrides?.challengeRequestIndicator ?: judo.challengeRequestIndicator
+    if (overrides != null) {
+        myChallengeRequestIndicator = overrides.challengeRequestIndicator
+    }
 
     return ThreeDSecureTwo.Builder()
         .setChallengeRequestIndicator(myChallengeRequestIndicator)
@@ -168,7 +189,7 @@ fun Transaction.toThreeDSecureTwo(
 fun TransactionDetails.toPaymentRequest(
     judo: Judo,
     transaction: Transaction,
-    overrides: TransactionDetailsOverrides? = null
+    overrides: TransactionDetailsOverrides? = null,
 ): PaymentRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
@@ -198,7 +219,7 @@ fun TransactionDetails.toPaymentRequest(
 fun TransactionDetails.toPreAuthRequest(
     judo: Judo,
     transaction: Transaction,
-    overrides: TransactionDetailsOverrides? = null
+    overrides: TransactionDetailsOverrides? = null,
 ): PreAuthRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
@@ -229,7 +250,7 @@ fun TransactionDetails.toPreAuthRequest(
 fun TransactionDetails.toCheckCardRequest(
     judo: Judo,
     transaction: Transaction,
-    overrides: TransactionDetailsOverrides? = null
+    overrides: TransactionDetailsOverrides? = null,
 ): CheckCardRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
@@ -255,7 +276,10 @@ fun TransactionDetails.toCheckCardRequest(
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-fun TransactionDetails.toSaveCardRequest(judo: Judo, transaction: Transaction): SaveCardRequest {
+fun TransactionDetails.toSaveCardRequest(
+    judo: Judo,
+    transaction: Transaction,
+): SaveCardRequest {
     return SaveCardRequest.Builder()
         .setUniqueRequest(false)
         .setYourPaymentReference(judo.reference.paymentReference)
@@ -276,7 +300,7 @@ fun TransactionDetails.toSaveCardRequest(judo: Judo, transaction: Transaction): 
 fun TransactionDetails.toRegisterCardRequest(
     judo: Judo,
     transaction: Transaction,
-    overrides: TransactionDetailsOverrides? = null
+    overrides: TransactionDetailsOverrides? = null,
 ): RegisterCardRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
@@ -307,7 +331,7 @@ fun TransactionDetails.toRegisterCardRequest(
 fun TransactionDetails.toTokenRequest(
     judo: Judo,
     transaction: Transaction,
-    overrides: TransactionDetailsOverrides? = null
+    overrides: TransactionDetailsOverrides? = null,
 ): TokenRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
@@ -338,7 +362,7 @@ fun TransactionDetails.toTokenRequest(
 fun TransactionDetails.toPreAuthTokenRequest(
     judo: Judo,
     transaction: Transaction,
-    overrides: TransactionDetailsOverrides? = null
+    overrides: TransactionDetailsOverrides? = null,
 ): PreAuthTokenRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
@@ -369,11 +393,12 @@ fun TransactionDetails.toPreAuthTokenRequest(
 fun TransactionDetails.toReceipt(judo: Judo): Receipt {
     val myAmount = judo.amount
     val myReference = judo.reference
-    val myJudoId = judo.judoId
-        .toCharArray()
-        .filter { it.isDigit() }
-        .joinToString(separator = "")
-        .toLongOrNull()
+    val myJudoId =
+        judo.judoId
+            .toCharArray()
+            .filter { it.isDigit() }
+            .joinToString(separator = "")
+            .toLongOrNull()
 
     return Receipt(
         judoId = myJudoId,
@@ -382,11 +407,12 @@ fun TransactionDetails.toReceipt(judo: Judo): Receipt {
         amount = myAmount.amount.toBigDecimal(),
         currency = myAmount.currency.name,
         consumer = Consumer(yourConsumerReference = myReference.consumerReference),
-        cardDetails = CardToken(
-            lastFour = cardLastFour,
-            token = cardToken,
-            type = cardType?.typeId ?: -1,
-            scheme = cardType?.displayName
-        )
+        cardDetails =
+            CardToken(
+                lastFour = cardLastFour,
+                token = cardToken,
+                type = cardType?.typeId ?: -1,
+                scheme = cardType?.displayName,
+            ),
     )
 }

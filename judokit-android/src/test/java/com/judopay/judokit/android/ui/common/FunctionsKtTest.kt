@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 
 @DisplayName("Testing the helper functions logic")
 internal class FunctionsKtTest {
-
     @Test
     @DisplayName("When a valid number is specified, isValidLuhnNumber() should return true")
     fun testThatWhenAValidLuhnNumberIsProvidedLuhnCheckReturnsTrue() {

@@ -1,6 +1,7 @@
 package com.judopay.judokit.android
 
 import android.app.Activity
+import android.os.Build
 import android.os.Parcelable
 import androidx.annotation.RequiresApi
 import com.judopay.judokit.android.api.model.Authorization
@@ -31,12 +32,10 @@ import kotlinx.parcelize.Parcelize
  * use {@link Judo#JUDO_OPTIONS} as the extra or argument name.
  */
 
-// Bundle keys
 const val JUDO_OPTIONS = "com.judopay.judokit.android.options"
 const val JUDO_RESULT = "com.judopay.judokit.android.result"
 const val JUDO_ERROR = "com.judopay.judokit.android.error"
 
-// Result codes
 /** Judo activity result: operation succeeded.  */
 const val PAYMENT_SUCCESS = Activity.RESULT_FIRST_USER + 1
 
@@ -56,6 +55,7 @@ private const val THREE_DS_TWO_MESSAGE_VERSION_TWO_DOT_TWO = "2.2.0"
  * Judo configuration object that is required for initiating a payment.
  */
 @Parcelize
+@Suppress("LongParameterList")
 class Judo internal constructor(
     val judoId: String,
     val authorization: Authorization,
@@ -82,13 +82,13 @@ class Judo internal constructor(
     val cardToken: CardToken? = null,
     val cardSecurityCode: String? = null,
     val subProductInfo: SubProductInfo = SubProductInfo.Unknown,
-    val recommendationConfiguration: RecommendationConfiguration? = null
+    val recommendationConfiguration: RecommendationConfiguration? = null,
 ) : Parcelable {
-
     /**
      * Builder class to create a [Judo] object since it's constructor is private
      * @param paymentWidgetType Property used to decide which payment widget to invoke for a transaction
      */
+    @Suppress("TooManyFunctions")
     class Builder(private val paymentWidgetType: PaymentWidgetType) {
         private var judoId: String? = null
         private var authorization: Authorization? = null
@@ -129,8 +129,7 @@ class Judo internal constructor(
          * @see com.judopay.judokit.android.api.model.BasicAuthorization
          * @see com.judopay.judokit.android.api.model.PaymentSessionAuthorization
          **/
-        fun setAuthorization(authorization: Authorization?) =
-            apply { this.authorization = authorization }
+        fun setAuthorization(authorization: Authorization?) = apply { this.authorization = authorization }
 
         /**
          * Sets environment type.
@@ -159,32 +158,28 @@ class Judo internal constructor(
          * @param configuration A set of configuration values that changes the UI
          * @see UiConfiguration
          */
-        fun setUiConfiguration(configuration: UiConfiguration?) =
-            apply { this.uiConfiguration = configuration }
+        fun setUiConfiguration(configuration: UiConfiguration?) = apply { this.uiConfiguration = configuration }
 
         /**
          * Sets an array of payment methods to be supported in payment methods screen.
          * @param methods Array of supported payment methods to display in payment methods screen
          * @see PaymentMethod
          */
-        fun setPaymentMethods(methods: Array<PaymentMethod>?) =
-            apply { this.paymentMethods = methods }
+        fun setPaymentMethods(methods: Array<PaymentMethod>?) = apply { this.paymentMethods = methods }
 
         /**
          * Sets an array of card networks to be supported.
          * @param networks Array of supported card networks
          * @see CardNetwork
          */
-        fun setSupportedCardNetworks(networks: Array<CardNetwork>?) =
-            apply { this.supportedCardNetworks = networks }
+        fun setSupportedCardNetworks(networks: Array<CardNetwork>?) = apply { this.supportedCardNetworks = networks }
 
         /**
          * Sets primary account details information.
          * @param details Object that contains information about the account details provided by the merchant
          * @see PrimaryAccountDetails
          */
-        fun setPrimaryAccountDetails(details: PrimaryAccountDetails?) =
-            apply { this.primaryAccountDetails = details }
+        fun setPrimaryAccountDetails(details: PrimaryAccountDetails?) = apply { this.primaryAccountDetails = details }
 
         /**
          * Sets GooglePay configuration.
@@ -192,8 +187,7 @@ class Judo internal constructor(
          * parameters for a GooglePay transaction
          * @see GooglePayConfiguration
          */
-        fun setGooglePayConfiguration(configuration: GooglePayConfiguration?) =
-            apply { this.googlePayConfiguration = configuration }
+        fun setGooglePayConfiguration(configuration: GooglePayConfiguration?) = apply { this.googlePayConfiguration = configuration }
 
         /**
          * Sets address configuration to be sent as part of payment requests.
@@ -201,29 +195,25 @@ class Judo internal constructor(
          * If set, will be sent to the Judo backend as part of the card details
          * @see Address
          */
-        fun setAddress(address: Address?) =
-            apply { this.address = address }
+        fun setAddress(address: Address?) = apply { this.address = address }
 
         /**
          * Sets the flag for initial recurring payment.
          * @param initialRecurringPayment Boolean value that toggles initial recurring payment.
          */
-        fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
-            apply { this.initialRecurringPayment = initialRecurringPayment }
+        fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) = apply { this.initialRecurringPayment = initialRecurringPayment }
 
         /**
          * Sets the flag for initial delayed authorization.
          * @param delayedAuthorisation Boolean value that toggles delayed authorization payment.
          */
-        fun setDelayedAuthorisation(delayedAuthorisation: Boolean?) =
-            apply { this.delayedAuthorisation = delayedAuthorisation }
+        fun setDelayedAuthorisation(delayedAuthorisation: Boolean?) = apply { this.delayedAuthorisation = delayedAuthorisation }
 
         /**
          * Sets the network timeout.
          * @param networkTimeout class for setting read, write and connect timeouts.
          */
-        fun setNetworkTimeout(networkTimeout: NetworkTimeout?) =
-            apply { this.networkTimeout = networkTimeout }
+        fun setNetworkTimeout(networkTimeout: NetworkTimeout?) = apply { this.networkTimeout = networkTimeout }
 
         /**
          * Sets the value for challenge request indicator.
@@ -236,60 +226,51 @@ class Judo internal constructor(
          * Sets the value for SCA exemption.
          * @param scaExemption Enum value [ScaExemption].
          */
-        fun setScaExemption(scaExemption: ScaExemption?) =
-            apply { this.scaExemption = scaExemption }
+        fun setScaExemption(scaExemption: ScaExemption?) = apply { this.scaExemption = scaExemption }
 
         /**
          * Sets the cardholder's mobile number.
          * @param mobileNumber the mobile number of the cardholder.
          */
-        fun setMobileNumber(mobileNumber: String?) =
-            apply { this.mobileNumber = mobileNumber }
+        fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = mobileNumber }
 
         /**
          * Sets the cardholder's email address.
          * @param emailAddress the email address of the cardholder.
          */
-        fun setEmailAddress(emailAddress: String?) =
-            apply { this.emailAddress = emailAddress }
+        fun setEmailAddress(emailAddress: String?) = apply { this.emailAddress = emailAddress }
 
         /**
          * Sets the maximum timeout for 3DS 2.0 transactions.
          * @param maxTimeout max timeout in minutes.
          */
-        fun setThreeDSTwoMaxTimeout(maxTimeout: Int?) =
-            apply { this.threeDSTwoMaxTimeout = maxTimeout }
+        fun setThreeDSTwoMaxTimeout(maxTimeout: Int?) = apply { this.threeDSTwoMaxTimeout = maxTimeout }
 
         /**
          * Sets the protocol message version for 3DS 2.0 transactions.
          * @param messageVersion 3DS 2.0 protocol message version.
          */
-        fun setThreeDSTwoMessageVersion(messageVersion: String?) =
-            apply { this.threeDSTwoMessageVersion = messageVersion }
+        fun setThreeDSTwoMessageVersion(messageVersion: String?) = apply { this.threeDSTwoMessageVersion = messageVersion }
 
         /**
          * Sets phone country code.
          */
-        fun setPhoneCountryCode(phoneCountryCode: String?) =
-            apply { this.phoneCountryCode = phoneCountryCode }
+        fun setPhoneCountryCode(phoneCountryCode: String?) = apply { this.phoneCountryCode = phoneCountryCode }
 
         /*
          * Sets card token details for token payment.
          */
-        fun setCardToken(cardToken: CardToken?) =
-            apply { this.cardToken = cardToken }
+        fun setCardToken(cardToken: CardToken?) = apply { this.cardToken = cardToken }
 
         /*
          * Sets the card security code for token payment.
          */
-        fun setCardSecurityCode(cardSecurityCode: String?) =
-            apply { this.cardSecurityCode = cardSecurityCode }
+        fun setCardSecurityCode(cardSecurityCode: String?) = apply { this.cardSecurityCode = cardSecurityCode }
 
-        fun setSubProductInfo(subProductInfo: SubProductInfo) =
-            apply { this.subProductInfo = subProductInfo }
+        fun setSubProductInfo(subProductInfo: SubProductInfo) = apply { this.subProductInfo = subProductInfo }
 
         // Recommendation Feature works only on Android API 22 (or higher).
-        @RequiresApi(22)
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
         fun setRecommendationConfiguration(recommendationConfiguration: RecommendationConfiguration?) =
             apply { this.recommendationConfiguration = recommendationConfiguration }
 
@@ -301,11 +282,16 @@ class Judo internal constructor(
          * @throws IllegalArgumentException If any of the required fields are empty/null or invalid
          */
         @Throws(IllegalArgumentException::class)
+        @Suppress("LongMethod")
         fun build(): Judo {
-            val id = requireJudoId(
-                judoId,
-                "The Judo ID parameter cannot be null or empty. The required Judo ID parameter has not been set in the Judo configuration."
-            )
+            val id =
+                requireJudoId(
+                    judoId,
+                    """
+                    The Judo ID parameter cannot be null or empty.
+                    The required Judo ID parameter has not been set in the Judo configuration.
+                    """.trimIndent(true),
+                )
             val myAuthorization = requireNotNull(authorization, "authorization")
 
             val myAmount = requireNotNull(amount, "amount")
@@ -318,24 +304,27 @@ class Judo internal constructor(
 
             val defaultPaymentMethods = arrayOf(PaymentMethod.CARD)
 
-            val defaultSupportedCardNetworks = arrayOf(
-                CardNetwork.VISA,
-                CardNetwork.MASTERCARD,
-                CardNetwork.AMEX,
-                CardNetwork.MAESTRO
-            )
+            val defaultSupportedCardNetworks =
+                arrayOf(
+                    CardNetwork.VISA,
+                    CardNetwork.MASTERCARD,
+                    CardNetwork.AMEX,
+                    CardNetwork.MAESTRO,
+                )
 
-            val myPaymentMethods = if (paymentMethods.isNullOrEmpty()) {
-                defaultPaymentMethods
-            } else {
-                checkNotNull(paymentMethods)
-            }
+            val myPaymentMethods =
+                if (paymentMethods.isNullOrEmpty()) {
+                    defaultPaymentMethods
+                } else {
+                    checkNotNull(paymentMethods)
+                }
 
-            val mySupportedCardNetworks = if (supportedCardNetworks.isNullOrEmpty()) {
-                defaultSupportedCardNetworks
-            } else {
-                checkNotNull(supportedCardNetworks)
-            }
+            val mySupportedCardNetworks =
+                if (supportedCardNetworks.isNullOrEmpty()) {
+                    defaultSupportedCardNetworks
+                } else {
+                    checkNotNull(supportedCardNetworks)
+                }
 
             val myNetworkTimeout = networkTimeout ?: NetworkTimeout.Builder().build()
 
@@ -343,7 +332,7 @@ class Judo internal constructor(
                 !(
                     recommendationConfiguration != null &&
                         authorization !is com.judopay.judokit.android.api.model.PaymentSessionAuthorization
-                    )
+                ),
             ) {
                 "Payment session is required for using the recommendation feature."
             }
@@ -374,37 +363,66 @@ class Judo internal constructor(
                 cardToken = cardToken,
                 cardSecurityCode = cardSecurityCode,
                 subProductInfo = subProductInfo,
-                recommendationConfiguration = recommendationConfiguration
+                recommendationConfiguration = recommendationConfiguration,
             )
         }
 
         @Throws(IllegalArgumentException::class)
-        private fun validatePaymentMethods(currency: Currency) = paymentMethods?.let { methods ->
-            // Payment methods accepted currencies checks
-            if (methods.size == 1) {
-                val method = methods.first()
-                val expectedCurrency = when (method) {
-                    PaymentMethod.IDEAL -> Currency.EUR
-                    else -> null
-                }
-                if (expectedCurrency != null && currency != expectedCurrency) {
-                    throw IllegalArgumentException("${method.name} transactions only support ${expectedCurrency.name} as the currency. Invalid currency passed to ${method.name} transaction configuration.")
+        private fun validatePaymentMethods(currency: Currency) =
+            paymentMethods?.let { methods ->
+                // Payment methods accepted currencies checks
+                if (methods.size == 1) {
+                    val method = methods.first()
+                    val expectedCurrency =
+                        when (method) {
+                            PaymentMethod.IDEAL -> Currency.EUR
+                            else -> null
+                        }
+                    if (expectedCurrency != null && currency != expectedCurrency) {
+                        throw IllegalArgumentException(
+                            """
+                            ${method.name} transactions only support ${expectedCurrency.name} as the currency.
+                            Invalid currency passed to ${method.name} transaction configuration.
+                            """.trimIndent(true),
+                        )
+                    }
                 }
             }
-        }
 
         @Throws(IllegalArgumentException::class)
-        private fun requireJudoId(judoId: String?, message: String?): String {
+        private fun requireJudoId(
+            judoId: String?,
+            message: String?,
+        ): String {
             val id = requireNotNullOrEmpty(judoId, "judoId", message)
-            if (id.matches(REGEX_JUDO_ID.toRegex())) {
-                return id
-            } else {
-                throw IllegalArgumentException("The Judo ID entered is invalid. The specified Judo ID parameter has an incorrect format.")
+            require(id.matches(REGEX_JUDO_ID.toRegex())) {
+                "The Judo ID entered is invalid. The specified Judo ID parameter has an incorrect format."
             }
+            return id
         }
     }
 
     override fun toString(): String {
-        return "Judo(judoId='$judoId', authorization=$authorization, isSandboxed=$isSandboxed, amount=$amount, reference=$reference, uiConfiguration=$uiConfiguration, paymentMethods=${paymentMethods.contentToString()}, supportedCardNetworks=${supportedCardNetworks.contentToString()}, primaryAccountDetails=$primaryAccountDetails, googlePayConfiguration=$googlePayConfiguration, paymentWidgetType=$paymentWidgetType, address=$address, initialRecurringPayment=$initialRecurringPayment, challengeRequestIndicator=$challengeRequestIndicator, scaExemption=$scaExemption, delayedAuthorisation=$delayedAuthorisation, cardToken=$cardToken)"
+        return """
+            Judo(
+                judoId='$judoId',
+                authorization=$authorization,
+                isSandboxed=$isSandboxed,
+                amount=$amount,
+                reference=$reference,
+                uiConfiguration=$uiConfiguration,
+                paymentMethods=${paymentMethods.contentToString()},
+                supportedCardNetworks=${supportedCardNetworks.contentToString()},
+                primaryAccountDetails=$primaryAccountDetails,
+                googlePayConfiguration=$googlePayConfiguration,
+                paymentWidgetType=$paymentWidgetType,
+                address=$address,
+                initialRecurringPayment=$initialRecurringPayment,
+                challengeRequestIndicator=$challengeRequestIndicator,
+                scaExemption=$scaExemption,
+                delayedAuthorisation=$delayedAuthorisation,
+                cardToken=$cardToken
+            )
+            """.trimIndent(true)
     }
 }

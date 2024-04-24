@@ -1,6 +1,7 @@
 package com.judokit.android.examples.test.card
 
 import android.Manifest
+import android.os.Build
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.compose.ui.test.onNodeWithText
@@ -111,7 +112,7 @@ class CardPaymentTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -140,7 +141,7 @@ class CardPaymentTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -161,7 +162,7 @@ class CardPaymentTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             "12/30",
-            "123"
+            "123",
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -182,7 +183,7 @@ class CardPaymentTest {
             "4111 1111 1111 1111",
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            "123"
+            "123",
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -203,7 +204,7 @@ class CardPaymentTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -231,7 +232,7 @@ class CardPaymentTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -252,7 +253,7 @@ class CardPaymentTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -273,7 +274,7 @@ class CardPaymentTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -304,7 +305,7 @@ class CardPaymentTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -347,7 +348,7 @@ class CardPaymentTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -388,7 +389,7 @@ class CardPaymentTest {
             CARD_NUMBER,
             "Frictionless Successful",
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -415,7 +416,7 @@ class CardPaymentTest {
             CARD_NUMBER,
             "Frictionless NoMethod",
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -442,7 +443,7 @@ class CardPaymentTest {
             CARD_NUMBER,
             "Frictionless AuthFailed",
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -479,7 +480,7 @@ class CardPaymentTest {
                 CARD_NUMBER,
                 CARDHOLDER_NAME,
                 CARD_EXPIRY,
-                CARD_SECURITY_CODE
+                CARD_SECURITY_CODE,
             )
 
             onView(withId(R.id.cardEntrySubmitButton))
@@ -501,7 +502,6 @@ class CardPaymentTest {
             clickCompleteOn3DS2Screen()
 
             assertReceiptObject("", "", "Success", "Payment")
-
         } catch (e: NoMatchingViewException) {
             onView(withId(R.id.payButton))
                 .perform(click())
@@ -545,7 +545,7 @@ class CardPaymentTest {
                 CARD_NUMBER,
                 CARDHOLDER_NAME,
                 CARD_EXPIRY,
-                CARD_SECURITY_CODE
+                CARD_SECURITY_CODE,
             )
 
             onView(withId(R.id.cardEntrySubmitButton))
@@ -567,7 +567,6 @@ class CardPaymentTest {
             clickCompleteOn3DS2Screen()
 
             assertReceiptObject("", "", "Success", "PreAuth")
-
         } catch (e: NoMatchingViewException) {
             onView(withId(R.id.payButton))
                 .perform(click())
@@ -600,7 +599,7 @@ class CardPaymentTest {
             "4222 0000 0122 7408",
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))

@@ -11,8 +11,10 @@ import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethod
 
 class IdealBankItemViewHolder(private val binding: IdealBankItemBinding) :
     RecyclerView.ViewHolder(binding.root), BindableRecyclerViewHolder<IdealBankItem, PaymentMethodItemAction> {
-
-    override fun bind(model: IdealBankItem, listener: PaymentMethodsAdapterListener?) {
+    override fun bind(
+        model: IdealBankItem,
+        listener: PaymentMethodsAdapterListener?,
+    ) {
         with(itemView) {
             binding.bankImage.setImageResource(model.idealBank.drawableResId)
             binding.bankName.text = model.idealBank.title

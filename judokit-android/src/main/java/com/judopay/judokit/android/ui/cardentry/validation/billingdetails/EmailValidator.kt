@@ -8,17 +8,20 @@ import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
 import com.judopay.judokit.android.ui.cardentry.validation.Validator
 
 data class EmailValidator(
-    override val fieldType: String = BillingDetailsFieldType.EMAIL.name
+    override val fieldType: String = BillingDetailsFieldType.EMAIL.name,
 ) : Validator {
-
-    override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult {
+    override fun validate(
+        input: String,
+        formFieldEvent: FormFieldEvent,
+    ): ValidationResult {
         val isValid = Patterns.EMAIL_ADDRESS.matcher(input).matches()
         val shouldDisplayMessage = formFieldEvent == FormFieldEvent.FOCUS_CHANGED
-        val message = if (shouldDisplayMessage) {
-            R.string.invalid_email_address
-        } else {
-            R.string.empty
-        }
+        val message =
+            if (shouldDisplayMessage) {
+                R.string.invalid_email_address
+            } else {
+                R.string.empty
+            }
         return ValidationResult(isValid, message)
     }
 }

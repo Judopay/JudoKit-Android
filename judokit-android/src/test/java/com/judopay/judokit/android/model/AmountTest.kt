@@ -8,7 +8,6 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Testing Amount class")
 internal class AmountTest {
-
     private val sut = Amount.Builder().setAmount("1").setCurrency(Currency.GBP)
 
     @DisplayName("Given amount is null, then set amount to empty string")

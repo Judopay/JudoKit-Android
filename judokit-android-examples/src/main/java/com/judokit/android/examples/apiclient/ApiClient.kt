@@ -9,16 +9,18 @@ data class CreatePaymentSessionRequest(
     val amount: String,
     val currency: String,
     val yourConsumerReference: String,
-    val yourPaymentReference: String
+    val yourPaymentReference: String,
 )
 
 data class CreatePaymentSessionResponse(
     val payByLinkUrl: String,
     val postUrl: String,
-    val reference: String
+    val reference: String,
 )
 
 public interface ApiClient {
     @POST("/webpayments/payments")
-    fun createPaymentSession(@Body request: CreatePaymentSessionRequest): Call<CreatePaymentSessionResponse>
+    fun createPaymentSession(
+        @Body request: CreatePaymentSessionRequest,
+    ): Call<CreatePaymentSessionResponse>
 }

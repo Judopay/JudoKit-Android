@@ -16,15 +16,15 @@ import okio.Buffer
 import java.io.IOException
 
 private const val ENHANCED_PAYMENT_DETAIL = "EnhancedPaymentDetail"
-private val PAYLOAD_ENDPOINTS = arrayListOf(
-    "/transactions/payments",
-    "/transactions/preauths",
-    "/transactions/registercard",
-    "/transactions/checkcard"
-)
+private val PAYLOAD_ENDPOINTS =
+    arrayListOf(
+        "/transactions/payments",
+        "/transactions/preauths",
+        "/transactions/registercard",
+        "/transactions/checkcard",
+    )
 
 class PayLoadInterceptor internal constructor(context: Context) : Interceptor {
-
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
@@ -40,7 +40,7 @@ class PayLoadInterceptor internal constructor(context: Context) : Interceptor {
                 return chain.proceed(
                     request.newBuilder()
                         .post(convertJsonToRequestBody(json))
-                        .build()
+                        .build(),
                 )
             }
         }
@@ -50,6 +50,7 @@ class PayLoadInterceptor internal constructor(context: Context) : Interceptor {
 
     private val payloadService = PayloadService(context)
 
+    @Suppress("SwallowedException")
     private val enhancedPaymentDetail: JsonObject
         get() {
             val paymentDetail = payloadService.getEnhancedPaymentDetail()?.toJSONString()

@@ -18,7 +18,10 @@ class TokenizedCardRepositoryTest {
     private val repository = TokenizedCardRepository(cardDao)
 
     @Test
-    @DisplayName("getAllSortedByIsDefaultSync should call tokenizedCardDao.getAllSortedByIsDefaultSync and return all cards ordered by isDefault descending synchronised")
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+    @DisplayName(
+        "getAllSortedByIsDefaultSync should call tokenizedCardDao.getAllSortedByIsDefaultSync and return all cards ordered by isDefault descending synchronised",
+    )
     fun getAllCardsSortedByDateSynchronised() {
         verify { cardDao.getAllSortedByIsDefaultSync() }
     }

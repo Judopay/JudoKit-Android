@@ -13,10 +13,10 @@ import java.nio.charset.StandardCharsets
 
 @DisplayName("Testing PaymentSessionAuthorization class")
 internal class PaymentSessionAuthorizationTest {
-
-    private val sut = PaymentSessionAuthorization.Builder()
-        .setApiToken("token")
-        .setPaymentSession("paymentSession")
+    private val sut =
+        PaymentSessionAuthorization.Builder()
+            .setApiToken("token")
+            .setPaymentSession("paymentSession")
 
     @BeforeEach
     internal fun setUp() {
@@ -25,7 +25,7 @@ internal class PaymentSessionAuthorizationTest {
         every {
             Base64.encodeToString(
                 "token:".toByteArray(StandardCharsets.UTF_8),
-                Base64.NO_WRAP
+                Base64.NO_WRAP,
             )
         } returns "credentials"
     }
@@ -65,8 +65,9 @@ internal class PaymentSessionAuthorizationTest {
     @DisplayName("Given token and paymentSession are present, then headers should contain Payment-Session")
     @Test
     fun headersShouldContainPaymentSession() {
-        val expected = Headers.Builder().add("Payment-Session", "paymentSession").build()
-            .get("Payment-Session")
+        val expected =
+            Headers.Builder().add("Payment-Session", "paymentSession").build()
+                .get("Payment-Session")
 
         Assertions.assertEquals(expected, sut.build().headers["Payment-Session"])
     }

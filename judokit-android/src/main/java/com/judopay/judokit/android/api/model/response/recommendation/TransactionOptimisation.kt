@@ -11,31 +11,42 @@ private const val NO_CHALLENGE_REQUESTED = "NO_CHALLENGE_REQUESTED"
 private const val CHALLENGE_REQUESTED = "CHALLENGE_REQUESTED"
 private const val CHALLENGE_REQUESTED_AS_MANDATE = "CHALLENGE_REQUESTED_AS_MANDATE"
 
+@Throws(IllegalArgumentException::class)
 fun String?.toChallengeRequestIndicator(): ChallengeRequestIndicator? {
-    return when (this?.uppercase()) {
+    if (this == null) return null
+
+    return when (uppercase()) {
         NO_PREFERENCE -> ChallengeRequestIndicator.NO_PREFERENCE
         NO_CHALLENGE_REQUESTED -> ChallengeRequestIndicator.NO_CHALLENGE
         CHALLENGE_REQUESTED -> ChallengeRequestIndicator.CHALLENGE_PREFERRED
         CHALLENGE_REQUESTED_AS_MANDATE -> ChallengeRequestIndicator.CHALLENGE_AS_MANDATE
-        else -> null
+        else -> throw IllegalArgumentException("Invalid challenge request indicator value: $this")
     }
 }
 
+@Throws(IllegalArgumentException::class)
 fun String?.toScaExemption(): ScaExemption? {
-    return when (this?.uppercase()) {
+    if (this == null) return null
+
+    return when (uppercase()) {
         LOW_VALUE -> ScaExemption.LOW_VALUE
         TRANSACTION_RISK_ANALYSIS -> ScaExemption.TRANSACTION_RISK_ANALYSIS
-        else -> null
+        else -> throw IllegalArgumentException("Invalid SCA exemption value: $this")
     }
 }
 
+@Suppress("SwallowedException")
 data class TransactionOptimisation(
-    val action: TransactionOptimisationAction?,
     val exemption: String?,
-    val threeDSChallengePreference: String?
+    val threeDSChallengePreference: String?,
 ) {
     val isValid: Boolean
-        get() = action != null &&
-            exemption.toScaExemption() != null &&
-            threeDSChallengePreference.toChallengeRequestIndicator() != null
+        get() =
+            try {
+                exemption?.toScaExemption()
+                threeDSChallengePreference?.toChallengeRequestIndicator()
+                true
+            } catch (e: IllegalArgumentException) {
+                false
+            }
 }

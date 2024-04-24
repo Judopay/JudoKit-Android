@@ -4,6 +4,7 @@ import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTw
 import com.judopay.judokit.android.model.PrimaryAccountDetails
 import com.judopay.judokit.android.requireNotNullOrEmpty
 
+@Suppress("LongParameterList")
 class PreAuthTokenRequest private constructor(
     private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String?,
@@ -25,8 +26,9 @@ class PreAuthTokenRequest private constructor(
     private var initialRecurringPayment: Boolean?,
     private var threeDSecure: ThreeDSecureTwo?,
     private var cardHolderName: String?,
-    private var delayedAuthorisation: Boolean = false
+    private var delayedAuthorisation: Boolean = false,
 ) {
+    @Suppress("TooManyFunctions")
     class Builder {
         private var uniqueRequest: Boolean? = false
         private var yourPaymentReference: String? = null
@@ -52,8 +54,7 @@ class PreAuthTokenRequest private constructor(
 
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
-        fun setYourPaymentReference(yourPaymentReference: String?) =
-            apply { this.yourPaymentReference = yourPaymentReference }
+        fun setYourPaymentReference(yourPaymentReference: String?) = apply { this.yourPaymentReference = yourPaymentReference }
 
         fun setAmount(amount: String?) = apply { this.amount = amount }
 
@@ -61,11 +62,9 @@ class PreAuthTokenRequest private constructor(
 
         fun setJudoId(judoId: String?) = apply { this.judoId = judoId }
 
-        fun setYourConsumerReference(yourConsumerReference: String?) =
-            apply { this.yourConsumerReference = yourConsumerReference }
+        fun setYourConsumerReference(yourConsumerReference: String?) = apply { this.yourConsumerReference = yourConsumerReference }
 
-        fun setYourPaymentMetaData(yourPaymentMetaData: Map<String, String>?) =
-            apply { this.yourPaymentMetaData = yourPaymentMetaData }
+        fun setYourPaymentMetaData(yourPaymentMetaData: Map<String, String>?) = apply { this.yourPaymentMetaData = yourPaymentMetaData }
 
         fun setEndDate(endDate: String?) = apply { this.endDate = endDate }
 
@@ -86,20 +85,15 @@ class PreAuthTokenRequest private constructor(
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
             apply { this.primaryAccountDetails = primaryAccountDetails }
 
-        fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) =
-            apply { this.initialRecurringPayment = initialRecurringPayment }
+        fun setInitialRecurringPayment(initialRecurringPayment: Boolean?) = apply { this.initialRecurringPayment = initialRecurringPayment }
 
-        fun setThreeDSecure(threeDSecureTwo: ThreeDSecureTwo?) =
-            apply { this.threeDSecure = threeDSecureTwo }
+        fun setThreeDSecure(threeDSecureTwo: ThreeDSecureTwo?) = apply { this.threeDSecure = threeDSecureTwo }
 
-        fun setPhoneCountryCode(phoneCountryCode: String?) =
-            apply { this.phoneCountryCode = phoneCountryCode }
+        fun setPhoneCountryCode(phoneCountryCode: String?) = apply { this.phoneCountryCode = phoneCountryCode }
 
-        fun setCardHolderName(cardHolderName: String?) =
-            apply { this.cardHolderName = cardHolderName }
+        fun setCardHolderName(cardHolderName: String?) = apply { this.cardHolderName = cardHolderName }
 
-        fun setDelayedAuthorisation(delayedAuthorisation: Boolean) =
-            apply { this.delayedAuthorisation = delayedAuthorisation }
+        fun setDelayedAuthorisation(delayedAuthorisation: Boolean) = apply { this.delayedAuthorisation = delayedAuthorisation }
 
         fun build(): PreAuthTokenRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
@@ -134,7 +128,7 @@ class PreAuthTokenRequest private constructor(
                 initialRecurringPayment,
                 myThreeDSecure,
                 cardHolderName,
-                delayedAuthorisation
+                delayedAuthorisation,
             )
         }
     }

@@ -11,34 +11,32 @@ import com.judopay.judokit.android.db.entity.TokenizedCardEntity
 @Database(
     entities = [TokenizedCardEntity::class],
     version = 3,
-    exportSchema = false
+    exportSchema = false,
 )
 @TypeConverters(JudoTypeConverters::class)
 abstract class JudoRoomDatabase : RoomDatabase() {
-
     abstract fun tokenizedCardDao(): TokenizedCardDao
 
     companion object {
-
         // Singleton prevents multiple instances of database opening at the same time.
         @Volatile
-        private var INSTANCE: JudoRoomDatabase? = null
+        private var database: JudoRoomDatabase? = null
 
         fun getDatabase(context: Context): JudoRoomDatabase {
-            val tempInstance = INSTANCE
+            val tempInstance = database
             if (tempInstance != null) {
                 return tempInstance
             }
             synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    JudoRoomDatabase::class.java,
-                    "judo_database"
-                )
-                    // TODO: Write proper migrations when going live
-                    .fallbackToDestructiveMigration()
-                    .build()
-                INSTANCE = instance
+                val instance =
+                    Room.databaseBuilder(
+                        context.applicationContext,
+                        JudoRoomDatabase::class.java,
+                        "judo_database",
+                    )
+                        .fallbackToDestructiveMigration()
+                        .build()
+                database = instance
                 return instance
             }
         }

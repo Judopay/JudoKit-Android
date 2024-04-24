@@ -1,5 +1,6 @@
 package com.judokit.android.examples.feature
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -39,7 +40,6 @@ import com.judopay.judokit.android.JudoActivity
 import com.judopay.judokit.android.PAYMENT_CANCELLED
 import com.judopay.judokit.android.PAYMENT_ERROR
 import com.judopay.judokit.android.PAYMENT_SUCCESS
-import com.judopay.judokit.android.model.RecommendationConfiguration
 import com.judopay.judokit.android.api.error.toJudoError
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.factory.RecommendationApiServiceFactory
@@ -61,6 +61,7 @@ import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.PrimaryAccountDetails
+import com.judopay.judokit.android.model.RecommendationConfiguration
 import com.judopay.judokit.android.model.Reference
 import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.model.USER_CANCELLED
@@ -78,9 +79,10 @@ import java.util.UUID
 
 const val JUDO_PAYMENT_WIDGET_REQUEST_CODE = 1
 const val LAST_USED_WIDGET_TYPE_KEY = "LAST_USED_WIDGET_TYPE"
+const val CHUCKER_MAX_CONTENT_LENGTH = 250000L
 
+@Suppress("TooGenericExceptionCaught", "TooGenericExceptionThrown", "LargeClass", "LongMethod")
 class DemoFeatureListActivity : AppCompatActivity() {
-
     private lateinit var sharedPreferences: SharedPreferences
     private var deepLinkIntent = intent
     private lateinit var binding: ActivityDemoFeatureListBinding
@@ -92,14 +94,15 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
         notificationPermissionLauncher = NotificationPermissionLauncher(this)
 
-        val externalInterceptors = listOf(
-            ChuckerInterceptor.Builder(this)
-                .collector(ChuckerCollector(this))
-                .maxContentLength(250000L)
-                .redactHeaders(emptySet())
-                .alwaysReadResponseBody(false)
-                .build()
-        )
+        val externalInterceptors =
+            listOf(
+                ChuckerInterceptor.Builder(this)
+                    .collector(ChuckerCollector(this))
+                    .maxContentLength(CHUCKER_MAX_CONTENT_LENGTH)
+                    .redactHeaders(emptySet())
+                    .alwaysReadResponseBody(false)
+                    .build(),
+            )
         JudoApiServiceFactory.externalInterceptors = externalInterceptors
         RecommendationApiServiceFactory.externalInterceptors = externalInterceptors
 
@@ -129,7 +132,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+    ) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == JUDO_PAYMENT_WIDGET_REQUEST_CODE) {
@@ -140,7 +147,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 }
 
                 PAYMENT_CANCELLED,
-                PAYMENT_ERROR -> {
+                PAYMENT_ERROR,
+                -> {
                     val error = data?.parcelable<JudoError>(JUDO_ERROR)
                     processPaymentError(error)
                 }
@@ -155,16 +163,18 @@ class DemoFeatureListActivity : AppCompatActivity() {
         super.onNewIntent(intent)
     }
 
-    private fun deepLinkIfNeeded() = deepLinkIntent?.data?.let {
-        val newIntent = Intent(this, JudoActivity::class.java)
-        val lastUsedPaymentWidget = sharedPreferences.getString(
-            LAST_USED_WIDGET_TYPE_KEY,
-            null
-        ) ?: PaymentWidgetType.PAYMENT_METHODS.name
+    private fun deepLinkIfNeeded() =
+        deepLinkIntent?.data?.let {
+            val newIntent = Intent(this, JudoActivity::class.java)
+            val lastUsedPaymentWidget =
+                sharedPreferences.getString(
+                    LAST_USED_WIDGET_TYPE_KEY,
+                    null,
+                ) ?: PaymentWidgetType.PAYMENT_METHODS.name
 
-        newIntent.putExtra(JUDO_OPTIONS, getJudo(PaymentWidgetType.valueOf(lastUsedPaymentWidget)))
-        startActivityForResult(newIntent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
-    }
+            newIntent.putExtra(JUDO_OPTIONS, getJudo(PaymentWidgetType.valueOf(lastUsedPaymentWidget)))
+            startActivityForResult(newIntent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
+        }
 
     private fun processSuccessfulPayment(result: JudoResult?) {
         if (result != null) {
@@ -198,30 +208,34 @@ class DemoFeatureListActivity : AppCompatActivity() {
             .show()
     }
 
+    @Suppress("CyclomaticComplexMethod")
     private fun showcaseFeature(feature: DemoFeature) {
         try {
-            val widgetType = when (feature) {
-                DemoFeature.GET_TRANSACTION_DETAILS,
-                DemoFeature.PAYMENT, DemoFeature.NO_UI -> PaymentWidgetType.CARD_PAYMENT
-                DemoFeature.PREAUTH -> PaymentWidgetType.PRE_AUTH
-                DemoFeature.REGISTER_CARD -> PaymentWidgetType.REGISTER_CARD
-                DemoFeature.CREATE_CARD_TOKEN -> PaymentWidgetType.CREATE_CARD_TOKEN
-                DemoFeature.CHECK_CARD -> PaymentWidgetType.CHECK_CARD
-                DemoFeature.PAYMENT_METHODS -> PaymentWidgetType.PAYMENT_METHODS
-                DemoFeature.PREAUTH_PAYMENT_METHODS -> PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS
-                DemoFeature.SERVER_TO_SERVER_PAYMENT_METHODS -> PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS
-                DemoFeature.GOOGLE_PAY_PAYMENT -> PaymentWidgetType.GOOGLE_PAY
-                DemoFeature.GOOGLE_PAY_PREAUTH -> PaymentWidgetType.PRE_AUTH_GOOGLE_PAY
-                DemoFeature.TOKEN_PAYMENTS -> PaymentWidgetType.TOKEN_PAYMENT
-            }
+            val widgetType =
+                when (feature) {
+                    DemoFeature.GET_TRANSACTION_DETAILS,
+                    DemoFeature.PAYMENT, DemoFeature.NO_UI,
+                    -> PaymentWidgetType.CARD_PAYMENT
+                    DemoFeature.PREAUTH -> PaymentWidgetType.PRE_AUTH
+                    DemoFeature.REGISTER_CARD -> PaymentWidgetType.REGISTER_CARD
+                    DemoFeature.CREATE_CARD_TOKEN -> PaymentWidgetType.CREATE_CARD_TOKEN
+                    DemoFeature.CHECK_CARD -> PaymentWidgetType.CHECK_CARD
+                    DemoFeature.PAYMENT_METHODS -> PaymentWidgetType.PAYMENT_METHODS
+                    DemoFeature.PREAUTH_PAYMENT_METHODS -> PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS
+                    DemoFeature.SERVER_TO_SERVER_PAYMENT_METHODS -> PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS
+                    DemoFeature.GOOGLE_PAY_PAYMENT -> PaymentWidgetType.GOOGLE_PAY
+                    DemoFeature.GOOGLE_PAY_PREAUTH -> PaymentWidgetType.PRE_AUTH_GOOGLE_PAY
+                    DemoFeature.TOKEN_PAYMENTS -> PaymentWidgetType.TOKEN_PAYMENT
+                }
             val judoConfig = getJudo(widgetType)
             navigateToJudoPaymentWidgetWithConfigurations(judoConfig, feature)
             sharedPreferences.edit().putString(LAST_USED_WIDGET_TYPE_KEY, widgetType.name).apply()
         } catch (exception: Exception) {
             when (exception) {
                 is IllegalArgumentException, is IllegalStateException -> {
-                    val message = exception.message
-                        ?: "An error occurred, please check your settings."
+                    val message =
+                        exception.message
+                            ?: "An error occurred, please check your settings."
                     toast("Error: $message")
                 }
                 else -> throw exception
@@ -229,37 +243,41 @@ class DemoFeatureListActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToJudoPaymentWidgetWithConfigurations(judo: Judo, feature: DemoFeature) {
+    private fun navigateToJudoPaymentWidgetWithConfigurations(
+        judo: Judo,
+        feature: DemoFeature,
+    ) {
         if (feature == DemoFeature.GET_TRANSACTION_DETAILS) {
             showGetTransactionDialog(judo)
         } else {
-            val myClass = when (judo.paymentWidgetType) {
-                PaymentWidgetType.CARD_PAYMENT ->
-                    if (feature == DemoFeature.NO_UI) {
-                        DemoNoUiPaymentActivity::class.java
-                    } else {
-                        JudoActivity::class.java
-                    }
-                PaymentWidgetType.TOKEN_PAYMENT -> TokenPaymentsActivity::class.java
-                else -> JudoActivity::class.java
-            }
+            val myClass =
+                when (judo.paymentWidgetType) {
+                    PaymentWidgetType.CARD_PAYMENT ->
+                        if (feature == DemoFeature.NO_UI) {
+                            DemoNoUiPaymentActivity::class.java
+                        } else {
+                            JudoActivity::class.java
+                        }
+                    PaymentWidgetType.TOKEN_PAYMENT -> TokenPaymentsActivity::class.java
+                    else -> JudoActivity::class.java
+                }
             val intent = Intent(this, myClass)
             intent.putExtra(JUDO_OPTIONS, judo)
             startActivityForResult(intent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
         }
     }
 
-    private fun toast(message: String) =
-        Snackbar.make(binding.sampleAppConstraintLayout, message, Snackbar.LENGTH_LONG).show()
+    private fun toast(message: String) = Snackbar.make(binding.sampleAppConstraintLayout, message, Snackbar.LENGTH_LONG).show()
 
     private fun setupRecyclerView() {
         val dividerItemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
 
         binding.recyclerView.apply {
             addItemDecoration(dividerItemDecoration)
-            adapter = DemoFeaturesAdapter(DemoFeature.values().asList()) {
-                showcaseFeature(it)
-            }
+            adapter =
+                DemoFeaturesAdapter(DemoFeature.entries) {
+                    showcaseFeature(it)
+                }
         }
     }
 
@@ -269,13 +287,13 @@ class DemoFeatureListActivity : AppCompatActivity() {
         AlertDialog.Builder(this).setTitle(R.string.feature_title_get_transaction_details)
             .setView(dialogBinding.root)
             .setPositiveButton(
-                R.string.dialog_button_ok
+                R.string.dialog_button_ok,
             ) { dialog, _ ->
                 val fetchTransactionDetailsCallback =
                     object : Callback<JudoApiCallResult<Receipt>> {
                         override fun onResponse(
                             call: Call<JudoApiCallResult<Receipt>>,
-                            response: Response<JudoApiCallResult<Receipt>>
+                            response: Response<JudoApiCallResult<Receipt>>,
                         ) {
                             when (val result = response.body()) {
                                 is JudoApiCallResult.Success -> {
@@ -291,7 +309,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
                         override fun onFailure(
                             call: Call<JudoApiCallResult<Receipt>>,
-                            t: Throwable
+                            t: Throwable,
                         ) {
                             dialog.dismiss()
                             throw Exception(t)
@@ -302,10 +320,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 dialogBinding.receiptProgressBar.visibility = View.VISIBLE
                 dialogBinding.receiptIdEditText.visibility = View.GONE
             }
-            .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }.show()
+            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }.show()
     }
 
     @Throws(IllegalArgumentException::class, IllegalStateException::class)
+    @SuppressLint("NewApi")
     private fun getJudo(widgetType: PaymentWidgetType): Judo {
         val isSandboxed = sharedPreferences.getBoolean("is_sandboxed", true)
         val judoId = sharedPreferences.getString("judo_id", null)
@@ -316,20 +335,24 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val mobileNumber = sharedPreferences.getString("mobile_number", null)
         val phoneCountryCode = sharedPreferences.getString("phone_country_code", null)
         val emailAddress = sharedPreferences.getString("email_address", null)
-        val challengeRequestIndicator = sharedPreferences.getString("challengeRequestIndicator", null)?.let {
-            try {
-                ChallengeRequestIndicator.valueOf(it)
-            } catch (throwable: Throwable) {
-                null
+        val challengeRequestIndicator =
+            sharedPreferences.getString("challengeRequestIndicator", null)?.let {
+                try {
+                    ChallengeRequestIndicator.valueOf(it)
+                } catch (throwable: Throwable) {
+                    toast("Error: ${throwable.message}")
+                    null
+                }
             }
-        }
-        val scaExemption = sharedPreferences.getString("scaExemption", null)?.let {
-            try {
-                ScaExemption.valueOf(it)
-            } catch (throwable: Throwable) {
-                null
+        val scaExemption =
+            sharedPreferences.getString("scaExemption", null)?.let {
+                try {
+                    ScaExemption.valueOf(it)
+                } catch (throwable: Throwable) {
+                    toast("Error: ${throwable.message}")
+                    null
+                }
             }
-        }
         val threeDSTwoMaxTimeout = sharedPreferences.getString("threeDSTwoMaxTimeout", null)?.toInt()
         val messageVersion = sharedPreferences.getString("threeDSTwoMessageVersion", null)
         val address = cardAddress
@@ -337,37 +360,41 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val rsaKey = sharedPreferences.getString("rsa_key", null)
         val recommendationUrl = sharedPreferences.getString("recommendation_url", null)
         val recommendationTimeout = sharedPreferences.getString("recommendation_timeout", null)?.toInt()
+        val haltTransactionInCaseOfAnyError = sharedPreferences.getBoolean("halt_transaction_in_case_of_any_error_enabled", false)
         val isRecommendationFeatureEnabled = sharedPreferences.getBoolean("is_recommendation_feature_enabled", false)
-        val recommendationConfiguration = if (isRecommendationFeatureEnabled) {
-            RecommendationConfiguration.Builder()
-                .setRsaPublicKey(rsaKey)
-                .setUrl(recommendationUrl)
-                .setTimeout(recommendationTimeout)
-                .build()
-        } else {
-            null
-        }
+        val recommendationConfiguration =
+            if (isRecommendationFeatureEnabled) {
+                RecommendationConfiguration.Builder()
+                    .setRsaPublicKey(rsaKey)
+                    .setUrl(recommendationUrl)
+                    .setTimeout(recommendationTimeout)
+                    .setShouldHaltTransactionInCaseOfAnyError(haltTransactionInCaseOfAnyError)
+                    .build()
+            } else {
+                null
+            }
 
-        val builder = Judo.Builder(widgetType)
-            .setJudoId(judoId)
-            .setAuthorization(authorization)
-            .setAmount(amount)
-            .setReference(reference)
-            .setIsSandboxed(isSandboxed)
-            .setSupportedCardNetworks(networks)
-            .setPaymentMethods(paymentMethods)
-            .setUiConfiguration(uiConfiguration)
-            .setGooglePayConfiguration(googlePayConfiguration)
-            .setInitialRecurringPayment(initialRecurringPayment)
-            .setDelayedAuthorisation(delayedAuthorisation)
-            .setMobileNumber(if (mobileNumber.isNullOrBlank()) null else mobileNumber)
-            .setPhoneCountryCode(if (phoneCountryCode.isNullOrBlank()) null else phoneCountryCode)
-            .setEmailAddress(if (emailAddress.isNullOrBlank()) null else emailAddress)
-            .setChallengeRequestIndicator(challengeRequestIndicator)
-            .setScaExemption(scaExemption)
-            .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
-            .setNetworkTimeout(networkTimeout)
-            .setRecommendationConfiguration(recommendationConfiguration)
+        val builder =
+            Judo.Builder(widgetType)
+                .setJudoId(judoId)
+                .setAuthorization(authorization)
+                .setAmount(amount)
+                .setReference(reference)
+                .setIsSandboxed(isSandboxed)
+                .setSupportedCardNetworks(networks)
+                .setPaymentMethods(paymentMethods)
+                .setUiConfiguration(uiConfiguration)
+                .setGooglePayConfiguration(googlePayConfiguration)
+                .setInitialRecurringPayment(initialRecurringPayment)
+                .setDelayedAuthorisation(delayedAuthorisation)
+                .setMobileNumber(if (mobileNumber.isNullOrBlank()) null else mobileNumber)
+                .setPhoneCountryCode(if (phoneCountryCode.isNullOrBlank()) null else phoneCountryCode)
+                .setEmailAddress(if (emailAddress.isNullOrBlank()) null else emailAddress)
+                .setChallengeRequestIndicator(challengeRequestIndicator)
+                .setScaExemption(scaExemption)
+                .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
+                .setNetworkTimeout(networkTimeout)
+                .setRecommendationConfiguration(recommendationConfiguration)
 
         if (!messageVersion.isNullOrBlank()) {
             builder.setThreeDSTwoMessageVersion(messageVersion)
@@ -415,14 +442,15 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 sharedPreferences.getBoolean("should_payment_button_display_amount", false)
             val shouldAskForBillingInformation = sharedPreferences.getBoolean("should_ask_for_billing_information", false)
 
-            val builder = UiConfiguration.Builder()
-                .setAvsEnabled(isAVSEnabled)
-                .setShouldPaymentMethodsDisplayAmount(shouldDisplayAmount)
-                .setShouldPaymentMethodsVerifySecurityCode(shouldPaymentMethodsVerifySecurityCode)
-                .setShouldAskForCSC(shouldAskForCSC)
-                .setShouldAskForCardholderName(shouldAskForCardholderName)
-                .setShouldPaymentButtonDisplayAmount(shouldPaymentButtonDisplayAmount)
-                .setShouldAskForBillingInformation(shouldAskForBillingInformation)
+            val builder =
+                UiConfiguration.Builder()
+                    .setAvsEnabled(isAVSEnabled)
+                    .setShouldPaymentMethodsDisplayAmount(shouldDisplayAmount)
+                    .setShouldPaymentMethodsVerifySecurityCode(shouldPaymentMethodsVerifySecurityCode)
+                    .setShouldAskForCSC(shouldAskForCSC)
+                    .setShouldAskForCardholderName(shouldAskForCardholderName)
+                    .setShouldPaymentButtonDisplayAmount(shouldPaymentButtonDisplayAmount)
+                    .setShouldAskForBillingInformation(shouldAskForBillingInformation)
 
             try {
                 builder.setThreeDSUiCustomization(threeDSSDKUiCustomization)
@@ -434,9 +462,10 @@ class DemoFeatureListActivity : AppCompatActivity() {
         }
 
     private val networks: Array<CardNetwork>?
-        get() = sharedPreferences.getStringSet("supported_networks", null)
-            ?.map { CardNetwork.valueOf(it) }
-            ?.toTypedArray()
+        get() =
+            sharedPreferences.getStringSet("supported_networks", null)
+                ?.map { CardNetwork.valueOf(it) }
+                ?.toTypedArray()
 
     private val paymentMethods: Array<PaymentMethod>
         get() {
@@ -455,11 +484,12 @@ class DemoFeatureListActivity : AppCompatActivity() {
             val isPaymentSessionEnabled =
                 sharedPreferences.getBoolean("is_payment_session_enabled", false)
 
-            val paymentReference = if (isPaymentSessionEnabled) {
-                sharedPreferences.getString("payment_reference", null)
-            } else {
-                UUID.randomUUID().toString()
-            }
+            val paymentReference =
+                if (isPaymentSessionEnabled) {
+                    sharedPreferences.getString("payment_reference", null)
+                } else {
+                    UUID.randomUUID().toString()
+                }
 
             return Reference.Builder()
                 .setConsumerReference("my-unique-ref")
@@ -472,11 +502,12 @@ class DemoFeatureListActivity : AppCompatActivity() {
         get() {
             val amountValue = sharedPreferences.getString("amount", null)
             val currency = sharedPreferences.getString("currency", null)
-            val myCurrency = if (!currency.isNullOrEmpty()) {
-                Currency.valueOf(currency)
-            } else {
-                Currency.GBP
-            }
+            val myCurrency =
+                if (!currency.isNullOrEmpty()) {
+                    Currency.valueOf(currency)
+                } else {
+                    Currency.GBP
+                }
 
             return Amount.Builder()
                 .setAmount(amountValue)
@@ -521,17 +552,19 @@ class DemoFeatureListActivity : AppCompatActivity() {
             val isBillingAddressRequired = billingAddress != null && billingAddress != "NONE"
 
             if (isBillingAddressRequired) {
-                billingAddressParams = GooglePayBillingAddressParameters(
-                    format = GooglePayAddressFormat.valueOf(billingAddress ?: "FULL"),
-                    phoneNumberRequired = isBillingAddressPhoneNumberRequired
-                )
+                billingAddressParams =
+                    GooglePayBillingAddressParameters(
+                        format = GooglePayAddressFormat.valueOf(billingAddress ?: "FULL"),
+                        phoneNumberRequired = isBillingAddressPhoneNumberRequired,
+                    )
             }
 
             if (isShippingAddressRequired) {
-                shippingAddressParams = GooglePayShippingAddressParameters(
-                    allowedCountryCodes = shippingAddressAllowedCountries,
-                    phoneNumberRequired = isShippingAddressPhoneNumberRequired
-                )
+                shippingAddressParams =
+                    GooglePayShippingAddressParameters(
+                        allowedCountryCodes = shippingAddressAllowedCountries,
+                        phoneNumberRequired = isShippingAddressPhoneNumberRequired,
+                    )
             }
 
             return GooglePayConfiguration.Builder()
@@ -562,14 +595,14 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     .setAccountNumber(
                         sharedPreferences.getString(
                             "primary_account_account_number",
-                            null
-                        )
+                            null,
+                        ),
                     )
                     .setDateOfBirth(
                         sharedPreferences.getString(
                             "primary_account_date_of_birth",
-                            null
-                        )
+                            null,
+                        ),
                     )
                     .setPostCode(sharedPreferences.getString("primary_account_post_code", null))
                     .build()
@@ -620,7 +653,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 toolbarCustomization.setTextFontName(sharedPreferences.getString("three_ds_toolbar_text_font_name", null))
                 toolbarCustomization.setTextColor(sharedPreferences.getString("three_ds_toolbar_text_color", null))
                 toolbarCustomization.setTextFontSize(
-                    sharedPreferences.getString("three_ds_toolbar_text_font_size", null)?.toInt()
+                    sharedPreferences.getString("three_ds_toolbar_text_font_size", null)?.toInt(),
                 )
                 toolbarCustomization.setBackgroundColor(sharedPreferences.getString("three_ds_toolbar_background_color", null))
                 toolbarCustomization.setHeaderText(sharedPreferences.getString("three_ds_toolbar_header_text", null))
@@ -634,15 +667,15 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 labelCustomization.setHeadingTextFontName(
                     sharedPreferences.getString(
                         "three_ds_label_heading_text_font_name",
-                        null
-                    )
+                        null,
+                    ),
                 )
                 labelCustomization.setHeadingTextColor(sharedPreferences.getString("three_ds_label_heading_text_color", null))
                 labelCustomization.setHeadingTextFontSize(
                     sharedPreferences.getString(
                         "three_ds_label_heading_text_font_size",
-                        null
-                    )?.toInt()
+                        null,
+                    )?.toInt(),
                 )
                 customization.setLabelCustomization(labelCustomization)
 
@@ -650,12 +683,12 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 textBoxCustomization.setTextFontName(sharedPreferences.getString("three_ds_text_box_text_font_name", null))
                 textBoxCustomization.setTextColor(sharedPreferences.getString("three_ds_text_box_text_color", null))
                 textBoxCustomization.setTextFontSize(
-                    sharedPreferences.getString("three_ds_text_box_text_font_size", null)?.toInt()
+                    sharedPreferences.getString("three_ds_text_box_text_font_size", null)?.toInt(),
                 )
                 textBoxCustomization.setBorderWidth(sharedPreferences.getString("three_ds_text_box_border_width", null)?.toInt())
                 textBoxCustomization.setBorderColor(sharedPreferences.getString("three_ds_text_box_border_color", null))
                 textBoxCustomization.setCornerRadius(
-                    sharedPreferences.getString("three_ds_text_box_corner_radius", null)?.toInt()
+                    sharedPreferences.getString("three_ds_text_box_corner_radius", null)?.toInt(),
                 )
                 customization.setTextBoxCustomization(textBoxCustomization)
 
@@ -663,27 +696,27 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 submitButtonCustomization.setTextFontName(
                     sharedPreferences.getString(
                         "three_ds_submit_button_text_font_name",
-                        null
-                    )
+                        null,
+                    ),
                 )
                 submitButtonCustomization.setTextColor(sharedPreferences.getString("three_ds_submit_button_text_color", null))
                 submitButtonCustomization.setTextFontSize(
                     sharedPreferences.getString(
                         "three_ds_submit_button_text_font_size",
-                        null
-                    )?.toInt()
+                        null,
+                    )?.toInt(),
                 )
                 submitButtonCustomization.setBackgroundColor(
                     sharedPreferences.getString(
                         "three_ds_submit_button_background_color",
-                        null
-                    )
+                        null,
+                    ),
                 )
                 submitButtonCustomization.setCornerRadius(
                     sharedPreferences.getString(
                         "three_ds_submit_button_corner_radius",
-                        null
-                    )?.toInt()
+                        null,
+                    )?.toInt(),
                 )
                 customization.setButtonCustomization(submitButtonCustomization, UiCustomization.ButtonType.SUBMIT)
 
@@ -691,16 +724,16 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 nextButtonCustomization.setTextFontName(sharedPreferences.getString("three_ds_next_button_text_font_name", null))
                 nextButtonCustomization.setTextColor(sharedPreferences.getString("three_ds_next_button_text_color", null))
                 nextButtonCustomization.setTextFontSize(
-                    sharedPreferences.getString("three_ds_next_button_text_font_size", null)?.toInt()
+                    sharedPreferences.getString("three_ds_next_button_text_font_size", null)?.toInt(),
                 )
                 nextButtonCustomization.setBackgroundColor(
                     sharedPreferences.getString(
                         "three_ds_next_button_background_color",
-                        null
-                    )
+                        null,
+                    ),
                 )
                 nextButtonCustomization.setCornerRadius(
-                    sharedPreferences.getString("three_ds_next_button_corner_radius", null)?.toInt()
+                    sharedPreferences.getString("three_ds_next_button_corner_radius", null)?.toInt(),
                 )
                 customization.setButtonCustomization(nextButtonCustomization, UiCustomization.ButtonType.NEXT)
 
@@ -708,27 +741,27 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 continueButtonCustomization.setTextFontName(
                     sharedPreferences.getString(
                         "three_ds_continue_button_text_font_name",
-                        null
-                    )
+                        null,
+                    ),
                 )
                 continueButtonCustomization.setTextColor(sharedPreferences.getString("three_ds_continue_button_text_color", null))
                 continueButtonCustomization.setTextFontSize(
                     sharedPreferences.getString(
                         "three_ds_continue_button_text_font_size",
-                        null
-                    )?.toInt()
+                        null,
+                    )?.toInt(),
                 )
                 continueButtonCustomization.setBackgroundColor(
                     sharedPreferences.getString(
                         "three_ds_continue_button_background_color",
-                        null
-                    )
+                        null,
+                    ),
                 )
                 continueButtonCustomization.setCornerRadius(
                     sharedPreferences.getString(
                         "three_ds_continue_button_corner_radius",
-                        null
-                    )?.toInt()
+                        null,
+                    )?.toInt(),
                 )
                 customization.setButtonCustomization(continueButtonCustomization, UiCustomization.ButtonType.CONTINUE)
 
@@ -736,27 +769,27 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 cancelButtonCustomization.setTextFontName(
                     sharedPreferences.getString(
                         "three_ds_cancel_button_text_font_name",
-                        null
-                    )
+                        null,
+                    ),
                 )
                 cancelButtonCustomization.setTextColor(sharedPreferences.getString("three_ds_cancel_button_text_color", null))
                 cancelButtonCustomization.setTextFontSize(
                     sharedPreferences.getString(
                         "three_ds_cancel_button_text_font_size",
-                        null
-                    )?.toInt()
+                        null,
+                    )?.toInt(),
                 )
                 cancelButtonCustomization.setBackgroundColor(
                     sharedPreferences.getString(
                         "three_ds_cancel_button_background_color",
-                        null
-                    )
+                        null,
+                    ),
                 )
                 cancelButtonCustomization.setCornerRadius(
                     sharedPreferences.getString(
                         "three_ds_cancel_button_corner_radius",
-                        null
-                    )?.toInt()
+                        null,
+                    )?.toInt(),
                 )
                 customization.setButtonCustomization(cancelButtonCustomization, UiCustomization.ButtonType.CANCEL)
 
@@ -764,27 +797,27 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 resendButtonCustomization.setTextFontName(
                     sharedPreferences.getString(
                         "three_ds_resend_button_text_font_name",
-                        null
-                    )
+                        null,
+                    ),
                 )
                 resendButtonCustomization.setTextColor(sharedPreferences.getString("three_ds_resend_button_text_color", null))
                 resendButtonCustomization.setTextFontSize(
                     sharedPreferences.getString(
                         "three_ds_resend_button_text_font_size",
-                        null
-                    )?.toInt()
+                        null,
+                    )?.toInt(),
                 )
                 resendButtonCustomization.setBackgroundColor(
                     sharedPreferences.getString(
                         "three_ds_resend_button_background_color",
-                        null
-                    )
+                        null,
+                    ),
                 )
                 resendButtonCustomization.setCornerRadius(
                     sharedPreferences.getString(
                         "three_ds_resend_button_corner_radius",
-                        null
-                    )?.toInt()
+                        null,
+                    )?.toInt(),
                 )
                 customization.setButtonCustomization(resendButtonCustomization, UiCustomization.ButtonType.RESEND)
 

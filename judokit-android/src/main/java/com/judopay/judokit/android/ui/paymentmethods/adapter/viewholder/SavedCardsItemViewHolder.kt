@@ -20,8 +20,10 @@ import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethod
 
 class SavedCardsItemViewHolder(private val binding: SavedCardItemBinding) :
     RecyclerView.ViewHolder(binding.root), BindableRecyclerViewHolder<PaymentMethodSavedCardItem, PaymentMethodItemAction> {
-
-    override fun bind(model: PaymentMethodSavedCardItem, listener: PaymentMethodsAdapterListener?) = with(binding.root) {
+    override fun bind(
+        model: PaymentMethodSavedCardItem,
+        listener: PaymentMethodsAdapterListener?,
+    ) = with(binding.root) {
         val params = binding.networkIconContainer.layoutParams as ViewGroup.MarginLayoutParams
         if (model.isInEditMode) {
             binding.removeCardIcon.visibility = View.VISIBLE
@@ -32,7 +34,7 @@ class SavedCardsItemViewHolder(private val binding: SavedCardItemBinding) :
             binding.removeCardIcon.setOnClickListener {
                 listener?.invoke(
                     PaymentMethodItemAction.DELETE_CARD,
-                    model
+                    model,
                 )
             }
             setOnClickListener { listener?.invoke(PaymentMethodItemAction.EDIT_CARD, model) }
@@ -59,15 +61,17 @@ class SavedCardsItemViewHolder(private val binding: SavedCardItemBinding) :
         }
     }
 
+    @Suppress("LongMethod", "NestedBlockDepth")
     private fun createBoldSubtitle(model: PaymentMethodSavedCardItem): SpannableStringBuilder {
         val boldString = SpannableStringBuilder()
         with(itemView) {
-            val cardSubtitle = SpannableStringBuilder(
-                context.getString(
-                    R.string.card_subtitle,
-                    model.network.displayName
+            val cardSubtitle =
+                SpannableStringBuilder(
+                    context.getString(
+                        R.string.card_subtitle,
+                        model.network.displayName,
+                    ),
                 )
-            )
             val date = CardDate(model.expireDate)
             when {
                 !date.isAfterToday -> {
@@ -77,27 +81,27 @@ class SavedCardsItemViewHolder(private val binding: SavedCardItemBinding) :
                         val expiredIndex =
                             if (boldString.indexOf(
                                     resources.getString(R.string.expired),
-                                    ignoreCase = true
+                                    ignoreCase = true,
                                 ) == -1
                             ) {
                                 0
                             } else {
                                 boldString.indexOf(
                                     resources.getString(R.string.expired),
-                                    ignoreCase = true
+                                    ignoreCase = true,
                                 )
                             }
                         setSpan(
                             StyleSpan(Typeface.BOLD),
                             0,
                             boldString.length - resources.getString(R.string.is_expired).length,
-                            Spannable.SPAN_INCLUSIVE_INCLUSIVE
+                            Spannable.SPAN_INCLUSIVE_INCLUSIVE,
                         )
                         setSpan(
                             StyleSpan(Typeface.BOLD),
                             expiredIndex,
                             boldString.length,
-                            Spannable.SPAN_INCLUSIVE_INCLUSIVE
+                            Spannable.SPAN_INCLUSIVE_INCLUSIVE,
                         )
                     }
                 }
@@ -107,41 +111,42 @@ class SavedCardsItemViewHolder(private val binding: SavedCardItemBinding) :
                         val expireIndex =
                             if (boldString.indexOf(
                                     resources.getString(R.string.expire_soon),
-                                    ignoreCase = true
+                                    ignoreCase = true,
                                 ) == -1
                             ) {
                                 0
                             } else {
                                 boldString.indexOf(
                                     resources.getString(R.string.expire_soon),
-                                    ignoreCase = true
+                                    ignoreCase = true,
                                 )
                             }
                         setSpan(
                             StyleSpan(Typeface.BOLD),
                             0,
                             boldString.length - resources.getString(R.string.will_expire_soon).length,
-                            Spannable.SPAN_INCLUSIVE_INCLUSIVE
+                            Spannable.SPAN_INCLUSIVE_INCLUSIVE,
                         )
                         setSpan(
                             StyleSpan(Typeface.BOLD),
                             expireIndex,
                             boldString.length,
-                            Spannable.SPAN_INCLUSIVE_INCLUSIVE
+                            Spannable.SPAN_INCLUSIVE_INCLUSIVE,
                         )
                     }
                     binding.subTitle.setTextColor(ContextCompat.getColor(context, R.color.warm_grey))
                 }
-                else -> boldString.apply {
-                    append(model.ending)
-                    setSpan(
-                        StyleSpan(Typeface.BOLD),
-                        0,
-                        boldString.length,
-                        Spannable.SPAN_INCLUSIVE_INCLUSIVE
-                    )
-                    binding.subTitle.setTextColor(ContextCompat.getColor(context, R.color.warm_grey))
-                }
+                else ->
+                    boldString.apply {
+                        append(model.ending)
+                        setSpan(
+                            StyleSpan(Typeface.BOLD),
+                            0,
+                            boldString.length,
+                            Spannable.SPAN_INCLUSIVE_INCLUSIVE,
+                        )
+                        binding.subTitle.setTextColor(ContextCompat.getColor(context, R.color.warm_grey))
+                    }
             }
 
             cardSubtitle.append(" ")

@@ -13,13 +13,12 @@ import retrofit2.http.Url
  * method to obtain an instance. See [GitHub](https://github.com/square/retrofit) for details.
  */
 fun interface RecommendationApiService {
-
     /**
      * A method used to fetch the recommendation status, based on provided encrypted card details.
      */
     @POST
     fun requestRecommendation(
         @Url url: String,
-        @Body recommendationRequest: RecommendationRequest
+        @Body recommendationRequest: RecommendationRequest,
     ): Call<RecommendationResponse>
 }

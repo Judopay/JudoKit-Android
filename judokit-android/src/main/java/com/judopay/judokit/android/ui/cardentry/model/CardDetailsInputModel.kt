@@ -17,5 +17,5 @@ data class CardDetailsInputModel(
     var enabledFields: List<CardDetailsFieldType> = emptyList(),
     var supportedNetworks: List<CardNetwork> = emptyList(),
     var cardNetwork: CardNetwork? = null,
-    var isValid: Boolean = false
+    var isValid: Boolean = false,
 )

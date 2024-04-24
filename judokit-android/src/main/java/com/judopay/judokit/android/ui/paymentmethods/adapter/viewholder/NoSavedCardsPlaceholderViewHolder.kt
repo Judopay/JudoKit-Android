@@ -9,7 +9,8 @@ import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethod
 
 class NoSavedCardsPlaceholderViewHolder(private val binding: NoSavedCardsPlaceholderItemBinding) :
     RecyclerView.ViewHolder(binding.root), BindableRecyclerViewHolder<PaymentMethodItem, PaymentMethodItemAction> {
-
-    override fun bind(model: PaymentMethodItem, listener: PaymentMethodsAdapterListener?) =
-        binding.addButton.setOnClickListener { listener?.invoke(PaymentMethodItemAction.ADD_CARD, model) }
+    override fun bind(
+        model: PaymentMethodItem,
+        listener: PaymentMethodsAdapterListener?,
+    ) = binding.addButton.setOnClickListener { listener?.invoke(PaymentMethodItemAction.ADD_CARD, model) }
 }

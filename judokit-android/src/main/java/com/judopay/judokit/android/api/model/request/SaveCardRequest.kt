@@ -11,6 +11,7 @@ import com.judopay.judokit.android.requireNotNullOrEmpty
  * When creating a [SaveCardRequest] the [SaveCardRequest.judoId]
  * must be provided.
  */
+@Suppress("LongParameterList")
 class SaveCardRequest private constructor(
     private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String,
@@ -27,8 +28,9 @@ class SaveCardRequest private constructor(
     private var emailAddress: String?,
     private var mobileNumber: String?,
     private var primaryAccountDetails: PrimaryAccountDetails?,
-    private var cardHolderName: String?
+    private var cardHolderName: String?,
 ) {
+    @Suppress("TooManyFunctions")
     class Builder {
         private var uniqueRequest: Boolean? = null
         private var yourPaymentReference: String? = null
@@ -49,18 +51,15 @@ class SaveCardRequest private constructor(
 
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
-        fun setYourPaymentReference(yourPaymentReference: String?) =
-            apply { this.yourPaymentReference = yourPaymentReference }
+        fun setYourPaymentReference(yourPaymentReference: String?) = apply { this.yourPaymentReference = yourPaymentReference }
 
         fun setCurrency(currency: String?) = apply { this.currency = currency }
 
         fun setJudoId(judoId: String?) = apply { this.judoId = judoId }
 
-        fun setYourConsumerReference(yourConsumerReference: String?) =
-            apply { this.yourConsumerReference = yourConsumerReference }
+        fun setYourConsumerReference(yourConsumerReference: String?) = apply { this.yourConsumerReference = yourConsumerReference }
 
-        fun setYourPaymentMetaData(yourPaymentMetaData: Map<String, String>?) =
-            apply { this.yourPaymentMetaData = yourPaymentMetaData }
+        fun setYourPaymentMetaData(yourPaymentMetaData: Map<String, String>?) = apply { this.yourPaymentMetaData = yourPaymentMetaData }
 
         fun setAddress(address: Address?) = apply { this.address = address }
 
@@ -81,8 +80,7 @@ class SaveCardRequest private constructor(
         fun setPrimaryAccountDetails(primaryAccountDetails: PrimaryAccountDetails?) =
             apply { this.primaryAccountDetails = primaryAccountDetails }
 
-        fun setCardHolderName(cardHolderName: String?) =
-            apply { this.cardHolderName = cardHolderName }
+        fun setCardHolderName(cardHolderName: String?) = apply { this.cardHolderName = cardHolderName }
 
         fun build(): SaveCardRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
@@ -111,7 +109,7 @@ class SaveCardRequest private constructor(
                 emailAddress,
                 mobileNumber,
                 primaryAccountDetails,
-                cardHolderName
+                cardHolderName,
             )
         }
     }

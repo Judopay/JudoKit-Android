@@ -9,7 +9,9 @@ import com.judopay.judokit.android.PAYMENT_SUCCESS
 
 sealed class JudoPaymentResult {
     data class Success(val result: JudoResult) : JudoPaymentResult()
+
     data class Error(val error: JudoError) : JudoPaymentResult()
+
     data class UserCancelled(var error: JudoError = JudoError.userCancelled()) : JudoPaymentResult()
 }
 
@@ -18,7 +20,6 @@ fun JudoPaymentResult.toIntent(): Intent {
 
     when (this) {
         is JudoPaymentResult.UserCancelled -> {
-            // TODO: to rethink this
             intent.putExtra(JUDO_ERROR, error)
         }
 
@@ -34,8 +35,9 @@ fun JudoPaymentResult.toIntent(): Intent {
 }
 
 val JudoPaymentResult.code: Int
-    get() = when (this) {
-        is JudoPaymentResult.UserCancelled -> PAYMENT_CANCELLED
-        is JudoPaymentResult.Success -> PAYMENT_SUCCESS
-        is JudoPaymentResult.Error -> PAYMENT_ERROR
-    }
+    get() =
+        when (this) {
+            is JudoPaymentResult.UserCancelled -> PAYMENT_CANCELLED
+            is JudoPaymentResult.Success -> PAYMENT_SUCCESS
+            is JudoPaymentResult.Error -> PAYMENT_ERROR
+        }

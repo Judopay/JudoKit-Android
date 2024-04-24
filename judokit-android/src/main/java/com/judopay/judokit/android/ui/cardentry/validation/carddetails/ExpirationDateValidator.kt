@@ -9,19 +9,22 @@ import com.judopay.judokit.android.ui.cardentry.validation.Validator
 
 class ExpirationDateValidator(
     override val fieldType: String = CardDetailsFieldType.EXPIRATION_DATE.name,
-    val cardDate: CardDate = CardDate()
+    val cardDate: CardDate = CardDate(),
 ) : Validator {
-
-    override fun validate(input: String, formFieldEvent: FormFieldEvent): ValidationResult {
-        val date = cardDate.apply { cardDate = input }
+    override fun validate(
+        input: String,
+        formFieldEvent: FormFieldEvent,
+    ): ValidationResult {
+        val date = cardDate.apply { date = input }
         val isValid = date.isAfterToday && date.isInsideAllowedDateRange
         val shouldNotDisplayMessage = formFieldEvent != FormFieldEvent.FOCUS_CHANGED
 
-        val message = when {
-            shouldNotDisplayMessage -> R.string.empty
-            !isValid -> R.string.check_expiry_date
-            else -> R.string.empty
-        }
+        val message =
+            when {
+                shouldNotDisplayMessage -> R.string.empty
+                !isValid -> R.string.check_expiry_date
+                else -> R.string.empty
+            }
 
         return ValidationResult(isValid, message)
     }

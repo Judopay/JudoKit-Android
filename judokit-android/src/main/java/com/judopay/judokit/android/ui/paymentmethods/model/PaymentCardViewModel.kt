@@ -13,9 +13,8 @@ data class PaymentCardViewModel(
     val maskedNumber: String = "",
     val expireDate: String = "",
     val pattern: CardPattern = CardPattern.BLACK,
-    val cardholderName: String = ""
+    val cardholderName: String = "",
 ) : CardViewModel {
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test
 
 @DisplayName("Testing card network logic")
 internal class CardNetworkTest {
-
     @DisplayName("Given ofNumber is called, then call withWhitespacesRemoved")
     @Test
     fun callWithWhitespacesRemovedOnOfNumberCall() {
@@ -257,7 +256,7 @@ internal class CardNetworkTest {
     fun returnCheckYourCvc2WhenMastercard() {
         assertEquals(
             R.string.check_mastercard_security_code,
-            CardNetwork.MASTERCARD.securityCodeInvalidResId
+            CardNetwork.MASTERCARD.securityCodeInvalidResId,
         )
     }
 
@@ -266,7 +265,7 @@ internal class CardNetworkTest {
     fun returnCheckYourCvn2WhenChinaUnionPay() {
         assertEquals(
             R.string.check_china_union_pay_security_code,
-            CardNetwork.CHINA_UNION_PAY.securityCodeInvalidResId
+            CardNetwork.CHINA_UNION_PAY.securityCodeInvalidResId,
         )
     }
 
@@ -425,7 +424,7 @@ internal class CardNetworkTest {
     fun returnAmexErrorStringResourceWhenAmex() {
         assertEquals(
             R.string.error_amex_not_supported,
-            CardNetwork.AMEX.notSupportedErrorMessageResId
+            CardNetwork.AMEX.notSupportedErrorMessageResId,
         )
     }
 
@@ -434,7 +433,7 @@ internal class CardNetworkTest {
     fun returnMastercardErrorStringResourceWhenMastercard() {
         assertEquals(
             R.string.error_mastercard_not_supported,
-            CardNetwork.MASTERCARD.notSupportedErrorMessageResId
+            CardNetwork.MASTERCARD.notSupportedErrorMessageResId,
         )
     }
 
@@ -443,7 +442,7 @@ internal class CardNetworkTest {
     fun returnMaestroErrorStringResourceWhenMaestro() {
         assertEquals(
             R.string.error_maestro_not_supported,
-            CardNetwork.MAESTRO.notSupportedErrorMessageResId
+            CardNetwork.MAESTRO.notSupportedErrorMessageResId,
         )
     }
 
@@ -452,7 +451,7 @@ internal class CardNetworkTest {
     fun returnVisaErrorStringResourceWhenVisa() {
         assertEquals(
             R.string.error_visa_not_supported,
-            CardNetwork.VISA.notSupportedErrorMessageResId
+            CardNetwork.VISA.notSupportedErrorMessageResId,
         )
     }
 
@@ -461,16 +460,18 @@ internal class CardNetworkTest {
     fun returnDiscoverErrorStringResourceWhenDiscover() {
         assertEquals(
             R.string.error_discover_not_supported,
-            CardNetwork.DISCOVER.notSupportedErrorMessageResId
+            CardNetwork.DISCOVER.notSupportedErrorMessageResId,
         )
     }
 
-    @DisplayName("Given notSupportedErrorMessageResId is called, when card network is DINERS_CLUB, return Diner's Club error string resource")
+    @DisplayName(
+        "Given notSupportedErrorMessageResId is called, when card network is DINERS_CLUB, return Diner's Club error string resource",
+    )
     @Test
     fun returnDinersClubErrorStringResourceWhenDinersClub() {
         assertEquals(
             R.string.error_diners_club_not_supported,
-            CardNetwork.DINERS_CLUB.notSupportedErrorMessageResId
+            CardNetwork.DINERS_CLUB.notSupportedErrorMessageResId,
         )
     }
 
@@ -479,16 +480,18 @@ internal class CardNetworkTest {
     fun returnJCBErrorStringResourceWhenJCB() {
         assertEquals(
             R.string.error_jcb_not_supported,
-            CardNetwork.JCB.notSupportedErrorMessageResId
+            CardNetwork.JCB.notSupportedErrorMessageResId,
         )
     }
 
-    @DisplayName("Given notSupportedErrorMessageResId is called, when card network is CHINA_UNION_PAY, return China UnionPay error string resource")
+    @DisplayName(
+        "Given notSupportedErrorMessageResId is called, when card network is CHINA_UNION_PAY, return China UnionPay error string resource",
+    )
     @Test
     fun returnChinaUnionPayErrorStringResourceWhenChinaUnionPay() {
         assertEquals(
             R.string.error_union_pay_not_supported,
-            CardNetwork.CHINA_UNION_PAY.notSupportedErrorMessageResId
+            CardNetwork.CHINA_UNION_PAY.notSupportedErrorMessageResId,
         )
     }
 
@@ -509,7 +512,7 @@ internal class CardNetworkTest {
     fun returnMastercardDefaultNameResourceWhenMastercard() {
         assertEquals(
             R.string.default_mastercard_card_title,
-            CardNetwork.MASTERCARD.defaultCardNameResId
+            CardNetwork.MASTERCARD.defaultCardNameResId,
         )
     }
 
@@ -530,7 +533,7 @@ internal class CardNetworkTest {
     fun returnDiscoverDefaultNameResourceWhenDiscover() {
         assertEquals(
             R.string.default_discover_card_title,
-            CardNetwork.DISCOVER.defaultCardNameResId
+            CardNetwork.DISCOVER.defaultCardNameResId,
         )
     }
 
@@ -539,7 +542,7 @@ internal class CardNetworkTest {
     fun returnDinersClubDefaultNameResourceWhenDinersClub() {
         assertEquals(
             R.string.default_dinnersclub_card_title,
-            CardNetwork.DINERS_CLUB.defaultCardNameResId
+            CardNetwork.DINERS_CLUB.defaultCardNameResId,
         )
     }
 
@@ -554,7 +557,7 @@ internal class CardNetworkTest {
     fun returnChinaUnionPayDefaultNameResourceWhenChinaUnionPay() {
         assertEquals(
             R.string.default_chinaunionpay_card_title,
-            CardNetwork.CHINA_UNION_PAY.defaultCardNameResId
+            CardNetwork.CHINA_UNION_PAY.defaultCardNameResId,
         )
     }
 

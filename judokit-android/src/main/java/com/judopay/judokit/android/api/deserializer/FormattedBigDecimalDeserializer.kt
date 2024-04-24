@@ -8,12 +8,11 @@ import java.lang.reflect.Type
 import java.math.BigDecimal
 
 internal class FormattedBigDecimalDeserializer : JsonDeserializer<BigDecimal> {
-
     @Throws(JsonParseException::class)
     override fun deserialize(
         json: JsonElement,
         typeOfT: Type,
-        context: JsonDeserializationContext
+        context: JsonDeserializationContext,
     ): BigDecimal {
         val jsonString = json.asString
         return if (jsonString.isNotEmpty()) {

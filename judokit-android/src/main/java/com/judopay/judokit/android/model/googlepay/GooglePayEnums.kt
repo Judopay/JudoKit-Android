@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-enum class GooglePayPaymentMethodType : Parcelable { CARD }
+enum class GooglePayPaymentMethodType : Parcelable { CARD, }
 
 @Parcelize
 enum class GooglePayAuthMethod : Parcelable { PAN_ONLY, CRYPTOGRAM_3DS }

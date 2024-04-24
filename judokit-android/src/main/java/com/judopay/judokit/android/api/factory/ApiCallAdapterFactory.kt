@@ -16,59 +16,75 @@ import java.lang.reflect.Type
 import java.util.concurrent.TimeUnit
 
 abstract class CallDelegate<TypeIn, TypeOut>(protected val proxy: Call<TypeIn>) : Call<TypeOut> {
-
     override fun execute(): Response<TypeOut> = throw NotImplementedError()
+
     final override fun enqueue(callback: Callback<TypeOut>) = enqueueImpl(callback)
+
     final override fun clone(): Call<TypeOut> = cloneImpl()
 
     override fun cancel() = proxy.cancel()
+
     override fun request(): Request = proxy.request()
+
     override fun isExecuted() = proxy.isExecuted
+
     override fun isCanceled() = proxy.isCanceled
 
     abstract fun enqueueImpl(callback: Callback<TypeOut>)
+
     abstract fun cloneImpl(): Call<TypeOut>
 }
 
+private const val RESULT_CALL_TIMEOUT_SECONDS = 30L
+
 class ResultCall<T>(proxy: Call<T>) : CallDelegate<T, JudoApiCallResult<T>>(proxy) {
+    override fun enqueueImpl(callback: Callback<JudoApiCallResult<T>>) =
+        proxy.enqueue(
+            object : Callback<T> {
+                override fun onResponse(
+                    call: Call<T>,
+                    response: Response<T>,
+                ) {
+                    val result =
+                        if (response.isSuccessful) {
+                            val body = response.body()
+                            JudoApiCallResult.Success<T>(body)
+                        } else {
+                            val code = response.code()
+                            var error: ApiError? = null
 
-    override fun enqueueImpl(callback: Callback<JudoApiCallResult<T>>) = proxy.enqueue(object : Callback<T> {
+                            response.errorBody()?.charStream()?.let {
+                                try {
+                                    error = Gson().fromJson(it, ApiError::class.java)
+                                } catch (exception: JsonSyntaxException) {
+                                    exception.printStackTrace()
+                                }
+                            }
 
-        override fun onResponse(call: Call<T>, response: Response<T>) {
-            val result = if (response.isSuccessful) {
-                val body = response.body()
-                JudoApiCallResult.Success<T>(body)
-            } else {
-                val code = response.code()
-                var error: ApiError? = null
+                            JudoApiCallResult.Failure(code, error)
+                        }
 
-                response.errorBody()?.charStream()?.let {
-                    try {
-                        error = Gson().fromJson(it, ApiError::class.java)
-                    } catch (exception: JsonSyntaxException) {
-                        exception.printStackTrace()
-                    }
+                    callback.onResponse(this@ResultCall, Response.success(result))
                 }
 
-                JudoApiCallResult.Failure(code, error)
-            }
-
-            callback.onResponse(this@ResultCall, Response.success(result))
-        }
-
-        override fun onFailure(call: Call<T>, throwable: Throwable) {
-            val result = JudoApiCallResult.Failure(throwable = throwable)
-            callback.onResponse(this@ResultCall, Response.success(result))
-        }
-    })
+                override fun onFailure(
+                    call: Call<T>,
+                    throwable: Throwable,
+                ) {
+                    val result = JudoApiCallResult.Failure(throwable = throwable)
+                    callback.onResponse(this@ResultCall, Response.success(result))
+                }
+            },
+        )
 
     override fun cloneImpl() = ResultCall(proxy.clone())
 
-    override fun timeout(): Timeout = Timeout().timeout(30, TimeUnit.SECONDS)
+    override fun timeout(): Timeout = Timeout().timeout(RESULT_CALL_TIMEOUT_SECONDS, TimeUnit.SECONDS)
 }
 
 class ResultAdapter(private val type: Type) : CallAdapter<Type, Call<JudoApiCallResult<Type>>> {
     override fun responseType() = type
+
     override fun adapt(call: Call<Type>): Call<JudoApiCallResult<Type>> = ResultCall(call)
 }
 
@@ -76,7 +92,7 @@ class ApiCallAdapterFactory : CallAdapter.Factory() {
     override fun get(
         returnType: Type,
         annotations: Array<Annotation>,
-        retrofit: Retrofit
+        retrofit: Retrofit,
     ) = when (getRawType(returnType)) {
         Call::class.java -> {
             val callType = getParameterUpperBound(0, returnType as ParameterizedType)

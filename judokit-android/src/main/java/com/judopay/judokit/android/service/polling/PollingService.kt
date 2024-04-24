@@ -13,7 +13,6 @@ private const val REQUEST_DELAY = 5000L
 private const val TIMEOUT = DELAY_IN_SECONDS * MILLISECONDS
 
 class PollingService(private val service: JudoApiService) {
-
     lateinit var orderId: String
     lateinit var result: (PollingResult<BankSaleStatusResponse>) -> Unit
 
