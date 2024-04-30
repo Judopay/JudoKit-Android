@@ -14,6 +14,7 @@ android {
 }
 
 dependencies {
+    // For the UI configuration classes
     api(libs.judopay.judo3ds2)
     implementation(libs.judopay.device.dna)
 
@@ -21,7 +22,8 @@ dependencies {
     implementation(libs.bundles.androidx.lifecycle)
     implementation(libs.bundles.androidx.navigation)
 
-    implementation(libs.squareup.retrofit2)
+    // For the exposed API client callbacks interfaces
+    api(libs.squareup.retrofit2)
     implementation(libs.squareup.retrofit2.converter.gson)
 
     implementation(libs.androidx.core.ktx)
