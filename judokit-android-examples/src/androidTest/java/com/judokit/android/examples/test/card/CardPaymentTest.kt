@@ -41,12 +41,18 @@ import android.os.Build
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import com.judokit.android.examples.BuildConfig
+import com.judokit.android.examples.test.card.BillingInfo.INVALID_ADDRESS_LABEL
+import com.judokit.android.examples.test.card.BillingInfo.INVALID_CITY_LABEL
+import com.judokit.android.examples.test.card.BillingInfo.INVALID_EMAIL_LABEL
+import com.judokit.android.examples.test.card.BillingInfo.INVALID_PHONE_LABEL
 import com.judokit.android.examples.test.card.BillingInfo.INVALID_POSTCODE
 import com.judokit.android.examples.test.card.BillingInfo.INVALID_POSTCODE_LABEL
 import com.judokit.android.examples.test.card.BillingInfo.INVALID_ZIPCODE_LABEL
+import com.judokit.android.examples.test.card.BillingInfo.SPECIAL_CHARACTERS
 import com.judokit.android.examples.test.card.BillingInfo.VALID_ADDRESS
 import com.judokit.android.examples.test.card.BillingInfo.VALID_CITY
 import com.judokit.android.examples.test.card.BillingInfo.VALID_COUNTRY
+import com.judokit.android.examples.test.card.BillingInfo.VALID_COUNTRY_CODE
 import com.judokit.android.examples.test.card.BillingInfo.VALID_EMAIL
 import com.judokit.android.examples.test.card.BillingInfo.VALID_MOBILE
 import com.judokit.android.examples.test.card.BillingInfo.VALID_POSTCODE
@@ -783,6 +789,57 @@ class CardPaymentTest {
 
         onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
             .check(matches(withText(INVALID_POSTCODE_LABEL)))
+
+        toggleBillingInfoSetting(false)
+    }
+
+    @Test
+    fun testBillingFieldsInputValidation() {
+        toggleBillingInfoSetting(true)
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        fillTextField(R.id.emailTextInputEditText, SPECIAL_CHARACTERS)
+        onView(withId(R.id.cityTextInputEditText)).perform(click())
+        Thread.sleep(500)
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_EMAIL_LABEL)))
+        fillTextField(R.id.emailTextInputEditText, VALID_EMAIL)
+
+        selectFromMultipleAndEnterText(R.id.countryTextInputEditText, VALID_COUNTRY)
+        onView(withText(VALID_COUNTRY)).perform(click())
+        fillTextField(R.id.mobileNumberTextInputEditText, VALID_COUNTRY_CODE)
+        onView(withId(R.id.cityTextInputEditText)).perform(click())
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_PHONE_LABEL)))
+        Thread.sleep(500)
+        fillTextField(R.id.mobileNumberTextInputEditText, VALID_MOBILE)
+
+        fillTextField(R.id.addressLine1TextInputEditText, SPECIAL_CHARACTERS)
+        onView(withId(R.id.cityTextInputEditText)).perform(click())
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_ADDRESS_LABEL)))
+        fillTextField(R.id.addressLine1TextInputEditText, VALID_ADDRESS)
+
+        fillTextField(R.id.cityTextInputEditText, SPECIAL_CHARACTERS)
+        onView(withId(R.id.addressLine1TextInputEditText)).perform(click())
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_CITY_LABEL)))
+        fillTextField(R.id.cityTextInputEditText, VALID_CITY)
 
         toggleBillingInfoSetting(false)
     }

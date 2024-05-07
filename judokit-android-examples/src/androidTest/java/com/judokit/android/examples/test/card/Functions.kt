@@ -130,7 +130,7 @@ fun enterPaymentSheetDetails(
     fillTextField(SDK.id.securityNumberTextInputEditText, cardSecurityCode)
 }
 
-private fun fillTextField(
+fun fillTextField(
     @IdRes textFieldId: Int,
     text: String,
 ) {
