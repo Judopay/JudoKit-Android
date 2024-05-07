@@ -1,7 +1,6 @@
 package com.judokit.android.examples.test.card
 
 import android.Manifest
-import android.os.Build
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.compose.ui.test.onNodeWithText
@@ -39,12 +38,17 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import android.os.Build
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
+import com.judokit.android.examples.BuildConfig
+import com.judokit.android.examples.test.card.BillingInfo.INVALID_POSTCODE
+import com.judokit.android.examples.test.card.BillingInfo.INVALID_POSTCODE_LABEL
+import com.judokit.android.examples.test.card.BillingInfo.INVALID_ZIPCODE_LABEL
 import com.judokit.android.examples.test.card.BillingInfo.VALID_ADDRESS
 import com.judokit.android.examples.test.card.BillingInfo.VALID_CITY
 import com.judokit.android.examples.test.card.BillingInfo.VALID_COUNTRY
 import com.judokit.android.examples.test.card.BillingInfo.VALID_EMAIL
 import com.judokit.android.examples.test.card.BillingInfo.VALID_MOBILE
-import com.judokit.android.examples.test.card.BillingInfo.VALID_PHONE_CODE
 import com.judokit.android.examples.test.card.BillingInfo.VALID_POSTCODE
 import com.judokit.android.examples.test.card.CardDetails.CARD_EXPIRY
 import com.judokit.android.examples.test.card.CardDetails.CARD_NUMBER
@@ -59,6 +63,7 @@ import com.judokit.android.examples.test.card.FeaturesList.REGISTER_CARD_LABEL
 import com.judokit.android.examples.test.card.FeaturesList.TOKEN_PAYMENTS_LABEL
 import com.judokit.android.examples.test.card.Other.CANCELLED_PAYMENT_TOAST
 import com.judokit.android.examples.test.card.Other.CANCEL_BUTTON
+import org.hamcrest.Matchers.allOf
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -651,7 +656,7 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        Thread.sleep(500)
+        Thread.sleep(1000)
 
         fillBillingDetails(
             VALID_EMAIL,
@@ -669,5 +674,128 @@ class CardPaymentTest {
         clickCompleteOn3DS2Screen()
 
         assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+    }
+
+    @Test
+    fun testUKPostCodeValidation() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putBoolean("should_ask_for_billing_information", true)
+            }
+            .commit()
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        fillBillingDetails(
+            VALID_EMAIL,
+            VALID_COUNTRY,
+            VALID_MOBILE,
+            VALID_ADDRESS,
+            VALID_CITY,
+            INVALID_POSTCODE
+        )
+
+        onView(withId(R.id.cityTextInputEditText))
+            .perform(click())
+
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_POSTCODE_LABEL)))
+    }
+
+    @Test
+    fun testUSPostCodeValidation() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putBoolean("should_ask_for_billing_information", true)
+            }
+            .commit()
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        fillBillingDetails(
+            VALID_EMAIL,
+            "United States",
+            VALID_MOBILE,
+            VALID_ADDRESS,
+            VALID_CITY,
+            INVALID_POSTCODE
+        )
+
+        onView(withId(R.id.cityTextInputEditText))
+            .perform(click())
+
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_ZIPCODE_LABEL)))
+    }
+
+    @Test
+    fun testCAPostCodeValidation() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putBoolean("should_ask_for_billing_information", true)
+            }
+            .commit()
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        fillBillingDetails(
+            VALID_EMAIL,
+            "Canada",
+            VALID_MOBILE,
+            VALID_ADDRESS,
+            VALID_CITY,
+            INVALID_POSTCODE
+        )
+
+        onView(withId(R.id.cityTextInputEditText))
+            .perform(click())
+
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_POSTCODE_LABEL)))
     }
 }

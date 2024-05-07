@@ -178,9 +178,6 @@ fun fillBillingDetails(email: String,
 
     fillTextField(SDK.id.mobileNumberTextInputEditText, phone)
 
-    onView(withId(R.id.constraintLayout))
-        .perform(ViewActions.swipeUp())
-
     fillTextField(SDK.id.addressLine1TextInputEditText, addressLineOne)
 
     fillTextField(SDK.id.cityTextInputEditText, city)
