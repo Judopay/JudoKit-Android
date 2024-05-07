@@ -1,4 +1,5 @@
 package com.judokit.android.examples.test.card
+
 object CardDetails {
     const val CARD_NUMBER = "4976 3500 0000 6891"
     const val CARDHOLDER_NAME = "Test User"
@@ -55,6 +56,3 @@ object BillingInfo {
     const val INVALID_ADDRESS_LABEL = "Please enter a valid address"
     const val INVALID_CITY_LABEL = "Please enter a valid city"
 }
-
-
-

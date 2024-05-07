@@ -1,6 +1,5 @@
 package com.judokit.android.examples.test.card
 
-import android.view.View
 import androidx.annotation.IdRes
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,21 +13,17 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
 import com.judokit.android.examples.result.ResultActivity
 import com.judokit.android.examples.test.BuildConfig
-import com.judopay.judokit.android.R
 import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.startsWith
 import org.hamcrest.Matchers
-import java.util.regex.Matcher
 import com.judokit.android.examples.R as Examples
 import com.judopay.judokit.android.R as SDK
-
 
 private val context = InstrumentationRegistry.getInstrumentation().targetContext
 private val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
@@ -162,12 +157,14 @@ fun setupRavelin(
     Thread.sleep(1000)
 }
 
-fun fillBillingDetails(email: String,
-                       country: String,
-                       phone: String,
-                       addressLineOne: String,
-                       city: String,
-                       postcode: String) {
+fun fillBillingDetails(
+    email: String,
+    country: String,
+    phone: String,
+    addressLineOne: String,
+    city: String,
+    postcode: String,
+) {
     fillTextField(SDK.id.emailTextInputEditText, email)
 
     selectFromMultipleAndEnterText(SDK.id.countryTextInputEditText, country)
@@ -185,12 +182,15 @@ fun fillBillingDetails(email: String,
     fillTextField(SDK.id.postalCodeTextInputEditText, postcode)
 }
 
-fun selectFromMultipleAndEnterText(@IdRes textFieldId: Int, text: String) {
+fun selectFromMultipleAndEnterText(
+    @IdRes textFieldId: Int,
+    text: String,
+) {
     onView(
         Matchers.allOf(
             withId(textFieldId),
-            ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)
-        )
+            ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+        ),
     ).perform(ViewActions.clearText(), ViewActions.typeText(text))
 }
 

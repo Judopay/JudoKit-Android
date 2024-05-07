@@ -18,10 +18,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import com.judokit.android.examples.feature.DemoFeatureListActivity
 import com.judokit.android.examples.test.BuildConfig
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.runner.RunWith
 import com.judokit.android.examples.test.card.CardDetails.CARDHOLDER_NAME
 import com.judokit.android.examples.test.card.CardDetails.CARD_EXPIRY
 import com.judokit.android.examples.test.card.CardDetails.CARD_NUMBER
@@ -42,6 +38,10 @@ import com.judokit.android.examples.test.card.Ravelin.PREVENT
 import com.judokit.android.examples.test.card.Ravelin.REVIEW
 import com.judokit.android.examples.test.card.Ravelin.TRA
 import com.judopay.judokit.android.R
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest

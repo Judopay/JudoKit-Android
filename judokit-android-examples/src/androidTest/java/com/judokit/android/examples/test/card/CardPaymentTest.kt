@@ -1,6 +1,7 @@
 package com.judokit.android.examples.test.card
 
 import android.Manifest
+import android.os.Build
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.compose.ui.test.onNodeWithText
@@ -19,9 +20,11 @@ import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -29,18 +32,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
+import com.judokit.android.examples.BuildConfig
 import com.judokit.android.examples.feature.DemoFeatureListActivity
 import com.judokit.android.examples.feature.tokenpayments.TokenPaymentsActivity
 import com.judokit.android.examples.result.ResultActivity
-import com.judopay.judokit.android.R
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.runner.RunWith
-import android.os.Build
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
-import com.judokit.android.examples.BuildConfig
 import com.judokit.android.examples.test.card.BillingInfo.INVALID_ADDRESS_LABEL
 import com.judokit.android.examples.test.card.BillingInfo.INVALID_CITY_LABEL
 import com.judokit.android.examples.test.card.BillingInfo.INVALID_EMAIL_LABEL
@@ -69,7 +64,12 @@ import com.judokit.android.examples.test.card.FeaturesList.REGISTER_CARD_LABEL
 import com.judokit.android.examples.test.card.FeaturesList.TOKEN_PAYMENTS_LABEL
 import com.judokit.android.examples.test.card.Other.CANCELLED_PAYMENT_TOAST
 import com.judokit.android.examples.test.card.Other.CANCEL_BUTTON
+import com.judopay.judokit.android.R
 import org.hamcrest.Matchers.allOf
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -650,7 +650,7 @@ class CardPaymentTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -665,7 +665,7 @@ class CardPaymentTest {
             VALID_MOBILE,
             VALID_ADDRESS,
             VALID_CITY,
-            VALID_POSTCODE
+            VALID_POSTCODE,
         )
 
         onView(withId(R.id.billingDetailsSubmitButton))
@@ -690,7 +690,7 @@ class CardPaymentTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -705,7 +705,7 @@ class CardPaymentTest {
             VALID_MOBILE,
             VALID_ADDRESS,
             VALID_CITY,
-            INVALID_POSTCODE
+            INVALID_POSTCODE,
         )
 
         onView(withId(R.id.cityTextInputEditText))
@@ -728,7 +728,7 @@ class CardPaymentTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -743,7 +743,7 @@ class CardPaymentTest {
             VALID_MOBILE,
             VALID_ADDRESS,
             VALID_CITY,
-            INVALID_POSTCODE
+            INVALID_POSTCODE,
         )
 
         onView(withId(R.id.cityTextInputEditText))
@@ -766,7 +766,7 @@ class CardPaymentTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
@@ -781,7 +781,7 @@ class CardPaymentTest {
             VALID_MOBILE,
             VALID_ADDRESS,
             VALID_CITY,
-            INVALID_POSTCODE
+            INVALID_POSTCODE,
         )
 
         onView(withId(R.id.cityTextInputEditText))
@@ -804,7 +804,7 @@ class CardPaymentTest {
             CARD_NUMBER,
             CARDHOLDER_NAME,
             CARD_EXPIRY,
-            CARD_SECURITY_CODE
+            CARD_SECURITY_CODE,
         )
 
         onView(withId(R.id.cardEntrySubmitButton))
