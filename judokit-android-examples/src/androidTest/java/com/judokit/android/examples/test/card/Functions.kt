@@ -193,3 +193,12 @@ fun selectFromMultipleAndEnterText(@IdRes textFieldId: Int, text: String) {
         )
     ).perform(ViewActions.clearText(), ViewActions.typeText(text))
 }
+
+fun toggleBillingInfoSetting(state: Boolean) {
+    sharedPrefs
+        .edit()
+        .apply {
+            putBoolean("should_ask_for_billing_information", state)
+        }
+        .commit()
+}

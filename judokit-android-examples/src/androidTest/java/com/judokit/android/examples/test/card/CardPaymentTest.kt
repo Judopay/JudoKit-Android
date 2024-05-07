@@ -109,7 +109,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onValidCardDetailsInputSubmitButtonShouldBeEnabled() {
+    fun testValidCardDetailsInputSubmitButton() {
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
@@ -125,7 +125,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onCancelledTransactionErrorPopupShouldBeDisplayed() {
+    fun testCancelledTransactionErrorPopupShouldBeDisplayed() {
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
@@ -138,7 +138,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulTransactionReceiptObjectShouldContainRelevantInfo() {
+    fun testSuccessfulTransaction() {
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
@@ -159,7 +159,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onDeclinedTransactionReceiptObjectShouldContainRelevantInfo() {
+    fun testDeclinedTransaction() {
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
@@ -180,7 +180,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onFailedTransactionReceiptObjectShouldContainRelevantInfo() {
+    fun testFailedTransaction() {
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
@@ -201,7 +201,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onCancel3DS2ChallengeScreenReceiptObjectShouldContainRelevantInfo() {
+    fun testCancel3DS2ChallengeScreen() {
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
@@ -229,7 +229,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulPreauthTransactionReceiptObjectContainsRelevantInfo() {
+    fun testSuccessfulPreauthTransaction() {
         onView(withText(PREAUTH_WITH_CARD_LABEL))
             .perform(click())
 
@@ -250,7 +250,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulRegisterCardTransactionReceiptObjectContainsRelevantInfo() {
+    fun testSuccessfulRegisterCardTransaction() {
         onView(withText(REGISTER_CARD_LABEL))
             .perform(click())
 
@@ -271,7 +271,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulCheckCardTransactionReceiptObjectContainsRelevantInfo() {
+    fun testSuccessfulCheckCardTransaction() {
         onView(withText(CHECK_CARD_LABEL))
             .perform(click())
 
@@ -292,7 +292,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulTokenPaymentReceiptObjectContainsRelevantInfo() {
+    fun testSuccessfulTokenPayment() {
         onView(withId(R.id.recyclerView))
             .perform(swipeUp())
 
@@ -335,7 +335,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulTokenPreauthReceiptObjectContainsRelevantInfo() {
+    fun testSuccessfulTokenPreauth() {
         onView(withId(R.id.recyclerView))
             .perform(swipeUp())
 
@@ -378,7 +378,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulFrictionlessPaymentReceiptObjectContainsRelevantInfo() {
+    fun testSuccessfulFrictionlessPayment() {
         sharedPrefs
             .edit()
             .apply {
@@ -405,7 +405,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onFrictionlessNoMethodPaymentReceiptObjectContainsRelevantInfo() {
+    fun testFrictionlessNoMethodPayment() {
         sharedPrefs
             .edit()
             .apply {
@@ -432,7 +432,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onFrictionlessAuthFailedPaymentReceiptObjectContainsRelevantInfo() {
+    fun testFrictionlessAuthFailedPayment() {
         sharedPrefs
             .edit()
             .apply {
@@ -463,7 +463,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulPaymentMethodsCardPaymentReceiptObjectContainsRelevantInfo() {
+    fun testSuccessfulPaymentMethodsCardPayment() {
         sharedPrefs
             .edit()
             .apply {
@@ -525,7 +525,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulPaymentMethodsPreauthReceiptObjectContainsRelevantInfo() {
+    fun testSuccessfulPaymentMethodsPreauth() {
         sharedPrefs
             .edit()
             .apply {
@@ -590,7 +590,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onUserCanSuccessfullyRemoveCardInPaymentMethods() {
+    fun testUserCanSuccessfullyRemoveCardInPaymentMethods() {
         onView(withText(PAYMENT_METHODS_LABEL))
             .perform(click())
 
@@ -635,12 +635,7 @@ class CardPaymentTest {
 
     @Test
     fun testSuccessfulPaymentWithBillingDetails() {
-        sharedPrefs
-            .edit()
-            .apply {
-                putBoolean("should_ask_for_billing_information", true)
-            }
-            .commit()
+        toggleBillingInfoSetting(true)
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -674,16 +669,13 @@ class CardPaymentTest {
         clickCompleteOn3DS2Screen()
 
         assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+
+        toggleBillingInfoSetting(false)
     }
 
     @Test
     fun testUKPostCodeValidation() {
-        sharedPrefs
-            .edit()
-            .apply {
-                putBoolean("should_ask_for_billing_information", true)
-            }
-            .commit()
+        toggleBillingInfoSetting(true)
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -715,16 +707,13 @@ class CardPaymentTest {
 
         onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
             .check(matches(withText(INVALID_POSTCODE_LABEL)))
+
+        toggleBillingInfoSetting(false)
     }
 
     @Test
     fun testUSPostCodeValidation() {
-        sharedPrefs
-            .edit()
-            .apply {
-                putBoolean("should_ask_for_billing_information", true)
-            }
-            .commit()
+        toggleBillingInfoSetting(true)
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -756,16 +745,13 @@ class CardPaymentTest {
 
         onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
             .check(matches(withText(INVALID_ZIPCODE_LABEL)))
+
+        toggleBillingInfoSetting(false)
     }
 
     @Test
     fun testCAPostCodeValidation() {
-        sharedPrefs
-            .edit()
-            .apply {
-                putBoolean("should_ask_for_billing_information", true)
-            }
-            .commit()
+        toggleBillingInfoSetting(true)
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -797,5 +783,7 @@ class CardPaymentTest {
 
         onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
             .check(matches(withText(INVALID_POSTCODE_LABEL)))
+
+        toggleBillingInfoSetting(false)
     }
 }
