@@ -4,18 +4,24 @@ import androidx.annotation.IdRes
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.IdlingResourceTimeoutException
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
 import com.judokit.android.examples.result.ResultActivity
 import com.judokit.android.examples.test.BuildConfig
 import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.startsWith
+import org.hamcrest.Matchers
 import com.judokit.android.examples.R as Examples
 import com.judopay.judokit.android.R as SDK
 
@@ -83,19 +89,19 @@ fun assertReceiptObject(
     type: String,
 ) {
     awaitActivityThenRun(ResultActivity::class.java.name) {
-        Espresso.onView(ViewMatchers.withId(SDK.id.recyclerView))
+        Espresso.onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(8))
             .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(startsWith(message)))))
 
-        Espresso.onView(ViewMatchers.withId(SDK.id.recyclerView))
+        Espresso.onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(13))
             .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(CoreMatchers.not(receiptId)))))
 
-        Espresso.onView(ViewMatchers.withId(SDK.id.recyclerView))
+        Espresso.onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(14))
             .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(result))))
 
-        Espresso.onView(ViewMatchers.withId(SDK.id.recyclerView))
+        Espresso.onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(15))
             .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(type))))
     }
@@ -119,7 +125,7 @@ fun enterPaymentSheetDetails(
     fillTextField(SDK.id.securityNumberTextInputEditText, cardSecurityCode)
 }
 
-private fun fillTextField(
+fun fillTextField(
     @IdRes textFieldId: Int,
     text: String,
 ) {
@@ -142,11 +148,57 @@ fun setupRavelin(
         }
         .commit()
 
-    Espresso.onView(ViewMatchers.withId(Examples.id.action_settings))
+    Espresso.onView(withId(Examples.id.action_settings))
         .perform(ViewActions.click())
 
     Espresso.onView(ViewMatchers.withText("Generate payment session"))
         .perform(ViewActions.click())
 
     Thread.sleep(1000)
+}
+
+fun fillBillingDetails(
+    email: String,
+    country: String,
+    phone: String,
+    addressLineOne: String,
+    city: String,
+    postcode: String,
+) {
+    fillTextField(SDK.id.emailTextInputEditText, email)
+
+    selectFromMultipleAndEnterText(SDK.id.countryTextInputEditText, country)
+
+    onView(withText(country)).perform(click())
+
+    Thread.sleep(500)
+
+    fillTextField(SDK.id.mobileNumberTextInputEditText, phone)
+
+    fillTextField(SDK.id.addressLine1TextInputEditText, addressLineOne)
+
+    fillTextField(SDK.id.cityTextInputEditText, city)
+
+    fillTextField(SDK.id.postalCodeTextInputEditText, postcode)
+}
+
+fun selectFromMultipleAndEnterText(
+    @IdRes textFieldId: Int,
+    text: String,
+) {
+    onView(
+        Matchers.allOf(
+            withId(textFieldId),
+            ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+        ),
+    ).perform(ViewActions.clearText(), ViewActions.typeText(text))
+}
+
+fun toggleBillingInfoSetting(state: Boolean) {
+    sharedPrefs
+        .edit()
+        .apply {
+            putBoolean("should_ask_for_billing_information", state)
+        }
+        .commit()
 }

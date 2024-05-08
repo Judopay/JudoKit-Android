@@ -1424,6 +1424,7 @@ public final class com/judopay/judokit/android/databinding/BillingDetailsFormVie
 	public final field billingDetailsTextView Landroid/widget/TextView;
 	public final field cityTextInputEditText Landroid/widget/EditText;
 	public final field cityTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
+	public final field constraintLayout Landroidx/constraintlayout/widget/ConstraintLayout;
 	public final field countryTextInputEditText Landroid/widget/AutoCompleteTextView;
 	public final field countryTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
 	public final field emailTextInputEditText Landroid/widget/EditText;
