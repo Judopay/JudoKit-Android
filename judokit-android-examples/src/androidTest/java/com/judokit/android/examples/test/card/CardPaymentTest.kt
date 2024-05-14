@@ -20,9 +20,11 @@ import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -30,11 +32,40 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
+import com.judokit.android.examples.BuildConfig
 import com.judokit.android.examples.feature.DemoFeatureListActivity
 import com.judokit.android.examples.feature.tokenpayments.TokenPaymentsActivity
 import com.judokit.android.examples.result.ResultActivity
-import com.judokit.android.examples.test.BuildConfig
+import com.judokit.android.examples.test.card.BillingInfo.INVALID_ADDRESS_LABEL
+import com.judokit.android.examples.test.card.BillingInfo.INVALID_CITY_LABEL
+import com.judokit.android.examples.test.card.BillingInfo.INVALID_EMAIL_LABEL
+import com.judokit.android.examples.test.card.BillingInfo.INVALID_PHONE_LABEL
+import com.judokit.android.examples.test.card.BillingInfo.INVALID_POSTCODE
+import com.judokit.android.examples.test.card.BillingInfo.INVALID_POSTCODE_LABEL
+import com.judokit.android.examples.test.card.BillingInfo.INVALID_ZIPCODE_LABEL
+import com.judokit.android.examples.test.card.BillingInfo.SPECIAL_CHARACTERS
+import com.judokit.android.examples.test.card.BillingInfo.VALID_ADDRESS
+import com.judokit.android.examples.test.card.BillingInfo.VALID_CITY
+import com.judokit.android.examples.test.card.BillingInfo.VALID_COUNTRY
+import com.judokit.android.examples.test.card.BillingInfo.VALID_COUNTRY_CODE
+import com.judokit.android.examples.test.card.BillingInfo.VALID_EMAIL
+import com.judokit.android.examples.test.card.BillingInfo.VALID_MOBILE
+import com.judokit.android.examples.test.card.BillingInfo.VALID_POSTCODE
+import com.judokit.android.examples.test.card.CardDetails.CARD_EXPIRY
+import com.judokit.android.examples.test.card.CardDetails.CARD_NUMBER
+import com.judokit.android.examples.test.card.CardDetails.CARD_SECURITY_CODE
+import com.judokit.android.examples.test.card.CardPaymentTest.ValidCardDetails.CARDHOLDER_NAME
+import com.judokit.android.examples.test.card.FeaturesList.CHECK_CARD_LABEL
+import com.judokit.android.examples.test.card.FeaturesList.PAYMENT_METHODS_LABEL
+import com.judokit.android.examples.test.card.FeaturesList.PAY_WITH_CARD_LABEL
+import com.judokit.android.examples.test.card.FeaturesList.PREAUTH_METHODS_LABEL
+import com.judokit.android.examples.test.card.FeaturesList.PREAUTH_WITH_CARD_LABEL
+import com.judokit.android.examples.test.card.FeaturesList.REGISTER_CARD_LABEL
+import com.judokit.android.examples.test.card.FeaturesList.TOKEN_PAYMENTS_LABEL
+import com.judokit.android.examples.test.card.Other.CANCELLED_PAYMENT_TOAST
+import com.judokit.android.examples.test.card.Other.CANCEL_BUTTON
 import com.judopay.judokit.android.R
+import org.hamcrest.Matchers.allOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -84,7 +115,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onValidCardDetailsInputSubmitButtonShouldBeEnabled() {
+    fun testValidCardDetailsInputSubmitButton() {
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
@@ -100,7 +131,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onCancelledTransactionErrorPopupShouldBeDisplayed() {
+    fun testCancelledTransactionErrorPopupShouldBeDisplayed() {
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
@@ -113,7 +144,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulTransactionReceiptObjectShouldContainRelevantInfo() {
+    fun testSuccessfulTransaction() {
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
@@ -134,7 +165,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onDeclinedTransactionReceiptObjectShouldContainRelevantInfo() {
+    fun testDeclinedTransaction() {
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
@@ -155,7 +186,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onFailedTransactionReceiptObjectShouldContainRelevantInfo() {
+    fun testFailedTransaction() {
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
@@ -176,7 +207,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onCancel3DS2ChallengeScreenReceiptObjectShouldContainRelevantInfo() {
+    fun testCancel3DS2ChallengeScreen() {
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
@@ -204,7 +235,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulPreauthTransactionReceiptObjectContainsRelevantInfo() {
+    fun testSuccessfulPreauthTransaction() {
         onView(withText(PREAUTH_WITH_CARD_LABEL))
             .perform(click())
 
@@ -225,7 +256,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulRegisterCardTransactionReceiptObjectContainsRelevantInfo() {
+    fun testSuccessfulRegisterCardTransaction() {
         onView(withText(REGISTER_CARD_LABEL))
             .perform(click())
 
@@ -246,7 +277,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulCheckCardTransactionReceiptObjectContainsRelevantInfo() {
+    fun testSuccessfulCheckCardTransaction() {
         onView(withText(CHECK_CARD_LABEL))
             .perform(click())
 
@@ -267,7 +298,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulTokenPaymentReceiptObjectContainsRelevantInfo() {
+    fun testSuccessfulTokenPayment() {
         onView(withId(R.id.recyclerView))
             .perform(swipeUp())
 
@@ -310,7 +341,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulTokenPreauthReceiptObjectContainsRelevantInfo() {
+    fun testSuccessfulTokenPreauth() {
         onView(withId(R.id.recyclerView))
             .perform(swipeUp())
 
@@ -353,7 +384,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulFrictionlessPaymentReceiptObjectContainsRelevantInfo() {
+    fun testSuccessfulFrictionlessPayment() {
         sharedPrefs
             .edit()
             .apply {
@@ -380,7 +411,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onFrictionlessNoMethodPaymentReceiptObjectContainsRelevantInfo() {
+    fun testFrictionlessNoMethodPayment() {
         sharedPrefs
             .edit()
             .apply {
@@ -407,7 +438,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onFrictionlessAuthFailedPaymentReceiptObjectContainsRelevantInfo() {
+    fun testFrictionlessAuthFailedPayment() {
         sharedPrefs
             .edit()
             .apply {
@@ -438,7 +469,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulPaymentMethodsCardPaymentReceiptObjectContainsRelevantInfo() {
+    fun testSuccessfulPaymentMethodsCardPayment() {
         sharedPrefs
             .edit()
             .apply {
@@ -500,7 +531,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onSuccessfulPaymentMethodsPreauthReceiptObjectContainsRelevantInfo() {
+    fun testSuccessfulPaymentMethodsPreauth() {
         sharedPrefs
             .edit()
             .apply {
@@ -565,7 +596,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun onUserCanSuccessfullyRemoveCardInPaymentMethods() {
+    fun testUserCanSuccessfullyRemoveCardInPaymentMethods() {
         onView(withText(PAYMENT_METHODS_LABEL))
             .perform(click())
 
@@ -606,5 +637,210 @@ class CardPaymentTest {
 
         onView(withText("Visa Ending 7408"))
             .check(doesNotExist())
+    }
+
+    @Test
+    fun testSuccessfulPaymentWithBillingDetails() {
+        toggleBillingInfoSetting(true)
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        fillBillingDetails(
+            VALID_EMAIL,
+            VALID_COUNTRY,
+            VALID_MOBILE,
+            VALID_ADDRESS,
+            VALID_CITY,
+            VALID_POSTCODE,
+        )
+
+        onView(withId(R.id.billingDetailsSubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        clickCompleteOn3DS2Screen()
+
+        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+
+        toggleBillingInfoSetting(false)
+    }
+
+    @Test
+    fun testUKPostCodeValidation() {
+        toggleBillingInfoSetting(true)
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        fillBillingDetails(
+            VALID_EMAIL,
+            VALID_COUNTRY,
+            VALID_MOBILE,
+            VALID_ADDRESS,
+            VALID_CITY,
+            INVALID_POSTCODE,
+        )
+
+        onView(withId(R.id.cityTextInputEditText))
+            .perform(click())
+
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_POSTCODE_LABEL)))
+
+        toggleBillingInfoSetting(false)
+    }
+
+    @Test
+    fun testUSPostCodeValidation() {
+        toggleBillingInfoSetting(true)
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        fillBillingDetails(
+            VALID_EMAIL,
+            "United States",
+            VALID_MOBILE,
+            VALID_ADDRESS,
+            VALID_CITY,
+            INVALID_POSTCODE,
+        )
+
+        onView(withId(R.id.cityTextInputEditText))
+            .perform(click())
+
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_ZIPCODE_LABEL)))
+
+        toggleBillingInfoSetting(false)
+    }
+
+    @Test
+    fun testCAPostCodeValidation() {
+        toggleBillingInfoSetting(true)
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        fillBillingDetails(
+            VALID_EMAIL,
+            "Canada",
+            VALID_MOBILE,
+            VALID_ADDRESS,
+            VALID_CITY,
+            INVALID_POSTCODE,
+        )
+
+        onView(withId(R.id.cityTextInputEditText))
+            .perform(click())
+
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_POSTCODE_LABEL)))
+
+        toggleBillingInfoSetting(false)
+    }
+
+    @Test
+    fun testBillingFieldsInputValidation() {
+        toggleBillingInfoSetting(true)
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        fillTextField(R.id.emailTextInputEditText, SPECIAL_CHARACTERS)
+        onView(withId(R.id.cityTextInputEditText)).perform(click())
+        Thread.sleep(500)
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_EMAIL_LABEL)))
+        fillTextField(R.id.emailTextInputEditText, VALID_EMAIL)
+
+        selectFromMultipleAndEnterText(R.id.countryTextInputEditText, VALID_COUNTRY)
+        onView(withText(VALID_COUNTRY)).perform(click())
+        fillTextField(R.id.mobileNumberTextInputEditText, VALID_COUNTRY_CODE)
+        onView(withId(R.id.cityTextInputEditText)).perform(click())
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_PHONE_LABEL)))
+        Thread.sleep(500)
+        fillTextField(R.id.mobileNumberTextInputEditText, VALID_MOBILE)
+
+        fillTextField(R.id.addressLine1TextInputEditText, SPECIAL_CHARACTERS)
+        onView(withId(R.id.cityTextInputEditText)).perform(click())
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_ADDRESS_LABEL)))
+        fillTextField(R.id.addressLine1TextInputEditText, VALID_ADDRESS)
+
+        fillTextField(R.id.cityTextInputEditText, SPECIAL_CHARACTERS)
+        onView(withId(R.id.addressLine1TextInputEditText)).perform(click())
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_CITY_LABEL)))
+        fillTextField(R.id.cityTextInputEditText, VALID_CITY)
+
+        toggleBillingInfoSetting(false)
     }
 }
