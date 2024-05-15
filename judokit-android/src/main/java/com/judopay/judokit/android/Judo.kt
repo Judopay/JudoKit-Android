@@ -345,6 +345,14 @@ class Judo internal constructor(
                 "Payment session is required for using the recommendation feature."
             }
 
+            require(
+                (
+                    delayedAuthorisation == true && allowIncrement == true
+                ),
+            ) {
+                "Both delayedAuthorisation and allowIncrement flags can't be set to true."
+            }
+
             return Judo(
                 judoId = id,
                 authorization = myAuthorization,
