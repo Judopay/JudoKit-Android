@@ -150,5 +150,6 @@ internal fun PaymentData.toPreAuthGooglePayRequest(judo: Judo): PreAuthGooglePay
         .setCardAddress(judo.address)
         .setGooglePayWallet(wallet)
         .setDelayedAuthorisation(judo.delayedAuthorisation ?: false)
+        .setAllowIncrement(judo.allowIncrement ?: false)
         .build()
 }

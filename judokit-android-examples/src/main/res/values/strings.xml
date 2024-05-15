@@ -202,6 +202,9 @@
     <string name="is_delayed_authorisation_on_title">Delayed authorisation</string>
     <string name="is_delayed_authorisation_on_summary">Turn on to set delayedAuthorisation flag to true.</string>
 
+    <string name="is_allow_increment_on_title">Allow increment</string>
+    <string name="is_allow_increment_on_summary">Turn on to set allowIncrement flag to true.</string>
+
     <string name="sdk_version_title">SDK version</string>
     <string name="judo_api_version_title">Judo API version</string>
 
