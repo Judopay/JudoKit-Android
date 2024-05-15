@@ -346,7 +346,7 @@ class Judo internal constructor(
             }
 
             require(
-                (
+                !(
                     delayedAuthorisation == true && allowIncrement == true
                 ),
             ) {
