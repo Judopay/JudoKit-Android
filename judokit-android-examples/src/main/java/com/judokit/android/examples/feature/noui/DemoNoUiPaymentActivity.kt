@@ -262,6 +262,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
                 .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
                 .setThreeDSTwoMessageVersion(threeDSTwoMessageVersion)
                 .setDelayedAuthorisation(delayedAuthorisation)
+                .setAllowIncrement(allowIncrement)
                 .build()
         }
 }
