@@ -1,0 +1,2 @@
+-keep class com.judopay.judokit.** { *; }
+-keepnames class com.judopay.judokit.** { *; }
