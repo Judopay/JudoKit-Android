@@ -15,7 +15,6 @@ class PreAuthGooglePayRequest private constructor(
     private var cardAddress: Address?,
     internal val googlePayWallet: GooglePayWallet,
     private var delayedAuthorisation: Boolean = false,
-    private var allowIncrement: Boolean = false,
 ) {
     @Suppress("TooManyFunctions")
     class Builder {
@@ -29,7 +28,6 @@ class PreAuthGooglePayRequest private constructor(
         private var cardAddress: Address? = null
         private var googlePayWallet: GooglePayWallet? = null
         private var delayedAuthorisation: Boolean = false
-        private var allowIncrement: Boolean = false
 
         fun setJudoId(judoId: String?) = apply { this.judoId = judoId }
 
@@ -51,8 +49,6 @@ class PreAuthGooglePayRequest private constructor(
         fun setGooglePayWallet(wallet: GooglePayWallet?) = apply { this.googlePayWallet = wallet }
 
         fun setDelayedAuthorisation(delayedAuthorisation: Boolean) = apply { this.delayedAuthorisation = delayedAuthorisation }
-
-        fun setAllowIncrement(allowIncrement: Boolean) = apply { this.allowIncrement = allowIncrement }
 
         fun build(): PreAuthGooglePayRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
@@ -76,7 +72,6 @@ class PreAuthGooglePayRequest private constructor(
                 cardAddress,
                 myWallet,
                 delayedAuthorisation,
-                allowIncrement,
             )
         }
     }

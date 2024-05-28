@@ -40,7 +40,6 @@ class TokenPaymentsViewModel {
                 .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
                 .setThreeDSTwoMessageVersion(threeDSTwoMessageVersion)
                 .setDelayedAuthorisation(delayedAuthorisation)
-                .setAllowIncrement(allowIncrement)
                 .setCardToken(if (widgetType.isTokenPayment) getCardToken() else null)
                 .setCardSecurityCode(securityCode.ifBlank { null })
                 .build()
