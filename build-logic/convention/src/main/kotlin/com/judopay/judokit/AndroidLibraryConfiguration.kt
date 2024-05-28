@@ -8,4 +8,8 @@ internal fun configureAndroidLibrary(
     buildFeatures {
         viewBinding = true
     }
+
+    defaultConfig {
+        consumerProguardFiles("consumer-rules.pro")
+    }
 }
