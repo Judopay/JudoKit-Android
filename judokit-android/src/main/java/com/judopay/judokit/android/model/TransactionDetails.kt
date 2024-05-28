@@ -238,7 +238,6 @@ fun TransactionDetails.toPreAuthRequest(
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
         .setInitialRecurringPayment(judo.initialRecurringPayment)
         .setDelayedAuthorisation(judo.delayedAuthorisation ?: false)
-        .setAllowIncrement(judo.allowIncrement ?: false)
         .setCardHolderName(cardHolderName)
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
@@ -388,7 +387,6 @@ fun TransactionDetails.toPreAuthTokenRequest(
         .setAddress(getAddress(judo))
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
         .setDelayedAuthorisation(judo.delayedAuthorisation ?: false)
-        .setAllowIncrement(judo.allowIncrement ?: false)
         .build()
 }
 

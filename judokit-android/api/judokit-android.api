@@ -9,7 +9,6 @@ public final class com/judopay/judokit/android/Judo : android/os/Parcelable {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public fun describeContents ()I
 	public final fun getAddress ()Lcom/judopay/judokit/android/api/model/request/Address;
-	public final fun getAllowIncrement ()Ljava/lang/Boolean;
 	public final fun getAmount ()Lcom/judopay/judokit/android/model/Amount;
 	public final fun getAuthorization ()Lcom/judopay/judokit/android/api/model/Authorization;
 	public final fun getCardSecurityCode ()Ljava/lang/String;
@@ -43,7 +42,6 @@ public final class com/judopay/judokit/android/Judo$Builder {
 	public fun <init> (Lcom/judopay/judokit/android/model/PaymentWidgetType;)V
 	public final fun build ()Lcom/judopay/judokit/android/Judo;
 	public final fun setAddress (Lcom/judopay/judokit/android/api/model/request/Address;)Lcom/judopay/judokit/android/Judo$Builder;
-	public final fun setAllowIncrement (Ljava/lang/Boolean;)Lcom/judopay/judokit/android/Judo$Builder;
 	public final fun setAmount (Lcom/judopay/judokit/android/model/Amount;)Lcom/judopay/judokit/android/Judo$Builder;
 	public final fun setAuthorization (Lcom/judopay/judokit/android/api/model/Authorization;)Lcom/judopay/judokit/android/Judo$Builder;
 	public final fun setCardSecurityCode (Ljava/lang/String;)Lcom/judopay/judokit/android/Judo$Builder;
@@ -605,13 +603,12 @@ public final class com/judopay/judokit/android/api/model/request/PaymentRequest$
 }
 
 public final class com/judopay/judokit/android/api/model/request/PreAuthGooglePayRequest {
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lcom/judopay/judokit/android/model/PrimaryAccountDetails;Lcom/judopay/judokit/android/api/model/request/Address;Lcom/judopay/judokit/android/api/model/request/GooglePayWallet;ZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lcom/judopay/judokit/android/model/PrimaryAccountDetails;Lcom/judopay/judokit/android/api/model/request/Address;Lcom/judopay/judokit/android/api/model/request/GooglePayWallet;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class com/judopay/judokit/android/api/model/request/PreAuthGooglePayRequest$Builder {
 	public fun <init> ()V
 	public final fun build ()Lcom/judopay/judokit/android/api/model/request/PreAuthGooglePayRequest;
-	public final fun setAllowIncrement (Z)Lcom/judopay/judokit/android/api/model/request/PreAuthGooglePayRequest$Builder;
 	public final fun setAmount (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/PreAuthGooglePayRequest$Builder;
 	public final fun setCardAddress (Lcom/judopay/judokit/android/api/model/request/Address;)Lcom/judopay/judokit/android/api/model/request/PreAuthGooglePayRequest$Builder;
 	public final fun setCurrency (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/PreAuthGooglePayRequest$Builder;
@@ -625,14 +622,13 @@ public final class com/judopay/judokit/android/api/model/request/PreAuthGooglePa
 }
 
 public final class com/judopay/judokit/android/api/model/request/PreAuthRequest {
-	public synthetic fun <init> (Ljava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lcom/judopay/judokit/android/api/model/request/Address;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/PrimaryAccountDetails;Ljava/lang/Boolean;Lcom/judopay/judokit/android/api/model/request/threedsecure/ThreeDSecureTwo;Ljava/lang/String;ZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lcom/judopay/judokit/android/api/model/request/Address;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/PrimaryAccountDetails;Ljava/lang/Boolean;Lcom/judopay/judokit/android/api/model/request/threedsecure/ThreeDSecureTwo;Ljava/lang/String;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class com/judopay/judokit/android/api/model/request/PreAuthRequest$Builder {
 	public fun <init> ()V
 	public final fun build ()Lcom/judopay/judokit/android/api/model/request/PreAuthRequest;
 	public final fun setAddress (Lcom/judopay/judokit/android/api/model/request/Address;)Lcom/judopay/judokit/android/api/model/request/PreAuthRequest$Builder;
-	public final fun setAllowIncrement (Z)Lcom/judopay/judokit/android/api/model/request/PreAuthRequest$Builder;
 	public final fun setAmount (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/PreAuthRequest$Builder;
 	public final fun setCardHolderName (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/PreAuthRequest$Builder;
 	public final fun setCardNumber (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/PreAuthRequest$Builder;
@@ -657,14 +653,13 @@ public final class com/judopay/judokit/android/api/model/request/PreAuthRequest$
 }
 
 public final class com/judopay/judokit/android/api/model/request/PreAuthTokenRequest {
-	public synthetic fun <init> (Ljava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Lcom/judopay/judokit/android/api/model/request/Address;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/PrimaryAccountDetails;Ljava/lang/Boolean;Lcom/judopay/judokit/android/api/model/request/threedsecure/ThreeDSecureTwo;Ljava/lang/String;ZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Lcom/judopay/judokit/android/api/model/request/Address;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/PrimaryAccountDetails;Ljava/lang/Boolean;Lcom/judopay/judokit/android/api/model/request/threedsecure/ThreeDSecureTwo;Ljava/lang/String;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class com/judopay/judokit/android/api/model/request/PreAuthTokenRequest$Builder {
 	public fun <init> ()V
 	public final fun build ()Lcom/judopay/judokit/android/api/model/request/PreAuthTokenRequest;
 	public final fun setAddress (Lcom/judopay/judokit/android/api/model/request/Address;)Lcom/judopay/judokit/android/api/model/request/PreAuthTokenRequest$Builder;
-	public final fun setAllowIncrement (Z)Lcom/judopay/judokit/android/api/model/request/PreAuthTokenRequest$Builder;
 	public final fun setAmount (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/PreAuthTokenRequest$Builder;
 	public final fun setCardHolderName (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/PreAuthTokenRequest$Builder;
 	public final fun setCardLastFour (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/PreAuthTokenRequest$Builder;

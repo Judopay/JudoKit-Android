@@ -79,7 +79,6 @@ class Judo internal constructor(
     val threeDSTwoMaxTimeout: Int,
     val threeDSTwoMessageVersion: String,
     val delayedAuthorisation: Boolean? = null,
-    val allowIncrement: Boolean? = null,
     val cardToken: CardToken? = null,
     val cardSecurityCode: String? = null,
     val subProductInfo: SubProductInfo = SubProductInfo.Unknown,
@@ -112,7 +111,6 @@ class Judo internal constructor(
         private var threeDSTwoMaxTimeout: Int? = null
         private var threeDSTwoMessageVersion: String? = null
         private var delayedAuthorisation: Boolean? = null
-        private var allowIncrement: Boolean? = null
         private var cardToken: CardToken? = null
         private var cardSecurityCode: String? = null
         private var subProductInfo: SubProductInfo = SubProductInfo.Unknown
@@ -210,12 +208,6 @@ class Judo internal constructor(
          * @param delayedAuthorisation Boolean value that toggles delayed authorization payment.
          */
         fun setDelayedAuthorisation(delayedAuthorisation: Boolean?) = apply { this.delayedAuthorisation = delayedAuthorisation }
-
-        /**
-         * Sets the allow increment flag.
-         * @param allowIncrement Boolean flag used by preauth transaction types.
-         */
-        fun setAllowIncrement(allowIncrement: Boolean?) = apply { this.allowIncrement = allowIncrement }
 
         /**
          * Sets the network timeout.
@@ -345,14 +337,6 @@ class Judo internal constructor(
                 "Payment session is required for using the recommendation feature."
             }
 
-            require(
-                !(
-                    delayedAuthorisation == true && allowIncrement == true
-                ),
-            ) {
-                "Both delayedAuthorisation and allowIncrement flags can't be set to true."
-            }
-
             return Judo(
                 judoId = id,
                 authorization = myAuthorization,
@@ -376,7 +360,6 @@ class Judo internal constructor(
                 threeDSTwoMaxTimeout = threeDSTwoMaxTimeout ?: DEFAULT_MAX_TIMEOUT,
                 threeDSTwoMessageVersion = threeDSTwoMessageVersion ?: THREE_DS_TWO_MESSAGE_VERSION_TWO_DOT_TWO,
                 delayedAuthorisation = delayedAuthorisation,
-                allowIncrement = allowIncrement,
                 cardToken = cardToken,
                 cardSecurityCode = cardSecurityCode,
                 subProductInfo = subProductInfo,
@@ -438,7 +421,6 @@ class Judo internal constructor(
                 challengeRequestIndicator=$challengeRequestIndicator,
                 scaExemption=$scaExemption,
                 delayedAuthorisation=$delayedAuthorisation,
-                allowIncrement=$allowIncrement,
                 cardToken=$cardToken
             )
             """.trimIndent(true)
