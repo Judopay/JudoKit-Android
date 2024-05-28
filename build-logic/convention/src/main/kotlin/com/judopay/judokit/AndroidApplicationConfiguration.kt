@@ -25,6 +25,16 @@ internal fun Project.configureAndroidApplication(
         kotlinCompilerExtensionVersion =
             versionCatalog.findVersion("androidxComposeCompiler").get().toString()
     }
+
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
 }
 
 private fun ApplicationDefaultConfig.addBuildConfigFields() {
