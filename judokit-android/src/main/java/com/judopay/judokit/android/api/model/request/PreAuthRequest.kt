@@ -30,6 +30,7 @@ class PreAuthRequest private constructor(
     private var threeDSecure: ThreeDSecureTwo?,
     private var cardHolderName: String?,
     private var delayedAuthorisation: Boolean = false,
+    private var allowIncrement: Boolean = false,
 ) {
     @Suppress("TooManyFunctions")
     class Builder {
@@ -57,6 +58,7 @@ class PreAuthRequest private constructor(
         private var phoneCountryCode: String? = null
         private var threeDSecure: ThreeDSecureTwo? = null
         private var delayedAuthorisation: Boolean = false
+        private var allowIncrement: Boolean = false
 
         fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
@@ -103,6 +105,8 @@ class PreAuthRequest private constructor(
 
         fun setDelayedAuthorisation(delayedAuthorisation: Boolean) = apply { this.delayedAuthorisation = delayedAuthorisation }
 
+        fun setAllowIncrement(allowIncrement: Boolean) = apply { this.allowIncrement = allowIncrement }
+
         fun build(): PreAuthRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myAmount = requireNotNullOrEmpty(amount, "amount")
@@ -140,6 +144,7 @@ class PreAuthRequest private constructor(
                 myThreeDSecure,
                 cardHolderName,
                 delayedAuthorisation,
+                allowIncrement,
             )
         }
     }
