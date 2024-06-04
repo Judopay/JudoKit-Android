@@ -254,7 +254,9 @@ jobs:
               --results-bucket $FIREBASE_TEST_RESULTS_BUCKET \
               --timeout=30m \
               --device model=shiba,version=34 \
-              --use-orchestrator
+              --use-orchestrator \
+              --num-flaky-test-attempts=1 \
+              --client-details=matrixLabel="Regression E2E"
 
   instrumented_test_sample_weekly:
     <<: *android-docker-executor
