@@ -61,21 +61,9 @@ fun <IR : IdlingResource> awaitIdlingResourceThenRun(
  */
 fun clickCompleteOn3DS2Screen() {
     awaitActivityThenRun("com.judopay.judo3ds2.ui.challenge.ChallengeActivity") {
-        try {
-            Thread.sleep(1000)
-            Espresso.onView(ViewMatchers.withText("COMPLETE"))
-                .perform(ViewActions.longClick())
-
-            Thread.sleep(1000)
-            Espresso.onView(ViewMatchers.withText("COMPLETE"))
-                .perform(ViewActions.longClick())
-
-            Thread.sleep(1000)
-            Espresso.onView(ViewMatchers.withText("COMPLETE"))
-                .perform(ViewActions.longClick())
-        } catch (e: IdlingResourceTimeoutException) {
-            println("Global Pay screen unable to continue")
-        }
+        Thread.sleep(10000)
+        Espresso.onView(ViewMatchers.withText("COMPLETE"))
+            .perform(ViewActions.longClick())
     }
 }
 

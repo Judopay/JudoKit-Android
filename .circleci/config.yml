@@ -255,8 +255,6 @@ jobs:
               --timeout=30m \
               --device model=shiba,version=34 \
               --num-flaky-test-attempts=1
-      - notify_slack_error
-      - notify_slack_pass
 
   instrumented_test_sample_weekly:
     <<: *android-docker-executor
@@ -343,7 +341,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - fix/debug-ui-test-failures
 
   publish_sdk:
     jobs:
