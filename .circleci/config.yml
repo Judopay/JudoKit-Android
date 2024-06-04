@@ -274,7 +274,9 @@ jobs:
               --device model=panther,version=33 \
               --device model=bluejay,version=32 \
               --device model=a51,version=31 \
-              --num-flaky-test-attempts=1
+              --num-flaky-test-attempts=1 \
+              --use-orchestrator \
+              --client-details=matrixLabel="Backward Compat E2E"
 
   sonar_scan:
     docker:

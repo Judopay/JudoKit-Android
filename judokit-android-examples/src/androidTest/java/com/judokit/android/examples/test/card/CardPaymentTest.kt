@@ -114,34 +114,34 @@ class CardPaymentTest {
             .commit()
     }
 
-//    @Test
-//    fun testValidCardDetailsInputSubmitButton() {
-//        onView(withText(PAY_WITH_CARD_LABEL))
-//            .perform(click())
-//
-//        enterPaymentSheetDetails(
-//            CARD_NUMBER,
-//            CARDHOLDER_NAME,
-//            CARD_EXPIRY,
-//            CARD_SECURITY_CODE,
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//    }
-//
-//    @Test
-//    fun testCancelledTransactionErrorPopupShouldBeDisplayed() {
-//        onView(withText(PAY_WITH_CARD_LABEL))
-//            .perform(click())
-//
-//        onView(withText(CANCEL_BUTTON))
-//            .perform(click())
-//
-//        Thread.sleep(500)
-//
-//        onView(withText(CANCELLED_PAYMENT_TOAST)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun testValidCardDetailsInputSubmitButton() {
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+    }
+
+    @Test
+    fun testCancelledTransactionErrorPopupShouldBeDisplayed() {
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        onView(withText(CANCEL_BUTTON))
+            .perform(click())
+
+        Thread.sleep(500)
+
+        onView(withText(CANCELLED_PAYMENT_TOAST)).check(matches(isDisplayed()))
+    }
     @Test
     fun testSuccessfulTransaction() {
         onView(withText(PAY_WITH_CARD_LABEL))
@@ -163,683 +163,683 @@ class CardPaymentTest {
         assertReceiptObject("AuthCode: ", "", "Success", "Payment")
     }
 
-//    @Test
-//    fun testSuccessfulRegisterCardTransaction() {
-//        onView(withText(REGISTER_CARD_LABEL))
-//            .perform(click())
-//
-//        enterPaymentSheetDetails(
-//            CARD_NUMBER,
-//            CARDHOLDER_NAME,
-//            CARD_EXPIRY,
-//            CARD_SECURITY_CODE,
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        clickCompleteOn3DS2Screen()
-//
-//        assertReceiptObject("AuthCode: ", "", "Success", "Register")
-//    }
-//
-//    @Test
-//    fun testDeclinedTransaction() {
-//        onView(withText(PAY_WITH_CARD_LABEL))
-//            .perform(click())
-//
-//        enterPaymentSheetDetails(
-//            CARD_NUMBER,
-//            CARDHOLDER_NAME,
-//            "12/30",
-//            "123",
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        clickCompleteOn3DS2Screen()
-//
-//        assertReceiptObject("", "", "Declined", "Payment")
-//    }
-//
-//    @Test
-//    fun testFailedTransaction() {
-//        onView(withText(PAY_WITH_CARD_LABEL))
-//            .perform(click())
-//
-//        enterPaymentSheetDetails(
-//            "4111 1111 1111 1111",
-//            CARDHOLDER_NAME,
-//            CARD_EXPIRY,
-//            "123",
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        clickCompleteOn3DS2Screen()
-//
-//        assertReceiptObject("The gateway reported an error", "", "Error", "Payment")
-//    }
-//
-//    @Test
-//    fun testCancel3DS2ChallengeScreen() {
-//        onView(withText(PAY_WITH_CARD_LABEL))
-//            .perform(click())
-//
-//        enterPaymentSheetDetails(
-//            CARD_NUMBER,
-//            CARDHOLDER_NAME,
-//            CARD_EXPIRY,
-//            CARD_SECURITY_CODE,
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        awaitActivityThenRun("com.judopay.judo3ds2.ui.challenge.ChallengeActivity") {
-//            onView(withText("CANCEL"))
-//                .perform(click())
-//        }
-//
-//        awaitActivityThenRun(ResultActivity::class.java.name) {
-//            onView(withId(R.id.recyclerView))
-//                .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(2))
-//                .check(matches(hasDescendant(withText("Unable to process transaction. Card authentication failed with 3DS Server."))))
-//        }
-//    }
-//
-//    @Test
-//    fun testSuccessfulPreauthTransaction() {
-//        onView(withText(PREAUTH_WITH_CARD_LABEL))
-//            .perform(click())
-//
-//        enterPaymentSheetDetails(
-//            CARD_NUMBER,
-//            CARDHOLDER_NAME,
-//            CARD_EXPIRY,
-//            CARD_SECURITY_CODE,
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        clickCompleteOn3DS2Screen()
-//
-//        assertReceiptObject("AuthCode: ", "", "Success", "PreAuth")
-//    }
-//
-//    @Test
-//    fun testSuccessfulCheckCardTransaction() {
-//        onView(withText(CHECK_CARD_LABEL))
-//            .perform(click())
-//
-//        enterPaymentSheetDetails(
-//            CARD_NUMBER,
-//            CARDHOLDER_NAME,
-//            CARD_EXPIRY,
-//            CARD_SECURITY_CODE,
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        clickCompleteOn3DS2Screen()
-//
-//        assertReceiptObject("AuthCode: ", "", "Success", "CheckCard")
-//    }
-//
-//    @Test
-//    fun testSuccessfulTokenPayment() {
-//        onView(withId(R.id.recyclerView))
-//            .perform(swipeUp())
-//
-//        onView(withText(TOKEN_PAYMENTS_LABEL))
-//            .perform(scrollTo())
-//            .perform(click())
-//
-//        composeTestRule.onNodeWithText("TOKENIZE A NEW CARD")
-//            .assertIsEnabled()
-//            .performClick()
-//
-//        Thread.sleep(500)
-//
-//        enterPaymentSheetDetails(
-//            CARD_NUMBER,
-//            CARDHOLDER_NAME,
-//            CARD_EXPIRY,
-//            CARD_SECURITY_CODE,
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        awaitActivityThenRun(TokenPaymentsActivity::class.java.name) {
-//            composeTestRule.onNodeWithText("Security code")
-//                .assertIsEnabled()
-//                .performTextInput(CARD_SECURITY_CODE)
-//
-//            closeSoftKeyboard()
-//
-//            composeTestRule.onNodeWithText("PAYMENT")
-//                .assertIsEnabled()
-//                .performClick()
-//        }
-//
-//        clickCompleteOn3DS2Screen()
-//
-//        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
-//    }
-//
-//    @Test
-//    fun testSuccessfulTokenPreauth() {
-//        onView(withId(R.id.recyclerView))
-//            .perform(swipeUp())
-//
-//        onView(withText(TOKEN_PAYMENTS_LABEL))
-//            .perform(scrollTo())
-//            .perform(click())
-//
-//        composeTestRule.onNodeWithText("TOKENIZE A NEW CARD")
-//            .assertIsEnabled()
-//            .performClick()
-//
-//        Thread.sleep(500)
-//
-//        enterPaymentSheetDetails(
-//            CARD_NUMBER,
-//            CARDHOLDER_NAME,
-//            CARD_EXPIRY,
-//            CARD_SECURITY_CODE,
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        awaitActivityThenRun(TokenPaymentsActivity::class.java.name) {
-//            composeTestRule.onNodeWithText("Security code")
-//                .assertIsEnabled()
-//                .performTextInput(CARD_SECURITY_CODE)
-//
-//            closeSoftKeyboard()
-//
-//            composeTestRule.onNodeWithText("PRE-AUTH")
-//                .assertIsEnabled()
-//                .performClick()
-//        }
-//
-//        clickCompleteOn3DS2Screen()
-//
-//        assertReceiptObject("AuthCode: ", "", "Success", "PreAuth")
-//    }
-//
-//    @Test
-//    fun testSuccessfulFrictionlessPayment() {
-//        sharedPrefs
-//            .edit()
-//            .apply {
-//                putString("challengeRequestIndicator", "NO_PREFERENCE")
-//            }
-//            .commit()
-//
-//        onView(withText(PAY_WITH_CARD_LABEL))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        enterPaymentSheetDetails(
-//            CARD_NUMBER,
-//            "Frictionless Successful",
-//            CARD_EXPIRY,
-//            CARD_SECURITY_CODE,
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
-//    }
-//
-//    @Test
-//    fun testFrictionlessNoMethodPayment() {
-//        sharedPrefs
-//            .edit()
-//            .apply {
-//                putString("challengeRequestIndicator", "NO_PREFERENCE")
-//            }
-//            .commit()
-//
-//        onView(withText(PAY_WITH_CARD_LABEL))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        enterPaymentSheetDetails(
-//            CARD_NUMBER,
-//            "Frictionless NoMethod",
-//            CARD_EXPIRY,
-//            CARD_SECURITY_CODE,
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
-//    }
-//
-//    @Test
-//    fun testFrictionlessAuthFailedPayment() {
-//        sharedPrefs
-//            .edit()
-//            .apply {
-//                putString("challengeRequestIndicator", "NO_PREFERENCE")
-//            }
-//            .commit()
-//
-//        onView(withText(PAY_WITH_CARD_LABEL))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        enterPaymentSheetDetails(
-//            CARD_NUMBER,
-//            "Frictionless AuthFailed",
-//            CARD_EXPIRY,
-//            CARD_SECURITY_CODE,
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        awaitActivityThenRun(ResultActivity::class.java.name) {
-//            onView(withId(R.id.recyclerView))
-//                .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(2))
-//                .check(matches(hasDescendant(withText("Unable to process transaction. Card authentication failed with 3DS Server."))))
-//        }
-//    }
-//
-//    @Test
-//    fun testSuccessfulPaymentMethodsCardPayment() {
-//        sharedPrefs
-//            .edit()
-//            .apply {
-//                putBoolean("should_payment_methods_verify_security_code", true)
-//            }
-//            .commit()
-//
-//        onView(withText(PAYMENT_METHODS_LABEL))
-//            .perform(click())
-//
-//        Thread.sleep(1000)
-//
-//        try {
-//            onView(withId(R.id.addButton))
-//                .check(matches(isEnabled()))
-//                .perform(click())
-//
-//            enterPaymentSheetDetails(
-//                CARD_NUMBER,
-//                CARDHOLDER_NAME,
-//                CARD_EXPIRY,
-//                CARD_SECURITY_CODE,
-//            )
-//
-//            onView(withId(R.id.cardEntrySubmitButton))
-//                .check(matches(isEnabled()))
-//                .perform(click())
-//
-//            Thread.sleep(1000)
-//
-//            onView(withId(R.id.payButton))
-//                .perform(click())
-//
-//            onView(withId(R.id.securityNumberTextInputEditText))
-//                .perform(clearText(), typeText(CARD_SECURITY_CODE))
-//
-//            onView(withId(R.id.cardEntrySubmitButton))
-//                .check(matches(isEnabled()))
-//                .perform(click())
-//
-//            clickCompleteOn3DS2Screen()
-//
-//            assertReceiptObject("", "", "Success", "Payment")
-//        } catch (e: NoMatchingViewException) {
-//            onView(withId(R.id.payButton))
-//                .perform(click())
-//
-//            onView(withId(R.id.securityNumberTextInputEditText))
-//                .perform(clearText(), typeText(CARD_SECURITY_CODE))
-//
-//            onView(withId(R.id.cardEntrySubmitButton))
-//                .check(matches(isEnabled()))
-//                .perform(click())
-//
-//            clickCompleteOn3DS2Screen()
-//
-//            assertReceiptObject("", "", "Success", "Payment")
-//        }
-//    }
-//
-//    @Test
-//    fun testSuccessfulPaymentMethodsPreauth() {
-//        sharedPrefs
-//            .edit()
-//            .apply {
-//                putBoolean("should_payment_methods_verify_security_code", true)
-//            }
-//            .commit()
-//
-//        onView(withId(R.id.recyclerView))
-//            .perform(swipeUp())
-//
-//        onView(withText(PREAUTH_METHODS_LABEL))
-//            .perform(click())
-//
-//        Thread.sleep(1000)
-//
-//        try {
-//            onView(withId(R.id.addButton))
-//                .check(matches(isEnabled()))
-//                .perform(click())
-//
-//            enterPaymentSheetDetails(
-//                CARD_NUMBER,
-//                CARDHOLDER_NAME,
-//                CARD_EXPIRY,
-//                CARD_SECURITY_CODE,
-//            )
-//
-//            onView(withId(R.id.cardEntrySubmitButton))
-//                .check(matches(isEnabled()))
-//                .perform(click())
-//
-//            Thread.sleep(1000)
-//
-//            onView(withId(R.id.payButton))
-//                .perform(click())
-//
-//            onView(withId(R.id.securityNumberTextInputEditText))
-//                .perform(clearText(), typeText(CARD_SECURITY_CODE))
-//
-//            onView(withId(R.id.cardEntrySubmitButton))
-//                .check(matches(isEnabled()))
-//                .perform(click())
-//
-//            clickCompleteOn3DS2Screen()
-//
-//            assertReceiptObject("", "", "Success", "PreAuth")
-//        } catch (e: NoMatchingViewException) {
-//            onView(withId(R.id.payButton))
-//                .perform(click())
-//
-//            onView(withId(R.id.securityNumberTextInputEditText))
-//                .perform(clearText(), typeText(CARD_SECURITY_CODE))
-//
-//            onView(withId(R.id.cardEntrySubmitButton))
-//                .check(matches(isEnabled()))
-//                .perform(click())
-//
-//            clickCompleteOn3DS2Screen()
-//
-//            assertReceiptObject("", "", "Success", "PreAuth")
-//        }
-//    }
-//
-//    @Test
-//    fun testUserCanSuccessfullyRemoveCardInPaymentMethods() {
-//        onView(withText(PAYMENT_METHODS_LABEL))
-//            .perform(click())
-//
-//        Thread.sleep(1000)
-//
-//        onView(withId(R.id.addButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        enterPaymentSheetDetails(
-//            "4222 0000 0122 7408",
-//            CARDHOLDER_NAME,
-//            CARD_EXPIRY,
-//            CARD_SECURITY_CODE,
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        Thread.sleep(2000)
-//
-//        onView(withId(R.id.subTitle))
-//            .check(matches(withText("Visa Ending 7408")))
-//
-//        onView(withId(R.id.editButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        onView(withId(R.id.removeCardIcon))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        onView(withText("Delete"))
-//            .perform(click())
-//
-//        Thread.sleep(1000)
-//
-//        onView(withText("Visa Ending 7408"))
-//            .check(doesNotExist())
-//    }
-//
-//    @Test
-//    fun testSuccessfulPaymentWithBillingDetails() {
-//        toggleBillingInfoSetting(true)
-//
-//        onView(withText(PAY_WITH_CARD_LABEL))
-//            .perform(click())
-//
-//        enterPaymentSheetDetails(
-//            CARD_NUMBER,
-//            CARDHOLDER_NAME,
-//            CARD_EXPIRY,
-//            CARD_SECURITY_CODE,
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        Thread.sleep(1000)
-//
-//        fillBillingDetails(
-//            VALID_EMAIL,
-//            VALID_COUNTRY,
-//            VALID_MOBILE,
-//            VALID_ADDRESS,
-//            VALID_CITY,
-//            VALID_POSTCODE,
-//        )
-//
-//        onView(withId(R.id.billingDetailsSubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        clickCompleteOn3DS2Screen()
-//
-//        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
-//
-//        toggleBillingInfoSetting(false)
-//    }
-//
-//    @Test
-//    fun testUKPostCodeValidation() {
-//        toggleBillingInfoSetting(true)
-//
-//        onView(withText(PAY_WITH_CARD_LABEL))
-//            .perform(click())
-//
-//        enterPaymentSheetDetails(
-//            CARD_NUMBER,
-//            CARDHOLDER_NAME,
-//            CARD_EXPIRY,
-//            CARD_SECURITY_CODE,
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        Thread.sleep(1000)
-//
-//        fillBillingDetails(
-//            VALID_EMAIL,
-//            VALID_COUNTRY,
-//            VALID_MOBILE,
-//            VALID_ADDRESS,
-//            VALID_CITY,
-//            INVALID_POSTCODE,
-//        )
-//
-//        onView(withId(R.id.cityTextInputEditText))
-//            .perform(click())
-//
-//        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-//            .check(matches(withText(INVALID_POSTCODE_LABEL)))
-//
-//        toggleBillingInfoSetting(false)
-//    }
-//
-//    @Test
-//    fun testUSPostCodeValidation() {
-//        toggleBillingInfoSetting(true)
-//
-//        onView(withText(PAY_WITH_CARD_LABEL))
-//            .perform(click())
-//
-//        enterPaymentSheetDetails(
-//            CARD_NUMBER,
-//            CARDHOLDER_NAME,
-//            CARD_EXPIRY,
-//            CARD_SECURITY_CODE,
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        Thread.sleep(1000)
-//
-//        fillBillingDetails(
-//            VALID_EMAIL,
-//            "United States",
-//            VALID_MOBILE,
-//            VALID_ADDRESS,
-//            VALID_CITY,
-//            INVALID_POSTCODE,
-//        )
-//
-//        onView(withId(R.id.cityTextInputEditText))
-//            .perform(click())
-//
-//        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-//            .check(matches(withText(INVALID_ZIPCODE_LABEL)))
-//
-//        toggleBillingInfoSetting(false)
-//    }
-//
-//    @Test
-//    fun testCAPostCodeValidation() {
-//        toggleBillingInfoSetting(true)
-//
-//        onView(withText(PAY_WITH_CARD_LABEL))
-//            .perform(click())
-//
-//        enterPaymentSheetDetails(
-//            CARD_NUMBER,
-//            CARDHOLDER_NAME,
-//            CARD_EXPIRY,
-//            CARD_SECURITY_CODE,
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        Thread.sleep(1000)
-//
-//        fillBillingDetails(
-//            VALID_EMAIL,
-//            "Canada",
-//            VALID_MOBILE,
-//            VALID_ADDRESS,
-//            VALID_CITY,
-//            INVALID_POSTCODE,
-//        )
-//
-//        onView(withId(R.id.cityTextInputEditText))
-//            .perform(click())
-//
-//        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-//            .check(matches(withText(INVALID_POSTCODE_LABEL)))
-//
-//        toggleBillingInfoSetting(false)
-//    }
-//
-//    @Test
-//    fun testBillingFieldsInputValidation() {
-//        toggleBillingInfoSetting(true)
-//
-//        onView(withText(PAY_WITH_CARD_LABEL))
-//            .perform(click())
-//
-//        enterPaymentSheetDetails(
-//            CARD_NUMBER,
-//            CARDHOLDER_NAME,
-//            CARD_EXPIRY,
-//            CARD_SECURITY_CODE,
-//        )
-//
-//        onView(withId(R.id.cardEntrySubmitButton))
-//            .check(matches(isEnabled()))
-//            .perform(click())
-//
-//        Thread.sleep(1000)
-//
-//        fillTextField(R.id.emailTextInputEditText, SPECIAL_CHARACTERS)
-//        onView(withId(R.id.cityTextInputEditText)).perform(click())
-//        Thread.sleep(500)
-//        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-//            .check(matches(withText(INVALID_EMAIL_LABEL)))
-//        fillTextField(R.id.emailTextInputEditText, VALID_EMAIL)
-//
-//        selectFromMultipleAndEnterText(R.id.countryTextInputEditText, VALID_COUNTRY)
-//        onView(withText(VALID_COUNTRY)).perform(click())
-//        fillTextField(R.id.mobileNumberTextInputEditText, VALID_COUNTRY_CODE)
-//        onView(withId(R.id.cityTextInputEditText)).perform(click())
-//        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-//            .check(matches(withText(INVALID_PHONE_LABEL)))
-//        Thread.sleep(500)
-//        fillTextField(R.id.mobileNumberTextInputEditText, VALID_MOBILE)
-//
-//        fillTextField(R.id.addressLine1TextInputEditText, SPECIAL_CHARACTERS)
-//        onView(withId(R.id.cityTextInputEditText)).perform(click())
-//        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-//            .check(matches(withText(INVALID_ADDRESS_LABEL)))
-//        fillTextField(R.id.addressLine1TextInputEditText, VALID_ADDRESS)
-//
-//        fillTextField(R.id.cityTextInputEditText, SPECIAL_CHARACTERS)
-//        onView(withId(R.id.addressLine1TextInputEditText)).perform(click())
-//        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-//            .check(matches(withText(INVALID_CITY_LABEL)))
-//        fillTextField(R.id.cityTextInputEditText, VALID_CITY)
-//
-//        toggleBillingInfoSetting(false)
-//    }
+    @Test
+    fun testSuccessfulRegisterCardTransaction() {
+        onView(withText(REGISTER_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        clickCompleteOn3DS2Screen()
+
+        assertReceiptObject("AuthCode: ", "", "Success", "Register")
+    }
+
+    @Test
+    fun testDeclinedTransaction() {
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            "12/30",
+            "123",
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        clickCompleteOn3DS2Screen()
+
+        assertReceiptObject("", "", "Declined", "Payment")
+    }
+
+    @Test
+    fun testFailedTransaction() {
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            "4111 1111 1111 1111",
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            "123",
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        clickCompleteOn3DS2Screen()
+
+        assertReceiptObject("The gateway reported an error", "", "Error", "Payment")
+    }
+
+    @Test
+    fun testCancel3DS2ChallengeScreen() {
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        awaitActivityThenRun("com.judopay.judo3ds2.ui.challenge.ChallengeActivity") {
+            onView(withText("CANCEL"))
+                .perform(click())
+        }
+
+        awaitActivityThenRun(ResultActivity::class.java.name) {
+            onView(withId(R.id.recyclerView))
+                .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(2))
+                .check(matches(hasDescendant(withText("Unable to process transaction. Card authentication failed with 3DS Server."))))
+        }
+    }
+
+    @Test
+    fun testSuccessfulPreauthTransaction() {
+        onView(withText(PREAUTH_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        clickCompleteOn3DS2Screen()
+
+        assertReceiptObject("AuthCode: ", "", "Success", "PreAuth")
+    }
+
+    @Test
+    fun testSuccessfulCheckCardTransaction() {
+        onView(withText(CHECK_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        clickCompleteOn3DS2Screen()
+
+        assertReceiptObject("AuthCode: ", "", "Success", "CheckCard")
+    }
+
+    @Test
+    fun testSuccessfulTokenPayment() {
+        onView(withId(R.id.recyclerView))
+            .perform(swipeUp())
+
+        onView(withText(TOKEN_PAYMENTS_LABEL))
+            .perform(scrollTo())
+            .perform(click())
+
+        composeTestRule.onNodeWithText("TOKENIZE A NEW CARD")
+            .assertIsEnabled()
+            .performClick()
+
+        Thread.sleep(500)
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        awaitActivityThenRun(TokenPaymentsActivity::class.java.name) {
+            composeTestRule.onNodeWithText("Security code")
+                .assertIsEnabled()
+                .performTextInput(CARD_SECURITY_CODE)
+
+            closeSoftKeyboard()
+
+            composeTestRule.onNodeWithText("PAYMENT")
+                .assertIsEnabled()
+                .performClick()
+        }
+
+        clickCompleteOn3DS2Screen()
+
+        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+    }
+
+    @Test
+    fun testSuccessfulTokenPreauth() {
+        onView(withId(R.id.recyclerView))
+            .perform(swipeUp())
+
+        onView(withText(TOKEN_PAYMENTS_LABEL))
+            .perform(scrollTo())
+            .perform(click())
+
+        composeTestRule.onNodeWithText("TOKENIZE A NEW CARD")
+            .assertIsEnabled()
+            .performClick()
+
+        Thread.sleep(500)
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        awaitActivityThenRun(TokenPaymentsActivity::class.java.name) {
+            composeTestRule.onNodeWithText("Security code")
+                .assertIsEnabled()
+                .performTextInput(CARD_SECURITY_CODE)
+
+            closeSoftKeyboard()
+
+            composeTestRule.onNodeWithText("PRE-AUTH")
+                .assertIsEnabled()
+                .performClick()
+        }
+
+        clickCompleteOn3DS2Screen()
+
+        assertReceiptObject("AuthCode: ", "", "Success", "PreAuth")
+    }
+
+    @Test
+    fun testSuccessfulFrictionlessPayment() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putString("challengeRequestIndicator", "NO_PREFERENCE")
+            }
+            .commit()
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            "Frictionless Successful",
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+    }
+
+    @Test
+    fun testFrictionlessNoMethodPayment() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putString("challengeRequestIndicator", "NO_PREFERENCE")
+            }
+            .commit()
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            "Frictionless NoMethod",
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+    }
+
+    @Test
+    fun testFrictionlessAuthFailedPayment() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putString("challengeRequestIndicator", "NO_PREFERENCE")
+            }
+            .commit()
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            "Frictionless AuthFailed",
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        awaitActivityThenRun(ResultActivity::class.java.name) {
+            onView(withId(R.id.recyclerView))
+                .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(2))
+                .check(matches(hasDescendant(withText("Unable to process transaction. Card authentication failed with 3DS Server."))))
+        }
+    }
+
+    @Test
+    fun testSuccessfulPaymentMethodsCardPayment() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putBoolean("should_payment_methods_verify_security_code", true)
+            }
+            .commit()
+
+        onView(withText(PAYMENT_METHODS_LABEL))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        try {
+            onView(withId(R.id.addButton))
+                .check(matches(isEnabled()))
+                .perform(click())
+
+            enterPaymentSheetDetails(
+                CARD_NUMBER,
+                CARDHOLDER_NAME,
+                CARD_EXPIRY,
+                CARD_SECURITY_CODE,
+            )
+
+            onView(withId(R.id.cardEntrySubmitButton))
+                .check(matches(isEnabled()))
+                .perform(click())
+
+            Thread.sleep(1000)
+
+            onView(withId(R.id.payButton))
+                .perform(click())
+
+            onView(withId(R.id.securityNumberTextInputEditText))
+                .perform(clearText(), typeText(CARD_SECURITY_CODE))
+
+            onView(withId(R.id.cardEntrySubmitButton))
+                .check(matches(isEnabled()))
+                .perform(click())
+
+            clickCompleteOn3DS2Screen()
+
+            assertReceiptObject("", "", "Success", "Payment")
+        } catch (e: NoMatchingViewException) {
+            onView(withId(R.id.payButton))
+                .perform(click())
+
+            onView(withId(R.id.securityNumberTextInputEditText))
+                .perform(clearText(), typeText(CARD_SECURITY_CODE))
+
+            onView(withId(R.id.cardEntrySubmitButton))
+                .check(matches(isEnabled()))
+                .perform(click())
+
+            clickCompleteOn3DS2Screen()
+
+            assertReceiptObject("", "", "Success", "Payment")
+        }
+    }
+
+    @Test
+    fun testSuccessfulPaymentMethodsPreauth() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putBoolean("should_payment_methods_verify_security_code", true)
+            }
+            .commit()
+
+        onView(withId(R.id.recyclerView))
+            .perform(swipeUp())
+
+        onView(withText(PREAUTH_METHODS_LABEL))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        try {
+            onView(withId(R.id.addButton))
+                .check(matches(isEnabled()))
+                .perform(click())
+
+            enterPaymentSheetDetails(
+                CARD_NUMBER,
+                CARDHOLDER_NAME,
+                CARD_EXPIRY,
+                CARD_SECURITY_CODE,
+            )
+
+            onView(withId(R.id.cardEntrySubmitButton))
+                .check(matches(isEnabled()))
+                .perform(click())
+
+            Thread.sleep(1000)
+
+            onView(withId(R.id.payButton))
+                .perform(click())
+
+            onView(withId(R.id.securityNumberTextInputEditText))
+                .perform(clearText(), typeText(CARD_SECURITY_CODE))
+
+            onView(withId(R.id.cardEntrySubmitButton))
+                .check(matches(isEnabled()))
+                .perform(click())
+
+            clickCompleteOn3DS2Screen()
+
+            assertReceiptObject("", "", "Success", "PreAuth")
+        } catch (e: NoMatchingViewException) {
+            onView(withId(R.id.payButton))
+                .perform(click())
+
+            onView(withId(R.id.securityNumberTextInputEditText))
+                .perform(clearText(), typeText(CARD_SECURITY_CODE))
+
+            onView(withId(R.id.cardEntrySubmitButton))
+                .check(matches(isEnabled()))
+                .perform(click())
+
+            clickCompleteOn3DS2Screen()
+
+            assertReceiptObject("", "", "Success", "PreAuth")
+        }
+    }
+
+    @Test
+    fun testUserCanSuccessfullyRemoveCardInPaymentMethods() {
+        onView(withText(PAYMENT_METHODS_LABEL))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        onView(withId(R.id.addButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            "4222 0000 0122 7408",
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(2000)
+
+        onView(withId(R.id.subTitle))
+            .check(matches(withText("Visa Ending 7408")))
+
+        onView(withId(R.id.editButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        onView(withId(R.id.removeCardIcon))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        onView(withText("Delete"))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        onView(withText("Visa Ending 7408"))
+            .check(doesNotExist())
+    }
+
+    @Test
+    fun testSuccessfulPaymentWithBillingDetails() {
+        toggleBillingInfoSetting(true)
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        fillBillingDetails(
+            VALID_EMAIL,
+            VALID_COUNTRY,
+            VALID_MOBILE,
+            VALID_ADDRESS,
+            VALID_CITY,
+            VALID_POSTCODE,
+        )
+
+        onView(withId(R.id.billingDetailsSubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        clickCompleteOn3DS2Screen()
+
+        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+
+        toggleBillingInfoSetting(false)
+    }
+
+    @Test
+    fun testUKPostCodeValidation() {
+        toggleBillingInfoSetting(true)
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        fillBillingDetails(
+            VALID_EMAIL,
+            VALID_COUNTRY,
+            VALID_MOBILE,
+            VALID_ADDRESS,
+            VALID_CITY,
+            INVALID_POSTCODE,
+        )
+
+        onView(withId(R.id.cityTextInputEditText))
+            .perform(click())
+
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_POSTCODE_LABEL)))
+
+        toggleBillingInfoSetting(false)
+    }
+
+    @Test
+    fun testUSPostCodeValidation() {
+        toggleBillingInfoSetting(true)
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        fillBillingDetails(
+            VALID_EMAIL,
+            "United States",
+            VALID_MOBILE,
+            VALID_ADDRESS,
+            VALID_CITY,
+            INVALID_POSTCODE,
+        )
+
+        onView(withId(R.id.cityTextInputEditText))
+            .perform(click())
+
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_ZIPCODE_LABEL)))
+
+        toggleBillingInfoSetting(false)
+    }
+
+    @Test
+    fun testCAPostCodeValidation() {
+        toggleBillingInfoSetting(true)
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        fillBillingDetails(
+            VALID_EMAIL,
+            "Canada",
+            VALID_MOBILE,
+            VALID_ADDRESS,
+            VALID_CITY,
+            INVALID_POSTCODE,
+        )
+
+        onView(withId(R.id.cityTextInputEditText))
+            .perform(click())
+
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_POSTCODE_LABEL)))
+
+        toggleBillingInfoSetting(false)
+    }
+
+    @Test
+    fun testBillingFieldsInputValidation() {
+        toggleBillingInfoSetting(true)
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        fillTextField(R.id.emailTextInputEditText, SPECIAL_CHARACTERS)
+        onView(withId(R.id.cityTextInputEditText)).perform(click())
+        Thread.sleep(500)
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_EMAIL_LABEL)))
+        fillTextField(R.id.emailTextInputEditText, VALID_EMAIL)
+
+        selectFromMultipleAndEnterText(R.id.countryTextInputEditText, VALID_COUNTRY)
+        onView(withText(VALID_COUNTRY)).perform(click())
+        fillTextField(R.id.mobileNumberTextInputEditText, VALID_COUNTRY_CODE)
+        onView(withId(R.id.cityTextInputEditText)).perform(click())
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_PHONE_LABEL)))
+        Thread.sleep(500)
+        fillTextField(R.id.mobileNumberTextInputEditText, VALID_MOBILE)
+
+        fillTextField(R.id.addressLine1TextInputEditText, SPECIAL_CHARACTERS)
+        onView(withId(R.id.cityTextInputEditText)).perform(click())
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_ADDRESS_LABEL)))
+        fillTextField(R.id.addressLine1TextInputEditText, VALID_ADDRESS)
+
+        fillTextField(R.id.cityTextInputEditText, SPECIAL_CHARACTERS)
+        onView(withId(R.id.addressLine1TextInputEditText)).perform(click())
+        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withText(INVALID_CITY_LABEL)))
+        fillTextField(R.id.cityTextInputEditText, VALID_CITY)
+
+        toggleBillingInfoSetting(false)
+    }
 }
