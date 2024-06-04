@@ -255,7 +255,6 @@ jobs:
               --timeout=30m \
               --device model=shiba,version=34 \
               --use-orchestrator \
-              --num-flaky-test-attempts=1 \
               --client-details=matrixLabel="Regression E2E"
 
   instrumented_test_sample_weekly:
@@ -274,7 +273,6 @@ jobs:
               --device model=panther,version=33 \
               --device model=bluejay,version=32 \
               --device model=a51,version=31 \
-              --num-flaky-test-attempts=1 \
               --use-orchestrator \
               --client-details=matrixLabel="Backward Compat E2E"
 

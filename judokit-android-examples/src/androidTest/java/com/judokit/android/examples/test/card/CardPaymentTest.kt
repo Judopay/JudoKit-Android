@@ -616,7 +616,7 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        Thread.sleep(2000)
+        Thread.sleep(10000)
 
         onView(withId(R.id.subTitle))
             .check(matches(withText("Visa Ending 7408")))
