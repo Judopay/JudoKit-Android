@@ -254,7 +254,7 @@ jobs:
               --results-bucket $FIREBASE_TEST_RESULTS_BUCKET \
               --timeout=30m \
               --device model=shiba,version=34 \
-              --num-flaky-test-attempts=1
+              --use-orchestrator
 
   instrumented_test_sample_weekly:
     <<: *android-docker-executor

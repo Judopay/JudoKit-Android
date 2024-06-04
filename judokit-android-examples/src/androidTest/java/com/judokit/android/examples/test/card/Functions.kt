@@ -61,7 +61,7 @@ fun <IR : IdlingResource> awaitIdlingResourceThenRun(
  */
 fun clickCompleteOn3DS2Screen() {
     awaitActivityThenRun("com.judopay.judo3ds2.ui.challenge.ChallengeActivity") {
-        Thread.sleep(10000)
+        Thread.sleep(15000)
         Espresso.onView(ViewMatchers.withText("COMPLETE"))
             .perform(ViewActions.longClick())
     }
