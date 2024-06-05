@@ -9,7 +9,9 @@ import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.IdlingResourceTimeoutException
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
@@ -116,8 +118,7 @@ fun fillTextField(
     @IdRes textFieldId: Int,
     text: String,
 ) {
-    onView((withId(textFieldId)))
-        .perform(ViewActions.clearText(), ViewActions.typeText(text))
+    Helpers().doOnView(withId(textFieldId), clearText(), typeText(text))
 }
 
 fun setupRavelin(
