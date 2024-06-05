@@ -60,12 +60,10 @@ fun <IR : IdlingResource> awaitIdlingResourceThenRun(
  * Complete the 3DS2 process
  */
 fun clickCompleteOn3DS2Screen() {
-    awaitActivityThenRun("com.judopay.judo3ds2.ui.challenge.ChallengeActivity") {
-        Helpers().assertOnView(withText("COMPLETE"))
-        Thread.sleep(15000)
-        Espresso.onView(ViewMatchers.withText("COMPLETE"))
-            .perform(ViewActions.longClick())
-    }
+    Helpers().assertOnView(withText("COMPLETE"))
+    Thread.sleep(15000)
+    onView(withText("COMPLETE"))
+        .perform(ViewActions.longClick())
 }
 
 /*
@@ -78,21 +76,21 @@ fun assertReceiptObject(
     type: String,
 ) {
     awaitActivityThenRun(ResultActivity::class.java.name) {
-        Espresso.onView(withId(SDK.id.recyclerView))
+        onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(8))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(startsWith(message)))))
+            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(withText(startsWith(message)))))
 
-        Espresso.onView(withId(SDK.id.recyclerView))
+        onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(13))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(CoreMatchers.not(receiptId)))))
+            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(withText(CoreMatchers.not(receiptId)))))
 
-        Espresso.onView(withId(SDK.id.recyclerView))
+        onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(14))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(result))))
+            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(withText(result))))
 
-        Espresso.onView(withId(SDK.id.recyclerView))
+        onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(15))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(type))))
+            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(withText(type))))
     }
 }
 
@@ -118,7 +116,7 @@ fun fillTextField(
     @IdRes textFieldId: Int,
     text: String,
 ) {
-    Espresso.onView((ViewMatchers.withId(textFieldId)))
+    onView((withId(textFieldId)))
         .perform(ViewActions.clearText(), ViewActions.typeText(text))
 }
 
@@ -137,11 +135,11 @@ fun setupRavelin(
         }
         .commit()
 
-    Espresso.onView(withId(Examples.id.action_settings))
-        .perform(ViewActions.click())
+    onView(withId(Examples.id.action_settings))
+        .perform(click())
 
-    Espresso.onView(ViewMatchers.withText("Generate payment session"))
-        .perform(ViewActions.click())
+    onView(withText("Generate payment session"))
+        .perform(click())
 
     Thread.sleep(1000)
 }

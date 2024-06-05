@@ -29,7 +29,7 @@ class EspressoExtensions {
 
                 override fun perform(uiController: UiController, view: View) {
 
-                    var tries = 1
+                    var tries = 3
                     val childViews: Iterable<View> = TreeIterables.breadthFirstViewTraversal(view)
 
                     childViews.forEach {
