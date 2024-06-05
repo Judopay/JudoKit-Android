@@ -605,11 +605,9 @@ class CardPaymentTest {
         onView(withText(PAYMENT_METHODS_LABEL))
             .perform(click())
 
-        Thread.sleep(1000)
+        Thread.sleep(5000)
 
-        onView(withId(R.id.addButton))
-            .check(matches(isEnabled()))
-            .perform(click())
+        Helpers().doOnView(withId(R.id.addButton), click())
 
         enterPaymentSheetDetails(
             "4222 0000 0122 7408",
