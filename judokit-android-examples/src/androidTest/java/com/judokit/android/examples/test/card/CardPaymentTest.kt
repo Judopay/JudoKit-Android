@@ -158,6 +158,8 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
+        Helpers().assertOnView(withText("COMPLETE"))
+
         clickCompleteOn3DS2Screen()
 
         assertReceiptObject("AuthCode: ", "", "Success", "Payment")
@@ -178,6 +180,8 @@ class CardPaymentTest {
         onView(withId(R.id.cardEntrySubmitButton))
             .check(matches(isEnabled()))
             .perform(click())
+
+        Helpers().assertOnView(withText("COMPLETE"))
 
         clickCompleteOn3DS2Screen()
 
@@ -200,6 +204,8 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
+        Helpers().assertOnView(withText("COMPLETE"))
+
         clickCompleteOn3DS2Screen()
 
         assertReceiptObject("", "", "Declined", "Payment")
@@ -221,6 +227,8 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
+        Helpers().assertOnView(withText("COMPLETE"))
+
         clickCompleteOn3DS2Screen()
 
         assertReceiptObject("The gateway reported an error", "", "Error", "Payment")
@@ -241,6 +249,8 @@ class CardPaymentTest {
         onView(withId(R.id.cardEntrySubmitButton))
             .check(matches(isEnabled()))
             .perform(click())
+
+        Helpers().assertOnView(withText("COMPLETE"))
 
         awaitActivityThenRun("com.judopay.judo3ds2.ui.challenge.ChallengeActivity") {
             onView(withText("CANCEL"))
@@ -270,6 +280,8 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
+        Helpers().assertOnView(withText("COMPLETE"))
+
         clickCompleteOn3DS2Screen()
 
         assertReceiptObject("AuthCode: ", "", "Success", "PreAuth")
@@ -290,6 +302,8 @@ class CardPaymentTest {
         onView(withId(R.id.cardEntrySubmitButton))
             .check(matches(isEnabled()))
             .perform(click())
+
+        Helpers().assertOnView(withText("COMPLETE"))
 
         clickCompleteOn3DS2Screen()
 
@@ -334,6 +348,8 @@ class CardPaymentTest {
                 .performClick()
         }
 
+        Helpers().assertOnView(withText("COMPLETE"))
+
         clickCompleteOn3DS2Screen()
 
         assertReceiptObject("AuthCode: ", "", "Success", "Payment")
@@ -377,6 +393,8 @@ class CardPaymentTest {
                 .performClick()
         }
 
+        Helpers().assertOnView(withText("COMPLETE"))
+
         clickCompleteOn3DS2Screen()
 
         assertReceiptObject("AuthCode: ", "", "Success", "PreAuth")
@@ -406,6 +424,8 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
+        Helpers().assertOnView(withText("COMPLETE"))
+
         assertReceiptObject("AuthCode: ", "", "Success", "Payment")
     }
 
@@ -432,6 +452,8 @@ class CardPaymentTest {
         onView(withId(R.id.cardEntrySubmitButton))
             .check(matches(isEnabled()))
             .perform(click())
+
+        Helpers().assertOnView(withText("COMPLETE"))
 
         assertReceiptObject("AuthCode: ", "", "Success", "Payment")
     }
@@ -509,6 +531,8 @@ class CardPaymentTest {
                 .check(matches(isEnabled()))
                 .perform(click())
 
+            Helpers().assertOnView(withText("COMPLETE"))
+
             clickCompleteOn3DS2Screen()
 
             assertReceiptObject("", "", "Success", "Payment")
@@ -522,6 +546,8 @@ class CardPaymentTest {
             onView(withId(R.id.cardEntrySubmitButton))
                 .check(matches(isEnabled()))
                 .perform(click())
+
+            Helpers().assertOnView(withText("COMPLETE"))
 
             clickCompleteOn3DS2Screen()
 
@@ -574,6 +600,8 @@ class CardPaymentTest {
                 .check(matches(isEnabled()))
                 .perform(click())
 
+            Helpers().assertOnView(withText("COMPLETE"))
+
             clickCompleteOn3DS2Screen()
 
             assertReceiptObject("", "", "Success", "PreAuth")
@@ -587,6 +615,8 @@ class CardPaymentTest {
             onView(withId(R.id.cardEntrySubmitButton))
                 .check(matches(isEnabled()))
                 .perform(click())
+
+            Helpers().assertOnView(withText("COMPLETE"))
 
             clickCompleteOn3DS2Screen()
 
@@ -670,6 +700,8 @@ class CardPaymentTest {
         onView(withId(R.id.billingDetailsSubmitButton))
             .check(matches(isEnabled()))
             .perform(click())
+
+        Helpers().assertOnView(withText("COMPLETE"))
 
         clickCompleteOn3DS2Screen()
 
