@@ -66,6 +66,7 @@ import com.judokit.android.examples.test.card.Other.CANCELLED_PAYMENT_TOAST
 import com.judokit.android.examples.test.card.Other.CANCEL_BUTTON
 import com.judopay.judokit.android.R
 import org.hamcrest.Matchers.allOf
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -112,6 +113,11 @@ class CardPaymentTest {
                 putBoolean("is_recommendation_feature_enabled", false)
             }
             .commit()
+    }
+
+    @After
+    fun tearDown() {
+        toggleBillingInfoSetting(false)
     }
 
     @Test
