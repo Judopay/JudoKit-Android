@@ -11,13 +11,19 @@ import org.hamcrest.Matcher
 import java.lang.Thread.sleep
 
 open class Helpers {
-    fun doOnView(matcher: Matcher<View>, vararg actions: ViewAction) {
+    fun doOnView(
+        matcher: Matcher<View>,
+        vararg actions: ViewAction,
+    ) {
         actions.forEach {
             waitForView(matcher).perform(it)
         }
     }
 
-    fun assertOnView(matcher: Matcher<View>, vararg assertions: ViewAssertion) {
+    fun assertOnView(
+        matcher: Matcher<View>,
+        vararg assertions: ViewAssertion,
+    ) {
         assertions.forEach {
             waitForView(matcher).check(it)
         }
@@ -34,9 +40,8 @@ open class Helpers {
     fun waitForView(
         viewMatcher: Matcher<View>,
         waitMillis: Int = 5000,
-        waitMillisPerTry: Long = 100
+        waitMillisPerTry: Long = 100,
     ): ViewInteraction {
-
         // Derive the max tries
         val maxTries = waitMillis / waitMillisPerTry.toInt()
 
@@ -52,9 +57,7 @@ open class Helpers {
 
                 // If we're here, we found our view. Now return it
                 return onView(viewMatcher)
-
             } catch (e: Exception) {
-
                 if (tries == maxTries) {
                     throw e
                 }

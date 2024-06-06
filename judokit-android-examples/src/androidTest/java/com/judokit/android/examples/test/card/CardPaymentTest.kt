@@ -148,6 +148,7 @@ class CardPaymentTest {
 
         onView(withText(CANCELLED_PAYMENT_TOAST)).check(matches(isDisplayed()))
     }
+
     @Test
     fun testSuccessfulTransaction() {
         onView(withText(PAY_WITH_CARD_LABEL))

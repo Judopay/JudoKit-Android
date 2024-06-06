@@ -10,15 +10,12 @@ import org.hamcrest.Matcher
 
 class EspressoExtensions {
     companion object {
-
         /**
          * Perform action of waiting for a certain view within a single root view
          * @param matcher Generic Matcher used to find our view
          */
         fun searchFor(matcher: Matcher<View>): ViewAction {
-
             return object : ViewAction {
-
                 override fun getConstraints(): Matcher<View> {
                     return isRoot()
                 }
@@ -27,8 +24,10 @@ class EspressoExtensions {
                     return "Searching for view $matcher in the root view"
                 }
 
-                override fun perform(uiController: UiController, view: View) {
-
+                override fun perform(
+                    uiController: UiController,
+                    view: View,
+                ) {
                     var tries = 3
                     val childViews: Iterable<View> = TreeIterables.breadthFirstViewTraversal(view)
 
