@@ -37,13 +37,13 @@ enum class CardNetwork : Parcelable {
 
         // The card scheme for a card number. This is the name of the card scheme as it appears on the card.
         // As it is returned by the API in the cardDetails object, it is not localized.
-        private const val CARD_SCHEME_VISA = "Visa"
-        private const val CARD_SCHEME_MASTERCARD = "Mastercard"
-        private const val CARD_SCHEME_MAESTRO = "Maestro"
+        private const val CARD_SCHEME_VISA = "VISA"
+        private const val CARD_SCHEME_MASTERCARD = "MASTERCARD"
+        private const val CARD_SCHEME_MAESTRO = "MAESTRO"
         private const val CARD_SCHEME_AMEX = "AMEX"
-        private const val CARD_SCHEME_CHINA_UNION_PAY = "China Union Pay"
+        private const val CARD_SCHEME_CHINA_UNION_PAY = "CHINA UNION PAY"
         private const val CARD_SCHEME_JCB = "JCB"
-        private const val CARD_SCHEME_DISCOVER = "Discover"
+        private const val CARD_SCHEME_DISCOVER = "DISCOVER"
 
         /**
          * A method that returns the card network based on the provided card number.
@@ -93,8 +93,8 @@ enum class CardNetwork : Parcelable {
                 17 -> DINERS_CLUB
 
                 // As a fallback, if the card scheme is provided, use it to determine the card network.
-                else ->
-                    when (scheme) {
+                else -> {
+                    when (scheme?.uppercase()) {
                         CARD_SCHEME_VISA -> VISA
                         CARD_SCHEME_MASTERCARD -> MASTERCARD
                         CARD_SCHEME_AMEX -> AMEX
@@ -104,6 +104,7 @@ enum class CardNetwork : Parcelable {
                         CARD_SCHEME_DISCOVER -> DISCOVER
                         else -> OTHER
                     }
+                }
             }
     }
 }
