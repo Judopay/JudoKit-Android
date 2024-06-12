@@ -73,7 +73,7 @@
     <dimen name="corner_radius_30dp">30dp</dimen>
     <dimen name="size_36dp">36dp</dimen>
     <dimen name="size_50dp">50dp</dimen>
-    <dimen name="powered_by_judo_width">96dp</dimen>
+    <dimen name="powered_by_judo_width">111dp</dimen>
     <dimen name="powered_by_judo_height">18dp</dimen>
 
 
