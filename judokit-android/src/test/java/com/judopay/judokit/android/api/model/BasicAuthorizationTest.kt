@@ -12,6 +12,10 @@ import org.junit.jupiter.api.assertThrows
 import java.nio.charset.StandardCharsets
 
 @DisplayName("Testing BasicAuthorization class")
+@Deprecated(
+    "This authentication method is deprecated. This test should be removed along " +
+        "with BasicAuthorisation class soon.",
+)
 internal class BasicAuthorizationTest {
     @BeforeEach
     internal fun setUp() {
@@ -25,6 +29,7 @@ internal class BasicAuthorizationTest {
         } returns "credentials"
     }
 
+    @Suppress("DEPRECATION") // The test has been set as 'deprecated' (no need for this warning).
     private val sut =
         BasicAuthorization.Builder()
             .setApiToken("token")

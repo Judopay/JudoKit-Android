@@ -3518,8 +3518,8 @@ public final class com/judopay/judokit/android/ui/cardentry/CardEntryAction$Vali
 public final class com/judopay/judokit/android/ui/cardentry/CardEntryFragment : com/google/android/material/bottomsheet/BottomSheetDialogFragment {
 	public fun <init> ()V
 	public fun getTheme ()I
-	public fun onActivityCreated (Landroid/os/Bundle;)V
 	public fun onCancel (Landroid/content/DialogInterface;)V
+	public fun onCreate (Landroid/os/Bundle;)V
 	public synthetic fun onCreateDialog (Landroid/os/Bundle;)Landroid/app/Dialog;
 	public fun onCreateDialog (Landroid/os/Bundle;)Lcom/judopay/judokit/android/ui/cardentry/JudoBottomSheetDialog;
 	public fun onCreateView (Landroid/view/LayoutInflater;Landroid/view/ViewGroup;Landroid/os/Bundle;)Landroid/view/View;
@@ -4142,7 +4142,7 @@ public final class com/judopay/judokit/android/ui/editcard/EditCardAction$Toggle
 
 public final class com/judopay/judokit/android/ui/editcard/EditCardFragment : androidx/fragment/app/Fragment {
 	public fun <init> ()V
-	public fun onActivityCreated (Landroid/os/Bundle;)V
+	public fun onCreate (Landroid/os/Bundle;)V
 	public fun onCreateView (Landroid/view/LayoutInflater;Landroid/view/ViewGroup;Landroid/os/Bundle;)Landroid/view/View;
 	public fun onDestroyView ()V
 	public fun onViewCreated (Landroid/view/View;Landroid/os/Bundle;)V
@@ -4250,7 +4250,7 @@ public final class com/judopay/judokit/android/ui/ideal/IdealAction$StartPolling
 
 public final class com/judopay/judokit/android/ui/ideal/IdealFragment : androidx/fragment/app/Fragment, com/judopay/judokit/android/ui/ideal/components/IdealWebViewCallback {
 	public fun <init> ()V
-	public fun onActivityCreated (Landroid/os/Bundle;)V
+	public fun onCreate (Landroid/os/Bundle;)V
 	public fun onCreateView (Landroid/view/LayoutInflater;Landroid/view/ViewGroup;Landroid/os/Bundle;)Landroid/view/View;
 	public fun onDestroyView ()V
 	public fun onPageStarted (Ljava/lang/String;)V
@@ -4402,7 +4402,7 @@ public final class com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsA
 
 public final class com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsFragment : androidx/fragment/app/Fragment {
 	public fun <init> ()V
-	public fun onActivityCreated (Landroid/os/Bundle;)V
+	public fun onCreate (Landroid/os/Bundle;)V
 	public fun onCreateView (Landroid/view/LayoutInflater;Landroid/view/ViewGroup;Landroid/os/Bundle;)Landroid/view/View;
 	public fun onDestroy ()V
 	public fun onDestroyView ()V
@@ -4974,10 +4974,11 @@ public final class com/judopay/judokit/android/ui/pollingstatus/PollingAction$Re
 public final class com/judopay/judokit/android/ui/pollingstatus/PollingStatusFragment : androidx/fragment/app/DialogFragment {
 	public fun <init> ()V
 	public final fun getResult ()Lcom/judopay/judokit/android/model/JudoPaymentResult;
-	public fun onActivityCreated (Landroid/os/Bundle;)V
+	public fun onCreate (Landroid/os/Bundle;)V
 	public fun onCreateDialog (Landroid/os/Bundle;)Landroid/app/Dialog;
 	public fun onCreateView (Landroid/view/LayoutInflater;Landroid/view/ViewGroup;Landroid/os/Bundle;)Landroid/view/View;
 	public fun onDestroyView ()V
+	public fun onViewCreated (Landroid/view/View;Landroid/os/Bundle;)V
 	public final fun setResult (Lcom/judopay/judokit/android/model/JudoPaymentResult;)V
 }
 

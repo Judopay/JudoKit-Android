@@ -37,19 +37,25 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
     private var _binding: IdealFragmentBinding? = null
     private val binding get() = _binding!!
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initializeViewModel()
+    }
 
-        val bic =
-            arguments?.getString(JUDO_IDEAL_BANK)
-                ?: throw NullPointerException(BIC_NOT_NULL)
+    private fun initializeViewModel() {
+        val application =
+            requireActivity().application
+        val service =
+            JudoApiServiceFactory.create(application, judo)
+        val pollingService =
+            PollingService(service)
+        val factory =
+            IdealViewModelFactory(judo, service, pollingService, application)
+        viewModel =
+            ViewModelProvider(this, factory)[IdealViewModel::class.java]
+    }
 
-        val application = requireActivity().application
-        val service = JudoApiServiceFactory.create(application, judo)
-        val pollingService = PollingService(service)
-        val factory = IdealViewModelFactory(judo, service, pollingService, application)
-        viewModel = ViewModelProvider(this, factory)[IdealViewModel::class.java]
-
+    private fun initializeViewModelObserving() {
         viewModel.saleCallResult.observe(viewLifecycleOwner) { handleSaleResult(it) }
         viewModel.saleStatusResult.observe(viewLifecycleOwner) { handleSaleStatusResult(it) }
 
@@ -67,9 +73,6 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
                 binding.idealPollingStatusView.visibility = View.GONE
             }
         }
-
-        binding.idealPollingStatusView.animateWithAlpha(1.0f)
-        viewModel.send(IdealAction.Initialise(bic))
     }
 
     override fun onCreateView(
@@ -116,10 +119,14 @@ class IdealFragment : Fragment(), IdealWebViewCallback {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.backButton.setOnClickListener { sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled()) }
-
         binding.idealWebView.view = this
+        initializeViewModelObserving()
+        binding.idealPollingStatusView.animateWithAlpha(1.0f)
+        val bic =
+            arguments?.getString(JUDO_IDEAL_BANK)
+                ?: throw NullPointerException(BIC_NOT_NULL)
+        viewModel.send(IdealAction.Initialise(bic))
     }
 
     override fun onPageStarted(checksum: String) {

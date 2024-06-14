@@ -1,6 +1,7 @@
 package com.judopay.judokit.android.ui.pollingstatus
 
 import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,15 +29,29 @@ class PollingStatusFragment : DialogFragment() {
     private val binding get() = _binding!!
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog =
-            object : Dialog(requireContext(), theme) {
-                override fun onBackPressed() {
-                    sharedViewModel.bankPaymentResult.postValue(result)
-                    super.onBackPressed()
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val dialog = Dialog(requireContext(), theme)
+            // Todo: Confirm with Stefan how/whether to unregister the new callback properly.
+            dialog.onBackInvokedDispatcher.registerOnBackInvokedCallback(
+                0,
+            ) {
+                sharedViewModel.bankPaymentResult.postValue(result)
             }
-        dialog.window?.applyDialogStyling()
-        return dialog
+            dialog.window?.applyDialogStyling()
+            return dialog
+        } else {
+            val dialog =
+                object : Dialog(requireContext(), theme) {
+                    @Deprecated("Deprecated in Java")
+                    override fun onBackPressed() {
+                        sharedViewModel.bankPaymentResult.postValue(result)
+                        @Suppress("DEPRECATION")
+                        super.onBackPressed()
+                    }
+                }
+            dialog.window?.applyDialogStyling()
+            return dialog
+        }
     }
 
     override fun onCreateView(
@@ -48,23 +63,31 @@ class PollingStatusFragment : DialogFragment() {
         return binding.root
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initializeViewModel()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.pollingStatusView.onButtonClickListener = { handlePollingStatusViewButtonClick(it) }
+        binding.pollingStatusView.animateWithAlpha(1.0f)
+    }
 
+    private fun initializeViewModel() {
         val application = requireActivity().application
         val service = JudoApiServiceFactory.create(application, judo)
         val pollingService = PollingService(service)
         val factory = PollingStatusViewModelFactory(pollingService, application)
         viewModel = ViewModelProvider(this, factory)[PollingStatusViewModel::class.java]
-
-        binding.pollingStatusView.onButtonClickListener = { handlePollingStatusViewButtonClick(it) }
-
-        binding.pollingStatusView.animateWithAlpha(1.0f)
     }
 
     private fun handlePollingStatusViewButtonClick(action: PollingStatusViewAction) {

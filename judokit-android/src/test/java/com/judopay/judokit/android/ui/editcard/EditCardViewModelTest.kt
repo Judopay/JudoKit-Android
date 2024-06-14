@@ -14,13 +14,13 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.spyk
 import io.mockk.verify
-import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -33,7 +33,7 @@ private const val NEW_TITLE = "NEW_TITLE"
 @ExtendWith(com.judopay.judokit.android.InstantExecutorExtension::class)
 @DisplayName("Testing edit card view model logic")
 internal class EditCardViewModelTest {
-    private val testDispatcher = TestCoroutineDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     private val application: Application = mockk(relaxed = true)
     private val cardRepository: TokenizedCardRepository = mockk(relaxed = true)
@@ -56,7 +56,6 @@ internal class EditCardViewModelTest {
     @AfterEach
     internal fun tearDown() {
         Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
     }
 
     @Test

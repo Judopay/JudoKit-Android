@@ -9,6 +9,7 @@ import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okio.Buffer
 import java.io.IOException
@@ -34,7 +35,7 @@ internal class DeviceDnaInterceptor(context: Context) : Interceptor {
                     addClientDetails(json)
                 }
 
-                val postJson = RequestBody.create(MEDIA_TYPE_APPLICATION_JSON, json.toString())
+                val postJson = json.toString().toRequestBody(MEDIA_TYPE_APPLICATION_JSON)
                 return chain.proceed(
                     request.newBuilder()
                         .post(postJson)
@@ -59,8 +60,7 @@ internal class DeviceDnaInterceptor(context: Context) : Interceptor {
         val buffer = Buffer()
         request.writeTo(buffer)
         val body = buffer.readUtf8()
-        val parser = JsonParser()
-        return parser.parse(body)
+        return JsonParser.parseString(body)
     }
 }
 
