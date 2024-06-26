@@ -66,6 +66,7 @@ import com.judokit.android.examples.test.card.Other.CANCELLED_PAYMENT_TOAST
 import com.judokit.android.examples.test.card.Other.CANCEL_BUTTON
 import com.judopay.judokit.android.R
 import org.hamcrest.Matchers.allOf
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -114,6 +115,11 @@ class CardPaymentTest {
             .commit()
     }
 
+    @After
+    fun tearDown() {
+        toggleBillingInfoSetting(false)
+    }
+
     @Test
     fun testValidCardDetailsInputSubmitButton() {
         onView(withText(PAY_WITH_CARD_LABEL))
@@ -159,9 +165,34 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
+        assertOnView(withText("COMPLETE"))
+
         clickCompleteOn3DS2Screen()
 
         assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+    }
+
+    @Test
+    fun testSuccessfulRegisterCardTransaction() {
+        onView(withText(REGISTER_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        assertOnView(withText("COMPLETE"))
+
+        clickCompleteOn3DS2Screen()
+
+        assertReceiptObject("AuthCode: ", "", "Success", "Register")
     }
 
     @Test
@@ -179,6 +210,8 @@ class CardPaymentTest {
         onView(withId(R.id.cardEntrySubmitButton))
             .check(matches(isEnabled()))
             .perform(click())
+
+        assertOnView(withText("COMPLETE"))
 
         clickCompleteOn3DS2Screen()
 
@@ -253,27 +286,6 @@ class CardPaymentTest {
         clickCompleteOn3DS2Screen()
 
         assertReceiptObject("AuthCode: ", "", "Success", "PreAuth")
-    }
-
-    @Test
-    fun testSuccessfulRegisterCardTransaction() {
-        onView(withText(REGISTER_CARD_LABEL))
-            .perform(click())
-
-        enterPaymentSheetDetails(
-            CARD_NUMBER,
-            CARDHOLDER_NAME,
-            CARD_EXPIRY,
-            CARD_SECURITY_CODE,
-        )
-
-        onView(withId(R.id.cardEntrySubmitButton))
-            .check(matches(isEnabled()))
-            .perform(click())
-
-        clickCompleteOn3DS2Screen()
-
-        assertReceiptObject("AuthCode: ", "", "Success", "Register")
     }
 
     @Test
@@ -600,11 +612,9 @@ class CardPaymentTest {
         onView(withText(PAYMENT_METHODS_LABEL))
             .perform(click())
 
-        Thread.sleep(1000)
+        Thread.sleep(5000)
 
-        onView(withId(R.id.addButton))
-            .check(matches(isEnabled()))
-            .perform(click())
+        doOnView(withId(R.id.addButton), click())
 
         enterPaymentSheetDetails(
             "4222 0000 0122 7408",
@@ -617,7 +627,7 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        Thread.sleep(2000)
+        Thread.sleep(10000)
 
         onView(withId(R.id.subTitle))
             .check(matches(withText("Visa Ending 7408")))

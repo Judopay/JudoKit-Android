@@ -3,13 +3,13 @@ package com.judokit.android.examples.test.card
 import androidx.annotation.IdRes
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.IdlingResource
-import androidx.test.espresso.IdlingResourceTimeoutException
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
@@ -19,7 +19,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.judokit.android.examples.result.ResultActivity
 import com.judokit.android.examples.test.BuildConfig
 import org.hamcrest.CoreMatchers
-import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.startsWith
 import org.hamcrest.Matchers
 import com.judokit.android.examples.R as Examples
@@ -60,23 +59,10 @@ fun <IR : IdlingResource> awaitIdlingResourceThenRun(
  * Complete the 3DS2 process
  */
 fun clickCompleteOn3DS2Screen() {
-    awaitActivityThenRun("com.judopay.judo3ds2.ui.challenge.ChallengeActivity") {
-        try {
-            Thread.sleep(1000)
-            Espresso.onView(ViewMatchers.withText("COMPLETE"))
-                .perform(ViewActions.longClick())
-
-            Thread.sleep(1000)
-            Espresso.onView(ViewMatchers.withText("COMPLETE"))
-                .perform(ViewActions.longClick())
-
-            Thread.sleep(1000)
-            Espresso.onView(ViewMatchers.withText("COMPLETE"))
-                .perform(ViewActions.longClick())
-        } catch (e: IdlingResourceTimeoutException) {
-            println("Global Pay screen unable to continue")
-        }
-    }
+    assertOnView(withText("COMPLETE"))
+    Thread.sleep(15000)
+    onView(withText("COMPLETE"))
+        .perform(ViewActions.longClick())
 }
 
 /*
@@ -89,21 +75,21 @@ fun assertReceiptObject(
     type: String,
 ) {
     awaitActivityThenRun(ResultActivity::class.java.name) {
-        Espresso.onView(withId(SDK.id.recyclerView))
+        onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(8))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(startsWith(message)))))
+            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(withText(startsWith(message)))))
 
-        Espresso.onView(withId(SDK.id.recyclerView))
+        onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(13))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(CoreMatchers.not(receiptId)))))
+            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(withText(CoreMatchers.not(receiptId)))))
 
-        Espresso.onView(withId(SDK.id.recyclerView))
+        onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(14))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(result))))
+            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(withText(result))))
 
-        Espresso.onView(withId(SDK.id.recyclerView))
+        onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(15))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(type))))
+            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(withText(type))))
     }
 }
 
@@ -129,8 +115,7 @@ fun fillTextField(
     @IdRes textFieldId: Int,
     text: String,
 ) {
-    Espresso.onView((ViewMatchers.withId(textFieldId)))
-        .perform(ViewActions.clearText(), ViewActions.typeText(text))
+    doOnView(withId(textFieldId), clearText(), typeText(text))
 }
 
 fun setupRavelin(
@@ -148,11 +133,11 @@ fun setupRavelin(
         }
         .commit()
 
-    Espresso.onView(withId(Examples.id.action_settings))
-        .perform(ViewActions.click())
+    onView(withId(Examples.id.action_settings))
+        .perform(click())
 
-    Espresso.onView(ViewMatchers.withText("Generate payment session"))
-        .perform(ViewActions.click())
+    onView(withText("Generate payment session"))
+        .perform(click())
 
     Thread.sleep(1000)
 }
@@ -191,7 +176,7 @@ fun selectFromMultipleAndEnterText(
             withId(textFieldId),
             ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
         ),
-    ).perform(ViewActions.clearText(), ViewActions.typeText(text))
+    ).perform(clearText(), typeText(text))
 }
 
 fun toggleBillingInfoSetting(state: Boolean) {
