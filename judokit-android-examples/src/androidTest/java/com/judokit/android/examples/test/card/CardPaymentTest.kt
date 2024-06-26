@@ -165,7 +165,7 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        Helpers().assertOnView(withText("COMPLETE"))
+        assertOnView(withText("COMPLETE"))
 
         clickCompleteOn3DS2Screen()
 
@@ -188,7 +188,7 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        Helpers().assertOnView(withText("COMPLETE"))
+        assertOnView(withText("COMPLETE"))
 
         clickCompleteOn3DS2Screen()
 
@@ -211,7 +211,7 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        Helpers().assertOnView(withText("COMPLETE"))
+        assertOnView(withText("COMPLETE"))
 
         clickCompleteOn3DS2Screen()
 
@@ -614,7 +614,7 @@ class CardPaymentTest {
 
         Thread.sleep(5000)
 
-        Helpers().doOnView(withId(R.id.addButton), click())
+        doOnView(withId(R.id.addButton), click())
 
         enterPaymentSheetDetails(
             "4222 0000 0122 7408",

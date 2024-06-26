@@ -59,7 +59,7 @@ fun <IR : IdlingResource> awaitIdlingResourceThenRun(
  * Complete the 3DS2 process
  */
 fun clickCompleteOn3DS2Screen() {
-    Helpers().assertOnView(withText("COMPLETE"))
+    assertOnView(withText("COMPLETE"))
     Thread.sleep(15000)
     onView(withText("COMPLETE"))
         .perform(ViewActions.longClick())
@@ -115,7 +115,7 @@ fun fillTextField(
     @IdRes textFieldId: Int,
     text: String,
 ) {
-    Helpers().doOnView(withId(textFieldId), clearText(), typeText(text))
+    doOnView(withId(textFieldId), clearText(), typeText(text))
 }
 
 fun setupRavelin(
@@ -176,7 +176,7 @@ fun selectFromMultipleAndEnterText(
             withId(textFieldId),
             ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
         ),
-    ).perform(ViewActions.clearText(), ViewActions.typeText(text))
+    ).perform(clearText(), typeText(text))
 }
 
 fun toggleBillingInfoSetting(state: Boolean) {
