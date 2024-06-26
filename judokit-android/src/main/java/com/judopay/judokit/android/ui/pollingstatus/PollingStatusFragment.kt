@@ -29,18 +29,14 @@ class PollingStatusFragment : DialogFragment() {
     private val binding get() = _binding!!
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val dialog = Dialog(requireContext(), theme)
-            // Todo: Confirm with Stefan how/whether to unregister the new callback properly.
-            dialog.onBackInvokedDispatcher.registerOnBackInvokedCallback(
-                0,
-            ) {
-                sharedViewModel.bankPaymentResult.postValue(result)
-            }
-            dialog.window?.applyDialogStyling()
-            return dialog
-        } else {
-            val dialog =
+        val dialog =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                Dialog(requireContext(), theme).apply {
+                    onBackInvokedDispatcher.registerOnBackInvokedCallback(0) {
+                        sharedViewModel.bankPaymentResult.postValue(result)
+                    }
+                }
+            } else {
                 object : Dialog(requireContext(), theme) {
                     @Deprecated("Deprecated in Java")
                     override fun onBackPressed() {
@@ -49,9 +45,9 @@ class PollingStatusFragment : DialogFragment() {
                         super.onBackPressed()
                     }
                 }
-            dialog.window?.applyDialogStyling()
-            return dialog
-        }
+            }
+        dialog.window?.applyDialogStyling()
+        return dialog
     }
 
     override fun onCreateView(
