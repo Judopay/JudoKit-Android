@@ -107,6 +107,7 @@ internal fun isInternetAvailable(context: Context): Boolean {
             }
     } else {
         connectivityManager.run {
+            @Suppress("DEPRECATION") // Updated solution implemented for Android API 23+.
             connectivityManager.activeNetworkInfo?.run {
                 result =
                     when (type) {

@@ -6,7 +6,7 @@ import com.google.common.truth.Truth.assertThat
 import com.judopay.judokit.android.InstantExecutorExtension
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.R
-import com.judopay.judokit.android.api.model.BasicAuthorization
+import com.judopay.judokit.android.api.model.PaymentSessionAuthorization
 import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.db.entity.TokenizedCardEntity
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
@@ -427,7 +427,7 @@ internal class CardEntryViewModelTest {
         uiConfiguration: UiConfiguration = UiConfiguration.Builder().build(),
     ) = Judo.Builder(widgetType)
         .setJudoId("123456789")
-        .setAuthorization(mockk<BasicAuthorization>(relaxed = true))
+        .setAuthorization(mockk<PaymentSessionAuthorization>(relaxed = true))
         .setAmount(Amount(amount = "1", currency = Currency.GBP))
         .setReference(Reference(consumerReference = "ref", paymentReference = UUID.randomUUID().toString()))
         .setUiConfiguration(uiConfiguration)
