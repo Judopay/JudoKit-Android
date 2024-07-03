@@ -856,7 +856,7 @@ class CardPaymentTest {
     }
 
     @Test
-    fun testStepUpTransaction() {
+    fun testStepUpPaymentTransaction() {
         sharedPrefs
             .edit()
             .apply {
@@ -883,5 +883,35 @@ class CardPaymentTest {
         clickCompleteOn3DS2Screen()
 
         assertReceiptObject("Card declined: CV2 policy", "", "Declined", "Payment")
+    }
+
+    @Test
+    fun testStepUpPreauthTransaction() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putString("challengeRequestIndicator", "NO_PREFERENCE")
+                putString("scaExemption", "LOW_VALUE")
+            }
+            .commit()
+        onView(withText(PREAUTH_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            "Frictionless Successful",
+            CARD_EXPIRY,
+            WRONG_CV2,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        assertOnView(withText("COMPLETE"))
+
+        clickCompleteOn3DS2Screen()
+
+        assertReceiptObject("Card declined: CV2 policy", "", "Declined", "PreAuth")
     }
 }
