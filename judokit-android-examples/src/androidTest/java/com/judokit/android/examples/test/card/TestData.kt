@@ -5,6 +5,7 @@ object CardDetails {
     const val CARDHOLDER_NAME = "Test User"
     const val CARD_EXPIRY = "12/25"
     const val CARD_SECURITY_CODE = "341"
+    const val WRONG_CV2 = "123"
 }
 
 object FeaturesList {

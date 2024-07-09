@@ -54,6 +54,7 @@ import com.judokit.android.examples.test.card.BillingInfo.VALID_POSTCODE
 import com.judokit.android.examples.test.card.CardDetails.CARD_EXPIRY
 import com.judokit.android.examples.test.card.CardDetails.CARD_NUMBER
 import com.judokit.android.examples.test.card.CardDetails.CARD_SECURITY_CODE
+import com.judokit.android.examples.test.card.CardDetails.WRONG_CV2
 import com.judokit.android.examples.test.card.CardPaymentTest.ValidCardDetails.CARDHOLDER_NAME
 import com.judokit.android.examples.test.card.FeaturesList.CHECK_CARD_LABEL
 import com.judokit.android.examples.test.card.FeaturesList.PAYMENT_METHODS_LABEL
@@ -852,5 +853,65 @@ class CardPaymentTest {
         fillTextField(R.id.cityTextInputEditText, VALID_CITY)
 
         toggleBillingInfoSetting(false)
+    }
+
+    @Test
+    fun testStepUpPaymentTransaction() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putString("challengeRequestIndicator", "NO_PREFERENCE")
+                putString("scaExemption", "LOW_VALUE")
+            }
+            .commit()
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            "Frictionless Successful",
+            CARD_EXPIRY,
+            WRONG_CV2,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        assertOnView(withText("COMPLETE"))
+
+        clickCompleteOn3DS2Screen()
+
+        assertReceiptObject("Card declined: CV2 policy", "", "Declined", "Payment")
+    }
+
+    @Test
+    fun testStepUpPreauthTransaction() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putString("challengeRequestIndicator", "NO_PREFERENCE")
+                putString("scaExemption", "LOW_VALUE")
+            }
+            .commit()
+        onView(withText(PREAUTH_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            "Frictionless Successful",
+            CARD_EXPIRY,
+            WRONG_CV2,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        assertOnView(withText("COMPLETE"))
+
+        clickCompleteOn3DS2Screen()
+
+        assertReceiptObject("Card declined: CV2 policy", "", "Declined", "PreAuth")
     }
 }
