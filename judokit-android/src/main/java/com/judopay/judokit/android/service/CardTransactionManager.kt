@@ -88,6 +88,11 @@ enum class TransactionType {
     PRE_AUTH_WITH_TOKEN,
     SAVE,
     CHECK,
+
+    @Deprecated(
+        "Register Card functionality has been deprecated and will be removed in a future version. " +
+            "Please use Check Card feature instead.",
+    )
     REGISTER,
 }
 

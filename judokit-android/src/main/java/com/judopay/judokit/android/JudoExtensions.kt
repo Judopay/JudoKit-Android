@@ -199,6 +199,10 @@ fun Judo.toPaymentRequest(
     .setPhoneCountryCode(phoneCountryCode)
     .build()
 
+@Deprecated(
+    "Register Card functionality has been deprecated and will be removed in a future version. " +
+        "Please use Check Card feature instead.",
+)
 fun Judo.toRegisterCardRequest(
     cardNumber: String,
     expirationDate: String,
