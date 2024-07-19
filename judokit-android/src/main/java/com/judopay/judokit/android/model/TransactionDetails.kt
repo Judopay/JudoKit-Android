@@ -298,6 +298,10 @@ fun TransactionDetails.toSaveCardRequest(
 }
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
+@Deprecated(
+    "Register Card functionality has been deprecated and will be removed in a future version. " +
+        "Please use Check Card feature instead.",
+)
 fun TransactionDetails.toRegisterCardRequest(
     judo: Judo,
     transaction: Transaction,
