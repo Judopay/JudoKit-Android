@@ -168,4 +168,19 @@
     <string name="security_code_entry_field" translatable="false">securityCodeField</string>
     <string name="payment_methods_pay_button" translatable="false">paymentMethodsPayNowButton</string>
     <string name="pay_now_button" translatable="false">cardEntrySubmitButton</string>
+
+    <string name="email_entry_field" translatable="false">emailEntryField</string>
+    <string name="country_entry_field" translatable="false">countryEntryField</string>
+    <string name="state_entry_field" translatable="false">stateEntryField</string>
+    <string name="phone_country_code_entry_field" translatable="false">phoneCountryCodeEntryField</string>
+    <string name="phone_entry_field" translatable="false">phoneEntryField</string>
+    <string name="address_one_entry_field" translatable="false">addressOneEntryField</string>
+    <string name="address_two_entry_field" translatable="false">addressTwoEntryField</string>
+    <string name="address_three_entry_field" translatable="false">addressThreeEntryField</string>
+    <string name="city_entry_field" translatable="false">cityEntryField</string>
+    <string name="post_code_entry_field" translatable="false">postCodeEntryField</string>
+    <string name="add_address_line_button" translatable="false">addAddressLineButton</string>
+    <string name="billing_details_container" translatable="false">billingInfoContainer</string>
+
+    <string name="judo_error_text" translatable="false">errorLabel</string>
 </resources>
