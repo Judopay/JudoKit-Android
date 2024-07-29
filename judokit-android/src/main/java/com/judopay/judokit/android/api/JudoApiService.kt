@@ -86,6 +86,10 @@ interface JudoApiService {
      * @return the receipt for the card registration with the status of the transaction
      */
     @POST("transactions/registercard")
+    @Deprecated(
+        "Register Card functionality has been deprecated and will be removed in a future version. " +
+            "Please use Check Card feature instead.",
+    )
     fun registerCard(
         @Body registerCardRequest: RegisterCardRequest,
     ): Call<JudoApiCallResult<Receipt>>

@@ -8,6 +8,10 @@ import com.judopay.judokit.android.requireNotNullOrEmpty
 private const val DEFAULT_AMOUNT = "0.01"
 
 @Suppress("LongParameterList")
+@Deprecated(
+    "Register Card functionality has been deprecated and will be removed in a future version. " +
+        "Please use Check Card feature instead.",
+)
 class RegisterCardRequest private constructor(
     private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String,

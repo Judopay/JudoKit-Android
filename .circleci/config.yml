@@ -254,9 +254,11 @@ jobs:
               --results-bucket $FIREBASE_TEST_RESULTS_BUCKET \
               --timeout=30m \
               --device model=shiba,version=34 \
-              --num-flaky-test-attempts=1
+              --use-orchestrator \
+              --client-details=matrixLabel="Regression E2E"
       - notify_slack_error
       - notify_slack_pass
+
 
   instrumented_test_sample_weekly:
     <<: *android-docker-executor
@@ -274,7 +276,8 @@ jobs:
               --device model=panther,version=33 \
               --device model=bluejay,version=32 \
               --device model=a51,version=31 \
-              --num-flaky-test-attempts=1
+              --use-orchestrator \
+              --client-details=matrixLabel="Backward Compat E2E"
       - notify_slack_error_weekly
       - notify_slack_pass_weekly
 

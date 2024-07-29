@@ -25,6 +25,7 @@ import com.judopay.judokit.android.api.model.response.recommendation.Recommendat
 import com.judopay.judokit.android.api.model.response.recommendation.toTransactionDetailsOverrides
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
 import com.judopay.judokit.android.model.CardNetwork
+import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.TransactionDetails
@@ -88,6 +89,11 @@ enum class TransactionType {
     PRE_AUTH_WITH_TOKEN,
     SAVE,
     CHECK,
+
+    @Deprecated(
+        "Register Card functionality has been deprecated and will be removed in a future version. " +
+            "Please use Check Card feature instead.",
+    )
     REGISTER,
 }
 
@@ -524,7 +530,11 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     ) {
         closeTransaction(context)
 
-        val overrides = TransactionDetailsOverrides(softDeclineReceiptId)
+        val overrides =
+            TransactionDetailsOverrides(
+                softDeclineReceiptId = softDeclineReceiptId,
+                challengeRequestIndicator = ChallengeRequestIndicator.CHALLENGE_AS_MANDATE,
+            )
         performTransaction(type, details, caller, overrides)
     }
 }
