@@ -85,7 +85,7 @@ internal fun isDependencyPresent(className: String) =
         Class.forName(className)
         true
     } catch (e: Throwable) {
-        Log.i("isDependencyPresent", "Dependency $className not available", e)
+        Log.i("isDependencyPresent", "Dependency $className is not available in the classpath.")
         false
     }
 
