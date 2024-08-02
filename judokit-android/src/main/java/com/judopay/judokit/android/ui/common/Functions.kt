@@ -79,13 +79,13 @@ fun showAlert(
  * @param className name of a class in a dependency package.
  * @return true if present, otherwise false
  */
-@Suppress("TooGenericExceptionCaught")
+@Suppress("SwallowedException")
 internal fun isDependencyPresent(className: String) =
     try {
         Class.forName(className)
         true
-    } catch (e: Throwable) {
-        Log.i("isDependencyPresent", "Dependency $className not available", e)
+    } catch (e: ClassNotFoundException) {
+        Log.i("isDependencyPresent", "Dependency $className is not available in the classpath.")
         false
     }
 
