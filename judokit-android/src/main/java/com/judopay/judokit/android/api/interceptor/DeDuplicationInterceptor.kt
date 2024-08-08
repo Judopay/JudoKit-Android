@@ -1,5 +1,6 @@
 package com.judopay.judokit.android.api.interceptor
 
+import com.google.gson.JsonParseException
 import com.google.gson.JsonParser
 import com.judopay.judokit.android.api.error.DuplicateTransactionError
 import okhttp3.Interceptor
@@ -19,11 +20,13 @@ internal class DeDuplicationInterceptor : Interceptor {
         val body = request.body
 
         if (body != null) {
-            val parser = JsonParser()
-
             val bodAsString = bodyToString(body)
-            val jsonElement = parser.parse(bodAsString)
-
+            val jsonElement =
+                try {
+                    JsonParser.parseString(bodAsString)
+                } catch (e: JsonParseException) {
+                    throw IOException("JSON format is incorrect.")
+                }
             if (jsonElement.isJsonObject) {
                 val jsonObject = jsonElement.asJsonObject
                 val uniqueReference = jsonObject[PAYMENT_REFERENCE_KEY]

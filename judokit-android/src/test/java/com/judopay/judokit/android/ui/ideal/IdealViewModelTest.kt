@@ -25,7 +25,7 @@ import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
@@ -44,7 +44,7 @@ private const val ORDER_ID = "orderId"
 @ExperimentalCoroutinesApi
 @ExtendWith(com.judopay.judokit.android.InstantExecutorExtension::class)
 class IdealViewModelTest {
-    private val testDispatcher = TestCoroutineDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     private val judo = getJudo()
     private val saleRequest = buildSaleRequest()
@@ -88,7 +88,6 @@ class IdealViewModelTest {
     @AfterEach
     internal fun tearDown() {
         Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
     }
 
     @Test

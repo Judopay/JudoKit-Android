@@ -155,8 +155,8 @@ fun View.animateWithTranslation(
 }
 
 fun View.dismissKeyboard() {
-    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.hideSoftInputFromWindow(windowToken, 0)
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+    imm?.hideSoftInputFromWindow(windowToken, 0)
 }
 
 fun Any.toJSONString(): String = Gson().toJson(this)

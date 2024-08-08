@@ -9,15 +9,13 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import retrofit2.await
 
-@ExperimentalCoroutinesApi
 @DisplayName("Testing polling logic")
 internal class PollingServiceTest {
     private val service: JudoApiService = mockk(relaxed = true)
@@ -50,7 +48,7 @@ internal class PollingServiceTest {
     @DisplayName("Given polling starts, when timeout>0, then make status call")
     @Test
     fun makeStatusCallWhenPollingStarts() {
-        runBlockingTest { sut.start() }
+        runTest { sut.start() }
 
         coVerify { service.status("orderId") }
     }
@@ -58,7 +56,7 @@ internal class PollingServiceTest {
     @DisplayName("Given status call is successful, when data is not null, invoke result")
     @Test
     fun invokeResultWhenStatusSuccessful() {
-        runBlockingTest { sut.start() }
+        runTest { sut.start() }
 
         val expectedResult = PollingResult.Success(statusResponse)
         assertEquals(expectedResult, actualResult)
@@ -69,7 +67,7 @@ internal class PollingServiceTest {
     fun invokePollingResultSuccessOnOrderStatusSuccess() {
         every { statusResponse.orderDetails.orderStatus } returns OrderStatus.SUCCEEDED
 
-        runBlockingTest { sut.start() }
+        runTest { sut.start() }
 
         val expectedResult = PollingResult.Success(statusResponse)
         assertEquals(expectedResult, actualResult)
@@ -80,7 +78,7 @@ internal class PollingServiceTest {
     fun invokePollingResultSuccessOnOrderStatusFailed() {
         every { statusResponse.orderDetails.orderStatus } returns OrderStatus.FAILED
 
-        runBlockingTest { sut.start() }
+        runTest { sut.start() }
 
         val expectedResult = PollingResult.Failure(statusResponse)
         assertEquals(expectedResult, actualResult)
@@ -91,7 +89,7 @@ internal class PollingServiceTest {
     fun invokePollingResultProcessingOnOrderStatusPending() {
         every { statusResponse.orderDetails.orderStatus } returns OrderStatus.PENDING
 
-        runBlockingTest { sut.start() }
+        runTest { sut.start() }
 
         val expectedResult = PollingResult.Retry
         assertEquals(expectedResult, actualResult)
@@ -102,7 +100,7 @@ internal class PollingServiceTest {
     fun invokePollingResultFailureOnDataNull() {
         every { statusCallResult.data } returns null
 
-        runBlockingTest { sut.start() }
+        runTest { sut.start() }
 
         val expectedResult = PollingResult.CallFailure()
         assertEquals(expectedResult, actualResult)
@@ -116,7 +114,7 @@ internal class PollingServiceTest {
             service.status("orderId").await().hint(JudoApiCallResult::class)
         } returns failStatusCallResult
 
-        runBlockingTest { sut.start() }
+        runTest { sut.start() }
 
         val expectedResult = PollingResult.CallFailure(error = failStatusCallResult.error)
         assertEquals(expectedResult, actualResult)
@@ -125,7 +123,7 @@ internal class PollingServiceTest {
     @DisplayName("Given retry is called, then start polling")
     @Test
     fun startPollingOnRetry() {
-        runBlockingTest {
+        runTest {
             sut.start()
             sut.retry()
         }

@@ -16,15 +16,12 @@ import com.judokit.android.examples.result.adapter.ResultActivityAdapter
 const val RESULT = "com.judopay.judokit.android.examples.result"
 
 class ResultActivity : AppCompatActivity() {
-    private lateinit var clipboardManager: ClipboardManager
     private lateinit var binding: ActivityResultBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
         val result = intent.parcelable<Result>(RESULT)
         if (result != null) {
@@ -51,13 +48,15 @@ class ResultActivity : AppCompatActivity() {
             ),
         )
 
+        val clipboardManager =
+            getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
         binding.recyclerView.adapter =
             ResultActivityAdapter(result.items) { item ->
                 if (item.subResult != null) {
                     startResultActivity(item.subResult)
                 } else {
                     val data = ClipData.newPlainText("text", item.value)
-                    clipboardManager.setPrimaryClip(data)
+                    clipboardManager?.setPrimaryClip(data)
                     Snackbar.make(binding.coordinatorLayout, "Value of '${item.title}' copied to clipboard.", Snackbar.LENGTH_SHORT)
                         .show()
                 }

@@ -63,6 +63,11 @@ class PaymentMethodsFragment : Fragment() {
         return binding.root
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initializeViewModel()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -76,31 +81,34 @@ class PaymentMethodsFragment : Fragment() {
         binding.headerView.fromEditMode = true
         setupRecyclerView()
         setupButtonCallbacks()
+        initializeViewModelObserving()
     }
 
-    @Deprecated("Deprecated in Java")
-    @Suppress("LongMethod")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        val application = requireActivity().application
-        val cardDate = CardDate()
-        val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
-        val cardRepository = TokenizedCardRepository(tokenizedCardDao)
-        service = JudoApiServiceFactory.create(application, judo)
-        cardTransactionManager = CardTransactionManager.getInstance(requireActivity())
+    private fun initializeViewModel() {
+        val application =
+            requireActivity().application
+        val tokenizedCardDao =
+            JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
+        service =
+            JudoApiServiceFactory.create(application, judo)
+        cardTransactionManager =
+            CardTransactionManager.getInstance(requireActivity())
         cardTransactionManager.configureWith(judo)
 
         val factory =
             PaymentMethodsViewModelFactory(
-                cardDate,
-                cardRepository,
+                CardDate(),
+                TokenizedCardRepository(tokenizedCardDao),
                 cardTransactionManager,
                 application,
                 judo,
             )
 
-        viewModel = ViewModelProvider(this, factory)[PaymentMethodsViewModel::class.java]
+        viewModel =
+            ViewModelProvider(this, factory)[PaymentMethodsViewModel::class.java]
+    }
+
+    private fun initializeViewModelObserving() {
         viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
 
         viewModel.judoPaymentResult.observe(

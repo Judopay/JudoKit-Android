@@ -3,14 +3,15 @@ package com.judopay.judokit.android.api.interceptor
 import android.content.Context
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import com.google.gson.JsonParseException
 import com.google.gson.JsonParser
-import com.google.gson.JsonSyntaxException
 import com.judopay.judokit.android.service.PayloadService
 import com.judopay.judokit.android.toJSONString
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okio.Buffer
 import java.io.IOException
@@ -50,21 +51,28 @@ class PayLoadInterceptor internal constructor(context: Context) : Interceptor {
 
     private val payloadService = PayloadService(context)
 
-    @Suppress("SwallowedException")
+    @Suppress("SwallowedException", "TooGenericExceptionCaught")
     private val enhancedPaymentDetail: JsonObject
         get() {
-            val paymentDetail = payloadService.getEnhancedPaymentDetail()?.toJSONString()
             return try {
-                val jsonElement = JsonParser().parse(paymentDetail)
-                jsonElement.asJsonObject
-            } catch (e: JsonSyntaxException) {
+                JsonParser
+                    .parseString(payloadService.getEnhancedPaymentDetail().toJSONString())
+                    .asJsonObject
+            } catch (e: Exception) {
                 JsonObject()
             }
         }
 
+    @Suppress("SwallowedException")
     private fun convertJsonToRequestBody(json: JsonObject): RequestBody {
         val mediaType = "application/json".toMediaTypeOrNull()
-        return RequestBody.create(mediaType, json.toString())
+        val jsonAsString =
+            try {
+                json.toString()
+            } catch (e: AssertionError) {
+                "{}"
+            }
+        return jsonAsString.toRequestBody(mediaType)
     }
 
     private fun convertRequestBodyToJson(request: Request): JsonElement? {
@@ -73,10 +81,10 @@ class PayLoadInterceptor internal constructor(context: Context) : Interceptor {
             request.newBuilder().build().body?.let {
                 it.writeTo(buffer)
                 val body = buffer.readUtf8()
-                val parser = JsonParser()
-                return parser.parse(body)
+                return JsonParser.parseString(body)
             }
         } catch (ignore: IOException) {
+        } catch (ignore: JsonParseException) {
         } finally {
             buffer.close()
         }

@@ -27,14 +27,14 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.spyk
 import io.mockk.verify
-import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
@@ -49,7 +49,7 @@ private const val API_EXCEPTION_STATUS_MESSAGE = "16: "
 @ExtendWith(InstantExecutorExtension::class)
 @DisplayName("Testing JudoSharedViewModel logic")
 internal class JudoSharedViewModelTest {
-    private val testDispatcher = TestCoroutineDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     private val judo: Judo = mockk(relaxed = true)
     private val googlePayService: JudoGooglePayService = mockk(relaxed = true)
@@ -78,7 +78,6 @@ internal class JudoSharedViewModelTest {
     @AfterEach
     internal fun tearDown() {
         Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
     }
 
     @DisplayName("Given send is called with LoadGPayPaymentData action, then checkIfGooglePayIsAvailable is called")
