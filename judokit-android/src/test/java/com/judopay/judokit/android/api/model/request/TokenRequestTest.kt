@@ -9,7 +9,6 @@ import org.junit.jupiter.api.assertThrows
 internal class TokenRequestTest {
     private val request =
         TokenRequest.Builder()
-            .setUniqueRequest(false)
             .setEndDate("1220")
             .setCv2("452")
             .setEmailAddress("mail@mail.com")

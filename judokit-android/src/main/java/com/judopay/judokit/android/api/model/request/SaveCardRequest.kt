@@ -13,7 +13,6 @@ import com.judopay.judokit.android.requireNotNullOrEmpty
  */
 @Suppress("LongParameterList")
 class SaveCardRequest private constructor(
-    private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String,
     private var currency: String,
     private var judoId: String,
@@ -32,7 +31,6 @@ class SaveCardRequest private constructor(
 ) {
     @Suppress("TooManyFunctions")
     class Builder {
-        private var uniqueRequest: Boolean? = null
         private var yourPaymentReference: String? = null
         private var currency: String? = null
         private var judoId: String? = null
@@ -48,8 +46,6 @@ class SaveCardRequest private constructor(
         private var mobileNumber: String? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
         private var cardHolderName: String? = null
-
-        fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
         fun setYourPaymentReference(yourPaymentReference: String?) = apply { this.yourPaymentReference = yourPaymentReference }
 
@@ -94,7 +90,6 @@ class SaveCardRequest private constructor(
                 requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
 
             return SaveCardRequest(
-                uniqueRequest,
                 paymentReference,
                 myCurrency,
                 id,

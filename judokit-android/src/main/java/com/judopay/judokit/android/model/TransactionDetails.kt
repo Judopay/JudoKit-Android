@@ -194,7 +194,6 @@ fun TransactionDetails.toPaymentRequest(
     val myAmount = judo.amount
     val myReference = judo.reference
     return PaymentRequest.Builder()
-        .setUniqueRequest(false)
         .setYourPaymentReference(myReference.paymentReference)
         .setAmount(myAmount.amount)
         .setCurrency(myAmount.currency.name)
@@ -224,7 +223,6 @@ fun TransactionDetails.toPreAuthRequest(
     val myAmount = judo.amount
     val myReference = judo.reference
     return PreAuthRequest.Builder()
-        .setUniqueRequest(false)
         .setYourPaymentReference(myReference.paymentReference)
         .setAmount(myAmount.amount)
         .setCurrency(myAmount.currency.name)
@@ -256,7 +254,6 @@ fun TransactionDetails.toCheckCardRequest(
     val myAmount = judo.amount
     val myReference = judo.reference
     return CheckCardRequest.Builder()
-        .setUniqueRequest(false)
         .setYourPaymentReference(myReference.paymentReference)
         .setCurrency(myAmount.currency.name)
         .setJudoId(judo.judoId)
@@ -282,7 +279,6 @@ fun TransactionDetails.toSaveCardRequest(
     transaction: Transaction,
 ): SaveCardRequest {
     return SaveCardRequest.Builder()
-        .setUniqueRequest(false)
         .setYourPaymentReference(judo.reference.paymentReference)
         .setCurrency(judo.amount.currency.name)
         .setJudoId(judo.judoId)
@@ -311,7 +307,6 @@ fun TransactionDetails.toRegisterCardRequest(
     val myReference = judo.reference
 
     return RegisterCardRequest.Builder()
-        .setUniqueRequest(false)
         .setYourPaymentReference(myReference.paymentReference)
         .setCurrency(myAmount.currency.name)
         .setAmount(myAmount.amount)
