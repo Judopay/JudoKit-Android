@@ -11,7 +11,6 @@ import com.judopay.judokit.android.api.deserializer.DateJsonDeserializer
 import com.judopay.judokit.android.api.deserializer.FormattedBigDecimalDeserializer
 import com.judopay.judokit.android.api.deserializer.ScaExemptionSerializer
 import com.judopay.judokit.android.api.interceptor.ApiHeadersInterceptor
-import com.judopay.judokit.android.api.interceptor.DeDuplicationInterceptor
 import com.judopay.judokit.android.api.interceptor.DeviceDnaInterceptor
 import com.judopay.judokit.android.api.interceptor.PayLoadInterceptor
 import com.judopay.judokit.android.apiBaseUrl
@@ -141,7 +140,6 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
                     AppMetaDataProvider(context, judo.subProductInfo),
                 ),
             )
-            add(DeDuplicationInterceptor())
             add(DeviceDnaInterceptor(context))
             add(PayLoadInterceptor(context))
         }

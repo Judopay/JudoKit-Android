@@ -8,7 +8,6 @@ import com.judopay.judokit.android.requireNotNullOrEmpty
 
 @Suppress("LongParameterList")
 class PreAuthRequest private constructor(
-    private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String?,
     private var amount: String?,
     private var currency: String?,
@@ -34,7 +33,6 @@ class PreAuthRequest private constructor(
 ) {
     @Suppress("TooManyFunctions")
     class Builder {
-        private var uniqueRequest: Boolean? = null
         private var yourPaymentReference: String? = null
         private var amount: String? = null
         private var currency: String? = null
@@ -59,8 +57,6 @@ class PreAuthRequest private constructor(
         private var threeDSecure: ThreeDSecureTwo? = null
         private var delayedAuthorisation: Boolean = false
         private var allowIncrement: Boolean = false
-
-        fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
         fun setYourPaymentReference(yourPaymentReference: String?) = apply { this.yourPaymentReference = yourPaymentReference }
 
@@ -122,7 +118,6 @@ class PreAuthRequest private constructor(
                 com.judopay.judokit.android.requireNotNull(threeDSecure, "threeDSecure")
 
             return PreAuthRequest(
-                uniqueRequest,
                 paymentReference,
                 myAmount,
                 myCurrency,
