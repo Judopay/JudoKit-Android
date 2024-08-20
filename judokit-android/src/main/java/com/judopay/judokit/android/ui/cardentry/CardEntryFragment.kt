@@ -338,13 +338,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     // Animating view position based on the keyboard show/hide state
     private fun subscribeToInsetsChanges() =
         requireDialog().window?.apply {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                setDecorFitsSystemWindows(false)
-            } else {
-                @Suppress("DEPRECATION") // Updated solution implemented for Android API 30+.
-                setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-            }
-            // Todo: Confirm with Stefan the instetsListener for versions R+.
+            setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             val insetsListener =
                 View.OnApplyWindowInsetsListener { view, windowInsets ->
                     return@OnApplyWindowInsetsListener view.onApplyWindowInsets(windowInsets)
