@@ -7,7 +7,6 @@ import com.judopay.judokit.android.requireNotNullOrEmpty
 
 @Suppress("LongParameterList")
 class TokenRequest private constructor(
-    private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String?,
     private var amount: String?,
     private var currency: String?,
@@ -30,7 +29,6 @@ class TokenRequest private constructor(
 ) {
     @Suppress("TooManyFunctions")
     class Builder {
-        private var uniqueRequest: Boolean? = false
         private var yourPaymentReference: String? = null
         private var amount: String? = null
         private var currency: String? = null
@@ -50,8 +48,6 @@ class TokenRequest private constructor(
         private var initialRecurringPayment: Boolean? = null
         private var threeDSecure: ThreeDSecureTwo? = null
         private var cardHolderName: String? = null
-
-        fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
         fun setYourPaymentReference(yourPaymentReference: String?) = apply { this.yourPaymentReference = yourPaymentReference }
 
@@ -104,7 +100,6 @@ class TokenRequest private constructor(
             val myThreeDSecure = requireNotNull(threeDSecure, "threeDSecure")
 
             return TokenRequest(
-                uniqueRequest,
                 paymentReference,
                 myAmount,
                 myCurrency,

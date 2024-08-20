@@ -181,7 +181,6 @@ fun Judo.toPaymentRequest(
     mobileNumber: String,
     phoneCountryCode: String? = null,
 ) = PaymentRequest.Builder()
-    .setUniqueRequest(false)
     .setYourPaymentReference(reference.paymentReference)
     .setAmount(amount.amount)
     .setCurrency(amount.currency.name)
@@ -209,7 +208,6 @@ fun Judo.toRegisterCardRequest(
     securityCode: String,
     threeDSecureTwo: ThreeDSecureTwo?,
 ) = RegisterCardRequest.Builder()
-    .setUniqueRequest(false)
     .setYourPaymentReference(reference.paymentReference)
     .setCurrency(amount.currency.name)
     .setJudoId(judoId)
@@ -231,7 +229,6 @@ fun Judo.toSaveCardRequest(
     securityCode: String,
     cardHolderName: String? = null,
 ) = SaveCardRequest.Builder()
-    .setUniqueRequest(false)
     .setYourPaymentReference(reference.paymentReference)
     .setCurrency(amount.currency.name)
     .setJudoId(judoId)
@@ -251,7 +248,6 @@ fun Judo.toCheckCardRequest(
     securityCode: String,
     threeDSecureTwo: ThreeDSecureTwo?,
 ) = CheckCardRequest.Builder()
-    .setUniqueRequest(false)
     .setYourPaymentReference(reference.paymentReference)
     .setCurrency(amount.currency.name)
     .setJudoId(judoId)

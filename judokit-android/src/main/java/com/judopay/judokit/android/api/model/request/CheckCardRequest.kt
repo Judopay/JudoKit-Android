@@ -7,7 +7,6 @@ import com.judopay.judokit.android.requireNotNullOrEmpty
 
 @Suppress("LongParameterList")
 class CheckCardRequest private constructor(
-    private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String,
     private var judoId: String,
     private var yourConsumerReference: String,
@@ -30,7 +29,6 @@ class CheckCardRequest private constructor(
 ) {
     @Suppress("TooManyFunctions")
     class Builder {
-        private var uniqueRequest: Boolean? = null
         private var yourPaymentReference: String? = null
         private var judoId: String? = null
         private var yourConsumerReference: String? = null
@@ -49,8 +47,6 @@ class CheckCardRequest private constructor(
         private var phoneCountryCode: String? = null
         private var emailAddress: String? = null
         private var mobileNumber: String? = null
-
-        fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
         fun setYourPaymentReference(yourPaymentReference: String?) = apply { this.yourPaymentReference = yourPaymentReference }
 
@@ -102,7 +98,6 @@ class CheckCardRequest private constructor(
             val myThreeDSecure = requireNotNull(threeDSecure, "threeDSecure")
 
             return CheckCardRequest(
-                uniqueRequest,
                 paymentReference,
                 id,
                 consumerReference,

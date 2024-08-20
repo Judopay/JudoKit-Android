@@ -13,7 +13,6 @@ private const val DEFAULT_AMOUNT = "0.01"
         "Please use Check Card feature instead.",
 )
 class RegisterCardRequest private constructor(
-    private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String,
     private var currency: String,
     private var judoId: String,
@@ -36,7 +35,6 @@ class RegisterCardRequest private constructor(
 ) {
     @Suppress("TooManyFunctions")
     class Builder {
-        private var uniqueRequest: Boolean? = null
         private var yourPaymentReference: String? = null
         private var currency: String? = null
         private var judoId: String? = null
@@ -56,8 +54,6 @@ class RegisterCardRequest private constructor(
         private var threeDSecure: ThreeDSecureTwo? = null
         private var cardHolderName: String? = null
         private var phoneCountryCode: String? = null
-
-        fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
         fun setYourPaymentReference(yourPaymentReference: String?) = apply { this.yourPaymentReference = yourPaymentReference }
 
@@ -112,7 +108,6 @@ class RegisterCardRequest private constructor(
             val myThreeDSecure = requireNotNull(threeDSecure)
 
             return RegisterCardRequest(
-                uniqueRequest,
                 paymentReference,
                 myCurrency,
                 id,

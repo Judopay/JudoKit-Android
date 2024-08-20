@@ -11,7 +11,6 @@ private const val MAX_PHONE_COUNTRY_CODE_LENGTH = 3
 
 @Suppress("LongParameterList")
 class PaymentRequest private constructor(
-    private var uniqueRequest: Boolean?,
     private var yourPaymentReference: String?,
     private var amount: String?,
     private var currency: String?,
@@ -35,7 +34,6 @@ class PaymentRequest private constructor(
 ) {
     @Suppress("TooManyFunctions")
     class Builder {
-        private var uniqueRequest: Boolean? = null
         private var yourPaymentReference: String? = null
         private var amount: String? = null
         private var currency: String? = null
@@ -58,8 +56,6 @@ class PaymentRequest private constructor(
         private var cardHolderName: String? = null
         private var phoneCountryCode: String? = null
         private var threeDSecure: ThreeDSecureTwo? = null
-
-        fun setUniqueRequest(uniqueRequest: Boolean?) = apply { this.uniqueRequest = uniqueRequest }
 
         fun setYourPaymentReference(yourPaymentReference: String?) = apply { this.yourPaymentReference = yourPaymentReference }
 
@@ -136,7 +132,6 @@ class PaymentRequest private constructor(
             }
 
             return PaymentRequest(
-                uniqueRequest,
                 paymentReference,
                 myAmount,
                 myCurrency,
