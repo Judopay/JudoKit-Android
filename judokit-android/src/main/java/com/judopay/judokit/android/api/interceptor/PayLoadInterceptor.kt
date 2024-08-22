@@ -5,6 +5,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.JsonParser
+import com.google.gson.JsonSyntaxException
 import com.judopay.judokit.android.service.PayloadService
 import com.judopay.judokit.android.toJSONString
 import okhttp3.Interceptor
@@ -51,16 +52,22 @@ class PayLoadInterceptor internal constructor(context: Context) : Interceptor {
 
     private val payloadService = PayloadService(context)
 
-    @Suppress("SwallowedException", "TooGenericExceptionCaught")
+    @Suppress("SwallowedException")
     private val enhancedPaymentDetail: JsonObject
         get() {
-            return try {
-                JsonParser
+            try {
+                return JsonParser
                     .parseString(payloadService.getEnhancedPaymentDetail().toJSONString())
                     .asJsonObject
-            } catch (e: Exception) {
-                JsonObject()
+            } catch (ignore: JsonParseException) {
+                // ignore
+            } catch (ignore: IllegalStateException) {
+                // ignore
+            } catch (ignore: JsonSyntaxException) {
+                // ignore
             }
+
+            return JsonObject()
         }
 
     @Suppress("SwallowedException")
@@ -69,7 +76,7 @@ class PayLoadInterceptor internal constructor(context: Context) : Interceptor {
         val jsonAsString =
             try {
                 json.toString()
-            } catch (e: AssertionError) {
+            } catch (ignore: AssertionError) {
                 "{}"
             }
         return jsonAsString.toRequestBody(mediaType)

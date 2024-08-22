@@ -1,7 +1,6 @@
 package com.judopay.judokit.android.api.interceptor
 
 import android.content.Context
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.JsonParser
@@ -23,33 +22,30 @@ internal class DeviceDnaInterceptor(context: Context) : Interceptor {
     private val deviceDna = DeviceDNA(context)
 
     @Throws(IOException::class)
-    @Suppress("SwallowedException", "TooGenericExceptionCaught", "NestedBlockDepth")
+    @Suppress("SwallowedException", "TooGenericExceptionCaught", "ReturnCount")
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val body = request.body
 
-        if (request.isPost && body != null) {
-            val bodyJson = getJsonRequestBody(body)
-            if (bodyJson.isJsonObject) {
-                val postJson =
-                    try {
-                        bodyJson.asJsonObject.let {
-                            if (it.get(CLIENT_DETAILS) == null) {
-                                addClientDetails(it)
-                            }
-                            it.toString()
-                        }
-                    } catch (e: Throwable) {
-                        throw IOException("JSON format is incorrect.")
-                    }
-                return chain.proceed(
-                    request.newBuilder()
-                        .post(postJson.toRequestBody(MEDIA_TYPE_APPLICATION_JSON))
-                        .build(),
-                )
-            }
+        if (!request.isPost || body == null) {
+            return chain.proceed(request)
         }
-        return chain.proceed(request)
+
+        val postJson = body.bodyAsJsonObject()
+
+        if (postJson == null || postJson.get(CLIENT_DETAILS) != null) {
+            return chain.proceed(request)
+        }
+
+        addClientDetails(postJson)
+
+        val requestBody = postJson.toString().toRequestBody(MEDIA_TYPE_APPLICATION_JSON)
+
+        return chain.proceed(
+            request.newBuilder()
+                .post(requestBody)
+                .build(),
+        )
     }
 
     private fun addClientDetails(json: JsonObject) {
@@ -61,17 +57,21 @@ internal class DeviceDnaInterceptor(context: Context) : Interceptor {
         json.add(CLIENT_DETAILS, clientDetailsJson)
     }
 
-    @Throws(IOException::class)
-    @Suppress("SwallowedException")
-    private fun getJsonRequestBody(request: RequestBody): JsonElement {
+    private fun RequestBody.bodyAsJsonObject(): JsonObject? {
         val buffer = Buffer()
-        request.writeTo(buffer)
+        writeTo(buffer)
         val body = buffer.readUtf8()
-        return try {
-            JsonParser.parseString(body)
-        } catch (e: JsonParseException) {
-            throw IOException()
+
+        try {
+            val jsonElement = JsonParser.parseString(body)
+            return jsonElement.asJsonObject
+        } catch (ignore: JsonParseException) {
+            // ignore
+        } catch (ignore: IllegalStateException) {
+            // ignore
         }
+
+        return null
     }
 }
 
