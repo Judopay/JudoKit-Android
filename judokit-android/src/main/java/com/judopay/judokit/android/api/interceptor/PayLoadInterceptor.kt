@@ -61,9 +61,9 @@ class PayLoadInterceptor internal constructor(context: Context) : Interceptor {
                     .asJsonObject
             } catch (ignore: JsonParseException) {
                 // ignore
-            } catch (ignore: IllegalStateException) {
-                // ignore
             } catch (ignore: JsonSyntaxException) {
+                // ignore
+            } catch (ignore: IllegalStateException) {
                 // ignore
             }
 

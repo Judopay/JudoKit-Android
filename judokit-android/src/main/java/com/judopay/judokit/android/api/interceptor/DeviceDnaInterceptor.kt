@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.JsonParser
+import com.google.gson.JsonSyntaxException
 import com.judopay.devicedna.DeviceDNA
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -58,19 +59,17 @@ internal class DeviceDnaInterceptor(context: Context) : Interceptor {
     }
 
     private fun RequestBody.bodyAsJsonObject(): JsonObject? {
-        val buffer = Buffer()
-        writeTo(buffer)
-        val body = buffer.readUtf8()
-
         try {
+            val buffer = Buffer()
+            writeTo(buffer)
+            val body = buffer.readUtf8()
             val jsonElement = JsonParser.parseString(body)
             return jsonElement.asJsonObject
+        } catch (ignore: IOException) {
         } catch (ignore: JsonParseException) {
-            // ignore
+        } catch (ignore: JsonSyntaxException) {
         } catch (ignore: IllegalStateException) {
-            // ignore
         }
-
         return null
     }
 }
