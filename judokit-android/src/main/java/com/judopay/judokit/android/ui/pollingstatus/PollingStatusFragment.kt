@@ -1,7 +1,6 @@
 package com.judopay.judokit.android.ui.pollingstatus
 
 import android.app.Dialog
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,20 +29,10 @@ class PollingStatusFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                Dialog(requireContext(), theme).apply {
-                    onBackInvokedDispatcher.registerOnBackInvokedCallback(0) {
-                        sharedViewModel.bankPaymentResult.postValue(result)
-                    }
-                }
-            } else {
-                object : Dialog(requireContext(), theme) {
-                    @Deprecated("Deprecated in Java")
-                    override fun onBackPressed() {
-                        sharedViewModel.bankPaymentResult.postValue(result)
-                        @Suppress("DEPRECATION")
-                        super.onBackPressed()
-                    }
+            object : Dialog(requireContext(), theme) {
+                override fun onBackPressed() {
+                    sharedViewModel.bankPaymentResult.postValue(result)
+                    super.onBackPressed()
                 }
             }
         dialog.window?.applyDialogStyling()
