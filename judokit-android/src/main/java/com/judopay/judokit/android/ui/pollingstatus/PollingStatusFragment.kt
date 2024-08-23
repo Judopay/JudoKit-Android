@@ -48,23 +48,31 @@ class PollingStatusFragment : DialogFragment() {
         return binding.root
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initializeViewModel()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.pollingStatusView.onButtonClickListener = { handlePollingStatusViewButtonClick(it) }
+        binding.pollingStatusView.animateWithAlpha(1.0f)
+    }
 
+    private fun initializeViewModel() {
         val application = requireActivity().application
         val service = JudoApiServiceFactory.create(application, judo)
         val pollingService = PollingService(service)
         val factory = PollingStatusViewModelFactory(pollingService, application)
         viewModel = ViewModelProvider(this, factory)[PollingStatusViewModel::class.java]
-
-        binding.pollingStatusView.onButtonClickListener = { handlePollingStatusViewButtonClick(it) }
-
-        binding.pollingStatusView.animateWithAlpha(1.0f)
     }
 
     private fun handlePollingStatusViewButtonClick(action: PollingStatusViewAction) {

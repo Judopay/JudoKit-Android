@@ -90,53 +90,9 @@ class CardEntryFragment : BottomSheetDialogFragment() {
 
     override fun getTheme(): Int = R.style.JudoTheme_BottomSheetDialogTheme
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        val application = requireActivity().application
-        val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
-        val cardRepository = TokenizedCardRepository(tokenizedCardDao)
-        val cardEntryOptions = arguments?.parcelable<CardEntryOptions>(CARD_ENTRY_OPTIONS)
-        val cardTransactionManager = CardTransactionManager.getInstance(requireActivity())
-        cardTransactionManager.configureWith(judo)
-
-        val factory =
-            CardEntryViewModelFactory(
-                judo,
-                cardTransactionManager,
-                cardRepository,
-                cardEntryOptions,
-                application,
-            )
-
-        viewModel = ViewModelProvider(this, factory)[CardEntryViewModel::class.java]
-
-        viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
-        viewModel.judoPaymentResult.observe(viewLifecycleOwner) { dispatchResult(it) }
-        viewModel.cardEntryToPaymentMethodResult.observe(
-            viewLifecycleOwner,
-        ) {
-            sharedViewModel.cardEntryToPaymentMethodResult.postValue(it)
-            findNavController().popBackStack()
-        }
-
-        viewModel.navigationObserver.observe(
-            viewLifecycleOwner,
-        ) {
-            bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-
-            Handler(Looper.getMainLooper()).postDelayed(
-                {
-                    when (it) {
-                        is CardEntryNavigation.Card -> binding.cardEntryViewAnimator.displayedChild = 0
-                        is CardEntryNavigation.Billing -> binding.cardEntryViewAnimator.displayedChild = 1
-                    }
-                    bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                },
-                BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME,
-            )
-        }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initializeViewModel()
     }
 
     // present it always expanded
@@ -166,6 +122,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
+        initializeViewModelObserving()
         binding.cancelButton.setOnClickListener { onUserCancelled() }
         binding.scanCardButton.setOnClickListener { handleScanCardButtonClicks() }
 
@@ -244,6 +201,58 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     override fun onDestroy() {
         viewModel.send(CardEntryAction.UnSubscribeToCardTransactionManagerResults)
         super.onDestroy()
+    }
+
+    private fun initializeViewModel() {
+        val application =
+            requireActivity().application
+        val tokenizedCardDao =
+            JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
+        val cardRepository =
+            TokenizedCardRepository(tokenizedCardDao)
+        val cardEntryOptions =
+            arguments?.parcelable<CardEntryOptions>(CARD_ENTRY_OPTIONS)
+        val cardTransactionManager =
+            CardTransactionManager.getInstance(requireActivity())
+        cardTransactionManager.configureWith(judo)
+        val factory =
+            CardEntryViewModelFactory(
+                judo,
+                cardTransactionManager,
+                cardRepository,
+                cardEntryOptions,
+                application,
+            )
+        viewModel =
+            ViewModelProvider(this, factory)[CardEntryViewModel::class.java]
+    }
+
+    private fun initializeViewModelObserving() {
+        viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
+        viewModel.judoPaymentResult.observe(viewLifecycleOwner) { dispatchResult(it) }
+        viewModel.cardEntryToPaymentMethodResult.observe(
+            viewLifecycleOwner,
+        ) {
+            sharedViewModel.cardEntryToPaymentMethodResult.postValue(it)
+            findNavController().popBackStack()
+        }
+
+        viewModel.navigationObserver.observe(
+            viewLifecycleOwner,
+        ) {
+            bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+            Handler(Looper.getMainLooper()).postDelayed(
+                {
+                    when (it) {
+                        is CardEntryNavigation.Card -> binding.cardEntryViewAnimator.displayedChild = 0
+                        is CardEntryNavigation.Billing -> binding.cardEntryViewAnimator.displayedChild = 1
+                    }
+                    bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                },
+                BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME,
+            )
+        }
     }
 
     private fun onUserCancelled() {

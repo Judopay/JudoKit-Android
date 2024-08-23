@@ -89,11 +89,11 @@ internal fun isDependencyPresent(className: String) =
         false
     }
 
-@Suppress("NestedBlockDepth", "ReturnCount")
+@Suppress("NestedBlockDepth", "ReturnCount", "CyclomaticComplexMethod")
 internal fun isInternetAvailable(context: Context): Boolean {
     var result = false
     val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager ?: return false
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         val networkCapabilities = connectivityManager.activeNetwork ?: return false
         val actNw =
@@ -107,6 +107,7 @@ internal fun isInternetAvailable(context: Context): Boolean {
             }
     } else {
         connectivityManager.run {
+            @Suppress("DEPRECATION") // Updated solution implemented for Android API 23+.
             connectivityManager.activeNetworkInfo?.run {
                 result =
                     when (type) {

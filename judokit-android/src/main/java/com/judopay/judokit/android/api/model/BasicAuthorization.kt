@@ -29,6 +29,8 @@ class BasicAuthorization internal constructor(
 
             fun setApiSecret(apiSecret: String?) = apply { this.apiSecret = apiSecret }
 
+            // Warnings suppressed as BasicAuthorization is already set ad deprecated (no need for them).
+            @Suppress("DEPRECATION")
             fun build(): BasicAuthorization {
                 val myToken = requireNotNullOrEmpty(apiToken, "apiToken")
                 val mySecret = requireNotNullOrEmpty(apiSecret, "apiSecret")

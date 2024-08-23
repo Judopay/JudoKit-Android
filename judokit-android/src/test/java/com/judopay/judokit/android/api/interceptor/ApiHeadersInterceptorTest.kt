@@ -5,7 +5,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.util.Base64
 import com.judopay.judokit.android.api.AppMetaDataProvider
-import com.judopay.judokit.android.api.model.BasicAuthorization
+import com.judopay.judokit.android.api.model.PaymentSessionAuthorization
 import com.judopay.judokit.android.model.SubProductInfo
 import com.judopay.judokit.android.ui.common.JUDO_API_VERSION
 import com.judopay.judokit.android.ui.common.JUDO_KIT_VERSION
@@ -26,7 +26,10 @@ import org.junit.jupiter.api.Test
 import java.nio.charset.StandardCharsets
 
 internal class ApiHeadersInterceptorTest {
-    private val authorization = BasicAuthorization.Builder().setApiToken("token").setApiSecret("secret")
+    private val authorization =
+        PaymentSessionAuthorization.Builder()
+            .setApiToken("token")
+            .setPaymentSession("paymentSession")
     private val okHttpClient = OkHttpClient.Builder()
     private val mockWebServer = MockWebServer()
 

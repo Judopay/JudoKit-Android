@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
 import android.location.LocationManager
+import android.os.Build
 import android.util.DisplayMetrics
 import android.view.WindowManager
 import android.webkit.WebSettings
@@ -69,7 +70,7 @@ class PayloadService(private val context: Context) {
     @Suppress("NestedBlockDepth")
     private fun getLastKnownLocation(): Location? {
         val manager =
-            context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager ?: return null
         val providers = manager.getProviders(true)
         var lastKnownLocation: Location? = null
         for (provider in providers) {
@@ -100,19 +101,41 @@ class PayloadService(private val context: Context) {
 
     private fun getThreeDSecureInfo(): ThreeDSecure = ThreeDSecure(getBrowserInfo())
 
+    @Suppress("SwallowedException")
     private fun getBrowserInfo(): Browser {
-        val wm =
-            context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val display = wm.defaultDisplay
-        val metrics = DisplayMetrics()
-        display.getMetrics(metrics)
+        var screenHeight: Int? = null
+        var screenWidth: Int? = null
+        (context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager)?.let {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val windowMetrics =
+                    try {
+                        it.currentWindowMetrics
+                    } catch (e: UnsupportedOperationException) {
+                        null
+                    }
+                screenWidth =
+                    windowMetrics?.bounds?.width()
+                screenHeight =
+                    windowMetrics?.bounds?.height()
+            } else {
+                @Suppress("DEPRECATION")
+                val display =
+                    it.defaultDisplay
+                val metrics =
+                    DisplayMetrics()
+                @Suppress("DEPRECATION")
+                display.getMetrics(metrics)
+                screenHeight =
+                    metrics.heightPixels
+                screenWidth =
+                    metrics.widthPixels
+            }
+        }
         val defaultTimeZone: TimeZone = TimeZone.getDefault()
         val deviceLanguage: String = Locale.getDefault().language
-        val screenHeight = metrics.heightPixels.toString()
-        val screenWidth = metrics.widthPixels.toString()
         val timeZone: String = defaultTimeZone.getDisplayName(false, TimeZone.SHORT)
         val userAgent = WebSettings.getDefaultUserAgent(context)
-        return Browser(deviceLanguage, screenHeight, screenWidth, timeZone, userAgent)
+        return Browser(deviceLanguage, screenHeight.toString(), screenWidth.toString(), timeZone, userAgent)
     }
 
     @Suppress("NestedBlockDepth", "SwallowedException")

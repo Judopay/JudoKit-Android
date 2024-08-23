@@ -1,22 +1,18 @@
 package com.judopay.judokit.android.ui.pollingstatus
 
 import android.app.Application
-import androidx.lifecycle.Observer
 import com.judopay.judokit.android.InstantExecutorExtension
 import com.judopay.judokit.android.api.JudoApiService
-import com.judopay.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
-import com.judopay.judokit.android.service.polling.PollingResult
 import com.judopay.judokit.android.service.polling.PollingService
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
@@ -30,7 +26,7 @@ import retrofit2.await
 @ExtendWith(InstantExecutorExtension::class)
 @DisplayName("Testing PollingStatusViewModel logic")
 internal class PollingStatusViewModelTest {
-    private val testDispatcher = TestCoroutineDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     private val service: JudoApiService = mockk(relaxed = true)
     private val pollingService: PollingService = mockk(relaxed = true)
@@ -41,8 +37,6 @@ internal class PollingStatusViewModelTest {
             pollingService,
             application,
         )
-
-    private val saleStatusResult = spyk<Observer<PollingResult<BankSaleStatusResponse>>>()
 
     @BeforeEach
     internal fun setUp() {
@@ -58,7 +52,6 @@ internal class PollingStatusViewModelTest {
     @AfterEach
     internal fun tearDown() {
         Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
     }
 
     @DisplayName("Given send with CancelPolling action is called, then cancel polling")

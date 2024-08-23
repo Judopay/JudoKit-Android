@@ -50,18 +50,9 @@ class EditCardFragment : Fragment() {
         _binding = null
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        val cardId = arguments?.getInt(JUDO_TOKENIZED_CARD_ID) ?: -1
-
-        val application = requireActivity().application
-        val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
-        val cardRepository = TokenizedCardRepository(tokenizedCardDao)
-        val factory = EditCardViewModelFactory(cardId, cardRepository, application)
-
-        viewModel = ViewModelProvider(this, factory).get(EditCardViewModel::class.java)
-        viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initializeViewModel()
     }
 
     override fun onViewCreated(
@@ -69,8 +60,22 @@ class EditCardFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
+        initializeViewModelObserving()
         setupColorPicker()
         setupCallbackListeners()
+    }
+
+    private fun initializeViewModel() {
+        val cardId = arguments?.getInt(JUDO_TOKENIZED_CARD_ID) ?: -1
+        val application = requireActivity().application
+        val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
+        val cardRepository = TokenizedCardRepository(tokenizedCardDao)
+        val factory = EditCardViewModelFactory(cardId, cardRepository, application)
+        viewModel = ViewModelProvider(this, factory).get(EditCardViewModel::class.java)
+    }
+
+    private fun initializeViewModelObserving() {
+        viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
     }
 
     private fun updateWithModel(model: EditCardModel) {
