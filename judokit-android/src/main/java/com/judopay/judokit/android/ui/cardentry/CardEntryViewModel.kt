@@ -107,7 +107,7 @@ class CardEntryViewModel(
 
     // used when the form needs to be pre populated, ex. `Scan Card`
     private var cardDetailsModel = CardDetailsInputModel()
-    private var billingAddressModel = BillingDetailsInputModel()
+    private var billingAddressModel = BillingDetailsInputModel(context)
 
     private var navigation: CardEntryNavigation = CardEntryNavigation.Card
 

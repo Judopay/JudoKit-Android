@@ -55,7 +55,7 @@ class BillingDetailsFormView
         internal var onBillingDetailsBackButtonClickListener: BillingDetailsBackButtonClickListener? =
             null
 
-        internal var model = BillingDetailsInputModel()
+        internal var model = BillingDetailsInputModel(context)
             set(value) {
                 field = value
                 binding.billingDetailsSubmitButton.state = model.submitButtonState
@@ -197,8 +197,16 @@ class BillingDetailsFormView
 
                     // setup state, and validate it
                     with(model.valueOfBillingDetailsFieldWithType(type)) {
-                        setText(this)
-                        textDidChange(type, this, FormFieldEvent.TEXT_CHANGED)
+                        var value = this
+                        if (type == BillingDetailsFieldType.COUNTRY) {
+                            if (value.isNotEmpty()) {
+                                countries.find { it.numericCode.equals(value, ignoreCase = true) }?.name?.let {
+                                    value = it
+                                }
+                            }
+                        }
+                        setText(value)
+                        textDidChange(type, value, FormFieldEvent.TEXT_CHANGED)
                     }
 
                     if (type == BillingDetailsFieldType.MOBILE_NUMBER) {

@@ -5,10 +5,12 @@ import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.telephony.TelephonyManager
 import android.util.Log
 import androidx.core.os.ConfigurationCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.judopay.judokit.android.R
+import com.judopay.judokit.android.ui.cardentry.model.CountryInfo
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -62,6 +64,24 @@ fun toDate(
     }
 
 fun getLocale(resources: Resources): Locale = ConfigurationCompat.getLocales(resources.configuration)[0] ?: Locale.getDefault()
+
+fun getDefaultCountry(context: Context): CountryInfo? {
+    val telephonyManager =
+        context.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+    val simCountryCode =
+        telephonyManager?.simCountryIso
+    val localeCountryCode =
+        getLocale(context.resources).country
+    return CountryInfo.list(context).find {
+            if (!simCountryCode.isNullOrEmpty()) {
+                it.alpha2Code.equals(simCountryCode, ignoreCase = true)
+            } else if (!localeCountryCode.isNullOrEmpty()) {
+                it.alpha2Code.equals(localeCountryCode, ignoreCase = true)
+            } else {
+                false
+            }
+        }
+}
 
 fun showAlert(
     context: Context,
