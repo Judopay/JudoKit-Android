@@ -5,8 +5,8 @@ kotlin = "1.9.23"
 ksp = "1.9.23-1.0.20"
 
 # judokit-android
-judo3ds2 = "1.4.2"
-deviceDna = "1.2.1"
+judo3ds2 = "1.4.3"
+deviceDna = "1.2.2"
 kotlinxCoroutines = "1.7.3"
 retrofit2 = "2.9.0"
 coreKtx = "1.12.0"
