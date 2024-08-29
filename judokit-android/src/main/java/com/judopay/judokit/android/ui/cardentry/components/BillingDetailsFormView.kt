@@ -198,11 +198,13 @@ class BillingDetailsFormView
                     // setup state, and validate it
                     with(model.valueOfBillingDetailsFieldWithType(type)) {
                         var value = this
-                        if (type == BillingDetailsFieldType.COUNTRY) {
-                            if (value.isNotEmpty()) {
-                                countries.find { it.numericCode.equals(value, ignoreCase = true) }?.name?.let {
-                                    value = it
-                                }
+                        if (type == BillingDetailsFieldType.COUNTRY &&
+                            value.isNotEmpty()
+                        ) {
+                            countries.find {
+                                it.numericCode.equals(value, ignoreCase = true)
+                            }?.name?.let {
+                                value = it
                             }
                         }
                         setText(value)
