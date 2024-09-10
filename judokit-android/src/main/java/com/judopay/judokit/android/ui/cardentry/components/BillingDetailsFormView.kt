@@ -1,7 +1,6 @@
 package com.judopay.judokit.android.ui.cardentry.components
 
 import android.content.Context
-import android.os.Build
 import android.telephony.PhoneNumberFormattingTextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -46,7 +45,7 @@ class BillingDetailsFormView
         context: Context,
         attrs: AttributeSet? = null,
         defStyle: Int = 0,
-    ) : FrameLayout(context, attrs, defStyle) {
+    ) : FrameLayout(context, attrs, defStyle), CardEntryViewAnimator.OnViewWillAppearListener {
         val binding = BillingDetailsFormViewBinding.inflate(LayoutInflater.from(context), this, true)
 
         internal var onFormValidationStatusListener: BillingDetailsFormValidationStatus? = null
@@ -119,6 +118,16 @@ class BillingDetailsFormView
             setupStateSpinner(Country.OTHER)
         }
 
+        override fun onViewWillAppear() {
+            selectedCountry = countries.firstOrNull { it.numericCode == model.countryCode }
+
+            editTextForType(BillingDetailsFieldType.COUNTRY).apply {
+                val text = selectedCountry?.name ?: ""
+                setText(text)
+                textDidChange(BillingDetailsFieldType.COUNTRY, text, FormFieldEvent.TEXT_CHANGED)
+            }
+        }
+
         private fun setupCountrySpinner() =
             binding.countryTextInputEditText.apply {
                 val adapter = ArrayAdapter(context, R.layout.country_select_dialog_item, countries)
@@ -170,15 +179,13 @@ class BillingDetailsFormView
                 if (mobileNumberFormatter != null) {
                     removeTextChangedListener(mobileNumberFormatter)
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mobileNumberFormatter =
-                        PhoneNumberFormattingTextWatcher(
-                            countries.find {
-                                it.name == editTextForType(BillingDetailsFieldType.COUNTRY).text.toString()
-                            }?.alpha2Code ?: "",
-                        )
-                    addTextChangedListener(mobileNumberFormatter)
-                }
+                mobileNumberFormatter =
+                    PhoneNumberFormattingTextWatcher(
+                        countries.find {
+                            it.name == editTextForType(BillingDetailsFieldType.COUNTRY).text.toString()
+                        }?.alpha2Code ?: "",
+                    )
+                addTextChangedListener(mobileNumberFormatter)
             }
 
         private fun setupFieldsContent() {
@@ -191,7 +198,7 @@ class BillingDetailsFormView
                 onBillingDetailsSubmitButtonClickListener?.invoke()
             }
 
-            BillingDetailsFieldType.values().forEach { type ->
+            BillingDetailsFieldType.entries.forEach { type ->
                 editTextForType(type).apply {
                     setHint(type.fieldHintResId)
 
@@ -330,7 +337,7 @@ class BillingDetailsFormView
 
         private fun updateSubmitButtonState() {
             val validationResults =
-                BillingDetailsFieldType.values().map {
+                BillingDetailsFieldType.entries.map {
                     validationResultsCache[it] ?: false
                 }
 
