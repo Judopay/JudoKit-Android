@@ -48,7 +48,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ViewAnimator
+    <com.judopay.judokit.android.ui.cardentry.components.CardEntryViewAnimator
         android:id="@+id/cardEntryViewAnimator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -67,5 +67,5 @@
             android:id="@+id/billing_address_form_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </ViewAnimator>
+    </com.judopay.judokit.android.ui.cardentry.components.CardEntryViewAnimator>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

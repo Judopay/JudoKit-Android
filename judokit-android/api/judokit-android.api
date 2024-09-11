@@ -1491,7 +1491,7 @@ public final class com/judopay/judokit/android/databinding/CardEntryFragmentBind
 	public final field cancelButton Landroid/widget/Button;
 	public final field cardDetailsFormView Lcom/judopay/judokit/android/ui/cardentry/components/CardEntryFormView;
 	public final field cardEntryToolbar Lcom/google/android/material/appbar/AppBarLayout;
-	public final field cardEntryViewAnimator Landroid/widget/ViewAnimator;
+	public final field cardEntryViewAnimator Lcom/judopay/judokit/android/ui/cardentry/components/CardEntryViewAnimator;
 	public final field scanCardButton Landroid/widget/Button;
 	public static fun bind (Landroid/view/View;)Lcom/judopay/judokit/android/databinding/CardEntryFragmentBinding;
 	public synthetic fun getRoot ()Landroid/view/View;
@@ -3562,12 +3562,13 @@ public final class com/judopay/judokit/android/ui/cardentry/JudoBottomSheetDialo
 	public fun onWindowAttributesChanged (Landroid/view/WindowManager$LayoutParams;)V
 }
 
-public final class com/judopay/judokit/android/ui/cardentry/components/BillingDetailsFormView : android/widget/FrameLayout {
+public final class com/judopay/judokit/android/ui/cardentry/components/BillingDetailsFormView : android/widget/FrameLayout, com/judopay/judokit/android/ui/cardentry/components/CardEntryViewAnimator$OnViewWillAppearListener {
 	public fun <init> (Landroid/content/Context;)V
 	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
 	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;I)V
 	public synthetic fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getBinding ()Lcom/judopay/judokit/android/databinding/BillingDetailsFormViewBinding;
+	public fun onViewWillAppear ()V
 }
 
 public final class com/judopay/judokit/android/ui/cardentry/components/CardEntryFormView : android/widget/FrameLayout {
@@ -3575,6 +3576,17 @@ public final class com/judopay/judokit/android/ui/cardentry/components/CardEntry
 	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
 	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;I)V
 	public synthetic fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class com/judopay/judokit/android/ui/cardentry/components/CardEntryViewAnimator : android/widget/ViewAnimator {
+	public fun <init> (Landroid/content/Context;)V
+	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
+	public synthetic fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun setDisplayedChild (I)V
+}
+
+public abstract interface class com/judopay/judokit/android/ui/cardentry/components/CardEntryViewAnimator$OnViewWillAppearListener {
+	public abstract fun onViewWillAppear ()V
 }
 
 public final class com/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout : android/widget/FrameLayout {
@@ -3752,6 +3764,8 @@ public final class com/judopay/judokit/android/ui/cardentry/model/CountryInfo {
 }
 
 public final class com/judopay/judokit/android/ui/cardentry/model/CountryInfo$Companion {
+	public final fun currentLocaleCountry (Landroid/content/Context;Lcom/judopay/judokit/android/ui/cardentry/model/CountryInfo;)Lcom/judopay/judokit/android/ui/cardentry/model/CountryInfo;
+	public static synthetic fun currentLocaleCountry$default (Lcom/judopay/judokit/android/ui/cardentry/model/CountryInfo$Companion;Landroid/content/Context;Lcom/judopay/judokit/android/ui/cardentry/model/CountryInfo;ILjava/lang/Object;)Lcom/judopay/judokit/android/ui/cardentry/model/CountryInfo;
 	public final fun list (Landroid/content/Context;)[Lcom/judopay/judokit/android/ui/cardentry/model/CountryInfo;
 }
 

@@ -1,6 +1,8 @@
 package com.judopay.judokit.android.ui.cardentry
 
 import android.app.Application
+import androidx.core.os.ConfigurationCompat
+import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.Observer
 import com.google.common.truth.Truth.assertThat
 import com.judopay.judokit.android.InstantExecutorExtension
@@ -27,7 +29,9 @@ import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.common.ButtonState
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +46,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import java.io.ByteArrayInputStream
+import java.io.InputStream
+import java.nio.charset.StandardCharsets
+import java.util.Locale
 import java.util.UUID
 
 @ExtendWith(InstantExecutorExtension::class)
@@ -63,6 +71,30 @@ internal class CardEntryViewModelTest {
     @BeforeEach
     internal fun setUp() {
         Dispatchers.setMain(testDispatcher)
+
+        Locale.setDefault(Locale.UK)
+
+        mockkStatic("androidx.core.os.ConfigurationCompat")
+
+        every {
+            ConfigurationCompat.getLocales(any())
+        } returns LocaleListCompat.getEmptyLocaleList()
+
+        val inputStream: InputStream =
+            ByteArrayInputStream(
+                (
+                    "[{ \"alpha2Code\": \"GB\"," +
+                        " \"name\": \"United Kingdom\"," +
+                        " \"dialCode\": \"44\"," +
+                        " \"numericCode\": \"826\"," +
+                        " \"phoneNumberFormat\": \"#### ######\" }]"
+                ).toByteArray(
+                    StandardCharsets.UTF_8,
+                ),
+            )
+
+        every { application.assets.open("countries.json") } returns inputStream
+
         sut = CardEntryViewModel(judo, cardTransactionManager, repository, CardEntryOptions(), application)
         sut.model.observeForever(modelSpy)
         sut.judoPaymentResult.observeForever(judoPaymentResultSpy)
