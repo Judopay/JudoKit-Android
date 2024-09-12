@@ -355,22 +355,11 @@ public final class com/judopay/judokit/android/api/model/BasicAuthorization$Crea
 }
 
 public final class com/judopay/judokit/android/api/model/Browser {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
-}
-
-public final class com/judopay/judokit/android/api/model/ClientDetails {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
-	public final fun getKey ()Ljava/lang/String;
-	public final fun getValue ()Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;)V
 }
 
 public final class com/judopay/judokit/android/api/model/ConsumerDevice {
-	public fun <init> (Ljava/lang/String;Lcom/judopay/judokit/android/api/model/ClientDetails;Lcom/judopay/judokit/android/api/model/GeoLocation;Lcom/judopay/judokit/android/api/model/ThreeDSecure;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Lcom/judopay/judokit/android/api/model/ClientDetails;Lcom/judopay/judokit/android/api/model/GeoLocation;Lcom/judopay/judokit/android/api/model/ThreeDSecure;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun getClientDetails ()Lcom/judopay/judokit/android/api/model/ClientDetails;
-	public final fun getGeolocation ()Lcom/judopay/judokit/android/api/model/GeoLocation;
-	public final fun getIpAddress ()Ljava/lang/String;
-	public final fun getPaymentType ()Ljava/lang/String;
+	public fun <init> (Lcom/judopay/judokit/android/api/model/ThreeDSecure;)V
 	public final fun getThreeDSecure ()Lcom/judopay/judokit/android/api/model/ThreeDSecure;
 }
 
@@ -378,10 +367,6 @@ public final class com/judopay/judokit/android/api/model/EnhancedPaymentDetail {
 	public fun <init> (Lcom/judopay/judokit/android/api/model/SDKInfo;Lcom/judopay/judokit/android/api/model/ConsumerDevice;)V
 	public final fun getConsumerDevice ()Lcom/judopay/judokit/android/api/model/ConsumerDevice;
 	public final fun getSdkInfo ()Lcom/judopay/judokit/android/api/model/SDKInfo;
-}
-
-public final class com/judopay/judokit/android/api/model/GeoLocation {
-	public fun <init> (DD)V
 }
 
 public final class com/judopay/judokit/android/api/model/PaymentSessionAuthorization : com/judopay/judokit/android/api/model/Authorization {
@@ -3327,10 +3312,6 @@ public final class com/judopay/judokit/android/service/JudoGooglePayService {
 public final class com/judopay/judokit/android/service/PayloadService {
 	public fun <init> (Landroid/content/Context;)V
 	public final fun getEnhancedPaymentDetail ()Lcom/judopay/judokit/android/api/model/EnhancedPaymentDetail;
-}
-
-public final class com/judopay/judokit/android/service/PayloadServiceKt {
-	public static final fun isPermissionGranted (Landroid/content/Context;Ljava/lang/String;)Z
 }
 
 public final class com/judopay/judokit/android/service/RecommendationService {
