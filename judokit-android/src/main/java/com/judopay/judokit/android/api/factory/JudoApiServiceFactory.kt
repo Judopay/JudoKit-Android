@@ -120,19 +120,20 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
             )
 
             setTimeouts(builder, judo.networkTimeout)
-            addInterceptors(builder, context, judo)
+            applyInternalInterceptors(builder, context, judo)
+            applyExternalInterceptors(builder)
             builder.build()
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
     }
 
-    override fun addInterceptors(
+    override fun applyInternalInterceptors(
         client: OkHttpClient.Builder,
         context: Context,
         judo: Judo,
     ) {
-        super.addInterceptors(client, context, judo)
+        super.applyInternalInterceptors(client, context, judo)
         client.interceptors().apply {
             add(
                 ApiHeadersInterceptor(

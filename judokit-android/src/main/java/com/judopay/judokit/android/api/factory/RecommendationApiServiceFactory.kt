@@ -42,12 +42,12 @@ object RecommendationApiServiceFactory : ServiceFactory<RecommendationApiService
         ).create(RecommendationApiService::class.java)
     }
 
-    override fun addInterceptors(
+    override fun applyInternalInterceptors(
         client: OkHttpClient.Builder,
         context: Context,
         judo: Judo,
     ) {
-        super.addInterceptors(client, context, judo)
+        super.applyInternalInterceptors(client, context, judo)
         client.interceptors().add(RecommendationHeadersInterceptor(judo.authorization))
     }
 
@@ -57,8 +57,8 @@ object RecommendationApiServiceFactory : ServiceFactory<RecommendationApiService
     ): OkHttpClient {
         val builder = OkHttpClient.Builder()
         setRecommendationCallTimeout(builder, judo)
-        addInterceptors(builder, context, judo)
-
+        applyInternalInterceptors(builder, context, judo)
+        applyExternalInterceptors(builder)
         return builder.build()
     }
 

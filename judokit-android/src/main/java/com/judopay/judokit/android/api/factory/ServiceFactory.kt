@@ -48,13 +48,20 @@ abstract class ServiceFactory<T> {
         judo: Judo,
     ): OkHttpClient
 
-    open fun addInterceptors(
+    open fun applyInternalInterceptors(
         client: OkHttpClient.Builder,
         context: Context,
         judo: Judo,
     ) {
         client.interceptors().apply {
             add(NetworkConnectivityInterceptor(context))
+        }
+    }
+
+    protected fun applyExternalInterceptors(
+        client: OkHttpClient.Builder
+    ) {
+        client.interceptors().apply {
             externalInterceptors?.forEach {
                 add(it)
             }
