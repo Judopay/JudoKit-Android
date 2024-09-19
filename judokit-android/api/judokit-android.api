@@ -309,6 +309,7 @@ public final class com/judopay/judokit/android/api/factory/ResultCall : com/judo
 
 public abstract class com/judopay/judokit/android/api/factory/ServiceFactory {
 	public fun <init> ()V
+	protected final fun addExternalInterceptors (Lokhttp3/OkHttpClient$Builder;)V
 	public fun addInterceptors (Lokhttp3/OkHttpClient$Builder;Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)V
 	public abstract fun create (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Ljava/lang/Object;
 	public abstract fun createApiService (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Ljava/lang/Object;

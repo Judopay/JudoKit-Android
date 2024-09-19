@@ -55,6 +55,11 @@ abstract class ServiceFactory<T> {
     ) {
         client.interceptors().apply {
             add(NetworkConnectivityInterceptor(context))
+        }
+    }
+
+    protected fun addExternalInterceptors(client: OkHttpClient.Builder) {
+        client.interceptors().apply {
             externalInterceptors?.forEach {
                 add(it)
             }

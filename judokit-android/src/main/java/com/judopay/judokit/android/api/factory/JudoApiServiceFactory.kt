@@ -121,6 +121,7 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
 
             setTimeouts(builder, judo.networkTimeout)
             addInterceptors(builder, context, judo)
+            addExternalInterceptors(builder)
             builder.build()
         } catch (e: Exception) {
             throw RuntimeException(e)
