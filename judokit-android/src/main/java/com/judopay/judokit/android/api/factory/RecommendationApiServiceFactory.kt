@@ -58,7 +58,7 @@ object RecommendationApiServiceFactory : ServiceFactory<RecommendationApiService
         val builder = OkHttpClient.Builder()
         setRecommendationCallTimeout(builder, judo)
         addInterceptors(builder, context, judo)
-
+        addExternalInterceptors(builder)
         return builder.build()
     }
 
