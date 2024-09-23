@@ -56,7 +56,7 @@ class PollingStatusView
         private val pollingTextResId: Int
             get() =
                 when (state) {
-                    PROCESSING -> R.string.processing
+                    PROCESSING -> R.string.polling_status_processing
                     DELAY -> R.string.there_is_a_delay
                     RETRY, FAIL -> R.string.transaction_unsuccessful
                     SUCCESS -> R.string.transaction_successful

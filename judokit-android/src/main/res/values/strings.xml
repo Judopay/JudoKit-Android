@@ -92,7 +92,7 @@
     <string name="default_dinnersclub_card_title">My Dinners Club Card</string>
 
     <string name="unable_to_process_request_error_title">Unable to process</string>
-    <string name="processing">Transaction pending…</string>
+    <string name="polling_status_processing">Transaction pending…</string>
 
     <string name="customize_card">Customize Card</string>
     <string name="save_as_default_payment_method">Save as default payment method</string>
@@ -183,4 +183,11 @@
     <string name="billing_details_container" translatable="false">billingInfoContainer</string>
 
     <string name="judo_error_text" translatable="false">errorLabel</string>
+
+    <!--    3DS2 - specific strings-->
+    <string name="processing">Processing</string>
+    <string name="secure_checkout">Secure Checkout</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
 </resources>
