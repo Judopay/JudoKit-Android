@@ -7,8 +7,6 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
 import androidx.core.os.ConfigurationCompat
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.judopay.judokit.android.R
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -62,17 +60,6 @@ fun toDate(
     }
 
 fun getLocale(resources: Resources): Locale = ConfigurationCompat.getLocales(resources.configuration)[0] ?: Locale.getDefault()
-
-fun showAlert(
-    context: Context,
-    message: String,
-) {
-    MaterialAlertDialogBuilder(context)
-        .setTitle(R.string.unable_to_process_request_error_title)
-        .setMessage(message)
-        .setNegativeButton(R.string.close, null)
-        .show()
-}
 
 /**
  * Helper function to check if a dependency is present using reflection.

@@ -18,15 +18,15 @@ data class StateValidator(
         formFieldEvent: FormFieldEvent,
     ): ValidationResult {
         if (country != Country.CA && country != Country.US) {
-            return ValidationResult(true, R.string.empty)
+            return ValidationResult(true, R.string.jp_empty)
         }
         val validStates = if (country == Country.CA) canadaProvincesAndTerritories else usStates
         val isValid = validStates.map { it.name.lowercase() }.contains(input.lowercase())
         val message =
             when {
-                isValid || formFieldEvent == FormFieldEvent.TEXT_CHANGED -> R.string.empty
-                country == Country.CA -> R.string.error_province_territory_should_not_be_empty
-                else -> R.string.error_state_should_not_be_empty
+                isValid || formFieldEvent == FormFieldEvent.TEXT_CHANGED -> R.string.jp_empty
+                country == Country.CA -> R.string.jp_error_province_territory_should_not_be_empty
+                else -> R.string.jp_error_state_should_not_be_empty
             }
         return ValidationResult(isValid, message)
     }

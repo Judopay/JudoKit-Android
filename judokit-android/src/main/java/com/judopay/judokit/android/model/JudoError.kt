@@ -44,11 +44,11 @@ data class JudoError(
         fun judoRequestFailedError(resources: Resources): JudoError =
             JudoError(
                 REQUEST_FAILED,
-                resources.getString(R.string.error_request_failed_desc),
+                resources.getString(R.string.jp_error_request_failed_desc),
                 mutableListOf(
                     JudoError(
                         REQUEST_FAILED,
-                        resources.getString(R.string.error_request_failed_reason),
+                        resources.getString(R.string.jp_error_request_failed_reason),
                     ),
                 ),
             )
@@ -61,11 +61,11 @@ data class JudoError(
         fun judoResponseParseError(resources: Resources) =
             JudoError(
                 RESPONSE_PARSING,
-                resources.getString(R.string.error_response_parse_desc),
+                resources.getString(R.string.jp_error_response_parse_desc),
                 mutableListOf(
                     JudoError(
                         RESPONSE_PARSING,
-                        resources.getString(R.string.error_response_parse_reason),
+                        resources.getString(R.string.jp_error_response_parse_reason),
                     ),
                 ),
             )
@@ -79,11 +79,11 @@ data class JudoError(
             message: String?,
         ) = JudoError(
             GOOGLE_PAY_NOT_SUPPORTED,
-            resources.getString(R.string.error_google_pay_not_supported_desc),
+            resources.getString(R.string.jp_error_google_pay_not_supported_desc),
             mutableListOf(
                 JudoError(
                     GOOGLE_PAY_NOT_SUPPORTED,
-                    message ?: resources.getString(R.string.error_google_pay_not_supported_reason),
+                    message ?: resources.getString(R.string.jp_error_google_pay_not_supported_reason),
                 ),
             ),
         )
@@ -98,11 +98,11 @@ data class JudoError(
         ): JudoError =
             JudoError(
                 NETWORK_ERROR,
-                resources.getString(R.string.error_network_failed_desc),
+                resources.getString(R.string.jp_error_network_failed_desc),
                 mutableListOf(
                     JudoError(
                         NETWORK_ERROR,
-                        throwable.localizedMessage ?: resources.getString(R.string.error_network_failed_reason),
+                        throwable.localizedMessage ?: resources.getString(R.string.jp_error_network_failed_reason),
                     ),
                 ),
             )
@@ -117,11 +117,11 @@ data class JudoError(
         ): JudoError =
             JudoError(
                 NETWORK_ERROR,
-                resources.getString(R.string.error_poor_connectivity_desc),
+                resources.getString(R.string.jp_error_poor_connectivity_desc),
                 mutableListOf(
                     JudoError(
                         NETWORK_ERROR,
-                        throwable.localizedMessage ?: resources.getString(R.string.error_poor_connectivity_reason),
+                        throwable.localizedMessage ?: resources.getString(R.string.jp_error_poor_connectivity_reason),
                     ),
                 ),
             )
@@ -138,11 +138,11 @@ data class JudoError(
         fun judoRecommendationTransactionPreventedError(resources: Resources): JudoError =
             JudoError(
                 REQUEST_FAILED,
-                resources.getString(R.string.recommendation_transaction_prevented_desc),
+                resources.getString(R.string.jp_recommendation_transaction_prevented_desc),
                 mutableListOf(
                     JudoError(
                         REQUEST_FAILED,
-                        resources.getString(R.string.recommendation_transaction_prevented_reason),
+                        resources.getString(R.string.jp_recommendation_transaction_prevented_reason),
                     ),
                 ),
             )
@@ -150,11 +150,11 @@ data class JudoError(
         fun judoRecommendationRetrievingError(resources: Resources): JudoError =
             JudoError(
                 REQUEST_FAILED,
-                resources.getString(R.string.recommendation_request_failed_desc),
+                resources.getString(R.string.jp_recommendation_request_failed_desc),
                 mutableListOf(
                     JudoError(
                         REQUEST_FAILED,
-                        resources.getString(R.string.recommendation_request_failed_reason),
+                        resources.getString(R.string.jp_recommendation_request_failed_reason),
                     ),
                 ),
             )
