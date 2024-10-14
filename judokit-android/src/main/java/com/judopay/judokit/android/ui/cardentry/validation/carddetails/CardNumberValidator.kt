@@ -31,8 +31,8 @@ data class CardNumberValidator(
         val message =
             when {
                 shouldNotDisplayMessage -> R.string.empty
-                isValidLength && network == CardNetwork.OTHER -> R.string.error_unknown_not_supported
-                isSupported && !isValid -> R.string.check_card_number
+                isValidLength && network == CardNetwork.OTHER -> R.string.jp_error_unknown_not_supported
+                isSupported && !isValid -> R.string.jp_check_card_number
                 !isSupported -> network.notSupportedErrorMessageResId
                 else -> R.string.empty
             }

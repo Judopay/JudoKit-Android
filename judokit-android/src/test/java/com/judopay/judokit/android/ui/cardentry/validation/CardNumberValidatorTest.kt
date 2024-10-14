@@ -30,7 +30,7 @@ internal class CardNumberValidatorTest {
     fun unsupportedCardNumber() {
         assertEquals(
             validator.validate("1111 1111 1111 1111", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.error_unknown_not_supported),
+            ValidationResult(false, R.string.jp_error_unknown_not_supported),
         )
     }
 
@@ -54,7 +54,7 @@ internal class CardNumberValidatorTest {
     fun unsupportedAndInvalidLengthCardNumber() {
         assertEquals(
             validator.validate("4111 1111 1111 1112", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.check_card_number),
+            ValidationResult(false, R.string.jp_check_card_number),
         )
     }
 
@@ -82,7 +82,7 @@ internal class CardNumberValidatorTest {
 
         assertEquals(
             validator.validate("4111 1111 1111 1111", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.error_visa_not_supported),
+            ValidationResult(false, R.string.jp_error_visa_not_supported),
         )
     }
 

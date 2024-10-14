@@ -19,7 +19,7 @@ data class AddressLineValidator(
         val shouldDisplayMessage = formFieldEvent == FormFieldEvent.FOCUS_CHANGED
         val message =
             if (shouldDisplayMessage) {
-                R.string.invalid_address
+                R.string.jp_invalid_address
             } else {
                 R.string.empty
             }

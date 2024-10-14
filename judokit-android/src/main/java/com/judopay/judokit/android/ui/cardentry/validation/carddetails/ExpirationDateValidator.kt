@@ -22,7 +22,7 @@ class ExpirationDateValidator(
         val message =
             when {
                 shouldNotDisplayMessage -> R.string.empty
-                !isValid -> R.string.check_expiry_date
+                !isValid -> R.string.jp_check_expiry_date
                 else -> R.string.empty
             }
 

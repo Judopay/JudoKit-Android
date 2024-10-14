@@ -47,8 +47,8 @@ open class PostcodeValidator(
 
     private fun errorString(): Int =
         when (country) {
-            Country.US -> R.string.invalid_zip_code
-            else -> R.string.invalid_postcode
+            Country.US -> R.string.jp_invalid_zip_code
+            else -> R.string.jp_invalid_postcode
         }
 
     private fun isPostCodeValid(input: String): Boolean {

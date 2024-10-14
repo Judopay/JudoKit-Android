@@ -21,7 +21,7 @@
         android:layout_marginStart="@dimen/space_24"
         android:layout_marginTop="@dimen/space_8"
         android:layout_marginEnd="@dimen/space_24"
-        android:text="@string/customize_card"
+        android:text="@string/jp_customize_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/backButton" />
@@ -94,7 +94,7 @@
                 android:drawableStart="@drawable/ic_radio_off"
                 android:drawablePadding="@dimen/space_8"
                 android:gravity="start|center_vertical"
-                android:text="@string/save_as_default_payment_method"
+                android:text="@string/jp_save_as_default_payment_method"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/titleTextInputLayout" />
@@ -106,7 +106,7 @@
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="60dp"
                 android:layout_marginEnd="@dimen/space_16"
-                android:text="@string/cancel"
+                android:text="@string/jp_cancel"
                 app:layout_constraintEnd_toStartOf="@+id/saveButton"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/saveAsDefaultTextView" />
@@ -118,7 +118,7 @@
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="60dp"
                 android:minWidth="200dp"
-                android:text="@string/save"
+                android:text="@string/jp_save"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/saveAsDefaultTextView" />
 

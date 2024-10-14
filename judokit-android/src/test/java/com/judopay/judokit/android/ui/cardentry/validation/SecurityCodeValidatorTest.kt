@@ -20,7 +20,7 @@ internal class SecurityCodeValidatorTest {
         validator.cardNetwork = CardNetwork.OTHER
         assertEquals(
             validator.validate("12", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.check_cvv),
+            ValidationResult(false, R.string.jp_check_cvv),
         )
     }
 
@@ -46,7 +46,7 @@ internal class SecurityCodeValidatorTest {
 
         assertEquals(
             validator.validate("123", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.check_amex_security_code),
+            ValidationResult(false, R.string.jp_check_amex_security_code),
         )
     }
 

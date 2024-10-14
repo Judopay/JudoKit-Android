@@ -46,7 +46,7 @@
                 style="@style/JudoTheme.TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/billing_details_title"
+                android:text="@string/jp_billing_details_title"
                 android:textColor="@color/jpDarkGrayColor"
                 android:textSize="@dimen/text_size_18" />
 
@@ -97,7 +97,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="addressRegion"
-                    android:hint="@string/us_state_hint"
+                    android:hint="@string/jp_us_state_hint"
                     android:inputType="textCapWords"
                     android:padding="@dimen/space_7"
                     tools:text="New York"
@@ -215,7 +215,7 @@
                 style="@style/JudoTheme.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/add_address_line"
+                android:text="@string/jp_add_address_line"
                 android:textAllCaps="false"
                 app:icon="@drawable/ic_add_card"
                 android:tag="@string/add_address_line_button" />
@@ -292,7 +292,7 @@
                 android:layout_width="@dimen/width_100"
                 android:layout_height="@dimen/button_height"
                 android:minWidth="@dimen/min_touch_target_size"
-                android:text="@string/back" />
+                android:text="@string/jp_back" />
 
             <com.judopay.judokit.android.ui.common.ProgressButton
                 android:id="@+id/billingDetailsSubmitButton"
@@ -300,7 +300,7 @@
                 android:layout_width="@dimen/width_0"
                 android:layout_height="@dimen/button_height"
                 android:minWidth="@dimen/min_touch_target_size"
-                android:text="@string/pay_now" />
+                android:text="@string/jp_pay_now" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.bottomappbar.BottomAppBar>

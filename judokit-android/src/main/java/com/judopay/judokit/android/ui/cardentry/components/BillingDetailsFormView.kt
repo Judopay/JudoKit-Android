@@ -143,11 +143,11 @@ class BillingDetailsFormView
             when (country) {
                 Country.US -> {
                     states = usStates
-                    hint = R.string.us_state_hint
+                    hint = R.string.jp_us_state_hint
                 }
                 Country.CA -> {
                     states = canadaProvincesAndTerritories
-                    hint = R.string.ca_province_hint
+                    hint = R.string.jp_ca_province_hint
                 }
                 else -> {
                     validationResultsCache[BillingDetailsFieldType.STATE] = true
@@ -239,14 +239,14 @@ class BillingDetailsFormView
 
         @Suppress("MagicNumber")
         private fun setAddAddressButtonClickListener() {
-            binding.addAddressLineButton.text = context.getString(R.string.add_address_line, 2)
+            binding.addAddressLineButton.text = context.getString(R.string.jp_add_address_line, 2)
             binding.addAddressLineButton.setOnClickListener {
                 if (binding.addressLine2TextInputLayout.visibility == VISIBLE) {
                     binding.addressLine3TextInputLayout.visibility = VISIBLE
                     binding.addAddressLineButton.visibility = GONE
                 } else {
                     binding.addressLine2TextInputLayout.visibility = VISIBLE
-                    binding.addAddressLineButton.text = context.getString(R.string.add_address_line, 3)
+                    binding.addAddressLineButton.text = context.getString(R.string.jp_add_address_line, 3)
                 }
             }
         }
@@ -282,7 +282,7 @@ class BillingDetailsFormView
                                 code.isEmpty() && number.isEmpty() -> return@mapNotNull null
                                 code.isEmpty() && number.isNotEmpty() -> return@mapNotNull ValidationResult(
                                     false,
-                                    R.string.invalid_phone_country_code,
+                                    R.string.jp_invalid_phone_country_code,
                                 )
                             }
                         }

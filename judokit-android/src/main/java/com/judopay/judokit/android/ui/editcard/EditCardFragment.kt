@@ -110,7 +110,7 @@ class EditCardFragment : Fragment() {
         binding.saveAsDefaultTextView.setOnClickListener { viewModel.send(EditCardAction.ToggleDefaultCardState) }
 
         binding.titleTextInputLayout.error =
-            getString(R.string.error_card_title_too_long, CARD_TITLE_MAX_CHARACTERS)
+            getString(R.string.jp_error_card_title_too_long, CARD_TITLE_MAX_CHARACTERS)
 
         binding.titleEditText.doAfterTextChanged {
             viewModel.send(EditCardAction.ChangeTitle(it.toString()))

@@ -25,8 +25,8 @@ data class StateValidator(
         val message =
             when {
                 isValid || formFieldEvent == FormFieldEvent.TEXT_CHANGED -> R.string.empty
-                country == Country.CA -> R.string.error_province_territory_should_not_be_empty
-                else -> R.string.error_state_should_not_be_empty
+                country == Country.CA -> R.string.jp_error_province_territory_should_not_be_empty
+                else -> R.string.jp_error_state_should_not_be_empty
             }
         return ValidationResult(isValid, message)
     }

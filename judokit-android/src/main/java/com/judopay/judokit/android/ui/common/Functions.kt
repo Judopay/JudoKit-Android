@@ -68,9 +68,9 @@ fun showAlert(
     message: String,
 ) {
     MaterialAlertDialogBuilder(context)
-        .setTitle(R.string.unable_to_process_request_error_title)
+        .setTitle(R.string.jp_unable_to_process_request_error_title)
         .setMessage(message)
-        .setNegativeButton(R.string.close, null)
+        .setNegativeButton(R.string.jp_close, null)
         .show()
 }
 

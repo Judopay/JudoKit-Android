@@ -195,7 +195,7 @@
                 style="@style/JudoTheme.BlackRoundedButton"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
-                android:text="@string/pay_now"
+                android:text="@string/jp_pay_now"
                 android:tag="@string/pay_now_button"/>
 
             <TextView
@@ -204,7 +204,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="@dimen/space_8"
-                android:text="@string/secure_server_transmission"
+                android:text="@string/jp_secure_server_transmission"
                 android:textColor="@color/brown_grey"
                 app:drawableStartCompat="@drawable/ic_lock_20dp" />
 

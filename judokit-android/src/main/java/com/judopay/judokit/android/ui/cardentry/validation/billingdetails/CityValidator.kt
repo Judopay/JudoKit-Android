@@ -19,7 +19,7 @@ data class CityValidator(
         val shouldDisplayMessage = formFieldEvent == FormFieldEvent.FOCUS_CHANGED
         val message =
             if (shouldDisplayMessage) {
-                R.string.invalid_city
+                R.string.jp_invalid_city
             } else {
                 R.string.empty
             }
