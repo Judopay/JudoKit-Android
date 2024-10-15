@@ -193,7 +193,7 @@ class CardEntryFormView
 
             val layout = textInputLayoutForType(type)
             val isValidResult = result?.isValid ?: true
-            val message = context.getString(result?.message ?: R.string.empty)
+            val message = context.getString(result?.message ?: R.string.jp_empty)
             val errorEnabled = value.isNotBlank() && !isValidResult && message.isNotEmpty()
 
             if (event == FormFieldEvent.TEXT_CHANGED) {

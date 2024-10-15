@@ -56,7 +56,7 @@ internal class PostcodeValidatorTest {
         validator.country = Country.GB
         assertEquals(
             validator.validate("SW15 5PU"),
-            ValidationResult(true, R.string.empty),
+            ValidationResult(true, R.string.jp_empty),
         )
     }
 
@@ -66,7 +66,7 @@ internal class PostcodeValidatorTest {
         validator.country = Country.GB
         assertEquals(
             validator.validate("SW15 5PU", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(true, R.string.empty),
+            ValidationResult(true, R.string.jp_empty),
         )
     }
 
@@ -115,7 +115,7 @@ internal class PostcodeValidatorTest {
         validator.country = Country.CA
         assertEquals(
             validator.validate("A1A 1A1"),
-            ValidationResult(true, R.string.empty),
+            ValidationResult(true, R.string.jp_empty),
         )
     }
 
@@ -164,7 +164,7 @@ internal class PostcodeValidatorTest {
         validator.country = Country.US
         assertEquals(
             validator.validate("99524"),
-            ValidationResult(true, R.string.empty),
+            ValidationResult(true, R.string.jp_empty),
         )
     }
 
@@ -174,7 +174,7 @@ internal class PostcodeValidatorTest {
         validator.country = Country.OTHER
         assertEquals(
             validator.validate(""),
-            ValidationResult(false, R.string.empty),
+            ValidationResult(false, R.string.jp_empty),
         )
     }
 
@@ -184,7 +184,7 @@ internal class PostcodeValidatorTest {
         validator.country = Country.OTHER
         assertEquals(
             validator.validate("postcode"),
-            ValidationResult(true, R.string.empty),
+            ValidationResult(true, R.string.jp_empty),
         )
     }
 
@@ -207,7 +207,7 @@ internal class PostcodeValidatorTest {
         validator.country = null
         assertEquals(
             validator.validate("postcode"),
-            ValidationResult(false, R.string.empty),
+            ValidationResult(false, R.string.jp_empty),
         )
     }
 }

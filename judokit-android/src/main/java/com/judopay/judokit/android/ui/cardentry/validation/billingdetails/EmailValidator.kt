@@ -20,7 +20,7 @@ data class EmailValidator(
             if (shouldDisplayMessage) {
                 R.string.jp_invalid_email_address
             } else {
-                R.string.empty
+                R.string.jp_empty
             }
         return ValidationResult(isValid, message)
     }

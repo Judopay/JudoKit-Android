@@ -21,7 +21,7 @@ data class AddressLineValidator(
             if (shouldDisplayMessage) {
                 R.string.jp_invalid_address
             } else {
-                R.string.empty
+                R.string.jp_empty
             }
         return ValidationResult(addressLineRegEx.matches(input), message)
     }

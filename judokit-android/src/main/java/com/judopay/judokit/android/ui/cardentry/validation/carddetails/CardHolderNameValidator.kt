@@ -26,11 +26,11 @@ data class CardHolderNameValidator(override val fieldType: String = CardDetailsF
 
         val message =
             when {
-                shouldNotDisplayMessage -> R.string.empty
+                shouldNotDisplayMessage -> R.string.jp_empty
                 isBlank -> R.string.jp_card_holder_name_required
                 isTooShort -> R.string.jp_card_holder_name_too_short
                 !isValidCharactersSet -> R.string.jp_card_holder_name_special_chars
-                else -> R.string.empty
+                else -> R.string.jp_empty
             }
 
         return ValidationResult(!isNotValid, message)

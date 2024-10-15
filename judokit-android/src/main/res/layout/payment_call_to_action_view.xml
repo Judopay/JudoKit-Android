@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/jp_pay_now"
-            android:tag="@string/payment_methods_pay_button" />
+            android:tag="@string/jp_payment_methods_pay_button" />
 
         <com.judopay.judokit.android.ui.common.GooglePayButton
             android:id="@+id/googlePayButton"

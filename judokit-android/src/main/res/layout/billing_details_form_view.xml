@@ -24,7 +24,7 @@
             android:paddingEnd="@dimen/space_24"
             android:paddingBottom="@dimen/space_12"
             tools:background="@color/white"
-            android:tag="@string/billing_details_container">
+            android:tag="@string/jp_billing_details_container">
 
             <androidx.constraintlayout.helper.widget.Flow
                 android:id="@+id/flow1"
@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:autofillHints="emailAddress"
                     android:inputType="textEmailAddress"
-                    android:tag="@string/email_entry_field"
+                    android:tag="@string/jp_email_entry_field"
                     tools:text="cardholder@email.com" />
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
@@ -82,7 +82,7 @@
                     android:padding="@dimen/space_7"
                     tools:ignore="LabelFor"
                     tools:text="United Kingdom"
-                    android:tag="@string/country_entry_field" />
+                    android:tag="@string/jp_country_entry_field" />
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
@@ -101,7 +101,7 @@
                     android:inputType="textCapWords"
                     android:padding="@dimen/space_7"
                     tools:text="New York"
-                    android:tag="@string/state_entry_field" />
+                    android:tag="@string/jp_state_entry_field" />
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
@@ -136,7 +136,7 @@
                     android:inputType="phone"
                     android:maxLength="7"
                     tools:text="+(373)"
-                    android:tag="@string/phone_country_code_entry_field" />
+                    android:tag="@string/jp_phone_country_code_entry_field" />
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
@@ -155,7 +155,7 @@
                     android:autofillHints="phoneNational"
                     android:inputType="phone"
                     tools:text="0799999999"
-                    android:tag="@string/phone_entry_field" />
+                    android:tag="@string/jp_phone_entry_field" />
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
@@ -172,7 +172,7 @@
                     android:autofillHints="streetAddress"
                     android:inputType="textPostalAddress|textCapWords"
                     tools:text="Line 1"
-                    android:tag="@string/address_one_entry_field" />
+                    android:tag="@string/jp_address_one_entry_field" />
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
@@ -189,7 +189,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPostalAddress|textCapWords"
                     tools:text="Line 2"
-                    android:tag="@string/address_two_entry_field" />
+                    android:tag="@string/jp_address_two_entry_field" />
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
@@ -206,7 +206,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPostalAddress|textCapWords"
                     tools:text="Line 3"
-                    android:tag="@string/address_three_entry_field" />
+                    android:tag="@string/jp_address_three_entry_field" />
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
@@ -218,7 +218,7 @@
                 android:text="@string/jp_add_address_line"
                 android:textAllCaps="false"
                 app:icon="@drawable/ic_add_card"
-                android:tag="@string/add_address_line_button" />
+                android:tag="@string/jp_add_address_line_button" />
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/cityTextInputLayout"
@@ -233,7 +233,7 @@
                     android:autofillHints="addressLocality"
                     android:inputType="textCapWords"
                     tools:text="London"
-                    android:tag="@string/city_entry_field" />
+                    android:tag="@string/jp_city_entry_field" />
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
@@ -249,7 +249,7 @@
                     android:autofillHints="postalCode"
                     android:inputType="textCapCharacters"
                     tools:text="S60 5NX"
-                    android:tag="@string/post_code_entry_field" />
+                    android:tag="@string/jp_post_code_entry_field" />
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

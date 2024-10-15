@@ -374,7 +374,7 @@ internal class CardEntryViewModelTest {
         val slots = mutableListOf<CardEntryFragmentModel>()
         verify { modelSpy.onChanged(capture(slots)) }
         val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.empty))
+        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.jp_empty))
     }
 
     @Test
@@ -393,7 +393,7 @@ internal class CardEntryViewModelTest {
         val slots = mutableListOf<CardEntryFragmentModel>()
         verify { modelSpy.onChanged(capture(slots)) }
         val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.empty))
+        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.jp_empty))
     }
 
     @Test

@@ -42,7 +42,7 @@ internal class CardNumberValidatorTest {
     fun supportedAndInvalidCardNumber() {
         assertEquals(
             validator.validate("4111"),
-            ValidationResult(false, R.string.empty),
+            ValidationResult(false, R.string.jp_empty),
         )
     }
 
@@ -66,7 +66,7 @@ internal class CardNumberValidatorTest {
     fun unsupportedAndInvalidLuhnCardNumber() {
         assertEquals(
             validator.validate("4111 1111 1111 111"),
-            ValidationResult(false, R.string.empty),
+            ValidationResult(false, R.string.jp_empty),
         )
     }
 
@@ -91,7 +91,7 @@ internal class CardNumberValidatorTest {
     fun supportedAndValidCardNumber() {
         assertEquals(
             validator.validate("4111 1111 1111 1111"),
-            ValidationResult(true, R.string.empty),
+            ValidationResult(true, R.string.jp_empty),
         )
     }
 }

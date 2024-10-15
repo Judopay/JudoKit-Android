@@ -391,9 +391,9 @@ class PaymentMethodsViewModel(
             PaymentMethod.CARD -> payWithCardButtonState(isLoading, cardModel)
             PaymentMethod.GOOGLE_PAY ->
                 if (isLoading) {
-                    ButtonState.Disabled(R.string.empty)
+                    ButtonState.Disabled(R.string.jp_empty)
                 } else {
-                    ButtonState.Enabled(R.string.empty)
+                    ButtonState.Enabled(R.string.jp_empty)
                 }
             PaymentMethod.IDEAL ->
                 if (isLoading) {

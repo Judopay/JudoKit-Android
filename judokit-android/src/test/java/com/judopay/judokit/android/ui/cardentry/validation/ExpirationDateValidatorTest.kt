@@ -49,6 +49,6 @@ internal class ExpirationDateValidatorTest {
         every { cardDate.isAfterToday } returns false
         every { cardDate.isInsideAllowedDateRange } returns false
 
-        assertEquals(R.string.empty, sut.validate("12/2").message)
+        assertEquals(R.string.jp_empty, sut.validate("12/2").message)
     }
 }

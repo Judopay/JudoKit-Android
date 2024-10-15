@@ -498,7 +498,7 @@ internal class CardNetworkTest {
     @DisplayName("Given notSupportedErrorMessageResId is called, when card network is OTHER, return empty string resource")
     @Test
     fun returnEmptyStringResourceWhenOther() {
-        assertEquals(R.string.empty, CardNetwork.OTHER.notSupportedErrorMessageResId)
+        assertEquals(R.string.jp_empty, CardNetwork.OTHER.notSupportedErrorMessageResId)
     }
 
     @DisplayName("Given defaultCardNameResId is called, when card network is AMEX, return AmEx error string resource")
@@ -564,7 +564,7 @@ internal class CardNetworkTest {
     @DisplayName("Given defaultCardNameResId is called, when card network is OTHER, return empty string resource")
     @Test
     fun returnEmptyStringResourceOnDefaultCardNameResIdWhenOther() {
-        assertEquals(R.string.empty, CardNetwork.OTHER.defaultCardNameResId)
+        assertEquals(R.string.jp_empty, CardNetwork.OTHER.defaultCardNameResId)
     }
 
     @DisplayName("Given typeId is called, when card network is VISA, return 1")

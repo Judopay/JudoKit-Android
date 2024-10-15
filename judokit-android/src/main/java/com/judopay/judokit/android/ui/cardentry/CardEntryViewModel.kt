@@ -432,7 +432,7 @@ private fun Judo.submitButtonText(options: CardEntryOptions): Int =
             }
         PaymentWidgetType.GOOGLE_PAY,
         PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
-        -> R.string.empty
+        -> R.string.jp_empty
     }
 
 private val Judo.continueButtonText: Int
@@ -457,7 +457,7 @@ private val Judo.continueButtonText: Int
                 }
             PaymentWidgetType.GOOGLE_PAY,
             PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
-            -> R.string.empty
+            -> R.string.jp_empty
         }
 
 private fun Judo.isTokenPayment(options: CardEntryOptions): Boolean {

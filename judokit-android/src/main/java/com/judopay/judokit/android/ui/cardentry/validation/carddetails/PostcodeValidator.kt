@@ -37,9 +37,9 @@ open class PostcodeValidator(
 
         val message =
             if (shouldDisplayMessage) {
-                if (isValid) R.string.empty else errorString()
+                if (isValid) R.string.jp_empty else errorString()
             } else {
-                R.string.empty
+                R.string.jp_empty
             }
 
         return ValidationResult(isValid, message)

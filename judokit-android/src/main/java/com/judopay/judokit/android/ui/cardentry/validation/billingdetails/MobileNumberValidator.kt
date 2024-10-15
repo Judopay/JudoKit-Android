@@ -21,7 +21,7 @@ data class MobileNumberValidator(
             if (shouldDisplayMessage) {
                 R.string.jp_invalid_mobile_number
             } else {
-                R.string.empty
+                R.string.jp_empty
             }
         return ValidationResult(mobileNumberRegEx.matches(input), message)
     }

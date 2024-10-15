@@ -139,7 +139,7 @@ class BillingDetailsFormView
 
         private fun setupStateSpinner(country: Country) {
             var states = emptyList<State>()
-            var hint = R.string.empty
+            var hint = R.string.jp_empty
             when (country) {
                 Country.US -> {
                     states = usStates
@@ -314,7 +314,7 @@ class BillingDetailsFormView
 
             val layout = textInputLayoutForType(type)
             val isValidResult = result?.isValid ?: true
-            val message = context.getString(result?.message ?: R.string.empty)
+            val message = context.getString(result?.message ?: R.string.jp_empty)
             val errorEnabled = value.isNotBlank() && !isValidResult && message.isNotEmpty()
 
             layout?.let {

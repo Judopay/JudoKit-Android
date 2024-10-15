@@ -1,5 +1,5 @@
 <resources>
-    <string name="judokit_android" translatable="false">JudoKit-Android</string>
+    <string name="jp_judokit_android" translatable="false">JudoKit-Android</string>
     <string name="jp_pay_now">%1$sPay Now</string>
     <string name="jp_pay_amount">Pay %1$s</string>
     <string name="jp_check_card">Check Card</string>
@@ -14,9 +14,8 @@
     <string name="jp_add_card">Add card</string>
     <string name="jp_you_will_pay">You will pay</string>
     <string name="jp_cards">Cards</string>
-    <string name="amazon_pay" translatable="false">Amazon Pay</string>
-    <string name="ideal_payment" translatable="false">iDeal</string>
-    <string name="empty" translatable="false" />
+    <string name="jp_ideal_payment" translatable="false">iDeal</string>
+    <string name="jp_empty" translatable="false" />
     <string name="jp_secure_server_transmission">Your card details are encrypted using TLS before transmission to our secure payment service provider.</string>
 
     <string name="jp_date_hint">MM/YY</string>
@@ -100,18 +99,8 @@
 
     <string name="jp_error_card_title_too_long">Card Name cannot be longer than %1$d characters</string>
 
-    <string name="rabobank" translatable="false">Rabobank</string>
-    <string name="abn_amro" translatable="false">ABN AMRO</string>
-    <string name="van_lanschot_bankiers" translatable="false">Van Lanschot Bankiers</string>
-    <string name="triodos_bank" translatable="false">Triodos Bank</string>
-    <string name="ing_bank" translatable="false">ING Bank</string>
-    <string name="sns_bank" translatable="false">SNS Bank</string>
-    <string name="asn" translatable="false">ASN</string>
-    <string name="regiobank" translatable="false">RegioBank</string>
-    <string name="knab" translatable="false">Knab</string>
-    <string name="bunq" translatable="false">Bunq</string>
-    <string name="moneyou" translatable="false">Moneyou</string>
-    <string name="handelsbanken" translatable="false">Handelsbanken</string>
+    <string name="jp_rabobank" translatable="false">Rabobank</string>
+    <string name="jp_ing_bank" translatable="false">ING Bank</string>
 
     <string name="jp_there_is_a_delay">This is taking longer than expected. Please wait…</string>
     <string name="jp_ideal_transaction">iDEAL transaction</string>
@@ -120,31 +109,31 @@
     <string name="jp_transaction_successful">Transaction success!</string>
 
     <!--    Google Pay not supported on device-->
-    <string name="error_google_pay_not_supported_desc" translatable="false">Google Pay is not supported on this device.</string>
-    <string name="error_google_pay_not_supported_reason" translatable="false">A Google Pay transaction was attempted on a device that either does not support, or does not have Google Pay set up.</string>
+    <string name="jp_error_google_pay_not_supported_desc" translatable="false">Google Pay is not supported on this device.</string>
+    <string name="jp_error_google_pay_not_supported_reason" translatable="false">A Google Pay transaction was attempted on a device that either does not support, or does not have Google Pay set up.</string>
 
     <!--    Backend request failed-->
-    <string name="error_request_failed_desc" translatable="false">The request has failed or responded without data.</string>
-    <string name="error_request_failed_reason" translatable="false">The transaction response returned without any data or there was an error while forming the request.</string>
+    <string name="jp_error_request_failed_desc" translatable="false">The request has failed or responded without data.</string>
+    <string name="jp_error_request_failed_reason" translatable="false">The transaction response returned without any data or there was an error while forming the request.</string>
 
     <!--    Unexpected response format (when iDEAL does not have the necessary properties)-->
-    <string name="error_response_parse_desc" translatable="false">Unexpected response format returned.</string>
-    <string name="error_response_parse_reason" translatable="false">The response did not contain some of the required parameters needed to complete the transaction.</string>
+    <string name="jp_error_response_parse_desc" translatable="false">Unexpected response format returned.</string>
+    <string name="jp_error_response_parse_reason" translatable="false">The response did not contain some of the required parameters needed to complete the transaction.</string>
 
     <!--    Network failed-->
-    <string name="error_network_failed_desc" translatable="false">No internet connection.</string>
-    <string name="error_network_failed_reason" translatable="false">Could not connect to server due to network failure.</string>
+    <string name="jp_error_network_failed_desc" translatable="false">No internet connection.</string>
+    <string name="jp_error_network_failed_reason" translatable="false">Could not connect to server due to network failure.</string>
 
     <!--   Poor connectivity-->
-    <string name="error_poor_connectivity_desc" translatable="false">Device has poor internet connectivity.</string>
-    <string name="error_poor_connectivity_reason" translatable="false">The request took too much time.</string>
+    <string name="jp_error_poor_connectivity_desc" translatable="false">Device has poor internet connectivity.</string>
+    <string name="jp_error_poor_connectivity_reason" translatable="false">The request took too much time.</string>
 
     <!--   Recommendation Feature fail-->
-    <string name="recommendation_transaction_prevented_desc" translatable="false">The recommendation server has prevented this transaction.</string>
-    <string name="recommendation_transaction_prevented_reason" translatable="false">It appears that the transaction you attempted to make has been blocked by the recommendation server."</string>
+    <string name="jp_recommendation_transaction_prevented_desc" translatable="false">The recommendation server has prevented this transaction.</string>
+    <string name="jp_recommendation_transaction_prevented_reason" translatable="false">It appears that the transaction you attempted to make has been blocked by the recommendation server."</string>
 
-    <string name="recommendation_request_failed_desc" translatable="false">There was an error when retrieving the recommendation response.</string>
-    <string name="recommendation_request_failed_reason" translatable="false">We are unable to process this request as there was an error when retrieving the recommendation response</string>
+    <string name="jp_recommendation_request_failed_desc" translatable="false">There was an error when retrieving the recommendation response.</string>
+    <string name="jp_recommendation_request_failed_reason" translatable="false">We are unable to process this request as there was an error when retrieving the recommendation response</string>
 
     <string name="jp_country_uk">UK</string>
     <string name="jp_country_usa">USA</string>
@@ -155,25 +144,25 @@
     <string name="jp_add_address_line">Add address line %1$d (optional)</string>
     <string name="jp_billing_details_title">Billing Details</string>
     <string name="jp_back">Back</string>
-    <string name="card_number_entry_field" translatable="false">cardNumberInputField</string>
-    <string name="cardholder_name_entry_field" translatable="false">cardHolderNameField</string>
-    <string name="expiry_date_entry_field" translatable="false">expiryDateField</string>
-    <string name="security_code_entry_field" translatable="false">securityCodeField</string>
-    <string name="payment_methods_pay_button" translatable="false">paymentMethodsPayNowButton</string>
-    <string name="pay_now_button" translatable="false">cardEntrySubmitButton</string>
+    <string name="jp_card_number_entry_field" translatable="false">cardNumberInputField</string>
+    <string name="jp_cardholder_name_entry_field" translatable="false">cardHolderNameField</string>
+    <string name="jp_expiry_date_entry_field" translatable="false">expiryDateField</string>
+    <string name="jp_security_code_entry_field" translatable="false">securityCodeField</string>
+    <string name="jp_payment_methods_pay_button" translatable="false">paymentMethodsPayNowButton</string>
+    <string name="jp_pay_now_button" translatable="false">cardEntrySubmitButton</string>
 
-    <string name="email_entry_field" translatable="false">emailEntryField</string>
-    <string name="country_entry_field" translatable="false">countryEntryField</string>
-    <string name="state_entry_field" translatable="false">stateEntryField</string>
-    <string name="phone_country_code_entry_field" translatable="false">phoneCountryCodeEntryField</string>
-    <string name="phone_entry_field" translatable="false">phoneEntryField</string>
-    <string name="address_one_entry_field" translatable="false">addressOneEntryField</string>
-    <string name="address_two_entry_field" translatable="false">addressTwoEntryField</string>
-    <string name="address_three_entry_field" translatable="false">addressThreeEntryField</string>
-    <string name="city_entry_field" translatable="false">cityEntryField</string>
-    <string name="post_code_entry_field" translatable="false">postCodeEntryField</string>
-    <string name="add_address_line_button" translatable="false">addAddressLineButton</string>
-    <string name="billing_details_container" translatable="false">billingInfoContainer</string>
+    <string name="jp_email_entry_field" translatable="false">emailEntryField</string>
+    <string name="jp_country_entry_field" translatable="false">countryEntryField</string>
+    <string name="jp_state_entry_field" translatable="false">stateEntryField</string>
+    <string name="jp_phone_country_code_entry_field" translatable="false">phoneCountryCodeEntryField</string>
+    <string name="jp_phone_entry_field" translatable="false">phoneEntryField</string>
+    <string name="jp_address_one_entry_field" translatable="false">addressOneEntryField</string>
+    <string name="jp_address_two_entry_field" translatable="false">addressTwoEntryField</string>
+    <string name="jp_address_three_entry_field" translatable="false">addressThreeEntryField</string>
+    <string name="jp_city_entry_field" translatable="false">cityEntryField</string>
+    <string name="jp_post_code_entry_field" translatable="false">postCodeEntryField</string>
+    <string name="jp_add_address_line_button" translatable="false">addAddressLineButton</string>
+    <string name="jp_billing_details_container" translatable="false">billingInfoContainer</string>
 
-    <string name="judo_error_text" translatable="false">errorLabel</string>
+    <string name="jp_judo_error_text" translatable="false">errorLabel</string>
 </resources>

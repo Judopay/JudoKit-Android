@@ -40,7 +40,7 @@ internal class StateValidatorTest {
         validator.country = Country.CA
         assertEquals(
             validator.validate("Alb", FormFieldEvent.TEXT_CHANGED),
-            ValidationResult(false, R.string.empty),
+            ValidationResult(false, R.string.jp_empty),
         )
     }
 

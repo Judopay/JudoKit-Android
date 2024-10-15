@@ -68,7 +68,7 @@ class ProgressButton
                 when (val myState = state) {
                     is ButtonState.Enabled -> resources.getString(myState.text, myState.amount ?: "")
                     is ButtonState.Disabled -> resources.getString(myState.text, myState.amount ?: "")
-                    else -> resources.getString(R.string.empty)
+                    else -> resources.getString(R.string.jp_empty)
                 }
 
             super.setText(text)
