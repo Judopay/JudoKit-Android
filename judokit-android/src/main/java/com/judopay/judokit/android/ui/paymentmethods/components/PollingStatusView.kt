@@ -56,19 +56,19 @@ class PollingStatusView
         private val pollingTextResId: Int
             get() =
                 when (state) {
-                    PROCESSING -> R.string.processing
-                    DELAY -> R.string.there_is_a_delay
-                    RETRY, FAIL -> R.string.transaction_unsuccessful
-                    SUCCESS -> R.string.transaction_successful
-                    else -> R.string.empty
+                    PROCESSING -> R.string.jp_processing
+                    DELAY -> R.string.jp_there_is_a_delay
+                    RETRY, FAIL -> R.string.jp_transaction_unsuccessful
+                    SUCCESS -> R.string.jp_transaction_successful
+                    else -> R.string.jp_empty
                 }
 
         private val pollingButtonTextResId: Int
             get() =
                 when (state) {
-                    DELAY, RETRY -> R.string.retry
-                    FAIL, SUCCESS -> R.string.close
-                    else -> R.string.empty
+                    DELAY, RETRY -> R.string.jp_retry
+                    FAIL, SUCCESS -> R.string.jp_close
+                    else -> R.string.jp_empty
                 }
 
         private val progressBarVisibility: Int

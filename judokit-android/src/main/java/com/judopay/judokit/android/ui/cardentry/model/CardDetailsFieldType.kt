@@ -27,25 +27,25 @@ enum class BillingDetailsFieldType {
 val CardDetailsFieldType.fieldHintResId: Int
     get() =
         when (this) {
-            CardDetailsFieldType.NUMBER -> R.string.card_number_hint
-            CardDetailsFieldType.HOLDER_NAME -> R.string.card_holder_hint
-            CardDetailsFieldType.EXPIRATION_DATE -> R.string.date_hint
-            CardDetailsFieldType.SECURITY_NUMBER -> R.string.cvv_hint
-            CardDetailsFieldType.COUNTRY -> R.string.country_hint
-            CardDetailsFieldType.POST_CODE -> R.string.post_code_hint
+            CardDetailsFieldType.NUMBER -> R.string.jp_card_number_hint
+            CardDetailsFieldType.HOLDER_NAME -> R.string.jp_card_holder_hint
+            CardDetailsFieldType.EXPIRATION_DATE -> R.string.jp_date_hint
+            CardDetailsFieldType.SECURITY_NUMBER -> R.string.jp_cvv_hint
+            CardDetailsFieldType.COUNTRY -> R.string.jp_country_hint
+            CardDetailsFieldType.POST_CODE -> R.string.jp_post_code_hint
         }
 
 val BillingDetailsFieldType.fieldHintResId: Int
     get() =
         when (this) {
-            BillingDetailsFieldType.COUNTRY -> R.string.country_hint
-            BillingDetailsFieldType.STATE -> R.string.us_state_hint
-            BillingDetailsFieldType.POST_CODE -> R.string.post_code_hint
-            BillingDetailsFieldType.EMAIL -> R.string.email_hint
-            BillingDetailsFieldType.PHONE_COUNTRY_CODE -> R.string.phone_country_code_hint
-            BillingDetailsFieldType.MOBILE_NUMBER -> R.string.mobile_number_hint
-            BillingDetailsFieldType.ADDRESS_LINE_1 -> R.string.address_line_1_hint
-            BillingDetailsFieldType.ADDRESS_LINE_2 -> R.string.address_line_2_hint
-            BillingDetailsFieldType.ADDRESS_LINE_3 -> R.string.address_line_3_hint
-            BillingDetailsFieldType.CITY -> R.string.city_hint
+            BillingDetailsFieldType.COUNTRY -> R.string.jp_country_hint
+            BillingDetailsFieldType.STATE -> R.string.jp_us_state_hint
+            BillingDetailsFieldType.POST_CODE -> R.string.jp_post_code_hint
+            BillingDetailsFieldType.EMAIL -> R.string.jp_email_hint
+            BillingDetailsFieldType.PHONE_COUNTRY_CODE -> R.string.jp_phone_country_code_hint
+            BillingDetailsFieldType.MOBILE_NUMBER -> R.string.jp_mobile_number_hint
+            BillingDetailsFieldType.ADDRESS_LINE_1 -> R.string.jp_address_line_1_hint
+            BillingDetailsFieldType.ADDRESS_LINE_2 -> R.string.jp_address_line_2_hint
+            BillingDetailsFieldType.ADDRESS_LINE_3 -> R.string.jp_address_line_3_hint
+            BillingDetailsFieldType.CITY -> R.string.jp_city_hint
         }

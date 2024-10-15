@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_24"
-                android:text="@string/cancel"
+                android:text="@string/jp_cancel"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,7 +40,7 @@
                 android:layout_gravity="end"
                 android:layout_marginEnd="@dimen/space_24"
                 android:gravity="end"
-                android:text="@string/button_scan_card"
+                android:text="@string/jp_button_scan_card"
                 app:icon="@drawable/ic_scan_card_16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

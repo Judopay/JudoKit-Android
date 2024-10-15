@@ -15,12 +15,12 @@ class SavedCardsHeaderViewHolder(private val binding: SavedCardHeaderItemBinding
         listener: PaymentMethodsAdapterListener?,
     ) = with(binding.root) {
         if (model.isInEditMode) {
-            binding.editButton.text = resources.getString(R.string.button_done)
+            binding.editButton.text = resources.getString(R.string.jp_button_done)
             binding.editButton.setOnClickListener {
                 listener?.invoke(PaymentMethodItemAction.DONE, model)
             }
         } else {
-            binding.editButton.text = resources.getString(R.string.button_edit)
+            binding.editButton.text = resources.getString(R.string.jp_button_edit)
             binding.editButton.setOnClickListener {
                 listener?.invoke(PaymentMethodItemAction.EDIT, model)
             }

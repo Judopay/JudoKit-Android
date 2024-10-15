@@ -18,9 +18,9 @@ data class EmailValidator(
         val shouldDisplayMessage = formFieldEvent == FormFieldEvent.FOCUS_CHANGED
         val message =
             if (shouldDisplayMessage) {
-                R.string.invalid_email_address
+                R.string.jp_invalid_email_address
             } else {
-                R.string.empty
+                R.string.jp_empty
             }
         return ValidationResult(isValid, message)
     }

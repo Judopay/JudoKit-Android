@@ -391,15 +391,15 @@ class PaymentMethodsViewModel(
             PaymentMethod.CARD -> payWithCardButtonState(isLoading, cardModel)
             PaymentMethod.GOOGLE_PAY ->
                 if (isLoading) {
-                    ButtonState.Disabled(R.string.empty)
+                    ButtonState.Disabled(R.string.jp_empty)
                 } else {
-                    ButtonState.Enabled(R.string.empty)
+                    ButtonState.Enabled(R.string.jp_empty)
                 }
             PaymentMethod.IDEAL ->
                 if (isLoading) {
                     ButtonState.Loading
                 } else {
-                    ButtonState.Enabled(R.string.pay_now)
+                    ButtonState.Enabled(R.string.jp_pay_now)
                 }
         }
 
@@ -414,8 +414,8 @@ class PaymentMethodsViewModel(
                     date = cardModel.expireDate
                 }.isAfterToday
             ->
-                ButtonState.Enabled(R.string.pay_now)
-            else -> ButtonState.Disabled(R.string.pay_now)
+                ButtonState.Enabled(R.string.jp_pay_now)
+            else -> ButtonState.Disabled(R.string.jp_pay_now)
         }
 
     private fun filterPaymentMethods(allMethods: List<PaymentMethod>): List<PaymentMethod> {

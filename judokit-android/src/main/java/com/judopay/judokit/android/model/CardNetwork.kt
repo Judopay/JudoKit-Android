@@ -154,12 +154,12 @@ val CardNetwork.securityCodeName: String
 val CardNetwork.securityCodeInvalidResId: Int
     get() =
         when (this) {
-            CardNetwork.AMEX -> R.string.check_amex_security_code
-            CardNetwork.VISA -> R.string.check_visa_security_code
-            CardNetwork.MASTERCARD -> R.string.check_mastercard_security_code
-            CardNetwork.CHINA_UNION_PAY -> R.string.check_china_union_pay_security_code
-            CardNetwork.JCB -> R.string.check_jcb_security_code
-            else -> R.string.check_cvv
+            CardNetwork.AMEX -> R.string.jp_check_amex_security_code
+            CardNetwork.VISA -> R.string.jp_check_visa_security_code
+            CardNetwork.MASTERCARD -> R.string.jp_check_mastercard_security_code
+            CardNetwork.CHINA_UNION_PAY -> R.string.jp_check_china_union_pay_security_code
+            CardNetwork.JCB -> R.string.jp_check_jcb_security_code
+            else -> R.string.jp_check_cvv
         }
 
 /**
@@ -229,15 +229,15 @@ val CardNetwork.cardNumberMaxLength: Int
 val CardNetwork.notSupportedErrorMessageResId: Int
     get() =
         when (this) {
-            CardNetwork.VISA -> R.string.error_visa_not_supported
-            CardNetwork.MASTERCARD -> R.string.error_mastercard_not_supported
-            CardNetwork.MAESTRO -> R.string.error_maestro_not_supported
-            CardNetwork.AMEX -> R.string.error_amex_not_supported
-            CardNetwork.DISCOVER -> R.string.error_discover_not_supported
-            CardNetwork.CHINA_UNION_PAY -> R.string.error_union_pay_not_supported
-            CardNetwork.JCB -> R.string.error_jcb_not_supported
-            CardNetwork.DINERS_CLUB -> R.string.error_diners_club_not_supported
-            else -> R.string.empty
+            CardNetwork.VISA -> R.string.jp_error_visa_not_supported
+            CardNetwork.MASTERCARD -> R.string.jp_error_mastercard_not_supported
+            CardNetwork.MAESTRO -> R.string.jp_error_maestro_not_supported
+            CardNetwork.AMEX -> R.string.jp_error_amex_not_supported
+            CardNetwork.DISCOVER -> R.string.jp_error_discover_not_supported
+            CardNetwork.CHINA_UNION_PAY -> R.string.jp_error_union_pay_not_supported
+            CardNetwork.JCB -> R.string.jp_error_jcb_not_supported
+            CardNetwork.DINERS_CLUB -> R.string.jp_error_diners_club_not_supported
+            else -> R.string.jp_empty
         }
 
 /**
@@ -247,15 +247,15 @@ val CardNetwork.notSupportedErrorMessageResId: Int
 val CardNetwork.defaultCardNameResId: Int
     get() =
         when (this) {
-            CardNetwork.AMEX -> R.string.default_amex_card_title
-            CardNetwork.MASTERCARD -> R.string.default_mastercard_card_title
-            CardNetwork.MAESTRO -> R.string.default_maestro_card_title
-            CardNetwork.VISA -> R.string.default_visa_card_title
-            CardNetwork.DISCOVER -> R.string.default_discover_card_title
-            CardNetwork.DINERS_CLUB -> R.string.default_dinnersclub_card_title
-            CardNetwork.JCB -> R.string.default_jcb_card_title
-            CardNetwork.CHINA_UNION_PAY -> R.string.default_chinaunionpay_card_title
-            else -> R.string.empty
+            CardNetwork.AMEX -> R.string.jp_default_amex_card_title
+            CardNetwork.MASTERCARD -> R.string.jp_default_mastercard_card_title
+            CardNetwork.MAESTRO -> R.string.jp_default_maestro_card_title
+            CardNetwork.VISA -> R.string.jp_default_visa_card_title
+            CardNetwork.DISCOVER -> R.string.jp_default_discover_card_title
+            CardNetwork.DINERS_CLUB -> R.string.jp_default_dinnersclub_card_title
+            CardNetwork.JCB -> R.string.jp_default_jcb_card_title
+            CardNetwork.CHINA_UNION_PAY -> R.string.jp_default_chinaunionpay_card_title
+            else -> R.string.jp_empty
         }
 
 /**

@@ -39,9 +39,9 @@ internal val PaymentMethod.icon
 internal val PaymentMethod.text
     get() =
         when (this) {
-            PaymentMethod.CARD -> R.string.cards
-            PaymentMethod.IDEAL -> R.string.ideal_payment
-            PaymentMethod.GOOGLE_PAY -> R.string.empty
+            PaymentMethod.CARD -> R.string.jp_cards
+            PaymentMethod.IDEAL -> R.string.jp_ideal_payment
+            PaymentMethod.GOOGLE_PAY -> R.string.jp_empty
         }
 
 internal val PaymentMethod.paymentButtonType: PaymentButtonType

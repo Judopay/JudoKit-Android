@@ -209,10 +209,10 @@ class PaymentMethodsFragment : Fragment() {
 
     private fun onDeleteCardItem(item: PaymentMethodSavedCardItem) {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.delete_card_alert_title)
-            .setMessage(R.string.delete_card_alert_message)
-            .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(R.string.delete) { _, _ ->
+            .setTitle(R.string.jp_delete_card_alert_title)
+            .setMessage(R.string.jp_delete_card_alert_message)
+            .setNegativeButton(R.string.jp_cancel, null)
+            .setPositiveButton(R.string.jp_delete) { _, _ ->
                 viewModel.send(PaymentMethodsAction.DeleteCard(item.id))
             }
             .show()

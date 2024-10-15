@@ -13,7 +13,7 @@
         style="@style/JudoTheme.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_card"
+        android:text="@string/jp_add_card"
         app:icon="@drawable/ic_add_card"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

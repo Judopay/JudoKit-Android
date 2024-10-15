@@ -21,9 +21,9 @@ class ExpirationDateValidator(
 
         val message =
             when {
-                shouldNotDisplayMessage -> R.string.empty
-                !isValid -> R.string.check_expiry_date
-                else -> R.string.empty
+                shouldNotDisplayMessage -> R.string.jp_empty
+                !isValid -> R.string.jp_check_expiry_date
+                else -> R.string.jp_empty
             }
 
         return ValidationResult(isValid, message)

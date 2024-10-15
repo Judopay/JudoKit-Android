@@ -116,7 +116,7 @@ internal class CardEntryViewModelTest {
         val slots = mutableListOf<CardEntryFragmentModel>()
         verify { modelSpy.onChanged(capture(slots)) }
         val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.pay_now))
+        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.jp_pay_now))
     }
 
     @Test
@@ -143,7 +143,7 @@ internal class CardEntryViewModelTest {
 
         verify { modelSpy.onChanged(capture(slots)) }
         val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Enabled(R.string.pay_now))
+        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Enabled(R.string.jp_pay_now))
     }
 
     @Test
@@ -355,7 +355,7 @@ internal class CardEntryViewModelTest {
         val slots = mutableListOf<CardEntryFragmentModel>()
         verify { modelSpy.onChanged(capture(slots)) }
         val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.save_card))
+        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.jp_save_card))
     }
 
     @Test
@@ -374,7 +374,7 @@ internal class CardEntryViewModelTest {
         val slots = mutableListOf<CardEntryFragmentModel>()
         verify { modelSpy.onChanged(capture(slots)) }
         val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.empty))
+        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.jp_empty))
     }
 
     @Test
@@ -393,7 +393,7 @@ internal class CardEntryViewModelTest {
         val slots = mutableListOf<CardEntryFragmentModel>()
         verify { modelSpy.onChanged(capture(slots)) }
         val inputModel = slots.last().formModel.cardDetailsInputModel
-        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.empty))
+        assertThat(inputModel.actionButtonState).isEqualTo(ButtonState.Disabled(R.string.jp_empty))
     }
 
     @Test

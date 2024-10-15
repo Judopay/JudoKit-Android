@@ -40,10 +40,10 @@ val Country.displayName: String
 val Country.translatableName: Int
     get() =
         when (this) {
-            Country.GB -> R.string.country_uk
-            Country.US -> R.string.country_usa
-            Country.CA -> R.string.country_canada
-            Country.OTHER -> R.string.country_other
+            Country.GB -> R.string.jp_country_uk
+            Country.US -> R.string.jp_country_usa
+            Country.CA -> R.string.jp_country_canada
+            Country.OTHER -> R.string.jp_country_other
         }
 
 val Country.postcodeMaxLength: Int

@@ -52,7 +52,7 @@
                     android:inputType="number"
                     android:autofillHints="creditCardNumber"
                     tools:text="1234 5678 9012 3456"
-                    android:tag="@string/card_number_entry_field"/>
+                    android:tag="@string/jp_card_number_entry_field"/>
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName|textCapWords"
                     tools:text="John Doe"
-                    android:tag="@string/cardholder_name_entry_field"/>
+                    android:tag="@string/jp_cardholder_name_entry_field"/>
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
             <androidx.constraintlayout.helper.widget.Flow
@@ -101,7 +101,7 @@
                     android:inputType="number"
                     android:autofillHints="creditCardExpirationDate"
                     tools:text="11/20"
-                    android:tag="@string/expiry_date_entry_field"/>
+                    android:tag="@string/jp_expiry_date_entry_field"/>
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
@@ -117,7 +117,7 @@
                     android:inputType="number"
                     android:autofillHints="creditCardSecurityCode"
                     tools:text="123"
-                    android:tag="@string/security_code_entry_field"/>
+                    android:tag="@string/jp_security_code_entry_field"/>
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
@@ -195,8 +195,8 @@
                 style="@style/JudoTheme.BlackRoundedButton"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
-                android:text="@string/pay_now"
-                android:tag="@string/pay_now_button"/>
+                android:text="@string/jp_pay_now"
+                android:tag="@string/jp_pay_now_button"/>
 
             <TextView
                 android:id="@+id/secureTransmissionTextView"
@@ -204,7 +204,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="@dimen/space_8"
-                android:text="@string/secure_server_transmission"
+                android:text="@string/jp_secure_server_transmission"
                 android:textColor="@color/brown_grey"
                 app:drawableStartCompat="@drawable/ic_lock_20dp" />
 

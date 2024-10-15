@@ -242,20 +242,20 @@ internal class CardNetworkTest {
     @DisplayName("Given securityCodeInvalidResId is called, when card network is AMEX, return Check your CID")
     @Test
     fun returnCheckYourCidWhenAmex() {
-        assertEquals(R.string.check_amex_security_code, CardNetwork.AMEX.securityCodeInvalidResId)
+        assertEquals(R.string.jp_check_amex_security_code, CardNetwork.AMEX.securityCodeInvalidResId)
     }
 
     @DisplayName("Given securityCodeInvalidResId is called, when card network is VISA, return Check your CVV2")
     @Test
     fun returnCheckYourCvv2WhenVisa() {
-        assertEquals(R.string.check_visa_security_code, CardNetwork.VISA.securityCodeInvalidResId)
+        assertEquals(R.string.jp_check_visa_security_code, CardNetwork.VISA.securityCodeInvalidResId)
     }
 
     @DisplayName("Given securityCodeInvalidResId is called, when card network is MASTERCARD, return Check your CVC2")
     @Test
     fun returnCheckYourCvc2WhenMastercard() {
         assertEquals(
-            R.string.check_mastercard_security_code,
+            R.string.jp_check_mastercard_security_code,
             CardNetwork.MASTERCARD.securityCodeInvalidResId,
         )
     }
@@ -264,7 +264,7 @@ internal class CardNetworkTest {
     @Test
     fun returnCheckYourCvn2WhenChinaUnionPay() {
         assertEquals(
-            R.string.check_china_union_pay_security_code,
+            R.string.jp_check_china_union_pay_security_code,
             CardNetwork.CHINA_UNION_PAY.securityCodeInvalidResId,
         )
     }
@@ -272,13 +272,13 @@ internal class CardNetworkTest {
     @DisplayName("Given securityCodeInvalidResId is called, when card network is JCB, return Check your CAV2")
     @Test
     fun returnCheckYourCav2WhenJCB() {
-        assertEquals(R.string.check_jcb_security_code, CardNetwork.JCB.securityCodeInvalidResId)
+        assertEquals(R.string.jp_check_jcb_security_code, CardNetwork.JCB.securityCodeInvalidResId)
     }
 
     @DisplayName("Given securityCodeInvalidResId is called, when card network is OTHER, return Check your CVV")
     @Test
     fun returnCheckYourCvvWhenOther() {
-        assertEquals(R.string.check_cvv, CardNetwork.OTHER.securityCodeInvalidResId)
+        assertEquals(R.string.jp_check_cvv, CardNetwork.OTHER.securityCodeInvalidResId)
     }
 
     @DisplayName("Given displayName is called, when card network is VISA, return Visa")
@@ -423,7 +423,7 @@ internal class CardNetworkTest {
     @Test
     fun returnAmexErrorStringResourceWhenAmex() {
         assertEquals(
-            R.string.error_amex_not_supported,
+            R.string.jp_error_amex_not_supported,
             CardNetwork.AMEX.notSupportedErrorMessageResId,
         )
     }
@@ -432,7 +432,7 @@ internal class CardNetworkTest {
     @Test
     fun returnMastercardErrorStringResourceWhenMastercard() {
         assertEquals(
-            R.string.error_mastercard_not_supported,
+            R.string.jp_error_mastercard_not_supported,
             CardNetwork.MASTERCARD.notSupportedErrorMessageResId,
         )
     }
@@ -441,7 +441,7 @@ internal class CardNetworkTest {
     @Test
     fun returnMaestroErrorStringResourceWhenMaestro() {
         assertEquals(
-            R.string.error_maestro_not_supported,
+            R.string.jp_error_maestro_not_supported,
             CardNetwork.MAESTRO.notSupportedErrorMessageResId,
         )
     }
@@ -450,7 +450,7 @@ internal class CardNetworkTest {
     @Test
     fun returnVisaErrorStringResourceWhenVisa() {
         assertEquals(
-            R.string.error_visa_not_supported,
+            R.string.jp_error_visa_not_supported,
             CardNetwork.VISA.notSupportedErrorMessageResId,
         )
     }
@@ -459,7 +459,7 @@ internal class CardNetworkTest {
     @Test
     fun returnDiscoverErrorStringResourceWhenDiscover() {
         assertEquals(
-            R.string.error_discover_not_supported,
+            R.string.jp_error_discover_not_supported,
             CardNetwork.DISCOVER.notSupportedErrorMessageResId,
         )
     }
@@ -470,7 +470,7 @@ internal class CardNetworkTest {
     @Test
     fun returnDinersClubErrorStringResourceWhenDinersClub() {
         assertEquals(
-            R.string.error_diners_club_not_supported,
+            R.string.jp_error_diners_club_not_supported,
             CardNetwork.DINERS_CLUB.notSupportedErrorMessageResId,
         )
     }
@@ -479,7 +479,7 @@ internal class CardNetworkTest {
     @Test
     fun returnJCBErrorStringResourceWhenJCB() {
         assertEquals(
-            R.string.error_jcb_not_supported,
+            R.string.jp_error_jcb_not_supported,
             CardNetwork.JCB.notSupportedErrorMessageResId,
         )
     }
@@ -490,7 +490,7 @@ internal class CardNetworkTest {
     @Test
     fun returnChinaUnionPayErrorStringResourceWhenChinaUnionPay() {
         assertEquals(
-            R.string.error_union_pay_not_supported,
+            R.string.jp_error_union_pay_not_supported,
             CardNetwork.CHINA_UNION_PAY.notSupportedErrorMessageResId,
         )
     }
@@ -498,20 +498,20 @@ internal class CardNetworkTest {
     @DisplayName("Given notSupportedErrorMessageResId is called, when card network is OTHER, return empty string resource")
     @Test
     fun returnEmptyStringResourceWhenOther() {
-        assertEquals(R.string.empty, CardNetwork.OTHER.notSupportedErrorMessageResId)
+        assertEquals(R.string.jp_empty, CardNetwork.OTHER.notSupportedErrorMessageResId)
     }
 
     @DisplayName("Given defaultCardNameResId is called, when card network is AMEX, return AmEx error string resource")
     @Test
     fun returnAmexDefaultNameResourceWhenAmex() {
-        assertEquals(R.string.default_amex_card_title, CardNetwork.AMEX.defaultCardNameResId)
+        assertEquals(R.string.jp_default_amex_card_title, CardNetwork.AMEX.defaultCardNameResId)
     }
 
     @DisplayName("Given defaultCardNameResId is called, when card network is MASTERCARD, return Mastercard error string resource")
     @Test
     fun returnMastercardDefaultNameResourceWhenMastercard() {
         assertEquals(
-            R.string.default_mastercard_card_title,
+            R.string.jp_default_mastercard_card_title,
             CardNetwork.MASTERCARD.defaultCardNameResId,
         )
     }
@@ -519,20 +519,20 @@ internal class CardNetworkTest {
     @DisplayName("Given defaultCardNameResId is called, when card network is MAESTRO, return Maestro error string resource")
     @Test
     fun returnMaestroDefaultNameResourceWhenMaestro() {
-        assertEquals(R.string.default_maestro_card_title, CardNetwork.MAESTRO.defaultCardNameResId)
+        assertEquals(R.string.jp_default_maestro_card_title, CardNetwork.MAESTRO.defaultCardNameResId)
     }
 
     @DisplayName("Given defaultCardNameResId is called, when card network is VISA, return Visa error string resource")
     @Test
     fun returnVisaDefaultNameResourceWhenVisa() {
-        assertEquals(R.string.default_visa_card_title, CardNetwork.VISA.defaultCardNameResId)
+        assertEquals(R.string.jp_default_visa_card_title, CardNetwork.VISA.defaultCardNameResId)
     }
 
     @DisplayName("Given defaultCardNameResId is called, when card network is DISCOVER, return Discover error string resource")
     @Test
     fun returnDiscoverDefaultNameResourceWhenDiscover() {
         assertEquals(
-            R.string.default_discover_card_title,
+            R.string.jp_default_discover_card_title,
             CardNetwork.DISCOVER.defaultCardNameResId,
         )
     }
@@ -541,7 +541,7 @@ internal class CardNetworkTest {
     @Test
     fun returnDinersClubDefaultNameResourceWhenDinersClub() {
         assertEquals(
-            R.string.default_dinnersclub_card_title,
+            R.string.jp_default_dinnersclub_card_title,
             CardNetwork.DINERS_CLUB.defaultCardNameResId,
         )
     }
@@ -549,14 +549,14 @@ internal class CardNetworkTest {
     @DisplayName("Given defaultCardNameResId is called, when card network is JCB, return JCB error string resource")
     @Test
     fun returnJCBErrorDefaultNameWhenJCB() {
-        assertEquals(R.string.default_jcb_card_title, CardNetwork.JCB.defaultCardNameResId)
+        assertEquals(R.string.jp_default_jcb_card_title, CardNetwork.JCB.defaultCardNameResId)
     }
 
     @DisplayName("Given defaultCardNameResId is called, when card network is CHINA_UNION_PAY, return China UnionPay error string resource")
     @Test
     fun returnChinaUnionPayDefaultNameResourceWhenChinaUnionPay() {
         assertEquals(
-            R.string.default_chinaunionpay_card_title,
+            R.string.jp_default_chinaunionpay_card_title,
             CardNetwork.CHINA_UNION_PAY.defaultCardNameResId,
         )
     }
@@ -564,7 +564,7 @@ internal class CardNetworkTest {
     @DisplayName("Given defaultCardNameResId is called, when card network is OTHER, return empty string resource")
     @Test
     fun returnEmptyStringResourceOnDefaultCardNameResIdWhenOther() {
-        assertEquals(R.string.empty, CardNetwork.OTHER.defaultCardNameResId)
+        assertEquals(R.string.jp_empty, CardNetwork.OTHER.defaultCardNameResId)
     }
 
     @DisplayName("Given typeId is called, when card network is VISA, return 1")

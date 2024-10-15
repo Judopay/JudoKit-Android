@@ -14,7 +14,7 @@ class PayloadService(private val context: Context) {
     fun getEnhancedPaymentDetail(): EnhancedPaymentDetail = EnhancedPaymentDetail(getSdkInfo(), getConsumerDevice())
 
     private fun getSdkInfo(): SDKInfo {
-        return SDKInfo(JUDO_KIT_VERSION, context.getString(R.string.judokit_android))
+        return SDKInfo(JUDO_KIT_VERSION, context.getString(R.string.jp_judokit_android))
     }
 
     private fun getConsumerDevice(): ConsumerDevice = ConsumerDevice(getThreeDSecureInfo())
