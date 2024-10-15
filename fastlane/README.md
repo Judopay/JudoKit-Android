@@ -55,6 +55,22 @@ Deploy a new version of the Example App to the Firebase App Distribution
 
 Releases the SDK to Maven Central
 
+### android inject_staging_environment
+
+```sh
+[bundle exec] fastlane android inject_staging_environment
+```
+
+Injects the staging env variables
+
+### android revert_staging_environment
+
+```sh
+[bundle exec] fastlane android revert_staging_environment
+```
+
+Revert injected staging env variables
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

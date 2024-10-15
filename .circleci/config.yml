@@ -228,7 +228,7 @@ jobs:
           name: Distribute Example App to Testers
           command: |
             export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-service-key.json
-            bundle exec fastlane example_app_distribution
+            bundle exec fastlane example_app_distribution build_variants:live,staging
       - persist_project_cache
 
   release_sdk:

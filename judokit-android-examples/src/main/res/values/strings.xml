@@ -44,11 +44,14 @@
     <string name="address_header">Address</string>
     <string name="others_header">Others</string>
     <string name="token_payments">Token payments</string>
-    <string name="sdk_info_header">JudoKit information</string>
+    <string name="sdk_info_header">SDK information</string>
 
     <!-- Messages Preferences -->
     <string name="is_sandboxed_title">Sandboxed</string>
     <string name="is_sandboxed_summary">Use Judopay API sandbox environment</string>
+
+    <string name="should_use_fabrick_ds_cert_title">Use Fabrick DS cert</string>
+    <string name="should_use_fabrick_ds_cert_summary">Use Fabrick DS cert in 3DS SDK when targeting sandbox</string>
 
     <string name="judo_id_title">Judo ID</string>
     <string name="judo_id_summary">Your Judo ID</string>

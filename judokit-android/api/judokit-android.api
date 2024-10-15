@@ -17,6 +17,7 @@ public final class com/judopay/judokit/android/Judo : android/os/Parcelable {
 	public final fun getChallengeRequestIndicator ()Lcom/judopay/judokit/android/model/ChallengeRequestIndicator;
 	public final fun getDelayedAuthorisation ()Ljava/lang/Boolean;
 	public final fun getEmailAddress ()Ljava/lang/String;
+	public final fun getExtras ()Landroid/os/Bundle;
 	public final fun getGooglePayConfiguration ()Lcom/judopay/judokit/android/model/GooglePayConfiguration;
 	public final fun getInitialRecurringPayment ()Ljava/lang/Boolean;
 	public final fun getJudoId ()Ljava/lang/String;
@@ -51,6 +52,7 @@ public final class com/judopay/judokit/android/Judo$Builder {
 	public final fun setChallengeRequestIndicator (Lcom/judopay/judokit/android/model/ChallengeRequestIndicator;)Lcom/judopay/judokit/android/Judo$Builder;
 	public final fun setDelayedAuthorisation (Ljava/lang/Boolean;)Lcom/judopay/judokit/android/Judo$Builder;
 	public final fun setEmailAddress (Ljava/lang/String;)Lcom/judopay/judokit/android/Judo$Builder;
+	public final fun setExtras (Landroid/os/Bundle;)Lcom/judopay/judokit/android/Judo$Builder;
 	public final fun setGooglePayConfiguration (Lcom/judopay/judokit/android/model/GooglePayConfiguration;)Lcom/judopay/judokit/android/Judo$Builder;
 	public final fun setInitialRecurringPayment (Ljava/lang/Boolean;)Lcom/judopay/judokit/android/Judo$Builder;
 	public final fun setIsSandboxed (Ljava/lang/Boolean;)Lcom/judopay/judokit/android/Judo$Builder;

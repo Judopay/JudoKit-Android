@@ -108,6 +108,7 @@ private val TransactionType.canBeSoftDeclined: Boolean
         ).contains(this)
 
 private const val THREE_DS_TWO_MIN_TIMEOUT = 5
+private const val SHOULD_USE_FABRICK_DS_ID = "shouldUseFabrickDsId"
 
 @Suppress("TooManyFunctions", "SwallowedException", "TooGenericExceptionCaught")
 class CardTransactionManager private constructor(private var context: FragmentActivity) : ActivityAwareComponent {
@@ -331,10 +332,16 @@ class CardTransactionManager private constructor(private var context: FragmentAc
                 }
 
                 val network = details.cardType ?: CardNetwork.OTHER
+                val sandboxDSID =
+                    if (judo.extras.getBoolean(SHOULD_USE_FABRICK_DS_ID, false)) {
+                        "F121535344"
+                    } else {
+                        "F000000000"
+                    }
 
                 val directoryServerID =
                     when {
-                        judo.isSandboxed -> "F000000000"
+                        judo.isSandboxed -> sandboxDSID
                         network == CardNetwork.VISA -> "A000000003"
                         network == CardNetwork.MASTERCARD || network == CardNetwork.MAESTRO -> "A000000004"
                         network == CardNetwork.AMEX -> "A000000025"

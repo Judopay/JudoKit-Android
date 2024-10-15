@@ -2,6 +2,7 @@ package com.judopay.judokit.android
 
 import android.app.Activity
 import android.os.Build
+import android.os.Bundle
 import android.os.Parcelable
 import androidx.annotation.RequiresApi
 import com.judopay.judokit.android.api.model.Authorization
@@ -84,6 +85,8 @@ class Judo internal constructor(
     val cardSecurityCode: String? = null,
     val subProductInfo: SubProductInfo = SubProductInfo.Unknown,
     val recommendationConfiguration: RecommendationConfiguration? = null,
+    // meant to be for internal usage only
+    val extras: Bundle,
 ) : Parcelable {
     /**
      * Builder class to create a [Judo] object since it's constructor is private
@@ -117,6 +120,7 @@ class Judo internal constructor(
         private var cardSecurityCode: String? = null
         private var subProductInfo: SubProductInfo = SubProductInfo.Unknown
         private var recommendationConfiguration: RecommendationConfiguration? = null
+        private var extras: Bundle = Bundle()
 
         /**
          * Sets the unique merchant ID
@@ -282,6 +286,8 @@ class Judo internal constructor(
         fun setRecommendationConfiguration(recommendationConfiguration: RecommendationConfiguration?) =
             apply { this.recommendationConfiguration = recommendationConfiguration }
 
+        fun setExtras(extras: Bundle) = apply { this.extras = extras }
+
         /**
          * Method that initializes Judo configuration object that can be used for
          * processing a payment.
@@ -381,6 +387,7 @@ class Judo internal constructor(
                 cardSecurityCode = cardSecurityCode,
                 subProductInfo = subProductInfo,
                 recommendationConfiguration = recommendationConfiguration,
+                extras = extras,
             )
         }
 
@@ -439,7 +446,8 @@ class Judo internal constructor(
                 scaExemption=$scaExemption,
                 delayedAuthorisation=$delayedAuthorisation,
                 allowIncrement=$allowIncrement,
-                cardToken=$cardToken
+                cardToken=$cardToken,
+                extras=$extras
             )
             """.trimIndent(true)
     }

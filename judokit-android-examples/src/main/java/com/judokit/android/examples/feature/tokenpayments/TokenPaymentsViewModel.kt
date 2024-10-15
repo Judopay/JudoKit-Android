@@ -43,6 +43,7 @@ class TokenPaymentsViewModel {
                 .setAllowIncrement(allowIncrement)
                 .setCardToken(if (widgetType.isTokenPayment) getCardToken() else null)
                 .setCardSecurityCode(securityCode.ifBlank { null })
+                .setExtras(extras)
                 .build()
         }
 

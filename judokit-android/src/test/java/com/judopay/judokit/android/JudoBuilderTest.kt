@@ -289,7 +289,7 @@ internal class JudoBuilderTest {
         val cardToken = CardToken(lastFour = "1234", token = "token", type = 2)
         judoBuilder.setCardToken(cardToken)
 
-        assertThat(judoBuilder.build().toString()).contains(", cardToken=CardToken(cardLastfour=1234, cardToken=token, cardType=2 )")
+        assertThat(judoBuilder.build().toString()).contains("cardToken=CardToken(cardLastfour=1234, cardToken=token, cardType=2")
     }
 
     @Test
