@@ -12,6 +12,14 @@
             app:summary="@string/is_sandboxed_summary"
             app:title="@string/is_sandboxed_title" />
 
+        <SwitchPreferenceCompat
+            app:dependency="is_sandboxed"
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="is_using_fabrick_3ds_service"
+            app:summary="@string/should_use_fabrick_ds_cert_summary"
+            app:title="@string/should_use_fabrick_ds_cert_title" />
+
         <EditTextPreference
             android:defaultValue="false"
             app:defaultValue="@string/default_judo_id"

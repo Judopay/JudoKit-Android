@@ -7,6 +7,9 @@ import org.gradle.api.Project
 internal fun Project.configureAndroidApplication(
     extension: ApplicationExtension,
 ) = extension.apply {
+
+    val appIdSuffix = findProperty("applicationIdSuffix")?.toString()
+
     defaultConfig {
         targetSdk = Versions.TARGET_SDK
         versionCode = getVersionCode()
@@ -33,6 +36,7 @@ internal fun Project.configureAndroidApplication(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            applicationIdSuffix = appIdSuffix.takeIf { !it.isNullOrBlank() }
         }
     }
 }

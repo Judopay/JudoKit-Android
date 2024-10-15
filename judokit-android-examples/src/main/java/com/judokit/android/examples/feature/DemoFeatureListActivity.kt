@@ -376,6 +376,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 null
             }
 
+        val extras =
+            Bundle().apply {
+                putBoolean("shouldUseFabrickDsId", sharedPreferences.getBoolean("is_using_fabrick_3ds_service", false))
+            }
+
         val builder =
             Judo.Builder(widgetType)
                 .setJudoId(judoId)
@@ -398,6 +403,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
                 .setNetworkTimeout(networkTimeout)
                 .setRecommendationConfiguration(recommendationConfiguration)
+                .setExtras(extras)
 
         if (!messageVersion.isNullOrBlank()) {
             builder.setThreeDSTwoMessageVersion(messageVersion)
