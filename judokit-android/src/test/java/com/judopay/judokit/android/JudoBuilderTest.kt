@@ -1,6 +1,5 @@
 package com.judopay.judokit.android
 
-import android.util.Log
 import com.google.common.truth.Truth.assertThat
 import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.model.Amount
