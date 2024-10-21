@@ -17,8 +17,8 @@ import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import com.judokit.android.examples.feature.DemoFeatureListActivity
-import com.judokit.android.examples.test.BuildConfig
 import com.judokit.android.examples.result.ResultActivity
+import com.judokit.android.examples.test.BuildConfig
 import com.judokit.android.examples.test.card.CardDetails.CARDHOLDER_NAME
 import com.judokit.android.examples.test.card.CardDetails.CARD_EXPIRY
 import com.judokit.android.examples.test.card.CardDetails.CARD_NUMBER
