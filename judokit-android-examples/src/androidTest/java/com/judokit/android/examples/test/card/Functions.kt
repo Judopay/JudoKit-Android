@@ -124,14 +124,8 @@ fun fillTextField(
     doOnView(withId(textFieldId), clearText(), typeText(text))
 }
 
-fun setupRavelin(
-    action: String,
-    toa: String,
-    exemption: String,
-    challenge: String,
-) {
+fun setupRavelin(suffix: String) {
     val recommendationURL = BuildConfig.RECOMMENDATION_URL
-    val suffix = "$action/$toa/$exemption/$challenge"
     sharedPrefs
         .edit()
         .apply {
@@ -195,8 +189,11 @@ fun toggleBillingInfoSetting(state: Boolean) {
 }
 
 fun assertUsingChucker(
-    criAssertion: String,
-    scaAssertion: String?,
+    cri: String? = null,
+    sca: String? = null,
+    checkCRI: Boolean,
+    checkSCA: Boolean,
+    challenge: Boolean? = true,
 ) {
     val context = InstrumentationRegistry.getInstrumentation().targetContext
 
@@ -205,15 +202,29 @@ fun assertUsingChucker(
 
     onView(withText("Chucker")).check(matches(isDisplayed()))
 
+    Thread.sleep(5000)
+
     // Open transaction
     onView(withId(ChuckerR.id.transactionsRecyclerView))
         .check(matches(isDisplayed()))
 
-    onView(
-        allOf(
-            withId(ChuckerR.id.path),
-        ),
-    ).perform(click())
+    if (challenge == true) {
+        onView(withId(ChuckerR.id.transactionsRecyclerView))
+            .perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                    1,
+                    click(),
+                ),
+            )
+    } else {
+        onView(withId(ChuckerR.id.transactionsRecyclerView))
+            .perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                    0,
+                    click(),
+                ),
+            )
+    }
 
     // Open request
     onView(withId(ChuckerR.id.tabLayout))
@@ -226,9 +237,13 @@ fun assertUsingChucker(
     ).perform(click())
 
     // Assertion
-    onView(withText(containsString("\"challengeRequestIndicator\": \"$criAssertion\"")))
-        .check(matches(isDisplayed()))
+    if (checkCRI && cri != null) {
+        onView(withText(containsString("\"challengeRequestIndicator\": \"$cri\"")))
+            .check(matches(isDisplayed()))
+    }
 
-    onView(withText(containsString("\"scaExemption\": \"$scaAssertion\"")))
-        .check(matches(isDisplayed()))
+    if (checkSCA && sca != null) {
+        onView(withText(containsString("\"scaExemption\": \"$sca\"")))
+            .check(matches(isDisplayed()))
+    }
 }

@@ -19,33 +19,27 @@ object FeaturesList {
 }
 
 object Ravelin {
-    const val ALLOW = "ALLOW"
-    const val PREVENT = "PREVENT"
-    const val REVIEW = "REVIEW"
-    const val AUTHORISE = "AUTHORISE"
-    const val AUTHENTICATE = "AUTHENTICATE"
-    const val TRA = "TRANSACTION_RISK_ANALYSIS"
-    const val LOW_VALUE = "LOW_VALUE"
-    const val NO_CHALLENGE = "NO_CHALLENGE_REQUESTED"
-    const val NO_PREFERENCE = "NO_PREFERENCE"
-    const val CHALLENGE_MANDATE = "CHALLENGE_REQUESTED_AS_MANDATE"
-    const val CHALLENGE_REQUESTED = "CHALLENGE_REQUESTED"
+    const val TRA = "transactionRiskAnalysis"
+    const val LOW_VALUE = "lowValue"
+    const val NO_CHALLENGE = "noChallenge"
+    const val NO_PREFERENCE = "noPreference"
+    const val CHALLENGE_MANDATE = "challengeAsMandate"
+    const val CHALLENGE_REQUESTED = "challengePreferred"
 }
 
 object Other {
     const val CANCEL_BUTTON = "Cancel"
     const val CANCELLED_PAYMENT_TOAST = "User cancelled the payment."
     const val TRANSACTION_PREVENTED = "The recommendation server has prevented this transaction."
+    const val TRANSACTION_HALTED = "There was an error when retrieving the recommendation response."
 }
 
 object BillingInfo {
     const val VALID_EMAIL = "user@test.com"
     const val VALID_MOBILE = "07812345678"
-    const val VALID_PHONE_CODE = "44"
     const val VALID_ADDRESS = "235 Regent Street"
     const val VALID_CITY = "London"
     const val VALID_POSTCODE = "W1B 2EL"
-    const val VALID_ADDRESS_TWO = "West End"
     const val VALID_COUNTRY_CODE = "826"
     const val VALID_COUNTRY = "United Kingdom"
     const val INVALID_POSTCODE = "38GL112"
