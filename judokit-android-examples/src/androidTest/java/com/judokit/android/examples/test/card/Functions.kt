@@ -19,7 +19,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
 import com.chuckerteam.chucker.api.Chucker
-import com.chuckerteam.chucker.R as ChuckerR
 import com.judokit.android.examples.result.ResultActivity
 import com.judokit.android.examples.test.BuildConfig
 import org.hamcrest.CoreMatchers
@@ -27,6 +26,7 @@ import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.startsWith
 import org.hamcrest.Matchers
+import com.chuckerteam.chucker.R as ChuckerR
 import com.judokit.android.examples.R as Examples
 import com.judopay.judokit.android.R as SDK
 
@@ -194,7 +194,10 @@ fun toggleBillingInfoSetting(state: Boolean) {
         .commit()
 }
 
-fun assertUsingChucker(criAssertion: String, scaAssertion: String?) {
+fun assertUsingChucker(
+    criAssertion: String,
+    scaAssertion: String?,
+) {
     val context = InstrumentationRegistry.getInstrumentation().targetContext
 
     val intent = Chucker.getLaunchIntent(context)
@@ -206,17 +209,21 @@ fun assertUsingChucker(criAssertion: String, scaAssertion: String?) {
     onView(withId(ChuckerR.id.transactionsRecyclerView))
         .check(matches(isDisplayed()))
 
-    onView(allOf(
-        withId(ChuckerR.id.path)
-    )).perform(click())
+    onView(
+        allOf(
+            withId(ChuckerR.id.path),
+        ),
+    ).perform(click())
 
     // Open request
     onView(withId(ChuckerR.id.tabLayout))
         .check(matches(isDisplayed()))
 
-    onView(allOf(
-        withText("Request")
-    )).perform(click())
+    onView(
+        allOf(
+            withText("Request"),
+        ),
+    ).perform(click())
 
     // Assertion
     onView(withText(containsString("\"challengeRequestIndicator\": \"$criAssertion\"")))
