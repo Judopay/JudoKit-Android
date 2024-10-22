@@ -229,6 +229,14 @@ class RavelinIntegrationTest {
 
     @Test
     fun testWithoutSendingSCAAndCRITransaction() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putString("challengeRequestIndicator", "DON_T_SET")
+                putString("scaExemption", "DON_T_SET")
+            }
+            .commit()
+
         setupRavelin("71")
 
         onView(withText(PAY_WITH_CARD_LABEL))
@@ -247,12 +255,21 @@ class RavelinIntegrationTest {
 
         clickCompleteOn3DS2Screen()
 
-        assertUsingChucker(checkCRI = false, checkSCA = false, challenge = false)
+        assertUsingChucker(checkCRI = false, checkSCA = false, challenge = true)
     }
 
     @Test
     fun testUsingSDKConfigTransaction() {
         setupRavelin("78")
+
+        sharedPrefs
+            .edit()
+            .apply {
+                putString("challengeRequestIndicator", "CHALLENGE_AS_MANDATE")
+                putString("scaExemption", "TRANSACTION_RISK_ANALYSIS")
+                putBoolean("halt_transaction_in_case_of_any_error_enabled", false)
+            }
+            .commit()
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -270,7 +287,7 @@ class RavelinIntegrationTest {
 
         clickCompleteOn3DS2Screen()
 
-        assertUsingChucker(checkCRI = false, checkSCA = false, challenge = true)
+        assertUsingChucker(CHALLENGE_MANDATE, TRA, checkCRI = true, checkSCA = true, challenge = true)
     }
 
     @Test
@@ -306,6 +323,7 @@ class RavelinIntegrationTest {
                 putBoolean("halt_transaction_in_case_of_any_error_enabled", true)
             }
             .commit()
+
         setupRavelin("5")
 
         onView(withText(PAY_WITH_CARD_LABEL))

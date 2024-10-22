@@ -256,8 +256,8 @@ jobs:
               --device model=shiba,version=34 \
               --use-orchestrator \
               --client-details=matrixLabel="Regression E2E"
-      - notify_slack_error
-      - notify_slack_pass
+      # - notify_slack_error
+      # - notify_slack_pass
 
 
   instrumented_test_sample_weekly:
@@ -346,7 +346,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - CT-3000-refactor-ravelin-tests
 
   publish_sdk:
     jobs:
