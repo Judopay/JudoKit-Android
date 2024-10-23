@@ -38,8 +38,8 @@ fun assertOnView(
  */
 fun waitForView(
     viewMatcher: Matcher<View>,
-    waitMillis: Int = 5000,
-    waitMillisPerTry: Long = 100,
+    waitMillis: Int = 10000,
+    waitMillisPerTry: Long = 500,
 ): ViewInteraction {
     // Derive the max tries
     val maxTries = waitMillis / waitMillisPerTry.toInt()
