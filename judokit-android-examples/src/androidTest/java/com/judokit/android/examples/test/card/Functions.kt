@@ -139,7 +139,8 @@ fun setupRavelin(suffix: String) {
     onView(withText("Generate payment session"))
         .perform(click())
 
-    Thread.sleep(1000)
+    onView(withId(Examples.id.sampleAppConstraintLayout))
+        .check(matches(isDisplayed()))
 }
 
 fun fillBillingDetails(

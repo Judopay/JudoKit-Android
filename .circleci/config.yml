@@ -255,7 +255,8 @@ jobs:
               --timeout=30m \
               --device model=shiba,version=34 \
               --use-orchestrator \
-              --client-details=matrixLabel="Regression E2E"
+              --client-details=matrixLabel="Regression E2E" \
+              --num-flaky-test-attempts=1
       # - notify_slack_error
       # - notify_slack_pass
 
