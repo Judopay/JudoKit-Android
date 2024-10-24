@@ -20,7 +20,7 @@ import java.util.Locale
 
 abstract class SwipeToDeleteCallback(
     @ColorRes val backgroundColor: Int = R.color.tomato_red,
-    @StringRes val text: Int = R.string.delete,
+    @StringRes val text: Int = R.string.jp_delete,
     @ColorRes val textColor: Int = R.color.white,
     @FontRes val textFont: Int = R.font.sf_pro_display_regular,
     @DimenRes val textSize: Int = R.dimen.body,

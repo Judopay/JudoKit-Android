@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/space_8"
         android:padding="0dp"
-        android:text="@string/you_will_pay"
+        android:text="@string/jp_you_will_pay"
         app:layout_constraintEnd_toStartOf="@+id/buttonsAnimator"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/buttonsAnimator" />
@@ -53,8 +53,8 @@
             style="@style/JudoTheme.BlackRoundedButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/pay_now"
-            android:tag="@string/payment_methods_pay_button" />
+            android:text="@string/jp_pay_now"
+            android:tag="@string/jp_payment_methods_pay_button" />
 
         <com.judopay.judokit.android.ui.common.GooglePayButton
             android:id="@+id/googlePayButton"

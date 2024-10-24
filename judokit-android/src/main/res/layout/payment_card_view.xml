@@ -51,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
-        android:text="@string/expired"
+        android:text="@string/jp_expired"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/expireDateTextView"
         app:layout_constraintEnd_toEndOf="@id/expireDateTextView"

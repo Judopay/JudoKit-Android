@@ -17,7 +17,7 @@ internal class StateValidatorTest {
         validator.country = Country.US
         assertEquals(
             validator.validate("Alaba", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.error_state_should_not_be_empty),
+            ValidationResult(false, R.string.jp_error_state_should_not_be_empty),
         )
     }
 
@@ -30,7 +30,7 @@ internal class StateValidatorTest {
         validator.country = Country.CA
         assertEquals(
             validator.validate("Alb", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.error_province_territory_should_not_be_empty),
+            ValidationResult(false, R.string.jp_error_province_territory_should_not_be_empty),
         )
     }
 
@@ -40,7 +40,7 @@ internal class StateValidatorTest {
         validator.country = Country.CA
         assertEquals(
             validator.validate("Alb", FormFieldEvent.TEXT_CHANGED),
-            ValidationResult(false, R.string.empty),
+            ValidationResult(false, R.string.jp_empty),
         )
     }
 

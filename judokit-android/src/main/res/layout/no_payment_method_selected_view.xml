@@ -19,7 +19,7 @@
         android:layout_gravity="top|start"
         android:layout_marginStart="@dimen/space_24"
         android:maxWidth="245dp"
-        android:text="@string/choose_payment_method"
+        android:text="@string/jp_choose_payment_method"
         app:layout_anchorGravity="center_vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guideline" />
@@ -34,7 +34,7 @@
         android:layout_marginEnd="@dimen/space_24"
         android:layout_marginBottom="@dimen/space_24"
         android:maxWidth="245dp"
-        android:text="@string/no_cards_added"
+        android:text="@string/jp_no_cards_added"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/headingTextView" />
 
