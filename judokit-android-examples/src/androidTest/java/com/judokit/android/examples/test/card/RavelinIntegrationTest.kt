@@ -76,7 +76,7 @@ class RavelinIntegrationTest {
 
     @Test
     fun testPreventTransaction() {
-        setupRavelin("7")
+        updateRecommendationUrlWith("7")
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -99,7 +99,7 @@ class RavelinIntegrationTest {
 
     @Test
     fun testReviewWithChallengeTransaction() {
-        setupRavelin("25")
+        updateRecommendationUrlWith("25")
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -122,7 +122,7 @@ class RavelinIntegrationTest {
 
     @Test
     fun testAllowNoPreferenceTransaction() {
-        setupRavelin("19")
+        updateRecommendationUrlWith("19")
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -143,7 +143,7 @@ class RavelinIntegrationTest {
 
     @Test
     fun testReviewNoChallengeTransaction() {
-        setupRavelin("24")
+        updateRecommendationUrlWith("24")
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -164,7 +164,7 @@ class RavelinIntegrationTest {
 
     @Test
     fun testAllowChallengeAsMandateTransaction() {
-        setupRavelin("18")
+        updateRecommendationUrlWith("18")
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -187,7 +187,7 @@ class RavelinIntegrationTest {
 
     @Test
     fun testWithoutSendingCRITransaction() {
-        setupRavelin("35")
+        updateRecommendationUrlWith("35")
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -208,7 +208,7 @@ class RavelinIntegrationTest {
 
     @Test
     fun testWithoutSendingSCATransaction() {
-        setupRavelin("60")
+        updateRecommendationUrlWith("60")
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -237,7 +237,7 @@ class RavelinIntegrationTest {
             }
             .commit()
 
-        setupRavelin("71")
+        updateRecommendationUrlWith("71")
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -260,7 +260,7 @@ class RavelinIntegrationTest {
 
     @Test
     fun testUsingSDKConfigTransaction() {
-        setupRavelin("78")
+        updateRecommendationUrlWith("78")
 
         sharedPrefs
             .edit()
@@ -292,7 +292,7 @@ class RavelinIntegrationTest {
 
     @Test
     fun testPreventWithEmptyObjectTransaction() {
-        setupRavelin("67")
+        updateRecommendationUrlWith("67")
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -324,7 +324,7 @@ class RavelinIntegrationTest {
             }
             .commit()
 
-        setupRavelin("5")
+        updateRecommendationUrlWith("5")
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())

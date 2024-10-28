@@ -21,6 +21,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.chuckerteam.chucker.api.Chucker
 import com.judokit.android.examples.result.ResultActivity
 import com.judokit.android.examples.test.BuildConfig
+import com.judokit.android.examples.test.card.FeaturesList.PAY_WITH_CARD_LABEL
 import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
@@ -124,8 +125,8 @@ fun fillTextField(
     doOnView(withId(textFieldId), clearText(), typeText(text))
 }
 
-fun setupRavelin(suffix: String) {
     val recommendationURL = BuildConfig.RECOMMENDATION_URL
+fun updateRecommendationUrlWith(suffix: String) {
     sharedPrefs
         .edit()
         .apply {
