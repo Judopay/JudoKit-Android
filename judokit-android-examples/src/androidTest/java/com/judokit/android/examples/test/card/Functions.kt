@@ -127,6 +127,7 @@ fun fillTextField(
 
     val recommendationURL = BuildConfig.RECOMMENDATION_URL
 fun updateRecommendationUrlWith(suffix: String) {
+    val recommendationURL = BuildConfig.RECOMMENDATION_URL
     sharedPrefs
         .edit()
         .apply {
