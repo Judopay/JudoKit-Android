@@ -36,7 +36,7 @@
             android:padding="0dp"
             android:visibility="gone"
             tools:visibility="visible"
-            android:tag="@string/judo_error_text"/>
+            android:tag="@string/jp_judo_error_text"/>
 
     </LinearLayout>
 

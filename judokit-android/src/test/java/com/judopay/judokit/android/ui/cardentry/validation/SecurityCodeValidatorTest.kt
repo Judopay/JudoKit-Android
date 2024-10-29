@@ -20,7 +20,7 @@ internal class SecurityCodeValidatorTest {
         validator.cardNetwork = CardNetwork.OTHER
         assertEquals(
             validator.validate("12", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.check_cvv),
+            ValidationResult(false, R.string.jp_check_cvv),
         )
     }
 
@@ -32,7 +32,7 @@ internal class SecurityCodeValidatorTest {
     fun invalidateWhenLengthLessThanThreeOnTextChanged() {
         assertEquals(
             validator.validate("12", FormFieldEvent.TEXT_CHANGED),
-            ValidationResult(false, R.string.empty),
+            ValidationResult(false, R.string.jp_empty),
         )
     }
 
@@ -46,7 +46,7 @@ internal class SecurityCodeValidatorTest {
 
         assertEquals(
             validator.validate("123", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(false, R.string.check_amex_security_code),
+            ValidationResult(false, R.string.jp_check_amex_security_code),
         )
     }
 
@@ -60,7 +60,7 @@ internal class SecurityCodeValidatorTest {
 
         assertEquals(
             validator.validate("123", FormFieldEvent.TEXT_CHANGED),
-            ValidationResult(false, R.string.empty),
+            ValidationResult(false, R.string.jp_empty),
         )
     }
 
@@ -69,7 +69,7 @@ internal class SecurityCodeValidatorTest {
     fun validateWhenLengthEqualToThreeOnFocusChanged() {
         assertEquals(
             validator.validate("123", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(true, R.string.empty),
+            ValidationResult(true, R.string.jp_empty),
         )
     }
 
@@ -78,7 +78,7 @@ internal class SecurityCodeValidatorTest {
     fun validateWhenLengthEqualToThreeOnTextChanged() {
         assertEquals(
             validator.validate("123", FormFieldEvent.TEXT_CHANGED),
-            ValidationResult(true, R.string.empty),
+            ValidationResult(true, R.string.jp_empty),
         )
     }
 
@@ -89,7 +89,7 @@ internal class SecurityCodeValidatorTest {
 
         assertEquals(
             validator.validate("1234", FormFieldEvent.FOCUS_CHANGED),
-            ValidationResult(true, R.string.empty),
+            ValidationResult(true, R.string.jp_empty),
         )
     }
 
@@ -100,7 +100,7 @@ internal class SecurityCodeValidatorTest {
 
         assertEquals(
             validator.validate("1234", FormFieldEvent.TEXT_CHANGED),
-            ValidationResult(true, R.string.empty),
+            ValidationResult(true, R.string.jp_empty),
         )
     }
 }

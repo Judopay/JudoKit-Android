@@ -35,7 +35,7 @@ class ProgressButton
         attrs: AttributeSet? = null,
         defStyle: Int = 0,
     ) : MaterialButton(context, attrs, defStyle), Drawable.Callback {
-        var state: ButtonState = ButtonState.Enabled(R.string.pay_now)
+        var state: ButtonState = ButtonState.Enabled(R.string.jp_pay_now)
             set(value) {
                 field = value
                 updateState()
@@ -68,7 +68,7 @@ class ProgressButton
                 when (val myState = state) {
                     is ButtonState.Enabled -> resources.getString(myState.text, myState.amount ?: "")
                     is ButtonState.Disabled -> resources.getString(myState.text, myState.amount ?: "")
-                    else -> resources.getString(R.string.empty)
+                    else -> resources.getString(R.string.jp_empty)
                 }
 
             super.setText(text)

@@ -4037,7 +4037,6 @@ public final class com/judopay/judokit/android/ui/common/ConstantsKt {
 
 public final class com/judopay/judokit/android/ui/common/FunctionsKt {
 	public static final fun getLocale (Landroid/content/res/Resources;)Ljava/util/Locale;
-	public static final fun showAlert (Landroid/content/Context;Ljava/lang/String;)V
 	public static final fun toDate (Ljava/lang/String;Ljava/util/Locale;Ljava/lang/String;)Ljava/util/Date;
 	public static synthetic fun toDate$default (Ljava/lang/String;Ljava/util/Locale;Ljava/lang/String;ILjava/lang/Object;)Ljava/util/Date;
 }

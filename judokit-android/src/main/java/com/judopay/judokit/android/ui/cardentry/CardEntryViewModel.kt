@@ -356,9 +356,9 @@ class CardEntryViewModel(
                 when {
                     shouldDisplayBackButton ->
                         if (isLoading) {
-                            ButtonState.Disabled(R.string.back)
+                            ButtonState.Disabled(R.string.jp_back)
                         } else {
-                            ButtonState.Enabled(R.string.back)
+                            ButtonState.Enabled(R.string.jp_back)
                         }
                     else -> ButtonState.Hidden
                 }
@@ -408,56 +408,56 @@ private val Judo.formattedAmount: String?
 
 private fun Judo.submitButtonText(options: CardEntryOptions): Int =
     when (paymentWidgetType) {
-        PaymentWidgetType.REGISTER_CARD -> R.string.register_card
-        PaymentWidgetType.CREATE_CARD_TOKEN -> R.string.save_card
-        PaymentWidgetType.CHECK_CARD -> R.string.check_card
+        PaymentWidgetType.REGISTER_CARD -> R.string.jp_register_card
+        PaymentWidgetType.CREATE_CARD_TOKEN -> R.string.jp_save_card
+        PaymentWidgetType.CHECK_CARD -> R.string.jp_check_card
         PaymentWidgetType.CARD_PAYMENT,
         PaymentWidgetType.PRE_AUTH,
         PaymentWidgetType.TOKEN_PAYMENT,
         PaymentWidgetType.TOKEN_PRE_AUTH,
         ->
             if (uiConfiguration.shouldPaymentButtonDisplayAmount) {
-                R.string.pay_amount
+                R.string.jp_pay_amount
             } else {
-                R.string.pay_now
+                R.string.jp_pay_now
             }
         PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
         PaymentWidgetType.PAYMENT_METHODS,
         PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
         ->
             if (options.isAddingNewCard) {
-                R.string.save_card
+                R.string.jp_save_card
             } else {
-                R.string.pay_now
+                R.string.jp_pay_now
             }
         PaymentWidgetType.GOOGLE_PAY,
         PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
-        -> R.string.empty
+        -> R.string.jp_empty
     }
 
 private val Judo.continueButtonText: Int
     get() =
         when (paymentWidgetType) {
-            PaymentWidgetType.CREATE_CARD_TOKEN -> R.string.save_card
+            PaymentWidgetType.CREATE_CARD_TOKEN -> R.string.jp_save_card
             PaymentWidgetType.REGISTER_CARD,
             PaymentWidgetType.CHECK_CARD,
             PaymentWidgetType.CARD_PAYMENT,
             PaymentWidgetType.PRE_AUTH,
             PaymentWidgetType.TOKEN_PAYMENT,
             PaymentWidgetType.TOKEN_PRE_AUTH,
-            -> R.string.continue_text
+            -> R.string.jp_continue_text
             PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
             PaymentWidgetType.PAYMENT_METHODS,
             PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
             ->
                 if (uiConfiguration.shouldAskForBillingInformation) {
-                    R.string.continue_text
+                    R.string.jp_continue_text
                 } else {
-                    R.string.save_card
+                    R.string.jp_save_card
                 }
             PaymentWidgetType.GOOGLE_PAY,
             PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
-            -> R.string.empty
+            -> R.string.jp_empty
         }
 
 private fun Judo.isTokenPayment(options: CardEntryOptions): Boolean {

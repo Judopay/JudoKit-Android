@@ -24,9 +24,9 @@ data class SecurityCodeValidator(
         val shouldDisplayMessage = !isLengthValid && formFieldEvent == FormFieldEvent.FOCUS_CHANGED
         val message =
             if (shouldDisplayMessage) {
-                cardNetwork?.securityCodeInvalidResId ?: R.string.empty
+                cardNetwork?.securityCodeInvalidResId ?: R.string.jp_empty
             } else {
-                R.string.empty
+                R.string.jp_empty
             }
 
         return ValidationResult(isLengthValid, message)

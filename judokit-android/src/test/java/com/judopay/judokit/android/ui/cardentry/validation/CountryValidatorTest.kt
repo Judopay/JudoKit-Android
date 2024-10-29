@@ -14,7 +14,7 @@ internal class CountryValidatorTest {
     fun invalidateWhenInputIsBlank() {
         assertEquals(
             validator.validate(""),
-            ValidationResult(false, R.string.error_country_should_not_be_empty),
+            ValidationResult(false, R.string.jp_error_country_should_not_be_empty),
         )
     }
 

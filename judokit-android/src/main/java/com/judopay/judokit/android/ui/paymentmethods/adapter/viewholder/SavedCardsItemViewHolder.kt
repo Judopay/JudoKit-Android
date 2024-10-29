@@ -68,7 +68,7 @@ class SavedCardsItemViewHolder(private val binding: SavedCardItemBinding) :
             val cardSubtitle =
                 SpannableStringBuilder(
                     context.getString(
-                        R.string.card_subtitle,
+                        R.string.jp_card_subtitle,
                         model.network.displayName,
                     ),
                 )
@@ -77,24 +77,24 @@ class SavedCardsItemViewHolder(private val binding: SavedCardItemBinding) :
                 !date.isAfterToday -> {
                     binding.subTitle.setTextColor(ContextCompat.getColor(context, R.color.tomato_red))
                     boldString.apply {
-                        append("${model.ending} ${resources.getString(R.string.is_expired)}")
+                        append("${model.ending} ${resources.getString(R.string.jp_is_expired)}")
                         val expiredIndex =
                             if (boldString.indexOf(
-                                    resources.getString(R.string.expired),
+                                    resources.getString(R.string.jp_expired),
                                     ignoreCase = true,
                                 ) == -1
                             ) {
                                 0
                             } else {
                                 boldString.indexOf(
-                                    resources.getString(R.string.expired),
+                                    resources.getString(R.string.jp_expired),
                                     ignoreCase = true,
                                 )
                             }
                         setSpan(
                             StyleSpan(Typeface.BOLD),
                             0,
-                            boldString.length - resources.getString(R.string.is_expired).length,
+                            boldString.length - resources.getString(R.string.jp_is_expired).length,
                             Spannable.SPAN_INCLUSIVE_INCLUSIVE,
                         )
                         setSpan(
@@ -107,24 +107,24 @@ class SavedCardsItemViewHolder(private val binding: SavedCardItemBinding) :
                 }
                 date.isExpiredInTwoMonths -> {
                     boldString.apply {
-                        append("${model.ending} ${resources.getString(R.string.will_expire_soon)}")
+                        append("${model.ending} ${resources.getString(R.string.jp_will_expire_soon)}")
                         val expireIndex =
                             if (boldString.indexOf(
-                                    resources.getString(R.string.expire_soon),
+                                    resources.getString(R.string.jp_expire_soon),
                                     ignoreCase = true,
                                 ) == -1
                             ) {
                                 0
                             } else {
                                 boldString.indexOf(
-                                    resources.getString(R.string.expire_soon),
+                                    resources.getString(R.string.jp_expire_soon),
                                     ignoreCase = true,
                                 )
                             }
                         setSpan(
                             StyleSpan(Typeface.BOLD),
                             0,
-                            boldString.length - resources.getString(R.string.will_expire_soon).length,
+                            boldString.length - resources.getString(R.string.jp_will_expire_soon).length,
                             Spannable.SPAN_INCLUSIVE_INCLUSIVE,
                         )
                         setSpan(

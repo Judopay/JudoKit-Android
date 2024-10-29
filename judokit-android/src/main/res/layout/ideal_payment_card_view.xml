@@ -16,7 +16,7 @@
         app:layout_anchorGravity="center_vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/ing_bank" />
+        tools:text="@string/jp_ing_bank" />
 
     <ImageView
         android:id="@+id/bankLogoImageView"

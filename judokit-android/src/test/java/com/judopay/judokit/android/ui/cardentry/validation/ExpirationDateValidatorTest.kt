@@ -22,7 +22,7 @@ internal class ExpirationDateValidatorTest {
         every { cardDate.isAfterToday } returns false
         every { cardDate.isInsideAllowedDateRange } returns true
 
-        assertEquals(ValidationResult(false, R.string.check_expiry_date), sut.validate("12/20", FormFieldEvent.FOCUS_CHANGED))
+        assertEquals(ValidationResult(false, R.string.jp_check_expiry_date), sut.validate("12/20", FormFieldEvent.FOCUS_CHANGED))
     }
 
     @DisplayName("Given date is not inside allowed date range, then return isValid false")
@@ -31,7 +31,7 @@ internal class ExpirationDateValidatorTest {
         every { cardDate.isAfterToday } returns true
         every { cardDate.isInsideAllowedDateRange } returns false
 
-        assertEquals(ValidationResult(false, R.string.check_expiry_date), sut.validate("12/20", FormFieldEvent.FOCUS_CHANGED))
+        assertEquals(ValidationResult(false, R.string.jp_check_expiry_date), sut.validate("12/20", FormFieldEvent.FOCUS_CHANGED))
     }
 
     @DisplayName("Given date is valid, then return isValid true")
@@ -49,6 +49,6 @@ internal class ExpirationDateValidatorTest {
         every { cardDate.isAfterToday } returns false
         every { cardDate.isInsideAllowedDateRange } returns false
 
-        assertEquals(R.string.empty, sut.validate("12/2").message)
+        assertEquals(R.string.jp_empty, sut.validate("12/2").message)
     }
 }

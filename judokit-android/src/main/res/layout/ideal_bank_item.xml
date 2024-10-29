@@ -31,7 +31,7 @@
         app:layout_constraintEnd_toStartOf="@id/radioIconImageView"
         app:layout_constraintStart_toEndOf="@id/bankImage"
         app:layout_constraintTop_toTopOf="@id/bankImage"
-        tools:text="@string/rabobank" />
+        tools:text="@string/jp_rabobank" />
 
     <ImageView
         android:id="@+id/radioIconImageView"

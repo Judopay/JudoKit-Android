@@ -27,7 +27,7 @@ typealias PaymentCallToActionViewListener = (action: PaymentCallToActionType) ->
 data class PaymentCallToActionViewModel(
     val amount: String = "",
     val buttonType: PaymentButtonType = PaymentButtonType.PLAIN,
-    val paymentButtonState: ButtonState = ButtonState.Disabled(R.string.pay_now),
+    val paymentButtonState: ButtonState = ButtonState.Disabled(R.string.jp_pay_now),
     val shouldDisplayAmount: Boolean = false,
 )
 
