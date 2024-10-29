@@ -17,25 +17,20 @@ import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import com.judokit.android.examples.feature.DemoFeatureListActivity
+import com.judokit.android.examples.result.ResultActivity
 import com.judokit.android.examples.test.BuildConfig
 import com.judokit.android.examples.test.card.CardDetails.CARDHOLDER_NAME
 import com.judokit.android.examples.test.card.CardDetails.CARD_EXPIRY
 import com.judokit.android.examples.test.card.CardDetails.CARD_NUMBER
 import com.judokit.android.examples.test.card.CardDetails.CARD_SECURITY_CODE
-import com.judokit.android.examples.test.card.FeaturesList.CHECK_CARD_LABEL
 import com.judokit.android.examples.test.card.FeaturesList.PAY_WITH_CARD_LABEL
-import com.judokit.android.examples.test.card.FeaturesList.PREAUTH_WITH_CARD_LABEL
+import com.judokit.android.examples.test.card.Other.TRANSACTION_HALTED
 import com.judokit.android.examples.test.card.Other.TRANSACTION_PREVENTED
-import com.judokit.android.examples.test.card.Ravelin.ALLOW
-import com.judokit.android.examples.test.card.Ravelin.AUTHENTICATE
-import com.judokit.android.examples.test.card.Ravelin.AUTHORISE
 import com.judokit.android.examples.test.card.Ravelin.CHALLENGE_MANDATE
 import com.judokit.android.examples.test.card.Ravelin.CHALLENGE_REQUESTED
 import com.judokit.android.examples.test.card.Ravelin.LOW_VALUE
 import com.judokit.android.examples.test.card.Ravelin.NO_CHALLENGE
 import com.judokit.android.examples.test.card.Ravelin.NO_PREFERENCE
-import com.judokit.android.examples.test.card.Ravelin.PREVENT
-import com.judokit.android.examples.test.card.Ravelin.REVIEW
 import com.judokit.android.examples.test.card.Ravelin.TRA
 import com.judopay.judokit.android.R
 import org.junit.Before
@@ -80,8 +75,8 @@ class RavelinIntegrationTest {
     }
 
     @Test
-    fun testPaymentAllowAuthoriseLowValueNoPreference() {
-        setupRavelin(ALLOW, AUTHORISE, LOW_VALUE, NO_PREFERENCE)
+    fun testPreventTransaction() {
+        updateRecommendationUrlWith("7")
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -97,12 +92,14 @@ class RavelinIntegrationTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+        awaitActivityThenRun(ResultActivity::class.java.name) {
+            onView(withText(TRANSACTION_PREVENTED)).check(matches(isDisplayed()))
+        }
     }
 
     @Test
-    fun testPaymentReviewAuthenticateTRAChallenge() {
-        setupRavelin(REVIEW, AUTHENTICATE, TRA, CHALLENGE_REQUESTED)
+    fun testReviewWithChallengeTransaction() {
+        updateRecommendationUrlWith("25")
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -120,12 +117,12 @@ class RavelinIntegrationTest {
 
         clickCompleteOn3DS2Screen()
 
-        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+        assertUsingChucker(CHALLENGE_REQUESTED, LOW_VALUE, checkCRI = true, checkSCA = true)
     }
 
     @Test
-    fun testPaymentPreventAuthoriseLowValueChallengeAsMandate() {
-        setupRavelin(PREVENT, AUTHORISE, LOW_VALUE, CHALLENGE_MANDATE)
+    fun testAllowNoPreferenceTransaction() {
+        updateRecommendationUrlWith("19")
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -141,14 +138,12 @@ class RavelinIntegrationTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        Thread.sleep(1000)
-
-        onView(withText(TRANSACTION_PREVENTED)).check(matches(isDisplayed()))
+        assertUsingChucker(NO_PREFERENCE, TRA, checkCRI = true, checkSCA = true, challenge = false)
     }
 
     @Test
-    fun testPaymentAllowAuthenticateTRANoChallenge() {
-        setupRavelin(ALLOW, AUTHENTICATE, TRA, NO_CHALLENGE)
+    fun testReviewNoChallengeTransaction() {
+        updateRecommendationUrlWith("24")
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -164,12 +159,12 @@ class RavelinIntegrationTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+        assertUsingChucker(NO_CHALLENGE, LOW_VALUE, checkCRI = true, checkSCA = true, challenge = false)
     }
 
     @Test
-    fun testPaymentPreventAuthenticateTRANoPreference() {
-        setupRavelin(PREVENT, AUTHENTICATE, TRA, NO_PREFERENCE)
+    fun testAllowChallengeAsMandateTransaction() {
+        updateRecommendationUrlWith("18")
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -185,16 +180,66 @@ class RavelinIntegrationTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        Thread.sleep(1000)
+        clickCompleteOn3DS2Screen()
 
-        onView(withText(TRANSACTION_PREVENTED)).check(matches(isDisplayed()))
+        assertUsingChucker(CHALLENGE_MANDATE, LOW_VALUE, checkCRI = true, checkSCA = true)
     }
 
     @Test
-    fun testPreAuthReviewAuthoriseLowValueChallengeAsMandate() {
-        setupRavelin(REVIEW, AUTHORISE, LOW_VALUE, CHALLENGE_MANDATE)
+    fun testWithoutSendingCRITransaction() {
+        updateRecommendationUrlWith("35")
 
-        onView(withText(PREAUTH_WITH_CARD_LABEL))
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        assertUsingChucker(LOW_VALUE, checkCRI = false, checkSCA = true, challenge = false)
+    }
+
+    @Test
+    fun testWithoutSendingSCATransaction() {
+        updateRecommendationUrlWith("60")
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        assertUsingChucker(NO_CHALLENGE, checkCRI = true, checkSCA = false, challenge = false)
+    }
+
+    @Test
+    fun testWithoutSendingSCAAndCRITransaction() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putString("challengeRequestIndicator", "DON_T_SET")
+                putString("scaExemption", "DON_T_SET")
+            }
+            .commit()
+
+        updateRecommendationUrlWith("71")
+
+        onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
         enterPaymentSheetDetails(
@@ -210,79 +255,23 @@ class RavelinIntegrationTest {
 
         clickCompleteOn3DS2Screen()
 
-        assertReceiptObject("AuthCode: ", "", "Success", "PreAuth")
+        assertUsingChucker(checkCRI = false, checkSCA = false, challenge = true)
     }
 
     @Test
-    fun testPreAuthAllowAuthoriseTRANoChallenge() {
-        setupRavelin(ALLOW, AUTHORISE, TRA, NO_CHALLENGE)
+    fun testUsingSDKConfigTransaction() {
+        updateRecommendationUrlWith("78")
 
-        onView(withText(PREAUTH_WITH_CARD_LABEL))
-            .perform(click())
+        sharedPrefs
+            .edit()
+            .apply {
+                putString("challengeRequestIndicator", "CHALLENGE_AS_MANDATE")
+                putString("scaExemption", "TRANSACTION_RISK_ANALYSIS")
+                putBoolean("halt_transaction_in_case_of_any_error_enabled", false)
+            }
+            .commit()
 
-        enterPaymentSheetDetails(
-            CARD_NUMBER,
-            CARDHOLDER_NAME,
-            CARD_EXPIRY,
-            CARD_SECURITY_CODE,
-        )
-
-        onView(withId(R.id.cardEntrySubmitButton))
-            .check(matches(isEnabled()))
-            .perform(click())
-
-        assertReceiptObject("AuthCode: ", "", "Success", "PreAuth")
-    }
-
-    @Test
-    fun testPreAuthPreventAuthenticateLowValueNoChallenge() {
-        setupRavelin(PREVENT, AUTHENTICATE, LOW_VALUE, NO_CHALLENGE)
-
-        onView(withText(PREAUTH_WITH_CARD_LABEL))
-            .perform(click())
-
-        enterPaymentSheetDetails(
-            CARD_NUMBER,
-            CARDHOLDER_NAME,
-            CARD_EXPIRY,
-            CARD_SECURITY_CODE,
-        )
-
-        onView(withId(R.id.cardEntrySubmitButton))
-            .check(matches(isEnabled()))
-            .perform(click())
-
-        Thread.sleep(1000)
-
-        onView(withText(TRANSACTION_PREVENTED)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun testPreAuthReviewAuthoriseTRANoPreference() {
-        setupRavelin(REVIEW, AUTHORISE, TRA, NO_PREFERENCE)
-
-        onView(withText(PREAUTH_WITH_CARD_LABEL))
-            .perform(click())
-
-        enterPaymentSheetDetails(
-            CARD_NUMBER,
-            CARDHOLDER_NAME,
-            CARD_EXPIRY,
-            CARD_SECURITY_CODE,
-        )
-
-        onView(withId(R.id.cardEntrySubmitButton))
-            .check(matches(isEnabled()))
-            .perform(click())
-
-        assertReceiptObject("AuthCode: ", "", "Success", "PreAuth")
-    }
-
-    @Test
-    fun testPreAuthAllowAuthenticateLowValueChallenge() {
-        setupRavelin(ALLOW, AUTHENTICATE, LOW_VALUE, CHALLENGE_REQUESTED)
-
-        onView(withText(PREAUTH_WITH_CARD_LABEL))
+        onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
         enterPaymentSheetDetails(
@@ -298,14 +287,14 @@ class RavelinIntegrationTest {
 
         clickCompleteOn3DS2Screen()
 
-        assertReceiptObject("AuthCode: ", "", "Success", "PreAuth")
+        assertUsingChucker(CHALLENGE_MANDATE, TRA, checkCRI = true, checkSCA = true, challenge = true)
     }
 
     @Test
-    fun testCheckCardAllowAuthoriseTRAChallengeAsMandate() {
-        setupRavelin(ALLOW, AUTHORISE, TRA, CHALLENGE_MANDATE)
+    fun testPreventWithEmptyObjectTransaction() {
+        updateRecommendationUrlWith("67")
 
-        onView(withText(CHECK_CARD_LABEL))
+        onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
         enterPaymentSheetDetails(
@@ -319,16 +308,25 @@ class RavelinIntegrationTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        clickCompleteOn3DS2Screen()
+        Thread.sleep(2500)
 
-        assertReceiptObject("AuthCode: ", "", "Success", "CheckCard")
+        awaitActivityThenRun(ResultActivity::class.java.name) {
+            onView(withText(TRANSACTION_PREVENTED)).check(matches(isDisplayed()))
+        }
     }
 
     @Test
-    fun testCheckCardReviewAuthenticateTRANoChallenge() {
-        setupRavelin(REVIEW, AUTHENTICATE, TRA, NO_CHALLENGE)
+    fun testHaltTransactionUponErrorSwitch() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putBoolean("halt_transaction_in_case_of_any_error_enabled", true)
+            }
+            .commit()
 
-        onView(withText(CHECK_CARD_LABEL))
+        updateRecommendationUrlWith("5")
+
+        onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
         enterPaymentSheetDetails(
@@ -342,80 +340,10 @@ class RavelinIntegrationTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        // Backend overrides CRI to Challenge as Mandate
-        clickCompleteOn3DS2Screen()
+        Thread.sleep(5000)
 
-        assertReceiptObject("AuthCode: ", "", "Success", "CheckCard")
-    }
-
-    @Test
-    fun testCheckCardPreventAuthenticateLowValueChallenge() {
-        setupRavelin(PREVENT, AUTHENTICATE, LOW_VALUE, CHALLENGE_REQUESTED)
-
-        onView(withText(CHECK_CARD_LABEL))
-            .perform(click())
-
-        enterPaymentSheetDetails(
-            CARD_NUMBER,
-            CARDHOLDER_NAME,
-            CARD_EXPIRY,
-            CARD_SECURITY_CODE,
-        )
-
-        onView(withId(R.id.cardEntrySubmitButton))
-            .check(matches(isEnabled()))
-            .perform(click())
-
-        Thread.sleep(1000)
-
-        onView(withText(TRANSACTION_PREVENTED)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun testCheckCardAllowAuthenticateLowValueNoPreference() {
-        setupRavelin(REVIEW, AUTHENTICATE, LOW_VALUE, NO_PREFERENCE)
-
-        onView(withText(CHECK_CARD_LABEL))
-            .perform(click())
-
-        enterPaymentSheetDetails(
-            CARD_NUMBER,
-            CARDHOLDER_NAME,
-            CARD_EXPIRY,
-            CARD_SECURITY_CODE,
-        )
-
-        onView(withId(R.id.cardEntrySubmitButton))
-            .check(matches(isEnabled()))
-            .perform(click())
-
-        // Backend overrides CRI to Challenge as Mandate
-        clickCompleteOn3DS2Screen()
-
-        assertReceiptObject("AuthCode: ", "", "Success", "CheckCard")
-    }
-
-    @Test
-    fun testCheckCardReviewAuthoriseLowValueChallenge() {
-        setupRavelin(REVIEW, AUTHORISE, LOW_VALUE, CHALLENGE_REQUESTED)
-
-        onView(withText(CHECK_CARD_LABEL))
-            .perform(click())
-
-        enterPaymentSheetDetails(
-            CARD_NUMBER,
-            CARDHOLDER_NAME,
-            CARD_EXPIRY,
-            CARD_SECURITY_CODE,
-        )
-
-        onView(withId(R.id.cardEntrySubmitButton))
-            .check(matches(isEnabled()))
-            .perform(click())
-
-        // Backend overrides CRI to Challenge as Mandate
-        clickCompleteOn3DS2Screen()
-
-        assertReceiptObject("AuthCode: ", "", "Success", "CheckCard")
+        awaitActivityThenRun(ResultActivity::class.java.name) {
+            onView(withText(TRANSACTION_HALTED)).check(matches(isDisplayed()))
+        }
     }
 }

@@ -11,16 +11,22 @@ import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
+import com.chuckerteam.chucker.api.Chucker
 import com.judokit.android.examples.result.ResultActivity
 import com.judokit.android.examples.test.BuildConfig
 import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.startsWith
 import org.hamcrest.Matchers
+import com.chuckerteam.chucker.R as ChuckerR
 import com.judokit.android.examples.R as Examples
 import com.judopay.judokit.android.R as SDK
 
@@ -60,7 +66,7 @@ fun <IR : IdlingResource> awaitIdlingResourceThenRun(
  */
 fun clickCompleteOn3DS2Screen() {
     assertOnView(withText("COMPLETE"))
-    Thread.sleep(15000)
+    Thread.sleep(20000)
     onView(withText("COMPLETE"))
         .perform(ViewActions.longClick())
 }
@@ -118,14 +124,8 @@ fun fillTextField(
     doOnView(withId(textFieldId), clearText(), typeText(text))
 }
 
-fun setupRavelin(
-    action: String,
-    toa: String,
-    exemption: String,
-    challenge: String,
-) {
+fun updateRecommendationUrlWith(suffix: String) {
     val recommendationURL = BuildConfig.RECOMMENDATION_URL
-    val suffix = "$action/$toa/$exemption/$challenge"
     sharedPrefs
         .edit()
         .apply {
@@ -139,7 +139,7 @@ fun setupRavelin(
     onView(withText("Generate payment session"))
         .perform(click())
 
-    Thread.sleep(1000)
+    Thread.sleep(10000)
 }
 
 fun fillBillingDetails(
@@ -186,4 +186,64 @@ fun toggleBillingInfoSetting(state: Boolean) {
             putBoolean("should_ask_for_billing_information", state)
         }
         .commit()
+}
+
+fun assertUsingChucker(
+    cri: String? = null,
+    sca: String? = null,
+    checkCRI: Boolean,
+    checkSCA: Boolean,
+    challenge: Boolean? = true,
+) {
+    val context = InstrumentationRegistry.getInstrumentation().targetContext
+
+    val intent = Chucker.getLaunchIntent(context)
+    context.startActivity(intent)
+
+    onView(withText("Chucker")).check(matches(isDisplayed()))
+
+    Thread.sleep(5000)
+
+    // Open transaction
+    onView(withId(ChuckerR.id.transactionsRecyclerView))
+        .check(matches(isDisplayed()))
+
+    if (challenge == true) {
+        onView(withId(ChuckerR.id.transactionsRecyclerView))
+            .perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                    1,
+                    click(),
+                ),
+            )
+    } else {
+        onView(withId(ChuckerR.id.transactionsRecyclerView))
+            .perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                    0,
+                    click(),
+                ),
+            )
+    }
+
+    // Open request
+    onView(withId(ChuckerR.id.tabLayout))
+        .check(matches(isDisplayed()))
+
+    onView(
+        allOf(
+            withText("Request"),
+        ),
+    ).perform(click())
+
+    // Assertion
+    if (checkCRI && cri != null) {
+        onView(withText(containsString("\"challengeRequestIndicator\": \"$cri\"")))
+            .check(matches(isDisplayed()))
+    }
+
+    if (checkSCA && sca != null) {
+        onView(withText(containsString("\"scaExemption\": \"$sca\"")))
+            .check(matches(isDisplayed()))
+    }
 }
