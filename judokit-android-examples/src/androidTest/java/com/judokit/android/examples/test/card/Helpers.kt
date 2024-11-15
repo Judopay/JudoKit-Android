@@ -9,6 +9,8 @@ import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import com.judokit.android.examples.test.card.EspressoExtensions.Companion.searchFor
 import org.hamcrest.Matcher
 import java.lang.Thread.sleep
+import android.content.res.Configuration
+import androidx.test.platform.app.InstrumentationRegistry
 
 fun doOnView(
     matcher: Matcher<View>,
@@ -64,4 +66,10 @@ fun waitForView(
         }
 
     throw Exception("Error finding a view matching $viewMatcher")
+}
+
+fun isTablet(): Boolean {
+    val context = InstrumentationRegistry.getInstrumentation().targetContext
+    val configuration = context.resources.configuration
+    return configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
 }

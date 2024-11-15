@@ -9,6 +9,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
@@ -825,10 +826,15 @@ class CardPaymentTest {
         Thread.sleep(1000)
 
         fillTextField(R.id.emailTextInputEditText, SPECIAL_CHARACTERS)
+        closeSoftKeyboard()
         onView(withId(R.id.cityTextInputEditText)).perform(click())
+        closeSoftKeyboard()
         Thread.sleep(500)
         onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
             .check(matches(withText(INVALID_EMAIL_LABEL)))
+        if (isTablet()) {
+            closeSoftKeyboard()
+        }
         fillTextField(R.id.emailTextInputEditText, VALID_EMAIL)
 
         selectFromMultipleAndEnterText(R.id.countryTextInputEditText, VALID_COUNTRY)
