@@ -1,16 +1,16 @@
 package com.judokit.android.examples.test.card
 
+import android.content.res.Configuration
 import android.view.View
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
+import androidx.test.platform.app.InstrumentationRegistry
 import com.judokit.android.examples.test.card.EspressoExtensions.Companion.searchFor
 import org.hamcrest.Matcher
 import java.lang.Thread.sleep
-import android.content.res.Configuration
-import androidx.test.platform.app.InstrumentationRegistry
 
 fun doOnView(
     matcher: Matcher<View>,
