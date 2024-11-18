@@ -182,7 +182,7 @@
         <Preference
             app:fragment="com.judokit.android.examples.settings.fragments.ThreeDSSDKUICustomisationFragment"
             app:iconSpaceReserved="false"
-            app:summary="Customize UI elements of the challenge screen"
+            app:summary="Customise UI elements of the challenge screen"
             app:title="UI customization" />
     </PreferenceCategory>
 

@@ -21,7 +21,7 @@
         android:layout_marginStart="@dimen/space_24"
         android:layout_marginTop="@dimen/space_8"
         android:layout_marginEnd="@dimen/space_24"
-        android:text="@string/jp_customize_card"
+        android:text="@string/jp_customise_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/backButton" />
