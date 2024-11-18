@@ -254,6 +254,7 @@ jobs:
               --results-bucket $FIREBASE_TEST_RESULTS_BUCKET \
               --timeout=30m \
               --device model=shiba,version=34 \
+              --device model=gta8wifi,version=34 \
               --use-orchestrator \
               --client-details=matrixLabel="Regression E2E" \
               --num-flaky-test-attempts=1
