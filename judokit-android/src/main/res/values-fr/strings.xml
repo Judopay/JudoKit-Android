@@ -89,7 +89,7 @@
     <string name="jp_default_jcb_card_title">Ma carte JCB</string>
     <string name="jp_default_chinaunionpay_card_title">Ma carte China Union Pay</string>
     <string name="jp_default_discover_card_title">Ma carte Discover</string>
-    <string name="jp_default_dinnersclub_card_title">Ma carte Dinners Club</string>
+    <string name="jp_default_dinersclub_card_title">Ma carte Diners Club</string>
 
     <string name="jp_processing">En cours…</string>
 
