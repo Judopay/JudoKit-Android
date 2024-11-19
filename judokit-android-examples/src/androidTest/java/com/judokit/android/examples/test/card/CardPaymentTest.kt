@@ -825,10 +825,15 @@ class CardPaymentTest {
         Thread.sleep(1000)
 
         fillTextField(R.id.emailTextInputEditText, SPECIAL_CHARACTERS)
+        closeSoftKeyboard()
         onView(withId(R.id.cityTextInputEditText)).perform(click())
+        closeSoftKeyboard()
         Thread.sleep(500)
         onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
             .check(matches(withText(INVALID_EMAIL_LABEL)))
+        if (isTablet()) {
+            closeSoftKeyboard()
+        }
         fillTextField(R.id.emailTextInputEditText, VALID_EMAIL)
 
         selectFromMultipleAndEnterText(R.id.countryTextInputEditText, VALID_COUNTRY)
