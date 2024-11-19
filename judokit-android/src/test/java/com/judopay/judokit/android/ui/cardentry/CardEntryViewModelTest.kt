@@ -447,13 +447,6 @@ internal class CardEntryViewModelTest {
         assertThat(slots.last()).isEqualTo(CardEntryNavigation.Card)
     }
 
-    @Test
-    fun `Given CardEntryViewModel initialises, shouldDisplayScanButton is always false`() {
-        val slots = mutableListOf<CardEntryFragmentModel>()
-        verify { modelSpy.onChanged(capture(slots)) }
-        assertThat(slots.last().displayScanButton).isFalse()
-    }
-
     private fun getJudo(
         widgetType: PaymentWidgetType,
         uiConfiguration: UiConfiguration = UiConfiguration.Builder().build(),

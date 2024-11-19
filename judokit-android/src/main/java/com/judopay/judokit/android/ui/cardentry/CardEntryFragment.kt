@@ -124,7 +124,6 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         initializeViewModelObserving()
         binding.cancelButton.setOnClickListener { onUserCancelled() }
-        binding.scanCardButton.setOnClickListener { handleScanCardButtonClicks() }
 
         binding.cardDetailsFormView.apply {
             onFormValidationStatusListener = { model, isValid ->
@@ -270,9 +269,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         val formModel = model.formModel
 
         binding.apply {
-            scanCardButton.isVisible = model.displayScanButton
             bottomSheetContainer.isVisible = model.isUserInputRequired
-
             cardDetailsFormView.model = formModel.cardDetailsInputModel
             billingAddressFormView.model = formModel.billingDetailsInputModel
         }
@@ -324,10 +321,6 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         } else {
             sharedViewModel.paymentResult.postValue(result)
         }
-    }
-
-    private fun handleScanCardButtonClicks() {
-        // noop
     }
 
     private fun unSubscribeFromInsetsChanges() =
