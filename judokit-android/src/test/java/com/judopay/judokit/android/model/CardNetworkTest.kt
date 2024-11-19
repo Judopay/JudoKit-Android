@@ -541,7 +541,7 @@ internal class CardNetworkTest {
     @Test
     fun returnDinersClubDefaultNameResourceWhenDinersClub() {
         assertEquals(
-            R.string.jp_default_dinnersclub_card_title,
+            R.string.jp_default_dinersclub_card_title,
             CardNetwork.DINERS_CLUB.defaultCardNameResId,
         )
     }

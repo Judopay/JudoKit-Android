@@ -252,7 +252,7 @@ val CardNetwork.defaultCardNameResId: Int
             CardNetwork.MAESTRO -> R.string.jp_default_maestro_card_title
             CardNetwork.VISA -> R.string.jp_default_visa_card_title
             CardNetwork.DISCOVER -> R.string.jp_default_discover_card_title
-            CardNetwork.DINERS_CLUB -> R.string.jp_default_dinnersclub_card_title
+            CardNetwork.DINERS_CLUB -> R.string.jp_default_dinersclub_card_title
             CardNetwork.JCB -> R.string.jp_default_jcb_card_title
             CardNetwork.CHINA_UNION_PAY -> R.string.jp_default_chinaunionpay_card_title
             else -> R.string.jp_empty

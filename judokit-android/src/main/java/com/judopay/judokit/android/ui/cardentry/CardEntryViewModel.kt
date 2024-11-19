@@ -40,7 +40,6 @@ sealed class CardEntryNavigation {
 
 data class CardEntryFragmentModel(
     val formModel: FormModel,
-    val displayScanButton: Boolean = true,
     val isUserInputRequired: Boolean = true,
 )
 
@@ -341,7 +340,6 @@ class CardEntryViewModel(
                 }
         }
 
-        val shouldDisplayScanButton = false
         val shouldDisplayBackButton = judo.enabledCardDetailsFields(cardEntryOptions).isNotEmpty()
 
         billingAddressModel.apply {
@@ -367,7 +365,7 @@ class CardEntryViewModel(
         val formModel = FormModel(cardDetailsModel, billingAddressModel)
 
         model.postValue(
-            CardEntryFragmentModel(formModel, shouldDisplayScanButton, isUserInputRequired = judo.isUserInputRequired(cardEntryOptions)),
+            CardEntryFragmentModel(formModel, isUserInputRequired = judo.isUserInputRequired(cardEntryOptions)),
         )
     }
 

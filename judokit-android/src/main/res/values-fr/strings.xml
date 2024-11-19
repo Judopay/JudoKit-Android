@@ -9,7 +9,6 @@
     <string name="jp_button_edit">Editer</string>
     <string name="jp_button_done">Terminer</string>
     <string name="jp_cancel">Anuler</string>
-    <string name="jp_button_scan_card">Scanner carte</string>
     <string name="jp_add_card">Ajouter carte</string>
     <string name="jp_you_will_pay">Vous allez payeer</string>
     <string name="jp_cards">Cartes</string>
@@ -89,11 +88,11 @@
     <string name="jp_default_jcb_card_title">Ma carte JCB</string>
     <string name="jp_default_chinaunionpay_card_title">Ma carte China Union Pay</string>
     <string name="jp_default_discover_card_title">Ma carte Discover</string>
-    <string name="jp_default_dinnersclub_card_title">Ma carte Dinners Club</string>
+    <string name="jp_default_dinersclub_card_title">Ma carte Diners Club</string>
 
     <string name="jp_processing">En cours…</string>
 
-    <string name="jp_customize_card">Customsier carte</string>
+    <string name="jp_customise_card">Customsier carte</string>
     <string name="jp_save_as_default_payment_method">Enregistrer en tant que mode de paiment par défaut</string>
     <string name="jp_save">Enregistrer</string>
 
