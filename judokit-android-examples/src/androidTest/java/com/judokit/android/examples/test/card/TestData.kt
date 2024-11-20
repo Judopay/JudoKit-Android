@@ -51,3 +51,10 @@ object BillingInfo {
     const val INVALID_ADDRESS_LABEL = "Please enter a valid address"
     const val INVALID_CITY_LABEL = "Please enter a valid city"
 }
+
+object Ideal {
+    const val NEXT_BUTTON = "Next"
+    const val LOGIN_BUTTON = "Login"
+    const val MAKE_PAYMENT_BUTTON = "Make Payment"
+    const val BACK_BUTTON = "Back to where you came from"
+}

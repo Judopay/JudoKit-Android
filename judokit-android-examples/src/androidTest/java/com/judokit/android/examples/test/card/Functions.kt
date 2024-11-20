@@ -10,13 +10,15 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.web.sugar.Web
+import androidx.test.espresso.web.webdriver.DriverAtoms
+import androidx.test.espresso.web.webdriver.Locator
 import androidx.test.platform.app.InstrumentationRegistry
 import com.chuckerteam.chucker.api.Chucker
 import com.judokit.android.examples.result.ResultActivity
@@ -83,19 +85,37 @@ fun assertReceiptObject(
     awaitActivityThenRun(ResultActivity::class.java.name) {
         onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(8))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(withText(startsWith(message)))))
+            .check(matches(ViewMatchers.hasDescendant(withText(startsWith(message)))))
 
         onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(13))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(withText(CoreMatchers.not(receiptId)))))
+            .check(matches(ViewMatchers.hasDescendant(withText(CoreMatchers.not(receiptId)))))
 
         onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(14))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(withText(result))))
+            .check(matches(ViewMatchers.hasDescendant(withText(result))))
 
         onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(15))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(withText(type))))
+            .check(matches(ViewMatchers.hasDescendant(withText(type))))
+    }
+}
+
+/*
+ * Assert iDEAL transaction result object
+ */
+fun assertIdealReceiptObject(
+    receiptId: String,
+    result: String,
+) {
+    awaitActivityThenRun(ResultActivity::class.java.name) {
+        onView(withId(SDK.id.recyclerView))
+            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(13))
+            .check(matches(ViewMatchers.hasDescendant(withText(CoreMatchers.not(receiptId)))))
+
+        onView(withId(SDK.id.recyclerView))
+            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(14))
+            .check(matches(ViewMatchers.hasDescendant(withText(result))))
     }
 }
 
@@ -246,4 +266,10 @@ fun assertUsingChucker(
         onView(withText(containsString("\"scaExemption\": \"$sca\"")))
             .check(matches(isDisplayed()))
     }
+}
+
+fun clickButtonOnWebViewWithText(text: String) {
+    Web.onWebView()
+        .withElement(DriverAtoms.findElement(Locator.XPATH, "//button[text()='$text']"))
+        .perform(DriverAtoms.webClick())
 }
