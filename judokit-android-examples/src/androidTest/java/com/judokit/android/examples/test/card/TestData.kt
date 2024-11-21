@@ -57,4 +57,5 @@ object Ideal {
     const val LOGIN_BUTTON = "Login"
     const val MAKE_PAYMENT_BUTTON = "Make Payment"
     const val BACK_BUTTON = "Back to where you came from"
+    const val ABORT_BUTTON = "Abort"
 }

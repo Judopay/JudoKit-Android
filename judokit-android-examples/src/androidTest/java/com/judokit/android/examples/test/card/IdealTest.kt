@@ -7,6 +7,8 @@ import androidx.preference.PreferenceManager
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.swipeUp
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -80,5 +82,25 @@ class IdealTest {
         clickButtonOnWebViewWithText(Ideal.BACK_BUTTON)
 
         assertIdealReceiptObject("", "SUCCEEDED")
+    }
+
+    @Test
+    fun testCancelIdealTransaction() {
+        onView(withText(PAYMENT_METHODS_LABEL))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        onView(withId(R.id.payButton))
+            .perform(click())
+
+        Thread.sleep(3000)
+
+        onView(withId(R.id.idealWebView)).perform(swipeUp())
+        clickButtonOnWebViewWithText(Ideal.ABORT_BUTTON)
+
+        Thread.sleep(1500)
+
+        onView(withText("The request has failed or responded without data.")).check(matches(isDisplayed()))
     }
 }
