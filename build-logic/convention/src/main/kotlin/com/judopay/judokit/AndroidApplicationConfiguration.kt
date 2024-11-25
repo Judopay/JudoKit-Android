@@ -47,4 +47,7 @@ private fun ApplicationDefaultConfig.addBuildConfigFields() {
     buildConfigField("String", "API_TEST_SECRET", "\"${System.getenv("API_TEST_SECRET")}\"")
     buildConfigField("String", "RECOMMENDATION_URL", "\"${System.getenv("RECOMMENDATION_URL")}\"")
     buildConfigField("String", "RSA_KEY", "\"${System.getenv("RSA_KEY")}\"")
+    buildConfigField("String", "IDEAL_JUDO_ID", "\"${System.getenv("IDEAL_JUDO_ID")}\"")
+    buildConfigField("String", "IDEAL_API_TEST_TOKEN", "\"${System.getenv("IDEAL_API_TEST_TOKEN")}\"")
+    buildConfigField("String", "IDEAL_API_TEST_SECRET", "\"${System.getenv("IDEAL_API_TEST_SECRET")}\"")
 }
