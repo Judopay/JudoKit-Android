@@ -919,4 +919,34 @@ class CardPaymentTest {
 
         assertReceiptObject("Card declined: CV2 policy", "", "Declined", "PreAuth")
     }
+
+    @Test
+    fun testPrimaryAccountDetailsTransaction() {
+        sharedPrefs
+            .edit()
+            .apply {
+                putBoolean("is_primary_account_details_enabled", true)
+            }
+            .commit()
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        assertOnView(withText("COMPLETE"))
+
+        clickCompleteOn3DS2Screen()
+
+        assertPADTransaction()
+    }
 }

@@ -215,14 +215,7 @@ fun assertUsingChucker(
     checkSCA: Boolean,
     challenge: Boolean? = true,
 ) {
-    val context = InstrumentationRegistry.getInstrumentation().targetContext
-
-    val intent = Chucker.getLaunchIntent(context)
-    context.startActivity(intent)
-
-    onView(withText("Chucker")).check(matches(isDisplayed()))
-
-    Thread.sleep(5000)
+    openChucker()
 
     // Open transaction
     onView(withId(ChuckerR.id.transactionsRecyclerView))
@@ -272,4 +265,38 @@ fun clickButtonOnWebViewWithText(text: String) {
     Web.onWebView()
         .withElement(DriverAtoms.findElement(Locator.XPATH, "//button[text()='$text']"))
         .perform(DriverAtoms.webClick())
+}
+
+fun openChucker() {
+    val context = InstrumentationRegistry.getInstrumentation().targetContext
+
+    val intent = Chucker.getLaunchIntent(context)
+    context.startActivity(intent)
+
+    onView(withText("Chucker")).check(matches(isDisplayed()))
+
+    Thread.sleep(5000)
+}
+
+fun assertPADTransaction() {
+    openChucker()
+    onView(withId(ChuckerR.id.transactionsRecyclerView))
+        .check(matches(isDisplayed()))
+    onView(withId(ChuckerR.id.transactionsRecyclerView))
+        .perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                1,
+                click(),
+            ),
+        )
+    onView(withId(ChuckerR.id.tabLayout))
+        .check(matches(isDisplayed()))
+
+    onView(
+        allOf(
+            withText("Request"),
+        ),
+    ).perform(click())
+    onView(withText(containsString("\"primaryAccountDetails\": ")))
+        .check(matches(isDisplayed()))
 }
