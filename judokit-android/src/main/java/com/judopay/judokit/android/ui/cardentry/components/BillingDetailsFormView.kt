@@ -12,16 +12,18 @@ import androidx.core.widget.addTextChangedListener
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.databinding.BillingDetailsFormViewBinding
 import com.judopay.judokit.android.dismissKeyboard
-import com.judopay.judokit.android.model.Country
+import com.judopay.judokit.android.model.AVSCountry
 import com.judopay.judokit.android.model.State
 import com.judopay.judokit.android.model.canadaProvincesAndTerritories
+import com.judopay.judokit.android.model.chinaProvinces
+import com.judopay.judokit.android.model.indiaStates
 import com.judopay.judokit.android.model.usStates
 import com.judopay.judokit.android.parentOfType
 import com.judopay.judokit.android.smoothScrollToView
 import com.judopay.judokit.android.ui.cardentry.formatting.PhoneCountryCodeTextWatcher
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsInputModel
-import com.judopay.judokit.android.ui.cardentry.model.CountryInfo
+import com.judopay.judokit.android.ui.cardentry.model.Country
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.model.fieldHintResId
 import com.judopay.judokit.android.ui.cardentry.model.valueOfBillingDetailsFieldWithType
@@ -76,7 +78,7 @@ class BillingDetailsFormView
         private val phoneNumberFields =
             arrayListOf(BillingDetailsFieldType.PHONE_COUNTRY_CODE.name, BillingDetailsFieldType.MOBILE_NUMBER.name)
 
-        private val countries = CountryInfo.list(context)
+        private val countries = Country.list(context)
 
         private val validationResultsCache = mutableMapOf<BillingDetailsFieldType, Boolean>()
 
@@ -86,26 +88,25 @@ class BillingDetailsFormView
 
         private var mobileNumberFormatter: PhoneNumberFormattingTextWatcher? = null
         private var selectedState: State? = null
-        private var selectedCountry: CountryInfo? = null
+        private var selectedCountry: Country? = null
             set(value) {
                 field = value
 
                 val dialCode = value?.dialCode ?: ""
-                val country = Country.entries.firstOrNull { it.name == selectedCountry?.alpha2Code } ?: Country.OTHER
 
                 textInputLayoutForType(BillingDetailsFieldType.PHONE_COUNTRY_CODE)?.let {
                     it.editText?.setText(dialCode)
                 }
 
                 validatorInstance<PostcodeValidator>()?.let {
-                    it.country = country
+                    it.country = AVSCountry.entries.firstOrNull { it.name == selectedCountry?.alpha2Code } ?: AVSCountry.OTHER
                 }
 
                 validatorInstance<StateValidator>()?.let {
-                    it.country = country
+                    it.country = selectedCountry
                 }
 
-                setupStateSpinner(country)
+                setupStateSpinner(selectedCountry)
                 updateSubmitButtonState()
             }
 
@@ -115,7 +116,7 @@ class BillingDetailsFormView
             setupPhoneCountryCodeFormatter()
             setupMobileNumberFormatter()
             setupCountrySpinner()
-            setupStateSpinner(Country.OTHER)
+            setupStateSpinner()
         }
 
         override fun onViewWillAppear() {
@@ -133,21 +134,29 @@ class BillingDetailsFormView
                 val adapter = ArrayAdapter(context, R.layout.country_select_dialog_item, countries)
                 setAdapter(adapter)
                 setOnItemClickListener { parent, _, index, _ ->
-                    selectedCountry = parent.getItemAtPosition(index) as CountryInfo
+                    selectedCountry = parent.getItemAtPosition(index) as Country
                 }
             }
 
-        private fun setupStateSpinner(country: Country) {
+        private fun setupStateSpinner(country: Country? = null) {
             var states = emptyList<State>()
             var hint = R.string.jp_empty
-            when (country) {
-                Country.US -> {
-                    states = usStates
-                    hint = R.string.jp_us_state_hint
-                }
-                Country.CA -> {
+            when (country?.alpha2Code) {
+                "CA" -> {
                     states = canadaProvincesAndTerritories
                     hint = R.string.jp_ca_province_hint
+                }
+                "CN" -> {
+                    states = chinaProvinces
+                    hint = R.string.jp_cn_province_hint
+                }
+                "IN" -> {
+                    states = indiaStates
+                    hint = R.string.jp_in_state_hint
+                }
+                "US" -> {
+                    states = usStates
+                    hint = R.string.jp_us_state_hint
                 }
                 else -> {
                     validationResultsCache[BillingDetailsFieldType.STATE] = true
