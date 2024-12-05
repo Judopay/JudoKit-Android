@@ -15,6 +15,7 @@ import com.judopay.judokit.android.dismissKeyboard
 import com.judopay.judokit.android.model.Country
 import com.judopay.judokit.android.model.State
 import com.judopay.judokit.android.model.canadaProvincesAndTerritories
+import com.judopay.judokit.android.model.indiaStates
 import com.judopay.judokit.android.model.usStates
 import com.judopay.judokit.android.parentOfType
 import com.judopay.judokit.android.smoothScrollToView
@@ -91,21 +92,20 @@ class BillingDetailsFormView
                 field = value
 
                 val dialCode = value?.dialCode ?: ""
-                val country = Country.entries.firstOrNull { it.name == selectedCountry?.alpha2Code } ?: Country.OTHER
 
                 textInputLayoutForType(BillingDetailsFieldType.PHONE_COUNTRY_CODE)?.let {
                     it.editText?.setText(dialCode)
                 }
 
                 validatorInstance<PostcodeValidator>()?.let {
-                    it.country = country
+                    it.country = Country.entries.firstOrNull { it.name == selectedCountry?.alpha2Code } ?: Country.OTHER
                 }
 
                 validatorInstance<StateValidator>()?.let {
-                    it.country = country
+                    it.country = selectedCountry
                 }
 
-                setupStateSpinner(country)
+                setupStateSpinner(selectedCountry)
                 updateSubmitButtonState()
             }
 
@@ -115,7 +115,7 @@ class BillingDetailsFormView
             setupPhoneCountryCodeFormatter()
             setupMobileNumberFormatter()
             setupCountrySpinner()
-            setupStateSpinner(Country.OTHER)
+            setupStateSpinner()
         }
 
         override fun onViewWillAppear() {
@@ -137,17 +137,21 @@ class BillingDetailsFormView
                 }
             }
 
-        private fun setupStateSpinner(country: Country) {
+        private fun setupStateSpinner(country: CountryInfo? = null) {
             var states = emptyList<State>()
             var hint = R.string.jp_empty
-            when (country) {
-                Country.US -> {
+            when (country?.alpha2Code) {
+                "US" -> {
                     states = usStates
                     hint = R.string.jp_us_state_hint
                 }
-                Country.CA -> {
+                "CA" -> {
                     states = canadaProvincesAndTerritories
                     hint = R.string.jp_ca_province_hint
+                }
+                "IN" -> {
+                    states = indiaStates
+                    hint = R.string.jp_us_state_hint
                 }
                 else -> {
                     validationResultsCache[BillingDetailsFieldType.STATE] = true
