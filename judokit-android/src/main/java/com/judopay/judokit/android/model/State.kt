@@ -75,3 +75,10 @@ val canadaProvincesAndTerritories =
         State(isoCode = "SK", name = "Saskatchewan"),
         State(isoCode = "YT", name = "Yukon"),
     )
+
+val indiaStates =
+    listOf(
+        // Todo
+        State(isoCode = "IN1", name = "Fake State 1"),
+        State(isoCode = "IN2", name = "Fake State 2"),
+    )
