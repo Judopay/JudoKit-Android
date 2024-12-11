@@ -5,33 +5,27 @@ import com.judopay.judokit.android.model.canadaProvincesAndTerritories
 import com.judopay.judokit.android.model.indiaStates
 import com.judopay.judokit.android.model.usStates
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
-import com.judopay.judokit.android.ui.cardentry.model.CountryInfo
+import com.judopay.judokit.android.ui.cardentry.model.Country
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
 import com.judopay.judokit.android.ui.cardentry.validation.Validator
 
 data class StateValidator(
-    var country: CountryInfo? = null,
+    var country: Country? = null,
     override val fieldType: String = BillingDetailsFieldType.STATE.name,
 ) : Validator {
     override fun validate(
         input: String,
         formFieldEvent: FormFieldEvent,
     ): ValidationResult {
-        if (country?.alpha2Code != "CA" && country?.alpha2Code != "US") {
+        if (country?.alpha2Code !in setOf("CA", "US", "IN")) {
             return ValidationResult(true, R.string.jp_empty)
         }
         val validStates =
             when (country?.alpha2Code) {
-                "CA" -> {
-                    canadaProvincesAndTerritories
-                }
-                "US" -> {
-                    usStates
-                }
-                else -> {
-                    indiaStates
-                }
+                "CA" -> canadaProvincesAndTerritories
+                "US" -> usStates
+                else -> indiaStates
             }
         val isValid = validStates.map { it.name.lowercase() }.contains(input.lowercase())
         val message =
