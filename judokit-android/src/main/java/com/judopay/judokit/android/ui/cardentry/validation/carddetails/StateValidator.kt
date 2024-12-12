@@ -1,10 +1,11 @@
 package com.judopay.judokit.android.ui.cardentry.validation.carddetails
 
 import com.judopay.judokit.android.R
-import com.judopay.judokit.android.model.Country
 import com.judopay.judokit.android.model.canadaProvincesAndTerritories
+import com.judopay.judokit.android.model.indiaStates
 import com.judopay.judokit.android.model.usStates
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
+import com.judopay.judokit.android.ui.cardentry.model.Country
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
 import com.judopay.judokit.android.ui.cardentry.validation.Validator
@@ -17,15 +18,20 @@ data class StateValidator(
         input: String,
         formFieldEvent: FormFieldEvent,
     ): ValidationResult {
-        if (country != Country.CA && country != Country.US) {
+        if (country?.alpha2Code !in setOf("CA", "US", "IN")) {
             return ValidationResult(true, R.string.jp_empty)
         }
-        val validStates = if (country == Country.CA) canadaProvincesAndTerritories else usStates
+        val validStates =
+            when (country?.alpha2Code) {
+                "CA" -> canadaProvincesAndTerritories
+                "US" -> usStates
+                else -> indiaStates
+            }
         val isValid = validStates.map { it.name.lowercase() }.contains(input.lowercase())
         val message =
             when {
                 isValid || formFieldEvent == FormFieldEvent.TEXT_CHANGED -> R.string.jp_empty
-                country == Country.CA -> R.string.jp_error_province_territory_should_not_be_empty
+                country?.alpha2Code == "CA" -> R.string.jp_error_province_territory_should_not_be_empty
                 else -> R.string.jp_error_state_should_not_be_empty
             }
         return ValidationResult(isValid, message)

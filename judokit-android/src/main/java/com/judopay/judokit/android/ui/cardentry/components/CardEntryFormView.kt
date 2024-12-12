@@ -12,9 +12,9 @@ import android.widget.FrameLayout
 import androidx.core.widget.addTextChangedListener
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.databinding.CardEntryFormViewBinding
+import com.judopay.judokit.android.model.AVSCountry
 import com.judopay.judokit.android.model.CardNetwork
-import com.judopay.judokit.android.model.Country
-import com.judopay.judokit.android.model.asCountry
+import com.judopay.judokit.android.model.asAVSCountry
 import com.judopay.judokit.android.model.postcodeMaxLength
 import com.judopay.judokit.android.model.translatableName
 import com.judopay.judokit.android.parentOfType
@@ -69,7 +69,7 @@ class CardEntryFormView
             )
 
         private val countriesAdapter: ArrayAdapter<String> by lazy {
-            val countries = Country.values().map { context.getString(it.translatableName) }
+            val countries = AVSCountry.values().map { context.getString(it.translatableName) }
             ArrayAdapter(context, android.R.layout.simple_list_item_1, countries)
         }
 
@@ -92,8 +92,8 @@ class CardEntryFormView
         }
 
         private fun setupCountryFormatter() {
-            val country = model.valueOfFieldWithType(CardDetailsFieldType.COUNTRY).asCountry()
-            onCountryDidSelect(country ?: Country.OTHER)
+            val country = model.valueOfFieldWithType(CardDetailsFieldType.COUNTRY).asAVSCountry()
+            onCountryDidSelect(country ?: AVSCountry.OTHER)
         }
 
         private fun setupNumberFormatter() =
@@ -118,9 +118,9 @@ class CardEntryFormView
                 addTextChangedListener(mask)
             }
 
-        private fun onCountryDidSelect(country: Country) {
+        private fun onCountryDidSelect(country: AVSCountry) {
             val previousSelected =
-                model.valueOfFieldWithType(CardDetailsFieldType.COUNTRY).asCountry()
+                model.valueOfFieldWithType(CardDetailsFieldType.COUNTRY).asAVSCountry()
             val postCodeEditText = editTextForType(CardDetailsFieldType.POST_CODE)
 
             postCodeEditText.filters = arrayOf(InputFilter.LengthFilter(country.postcodeMaxLength))
@@ -308,7 +308,7 @@ class CardEntryFormView
                 setAdapter(countriesAdapter)
                 setOnClickListener { showDropDown() }
                 setOnItemClickListener { _, _, _, id ->
-                    val selected = Country.values()[id.toInt()]
+                    val selected = AVSCountry.values()[id.toInt()]
                     onCountryDidSelect(selected)
                 }
             }
