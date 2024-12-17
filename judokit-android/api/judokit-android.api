@@ -4008,6 +4008,11 @@ public final class com/judopay/judokit/android/ui/common/ButtonState$Loading : c
 }
 
 public final class com/judopay/judokit/android/ui/common/ConstantsKt {
+	public static final field ALPHA_2_CODE_CANADA Ljava/lang/String;
+	public static final field ALPHA_2_CODE_CHINA Ljava/lang/String;
+	public static final field ALPHA_2_CODE_GB Ljava/lang/String;
+	public static final field ALPHA_2_CODE_INDIA Ljava/lang/String;
+	public static final field ALPHA_2_CODE_US Ljava/lang/String;
 	public static final field ANIMATION_DURATION_500 J
 	public static final field GOOGLE_PAY_API_VERSION I
 	public static final field GOOGLE_PAY_API_VERSION_MINOR I

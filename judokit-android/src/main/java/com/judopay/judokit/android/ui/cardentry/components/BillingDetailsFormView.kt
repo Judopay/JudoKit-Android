@@ -36,6 +36,10 @@ import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.PhoneC
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.CountryValidator
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.PostcodeValidator
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.StateValidator
+import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_CANADA
+import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_CHINA
+import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_INDIA
+import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_US
 
 internal typealias BillingDetailsFormValidationStatus = (model: BillingDetailsInputModel, isValid: Boolean) -> Unit
 internal typealias BillingDetailsSubmitButtonClickListener = () -> Unit
@@ -142,19 +146,19 @@ class BillingDetailsFormView
             var states = emptyList<State>()
             var hint = R.string.jp_empty
             when (country?.alpha2Code) {
-                "CA" -> {
+                ALPHA_2_CODE_CANADA -> {
                     states = canadaProvincesAndTerritories
                     hint = R.string.jp_ca_province_hint
                 }
-                "CN" -> {
+                ALPHA_2_CODE_CHINA -> {
                     states = chinaProvinces
                     hint = R.string.jp_cn_province_hint
                 }
-                "IN" -> {
+                ALPHA_2_CODE_INDIA -> {
                     states = indiaStates
                     hint = R.string.jp_in_state_hint
                 }
-                "US" -> {
+                ALPHA_2_CODE_US -> {
                     states = usStates
                     hint = R.string.jp_us_state_hint
                 }
@@ -310,8 +314,8 @@ class BillingDetailsFormView
             if (type == BillingDetailsFieldType.STATE && event == FormFieldEvent.TEXT_CHANGED) {
                 val typedState =
                     when (selectedCountry?.alpha2Code) {
-                        "CA" -> canadaProvincesAndTerritories.firstOrNull { it.name.lowercase() == value.lowercase() }
-                        "US" -> usStates.firstOrNull { it.name.lowercase() == value.lowercase() }
+                        ALPHA_2_CODE_CANADA -> canadaProvincesAndTerritories.firstOrNull { it.name.lowercase() == value.lowercase() }
+                        ALPHA_2_CODE_US -> usStates.firstOrNull { it.name.lowercase() == value.lowercase() }
                         else -> null
                     }
                 selectedState = typedState

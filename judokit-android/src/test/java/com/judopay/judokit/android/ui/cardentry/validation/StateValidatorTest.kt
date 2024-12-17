@@ -4,16 +4,21 @@ import com.judopay.judokit.android.R
 import com.judopay.judokit.android.ui.cardentry.model.Country
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.StateValidator
+import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_CANADA
+import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_CHINA
+import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_GB
+import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_INDIA
+import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_US
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 internal class StateValidatorTest {
-    private val countryUK = Country("GB", "United Kingdom", "44", "826", "#### ######")
-    private val countryUS = Country("US", "United States", "1", "840", "(###) ###-####")
-    private val countryCanada = Country("CA", "Canada", "1", "124", "(###) ###-####")
-    private val countryChina = Country("CN", "China", "86", "156", "##-#########")
-    private val countryIndia = Country("IN", "India", "91", "356", "#####-#####")
+    private val countryUK = Country(ALPHA_2_CODE_GB, "United Kingdom", "44", "826", "#### ######")
+    private val countryUS = Country(ALPHA_2_CODE_US, "United States", "1", "840", "(###) ###-####")
+    private val countryCanada = Country(ALPHA_2_CODE_CANADA, "Canada", "1", "124", "(###) ###-####")
+    private val countryChina = Country(ALPHA_2_CODE_CHINA, "China", "86", "156", "##-#########")
+    private val countryIndia = Country(ALPHA_2_CODE_INDIA, "India", "91", "356", "#####-#####")
 
     private val validator: StateValidator = StateValidator()
 
