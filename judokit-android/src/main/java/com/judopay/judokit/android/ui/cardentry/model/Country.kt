@@ -7,7 +7,7 @@ import com.judopay.judokit.android.ui.common.getLocale
 private const val COUNTRIES_JSON_FILE_NAME = "countries.json"
 private const val DEFAULT_ALPHA_2_COUNTRY_CODE = "GB"
 
-data class CountryInfo(
+data class Country(
     val alpha2Code: String,
     val name: String,
     val dialCode: String,
@@ -17,14 +17,14 @@ data class CountryInfo(
     override fun toString() = name
 
     companion object {
-        private var countryList: Array<CountryInfo>? = null
+        private var countryList: Array<Country>? = null
 
-        fun list(context: Context): Array<CountryInfo> {
+        fun list(context: Context): Array<Country> {
             if (countryList == null) {
                 countryList =
                     Gson().fromJson(
                         context.assets.open(COUNTRIES_JSON_FILE_NAME).bufferedReader().use { it.readText() },
-                        Array<CountryInfo>::class.java,
+                        Array<Country>::class.java,
                     )
             }
             return countryList!!
@@ -32,8 +32,8 @@ data class CountryInfo(
 
         fun currentLocaleCountry(
             context: Context,
-            default: CountryInfo = list(context).first { it.alpha2Code == DEFAULT_ALPHA_2_COUNTRY_CODE },
-        ): CountryInfo {
+            default: Country = list(context).first { it.alpha2Code == DEFAULT_ALPHA_2_COUNTRY_CODE },
+        ): Country {
             val alpha2Code = getLocale(context.resources).country
             return list(context).firstOrNull { it.alpha2Code == alpha2Code } ?: default
         }
