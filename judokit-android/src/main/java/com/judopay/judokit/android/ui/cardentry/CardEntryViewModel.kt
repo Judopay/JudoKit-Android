@@ -25,7 +25,7 @@ import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
-import com.judopay.judokit.android.ui.cardentry.model.Country
+import com.judopay.judokit.android.ui.cardentry.model.CountryInfo
 import com.judopay.judokit.android.ui.cardentry.model.FormModel
 import com.judopay.judokit.android.ui.common.ButtonState
 import com.judopay.judokit.android.ui.paymentmethods.toTokenizedCardEntity
@@ -107,7 +107,7 @@ class CardEntryViewModel(
 
     // used when the form needs to be pre populated, ex. `Scan Card`
     private var cardDetailsModel = CardDetailsInputModel()
-    private var billingAddressModel = BillingDetailsInputModel(countryCode = Country.currentLocaleCountry(context).numericCode)
+    private var billingAddressModel = BillingDetailsInputModel(countryCode = CountryInfo.currentLocaleCountry(context).numericCode)
 
     private var navigation: CardEntryNavigation = CardEntryNavigation.Card
 

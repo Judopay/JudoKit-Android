@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-internal class AVSCountryValidatorTest {
+internal class CountryValidatorTest {
     private val validator: CountryValidator = CountryValidator()
 
     @Test

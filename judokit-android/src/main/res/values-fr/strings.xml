@@ -21,8 +21,6 @@
     <string name="jp_country_hint">Pays</string>
     <string name="jp_us_state_hint">État</string>
     <string name="jp_ca_province_hint">Province ou territoire</string>
-    <string name="jp_in_state_hint">State or union territory</string>
-    <string name="jp_cn_province_hint">Province or region</string>
     <string name="jp_post_code_hint">Code postal</string>
     <string name="jp_check_card_number">Vérifiez le numéro de carte</string>
     <string name="jp_error_unknown_not_supported">Unknown Card Network n\'est pas prise en charge</string>
@@ -62,8 +60,6 @@
     <string name="jp_error_country_should_not_be_empty">Veuillez sélectionner un pays</string>
     <string name="jp_error_state_should_not_be_empty">Veuillez sélectionner un état</string>
     <string name="jp_error_province_territory_should_not_be_empty">Veuillez sélectionner une province ou un territoire</string>
-    <string name="jp_error_state_union_territory_should_not_be_empty">Please select a state or union territory</string>
-    <string name="jp_error_province_region_should_not_be_empty">Please select a province or region</string>
     <string name="jp_expired">Expiré</string>
     <string name="jp_is_expired">est expiré</string>
     <string name="jp_will_expire_soon">va bientôt expirer</string>
