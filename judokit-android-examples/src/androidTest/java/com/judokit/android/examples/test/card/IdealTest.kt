@@ -20,7 +20,6 @@ import com.judokit.android.examples.BuildConfig
 import com.judokit.android.examples.feature.DemoFeatureListActivity
 import com.judokit.android.examples.test.card.FeaturesList.PAYMENT_METHODS_LABEL
 import com.judopay.judokit.android.R
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -56,15 +55,6 @@ class IdealTest {
                 putStringSet("payment_methods", setOf("IDEAL"))
             }
             .commit()
-    }
-
-    @After
-    fun tearDown() {
-        sharedPrefs
-            .edit()
-            .apply {
-                putString("currency", "GBP")
-            }
     }
 
     @Test
