@@ -281,7 +281,8 @@ jobs:
               --device model=a51,version=31 \
               --use-orchestrator \
               --client-details=matrixLabel="Backward Compat E2E (API 31)" \
-              --test-targets="class com.judokit.android.examples.test.card.CardPaymentTest, class com.judokit.android.examples.test.card.IdealTest"
+              --test-targets="class com.judokit.android.examples.test.card.CardPaymentTest, class com.judokit.android.examples.test.card.IdealTest" \
+              --num-flaky-test-attempts=1
       # - notify_slack_error_weekly
       # - notify_slack_pass_weekly
   instrumented_test_sample_weekly_api_32:
@@ -300,7 +301,8 @@ jobs:
               --device model=bluejay,version=32 \
               --use-orchestrator \
               --client-details=matrixLabel="Backward Compat E2E (API 32)" \
-              --test-targets="class com.judokit.android.examples.test.card.CardPaymentTest, class com.judokit.android.examples.test.card.IdealTest"
+              --test-targets="class com.judokit.android.examples.test.card.CardPaymentTest, class com.judokit.android.examples.test.card.IdealTest" \
+              --num-flaky-test-attempts=1
       # - notify_slack_error_weekly
       # - notify_slack_pass_weekly
   instrumented_test_sample_weekly_api_33:
@@ -319,7 +321,8 @@ jobs:
               --device model=panther,version=33 \
               --use-orchestrator \
               --client-details=matrixLabel="Backward Compat E2E (API 33)" \
-              --test-targets="class com.judokit.android.examples.test.card.CardPaymentTest, class com.judokit.android.examples.test.card.IdealTest"
+              --test-targets="class com.judokit.android.examples.test.card.CardPaymentTest, class com.judokit.android.examples.test.card.IdealTest" \
+              --num-flaky-test-attempts=1
       # - notify_slack_error_weekly
       # - notify_slack_pass_weekly
 
