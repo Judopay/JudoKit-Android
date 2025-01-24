@@ -265,7 +265,43 @@ jobs:
       - notify_slack_pass
 
 
-  instrumented_test_sample_weekly:
+  instrumented_test_sample_weekly_api_31:
+    <<: *android-docker-executor
+    steps:
+      - prepare_instrumented_tests
+      - run:
+          name: Test with Firebase Test Lab
+          no_output_timeout: 30m
+          command: >
+            gcloud firebase test android run \
+              --app judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk \
+              --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk \
+              --results-bucket $FIREBASE_TEST_RESULTS_BUCKET \
+              --timeout=30m \
+              --device model=a51,version=31 \
+              --use-orchestrator \
+              --client-details=matrixLabel="Backward Compat E2E (API 31)"
+      # - notify_slack_error_weekly
+      # - notify_slack_pass_weekly
+  instrumented_test_sample_weekly_api_32:
+    <<: *android-docker-executor
+    steps:
+      - prepare_instrumented_tests
+      - run:
+          name: Test with Firebase Test Lab
+          no_output_timeout: 30m
+          command: >
+            gcloud firebase test android run \
+              --app judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk \
+              --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk \
+              --results-bucket $FIREBASE_TEST_RESULTS_BUCKET \
+              --timeout=30m \
+              --device model=bluejay,version=32 \
+              --use-orchestrator \
+              --client-details=matrixLabel="Backward Compat E2E (API 32)"
+      # - notify_slack_error_weekly
+      # - notify_slack_pass_weekly
+  instrumented_test_sample_weekly_api_33:
     <<: *android-docker-executor
     steps:
       - prepare_instrumented_tests
@@ -279,12 +315,10 @@ jobs:
               --results-bucket $FIREBASE_TEST_RESULTS_BUCKET \
               --timeout=30m \
               --device model=panther,version=33 \
-              --device model=bluejay,version=32 \
-              --device model=a51,version=31 \
               --use-orchestrator \
-              --client-details=matrixLabel="Backward Compat E2E"
-      - notify_slack_error_weekly
-      - notify_slack_pass_weekly
+              --client-details=matrixLabel="Backward Compat E2E (API 33)"
+      # - notify_slack_error_weekly
+      # - notify_slack_pass_weekly
 
   sonar_scan:
     docker:
@@ -380,9 +414,21 @@ workflows:
   e2e-backward-compat-weekly:
     when: << pipeline.parameters.weekly >>
     jobs:
-      - instrumented_test_sample_weekly:
+      - instrumented_test_sample_weekly_api_31:
           context: shared-secrets
           filters:
             branches:
               only:
-                - master
+                - backward-compat-fixes
+      - instrumented_test_sample_weekly_api_32:
+          context: shared-secrets
+          filters:
+            branches:
+              only:
+                - backward-compat-fixes
+      - instrumented_test_sample_weekly_api_33:
+          context: shared-secrets
+          filters:
+            branches:
+              only:
+                - backward-compat-fixes
