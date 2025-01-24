@@ -124,6 +124,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         initializeViewModelObserving()
         binding.cancelButton.setOnClickListener { onUserCancelled() }
+        binding.nfcButton.setOnClickListener { onUserClickedNFC() }
 
         binding.cardDetailsFormView.apply {
             onFormValidationStatusListener = { model, isValid ->
@@ -174,6 +175,13 @@ class CardEntryFragment : BottomSheetDialogFragment() {
                 }
             },
         )
+
+        binding.nfcCardReadingFormView.apply {
+            onNfcCancelClickListener = {
+                viewModel.send(CardEntryAction.NfcScanCancelled)
+                sharedViewModel.disableNfc()
+            }
+        }
 
         // Prevents bottom sheet dialog to jump around when animating.
         val transition = LayoutTransition()
@@ -244,8 +252,21 @@ class CardEntryFragment : BottomSheetDialogFragment() {
             Handler(Looper.getMainLooper()).postDelayed(
                 {
                     when (it) {
-                        is CardEntryNavigation.Card -> binding.cardEntryViewAnimator.displayedChild = 0
-                        is CardEntryNavigation.Billing -> binding.cardEntryViewAnimator.displayedChild = 1
+                        is CardEntryNavigation.Card -> {
+                            binding.cancelButton.visibility = View.VISIBLE
+                            binding.nfcButton.visibility = View.VISIBLE
+                            binding.cardEntryViewAnimator.displayedChild = 0
+                        }
+                        is CardEntryNavigation.Billing -> {
+                            binding.cancelButton.visibility = View.VISIBLE
+                            binding.nfcButton.visibility = View.VISIBLE
+                            binding.cardEntryViewAnimator.displayedChild = 1
+                        }
+                        is CardEntryNavigation.NFC -> {
+                            binding.cancelButton.visibility = View.GONE
+                            binding.nfcButton.visibility = View.GONE
+                            binding.cardEntryViewAnimator.displayedChild = 2
+                        }
                     }
                     bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 },
@@ -263,6 +284,18 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         } else {
             sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled())
         }
+    }
+
+    private fun onUserClickedNFC() {
+        sharedViewModel.enableNfc({
+            viewModel.send((CardEntryAction.ScanCard(it)))
+        })
+        viewModel.send(CardEntryAction.OpenScanCardForm)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sharedViewModel.disableNfc()
     }
 
     private fun updateWithModel(model: CardEntryFragmentModel) {

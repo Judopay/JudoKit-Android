@@ -73,6 +73,14 @@ class CardEntryFormView
             ArrayAdapter(context, android.R.layout.simple_list_item_1, countries)
         }
 
+        fun bringFocusToName()  {
+            binding.nameTextInputEditText.apply {
+                post {
+                    requestFocus()
+                }
+            }
+        }
+
         private val securityCodeFormatter: SecurityCodeInputMaskTextWatcher by lazy {
             val editText = editTextForType(CardDetailsFieldType.SECURITY_NUMBER)
             SecurityCodeInputMaskTextWatcher(editText).also { it.cardNetwork = model.cardNetwork }
@@ -265,6 +273,7 @@ class CardEntryFormView
             binding.cardEntrySubmitButton.state = model.actionButtonState
 
             preFillFields()
+            updateFocus()
         }
 
         private fun preFillFields() =
@@ -278,6 +287,16 @@ class CardEntryFormView
                     }
                 }
             }
+
+        // NFC case (empty cardholder name gets focused).
+        private fun updateFocus() {
+            if (model.cardNumber.isNotEmpty()
+                && model.expirationDate.isNotEmpty()
+                && model.cardHolderName.isEmpty()
+            ) {
+                bringFocusToName()
+            }
+        }
 
         private fun updateValidators() {
             validatorInstance<CardNumberValidator>()?.let {

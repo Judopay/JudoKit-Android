@@ -36,6 +36,8 @@ sealed class CardEntryNavigation {
     object Card : CardEntryNavigation()
 
     object Billing : CardEntryNavigation()
+
+    object NFC : CardEntryNavigation()
 }
 
 data class CardEntryFragmentModel(
@@ -62,6 +64,10 @@ sealed class CardEntryAction {
     object SubmitBillingDetailsForm : CardEntryAction()
 
     object PressBackButton : CardEntryAction()
+
+    object OpenScanCardForm : CardEntryAction()
+
+    object NfcScanCancelled : CardEntryAction()
 
     object SubscribeToCardTransactionManagerResults : CardEntryAction()
 
@@ -168,6 +174,10 @@ class CardEntryViewModel(
                 buildModel(
                     isCardDetailsValid = true,
                 )
+                navigationObserver.postValue(CardEntryNavigation.Card)
+            }
+            is CardEntryAction.NfcScanCancelled -> {
+                navigationObserver.postValue(CardEntryNavigation.Card)
             }
             is CardEntryAction.PressBackButton -> {
                 navigation = CardEntryNavigation.Card
@@ -175,6 +185,9 @@ class CardEntryViewModel(
                     isCardDetailsValid = true,
                 )
                 navigationObserver.postValue(CardEntryNavigation.Card)
+            }
+            is CardEntryAction.OpenScanCardForm -> {
+                navigationObserver.postValue(CardEntryNavigation.NFC)
             }
             is CardEntryAction.BillingDetailsValidationStatusChanged -> {
                 billingAddressModel = action.input

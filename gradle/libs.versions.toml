@@ -18,6 +18,7 @@ lifecycleRuntimeKtx = "2.7.0"
 swiperefreshlayout = "1.1.0"
 navigation = "2.7.7"
 room = "2.6.1"
+nfcCardReader = "1.4.0"
 material = "1.11.0"
 playServicesWallet = "19.3.0"
 ravelinEncrypt = "3.1.0"
@@ -75,6 +76,7 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+nfc-card-reader = { group = "com.github.vickyramachandra", name = "nfc-card-reader", version.ref = "nfcCardReader" }
 android-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 play-services-wallet = { group = "com.google.android.gms", name = "play-services-wallet", version.ref = "playServicesWallet" }
 ravelin-encrypt = { group = "com.ravelin.sdk", name = "ravelin-encrypt", version.ref = "ravelinEncrypt" }

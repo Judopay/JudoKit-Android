@@ -22,6 +22,7 @@ import com.judopay.judokit.android.model.isPaymentMethodsWidget
 import com.judopay.judokit.android.model.navigationGraphId
 import com.judopay.judokit.android.model.toIntent
 import com.judopay.judokit.android.service.JudoGooglePayService
+import com.judopay.judokit.android.ui.cardentry.NfcCardManagerImproved
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.paymentmethods.CARD_ENTRY_OPTIONS
 
@@ -55,12 +56,14 @@ class JudoActivity : AppCompatActivity() {
         val config = judo
         // setup shared view-model & response callbacks
         val judoApiService = JudoApiServiceFactory.create(applicationContext, config)
+        val nfcService = NfcService(NfcCardManagerImproved(this))
         val factory =
             JudoSharedViewModelFactory(
                 config,
                 buildJudoGooglePayService(),
                 judoApiService,
                 application,
+                nfcService,
             )
 
         viewModel = ViewModelProvider(this, factory).get(JudoSharedViewModel::class.java)
@@ -182,5 +185,14 @@ class JudoActivity : AppCompatActivity() {
         val walletOptions = Wallet.WalletOptions.Builder().setEnvironment(environment).build()
         val client = Wallet.getPaymentsClient(this, walletOptions)
         return JudoGooglePayService(client, this, judo)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        processNfcMessageIfAvailable(intent)
+    }
+
+    private fun processNfcMessageIfAvailable(intent: Intent?) {
+        intent?.let { viewModel.handleNfcIntent(it) }
     }
 }

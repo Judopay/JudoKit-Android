@@ -1,6 +1,7 @@
 package com.judopay.judokit.android
 
 import android.app.Application
+import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,6 +12,7 @@ import com.google.android.gms.wallet.PaymentData
 import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.model.request.toJudoResult
 import com.judopay.judokit.android.api.model.response.toJudoPaymentResult
+import com.judopay.judokit.android.model.CardScanningResult
 import com.judopay.judokit.android.model.JudoError
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentWidgetType
@@ -40,11 +42,12 @@ internal class JudoSharedViewModelFactory(
     private val googlePayService: JudoGooglePayService,
     private val judoApiService: JudoApiService,
     private val application: Application,
+    private val nfcService: NfcService,
 ) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == JudoSharedViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
-            JudoSharedViewModel(judo, googlePayService, judoApiService, application) as T
+            JudoSharedViewModel(judo, googlePayService, judoApiService, application, nfcService) as T
         } else {
             super.create(modelClass)
         }
@@ -56,6 +59,7 @@ class JudoSharedViewModel(
     private val googlePayService: JudoGooglePayService,
     private val judoApiService: JudoApiService,
     application: Application,
+    private val nfcService: NfcService,
 ) : AndroidViewModel(application) {
     private val resources = application.resources
 
@@ -81,6 +85,18 @@ class JudoSharedViewModel(
             is JudoSharedAction.LoadGPayPaymentDataError -> onLoadGPayPaymentDataError(action.errorMessage)
             is JudoSharedAction.LoadGPayPaymentDataUserCancelled -> onLoadGPayPaymentDataUserCancelled()
         }
+
+    fun enableNfc(onResult: ((CardScanningResult) -> Unit)) {
+        nfcService.enableNfcScanning(onResult)
+    }
+
+    fun disableNfc() {
+        nfcService.disableNfcScanning()
+    }
+
+    fun handleNfcIntent(intent: Intent) {
+        nfcService.handleNfcIntent(intent)
+    }
 
     @Suppress("TooGenericExceptionCaught")
     private fun onLoadGPayPaymentData() {

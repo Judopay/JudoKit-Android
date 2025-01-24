@@ -13,6 +13,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven("https://www.jitpack.io")
 
         // Ravelin - optional - only required if you are using Ravelin
         maven("https://maven.ravelin.com/public/repositories/core-android/")
