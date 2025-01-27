@@ -283,8 +283,8 @@ jobs:
               --client-details=matrixLabel="Backward Compat E2E (API 31)" \
               --test-targets="class com.judokit.android.examples.test.card.CardPaymentTest" \
               --num-flaky-test-attempts=1
-      # - notify_slack_error_weekly
-      # - notify_slack_pass_weekly
+      - notify_slack_error_weekly
+      - notify_slack_pass_weekly
   instrumented_test_sample_weekly_api_32:
     <<: *android-docker-executor
     steps:
@@ -303,8 +303,8 @@ jobs:
               --client-details=matrixLabel="Backward Compat E2E (API 32)" \
               --test-targets="class com.judokit.android.examples.test.card.CardPaymentTest" \
               --num-flaky-test-attempts=1
-      # - notify_slack_error_weekly
-      # - notify_slack_pass_weekly
+      - notify_slack_error_weekly
+      - notify_slack_pass_weekly
   instrumented_test_sample_weekly_api_33:
     <<: *android-docker-executor
     steps:
@@ -323,8 +323,8 @@ jobs:
               --client-details=matrixLabel="Backward Compat E2E (API 33)" \
               --test-targets="class com.judokit.android.examples.test.card.CardPaymentTest" \
               --num-flaky-test-attempts=1
-      # - notify_slack_error_weekly
-      # - notify_slack_pass_weekly
+      - notify_slack_error_weekly
+      - notify_slack_pass_weekly
 
   sonar_scan:
     docker:
@@ -425,16 +425,16 @@ workflows:
           filters:
             branches:
               only:
-                - backward-compat-fixes
+                - master
       - instrumented_test_sample_weekly_api_32:
           context: shared-secrets
           filters:
             branches:
               only:
-                - backward-compat-fixes
+                - master
       - instrumented_test_sample_weekly_api_33:
           context: shared-secrets
           filters:
             branches:
               only:
-                - backward-compat-fixes
+                - master
