@@ -257,6 +257,7 @@ class CardPaymentTest {
             .perform(click())
 
         awaitActivityThenRun("com.judopay.judo3ds2.ui.challenge.ChallengeActivity") {
+            Thread.sleep(5000)
             onView(withText("CANCEL"))
                 .perform(click())
         }
