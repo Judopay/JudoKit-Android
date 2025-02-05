@@ -17,10 +17,11 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:layout_marginTop="@dimen/negative_space_4"
+            android:layout_marginTop="-6dp"
             android:layout_marginBottom="@dimen/space_4"
+            android:paddingBottom="@dimen/space_4"
             android:background="@color/white"
-            android:clipToPadding="true">
+            android:clipToPadding="false">
 
             <Button
                 android:id="@+id/cancelButton"
@@ -30,18 +31,29 @@
                 android:layout_marginStart="@dimen/space_24"
                 android:text="@string/jp_cancel"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <ImageButton
-                android:id="@+id/nfcButton"
-                style="@style/JudoTheme.TextButton"
-                android:layout_width="@dimen/width_75"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/space_24"
-                android:src="@drawable/ic_nfc_payment"
-                android:scaleType="fitCenter"
+                android:background="@drawable/card_white_background"
+                android:elevation="2dp"
+                android:clipToPadding="false"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <ImageButton
+                    android:id="@+id/nfcButton"
+                    style="@style/JudoTheme.TextButton"
+                    android:layout_width="66dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_nfc_payment"
+                    android:scaleType="fitCenter" />
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
