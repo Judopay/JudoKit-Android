@@ -34,9 +34,10 @@ class NFCFormView
     }
 
     private fun setupText() {
-        val nfcText =
-            "NFC scanning activated.\n\nHold your card near the back of your mobile device to read its number, name and expiry date."
-        binding.nfcTextView.text = nfcText
+//        val nfcText =
+//            "NFC scanning activated.\n\nHold your card near the back of your mobile device to read its number, name and expiry date."
+        binding.nfcTitleTextView.text = "NFC scanning activated."
+        binding.nfcHeaderTextView.text = "Hold your card near the back of your mobile device to read its number, name and expiry date."
     }
 
     private fun setupVideo() {

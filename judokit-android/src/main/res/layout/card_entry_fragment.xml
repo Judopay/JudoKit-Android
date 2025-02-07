@@ -39,19 +39,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/space_24"
                 android:background="@drawable/card_white_background"
-                android:elevation="2dp"
-                android:clipToPadding="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent">
 
-                <ImageButton
+                <Button
                     android:id="@+id/nfcButton"
-                    style="@style/JudoTheme.TextButton"
-                    android:layout_width="66dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_nfc_payment"
-                    android:scaleType="fitCenter" />
+                    style="@style/JudoTheme.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="56dp"
+                    app:icon="@drawable/ic_nfc_payment_02"
+                    app:iconSize="42dp" />
 
             </LinearLayout>
 
@@ -63,7 +61,6 @@
         android:id="@+id/cardEntryViewAnimator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_80"
         android:clipToPadding="false"
         android:inAnimation="@anim/fade_in"
         android:measureAllChildren="false"
@@ -72,17 +69,20 @@
         <com.judopay.judokit.android.ui.cardentry.components.CardEntryFormView
             android:id="@+id/card_details_form_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_80" />
 
         <com.judopay.judokit.android.ui.cardentry.components.BillingDetailsFormView
             android:id="@+id/billing_address_form_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_80" />
 
         <com.judopay.judokit.android.ui.cardentry.components.NFCFormView
             android:id="@+id/nfc_card_reading_form_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_40" />
 
     </com.judopay.judokit.android.ui.cardentry.components.CardEntryViewAnimator>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

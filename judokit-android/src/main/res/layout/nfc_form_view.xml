@@ -17,14 +17,20 @@
         android:tag="@string/jp_billing_details_container">
 
         <TextView
-            android:id="@+id/nfcTextView"
-            style="@style/JudoTheme.TextView"
-            android:layout_width="wrap_content"
+            android:id="@+id/nfcTitleTextView"
+            style="@style/JudoTheme.Title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space_48"
-            android:textColor="@color/jpDarkGrayColor"
-            android:gravity="center"
-            android:textSize="@dimen/text_size_24"/>
+            android:layout_marginBottom="@dimen/space_16"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/nfcHeaderTextView"
+            style="@style/JudoTheme.Headline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_16"
+            android:gravity="center" />
 
         <VideoView
             android:id="@+id/videoView"
@@ -32,16 +38,16 @@
             android:layout_height="160dp"
             android:backgroundTint="@android:color/white"
             android:background="@android:color/white"
-            android:layout_marginBottom="@dimen/space_56"
-            android:layout_gravity="center"/>
+            android:layout_marginBottom="@dimen/space_16"
+            android:layout_gravity="center" />
 
         <com.judopay.judokit.android.ui.common.ProgressButton
             android:id="@+id/nfcCancelButton"
             style="@style/JudoTheme.BlackRoundedButton"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
-            android:layout_marginBottom="@dimen/space_40"
-            android:text="@string/cancel"/>
+            android:layout_marginBottom="@dimen/space_32"
+            android:text="@string/cancel" />
 
     </LinearLayout>
 
