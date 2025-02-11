@@ -67,7 +67,7 @@ class IdealTest {
         onView(withId(R.id.payButton))
             .perform(click())
 
-        Thread.sleep(3000)
+        Thread.sleep(10000)
 
         onView(withId(R.id.idealWebView)).perform(swipeUp())
         clickButtonOnWebViewWithText(Ideal.NEXT_BUTTON)

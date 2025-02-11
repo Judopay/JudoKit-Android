@@ -68,7 +68,7 @@ fun <IR : IdlingResource> awaitIdlingResourceThenRun(
  */
 fun clickCompleteOn3DS2Screen() {
     assertOnView(withText("COMPLETE"))
-    Thread.sleep(20000)
+    Thread.sleep(30000)
     onView(withText("COMPLETE"))
         .perform(ViewActions.longClick())
 }
@@ -159,7 +159,7 @@ fun updateRecommendationUrlWith(suffix: String) {
     onView(withText("Generate payment session"))
         .perform(click())
 
-    Thread.sleep(10000)
+    Thread.sleep(20000)
 }
 
 fun fillBillingDetails(

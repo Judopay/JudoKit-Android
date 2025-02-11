@@ -70,6 +70,7 @@ class RavelinIntegrationTest {
                 putBoolean("should_ask`_for_csc", false)
                 putBoolean("is_recommendation_feature_enabled", true)
                 putString("rsa_key", BuildConfig.RSA_KEY)
+                putStringSet("payment_methods", setOf("CARD"))
             }
             .commit()
     }
