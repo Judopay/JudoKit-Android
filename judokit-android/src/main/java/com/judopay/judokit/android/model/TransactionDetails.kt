@@ -50,7 +50,7 @@ class TransactionDetails private constructor(
         private var expirationDate: String? = null
         private var securityNumber: String? = null
         private var countryCode: String? = null
-        private var state: String? = null
+        private var administrativeDivision: String? = null
         private var email: String? = null
         private var phoneCountryCode: String? = null
         private var mobileNumber: String? = null
@@ -90,7 +90,7 @@ class TransactionDetails private constructor(
 
         fun setPostalCode(postalCode: String?) = apply { this.postalCode = postalCode }
 
-        fun setState(state: String?) = apply { this.state = state }
+        fun setState(administrativeDivision: String?) = apply { this.administrativeDivision = administrativeDivision }
 
         fun setCardToken(cardToken: String?) = apply { this.cardToken = cardToken }
 
@@ -120,7 +120,7 @@ class TransactionDetails private constructor(
                 cardToken = cardToken,
                 cardType = cardType,
                 cardLastFour = cardLastFour,
-                state = state,
+                state = administrativeDivision,
             )
         }
     }
@@ -135,7 +135,7 @@ fun TransactionDetails.getAddress(judo: Judo): Address? {
             .setTown(city)
             .setPostCode(postalCode)
             .setCountryCode(country?.toIntOrNull())
-            .setState(state)
+            .setAdministrativeDivision(state)
             .build()
     }
 

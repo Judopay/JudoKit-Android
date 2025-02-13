@@ -27,7 +27,7 @@ class Address internal constructor(
         private var town: String? = null
         private var billingCountry: String? = null
         private var countryCode: Int? = null
-        private var state: String? = null
+        private var administrativeDivision: String? = null
 
         /**
          * Sets line one of the address.
@@ -67,7 +67,10 @@ class Address internal constructor(
         /**
          * Sets state of the address.
          */
-        fun setState(state: String?) = apply { this.state = state }
+        fun setAdministrativeDivision(administrativeDivision: String?) =
+            apply {
+                this.administrativeDivision = administrativeDivision
+            }
 
         /**
          * Creates an instance of [Address] based on provided data in setters.
@@ -82,7 +85,7 @@ class Address internal constructor(
                 billingCountry = billingCountry,
                 postCode = postCode,
                 countryCode = countryCode,
-                state = if (state.isNullOrBlank()) null else state,
+                state = if (administrativeDivision.isNullOrBlank()) null else administrativeDivision,
             )
         }
     }

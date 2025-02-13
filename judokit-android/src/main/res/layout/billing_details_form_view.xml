@@ -30,7 +30,7 @@
                 android:id="@+id/flow1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="billingDetailsTextView,emailTextInputLayout,countryTextInputLayout,stateTextInputLayout,flow2,addressLine1TextInputLayout,addressLine2TextInputLayout,addressLine3TextInputLayout,addAddressLineButton,cityTextInputLayout,postalCodeTextInputLayout"
+                app:constraint_referenced_ids="billingDetailsTextView,emailTextInputLayout,countryTextInputLayout,administrativeDivisionTextInputLayout,flow2,addressLine1TextInputLayout,addressLine2TextInputLayout,addressLine3TextInputLayout,addAddressLineButton,cityTextInputLayout,postalCodeTextInputLayout"
                 app:flow_horizontalAlign="start"
                 app:flow_horizontalBias="0"
                 app:flow_maxElementsWrap="1"
@@ -87,12 +87,12 @@
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
-                android:id="@+id/stateTextInputLayout"
+                android:id="@+id/administrativeDivisionTextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
-                    android:id="@+id/stateTextInputEditText"
+                    android:id="@+id/administrativeDivisionTextInputEditText"
                     style="@style/JudoTheme.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

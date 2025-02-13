@@ -1,10 +1,10 @@
 package com.judopay.judokit.android.ui.cardentry.validation.carddetails
 
 import com.judopay.judokit.android.R
-import com.judopay.judokit.android.model.canadaProvincesAndTerritories
-import com.judopay.judokit.android.model.chinaProvinces
-import com.judopay.judokit.android.model.indiaStates
-import com.judopay.judokit.android.model.usStates
+import com.judopay.judokit.android.model.american
+import com.judopay.judokit.android.model.canadian
+import com.judopay.judokit.android.model.chinese
+import com.judopay.judokit.android.model.indian
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.Country
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
@@ -15,9 +15,9 @@ import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_CHINA
 import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_INDIA
 import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_US
 
-data class StateValidator(
+data class AdministrativeDivisionValidator(
     var country: Country? = null,
-    override val fieldType: String = BillingDetailsFieldType.STATE.name,
+    override val fieldType: String = BillingDetailsFieldType.ADMINISTRATIVE_DIVISION.name,
 ) : Validator {
     override fun validate(
         input: String,
@@ -34,14 +34,14 @@ data class StateValidator(
         ) {
             return ValidationResult(true, R.string.jp_empty)
         }
-        val validStates =
+        val validAdministrativeDivisions =
             when (country?.alpha2Code) {
-                ALPHA_2_CODE_CANADA -> canadaProvincesAndTerritories
-                ALPHA_2_CODE_CHINA -> chinaProvinces
-                ALPHA_2_CODE_INDIA -> indiaStates
-                else -> usStates
+                ALPHA_2_CODE_CANADA -> canadian
+                ALPHA_2_CODE_CHINA -> chinese
+                ALPHA_2_CODE_INDIA -> indian
+                else -> american
             }
-        val isValid = validStates.map { it.name.lowercase() }.contains(input.lowercase())
+        val isValid = validAdministrativeDivisions.map { it.name.lowercase() }.contains(input.lowercase())
         val message =
             when {
                 isValid || formFieldEvent == FormFieldEvent.TEXT_CHANGED -> R.string.jp_empty

@@ -431,7 +431,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     .setTown(sharedPreferences.getString("address_town", null))
                     .setPostCode(sharedPreferences.getString("address_post_code", null))
                     .setCountryCode(sharedPreferences.getString("address_country_code", null)?.toIntOrNull())
-                    .setState(sharedPreferences.getString("address_state", null))
+                    .setAdministrativeDivision(sharedPreferences.getString("address_administrative_division", null))
                     .setBillingCountry(sharedPreferences.getString("address_billing_country", null))
                     .build()
             }
