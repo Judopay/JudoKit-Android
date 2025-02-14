@@ -17,8 +17,15 @@ class Address internal constructor(
     var billingCountry: String?,
     var postCode: String?,
     var countryCode: Int?,
-    var state: String?,
+    @SerializedName("state") var administrativeDivision: String?,
 ) : Parcelable {
+    @Deprecated("Please use administrativeDivision instead", replaceWith = ReplaceWith("administrativeDivision"))
+    var state: String?
+        get() = administrativeDivision
+        set(value) {
+            administrativeDivision = value
+        }
+
     class Builder {
         private var line1: String? = null
         private var line2: String? = null
@@ -67,10 +74,16 @@ class Address internal constructor(
         /**
          * Sets state of the address.
          */
-        fun setAdministrativeDivision(administrativeDivision: String?) =
-            apply {
-                this.administrativeDivision = administrativeDivision
-            }
+        @Deprecated(
+            "Please use setAdministrativeDivision instead",
+            replaceWith = ReplaceWith("setAdministrativeDivision(administrativeDivision)"),
+        )
+        fun setState(state: String?) = apply { this.administrativeDivision = state }
+
+        /**
+         * Sets administrative area of the address.
+         */
+        fun setAdministrativeDivision(administrativeDivision: String?) = apply { this.administrativeDivision = administrativeDivision }
 
         /**
          * Creates an instance of [Address] based on provided data in setters.
@@ -85,7 +98,7 @@ class Address internal constructor(
                 billingCountry = billingCountry,
                 postCode = postCode,
                 countryCode = countryCode,
-                state = if (administrativeDivision.isNullOrBlank()) null else administrativeDivision,
+                administrativeDivision = if (administrativeDivision.isNullOrBlank()) null else administrativeDivision,
             )
         }
     }

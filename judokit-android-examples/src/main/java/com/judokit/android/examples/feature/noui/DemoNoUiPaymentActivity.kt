@@ -48,6 +48,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
         val judo = intent.parcelable<Judo>(JUDO_OPTIONS)
         check(judo != null) { "Judo object is required" }
 
+        judo.address?.administrativeDivision = ""
         service = JudoApiServiceFactory.create(this, judo)
         transactionDetailsBuilder =
             TransactionDetails.Builder()
@@ -60,7 +61,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
                 .setAddressLine3(judo.address?.line3)
                 .setCity(judo.address?.town)
                 .setPostalCode(judo.address?.postCode)
-                .setState(judo.address?.state)
+                .setAdministrativeDivision(judo.address?.state)
                 // Setting card details manually, as it's for 'no-UI' transaction.
                 .setCardNumber("4000023104662535")
                 .setExpirationDate("12/25")

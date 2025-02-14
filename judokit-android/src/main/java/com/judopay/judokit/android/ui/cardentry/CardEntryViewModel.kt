@@ -303,7 +303,7 @@ class CardEntryViewModel(
             .setAddressLine3(judo.address?.line3)
             .setCity(judo.address?.town)
             .setPostalCode(judo.address?.postCode)
-            .setState(judo.address?.state)
+            .setAdministrativeDivision(judo.address?.administrativeDivision)
             .setCardToken(judo.cardToken?.token)
             .setCardType(CardNetwork.withIdentifier(judo.cardToken?.type ?: 0, judo.cardToken?.scheme))
             .setCardLastFour(judo.cardToken?.lastFour)
