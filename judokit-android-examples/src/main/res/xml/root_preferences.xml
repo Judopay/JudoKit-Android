@@ -283,9 +283,9 @@
             app:defaultValue=""
             app:dependency="is_address_enabled"
             app:iconSpaceReserved="false"
-            app:key="address_state"
-            app:summary="Your state"
-            app:title="State"
+            app:key="address_administrative_division"
+            app:summary="Your administrative division"
+            app:title="Administrative division"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference

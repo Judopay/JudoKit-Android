@@ -13,7 +13,7 @@ data class BillingDetailsInputModel(
     val city: String = "",
     val countryCode: String = "",
     val postalCode: String = "",
-    val state: String = "",
+    val administrativeDivision: String = "",
     var submitButtonState: ButtonState = ButtonState.Disabled(R.string.jp_pay_now),
     var backButtonState: ButtonState = ButtonState.Enabled(R.string.jp_back),
     var isValid: Boolean = false,

@@ -12,16 +12,18 @@ import androidx.core.widget.addTextChangedListener
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.databinding.BillingDetailsFormViewBinding
 import com.judopay.judokit.android.dismissKeyboard
-import com.judopay.judokit.android.model.Country
-import com.judopay.judokit.android.model.State
-import com.judopay.judokit.android.model.canadaProvincesAndTerritories
-import com.judopay.judokit.android.model.usStates
+import com.judopay.judokit.android.model.AVSCountry
+import com.judopay.judokit.android.model.AdministrativeDivision
+import com.judopay.judokit.android.model.american
+import com.judopay.judokit.android.model.canadian
+import com.judopay.judokit.android.model.chinese
+import com.judopay.judokit.android.model.indian
 import com.judopay.judokit.android.parentOfType
 import com.judopay.judokit.android.smoothScrollToView
 import com.judopay.judokit.android.ui.cardentry.formatting.PhoneCountryCodeTextWatcher
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsInputModel
-import com.judopay.judokit.android.ui.cardentry.model.CountryInfo
+import com.judopay.judokit.android.ui.cardentry.model.Country
 import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.model.fieldHintResId
 import com.judopay.judokit.android.ui.cardentry.model.valueOfBillingDetailsFieldWithType
@@ -31,9 +33,13 @@ import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.CityVa
 import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.EmailValidator
 import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.MobileNumberValidator
 import com.judopay.judokit.android.ui.cardentry.validation.billingdetails.PhoneCountryCodeValidator
+import com.judopay.judokit.android.ui.cardentry.validation.carddetails.AdministrativeDivisionValidator
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.CountryValidator
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.PostcodeValidator
-import com.judopay.judokit.android.ui.cardentry.validation.carddetails.StateValidator
+import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_CANADA
+import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_CHINA
+import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_INDIA
+import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_US
 
 internal typealias BillingDetailsFormValidationStatus = (model: BillingDetailsInputModel, isValid: Boolean) -> Unit
 internal typealias BillingDetailsSubmitButtonClickListener = () -> Unit
@@ -65,7 +71,7 @@ class BillingDetailsFormView
             mutableListOf(
                 EmailValidator(),
                 CountryValidator(),
-                StateValidator(),
+                AdministrativeDivisionValidator(),
                 PhoneCountryCodeValidator(),
                 MobileNumberValidator(),
                 CityValidator(),
@@ -76,7 +82,7 @@ class BillingDetailsFormView
         private val phoneNumberFields =
             arrayListOf(BillingDetailsFieldType.PHONE_COUNTRY_CODE.name, BillingDetailsFieldType.MOBILE_NUMBER.name)
 
-        private val countries = CountryInfo.list(context)
+        private val countries = Country.list(context)
 
         private val validationResultsCache = mutableMapOf<BillingDetailsFieldType, Boolean>()
 
@@ -85,27 +91,26 @@ class BillingDetailsFormView
         }
 
         private var mobileNumberFormatter: PhoneNumberFormattingTextWatcher? = null
-        private var selectedState: State? = null
-        private var selectedCountry: CountryInfo? = null
+        private var selectedAdministrativeDivision: AdministrativeDivision? = null
+        private var selectedCountry: Country? = null
             set(value) {
                 field = value
 
                 val dialCode = value?.dialCode ?: ""
-                val country = Country.entries.firstOrNull { it.name == selectedCountry?.alpha2Code } ?: Country.OTHER
 
                 textInputLayoutForType(BillingDetailsFieldType.PHONE_COUNTRY_CODE)?.let {
                     it.editText?.setText(dialCode)
                 }
 
                 validatorInstance<PostcodeValidator>()?.let {
-                    it.country = country
+                    it.country = AVSCountry.entries.firstOrNull { it.name == selectedCountry?.alpha2Code } ?: AVSCountry.OTHER
                 }
 
-                validatorInstance<StateValidator>()?.let {
-                    it.country = country
+                validatorInstance<AdministrativeDivisionValidator>()?.let {
+                    it.country = selectedCountry
                 }
 
-                setupStateSpinner(country)
+                setupStateSpinner(selectedCountry)
                 updateSubmitButtonState()
             }
 
@@ -115,7 +120,7 @@ class BillingDetailsFormView
             setupPhoneCountryCodeFormatter()
             setupMobileNumberFormatter()
             setupCountrySpinner()
-            setupStateSpinner(Country.OTHER)
+            setupStateSpinner()
         }
 
         override fun onViewWillAppear() {
@@ -133,40 +138,48 @@ class BillingDetailsFormView
                 val adapter = ArrayAdapter(context, R.layout.country_select_dialog_item, countries)
                 setAdapter(adapter)
                 setOnItemClickListener { parent, _, index, _ ->
-                    selectedCountry = parent.getItemAtPosition(index) as CountryInfo
+                    selectedCountry = parent.getItemAtPosition(index) as Country
                 }
             }
 
-        private fun setupStateSpinner(country: Country) {
-            var states = emptyList<State>()
+        private fun setupStateSpinner(country: Country? = null) {
+            var administrativeDivisions = emptyList<AdministrativeDivision>()
             var hint = R.string.jp_empty
-            when (country) {
-                Country.US -> {
-                    states = usStates
-                    hint = R.string.jp_us_state_hint
-                }
-                Country.CA -> {
-                    states = canadaProvincesAndTerritories
+            when (country?.alpha2Code) {
+                ALPHA_2_CODE_CANADA -> {
+                    administrativeDivisions = canadian
                     hint = R.string.jp_ca_province_hint
                 }
+                ALPHA_2_CODE_CHINA -> {
+                    administrativeDivisions = chinese
+                    hint = R.string.jp_cn_province_hint
+                }
+                ALPHA_2_CODE_INDIA -> {
+                    administrativeDivisions = indian
+                    hint = R.string.jp_in_state_hint
+                }
+                ALPHA_2_CODE_US -> {
+                    administrativeDivisions = american
+                    hint = R.string.jp_us_state_hint
+                }
                 else -> {
-                    validationResultsCache[BillingDetailsFieldType.STATE] = true
+                    validationResultsCache[BillingDetailsFieldType.ADMINISTRATIVE_DIVISION] = true
                 }
             }
-            val hasStates = states.isNotEmpty()
+            val hasStates = administrativeDivisions.isNotEmpty()
             if (hasStates) {
-                validationResultsCache[BillingDetailsFieldType.STATE] = false
-                binding.stateTextInputEditText.apply {
+                validationResultsCache[BillingDetailsFieldType.ADMINISTRATIVE_DIVISION] = false
+                binding.administrativeDivisionTextInputEditText.apply {
                     setHint(hint)
-                    setAdapter(ArrayAdapter(context, R.layout.country_select_dialog_item, states))
+                    setAdapter(ArrayAdapter(context, R.layout.country_select_dialog_item, administrativeDivisions))
                     setOnItemClickListener { parent, _, position, _ ->
-                        selectedState = parent.getItemAtPosition(position) as State
+                        selectedAdministrativeDivision = parent.getItemAtPosition(position) as AdministrativeDivision
                     }
                 }
             }
-            selectedState = null
-            binding.stateTextInputEditText.setText("")
-            binding.stateTextInputLayout.isVisible = hasStates
+            selectedAdministrativeDivision = null
+            binding.administrativeDivisionTextInputEditText.setText("")
+            binding.administrativeDivisionTextInputLayout.isVisible = hasStates
         }
 
         private fun setupPhoneCountryCodeFormatter() =
@@ -254,7 +267,7 @@ class BillingDetailsFormView
         private fun editTextForType(type: BillingDetailsFieldType): EditText =
             when (type) {
                 BillingDetailsFieldType.COUNTRY -> binding.countryTextInputEditText
-                BillingDetailsFieldType.STATE -> binding.stateTextInputEditText
+                BillingDetailsFieldType.ADMINISTRATIVE_DIVISION -> binding.administrativeDivisionTextInputEditText
                 BillingDetailsFieldType.POST_CODE -> binding.postalCodeTextInputEditText
                 BillingDetailsFieldType.EMAIL -> binding.emailTextInputEditText
                 BillingDetailsFieldType.PHONE_COUNTRY_CODE -> binding.phoneCountryCodeTextInputEditText
@@ -298,14 +311,14 @@ class BillingDetailsFormView
                     selectedCountry = typedCountry
                 }
             }
-            if (type == BillingDetailsFieldType.STATE && event == FormFieldEvent.TEXT_CHANGED) {
+            if (type == BillingDetailsFieldType.ADMINISTRATIVE_DIVISION && event == FormFieldEvent.TEXT_CHANGED) {
                 val typedState =
                     when (selectedCountry?.alpha2Code) {
-                        "CA" -> canadaProvincesAndTerritories.firstOrNull { it.name.lowercase() == value.lowercase() }
-                        "US" -> usStates.firstOrNull { it.name.lowercase() == value.lowercase() }
+                        ALPHA_2_CODE_CANADA -> canadian.firstOrNull { it.name.lowercase() == value.lowercase() }
+                        ALPHA_2_CODE_US -> american.firstOrNull { it.name.lowercase() == value.lowercase() }
                         else -> null
                     }
-                selectedState = typedState
+                selectedAdministrativeDivision = typedState
             }
 
             val result = validationResults.firstOrNull()
@@ -353,7 +366,7 @@ class BillingDetailsFormView
             val inputModel =
                 BillingDetailsInputModel(
                     countryCode = selectedCountry?.numericCode ?: "",
-                    state = selectedState?.isoCode ?: "",
+                    administrativeDivision = selectedAdministrativeDivision?.isoCode ?: "",
                     postalCode = valueOfEditTextWithType(BillingDetailsFieldType.POST_CODE),
                     email = valueOfEditTextWithType(BillingDetailsFieldType.EMAIL),
                     addressLine1 = valueOfEditTextWithType(BillingDetailsFieldType.ADDRESS_LINE_1),

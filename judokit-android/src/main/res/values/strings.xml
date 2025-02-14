@@ -23,6 +23,8 @@
     <string name="jp_country_hint">Country</string>
     <string name="jp_us_state_hint">State</string>
     <string name="jp_ca_province_hint">Province or territory</string>
+    <string name="jp_in_state_hint">State or union territory</string>
+    <string name="jp_cn_province_hint">Province or region</string>
     <string name="jp_post_code_hint">Postcode</string>
     <string name="jp_email_hint">Email</string>
     <string name="jp_phone_country_code_hint">+()</string>
@@ -51,6 +53,8 @@
     <string name="jp_error_country_should_not_be_empty">Please select a country</string>
     <string name="jp_error_state_should_not_be_empty">Please select a state</string>
     <string name="jp_error_province_territory_should_not_be_empty">Please select a province or territory</string>
+    <string name="jp_error_state_union_territory_should_not_be_empty">Please select a state or union territory</string>
+    <string name="jp_error_province_region_should_not_be_empty">Please select a province or region</string>
     <string name="jp_card_subtitle">%1$s Ending</string>
     <string name="jp_expired">Expired</string>
     <string name="jp_is_expired">is Expired</string>

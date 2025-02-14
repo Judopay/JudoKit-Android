@@ -405,6 +405,7 @@ public final class com/judopay/judokit/android/api/model/ThreeDSecure {
 public final class com/judopay/judokit/android/api/model/request/Address : android/os/Parcelable {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public fun describeContents ()I
+	public final fun getAdministrativeDivision ()Ljava/lang/String;
 	public final fun getBillingCountry ()Ljava/lang/String;
 	public final fun getCountryCode ()Ljava/lang/Integer;
 	public final fun getLine1 ()Ljava/lang/String;
@@ -413,6 +414,7 @@ public final class com/judopay/judokit/android/api/model/request/Address : andro
 	public final fun getPostCode ()Ljava/lang/String;
 	public final fun getState ()Ljava/lang/String;
 	public final fun getTown ()Ljava/lang/String;
+	public final fun setAdministrativeDivision (Ljava/lang/String;)V
 	public final fun setBillingCountry (Ljava/lang/String;)V
 	public final fun setCountryCode (Ljava/lang/Integer;)V
 	public final fun setLine1 (Ljava/lang/String;)V
@@ -427,6 +429,7 @@ public final class com/judopay/judokit/android/api/model/request/Address : andro
 public final class com/judopay/judokit/android/api/model/request/Address$Builder {
 	public fun <init> ()V
 	public final fun build ()Lcom/judopay/judokit/android/api/model/request/Address;
+	public final fun setAdministrativeDivision (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/Address$Builder;
 	public final fun setBillingCountry (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/Address$Builder;
 	public final fun setCountryCode (Ljava/lang/Integer;)Lcom/judopay/judokit/android/api/model/request/Address$Builder;
 	public final fun setLine1 (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/Address$Builder;
@@ -1398,6 +1401,8 @@ public final class com/judopay/judokit/android/databinding/BillingDetailsFormVie
 	public final field addressLine2TextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
 	public final field addressLine3TextInputEditText Landroid/widget/EditText;
 	public final field addressLine3TextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
+	public final field administrativeDivisionTextInputEditText Landroid/widget/AutoCompleteTextView;
+	public final field administrativeDivisionTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
 	public final field billingContainer Landroidx/coordinatorlayout/widget/CoordinatorLayout;
 	public final field billingDetailsBackButton Lcom/judopay/judokit/android/ui/common/ProgressButton;
 	public final field billingDetailsBottomAppBar Lcom/google/android/material/bottomappbar/BottomAppBar;
@@ -1420,8 +1425,6 @@ public final class com/judopay/judokit/android/databinding/BillingDetailsFormVie
 	public final field phoneCountryCodeTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
 	public final field postalCodeTextInputEditText Landroid/widget/EditText;
 	public final field postalCodeTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
-	public final field stateTextInputEditText Landroid/widget/AutoCompleteTextView;
-	public final field stateTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
 	public static fun bind (Landroid/view/View;)Lcom/judopay/judokit/android/databinding/BillingDetailsFormViewBinding;
 	public synthetic fun getRoot ()Landroid/view/View;
 	public fun getRoot ()Landroidx/coordinatorlayout/widget/CoordinatorLayout;
@@ -1893,6 +1896,45 @@ public final class com/judopay/judokit/android/db/repository/TokenizedCardReposi
 	public final fun updateAllLastUsedToFalse (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
+public final class com/judopay/judokit/android/model/AVSCountry : java/lang/Enum {
+	public static final field CA Lcom/judopay/judokit/android/model/AVSCountry;
+	public static final field GB Lcom/judopay/judokit/android/model/AVSCountry;
+	public static final field OTHER Lcom/judopay/judokit/android/model/AVSCountry;
+	public static final field US Lcom/judopay/judokit/android/model/AVSCountry;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/judopay/judokit/android/model/AVSCountry;
+	public static fun values ()[Lcom/judopay/judokit/android/model/AVSCountry;
+}
+
+public final class com/judopay/judokit/android/model/AVSCountryKt {
+	public static final fun asAVSCountry (I)Lcom/judopay/judokit/android/model/AVSCountry;
+	public static final fun asAVSCountry (Ljava/lang/String;)Lcom/judopay/judokit/android/model/AVSCountry;
+	public static final fun getDisplayName (Lcom/judopay/judokit/android/model/AVSCountry;)Ljava/lang/String;
+	public static final fun getISONumericCode (Lcom/judopay/judokit/android/model/AVSCountry;)Ljava/lang/Integer;
+	public static final fun getPostcodeMaxLength (Lcom/judopay/judokit/android/model/AVSCountry;)I
+	public static final fun getTranslatableName (Lcom/judopay/judokit/android/model/AVSCountry;)I
+}
+
+public final class com/judopay/judokit/android/model/AdministrativeDivision {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/model/AdministrativeDivision;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/AdministrativeDivision;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/AdministrativeDivision;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getIsoCode ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/judopay/judokit/android/model/AdministrativeDivisionKt {
+	public static final fun getAmerican ()Ljava/util/List;
+	public static final fun getCanadian ()Ljava/util/List;
+	public static final fun getChinese ()Ljava/util/List;
+	public static final fun getIndian ()Ljava/util/List;
+}
+
 public final class com/judopay/judokit/android/model/Amount : android/os/Parcelable {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public fun describeContents ()I
@@ -2074,25 +2116,6 @@ public final class com/judopay/judokit/android/model/ChallengeRequestIndicator$C
 	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
 	public final fun newArray (I)[Lcom/judopay/judokit/android/model/ChallengeRequestIndicator;
 	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
-public final class com/judopay/judokit/android/model/Country : java/lang/Enum {
-	public static final field CA Lcom/judopay/judokit/android/model/Country;
-	public static final field GB Lcom/judopay/judokit/android/model/Country;
-	public static final field OTHER Lcom/judopay/judokit/android/model/Country;
-	public static final field US Lcom/judopay/judokit/android/model/Country;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/judopay/judokit/android/model/Country;
-	public static fun values ()[Lcom/judopay/judokit/android/model/Country;
-}
-
-public final class com/judopay/judokit/android/model/CountryKt {
-	public static final fun asCountry (I)Lcom/judopay/judokit/android/model/Country;
-	public static final fun asCountry (Ljava/lang/String;)Lcom/judopay/judokit/android/model/Country;
-	public static final fun getDisplayName (Lcom/judopay/judokit/android/model/Country;)Ljava/lang/String;
-	public static final fun getISONumericCode (Lcom/judopay/judokit/android/model/Country;)Ljava/lang/Integer;
-	public static final fun getPostcodeMaxLength (Lcom/judopay/judokit/android/model/Country;)I
-	public static final fun getTranslatableName (Lcom/judopay/judokit/android/model/Country;)I
 }
 
 public final class com/judopay/judokit/android/model/Currency : java/lang/Enum, android/os/Parcelable {
@@ -2550,24 +2573,6 @@ public final class com/judopay/judokit/android/model/ScaExemption$Creator : andr
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/judopay/judokit/android/model/State {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/model/State;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/State;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/State;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getIsoCode ()Ljava/lang/String;
-	public final fun getName ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/judopay/judokit/android/model/StateKt {
-	public static final fun getCanadaProvincesAndTerritories ()Ljava/util/List;
-	public static final fun getUsStates ()Ljava/util/List;
-}
-
 public abstract class com/judopay/judokit/android/model/SubProductInfo : android/os/Parcelable {
 }
 
@@ -2607,6 +2612,7 @@ public final class com/judopay/judokit/android/model/TransactionDetails {
 	public final fun getAddressLine1 ()Ljava/lang/String;
 	public final fun getAddressLine2 ()Ljava/lang/String;
 	public final fun getAddressLine3 ()Ljava/lang/String;
+	public final fun getAdministrativeDivision ()Ljava/lang/String;
 	public final fun getCardHolderName ()Ljava/lang/String;
 	public final fun getCardLastFour ()Ljava/lang/String;
 	public final fun getCardNumber ()Ljava/lang/String;
@@ -2620,7 +2626,6 @@ public final class com/judopay/judokit/android/model/TransactionDetails {
 	public final fun getPhoneCountryCode ()Ljava/lang/String;
 	public final fun getPostalCode ()Ljava/lang/String;
 	public final fun getSecurityNumber ()Ljava/lang/String;
-	public final fun getState ()Ljava/lang/String;
 }
 
 public final class com/judopay/judokit/android/model/TransactionDetails$Builder {
@@ -2629,6 +2634,7 @@ public final class com/judopay/judokit/android/model/TransactionDetails$Builder 
 	public final fun setAddressLine1 (Ljava/lang/String;)Lcom/judopay/judokit/android/model/TransactionDetails$Builder;
 	public final fun setAddressLine2 (Ljava/lang/String;)Lcom/judopay/judokit/android/model/TransactionDetails$Builder;
 	public final fun setAddressLine3 (Ljava/lang/String;)Lcom/judopay/judokit/android/model/TransactionDetails$Builder;
+	public final fun setAdministrativeDivision (Ljava/lang/String;)Lcom/judopay/judokit/android/model/TransactionDetails$Builder;
 	public final fun setCardHolderName (Ljava/lang/String;)Lcom/judopay/judokit/android/model/TransactionDetails$Builder;
 	public final fun setCardLastFour (Ljava/lang/String;)Lcom/judopay/judokit/android/model/TransactionDetails$Builder;
 	public final fun setCardNumber (Ljava/lang/String;)Lcom/judopay/judokit/android/model/TransactionDetails$Builder;
@@ -3589,13 +3595,13 @@ public final class com/judopay/judokit/android/ui/cardentry/model/BillingDetails
 	public static final field ADDRESS_LINE_1 Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;
 	public static final field ADDRESS_LINE_2 Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;
 	public static final field ADDRESS_LINE_3 Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;
+	public static final field ADMINISTRATIVE_DIVISION Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;
 	public static final field CITY Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;
 	public static final field COUNTRY Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;
 	public static final field EMAIL Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;
 	public static final field MOBILE_NUMBER Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;
 	public static final field PHONE_COUNTRY_CODE Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;
 	public static final field POST_CODE Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;
-	public static final field STATE Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;
 	public static fun values ()[Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;
@@ -3624,6 +3630,7 @@ public final class com/judopay/judokit/android/ui/cardentry/model/BillingDetails
 	public final fun getAddressLine1 ()Ljava/lang/String;
 	public final fun getAddressLine2 ()Ljava/lang/String;
 	public final fun getAddressLine3 ()Ljava/lang/String;
+	public final fun getAdministrativeDivision ()Ljava/lang/String;
 	public final fun getBackButtonState ()Lcom/judopay/judokit/android/ui/common/ButtonState;
 	public final fun getCity ()Ljava/lang/String;
 	public final fun getCountryCode ()Ljava/lang/String;
@@ -3631,7 +3638,6 @@ public final class com/judopay/judokit/android/ui/cardentry/model/BillingDetails
 	public final fun getMobileNumber ()Ljava/lang/String;
 	public final fun getPhoneCountryCode ()Ljava/lang/String;
 	public final fun getPostalCode ()Ljava/lang/String;
-	public final fun getState ()Ljava/lang/String;
 	public final fun getSubmitButtonState ()Lcom/judopay/judokit/android/ui/common/ButtonState;
 	public fun hashCode ()I
 	public final fun isValid ()Z
@@ -3724,16 +3730,16 @@ public final class com/judopay/judokit/android/ui/cardentry/model/CardEntryOptio
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/judopay/judokit/android/ui/cardentry/model/CountryInfo {
-	public static final field Companion Lcom/judopay/judokit/android/ui/cardentry/model/CountryInfo$Companion;
+public final class com/judopay/judokit/android/ui/cardentry/model/Country {
+	public static final field Companion Lcom/judopay/judokit/android/ui/cardentry/model/Country$Companion;
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/lang/String;
 	public final fun component5 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/ui/cardentry/model/CountryInfo;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/ui/cardentry/model/CountryInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/ui/cardentry/model/CountryInfo;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/ui/cardentry/model/Country;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/ui/cardentry/model/Country;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/ui/cardentry/model/Country;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAlpha2Code ()Ljava/lang/String;
 	public final fun getDialCode ()Ljava/lang/String;
@@ -3744,10 +3750,10 @@ public final class com/judopay/judokit/android/ui/cardentry/model/CountryInfo {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/judopay/judokit/android/ui/cardentry/model/CountryInfo$Companion {
-	public final fun currentLocaleCountry (Landroid/content/Context;Lcom/judopay/judokit/android/ui/cardentry/model/CountryInfo;)Lcom/judopay/judokit/android/ui/cardentry/model/CountryInfo;
-	public static synthetic fun currentLocaleCountry$default (Lcom/judopay/judokit/android/ui/cardentry/model/CountryInfo$Companion;Landroid/content/Context;Lcom/judopay/judokit/android/ui/cardentry/model/CountryInfo;ILjava/lang/Object;)Lcom/judopay/judokit/android/ui/cardentry/model/CountryInfo;
-	public final fun list (Landroid/content/Context;)[Lcom/judopay/judokit/android/ui/cardentry/model/CountryInfo;
+public final class com/judopay/judokit/android/ui/cardentry/model/Country$Companion {
+	public final fun currentLocaleCountry (Landroid/content/Context;Lcom/judopay/judokit/android/ui/cardentry/model/Country;)Lcom/judopay/judokit/android/ui/cardentry/model/Country;
+	public static synthetic fun currentLocaleCountry$default (Lcom/judopay/judokit/android/ui/cardentry/model/Country$Companion;Landroid/content/Context;Lcom/judopay/judokit/android/ui/cardentry/model/Country;ILjava/lang/Object;)Lcom/judopay/judokit/android/ui/cardentry/model/Country;
+	public final fun list (Landroid/content/Context;)[Lcom/judopay/judokit/android/ui/cardentry/model/Country;
 }
 
 public final class com/judopay/judokit/android/ui/cardentry/model/FormFieldEvent : java/lang/Enum {
@@ -3869,6 +3875,23 @@ public final class com/judopay/judokit/android/ui/cardentry/validation/billingde
 	public fun validate (Ljava/lang/String;Lcom/judopay/judokit/android/ui/cardentry/model/FormFieldEvent;)Lcom/judopay/judokit/android/ui/cardentry/validation/ValidationResult;
 }
 
+public final class com/judopay/judokit/android/ui/cardentry/validation/carddetails/AdministrativeDivisionValidator : com/judopay/judokit/android/ui/cardentry/validation/Validator {
+	public fun <init> ()V
+	public fun <init> (Lcom/judopay/judokit/android/ui/cardentry/model/Country;Ljava/lang/String;)V
+	public synthetic fun <init> (Lcom/judopay/judokit/android/ui/cardentry/model/Country;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/judopay/judokit/android/ui/cardentry/model/Country;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Lcom/judopay/judokit/android/ui/cardentry/model/Country;Ljava/lang/String;)Lcom/judopay/judokit/android/ui/cardentry/validation/carddetails/AdministrativeDivisionValidator;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/ui/cardentry/validation/carddetails/AdministrativeDivisionValidator;Lcom/judopay/judokit/android/ui/cardentry/model/Country;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/ui/cardentry/validation/carddetails/AdministrativeDivisionValidator;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCountry ()Lcom/judopay/judokit/android/ui/cardentry/model/Country;
+	public fun getFieldType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun setCountry (Lcom/judopay/judokit/android/ui/cardentry/model/Country;)V
+	public fun toString ()Ljava/lang/String;
+	public fun validate (Ljava/lang/String;Lcom/judopay/judokit/android/ui/cardentry/model/FormFieldEvent;)Lcom/judopay/judokit/android/ui/cardentry/validation/ValidationResult;
+}
+
 public final class com/judopay/judokit/android/ui/cardentry/validation/carddetails/CardHolderNameValidator : com/judopay/judokit/android/ui/cardentry/validation/Validator {
 	public fun <init> ()V
 	public fun <init> (Ljava/lang/String;)V
@@ -3924,11 +3947,11 @@ public final class com/judopay/judokit/android/ui/cardentry/validation/carddetai
 
 public class com/judopay/judokit/android/ui/cardentry/validation/carddetails/PostcodeValidator : com/judopay/judokit/android/ui/cardentry/validation/Validator {
 	public fun <init> ()V
-	public fun <init> (Lcom/judopay/judokit/android/model/Country;Ljava/lang/String;)V
-	public synthetic fun <init> (Lcom/judopay/judokit/android/model/Country;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun getCountry ()Lcom/judopay/judokit/android/model/Country;
+	public fun <init> (Lcom/judopay/judokit/android/model/AVSCountry;Ljava/lang/String;)V
+	public synthetic fun <init> (Lcom/judopay/judokit/android/model/AVSCountry;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getCountry ()Lcom/judopay/judokit/android/model/AVSCountry;
 	public fun getFieldType ()Ljava/lang/String;
-	public fun setCountry (Lcom/judopay/judokit/android/model/Country;)V
+	public fun setCountry (Lcom/judopay/judokit/android/model/AVSCountry;)V
 	public fun validate (Ljava/lang/String;Lcom/judopay/judokit/android/ui/cardentry/model/FormFieldEvent;)Lcom/judopay/judokit/android/ui/cardentry/validation/ValidationResult;
 }
 
@@ -3945,23 +3968,6 @@ public final class com/judopay/judokit/android/ui/cardentry/validation/carddetai
 	public fun getFieldType ()Ljava/lang/String;
 	public fun hashCode ()I
 	public final fun setCardNetwork (Lcom/judopay/judokit/android/model/CardNetwork;)V
-	public fun toString ()Ljava/lang/String;
-	public fun validate (Ljava/lang/String;Lcom/judopay/judokit/android/ui/cardentry/model/FormFieldEvent;)Lcom/judopay/judokit/android/ui/cardentry/validation/ValidationResult;
-}
-
-public final class com/judopay/judokit/android/ui/cardentry/validation/carddetails/StateValidator : com/judopay/judokit/android/ui/cardentry/validation/Validator {
-	public fun <init> ()V
-	public fun <init> (Lcom/judopay/judokit/android/model/Country;Ljava/lang/String;)V
-	public synthetic fun <init> (Lcom/judopay/judokit/android/model/Country;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Lcom/judopay/judokit/android/model/Country;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun copy (Lcom/judopay/judokit/android/model/Country;Ljava/lang/String;)Lcom/judopay/judokit/android/ui/cardentry/validation/carddetails/StateValidator;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/ui/cardentry/validation/carddetails/StateValidator;Lcom/judopay/judokit/android/model/Country;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/ui/cardentry/validation/carddetails/StateValidator;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getCountry ()Lcom/judopay/judokit/android/model/Country;
-	public fun getFieldType ()Ljava/lang/String;
-	public fun hashCode ()I
-	public final fun setCountry (Lcom/judopay/judokit/android/model/Country;)V
 	public fun toString ()Ljava/lang/String;
 	public fun validate (Ljava/lang/String;Lcom/judopay/judokit/android/ui/cardentry/model/FormFieldEvent;)Lcom/judopay/judokit/android/ui/cardentry/validation/ValidationResult;
 }
@@ -4006,6 +4012,11 @@ public final class com/judopay/judokit/android/ui/common/ButtonState$Loading : c
 }
 
 public final class com/judopay/judokit/android/ui/common/ConstantsKt {
+	public static final field ALPHA_2_CODE_CANADA Ljava/lang/String;
+	public static final field ALPHA_2_CODE_CHINA Ljava/lang/String;
+	public static final field ALPHA_2_CODE_GB Ljava/lang/String;
+	public static final field ALPHA_2_CODE_INDIA Ljava/lang/String;
+	public static final field ALPHA_2_CODE_US Ljava/lang/String;
 	public static final field ANIMATION_DURATION_500 J
 	public static final field GOOGLE_PAY_API_VERSION I
 	public static final field GOOGLE_PAY_API_VERSION_MINOR I
