@@ -3576,6 +3576,14 @@ public abstract interface class com/judopay/judokit/android/ui/cardentry/compone
 	public abstract fun onViewWillAppear ()V
 }
 
+public final class com/judopay/judokit/android/ui/cardentry/components/DiacriticInsensitiveAdapter : android/widget/ArrayAdapter {
+	public fun <init> (Landroid/content/Context;Ljava/util/List;)V
+	public fun getCount ()I
+	public fun getFilter ()Landroid/widget/Filter;
+	public fun getItem (I)Lcom/judopay/judokit/android/model/AdministrativeDivision;
+	public synthetic fun getItem (I)Ljava/lang/Object;
+}
+
 public final class com/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout : android/widget/FrameLayout {
 	public fun <init> (Landroid/content/Context;)V
 	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V

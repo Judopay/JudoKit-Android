@@ -171,7 +171,7 @@ class BillingDetailsFormView
                 validationResultsCache[BillingDetailsFieldType.ADMINISTRATIVE_DIVISION] = false
                 binding.administrativeDivisionTextInputEditText.apply {
                     setHint(hint)
-                    setAdapter(ArrayAdapter(context, R.layout.country_select_dialog_item, administrativeDivisions))
+                    setAdapter(DiacriticInsensitiveAdapter(context, administrativeDivisions))
                     setOnItemClickListener { parent, _, position, _ ->
                         selectedAdministrativeDivision = parent.getItemAtPosition(position) as AdministrativeDivision
                     }
