@@ -186,7 +186,7 @@
       ensure_git_status_clean(
           show_uncommitted_changes: true,
           show_diff: true,
-          ignore_files: ['**/.bundle/**']
+          ignore_files: ['.bundle/config']
       )
       gradle(
         task: "clean judokit-android:build judokit-android:dokkaJavadoc publishToSonatype closeAndReleaseSonatypeStagingRepository",
