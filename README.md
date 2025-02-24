@@ -10,7 +10,7 @@ An SDK to assist Android app developers to process payments on Android.
 
 ```kotlin
 dependencies {
-    implementation("com.judopay:judokit-android:4.3.6")
+    implementation("com.judopay:judokit-android:4.3.7")
 }
 ```
 
