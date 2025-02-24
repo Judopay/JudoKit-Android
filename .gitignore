@@ -43,6 +43,7 @@ fastlane/report.xml
 
 # Ruby & Bundler
 vendor
+.bundle
 
 .scannerwork
 credentials.json
