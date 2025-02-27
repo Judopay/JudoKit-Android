@@ -52,6 +52,7 @@ class Receipt(
     val acsTransactionId: String? = null,
     val acsThreeDSRequestorAppURL: String? = null,
     val cReq: String? = null,
+    val emailAddress: String? = null,
 ) {
     val isThreeDSecureTwoRequired: Boolean
         get() = message.equals(CHALLENGE_REQUIRED_MESSAGE, true)
@@ -82,7 +83,8 @@ class Receipt(
                 paReq=$paReq,
                 acsUrl=$acsUrl,
                 result=$result,
-                message=$message
+                message=$message,
+                emailAddress=$emailAddress
             )
             """.trimIndent(true)
     }
@@ -108,6 +110,7 @@ fun Receipt.toJudoResult() =
         result,
         message,
         yourPaymentMetaData,
+        emailAddress,
     )
 
 fun Receipt.toCardVerificationModel() =

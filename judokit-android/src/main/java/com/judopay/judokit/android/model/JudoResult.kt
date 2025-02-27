@@ -30,4 +30,5 @@ data class JudoResult(
     val result: String? = null,
     val message: String? = null,
     val yourPaymentMetaData: Map<String, String>? = null,
+    val emailAddress: String? = null,
 ) : Parcelable
