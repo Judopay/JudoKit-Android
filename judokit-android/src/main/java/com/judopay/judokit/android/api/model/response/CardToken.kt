@@ -22,6 +22,7 @@ class CardToken(
     @SerializedName("cardHolderName") var cardHolderName: String? = null,
     var bank: String? = null,
     var endDate: String? = null,
+    var ownerType: String? = null,
 ) : Parcelable {
     val formattedEndDate: String
         get() {
