@@ -102,24 +102,6 @@ fun assertReceiptObject(
 }
 
 /*
- * Assert iDEAL transaction result object
- */
-fun assertIdealReceiptObject(
-    receiptId: String,
-    result: String,
-) {
-    awaitActivityThenRun(ResultActivity::class.java.name) {
-        onView(withId(SDK.id.recyclerView))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(13))
-            .check(matches(ViewMatchers.hasDescendant(withText(CoreMatchers.not(receiptId)))))
-
-        onView(withId(SDK.id.recyclerView))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(14))
-            .check(matches(ViewMatchers.hasDescendant(withText(result))))
-    }
-}
-
-/*
  * Fill card payment sheet
  */
 fun enterPaymentSheetDetails(

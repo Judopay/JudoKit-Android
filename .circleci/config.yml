@@ -192,10 +192,7 @@ commands:
             export API_TEST_TOKEN=${API_TEST_TOKEN} \
             export API_TEST_SECRET=${API_TEST_SECRET} \
             export RECOMMENDATION_URL=${RECOMMENDATION_URL} \
-            export RSA_KEY=${RSA_KEY} \
-            export IDEAL_JUDO_ID=${IDEAL_JUDO_ID} \
-            export IDEAL_API_TEST_TOKEN=${IDEAL_API_TEST_TOKEN} \
-            export IDEAL_API_TEST_SECRET=${IDEAL_API_TEST_SECRET}
+            export RSA_KEY=${RSA_KEY}
 
 aliases:
   android-docker-executor: &android-docker-executor
