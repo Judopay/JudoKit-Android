@@ -84,38 +84,20 @@ fun assertReceiptObject(
 ) {
     awaitActivityThenRun(ResultActivity::class.java.name) {
         onView(withId(SDK.id.recyclerView))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(8))
+            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(9))
             .check(matches(ViewMatchers.hasDescendant(withText(startsWith(message)))))
 
         onView(withId(SDK.id.recyclerView))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(13))
-            .check(matches(ViewMatchers.hasDescendant(withText(CoreMatchers.not(receiptId)))))
-
-        onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(14))
-            .check(matches(ViewMatchers.hasDescendant(withText(result))))
+            .check(matches(ViewMatchers.hasDescendant(withText(CoreMatchers.not(receiptId)))))
 
         onView(withId(SDK.id.recyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(15))
-            .check(matches(ViewMatchers.hasDescendant(withText(type))))
-    }
-}
-
-/*
- * Assert iDEAL transaction result object
- */
-fun assertIdealReceiptObject(
-    receiptId: String,
-    result: String,
-) {
-    awaitActivityThenRun(ResultActivity::class.java.name) {
-        onView(withId(SDK.id.recyclerView))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(13))
-            .check(matches(ViewMatchers.hasDescendant(withText(CoreMatchers.not(receiptId)))))
-
-        onView(withId(SDK.id.recyclerView))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(14))
             .check(matches(ViewMatchers.hasDescendant(withText(result))))
+
+        onView(withId(SDK.id.recyclerView))
+            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(16))
+            .check(matches(ViewMatchers.hasDescendant(withText(type))))
     }
 }
 
@@ -169,6 +151,7 @@ fun fillBillingDetails(
     addressLineOne: String,
     city: String,
     postcode: String,
+    state: String? = null,
 ) {
     fillTextField(SDK.id.emailTextInputEditText, email)
 
@@ -177,6 +160,13 @@ fun fillBillingDetails(
     onView(withText(country)).perform(click())
 
     Thread.sleep(500)
+
+    if (country == "India" || country == "China") {
+        if (state != null) {
+            fillTextField(SDK.id.administrativeDivisionTextInputEditText, state)
+            onView(withText(state)).perform(click())
+        }
+    }
 
     fillTextField(SDK.id.mobileNumberTextInputEditText, phone)
 
