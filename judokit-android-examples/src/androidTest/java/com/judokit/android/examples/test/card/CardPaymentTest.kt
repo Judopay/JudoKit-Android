@@ -950,4 +950,86 @@ class CardPaymentTest {
 
         assertPADTransaction()
     }
+
+    @Test
+    fun testIndiaStateField() {
+        toggleBillingInfoSetting(true)
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        fillBillingDetails(
+            VALID_EMAIL,
+            "India",
+            VALID_MOBILE,
+            VALID_ADDRESS,
+            VALID_CITY,
+            VALID_POSTCODE,
+            "Kerala"
+        )
+
+        onView(withId(R.id.billingDetailsSubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        clickCompleteOn3DS2Screen()
+
+        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+
+        toggleBillingInfoSetting(false)
+    }
+
+    @Test
+    fun testChinaStateField() {
+        toggleBillingInfoSetting(true)
+
+        onView(withText(PAY_WITH_CARD_LABEL))
+            .perform(click())
+
+        enterPaymentSheetDetails(
+            CARD_NUMBER,
+            CARDHOLDER_NAME,
+            CARD_EXPIRY,
+            CARD_SECURITY_CODE,
+        )
+
+        onView(withId(R.id.cardEntrySubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        Thread.sleep(1000)
+
+        fillBillingDetails(
+            VALID_EMAIL,
+            "China",
+            VALID_MOBILE,
+            VALID_ADDRESS,
+            VALID_CITY,
+            VALID_POSTCODE,
+            "Sichuan Sheng"
+        )
+
+        onView(withId(R.id.billingDetailsSubmitButton))
+            .check(matches(isEnabled()))
+            .perform(click())
+
+        clickCompleteOn3DS2Screen()
+
+        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+
+        toggleBillingInfoSetting(false)
+    }
 }
