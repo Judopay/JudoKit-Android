@@ -978,7 +978,7 @@ class CardPaymentTest {
             VALID_ADDRESS,
             VALID_CITY,
             VALID_POSTCODE,
-            "Kerala"
+            "Kerala",
         )
 
         onView(withId(R.id.billingDetailsSubmitButton))
@@ -1019,7 +1019,7 @@ class CardPaymentTest {
             VALID_ADDRESS,
             VALID_CITY,
             VALID_POSTCODE,
-            "Sichuan Sheng"
+            "Sichuan Sheng",
         )
 
         onView(withId(R.id.billingDetailsSubmitButton))
