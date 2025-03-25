@@ -12,7 +12,6 @@
     <string name="jp_add_card">Add card</string>
     <string name="jp_you_will_pay">You will pay</string>
     <string name="jp_cards">Cards</string>
-    <string name="jp_ideal_payment" translatable="false">iDeal</string>
     <string name="jp_empty" translatable="false" />
     <string name="jp_secure_server_transmission">Your card details are encrypted using TLS before transmission to our secure payment service provider.</string>
 
@@ -100,11 +99,7 @@
 
     <string name="jp_error_card_title_too_long">Card Name cannot be longer than %1$d characters</string>
 
-    <string name="jp_rabobank" translatable="false">Rabobank</string>
-    <string name="jp_ing_bank" translatable="false">ING Bank</string>
-
     <string name="jp_there_is_a_delay">This is taking longer than expected. Please wait…</string>
-    <string name="jp_ideal_transaction">iDEAL transaction</string>
 
     <string name="jp_retry">Retry</string>
     <string name="jp_transaction_successful">Transaction success!</string>
@@ -116,10 +111,6 @@
     <!--    Backend request failed-->
     <string name="jp_error_request_failed_desc" translatable="false">The request has failed or responded without data.</string>
     <string name="jp_error_request_failed_reason" translatable="false">The transaction response returned without any data or there was an error while forming the request.</string>
-
-    <!--    Unexpected response format (when iDEAL does not have the necessary properties)-->
-    <string name="jp_error_response_parse_desc" translatable="false">Unexpected response format returned.</string>
-    <string name="jp_error_response_parse_reason" translatable="false">The response did not contain some of the required parameters needed to complete the transaction.</string>
 
     <!--    Network failed-->
     <string name="jp_error_network_failed_desc" translatable="false">No internet connection.</string>
