@@ -6,7 +6,6 @@ import com.judopay.judokit.android.R
 import kotlinx.parcelize.Parcelize
 
 const val USER_CANCELLED = -1
-const val RESPONSE_PARSING = -2
 const val GOOGLE_PAY_NOT_SUPPORTED = -3
 const val REQUEST_FAILED = -4
 const val EXCEPTION_CAUGHT = -5
@@ -49,23 +48,6 @@ data class JudoError(
                     JudoError(
                         REQUEST_FAILED,
                         resources.getString(R.string.jp_error_request_failed_reason),
-                    ),
-                ),
-            )
-
-        /**
-         * Utility function that creates a JudoError object with response parsing
-         * error code and message. Used when iDEAL response doesn't contain secure token
-         * or redirect url.
-         */
-        fun judoResponseParseError(resources: Resources) =
-            JudoError(
-                RESPONSE_PARSING,
-                resources.getString(R.string.jp_error_response_parse_desc),
-                mutableListOf(
-                    JudoError(
-                        RESPONSE_PARSING,
-                        resources.getString(R.string.jp_error_response_parse_reason),
                     ),
                 ),
             )

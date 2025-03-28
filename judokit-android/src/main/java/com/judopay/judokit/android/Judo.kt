@@ -11,7 +11,6 @@ import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.model.Amount
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.ChallengeRequestIndicator
-import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.GooglePayConfiguration
 import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.PaymentMethod
@@ -311,8 +310,6 @@ class Judo internal constructor(
             val myAmount = requireNotNull(amount, "amount")
             val myReference = requireNotNull(reference, "reference")
 
-            validatePaymentMethods(myAmount.currency)
-
             val myUiConfiguration = requireNotNull(uiConfiguration, "uiConfiguration")
             val mySandboxed = isSandboxed ?: false
 
@@ -390,28 +387,6 @@ class Judo internal constructor(
                 extras = extras,
             )
         }
-
-        @Throws(IllegalArgumentException::class)
-        private fun validatePaymentMethods(currency: Currency) =
-            paymentMethods?.let { methods ->
-                // Payment methods accepted currencies checks
-                if (methods.size == 1) {
-                    val method = methods.first()
-                    val expectedCurrency =
-                        when (method) {
-                            PaymentMethod.IDEAL -> Currency.EUR
-                            else -> null
-                        }
-                    if (expectedCurrency != null && currency != expectedCurrency) {
-                        throw IllegalArgumentException(
-                            """
-                            ${method.name} transactions only support ${expectedCurrency.name} as the currency.
-                            Invalid currency passed to ${method.name} transaction configuration.
-                            """.trimIndent(true),
-                        )
-                    }
-                }
-            }
 
         @Throws(IllegalArgumentException::class)
         private fun requireJudoId(

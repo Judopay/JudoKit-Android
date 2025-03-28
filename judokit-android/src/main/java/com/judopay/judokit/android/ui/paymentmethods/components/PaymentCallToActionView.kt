@@ -12,14 +12,12 @@ import com.judopay.judokit.android.ui.common.ButtonState
 
 enum class PaymentButtonType {
     PLAIN,
-    IDEAL,
     GOOGLE_PAY,
 }
 
 enum class PaymentCallToActionType {
     PAY_WITH_CARD,
     PAY_WITH_GOOGLE_PAY,
-    PAY_WITH_IDEAL,
 }
 
 typealias PaymentCallToActionViewListener = (action: PaymentCallToActionType) -> Unit
@@ -60,9 +58,8 @@ class PaymentCallToActionView
                 binding.amountTextView.visibility = visibility
 
                 when (buttonType) {
-                    PaymentButtonType.PLAIN,
-                    PaymentButtonType.IDEAL,
-                    -> binding.payButton.state = paymentButtonState
+                    PaymentButtonType.PLAIN ->
+                        binding.payButton.state = paymentButtonState
                     PaymentButtonType.GOOGLE_PAY ->
                         binding.googlePayButton.isEnabled =
                             paymentButtonState is ButtonState.Enabled
@@ -70,9 +67,7 @@ class PaymentCallToActionView
 
                 val buttonToShow =
                     when (buttonType) {
-                        PaymentButtonType.PLAIN,
-                        PaymentButtonType.IDEAL,
-                        -> binding.payButton
+                        PaymentButtonType.PLAIN -> binding.payButton
                         PaymentButtonType.GOOGLE_PAY -> binding.googlePayButton
                     }
 
@@ -92,7 +87,6 @@ class PaymentCallToActionView
                 when (model.buttonType) {
                     PaymentButtonType.PLAIN -> PaymentCallToActionType.PAY_WITH_CARD
                     PaymentButtonType.GOOGLE_PAY -> PaymentCallToActionType.PAY_WITH_GOOGLE_PAY
-                    PaymentButtonType.IDEAL -> PaymentCallToActionType.PAY_WITH_IDEAL
                 }
 
             callbackListener?.invoke(actionType)

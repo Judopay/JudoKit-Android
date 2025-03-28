@@ -23,7 +23,6 @@ import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.request.CheckCardRequest
 import com.judopay.judokit.android.api.model.request.GooglePayRequest
 import com.judopay.judokit.android.api.model.request.GooglePayWallet
-import com.judopay.judokit.android.api.model.request.IdealSaleRequest
 import com.judopay.judokit.android.api.model.request.PaymentRequest
 import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
@@ -288,16 +287,6 @@ fun Judo.toGooglePayRequest(
         .setGooglePayWallet(wallet)
         .build()
 }
-
-fun Judo.toIdealSaleRequest(bic: String) =
-    IdealSaleRequest.Builder()
-        .setAmount(amount.amount)
-        .setMerchantConsumerReference(reference.consumerReference)
-        .setMerchantPaymentReference(reference.paymentReference)
-        .setPaymentMetadata(reference.metaData?.toMap())
-        .setJudoId(judoId)
-        .setBic(bic)
-        .build()
 
 fun Judo.toTokenRequest(
     cardToken: String,

@@ -25,14 +25,6 @@
             app:destination="@id/editCardFragment" />
 
         <action
-            android:id="@+id/action_paymentMethodsFragment_to_idealFragment"
-            app:destination="@id/idealFragment">
-            <argument
-                android:name="com.judopay.judokit.android.idealbankbic"
-                app:argType="string" />
-        </action>
-
-        <action
             android:id="@+id/action_paymentMethodsFragment_to_PollingStatusFragment"
             app:destination="@id/pollingStatusFragment">
             <argument
@@ -53,12 +45,6 @@
         android:name="com.judopay.judokit.android.ui.editcard.EditCardFragment"
         android:label="EditCardFragment"
         tools:layout="@layout/edit_card_fragment" />
-
-    <fragment
-        android:id="@+id/idealFragment"
-        android:name="com.judopay.judokit.android.ui.ideal.IdealFragment"
-        android:label="IdealFragment"
-        tools:layout="@layout/ideal_fragment" />
 
     <dialog
         android:id="@+id/pollingStatusFragment"

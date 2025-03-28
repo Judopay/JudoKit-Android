@@ -103,7 +103,6 @@
     <string name="jp_error_card_title_too_long">El nombre no puede exceder los %1$d caracteres</string>
 
     <string name="jp_there_is_a_delay">Está tardando más de lo esperado. Por favor, espere…</string>
-    <string name="jp_ideal_transaction">Transacción iDEAL</string>
 
     <string name="jp_retry">Reintentar</string>
     <string name="jp_transaction_successful">Transacción completa</string>

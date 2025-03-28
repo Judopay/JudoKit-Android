@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.judopay.judokit.android.databinding.IdealBankItemBinding
 import com.judopay.judokit.android.databinding.NoSavedCardsPlaceholderItemBinding
 import com.judopay.judokit.android.databinding.PaymentMethodsSelectorItemBinding
 import com.judopay.judokit.android.databinding.SavedCardFooterItemBinding
@@ -14,7 +13,6 @@ import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethod
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItem
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItemAction
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItemType
-import com.judopay.judokit.android.ui.paymentmethods.adapter.viewholder.IdealBankItemViewHolder
 import com.judopay.judokit.android.ui.paymentmethods.adapter.viewholder.MethodSelectorViewHolder
 import com.judopay.judokit.android.ui.paymentmethods.adapter.viewholder.NoSavedCardsPlaceholderViewHolder
 import com.judopay.judokit.android.ui.paymentmethods.adapter.viewholder.SavedCardsFooterViewHolder
@@ -66,10 +64,6 @@ class PaymentMethodsAdapter(
             PaymentMethodItemType.NO_SAVED_CARDS_PLACEHOLDER ->
                 NoSavedCardsPlaceholderViewHolder(
                     NoSavedCardsPlaceholderItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-                )
-            PaymentMethodItemType.IDEAL_BANK_ITEM ->
-                IdealBankItemViewHolder(
-                    IdealBankItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
                 )
             else -> {
                 throw NotImplementedError("Unsupported or null type")

@@ -10,7 +10,6 @@ import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.model.response.CardDate
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
-import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
@@ -21,8 +20,6 @@ import com.judopay.judokit.android.service.CardTransactionManager
 import com.judopay.judokit.android.service.CardTransactionManagerResultListener
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.common.ButtonState
-import com.judopay.judokit.android.ui.paymentmethods.adapter.model.IdealBank
-import com.judopay.judokit.android.ui.paymentmethods.adapter.model.IdealBankItem
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItem
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItemType
@@ -36,8 +33,6 @@ import com.judopay.judokit.android.ui.paymentmethods.model.CardPaymentMethodMode
 import com.judopay.judokit.android.ui.paymentmethods.model.CardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.Event
 import com.judopay.judokit.android.ui.paymentmethods.model.GooglePayPaymentMethodModel
-import com.judopay.judokit.android.ui.paymentmethods.model.IdealPaymentCardViewModel
-import com.judopay.judokit.android.ui.paymentmethods.model.IdealPaymentMethodModel
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentMethodModel
 import kotlinx.coroutines.launch
@@ -55,13 +50,9 @@ sealed class PaymentMethodsAction {
 
     data class EditMode(val isInEditMode: Boolean) : PaymentMethodsAction()
 
-    data class SelectIdealBank(val idealBank: IdealBank) : PaymentMethodsAction()
-
     object InitiateSelectedCardPayment : PaymentMethodsAction()
 
     data class PayWithCard(val transactionDetail: TransactionDetails.Builder) : PaymentMethodsAction()
-
-    object PayWithSelectedIdealBank : PaymentMethodsAction()
 
     object Update : PaymentMethodsAction()
 
@@ -103,7 +94,6 @@ class PaymentMethodsViewModel(
 ) : AndroidViewModel(application), CardTransactionManagerResultListener {
     val model = MutableLiveData<PaymentMethodsModel>()
     val judoPaymentResult = MutableLiveData<JudoPaymentResult>()
-    val payWithIdealObserver = MutableLiveData<Event<String>>()
     val displayCardEntryObserver = MutableLiveData<Event<CardEntryOptions>>()
 
     val allCardsSync = cardRepository.allCardsSync
@@ -120,17 +110,6 @@ class PaymentMethodsViewModel(
                 }
             }
             return -1
-        }
-
-    private val selectedBank: IdealBank
-        get() {
-            model.value?.let { myModel ->
-                val method = myModel.currentPaymentMethod
-                if (method is IdealPaymentMethodModel) {
-                    return method.selectedBank
-                }
-            }
-            return IdealBank.ING_BANK
         }
 
     init {
@@ -155,15 +134,8 @@ class PaymentMethodsViewModel(
                 val paymentMethod = model.value?.currentPaymentMethod
                 payWithSelectedCard(paymentMethod)
             }
-            is PaymentMethodsAction.PayWithSelectedIdealBank -> {
-                buildModel(isLoading = true)
-                payWithSelectedIdealBank()
-            }
             is PaymentMethodsAction.SelectStoredCard -> {
                 buildModel(isLoading = false, selectedCardId = action.id)
-            }
-            is PaymentMethodsAction.SelectIdealBank -> {
-                buildModel(isLoading = false, selectedBank = action.idealBank)
             }
             is PaymentMethodsAction.Update ->
                 buildModel(
@@ -256,19 +228,6 @@ class PaymentMethodsViewModel(
         judoPaymentResult.postValue(result)
     }
 
-    private fun payWithSelectedIdealBank() =
-        viewModelScope.launch {
-            model.value?.let { methodModel ->
-                if (methodModel.currentPaymentMethod is IdealPaymentMethodModel) {
-                    payWithIdealObserver.postValue(
-                        Event(
-                            methodModel.currentPaymentMethod.selectedBank.bic,
-                        ),
-                    )
-                }
-            }
-        }
-
     private fun deleteCardWithId(id: Int) =
         viewModelScope.launch {
             cardRepository.deleteCardWithId(id)
@@ -280,15 +239,12 @@ class PaymentMethodsViewModel(
         isLoading: Boolean = false,
         selectedCardId: Int = selectedCardIdentifier,
         isInEditMode: Boolean = false,
-        selectedBank: IdealBank = this.selectedBank,
     ) = viewModelScope.launch {
         val cardModel: CardViewModel
 
         val recyclerViewData = mutableListOf<PaymentMethodItem>()
         var allMethods = judo.paymentMethods.toList()
         val cards = allCardsSync.value
-
-        allMethods = filterPaymentMethods(allMethods)
 
         if (allMethods.size > 1) {
             recyclerViewData.add(
@@ -355,19 +311,6 @@ class PaymentMethodsViewModel(
                     cardModel = GooglePayCardViewModel()
                     GooglePayPaymentMethodModel(items = recyclerViewData)
                 }
-
-                PaymentMethod.IDEAL -> {
-                    val bankItems =
-                        IdealBank.values().map {
-                            IdealBankItem(idealBank = it).apply { isSelected = it == selectedBank }
-                        }
-
-                    recyclerViewData.addAll(bankItems)
-
-                    cardModel = IdealPaymentCardViewModel(idealBank = selectedBank)
-
-                    IdealPaymentMethodModel(selectedBank = selectedBank, items = recyclerViewData)
-                }
             }
 
         val callToActionModel =
@@ -395,12 +338,6 @@ class PaymentMethodsViewModel(
                 } else {
                     ButtonState.Enabled(R.string.jp_empty)
                 }
-            PaymentMethod.IDEAL ->
-                if (isLoading) {
-                    ButtonState.Loading
-                } else {
-                    ButtonState.Enabled(R.string.jp_pay_now)
-                }
         }
 
     private fun payWithCardButtonState(
@@ -417,12 +354,4 @@ class PaymentMethodsViewModel(
                 ButtonState.Enabled(R.string.jp_pay_now)
             else -> ButtonState.Disabled(R.string.jp_pay_now)
         }
-
-    private fun filterPaymentMethods(allMethods: List<PaymentMethod>): List<PaymentMethod> {
-        var paymentMethods = allMethods
-        if (judo.amount.currency != Currency.EUR) {
-            paymentMethods = judo.paymentMethods.filter { it != PaymentMethod.IDEAL }
-        }
-        return paymentMethods
-    }
 }

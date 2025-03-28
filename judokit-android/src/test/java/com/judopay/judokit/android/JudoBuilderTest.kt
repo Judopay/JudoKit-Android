@@ -113,52 +113,6 @@ internal class JudoBuilderTest {
     }
 
     @Test
-    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
-    @DisplayName(
-        "Given paymentMethods size is 1 and paymentMethod is iDEAL and currency is not EUR, then build() should throw a IllegalArgumentException",
-    )
-    fun testThatBuildThrowsOnPaymentMethodsIdealNotSupported() {
-        assertThrows<IllegalArgumentException> {
-            judoBuilder.setPaymentMethods(arrayOf(PaymentMethod.IDEAL)).build()
-        }
-    }
-
-    @Test
-    @DisplayName("Given paymentMethods size is greater than 1, then build() should not throw a IllegalArgumentException")
-    fun testThatBuildDoesNotThrowsOnPaymentMethodsIdealNotSupported() {
-        assertDoesNotThrow {
-            judoBuilder.build()
-        }
-    }
-
-    @Test
-    @DisplayName("Given paymentMethods currency is EUR, then build() should not throw a IllegalArgumentException")
-    fun testThatBuildDoesNotThrowsOnPaymentMethodsIdealNotSupportedWithEur() {
-        assertDoesNotThrow {
-            judoBuilder.setAmount(Amount("1", Currency.EUR)).build()
-        }
-    }
-
-    @Test
-    @DisplayName("Given paymentMethods does not include iDEAL, then build() should not throw a IllegalArgumentException")
-    fun testThatBuildDoesNotThrowsOnPaymentMethodsNotIncludeIdeal() {
-        assertDoesNotThrow {
-            judoBuilder.setPaymentMethods(arrayOf(PaymentMethod.CARD)).build()
-        }
-    }
-
-    @Test
-    @DisplayName(
-        "Given paymentMethods size is 1 and includes iDEAL and currency is EUR, then build() should not throw a IllegalArgumentException",
-    )
-    fun testThatBuildDoesNotThsrowsOnPaymentMethodsSizeOneIncludesIdealAndCurrencyEur() {
-        assertDoesNotThrow {
-            judoBuilder.setPaymentMethods(arrayOf(PaymentMethod.IDEAL))
-                .setAmount(Amount("1", Currency.EUR)).build()
-        }
-    }
-
-    @Test
     @DisplayName("Given paymentMethods is empty, then build() with default payment methods")
     fun testThatObjectHasDefaultPaymentMethodsWhenPaymentMethodsEmpty() {
         judoBuilder.setPaymentMethods(emptyArray())

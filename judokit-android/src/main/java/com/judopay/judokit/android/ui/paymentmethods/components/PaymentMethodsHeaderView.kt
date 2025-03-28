@@ -3,7 +3,6 @@ package com.judopay.judokit.android.ui.paymentmethods.components
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import com.judopay.judokit.android.R
@@ -11,7 +10,6 @@ import com.judopay.judokit.android.databinding.PaymentMethodsHeaderViewBinding
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.ui.paymentmethods.model.CardAnimationType
 import com.judopay.judokit.android.ui.paymentmethods.model.CardViewModel
-import com.judopay.judokit.android.ui.paymentmethods.model.IdealPaymentCardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.inAnimation
 import com.judopay.judokit.android.ui.paymentmethods.model.outAnimation
@@ -62,7 +60,7 @@ class PaymentMethodsHeaderView
 
             val cardModel = model.cardModel
 
-            binding.viewAnimator.visibility = View.GONE
+            binding.viewAnimator.visibility = GONE
             binding.noPaymentMethodSelectedView.hide(binding.placeholderBackgroundImageView)
             when (cardModel) {
                 is NoPaymentMethodSelectedViewModel -> {
@@ -82,19 +80,6 @@ class PaymentMethodsHeaderView
                     mainDisplayed = !mainDisplayed
                     currentPaymentMethod = PaymentMethod.CARD
                 }
-                is IdealPaymentCardViewModel -> {
-                    if (mainDisplayed) {
-                        cardModel.layoutId = R.id.secondaryIdealPaymentCardView
-                        val myIdealPaymentCardView = binding.secondaryIdealPaymentCardView.children.first()
-                        (myIdealPaymentCardView as IdealPaymentCardView).model = cardModel
-                    } else {
-                        cardModel.layoutId = R.id.idealPaymentCardView
-                        val myIdealPaymentCardView = binding.idealPaymentCardView.children.first()
-                        (myIdealPaymentCardView as IdealPaymentCardView).model = cardModel
-                    }
-                    mainDisplayed = !mainDisplayed
-                    currentPaymentMethod = PaymentMethod.IDEAL
-                }
                 is GooglePayCardViewModel -> currentPaymentMethod = PaymentMethod.GOOGLE_PAY
             }
             show(cardModel)
@@ -103,7 +88,7 @@ class PaymentMethodsHeaderView
 
         private fun show(cardModel: CardViewModel) {
             setAnimationType()
-            binding.viewAnimator.visibility = View.VISIBLE
+            binding.viewAnimator.visibility = VISIBLE
             binding.viewAnimator.children.forEachIndexed { index, view ->
                 if (view.id == cardModel.layoutId) {
                     binding.viewAnimator.displayedChild = index
@@ -129,7 +114,7 @@ class PaymentMethodsHeaderView
                     binding.viewAnimator.outAnimation = CardAnimationType.RIGHT.outAnimation(context)
                 }
                 indexOfPrevious == indexOfCurrent && previousCard != model.cardModel -> {
-                    if (currentPaymentMethod == PaymentMethod.CARD || currentPaymentMethod == PaymentMethod.IDEAL) {
+                    if (currentPaymentMethod == PaymentMethod.CARD) {
                         binding.viewAnimator.inAnimation = CardAnimationType.BOTTOM.inAnimation(context)
                         binding.viewAnimator.outAnimation = CardAnimationType.BOTTOM.outAnimation(context)
                     } else {

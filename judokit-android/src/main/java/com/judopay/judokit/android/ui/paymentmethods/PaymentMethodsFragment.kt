@@ -26,10 +26,8 @@ import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.service.CardTransactionManager
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
-import com.judopay.judokit.android.ui.ideal.JUDO_IDEAL_BANK
 import com.judopay.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judopay.judokit.android.ui.paymentmethods.adapter.SwipeToDeleteCallback
-import com.judopay.judokit.android.ui.paymentmethods.adapter.model.IdealBankItem
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItem
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItemAction
@@ -121,19 +119,6 @@ class PaymentMethodsFragment : Fragment() {
             viewModel.send(PaymentMethodsAction.Update)
         }
 
-        viewModel.payWithIdealObserver.observe(
-            viewLifecycleOwner,
-        ) {
-            it.getContentIfNotHandled()?.let { bic ->
-                findNavController().navigate(
-                    R.id.action_paymentMethodsFragment_to_idealFragment,
-                    bundleOf(
-                        JUDO_IDEAL_BANK to bic,
-                    ),
-                )
-            }
-        }
-
         viewModel.displayCardEntryObserver.observe(
             viewLifecycleOwner,
         ) {
@@ -203,7 +188,6 @@ class PaymentMethodsFragment : Fragment() {
                     viewModel.send(PaymentMethodsAction.EditMode(false))
                 }
             }
-            is IdealBankItem -> viewModel.send(PaymentMethodsAction.SelectIdealBank(item.idealBank))
         }
     }
 
@@ -282,9 +266,6 @@ class PaymentMethodsFragment : Fragment() {
                     sharedViewModel.send(JudoSharedAction.LoadGPayPaymentData)
                     viewModel.send(PaymentMethodsAction.UpdateButtonState(false))
                 }
-
-                PaymentCallToActionType.PAY_WITH_IDEAL ->
-                    viewModel.send(PaymentMethodsAction.PayWithSelectedIdealBank)
             }
         }
     }
