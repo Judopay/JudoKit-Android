@@ -3,6 +3,7 @@ package com.judokit.android.examples.feature.noui
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.judokit.android.examples.R
@@ -42,6 +43,8 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDemoNoUiPaymentBinding.inflate(layoutInflater)
+        title = getString(R.string.feature_title_payment_no_ui)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setContentView(binding.root)
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
@@ -105,6 +108,15 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
         if (requestCode == JUDO_PAYMENT_WIDGET_REQUEST_CODE) {
             setResult(resultCode, data)
             finish()
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == android.R.id.home) {
+            onBackPressedDispatcher.onBackPressed()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
         }
     }
 
