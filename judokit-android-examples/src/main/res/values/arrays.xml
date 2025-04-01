@@ -140,6 +140,7 @@
 
     <string-array name="default_payment_methods_values">
         <item>CARD</item>
+        <item>GOOGLE_PAY</item>
     </string-array>
 
     <string-array name="google_pay_address_values">
