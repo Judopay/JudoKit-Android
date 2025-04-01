@@ -47,14 +47,12 @@ enum class PaymentWidgetType : Parcelable {
     PRE_AUTH_GOOGLE_PAY,
 
     /**
-     * Starts the payment methods widget to perform card, GooglePay, and iDEAL
-     * payments.
+     * Starts the payment methods widget to perform card and GooglePay payments.
      */
     PAYMENT_METHODS,
 
     /**
-     * Starts the payment methods widget to perform card, GooglePay, and iDEAL
-     * pre-auth payments.
+     * Starts the payment methods widget to perform card and GooglePay pre-auth payments.
      */
     PRE_AUTH_PAYMENT_METHODS,
 

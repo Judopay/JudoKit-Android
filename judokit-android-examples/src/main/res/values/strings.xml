@@ -248,8 +248,8 @@
     <string name="three_ds2_protocol_message_version_summary">Override 3DS 2.0 protocol message version</string>
     <string name="three_ds2_protocol_message_version_title">Message version</string>
 
-    <string name="feature_title_payment_no_ui">Card payments no UI</string>
-    <string name="feature_subtitle_payment_no_ui">Card payments using card transaction service</string>
+    <string name="feature_title_payment_no_ui">No-UI transactions</string>
+    <string name="feature_subtitle_payment_no_ui">No-UI transactions using card transaction manager</string>
 
     <string name="feature_title_token_payments">Token payments</string>
     <string name="feature_subtitle_token_payments">with optionally asking for CSC and/or cardholder name</string>

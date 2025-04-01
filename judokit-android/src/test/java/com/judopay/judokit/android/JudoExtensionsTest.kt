@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
 import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.request.CheckCardRequest
-import com.judopay.judokit.android.api.model.request.IdealSaleRequest
 import com.judopay.judokit.android.api.model.request.PaymentRequest
 import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
@@ -180,23 +179,6 @@ internal class JudoExtensionsTest {
         val whitespaceString = "White space"
 
         assertEquals("Whitespace", whitespaceString.withWhitespacesRemoved)
-    }
-
-    @DisplayName("Given Judo.toIdealSaleRequest is called, then map Judo to IdealSaleRequest")
-    @Test
-    fun mapJudoToIdealSaleRequest() {
-        val expected =
-            IdealSaleRequest.Builder().setAmount("1")
-                .setMerchantConsumerReference("ref")
-                .setMerchantPaymentReference("ref")
-                .setJudoId("123456789")
-                .setBic("bic")
-                .setPaymentMetadata(emptyMap())
-                .build()
-
-        val actual = judo.toIdealSaleRequest("bic")
-
-        assertEquals(expected, actual)
     }
 
     @DisplayName("Given Judo.toPaymentRequest is called, then map Judo to PaymentRequest")

@@ -3,7 +3,6 @@ package com.judopay.judokit.android.api
 import com.judopay.judokit.android.api.model.request.CheckCardRequest
 import com.judopay.judokit.android.api.model.request.Complete3DS2Request
 import com.judopay.judokit.android.api.model.request.GooglePayRequest
-import com.judopay.judokit.android.api.model.request.IdealSaleRequest
 import com.judopay.judokit.android.api.model.request.PaymentRequest
 import com.judopay.judokit.android.api.model.request.PreAuthGooglePayRequest
 import com.judopay.judokit.android.api.model.request.PreAuthRequest
@@ -12,7 +11,6 @@ import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
 import com.judopay.judokit.android.api.model.response.BankSaleStatusResponse
-import com.judopay.judokit.android.api.model.response.IdealSaleResponse
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.Receipt
 import retrofit2.Call
@@ -137,17 +135,6 @@ interface JudoApiService {
     fun preAuthGooglePayPayment(
         @Body preAuthGooglePayRequest: PreAuthGooglePayRequest,
     ): Call<JudoApiCallResult<Receipt>>
-
-    /**
-     * A method that invokes a Bank transaction, used for completing transactions via iDEAL Bank apps.
-     *
-     * @param saleRequest - an instance of [IdealSaleRequest] describing the Bank request.
-     * @return the receipt of the iDEAL transaction.
-     */
-    @POST("order/bank/sale")
-    fun sale(
-        @Body saleRequest: IdealSaleRequest,
-    ): Call<JudoApiCallResult<IdealSaleResponse>>
 
     @GET("order/bank/statusrequest/{orderID}")
     fun status(
