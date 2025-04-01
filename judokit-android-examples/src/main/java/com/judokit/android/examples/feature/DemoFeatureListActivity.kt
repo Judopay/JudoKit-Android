@@ -480,7 +480,13 @@ class DemoFeatureListActivity : AppCompatActivity() {
         get() {
             val paymentMethods =
                 sharedPreferences.getStringSet("payment_methods", null)
-                    ?.map { PaymentMethod.valueOf(it) }
+                    ?.mapNotNull {
+                        try {
+                            PaymentMethod.valueOf(it)
+                        } catch (_: Exception) {
+                            null
+                        }
+                    }
                     ?.toTypedArray()
 
             // for demo purposes we want them in a certain order
