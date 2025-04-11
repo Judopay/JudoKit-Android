@@ -28,13 +28,15 @@ import com.judopay.judokit.android.toMap
 
 internal fun GooglePayConfiguration.toGooglePayPaymentMethod(judo: Judo): GooglePayPaymentMethod {
     val networks = judo.supportedCardNetworks.filter { it.isSupportedByGooglePay }
+    val allowedAuthMethods =
+        arrayOf(
+            GooglePayAuthMethod.PAN_ONLY,
+            GooglePayAuthMethod.CRYPTOGRAM_3DS,
+        )
 
     val cardParameters =
         GooglePayCardParameters(
-            allowedAuthMethods =
-                arrayOf(
-                    GooglePayAuthMethod.CRYPTOGRAM_3DS,
-                ),
+            allowedAuthMethods = allowedAuthMethods,
             allowedCardNetworks = networks.toTypedArray(),
             allowPrepaidCards = allowPrepaidCards,
             allowCreditCards = allowCreditCards,
