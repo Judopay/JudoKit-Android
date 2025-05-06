@@ -258,8 +258,8 @@ jobs:
               --use-orchestrator \
               --client-details=matrixLabel="Regression E2E" \
               --num-flaky-test-attempts=1
-      # - notify_slack_error
-      # - notify_slack_pass
+      - notify_slack_error
+      - notify_slack_pass
 
 
   instrumented_test_sample_weekly_api_31:
@@ -388,7 +388,7 @@ workflows:
           filters:
             branches:
               only:
-                - fix-flaky-tests
+                - master
 
   publish_sdk:
     jobs:
