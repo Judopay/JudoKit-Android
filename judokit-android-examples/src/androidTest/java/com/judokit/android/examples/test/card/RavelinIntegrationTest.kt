@@ -71,6 +71,7 @@ class RavelinIntegrationTest {
                 putBoolean("is_recommendation_feature_enabled", true)
                 putString("rsa_key", BuildConfig.RSA_KEY)
                 putStringSet("payment_methods", setOf("CARD"))
+                putBoolean("is_address_enabled", false)
             }
             .commit()
     }
