@@ -99,7 +99,7 @@
 
     <style name="JudoTheme.TextInputEditText" parent="Widget.AppCompat.EditText">
         <!-- Theme attributes -->
-        <item name="android:textColorHint">@color/jpBrownGrayColor</item>
+        <item name="android:textColorHint">@color/jpNeutralGrayColor</item>
         <item name="colorControlNormal">@color/jpBlackColor</item>
         <item name="colorControlActivated">@color/jpBlackColor</item>
         <item name="fontFamily">@font/sf_pro_display_regular</item>
