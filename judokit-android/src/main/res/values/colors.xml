@@ -4,13 +4,15 @@
 
     <color name="jpBlackColor">@color/black</color>
     <color name="jpGrayColor">@color/very_light_pink_two</color>
-    <color name="jpDarkGrayColor">@color/brown_grey</color>
+    <color name="jpBrownGrayColor">@color/brown_grey</color>
+    <color name="jpDarkGrayColor">@color/dark_grey</color>
     <color name="jpLightGrayColor">@color/white_opaque</color>
     <color name="jpWhiteColor">@color/white</color>
     <color name="jpRedColor">@color/tomato_red</color>
 
     <color name="black">#262626</color>
     <color name="brown_grey">#999999</color>
+    <color name="dark_grey">#767676</color>
     <color name="very_light_pink_two">#eeeeee</color>
     <color name="very_light_pink">#E5E5E5</color>
     <color name="tomato_red">#E21900</color>
