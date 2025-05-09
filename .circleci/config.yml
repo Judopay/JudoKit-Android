@@ -275,7 +275,7 @@ jobs:
               --test judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk \
               --results-bucket $FIREBASE_TEST_RESULTS_BUCKET \
               --timeout=30m \
-              --device model=a51,version=31 \
+              --device model=a12,version=31 \
               --use-orchestrator \
               --client-details=matrixLabel="Backward Compat E2E (API 31)" \
               --test-targets="class com.judokit.android.examples.test.card.CardPaymentTest" \
