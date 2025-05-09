@@ -126,8 +126,7 @@
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/phoneCountryCodeTextInputLayout"
                 android:layout_width="@dimen/space_80"
-                android:layout_height="wrap_content"
-                app:disableRightCornerRadius="true">
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/phoneCountryCodeTextInputEditText"
@@ -146,18 +145,17 @@
                 android:id="@+id/mobileNumberTextInputLayout"
                 android:layout_width="@dimen/width_0"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_1"
-                app:disableLeftCornerRadius="true">
+                android:layout_marginStart="@dimen/space_1">
 
                 <EditText
                     android:id="@+id/mobileNumberTextInputEditText"
                     style="@style/JudoTheme.TextInputEditText"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:autofillHints="phoneNational"
                     android:inputType="phone"
-                    tools:text="0799999999"
-                    android:tag="@string/jp_phone_entry_field" />
+                    android:tag="@string/jp_phone_entry_field"
+                    tools:text="0799999999" />
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 

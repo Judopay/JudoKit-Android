@@ -13,7 +13,8 @@
     <color name="black">#262626</color>
     <color name="brown_grey">#999999</color>
     <color name="dark_grey">#767676</color>
-    <color name="neutral_grey">#717171</color>
+    <color name="graphite_grey">#8C8C8C</color>
+    <color name="neutral_grey">#707070</color>
     <color name="very_light_pink_two">#eeeeee</color>
     <color name="very_light_pink">#E5E5E5</color>
     <color name="tomato_red">#E21900</color>
