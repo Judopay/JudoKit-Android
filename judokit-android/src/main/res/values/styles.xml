@@ -105,13 +105,9 @@
         <item name="fontFamily">@font/sf_pro_display_regular</item>
         <item name="android:textSize">@dimen/headline</item>
         <item name="android:textColor">@color/jpBlackColor</item>
+        <item name="android:layout_gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:paddingStart">0dp</item>
-        <item name="android:paddingEnd">0dp</item>
-        <item name="android:paddingBottom">0dp</item>
-        <item name="android:paddingTop">0dp</item>
-        <item name="android:padding">0dp</item>
         <item name="android:background">@null</item>
     </style>
 
@@ -179,5 +175,6 @@
     <style name="JudoTheme.Caption.Error.Medium" parent="JudoTheme.Caption.Error">
         <item name="fontFamily">@font/sf_pro_display_medium</item>
         <item name="android:textColor">@color/jpRedColor</item>
+        <item name="android:textSize">@dimen/large_caption</item>
     </style>
 </resources>
