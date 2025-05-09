@@ -179,5 +179,6 @@
     <style name="JudoTheme.Caption.Error.Medium" parent="JudoTheme.Caption.Error">
         <item name="fontFamily">@font/sf_pro_display_medium</item>
         <item name="android:textColor">@color/jpRedColor</item>
+        <item name="android:textSize">@dimen/large_caption</item>
     </style>
 </resources>

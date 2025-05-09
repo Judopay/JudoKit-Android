@@ -36,6 +36,7 @@
     <dimen name="title">18sp</dimen>
     <dimen name="headline">16sp</dimen>
     <dimen name="body">14sp</dimen>
+    <dimen name="large_caption">11sp</dimen>
     <dimen name="caption">10sp</dimen>
 
     <!-- Buttons -->
@@ -56,7 +57,7 @@
 
     <!-- Text input layouts -->
     <dimen name="input_layout_corner_radius">6dp</dimen>
-    <dimen name="judo_text_input_layout_height">44dp</dimen>
+    <dimen name="judo_text_input_layout_height">56dp</dimen>
 
     <!-- Cards -->
     <dimen name="card_corner_radius">10dp</dimen>
