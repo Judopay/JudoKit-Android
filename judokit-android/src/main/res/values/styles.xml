@@ -162,11 +162,6 @@
         <item name="fontFamily">@font/sf_pro_display_regular</item>
         <item name="android:textSize">@dimen/caption</item>
     </style>
-
-    <style name="JudoTheme.Caption.Light" parent="JudoTheme.Caption">
-        <item name="android:textColor">@color/jpBrownGrayColor</item>
-    </style>
-
     <style name="JudoTheme.Caption.Error" parent="JudoTheme.Caption">
         <item name="fontFamily">@font/sf_pro_display_semibold</item>
         <item name="android:textColor">@color/jpRedColor</item>

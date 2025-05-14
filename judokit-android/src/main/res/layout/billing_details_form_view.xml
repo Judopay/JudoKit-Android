@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/jp_billing_details_title"
-                android:textColor="@color/jpBrownGrayColor"
+                android:textColor="@color/jpDarkGrayColor"
                 android:textSize="@dimen/text_size_18" />
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
