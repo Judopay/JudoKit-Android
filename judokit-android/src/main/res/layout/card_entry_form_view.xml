@@ -16,7 +16,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space_94"
+            android:layout_marginBottom="@dimen/space_106"
             android:clipToPadding="false"
             android:paddingStart="@dimen/space_24"
             android:paddingEnd="@dimen/space_24"
@@ -136,7 +136,8 @@
                     android:focusable="false"
                     android:longClickable="false"
                     android:maxLines="1"
-                    android:padding="@dimen/space_7"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:paddingVertical="@dimen/space_8"
                     tools:ignore="LabelFor"
                     tools:text="Country" />
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
