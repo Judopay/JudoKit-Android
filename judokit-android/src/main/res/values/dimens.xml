@@ -4,6 +4,7 @@
     <dimen name="negative_space_3">-3dp</dimen>
     <dimen name="negative_space_4">-4dp</dimen>
     <dimen name="space_1">1dp</dimen>
+    <dimen name="space_2">2dp</dimen>
     <dimen name="space_3">3dp</dimen>
     <dimen name="space_4">4dp</dimen>
     <dimen name="space_6">6dp</dimen>
@@ -20,6 +21,7 @@
     <dimen name="space_48">48dp</dimen>
     <dimen name="space_56">56dp</dimen>
     <dimen name="space_68">68dp</dimen>
+    <dimen name="space_74">74dp</dimen>
     <dimen name="space_80">80dp</dimen>
     <dimen name="space_106">106dp</dimen>
     <dimen name="space_132">132dp</dimen>
@@ -44,7 +46,7 @@
     <!-- Buttons -->
     <dimen name="min_touch_target_size">48dp</dimen>
     <dimen name="button_corner_radius">4dp</dimen>
-    <dimen name="button_height">56dp</dimen>
+    <dimen name="button_height">54dp</dimen>
 
     <!-- App bar -->
     <dimen name="app_bar_layout_height">400dp</dimen>
