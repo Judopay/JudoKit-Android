@@ -18,7 +18,7 @@
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space_68"
+            android:layout_marginBottom="@dimen/space_74"
             android:clipToPadding="false"
             android:paddingStart="@dimen/space_24"
             android:paddingEnd="@dimen/space_24"
@@ -269,8 +269,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_8"
-            android:layout_marginBottom="@dimen/space_8">
+            android:layout_marginTop="@dimen/space_16"
+            android:layout_marginBottom="@dimen/space_16">
 
             <androidx.constraintlayout.helper.widget.Flow
                 android:id="@+id/flow3"
