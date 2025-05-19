@@ -98,16 +98,16 @@
       expected_env_vars = [
           "ORG_GRADLE_PROJECT_signingKey_base64",
           "ORG_GRADLE_PROJECT_signingPassword",
-          "ORG_GRADLE_PROJECT_ossrhTokenPassword",
-          "ORG_GRADLE_PROJECT_ossrhToken",
+          "ORG_GRADLE_PROJECT_sonatypeTokenPassword",
+          "ORG_GRADLE_PROJECT_sonatypeToken",
       ]
 
       if expected_env_vars.all? { |var_name| env_var_valid?(var_name) }
           return {
               "signingKey" => Base64.decode64(ENV["ORG_GRADLE_PROJECT_signingKey_base64"]),
               "signingPassword" => ENV["ORG_GRADLE_PROJECT_signingPassword"],
-              "sonatypePassword" => ENV["ORG_GRADLE_PROJECT_ossrhTokenPassword"],
-              "sonatypeUsername" => ENV["ORG_GRADLE_PROJECT_ossrhToken"],
+              "sonatypePassword" => ENV["ORG_GRADLE_PROJECT_sonatypeTokenPassword"],
+              "sonatypeUsername" => ENV["ORG_GRADLE_PROJECT_sonatypeToken"],
           }
       end
 
