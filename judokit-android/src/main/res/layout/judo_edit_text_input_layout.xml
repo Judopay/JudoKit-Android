@@ -5,10 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/judo_text_input_layout_height"
     android:background="@drawable/edit_text_input_layout_background_shape"
-    android:paddingStart="@dimen/space_8"
-    android:paddingTop="@dimen/space_4"
-    android:paddingEnd="@dimen/space_8"
-    android:paddingBottom="@dimen/space_4">
+    android:paddingHorizontal="@dimen/space_16"
+    android:paddingVertical="@dimen/space_8">
 
     <LinearLayout
         android:id="@+id/containerLayout"
@@ -29,7 +27,7 @@
             android:id="@+id/errorTextView"
             style="@style/JudoTheme.Caption.Error.Medium"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/space_14"
+            android:layout_height="wrap_content"
             android:layout_margin="0dp"
             android:ellipsize="end"
             android:maxLines="1"
