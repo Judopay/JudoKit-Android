@@ -2,7 +2,7 @@
 agp = "8.10.0"
 gradle = "8.3.2"
 kotlin = "1.9.23"
-ksp = "1.9.23-1.0.20"
+ksp = "1.9.25-1.0.20"
 
 # judokit-android
 judo3ds2 = "1.4.4"
