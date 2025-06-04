@@ -6,10 +6,14 @@ internal fun configureAndroidLibraryAdditionalArtifacts(
     extension: LibraryExtension,
 ) = extension.apply {
     publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
         multipleVariants {
+            allVariants()
             withJavadocJar()
             withSourcesJar()
-            allVariants()
         }
     }
 }

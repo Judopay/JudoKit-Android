@@ -31,6 +31,7 @@ dependencies {
 
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.material.icons.extended)
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.ui.tooling.preview)
 

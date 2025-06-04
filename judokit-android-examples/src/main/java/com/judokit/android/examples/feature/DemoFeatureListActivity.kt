@@ -157,7 +157,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
         deepLinkIntent = intent
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         deepLinkIntent = intent
         deepLinkIfNeeded()
         super.onNewIntent(intent)

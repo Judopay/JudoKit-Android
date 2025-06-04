@@ -9,8 +9,6 @@ import org.gradle.kotlin.dsl.get
 internal fun Project.configureMavenPublishing(
     extension: PublishingExtension
 ) = extension.apply {
-    val javadoc = javadoc()
-
     publications {
         create<MavenPublication>("judokit-android-release") {
             artifactId = "judokit-android"
@@ -18,8 +16,6 @@ internal fun Project.configureMavenPublishing(
             version = Versions.VERSION_NAME
 
             from(components["release"])
-            artifact(javadoc.get())
-
             configurePom()
         }
     }

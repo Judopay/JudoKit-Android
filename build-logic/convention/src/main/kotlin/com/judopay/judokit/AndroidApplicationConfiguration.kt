@@ -24,11 +24,6 @@ internal fun Project.configureAndroidApplication(
         viewBinding = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion =
-            versionCatalog.findVersion("androidxComposeCompiler").get().toString()
-    }
-
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true

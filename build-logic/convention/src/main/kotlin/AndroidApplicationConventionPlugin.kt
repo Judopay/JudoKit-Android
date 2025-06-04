@@ -13,6 +13,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
 
                 apply("com.google.gms.google-services")
                 apply("com.google.firebase.crashlytics")
+                apply("org.jetbrains.kotlin.plugin.compose")
             }
 
             extensions.configure<ApplicationExtension> {
