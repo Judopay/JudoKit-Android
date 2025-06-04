@@ -21,7 +21,7 @@ class AppMetaDataProvider(context: Context, subProductInfo: SubProductInfo) {
         get() =
             try {
                 val packageInfo = applicationContext.packageManager.getPackageInfo(applicationContext.packageName, 0)
-                packageInfo.versionName
+                packageInfo.versionName ?: ""
             } catch (e: PackageManager.NameNotFoundException) {
                 ""
             }
