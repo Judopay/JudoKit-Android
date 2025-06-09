@@ -3,25 +3,30 @@ package com.judokit.android.examples.feature.tokenpayments
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -32,6 +37,7 @@ import com.judokit.android.examples.R
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.securityCodeLength
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Suppress("LongParameterList", "LongMethod", "MagicNumber")
 fun TokenPaymentsScreen(
@@ -46,16 +52,22 @@ fun TokenPaymentsScreen(
         derivedStateOf { viewModel.scheme.isNotBlank() && viewModel.token.isNotBlank() && viewModel.lastFour.isNotBlank() }
     }
     val securityCodeLength by remember(key1 = viewModel.scheme) {
-        mutableStateOf(CardNetwork.withIdentifier(viewModel.scheme.toIntOrNull() ?: 0).securityCodeLength)
+        mutableIntStateOf(CardNetwork.withIdentifier(viewModel.scheme.toIntOrNull() ?: 0).securityCodeLength)
     }
 
     Scaffold(
         modifier = modifier,
+        contentWindowInsets = WindowInsets.safeContent,
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.feature_title_token_payments)) },
                 navigationIcon = { IconButton(onClick = { onClose() }) { Icon(Icons.Filled.ArrowBack, "") } },
-                elevation = 4.dp,
+                colors =
+                    topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
             )
         },
     ) { paddingValues ->
@@ -65,9 +77,9 @@ fun TokenPaymentsScreen(
                 Modifier
                     .verticalScroll(rememberScrollState())
                     .padding(paddingValues)
-                    .padding(16.dp)
                     .fillMaxWidth(),
         ) {
+            Spacer(Modifier.height(16.dp))
             Text("Please fill in the fields below with a tokenized card's details or tokenize a new card below")
             OutlinedTextField(
                 value = viewModel.scheme,

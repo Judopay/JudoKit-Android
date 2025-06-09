@@ -4,8 +4,8 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class Risks(val postCodeCheck: String? = null) : Parcelable {
-    override fun toString(): String {
-        return "Risks(postCodeCheck=$postCodeCheck)"
-    }
+class Risks(
+    val postCodeCheck: String? = null,
+) : Parcelable {
+    override fun toString(): String = "Risks(postCodeCheck=$postCodeCheck)"
 }

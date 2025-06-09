@@ -20,6 +20,7 @@ import com.judopay.judokit.android.service.polling.PollingService
 import com.judopay.judokit.android.ui.paymentmethods.components.PollingStatusViewAction
 import com.judopay.judokit.android.ui.paymentmethods.components.PollingStatusViewState
 
+// TODO: cleanup iDEAL leftovers
 class PollingStatusFragment : DialogFragment() {
     private lateinit var viewModel: PollingStatusViewModel
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()

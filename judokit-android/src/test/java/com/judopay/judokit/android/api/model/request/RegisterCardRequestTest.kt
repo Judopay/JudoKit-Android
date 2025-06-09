@@ -6,7 +6,8 @@ import org.junit.jupiter.api.assertThrows
 
 internal class RegisterCardRequestTest {
     private val request =
-        RegisterCardRequest.Builder()
+        RegisterCardRequest
+            .Builder()
             .setIssueNumber("123")
             .setStartDate("1220")
             .setEmailAddress("email@mail.com")
@@ -49,9 +50,10 @@ internal class RegisterCardRequestTest {
     @DisplayName("Should throw an exception on providing null consumer reference")
     fun exceptionOnNullConsumerReference() {
         assertThrows<IllegalArgumentException> {
-            request.setYourConsumerReference(
-                null,
-            ).build()
+            request
+                .setYourConsumerReference(
+                    null,
+                ).build()
         }
     }
 
@@ -59,9 +61,10 @@ internal class RegisterCardRequestTest {
     @DisplayName("Should throw an exception on providing empty consumer reference")
     fun exceptionOnEmptyConsumerReference() {
         assertThrows<IllegalArgumentException> {
-            request.setYourConsumerReference(
-                "",
-            ).build()
+            request
+                .setYourConsumerReference(
+                    "",
+                ).build()
         }
     }
 
@@ -115,9 +118,10 @@ internal class RegisterCardRequestTest {
     @DisplayName("Should throw an exception on providing null payment reference")
     fun exceptionOnNullPaymentReference() {
         assertThrows<IllegalArgumentException> {
-            request.setYourPaymentReference(
-                null,
-            ).build()
+            request
+                .setYourPaymentReference(
+                    null,
+                ).build()
         }
     }
 
@@ -125,9 +129,10 @@ internal class RegisterCardRequestTest {
     @DisplayName("Should throw an exception on providing empty payment reference")
     fun exceptionOnEmptyPaymentReference() {
         assertThrows<IllegalArgumentException> {
-            request.setYourPaymentReference(
-                "",
-            ).build()
+            request
+                .setYourPaymentReference(
+                    "",
+                ).build()
         }
     }
 

@@ -23,13 +23,14 @@ dependencies {
     implementation(libs.kotlin.reflect)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.android.material)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.preference.ktx)
     implementation(libs.chucker)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.activity.ktx)
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.material.icons.extended)
     implementation(libs.androidx.compose.material)
@@ -38,6 +39,7 @@ dependencies {
     implementation(libs.squareup.retrofit2)
     implementation(libs.squareup.retrofit2.converter.gson)
     implementation(libs.ravelin.encrypt)
+    implementation(libs.androidx.material3.android)
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)

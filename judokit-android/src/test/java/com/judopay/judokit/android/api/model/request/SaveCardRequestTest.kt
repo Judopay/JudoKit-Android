@@ -7,7 +7,8 @@ import org.junit.jupiter.api.assertThrows
 @DisplayName("Testing save card request builder")
 internal class SaveCardRequestTest {
     private val request =
-        SaveCardRequest.Builder()
+        SaveCardRequest
+            .Builder()
             .setIssueNumber("123")
             .setStartDate("1220")
             .setEmailAddress("email@mail.com")

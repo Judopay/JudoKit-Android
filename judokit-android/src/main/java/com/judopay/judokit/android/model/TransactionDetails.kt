@@ -134,7 +134,8 @@ class TransactionDetails private constructor(
 
 fun TransactionDetails.getAddress(judo: Judo): Address? {
     if (judo.uiConfiguration.shouldAskForBillingInformation) {
-        return Address.Builder()
+        return Address
+            .Builder()
             .setLine1(addressLine1)
             .setLine2(addressLine2)
             .setLine3(addressLine3)
@@ -156,7 +157,8 @@ fun Transaction.toThreeDSecureTwo(
     val parameters = getAuthenticationRequestParameters()
     val sdkParameters =
         with(parameters) {
-            SdkParameters.Builder()
+            SdkParameters
+                .Builder()
                 .setApplicationId(getSDKAppID())
                 .setEncodedData(getDeviceData())
                 .setEphemeralPublicKey(
@@ -164,8 +166,7 @@ fun Transaction.toThreeDSecureTwo(
                         getSDKEphemeralPublicKey(),
                         EphemeralPublicKey::class.java,
                     ),
-                )
-                .setMaxTimeout(judo.threeDSTwoMaxTimeout)
+                ).setMaxTimeout(judo.threeDSTwoMaxTimeout)
                 .setReferenceNumber(getSDKReferenceNumber())
                 .setTransactionId(getSDKTransactionID())
                 .setDeviceRenderOptions(DeviceRenderOptions())
@@ -183,7 +184,8 @@ fun Transaction.toThreeDSecureTwo(
         myChallengeRequestIndicator = overrides.challengeRequestIndicator
     }
 
-    return ThreeDSecureTwo.Builder()
+    return ThreeDSecureTwo
+        .Builder()
         .setChallengeRequestIndicator(myChallengeRequestIndicator)
         .setScaExemption(myScaExemption)
         .setSdkParameters(sdkParameters)
@@ -199,7 +201,8 @@ fun TransactionDetails.toPaymentRequest(
 ): PaymentRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
-    return PaymentRequest.Builder()
+    return PaymentRequest
+        .Builder()
         .setYourPaymentReference(myReference.paymentReference)
         .setAmount(myAmount.amount)
         .setCurrency(myAmount.currency.name)
@@ -228,7 +231,8 @@ fun TransactionDetails.toPreAuthRequest(
 ): PreAuthRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
-    return PreAuthRequest.Builder()
+    return PreAuthRequest
+        .Builder()
         .setYourPaymentReference(myReference.paymentReference)
         .setAmount(myAmount.amount)
         .setCurrency(myAmount.currency.name)
@@ -259,7 +263,8 @@ fun TransactionDetails.toCheckCardRequest(
 ): CheckCardRequest {
     val myAmount = judo.amount
     val myReference = judo.reference
-    return CheckCardRequest.Builder()
+    return CheckCardRequest
+        .Builder()
         .setYourPaymentReference(myReference.paymentReference)
         .setCurrency(myAmount.currency.name)
         .setJudoId(judo.judoId)
@@ -283,8 +288,9 @@ fun TransactionDetails.toCheckCardRequest(
 fun TransactionDetails.toSaveCardRequest(
     judo: Judo,
     transaction: Transaction,
-): SaveCardRequest {
-    return SaveCardRequest.Builder()
+): SaveCardRequest =
+    SaveCardRequest
+        .Builder()
         .setYourPaymentReference(judo.reference.paymentReference)
         .setCurrency(judo.amount.currency.name)
         .setJudoId(judo.judoId)
@@ -297,7 +303,6 @@ fun TransactionDetails.toSaveCardRequest(
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
         .setAddress(judo.address)
         .build()
-}
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
 @Deprecated(
@@ -312,7 +317,8 @@ fun TransactionDetails.toRegisterCardRequest(
     val myAmount = judo.amount
     val myReference = judo.reference
 
-    return RegisterCardRequest.Builder()
+    return RegisterCardRequest
+        .Builder()
         .setYourPaymentReference(myReference.paymentReference)
         .setCurrency(myAmount.currency.name)
         .setAmount(myAmount.amount)
@@ -342,7 +348,8 @@ fun TransactionDetails.toTokenRequest(
     val myAmount = judo.amount
     val myReference = judo.reference
 
-    return TokenRequest.Builder()
+    return TokenRequest
+        .Builder()
         .setJudoId(judo.judoId)
         .setAmount(myAmount.amount)
         .setCurrency(myAmount.currency.name)
@@ -373,7 +380,8 @@ fun TransactionDetails.toPreAuthTokenRequest(
     val myAmount = judo.amount
     val myReference = judo.reference
 
-    return PreAuthTokenRequest.Builder()
+    return PreAuthTokenRequest
+        .Builder()
         .setJudoId(judo.judoId)
         .setAmount(myAmount.amount)
         .setCurrency(myAmount.currency.name)

@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_24"
+        android:layout_marginBottom="@dimen/space_24"
         app:liftOnScroll="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,11 +41,12 @@
         android:id="@+id/cardEntryViewAnimator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_80"
+        android:layout_marginTop="@dimen/space_24"
         android:clipToPadding="false"
         android:inAnimation="@anim/fade_in"
         android:measureAllChildren="false"
-        android:outAnimation="@anim/fade_out">
+        android:outAnimation="@anim/fade_out"
+        android:fitsSystemWindows="true">
 
         <com.judopay.judokit.android.ui.cardentry.components.CardEntryFormView
             android:id="@+id/card_details_form_view"

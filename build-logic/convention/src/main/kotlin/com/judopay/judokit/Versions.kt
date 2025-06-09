@@ -14,10 +14,9 @@ object Versions {
 
 private const val EXAMPLE_APP_VERSION_CODE = "android.injected.version.code"
 
-fun Project.getVersionCode(): Int {
-    return if (hasProperty(EXAMPLE_APP_VERSION_CODE)) {
+fun Project.getVersionCode(): Int =
+    if (hasProperty(EXAMPLE_APP_VERSION_CODE)) {
         property(EXAMPLE_APP_VERSION_CODE).toString().toInt()
     } else {
         1
     }
-}

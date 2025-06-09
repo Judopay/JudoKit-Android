@@ -185,7 +185,8 @@ internal class JudoExtensionsTest {
     @Test
     fun mapJudoToPaymentRequest() {
         val expected =
-            PaymentRequest.Builder()
+            PaymentRequest
+                .Builder()
                 .setYourPaymentReference("ref")
                 .setJudoId("123456789")
                 .setYourPaymentMetaData(emptyMap())
@@ -223,7 +224,8 @@ internal class JudoExtensionsTest {
     @Test
     fun mapJudoToPaymentRequestWithUnusualPhoneDetails() {
         val expected =
-            PaymentRequest.Builder()
+            PaymentRequest
+                .Builder()
                 .setYourPaymentReference("ref")
                 .setJudoId("123456789")
                 .setYourPaymentMetaData(emptyMap())
@@ -260,7 +262,8 @@ internal class JudoExtensionsTest {
     @Test
     fun mapJudoToRegisterCardRequest() {
         val expected =
-            RegisterCardRequest.Builder()
+            RegisterCardRequest
+                .Builder()
                 .setYourPaymentReference("ref")
                 .setJudoId("123456789")
                 .setYourPaymentMetaData(emptyMap())
@@ -287,7 +290,8 @@ internal class JudoExtensionsTest {
     @Test
     fun mapJudoToCheckCardRequest() {
         val expected =
-            CheckCardRequest.Builder()
+            CheckCardRequest
+                .Builder()
                 .setYourPaymentReference("ref")
                 .setJudoId("123456789")
                 .setYourPaymentMetaData(emptyMap())
@@ -313,7 +317,8 @@ internal class JudoExtensionsTest {
     @Test
     fun mapJudoToTokenRequest() {
         val expected =
-            TokenRequest.Builder()
+            TokenRequest
+                .Builder()
                 .setAmount("1")
                 .setYourPaymentReference("ref")
                 .setJudoId("123456789")

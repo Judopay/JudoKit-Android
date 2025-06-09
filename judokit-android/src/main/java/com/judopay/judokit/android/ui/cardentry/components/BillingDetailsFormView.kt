@@ -51,7 +51,8 @@ class BillingDetailsFormView
         context: Context,
         attrs: AttributeSet? = null,
         defStyle: Int = 0,
-    ) : FrameLayout(context, attrs, defStyle), CardEntryViewAnimator.OnViewWillAppearListener {
+    ) : FrameLayout(context, attrs, defStyle),
+        CardEntryViewAnimator.OnViewWillAppearListener {
         val binding = BillingDetailsFormViewBinding.inflate(LayoutInflater.from(context), this, true)
 
         internal var onFormValidationStatusListener: BillingDetailsFormValidationStatus? = null
@@ -194,9 +195,10 @@ class BillingDetailsFormView
                 }
                 mobileNumberFormatter =
                     PhoneNumberFormattingTextWatcher(
-                        countries.find {
-                            it.name == editTextForType(BillingDetailsFieldType.COUNTRY).text.toString()
-                        }?.alpha2Code ?: "",
+                        countries
+                            .find {
+                                it.name == editTextForType(BillingDetailsFieldType.COUNTRY).text.toString()
+                            }?.alpha2Code ?: "",
                     )
                 addTextChangedListener(mobileNumberFormatter)
             }
@@ -380,7 +382,5 @@ class BillingDetailsFormView
             onFormValidationStatusListener?.invoke(inputModel, isFormValid)
         }
 
-        private inline fun <reified V> validatorInstance(): V? {
-            return validators.firstOrNull { it is V } as V?
-        }
+        private inline fun <reified V> validatorInstance(): V? = validators.firstOrNull { it is V } as V?
     }

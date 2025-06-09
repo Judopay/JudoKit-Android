@@ -50,7 +50,9 @@ interface ActivityAwareComponent {
     fun updateActivity(activity: FragmentActivity)
 }
 
-open class SingletonHolder<out T : ActivityAwareComponent>(creator: (FragmentActivity) -> T) {
+open class SingletonHolder<out T : ActivityAwareComponent>(
+    creator: (FragmentActivity) -> T,
+) {
     private var creator: ((FragmentActivity) -> T)? = creator
 
     @Volatile
@@ -111,7 +113,9 @@ private const val THREE_DS_TWO_MIN_TIMEOUT = 5
 private const val SHOULD_USE_FABRICK_DS_ID = "shouldUseFabrickDsId"
 
 @Suppress("TooManyFunctions", "SwallowedException", "TooGenericExceptionCaught")
-class CardTransactionManager private constructor(private var context: FragmentActivity) : ActivityAwareComponent {
+class CardTransactionManager private constructor(
+    private var context: FragmentActivity,
+) : ActivityAwareComponent {
     private lateinit var judo: Judo
     private lateinit var judoApiService: JudoApiService
     private lateinit var recommendationService: RecommendationService

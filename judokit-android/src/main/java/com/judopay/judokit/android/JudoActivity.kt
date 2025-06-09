@@ -5,8 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.gms.wallet.AutoResolveHelper
@@ -42,6 +44,8 @@ class JudoActivity : AppCompatActivity() {
     private lateinit var viewModel: JudoSharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.judopay_activity)
 
@@ -66,6 +70,7 @@ class JudoActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, factory).get(JudoSharedViewModel::class.java)
         viewModel.paymentResult.observe(this) { dispatchPaymentResult(it) }
 
+        // TODO: cleanup iDEAL leftovers
         viewModel.bankPaymentResult.observe(
             this,
         ) {
@@ -74,6 +79,12 @@ class JudoActivity : AppCompatActivity() {
             } else {
                 viewModel.paymentResult.postValue(it)
             }
+        }
+
+        if (config.paymentWidgetType.isPaymentMethodsWidget) {
+            WindowCompat
+                .getInsetsController(window, window.decorView)
+                .isAppearanceLightStatusBars = true
         }
 
         if (config.paymentWidgetType.isGooglePayWidget) {
@@ -92,9 +103,11 @@ class JudoActivity : AppCompatActivity() {
             } else {
                 null
             }
+
         val navigationHost = NavHostFragment.create(graphId, bundle)
 
-        supportFragmentManager.beginTransaction()
+        supportFragmentManager
+            .beginTransaction()
             .replace(R.id.container, navigationHost)
             .setPrimaryNavigationFragment(navigationHost)
             .commit()
@@ -179,7 +192,11 @@ class JudoActivity : AppCompatActivity() {
                 else -> WalletConstants.ENVIRONMENT_TEST
             }
 
-        val walletOptions = Wallet.WalletOptions.Builder().setEnvironment(environment).build()
+        val walletOptions =
+            Wallet.WalletOptions
+                .Builder()
+                .setEnvironment(environment)
+                .build()
         val client = Wallet.getPaymentsClient(this, walletOptions)
         return JudoGooglePayService(client, this, judo)
     }

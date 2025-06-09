@@ -48,7 +48,7 @@ fun waitForView(
 
     var tries = 0
 
-    for (i in 0..maxTries)
+    for (i in 0..maxTries) {
         try {
             // Track the amount of times we've tried
             tries++
@@ -64,6 +64,7 @@ fun waitForView(
             }
             sleep(waitMillisPerTry)
         }
+    }
 
     throw Exception("Error finding a view matching $viewMatcher")
 }
