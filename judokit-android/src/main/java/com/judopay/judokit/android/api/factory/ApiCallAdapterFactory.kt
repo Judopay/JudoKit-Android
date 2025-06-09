@@ -15,7 +15,9 @@ import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import java.util.concurrent.TimeUnit
 
-abstract class CallDelegate<TypeIn, TypeOut>(protected val proxy: Call<TypeIn>) : Call<TypeOut> {
+abstract class CallDelegate<TypeIn, TypeOut>(
+    protected val proxy: Call<TypeIn>,
+) : Call<TypeOut> {
     override fun execute(): Response<TypeOut> = throw NotImplementedError()
 
     final override fun enqueue(callback: Callback<TypeOut>) = enqueueImpl(callback)
@@ -37,7 +39,9 @@ abstract class CallDelegate<TypeIn, TypeOut>(protected val proxy: Call<TypeIn>) 
 
 private const val RESULT_CALL_TIMEOUT_SECONDS = 30L
 
-class ResultCall<T>(proxy: Call<T>) : CallDelegate<T, JudoApiCallResult<T>>(proxy) {
+class ResultCall<T>(
+    proxy: Call<T>,
+) : CallDelegate<T, JudoApiCallResult<T>>(proxy) {
     override fun enqueueImpl(callback: Callback<JudoApiCallResult<T>>) =
         proxy.enqueue(
             object : Callback<T> {
@@ -82,7 +86,9 @@ class ResultCall<T>(proxy: Call<T>) : CallDelegate<T, JudoApiCallResult<T>>(prox
     override fun timeout(): Timeout = Timeout().timeout(RESULT_CALL_TIMEOUT_SECONDS, TimeUnit.SECONDS)
 }
 
-class ResultAdapter(private val type: Type) : CallAdapter<Type, Call<JudoApiCallResult<Type>>> {
+class ResultAdapter(
+    private val type: Type,
+) : CallAdapter<Type, Call<JudoApiCallResult<Type>>> {
     override fun responseType() = type
 
     override fun adapt(call: Call<Type>): Call<JudoApiCallResult<Type>> = ResultCall(call)

@@ -5,8 +5,10 @@ import com.judokit.android.examples.common.BindableRecyclerViewHolder
 import com.judokit.android.examples.databinding.ItemDemoFeatureBinding
 import com.judokit.android.examples.model.DemoFeature
 
-open class DemoFeatureItemViewHolder(private val binding: ItemDemoFeatureBinding) :
-    RecyclerView.ViewHolder(binding.root), BindableRecyclerViewHolder<DemoFeature> {
+open class DemoFeatureItemViewHolder(
+    private val binding: ItemDemoFeatureBinding,
+) : RecyclerView.ViewHolder(binding.root),
+    BindableRecyclerViewHolder<DemoFeature> {
     override fun bind(
         model: DemoFeature,
         listener: ((DemoFeature) -> Unit)?,

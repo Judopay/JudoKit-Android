@@ -23,7 +23,10 @@ data class Country(
             if (countryList == null) {
                 countryList =
                     Gson().fromJson(
-                        context.assets.open(COUNTRIES_JSON_FILE_NAME).bufferedReader().use { it.readText() },
+                        context.assets
+                            .open(COUNTRIES_JSON_FILE_NAME)
+                            .bufferedReader()
+                            .use { it.readText() },
                         Array<Country>::class.java,
                     )
             }

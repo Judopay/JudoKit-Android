@@ -107,14 +107,16 @@ internal fun PaymentData.toGooglePayRequest(judo: Judo): GooglePayRequest {
     val gPayPaymentData = Gson().fromJson(toJson(), GooglePayPaymentData::class.java)
 
     val wallet =
-        GooglePayWallet.Builder()
+        GooglePayWallet
+            .Builder()
             .setGooglePayPaymentData(gPayPaymentData)
             .build()
 
     val amount = judo.amount
     val reference = judo.reference
 
-    return GooglePayRequest.Builder()
+    return GooglePayRequest
+        .Builder()
         .setJudoId(judo.judoId)
         .setAmount(amount.amount)
         .setCurrency(amount.currency.name)
@@ -132,14 +134,16 @@ internal fun PaymentData.toPreAuthGooglePayRequest(judo: Judo): PreAuthGooglePay
     val gPayPaymentData = Gson().fromJson(toJson(), GooglePayPaymentData::class.java)
 
     val wallet =
-        GooglePayWallet.Builder()
+        GooglePayWallet
+            .Builder()
             .setGooglePayPaymentData(gPayPaymentData)
             .build()
 
     val amount = judo.amount
     val reference = judo.reference
 
-    return PreAuthGooglePayRequest.Builder()
+    return PreAuthGooglePayRequest
+        .Builder()
         .setJudoId(judo.judoId)
         .setAmount(amount.amount)
         .setCurrency(amount.currency.name)

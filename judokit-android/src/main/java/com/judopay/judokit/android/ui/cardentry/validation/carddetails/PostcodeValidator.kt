@@ -51,8 +51,8 @@ open class PostcodeValidator(
             else -> R.string.jp_invalid_postcode
         }
 
-    private fun isPostCodeValid(input: String): Boolean {
-        return when (country) {
+    private fun isPostCodeValid(input: String): Boolean =
+        when (country) {
             AVSCountry.GB -> input.length in POSTAL_CODE_MIN_LENGTH_UK..POSTAL_CODE_MAX_LENGTH_UK && input.matches(postCodeGBRegEx)
             AVSCountry.US -> input.length in POSTAL_CODE_MIN_LENGTH_USA..POSTAL_CODE_MAX_LENGTH_USA && input.matches(postCodeUSRegEx)
             AVSCountry.CA -> input.length in POSTAL_CODE_MIN_LENGTH_CA..POSTAL_CODE_MAX_LENGTH_CA && input.matches(postCodeCARegEx)
@@ -63,5 +63,4 @@ open class PostcodeValidator(
                     )
             else -> false
         }
-    }
 }

@@ -72,7 +72,5 @@ class RecommendationConfiguration internal constructor(
         }
     }
 
-    override fun toString(): String {
-        return "RecommendationConfiguration(url=$url, rsaPublicKey='$rsaPublicKey', timeout=$timeout)"
-    }
+    override fun toString(): String = "RecommendationConfiguration(url=$url, rsaPublicKey='$rsaPublicKey', timeout=$timeout)"
 }

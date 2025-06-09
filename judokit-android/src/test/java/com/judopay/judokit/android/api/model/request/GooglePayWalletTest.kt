@@ -8,7 +8,8 @@ import org.junit.jupiter.api.assertThrows
 @DisplayName("Testing Google pay wallet builder")
 internal class GooglePayWalletTest {
     private val wallet =
-        GooglePayWallet.Builder()
+        GooglePayWallet
+            .Builder()
             .setCardDetails("cardDetails")
             .setCardNetwork("network")
             .setToken("token")

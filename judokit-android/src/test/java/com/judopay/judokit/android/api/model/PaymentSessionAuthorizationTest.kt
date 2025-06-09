@@ -14,7 +14,8 @@ import java.nio.charset.StandardCharsets
 @DisplayName("Testing PaymentSessionAuthorization class")
 internal class PaymentSessionAuthorizationTest {
     private val sut =
-        PaymentSessionAuthorization.Builder()
+        PaymentSessionAuthorization
+            .Builder()
             .setApiToken("token")
             .setPaymentSession("paymentSession")
 
@@ -66,7 +67,10 @@ internal class PaymentSessionAuthorizationTest {
     @Test
     fun headersShouldContainPaymentSession() {
         val expected =
-            Headers.Builder().add("Payment-Session", "paymentSession").build()
+            Headers
+                .Builder()
+                .add("Payment-Session", "paymentSession")
+                .build()
                 .get("Payment-Session")
 
         Assertions.assertEquals(expected, sut.build().headers["Payment-Session"])

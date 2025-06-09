@@ -1,16 +1,14 @@
 package com.judokit.android.examples.feature.tokenpayments
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.ui.Modifier
 import com.judokit.android.examples.common.parcelable
 import com.judokit.android.examples.common.startResultActivity
 import com.judokit.android.examples.common.toResult
@@ -41,6 +39,12 @@ class TokenPaymentsActivity : ComponentActivity() {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+        }
+
         super.onCreate(savedInstanceState)
 
         val judo = intent.parcelable<Judo>(JUDO_OPTIONS)
@@ -50,15 +54,13 @@ class TokenPaymentsActivity : ComponentActivity() {
 
         setContent {
             JudoKitAndroidTheme {
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-                    TokenPaymentsScreen(
-                        viewModel = viewModel,
-                        onTokenizeNewCard = { tokenizeNewCard() },
-                        onTokenPayment = { makeTokenPayment(isPreAuth = false) },
-                        onTokenPreAuth = { makeTokenPayment(isPreAuth = true) },
-                        onClose = { finish() },
-                    )
-                }
+                TokenPaymentsScreen(
+                    viewModel = viewModel,
+                    onTokenizeNewCard = { tokenizeNewCard() },
+                    onTokenPayment = { makeTokenPayment(isPreAuth = false) },
+                    onTokenPreAuth = { makeTokenPayment(isPreAuth = true) },
+                    onClose = { finish() },
+                )
             }
         }
     }

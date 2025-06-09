@@ -9,7 +9,9 @@ import com.judopay.judokit.android.model.JudoPaymentResult
 import java.net.SocketTimeoutException
 
 sealed class JudoApiCallResult<out T> {
-    data class Success<T>(val data: T?) : JudoApiCallResult<T>()
+    data class Success<T>(
+        val data: T?,
+    ) : JudoApiCallResult<T>()
 
     data class Failure(
         val statusCode: Int = -1,

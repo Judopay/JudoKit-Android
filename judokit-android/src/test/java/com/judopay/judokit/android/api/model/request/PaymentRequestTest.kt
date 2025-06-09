@@ -7,7 +7,8 @@ import org.junit.jupiter.api.assertThrows
 @DisplayName("Testing payment request builder")
 internal class PaymentRequestTest {
     private val request =
-        PaymentRequest.Builder()
+        PaymentRequest
+            .Builder()
             .setIssueNumber("123")
             .setStartDate("1220")
             .setExpiryDate("1220")

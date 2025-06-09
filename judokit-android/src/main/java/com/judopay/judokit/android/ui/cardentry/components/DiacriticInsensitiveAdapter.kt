@@ -49,8 +49,8 @@ class DiacriticInsensitiveAdapter(
             }
         }
 
-    private fun normalize(text: String): String {
-        return Normalizer.normalize(text, Normalizer.Form.NFD)
+    private fun normalize(text: String): String =
+        Normalizer
+            .normalize(text, Normalizer.Form.NFD)
             .replace("\\p{Mn}+".toRegex(), "")
-    }
 }

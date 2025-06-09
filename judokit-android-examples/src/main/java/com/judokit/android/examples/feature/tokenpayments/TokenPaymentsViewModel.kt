@@ -19,7 +19,8 @@ class TokenPaymentsViewModel {
 
     fun getJudo(widgetType: PaymentWidgetType): Judo =
         with(initialJudoConfig) {
-            Judo.Builder(widgetType)
+            Judo
+                .Builder(widgetType)
                 .setJudoId(judoId)
                 .setAuthorization(authorization)
                 .setIsSandboxed(isSandboxed)

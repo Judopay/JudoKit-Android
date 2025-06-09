@@ -9,7 +9,5 @@ class Receipts(
     val offset: Int,
     val results: List<Receipt>,
 ) {
-    override fun toString(): String {
-        return "Receipts(resultCount=$resultCount, pageSize=$pageSize, offset=$offset, results=$results)"
-    }
+    override fun toString(): String = "Receipts(resultCount=$resultCount, pageSize=$pageSize, offset=$offset, results=$results)"
 }

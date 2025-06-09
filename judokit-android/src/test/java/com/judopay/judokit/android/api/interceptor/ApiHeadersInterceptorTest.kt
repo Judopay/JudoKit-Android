@@ -27,7 +27,8 @@ import java.nio.charset.StandardCharsets
 
 internal class ApiHeadersInterceptorTest {
     private val authorization =
-        PaymentSessionAuthorization.Builder()
+        PaymentSessionAuthorization
+            .Builder()
             .setApiToken("token")
             .setPaymentSession("paymentSession")
     private val okHttpClient = OkHttpClient.Builder()
@@ -81,7 +82,9 @@ internal class ApiHeadersInterceptorTest {
     }
 
     private fun makeRequest(url: String): RecordedRequest {
-        okHttpClient.build().newCall(Request.Builder().url(mockWebServer.url(url)).build())
+        okHttpClient
+            .build()
+            .newCall(Request.Builder().url(mockWebServer.url(url)).build())
             .execute()
         return mockWebServer.takeRequest()
     }

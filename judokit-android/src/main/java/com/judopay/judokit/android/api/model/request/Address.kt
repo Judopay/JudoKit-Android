@@ -89,8 +89,8 @@ class Address internal constructor(
          * Creates an instance of [Address] based on provided data in setters.
          * @return An instance of [Address]
          */
-        fun build(): Address {
-            return Address(
+        fun build(): Address =
+            Address(
                 line1 = line1,
                 line2 = line2,
                 line3 = line3,
@@ -100,6 +100,5 @@ class Address internal constructor(
                 countryCode = countryCode,
                 administrativeDivision = if (administrativeDivision.isNullOrBlank()) null else administrativeDivision,
             )
-        }
     }
 }

@@ -347,7 +347,5 @@ class CardEntryFormView
             onFormValidationStatusListener?.invoke(inputModel, isFormValid)
         }
 
-        private inline fun <reified V> validatorInstance(): V? {
-            return validators.firstOrNull { it is V } as V?
-        }
+        private inline fun <reified V> validatorInstance(): V? = validators.firstOrNull { it is V } as V?
     }

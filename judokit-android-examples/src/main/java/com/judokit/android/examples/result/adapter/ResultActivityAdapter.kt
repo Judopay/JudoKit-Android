@@ -19,9 +19,8 @@ class ResultActivityAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ResultActivityItemViewHolder {
-        return ResultActivityItemViewHolder(ItemResultPropertyBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-    }
+    ): ResultActivityItemViewHolder =
+        ResultActivityItemViewHolder(ItemResultPropertyBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(
         holder: ResultActivityItemViewHolder,

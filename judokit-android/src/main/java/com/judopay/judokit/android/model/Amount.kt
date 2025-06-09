@@ -14,7 +14,10 @@ import java.util.Locale
  * Use [Builder] to create an instance.
  */
 @Parcelize
-class Amount internal constructor(val amount: String, val currency: Currency) : Parcelable {
+class Amount internal constructor(
+    val amount: String,
+    val currency: Currency,
+) : Parcelable {
     /**
      * Builder class for creating an instance of [Amount].
      */
@@ -64,9 +67,7 @@ class Amount internal constructor(val amount: String, val currency: Currency) : 
         }
     }
 
-    override fun toString(): String {
-        return "Amount(amount='$amount', currency=$currency)"
-    }
+    override fun toString(): String = "Amount(amount='$amount', currency=$currency)"
 }
 
 @Suppress("SwallowedException")

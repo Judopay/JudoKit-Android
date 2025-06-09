@@ -7,7 +7,5 @@ data class ValidationResult(
     val isValid: Boolean,
     @StringRes val message: Int = R.string.jp_empty,
 ) {
-    override fun toString(): String {
-        return "ValidationResult(isValid=$isValid, message=$message)"
-    }
+    override fun toString(): String = "ValidationResult(isValid=$isValid, message=$message)"
 }

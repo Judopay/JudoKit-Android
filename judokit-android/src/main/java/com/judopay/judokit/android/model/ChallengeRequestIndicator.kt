@@ -4,7 +4,9 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-enum class ChallengeRequestIndicator(val value: String) : Parcelable {
+enum class ChallengeRequestIndicator(
+    val value: String,
+) : Parcelable {
     NO_PREFERENCE("noPreference"),
     NO_CHALLENGE("noChallenge"),
     CHALLENGE_PREFERRED("challengePreferred"),

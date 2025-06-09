@@ -12,7 +12,8 @@ class AppBarLayoutHeightAwareContainerView
         context: Context,
         attrs: AttributeSet? = null,
         defStyle: Int = 0,
-    ) : ConstraintLayout(context, attrs, defStyle), AppBarLayout.OnOffsetChangedListener {
+    ) : ConstraintLayout(context, attrs, defStyle),
+        AppBarLayout.OnOffsetChangedListener {
         override fun onAttachedToWindow() {
             super.onAttachedToWindow()
             parentOfType(AppBarLayout::class.java)?.addOnOffsetChangedListener(this)

@@ -132,8 +132,7 @@ fun updateRecommendationUrlWith(suffix: String) {
         .edit()
         .apply {
             putString("recommendation_url", recommendationURL + suffix)
-        }
-        .commit()
+        }.commit()
 
     onView(withId(Examples.id.action_settings))
         .perform(click())
@@ -194,8 +193,7 @@ fun toggleBillingInfoSetting(state: Boolean) {
         .edit()
         .apply {
             putBoolean("should_ask_for_billing_information", state)
-        }
-        .commit()
+        }.commit()
 }
 
 fun assertUsingChucker(
@@ -252,7 +250,8 @@ fun assertUsingChucker(
 }
 
 fun clickButtonOnWebViewWithText(text: String) {
-    Web.onWebView()
+    Web
+        .onWebView()
         .withElement(DriverAtoms.findElement(Locator.XPATH, "//button[text()='$text']"))
         .perform(DriverAtoms.webClick())
 }

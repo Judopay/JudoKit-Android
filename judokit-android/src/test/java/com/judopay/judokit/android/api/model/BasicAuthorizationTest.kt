@@ -31,7 +31,8 @@ internal class BasicAuthorizationTest {
 
     @Suppress("DEPRECATION") // The test has been set as 'deprecated' (no need for this warning).
     private val sut =
-        BasicAuthorization.Builder()
+        BasicAuthorization
+            .Builder()
             .setApiToken("token")
             .setApiSecret("secret")
 
@@ -69,7 +70,10 @@ internal class BasicAuthorizationTest {
             )
 
         val expected =
-            Headers.Builder().add("Authorization", "Basic $credentials").build()
+            Headers
+                .Builder()
+                .add("Authorization", "Basic $credentials")
+                .build()
                 .get("Authorization")
 
         assertEquals(expected, sut.build().headers.get("Authorization"))

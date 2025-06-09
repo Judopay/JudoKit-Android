@@ -32,8 +32,10 @@ dependencies {
     implementation(libs.androidx.vectordrawable)
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.androidx.activity.ktx)
 
     implementation(libs.android.material)
+
     implementation(libs.play.services.wallet)
 
     implementation(libs.androidx.room.runtime)

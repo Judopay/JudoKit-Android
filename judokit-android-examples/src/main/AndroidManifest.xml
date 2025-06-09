@@ -25,17 +25,20 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.judokit.android.examples.feature.noui.DemoNoUiPaymentActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.judokit.android.examples.result.ResultActivity"
             android:exported="false"
-            android:theme="@style/Theme.DemoApp" />
+            android:theme="@style/Theme.DemoApp"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.judokit.android.examples.settings.SettingsActivity"
             android:exported="false"
             android:label="@string/title_settings"
             android:parentActivityName="com.judokit.android.examples.feature.DemoFeatureListActivity"
-            android:theme="@style/Theme.DemoApp">
+            android:theme="@style/Theme.DemoApp"
+            android:windowSoftInputMode="adjustResize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.judokit.android.examples.feature.DemoFeatureListActivity" />
@@ -44,7 +47,8 @@
             android:name="com.judokit.android.examples.feature.DemoFeatureListActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.DemoApp">
+            android:theme="@style/Theme.DemoApp"
+            android:windowSoftInputMode="adjustResize" >
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

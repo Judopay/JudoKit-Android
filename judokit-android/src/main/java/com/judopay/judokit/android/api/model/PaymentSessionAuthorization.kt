@@ -36,7 +36,9 @@ class PaymentSessionAuthorization internal constructor(
 
     override val headers: Headers
         get() =
-            Headers.Builder()
+            Headers
+                .Builder()
                 .add(API_TOKEN_HEADER, apiToken)
-                .add(PAYMENT_SESSION_HEADER, paymentSession).build()
+                .add(PAYMENT_SESSION_HEADER, paymentSession)
+                .build()
 }

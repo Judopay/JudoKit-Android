@@ -105,7 +105,8 @@ class PreAuthTokenRequest private constructor(
                 requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
             val myCardToken = requireNotNullOrEmpty(cardToken, "cardToken")
             val myThreeDSecure =
-                com.judopay.judokit.android.requireNotNull(threeDSecure, "threeDSecure")
+                com.judopay.judokit.android
+                    .requireNotNull(threeDSecure, "threeDSecure")
 
             return PreAuthTokenRequest(
                 paymentReference,

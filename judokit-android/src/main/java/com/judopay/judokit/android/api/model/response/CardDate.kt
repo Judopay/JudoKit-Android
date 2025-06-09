@@ -4,7 +4,9 @@ import java.util.Calendar
 import java.util.Date
 
 @Suppress("MagicNumber")
-class CardDate(date: String = "") {
+class CardDate(
+    date: String = "",
+) {
     var date: String = date
         set(value) {
             field = value
@@ -14,21 +16,19 @@ class CardDate(date: String = "") {
     internal var month: Int = 0
     internal var year: Int = 0
 
-    private fun getYear(year: String): Int {
-        return if (isDateInvalid(year)) {
+    private fun getYear(year: String): Int =
+        if (isDateInvalid(year)) {
             0
         } else {
             2000 + year.substring(2, 4).toInt()
         }
-    }
 
-    private fun getMonth(month: String): Int {
-        return if (isDateInvalid(month)) {
+    private fun getMonth(month: String): Int =
+        if (isDateInvalid(month)) {
             0
         } else {
             month.substring(0, 2).toInt()
         }
-    }
 
     val isBeforeToday: Boolean
         get() {
@@ -83,9 +83,7 @@ class CardDate(date: String = "") {
             return cardDate.after(now) && cardDate.before(maxDate)
         }
 
-    private fun isDateInvalid(date: String): Boolean {
-        return !date.matches("(?:0[1-9]|1[0-2])[0-9]{2}".toRegex())
-    }
+    private fun isDateInvalid(date: String): Boolean = !date.matches("(?:0[1-9]|1[0-2])[0-9]{2}".toRegex())
 
     private fun splitCardDate(cardDate: String) {
         val splitCardDate = cardDate.replace("/".toRegex(), "")

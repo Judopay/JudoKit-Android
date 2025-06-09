@@ -9,9 +9,7 @@ data class ResultItem(
     val value: String,
     val subResult: Result? = null,
 ) : Parcelable {
-    override fun toString(): String {
-        return "ResultItem(title='$title', value='$value', subResult=$subResult)"
-    }
+    override fun toString(): String = "ResultItem(title='$title', value='$value', subResult=$subResult)"
 }
 
 @Parcelize
@@ -19,7 +17,5 @@ data class Result(
     val title: String,
     val items: List<ResultItem>,
 ) : Parcelable {
-    override fun toString(): String {
-        return "Result(title='$title', items=$items)"
-    }
+    override fun toString(): String = "Result(title='$title', items=$items)"
 }

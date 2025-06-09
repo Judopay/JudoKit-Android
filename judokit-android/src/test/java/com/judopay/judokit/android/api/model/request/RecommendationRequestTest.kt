@@ -17,7 +17,8 @@ internal class RecommendationRequestTest {
     @DisplayName("Given a valid payment method, then build() should return RecommendationRequest object")
     fun buildRecommendationRequest() {
         val paymentMethodCipher =
-            PaymentMethodCipher.Builder()
+            PaymentMethodCipher
+                .Builder()
                 .setAesKeyCipherText("aesKeyCipherText")
                 .setAlgorithm("algorithm")
                 .setCardCipherText("cardCipherText")

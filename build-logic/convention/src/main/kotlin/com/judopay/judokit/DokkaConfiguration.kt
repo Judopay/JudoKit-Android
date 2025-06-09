@@ -6,7 +6,6 @@ import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.getValue
 import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.kotlin.dsl.registering
-
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
@@ -17,7 +16,7 @@ internal fun Project.configureDokka() {
     tasks.withType<DokkaTask>().configureEach {
         pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
             footerMessage = "(c) Judopay ${Year.now().value}. All rights reserved."
-           // todo: configure other Dokka settings
+            // todo: configure other Dokka settings
         }
     }
 }

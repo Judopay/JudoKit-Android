@@ -33,7 +33,8 @@ abstract class ServiceFactory<T> {
         judo: Judo,
         baseUrl: String,
     ): Retrofit =
-        Retrofit.Builder()
+        Retrofit
+            .Builder()
             .baseUrl(baseUrl)
             .client(getOkHttpClient(context, judo))
             .addConverterFactory(gsonConverterFactory)

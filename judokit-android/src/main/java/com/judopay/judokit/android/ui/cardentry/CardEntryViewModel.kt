@@ -44,18 +44,23 @@ data class CardEntryFragmentModel(
 )
 
 sealed class CardEntryAction {
-    data class ValidationStatusChanged(val input: CardDetailsInputModel, val isFormValid: Boolean) :
-        CardEntryAction()
+    data class ValidationStatusChanged(
+        val input: CardDetailsInputModel,
+        val isFormValid: Boolean,
+    ) : CardEntryAction()
 
     data class BillingDetailsValidationStatusChanged(
         val input: BillingDetailsInputModel,
         val isFormValid: Boolean,
-    ) :
-        CardEntryAction()
+    ) : CardEntryAction()
 
-    data class InsertCard(val tokenizedCard: CardToken) : CardEntryAction()
+    data class InsertCard(
+        val tokenizedCard: CardToken,
+    ) : CardEntryAction()
 
-    data class ScanCard(val result: CardScanningResult) : CardEntryAction()
+    data class ScanCard(
+        val result: CardScanningResult,
+    ) : CardEntryAction()
 
     object SubmitCardEntryForm : CardEntryAction()
 
@@ -75,8 +80,8 @@ internal class CardEntryViewModelFactory(
     private val cardEntryOptions: CardEntryOptions?,
     private val application: Application,
 ) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass == CardEntryViewModel::class.java) {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
+        if (modelClass == CardEntryViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
             CardEntryViewModel(
                 judo,
@@ -88,7 +93,6 @@ internal class CardEntryViewModelFactory(
         } else {
             super.create(modelClass)
         }
-    }
 }
 
 class CardEntryViewModel(
@@ -97,7 +101,8 @@ class CardEntryViewModel(
     private val cardRepository: TokenizedCardRepository,
     private val cardEntryOptions: CardEntryOptions,
     application: Application,
-) : AndroidViewModel(application), CardTransactionManagerResultListener {
+) : AndroidViewModel(application),
+    CardTransactionManagerResultListener {
     val model = MutableLiveData<CardEntryFragmentModel>()
     val judoPaymentResult = MutableLiveData<JudoPaymentResult>()
     val cardEntryToPaymentMethodResult = MutableLiveData<TransactionDetails.Builder>()
@@ -217,7 +222,8 @@ class CardEntryViewModel(
             if (cardEntryOptions.isPresentedFromPaymentMethods && !cardEntryOptions.isAddingNewCard) {
                 with(billingAddressModel) {
                     cardEntryToPaymentMethodResult.postValue(
-                        TransactionDetails.Builder()
+                        TransactionDetails
+                            .Builder()
                             .setCardHolderName(cardDetailsModel.cardHolderName)
                             .setSecurityNumber(cardDetailsModel.securityNumber)
                             .setEmail(email)
@@ -293,7 +299,8 @@ class CardEntryViewModel(
         val securityNumber = if (judo.uiConfiguration.shouldAskForCSC) cardDetailsModel.securityNumber else judo.cardSecurityCode
         val cardholderName =
             if (judo.uiConfiguration.shouldAskForCardholderName) cardDetailsModel.cardHolderName else judo.cardToken?.cardHolderName
-        return TransactionDetails.Builder()
+        return TransactionDetails
+            .Builder()
             .setEmail(judo.emailAddress)
             .setCountryCode(judo.address?.countryCode.toString())
             .setPhoneCountryCode(judo.phoneCountryCode)

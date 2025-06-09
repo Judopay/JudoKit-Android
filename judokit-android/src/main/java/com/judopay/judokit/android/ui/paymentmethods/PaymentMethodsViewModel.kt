@@ -39,20 +39,31 @@ import kotlinx.coroutines.launch
 
 // view-model actions
 sealed class PaymentMethodsAction {
-    data class DeleteCard(val cardId: Int) : PaymentMethodsAction()
+    data class DeleteCard(
+        val cardId: Int,
+    ) : PaymentMethodsAction()
 
-    data class SelectPaymentMethod(val method: PaymentMethod) : PaymentMethodsAction()
+    data class SelectPaymentMethod(
+        val method: PaymentMethod,
+    ) : PaymentMethodsAction()
 
-    data class SelectStoredCard(val id: Int) : PaymentMethodsAction()
+    data class SelectStoredCard(
+        val id: Int,
+    ) : PaymentMethodsAction()
 
-    data class UpdateButtonState(val buttonEnabled: Boolean) :
-        PaymentMethodsAction()
+    data class UpdateButtonState(
+        val buttonEnabled: Boolean,
+    ) : PaymentMethodsAction()
 
-    data class EditMode(val isInEditMode: Boolean) : PaymentMethodsAction()
+    data class EditMode(
+        val isInEditMode: Boolean,
+    ) : PaymentMethodsAction()
 
     object InitiateSelectedCardPayment : PaymentMethodsAction()
 
-    data class PayWithCard(val transactionDetail: TransactionDetails.Builder) : PaymentMethodsAction()
+    data class PayWithCard(
+        val transactionDetail: TransactionDetails.Builder,
+    ) : PaymentMethodsAction()
 
     object Update : PaymentMethodsAction()
 
@@ -69,8 +80,8 @@ internal class PaymentMethodsViewModelFactory(
     private val application: Application,
     private val judo: Judo,
 ) : NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass == PaymentMethodsViewModel::class.java) {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
+        if (modelClass == PaymentMethodsViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
             PaymentMethodsViewModel(
                 cardDate,
@@ -82,7 +93,6 @@ internal class PaymentMethodsViewModelFactory(
         } else {
             super.create(modelClass)
         }
-    }
 }
 
 class PaymentMethodsViewModel(
@@ -91,7 +101,8 @@ class PaymentMethodsViewModel(
     private val cardTransactionManager: CardTransactionManager,
     application: Application,
     private val judo: Judo,
-) : AndroidViewModel(application), CardTransactionManagerResultListener {
+) : AndroidViewModel(application),
+    CardTransactionManagerResultListener {
     val model = MutableLiveData<PaymentMethodsModel>()
     val judoPaymentResult = MutableLiveData<JudoPaymentResult>()
     val displayCardEntryObserver = MutableLiveData<Event<CardEntryOptions>>()
@@ -139,7 +150,11 @@ class PaymentMethodsViewModel(
             }
             is PaymentMethodsAction.Update ->
                 buildModel(
-                    isLoading = model.value?.headerModel?.callToActionModel?.paymentButtonState == ButtonState.Loading,
+                    isLoading =
+                        model.value
+                            ?.headerModel
+                            ?.callToActionModel
+                            ?.paymentButtonState == ButtonState.Loading,
                 )
             is PaymentMethodsAction.SelectPaymentMethod -> {
                 if (selectedPaymentMethod != action.method) buildModel(action.method, false)
@@ -200,7 +215,8 @@ class PaymentMethodsViewModel(
                 cardRepository.insert(entity.apply { isLastUsed = true })
             }
 
-            transactionDetailBuilder.setCardToken(entity.token)
+            transactionDetailBuilder
+                .setCardToken(entity.token)
                 .setCardLastFour(entity.ending)
                 .setCardType(entity.network)
                 .setExpirationDate(entity.expireDate)
@@ -347,9 +363,10 @@ class PaymentMethodsViewModel(
         when {
             isLoading -> ButtonState.Loading
             cardModel is PaymentCardViewModel &&
-                cardDate.apply {
-                    date = cardModel.expireDate
-                }.isAfterToday
+                cardDate
+                    .apply {
+                        date = cardModel.expireDate
+                    }.isAfterToday
             ->
                 ButtonState.Enabled(R.string.jp_pay_now)
             else -> ButtonState.Disabled(R.string.jp_pay_now)

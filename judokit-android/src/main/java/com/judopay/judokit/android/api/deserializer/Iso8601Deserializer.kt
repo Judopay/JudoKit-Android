@@ -7,9 +7,7 @@ import java.util.TimeZone
 
 @Suppress("MagicNumber")
 object Iso8601Deserializer {
-    fun toDate(toParse: String): Date {
-        return toCalendar(toParse).time
-    }
+    fun toDate(toParse: String): Date = toCalendar(toParse).time
 
     private fun toCalendar(toParse: String): Calendar {
         if (toParse.indexOf('T') == -1) {
@@ -105,13 +103,12 @@ object Iso8601Deserializer {
         result: Calendar,
         basicFormatDate: String,
         originalDate: String,
-    ): Calendar {
-        return when (basicFormatDate.length) {
+    ): Calendar =
+        when (basicFormatDate.length) {
             2 -> parseCalendarDateWithCenturyOnly(result, basicFormatDate)
             4 -> parseCalendarDateWithYearOnly(result, basicFormatDate)
             else -> parseCalendarDateWithPrecisionGreaterThanYear(result, basicFormatDate, originalDate)
         }
-    }
 
     private fun parseCalendarDateWithCenturyOnly(
         result: Calendar,

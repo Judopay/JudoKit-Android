@@ -8,7 +8,8 @@ import org.junit.jupiter.api.assertThrows
 @DisplayName("Testing token request builder")
 internal class TokenRequestTest {
     private val request =
-        TokenRequest.Builder()
+        TokenRequest
+            .Builder()
             .setEndDate("1220")
             .setCv2("452")
             .setEmailAddress("mail@mail.com")

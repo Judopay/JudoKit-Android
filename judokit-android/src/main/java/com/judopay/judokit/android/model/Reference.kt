@@ -61,7 +61,8 @@ class Reference internal constructor(
                 )
             val myPaymentReference =
                 if (paymentReference.isNullOrEmpty()) {
-                    UUID.randomUUID()
+                    UUID
+                        .randomUUID()
                         .toString()
                 } else {
                     paymentReference!!
@@ -71,7 +72,6 @@ class Reference internal constructor(
         }
     }
 
-    override fun toString(): String {
-        return "Reference(consumerReference='$consumerReference', paymentReference='$paymentReference', metaData=$metaData)"
-    }
+    override fun toString(): String =
+        "Reference(consumerReference='$consumerReference', paymentReference='$paymentReference', metaData=$metaData)"
 }

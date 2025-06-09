@@ -66,15 +66,14 @@ internal fun validateTimeout(
     propertyName: String,
     minTimeout: Long,
     maxTimeout: Long,
-): Long {
-    return timeout?.let {
+): Long =
+    timeout?.let {
         require(it in minTimeout..maxTimeout) {
             "$propertyName should be greater than $minTimeout seconds and less than $maxTimeout seconds"
         }
 
         it
     } ?: minTimeout
-}
 
 @Suppress("UNCHECKED_CAST")
 fun <T : View> View.parentOfType(parentType: Class<T>): T? {
@@ -104,9 +103,7 @@ fun <T : View> ViewGroup.subViewsWithType(subviewType: Class<T>): List<T> {
 fun ViewGroup.inflate(
     resource: Int,
     attachToRoot: Boolean = false,
-): View {
-    return LayoutInflater.from(context).inflate(resource, this, attachToRoot)
-}
+): View = LayoutInflater.from(context).inflate(resource, this, attachToRoot)
 
 val FragmentActivity.judo: Judo
     get() =
@@ -129,10 +126,11 @@ internal fun String.trimIndent(replaceNewLinesWithSpaces: Boolean): String {
 }
 
 fun Bundle.toMap(): Map<String, String> =
-    keySet().mapNotNull {
-        val value = getString(it)
-        if (value != null) Pair(it, value) else null
-    }.toMap()
+    keySet()
+        .mapNotNull {
+            val value = getString(it)
+            if (value != null) Pair(it, value) else null
+        }.toMap()
 
 fun View.animateWithAlpha(
     alpha: Float,
@@ -148,7 +146,8 @@ fun View.animateWithTranslation(
     alpha: Float,
     duration: Long = ANIMATION_DURATION_500,
 ) {
-    animate().translationY(translationY)
+    animate()
+        .translationY(translationY)
         .alpha(alpha)
         .duration = duration
 }
@@ -179,7 +178,8 @@ fun Judo.toPaymentRequest(
     threeDSecureTwo: ThreeDSecureTwo?,
     mobileNumber: String,
     phoneCountryCode: String? = null,
-) = PaymentRequest.Builder()
+) = PaymentRequest
+    .Builder()
     .setYourPaymentReference(reference.paymentReference)
     .setAmount(amount.amount)
     .setCurrency(amount.currency.name)
@@ -206,7 +206,8 @@ fun Judo.toRegisterCardRequest(
     expirationDate: String,
     securityCode: String,
     threeDSecureTwo: ThreeDSecureTwo?,
-) = RegisterCardRequest.Builder()
+) = RegisterCardRequest
+    .Builder()
     .setYourPaymentReference(reference.paymentReference)
     .setCurrency(amount.currency.name)
     .setJudoId(judoId)
@@ -227,7 +228,8 @@ fun Judo.toSaveCardRequest(
     expirationDate: String,
     securityCode: String,
     cardHolderName: String? = null,
-) = SaveCardRequest.Builder()
+) = SaveCardRequest
+    .Builder()
     .setYourPaymentReference(reference.paymentReference)
     .setCurrency(amount.currency.name)
     .setJudoId(judoId)
@@ -246,7 +248,8 @@ fun Judo.toCheckCardRequest(
     expirationDate: String,
     securityCode: String,
     threeDSecureTwo: ThreeDSecureTwo?,
-) = CheckCardRequest.Builder()
+) = CheckCardRequest
+    .Builder()
     .setYourPaymentReference(reference.paymentReference)
     .setCurrency(amount.currency.name)
     .setJudoId(judoId)
@@ -268,14 +271,16 @@ fun Judo.toGooglePayRequest(
     billingAddress: GooglePayAddress? = null,
 ): GooglePayRequest {
     val wallet =
-        GooglePayWallet.Builder()
+        GooglePayWallet
+            .Builder()
             .setToken(token)
             .setCardNetwork(cardNetwork)
             .setCardDetails(cardDetails)
             .setBillingAddress(billingAddress)
             .build()
 
-    return GooglePayRequest.Builder()
+    return GooglePayRequest
+        .Builder()
         .setJudoId(judoId)
         .setAmount(amount.amount)
         .setCurrency(amount.currency.name)
@@ -292,7 +297,8 @@ fun Judo.toTokenRequest(
     cardToken: String,
     threeDSecureTwo: ThreeDSecureTwo? = null,
     securityCode: String? = null,
-) = TokenRequest.Builder()
+) = TokenRequest
+    .Builder()
     .setAmount(amount.amount)
     .setCurrency(amount.currency.name)
     .setJudoId(judoId)

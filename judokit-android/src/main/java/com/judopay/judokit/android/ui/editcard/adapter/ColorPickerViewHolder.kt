@@ -16,7 +16,9 @@ import com.judopay.judokit.android.ui.editcard.colorRes
 private const val SCALE_SELECTED = 1.4f
 private const val SCALE_UNSELECTED = 1f
 
-class ColorPickerViewHolder(private val binding: ColorPickerItemBinding) : RecyclerView.ViewHolder(binding.root) {
+class ColorPickerViewHolder(
+    private val binding: ColorPickerItemBinding,
+) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
         model: ColorPickerItem,
         listener: ColorPickerAdapterListener?,
@@ -25,7 +27,8 @@ class ColorPickerViewHolder(private val binding: ColorPickerItemBinding) : Recyc
         val scale = if (model.isSelected) SCALE_SELECTED else SCALE_UNSELECTED
         val padding =
             if (model.isSelected) {
-                resources.getDimension(R.dimen.space_12)
+                resources
+                    .getDimension(R.dimen.space_12)
                     .toInt()
             } else {
                 resources.getDimension(R.dimen.space_4).toInt()
@@ -53,7 +56,8 @@ private fun drawableWith(
     cornerRadius: Float,
 ): Drawable {
     val shapeModel =
-        ShapeAppearanceModel.Builder()
+        ShapeAppearanceModel
+            .Builder()
             .setAllCorners(CornerFamily.ROUNDED, cornerRadius)
             .build()
 

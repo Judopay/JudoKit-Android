@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import com.judopay.judokit.android.db.dao.TokenizedCardDao
 import com.judopay.judokit.android.db.entity.TokenizedCardEntity
 
-class TokenizedCardRepository(private val tokenizedCardDao: TokenizedCardDao) {
+class TokenizedCardRepository(
+    private val tokenizedCardDao: TokenizedCardDao,
+) {
     val allCardsSync: LiveData<List<TokenizedCardEntity>> =
         tokenizedCardDao.getAllSortedByIsDefaultSync()
 

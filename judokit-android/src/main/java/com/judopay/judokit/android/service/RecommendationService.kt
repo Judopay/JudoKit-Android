@@ -42,7 +42,8 @@ private fun TransactionDetails.toRavelinEncryptedCard(rsaPublicKey: String): Enc
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
 private fun EncryptedCard.toRecommendationRequest() =
-    RecommendationRequest.Builder()
+    RecommendationRequest
+        .Builder()
         .setPaymentMethod(
             paymentMethod =
                 RecommendationPaymentMethod(
@@ -57,10 +58,12 @@ private fun EncryptedCard.toRecommendationRequest() =
                             recommendationFeatureProviderSDKVersion = ravelinSDKVersion,
                         ),
                 ),
-        )
-        .build()
+        ).build()
 
-class RecommendationService(private val context: Context, private val judo: Judo) {
+class RecommendationService(
+    private val context: Context,
+    private val judo: Judo,
+) {
     private val apiService: RecommendationApiService by lazy {
         RecommendationApiServiceFactory.create(context, judo)
     }
@@ -68,9 +71,12 @@ class RecommendationService(private val context: Context, private val judo: Judo
     fun isRecommendationFeatureAvailable(type: TransactionType): Boolean {
         val isSupportedType = type == TransactionType.PAYMENT || type == TransactionType.CHECK || type == TransactionType.PRE_AUTH
 
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1 && // RavelinEncrypt requires API 22
-            isDependencyPresent(RAVELIN_ENCRYPT_CLASS_NAME) && // RavelinEncrypt should be present in classpath
-            judo.recommendationConfiguration != null && // recommendationConfiguration should be set by the user
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1 &&
+            // RavelinEncrypt requires API 22
+            isDependencyPresent(RAVELIN_ENCRYPT_CLASS_NAME) &&
+            // RavelinEncrypt should be present in classpath
+            judo.recommendationConfiguration != null &&
+            // recommendationConfiguration should be set by the user
             isSupportedType // recommendation is only supported for payment, check and pre-auth transactions
     }
 

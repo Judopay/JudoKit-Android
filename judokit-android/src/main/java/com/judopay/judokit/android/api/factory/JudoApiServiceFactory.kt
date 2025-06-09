@@ -50,8 +50,7 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
                 .registerTypeAdapter(
                     ChallengeRequestIndicator::class.java,
                     ChallengeRequestIndicatorSerializer(),
-                )
-                .create()
+                ).create()
 
     override var externalInterceptors: List<Interceptor>? = null
 
@@ -78,8 +77,8 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
     override fun getOkHttpClient(
         context: Context,
         judo: Judo,
-    ): OkHttpClient {
-        return try {
+    ): OkHttpClient =
+        try {
             val sslContext = SSLContext.getInstance("TLSv1.2")
             sslContext.init(null, null, null)
 
@@ -99,24 +98,26 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
             val specs: MutableList<ConnectionSpec> = ArrayList()
 
             specs.add(
-                ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+                ConnectionSpec
+                    .Builder(ConnectionSpec.MODERN_TLS)
                     .tlsVersions(TlsVersion.TLS_1_2)
                     .build(),
             )
 
             val builder =
-                OkHttpClient.Builder()
+                OkHttpClient
+                    .Builder()
                     .sslSocketFactory(Tls12SslSocketFactory(sslContext.socketFactory), trustManager)
                     .connectionSpecs(specs)
 
             builder.certificatePinner(
-                CertificatePinner.Builder()
+                CertificatePinner
+                    .Builder()
                     .add(
                         HOSTNAME_WILDCARD_PATTERN,
                         "sha256/SuY75QgkSNBlMtHNPeW9AayE7KNDAypMBHlJH9GEhXs=",
                         "sha256/c4zbAoMygSbepJKqU3322FvFv5unm+TWZROW3FHU1o8=",
-                    )
-                    .build(),
+                    ).build(),
             )
 
             setTimeouts(builder, judo.networkTimeout)
@@ -126,7 +127,6 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
-    }
 
     override fun addInterceptors(
         client: OkHttpClient.Builder,
@@ -151,7 +151,8 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
         networkTimeout: NetworkTimeout,
     ) {
         with(networkTimeout) {
-            builder.connectTimeout(connectTimeout, TimeUnit.SECONDS)
+            builder
+                .connectTimeout(connectTimeout, TimeUnit.SECONDS)
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
                 .writeTimeout(writeTimeout, TimeUnit.SECONDS)
         }

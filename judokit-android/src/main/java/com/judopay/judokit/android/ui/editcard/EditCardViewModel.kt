@@ -12,9 +12,13 @@ import com.judopay.judokit.android.ui.editcard.adapter.ColorPickerItem
 import kotlinx.coroutines.launch
 
 sealed class EditCardAction {
-    data class ChangePattern(val pattern: CardPattern) : EditCardAction()
+    data class ChangePattern(
+        val pattern: CardPattern,
+    ) : EditCardAction()
 
-    data class ChangeTitle(val newTitle: String) : EditCardAction()
+    data class ChangeTitle(
+        val newTitle: String,
+    ) : EditCardAction()
 
     object ToggleDefaultCardState : EditCardAction()
 
@@ -26,14 +30,13 @@ internal class EditCardViewModelFactory(
     private val cardRepository: TokenizedCardRepository,
     private val application: Application,
 ) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass == EditCardViewModel::class.java) {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
+        if (modelClass == EditCardViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
             EditCardViewModel(cardId, cardRepository, application) as T
         } else {
             super.create(modelClass)
         }
-    }
 }
 
 private const val MAX_CARD_TITLE_LENGTH = 28
@@ -61,7 +64,8 @@ class EditCardViewModel(
                 selectedPattern != cardEntity.pattern ||
                     isSelectedAsDefault != cardEntity.isDefault ||
                     currentCardTitle != cardEntity.title
-            ) && currentCardTitle.length <= MAX_CARD_TITLE_LENGTH
+            ) &&
+                currentCardTitle.length <= MAX_CARD_TITLE_LENGTH
         }
 
     init {

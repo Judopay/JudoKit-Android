@@ -415,7 +415,11 @@ internal class CardEntryViewModelTest {
         val judo =
             getJudo(
                 PaymentWidgetType.CARD_PAYMENT,
-                UiConfiguration.Builder().setShouldAskForCSC(true).setShouldAskForCardholderName(true).build(),
+                UiConfiguration
+                    .Builder()
+                    .setShouldAskForCSC(true)
+                    .setShouldAskForCardholderName(true)
+                    .build(),
             )
         sut =
             CardEntryViewModel(
@@ -450,7 +454,8 @@ internal class CardEntryViewModelTest {
     private fun getJudo(
         widgetType: PaymentWidgetType,
         uiConfiguration: UiConfiguration = UiConfiguration.Builder().build(),
-    ) = Judo.Builder(widgetType)
+    ) = Judo
+        .Builder(widgetType)
         .setJudoId("123456789")
         .setAuthorization(mockk<PaymentSessionAuthorization>(relaxed = true))
         .setAmount(Amount(amount = "1", currency = Currency.GBP))

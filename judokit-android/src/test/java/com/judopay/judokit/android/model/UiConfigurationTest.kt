@@ -56,8 +56,10 @@ internal class UiConfigurationTest {
     @Test
     fun throwsOnShouldPaymentMethodsVerifySecurityCodeNull() {
         assertThrows<IllegalArgumentException> {
-            sut.setShouldPaymentMethodsVerifySecurityCode(null)
-                .build().shouldPaymentMethodsVerifySecurityCode
+            sut
+                .setShouldPaymentMethodsVerifySecurityCode(null)
+                .build()
+                .shouldPaymentMethodsVerifySecurityCode
         }
     }
 

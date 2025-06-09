@@ -60,8 +60,8 @@ class Receipt(
     val isSoftDeclined: Boolean
         get() = result.equals(DECLINED_RESULT, true) && message.equals(SOFT_DECLINED_MESSAGE, true) && !receiptId.isNullOrEmpty()
 
-    override fun toString(): String {
-        return """
+    override fun toString(): String =
+        """
             Receipt(
                 judoId=$judoId,
                 receiptId=$receiptId,
@@ -87,7 +87,6 @@ class Receipt(
                 emailAddress=$emailAddress
             )
             """.trimIndent(true)
-    }
 }
 
 fun Receipt.toJudoResult() =
@@ -114,7 +113,8 @@ fun Receipt.toJudoResult() =
     )
 
 fun Receipt.toCardVerificationModel() =
-    CardVerificationModel.Builder()
+    CardVerificationModel
+        .Builder()
         .setReceiptId(receiptId)
         .setMd(md)
         .setPaReq(paReq)
@@ -139,8 +139,8 @@ fun Receipt.getCReqParameters(): CReqParameters? =
         null
     }
 
-fun Receipt.getChallengeParameters(cReqParams: CReqParameters? = getCReqParameters()): ChallengeParameters {
-    return ChallengeParameters(
+fun Receipt.getChallengeParameters(cReqParams: CReqParameters? = getCReqParameters()): ChallengeParameters =
+    ChallengeParameters(
         cReqParams?.threeDSServerTransID,
         cReqParams?.acsTransID,
         acsReferenceNumber,
@@ -148,4 +148,3 @@ fun Receipt.getChallengeParameters(cReqParams: CReqParameters? = getCReqParamete
         null,
         cReqParams?.messageVersion,
     )
-}

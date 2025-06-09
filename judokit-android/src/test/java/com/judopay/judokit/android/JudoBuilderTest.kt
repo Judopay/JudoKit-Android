@@ -27,7 +27,8 @@ internal class JudoBuilderTest {
     @BeforeEach
     fun setUp() {
         judoBuilder =
-            Judo.Builder(PaymentWidgetType.CARD_PAYMENT)
+            Judo
+                .Builder(PaymentWidgetType.CARD_PAYMENT)
                 .setJudoId("111111111")
                 .setAuthorization(mockk(relaxed = true))
                 .setAmount(Amount("1", Currency.GBP))
@@ -36,8 +37,7 @@ internal class JudoBuilderTest {
                         every { consumerReference } returns "consumer"
                         every { paymentReference } returns "payment"
                     },
-                )
-                .setPaymentMethods(PaymentMethod.values())
+                ).setPaymentMethods(PaymentMethod.values())
                 .setIsSandboxed(true)
                 .setSupportedCardNetworks(CardNetwork.values())
                 .setPrimaryAccountDetails(mockk())
@@ -211,7 +211,8 @@ internal class JudoBuilderTest {
         val readTimeout = 200L
         val writeTimeout = 80L
         judoBuilder.setNetworkTimeout(
-            NetworkTimeout.Builder()
+            NetworkTimeout
+                .Builder()
                 .setConnectTimeout(connectTimeout)
                 .setReadTimeout(readTimeout)
                 .setWriteTimeout(writeTimeout)

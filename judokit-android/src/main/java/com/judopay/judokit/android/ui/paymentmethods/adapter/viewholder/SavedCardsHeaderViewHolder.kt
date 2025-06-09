@@ -8,8 +8,10 @@ import com.judopay.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapt
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItemAction
 
-class SavedCardsHeaderViewHolder(private val binding: SavedCardHeaderItemBinding) :
-    RecyclerView.ViewHolder(binding.root), BindableRecyclerViewHolder<PaymentMethodGenericItem, PaymentMethodItemAction> {
+class SavedCardsHeaderViewHolder(
+    private val binding: SavedCardHeaderItemBinding,
+) : RecyclerView.ViewHolder(binding.root),
+    BindableRecyclerViewHolder<PaymentMethodGenericItem, PaymentMethodItemAction> {
     override fun bind(
         model: PaymentMethodGenericItem,
         listener: PaymentMethodsAdapterListener?,

@@ -20,8 +20,8 @@ internal class PollingStatusViewModelFactory(
     private val pollingService: PollingService,
     private val application: Application,
 ) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass == PollingStatusViewModel::class.java) {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
+        if (modelClass == PollingStatusViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
             PollingStatusViewModel(
                 pollingService,
@@ -30,7 +30,6 @@ internal class PollingStatusViewModelFactory(
         } else {
             super.create(modelClass)
         }
-    }
 }
 
 class PollingStatusViewModel(

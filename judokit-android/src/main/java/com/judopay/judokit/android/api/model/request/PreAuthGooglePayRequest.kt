@@ -63,7 +63,8 @@ class PreAuthGooglePayRequest private constructor(
             val paymentReference =
                 requireNotNullOrEmpty(yourPaymentReference, "yourPaymentReference")
             val myWallet =
-                com.judopay.judokit.android.requireNotNull(googlePayWallet, "googlePayWallet")
+                com.judopay.judokit.android
+                    .requireNotNull(googlePayWallet, "googlePayWallet")
 
             return PreAuthGooglePayRequest(
                 id,

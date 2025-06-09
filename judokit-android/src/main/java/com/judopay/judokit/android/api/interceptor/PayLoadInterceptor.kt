@@ -26,7 +26,9 @@ private val PAYLOAD_ENDPOINTS =
         "/transactions/checkcard",
     )
 
-class PayLoadInterceptor internal constructor(context: Context) : Interceptor {
+class PayLoadInterceptor internal constructor(
+    context: Context,
+) : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
@@ -40,7 +42,8 @@ class PayLoadInterceptor internal constructor(context: Context) : Interceptor {
                 }
 
                 return chain.proceed(
-                    request.newBuilder()
+                    request
+                        .newBuilder()
                         .post(convertJsonToRequestBody(json))
                         .build(),
                 )

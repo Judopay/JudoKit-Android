@@ -95,7 +95,8 @@ internal class GooglePayConfigurationTest {
             googlePayConfigurationBuilder
                 .setEnvironment(GooglePayEnvironment.TEST)
                 .setTransactionCountryCode("US")
-                .build().totalPriceStatus
+                .build()
+                .totalPriceStatus
         val expectedTotalPriceStatus = GooglePayPriceStatus.FINAL
 
         assertEquals(expectedTotalPriceStatus, actualTotalPriceStatus)

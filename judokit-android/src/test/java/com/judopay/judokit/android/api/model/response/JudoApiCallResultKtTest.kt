@@ -15,7 +15,8 @@ internal class JudoApiCallResultKtTest {
     @Test
     fun returnSuccessOnToJudoPaymentResultCallWithJudoApiCallResultSuccess() {
         assertTrue(
-            JudoApiCallResult.Success<Receipt>(mockk(relaxed = true))
+            JudoApiCallResult
+                .Success<Receipt>(mockk(relaxed = true))
                 .toJudoPaymentResult(resources) is JudoPaymentResult.Success,
         )
     }
@@ -26,7 +27,8 @@ internal class JudoApiCallResultKtTest {
     @Test
     fun returnErrorOnToJudoPaymentResultCallWithJudoApiCallResultSuccessAndDataNull() {
         assertTrue(
-            JudoApiCallResult.Success<Receipt>(null)
+            JudoApiCallResult
+                .Success<Receipt>(null)
                 .toJudoPaymentResult(resources) is JudoPaymentResult.Error,
         )
     }
@@ -35,7 +37,8 @@ internal class JudoApiCallResultKtTest {
     @Test
     fun returnErrorOnToJudoPaymentResultCallWithJudoApiCallResultSuccess() {
         assertTrue(
-            JudoApiCallResult.Failure()
+            JudoApiCallResult
+                .Failure()
                 .toJudoPaymentResult(resources) is JudoPaymentResult.Error,
         )
     }

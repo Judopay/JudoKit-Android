@@ -6,8 +6,10 @@ import com.judokit.android.examples.common.BindableRecyclerViewHolder
 import com.judokit.android.examples.databinding.ItemResultPropertyBinding
 import com.judokit.android.examples.model.ResultItem
 
-class ResultActivityItemViewHolder(private val binding: ItemResultPropertyBinding) :
-    RecyclerView.ViewHolder(binding.root), BindableRecyclerViewHolder<ResultItem> {
+class ResultActivityItemViewHolder(
+    private val binding: ItemResultPropertyBinding,
+) : RecyclerView.ViewHolder(binding.root),
+    BindableRecyclerViewHolder<ResultItem> {
     override fun bind(
         model: ResultItem,
         listener: ((ResultItem) -> Unit)?,

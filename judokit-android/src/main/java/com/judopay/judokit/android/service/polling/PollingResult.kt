@@ -17,7 +17,11 @@ sealed class PollingResult<out T> {
         val throwable: Throwable? = null,
     ) : PollingResult<Nothing>()
 
-    data class Failure<T>(val data: T?) : PollingResult<T>()
+    data class Failure<T>(
+        val data: T?,
+    ) : PollingResult<T>()
 
-    data class Success<T>(val data: T?) : PollingResult<T>()
+    data class Success<T>(
+        val data: T?,
+    ) : PollingResult<T>()
 }

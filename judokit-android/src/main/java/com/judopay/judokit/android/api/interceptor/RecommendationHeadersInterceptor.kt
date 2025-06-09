@@ -21,7 +21,8 @@ internal class RecommendationHeadersInterceptor(
         val session = authorization.headers[PAYMENT_SESSION_HEADER]
 
         val headers =
-            Headers.Builder()
+            Headers
+                .Builder()
                 .add(PAYMENT_SESSION_HEADER.lowercase(), session ?: "")
                 .add(CONTENT_TYPE_HEADER, JSON_MIME_TYPE)
                 .add(ACCEPT_HEADER, JSON_MIME_TYPE)
@@ -29,7 +30,8 @@ internal class RecommendationHeadersInterceptor(
                 .build()
 
         val request =
-            chain.request()
+            chain
+                .request()
                 .newBuilder()
                 .headers(headers)
                 .build()

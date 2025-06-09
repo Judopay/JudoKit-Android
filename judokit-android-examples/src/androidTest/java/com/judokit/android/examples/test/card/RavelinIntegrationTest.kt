@@ -72,8 +72,7 @@ class RavelinIntegrationTest {
                 putString("rsa_key", BuildConfig.RSA_KEY)
                 putStringSet("payment_methods", setOf("CARD"))
                 putBoolean("is_address_enabled", false)
-            }
-            .commit()
+            }.commit()
     }
 
     @Test
@@ -236,8 +235,7 @@ class RavelinIntegrationTest {
             .apply {
                 putString("challengeRequestIndicator", "DON_T_SET")
                 putString("scaExemption", "DON_T_SET")
-            }
-            .commit()
+            }.commit()
 
         updateRecommendationUrlWith("71")
 
@@ -270,8 +268,7 @@ class RavelinIntegrationTest {
                 putString("challengeRequestIndicator", "CHALLENGE_AS_MANDATE")
                 putString("scaExemption", "TRANSACTION_RISK_ANALYSIS")
                 putBoolean("halt_transaction_in_case_of_any_error_enabled", false)
-            }
-            .commit()
+            }.commit()
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -323,8 +320,7 @@ class RavelinIntegrationTest {
             .edit()
             .apply {
                 putBoolean("halt_transaction_in_case_of_any_error_enabled", true)
-            }
-            .commit()
+            }.commit()
 
         updateRecommendationUrlWith("5")
 
