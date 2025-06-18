@@ -67,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName|textCapWords"
-                    android:autofillHints="name"
+                    android:autofillHints="personName"
                     tools:text="John Doe"
                     android:tag="@string/jp_cardholder_name_entry_field"/>
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
