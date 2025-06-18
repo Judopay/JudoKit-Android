@@ -323,19 +323,6 @@ jobs:
       - notify_slack_error_weekly
       - notify_slack_pass_weekly
 
-  sonar_scan:
-    docker:
-      - image: europe-docker.pkg.dev/opnf-management/docker/sonar-scanner:latest
-        auth:
-          username: _json_key
-          password: $GCLOUD_SERVICE_KEY
-    working_directory: /home/circleci/project
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /home/circleci/project
-      - run: /opt/run-scan.sh
-
   report_to_jira:
     docker:
       - image: europe-docker.pkg.dev/opnf-management/docker/deployer:latest
