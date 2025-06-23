@@ -352,36 +352,112 @@ jobs:
       BUILD_VARIANT: debug 
       APP_APK_PATH: judokit-android-examples/build/outputs/apk/${BUILD_VARIANT}/judokit-android-examples-${BUILD_VARIANT}.apk
       TEST_APK_PATH: judokit-android-examples/build/outputs/apk/androidTest/${BUILD_VARIANT}/judokit-android-examples-${BUILD_VARIANT}-androidTest.apk
+      BS_UPLOAD_APP_URL: "https://api-cloud.browserstack.com/app-automate/espresso/v2/app"
+      BS_UPLOAD_TEST_SUITE_URL: "https://api-cloud.browserstack.com/app-automate/espresso/v2/test-suite"
+      BS_BUILD_API_URL: "https://api-cloud.browserstack.com/app-automate/espresso/v2/build"
+      BS_BUILD_STATUS_URL_PREFIX: "https://api-cloud.browserstack.com/app-automate/espresso/v2/builds"
+      BS_DASHBOARD_URL_PREFIX: "https://app-automate.browserstack.com/dashboard/v2/builds"
 
     steps:
       - prepare_instrumented_tests
       - run:
-          name: Install BrowserStack SDK
+          name: Upload App APK to BrowserStack (via curl)
           command: |
-            # Install nvm (Node Version Manager)
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # Load nvm
-            nvm install 16 
-            nvm use 16
+            echo "Uploading app APK from: ${APP_APK_PATH}"
+            RESPONSE=$(curl -u "${BROWSERSTACK_USERNAME}:${BROWSERSTACK_ACCESS_KEY}" \
+              -X POST "${BS_UPLOAD_APP_URL}" \
+              -F "file=@${APP_APK_PATH}" \
+              --output -)
+            
+            if echo "$RESPONSE" | jq -e '.app_url' >/dev/null; then
+              export BS_APP_URL=$(echo "$RESPONSE" | jq -r '.app_url')
+              echo "export BS_APP_URL=${BS_APP_URL}" >> $BASH_ENV
+              echo "Uploaded App URL: ${BS_APP_URL}"
+            else
+              echo "Error uploading app APK. Response: $RESPONSE"
+              exit 1
+            fi
 
-            # Install the BrowserStack Node.js SDK globally
-            npm install -g browserstack-cli
       - run:
-          name: Upload Test APK to BrowserStack
+          name: Upload Test APK to BrowserStack (via curl)
           command: |
-            export BS_TEST_URL=$(browserstack app-automate upload -f ${TEST_APK_PATH} --test-suite-url "my-espresso-tests-${CIRCLE_BUILD_NUM}" --output json | jq -r '.test_suite_url')
-            echo "export BS_TEST_URL=${BS_TEST_URL}" >> $BASH_ENV
-            echo "Uploaded Test Suite URL: ${BS_TEST_URL}"
+            echo "Uploading test APK from: ${TEST_APK_PATH}"
+            RESPONSE=$(curl -u "${BROWSERSTACK_USERNAME}:${BROWSERSTACK_ACCESS_KEY}" \
+              -X POST "${BS_UPLOAD_TEST_SUITE_URL}" \
+              -F "file=@${TEST_APK_PATH}" \
+              --output -)
+            
+            if echo "$RESPONSE" | jq -e '.test_suite_url' >/dev/null; then
+              export BS_TEST_URL=$(echo "$RESPONSE" | jq -r '.test_suite_url')
+              echo "export BS_TEST_URL=${BS_TEST_URL}" >> $BASH_ENV
+              echo "Uploaded Test Suite URL: ${BS_TEST_URL}"
+            else
+              echo "Error uploading test APK. Response: $RESPONSE"
+              exit 1
+            fi
+
       - run:
-          name: Run Espresso Tests on BrowserStack
+          name: Run Espresso Tests on BrowserStack (via curl)
           command: |
-            browserstack app-automate espresso run \
-              --app-url ${BS_APP_URL} \
-              --test-suite-url ${BS_TEST_URL} \
-              --devices "Google Pixel 9-15.0" \
-              --build-tag "JudoKit-Android Espresso Tests #${CIRCLE_BUILD_NUM}" \
-              --project "JudoKit-Android Espresso Tests" \
+            echo "Initiating test run on BrowserStack..."
+            BUILD_PAYLOAD='{
+              "devices": ["Google Pixel 9-15.0"],
+              "app": "'"${BS_APP_URL}"'",
+              "testSuite": "'"${BS_TEST_URL}"'",
+              "project": "JudoKit-Android Espresso Tests",
+              "build": "JudoKit-Android Espresso Tests #${CIRCLE_BUILD_NUM}"
+            }'
+
+            RESPONSE=$(curl -u "${BROWSERSTACK_USERNAME}:${BROWSERSTACK_ACCESS_KEY}" \
+              -X POST "${BS_BUILD_API_URL}" \
+              -d "${BUILD_PAYLOAD}" \
+              -H "Content-Type: application/json" \
+              --output -)
+            
+            # Check if build initiation was successful and parse build_id
+            if echo "$RESPONSE" | jq -e '.build_id' >/dev/null; then
+              export BS_BUILD_ID=$(echo "$RESPONSE" | jq -r '.build_id')
+              echo "export BS_BUILD_ID=${BS_BUILD_ID}" >> $BASH_ENV
+              echo "BrowserStack Build ID: ${BS_BUILD_ID}"
+            else
+              echo "Error initiating BrowserStack build. Response: $RESPONSE"
+              exit 1
+            fi
+
+      - run:
+          name: Wait for BrowserStack Tests to Complete
+          command: |
+            echo "Waiting for tests to complete on BrowserStack (Build ID: ${BS_BUILD_ID})..."
+            STATUS="running"
+            MAX_WAIT_SECONDS=1800 # 30 minutes timeout
+            START_TIME=$(date +%s)
+            
+            while [ "$STATUS" == "running" ] || [ "$STATUS" == "queued" ]; do
+              CURRENT_TIME=$(date +%s)
+              ELAPSED_TIME=$((CURRENT_TIME - START_TIME))
+              
+              if [ "$ELAPSED_TIME" -ge "$MAX_WAIT_SECONDS" ]; then
+                echo "BrowserStack tests timed out after ${MAX_WAIT_SECONDS} seconds."
+                exit 1
+              fi
+
+              sleep 15
+
+              STATUS_RESPONSE=$(curl -s -u "${BROWSERSTACK_USERNAME}:${BROWSERSTACK_ACCESS_KEY}" \
+                "${BS_BUILD_STATUS_URL_PREFIX}/${BS_BUILD_ID}")
+              
+              STATUS=$(echo "$STATUS_RESPONSE" | jq -r '.status')
+              echo "Current BrowserStack status: ${STATUS}"
+            done
+
+            echo "BrowserStack tests finished with status: ${STATUS}"
+            echo "View results: ${BS_DASHBOARD_URL_PREFIX}/${BS_BUILD_ID}"
+
+            # Exit with a non-zero code if tests failed
+            if [ "$STATUS" != "passed" ]; then
+              echo "BrowserStack tests did not pass. Status: ${STATUS}"
+              exit 1
+            fi
 
 workflows:
   version: 2
