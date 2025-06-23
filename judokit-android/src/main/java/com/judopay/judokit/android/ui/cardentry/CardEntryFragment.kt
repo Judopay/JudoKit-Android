@@ -157,6 +157,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         _binding = null
     }
 
+    @Suppress("LongMethod")
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
