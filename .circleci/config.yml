@@ -362,11 +362,11 @@ jobs:
             curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # Load nvm
-            nvm install 18 # Install Node.js version 18 (or a compatible version)
-            nvm use 18 # Use the installed Node.js version
+            nvm install 16 
+            nvm use 16
 
             # Install the BrowserStack Node.js SDK globally
-            npm install -g browserstack-sdk
+            npm install -g browserstack-cli
       - run:
           name: Upload Test APK to BrowserStack
           command: |
