@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package com.judokit.android.examples.theme
 
 import androidx.compose.ui.graphics.Color
