@@ -346,19 +346,20 @@ jobs:
 
   run_espresso_tests_on_browserstack:
     <<: *android-docker-executor
-    environment:
-      BROWSERSTACK_USERNAME: $BROWSERSTACK_USERNAME
-      BROWSERSTACK_ACCESS_KEY: $BROWSERSTACK_ACCESS_KEY
-      APP_APK_PATH: judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk
-      TEST_APK_PATH: judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk
-      BS_UPLOAD_APP_URL: "https://api-cloud.browserstack.com/app-automate/espresso/v2/app"
-      BS_UPLOAD_TEST_SUITE_URL: "https://api-cloud.browserstack.com/app-automate/espresso/v2/test-suite"
-      BS_BUILD_API_URL: "https://api-cloud.browserstack.com/app-automate/espresso/v2/build"
-      BS_BUILD_STATUS_URL_PREFIX: "https://api-cloud.browserstack.com/app-automate/espresso/v2/builds"
-      BS_DASHBOARD_URL_PREFIX: "https://app-automate.browserstack.com/dashboard/v2/builds"
-
     steps:
       - prepare_instrumented_tests
+      - run:
+          name: Export environment variables
+          command: |
+            export BROWSERSTACK_USERNAME=${$BROWSERSTACK_USERNAME} \
+            export BROWSERSTACK_ACCESS_KEY=${$BROWSERSTACK_ACCESS_KEY} \
+            export APP_APK_PATH=judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk \
+            export TEST_APK_PATH=judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk
+            export BS_UPLOAD_APP_URL="https://api-cloud.browserstack.com/app-automate/espresso/v2/app"
+            export BS_UPLOAD_TEST_SUITE_URL="https://api-cloud.browserstack.com/app-automate/espresso/v2/test-suite"
+            export BS_BUILD_API_URL="https://api-cloud.browserstack.com/app-automate/espresso/v2/build"
+            export BS_BUILD_STATUS_URL_PREFIX="https://api-cloud.browserstack.com/app-automate/espresso/v2/builds"
+            export BS_DASHBOARD_URL_PREFIX="https://app-automate.browserstack.com/dashboard/v2/builds"
       - run:
           name: Upload App APK to BrowserStack (via curl)
           command: |
