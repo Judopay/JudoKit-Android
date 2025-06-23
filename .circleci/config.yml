@@ -357,7 +357,16 @@ jobs:
       - prepare_instrumented_tests
       - run:
           name: Install BrowserStack SDK
-          command: npm install -g browserstack-sdk
+          command: |
+            # Install nvm (Node Version Manager)
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # Load nvm
+            nvm install 18 # Install Node.js version 18 (or a compatible version)
+            nvm use 18 # Use the installed Node.js version
+
+            # Install the BrowserStack Node.js SDK globally
+            npm install -g browserstack-sdk
       - run:
           name: Upload Test APK to BrowserStack
           command: |
