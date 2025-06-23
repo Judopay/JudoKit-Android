@@ -363,16 +363,16 @@ jobs:
       - run:
           name: Upload App APK to BrowserStack (via curl)
           command: |
-            echo "Uploading app APK from: ${APP_APK_PATH}"
-            RESPONSE=$(curl -u "${BROWSERSTACK_USERNAME}:${BROWSERSTACK_ACCESS_KEY}" \
-              -X POST "${BS_UPLOAD_APP_URL}" \
-              -F "file=@${APP_APK_PATH}" \
+            echo "Uploading app APK from: $APP_APK_PATH"
+            RESPONSE=$(curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+              -X POST "$BS_UPLOAD_APP_URL" \
+              -F "file=@$APP_APK_PATH" \
               --output -)
             
             if echo "$RESPONSE" | jq -e '.app_url' >/dev/null; then
               export BS_APP_URL=$(echo "$RESPONSE" | jq -r '.app_url')
-              echo "export BS_APP_URL=${BS_APP_URL}" >> $BASH_ENV
-              echo "Uploaded App URL: ${BS_APP_URL}"
+              echo "export BS_APP_URL=$BS_APP_URL" >> $BASH_ENV
+              echo "Uploaded App URL: $BS_APP_URL"
             else
               echo "Error uploading app APK. Response: $RESPONSE"
               exit 1
@@ -381,16 +381,16 @@ jobs:
       - run:
           name: Upload Test APK to BrowserStack (via curl)
           command: |
-            echo "Uploading test APK from: ${TEST_APK_PATH}"
-            RESPONSE=$(curl -u "${BROWSERSTACK_USERNAME}:${BROWSERSTACK_ACCESS_KEY}" \
-              -X POST "${BS_UPLOAD_TEST_SUITE_URL}" \
-              -F "file=@${TEST_APK_PATH}" \
+            echo "Uploading test APK from: $TEST_APK_PATH"
+            RESPONSE=$(curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+              -X POST "$BS_UPLOAD_TEST_SUITE_URL" \
+              -F "file=@$TEST_APK_PATH" \
               --output -)
             
             if echo "$RESPONSE" | jq -e '.test_suite_url' >/dev/null; then
               export BS_TEST_URL=$(echo "$RESPONSE" | jq -r '.test_suite_url')
-              echo "export BS_TEST_URL=${BS_TEST_URL}" >> $BASH_ENV
-              echo "Uploaded Test Suite URL: ${BS_TEST_URL}"
+              echo "export BS_TEST_URL=$BS_TEST_URL" >> $BASH_ENV
+              echo "Uploaded Test Suite URL: $BS_TEST_URL"
             else
               echo "Error uploading test APK. Response: $RESPONSE"
               exit 1
@@ -402,23 +402,23 @@ jobs:
             echo "Initiating test run on BrowserStack..."
             BUILD_PAYLOAD='{
               "devices": ["Google Pixel 9-15.0"],
-              "app": "'"${BS_APP_URL}"'",
-              "testSuite": "'"${BS_TEST_URL}"'",
+              "app": "'"$BS_APP_URL"'",
+              "testSuite": "'"$BS_TEST_URL"'",
               "project": "JudoKit-Android Espresso Tests",
-              "build": "JudoKit-Android Espresso Tests #${CIRCLE_BUILD_NUM}"
+              "build": "JudoKit-Android Espresso Tests #$CIRCLE_BUILD_NUM"
             }'
 
-            RESPONSE=$(curl -u "${BROWSERSTACK_USERNAME}:${BROWSERSTACK_ACCESS_KEY}" \
-              -X POST "${BS_BUILD_API_URL}" \
-              -d "${BUILD_PAYLOAD}" \
+            RESPONSE=$(curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+              -X POST "$BS_BUILD_API_URL" \
+              -d "$BUILD_PAYLOAD" \
               -H "Content-Type: application/json" \
               --output -)
             
             # Check if build initiation was successful and parse build_id
             if echo "$RESPONSE" | jq -e '.build_id' >/dev/null; then
               export BS_BUILD_ID=$(echo "$RESPONSE" | jq -r '.build_id')
-              echo "export BS_BUILD_ID=${BS_BUILD_ID}" >> $BASH_ENV
-              echo "BrowserStack Build ID: ${BS_BUILD_ID}"
+              echo "export BS_BUILD_ID=$BS_BUILD_ID" >> $BASH_ENV
+              echo "BrowserStack Build ID: $BS_BUILD_ID"
             else
               echo "Error initiating BrowserStack build. Response: $RESPONSE"
               exit 1
@@ -427,7 +427,7 @@ jobs:
       - run:
           name: Wait for BrowserStack Tests to Complete
           command: |
-            echo "Waiting for tests to complete on BrowserStack (Build ID: ${BS_BUILD_ID})..."
+            echo "Waiting for tests to complete on BrowserStack (Build ID: $BS_BUILD_ID)..."
             STATUS="running"
             MAX_WAIT_SECONDS=1800 # 30 minutes timeout
             START_TIME=$(date +%s)
@@ -437,25 +437,25 @@ jobs:
               ELAPSED_TIME=$((CURRENT_TIME - START_TIME))
               
               if [ "$ELAPSED_TIME" -ge "$MAX_WAIT_SECONDS" ]; then
-                echo "BrowserStack tests timed out after ${MAX_WAIT_SECONDS} seconds."
+                echo "BrowserStack tests timed out after $MAX_WAIT_SECONDS seconds."
                 exit 1
               fi
 
               sleep 15
 
-              STATUS_RESPONSE=$(curl -s -u "${BROWSERSTACK_USERNAME}:${BROWSERSTACK_ACCESS_KEY}" \
-                "${BS_BUILD_STATUS_URL_PREFIX}/${BS_BUILD_ID}")
+              STATUS_RESPONSE=$(curl -s -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+                "$BS_BUILD_STATUS_URL_PREFIX}/$BS_BUILD_ID")
               
               STATUS=$(echo "$STATUS_RESPONSE" | jq -r '.status')
-              echo "Current BrowserStack status: ${STATUS}"
+              echo "Current BrowserStack status: $STATUS"
             done
 
-            echo "BrowserStack tests finished with status: ${STATUS}"
-            echo "View results: ${BS_DASHBOARD_URL_PREFIX}/${BS_BUILD_ID}"
+            echo "BrowserStack tests finished with status: $STATUS"
+            echo "View results: $BS_DASHBOARD_URL_PREFIX}/$BS_BUILD_ID"
 
             # Exit with a non-zero code if tests failed
             if [ "$STATUS" != "passed" ]; then
-              echo "BrowserStack tests did not pass. Status: ${STATUS}"
+              echo "BrowserStack tests did not pass. Status: $STATUS"
               exit 1
             fi
 
