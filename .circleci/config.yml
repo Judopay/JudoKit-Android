@@ -351,8 +351,8 @@ jobs:
       - run:
           name: Export environment variables
           command: |
-            export BROWSERSTACK_USERNAME=${$BROWSERSTACK_USERNAME} \
-            export BROWSERSTACK_ACCESS_KEY=${$BROWSERSTACK_ACCESS_KEY} \
+            export BROWSERSTACK_USERNAME=${BROWSERSTACK_USERNAME} \
+            export BROWSERSTACK_ACCESS_KEY=${BROWSERSTACK_ACCESS_KEY} \
             export APP_APK_PATH=judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk \
             export TEST_APK_PATH=judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk \
             export BS_UPLOAD_APP_URL="https://api-cloud.browserstack.com/app-automate/espresso/v2/app" \
