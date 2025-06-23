@@ -8,7 +8,8 @@ import org.junit.jupiter.api.assertThrows
 @DisplayName("Testing CardVerificationModel builder")
 internal class CardVerificationModelTest {
     private val sut =
-        CardVerificationModel.Builder()
+        CardVerificationModel
+            .Builder()
             .setAcsUrl("acs")
             .setMd("md")
             .setPaReq("pareq")

@@ -7,17 +7,16 @@ object Versions {
     const val VERSION_NAME: String = "5.0.0"
 
     // Android versions
-    const val TARGET_SDK: Int = 34
-    const val COMPILE_SDK: Int = 34
+    const val TARGET_SDK: Int = 35
+    const val COMPILE_SDK: Int = 35
     const val MIN_SDK: Int = 21
 }
 
 private const val EXAMPLE_APP_VERSION_CODE = "android.injected.version.code"
 
-fun Project.getVersionCode(): Int {
-    return if (hasProperty(EXAMPLE_APP_VERSION_CODE)) {
+fun Project.getVersionCode(): Int =
+    if (hasProperty(EXAMPLE_APP_VERSION_CODE)) {
         property(EXAMPLE_APP_VERSION_CODE).toString().toInt()
     } else {
         1
     }
-}

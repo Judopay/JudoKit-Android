@@ -12,7 +12,8 @@ import java.math.BigDecimal
 @DisplayName("Testing Google pay request builder")
 internal class GooglePayRequestTest {
     private val request =
-        GooglePayRequest.Builder()
+        GooglePayRequest
+            .Builder()
             .setJudoId("id")
             .setAmount("1")
             .setCurrency("GBP")
@@ -23,8 +24,7 @@ internal class GooglePayRequestTest {
                     every { token } returns "token"
                     every { cardNetwork } returns "Visa"
                 },
-            )
-            .setYourPaymentMetaData(mockk(relaxed = true))
+            ).setYourPaymentMetaData(mockk(relaxed = true))
             .setPrimaryAccountDetails(mockk(relaxed = true))
             .setCardAddress(mockk(relaxed = true))
 
@@ -105,9 +105,30 @@ internal class GooglePayRequestTest {
     fun mapFieldsToJudoResultOnToJudoResultCall() {
         assertEquals(BigDecimal(1), request.build().toJudoResult().amount)
         assertEquals("GBP", request.build().toJudoResult().currency)
-        assertEquals("consumerRef", request.build().toJudoResult().consumer?.yourConsumerReference)
+        assertEquals(
+            "consumerRef",
+            request
+                .build()
+                .toJudoResult()
+                .consumer
+                ?.yourConsumerReference,
+        )
         assertEquals("paymentRef", request.build().toJudoResult().yourPaymentReference)
-        assertEquals("token", request.build().toJudoResult().cardDetails?.token)
-        assertEquals("Visa", request.build().toJudoResult().cardDetails?.scheme)
+        assertEquals(
+            "token",
+            request
+                .build()
+                .toJudoResult()
+                .cardDetails
+                ?.token,
+        )
+        assertEquals(
+            "Visa",
+            request
+                .build()
+                .toJudoResult()
+                .cardDetails
+                ?.scheme,
+        )
     }
 }

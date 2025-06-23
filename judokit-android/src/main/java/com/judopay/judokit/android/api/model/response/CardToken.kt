@@ -30,7 +30,5 @@ class CardToken(
             return if (data.length != 4) "" else "${data.substring(0, 2)}/${data.substring(2, 4)}"
         }
 
-    override fun toString(): String {
-        return "CardToken(cardLastfour=$lastFour, cardToken=$token, cardType=$type"
-    }
+    override fun toString(): String = "CardToken(cardLastfour=$lastFour, cardToken=$token, cardType=$type"
 }

@@ -6,56 +6,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/space_40"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/space_32"
-        android:layout_gravity="bottom|center_horizontal"
-        android:background="@color/white">
-
-        <ImageView
-            android:layout_width="@dimen/powered_by_judo_width"
-            android:layout_height="@dimen/powered_by_judo_height"
-            android:layout_gravity="center_horizontal"
-            android:contentDescription="@null"
-            app:srcCompat="@drawable/ic_powered_by_judo" />
-    </FrameLayout>
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_layout_height"
-        android:fitsSystemWindows="true"
-        android:theme="@style/JudoTheme.AppBarLayout">
+        android:theme="@style/JudoTheme.AppBarLayout"
+        android:background="@color/white"
+        android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:minHeight="@dimen/app_bar_layout_min_height"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:scrimVisibleHeightTrigger="1dp"
             app:titleEnabled="false">
-
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:minHeight="@dimen/app_bar_layout_min_height"
-                app:layout_collapseMode="pin" />
 
             <com.judopay.judokit.android.ui.paymentmethods.components.AppBarLayoutHeightAwareContainerView
                 android:id="@+id/heightAwareView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/light_pink_gradient_background"
+                android:layout_marginTop="@dimen/space_56"
                 app:layout_collapseMode="pin">
 
                 <com.judopay.judokit.android.ui.paymentmethods.components.PaymentMethodsHeaderView
@@ -75,4 +48,25 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_48"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@color/white">
+        <ImageView
+            android:layout_width="@dimen/powered_by_judo_width"
+            android:layout_height="@dimen/powered_by_judo_height"
+            android:layout_marginTop="@dimen/space_4"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/ic_powered_by_judo" />
+    </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -31,17 +31,13 @@ abstract class SwipeToDeleteCallback(
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
-    ): Int {
-        return makeMovementFlags(0, if (viewHolder is SavedCardsItemViewHolder) ItemTouchHelper.LEFT else 0)
-    }
+    ): Int = makeMovementFlags(0, if (viewHolder is SavedCardsItemViewHolder) ItemTouchHelper.LEFT else 0)
 
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder,
-    ): Boolean {
-        return false
-    }
+    ): Boolean = false
 
     override fun onChildDraw(
         canvas: Canvas,

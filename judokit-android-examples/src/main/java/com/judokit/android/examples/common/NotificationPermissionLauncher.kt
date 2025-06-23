@@ -14,7 +14,9 @@ const val NOTIFICATION_PERMISSION_IS_REQUIRED_MESSAGE = "Notification permission
 const val BUTTON_OK = "OK"
 const val BUTTON_CANCEL = "Cancel"
 
-class NotificationPermissionLauncher(activity: AppCompatActivity) {
+class NotificationPermissionLauncher(
+    activity: AppCompatActivity,
+) {
     private var activityReference: WeakReference<AppCompatActivity> = WeakReference(activity)
     var hasNotificationPermissionGranted = false
 
@@ -52,8 +54,7 @@ class NotificationPermissionLauncher(activity: AppCompatActivity) {
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     intent.data = Uri.parse("package:${it.applicationContext.packageName}")
                     it.startActivity(intent)
-                }
-                .setNegativeButton(BUTTON_CANCEL, null)
+                }.setNegativeButton(BUTTON_CANCEL, null)
                 .show()
         }
     }
@@ -67,8 +68,7 @@ class NotificationPermissionLauncher(activity: AppCompatActivity) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
                     }
-                }
-                .setNegativeButton(BUTTON_CANCEL, null)
+                }.setNegativeButton(BUTTON_CANCEL, null)
                 .show()
         }
     }

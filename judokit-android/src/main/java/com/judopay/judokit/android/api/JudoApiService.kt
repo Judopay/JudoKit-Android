@@ -10,7 +10,6 @@ import com.judopay.judokit.android.api.model.request.PreAuthTokenRequest
 import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
-import com.judopay.judokit.android.api.model.response.BankSaleStatusResponse
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
 import com.judopay.judokit.android.api.model.response.Receipt
 import retrofit2.Call
@@ -135,11 +134,6 @@ interface JudoApiService {
     fun preAuthGooglePayPayment(
         @Body preAuthGooglePayRequest: PreAuthGooglePayRequest,
     ): Call<JudoApiCallResult<Receipt>>
-
-    @GET("order/bank/statusrequest/{orderID}")
-    fun status(
-        @Path("orderID") orderId: String,
-    ): Call<JudoApiCallResult<BankSaleStatusResponse>>
 
     /**
      * A method used to fetch the details of a transaction based on a provided receipt ID

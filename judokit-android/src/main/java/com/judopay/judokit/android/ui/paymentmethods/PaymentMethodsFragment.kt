@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -77,6 +79,12 @@ class PaymentMethodsFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         binding.headerView.fromEditMode = true
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { view, insets ->
+            view.updatePadding(bottom = insets.systemWindowInsets.bottom + resources.getDimension(R.dimen.space_48).toInt())
+            insets
+        }
+
         setupRecyclerView()
         setupButtonCallbacks()
         initializeViewModelObserving()
@@ -144,7 +152,10 @@ class PaymentMethodsFragment : Fragment() {
             viewModel.send(PaymentMethodsAction.PayWithCard(transactionDetailBuilder))
         }
 
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("user-cancelled")
+        findNavController()
+            .currentBackStackEntry
+            ?.savedStateHandle
+            ?.getLiveData<Boolean>("user-cancelled")
             ?.observe(viewLifecycleOwner) {
                 if (it) {
                     viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
@@ -198,8 +209,7 @@ class PaymentMethodsFragment : Fragment() {
             .setNegativeButton(R.string.jp_cancel, null)
             .setPositiveButton(R.string.jp_delete) { _, _ ->
                 viewModel.send(PaymentMethodsAction.DeleteCard(item.id))
-            }
-            .show()
+            }.show()
     }
 
     private fun onEdit(cardId: Int) {

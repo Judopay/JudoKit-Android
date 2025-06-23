@@ -1,53 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    tools:context="com.judokit.android.examples.feature.noui.DemoNoUiPaymentActivity">
+    android:id="@+id/coordinatorLayout"
+    android:fitsSystemWindows="true"
+    tools:context=".feature.noui.DemoNoUiPaymentActivity">
 
-    <com.judopay.judokit.android.ui.common.ProgressButton
-        android:id="@+id/payWithCardButton"
-        style="@style/JudoTheme.BlackRoundedButton"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height"
-        android:layout_marginStart="@dimen/spacing_16"
-        android:layout_marginTop="@dimen/spacing_16"
-        android:layout_marginEnd="@dimen/spacing_16"
-        android:minWidth="@dimen/min_touch_target_size"
-        android:text="@string/feature_title_payment"/>
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
 
-    <com.judopay.judokit.android.ui.common.ProgressButton
-        android:id="@+id/preAuthWithCardButton"
-        style="@style/JudoTheme.BlackRoundedButton"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="@string/feature_title_payment_no_ui"/>
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.core.view.insets.ProtectionLayout
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height"
-        android:layout_marginStart="@dimen/spacing_16"
-        android:layout_marginTop="@dimen/spacing_16"
-        android:layout_marginEnd="@dimen/spacing_16"
-        android:minWidth="@dimen/min_touch_target_size"
-        android:text="@string/feature_title_preauth"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/payWithCardButton"
-        app:layout_constraintBottom_toTopOf="@id/checkCardButton"/>
+        android:fitsSystemWindows="true">
 
-    <com.judopay.judokit.android.ui.common.ProgressButton
-        android:id="@+id/checkCardButton"
-        style="@style/JudoTheme.BlackRoundedButton"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height"
-        android:layout_marginStart="@dimen/spacing_16"
-        android:layout_marginTop="@dimen/spacing_16"
-        android:layout_marginEnd="@dimen/spacing_16"
-        android:minWidth="@dimen/min_touch_target_size"
-        android:text="@string/feature_title_check_card"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/preAuthWithCardButton"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
-</LinearLayout>
+            <com.judopay.judokit.android.ui.common.ProgressButton
+                android:id="@+id/payWithCardButton"
+                style="@style/JudoTheme.BlackRoundedButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginStart="@dimen/spacing_16"
+                android:layout_marginTop="@dimen/spacing_16"
+                android:layout_marginEnd="@dimen/spacing_16"
+                android:minWidth="@dimen/min_touch_target_size"
+                android:text="@string/feature_title_payment"/>
+
+            <com.judopay.judokit.android.ui.common.ProgressButton
+                android:id="@+id/preAuthWithCardButton"
+                style="@style/JudoTheme.BlackRoundedButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginStart="@dimen/spacing_16"
+                android:layout_marginTop="@dimen/spacing_16"
+                android:layout_marginEnd="@dimen/spacing_16"
+                android:minWidth="@dimen/min_touch_target_size"
+                android:text="@string/feature_title_preauth"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/payWithCardButton"
+                app:layout_constraintBottom_toTopOf="@id/checkCardButton"/>
+
+            <com.judopay.judokit.android.ui.common.ProgressButton
+                android:id="@+id/checkCardButton"
+                style="@style/JudoTheme.BlackRoundedButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginStart="@dimen/spacing_16"
+                android:layout_marginTop="@dimen/spacing_16"
+                android:layout_marginEnd="@dimen/spacing_16"
+                android:minWidth="@dimen/min_touch_target_size"
+                android:text="@string/feature_title_check_card"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/preAuthWithCardButton"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </LinearLayout>
+    </androidx.core.view.insets.ProtectionLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

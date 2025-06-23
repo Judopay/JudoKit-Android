@@ -20,9 +20,7 @@ import kotlin.reflect.full.memberProperties
 fun ViewGroup.inflate(
     resource: Int,
     attachToRoot: Boolean = false,
-): View {
-    return LayoutInflater.from(context).inflate(resource, this, attachToRoot)
-}
+): View = LayoutInflater.from(context).inflate(resource, this, attachToRoot)
 
 fun Activity.startResultActivity(result: Result) {
     val intent = Intent(this, ResultActivity::class.java)

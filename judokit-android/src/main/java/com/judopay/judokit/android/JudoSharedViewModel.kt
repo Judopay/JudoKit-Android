@@ -25,9 +25,13 @@ import retrofit2.await
 
 // view-model actions
 sealed class JudoSharedAction {
-    data class LoadGPayPaymentDataSuccess(val paymentData: PaymentData) : JudoSharedAction()
+    data class LoadGPayPaymentDataSuccess(
+        val paymentData: PaymentData,
+    ) : JudoSharedAction()
 
-    data class LoadGPayPaymentDataError(val errorMessage: String) : JudoSharedAction()
+    data class LoadGPayPaymentDataError(
+        val errorMessage: String,
+    ) : JudoSharedAction()
 
     object LoadGPayPaymentDataUserCancelled : JudoSharedAction()
 
@@ -41,14 +45,13 @@ internal class JudoSharedViewModelFactory(
     private val judoApiService: JudoApiService,
     private val application: Application,
 ) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass == JudoSharedViewModel::class.java) {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
+        if (modelClass == JudoSharedViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
             JudoSharedViewModel(judo, googlePayService, judoApiService, application) as T
         } else {
             super.create(modelClass)
         }
-    }
 }
 
 class JudoSharedViewModel(
@@ -62,7 +65,6 @@ class JudoSharedViewModel(
     // used to share a card payment result between fragments (card input / payment methods)
     val paymentResult = MutableLiveData<JudoPaymentResult>()
 
-    val bankPaymentResult = MutableLiveData<JudoPaymentResult>()
     val paymentMethodsResult = MutableLiveData<JudoPaymentResult>()
 
     // used to pass security code and/or cardholder name from card entry to payment methods screen
@@ -138,16 +140,18 @@ class JudoSharedViewModel(
                         PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
                         PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
                         ->
-                            judoApiService.preAuthGooglePayPayment(
-                                paymentData.toPreAuthGooglePayRequest(judo),
-                            ).await()
+                            judoApiService
+                                .preAuthGooglePayPayment(
+                                    paymentData.toPreAuthGooglePayRequest(judo),
+                                ).await()
 
                         PaymentWidgetType.GOOGLE_PAY,
                         PaymentWidgetType.PAYMENT_METHODS,
                         ->
-                            judoApiService.googlePayPayment(
-                                paymentData.toGooglePayRequest(judo),
-                            ).await()
+                            judoApiService
+                                .googlePayPayment(
+                                    paymentData.toGooglePayRequest(judo),
+                                ).await()
 
                         else -> throw IllegalStateException("Unexpected payment widget type: ${judo.paymentWidgetType}")
                     }

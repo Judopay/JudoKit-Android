@@ -6,7 +6,10 @@ import android.widget.ViewAnimator
 
 class CardEntryViewAnimator
     @JvmOverloads
-    constructor(context: Context, attrs: AttributeSet? = null) : ViewAnimator(context, attrs) {
+    constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+    ) : ViewAnimator(context, attrs) {
         interface OnViewWillAppearListener {
             fun onViewWillAppear()
         }
