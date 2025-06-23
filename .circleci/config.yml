@@ -349,9 +349,8 @@ jobs:
     environment:
       BROWSERSTACK_USERNAME: $BROWSERSTACK_USERNAME
       BROWSERSTACK_ACCESS_KEY: $BROWSERSTACK_ACCESS_KEY
-      BUILD_VARIANT: debug 
-      APP_APK_PATH: judokit-android-examples/build/outputs/apk/${BUILD_VARIANT}/judokit-android-examples-${BUILD_VARIANT}.apk
-      TEST_APK_PATH: judokit-android-examples/build/outputs/apk/androidTest/${BUILD_VARIANT}/judokit-android-examples-${BUILD_VARIANT}-androidTest.apk
+      APP_APK_PATH: judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk
+      TEST_APK_PATH: judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk
       BS_UPLOAD_APP_URL: "https://api-cloud.browserstack.com/app-automate/espresso/v2/app"
       BS_UPLOAD_TEST_SUITE_URL: "https://api-cloud.browserstack.com/app-automate/espresso/v2/test-suite"
       BS_BUILD_API_URL: "https://api-cloud.browserstack.com/app-automate/espresso/v2/build"
