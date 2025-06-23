@@ -205,6 +205,9 @@ parameters:
   weekly:
     type: boolean
     default: false
+  bs: 
+    type: boolean
+    default: false
 
 jobs:
   check_pull_request:
@@ -261,7 +264,6 @@ jobs:
       - notify_slack_error
       - notify_slack_pass
 
-
   instrumented_test_sample_weekly_api_31:
     <<: *android-docker-executor
     steps:
@@ -282,6 +284,7 @@ jobs:
               --num-flaky-test-attempts=1
       - notify_slack_error_weekly
       - notify_slack_pass_weekly
+
   instrumented_test_sample_weekly_api_32:
     <<: *android-docker-executor
     steps:
@@ -302,6 +305,7 @@ jobs:
               --num-flaky-test-attempts=1
       - notify_slack_error_weekly
       - notify_slack_pass_weekly
+
   instrumented_test_sample_weekly_api_33:
     <<: *android-docker-executor
     steps:
@@ -339,6 +343,36 @@ jobs:
           environment:
             ENVIRONMENT: << parameters.environment >>
           command: /resources/scripts/report-status-to-jira.sh
+
+  run_espresso_tests_on_browserstack:
+    <<: *android-docker-executor
+    environment:
+      BROWSERSTACK_USERNAME: $BROWSERSTACK_USERNAME
+      BROWSERSTACK_ACCESS_KEY: $BROWSERSTACK_ACCESS_KEY
+      BUILD_VARIANT: debug 
+      APP_APK_PATH: judokit-android-examples/build/outputs/apk/${BUILD_VARIANT}/judokit-android-examples-${BUILD_VARIANT}.apk
+      TEST_APK_PATH: judokit-android-examples/build/outputs/apk/androidTest/${BUILD_VARIANT}/judokit-android-examples-${BUILD_VARIANT}-androidTest.apk
+
+    steps:
+      - prepare_instrumented_tests
+      - run:
+          name: Install BrowserStack SDK
+          command: npm install -g browserstack-sdk
+      - run:
+          name: Upload Test APK to BrowserStack
+          command: |
+            export BS_TEST_URL=$(browserstack app-automate upload -f ${TEST_APK_PATH} --test-suite-url "my-espresso-tests-${CIRCLE_BUILD_NUM}" --output json | jq -r '.test_suite_url')
+            echo "export BS_TEST_URL=${BS_TEST_URL}" >> $BASH_ENV
+            echo "Uploaded Test Suite URL: ${BS_TEST_URL}"
+      - run:
+          name: Run Espresso Tests on BrowserStack
+          command: |
+            browserstack app-automate espresso run \
+              --app-url ${BS_APP_URL} \
+              --test-suite-url ${BS_TEST_URL} \
+              --devices "Google Pixel 9-15.0" \
+              --build-tag "JudoKit-Android Espresso Tests #${CIRCLE_BUILD_NUM}" \
+              --project "JudoKit-Android Espresso Tests" \
 
 workflows:
   version: 2
@@ -422,3 +456,13 @@ workflows:
             branches:
               only:
                 - master
+
+  instrumented_test_bs:
+    when: << pipeline.parameters.bs >>
+    jobs:
+      - run_espresso_tests_on_browserstack:
+          context: shared-secrets
+          filters:
+            branches:
+              only:
+                - CT-3082
