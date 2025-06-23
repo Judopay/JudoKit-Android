@@ -40,6 +40,7 @@ import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_CANADA
 import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_CHINA
 import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_INDIA
 import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_US
+import com.judopay.judokit.android.ui.common.heightWithInsetsAndMargins
 
 internal typealias BillingDetailsFormValidationStatus = (model: BillingDetailsInputModel, isValid: Boolean) -> Unit
 internal typealias BillingDetailsSubmitButtonClickListener = () -> Unit
@@ -122,6 +123,13 @@ class BillingDetailsFormView
             setupMobileNumberFormatter()
             setupCountrySpinner()
             setupStateSpinner()
+
+            binding.billingDetailsBottomAppBar.post {
+                val additionalSpacing = resources.getDimension(R.dimen.space_94).toInt()
+                val params = binding.billingDetailsContainerLayout.layoutParams as MarginLayoutParams
+                params.bottomMargin = binding.billingDetailsBottomAppBar.heightWithInsetsAndMargins + additionalSpacing
+                binding.billingDetailsContainerLayout.layoutParams = params
+            }
         }
 
         override fun onViewWillAppear() {

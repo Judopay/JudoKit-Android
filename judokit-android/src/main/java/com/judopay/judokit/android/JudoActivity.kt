@@ -70,17 +70,6 @@ class JudoActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, factory).get(JudoSharedViewModel::class.java)
         viewModel.paymentResult.observe(this) { dispatchPaymentResult(it) }
 
-        // TODO: cleanup iDEAL leftovers
-        viewModel.bankPaymentResult.observe(
-            this,
-        ) {
-            if (config.paymentWidgetType.isPaymentMethodsWidget) {
-                viewModel.paymentMethodsResult.postValue(it)
-            } else {
-                viewModel.paymentResult.postValue(it)
-            }
-        }
-
         if (config.paymentWidgetType.isPaymentMethodsWidget) {
             WindowCompat
                 .getInsetsController(window, window.decorView)

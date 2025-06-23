@@ -6,6 +6,8 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.os.ConfigurationCompat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -107,4 +109,22 @@ internal fun isInternetAvailable(context: Context): Boolean {
         }
     }
     return result
+}
+
+/**
+ * Calculates the total height of a View including its padding and margins.
+ * This includes:
+ * - The base height of the view
+ * - Internal padding (top + bottom)
+ * - Margin values (top + bottom)
+ */
+val View.heightWithInsetsAndMargins: Int
+    get() {
+        val internalPadding = paddingTop + paddingBottom
+        return height + internalPadding + calculateVerticalMargins()
+    }
+
+private fun View.calculateVerticalMargins(): Int {
+    val params = layoutParams as? ViewGroup.MarginLayoutParams
+    return (params?.topMargin ?: 0) + (params?.bottomMargin ?: 0)
 }

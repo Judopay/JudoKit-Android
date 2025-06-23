@@ -11,15 +11,12 @@
         style="@style/Widget.MaterialComponents.AppBarLayout.Surface"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_24"
-        android:layout_marginBottom="@dimen/space_24"
-        app:liftOnScroll="true">
+        android:layout_marginTop="@dimen/space_16"
+        app:elevation="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:layout_marginTop="@dimen/negative_space_4"
-            android:layout_marginBottom="@dimen/space_4"
+            android:layout_height="match_parent"
             android:background="@color/white"
             android:clipToPadding="true">
 
@@ -41,11 +38,11 @@
         android:id="@+id/cardEntryViewAnimator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_24"
         android:clipToPadding="false"
         android:inAnimation="@anim/fade_in"
         android:measureAllChildren="false"
         android:outAnimation="@anim/fade_out"
+        android:layout_marginTop="@dimen/space_16"
         android:fitsSystemWindows="true">
 
         <com.judopay.judokit.android.ui.cardentry.components.CardEntryFormView

@@ -81,7 +81,7 @@ class PaymentMethodsFragment : Fragment() {
         binding.headerView.fromEditMode = true
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { view, insets ->
-            view.updatePadding(bottom = insets.systemWindowInsets.bottom + 48)
+            view.updatePadding(bottom = insets.systemWindowInsets.bottom + resources.getDimension(R.dimen.space_48).toInt())
             insets
         }
 

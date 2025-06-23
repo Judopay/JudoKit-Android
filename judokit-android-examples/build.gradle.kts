@@ -23,6 +23,7 @@ dependencies {
     implementation(libs.kotlin.reflect)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.android.material)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.preference.ktx)
     implementation(libs.chucker)

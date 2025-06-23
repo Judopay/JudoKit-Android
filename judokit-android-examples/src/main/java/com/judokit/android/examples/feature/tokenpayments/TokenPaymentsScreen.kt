@@ -12,17 +12,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -61,13 +59,7 @@ fun TokenPaymentsScreen(
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.feature_title_token_payments)) },
-                navigationIcon = { IconButton(onClick = { onClose() }) { Icon(Icons.Filled.ArrowBack, "") } },
-                colors =
-                    topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                    ),
+                navigationIcon = { IconButton(onClick = { onClose() }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "") } },
             )
         },
     ) { paddingValues ->
@@ -77,6 +69,7 @@ fun TokenPaymentsScreen(
                 Modifier
                     .verticalScroll(rememberScrollState())
                     .padding(paddingValues)
+                    .padding(16.dp)
                     .fillMaxWidth(),
         ) {
             Spacer(Modifier.height(16.dp))

@@ -65,7 +65,6 @@ class JudoSharedViewModel(
     // used to share a card payment result between fragments (card input / payment methods)
     val paymentResult = MutableLiveData<JudoPaymentResult>()
 
-    val bankPaymentResult = MutableLiveData<JudoPaymentResult>()
     val paymentMethodsResult = MutableLiveData<JudoPaymentResult>()
 
     // used to pass security code and/or cardholder name from card entry to payment methods screen

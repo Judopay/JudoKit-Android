@@ -11,6 +11,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
 import android.view.WindowManager
 import android.view.autofill.AutofillManager
 import androidx.annotation.StyleRes
@@ -36,6 +37,7 @@ import com.judopay.judokit.android.model.isCardPaymentWidget
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
 import com.judopay.judokit.android.service.CardTransactionManager
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
+import com.judopay.judokit.android.ui.common.heightWithInsetsAndMargins
 import com.judopay.judokit.android.ui.common.parcelable
 import com.judopay.judokit.android.ui.paymentmethods.CARD_ENTRY_OPTIONS
 
@@ -79,6 +81,44 @@ class JudoBottomSheetDialog(
         }
 
         super.onAttachedToWindow()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setOnShowListener {
+            val bottomSheet = findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            val behavior = BottomSheetBehavior.from(bottomSheet!!)
+
+            behavior.addBottomSheetCallback(
+                object : BottomSheetBehavior.BottomSheetCallback() {
+                    var keyboardDismissed = false
+
+                    override fun onSlide(
+                        bottomSheet: View,
+                        slideOffset: Float,
+                    ) {
+                        if (slideOffset < 0 && !keyboardDismissed) {
+                            bottomSheet.dismissKeyboard()
+                            keyboardDismissed = true
+                        }
+                    }
+
+                    override fun onStateChanged(
+                        bottomSheet: View,
+                        newState: Int,
+                    ) {
+                        if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                            keyboardDismissed = false
+                        }
+                        if (newState == BottomSheetBehavior.STATE_COLLAPSED ||
+                            newState == BottomSheetBehavior.STATE_HIDDEN
+                        ) {
+                            bottomSheet.dismissKeyboard()
+                        }
+                    }
+                },
+            )
+        }
     }
 }
 
@@ -179,6 +219,14 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         val transition = LayoutTransition()
         transition.setAnimateParentHierarchy(false)
         binding.bottomSheetContainer.layoutTransition = transition
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            binding.cardEntryToolbar.post {
+                val params = binding.cardEntryViewAnimator.layoutParams as MarginLayoutParams
+                params.topMargin = binding.cardEntryToolbar.heightWithInsetsAndMargins
+                binding.cardEntryViewAnimator.layoutParams = params
+            }
+        }
     }
 
     override fun onStart() {
