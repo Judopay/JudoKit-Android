@@ -349,13 +349,6 @@ jobs:
     steps:
       - prepare_instrumented_tests
       - run:
-          name: Export environment variables
-          command: |
-            export BROWSERSTACK_USERNAME=${BROWSERSTACK_USERNAME} \
-            export BROWSERSTACK_ACCESS_KEY=${BROWSERSTACK_ACCESS_KEY} \
-            echo "USERNAME: $BROWSERSTACK_USERNAME" \
-            echo "ACCESS_KEY: $BROWSERSTACK_ACCESS_KEY" | sed 's/./*/g'
-      - run:
           name: Upload app APK to BrowserStack
           command: |
             APP_UPLOAD_RESPONSE=$(curl -s -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
