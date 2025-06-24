@@ -351,9 +351,23 @@ jobs:
       - run:
           name: Upload app APK to BrowserStack
           command: |
+            APP_PATH="./judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk"
+            TEST_PATH="./judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk"
+
+            # Check file existence
+            if [ ! -f "$APP_PATH" ]; then
+              echo "❌ App APK not found at $APP_PATH"
+              exit 1
+            fi
+
+            if [ ! -f "$TEST_PATH" ]; then
+              echo "❌ Test APK not found at $TEST_PATH"
+              exit 1
+            fi
+
             APP_UPLOAD_RESPONSE=$(curl -s -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
               -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/app" \
-              -F "file=@./judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk")
+              -F "file=@$APP_PATH")
             APP_URL=$(echo "$APP_UPLOAD_RESPONSE" | jq -r '.app_url')
             echo "Test APK Upload Response: $TEST_UPLOAD_RESPONSE"
             echo "export APP_URL=$APP_URL" >> $BASH_ENV
@@ -362,7 +376,7 @@ jobs:
           command: |
             TEST_UPLOAD_RESPONSE=$(curl -s -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
               -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/test-suite" \
-              -F "file=@./judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk")
+              -F "file=@$TEST_PATH")
             TEST_URL=$(echo "$TEST_UPLOAD_RESPONSE" | jq -r '.test_url')
             echo "Test APK Upload Response: $TEST_UPLOAD_RESPONSE"
             echo "export TEST_URL=$TEST_URL" >> $BASH_ENV
