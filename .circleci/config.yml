@@ -349,19 +349,10 @@ jobs:
     steps:
       - prepare_instrumented_tests
       - run:
-          name: Debug BrowserStack credentials
+          name: List APKs before upload
           command: |
-            if [ -z "$BROWSERSTACK_USERNAME" ]; then
-              echo "❌ BROWSERSTACK_USERNAME is not set"
-            else
-              echo "✅ BROWSERSTACK_USERNAME is set: $BROWSERSTACK_USERNAME"
-            fi
-
-            if [ -z "$BROWSERSTACK_ACCESS_KEY" ]; then
-              echo "❌ BROWSERSTACK_ACCESS_KEY is not set"
-            else
-              echo "✅ BROWSERSTACK_ACCESS_KEY is set and length is ${#BROWSERSTACK_ACCESS_KEY}"
-            fi
+            echo "PWD: $(pwd)"
+            find . -type f | grep '\.apk' || echo "⚠️ No APKs found!"
       - run:
           name: Upload app APK to BrowserStack
           command: |
