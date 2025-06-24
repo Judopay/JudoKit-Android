@@ -352,25 +352,6 @@ jobs:
           name: Upload app APK to BrowserStack
           command: |
             APP_PATH="./judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk"
-            TEST_PATH="./judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk"
-
-            # Check file existence
-            if [ ! -f "$APP_PATH" ]; then
-              echo "❌ App APK not found at $APP_PATH"
-              exit 1
-            fi
-
-            if [ ! -f "$TEST_PATH" ]; then
-              echo "❌ Test APK not found at $TEST_PATH"
-              exit 1
-            fi
-
-            ls -lh "$TEST_PATH"
-            file "$TEST_PATH"
-
-            ls -lh "$APP_PATH"
-            file "$APP_PATH"
-
             APP_UPLOAD_RESPONSE=$(curl -v -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
               -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/app" \
               -F "file=@$APP_PATH")
@@ -380,6 +361,7 @@ jobs:
       - run:
           name: Upload test APK to BrowserStack
           command: |
+            TEST_PATH="./judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk"
             ABS_TEST_PATH="$(realpath "$TEST_PATH")"
             echo "Resolved absolute test APK path: $ABS_TEST_PATH"
 
