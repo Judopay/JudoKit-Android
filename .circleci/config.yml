@@ -349,16 +349,11 @@ jobs:
     steps:
       - prepare_instrumented_tests
       - run:
-          name: List APKs before upload
-          command: |
-            echo "PWD: $(pwd)"
-            find . -type f | grep '\.apk' || echo "⚠️ No APKs found!"
-      - run:
           name: Upload app APK to BrowserStack
           command: |
             APP_UPLOAD_RESPONSE=$(curl -s -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
               -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/app" \
-              -F "file=@judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk")
+              -F "file=@./judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk")
             APP_URL=$(echo "$APP_UPLOAD_RESPONSE" | jq -r '.app_url')
 
             echo "export APP_URL=$APP_URL" >> $BASH_ENV
@@ -367,7 +362,7 @@ jobs:
           command: |
             TEST_UPLOAD_RESPONSE=$(curl -s -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
               -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/test-suite" \
-              -F "file=@judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk")
+              -F "file=@./judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk")
             TEST_URL=$(echo "$TEST_UPLOAD_RESPONSE" | jq -r '.test_url')
 
             echo "export TEST_URL=$TEST_URL" >> $BASH_ENV
