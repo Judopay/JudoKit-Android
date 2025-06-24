@@ -355,7 +355,7 @@ jobs:
               -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/app" \
               -F "file=@./judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk")
             APP_URL=$(echo "$APP_UPLOAD_RESPONSE" | jq -r '.app_url')
-
+            echo "Test APK Upload Response: $TEST_UPLOAD_RESPONSE"
             echo "export APP_URL=$APP_URL" >> $BASH_ENV
       - run:
           name: Upload test APK to BrowserStack
@@ -364,7 +364,7 @@ jobs:
               -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/test-suite" \
               -F "file=@./judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk")
             TEST_URL=$(echo "$TEST_UPLOAD_RESPONSE" | jq -r '.test_url')
-
+            echo "Test APK Upload Response: $TEST_UPLOAD_RESPONSE"
             echo "export TEST_URL=$TEST_URL" >> $BASH_ENV
       - run:
           name: Trigger Espresso Test Run
@@ -379,6 +379,8 @@ jobs:
                 "testSuite": "'"$TEST_URL"'",
                 "devices": ["Google Pixel 6-12.0"]
               }')
+
+            echo "Trigger Espresso Test Run Response: $TRIGGER_RESPONSE"
 
             BUILD_ID=$(echo "$TRIGGER_RESPONSE" | jq -r '.build_id')
 
