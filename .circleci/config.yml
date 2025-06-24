@@ -373,7 +373,7 @@ jobs:
             TEST_UPLOAD_RESPONSE=$(curl -v -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
               -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/test-suite" \
               -F file="@$ABS_TEST_PATH")
-            TEST_URL=$(echo "$TEST_UPLOAD_RESPONSE" | jq -r '.test_url')
+            TEST_URL=$(echo "$TEST_UPLOAD_RESPONSE" | jq -r '.test_suite_url')
             echo "Test APK Upload Response: $TEST_UPLOAD_RESPONSE"
             echo "export TEST_URL=$TEST_URL" >> $BASH_ENV
       - run:
