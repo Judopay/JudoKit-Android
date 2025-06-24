@@ -352,112 +352,83 @@ jobs:
           name: Export environment variables
           command: |
             export BROWSERSTACK_USERNAME=${BROWSERSTACK_USERNAME} \
-            export BROWSERSTACK_ACCESS_KEY=${BROWSERSTACK_ACCESS_KEY} \
-            export APP_APK_PATH=judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk \
-            export TEST_APK_PATH=judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk \
-            export BS_UPLOAD_APP_URL="https://api-cloud.browserstack.com/app-automate/espresso/v2/app" \
-            export BS_UPLOAD_TEST_SUITE_URL="https://api-cloud.browserstack.com/app-automate/espresso/v2/test-suite" \
-            export BS_BUILD_API_URL="https://api-cloud.browserstack.com/app-automate/espresso/v2/build" \
-            export BS_BUILD_STATUS_URL_PREFIX="https://api-cloud.browserstack.com/app-automate/espresso/v2/builds" \
-            export BS_DASHBOARD_URL_PREFIX="https://app-automate.browserstack.com/dashboard/v2/builds"
+            export BROWSERSTACK_ACCESS_KEY=${BROWSERSTACK_ACCESS_KEY}
       - run:
-          name: Upload App APK to BrowserStack (via curl)
+          name: Upload app APK to BrowserStack
           command: |
-            echo "Uploading app APK from: $APP_APK_PATH"
-            RESPONSE=$(curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
-              -X POST "$BS_UPLOAD_APP_URL" \
-              -F "file=@$APP_APK_PATH" \
-              --output -)
-            
-            if echo "$RESPONSE" | jq -e '.app_url' >/dev/null; then
-              export BS_APP_URL=$(echo "$RESPONSE" | jq -r '.app_url')
-              echo "export BS_APP_URL=$BS_APP_URL" >> $BASH_ENV
-              echo "Uploaded App URL: $BS_APP_URL"
-            else
-              echo "Error uploading app APK. Response: $RESPONSE"
-              exit 1
-            fi
+            APP_UPLOAD_RESPONSE=$(curl -s -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+              -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/app" \
+              -F "file=@judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk")
+            APP_URL=$(echo "$APP_UPLOAD_RESPONSE" | jq -r '.app_url')
+
+            echo "export APP_URL=$APP_URL" >> $BASH_ENV
 
       - run:
-          name: Upload Test APK to BrowserStack (via curl)
+          name: Upload test APK to BrowserStack
           command: |
-            echo "Uploading test APK from: $TEST_APK_PATH"
-            RESPONSE=$(curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
-              -X POST "$BS_UPLOAD_TEST_SUITE_URL" \
-              -F "file=@$TEST_APK_PATH" \
-              --output -)
-            
-            if echo "$RESPONSE" | jq -e '.test_suite_url' >/dev/null; then
-              export BS_TEST_URL=$(echo "$RESPONSE" | jq -r '.test_suite_url')
-              echo "export BS_TEST_URL=$BS_TEST_URL" >> $BASH_ENV
-              echo "Uploaded Test Suite URL: $BS_TEST_URL"
-            else
-              echo "Error uploading test APK. Response: $RESPONSE"
-              exit 1
-            fi
+            TEST_UPLOAD_RESPONSE=$(curl -s -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+              -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/test-suite" \
+              -F "file=@judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk")
+            TEST_URL=$(echo "$TEST_UPLOAD_RESPONSE" | jq -r '.test_url')
+
+            echo "export TEST_URL=$TEST_URL" >> $BASH_ENV
 
       - run:
-          name: Run Espresso Tests on BrowserStack (via curl)
+          name: Trigger Espresso Test Run
           command: |
-            echo "Initiating test run on BrowserStack..."
-            BUILD_PAYLOAD='{
-              "devices": ["Google Pixel 9-15.0"],
-              "app": "'"$BS_APP_URL"'",
-              "testSuite": "'"$BS_TEST_URL"'",
-              "project": "JudoKit-Android Espresso Tests",
-              "build": "JudoKit-Android Espresso Tests #$CIRCLE_BUILD_NUM"
-            }'
+            source $BASH_ENV
 
-            RESPONSE=$(curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
-              -X POST "$BS_BUILD_API_URL" \
-              -d "$BUILD_PAYLOAD" \
+            TRIGGER_RESPONSE=$(curl -s -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+              -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/build" \
               -H "Content-Type: application/json" \
-              --output -)
-            
-            # Check if build initiation was successful and parse build_id
-            if echo "$RESPONSE" | jq -e '.build_id' >/dev/null; then
-              export BS_BUILD_ID=$(echo "$RESPONSE" | jq -r '.build_id')
-              echo "export BS_BUILD_ID=$BS_BUILD_ID" >> $BASH_ENV
-              echo "BrowserStack Build ID: $BS_BUILD_ID"
-            else
-              echo "Error initiating BrowserStack build. Response: $RESPONSE"
+              -d '{
+                "app": "'"$APP_URL"'",
+                "testSuite": "'"$TEST_URL"'",
+                "devices": ["Google Pixel 6-12.0"]
+              }')
+
+            BUILD_ID=$(echo "$TRIGGER_RESPONSE" | jq -r '.build_id')
+
+            if [[ "$BUILD_ID" == "null" ]]; then
+              echo "Failed to trigger tests: $TRIGGER_RESPONSE"
               exit 1
             fi
 
+            echo "Triggered BrowserStack build: $BUILD_ID"
+            echo "export BUILD_ID=$BUILD_ID" >> $BASH_ENV
+
       - run:
-          name: Wait for BrowserStack Tests to Complete
+          name: Poll for test result
           command: |
-            echo "Waiting for tests to complete on BrowserStack (Build ID: $BS_BUILD_ID)..."
-            STATUS="running"
-            MAX_WAIT_SECONDS=1800 # 30 minutes timeout
-            START_TIME=$(date +%s)
-            
-            while [ "$STATUS" == "running" ] || [ "$STATUS" == "queued" ]; do
-              CURRENT_TIME=$(date +%s)
-              ELAPSED_TIME=$((CURRENT_TIME - START_TIME))
-              
-              if [ "$ELAPSED_TIME" -ge "$MAX_WAIT_SECONDS" ]; then
-                echo "BrowserStack tests timed out after $MAX_WAIT_SECONDS seconds."
-                exit 1
-              fi
+            source $BASH_ENV
 
-              sleep 15
-
+            echo "Polling for build status..."
+            for i in {1..30}; do
               STATUS_RESPONSE=$(curl -s -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
-                "$BS_BUILD_STATUS_URL_PREFIX}/$BS_BUILD_ID")
-              
+                "https://api-cloud.browserstack.com/app-automate/espresso/v2/builds/$BUILD_ID")
+
               STATUS=$(echo "$STATUS_RESPONSE" | jq -r '.status')
-              echo "Current BrowserStack status: $STATUS"
+              if [[ "$STATUS" == "done" ]]; then
+                echo "Build completed."
+                FAILED_COUNT=$(echo "$STATUS_RESPONSE" | jq -r '.test_cases.failed')
+                if [[ "$FAILED_COUNT" -gt 0 ]]; then
+                  echo "Some tests failed: $FAILED_COUNT failed."
+                  exit 1
+                else
+                  echo "All tests passed!"
+                  exit 0
+                fi
+              elif [[ "$STATUS" == "failed" ]]; then
+                echo "Test build failed to run."
+                exit 1
+              else
+                echo "Status: $STATUS (waiting...)"
+                sleep 10
+              fi
             done
 
-            echo "BrowserStack tests finished with status: $STATUS"
-            echo "View results: $BS_DASHBOARD_URL_PREFIX}/$BS_BUILD_ID"
-
-            # Exit with a non-zero code if tests failed
-            if [ "$STATUS" != "passed" ]; then
-              echo "BrowserStack tests did not pass. Status: $STATUS"
-              exit 1
-            fi
+            echo "Timed out waiting for test results."
+            exit 1
 
 workflows:
   version: 2
