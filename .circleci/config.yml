@@ -365,7 +365,13 @@ jobs:
               exit 1
             fi
 
-            APP_UPLOAD_RESPONSE=$(curl -s -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+            ls -lh "$TEST_PATH"
+            file "$TEST_PATH"
+
+            ls -lh "$APP_PATH"
+            file "$APP_PATH"
+
+            APP_UPLOAD_RESPONSE=$(curl -v -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
               -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/app" \
               -F "file=@$APP_PATH")
             APP_URL=$(echo "$APP_UPLOAD_RESPONSE" | jq -r '.app_url')
@@ -374,7 +380,7 @@ jobs:
       - run:
           name: Upload test APK to BrowserStack
           command: |
-            TEST_UPLOAD_RESPONSE=$(curl -s -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+            TEST_UPLOAD_RESPONSE=$(curl -v -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
               -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/test-suite" \
               -F "file=@$TEST_PATH")
             TEST_URL=$(echo "$TEST_UPLOAD_RESPONSE" | jq -r '.test_url')
@@ -385,7 +391,7 @@ jobs:
           command: |
             source $BASH_ENV
 
-            TRIGGER_RESPONSE=$(curl -s -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+            TRIGGER_RESPONSE=$(curl -v -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
               -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/build" \
               -H "Content-Type: application/json" \
               -d '{
