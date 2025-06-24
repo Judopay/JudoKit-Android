@@ -381,6 +381,9 @@ jobs:
           command: |
             source $BASH_ENV
 
+            echo "Using TEST_URL: $TEST_URL"
+            echo "Using APP_URL: $APP_URL"
+
             TRIGGER_RESPONSE=$(curl -v -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
               -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/build" \
               -H "Content-Type: application/json" \
