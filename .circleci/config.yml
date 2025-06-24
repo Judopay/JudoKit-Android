@@ -352,7 +352,9 @@ jobs:
           name: Export environment variables
           command: |
             export BROWSERSTACK_USERNAME=${BROWSERSTACK_USERNAME} \
-            export BROWSERSTACK_ACCESS_KEY=${BROWSERSTACK_ACCESS_KEY}
+            export BROWSERSTACK_ACCESS_KEY=${BROWSERSTACK_ACCESS_KEY} \
+            echo "USERNAME: $BROWSERSTACK_USERNAME" \
+            echo "ACCESS_KEY: $BROWSERSTACK_ACCESS_KEY" | sed 's/./*/g'
       - run:
           name: Upload app APK to BrowserStack
           command: |
@@ -362,7 +364,6 @@ jobs:
             APP_URL=$(echo "$APP_UPLOAD_RESPONSE" | jq -r '.app_url')
 
             echo "export APP_URL=$APP_URL" >> $BASH_ENV
-
       - run:
           name: Upload test APK to BrowserStack
           command: |
@@ -372,7 +373,6 @@ jobs:
             TEST_URL=$(echo "$TEST_UPLOAD_RESPONSE" | jq -r '.test_url')
 
             echo "export TEST_URL=$TEST_URL" >> $BASH_ENV
-
       - run:
           name: Trigger Espresso Test Run
           command: |
@@ -396,7 +396,6 @@ jobs:
 
             echo "Triggered BrowserStack build: $BUILD_ID"
             echo "export BUILD_ID=$BUILD_ID" >> $BASH_ENV
-
       - run:
           name: Poll for test result
           command: |
