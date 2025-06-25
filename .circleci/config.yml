@@ -383,7 +383,7 @@ jobs:
               -d '{
                 "app": "'"$APP_URL"'",
                 "testSuite": "'"$TEST_URL"'",
-                "devices": ["Google Pixel 9-16.0", "Pixel 9 Pro-15.0", "Galaxy S21-11.0", "OnePlus 8-10.0"],
+                "devices": ["Pixel 9 Pro-15.0", "Galaxy S21-11.0", "OnePlus 8-10.0", "Pixel 3-9.0", "Galaxy S9-8.0", "Galaxy S8-7.0"],
                 "project" : "JudoKit-Android UI Tests",
                 "buildTag": "JudoKit-Android",
                 "annotation": ["com.judokit.android.examples.test.card.annotations.SmokeTest"]
