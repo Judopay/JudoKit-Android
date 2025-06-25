@@ -65,6 +65,7 @@ import com.judokit.android.examples.test.card.FeaturesList.REGISTER_CARD_LABEL
 import com.judokit.android.examples.test.card.FeaturesList.TOKEN_PAYMENTS_LABEL
 import com.judokit.android.examples.test.card.Other.CANCELLED_PAYMENT_TOAST
 import com.judokit.android.examples.test.card.Other.CANCEL_BUTTON
+import com.judokit.android.examples.test.card.annotations.SmokeTest
 import com.judopay.judokit.android.R
 import org.hamcrest.Matchers.allOf
 import org.junit.After
@@ -151,6 +152,7 @@ class CardPaymentTest {
     }
 
     @Test
+    @SmokeTest
     fun testSuccessfulTransaction() {
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -312,6 +314,7 @@ class CardPaymentTest {
     }
 
     @Test
+    @SmokeTest
     fun testSuccessfulTokenPayment() {
         onView(withId(R.id.recyclerView))
             .perform(swipeUp())
@@ -483,6 +486,7 @@ class CardPaymentTest {
     }
 
     @Test
+    @SmokeTest
     fun testSuccessfulPaymentMethodsCardPayment() {
         sharedPrefs
             .edit()
@@ -652,6 +656,7 @@ class CardPaymentTest {
     }
 
     @Test
+    @SmokeTest
     fun testSuccessfulPaymentWithBillingDetails() {
         toggleBillingInfoSetting(true)
 

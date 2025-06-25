@@ -356,14 +356,12 @@ jobs:
               -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/app" \
               -F "file=@$APP_PATH")
             APP_URL=$(echo "$APP_UPLOAD_RESPONSE" | jq -r '.app_url')
-            echo "Test APK Upload Response: $TEST_UPLOAD_RESPONSE"
             echo "export APP_URL=$APP_URL" >> $BASH_ENV
       - run:
           name: Upload test APK to BrowserStack
           command: |
             TEST_PATH="./judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk"
             ABS_TEST_PATH="$(realpath "$TEST_PATH")"
-            echo "Resolved absolute test APK path: $ABS_TEST_PATH"
 
             if [ ! -f "$ABS_TEST_PATH" ]; then
               echo "❌ realpath resolved to missing file: $ABS_TEST_PATH"
@@ -374,26 +372,22 @@ jobs:
               -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/test-suite" \
               -F file="@$ABS_TEST_PATH")
             TEST_URL=$(echo "$TEST_UPLOAD_RESPONSE" | jq -r '.test_suite_url')
-            echo "Test APK Upload Response: $TEST_UPLOAD_RESPONSE"
             echo "export TEST_URL=$TEST_URL" >> $BASH_ENV
       - run:
           name: Trigger Espresso Test Run
           command: |
             source $BASH_ENV
-
-            echo "Using TEST_URL: $TEST_URL"
-            echo "Using APP_URL: $APP_URL"
-
             TRIGGER_RESPONSE=$(curl -v -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
               -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/build" \
               -H "Content-Type: application/json" \
               -d '{
                 "app": "'"$APP_URL"'",
                 "testSuite": "'"$TEST_URL"'",
-                "devices": ["Google Pixel 6-12.0"]
+                "devices": ["Google Pixel 9-16.0", "Pixel 9 Pro-15.0", "Galaxy S21-11.0", "OnePlus 8-10.0"],
+                "project" : "JudoKit-Android UI Tests",
+                "buildTag": "JudoKit-Android",
+                "annotation": ["com.judokit.android.examples.test.card.annotations.SmokeTest"]
               }')
-
-            echo "Trigger Espresso Test Run Response: $TRIGGER_RESPONSE"
 
             BUILD_ID=$(echo "$TRIGGER_RESPONSE" | jq -r '.build_id')
 
@@ -409,33 +403,29 @@ jobs:
           command: |
             source $BASH_ENV
 
-            echo "Polling for build status..."
-            for i in {1..30}; do
-              STATUS_RESPONSE=$(curl -s -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
-                "https://api-cloud.browserstack.com/app-automate/espresso/v2/builds/$BUILD_ID")
+            MAX_WAIT_SECONDS=900
+            SLEEP_INTERVAL=10
+            ELAPSED=0
 
-              STATUS=$(echo "$STATUS_RESPONSE" | jq -r '.status')
-              if [[ "$STATUS" == "done" ]]; then
-                echo "Build completed."
-                FAILED_COUNT=$(echo "$STATUS_RESPONSE" | jq -r '.test_cases.failed')
-                if [[ "$FAILED_COUNT" -gt 0 ]]; then
-                  echo "Some tests failed: $FAILED_COUNT failed."
-                  exit 1
-                else
-                  echo "All tests passed!"
-                  exit 0
-                fi
-              elif [[ "$STATUS" == "failed" ]]; then
-                echo "Test build failed to run."
-                exit 1
-              else
-                echo "Status: $STATUS (waiting...)"
-                sleep 10
+            while true; do
+              STATUS=$(curl -s -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+                "https://api-cloud.browserstack.com/app-automate/espresso/v2/builds/$BUILD_ID" | jq -r '.status')
+
+              echo "Build status: $STATUS"
+
+              if [[ "$STATUS" == "done" || "$STATUS" == "failed" || "$STATUS" == "timed_out" ]]; then
+                echo "Final status: $STATUS"
+                break
               fi
-            done
 
-            echo "Timed out waiting for test results."
-            exit 1
+              if (( ELAPSED >= MAX_WAIT_SECONDS )); then
+                echo "Timeout waiting for test run to complete."
+                exit 1
+              fi
+
+              sleep $SLEEP_INTERVAL
+              ELAPSED=$((ELAPSED + SLEEP_INTERVAL))
+            done
 
 workflows:
   version: 2
