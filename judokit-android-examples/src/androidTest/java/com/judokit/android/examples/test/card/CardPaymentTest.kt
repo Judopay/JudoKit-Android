@@ -314,7 +314,6 @@ class CardPaymentTest {
     }
 
     @Test
-    @SmokeTest
     fun testSuccessfulTokenPayment() {
         onView(withId(R.id.recyclerView))
             .perform(swipeUp())
@@ -486,7 +485,6 @@ class CardPaymentTest {
     }
 
     @Test
-    @SmokeTest
     fun testSuccessfulPaymentMethodsCardPayment() {
         sharedPrefs
             .edit()
@@ -656,7 +654,6 @@ class CardPaymentTest {
     }
 
     @Test
-    @SmokeTest
     fun testSuccessfulPaymentWithBillingDetails() {
         toggleBillingInfoSetting(true)
 

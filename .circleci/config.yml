@@ -364,7 +364,7 @@ jobs:
             ABS_TEST_PATH="$(realpath "$TEST_PATH")"
 
             if [ ! -f "$ABS_TEST_PATH" ]; then
-              echo "❌ realpath resolved to missing file: $ABS_TEST_PATH"
+              echo "Realpath resolved to missing file: $ABS_TEST_PATH"
               exit 1
             fi
 
