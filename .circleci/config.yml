@@ -10,7 +10,7 @@ commands:
     parameters:
       event:
         type: enum
-        enum: [pass, error, fail]
+        enum: [pass, error,]
       message_text:
         type: string
     steps:
@@ -139,11 +139,11 @@ jobs:
       - notify_slack_summary:
           event: pass
           message_text: >
-            :white_tick: *Android :android: regression tests passed successfully!*  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+            :white_tick: *Android :android: regression tests passed successfully!*  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
       - notify_slack_summary:
           event: fail
           message_text: >
-            :x: *Android :android: regression tests failed. Please investigate :eyes: *  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+            :x: *Android :android: regression tests failed. Please investigate :eyes: *  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
 
   instrumented_test_sample_weekly_api_31:
     <<: *android-docker-executor
@@ -166,11 +166,11 @@ jobs:
       - notify_slack_summary:
           event: pass
           message_text: >
-            :white_tick: *Android :android: backward compatibility (API 31/Android 12) tests passed successfully!*  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+            :white_tick: *Android :android: backward compatibility (API 31/Android 12) tests passed successfully!*  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
       - notify_slack_summary:
           event: fail
           message_text: >
-            :x: *Android :android: backward compatibility (API 31/Android 12) tests failed - please investigate :eyes: *  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+            :x: *Android :android: backward compatibility (API 31/Android 12) tests failed - please investigate :eyes: *  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
 
   instrumented_test_sample_weekly_api_32:
     <<: *android-docker-executor
@@ -193,11 +193,11 @@ jobs:
       - notify_slack_summary:
           event: pass
           message_text: >
-            :white_tick: *Android :android: backward compatibility (API 32/Android 12) tests passed successfully!*  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+            :white_tick: *Android :android: backward compatibility (API 32/Android 12) tests passed successfully!*  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
       - notify_slack_summary:
           event: fail
           message_text: >
-            :x: *Android :android: backward compatibility (API 32/Android 12) tests failed - please investigate :eyes: *  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+            :x: *Android :android: backward compatibility (API 32/Android 12) tests failed - please investigate :eyes: *  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
 
   instrumented_test_sample_weekly_api_33:
     <<: *android-docker-executor
@@ -220,11 +220,11 @@ jobs:
       - notify_slack_summary:
           event: pass
           message_text: >
-            :white_tick: *Android :android: backward compatibility (API 33/Android 13) tests passed successfully!*  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+            :white_tick: *Android :android: backward compatibility (API 33/Android 13) tests passed successfully!*  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
       - notify_slack_summary:
           event: fail
           message_text: >
-            :x: *Android :android: backward compatibility (API 33/Android 13) tests failed - please investigate :eyes: *  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+            :x: *Android :android: backward compatibility (API 33/Android 13) tests failed - please investigate :eyes: *  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
 
   report_to_jira:
     docker:
@@ -300,11 +300,11 @@ jobs:
       - notify_slack_summary:
           event: pass
           message_text: >
-            :white_tick: *Android :android: smoke tests successfully started on :browserstack: BrowserStack!*  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://app-automate.browserstack.com/dashboard/v2/builds/$BUILD_ID | :browserstack: Browserstack build>*
+            :white_tick: *Android :android: smoke tests successfully started on :browserstack: BrowserStack!*  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://app-automate.browserstack.com/dashboard/v2/builds/$BUILD_ID | :browserstack: Browserstack build>*
       - notify_slack_summary:
           event: fail
           message_text: >
-            :x: *Android :android: smoke tests failed to start on :browserstack: BrowserStack - please investigate :eyes: *  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://app-automate.browserstack.com/dashboard/v2/builds/$BUILD_ID | :browserstack: Browserstack build>*
+            :x: *Android :android: smoke tests failed to start on :browserstack: BrowserStack - please investigate :eyes: *  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://app-automate.browserstack.com/dashboard/v2/builds/$BUILD_ID | :browserstack: Browserstack build>*
 
 workflows:
   version: 2
