@@ -6,153 +6,28 @@ orbs:
   ruby: circleci/ruby@2.1.0
 
 commands:
-  notify_slack_error:
+  notify_slack_summary:
+    parameters:
+      event:
+        type: enum
+        enum: [pass, error]
+      message_text:
+        type: string
     steps:
       - slack/notify:
-          event: fail
+          event: << parameters.event >>
           custom: |
             {
               "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "CircleCI ran the :android: Android E2E mobile tests but they *failed*, here are the results: \n *<$CIRCLE_BUILD_URL | :circleci: Open build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
-                  }
+                { "type": "section", "text": { "type": "mrkdwn", "text": "<< parameters.message_text >>" }
                 },
                 {
                   "type": "section",
                   "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Branch:*\n$CIRCLE_BRANCH"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Commit:* \n <https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Author:*\n$CIRCLE_USERNAME"
-                    }
-                  ]
-                }
-              ]
-            }
-
-  notify_slack_pass:
-    steps:
-      - slack/notify:
-          event: pass
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "CircleCI has just *successfully* ran the :android: Android E2E mobile tests, here are the results: \n *<$CIRCLE_BUILD_URL | :circleci: Open build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
-                  }
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Branch:*\n$CIRCLE_BRANCH"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Commit:* \n <https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Author:*\n$CIRCLE_USERNAME"
-                    }
-                  ]
-                }
-              ]
-            }
-
-  notify_slack_error_weekly:
-    steps:
-      - slack/notify:
-          event: fail
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "CircleCI ran the :android: Android E2E backward compatibility mobile tests but they *failed*, here are the results: \n *<$CIRCLE_BUILD_URL | :circleci: Open build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
-                  }
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Branch:*\n$CIRCLE_BRANCH"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Commit:* \n <https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Author:*\n$CIRCLE_USERNAME"
-                    }
-                  ]
-                }
-              ]
-            }
-
-  notify_slack_pass_weekly:
-    steps:
-      - slack/notify:
-          event: pass
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "CircleCI has just *successfully* ran the :android: Android E2E backward compatibility mobile tests, here are the results: \n *<$CIRCLE_BUILD_URL | :circleci: Open build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
-                  }
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Branch:*\n$CIRCLE_BRANCH"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Commit:* \n <https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Author:*\n$CIRCLE_USERNAME"
-                    }
+                    { "type": "mrkdwn", "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME" },
+                    { "type": "mrkdwn", "text": "*Branch:*\n$CIRCLE_BRANCH" },
+                    { "type": "mrkdwn", "text": "*Commit:*\n<https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>" },
+                    { "type": "mrkdwn", "text": "*Author:*\n$CIRCLE_USERNAME" }
                   ]
                 }
               ]
@@ -205,7 +80,7 @@ parameters:
   weekly:
     type: boolean
     default: false
-  bs: 
+  browserstack: 
     type: boolean
     default: false
 
@@ -261,8 +136,14 @@ jobs:
               --use-orchestrator \
               --client-details=matrixLabel="Regression E2E" \
               --num-flaky-test-attempts=1
-      - notify_slack_error
-      - notify_slack_pass
+      - notify_slack_summary:
+          event: pass
+          message_text: >
+            :white_tick: *Android :android: regression tests passed successfully!*  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+      - notify_slack_summary:
+          event: fail
+          message_text: >
+            :x: *Android :android: regression tests failed. Please investigate :eyes: *  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
 
   instrumented_test_sample_weekly_api_31:
     <<: *android-docker-executor
@@ -282,8 +163,14 @@ jobs:
               --client-details=matrixLabel="Backward Compat E2E (API 31)" \
               --test-targets="class com.judokit.android.examples.test.card.CardPaymentTest" \
               --num-flaky-test-attempts=1
-      - notify_slack_error_weekly
-      - notify_slack_pass_weekly
+      - notify_slack_summary:
+          event: pass
+          message_text: >
+            :white_tick: *Android :android: backward compatibility (API 31/Android 12) tests passed successfully!*  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+      - notify_slack_summary:
+          event: fail
+          message_text: >
+            :x: *Android :android: backward compatibility (API 31/Android 12) tests failed - please investigate :eyes: *  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
 
   instrumented_test_sample_weekly_api_32:
     <<: *android-docker-executor
@@ -303,8 +190,14 @@ jobs:
               --client-details=matrixLabel="Backward Compat E2E (API 32)" \
               --test-targets="class com.judokit.android.examples.test.card.CardPaymentTest" \
               --num-flaky-test-attempts=1
-      - notify_slack_error_weekly
-      - notify_slack_pass_weekly
+      - notify_slack_summary:
+          event: pass
+          message_text: >
+            :white_tick: *Android :android: backward compatibility (API 32/Android 12) tests passed successfully!*  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+      - notify_slack_summary:
+          event: fail
+          message_text: >
+            :x: *Android :android: backward compatibility (API 32/Android 12) tests failed - please investigate :eyes: *  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
 
   instrumented_test_sample_weekly_api_33:
     <<: *android-docker-executor
@@ -324,8 +217,14 @@ jobs:
               --client-details=matrixLabel="Backward Compat E2E (API 33)" \
               --test-targets="class com.judokit.android.examples.test.card.CardPaymentTest" \
               --num-flaky-test-attempts=1
-      - notify_slack_error_weekly
-      - notify_slack_pass_weekly
+      - notify_slack_summary:
+          event: pass
+          message_text: >
+            :white_tick: *Android :android: backward compatibility (API 33/Android 13) tests passed successfully!*  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+      - notify_slack_summary:
+          event: fail
+          message_text: >
+            :x: *Android :android: backward compatibility (API 33/Android 13) tests failed - please investigate :eyes: *  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
 
   report_to_jira:
     docker:
@@ -398,34 +297,14 @@ jobs:
 
             echo "Triggered BrowserStack build: $BUILD_ID"
             echo "export BUILD_ID=$BUILD_ID" >> $BASH_ENV
-      - run:
-          name: Poll for test result
-          command: |
-            source $BASH_ENV
-
-            MAX_WAIT_SECONDS=900
-            SLEEP_INTERVAL=10
-            ELAPSED=0
-
-            while true; do
-              STATUS=$(curl -s -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
-                "https://api-cloud.browserstack.com/app-automate/espresso/v2/builds/$BUILD_ID" | jq -r '.status')
-
-              echo "Build status: $STATUS"
-
-              if [[ "$STATUS" == "done" || "$STATUS" == "failed" || "$STATUS" == "timed_out" ]]; then
-                echo "Final status: $STATUS"
-                break
-              fi
-
-              if (( ELAPSED >= MAX_WAIT_SECONDS )); then
-                echo "Timeout waiting for test run to complete."
-                exit 1
-              fi
-
-              sleep $SLEEP_INTERVAL
-              ELAPSED=$((ELAPSED + SLEEP_INTERVAL))
-            done
+      - notify_slack_summary:
+          event: pass
+          message_text: >
+            :white_tick: *Android :android: smoke tests successfully started on :browserstack: BrowserStack!*  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://app-automate.browserstack.com/dashboard/v2/builds/$BUILD_ID | :browserstack: Browserstack build>*
+      - notify_slack_summary:
+          event: fail
+          message_text: >
+            :x: *Android :android: smoke tests failed to start on :browserstack: BrowserStack - please investigate :eyes: *  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://app-automate.browserstack.com/dashboard/v2/builds/$BUILD_ID | :browserstack: Browserstack build>*
 
 workflows:
   version: 2
@@ -510,8 +389,8 @@ workflows:
               only:
                 - master
 
-  instrumented_test_bs:
-    when: << pipeline.parameters.bs >>
+  instrumented_test_browserstack:
+    when: << pipeline.parameters.browserstack >>
     jobs:
       - run_espresso_tests_on_browserstack:
           context: shared-secrets
