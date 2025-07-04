@@ -10,7 +10,7 @@ commands:
     parameters:
       event:
         type: enum
-        enum: [pass, error]
+        enum: [pass, error, fail]
       message_text:
         type: string
     steps:
