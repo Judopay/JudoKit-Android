@@ -24,10 +24,10 @@ commands:
                 {
                   "type": "section",
                   "fields": [
-                    { "type": "mrkdwn", "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME" },
-                    { "type": "mrkdwn", "text": "*Branch:*\n$CIRCLE_BRANCH" },
-                    { "type": "mrkdwn", "text": "*Commit:*\n<https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>" },
-                    { "type": "mrkdwn", "text": "*Author:*\n$CIRCLE_USERNAME" }
+                    { "type": "mrkdwn", "text": "*Project:*\\n$CIRCLE_PROJECT_REPONAME" },
+                    { "type": "mrkdwn", "text": "*Branch:*\\n$CIRCLE_BRANCH" },
+                    { "type": "mrkdwn", "text": "*Commit:*\\n<https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>" },
+                    { "type": "mrkdwn", "text": "*Author:*\\n$CIRCLE_USERNAME" }
                   ]
                 }
               ]
