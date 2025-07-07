@@ -33,7 +33,8 @@ internal class ApiHeadersInterceptor(
         val isSaleRequest = path.startsWith(BANK_ENDPOINT)
         val headers = getHeaders(isSaleRequest)
         val request =
-            chain.request()
+            chain
+                .request()
                 .newBuilder()
                 .headers(headers)
                 .build()
@@ -42,7 +43,8 @@ internal class ApiHeadersInterceptor(
     }
 
     private fun getHeaders(isSaleRequest: Boolean) =
-        Headers.Builder()
+        Headers
+            .Builder()
             .addAll(authorization.headers)
             .add(CONTENT_TYPE_HEADER, JSON_MIME_TYPE)
             .add(ACCEPT_HEADER, JSON_MIME_TYPE)

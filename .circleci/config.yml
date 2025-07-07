@@ -1,9 +1,9 @@
 version: 2.1
 
 orbs:
-  android: circleci/android@2.5.0
+  android: circleci/android@3.1.0
   slack: circleci/slack@4.12.5
-  ruby: circleci/ruby@2.1.0
+  ruby: circleci/ruby@2.5.3
 
 commands:
   notify_slack_summary:
@@ -36,14 +36,16 @@ commands:
   checkout_project:
     steps:
       - checkout
+      - ruby/install:
+         version: "$(cat .ruby-version)"
       - ruby/install-deps
-      - android/accept-licenses
-      - android/restore-gradle-cache
-      - android/restore-build-cache
+      - android/accept_licenses
+      - android/restore_gradle_cache
+      - android/restore_build_cache
   persist_project_cache:
     steps:
-      - android/save-build-cache
-      - android/save-gradle-cache
+      - android/save_build_cache
+      - android/save_gradle_cache
   prepare_instrumented_tests:
     steps:
       - checkout_project
@@ -72,9 +74,9 @@ commands:
 aliases:
   android-docker-executor: &android-docker-executor
     executor:
-      name: android/android-docker
-      tag: 2024.01.1
-      resource-class: xlarge
+      name: android/android_docker
+      tag: 2025.04.1
+      resource_class: xlarge
 
 parameters:
   weekly:

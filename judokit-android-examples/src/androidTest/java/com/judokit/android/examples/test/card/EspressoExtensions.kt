@@ -16,13 +16,9 @@ class EspressoExtensions {
          */
         fun searchFor(matcher: Matcher<View>): ViewAction {
             return object : ViewAction {
-                override fun getConstraints(): Matcher<View> {
-                    return isRoot()
-                }
+                override fun getConstraints(): Matcher<View> = isRoot()
 
-                override fun getDescription(): String {
-                    return "Searching for view $matcher in the root view"
-                }
+                override fun getDescription(): String = "Searching for view $matcher in the root view"
 
                 override fun perform(
                     uiController: UiController,
@@ -38,7 +34,8 @@ class EspressoExtensions {
                         }
                     }
 
-                    throw NoMatchingViewException.Builder()
+                    throw NoMatchingViewException
+                        .Builder()
                         .withRootView(view)
                         .withViewMatcher(matcher)
                         .build()

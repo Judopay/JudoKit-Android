@@ -113,8 +113,7 @@ class CardPaymentTest {
                 putString("currency", "GBP")
                 putBoolean("should_ask_for_csc", false)
                 putBoolean("is_recommendation_feature_enabled", false)
-            }
-            .commit()
+            }.commit()
     }
 
     @After
@@ -322,7 +321,8 @@ class CardPaymentTest {
             .perform(scrollTo())
             .perform(click())
 
-        composeTestRule.onNodeWithText("TOKENIZE A NEW CARD")
+        composeTestRule
+            .onNodeWithText("TOKENIZE A NEW CARD")
             .assertIsEnabled()
             .performClick()
 
@@ -340,13 +340,15 @@ class CardPaymentTest {
             .perform(click())
 
         awaitActivityThenRun(TokenPaymentsActivity::class.java.name) {
-            composeTestRule.onNodeWithText("Security code")
+            composeTestRule
+                .onNodeWithText("Security code")
                 .assertIsEnabled()
                 .performTextInput(CARD_SECURITY_CODE)
 
             closeSoftKeyboard()
 
-            composeTestRule.onNodeWithText("PAYMENT")
+            composeTestRule
+                .onNodeWithText("PAYMENT")
                 .assertIsEnabled()
                 .performClick()
         }
@@ -365,7 +367,8 @@ class CardPaymentTest {
             .perform(scrollTo())
             .perform(click())
 
-        composeTestRule.onNodeWithText("TOKENIZE A NEW CARD")
+        composeTestRule
+            .onNodeWithText("TOKENIZE A NEW CARD")
             .assertIsEnabled()
             .performClick()
 
@@ -383,13 +386,15 @@ class CardPaymentTest {
             .perform(click())
 
         awaitActivityThenRun(TokenPaymentsActivity::class.java.name) {
-            composeTestRule.onNodeWithText("Security code")
+            composeTestRule
+                .onNodeWithText("Security code")
                 .assertIsEnabled()
                 .performTextInput(CARD_SECURITY_CODE)
 
             closeSoftKeyboard()
 
-            composeTestRule.onNodeWithText("PRE-AUTH")
+            composeTestRule
+                .onNodeWithText("PRE-AUTH")
                 .assertIsEnabled()
                 .performClick()
         }
@@ -405,8 +410,7 @@ class CardPaymentTest {
             .edit()
             .apply {
                 putString("challengeRequestIndicator", "NO_PREFERENCE")
-            }
-            .commit()
+            }.commit()
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .check(matches(isEnabled()))
@@ -432,8 +436,7 @@ class CardPaymentTest {
             .edit()
             .apply {
                 putString("challengeRequestIndicator", "NO_PREFERENCE")
-            }
-            .commit()
+            }.commit()
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .check(matches(isEnabled()))
@@ -459,8 +462,7 @@ class CardPaymentTest {
             .edit()
             .apply {
                 putString("challengeRequestIndicator", "NO_PREFERENCE")
-            }
-            .commit()
+            }.commit()
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .check(matches(isEnabled()))
@@ -490,8 +492,7 @@ class CardPaymentTest {
             .edit()
             .apply {
                 putBoolean("should_payment_methods_verify_security_code", true)
-            }
-            .commit()
+            }.commit()
 
         onView(withText(PAYMENT_METHODS_LABEL))
             .perform(click())
@@ -552,8 +553,7 @@ class CardPaymentTest {
             .edit()
             .apply {
                 putBoolean("should_payment_methods_verify_security_code", true)
-            }
-            .commit()
+            }.commit()
 
         onView(withId(R.id.recyclerView))
             .perform(swipeUp())
@@ -870,8 +870,7 @@ class CardPaymentTest {
             .apply {
                 putString("challengeRequestIndicator", "NO_PREFERENCE")
                 putString("scaExemption", "LOW_VALUE")
-            }
-            .commit()
+            }.commit()
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
@@ -900,8 +899,7 @@ class CardPaymentTest {
             .apply {
                 putString("challengeRequestIndicator", "NO_PREFERENCE")
                 putString("scaExemption", "LOW_VALUE")
-            }
-            .commit()
+            }.commit()
         onView(withText(PREAUTH_WITH_CARD_LABEL))
             .perform(click())
 
@@ -929,8 +927,7 @@ class CardPaymentTest {
             .edit()
             .apply {
                 putBoolean("is_primary_account_details_enabled", true)
-            }
-            .commit()
+            }.commit()
 
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())

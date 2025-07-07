@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.judokit.android.examples.R
@@ -32,7 +33,9 @@ sealed class ActivityState {
     object CheckCard : ActivityState()
 }
 
-class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResultListener {
+class DemoNoUiPaymentActivity :
+    AppCompatActivity(),
+    CardTransactionManagerResultListener {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var service: JudoApiService
     private lateinit var transactionDetailsBuilder: TransactionDetails.Builder
@@ -41,11 +44,19 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
 
     @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+
         super.onCreate(savedInstanceState)
+
         binding = ActivityDemoNoUiPaymentBinding.inflate(layoutInflater)
-        title = getString(R.string.feature_title_payment_no_ui)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         setContentView(binding.root)
+
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val judo = intent.parcelable<Judo>(JUDO_OPTIONS)
@@ -54,7 +65,8 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
         judo.address?.administrativeDivision = ""
         service = JudoApiServiceFactory.create(this, judo)
         transactionDetailsBuilder =
-            TransactionDetails.Builder()
+            TransactionDetails
+                .Builder()
                 .setEmail(judo.emailAddress)
                 .setCountryCode(judo.address?.countryCode.toString())
                 .setPhoneCountryCode(judo.phoneCountryCode)
@@ -111,14 +123,13 @@ class DemoNoUiPaymentActivity : AppCompatActivity(), CardTransactionManagerResul
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == android.R.id.home) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        if (item.itemId == android.R.id.home) {
             onBackPressedDispatcher.onBackPressed()
             true
         } else {
             super.onOptionsItemSelected(item)
         }
-    }
 
     override fun onDestroy() {
         CardTransactionManager.getInstance(this).unRegisterResultListener(this)

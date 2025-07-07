@@ -76,33 +76,34 @@ class RootFragment : PreferenceFragmentCompat() {
         val randomReference = UUID.randomUUID().toString()
         sharedPreferences.edit().putString("payment_reference", randomReference).apply()
 
-        createApiClient().createPaymentSession(
-            CreatePaymentSessionRequest(
-                judoId = sharedPreferences.getString("judo_id", "") ?: "",
-                amount = sharedPreferences.getString("amount", "") ?: "",
-                currency = sharedPreferences.getString("currency", "") ?: "",
-                yourPaymentReference = sharedPreferences.getString("payment_reference", "") ?: "",
-                yourConsumerReference = "my-unique-ref",
-            ),
-        ).enqueue(
-            object : Callback<CreatePaymentSessionResponse> {
-                override fun onFailure(
-                    call: Call<CreatePaymentSessionResponse>,
-                    t: Throwable,
-                ) {
-                    progressButton.state = ButtonState.Enabled(R.string.generate_payment_session_title)
-                    updatePaymentSession(null, t)
-                }
+        createApiClient()
+            .createPaymentSession(
+                CreatePaymentSessionRequest(
+                    judoId = sharedPreferences.getString("judo_id", "") ?: "",
+                    amount = sharedPreferences.getString("amount", "") ?: "",
+                    currency = sharedPreferences.getString("currency", "") ?: "",
+                    yourPaymentReference = sharedPreferences.getString("payment_reference", "") ?: "",
+                    yourConsumerReference = "my-unique-ref",
+                ),
+            ).enqueue(
+                object : Callback<CreatePaymentSessionResponse> {
+                    override fun onFailure(
+                        call: Call<CreatePaymentSessionResponse>,
+                        t: Throwable,
+                    ) {
+                        progressButton.state = ButtonState.Enabled(R.string.generate_payment_session_title)
+                        updatePaymentSession(null, t)
+                    }
 
-                override fun onResponse(
-                    call: Call<CreatePaymentSessionResponse>,
-                    response: Response<CreatePaymentSessionResponse>,
-                ) {
-                    progressButton.state = ButtonState.Enabled(R.string.generate_payment_session_title)
-                    updatePaymentSession(response.body()?.reference)
-                }
-            },
-        )
+                    override fun onResponse(
+                        call: Call<CreatePaymentSessionResponse>,
+                        response: Response<CreatePaymentSessionResponse>,
+                    ) {
+                        progressButton.state = ButtonState.Enabled(R.string.generate_payment_session_title)
+                        updatePaymentSession(response.body()?.reference)
+                    }
+                },
+            )
     }
 
     private fun updatePaymentSession(
@@ -144,7 +145,8 @@ class RootFragment : PreferenceFragmentCompat() {
         val gson = GsonBuilder().create()
 
         val chuck =
-            ChuckerInterceptor.Builder(activity)
+            ChuckerInterceptor
+                .Builder(activity)
                 .collector(ChuckerCollector(activity))
                 .maxContentLength(CHUCKER_MAX_CONTENT_LENGTH)
                 .redactHeaders(emptySet())
@@ -152,13 +154,15 @@ class RootFragment : PreferenceFragmentCompat() {
                 .build()
 
         val client =
-            OkHttpClient.Builder()
+            OkHttpClient
+                .Builder()
                 .addInterceptor(chuck)
                 .addInterceptor { chain ->
                     val original = chain.request()
 
                     val request =
-                        original.newBuilder()
+                        original
+                            .newBuilder()
                             .header("User-Agent", "JudoKit-Android Examples")
                             .header("Accept", "application/json")
                             .header("Content-Type", "application/json")
@@ -168,11 +172,11 @@ class RootFragment : PreferenceFragmentCompat() {
                             .build()
 
                     chain.proceed(request)
-                }
-                .build()
+                }.build()
 
         val retrofit =
-            Retrofit.Builder()
+            Retrofit
+                .Builder()
                 .baseUrl(baseUrl)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create(gson))

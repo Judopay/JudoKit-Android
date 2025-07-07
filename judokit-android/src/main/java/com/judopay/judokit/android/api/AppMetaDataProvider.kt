@@ -7,7 +7,10 @@ import android.os.Build
 import com.judopay.judokit.android.model.SubProductInfo
 import com.judopay.judokit.android.ui.common.JUDO_KIT_VERSION
 
-class AppMetaDataProvider(context: Context, subProductInfo: SubProductInfo) {
+class AppMetaDataProvider(
+    context: Context,
+    subProductInfo: SubProductInfo,
+) {
     object SystemInfo {
         val androidVersionString: String? = Build.VERSION.RELEASE
         val deviceManufacturer: String? = Build.MANUFACTURER
@@ -21,7 +24,7 @@ class AppMetaDataProvider(context: Context, subProductInfo: SubProductInfo) {
         get() =
             try {
                 val packageInfo = applicationContext.packageManager.getPackageInfo(applicationContext.packageName, 0)
-                packageInfo.versionName
+                packageInfo.versionName ?: ""
             } catch (e: PackageManager.NameNotFoundException) {
                 ""
             }

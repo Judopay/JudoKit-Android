@@ -43,8 +43,8 @@ class PaymentMethodsAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerView.ViewHolder {
-        return when (PaymentMethodItemType.values().firstOrNull { it.ordinal == viewType }) {
+    ): RecyclerView.ViewHolder =
+        when (PaymentMethodItemType.values().firstOrNull { it.ordinal == viewType }) {
             PaymentMethodItemType.SELECTOR ->
                 MethodSelectorViewHolder(
                     PaymentMethodsSelectorItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
@@ -69,7 +69,6 @@ class PaymentMethodsAdapter(
                 throw NotImplementedError("Unsupported or null type")
             }
         }
-    }
 
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,

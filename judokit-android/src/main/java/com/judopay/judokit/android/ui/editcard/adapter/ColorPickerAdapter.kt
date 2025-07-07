@@ -35,7 +35,5 @@ class ColorPickerAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ColorPickerViewHolder {
-        return ColorPickerViewHolder(ColorPickerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-    }
+    ): ColorPickerViewHolder = ColorPickerViewHolder(ColorPickerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 }

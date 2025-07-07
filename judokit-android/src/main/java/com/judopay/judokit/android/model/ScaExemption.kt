@@ -4,7 +4,9 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-enum class ScaExemption(val value: String) : Parcelable {
+enum class ScaExemption(
+    val value: String,
+) : Parcelable {
     LOW_VALUE("lowValue"),
     SECURE_CORPORATE("secureCorporate"),
     TRUSTED_BENEFICIARY("trustedBeneficiary"),

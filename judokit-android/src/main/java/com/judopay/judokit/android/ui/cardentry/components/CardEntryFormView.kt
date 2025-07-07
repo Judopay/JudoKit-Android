@@ -34,6 +34,7 @@ import com.judopay.judokit.android.ui.cardentry.validation.carddetails.Expiratio
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.PostcodeValidator
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.SecurityCodeValidator
 import com.judopay.judokit.android.ui.common.PATTERN_CARD_EXPIRATION_DATE
+import com.judopay.judokit.android.ui.common.heightWithInsetsAndMargins
 import kotlin.collections.forEach as kForEach
 
 internal typealias FormValidationStatus = (model: CardDetailsInputModel, isValid: Boolean) -> Unit
@@ -82,6 +83,13 @@ class CardEntryFormView
             super.onFinishInflate()
             setupFieldsContent()
             setupFieldsFormatting()
+
+            binding.cardEntryBottomAppBar.post {
+                val additionalSpacing = resources.getDimension(R.dimen.space_8).toInt()
+                val params = binding.cardDetailsContainerLayout.layoutParams as LayoutParams
+                params.bottomMargin = binding.cardEntryBottomAppBar.heightWithInsetsAndMargins + additionalSpacing
+                binding.cardDetailsContainerLayout.layoutParams = params
+            }
         }
 
         private fun setupFieldsFormatting() {
@@ -347,7 +355,5 @@ class CardEntryFormView
             onFormValidationStatusListener?.invoke(inputModel, isFormValid)
         }
 
-        private inline fun <reified V> validatorInstance(): V? {
-            return validators.firstOrNull { it is V } as V?
-        }
+        private inline fun <reified V> validatorInstance(): V? = validators.firstOrNull { it is V } as V?
     }

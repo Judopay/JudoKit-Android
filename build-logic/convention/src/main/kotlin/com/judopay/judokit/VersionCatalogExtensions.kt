@@ -17,14 +17,10 @@ import org.gradle.kotlin.dsl.getByType
 val Project.versionCatalog: VersionCatalog
     get() = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
-fun VersionCatalog.version(alias: String): VersionConstraint =
-    findVersion(alias).get()
+fun VersionCatalog.version(alias: String): VersionConstraint = findVersion(alias).get()
 
-fun VersionCatalog.bundle(alias: String): Provider<ExternalModuleDependencyBundle> =
-    findBundle(alias).get()
+fun VersionCatalog.bundle(alias: String): Provider<ExternalModuleDependencyBundle> = findBundle(alias).get()
 
-fun VersionCatalog.library(alias: String): Provider<MinimalExternalModuleDependency> =
-    findLibrary(alias).get()
+fun VersionCatalog.library(alias: String): Provider<MinimalExternalModuleDependency> = findLibrary(alias).get()
 
-fun VersionCatalog.requiredVersion(alias: String): String =
-    version(alias).requiredVersion
+fun VersionCatalog.requiredVersion(alias: String): String = version(alias).requiredVersion

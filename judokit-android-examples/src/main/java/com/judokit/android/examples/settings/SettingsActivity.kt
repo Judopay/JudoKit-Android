@@ -2,6 +2,7 @@ package com.judokit.android.examples.settings
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -9,14 +10,27 @@ import com.judokit.android.examples.R
 import com.judokit.android.examples.settings.fragments.RootFragment
 import com.judokit.android.examples.settings.fragments.ThreeDSSDKUICustomisationFragment
 
-class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+class SettingsActivity :
+    AppCompatActivity(),
+    PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.settings_activity)
-        supportFragmentManager.beginTransaction()
+
+        supportFragmentManager
+            .beginTransaction()
             .replace(R.id.settings, RootFragment())
             .commit()
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        setSupportActionBar(findViewById(R.id.toolbar))
+
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -38,7 +52,8 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         fragment.setTargetFragment(caller, 0)
 
         // Replace the existing Fragment with the new Fragment
-        supportFragmentManager.beginTransaction()
+        supportFragmentManager
+            .beginTransaction()
             .replace(R.id.settings, fragment)
             .addToBackStack(null)
             .commit()

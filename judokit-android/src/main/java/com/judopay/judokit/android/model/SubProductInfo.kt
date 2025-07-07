@@ -7,5 +7,7 @@ import kotlinx.parcelize.Parcelize
 sealed class SubProductInfo : Parcelable {
     object Unknown : SubProductInfo()
 
-    class ReactNative(val version: String) : SubProductInfo()
+    class ReactNative(
+        val version: String,
+    ) : SubProductInfo()
 }

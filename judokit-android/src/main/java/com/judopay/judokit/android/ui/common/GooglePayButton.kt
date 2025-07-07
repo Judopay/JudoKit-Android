@@ -48,9 +48,7 @@ class GooglePayButton
         }
 
         private fun update() {
-            fun visibility(style: GooglePayButtonStyle): Int {
-                return if (style == this.style) View.VISIBLE else View.GONE
-            }
+            fun visibility(style: GooglePayButtonStyle): Int = if (style == this.style) View.VISIBLE else View.GONE
 
             binding.blackButton.root.visibility = visibility(GooglePayButtonStyle.BLACK)
             binding.blackBuyWithButton.root.visibility = visibility(GooglePayButtonStyle.BLACK_BUY_WITH)

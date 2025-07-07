@@ -24,14 +24,6 @@
             android:id="@+id/action_paymentMethodsFragment_to_editCardFragment"
             app:destination="@id/editCardFragment" />
 
-        <action
-            android:id="@+id/action_paymentMethodsFragment_to_PollingStatusFragment"
-            app:destination="@id/pollingStatusFragment">
-            <argument
-                android:name="com.judopay.judokit.android.model.paymentWidgetType"
-                app:argType="com.judopay.judokit.android.model.PaymentWidgetType" />
-        </action>
-
     </fragment>
 
     <dialog
@@ -45,10 +37,5 @@
         android:name="com.judopay.judokit.android.ui.editcard.EditCardFragment"
         android:label="EditCardFragment"
         tools:layout="@layout/edit_card_fragment" />
-
-    <dialog
-        android:id="@+id/pollingStatusFragment"
-        android:name="com.judopay.judokit.android.ui.pollingstatus.PollingStatusFragment"
-        android:label="PollingStatusFragment" />
 
 </navigation>

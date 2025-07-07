@@ -8,11 +8,17 @@ import com.judopay.judokit.android.PAYMENT_ERROR
 import com.judopay.judokit.android.PAYMENT_SUCCESS
 
 sealed class JudoPaymentResult {
-    data class Success(val result: JudoResult) : JudoPaymentResult()
+    data class Success(
+        val result: JudoResult,
+    ) : JudoPaymentResult()
 
-    data class Error(val error: JudoError) : JudoPaymentResult()
+    data class Error(
+        val error: JudoError,
+    ) : JudoPaymentResult()
 
-    data class UserCancelled(var error: JudoError = JudoError.userCancelled()) : JudoPaymentResult()
+    data class UserCancelled(
+        var error: JudoError = JudoError.userCancelled(),
+    ) : JudoPaymentResult()
 }
 
 fun JudoPaymentResult.toIntent(): Intent {

@@ -166,7 +166,8 @@ class PaymentSelectorView
 
         private fun scrollToView(itemView: PaymentSelectorItemView) {
             val rect = Rect()
-            itemView.getTextView()
+            itemView
+                .getTextView()
                 .measure(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT,

@@ -19,7 +19,9 @@ private const val CLIENT_DETAILS = "clientDetails"
 private const val METHOD_POST = "POST"
 private val MEDIA_TYPE_APPLICATION_JSON = "application/json".toMediaTypeOrNull()
 
-internal class DeviceDnaInterceptor(context: Context) : Interceptor {
+internal class DeviceDnaInterceptor(
+    context: Context,
+) : Interceptor {
     private val deviceDna = DeviceDNA(context)
 
     @Throws(IOException::class)
@@ -43,7 +45,8 @@ internal class DeviceDnaInterceptor(context: Context) : Interceptor {
         val requestBody = postJson.toString().toRequestBody(MEDIA_TYPE_APPLICATION_JSON)
 
         return chain.proceed(
-            request.newBuilder()
+            request
+                .newBuilder()
                 .post(requestBody)
                 .build(),
         )

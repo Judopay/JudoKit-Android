@@ -4,11 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.updatePadding
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.chuckerteam.chucker.api.ChuckerCollector
@@ -90,13 +91,16 @@ class DemoFeatureListActivity : AppCompatActivity() {
     private lateinit var notificationPermissionLauncher: NotificationPermissionLauncher
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+
         super.onCreate(savedInstanceState)
 
         notificationPermissionLauncher = NotificationPermissionLauncher(this)
 
         val externalInterceptors =
             listOf(
-                ChuckerInterceptor.Builder(this)
+                ChuckerInterceptor
+                    .Builder(this)
                     .collector(ChuckerCollector(this))
                     .maxContentLength(CHUCKER_MAX_CONTENT_LENGTH)
                     .redactHeaders(emptySet())
@@ -108,28 +112,22 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
         binding = ActivityDemoFeatureListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_settings -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    true
+                }
+                else -> false
+            }
+        }
+
         setupRecyclerView()
 
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false)
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-
-        deepLinkIfNeeded()
         notificationPermissionLauncher.requestPermissionIfNeeded()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.demo_feature_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings -> {
-                startActivity(Intent(this, SettingsActivity::class.java))
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     override fun onActivityResult(
@@ -156,25 +154,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
         }
         deepLinkIntent = intent
     }
-
-    override fun onNewIntent(intent: Intent?) {
-        deepLinkIntent = intent
-        deepLinkIfNeeded()
-        super.onNewIntent(intent)
-    }
-
-    private fun deepLinkIfNeeded() =
-        deepLinkIntent?.data?.let {
-            val newIntent = Intent(this, JudoActivity::class.java)
-            val lastUsedPaymentWidget =
-                sharedPreferences.getString(
-                    LAST_USED_WIDGET_TYPE_KEY,
-                    null,
-                ) ?: PaymentWidgetType.PAYMENT_METHODS.name
-
-            newIntent.putExtra(JUDO_OPTIONS, getJudo(PaymentWidgetType.valueOf(lastUsedPaymentWidget)))
-            startActivityForResult(newIntent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
-        }
 
     private fun processSuccessfulPayment(result: JudoResult?) {
         if (result != null) {
@@ -267,9 +246,14 @@ class DemoFeatureListActivity : AppCompatActivity() {
         }
     }
 
-    private fun toast(message: String) = Snackbar.make(binding.sampleAppConstraintLayout, message, Snackbar.LENGTH_LONG).show()
+    private fun toast(message: String) = Snackbar.make(binding.coordinatorLayout, message, Snackbar.LENGTH_LONG).show()
 
     private fun setupRecyclerView() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { v, insets ->
+            v.updatePadding(bottom = insets.systemWindowInsets.bottom)
+            insets
+        }
+
         val dividerItemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
 
         binding.recyclerView.apply {
@@ -284,7 +268,9 @@ class DemoFeatureListActivity : AppCompatActivity() {
     private fun showGetTransactionDialog(judo: Judo) {
         val dialogBinding = DialogGetTransactionBinding.inflate(layoutInflater)
         val service = JudoApiServiceFactory.createApiService(this, judo)
-        AlertDialog.Builder(this).setTitle(R.string.feature_title_get_transaction_details)
+        AlertDialog
+            .Builder(this)
+            .setTitle(R.string.feature_title_get_transaction_details)
             .setView(dialogBinding.root)
             .setPositiveButton(
                 R.string.dialog_button_ok,
@@ -315,12 +301,13 @@ class DemoFeatureListActivity : AppCompatActivity() {
                             throw Exception(t)
                         }
                     }
-                service.fetchTransactionWithReceiptId(dialogBinding.receiptIdEditText.text.toString())
+                service
+                    .fetchTransactionWithReceiptId(dialogBinding.receiptIdEditText.text.toString())
                     .enqueue(fetchTransactionDetailsCallback)
                 dialogBinding.receiptProgressBar.visibility = View.VISIBLE
                 dialogBinding.receiptIdEditText.visibility = View.GONE
-            }
-            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }.show()
+            }.setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+            .show()
     }
 
     @Throws(IllegalArgumentException::class, IllegalStateException::class)
@@ -366,7 +353,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val isRecommendationFeatureEnabled = sharedPreferences.getBoolean("is_recommendation_feature_enabled", false)
         val recommendationConfiguration =
             if (isRecommendationFeatureEnabled) {
-                RecommendationConfiguration.Builder()
+                RecommendationConfiguration
+                    .Builder()
                     .setRsaPublicKey(rsaKey)
                     .setUrl(recommendationUrl)
                     .setTimeout(recommendationTimeout)
@@ -382,7 +370,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
             }
 
         val builder =
-            Judo.Builder(widgetType)
+            Judo
+                .Builder(widgetType)
                 .setJudoId(judoId)
                 .setAuthorization(authorization)
                 .setAmount(amount)
@@ -424,7 +413,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
         get() {
             val isAddressEnabled = sharedPreferences.getBoolean("is_address_enabled", false)
             if (isAddressEnabled) {
-                return Address.Builder()
+                return Address
+                    .Builder()
                     .setLine1(sharedPreferences.getString("address_line_1", null))
                     .setLine2(sharedPreferences.getString("address_line_2", null))
                     .setLine3(sharedPreferences.getString("address_line_3", null))
@@ -452,7 +442,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
             val shouldAskForBillingInformation = sharedPreferences.getBoolean("should_ask_for_billing_information", false)
 
             val builder =
-                UiConfiguration.Builder()
+                UiConfiguration
+                    .Builder()
                     .setAvsEnabled(isAVSEnabled)
                     .setShouldPaymentMethodsDisplayAmount(shouldDisplayAmount)
                     .setShouldPaymentMethodsVerifySecurityCode(shouldPaymentMethodsVerifySecurityCode)
@@ -472,22 +463,23 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
     private val networks: Array<CardNetwork>?
         get() =
-            sharedPreferences.getStringSet("supported_networks", null)
+            sharedPreferences
+                .getStringSet("supported_networks", null)
                 ?.map { CardNetwork.valueOf(it) }
                 ?.toTypedArray()
 
     private val paymentMethods: Array<PaymentMethod>
         get() {
             val paymentMethods =
-                sharedPreferences.getStringSet("payment_methods", null)
+                sharedPreferences
+                    .getStringSet("payment_methods", null)
                     ?.mapNotNull {
                         try {
                             PaymentMethod.valueOf(it)
                         } catch (_: Exception) {
                             null
                         }
-                    }
-                    ?.toTypedArray()
+                    }?.toTypedArray()
 
             // for demo purposes we want them in a certain order
             val methods = paymentMethods?.toList() ?: emptyList()
@@ -506,7 +498,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     UUID.randomUUID().toString()
                 }
 
-            return Reference.Builder()
+            return Reference
+                .Builder()
                 .setConsumerReference("my-unique-ref")
                 .setPaymentReference(paymentReference)
                 .setMetaData(Bundle().apply { putString("exampleMetaKey", "exampleMetaValue") })
@@ -524,7 +517,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     Currency.GBP
                 }
 
-            return Amount.Builder()
+            return Amount
+                .Builder()
                 .setAmount(amountValue)
                 .setCurrency(myCurrency)
                 .build()
@@ -559,7 +553,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
             val totalPriceLabel = sharedPreferences.getString("google_pay_total_price_label", null)?.ifEmpty { null }
             val checkoutOption = sharedPreferences.getString("google_pay_checkout_option", null)
             val shippingAddressAllowedCountries =
-                sharedPreferences.getString("google_pay_shipping_address_allowed_countries", null)
+                sharedPreferences
+                    .getString("google_pay_shipping_address_allowed_countries", null)
                     ?.ifEmpty { null }
                     ?.split(",")
                     ?.toTypedArray()
@@ -582,7 +577,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     )
             }
 
-            return GooglePayConfiguration.Builder()
+            return GooglePayConfiguration
+                .Builder()
                 .setEnvironment(gPayEnv)
                 .setMerchantName(merchantName?.ifBlank { null })
                 .setTransactionCountryCode(countryCode)
@@ -605,21 +601,20 @@ class DemoFeatureListActivity : AppCompatActivity() {
             val isPrimaryAccountDetailsEnabled =
                 sharedPreferences.getBoolean("is_primary_account_details_enabled", false)
             if (isPrimaryAccountDetailsEnabled) {
-                return PrimaryAccountDetails.Builder()
+                return PrimaryAccountDetails
+                    .Builder()
                     .setName(sharedPreferences.getString("primary_account_name", null))
                     .setAccountNumber(
                         sharedPreferences.getString(
                             "primary_account_account_number",
                             null,
                         ),
-                    )
-                    .setDateOfBirth(
+                    ).setDateOfBirth(
                         sharedPreferences.getString(
                             "primary_account_date_of_birth",
                             null,
                         ),
-                    )
-                    .setPostCode(sharedPreferences.getString("primary_account_post_code", null))
+                    ).setPostCode(sharedPreferences.getString("primary_account_post_code", null))
                     .build()
             }
             return null
@@ -634,12 +629,14 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
             return if (isPaymentSessionEnabled) {
                 val paymentSession = sharedPreferences.getString("payment_session", null)
-                PaymentSessionAuthorization.Builder()
+                PaymentSessionAuthorization
+                    .Builder()
                     .setPaymentSession(paymentSession)
                     .setApiToken(token)
                     .build()
             } else {
-                BasicAuthorization.Builder()
+                BasicAuthorization
+                    .Builder()
                     .setApiToken(token)
                     .setApiSecret(secret)
                     .build()
@@ -652,7 +649,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
             val readTimeout = sharedPreferences.getString("read_timeout", null)
             val writeTimeout = sharedPreferences.getString("write_timeout", null)
 
-            return NetworkTimeout.Builder()
+            return NetworkTimeout
+                .Builder()
                 .setConnectTimeout(connectTimeout?.toLongOrNull())
                 .setReadTimeout(readTimeout?.toLongOrNull())
                 .setWriteTimeout(writeTimeout?.toLongOrNull())
@@ -687,10 +685,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 )
                 labelCustomization.setHeadingTextColor(sharedPreferences.getString("three_ds_label_heading_text_color", null))
                 labelCustomization.setHeadingTextFontSize(
-                    sharedPreferences.getString(
-                        "three_ds_label_heading_text_font_size",
-                        null,
-                    )?.toInt(),
+                    sharedPreferences
+                        .getString(
+                            "three_ds_label_heading_text_font_size",
+                            null,
+                        )?.toInt(),
                 )
                 customization.setLabelCustomization(labelCustomization)
 
@@ -716,10 +715,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 )
                 submitButtonCustomization.setTextColor(sharedPreferences.getString("three_ds_submit_button_text_color", null))
                 submitButtonCustomization.setTextFontSize(
-                    sharedPreferences.getString(
-                        "three_ds_submit_button_text_font_size",
-                        null,
-                    )?.toInt(),
+                    sharedPreferences
+                        .getString(
+                            "three_ds_submit_button_text_font_size",
+                            null,
+                        )?.toInt(),
                 )
                 submitButtonCustomization.setBackgroundColor(
                     sharedPreferences.getString(
@@ -728,10 +728,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     ),
                 )
                 submitButtonCustomization.setCornerRadius(
-                    sharedPreferences.getString(
-                        "three_ds_submit_button_corner_radius",
-                        null,
-                    )?.toInt(),
+                    sharedPreferences
+                        .getString(
+                            "three_ds_submit_button_corner_radius",
+                            null,
+                        )?.toInt(),
                 )
                 customization.setButtonCustomization(submitButtonCustomization, UiCustomization.ButtonType.SUBMIT)
 
@@ -761,10 +762,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 )
                 continueButtonCustomization.setTextColor(sharedPreferences.getString("three_ds_continue_button_text_color", null))
                 continueButtonCustomization.setTextFontSize(
-                    sharedPreferences.getString(
-                        "three_ds_continue_button_text_font_size",
-                        null,
-                    )?.toInt(),
+                    sharedPreferences
+                        .getString(
+                            "three_ds_continue_button_text_font_size",
+                            null,
+                        )?.toInt(),
                 )
                 continueButtonCustomization.setBackgroundColor(
                     sharedPreferences.getString(
@@ -773,10 +775,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     ),
                 )
                 continueButtonCustomization.setCornerRadius(
-                    sharedPreferences.getString(
-                        "three_ds_continue_button_corner_radius",
-                        null,
-                    )?.toInt(),
+                    sharedPreferences
+                        .getString(
+                            "three_ds_continue_button_corner_radius",
+                            null,
+                        )?.toInt(),
                 )
                 customization.setButtonCustomization(continueButtonCustomization, UiCustomization.ButtonType.CONTINUE)
 
@@ -789,10 +792,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 )
                 cancelButtonCustomization.setTextColor(sharedPreferences.getString("three_ds_cancel_button_text_color", null))
                 cancelButtonCustomization.setTextFontSize(
-                    sharedPreferences.getString(
-                        "three_ds_cancel_button_text_font_size",
-                        null,
-                    )?.toInt(),
+                    sharedPreferences
+                        .getString(
+                            "three_ds_cancel_button_text_font_size",
+                            null,
+                        )?.toInt(),
                 )
                 cancelButtonCustomization.setBackgroundColor(
                     sharedPreferences.getString(
@@ -801,10 +805,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     ),
                 )
                 cancelButtonCustomization.setCornerRadius(
-                    sharedPreferences.getString(
-                        "three_ds_cancel_button_corner_radius",
-                        null,
-                    )?.toInt(),
+                    sharedPreferences
+                        .getString(
+                            "three_ds_cancel_button_corner_radius",
+                            null,
+                        )?.toInt(),
                 )
                 customization.setButtonCustomization(cancelButtonCustomization, UiCustomization.ButtonType.CANCEL)
 
@@ -817,10 +822,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 )
                 resendButtonCustomization.setTextColor(sharedPreferences.getString("three_ds_resend_button_text_color", null))
                 resendButtonCustomization.setTextFontSize(
-                    sharedPreferences.getString(
-                        "three_ds_resend_button_text_font_size",
-                        null,
-                    )?.toInt(),
+                    sharedPreferences
+                        .getString(
+                            "three_ds_resend_button_text_font_size",
+                            null,
+                        )?.toInt(),
                 )
                 resendButtonCustomization.setBackgroundColor(
                     sharedPreferences.getString(
@@ -829,10 +835,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     ),
                 )
                 resendButtonCustomization.setCornerRadius(
-                    sharedPreferences.getString(
-                        "three_ds_resend_button_corner_radius",
-                        null,
-                    )?.toInt(),
+                    sharedPreferences
+                        .getString(
+                            "three_ds_resend_button_corner_radius",
+                            null,
+                        )?.toInt(),
                 )
                 customization.setButtonCustomization(resendButtonCustomization, UiCustomization.ButtonType.RESEND)
 

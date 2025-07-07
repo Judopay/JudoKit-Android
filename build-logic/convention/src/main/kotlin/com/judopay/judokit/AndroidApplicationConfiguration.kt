@@ -4,42 +4,35 @@ import com.android.build.api.dsl.ApplicationDefaultConfig
 import com.android.build.api.dsl.ApplicationExtension
 import org.gradle.api.Project
 
-internal fun Project.configureAndroidApplication(
-    extension: ApplicationExtension,
-) = extension.apply {
+internal fun Project.configureAndroidApplication(extension: ApplicationExtension) =
+    extension.apply {
+        val appIdSuffix = findProperty("applicationIdSuffix")?.toString()
 
-    val appIdSuffix = findProperty("applicationIdSuffix")?.toString()
+        defaultConfig {
+            targetSdk = Versions.TARGET_SDK
+            versionCode = getVersionCode()
 
-    defaultConfig {
-        targetSdk = Versions.TARGET_SDK
-        versionCode = getVersionCode()
+            testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+            addBuildConfigFields()
+        }
 
-        addBuildConfigFields()
-    }
+        buildFeatures {
+            compose = true
+            viewBinding = true
+        }
 
-    buildFeatures {
-        compose = true
-        viewBinding = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion =
-            versionCatalog.findVersion("androidxComposeCompiler").get().toString()
-    }
-
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-            applicationIdSuffix = appIdSuffix.takeIf { !it.isNullOrBlank() }
+        buildTypes {
+            getByName("release") {
+                isMinifyEnabled = true
+                proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro",
+                )
+                applicationIdSuffix = appIdSuffix.takeIf { !it.isNullOrBlank() }
+            }
         }
     }
-}
 
 private fun ApplicationDefaultConfig.addBuildConfigFields() {
     buildConfigField("String", "JUDO_ID", "\"${System.getenv("JUDO_ID")}\"")
