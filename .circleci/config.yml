@@ -295,7 +295,7 @@ jobs:
           name: Prepare Slack messages
           command: |
             # Success message
-            MESSAGE=$(cat <<EOF
+            MESSAGE=$(cat \<<EOF
             :white_tick: *Android :android: smoke tests successfully started on :browserstack: BrowserStack!*  
             *<$CIRCLE_BUILD_URL | :circleci: View build>*  
             *<https://app-automate.browserstack.com/dashboard/v2/builds/$BUILD_ID | :browserstack: Browserstack build>*
@@ -305,7 +305,7 @@ jobs:
             echo "export SLACK_MESSAGE_TEXT=\"$ESCAPED\"" >> "$BASH_ENV"
 
             # Failure message
-            MESSAGE_FAILED=$(cat <<EOF
+            MESSAGE_FAILED=$(cat \<<EOF
             :x: *Android :android: smoke tests failed to start on :browserstack: BrowserStack - please investigate :eyes:*  
             *<$CIRCLE_BUILD_URL | :circleci: View build>*  
             *<https://app-automate.browserstack.com/dashboard/v2/builds/$BUILD_ID | :browserstack: Browserstack build>*
