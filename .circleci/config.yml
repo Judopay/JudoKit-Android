@@ -24,10 +24,10 @@ commands:
                 {
                   "type": "section",
                   "fields": [
-                    { "type": "mrkdwn", "text": "*Project:*\\n$CIRCLE_PROJECT_REPONAME" },
-                    { "type": "mrkdwn", "text": "*Branch:*\\n$CIRCLE_BRANCH" },
-                    { "type": "mrkdwn", "text": "*Commit:*\\n<https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>" },
-                    { "type": "mrkdwn", "text": "*Author:*\\n$CIRCLE_USERNAME" }
+                    { "type": "mrkdwn", "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME" },
+                    { "type": "mrkdwn", "text": "*Branch:*\n$CIRCLE_BRANCH" },
+                    { "type": "mrkdwn", "text": "*Commit:*\n<https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>" },
+                    { "type": "mrkdwn", "text": "*Author:*\n$CIRCLE_USERNAME" }
                   ]
                 }
               ]
@@ -140,12 +140,10 @@ jobs:
               --num-flaky-test-attempts=1
       - notify_slack_summary:
           event: pass
-          message_text: >
-            :white_tick: *Android :android: regression tests passed successfully!*  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+          message_text: ":white_tick: *Android :android: regression tests passed successfully!*  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
       - notify_slack_summary:
           event: fail
-          message_text: >
-            :x: *Android :android: regression tests failed. Please investigate :eyes: *  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+          message_text: ":x: *Android :android: regression tests failed. Please investigate :eyes: *  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
 
   instrumented_test_sample_weekly_api_31:
     <<: *android-docker-executor
@@ -167,12 +165,10 @@ jobs:
               --num-flaky-test-attempts=1
       - notify_slack_summary:
           event: pass
-          message_text: >
-            :white_tick: *Android :android: backward compatibility (API 31/Android 12) tests passed successfully!*  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+          message_text: ":white_tick: *Android :android: backward compatibility (API 31/Android 12) tests passed successfully!*  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
       - notify_slack_summary:
           event: fail
-          message_text: >
-            :x: *Android :android: backward compatibility (API 31/Android 12) tests failed - please investigate :eyes: *  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+          message_text: ":x: *Android :android: backward compatibility (API 31/Android 12) tests failed - please investigate :eyes: *  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
 
   instrumented_test_sample_weekly_api_32:
     <<: *android-docker-executor
@@ -194,12 +190,10 @@ jobs:
               --num-flaky-test-attempts=1
       - notify_slack_summary:
           event: pass
-          message_text: >
-            :white_tick: *Android :android: backward compatibility (API 32/Android 12) tests passed successfully!*  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+          message_text: ":white_tick: *Android :android: backward compatibility (API 32/Android 12) tests passed successfully!*  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
       - notify_slack_summary:
           event: fail
-          message_text: >
-            :x: *Android :android: backward compatibility (API 32/Android 12) tests failed - please investigate :eyes: *  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+          message_text: ":x: *Android :android: backward compatibility (API 32/Android 12) tests failed - please investigate :eyes: *  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
 
   instrumented_test_sample_weekly_api_33:
     <<: *android-docker-executor
@@ -221,12 +215,10 @@ jobs:
               --num-flaky-test-attempts=1
       - notify_slack_summary:
           event: pass
-          message_text: >
-            :white_tick: *Android :android: backward compatibility (API 33/Android 13) tests passed successfully!*  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+          message_text: ":white_tick: *Android :android: backward compatibility (API 33/Android 13) tests passed successfully!*  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
       - notify_slack_summary:
           event: fail
-          message_text: >
-            :x: *Android :android: backward compatibility (API 33/Android 13) tests failed - please investigate :eyes: *  \\n *<$CIRCLE_BUILD_URL | :circleci: View build>* \\n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+          message_text: ":x: *Android :android: backward compatibility (API 33/Android 13) tests failed - please investigate :eyes: *  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
 
   report_to_jira:
     docker:
