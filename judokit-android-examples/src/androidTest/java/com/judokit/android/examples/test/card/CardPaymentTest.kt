@@ -65,6 +65,7 @@ import com.judokit.android.examples.test.card.FeaturesList.REGISTER_CARD_LABEL
 import com.judokit.android.examples.test.card.FeaturesList.TOKEN_PAYMENTS_LABEL
 import com.judokit.android.examples.test.card.Other.CANCELLED_PAYMENT_TOAST
 import com.judokit.android.examples.test.card.Other.CANCEL_BUTTON
+import com.judokit.android.examples.test.card.annotations.SmokeTest
 import com.judopay.judokit.android.R
 import org.hamcrest.Matchers.allOf
 import org.junit.After
@@ -149,6 +150,7 @@ class CardPaymentTest {
         onView(withText(CANCELLED_PAYMENT_TOAST)).check(matches(isDisplayed()))
     }
 
+    @SmokeTest
     @Test
     fun testSuccessfulTransaction() {
         onView(withText(PAY_WITH_CARD_LABEL))
