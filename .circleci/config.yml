@@ -301,6 +301,8 @@ jobs:
             *<https://app-automate.browserstack.com/dashboard/v2/builds/$BUILD_ID | :browserstack: Browserstack build>*
             EOF
             )
+            ESCAPED=$(python3 -c 'import json,sys; print(json.dumps(sys.stdin.read())[1:-1])' <<< "$MESSAGE")
+            echo "export SLACK_MESSAGE_TEXT=\"$ESCAPED\"" >> "$BASH_ENV"
       - notify_slack_summary:
           event: pass
           message_text: "$SLACK_MESSAGE_TEXT"
