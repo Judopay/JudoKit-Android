@@ -361,7 +361,8 @@ jobs:
                 "devices": ["Samsung Galaxy S25 Ultra-15.0", "Samsung Galaxy S21-11.0", "OnePlus 8-10.0", "Samsung Galaxy A10-9.0", "Samsung Galaxy S9-8.0", "Samsung Galaxy S8-7.0"],
                 "project" : "JudoKit-Android UI Tests",
                 "buildTag": "JudoKit-Android",
-                "annotation": ["com.judokit.android.examples.test.card.annotations.SmokeTest"]
+                "annotation": ["com.judokit.android.examples.test.card.annotations.SmokeTest"],
+                "networkLogs": true
               }')
 
             BUILD_ID=$(echo "$TRIGGER_RESPONSE" | jq -r '.build_id')
