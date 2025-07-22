@@ -401,6 +401,7 @@ class CardTransactionManager private constructor(
     private fun performComplete3ds2(
         receipt: Receipt,
         caller: String,
+        threeDSSDKChallengeStatus: String? = null,
     ) {
         val receiptId = receipt.receiptId ?: ""
         val version = receipt.getCReqParameters()?.messageVersion ?: judo.threeDSTwoMessageVersion
@@ -408,7 +409,7 @@ class CardTransactionManager private constructor(
 
         applicationScope.launch {
             val result =
-                judoApiService.complete3ds2(receiptId, Complete3DS2Request(version, cv2)).await()
+                judoApiService.complete3ds2(receiptId, Complete3DS2Request(version, cv2, threeDSSDKChallengeStatus)).await()
             onResult(result.toJudoPaymentResult(context.resources), caller)
         }
     }
@@ -445,23 +446,23 @@ class CardTransactionManager private constructor(
         val challengeStatusReceiver =
             object : ChallengeStatusReceiver {
                 override fun cancelled() {
-                    performComplete3ds2(receipt, caller)
+                    performComplete3ds2(receipt, caller, ThreeDSSDKChallengeStatus.CANCELLED)
                 }
 
                 override fun completed(completionEvent: CompletionEvent) {
-                    performComplete3ds2(receipt, caller)
+                    performComplete3ds2(receipt, caller, completionEvent.toFormattedEventString())
                 }
 
                 override fun protocolError(protocolErrorEvent: ProtocolErrorEvent) {
-                    performComplete3ds2(receipt, caller)
+                    performComplete3ds2(receipt, caller, protocolErrorEvent.toFormattedEventString())
                 }
 
                 override fun runtimeError(runtimeErrorEvent: RuntimeErrorEvent) {
-                    performComplete3ds2(receipt, caller)
+                    performComplete3ds2(receipt, caller, runtimeErrorEvent.toFormattedEventString())
                 }
 
                 override fun timedout() {
-                    performComplete3ds2(receipt, caller)
+                    performComplete3ds2(receipt, caller, ThreeDSSDKChallengeStatus.TIMEOUT)
                 }
             }
 
