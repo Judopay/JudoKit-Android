@@ -471,9 +471,9 @@ public final class com/judopay/judokit/android/api/model/request/CheckCardReques
 }
 
 public final class com/judopay/judokit/android/api/model/request/Complete3DS2Request {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/Complete3DS2Request;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/api/model/request/Complete3DS2Request;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/api/model/request/Complete3DS2Request;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/Complete3DS2Request;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/api/model/request/Complete3DS2Request;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/api/model/request/Complete3DS2Request;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
