@@ -132,6 +132,7 @@ class CardTransactionManager private constructor(
 
     private val listenerMap = WeakHashMap<String, CardTransactionManagerResultListener>()
     private val results = HashMap<String, JudoPaymentResult>()
+    private val completedTransactionIDs = mutableSetOf<String>()
 
     companion object : SingletonHolder<CardTransactionManager>(::CardTransactionManager)
 
@@ -404,6 +405,12 @@ class CardTransactionManager private constructor(
         threeDSSDKChallengeStatus: String? = null,
     ) {
         val receiptId = receipt.receiptId ?: ""
+
+        if (completedTransactionIDs.contains(receiptId)) {
+            Log.w(CardTransactionManager::class.java.name, "Attempt to invoke repeatedly complete3DS2 was detected.")
+            return
+        }
+
         val version = receipt.getCReqParameters()?.messageVersion ?: judo.threeDSTwoMessageVersion
         val cv2 = transactionDetails?.securityNumber
 
@@ -412,6 +419,8 @@ class CardTransactionManager private constructor(
                 judoApiService.complete3ds2(receiptId, Complete3DS2Request(version, cv2, threeDSSDKChallengeStatus)).await()
             onResult(result.toJudoPaymentResult(context.resources), caller)
         }
+
+        completedTransactionIDs.add(receiptId)
     }
 
     private fun handleJudoApiResult(
