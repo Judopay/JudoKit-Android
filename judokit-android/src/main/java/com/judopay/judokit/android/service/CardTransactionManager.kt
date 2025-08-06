@@ -50,7 +50,9 @@ interface ActivityAwareComponent {
     fun updateActivity(activity: FragmentActivity)
 }
 
-open class SingletonHolder<out T : ActivityAwareComponent>(creator: (FragmentActivity) -> T) {
+open class SingletonHolder<out T : ActivityAwareComponent>(
+    creator: (FragmentActivity) -> T,
+) {
     private var creator: ((FragmentActivity) -> T)? = creator
 
     @Volatile
@@ -111,7 +113,9 @@ private const val THREE_DS_TWO_MIN_TIMEOUT = 5
 private const val SHOULD_USE_FABRICK_DS_ID = "shouldUseFabrickDsId"
 
 @Suppress("TooManyFunctions", "SwallowedException", "TooGenericExceptionCaught")
-class CardTransactionManager private constructor(private var context: FragmentActivity) : ActivityAwareComponent {
+class CardTransactionManager private constructor(
+    private var context: FragmentActivity,
+) : ActivityAwareComponent {
     private lateinit var judo: Judo
     private lateinit var judoApiService: JudoApiService
     private lateinit var recommendationService: RecommendationService
@@ -128,6 +132,7 @@ class CardTransactionManager private constructor(private var context: FragmentAc
 
     private val listenerMap = WeakHashMap<String, CardTransactionManagerResultListener>()
     private val results = HashMap<String, JudoPaymentResult>()
+    private val completedTransactionIDs = mutableSetOf<String>()
 
     companion object : SingletonHolder<CardTransactionManager>(::CardTransactionManager)
 
@@ -397,16 +402,25 @@ class CardTransactionManager private constructor(private var context: FragmentAc
     private fun performComplete3ds2(
         receipt: Receipt,
         caller: String,
+        threeDSSDKChallengeStatus: String? = null,
     ) {
         val receiptId = receipt.receiptId ?: ""
+
+        if (completedTransactionIDs.contains(receiptId)) {
+            Log.w(CardTransactionManager::class.java.name, "Attempt to invoke repeatedly complete3DS2 was detected.")
+            return
+        }
+
         val version = receipt.getCReqParameters()?.messageVersion ?: judo.threeDSTwoMessageVersion
         val cv2 = transactionDetails?.securityNumber
 
         applicationScope.launch {
             val result =
-                judoApiService.complete3ds2(receiptId, Complete3DS2Request(version, cv2)).await()
+                judoApiService.complete3ds2(receiptId, Complete3DS2Request(version, cv2, threeDSSDKChallengeStatus)).await()
             onResult(result.toJudoPaymentResult(context.resources), caller)
         }
+
+        completedTransactionIDs.add(receiptId)
     }
 
     private fun handleJudoApiResult(
@@ -441,23 +455,23 @@ class CardTransactionManager private constructor(private var context: FragmentAc
         val challengeStatusReceiver =
             object : ChallengeStatusReceiver {
                 override fun cancelled() {
-                    performComplete3ds2(receipt, caller)
+                    performComplete3ds2(receipt, caller, ThreeDSSDKChallengeStatus.CANCELLED)
                 }
 
                 override fun completed(completionEvent: CompletionEvent) {
-                    performComplete3ds2(receipt, caller)
+                    performComplete3ds2(receipt, caller, completionEvent.toFormattedEventString())
                 }
 
                 override fun protocolError(protocolErrorEvent: ProtocolErrorEvent) {
-                    performComplete3ds2(receipt, caller)
+                    performComplete3ds2(receipt, caller, protocolErrorEvent.toFormattedEventString())
                 }
 
                 override fun runtimeError(runtimeErrorEvent: RuntimeErrorEvent) {
-                    performComplete3ds2(receipt, caller)
+                    performComplete3ds2(receipt, caller, runtimeErrorEvent.toFormattedEventString())
                 }
 
                 override fun timedout() {
-                    performComplete3ds2(receipt, caller)
+                    performComplete3ds2(receipt, caller, ThreeDSSDKChallengeStatus.TIMEOUT)
                 }
             }
 

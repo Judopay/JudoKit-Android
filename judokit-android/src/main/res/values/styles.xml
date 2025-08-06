@@ -76,6 +76,8 @@
         <item name="android:windowSoftInputMode">adjustResize</item>
         <item name="android:windowAnimationStyle">@style/JudoTheme.BottomSheetDialogAnimation</item>
         <item name="bottomSheetStyle">@style/JudoTheme.BottomSheet.Modal</item>
+        <item name="enableEdgeToEdge">true</item>
+
     </style>
 
     <style name="JudoTheme.BottomSheetDialogAnimation">

@@ -123,8 +123,8 @@ open class Response(
     val isDeclined: Boolean
         get() = RESPONSE_STATUS_DECLINED == result
 
-    override fun toString(): String {
-        return """
+    override fun toString(): String =
+        """
             Response(
                 result=$result,
                 errorCategory=$errorCategory,
@@ -135,5 +135,4 @@ open class Response(
                 errorDetails=$errorDetails
             )
             """.trimIndent(true)
-    }
 }

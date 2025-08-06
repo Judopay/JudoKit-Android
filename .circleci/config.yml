@@ -1,158 +1,33 @@
 version: 2.1
 
 orbs:
-  android: circleci/android@2.5.0
+  android: circleci/android@3.1.0
   slack: circleci/slack@4.12.5
-  ruby: circleci/ruby@2.1.0
+  ruby: circleci/ruby@2.5.3
 
 commands:
-  notify_slack_error:
+  notify_slack_summary:
+    parameters:
+      event:
+        type: enum
+        enum: [pass, error, fail]
+      message_text:
+        type: string
     steps:
       - slack/notify:
-          event: fail
+          event: << parameters.event >>
           custom: |
             {
               "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "CircleCI ran the :android: Android E2E mobile tests but they *failed*, here are the results: \n *<$CIRCLE_BUILD_URL | :circleci: Open build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
-                  }
+                { "type": "section", "text": { "type": "mrkdwn", "text": "<< parameters.message_text >>" }
                 },
                 {
                   "type": "section",
                   "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Branch:*\n$CIRCLE_BRANCH"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Commit:* \n <https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Author:*\n$CIRCLE_USERNAME"
-                    }
-                  ]
-                }
-              ]
-            }
-
-  notify_slack_pass:
-    steps:
-      - slack/notify:
-          event: pass
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "CircleCI has just *successfully* ran the :android: Android E2E mobile tests, here are the results: \n *<$CIRCLE_BUILD_URL | :circleci: Open build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
-                  }
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Branch:*\n$CIRCLE_BRANCH"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Commit:* \n <https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Author:*\n$CIRCLE_USERNAME"
-                    }
-                  ]
-                }
-              ]
-            }
-
-  notify_slack_error_weekly:
-    steps:
-      - slack/notify:
-          event: fail
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "CircleCI ran the :android: Android E2E backward compatibility mobile tests but they *failed*, here are the results: \n *<$CIRCLE_BUILD_URL | :circleci: Open build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
-                  }
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Branch:*\n$CIRCLE_BRANCH"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Commit:* \n <https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Author:*\n$CIRCLE_USERNAME"
-                    }
-                  ]
-                }
-              ]
-            }
-
-  notify_slack_pass_weekly:
-    steps:
-      - slack/notify:
-          event: pass
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "CircleCI has just *successfully* ran the :android: Android E2E backward compatibility mobile tests, here are the results: \n *<$CIRCLE_BUILD_URL | :circleci: Open build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
-                  }
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Branch:*\n$CIRCLE_BRANCH"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Commit:* \n <https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Author:*\n$CIRCLE_USERNAME"
-                    }
+                    { "type": "mrkdwn", "text": "*Project:*\n$CIRCLE_PROJECT_REPONAME" },
+                    { "type": "mrkdwn", "text": "*Branch:*\n$CIRCLE_BRANCH" },
+                    { "type": "mrkdwn", "text": "*Commit:*\n<https://github.com/Judopay/JudoKit-Android/commit/${CIRCLE_SHA1} | ${CIRCLE_SHA1:0:7}>" },
+                    { "type": "mrkdwn", "text": "*Author:*\n$CIRCLE_USERNAME" }
                   ]
                 }
               ]
@@ -161,14 +36,16 @@ commands:
   checkout_project:
     steps:
       - checkout
+      - ruby/install:
+          version: "$(cat .ruby-version)"
       - ruby/install-deps
-      - android/accept-licenses
-      - android/restore-gradle-cache
-      - android/restore-build-cache
+      - android/accept_licenses
+      - android/restore_gradle_cache
+      - android/restore_build_cache
   persist_project_cache:
     steps:
-      - android/save-build-cache
-      - android/save-gradle-cache
+      - android/save_build_cache
+      - android/save_gradle_cache
   prepare_instrumented_tests:
     steps:
       - checkout_project
@@ -197,12 +74,15 @@ commands:
 aliases:
   android-docker-executor: &android-docker-executor
     executor:
-      name: android/android-docker
-      tag: 2024.01.1
-      resource-class: xlarge
+      name: android/android_docker
+      tag: 2025.04.1
+      resource_class: xlarge
 
 parameters:
   weekly:
+    type: boolean
+    default: false
+  browserstack: 
     type: boolean
     default: false
 
@@ -258,9 +138,37 @@ jobs:
               --use-orchestrator \
               --client-details=matrixLabel="Regression E2E" \
               --num-flaky-test-attempts=1
-      - notify_slack_error
-      - notify_slack_pass
-
+      - run:
+          name: Prepare Slack message
+          command: |
+            # Success message
+            MESSAGE=$(cat \<<EOF
+            *Android :android: regression tests passed successfully!*  
+            *<$CIRCLE_BUILD_URL | :circleci: View build>*  
+            *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+            EOF
+            )
+            echo "export SLACK_MESSAGE_TEXT=\"$MESSAGE\"" >> "$BASH_ENV"
+            # Fail message
+            FAIL_MESSAGE=$(cat \<<EOF
+            *Android :android: regression tests failed. Please investigate*  
+            *<$CIRCLE_BUILD_URL | :circleci: View build>*  
+            *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+            EOF
+            )
+            echo "export SLACK_FAIL_MESSAGE_TEXT=\"$FAIL_MESSAGE\"" >> "$BASH_ENV"
+      - notify_slack_summary:
+          event: pass
+          message_text: "$SLACK_MESSAGE_TEXT"
+      - notify_slack_summary:
+          event: fail
+          message_text: "$SLACK_FAIL_MESSAGE_TEXT"
+      - notify_slack_summary:
+          event: pass
+          message_text: ":white_tick: *Android :android: regression tests passed successfully!*  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
+      - notify_slack_summary:
+          event: fail
+          message_text: ":x: *Android :android: regression tests failed. Please investigate :eyes: *  \n *<$CIRCLE_BUILD_URL | :circleci: View build>* \n *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*"
 
   instrumented_test_sample_weekly_api_31:
     <<: *android-docker-executor
@@ -280,8 +188,32 @@ jobs:
               --client-details=matrixLabel="Backward Compat E2E (API 31)" \
               --test-targets="class com.judokit.android.examples.test.card.CardPaymentTest" \
               --num-flaky-test-attempts=1
-      - notify_slack_error_weekly
-      - notify_slack_pass_weekly
+      - run:
+          name: Prepare Slack message
+          command: |
+            # Success message
+            MESSAGE=$(cat \<<EOF
+            *Android :android: backward compatibility (API 31/Android 12) tests passed successfully!*  
+            *<$CIRCLE_BUILD_URL | :circleci: View build>*  
+            *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+            EOF
+            )
+            echo "export SLACK_MESSAGE_TEXT=\"$MESSAGE\"" >> "$BASH_ENV"
+            # Fail message
+            FAIL_MESSAGE=$(cat \<<EOF
+            *Android :android: backward compatibility (API 31/Android 12) tests failed - please investigate*  
+            *<$CIRCLE_BUILD_URL | :circleci: View build>*  
+            *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+            EOF
+            )
+            echo "export SLACK_FAIL_MESSAGE_TEXT=\"$FAIL_MESSAGE\"" >> "$BASH_ENV"
+      - notify_slack_summary:
+          event: pass
+          message_text: "$SLACK_MESSAGE_TEXT"
+      - notify_slack_summary:
+          event: fail
+          message_text: "$SLACK_FAIL_MESSAGE_TEXT"
+
   instrumented_test_sample_weekly_api_32:
     <<: *android-docker-executor
     steps:
@@ -300,8 +232,32 @@ jobs:
               --client-details=matrixLabel="Backward Compat E2E (API 32)" \
               --test-targets="class com.judokit.android.examples.test.card.CardPaymentTest" \
               --num-flaky-test-attempts=1
-      - notify_slack_error_weekly
-      - notify_slack_pass_weekly
+      - run:
+          name: Prepare Slack message
+          command: |
+            # Success message
+            MESSAGE=$(cat \<<EOF
+            *Android :android: backward compatibility (API 32/Android 12) tests passed successfully!*  
+            *<$CIRCLE_BUILD_URL | :circleci: View build>*  
+            *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+            EOF
+            )
+            echo "export SLACK_MESSAGE_TEXT=\"$MESSAGE\"" >> "$BASH_ENV"
+            # Fail message
+            FAIL_MESSAGE=$(cat \<<EOF
+            *Android :android: backward compatibility (API 32/Android 12) tests failed - please investigate*  
+            *<$CIRCLE_BUILD_URL | :circleci: View build>*  
+            *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+            EOF
+            )
+            echo "export SLACK_FAIL_MESSAGE_TEXT=\"$FAIL_MESSAGE\"" >> "$BASH_ENV"
+      - notify_slack_summary:
+          event: pass
+          message_text: "$SLACK_MESSAGE_TEXT"
+      - notify_slack_summary:
+          event: fail
+          message_text: "$SLACK_FAIL_MESSAGE_TEXT"
+
   instrumented_test_sample_weekly_api_33:
     <<: *android-docker-executor
     steps:
@@ -320,8 +276,31 @@ jobs:
               --client-details=matrixLabel="Backward Compat E2E (API 33)" \
               --test-targets="class com.judokit.android.examples.test.card.CardPaymentTest" \
               --num-flaky-test-attempts=1
-      - notify_slack_error_weekly
-      - notify_slack_pass_weekly
+      - run:
+          name: Prepare Slack message
+          command: |
+            # Success message
+            MESSAGE=$(cat \<<EOF
+            *Android :android: backward compatibility (API 33/Android 13) tests passed successfully!*  
+            *<$CIRCLE_BUILD_URL | :circleci: View build>*  
+            *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+            EOF
+            )
+            echo "export SLACK_MESSAGE_TEXT=\"$MESSAGE\"" >> "$BASH_ENV"
+            # Fail message
+            FAIL_MESSAGE=$(cat \<<EOF
+            *Android :android: backward compatibility (API 33/Android 13) tests failed - please investigate*  
+            *<$CIRCLE_BUILD_URL | :circleci: View build>*  
+            *<https://console.firebase.google.com/u/0/project/opnf-prod/testlab/histories/ | :firebase: Firebase results>*
+            EOF
+            )
+            echo "export SLACK_FAIL_MESSAGE_TEXT=\"$FAIL_MESSAGE\"" >> "$BASH_ENV"
+      - notify_slack_summary:
+          event: pass
+          message_text: "$SLACK_MESSAGE_TEXT"
+      - notify_slack_summary:
+          event: fail
+          message_text: "$SLACK_FAIL_MESSAGE_TEXT"
 
   report_to_jira:
     docker:
@@ -339,6 +318,87 @@ jobs:
           environment:
             ENVIRONMENT: << parameters.environment >>
           command: /resources/scripts/report-status-to-jira.sh
+
+  run_espresso_tests_on_browserstack:
+    <<: *android-docker-executor
+    steps:
+      - prepare_instrumented_tests
+      - run:
+          name: Upload app APK to BrowserStack
+          command: |
+            APP_PATH="./judokit-android-examples/build/outputs/apk/debug/judokit-android-examples-debug.apk"
+            APP_UPLOAD_RESPONSE=$(curl -v -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+              -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/app" \
+              -F "file=@$APP_PATH")
+            APP_URL=$(echo "$APP_UPLOAD_RESPONSE" | jq -r '.app_url')
+            echo "export APP_URL=$APP_URL" >> $BASH_ENV
+      - run:
+          name: Upload test APK to BrowserStack
+          command: |
+            TEST_PATH="./judokit-android-examples/build/outputs/apk/androidTest/debug/judokit-android-examples-debug-androidTest.apk"
+            ABS_TEST_PATH="$(realpath "$TEST_PATH")"
+
+            if [ ! -f "$ABS_TEST_PATH" ]; then
+              echo "Realpath resolved to missing file: $ABS_TEST_PATH"
+              exit 1
+            fi
+
+            TEST_UPLOAD_RESPONSE=$(curl -v -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+              -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/test-suite" \
+              -F file="@$ABS_TEST_PATH")
+            TEST_URL=$(echo "$TEST_UPLOAD_RESPONSE" | jq -r '.test_suite_url')
+            echo "export TEST_URL=$TEST_URL" >> $BASH_ENV
+      - run:
+          name: Trigger Espresso Test Run
+          command: |
+            source $BASH_ENV
+            TRIGGER_RESPONSE=$(curl -v -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+              -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/build" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "app": "'"$APP_URL"'",
+                "testSuite": "'"$TEST_URL"'",
+                "devices": ["Samsung Galaxy S25 Ultra-15.0", "Samsung Galaxy S21-11.0", "OnePlus 8-10.0", "Samsung Galaxy A10-9.0", "Samsung Galaxy S9-8.0", "Samsung Galaxy S8-7.0"],
+                "project" : "JudoKit-Android UI Tests",
+                "buildTag": "JudoKit-Android",
+                "annotation": ["com.judokit.android.examples.test.card.annotations.SmokeTest"],
+                "networkLogs": true
+              }')
+
+            BUILD_ID=$(echo "$TRIGGER_RESPONSE" | jq -r '.build_id')
+
+            if [[ "$BUILD_ID" == "null" ]]; then
+              echo "Failed to trigger tests: $TRIGGER_RESPONSE"
+              exit 1
+            fi
+
+            echo "Triggered BrowserStack build: $BUILD_ID"
+            echo "export BUILD_ID=$BUILD_ID" >> $BASH_ENV
+      - run:
+          name: Prepare Slack message
+          command: |
+            # Success message
+            MESSAGE=$(cat \<<EOF
+            *Android :android: smoke tests successfully started on :browserstack: BrowserStack!*  
+            *<$CIRCLE_BUILD_URL | :circleci: View build>*  
+            *<https://app-automate.browserstack.com/dashboard/v2/builds/$BUILD_ID | :browserstack: Browserstack build>*
+            EOF
+            )
+            echo "export SLACK_MESSAGE_TEXT=\"$MESSAGE\"" >> "$BASH_ENV"
+            # Fail message
+            FAIL_MESSAGE=$(cat \<<EOF
+            *Android :android: smoke tests failed to start on :browserstack: BrowserStack - please investigate*  
+            *<$CIRCLE_BUILD_URL | :circleci: View build>*  
+            *<https://app-automate.browserstack.com/dashboard/v2/builds/$BUILD_ID | :browserstack: Browserstack build>*
+            EOF
+            )
+            echo "export SLACK_FAIL_MESSAGE_TEXT=\"$FAIL_MESSAGE\"" >> "$BASH_ENV"
+      - notify_slack_summary:
+          event: pass
+          message_text: "$SLACK_MESSAGE_TEXT"
+      - notify_slack_summary:
+          event: fail
+          message_text: "$SLACK_FAIL_MESSAGE_TEXT"
 
 workflows:
   version: 2
@@ -422,3 +482,13 @@ workflows:
             branches:
               only:
                 - master
+
+  instrumented_test_browserstack:
+    when: << pipeline.parameters.browserstack >>
+    jobs:
+      - run_espresso_tests_on_browserstack:
+          context: shared-secrets
+          filters:
+            branches:
+              only:
+                - CT-3082-bs-setup

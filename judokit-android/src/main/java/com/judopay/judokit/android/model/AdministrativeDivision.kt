@@ -1,6 +1,9 @@
 package com.judopay.judokit.android.model
 
-data class AdministrativeDivision(val isoCode: String, val name: String) {
+data class AdministrativeDivision(
+    val isoCode: String,
+    val name: String,
+) {
     override fun toString() = this.name
 }
 

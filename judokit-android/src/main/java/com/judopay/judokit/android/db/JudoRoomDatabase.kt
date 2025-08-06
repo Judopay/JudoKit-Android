@@ -29,12 +29,12 @@ abstract class JudoRoomDatabase : RoomDatabase() {
             }
             synchronized(this) {
                 val instance =
-                    Room.databaseBuilder(
-                        context.applicationContext,
-                        JudoRoomDatabase::class.java,
-                        "judo_database",
-                    )
-                        .fallbackToDestructiveMigration()
+                    Room
+                        .databaseBuilder(
+                            context.applicationContext,
+                            JudoRoomDatabase::class.java,
+                            "judo_database",
+                        ).fallbackToDestructiveMigration(false)
                         .build()
                 database = instance
                 return instance

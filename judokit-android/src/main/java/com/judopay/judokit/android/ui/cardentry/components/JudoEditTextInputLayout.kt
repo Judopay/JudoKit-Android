@@ -33,21 +33,22 @@ class JudoEditTextInputLayout
         private val binding = JudoEditTextInputLayoutBinding.inflate(LayoutInflater.from(context), this, true)
 
         init {
-            context.theme.obtainStyledAttributes(
-                attrs,
-                R.styleable.JudoEditTextInputLayout,
-                0,
-                0,
-            ).apply {
-                try {
-                    mDisableLeftCornerRadius =
-                        getBoolean(R.styleable.JudoEditTextInputLayout_disableLeftCornerRadius, false)
-                    mDisableRightCornerRadius =
-                        getBoolean(R.styleable.JudoEditTextInputLayout_disableRightCornerRadius, false)
-                } finally {
-                    recycle()
+            context.theme
+                .obtainStyledAttributes(
+                    attrs,
+                    R.styleable.JudoEditTextInputLayout,
+                    0,
+                    0,
+                ).apply {
+                    try {
+                        mDisableLeftCornerRadius =
+                            getBoolean(R.styleable.JudoEditTextInputLayout_disableLeftCornerRadius, false)
+                        mDisableRightCornerRadius =
+                            getBoolean(R.styleable.JudoEditTextInputLayout_disableRightCornerRadius, false)
+                    } finally {
+                        recycle()
+                    }
                 }
-            }
         }
 
         var isErrorEnabled: Boolean = false
@@ -134,18 +135,19 @@ class JudoEditTextInputLayout
                 }
 
             editText?.let { editTextView ->
-                ObjectAnimator.ofFloat(
-                    editTextView,
-                    "textSize",
-                    fromToValues.first,
-                    fromToValues.second,
-                ).apply {
-                    doOnEnd {
-                        editTextView.textSize = fromToValues.second
-                        editTextView.setTextColor(ContextCompat.getColor(context, textColor))
-                    }
-                    duration = TEXT_SIZE_ANIMATION_DURATION
-                }.start()
+                ObjectAnimator
+                    .ofFloat(
+                        editTextView,
+                        "textSize",
+                        fromToValues.first,
+                        fromToValues.second,
+                    ).apply {
+                        doOnEnd {
+                            editTextView.textSize = fromToValues.second
+                            editTextView.setTextColor(ContextCompat.getColor(context, textColor))
+                        }
+                        duration = TEXT_SIZE_ANIMATION_DURATION
+                    }.start()
             }
         }
 

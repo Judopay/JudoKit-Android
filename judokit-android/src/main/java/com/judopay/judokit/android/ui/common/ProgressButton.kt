@@ -34,7 +34,8 @@ class ProgressButton
         context: Context,
         attrs: AttributeSet? = null,
         defStyle: Int = 0,
-    ) : MaterialButton(context, attrs, defStyle), Drawable.Callback {
+    ) : MaterialButton(context, attrs, defStyle),
+        Drawable.Callback {
         var state: ButtonState = ButtonState.Enabled(R.string.jp_pay_now)
             set(value) {
                 field = value

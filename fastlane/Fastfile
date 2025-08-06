@@ -155,6 +155,8 @@
       assemble_android_test = options[:with_android_test] || false
       assemble_android_test_task = assemble_android_test ? "judokit-android-examples:assembleAndroidTest" : ""
 
+      remove_certificate_pinner if assemble_android_test
+
       gradle(
         task: "clean judokit-android-examples:assemble #{assemble_android_test_task}",
         properties: properties
@@ -215,5 +217,37 @@
           "judokit-android-examples/src/main/res/values/strings.xml"
         ]
       )
+    end
+
+    desc "Remove certificate pinner configuration from source files"
+    lane :remove_certificate_pinner do |options|
+      file_path = options[:file_path] || "../judokit-android/src/main/java/com/judopay/judokit/android/api/factory/JudoApiServiceFactory.kt"
+
+      # The regex pattern to match the certificate pinner block
+      # Starts with `builder.certificatePinner(`, followed by any number of nested parentheses, and ends with a closing parenthesis
+      cert_pinner_pattern = /builder\.certificatePinner\([^()]*(?:\([^()]*(?:\([^()]*\)[^()]*)*\)[^()]*)*\)/m
+
+      unless File.exist?(file_path)
+        UI.user_error!("Could not find file at path: #{file_path}")
+        next
+      end
+
+      content = File.read(file_path)
+      matches = content.scan(cert_pinner_pattern)
+
+      if matches.empty?
+        UI.important("No certificate pinner configurations found in #{file_path}")
+        next
+      end
+
+      UI.message("Found #{matches.count} certificate pinner configuration(s):")
+      matches.each do |match|
+        UI.message("\nConfiguration to remove:")
+        UI.message(match)
+      end
+
+      new_content = content.gsub(cert_pinner_pattern, '')
+      File.write(file_path, new_content)
+      UI.success("Successfully removed #{matches.count} certificate pinner configuration(s)")
     end
   end

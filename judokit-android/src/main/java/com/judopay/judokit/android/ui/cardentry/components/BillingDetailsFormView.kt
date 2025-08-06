@@ -40,6 +40,7 @@ import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_CANADA
 import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_CHINA
 import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_INDIA
 import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_US
+import com.judopay.judokit.android.ui.common.heightWithInsetsAndMargins
 
 internal typealias BillingDetailsFormValidationStatus = (model: BillingDetailsInputModel, isValid: Boolean) -> Unit
 internal typealias BillingDetailsSubmitButtonClickListener = () -> Unit
@@ -51,7 +52,8 @@ class BillingDetailsFormView
         context: Context,
         attrs: AttributeSet? = null,
         defStyle: Int = 0,
-    ) : FrameLayout(context, attrs, defStyle), CardEntryViewAnimator.OnViewWillAppearListener {
+    ) : FrameLayout(context, attrs, defStyle),
+        CardEntryViewAnimator.OnViewWillAppearListener {
         val binding = BillingDetailsFormViewBinding.inflate(LayoutInflater.from(context), this, true)
 
         internal var onFormValidationStatusListener: BillingDetailsFormValidationStatus? = null
@@ -121,6 +123,13 @@ class BillingDetailsFormView
             setupMobileNumberFormatter()
             setupCountrySpinner()
             setupStateSpinner()
+
+            binding.billingDetailsBottomAppBar.post {
+                val additionalSpacing = resources.getDimension(R.dimen.space_94).toInt()
+                val params = binding.billingDetailsContainerLayout.layoutParams as MarginLayoutParams
+                params.bottomMargin = binding.billingDetailsBottomAppBar.heightWithInsetsAndMargins + additionalSpacing
+                binding.billingDetailsContainerLayout.layoutParams = params
+            }
         }
 
         override fun onViewWillAppear() {
@@ -194,9 +203,10 @@ class BillingDetailsFormView
                 }
                 mobileNumberFormatter =
                     PhoneNumberFormattingTextWatcher(
-                        countries.find {
-                            it.name == editTextForType(BillingDetailsFieldType.COUNTRY).text.toString()
-                        }?.alpha2Code ?: "",
+                        countries
+                            .find {
+                                it.name == editTextForType(BillingDetailsFieldType.COUNTRY).text.toString()
+                            }?.alpha2Code ?: "",
                     )
                 addTextChangedListener(mobileNumberFormatter)
             }
@@ -380,7 +390,5 @@ class BillingDetailsFormView
             onFormValidationStatusListener?.invoke(inputModel, isFormValid)
         }
 
-        private inline fun <reified V> validatorInstance(): V? {
-            return validators.firstOrNull { it is V } as V?
-        }
+        private inline fun <reified V> validatorInstance(): V? = validators.firstOrNull { it is V } as V?
     }

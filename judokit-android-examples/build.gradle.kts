@@ -30,13 +30,17 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.activity.ktx)
+
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.material.icons.extended)
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.ui.tooling.preview)
 
     implementation(libs.squareup.retrofit2)
     implementation(libs.squareup.retrofit2.converter.gson)
     implementation(libs.ravelin.encrypt)
+    implementation(libs.androidx.material3.android)
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)

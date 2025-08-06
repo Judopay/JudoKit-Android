@@ -15,14 +15,13 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:id="@+id/billingDetailsContainerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space_74"
             android:clipToPadding="false"
             android:paddingStart="@dimen/space_24"
             android:paddingEnd="@dimen/space_24"
-            android:paddingBottom="@dimen/space_12"
             tools:background="@color/white"
             android:tag="@string/jp_billing_details_container">
 

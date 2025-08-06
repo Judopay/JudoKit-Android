@@ -33,14 +33,13 @@ object RecommendationApiServiceFactory : ServiceFactory<RecommendationApiService
     override fun create(
         context: Context,
         judo: Judo,
-    ): RecommendationApiService {
-        return createRetrofit(
+    ): RecommendationApiService =
+        createRetrofit(
             context.applicationContext,
             judo,
             // This base URL is never used later on, but is required by Retrofit to be provided.
             LOCALHOST_URL,
         ).create(RecommendationApiService::class.java)
-    }
 
     override fun addInterceptors(
         client: OkHttpClient.Builder,

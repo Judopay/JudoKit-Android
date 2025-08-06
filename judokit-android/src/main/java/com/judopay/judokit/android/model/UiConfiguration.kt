@@ -111,8 +111,8 @@ class UiConfiguration internal constructor(
         }
     }
 
-    override fun toString(): String {
-        return """
+    override fun toString(): String =
+        """
             UiConfiguration(
                 avsEnabled=$avsEnabled,
                 shouldPaymentMethodsDisplayAmount=$shouldPaymentMethodsDisplayAmount,
@@ -122,5 +122,4 @@ class UiConfiguration internal constructor(
                 threeDSUiCustomization=$threeDSUiCustomization
             )
             """.trimIndent(true)
-    }
 }

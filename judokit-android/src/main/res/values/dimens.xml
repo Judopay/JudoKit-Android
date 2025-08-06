@@ -50,7 +50,7 @@
     <dimen name="button_height">54dp</dimen>
 
     <!-- App bar -->
-    <dimen name="app_bar_layout_height">400dp</dimen>
+    <dimen name="app_bar_layout_height">448dp</dimen>
     <dimen name="app_bar_layout_min_height">330dp</dimen>
 
     <!-- Payment methods screen-->

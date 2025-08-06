@@ -92,7 +92,9 @@ class Judo internal constructor(
      * @param paymentWidgetType Property used to decide which payment widget to invoke for a transaction
      */
     @Suppress("TooManyFunctions")
-    class Builder(private val paymentWidgetType: PaymentWidgetType) {
+    class Builder(
+        private val paymentWidgetType: PaymentWidgetType,
+    ) {
         private var judoId: String? = null
         private var authorization: Authorization? = null
         private var isSandboxed: Boolean? = null
@@ -401,8 +403,8 @@ class Judo internal constructor(
         }
     }
 
-    override fun toString(): String {
-        return """
+    override fun toString(): String =
+        """
             Judo(
                 judoId='$judoId',
                 authorization=$authorization,
@@ -425,5 +427,4 @@ class Judo internal constructor(
                 extras=$extras
             )
             """.trimIndent(true)
-    }
 }

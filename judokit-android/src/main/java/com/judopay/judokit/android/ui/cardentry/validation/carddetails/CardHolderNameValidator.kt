@@ -9,8 +9,9 @@ import com.judopay.judokit.android.ui.common.REG_EX_CARDHOLDER_NAME
 
 private const val MIN_CARDHOLDER_NAME_LENGTH = 4
 
-data class CardHolderNameValidator(override val fieldType: String = CardDetailsFieldType.HOLDER_NAME.name) :
-    Validator {
+data class CardHolderNameValidator(
+    override val fieldType: String = CardDetailsFieldType.HOLDER_NAME.name,
+) : Validator {
     private val cardholderNameRegEx = REG_EX_CARDHOLDER_NAME.toRegex()
 
     override fun validate(

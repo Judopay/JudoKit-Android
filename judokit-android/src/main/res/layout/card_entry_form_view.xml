@@ -14,13 +14,12 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cardDetailsContainerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space_106"
             android:clipToPadding="false"
             android:paddingStart="@dimen/space_24"
             android:paddingEnd="@dimen/space_24"
-            android:paddingBottom="@dimen/space_12"
             tools:background="@color/greyish"
             tools:ignore="MissingConstraints">
 
