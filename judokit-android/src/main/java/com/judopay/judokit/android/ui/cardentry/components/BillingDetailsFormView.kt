@@ -125,7 +125,7 @@ class BillingDetailsFormView
             setupStateSpinner()
 
             binding.billingDetailsBottomAppBar.post {
-                val additionalSpacing = resources.getDimension(R.dimen.space_94).toInt()
+                val additionalSpacing = resources.getDimension(R.dimen.space_88).toInt()
                 val params = binding.billingDetailsContainerLayout.layoutParams as MarginLayoutParams
                 params.bottomMargin = binding.billingDetailsBottomAppBar.heightWithInsetsAndMargins + additionalSpacing
                 binding.billingDetailsContainerLayout.layoutParams = params

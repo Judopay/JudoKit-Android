@@ -85,7 +85,7 @@ class CardEntryFormView
             setupFieldsFormatting()
 
             binding.cardEntryBottomAppBar.post {
-                val additionalSpacing = resources.getDimension(R.dimen.space_8).toInt()
+                val additionalSpacing = resources.getDimension(R.dimen.space_16).toInt()
                 val params = binding.cardDetailsContainerLayout.layoutParams as LayoutParams
                 params.bottomMargin = binding.cardEntryBottomAppBar.heightWithInsetsAndMargins + additionalSpacing
                 binding.cardDetailsContainerLayout.layoutParams = params
