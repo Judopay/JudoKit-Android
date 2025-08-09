@@ -134,6 +134,7 @@
 
     <string name="jp_continue_text">Continue</string>
     <string name="jp_add_address_line">Add address line %1$d (optional)</string>
+    <string name="jp_card_entry_title">Card Information</string>
     <string name="jp_billing_details_title">Billing Details</string>
     <string name="jp_back">Back</string>
     <string name="jp_card_number_entry_field" translatable="false">cardNumberInputField</string>

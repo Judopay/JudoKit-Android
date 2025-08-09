@@ -1268,9 +1268,9 @@ public final class com/judopay/judokit/android/databinding/BillingDetailsFormVie
 	public final field billingDetailsBackButton Lcom/judopay/judokit/android/ui/common/ProgressButton;
 	public final field billingDetailsBottomAppBar Lcom/google/android/material/bottomappbar/BottomAppBar;
 	public final field billingDetailsContainerLayout Landroidx/constraintlayout/widget/ConstraintLayout;
+	public final field billingDetailsHeading Landroid/widget/TextView;
 	public final field billingDetailsScrollView Landroidx/core/widget/NestedScrollView;
 	public final field billingDetailsSubmitButton Lcom/judopay/judokit/android/ui/common/ProgressButton;
-	public final field billingDetailsTextView Landroid/widget/TextView;
 	public final field cityTextInputEditText Landroid/widget/EditText;
 	public final field cityTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
 	public final field countryTextInputEditText Landroid/widget/AutoCompleteTextView;
@@ -1313,6 +1313,7 @@ public final class com/judopay/judokit/android/databinding/CardEntryFormViewBind
 	public final field cardContainer Landroidx/coordinatorlayout/widget/CoordinatorLayout;
 	public final field cardDetailsContainerLayout Landroidx/constraintlayout/widget/ConstraintLayout;
 	public final field cardEntryBottomAppBar Lcom/google/android/material/bottomappbar/BottomAppBar;
+	public final field cardEntryHeading Landroid/widget/TextView;
 	public final field cardEntrySubmitButton Lcom/judopay/judokit/android/ui/common/ProgressButton;
 	public final field countryTextInputEditText Landroid/widget/AutoCompleteTextView;
 	public final field countryTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
