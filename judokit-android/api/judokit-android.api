@@ -1382,6 +1382,7 @@ public final class com/judopay/judokit/android/databinding/EditCardFragmentBindi
 	public final field saveButton Lcom/google/android/material/button/MaterialButton;
 	public final field titleEditText Landroid/widget/EditText;
 	public final field titleTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
+	public final field toolbar Landroid/widget/LinearLayout;
 	public static fun bind (Landroid/view/View;)Lcom/judopay/judokit/android/databinding/EditCardFragmentBinding;
 	public synthetic fun getRoot ()Landroid/view/View;
 	public fun getRoot ()Landroidx/constraintlayout/widget/ConstraintLayout;
