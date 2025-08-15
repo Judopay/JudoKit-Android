@@ -102,7 +102,7 @@ def replace(file_path:, old_string:, new_string:)
   puts("Replaced '#{old_string}' with '#{new_string}' in #{file_path}")
 end
 
-restore_certificate_pinner(sdk_root_path:)
+def restore_certificate_pinner(sdk_root_path:)
   reset_git_repo(
     force: true,
     files: [
