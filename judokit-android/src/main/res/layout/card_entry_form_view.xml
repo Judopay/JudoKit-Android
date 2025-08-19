@@ -40,12 +40,10 @@
 
             <TextView
                 android:id="@+id/cardEntryHeading"
-                style="@style/JudoTheme.TextView"
+                style="@style/JudoTheme.Title.Dark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/jp_card_entry_title"
-                android:textColor="@color/jpDarkGrayColor"
-                android:textSize="@dimen/text_size_18" />
+                android:text="@string/jp_card_entry_title" />
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/numberTextInputLayout"
