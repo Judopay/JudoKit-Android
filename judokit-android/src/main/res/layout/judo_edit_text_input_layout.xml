@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="@dimen/judo_text_input_layout_height"
-    android:background="@drawable/edit_text_input_layout_background_shape"
     android:paddingHorizontal="@dimen/space_16"
     android:paddingVertical="@dimen/space_8">
 
@@ -13,7 +12,6 @@
         android:id="@+id/containerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:minHeight="@dimen/judo_text_input_layout_height"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="0dp"
