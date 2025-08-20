@@ -1255,7 +1255,8 @@ public final class com/judopay/judokit/android/api/model/response/recommendation
 }
 
 public final class com/judopay/judokit/android/databinding/BillingDetailsFormViewBinding : androidx/viewbinding/ViewBinding {
-	public final field addAddressLineButton Lcom/google/android/material/button/MaterialButton;
+	public final field addAddressLineButton Landroid/widget/LinearLayout;
+	public final field addAddressLineButtonText Landroid/widget/TextView;
 	public final field addressLine1TextInputEditText Landroid/widget/EditText;
 	public final field addressLine1TextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
 	public final field addressLine2TextInputEditText Landroid/widget/EditText;
