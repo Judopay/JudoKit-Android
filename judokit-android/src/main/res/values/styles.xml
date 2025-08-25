@@ -39,7 +39,6 @@
         <item name="android:paddingRight">@dimen/space_6</item>
         <item name="android:minHeight">@dimen/min_touch_target_size</item>
         <item name="android:minWidth">@dimen/min_touch_target_size</item>
-        <item name="android:padding">0dp</item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -67,6 +66,11 @@
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
         <item name="android:padding">0dp</item>
+    </style>
+
+    <style name="JudoTheme.BottomBackButton" parent="JudoTheme.TextButton">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
     </style>
 
     <!-- Bottom Sheets -->

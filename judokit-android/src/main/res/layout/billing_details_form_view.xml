@@ -307,7 +307,7 @@
 
             <com.judopay.judokit.android.ui.common.ProgressButton
                 android:id="@+id/billingDetailsBackButton"
-                style="@style/JudoTheme.TextButton"
+                style="@style/JudoTheme.BottomBackButton"
                 android:layout_width="@dimen/width_100"
                 android:layout_height="@dimen/button_height"
                 android:minWidth="@dimen/min_touch_target_size"
