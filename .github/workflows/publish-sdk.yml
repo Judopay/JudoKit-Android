@@ -1,0 +1,10 @@
+name: Android Publish SDK
+
+on:
+  push:
+    tags: 'v[0-9]*.[0-9]*'
+
+jobs:
+  publish:
+    uses: Judopay/github-actions/.github/workflows/android-publish.yml@master
+    secrets: inherit

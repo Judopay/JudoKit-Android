@@ -1,253 +1,257 @@
-  default_platform(:android)
+require './helpers'
 
-  @supported_variants = %w(live staging)
+default_platform(:android)
 
-  # Check if an environment variable exists and is not empty
-  def env_var_valid?(var_name)
-    return ENV.has_key?(var_name) && !ENV[var_name].to_s.empty?
+@environments = ['staging', 'production']
+@fl_output_dir = ENV['FL_OUTPUT_DIR'] || "#{File.expand_path('..')}/fastlane_output"
+@project_root_path = File.expand_path('..')
+@sample_apps = [
+  SampleApp.new(
+    firebase_app_id: {
+      production: "1:34238832242:android:977c45c8ec944cb463eceb",
+      staging: "1:34238832242:android:50bc19a2f7de31f063eceb"
+    },
+    google_services_json_b64_var_name: {
+      production: "JUDOKIT_PROD_SAMPLE_APP_GOOGLE_SERVICES_JSON_B64",
+      staging: "JUDOKIT_STAGING_SAMPLE_APP_GOOGLE_SERVICES_JSON_B64"
+    },
+    path: "#{@project_root_path}/judokit-android-examples",
+  )
+]
+
+platform :android do
+  desc "Lint SDK"
+  lane :lint do
+    gradle(task: "ktlintCheck detekt")
   end
 
-  def replace(file_path, old_string, new_string)
-    # Check if the file exists
-    unless File.exist?(file_path)
-      UI.user_error!("File not found: #{file_path}")
-    end
-
-    # Read the file content
-    file_content = File.read(file_path)
-
-    # Replace the string
-    new_content = file_content.gsub(old_string, new_string)
-
-    # Write the updated content back to the file
-    File.open(file_path, "w") { |file| file.puts new_content }
-
-    UI.success("Replaced '#{old_string}' with '#{new_string}' in #{file_path}")
+  desc "Build the SDK"
+  lane :build do
+    gradle(task: "clean judokit-android:assemble judokit-android:dokkaJavadoc")
   end
 
-  def extract_build_variants_list(options)
-    default_variants = %w(live)
-
-    if options[:build_variants].nil?
-      UI.important("No build_variants option has been provided, defaulting to: #{default_variants}")
-    end
-
-    current_variants = options[:build_variants]&.split(',')&.map(&:strip) || default_variants
-
-    current_variants.each do |variant|
-      UI.user_error!("Unsupported build variant '#{variant}', must be: #{@supported_variants}") unless @supported_variants.include?(variant)
-    end
-
-    return current_variants
+  desc "Run SDK Tests"
+  lane :test do
+    gradle(task: "clean judokit-android:check")
   end
 
-  def extract_build_variant(options)
-    default_variant = "live"
-
-    if options[:variant].nil? || !@supported_variants.include?(options[:variant])
-      UI.important("Invalid or no variant option has been provided, defaulting to: #{default_variant}")
-      return default_variant
-    else
-      return options[:variant]
-    end
-  end
-
-  def firebase_app_id_for_build_variant(variant)
-    case variant
-    when 'live'
-      return ENV['ANDROID_FIREBASE_APP_ID']
-    when 'staging'
-      return ENV['ANDROID_FIREBASE_STAGING_APP_ID']
-    end
-  end
-
-  # Create a keystore for the example app
-  # The keystore is created from the ANDROID_SIGNING_PRIVATE_KEY, ANDROID_SIGNING_CERTIFICATE, and ANDROID_KEYSTORE_PASSWORD environment variables
-  # If any of these environment variables are not set, the example app will not be signed
-  def create_example_app_keystore
-      expected_env_vars =[
-            "ANDROID_SIGNING_PRIVATE_KEY",
-            "ANDROID_SIGNING_CERTIFICATE",
-            "ANDROID_KEYSTORE_PASSWORD",
-          ]
-
-      if expected_env_vars.all? { |var_name| env_var_valid?(var_name) }
-          UI.message("Creating a keystore for the example app")
-
-          sh "echo \"$ANDROID_SIGNING_PRIVATE_KEY\" | base64 -d > signing.key"
-          sh "echo \"$ANDROID_SIGNING_CERTIFICATE\" | base64 -d > signing.crt"
-
-          sh "openssl pkcs12 -export -inkey signing.key -in signing.crt -out signing.p12 -passout \"pass:$ANDROID_KEYSTORE_PASSWORD\""
-          sh "keytool -importkeystore -srckeystore signing.p12 -srcstoretype pkcs12 -srcstorepass \"$ANDROID_KEYSTORE_PASSWORD\" -destkeystore signing.jks -deststoretype JKS -storepass \"$ANDROID_KEYSTORE_PASSWORD\" -noprompt 2>/dev/null"
-
-          File.delete("signing.key", "signing.crt", "signing.p12")
-
-          return {
-            "android.injected.signing.store.file" => "#{Dir.pwd}/signing.jks",
-            "android.injected.signing.store.password" => ENV['ANDROID_KEYSTORE_PASSWORD'],
-            "android.injected.signing.key.alias" => "1",
-            "android.injected.signing.key.password" => ENV['ANDROID_KEYSTORE_PASSWORD'],
-          }
-      end
-
-      UI.important("Code signing environment variables are not set. The example app will not be signed.")
-      return {}
-  end
-
-  def create_signing_properties
-      expected_env_vars = [
-          "ORG_GRADLE_PROJECT_signingKey_base64",
-          "ORG_GRADLE_PROJECT_signingPassword",
-          "ORG_GRADLE_PROJECT_sonatypePassword",
-          "ORG_GRADLE_PROJECT_sonatypeUsername",
-      ]
-
-      if expected_env_vars.all? { |var_name| env_var_valid?(var_name) }
-          return {
-              "signingKey" => Base64.decode64(ENV["ORG_GRADLE_PROJECT_signingKey_base64"]),
-              "signingPassword" => ENV["ORG_GRADLE_PROJECT_signingPassword"],
-              "sonatypePassword" => ENV["ORG_GRADLE_PROJECT_sonatypePassword"],
-              "sonatypeUsername" => ENV["ORG_GRADLE_PROJECT_sonatypeUsername"],
-          }
-      end
-
-      UI.important("Code signing environment variables are not set. The SDK will not be signed.")
-      return {}
-  end
-
-  platform :android do
-
-    before_all do
-      prepare_google_services_json
-    end
-
-    desc "Create the google-services.json file for the example app"
-    lane :prepare_google_services_json do
-      if env_var_valid?('ANDROID_GOOGLE_SERVICES_JSON')
-        Dir.chdir('..') do
-          sh "echo \"$ANDROID_GOOGLE_SERVICES_JSON\" | base64 -d > judokit-android-examples/google-services.json"
-        end
-      else
-        UI.abort_with_message!("ANDROID_GOOGLE_SERVICES_JSON environment variable is not set. Unable to build the project.")
-      end
-    end
-
-    desc "Run the pull request checks"
-    lane :pull_request_checks do
-      gradle(task: "clean check judokit-android:assemble judokit-android-examples:assemble")
-    end
-
-    desc "Build the Example App"
-    lane :build_example_app do |options|
-      variant = extract_build_variant(options)
-      properties = create_example_app_keystore
-
-      if variant == 'staging'
-        properties["applicationIdSuffix"] = "staging"
-        inject_staging_environment
-      end
-
-      latest_release = firebase_app_distribution_get_latest_release(app:firebase_app_id_for_build_variant(variant))
-      current_version = latest_release.nil? ? 0 : latest_release[:buildVersion].to_i
-      properties["android.injected.version.code"] = current_version + 1
-
-      # For the instrumented tests
-      assemble_android_test = options[:with_android_test] || false
-      assemble_android_test_task = assemble_android_test ? "judokit-android-examples:assembleAndroidTest" : ""
-
-      remove_certificate_pinner if assemble_android_test
-
-      gradle(
-        task: "clean judokit-android-examples:assemble #{assemble_android_test_task}",
-        properties: properties
-      )
-
-      after_all do
-        if variant == 'staging'
-          revert_staging_environment
-        end
-      end
-    end
-
-    desc "Deploy a new version of the Example App to the Firebase App Distribution"
-    lane :example_app_distribution do |options|
-      extract_build_variants_list(options).each do |variant|
-        firebase_app_distribution_options = {
-          app: firebase_app_id_for_build_variant(variant),
-          groups: 'default-testers',
-          release_notes: changelog_from_git_commits(commits_count: 1)
-        }
-
-        build_example_app(variant: variant)
-        firebase_app_distribution firebase_app_distribution_options
-      end
-    end
-
-    desc "Releases the SDK to Maven Central"
-    lane :release_sdk do
+  desc "Publish the SDK"
+  lane :publish do
+    if env_vars_valid?([
+      "ORG_GRADLE_PROJECT_signingKey_base64",
+      "ORG_GRADLE_PROJECT_signingPassword",
+      "ORG_GRADLE_PROJECT_sonatypePassword",
+      "ORG_GRADLE_PROJECT_sonatypeUsername",
+    ])
       ensure_git_status_clean(
-          show_uncommitted_changes: true,
-          show_diff: true,
-          ignore_files: ['.bundle/config']
+        show_uncommitted_changes: true,
+        show_diff: true,
+        ignore_files: ['.bundle/config']
       )
+
       gradle(
         task: "clean judokit-android:build judokit-android:dokkaJavadoc publishToSonatype closeAndReleaseSonatypeStagingRepository",
-        properties: create_signing_properties
+        properties: {
+          "signingKey" => Base64.decode64(ENV["ORG_GRADLE_PROJECT_signingKey_base64"])
+        }
       )
-    end
-
-    desc "Injects the staging env variables"
-    lane :inject_staging_environment do
-        unless env_var_valid?('STAGING_HOST_NAME')
-            UI.abort_with_message!("STAGING_HOST_NAME environment variable is not set. Unable to continue.")
-        end
-
-        Dir.chdir('..') do
-          replace("judokit-android/src/main/java/com/judopay/judokit/android/model/ApiEnvironment.kt", ".judopay.com", ".#{ENV['STAGING_HOST_NAME']}")
-          replace("judokit-android-examples/src/main/res/values/strings.xml", "JudoKit", "[STG] JudoKit")
-        end
-    end
-
-    desc "Revert injected staging env variables"
-    lane :revert_staging_environment do
-      reset_git_repo(
-        force: true,
-        files: [
-          "judokit-android/src/main/java/com/judopay/judokit/android/model/ApiEnvironment.kt",
-          "judokit-android-examples/src/main/res/values/strings.xml"
-        ]
-      )
-    end
-
-    desc "Remove certificate pinner configuration from source files"
-    lane :remove_certificate_pinner do |options|
-      file_path = options[:file_path] || "../judokit-android/src/main/java/com/judopay/judokit/android/api/factory/JudoApiServiceFactory.kt"
-
-      # The regex pattern to match the certificate pinner block
-      # Starts with `builder.certificatePinner(`, followed by any number of nested parentheses, and ends with a closing parenthesis
-      cert_pinner_pattern = /builder\.certificatePinner\([^()]*(?:\([^()]*(?:\([^()]*\)[^()]*)*\)[^()]*)*\)/m
-
-      unless File.exist?(file_path)
-        UI.user_error!("Could not find file at path: #{file_path}")
-        next
-      end
-
-      content = File.read(file_path)
-      matches = content.scan(cert_pinner_pattern)
-
-      if matches.empty?
-        UI.important("No certificate pinner configurations found in #{file_path}")
-        next
-      end
-
-      UI.message("Found #{matches.count} certificate pinner configuration(s):")
-      matches.each do |match|
-        UI.message("\nConfiguration to remove:")
-        UI.message(match)
-      end
-
-      new_content = content.gsub(cert_pinner_pattern, '')
-      File.write(file_path, new_content)
-      UI.success("Successfully removed #{matches.count} certificate pinner configuration(s)")
+    else
+      UI.user_error!("The variables required for publishing to Sonatype are not set. Cannot continue.")
     end
   end
+
+  desc "Run the pull request checks"
+  lane :pr_check do
+    lint
+    build
+    test
+    build_sample_apps
+  end
+
+  desc "Build Sample Apps"
+  lane :build_sample_apps do |options|
+    if env_vars_valid?([
+      "ANDROID_SIGNING_PRIVATE_KEY",
+      "ANDROID_SIGNING_CERTIFICATE",
+      "ANDROID_KEYSTORE_PASSWORD",
+      "JUDO_API_ID",
+      "JUDO_API_SECRET",
+      "JUDO_API_TOKEN",
+      "RAVELIN_MOCK_SERVER_URL",
+      "RSA_PUBLIC_KEY"
+    ])
+      java_keystore_file = "#{Dir.tmpdir()}/keystore.jks"
+
+      create_java_keystore(
+        private_key_b64: ENV["ANDROID_SIGNING_PRIVATE_KEY"],
+        certificate_b64: ENV["ANDROID_SIGNING_CERTIFICATE"],
+        destination_keystore_file: java_keystore_file,
+        keystore_password: ENV["ANDROID_KEYSTORE_PASSWORD"]
+      )
+
+      # Required for running the instrumentation tests
+      remove_certificate_pinner(sdk_root_path: "#{@project_root_path}/judokit-android")
+
+      @sample_apps.each do |app|
+        @environments.select{ |env|
+          !options.key?(:environment) || options[:environment] == env
+        }.each do |env|
+          UI.message(env)
+          build_sample_app({
+            app: app,
+            environment: env,
+            keystore_file: java_keystore_file
+          }) if !app.firebase_app_id(environment: env).nil?
+        end
+      end
+
+      restore_certificate_pinner(sdk_root_path: "#{@project_root_path}/judokit-android")
+    else
+      UI.user_error!("The variables required for building sample apps are not set. Cannot continue.")
+    end
+  end
+
+  desc "Build a Sample App"
+  private_lane :build_sample_app do |options|
+    options[:app].prepare_google_services_json(environment: options[:environment])
+
+    inject_staging_environment(
+      app: options[:app],
+      sdk_root_path: "#{@project_root_path}/judokit-android"
+    ) if options[:environment] == 'staging'
+
+    latest_release = firebase_app_distribution_get_latest_release(
+      app: options[:app].firebase_app_id(environment: options[:environment])
+    )
+
+    gradle(
+      task: "#{options[:app].app_name}:assemble #{options[:app].app_name}:assembleAndroidTest",
+      properties: {
+        "android.injected.version.code" => latest_release.nil? ? 1 : latest_release[:buildVersion].to_i + 1,
+        "android.injected.signing.store.file" => options[:keystore_file],
+        "android.injected.signing.store.password" => ENV['ANDROID_KEYSTORE_PASSWORD'],
+        "android.injected.signing.key.alias" => "1",
+        "android.injected.signing.key.password" => ENV['ANDROID_KEYSTORE_PASSWORD'],
+        "applicationIdSuffix" => options[:environment] == "staging" ? "staging" : ""
+      }
+    )
+
+    revert_staging_environment(
+      app: options[:app],
+      sdk_root_path: "#{@project_root_path}/judokit-android"
+    ) if options[:environment] == 'staging'
+
+    options[:app].copy_apks_to_destination(environment: options[:environment], destination: @fl_output_dir)
+  end
+
+  desc "Run instrumented tests for sample apps on Firebase"
+  lane :test_sample_apps_firebase do |options|
+    @sample_apps.each do |app|
+      test_sample_app_firebase({app: app, environment: "production"})
+    end
+  end
+
+  desc "Run instrumented tests for a sample app on Firebase"
+  private_lane :test_sample_app_firebase do |options|
+    if env_vars_valid?([
+      "FIREBASE_TEST_RESULTS_BUCKET",
+    ])
+      sh(
+        "gcloud firebase test android run"\
+          " --app #{@fl_output_dir}/#{options[:app].debug_apk(environment: options[:environment])}"\
+          " --test #{@fl_output_dir}/#{options[:app].testsuite_apk(environment: options[:environment])}"\
+          " --device model=shiba,version=34"\
+          " --device model=gta8wifi,version=34"\
+          " --device model=panther,version=33"\
+          " --device model=bluejay,version=32"\
+          " --device model=a12,version=31"\
+          " --use-orchestrator"\
+          " --record-video"\
+          " --results-bucket #{ENV['FIREBASE_TEST_RESULTS_BUCKET']}"\
+          " --client-details=#{[
+              "matrixLabel=\"#{ENV['FIREBASE_MATRIX_LABEL'] || "Manual Trigger"}\"",
+              "app=\"#{options[:app].app_name}\"",
+              "project=JudoKit-Android"
+            ].join(",")}"\
+          " --timeout=30m"\
+          " --num-flaky-test-attempts=1"\
+          " --async"
+      )
+    else
+      UI.user_error!("The variables required for testing sample apps in Firebase are not set. Cannot continue.")
+    end
+  end
+
+  desc "Run instrumented tests for sample apps on BrowserStack"
+  lane :test_sample_apps_browserstack do |options|
+    if env_vars_valid?([
+      "BROWSERSTACK_USERNAME",
+      "BROWSERSTACK_ACCESS_KEY"
+    ])
+      @sample_apps.each do |app|
+        test_sample_app_browserstack({app: app, environment: "production"})
+      end
+    else
+      UI.user_error!("The variables required for testing sample apps in Browserstack are not set. Cannot continue.")
+    end
+  end
+
+  desc "Run instrumented tests for a sample app on BrowserStack"
+  private_lane :test_sample_app_browserstack do |options|
+    upload_to_browserstack_app_automate(
+      browserstack_username: ENV["BROWSERSTACK_USERNAME"],
+      browserstack_access_key: ENV["BROWSERSTACK_ACCESS_KEY"],
+      file_path: "#{@fl_output_dir}/#{options[:app].debug_apk(environment: options[:environment])}"
+    )
+
+    app_url = ENV["BROWSERSTACK_APP_ID"]
+
+    test_suite_url = upload_testsuite_to_browserstack(
+      browserstack_username: ENV["BROWSERSTACK_USERNAME"],
+      browserstack_access_key: ENV["BROWSERSTACK_ACCESS_KEY"],
+      file_path: "#{@fl_output_dir}/#{options[:app].testsuite_apk(environment: options[:environment])}"
+    )
+
+    run_testsuite_on_browserstack(
+      browserstack_username: ENV["BROWSERSTACK_USERNAME"],
+      browserstack_access_key: ENV["BROWSERSTACK_ACCESS_KEY"],
+      app_url: app_url,
+      test_suite_url: test_suite_url,
+      devices: [
+        "OnePlus 8-10.0",
+        "Samsung Galaxy S25 Ultra-15.0",
+        "Samsung Galaxy S21-11.0",
+        "Samsung Galaxy A10-9.0",
+        "Samsung Galaxy S9-8.0"
+      ],
+      project: "JudoKit-Android UI Tests",
+      build_tag: "JudoKit-Android",
+      annotation: ["com.judokit.android.examples.test.card.annotations.SmokeTest"]
+    )
+  end
+
+  desc "Publish Sample Apps to Firebase"
+  lane :publish_sample_apps do |options|
+    @sample_apps.each do |app|
+      @environments.select{ |env|
+        !options.key?(:environment) || options[:environment] == env
+      }.each do |env|
+        publish_sample_app({app: app, environment: env})
+      end
+    end
+  end
+
+  desc "Publish Sample App to Firebase"
+  private_lane :publish_sample_app do |options|
+    if options[:app].firebase_app_id(environment: options[:environment]).nil?
+      UI.important("No Firebase App ID found for #{options[:app].app_name} and environment #{options[:environment]}. Won't publish.")
+      next
+    end
+    firebase_app_distribution({
+      android_artifact_path: "#{@fl_output_dir}/#{options[:app].release_apk(environment: options[:environment])}",
+      app: options[:app].firebase_app_id(environment: options[:environment]),
+      groups: 'default-testers',
+      release_notes: changelog_from_git_commits(commits_count: 1),
+    })
+  end
+end

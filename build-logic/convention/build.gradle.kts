@@ -28,6 +28,7 @@ dependencies {
     compileOnly(libs.bundles.dokka)
     runtimeOnly(libs.bundles.dokka)
 
+    compileOnly(libs.kover.gradle.plugin)
     compileOnly(libs.ktlint.gradle.plugin)
 }
 
@@ -51,6 +52,10 @@ gradlePlugin {
         register("androidKotlin") {
             id = "judokit.android.kotlin"
             implementationClass = "AndroidKotlinConventionPlugin"
+        }
+        register("kover") {
+            id = "judo3ds2.kotlinx.kover"
+            implementationClass = "KoverConventionPlugin"
         }
         register("mavenPublish") {
             id = "judokit.maven-publish"

@@ -15,61 +15,77 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## Android
 
-### android prepare_google_services_json
+### android lint
 
 ```sh
-[bundle exec] fastlane android prepare_google_services_json
+[bundle exec] fastlane android lint
 ```
 
-Create the google-services.json file for the example app
+Lint SDK
 
-### android pull_request_checks
+### android build
 
 ```sh
-[bundle exec] fastlane android pull_request_checks
+[bundle exec] fastlane android build
+```
+
+Build the SDK
+
+### android test
+
+```sh
+[bundle exec] fastlane android test
+```
+
+Run SDK Tests
+
+### android publish
+
+```sh
+[bundle exec] fastlane android publish
+```
+
+Publish the SDK
+
+### android pr_check
+
+```sh
+[bundle exec] fastlane android pr_check
 ```
 
 Run the pull request checks
 
-### android build_example_app
+### android build_sample_apps
 
 ```sh
-[bundle exec] fastlane android build_example_app
+[bundle exec] fastlane android build_sample_apps
 ```
 
-Build the Example App
+Build Sample Apps
 
-### android example_app_distribution
+### android test_sample_apps_firebase
 
 ```sh
-[bundle exec] fastlane android example_app_distribution
+[bundle exec] fastlane android test_sample_apps_firebase
 ```
 
-Deploy a new version of the Example App to the Firebase App Distribution
+Run instrumented tests for sample apps on Firebase
 
-### android release_sdk
+### android test_sample_apps_browserstack
 
 ```sh
-[bundle exec] fastlane android release_sdk
+[bundle exec] fastlane android test_sample_apps_browserstack
 ```
 
-Releases the SDK to Maven Central
+Run instrumented tests for sample apps on BrowserStack
 
-### android inject_staging_environment
+### android publish_sample_apps
 
 ```sh
-[bundle exec] fastlane android inject_staging_environment
+[bundle exec] fastlane android publish_sample_apps
 ```
 
-Injects the staging env variables
-
-### android revert_staging_environment
-
-```sh
-[bundle exec] fastlane android revert_staging_environment
-```
-
-Revert injected staging env variables
+Publish Sample Apps to Firebase
 
 ----
 

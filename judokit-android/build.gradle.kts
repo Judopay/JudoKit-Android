@@ -5,6 +5,7 @@ plugins {
     id("judokit.android.library")
     id("judokit.android.kotlin")
     id("judokit.android.lint")
+    id("judo3ds2.kotlinx.kover")
     id("judokit.maven-publish")
 }
 
