@@ -28,7 +28,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/light_pink_gradient_background"
-                android:layout_marginTop="@dimen/space_56"
                 app:layout_collapseMode="pin">
 
                 <com.judopay.judokit.android.ui.paymentmethods.components.PaymentMethodsHeaderView
