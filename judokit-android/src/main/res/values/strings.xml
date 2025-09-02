@@ -76,7 +76,7 @@
 
     <string name="jp_no_connected_cards">You didn\'t connect any cards yet</string>
     <string name="jp_choose_payment_method">Choose a Payment Method</string>
-    <string name="jp_no_cards_added">You didn’t add any cards yet.\nAdd one right now or use any of the payment methods below</string>
+    <string name="jp_no_cards_added">You didn’t add any cards yet.\nAdd one right now or use any of the\npayment methods below</string>
     <string name="google_pay" translatable="false">Google Pay</string>
     <string name="jp_delete">Delete</string>
 
