@@ -3,6 +3,7 @@
 package com.judopay.judokit.android
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
@@ -14,10 +15,13 @@ import android.view.ViewParent
 import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.DimenRes
+import androidx.annotation.FloatRange
 import androidx.core.view.children
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.gson.Gson
 import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.request.CheckCardRequest
@@ -31,6 +35,7 @@ import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTw
 import com.judopay.judokit.android.model.ApiEnvironment
 import com.judopay.judokit.android.model.googlepay.GooglePayAddress
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_500
+import com.judopay.judokit.android.ui.common.LANDSCAPE_MIN_HEIGHT_RATIO
 import com.judopay.judokit.android.ui.common.parcelable
 import com.judopay.judokit.android.ui.error.JudoNotProvidedError
 
@@ -334,4 +339,15 @@ internal fun ViewGroup.getDeepChildOffset(
     }
 
     getDeepChildOffset(mainParent, parentGroup.parent, parentGroup, accumulatedOffset)
+}
+
+internal fun CollapsingToolbarLayout.setAdaptiveMinHeight(
+    @FloatRange(from = 0.0, to = 1.0) landscapeMinHeightPercentage: Float = LANDSCAPE_MIN_HEIGHT_RATIO,
+    @DimenRes portraitMinHeightRes: Int = R.dimen.app_bar_layout_min_height
+) {
+    minimumHeight =
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            (resources.displayMetrics.heightPixels * landscapeMinHeightPercentage).toInt()
+        else
+            resources.getDimensionPixelSize(portraitMinHeightRes)
 }
