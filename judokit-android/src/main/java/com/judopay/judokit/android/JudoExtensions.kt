@@ -343,11 +343,12 @@ internal fun ViewGroup.getDeepChildOffset(
 
 internal fun CollapsingToolbarLayout.setAdaptiveMinHeight(
     @FloatRange(from = 0.0, to = 1.0) landscapeMinHeightPercentage: Float = LANDSCAPE_MIN_HEIGHT_RATIO,
-    @DimenRes portraitMinHeightRes: Int = R.dimen.app_bar_layout_min_height
+    @DimenRes portraitMinHeightRes: Int = R.dimen.app_bar_layout_min_height,
 ) {
     minimumHeight =
-        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             (resources.displayMetrics.heightPixels * landscapeMinHeightPercentage).toInt()
-        else
+        } else {
             resources.getDimensionPixelSize(portraitMinHeightRes)
+        }
 }

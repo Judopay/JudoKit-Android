@@ -3788,6 +3788,7 @@ public final class com/judopay/judokit/android/ui/common/ConstantsKt {
 	public static final field GOOGLE_PAY_API_VERSION_MINOR I
 	public static final field JUDO_API_VERSION Ljava/lang/String;
 	public static final field JUDO_KIT_VERSION Ljava/lang/String;
+	public static final field LANDSCAPE_MIN_HEIGHT_RATIO F
 	public static final field PATTERN_CARD_EXPIRATION_DATE Ljava/lang/String;
 	public static final field POSTAL_CODE_MAX_LENGTH_CA I
 	public static final field POSTAL_CODE_MAX_LENGTH_OTHER I
