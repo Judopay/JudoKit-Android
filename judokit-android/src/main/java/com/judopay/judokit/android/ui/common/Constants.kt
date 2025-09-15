@@ -41,3 +41,5 @@ const val ALPHA_2_CODE_CHINA = "CN"
 const val ALPHA_2_CODE_INDIA = "IN"
 const val ALPHA_2_CODE_US = "US"
 const val ALPHA_2_CODE_GB = "GB"
+
+const val LANDSCAPE_MIN_HEIGHT_RATIO = 0.30f
