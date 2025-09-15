@@ -11,7 +11,7 @@ const val REGEX_URL = "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-z
 /**
  *  Constant to store the sdk version, injected in every Judo API request headers/body
  */
-const val JUDO_KIT_VERSION = "5.0.2"
+const val JUDO_KIT_VERSION = "5.0.3"
 
 /**
  *  Constant to store the Judo API version, injected in every Judo API request headers
@@ -41,3 +41,5 @@ const val ALPHA_2_CODE_CHINA = "CN"
 const val ALPHA_2_CODE_INDIA = "IN"
 const val ALPHA_2_CODE_US = "US"
 const val ALPHA_2_CODE_GB = "GB"
+
+const val LANDSCAPE_MIN_HEIGHT_RATIO = 0.30f

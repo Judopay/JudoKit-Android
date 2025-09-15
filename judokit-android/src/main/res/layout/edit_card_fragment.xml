@@ -7,25 +7,30 @@
     android:background="@color/white"
     android:fitsSystemWindows="true">
 
-    <ImageButton
-        android:id="@+id/backButton"
-        style="@style/JudoTheme.BackButton"
-        android:contentDescription="@null"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/headingTextView"
-        style="@style/JudoTheme.Title.Large"
+    <LinearLayout
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_24"
-        android:layout_marginTop="@dimen/space_8"
-        android:layout_marginEnd="@dimen/space_24"
-        android:text="@string/jp_customise_card"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backButton" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            style="@style/JudoTheme.BackButton"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/headingTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/JudoTheme.Title.Large"
+            android:layout_marginStart="@dimen/space_12"
+            android:layout_gravity="center_vertical"
+            android:text="@string/jp_customise_card" />
+
+    </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -34,13 +39,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headingTextView">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
-            android:padding="@dimen/space_24">
+            android:paddingHorizontal="@dimen/space_24"
+            android:paddingVertical="@dimen/space_18">
 
             <com.judopay.judokit.android.ui.paymentmethods.components.PaymentCardView
                 android:id="@+id/cardView"

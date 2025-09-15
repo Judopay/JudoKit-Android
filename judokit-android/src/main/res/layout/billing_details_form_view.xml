@@ -29,7 +29,7 @@
                 android:id="@+id/flow1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="billingDetailsTextView,emailTextInputLayout,countryTextInputLayout,administrativeDivisionTextInputLayout,flow2,addressLine1TextInputLayout,addressLine2TextInputLayout,addressLine3TextInputLayout,addAddressLineButton,cityTextInputLayout,postalCodeTextInputLayout"
+                app:constraint_referenced_ids="billingDetailsHeading,emailTextInputLayout,countryTextInputLayout,administrativeDivisionTextInputLayout,flow2,addressLine1TextInputLayout,addressLine2TextInputLayout,addressLine3TextInputLayout,addAddressLineButton,cityTextInputLayout,postalCodeTextInputLayout"
                 app:flow_horizontalAlign="start"
                 app:flow_horizontalBias="0"
                 app:flow_maxElementsWrap="1"
@@ -41,13 +41,11 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/billingDetailsTextView"
-                style="@style/JudoTheme.TextView"
+                android:id="@+id/billingDetailsHeading"
+                style="@style/JudoTheme.Title.Dark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/jp_billing_details_title"
-                android:textColor="@color/jpDarkGrayColor"
-                android:textSize="@dimen/text_size_18" />
+                android:text="@string/jp_billing_details_title" />
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/emailTextInputLayout"

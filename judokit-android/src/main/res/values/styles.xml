@@ -140,6 +140,10 @@
         <item name="android:textSize">@dimen/title</item>
     </style>
 
+    <style name="JudoTheme.Title.Dark" parent="JudoTheme.Title">
+        <item name="android:textColor">@color/jpDarkGrayColor</item>
+    </style>
+
     <style name="JudoTheme.Title.Light" parent="JudoTheme.Title">
         <item name="android:textColor">@color/jpWhiteColor</item>
         <item name="android:maxLines">1</item>
