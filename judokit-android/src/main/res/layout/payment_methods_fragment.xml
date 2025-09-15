@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/light_pink_gradient_background"
-                android:layout_marginTop="@dimen/space_56"
+                android:layout_marginTop="@dimen/space_74"
                 app:layout_collapseMode="pin">
 
                 <com.judopay.judokit.android.ui.paymentmethods.components.PaymentMethodsHeaderView
@@ -38,12 +38,26 @@
 
             </com.judopay.judokit.android.ui.paymentmethods.components.AppBarLayoutHeightAwareContainerView>
 
-            <!-- TODO: Should be replaced by Toolbar:app:navigationIcon -->
-            <ImageButton
-                android:id="@+id/backButton"
-                style="@style/JudoTheme.BackButton"
-                android:contentDescription="@null"
-                app:layout_collapseMode="pin" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_collapseMode="pin">
+
+                <ImageButton
+                    android:id="@+id/backButton"
+                    style="@style/JudoTheme.BackButton"
+                    android:contentDescription="@null" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/JudoTheme.Title.Large"
+                    android:layout_marginStart="@dimen/space_12"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/jp_payment_methods_title" />
+
+            </LinearLayout>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
