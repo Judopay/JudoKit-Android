@@ -262,14 +262,14 @@ class BillingDetailsFormView
 
         @Suppress("MagicNumber")
         private fun setAddAddressButtonClickListener() {
-            binding.addAddressLineButton.text = context.getString(R.string.jp_add_address_line, 2)
+            binding.addAddressLineButtonText.text = context.getString(R.string.jp_add_address_line, 2)
             binding.addAddressLineButton.setOnClickListener {
                 if (binding.addressLine2TextInputLayout.visibility == VISIBLE) {
                     binding.addressLine3TextInputLayout.visibility = VISIBLE
                     binding.addAddressLineButton.visibility = GONE
                 } else {
                     binding.addressLine2TextInputLayout.visibility = VISIBLE
-                    binding.addAddressLineButton.text = context.getString(R.string.jp_add_address_line, 3)
+                    binding.addAddressLineButtonText.text = context.getString(R.string.jp_add_address_line, 3)
                 }
             }
         }

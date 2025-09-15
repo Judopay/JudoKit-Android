@@ -207,15 +207,35 @@
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
-            <com.google.android.material.button.MaterialButton
+            <LinearLayout
                 android:id="@+id/addAddressLineButton"
-                style="@style/JudoTheme.TextButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/jp_add_address_line"
-                android:textAllCaps="false"
-                app:icon="@drawable/ic_add_card"
-                android:tag="@string/jp_add_address_line_button" />
+                android:orientation="horizontal"
+                android:background="@drawable/transparent_background_round_corners_shape"
+                android:tag="@string/jp_add_address_line_button">
+
+                <TextView
+                    style="@style/JudoTheme.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="+"
+                    android:focusable="false"
+                    android:clickable="false"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/addAddressLineButtonText"
+                    style="@style/JudoTheme.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="false"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/jp_add_address_line" />
+
+            </LinearLayout>
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/cityTextInputLayout"
@@ -285,7 +305,7 @@
 
             <com.judopay.judokit.android.ui.common.ProgressButton
                 android:id="@+id/billingDetailsBackButton"
-                style="@style/JudoTheme.TextButton"
+                style="@style/JudoTheme.BottomBackButton"
                 android:layout_width="@dimen/width_100"
                 android:layout_height="@dimen/button_height"
                 android:minWidth="@dimen/min_touch_target_size"

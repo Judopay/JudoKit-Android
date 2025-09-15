@@ -16,12 +16,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/space_8"
-        android:layout_marginBottom="@dimen/space_4"
         android:padding="0dp"
+        android:includeFontPadding="false"
         android:text="@string/jp_you_will_pay"
         app:layout_constraintEnd_toStartOf="@+id/buttonsAnimator"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/buttonsAnimator" />
+        app:layout_constraintTop_toTopOf="@+id/buttonsAnimator"
+        app:layout_constraintBottom_toTopOf="@id/amountTextView" />
 
     <TextView
         android:id="@+id/amountTextView"
@@ -30,6 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/space_8"
         android:padding="0dp"
+        android:includeFontPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/youWillPayTextView"
         app:layout_constraintBottom_toBottomOf="@+id/buttonsAnimator"
         app:layout_constraintEnd_toStartOf="@+id/buttonsAnimator"
         app:layout_constraintStart_toStartOf="parent"

@@ -82,7 +82,7 @@
 
     <string name="jp_no_connected_cards">Todavía no ha conectado ninguna tarjeta</string>
     <string name="jp_choose_payment_method">Elija un método de pago</string>
-    <string name="jp_no_cards_added">Todavía no ha añadido ninguna tarjeta.\nAñada una ahora o utilice uno de los métodos de pago a continuación</string>
+    <string name="jp_no_cards_added">Todavía no ha añadido ninguna tarjeta.\nAñada una ahora o utilice uno de los\nmétodos de pago a continuación</string>
     <string name="jp_delete">Borrar</string>
 
     <string name="jp_delete_card_alert_title">¿Borrar tarjeta?</string>

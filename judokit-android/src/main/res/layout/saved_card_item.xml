@@ -48,9 +48,11 @@
         android:layout_marginStart="@dimen/space_8"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="@dimen/space_8"
+        android:includeFontPadding="false"
         app:layout_constraintEnd_toStartOf="@+id/radioIconImageView"
         app:layout_constraintStart_toEndOf="@+id/networkIconContainer"
         app:layout_constraintTop_toTopOf="@+id/networkIconContainer"
+        app:layout_constraintBottom_toTopOf="@id/subTitle"
         tools:text="Card for shopping" />
 
     <TextView
@@ -60,8 +62,10 @@
         android:layout_marginStart="@dimen/space_8"
         android:layout_marginEnd="@dimen/space_8"
         android:layout_marginBottom="0dp"
+        android:includeFontPadding="false"
         style="@style/JudoTheme.Caption"
         android:textColor="@color/jpDarkGrayColor"
+        app:layout_constraintTop_toBottomOf="@id/title"
         app:layout_constraintBottom_toBottomOf="@+id/networkIconContainer"
         app:layout_constraintEnd_toStartOf="@+id/radioIconImageView"
         app:layout_constraintStart_toEndOf="@+id/networkIconContainer"
