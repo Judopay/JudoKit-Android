@@ -5,8 +5,10 @@
     <color name="jpBlackColor">@color/black</color>
     <color name="jpGrayColor">@color/very_light_pink_two</color>
     <color name="jpDarkGrayColor">@color/dark_grey</color>
+    <color name="jpGraphiteGrayColor">@color/graphite_grey</color>
     <color name="jpNeutralGrayColor">@color/neutral_grey</color>
     <color name="jpLightGrayColor">@color/white_opaque</color>
+    <color name="jpWarmGrayColor">@color/warm_grey</color>
     <color name="jpWhiteColor">@color/white</color>
     <color name="jpRedColor">@color/tomato_red</color>
 

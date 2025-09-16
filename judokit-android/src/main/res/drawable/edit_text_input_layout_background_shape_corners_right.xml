@@ -6,7 +6,7 @@
         android:topRightRadius="@dimen/input_layout_corner_radius" />
     <stroke
         android:width="@dimen/width_1"
-        android:color="@color/graphite_grey" />
+        android:color="@color/jpGraphiteGrayColor" />
     <padding
         android:bottom="0dp"
         android:left="0dp"
