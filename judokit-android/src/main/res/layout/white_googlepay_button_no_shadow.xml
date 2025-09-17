@@ -5,7 +5,7 @@
     android:layout_height="48sp"
     android:background="@drawable/white_googlepay_button_no_shadow_background"
     android:contentDescription="@string/googlepay_button_content_description"
-    android:paddingTop="2sp">
+    android:padding="@dimen/google_button_no_shadow_padding">
 
     <LinearLayout
         android:layout_width="match_parent"
