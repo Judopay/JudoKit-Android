@@ -93,4 +93,8 @@
     <dimen name="elevation_0">0dp</dimen>
     <dimen name="width_100">100dp</dimen>
 
+    <!-- Card entry view dimens for portrait orientation -->
+    <dimen name="card_entry_view_app_bar_margin_top">16dp</dimen>
+    <dimen name="card_entry_view_animator_margin_top">16dp</dimen>
+
 </resources>
