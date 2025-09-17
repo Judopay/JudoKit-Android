@@ -73,7 +73,7 @@
     <dimen name="card_elevation_2dp">2dp</dimen>
     <dimen name="card_elevation_8dp">8dp</dimen>
     <dimen name="elevation_4">4dp</dimen>
-    <dimen name="card_height">190dp</dimen>
+    <dimen name="card_width">0dp</dimen>
 
     <dimen name="payment_selector_height">64dp</dimen>
     <dimen name="payment_selector_item_height">56dp</dimen>
