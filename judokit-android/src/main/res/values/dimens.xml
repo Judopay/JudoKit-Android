@@ -38,6 +38,7 @@
     <dimen name="width_1">1dp</dimen>
     <dimen name="width_60">60dp</dimen>
     <dimen name="width_200">200dp</dimen>
+    <dimen name="width_250">250dp</dimen>
     <dimen name="width_350">350dp</dimen>
 
     <!-- Font sizes -->

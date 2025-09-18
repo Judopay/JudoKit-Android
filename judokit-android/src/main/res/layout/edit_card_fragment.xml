@@ -110,6 +110,7 @@
                 style="@style/JudoTheme.BottomBackButton"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/button_height"
+                app:layout_constraintWidth_max="@dimen/width_250"
                 android:layout_marginTop="60dp"
                 android:layout_marginEnd="@dimen/space_16"
                 android:text="@string/jp_cancel"
