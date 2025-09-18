@@ -134,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone">
 
-                <AutoCompleteTextView
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                     android:id="@+id/countryTextInputEditText"
                     style="@style/JudoTheme.TextInputEditText"
                     android:layout_width="match_parent"
@@ -144,8 +144,6 @@
                     android:focusable="false"
                     android:longClickable="false"
                     android:maxLines="1"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:paddingVertical="@dimen/space_8"
                     tools:ignore="LabelFor"
                     tools:text="Country" />
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>

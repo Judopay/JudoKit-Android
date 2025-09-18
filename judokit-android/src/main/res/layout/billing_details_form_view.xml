@@ -70,15 +70,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <AutoCompleteTextView
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                     android:id="@+id/countryTextInputEditText"
                     style="@style/JudoTheme.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="addressCountry"
                     android:inputType="textCapWords"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:paddingVertical="@dimen/space_8"
                     tools:ignore="LabelFor"
                     tools:text="United Kingdom"
                     android:tag="@string/jp_country_entry_field" />
@@ -90,7 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <AutoCompleteTextView
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                     android:id="@+id/administrativeDivisionTextInputEditText"
                     style="@style/JudoTheme.TextInputEditText"
                     android:layout_width="match_parent"
@@ -98,8 +96,6 @@
                     android:autofillHints="addressRegion"
                     android:hint="@string/jp_us_state_hint"
                     android:inputType="textCapWords"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:paddingVertical="@dimen/space_8"
                     tools:text="New York"
                     android:tag="@string/jp_state_entry_field" />
 
