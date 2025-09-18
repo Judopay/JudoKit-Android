@@ -19,6 +19,7 @@
     <dimen name="space_24">24dp</dimen>
     <dimen name="space_32">32dp</dimen>
     <dimen name="space_40">40dp</dimen>
+    <dimen name="space_42">42dp</dimen>
     <dimen name="space_48">48dp</dimen>
     <dimen name="space_56">56dp</dimen>
     <dimen name="space_68">68dp</dimen>

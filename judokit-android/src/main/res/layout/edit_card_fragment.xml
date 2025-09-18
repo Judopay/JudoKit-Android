@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:clipToPadding="false"
             android:paddingHorizontal="@dimen/space_24"
-            android:paddingVertical="@dimen/space_18">
+            android:paddingVertical="@dimen/space_12">
 
             <com.judopay.judokit.android.ui.paymentmethods.components.PaymentCardView
                 android:id="@+id/cardView"
