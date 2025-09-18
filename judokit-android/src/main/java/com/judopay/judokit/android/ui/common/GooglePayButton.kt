@@ -59,16 +59,18 @@ class GooglePayButton
             binding.whiteBuyWithButton.root.visibility = visibility(GooglePayButtonStyle.WHITE_BUY_WITH)
             binding.whiteBuyWithButtonNoShadow.root.visibility = visibility(GooglePayButtonStyle.WHITE_BUY_WITH_NO_SHADOW)
 
-
             // No-shadow styles have extra padding in their PNG assets, so we apply a negative margin to match PAY NOW button height.
             if (style != GooglePayButtonStyle.WHITE_NO_SHADOW && style != GooglePayButtonStyle.WHITE_BUY_WITH_NO_SHADOW) {
-                setMargin(binding.googlePayButtonContainer, -dpToPx(3))
+                setMargin(binding.googlePayButtonContainer, -dpToPx(NO_SHADOW_MARGIN_OFFSET_DP))
             }
         }
 
-        private fun setMargin(view: View, px: Int) {
+        private fun setMargin(
+            view: View,
+            px: Int,
+        ) {
             (view.layoutParams as? MarginLayoutParams)?.setMargins(px, px, px, px)
         }
 
-        private fun dpToPx(dp: Int) = (dp * resources.displayMetrics.density + 0.5f).toInt()
+        private fun dpToPx(dp: Int) = (dp * resources.displayMetrics.density + ROUNDING_BIAS).toInt()
     }
