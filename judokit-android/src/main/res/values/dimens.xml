@@ -10,6 +10,7 @@
     <dimen name="space_6">6dp</dimen>
     <dimen name="space_7">7dp</dimen>
     <dimen name="space_8">8dp</dimen>
+    <dimen name="space_9">9dp</dimen>
     <dimen name="space_16">16dp</dimen>
     <dimen name="space_12">12dp</dimen>
     <dimen name="space_10">10dp</dimen>
@@ -58,6 +59,9 @@
     <dimen name="app_bar_layout_height">448dp</dimen>
     <dimen name="app_bar_layout_min_height">330dp</dimen>
 
+    <!-- Headings -->
+    <dimen name="heading_bottom_spacing">2dp</dimen>
+
     <!-- Payment methods screen-->
     <dimen name="network_icon_container_height">36dp</dimen>
     <dimen name="network_icon_container_width">52dp</dimen>
@@ -87,7 +91,6 @@
     <dimen name="powered_by_judo_width">111dp</dimen>
     <dimen name="powered_by_judo_height">18dp</dimen>
 
-
     <dimen name="size_120">120dp</dimen>
     <dimen name="width_card_image_view">74dp</dimen>
     <dimen name="height_card_image_view">32dp</dimen>
@@ -96,6 +99,6 @@
 
     <!-- Card entry view dimens for portrait orientation -->
     <dimen name="card_entry_view_app_bar_margin_top">16dp</dimen>
-    <dimen name="card_entry_view_animator_margin_top">16dp</dimen>
+    <dimen name="card_entry_view_animator_margin_top">22dp</dimen>
 
 </resources>

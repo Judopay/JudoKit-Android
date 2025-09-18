@@ -32,7 +32,7 @@
                 app:flow_horizontalBias="0"
                 app:flow_maxElementsWrap="1"
                 app:flow_verticalBias="0"
-                app:flow_verticalGap="@dimen/space_8"
+                app:flow_verticalGap="@dimen/space_9"
                 app:flow_wrapMode="chain"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -43,6 +43,7 @@
                 style="@style/JudoTheme.Title.Dark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/heading_bottom_spacing"
                 android:text="@string/jp_card_entry_title" />
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
@@ -87,10 +88,10 @@
                 app:flow_horizontalBias="0"
                 app:flow_maxElementsWrap="2"
                 app:flow_verticalBias="0"
-                app:flow_verticalGap="@dimen/space_8"
-                app:flow_horizontalGap="@dimen/space_8"
+                app:flow_verticalGap="@dimen/space_9"
+                app:flow_horizontalGap="@dimen/space_9"
                 app:flow_wrapMode="chain"
-                android:layout_marginTop="@dimen/space_8"
+                android:layout_marginTop="@dimen/space_9"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/flow1" />
@@ -191,7 +192,7 @@
                 app:flow_horizontalBias="0"
                 app:flow_maxElementsWrap="1"
                 app:flow_verticalBias="0"
-                app:flow_verticalGap="@dimen/space_8"
+                app:flow_verticalGap="@dimen/space_9"
                 app:flow_wrapMode="chain"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -34,7 +34,7 @@
                 app:flow_horizontalBias="0"
                 app:flow_maxElementsWrap="1"
                 app:flow_verticalBias="0"
-                app:flow_verticalGap="@dimen/space_8"
+                app:flow_verticalGap="@dimen/space_9"
                 app:flow_wrapMode="chain"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -45,6 +45,7 @@
                 style="@style/JudoTheme.Title.Dark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/heading_bottom_spacing"
                 android:text="@string/jp_billing_details_title" />
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
@@ -108,14 +109,14 @@
                 android:id="@+id/flow2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_8"
+                android:layout_marginTop="@dimen/space_9"
                 app:constraint_referenced_ids="phoneCountryCodeTextInputLayout,mobileNumberTextInputLayout"
                 app:flow_horizontalAlign="start"
                 app:flow_horizontalBias="0"
-                app:flow_horizontalGap="@dimen/space_8"
+                app:flow_horizontalGap="@dimen/space_9"
                 app:flow_maxElementsWrap="2"
                 app:flow_verticalBias="0"
-                app:flow_verticalGap="@dimen/space_8"
+                app:flow_verticalGap="@dimen/space_9"
                 app:flow_wrapMode="chain"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -294,7 +295,7 @@
                 app:constraint_referenced_ids="billingDetailsBackButton,billingDetailsSubmitButton"
                 app:flow_horizontalAlign="start"
                 app:flow_horizontalBias="0"
-                app:flow_horizontalGap="@dimen/space_8"
+                app:flow_horizontalGap="@dimen/space_9"
                 app:flow_maxElementsWrap="2"
                 app:flow_verticalBias="0"
                 app:flow_wrapMode="chain"
