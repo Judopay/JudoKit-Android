@@ -1,6 +1,7 @@
 package com.judopay.judokit.android.ui.cardentry
 
 import android.animation.LayoutTransition
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Build
@@ -45,6 +46,8 @@ private const val BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME = 300L
 private const val BOTTOM_SHEET_PEEK_HEIGHT = 200
 private const val KEYBOARD_DISMISS_TIMEOUT = 500L
 private const val BOTTOM_APP_BAR_ELEVATION_CHANGE_DURATION = 200L
+private const val CARD_ENTRY_FADE_ANIMATION_DURATION = 300L
+private const val CARD_ENTRY_FADE_ANIMATION_VISIBILITY_POINT = 0.3f
 
 class JudoBottomSheetDialog(
     context: Context,
@@ -127,6 +130,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
     private var _binding: CardEntryFragmentBinding? = null
     private val binding get() = _binding!!
+    private var isCardEntryViewVisible = true
 
     override fun getTheme(): Int = R.style.JudoTheme_BottomSheetDialogTheme
 
@@ -221,13 +225,24 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         transition.setAnimateParentHierarchy(false)
         binding.bottomSheetContainer.layoutTransition = transition
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-            binding.cardEntryToolbar.post {
-                val params = binding.cardEntryViewAnimator.layoutParams as MarginLayoutParams
-                params.topMargin = binding.cardEntryToolbar.heightWithInsetsAndMargins
-                binding.cardEntryViewAnimator.layoutParams = params
+        // Handle spacing to ensure content appears right below toolbar
+        updateToolbarAndContentSpacing()
+
+        // Set up bottom sheet slide callback for fade animations
+        bottomSheetDialog.behavior.addBottomSheetCallback(
+            object : BottomSheetBehavior.BottomSheetCallback() {
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    // Fade out content when sliding down (collapsing), fade in when sliding up (expanding)
+                    val shouldBeVisible = slideOffset >= CARD_ENTRY_FADE_ANIMATION_VISIBILITY_POINT
+                    if (shouldBeVisible != isCardEntryViewVisible) {
+                        isCardEntryViewVisible = shouldBeVisible
+                        animateCardEntryViewVisibility(shouldBeVisible)
+                    }
+                }
+
+                override fun onStateChanged(bottomSheet: View, newState: Int) {}
             }
-        }
+        )
     }
 
     override fun onStart() {
@@ -383,6 +398,8 @@ class CardEntryFragment : BottomSheetDialogFragment() {
             setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             val insetsListener =
                 View.OnApplyWindowInsetsListener { view, windowInsets ->
+                    // Update toolbar and content spacing when insets change
+                    updateToolbarAndContentSpacing()
                     return@OnApplyWindowInsetsListener view.onApplyWindowInsets(windowInsets)
                 }
             decorView.setOnApplyWindowInsetsListener(insetsListener)
@@ -390,4 +407,23 @@ class CardEntryFragment : BottomSheetDialogFragment() {
 
     private val bottomSheetDialog: JudoBottomSheetDialog
         get() = dialog as JudoBottomSheetDialog
+
+    private fun updateToolbarAndContentSpacing() {
+        val params = binding.cardEntryViewAnimator.layoutParams as MarginLayoutParams
+        params.topMargin = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+             binding.cardEntryToolbar.heightWithInsetsAndMargins
+        } else {
+            (binding.cardEntryToolbar.height * 0.5).toInt()
+        }
+        binding.cardEntryToolbar.post {
+            binding.cardEntryViewAnimator.layoutParams = params
+        }
+    }
+
+    private fun animateCardEntryViewVisibility(visible: Boolean) {
+        val targetAlpha = if (visible) 1.0f else 0.0f
+        val animator = ObjectAnimator.ofFloat(binding.cardEntryViewAnimator, "alpha", targetAlpha)
+        animator.duration = CARD_ENTRY_FADE_ANIMATION_DURATION
+        animator.start()
+    }
 }

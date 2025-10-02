@@ -42,7 +42,6 @@
         android:inAnimation="@anim/fade_in"
         android:measureAllChildren="false"
         android:outAnimation="@anim/fade_out"
-        android:layout_marginTop="@dimen/card_entry_view_animator_margin_top"
         android:fitsSystemWindows="true">
 
         <com.judopay.judokit.android.ui.cardentry.components.CardEntryFormView
