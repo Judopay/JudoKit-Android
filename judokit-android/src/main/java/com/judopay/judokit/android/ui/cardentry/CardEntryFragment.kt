@@ -48,6 +48,7 @@ private const val KEYBOARD_DISMISS_TIMEOUT = 500L
 private const val BOTTOM_APP_BAR_ELEVATION_CHANGE_DURATION = 200L
 private const val CARD_ENTRY_FADE_ANIMATION_DURATION = 300L
 private const val CARD_ENTRY_FADE_ANIMATION_VISIBILITY_POINT = 0.3f
+private const val CARD_ENTRY_TOOLBAR_HEIGHT_MULTIPLIER_FOR_INSETS = 0.5
 
 class JudoBottomSheetDialog(
     context: Context,
@@ -231,7 +232,10 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         // Set up bottom sheet slide callback for fade animations
         bottomSheetDialog.behavior.addBottomSheetCallback(
             object : BottomSheetBehavior.BottomSheetCallback() {
-                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                override fun onSlide(
+                    bottomSheet: View,
+                    slideOffset: Float,
+                ) {
                     // Fade out content when sliding down (collapsing), fade in when sliding up (expanding)
                     val shouldBeVisible = slideOffset >= CARD_ENTRY_FADE_ANIMATION_VISIBILITY_POINT
                     if (shouldBeVisible != isCardEntryViewVisible) {
@@ -240,8 +244,12 @@ class CardEntryFragment : BottomSheetDialogFragment() {
                     }
                 }
 
-                override fun onStateChanged(bottomSheet: View, newState: Int) {}
-            }
+                @Suppress("EmptyFunctionBlock")
+                override fun onStateChanged(
+                    bottomSheet: View,
+                    newState: Int,
+                ) {}
+            },
         )
     }
 
@@ -410,11 +418,12 @@ class CardEntryFragment : BottomSheetDialogFragment() {
 
     private fun updateToolbarAndContentSpacing() {
         val params = binding.cardEntryViewAnimator.layoutParams as MarginLayoutParams
-        params.topMargin = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-             binding.cardEntryToolbar.heightWithInsetsAndMargins
-        } else {
-            (binding.cardEntryToolbar.height * 0.5).toInt()
-        }
+        params.topMargin =
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                binding.cardEntryToolbar.heightWithInsetsAndMargins
+            } else {
+                (binding.cardEntryToolbar.height * CARD_ENTRY_TOOLBAR_HEIGHT_MULTIPLIER_FOR_INSETS).toInt()
+            }
         binding.cardEntryToolbar.post {
             binding.cardEntryViewAnimator.layoutParams = params
         }
