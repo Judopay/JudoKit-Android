@@ -57,8 +57,8 @@
     <dimen name="google_button_no_shadow_padding">3dp</dimen>
 
     <!-- App bar -->
-    <dimen name="app_bar_layout_height">448dp</dimen>
-    <dimen name="app_bar_layout_min_height">330dp</dimen>
+    <dimen name="app_bar_layout_height">408dp</dimen>
+    <dimen name="app_bar_layout_min_height">350dp</dimen>
 
     <!-- Headings -->
     <dimen name="heading_bottom_spacing">2dp</dimen>
