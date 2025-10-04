@@ -26,6 +26,7 @@ import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.judo
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.service.CardTransactionManager
+import com.judopay.judokit.android.setAdaptiveMinHeight
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
 import com.judopay.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapter
@@ -79,6 +80,7 @@ class PaymentMethodsFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         binding.headerView.fromEditMode = true
+        binding.collapsingToolbarLayout.setAdaptiveMinHeight()
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { view, insets ->
             view.updatePadding(bottom = insets.systemWindowInsets.bottom + resources.getDimension(R.dimen.space_48).toInt())

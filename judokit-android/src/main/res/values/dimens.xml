@@ -4,22 +4,30 @@
     <dimen name="negative_space_3">-3dp</dimen>
     <dimen name="negative_space_4">-4dp</dimen>
     <dimen name="space_1">1dp</dimen>
+    <dimen name="space_2">2dp</dimen>
     <dimen name="space_3">3dp</dimen>
     <dimen name="space_4">4dp</dimen>
     <dimen name="space_6">6dp</dimen>
     <dimen name="space_7">7dp</dimen>
     <dimen name="space_8">8dp</dimen>
+    <dimen name="space_9">9dp</dimen>
     <dimen name="space_16">16dp</dimen>
     <dimen name="space_12">12dp</dimen>
     <dimen name="space_10">10dp</dimen>
     <dimen name="space_14">14dp</dimen>
+    <dimen name="space_18">18dp</dimen>
     <dimen name="space_20">20dp</dimen>
     <dimen name="space_24">24dp</dimen>
     <dimen name="space_32">32dp</dimen>
     <dimen name="space_40">40dp</dimen>
+    <dimen name="space_42">42dp</dimen>
     <dimen name="space_48">48dp</dimen>
     <dimen name="space_56">56dp</dimen>
     <dimen name="space_68">68dp</dimen>
+    <dimen name="space_74">74dp</dimen>
+    <dimen name="space_80">80dp</dimen>
+    <dimen name="space_88">88dp</dimen>
+    <dimen name="space_106">106dp</dimen>
     <dimen name="space_132">132dp</dimen>
 
     <dimen name="height_1">1dp</dimen>
@@ -27,8 +35,10 @@
     <dimen name="height_60">60dp</dimen>
     <dimen name="height_250">250dp</dimen>
     <dimen name="height_100">100dp</dimen>
+    <dimen name="width_1">1dp</dimen>
     <dimen name="width_60">60dp</dimen>
     <dimen name="width_200">200dp</dimen>
+    <dimen name="width_250">250dp</dimen>
     <dimen name="width_350">350dp</dimen>
 
     <!-- Font sizes -->
@@ -36,16 +46,22 @@
     <dimen name="title">18sp</dimen>
     <dimen name="headline">16sp</dimen>
     <dimen name="body">14sp</dimen>
+    <dimen name="large_caption">11sp</dimen>
     <dimen name="caption">10sp</dimen>
 
     <!-- Buttons -->
     <dimen name="min_touch_target_size">48dp</dimen>
     <dimen name="button_corner_radius">4dp</dimen>
-    <dimen name="button_height">56dp</dimen>
+    <dimen name="button_height">54dp</dimen>
+    <dimen name="google_button_padding">7dp</dimen>
+    <dimen name="google_button_no_shadow_padding">3dp</dimen>
 
     <!-- App bar -->
-    <dimen name="app_bar_layout_height">448dp</dimen>
-    <dimen name="app_bar_layout_min_height">330dp</dimen>
+    <dimen name="app_bar_layout_height">458dp</dimen>
+    <dimen name="app_bar_layout_min_height">345dp</dimen>
+
+    <!-- Headings -->
+    <dimen name="heading_bottom_spacing">2dp</dimen>
 
     <!-- Payment methods screen-->
     <dimen name="network_icon_container_height">36dp</dimen>
@@ -56,14 +72,14 @@
 
     <!-- Text input layouts -->
     <dimen name="input_layout_corner_radius">6dp</dimen>
-    <dimen name="judo_text_input_layout_height">44dp</dimen>
+    <dimen name="judo_text_input_layout_height">56dp</dimen>
 
     <!-- Cards -->
     <dimen name="card_corner_radius">10dp</dimen>
     <dimen name="card_elevation_2dp">2dp</dimen>
     <dimen name="card_elevation_8dp">8dp</dimen>
     <dimen name="elevation_4">4dp</dimen>
-    <dimen name="card_height">190dp</dimen>
+    <dimen name="card_width">0dp</dimen>
 
     <dimen name="payment_selector_height">64dp</dimen>
     <dimen name="payment_selector_item_height">56dp</dimen>
@@ -76,13 +92,14 @@
     <dimen name="powered_by_judo_width">111dp</dimen>
     <dimen name="powered_by_judo_height">18dp</dimen>
 
-
     <dimen name="size_120">120dp</dimen>
     <dimen name="width_card_image_view">74dp</dimen>
     <dimen name="height_card_image_view">32dp</dimen>
-    <dimen name="space_80">80dp</dimen>
-    <dimen name="space_94">94dp</dimen>
     <dimen name="elevation_0">0dp</dimen>
     <dimen name="width_100">100dp</dimen>
+
+    <!-- Card entry view dimens for portrait orientation -->
+    <dimen name="card_entry_view_app_bar_margin_top">16dp</dimen>
+    <dimen name="card_entry_view_animator_margin_top">22dp</dimen>
 
 </resources>

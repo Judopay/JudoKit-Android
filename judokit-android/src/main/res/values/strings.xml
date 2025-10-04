@@ -76,7 +76,7 @@
 
     <string name="jp_no_connected_cards">You didn\'t connect any cards yet</string>
     <string name="jp_choose_payment_method">Choose a Payment Method</string>
-    <string name="jp_no_cards_added">You didn’t add any cards yet.\nAdd one right now or use any of the payment methods below</string>
+    <string name="jp_no_cards_added">You didn’t add any cards yet.\nAdd one right now or use any of the\npayment methods below</string>
     <string name="google_pay" translatable="false">Google Pay</string>
     <string name="jp_delete">Delete</string>
 
@@ -134,7 +134,9 @@
 
     <string name="jp_continue_text">Continue</string>
     <string name="jp_add_address_line">Add address line %1$d (optional)</string>
+    <string name="jp_card_entry_title">Card Information</string>
     <string name="jp_billing_details_title">Billing Details</string>
+    <string name="jp_payment_methods_title">Payment Methods</string>
     <string name="jp_back">Back</string>
     <string name="jp_card_number_entry_field" translatable="false">cardNumberInputField</string>
     <string name="jp_cardholder_name_entry_field" translatable="false">cardHolderNameField</string>

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.rememberScrollState
@@ -30,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.judokit.android.examples.R
 import com.judopay.judokit.android.model.CardNetwork
@@ -122,8 +124,13 @@ fun TokenPaymentsScreen(
 
             Button(
                 onClick = { onTokenizeNewCard() },
-                modifier = Modifier.fillMaxWidth().height(48.dp),
-            ) { Text("Tokenize a new card".uppercase()) }
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+            ) {
+                Text(
+                    text = "Tokenize a new card".uppercase(),
+                    textAlign = TextAlign.Center,
+                )
+            }
 
             Spacer(Modifier.height(32.dp))
 

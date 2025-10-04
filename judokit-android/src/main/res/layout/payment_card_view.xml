@@ -40,9 +40,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_24"
+        android:layout_marginEnd="@dimen/space_8"
         android:layout_marginBottom="@dimen/space_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/expireDateTextView"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         tools:text="•••• •••• •••• 1122" />
 
     <TextView
@@ -66,6 +69,7 @@
         android:layout_marginEnd="@dimen/space_24"
         android:includeFontPadding="false"
         app:layout_constraintBottom_toBottomOf="@id/cardNumberMaskTextView"
+        app:layout_constraintStart_toEndOf="@id/cardNumberMaskTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/cardNumberMaskTextView"
         tools:text="11/22" />

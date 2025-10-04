@@ -158,10 +158,10 @@ class JudoEditTextInputLayout
                 visibility =
                     if (image > 0) {
                         setImageResource(image)
-                        View.VISIBLE
+                        VISIBLE
                     } else {
                         setImageDrawable(null)
-                        View.GONE
+                        GONE
                     }
             }
     }

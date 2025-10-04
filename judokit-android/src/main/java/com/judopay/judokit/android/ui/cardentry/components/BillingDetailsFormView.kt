@@ -125,7 +125,7 @@ class BillingDetailsFormView
             setupStateSpinner()
 
             binding.billingDetailsBottomAppBar.post {
-                val additionalSpacing = resources.getDimension(R.dimen.space_94).toInt()
+                val additionalSpacing = resources.getDimension(R.dimen.space_88).toInt()
                 val params = binding.billingDetailsContainerLayout.layoutParams as MarginLayoutParams
                 params.bottomMargin = binding.billingDetailsBottomAppBar.heightWithInsetsAndMargins + additionalSpacing
                 binding.billingDetailsContainerLayout.layoutParams = params
@@ -262,14 +262,14 @@ class BillingDetailsFormView
 
         @Suppress("MagicNumber")
         private fun setAddAddressButtonClickListener() {
-            binding.addAddressLineButton.text = context.getString(R.string.jp_add_address_line, 2)
+            binding.addAddressLineButtonText.text = context.getString(R.string.jp_add_address_line, 2)
             binding.addAddressLineButton.setOnClickListener {
                 if (binding.addressLine2TextInputLayout.visibility == VISIBLE) {
                     binding.addressLine3TextInputLayout.visibility = VISIBLE
                     binding.addAddressLineButton.visibility = GONE
                 } else {
                     binding.addressLine2TextInputLayout.visibility = VISIBLE
-                    binding.addAddressLineButton.text = context.getString(R.string.jp_add_address_line, 3)
+                    binding.addAddressLineButtonText.text = context.getString(R.string.jp_add_address_line, 3)
                 }
             }
         }

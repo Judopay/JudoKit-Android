@@ -9,16 +9,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.45" />
+        app:layout_constraintGuide_percent="0.35" />
 
     <TextView
         android:id="@+id/headingTextView"
         style="@style/JudoTheme.Title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="top|start"
         android:layout_marginStart="@dimen/space_24"
-        android:maxWidth="245dp"
         android:text="@string/jp_choose_payment_method"
         app:layout_anchorGravity="center_vertical"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,13 +26,12 @@
     <TextView
         android:id="@+id/subHeadingTextView"
         style="@style/JudoTheme.Body.Regular"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_24"
         android:layout_marginTop="@dimen/space_4"
         android:layout_marginEnd="@dimen/space_24"
         android:layout_marginBottom="@dimen/space_24"
-        android:maxWidth="245dp"
         android:text="@string/jp_no_cards_added"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/headingTextView" />

@@ -136,7 +136,7 @@ class SavedCardsItemViewHolder(
                             Spannable.SPAN_INCLUSIVE_INCLUSIVE,
                         )
                     }
-                    binding.subTitle.setTextColor(ContextCompat.getColor(context, R.color.warm_grey))
+                    binding.subTitle.setTextColor(ContextCompat.getColor(context, R.color.jpWarmGrayColor))
                 }
                 else ->
                     boldString.apply {
@@ -147,7 +147,7 @@ class SavedCardsItemViewHolder(
                             boldString.length,
                             Spannable.SPAN_INCLUSIVE_INCLUSIVE,
                         )
-                        binding.subTitle.setTextColor(ContextCompat.getColor(context, R.color.warm_grey))
+                        binding.subTitle.setTextColor(ContextCompat.getColor(context, R.color.jpWarmGrayColor))
                     }
             }
 

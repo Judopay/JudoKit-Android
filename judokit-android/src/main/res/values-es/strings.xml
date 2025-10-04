@@ -42,7 +42,9 @@
     <string name="jp_invalid_city">Please enter a valid city</string>
     <string name="jp_continue_text">Continue</string>
     <string name="jp_add_address_line">Add address line %1$d (optional)</string>
+    <string name="jp_card_entry_title">Card Information</string>
     <string name="jp_billing_details_title">Billing Details</string>
+    <string name="jp_payment_methods_title">Payment Methods</string>
     <string name="jp_back">Back</string>
 
     <string name="jp_error_mastercard_not_supported">Mastercard no es compatible</string>
@@ -80,7 +82,7 @@
 
     <string name="jp_no_connected_cards">Todavía no ha conectado ninguna tarjeta</string>
     <string name="jp_choose_payment_method">Elija un método de pago</string>
-    <string name="jp_no_cards_added">Todavía no ha añadido ninguna tarjeta.\nAñada una ahora o utilice uno de los métodos de pago a continuación</string>
+    <string name="jp_no_cards_added">Todavía no ha añadido ninguna tarjeta.\nAñada una ahora o utilice uno de los\nmétodos de pago a continuación</string>
     <string name="jp_delete">Borrar</string>
 
     <string name="jp_delete_card_alert_title">¿Borrar tarjeta?</string>
