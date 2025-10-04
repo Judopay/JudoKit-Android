@@ -152,6 +152,7 @@
 
     <style name="JudoTheme.Headline" parent="JudoTheme.TextView">
         <item name="android:textSize">@dimen/headline</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="JudoTheme.Headline.Regular" parent="JudoTheme.TextView">
