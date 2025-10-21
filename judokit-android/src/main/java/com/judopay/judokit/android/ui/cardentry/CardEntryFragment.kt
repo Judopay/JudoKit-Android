@@ -1,7 +1,6 @@
 package com.judopay.judokit.android.ui.cardentry
 
 import android.animation.LayoutTransition
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Build
@@ -28,6 +27,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.judopay.judokit.android.JudoSharedViewModel
 import com.judopay.judokit.android.R
+import com.judopay.judokit.android.animateWithAlpha
 import com.judopay.judokit.android.databinding.CardEntryFragmentBinding
 import com.judopay.judokit.android.db.JudoRoomDatabase
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
@@ -430,9 +430,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     }
 
     private fun animateCardEntryViewVisibility(visible: Boolean) {
-        val targetAlpha = if (visible) 1.0f else 0.0f
-        val animator = ObjectAnimator.ofFloat(binding.cardEntryViewAnimator, "alpha", targetAlpha)
-        animator.duration = CARD_ENTRY_FADE_ANIMATION_DURATION
-        animator.start()
+        val alpha = if (visible) 1.0f else 0.0f
+        binding.cardEntryViewAnimator.animateWithAlpha(alpha, CARD_ENTRY_FADE_ANIMATION_DURATION)
     }
 }
