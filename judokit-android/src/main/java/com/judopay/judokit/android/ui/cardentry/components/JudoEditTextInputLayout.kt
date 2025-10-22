@@ -18,7 +18,7 @@ import com.judopay.judokit.android.databinding.JudoEditTextInputLayoutBinding
 import com.judopay.judokit.android.subViewsWithType
 
 private const val TEXT_SIZE_VALID = 16f
-private const val TEXT_SIZE_INVALID = 14f
+private const val TEXT_SIZE_INVALID = 15f
 private const val TEXT_SIZE_ANIMATION_DURATION = 100L
 
 class JudoEditTextInputLayout
