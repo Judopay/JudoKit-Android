@@ -33,7 +33,6 @@ class GooglePayButton
 
         init {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.GooglePayButton)
-
             for (i in 0 until typedArray.indexCount) {
                 when (val at = typedArray.getIndex(i)) {
                     R.styleable.GooglePayButton_style -> {
@@ -43,8 +42,9 @@ class GooglePayButton
                     }
                 }
             }
-
             typedArray.recycle()
+
+            setGoogleButtonOffset(binding.googlePayButtonContainer, dpToPx(NO_SHADOW_MARGIN_OFFSET_DP))
         }
 
         private fun update() {
@@ -58,14 +58,9 @@ class GooglePayButton
 
             binding.whiteBuyWithButton.root.visibility = visibility(GooglePayButtonStyle.WHITE_BUY_WITH)
             binding.whiteBuyWithButtonNoShadow.root.visibility = visibility(GooglePayButtonStyle.WHITE_BUY_WITH_NO_SHADOW)
-
-            // No-shadow styles have extra padding in their PNG assets, so we apply a negative margin to match PAY NOW button height.
-            if (style != GooglePayButtonStyle.WHITE_NO_SHADOW && style != GooglePayButtonStyle.WHITE_BUY_WITH_NO_SHADOW) {
-                setMargin(binding.googlePayButtonContainer, -dpToPx(NO_SHADOW_MARGIN_OFFSET_DP))
-            }
         }
 
-        private fun setMargin(
+        private fun setGoogleButtonOffset(
             view: View,
             px: Int,
         ) {

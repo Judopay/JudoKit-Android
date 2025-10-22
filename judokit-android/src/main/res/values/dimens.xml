@@ -55,7 +55,7 @@
     <dimen name="button_corner_radius">4dp</dimen>
     <dimen name="button_height">54dp</dimen>
     <dimen name="google_button_padding">7dp</dimen>
-    <dimen name="google_button_no_shadow_padding">3dp</dimen>
+    <dimen name="google_button_no_shadow_padding">7dp</dimen>
 
     <!-- App bar -->
     <dimen name="app_bar_layout_height">458dp</dimen>
