@@ -109,7 +109,7 @@
                 app:constraint_referenced_ids="phoneCountryCodeTextInputLayout,mobileNumberTextInputLayout"
                 app:flow_horizontalAlign="start"
                 app:flow_horizontalBias="0"
-                app:flow_horizontalGap="@dimen/space_9"
+                app:flow_horizontalGap="0dp"
                 app:flow_maxElementsWrap="2"
                 app:flow_verticalBias="0"
                 app:flow_verticalGap="@dimen/space_9"
@@ -120,7 +120,8 @@
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/phoneCountryCodeTextInputLayout"
                 android:layout_width="@dimen/space_80"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:disableRightCornerRadius="true">
 
                 <EditText
                     android:id="@+id/phoneCountryCodeTextInputEditText"
@@ -139,7 +140,8 @@
                 android:id="@+id/mobileNumberTextInputLayout"
                 android:layout_width="@dimen/width_0"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_1">
+                android:translationX="@dimen/negative_space_1"
+                app:disableLeftCornerRadius="true">
 
                 <EditText
                     android:id="@+id/mobileNumberTextInputEditText"
