@@ -42,6 +42,10 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="JudoTheme.TextButton.Large" parent="JudoTheme.TextButton">
+        <item name="android:textSize">@dimen/headline</item>
+    </style>
+
     <!-- Outlined text like buttons eg.: SCAN CARD ... -->
     <style name="JudoTheme.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:fontFamily">@font/sf_pro_display_semibold</item>

@@ -213,7 +213,7 @@
                 android:tag="@string/jp_add_address_line_button">
 
                 <TextView
-                    style="@style/JudoTheme.TextButton"
+                    style="@style/JudoTheme.TextButton.Large"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:paddingHorizontal="@dimen/space_4"
@@ -225,7 +225,7 @@
 
                 <TextView
                     android:id="@+id/addAddressLineButtonText"
-                    style="@style/JudoTheme.TextButton"
+                    style="@style/JudoTheme.TextButton.Large"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAllCaps="false"
