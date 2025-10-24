@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottomSheetContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,26 +10,18 @@
         style="@style/Widget.MaterialComponents.AppBarLayout.Surface"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/card_entry_view_app_bar_margin_top"
-        app:elevation="0dp">
+        android:background="@color/white"
+        android:elevation="@dimen/card_elevation_2dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:clipToPadding="true">
-
-            <Button
-                android:id="@+id/cancelButton"
-                style="@style/JudoTheme.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_24"
-                android:text="@string/jp_cancel"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/cancelButton"
+            style="@style/JudoTheme.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_24"
+            android:layout_marginBottom="@dimen/space_12"
+            android:layout_marginTop="@dimen/space_12"
+            android:text="@string/jp_cancel" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

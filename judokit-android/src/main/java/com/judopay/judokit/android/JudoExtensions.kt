@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Point
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -318,10 +319,13 @@ fun Judo.toTokenRequest(
     .setThreeDSecure(threeDSecureTwo)
     .build()
 
-internal fun NestedScrollView.smoothScrollToView(view: View) {
-    val childOffset = Point()
-    getDeepChildOffset(this, view.parent, view, childOffset)
-    smoothScrollTo(0, childOffset.y)
+internal fun NestedScrollView.smoothScrollToView(targetView: View) {
+    val childRect = Rect()
+    targetView.getDrawingRect(childRect)
+    offsetDescendantRectToMyCoords(targetView, childRect)
+
+    val scrollY = childRect.top - (height / 2 - targetView.height / 2)
+    smoothScrollTo(0, scrollY)
 }
 
 internal fun ViewGroup.getDeepChildOffset(

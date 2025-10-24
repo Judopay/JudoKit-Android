@@ -89,6 +89,7 @@
 
     <dimen name="corner_radius_2_8dp">2.8dp</dimen>
     <dimen name="corner_radius_30dp">30dp</dimen>
+    <dimen name="size_16dp">16dp</dimen>
     <dimen name="size_36dp">36dp</dimen>
     <dimen name="size_50dp">50dp</dimen>
     <dimen name="powered_by_judo_width">111dp</dimen>
@@ -99,9 +100,5 @@
     <dimen name="height_card_image_view">32dp</dimen>
     <dimen name="elevation_0">0dp</dimen>
     <dimen name="width_100">100dp</dimen>
-
-    <!-- Card entry view dimens for portrait orientation -->
-    <dimen name="card_entry_view_app_bar_margin_top">16dp</dimen>
-    <dimen name="card_entry_view_animator_margin_top">22dp</dimen>
 
 </resources>

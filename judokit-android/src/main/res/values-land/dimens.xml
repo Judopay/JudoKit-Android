@@ -2,9 +2,4 @@
 
     <!-- Cards -->
     <dimen name="card_width">280dp</dimen>
-
-    <!-- Card entry view dimens for landscape orientation -->
-    <dimen name="card_entry_view_app_bar_margin_top">12dp</dimen>
-    <dimen name="card_entry_view_animator_margin_top">46dp</dimen>
-
 </resources>

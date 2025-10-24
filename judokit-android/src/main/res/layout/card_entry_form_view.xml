@@ -179,7 +179,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space_12">
+            android:layout_marginTop="@dimen/space_12">
 
             <androidx.constraintlayout.helper.widget.Flow
                 android:id="@+id/flow3"
@@ -213,7 +213,8 @@
                 android:drawablePadding="@dimen/space_8"
                 android:text="@string/jp_secure_server_transmission"
                 android:textColor="@color/brown_grey"
-                app:drawableStartCompat="@drawable/ic_lock_20dp" />
+                app:drawableStartCompat="@drawable/ic_lock_20dp"
+                android:paddingBottom="@dimen/space_9"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.bottomappbar.BottomAppBar>
