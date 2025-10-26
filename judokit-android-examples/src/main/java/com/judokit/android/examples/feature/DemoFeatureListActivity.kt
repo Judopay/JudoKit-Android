@@ -351,6 +351,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
         val recommendationTimeout = sharedPreferences.getString("recommendation_timeout", null)?.toInt()
         val haltTransactionInCaseOfAnyError = sharedPreferences.getBoolean("halt_transaction_in_case_of_any_error_enabled", false)
         val isRecommendationFeatureEnabled = sharedPreferences.getBoolean("is_recommendation_feature_enabled", false)
+        val isDisableNetworkTokenisationOn = sharedPreferences.getBoolean("is_disable_network_tokenisation_on", false)
+
         val recommendationConfiguration =
             if (isRecommendationFeatureEnabled) {
                 RecommendationConfiguration
@@ -392,6 +394,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 .setThreeDSTwoMaxTimeout(threeDSTwoMaxTimeout)
                 .setNetworkTimeout(networkTimeout)
                 .setRecommendationConfiguration(recommendationConfiguration)
+                .setDisableNetworkTokenisation(isDisableNetworkTokenisationOn)
                 .setExtras(extras)
 
         if (!messageVersion.isNullOrBlank()) {

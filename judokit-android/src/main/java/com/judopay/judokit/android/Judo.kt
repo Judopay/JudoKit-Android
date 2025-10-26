@@ -84,6 +84,7 @@ class Judo internal constructor(
     val cardSecurityCode: String? = null,
     val subProductInfo: SubProductInfo = SubProductInfo.Unknown,
     val recommendationConfiguration: RecommendationConfiguration? = null,
+    val disableNetworkTokenisation: Boolean,
     // meant to be for internal usage only
     val extras: Bundle,
 ) : Parcelable {
@@ -121,6 +122,7 @@ class Judo internal constructor(
         private var cardSecurityCode: String? = null
         private var subProductInfo: SubProductInfo = SubProductInfo.Unknown
         private var recommendationConfiguration: RecommendationConfiguration? = null
+        private var disableNetworkTokenisation: Boolean = false
         private var extras: Bundle = Bundle()
 
         /**
@@ -287,6 +289,16 @@ class Judo internal constructor(
         fun setRecommendationConfiguration(recommendationConfiguration: RecommendationConfiguration?) =
             apply { this.recommendationConfiguration = recommendationConfiguration }
 
+        /**
+         * Sets the flag to enable or disable network tokenisation.
+         *
+         * @param disabled Boolean flag that determines whether network tokenisation is disabled.
+         */
+        fun setDisableNetworkTokenisation(disabled: Boolean) =
+            apply {
+                this.disableNetworkTokenisation = disabled
+            }
+
         fun setExtras(extras: Bundle) = apply { this.extras = extras }
 
         /**
@@ -386,6 +398,7 @@ class Judo internal constructor(
                 cardSecurityCode = cardSecurityCode,
                 subProductInfo = subProductInfo,
                 recommendationConfiguration = recommendationConfiguration,
+                disableNetworkTokenisation = disableNetworkTokenisation,
                 extras = extras,
             )
         }
@@ -424,6 +437,7 @@ class Judo internal constructor(
                 delayedAuthorisation=$delayedAuthorisation,
                 allowIncrement=$allowIncrement,
                 cardToken=$cardToken,
+                disableNetworkTokenisation=$disableNetworkTokenisation,
                 extras=$extras
             )
             """.trimIndent(true)

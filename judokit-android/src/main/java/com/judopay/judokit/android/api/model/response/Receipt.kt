@@ -53,6 +53,8 @@ class Receipt(
     val acsThreeDSRequestorAppURL: String? = null,
     val cReq: String? = null,
     val emailAddress: String? = null,
+    val disableNetworkTokenisation: Boolean? = false,
+    val networkTokenisationDetails: NetworkTokenisationDetails? = null,
 ) {
     val isThreeDSecureTwoRequired: Boolean
         get() = message.equals(CHALLENGE_REQUIRED_MESSAGE, true)
@@ -84,7 +86,9 @@ class Receipt(
                 acsUrl=$acsUrl,
                 result=$result,
                 message=$message,
-                emailAddress=$emailAddress
+                emailAddress=$emailAddress,
+                disableNetworkTokenisation=$disableNetworkTokenisation,
+                networkTokenisationDetails=$networkTokenisationDetails
             )
             """.trimIndent(true)
 }

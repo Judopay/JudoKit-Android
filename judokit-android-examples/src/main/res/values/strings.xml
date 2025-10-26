@@ -208,6 +208,9 @@
     <string name="is_allow_increment_on_title">Allow increment</string>
     <string name="is_allow_increment_on_summary">Turn on to set allowIncrement flag to true for pre-auth requests.</string>
 
+    <string name="is_disable_network_tokenisation_on_title">Disable network tokenisation</string>
+    <string name="is_disable_network_tokenisation_on_summary">Turn on to disable network tokenisation for card payments.</string>
+
     <string name="sdk_version_title">SDK version</string>
     <string name="judo_api_version_title">Judo API version</string>
 
