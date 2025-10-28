@@ -3296,8 +3296,11 @@ public final class com/judopay/judokit/android/ui/cardentry/CardEntryFragment : 
 	public fun onDestroy ()V
 	public fun onDestroyView ()V
 	public fun onStart ()V
-	public fun onStop ()V
 	public fun onViewCreated (Landroid/view/View;Landroid/os/Bundle;)V
+}
+
+public final class com/judopay/judokit/android/ui/cardentry/CardEntryFragmentKt {
+	public static final fun waitForAllLaidOut ([Landroid/view/View;Lkotlin/jvm/functions/Function0;)V
 }
 
 public final class com/judopay/judokit/android/ui/cardentry/CardEntryFragmentModel {
@@ -3355,6 +3358,7 @@ public final class com/judopay/judokit/android/ui/cardentry/components/CardEntry
 	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
 	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;I)V
 	public synthetic fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getBinding ()Lcom/judopay/judokit/android/databinding/CardEntryFormViewBinding;
 }
 
 public final class com/judopay/judokit/android/ui/cardentry/components/CardEntryViewAnimator : android/widget/ViewAnimator {
