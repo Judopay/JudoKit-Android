@@ -32,6 +32,7 @@ class RegisterCardRequest private constructor(
     private var initialRecurringPayment: Boolean?,
     private var threeDSecure: ThreeDSecureTwo?,
     private var cardHolderName: String?,
+    private var disableNetworkTokenisation: Boolean = false,
 ) {
     @Suppress("TooManyFunctions")
     class Builder {
@@ -54,6 +55,7 @@ class RegisterCardRequest private constructor(
         private var threeDSecure: ThreeDSecureTwo? = null
         private var cardHolderName: String? = null
         private var phoneCountryCode: String? = null
+        private var disableNetworkTokenisation: Boolean = false
 
         fun setYourPaymentReference(yourPaymentReference: String?) = apply { this.yourPaymentReference = yourPaymentReference }
 
@@ -94,6 +96,8 @@ class RegisterCardRequest private constructor(
 
         fun setPhoneCountryCode(phoneCountryCode: String?) = apply { this.phoneCountryCode = phoneCountryCode }
 
+        fun setDisableNetworkTokenisation(disabled: Boolean) = apply { this.disableNetworkTokenisation = disabled }
+
         fun build(): RegisterCardRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myCurrency = requireNotNullOrEmpty(currency, "currency")
@@ -127,6 +131,7 @@ class RegisterCardRequest private constructor(
                 initialRecurringPayment,
                 myThreeDSecure,
                 cardHolderName,
+                disableNetworkTokenisation,
             )
         }
     }

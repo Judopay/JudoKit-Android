@@ -26,6 +26,7 @@ class CheckCardRequest private constructor(
     private var threeDSecure: ThreeDSecureTwo?,
     private var cardHolderName: String?,
     private var amount: String = "0",
+    private var disableNetworkTokenisation: Boolean = false,
 ) {
     @Suppress("TooManyFunctions")
     class Builder {
@@ -47,6 +48,7 @@ class CheckCardRequest private constructor(
         private var phoneCountryCode: String? = null
         private var emailAddress: String? = null
         private var mobileNumber: String? = null
+        private var disableNetworkTokenisation: Boolean = false
 
         fun setYourPaymentReference(yourPaymentReference: String?) = apply { this.yourPaymentReference = yourPaymentReference }
 
@@ -85,6 +87,8 @@ class CheckCardRequest private constructor(
 
         fun setMobileNumber(mobileNumber: String?) = apply { this.mobileNumber = mobileNumber }
 
+        fun setDisableNetworkTokenisation(disabled: Boolean) = apply { this.disableNetworkTokenisation = disabled }
+
         fun build(): CheckCardRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myCurrency = requireNotNullOrEmpty(currency, "currency")
@@ -116,6 +120,7 @@ class CheckCardRequest private constructor(
                 phoneCountryCode,
                 myThreeDSecure,
                 cardHolderName,
+                disableNetworkTokenisation = disableNetworkTokenisation,
             )
         }
     }

@@ -10,6 +10,7 @@ data class CreatePaymentSessionRequest(
     val currency: String,
     val yourConsumerReference: String,
     val yourPaymentReference: String,
+    val disableNetworkTokenisation: Boolean = false,
 )
 
 data class CreatePaymentSessionResponse(

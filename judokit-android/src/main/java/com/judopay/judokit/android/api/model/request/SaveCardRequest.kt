@@ -28,6 +28,7 @@ class SaveCardRequest private constructor(
     private var mobileNumber: String?,
     private var primaryAccountDetails: PrimaryAccountDetails?,
     private var cardHolderName: String?,
+    private var disableNetworkTokenisation: Boolean = false,
 ) {
     @Suppress("TooManyFunctions")
     class Builder {
@@ -46,6 +47,7 @@ class SaveCardRequest private constructor(
         private var mobileNumber: String? = null
         private var primaryAccountDetails: PrimaryAccountDetails? = null
         private var cardHolderName: String? = null
+        private var disableNetworkTokenisation: Boolean = false
 
         fun setYourPaymentReference(yourPaymentReference: String?) = apply { this.yourPaymentReference = yourPaymentReference }
 
@@ -78,6 +80,8 @@ class SaveCardRequest private constructor(
 
         fun setCardHolderName(cardHolderName: String?) = apply { this.cardHolderName = cardHolderName }
 
+        fun setDisableNetworkTokenisation(disabled: Boolean) = apply { this.disableNetworkTokenisation = disabled }
+
         fun build(): SaveCardRequest {
             val id = requireNotNullOrEmpty(judoId, "judoId")
             val myCurrency = requireNotNullOrEmpty(currency, "currency")
@@ -105,6 +109,7 @@ class SaveCardRequest private constructor(
                 mobileNumber,
                 primaryAccountDetails,
                 cardHolderName,
+                disableNetworkTokenisation,
             )
         }
     }
