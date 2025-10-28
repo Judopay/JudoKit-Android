@@ -56,6 +56,7 @@ import com.judopay.judokit.android.ui.common.parcelable
 import com.judopay.judokit.android.ui.paymentmethods.CARD_ENTRY_OPTIONS
 
 private const val BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME = 300L
+private const val BOTTOM_SHEET_EXPAND_ANIMATION_TIME = BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME / 6
 private const val BOTTOM_SHEET_PEEK_HEIGHT = 200
 private const val KEYBOARD_DISMISS_TIMEOUT = 500L
 
@@ -423,7 +424,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
                             is CardEntryNavigation.Card -> 0
                             is CardEntryNavigation.Billing -> 1
                         }
-                    postDelayed(BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME / 6) {
+                    postDelayed(BOTTOM_SHEET_EXPAND_ANIMATION_TIME) {
                         bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
                     }
                 }
