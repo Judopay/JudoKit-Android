@@ -556,6 +556,13 @@
             app:title="@string/payment_methods_title"
             app:useSimpleSummaryProvider="true" />
 
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="is_disable_network_tokenisation_on"
+            app:summary="@string/is_disable_network_tokenisation_on_summary"
+            app:title="@string/is_disable_network_tokenisation_on_title" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

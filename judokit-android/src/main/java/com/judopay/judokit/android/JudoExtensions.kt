@@ -201,6 +201,7 @@ fun Judo.toPaymentRequest(
     .setThreeDSecure(threeDSecureTwo)
     .setMobileNumber(mobileNumber)
     .setPhoneCountryCode(phoneCountryCode)
+    .setDisableNetworkTokenisation(disableNetworkTokenisation)
     .build()
 
 @Deprecated(
@@ -227,6 +228,7 @@ fun Judo.toRegisterCardRequest(
     .setAmount(amount.amount)
     .setInitialRecurringPayment(initialRecurringPayment)
     .setThreeDSecure(threeDSecureTwo)
+    .setDisableNetworkTokenisation(disableNetworkTokenisation)
     .build()
 
 fun Judo.toSaveCardRequest(
@@ -247,6 +249,7 @@ fun Judo.toSaveCardRequest(
     .setCardHolderName(cardHolderName)
     .setCv2(securityCode)
     .setPrimaryAccountDetails(primaryAccountDetails)
+    .setDisableNetworkTokenisation(disableNetworkTokenisation)
     .build()
 
 fun Judo.toCheckCardRequest(
@@ -268,6 +271,7 @@ fun Judo.toCheckCardRequest(
     .setPrimaryAccountDetails(primaryAccountDetails)
     .setInitialRecurringPayment(initialRecurringPayment)
     .setThreeDSecure(threeDSecureTwo)
+    .setDisableNetworkTokenisation(disableNetworkTokenisation)
     .build()
 
 fun Judo.toGooglePayRequest(
@@ -317,6 +321,7 @@ fun Judo.toTokenRequest(
     .setAddress(address ?: Address.Builder().build())
     .setInitialRecurringPayment(initialRecurringPayment)
     .setThreeDSecure(threeDSecureTwo)
+    .setDisableNetworkTokenisation(disableNetworkTokenisation)
     .build()
 
 internal fun NestedScrollView.smoothScrollToView(targetView: View) {
