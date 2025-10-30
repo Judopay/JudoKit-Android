@@ -98,6 +98,7 @@ public final class com/judopay/judokit/android/JudoExtensionsKt {
 	public static final fun inflate (Landroid/view/ViewGroup;IZ)Landroid/view/View;
 	public static synthetic fun inflate$default (Landroid/view/ViewGroup;IZILjava/lang/Object;)Landroid/view/View;
 	public static final fun parentOfType (Landroid/view/View;Ljava/lang/Class;)Landroid/view/View;
+	public static final fun setMaxTextSize (Landroid/widget/TextView;F)V
 	public static final fun subViewsWithType (Landroid/view/ViewGroup;Ljava/lang/Class;)Ljava/util/List;
 	public static final fun toCheckCardRequest (Lcom/judopay/judokit/android/Judo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/api/model/request/threedsecure/ThreeDSecureTwo;)Lcom/judopay/judokit/android/api/model/request/CheckCardRequest;
 	public static final fun toGooglePayRequest (Lcom/judopay/judokit/android/Judo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayAddress;)Lcom/judopay/judokit/android/api/model/request/GooglePayRequest;
