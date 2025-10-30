@@ -1,0 +1,6 @@
+<resources>
+    <style name="JudoTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/white</item>
+    </style>
+</resources>
+
