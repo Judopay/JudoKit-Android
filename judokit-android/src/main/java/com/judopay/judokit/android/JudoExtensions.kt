@@ -9,6 +9,7 @@ import android.graphics.Point
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import android.view.ViewParent
 import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import androidx.annotation.DimenRes
 import androidx.annotation.FloatRange
 import androidx.core.view.children
@@ -164,6 +166,16 @@ fun View.dismissKeyboard() {
 }
 
 fun Any.toJSONString(): String = Gson().toJson(this)
+
+// Replacement of autoSizeMaxTextSize for APIs lower than 26
+fun TextView.setMaxTextSize(maxTextSizeSp: Float) {
+    val metrics = resources.displayMetrics
+    val density = metrics.density
+    val maxPx = maxTextSizeSp * density
+    if (textSize > maxPx) {
+        setTextSize(TypedValue.COMPLEX_UNIT_PX, maxPx)
+    }
+}
 
 @Suppress("MagicNumber")
 internal fun Window.applyDialogStyling() {

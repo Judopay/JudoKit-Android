@@ -10,10 +10,13 @@ import com.judopay.judokit.android.R
 import com.judopay.judokit.android.animateWithAlpha
 import com.judopay.judokit.android.animateWithTranslation
 import com.judopay.judokit.android.databinding.NoPaymentMethodSelectedViewBinding
+import com.judopay.judokit.android.setMaxTextSize
 import com.judopay.judokit.android.ui.paymentmethods.model.CardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.CardViewType
 
 private const val TRANSLATE_120 = 120f
+private const val HEADING_MAX_TEXT_SIZE = 27f
+private const val SUBHEADING_MAX_TEXT_SIZE = 24f
 
 data class NoPaymentMethodSelectedViewModel(
     override val type: CardViewType = CardViewType.PLACEHOLDER,
@@ -28,6 +31,11 @@ class NoPaymentMethodSelectedView
         defStyle: Int = 0,
     ) : FrameLayout(context, attrs, defStyle) {
         private val binding = NoPaymentMethodSelectedViewBinding.inflate(LayoutInflater.from(context), this, true)
+
+        init {
+            binding.headingTextView.setMaxTextSize(HEADING_MAX_TEXT_SIZE)
+            binding.subHeadingTextView.setMaxTextSize(SUBHEADING_MAX_TEXT_SIZE)
+        }
 
         fun show(placeholderImage: ImageView) {
             placeholderImage.apply {
