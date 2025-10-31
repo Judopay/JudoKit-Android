@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.accessibility.AccessibilityEvent
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -15,6 +16,7 @@ import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.databinding.JudoEditTextInputLayoutBinding
+import com.judopay.judokit.android.moveCursorToEnd
 import com.judopay.judokit.android.subViewsWithType
 
 private const val TEXT_SIZE_VALID = 16f
@@ -91,6 +93,18 @@ class JudoEditTextInputLayout
                         LinearLayout.LayoutParams.MATCH_PARENT,
                     )
                 binding.containerLayout.addView(it, layoutParams)
+                it.accessibilityDelegate =
+                    object : AccessibilityDelegate() {
+                        override fun sendAccessibilityEvent(
+                            host: View,
+                            eventType: Int,
+                        ) {
+                            super.sendAccessibilityEvent(host, eventType)
+                            if (eventType == AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED) {
+                                (host as? EditText)?.moveCursorToEnd()
+                            }
+                        }
+                    }
             }
 
             background =

@@ -17,6 +17,7 @@ import android.view.ViewParent
 import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.DimenRes
 import androidx.annotation.FloatRange
@@ -174,6 +175,12 @@ fun TextView.setMaxTextSize(maxTextSizeSp: Float) {
     val maxPx = maxTextSizeSp * density
     if (textSize > maxPx) {
         setTextSize(TypedValue.COMPLEX_UNIT_PX, maxPx)
+    }
+}
+
+internal fun EditText.moveCursorToEnd() {
+    post {
+        setSelection(text?.length ?: 0)
     }
 }
 
