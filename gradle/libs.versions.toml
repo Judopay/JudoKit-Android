@@ -45,6 +45,7 @@ testRunner = "1.6.1"
 nexusPublish = "2.0.0"
 dokka = "2.0.0"
 detekt = "1.23.8"
+kover = "0.9.1"
 ktlint = "12.3.0"
 ktlint-compose-rules = "0.3.12"
 binaryCompatibilityValidator = "0.17.0"
@@ -127,6 +128,8 @@ dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "dokka" 
 # @keep for the included build-logic
 dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 # @keep for the included build-logic
+kover-gradle-plugin = { module = "org.jetbrains.kotlinx.kover:org.jetbrains.kotlinx.kover.gradle.plugin", version.ref = "kover" }
+# @keep for the included build-logic
 ktlint-gradle-plugin = { module = "org.jlleitschuh.gradle:ktlint-gradle", version.ref = "ktlint" }
 # @keep for the included build-logic
 ktling-compose-rules = { module = "io.nlopez.compose.rules:ktlint", version.ref = "ktlint-compose-rules" }
@@ -159,6 +162,7 @@ dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 kotlin-binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binaryCompatibilityValidator" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover"}
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
 junit5 = { id = "de.mannodermaus.android-junit5", version.ref = "androidJunit5" }

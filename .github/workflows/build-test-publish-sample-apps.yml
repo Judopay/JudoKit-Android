@@ -1,0 +1,24 @@
+name: Android Build, Test and Publish Sample Apps
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build_and_test_sample_apps:
+    uses: Judopay/github-actions/.github/workflows/android-build-and-test-sample-apps.yml@master
+    secrets: inherit
+  publish_sample_apps:
+    uses: Judopay/github-actions/.github/workflows/publish-sample-apps.yml@master
+    needs: build_and_test_sample_apps
+    secrets: inherit
+  test_sample_apps_firebase:
+    uses: Judopay/github-actions/.github/workflows/test-sample-apps-firebase.yml@master
+    needs: publish_sample_apps
+    secrets: inherit
+    with:
+      firebase_matrix_label: 'Merge to master'
+  test_sample_apps_browserstack:
+    uses: Judopay/github-actions/.github/workflows/test-sample-apps-browserstack.yml@master
+    needs: publish_sample_apps
+    secrets: inherit
