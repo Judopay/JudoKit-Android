@@ -11,12 +11,12 @@ const val REGEX_URL = "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-z
 /**
  *  Constant to store the sdk version, injected in every Judo API request headers/body
  */
-const val JUDO_KIT_VERSION = "5.0.2"
+const val JUDO_KIT_VERSION = "5.0.5"
 
 /**
  *  Constant to store the Judo API version, injected in every Judo API request headers
  */
-const val JUDO_API_VERSION = "6.22.0"
+const val JUDO_API_VERSION = "6.23.0"
 
 const val POSTAL_CODE_MIN_LENGTH_CA = 6
 const val POSTAL_CODE_MAX_LENGTH_CA = 7

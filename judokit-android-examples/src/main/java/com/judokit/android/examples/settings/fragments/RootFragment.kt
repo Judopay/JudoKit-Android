@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.util.Base64
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.edit
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
@@ -74,7 +75,7 @@ class RootFragment : PreferenceFragmentCompat() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireActivity())
 
         val randomReference = UUID.randomUUID().toString()
-        sharedPreferences.edit().putString("payment_reference", randomReference).apply()
+        sharedPreferences.edit { putString("payment_reference", randomReference) }
 
         createApiClient()
             .createPaymentSession(
@@ -84,6 +85,7 @@ class RootFragment : PreferenceFragmentCompat() {
                     currency = sharedPreferences.getString("currency", "") ?: "",
                     yourPaymentReference = sharedPreferences.getString("payment_reference", "") ?: "",
                     yourConsumerReference = "my-unique-ref",
+                    disableNetworkTokenisation = sharedPreferences.getBoolean("is_disable_network_tokenisation_on", false),
                 ),
             ).enqueue(
                 object : Callback<CreatePaymentSessionResponse> {
@@ -116,7 +118,7 @@ class RootFragment : PreferenceFragmentCompat() {
         }
 
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireActivity())
-        sharedPreferences.edit().putString("payment_session", session).apply()
+        sharedPreferences.edit { putString("payment_session", session) }
 
         Toast.makeText(activity, "Payment session created!", Toast.LENGTH_LONG).show()
         requireActivity().finish()
@@ -166,7 +168,7 @@ class RootFragment : PreferenceFragmentCompat() {
                             .header("User-Agent", "JudoKit-Android Examples")
                             .header("Accept", "application/json")
                             .header("Content-Type", "application/json")
-                            .header("Api-Version", "6.22.0")
+                            .header("Api-Version", "6.23.0")
                             .header("Cache-Control", "no-cache")
                             .header("Authorization", "Basic $encodedCredentials")
                             .build()

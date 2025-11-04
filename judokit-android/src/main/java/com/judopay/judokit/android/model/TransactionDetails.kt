@@ -220,6 +220,7 @@ fun TransactionDetails.toPaymentRequest(
         .setPhoneCountryCode(phoneCountryCode)
         .setEmailAddress(email)
         .setThreeDSecure(transaction.toThreeDSecureTwo(judo, overrides))
+        .setDisableNetworkTokenisation(judo.disableNetworkTokenisation)
         .build()
 }
 
@@ -252,6 +253,7 @@ fun TransactionDetails.toPreAuthRequest(
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
         .setThreeDSecure(transaction.toThreeDSecureTwo(judo, overrides))
+        .setDisableNetworkTokenisation(judo.disableNetworkTokenisation)
         .build()
 }
 
@@ -281,6 +283,7 @@ fun TransactionDetails.toCheckCardRequest(
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
+        .setDisableNetworkTokenisation(judo.disableNetworkTokenisation)
         .build()
 }
 
@@ -302,6 +305,7 @@ fun TransactionDetails.toSaveCardRequest(
         .setCardHolderName(cardHolderName)
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
         .setAddress(judo.address)
+        .setDisableNetworkTokenisation(judo.disableNetworkTokenisation)
         .build()
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
@@ -336,6 +340,7 @@ fun TransactionDetails.toRegisterCardRequest(
         .setMobileNumber(mobileNumber)
         .setEmailAddress(email)
         .setPhoneCountryCode(phoneCountryCode)
+        .setDisableNetworkTokenisation(judo.disableNetworkTokenisation)
         .build()
 }
 
@@ -368,6 +373,7 @@ fun TransactionDetails.toTokenRequest(
         .setPhoneCountryCode(phoneCountryCode)
         .setAddress(getAddress(judo))
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
+        .setDisableNetworkTokenisation(judo.disableNetworkTokenisation)
         .build()
 }
 
@@ -402,6 +408,7 @@ fun TransactionDetails.toPreAuthTokenRequest(
         .setPrimaryAccountDetails(judo.primaryAccountDetails)
         .setDelayedAuthorisation(judo.delayedAuthorisation ?: false)
         .setAllowIncrement(judo.allowIncrement ?: false)
+        .setDisableNetworkTokenisation(judo.disableNetworkTokenisation)
         .build()
 }
 
