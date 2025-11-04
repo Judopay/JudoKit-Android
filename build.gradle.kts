@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.kotlin.binary.compatibility.validator) apply false
     alias(libs.plugins.junit5) apply false
     alias(libs.plugins.nexus.publish)
+    alias(libs.plugins.kover) apply false
     id("judokit.nexus-publish")
 
     // sample app crash reporting

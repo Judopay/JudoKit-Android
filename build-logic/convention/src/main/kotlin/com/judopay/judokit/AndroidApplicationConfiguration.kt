@@ -35,9 +35,9 @@ internal fun Project.configureAndroidApplication(extension: ApplicationExtension
     }
 
 private fun ApplicationDefaultConfig.addBuildConfigFields() {
-    buildConfigField("String", "JUDO_ID", "\"${System.getenv("JUDO_ID")}\"")
-    buildConfigField("String", "API_TEST_TOKEN", "\"${System.getenv("API_TEST_TOKEN")}\"")
-    buildConfigField("String", "API_TEST_SECRET", "\"${System.getenv("API_TEST_SECRET")}\"")
-    buildConfigField("String", "RECOMMENDATION_URL", "\"${System.getenv("RECOMMENDATION_URL")}\"")
-    buildConfigField("String", "RSA_KEY", "\"${System.getenv("RSA_KEY")}\"")
+    buildConfigField("String", "JUDO_ID", "\"${System.getenv("JUDO_API_ID")}\"")
+    buildConfigField("String", "API_TEST_TOKEN", "\"${System.getenv("JUDO_API_TOKEN")}\"")
+    buildConfigField("String", "API_TEST_SECRET", "\"${System.getenv("JUDO_API_SECRET")}\"")
+    buildConfigField("String", "RECOMMENDATION_URL", "\"${System.getenv("RAVELIN_MOCK_SERVER_URL")}\"")
+    buildConfigField("String", "RSA_KEY", "\"${System.getenv("RSA_PUBLIC_KEY")}\"")
 }
