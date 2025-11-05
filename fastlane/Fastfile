@@ -222,7 +222,7 @@ platform :android do
         "Samsung Galaxy S25 Ultra-15.0",
         "Samsung Galaxy S21-11.0",
         "Samsung Galaxy A10-9.0",
-        "Samsung Galaxy S9-8.0"
+        "Google Pixel 9-16.0"
       ],
       project: "JudoKit-Android UI Tests",
       build_tag: "JudoKit-Android",
