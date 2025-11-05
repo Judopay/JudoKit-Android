@@ -40,7 +40,6 @@ import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_CANADA
 import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_CHINA
 import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_INDIA
 import com.judopay.judokit.android.ui.common.ALPHA_2_CODE_US
-import com.judopay.judokit.android.ui.common.heightWithInsetsAndMargins
 
 internal typealias BillingDetailsFormValidationStatus = (model: BillingDetailsInputModel, isValid: Boolean) -> Unit
 internal typealias BillingDetailsSubmitButtonClickListener = () -> Unit
@@ -123,13 +122,6 @@ class BillingDetailsFormView
             setupMobileNumberFormatter()
             setupCountrySpinner()
             setupStateSpinner()
-
-            binding.billingDetailsBottomAppBar.post {
-                val additionalSpacing = resources.getDimension(R.dimen.space_94).toInt()
-                val params = binding.billingDetailsContainerLayout.layoutParams as MarginLayoutParams
-                params.bottomMargin = binding.billingDetailsBottomAppBar.heightWithInsetsAndMargins + additionalSpacing
-                binding.billingDetailsContainerLayout.layoutParams = params
-            }
         }
 
         override fun onViewWillAppear() {
@@ -262,14 +254,14 @@ class BillingDetailsFormView
 
         @Suppress("MagicNumber")
         private fun setAddAddressButtonClickListener() {
-            binding.addAddressLineButton.text = context.getString(R.string.jp_add_address_line, 2)
+            binding.addAddressLineButtonText.text = context.getString(R.string.jp_add_address_line, 2)
             binding.addAddressLineButton.setOnClickListener {
                 if (binding.addressLine2TextInputLayout.visibility == VISIBLE) {
                     binding.addressLine3TextInputLayout.visibility = VISIBLE
                     binding.addAddressLineButton.visibility = GONE
                 } else {
                     binding.addressLine2TextInputLayout.visibility = VISIBLE
-                    binding.addAddressLineButton.text = context.getString(R.string.jp_add_address_line, 3)
+                    binding.addAddressLineButtonText.text = context.getString(R.string.jp_add_address_line, 3)
                 }
             }
         }

@@ -3,10 +3,13 @@
 package com.judopay.judokit.android
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Point
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,10 +17,15 @@ import android.view.ViewParent
 import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.widget.TextView
+import androidx.annotation.DimenRes
+import androidx.annotation.FloatRange
 import androidx.core.view.children
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.gson.Gson
 import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.request.CheckCardRequest
@@ -31,6 +39,7 @@ import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTw
 import com.judopay.judokit.android.model.ApiEnvironment
 import com.judopay.judokit.android.model.googlepay.GooglePayAddress
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_500
+import com.judopay.judokit.android.ui.common.LANDSCAPE_MIN_HEIGHT_RATIO
 import com.judopay.judokit.android.ui.common.parcelable
 import com.judopay.judokit.android.ui.error.JudoNotProvidedError
 
@@ -158,6 +167,22 @@ fun View.dismissKeyboard() {
 }
 
 fun Any.toJSONString(): String = Gson().toJson(this)
+
+// Replacement of autoSizeMaxTextSize for APIs lower than 26
+fun TextView.setMaxTextSize(maxTextSizeSp: Float) {
+    val metrics = resources.displayMetrics
+    val density = metrics.density
+    val maxPx = maxTextSizeSp * density
+    if (textSize > maxPx) {
+        setTextSize(TypedValue.COMPLEX_UNIT_PX, maxPx)
+    }
+}
+
+internal fun EditText.moveCursorToEnd() {
+    post {
+        setSelection(text?.length ?: 0)
+    }
+}
 
 @Suppress("MagicNumber")
 internal fun Window.applyDialogStyling() {
@@ -318,10 +343,13 @@ fun Judo.toTokenRequest(
     .setDisableNetworkTokenisation(disableNetworkTokenisation)
     .build()
 
-internal fun NestedScrollView.smoothScrollToView(view: View) {
-    val childOffset = Point()
-    getDeepChildOffset(this, view.parent, view, childOffset)
-    smoothScrollTo(0, childOffset.y)
+internal fun NestedScrollView.smoothScrollToView(targetView: View) {
+    val childRect = Rect()
+    targetView.getDrawingRect(childRect)
+    offsetDescendantRectToMyCoords(targetView, childRect)
+
+    val scrollY = childRect.top - (height / 2 - targetView.height / 2)
+    smoothScrollTo(0, scrollY)
 }
 
 internal fun ViewGroup.getDeepChildOffset(
@@ -339,4 +367,16 @@ internal fun ViewGroup.getDeepChildOffset(
     }
 
     getDeepChildOffset(mainParent, parentGroup.parent, parentGroup, accumulatedOffset)
+}
+
+internal fun CollapsingToolbarLayout.setAdaptiveMinHeight(
+    @FloatRange(from = 0.0, to = 1.0) landscapeMinHeightPercentage: Float = LANDSCAPE_MIN_HEIGHT_RATIO,
+    @DimenRes portraitMinHeightRes: Int = R.dimen.app_bar_layout_min_height,
+) {
+    minimumHeight =
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            (resources.displayMetrics.heightPixels * landscapeMinHeightPercentage).toInt()
+        } else {
+            resources.getDimensionPixelSize(portraitMinHeightRes)
+        }
 }

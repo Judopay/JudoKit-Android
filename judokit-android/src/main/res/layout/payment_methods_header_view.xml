@@ -10,7 +10,8 @@
         android:id="@+id/viewAnimator"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/space_32"
+        android:layout_marginTop="@dimen/space_42"
+        android:paddingTop="@dimen/space_56"
         android:animateFirstView="false"
         android:background="@android:color/transparent"
         android:clipChildren="false"
@@ -25,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:padding="@dimen/space_16">
+            android:padding="@dimen/space_12">
 
             <com.judopay.judokit.android.ui.paymentmethods.components.PaymentCardView
                 android:layout_width="0dp"
@@ -46,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:padding="@dimen/space_16">
+            android:padding="@dimen/space_12">
 
             <com.judopay.judokit.android.ui.paymentmethods.components.PaymentCardView
                 android:layout_width="0dp"
@@ -67,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:padding="@dimen/space_16">
+            android:padding="@dimen/space_12">
 
             <com.judopay.judokit.android.ui.paymentmethods.components.GooglePayCardView
                 android:layout_width="0dp"
@@ -88,11 +89,12 @@
     <ImageView
         android:id="@+id/placeholderBackgroundImageView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:adjustViewBounds="true"
         android:contentDescription="@null"
         android:scaleType="centerCrop"
         android:src="@drawable/no_cards_background"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -102,9 +104,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/paymentCallToActionView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.65"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.judopay.judokit.android.ui.paymentmethods.components.PaymentCallToActionView
         android:id="@+id/paymentCallToActionView"

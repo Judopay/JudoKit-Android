@@ -1,0 +1,5 @@
+<resources>
+
+    <!-- Cards -->
+    <dimen name="card_width">280dp</dimen>
+</resources>

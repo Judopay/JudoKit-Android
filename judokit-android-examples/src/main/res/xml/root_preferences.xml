@@ -5,14 +5,14 @@
         app:iconSpaceReserved="false"
         app:title="@string/api_header">
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="true"
             app:iconSpaceReserved="false"
             app:key="is_sandboxed"
             app:summary="@string/is_sandboxed_summary"
             app:title="@string/is_sandboxed_title" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:dependency="is_sandboxed"
             app:defaultValue="false"
             app:iconSpaceReserved="false"
@@ -104,7 +104,7 @@
             app:summary="@string/recommendation_timeout_summary"
             app:title="@string/recommendation_timeout_title" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:dependency="is_recommendation_feature_enabled"
             app:defaultValue="false"
             app:iconSpaceReserved="false"
@@ -118,7 +118,7 @@
         app:iconSpaceReserved="false"
         app:title="@string/three_ds2_header">
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
             app:key="should_ask_for_billing_information"
@@ -367,7 +367,7 @@
         app:iconSpaceReserved="false"
         app:title="@string/google_pay_header">
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
             app:key="is_google_pay_production_environment"
@@ -398,14 +398,14 @@
             app:title="@string/billing_address_title"
             app:useSimpleSummaryProvider="true" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
             app:key="is_billing_address_phone_number_required"
             app:summary="@string/billing_address_phone_number_summary"
             app:title="@string/billing_address_phone_number_title" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
             app:key="is_shipping_address_required"
@@ -419,28 +419,28 @@
             app:summary="@string/google_pay_shipping_address_allowed_countries_summary"
             app:title="@string/google_pay_shipping_address_allowed_countries_title" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
             app:key="is_shipping_address_phone_number_required"
             app:summary="@string/shipping_address_phone_number_summary"
             app:title="@string/shipping_address_phone_number_title" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
             app:key="is_email_address_required"
             app:summary="@string/email_address_summary"
             app:title="@string/email_address_title" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="true"
             app:iconSpaceReserved="false"
             app:key="allow_prepaid_cards"
             app:summary="@string/google_pay_allow_prepaid_cards_summary"
             app:title="@string/google_pay_allow_prepaid_cards_title" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="true"
             app:iconSpaceReserved="false"
             app:key="allow_credit_cards"
@@ -487,49 +487,49 @@
         app:iconSpaceReserved="false"
         app:title="@string/others_header">
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
             app:key="is_avs_enabled"
             app:summary="@string/avs_summary"
             app:title="@string/avs_title" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
             app:key="should_payment_methods_verify_security_code"
             app:summary="@string/security_code_summary"
             app:title="@string/security_code_title" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="true"
             app:iconSpaceReserved="false"
             app:key="should_display_amount"
             app:summary="@string/should_display_amount_summary"
             app:title="@string/should_display_amount_title" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
             app:key="should_payment_button_display_amount"
             app:summary="@string/should_payment_button_display_amount_summary"
             app:title="@string/should_payment_button_display_amount_title" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
             app:key="is_initial_recurring_payment"
             app:summary="@string/is_initial_recurring_payment_summary"
             app:title="@string/is_initial_recurring_payment_title" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
             app:key="is_delayed_authorisation_on"
             app:summary="@string/is_delayed_authorisation_on_summary"
             app:title="@string/is_delayed_authorisation_on_title" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
             app:key="is_allow_increment_on"
@@ -569,14 +569,14 @@
         app:iconSpaceReserved="false"
         app:title="@string/token_payments">
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
             app:key="should_ask_for_csc"
             app:summary="@string/should_ask_for_csc_summary"
             app:title="@string/should_ask_for_csc_title" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
             app:key="should_ask_for_cardholder_name"

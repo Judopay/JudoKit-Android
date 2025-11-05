@@ -33,7 +33,6 @@ class GooglePayButton
 
         init {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.GooglePayButton)
-
             for (i in 0 until typedArray.indexCount) {
                 when (val at = typedArray.getIndex(i)) {
                     R.styleable.GooglePayButton_style -> {
@@ -43,8 +42,9 @@ class GooglePayButton
                     }
                 }
             }
-
             typedArray.recycle()
+
+            setGoogleButtonOffset(binding.googlePayButtonContainer, dpToPx(NO_SHADOW_MARGIN_OFFSET_DP))
         }
 
         private fun update() {
@@ -59,4 +59,13 @@ class GooglePayButton
             binding.whiteBuyWithButton.root.visibility = visibility(GooglePayButtonStyle.WHITE_BUY_WITH)
             binding.whiteBuyWithButtonNoShadow.root.visibility = visibility(GooglePayButtonStyle.WHITE_BUY_WITH_NO_SHADOW)
         }
+
+        private fun setGoogleButtonOffset(
+            view: View,
+            px: Int,
+        ) {
+            (view.layoutParams as? MarginLayoutParams)?.setMargins(px, px, px, px)
+        }
+
+        private fun dpToPx(dp: Int) = (dp * resources.displayMetrics.density + ROUNDING_BIAS).toInt()
     }

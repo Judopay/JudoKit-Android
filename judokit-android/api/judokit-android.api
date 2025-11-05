@@ -98,6 +98,7 @@ public final class com/judopay/judokit/android/JudoExtensionsKt {
 	public static final fun inflate (Landroid/view/ViewGroup;IZ)Landroid/view/View;
 	public static synthetic fun inflate$default (Landroid/view/ViewGroup;IZILjava/lang/Object;)Landroid/view/View;
 	public static final fun parentOfType (Landroid/view/View;Ljava/lang/Class;)Landroid/view/View;
+	public static final fun setMaxTextSize (Landroid/widget/TextView;F)V
 	public static final fun subViewsWithType (Landroid/view/ViewGroup;Ljava/lang/Class;)Ljava/util/List;
 	public static final fun toCheckCardRequest (Lcom/judopay/judokit/android/Judo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/api/model/request/threedsecure/ThreeDSecureTwo;)Lcom/judopay/judokit/android/api/model/request/CheckCardRequest;
 	public static final fun toGooglePayRequest (Lcom/judopay/judokit/android/Judo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayAddress;)Lcom/judopay/judokit/android/api/model/request/GooglePayRequest;
@@ -1285,25 +1286,26 @@ public final class com/judopay/judokit/android/api/model/response/recommendation
 }
 
 public final class com/judopay/judokit/android/databinding/BillingDetailsFormViewBinding : androidx/viewbinding/ViewBinding {
-	public final field addAddressLineButton Lcom/google/android/material/button/MaterialButton;
+	public final field addAddressLineButton Landroid/widget/LinearLayout;
+	public final field addAddressLineButtonText Landroid/widget/TextView;
 	public final field addressLine1TextInputEditText Landroid/widget/EditText;
 	public final field addressLine1TextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
 	public final field addressLine2TextInputEditText Landroid/widget/EditText;
 	public final field addressLine2TextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
 	public final field addressLine3TextInputEditText Landroid/widget/EditText;
 	public final field addressLine3TextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
-	public final field administrativeDivisionTextInputEditText Landroid/widget/AutoCompleteTextView;
+	public final field administrativeDivisionTextInputEditText Landroidx/appcompat/widget/AppCompatAutoCompleteTextView;
 	public final field administrativeDivisionTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
 	public final field billingContainer Landroidx/coordinatorlayout/widget/CoordinatorLayout;
 	public final field billingDetailsBackButton Lcom/judopay/judokit/android/ui/common/ProgressButton;
 	public final field billingDetailsBottomAppBar Lcom/google/android/material/bottomappbar/BottomAppBar;
 	public final field billingDetailsContainerLayout Landroidx/constraintlayout/widget/ConstraintLayout;
+	public final field billingDetailsHeading Landroid/widget/TextView;
 	public final field billingDetailsScrollView Landroidx/core/widget/NestedScrollView;
 	public final field billingDetailsSubmitButton Lcom/judopay/judokit/android/ui/common/ProgressButton;
-	public final field billingDetailsTextView Landroid/widget/TextView;
 	public final field cityTextInputEditText Landroid/widget/EditText;
 	public final field cityTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
-	public final field countryTextInputEditText Landroid/widget/AutoCompleteTextView;
+	public final field countryTextInputEditText Landroidx/appcompat/widget/AppCompatAutoCompleteTextView;
 	public final field countryTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
 	public final field emailTextInputEditText Landroid/widget/EditText;
 	public final field emailTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
@@ -1343,8 +1345,9 @@ public final class com/judopay/judokit/android/databinding/CardEntryFormViewBind
 	public final field cardContainer Landroidx/coordinatorlayout/widget/CoordinatorLayout;
 	public final field cardDetailsContainerLayout Landroidx/constraintlayout/widget/ConstraintLayout;
 	public final field cardEntryBottomAppBar Lcom/google/android/material/bottomappbar/BottomAppBar;
+	public final field cardEntryHeading Landroid/widget/TextView;
 	public final field cardEntrySubmitButton Lcom/judopay/judokit/android/ui/common/ProgressButton;
-	public final field countryTextInputEditText Landroid/widget/AutoCompleteTextView;
+	public final field countryTextInputEditText Landroidx/appcompat/widget/AppCompatAutoCompleteTextView;
 	public final field countryTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
 	public final field expirationDateTextInputEditText Landroid/widget/EditText;
 	public final field expirationDateTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
@@ -1411,6 +1414,7 @@ public final class com/judopay/judokit/android/databinding/EditCardFragmentBindi
 	public final field saveButton Lcom/google/android/material/button/MaterialButton;
 	public final field titleEditText Landroid/widget/EditText;
 	public final field titleTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
+	public final field toolbar Landroid/widget/LinearLayout;
 	public static fun bind (Landroid/view/View;)Lcom/judopay/judokit/android/databinding/EditCardFragmentBinding;
 	public synthetic fun getRoot ()Landroid/view/View;
 	public fun getRoot ()Landroidx/constraintlayout/widget/ConstraintLayout;
@@ -1421,6 +1425,7 @@ public final class com/judopay/judokit/android/databinding/EditCardFragmentBindi
 public final class com/judopay/judokit/android/databinding/GooglePayButtonBinding : androidx/viewbinding/ViewBinding {
 	public final field blackButton Lcom/judopay/judokit/android/databinding/BlackGooglepayButtonBinding;
 	public final field blackBuyWithButton Lcom/judopay/judokit/android/databinding/BlackBuyWithGooglepayButtonBinding;
+	public final field googlePayButtonContainer Landroidx/constraintlayout/widget/ConstraintLayout;
 	public final field whiteButton Lcom/judopay/judokit/android/databinding/WhiteGooglepayButtonBinding;
 	public final field whiteButtonNoShadow Lcom/judopay/judokit/android/databinding/WhiteGooglepayButtonNoShadowBinding;
 	public final field whiteBuyWithButton Lcom/judopay/judokit/android/databinding/WhiteBuyWithGooglepayButtonBinding;
@@ -3292,8 +3297,11 @@ public final class com/judopay/judokit/android/ui/cardentry/CardEntryFragment : 
 	public fun onDestroy ()V
 	public fun onDestroyView ()V
 	public fun onStart ()V
-	public fun onStop ()V
 	public fun onViewCreated (Landroid/view/View;Landroid/os/Bundle;)V
+}
+
+public final class com/judopay/judokit/android/ui/cardentry/CardEntryFragmentKt {
+	public static final fun waitForAllLaidOut ([Landroid/view/View;Lkotlin/jvm/functions/Function0;)V
 }
 
 public final class com/judopay/judokit/android/ui/cardentry/CardEntryFragmentModel {
@@ -3351,6 +3359,7 @@ public final class com/judopay/judokit/android/ui/cardentry/components/CardEntry
 	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
 	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;I)V
 	public synthetic fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getBinding ()Lcom/judopay/judokit/android/databinding/CardEntryFormViewBinding;
 }
 
 public final class com/judopay/judokit/android/ui/cardentry/components/CardEntryViewAnimator : android/widget/ViewAnimator {
@@ -3818,6 +3827,8 @@ public final class com/judopay/judokit/android/ui/common/ConstantsKt {
 	public static final field GOOGLE_PAY_API_VERSION_MINOR I
 	public static final field JUDO_API_VERSION Ljava/lang/String;
 	public static final field JUDO_KIT_VERSION Ljava/lang/String;
+	public static final field LANDSCAPE_MIN_HEIGHT_RATIO F
+	public static final field NO_SHADOW_MARGIN_OFFSET_DP I
 	public static final field PATTERN_CARD_EXPIRATION_DATE Ljava/lang/String;
 	public static final field POSTAL_CODE_MAX_LENGTH_CA I
 	public static final field POSTAL_CODE_MAX_LENGTH_OTHER I
@@ -3837,6 +3848,7 @@ public final class com/judopay/judokit/android/ui/common/ConstantsKt {
 	public static final field REG_EX_MOBILE_NUMBER Ljava/lang/String;
 	public static final field REG_EX_OTHER_POST_CODE Ljava/lang/String;
 	public static final field REG_EX_US_POST_CODE Ljava/lang/String;
+	public static final field ROUNDING_BIAS F
 }
 
 public final class com/judopay/judokit/android/ui/common/FunctionsKt {

@@ -39,6 +39,11 @@
         <item name="android:paddingRight">@dimen/space_6</item>
         <item name="android:minHeight">@dimen/min_touch_target_size</item>
         <item name="android:minWidth">@dimen/min_touch_target_size</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="JudoTheme.TextButton.Large" parent="JudoTheme.TextButton">
+        <item name="android:textSize">@dimen/headline</item>
     </style>
 
     <!-- Outlined text like buttons eg.: SCAN CARD ... -->
@@ -62,6 +67,14 @@
         <item name="android:textColor">@color/jpWhiteColor</item>
         <item name="android:textAllCaps">true</item>
         <item name="backgroundTint">@color/black_button_background_selector</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:padding">0dp</item>
+    </style>
+
+    <style name="JudoTheme.BottomBackButton" parent="JudoTheme.TextButton">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
     </style>
 
     <!-- Bottom Sheets -->
@@ -101,19 +114,15 @@
 
     <style name="JudoTheme.TextInputEditText" parent="Widget.AppCompat.EditText">
         <!-- Theme attributes -->
-        <item name="android:textColorHint">@color/jpDarkGrayColor</item>
+        <item name="android:textColorHint">@color/jpNeutralGrayColor</item>
         <item name="colorControlNormal">@color/jpBlackColor</item>
         <item name="colorControlActivated">@color/jpBlackColor</item>
         <item name="fontFamily">@font/sf_pro_display_regular</item>
         <item name="android:textSize">@dimen/headline</item>
         <item name="android:textColor">@color/jpBlackColor</item>
+        <item name="android:layout_gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:paddingStart">0dp</item>
-        <item name="android:paddingEnd">0dp</item>
-        <item name="android:paddingBottom">0dp</item>
-        <item name="android:paddingTop">0dp</item>
-        <item name="android:padding">0dp</item>
         <item name="android:background">@null</item>
     </style>
 
@@ -135,6 +144,10 @@
         <item name="android:textSize">@dimen/title</item>
     </style>
 
+    <style name="JudoTheme.Title.Dark" parent="JudoTheme.Title">
+        <item name="android:textColor">@color/jpDarkGrayColor</item>
+    </style>
+
     <style name="JudoTheme.Title.Light" parent="JudoTheme.Title">
         <item name="android:textColor">@color/jpWhiteColor</item>
         <item name="android:maxLines">1</item>
@@ -143,6 +156,7 @@
 
     <style name="JudoTheme.Headline" parent="JudoTheme.TextView">
         <item name="android:textSize">@dimen/headline</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="JudoTheme.Headline.Regular" parent="JudoTheme.TextView">
@@ -168,11 +182,6 @@
         <item name="fontFamily">@font/sf_pro_display_regular</item>
         <item name="android:textSize">@dimen/caption</item>
     </style>
-
-    <style name="JudoTheme.Caption.Light" parent="JudoTheme.Caption">
-        <item name="android:textColor">@color/jpDarkGrayColor</item>
-    </style>
-
     <style name="JudoTheme.Caption.Error" parent="JudoTheme.Caption">
         <item name="fontFamily">@font/sf_pro_display_semibold</item>
         <item name="android:textColor">@color/jpRedColor</item>
@@ -181,5 +190,6 @@
     <style name="JudoTheme.Caption.Error.Medium" parent="JudoTheme.Caption.Error">
         <item name="fontFamily">@font/sf_pro_display_medium</item>
         <item name="android:textColor">@color/jpRedColor</item>
+        <item name="android:textSize">@dimen/large_caption</item>
     </style>
 </resources>

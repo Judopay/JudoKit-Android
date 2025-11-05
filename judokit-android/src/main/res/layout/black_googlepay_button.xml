@@ -2,10 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="48sp"
+    android:layout_height="match_parent"
     android:background="@drawable/black_googlepay_button_no_shadow_background"
     android:contentDescription="@string/googlepay_button_content_description"
-    android:paddingTop="2sp">
+    android:padding="@dimen/google_button_padding">
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -27,16 +27,24 @@
                 android:id="@+id/flow1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="numberTextInputLayout,nameTextInputLayout"
+                app:constraint_referenced_ids="cardEntryHeading,numberTextInputLayout,nameTextInputLayout"
                 app:flow_horizontalAlign="start"
                 app:flow_horizontalBias="0"
                 app:flow_maxElementsWrap="1"
                 app:flow_verticalBias="0"
-                app:flow_verticalGap="@dimen/space_8"
+                app:flow_verticalGap="@dimen/space_9"
                 app:flow_wrapMode="chain"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/cardEntryHeading"
+                style="@style/JudoTheme.Title.Dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/heading_bottom_spacing"
+                android:text="@string/jp_card_entry_title" />
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/numberTextInputLayout"
@@ -66,6 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName|textCapWords"
+                    android:autofillHints="personName"
                     tools:text="John Doe"
                     android:tag="@string/jp_cardholder_name_entry_field"/>
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
@@ -79,10 +88,10 @@
                 app:flow_horizontalBias="0"
                 app:flow_maxElementsWrap="2"
                 app:flow_verticalBias="0"
-                app:flow_verticalGap="@dimen/space_8"
-                app:flow_horizontalGap="@dimen/space_8"
+                app:flow_verticalGap="@dimen/space_9"
+                app:flow_horizontalGap="@dimen/space_9"
                 app:flow_wrapMode="chain"
-                android:layout_marginTop="@dimen/space_8"
+                android:layout_marginTop="@dimen/space_9"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/flow1" />
@@ -125,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone">
 
-                <AutoCompleteTextView
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                     android:id="@+id/countryTextInputEditText"
                     style="@style/JudoTheme.TextInputEditText"
                     android:layout_width="match_parent"
@@ -135,7 +144,6 @@
                     android:focusable="false"
                     android:longClickable="false"
                     android:maxLines="1"
-                    android:padding="@dimen/space_7"
                     tools:ignore="LabelFor"
                     tools:text="Country" />
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
@@ -171,7 +179,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space_12">
+            android:layout_marginTop="@dimen/space_12">
 
             <androidx.constraintlayout.helper.widget.Flow
                 android:id="@+id/flow3"
@@ -182,7 +190,7 @@
                 app:flow_horizontalBias="0"
                 app:flow_maxElementsWrap="1"
                 app:flow_verticalBias="0"
-                app:flow_verticalGap="@dimen/space_8"
+                app:flow_verticalGap="@dimen/space_9"
                 app:flow_wrapMode="chain"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -205,7 +213,8 @@
                 android:drawablePadding="@dimen/space_8"
                 android:text="@string/jp_secure_server_transmission"
                 android:textColor="@color/brown_grey"
-                app:drawableStartCompat="@drawable/ic_lock_20dp" />
+                app:drawableStartCompat="@drawable/ic_lock_20dp"
+                android:paddingBottom="@dimen/space_9"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.bottomappbar.BottomAppBar>

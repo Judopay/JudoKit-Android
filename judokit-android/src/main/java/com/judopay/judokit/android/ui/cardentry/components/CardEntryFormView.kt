@@ -34,7 +34,6 @@ import com.judopay.judokit.android.ui.cardentry.validation.carddetails.Expiratio
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.PostcodeValidator
 import com.judopay.judokit.android.ui.cardentry.validation.carddetails.SecurityCodeValidator
 import com.judopay.judokit.android.ui.common.PATTERN_CARD_EXPIRATION_DATE
-import com.judopay.judokit.android.ui.common.heightWithInsetsAndMargins
 import kotlin.collections.forEach as kForEach
 
 internal typealias FormValidationStatus = (model: CardDetailsInputModel, isValid: Boolean) -> Unit
@@ -47,7 +46,7 @@ class CardEntryFormView
         attrs: AttributeSet? = null,
         defStyle: Int = 0,
     ) : FrameLayout(context, attrs, defStyle) {
-        private val binding = CardEntryFormViewBinding.inflate(LayoutInflater.from(context), this, true)
+        val binding = CardEntryFormViewBinding.inflate(LayoutInflater.from(context), this, true)
 
         internal var model = CardDetailsInputModel()
             set(value) {
@@ -83,13 +82,6 @@ class CardEntryFormView
             super.onFinishInflate()
             setupFieldsContent()
             setupFieldsFormatting()
-
-            binding.cardEntryBottomAppBar.post {
-                val additionalSpacing = resources.getDimension(R.dimen.space_8).toInt()
-                val params = binding.cardDetailsContainerLayout.layoutParams as LayoutParams
-                params.bottomMargin = binding.cardEntryBottomAppBar.heightWithInsetsAndMargins + additionalSpacing
-                binding.cardDetailsContainerLayout.layoutParams = params
-            }
         }
 
         private fun setupFieldsFormatting() {

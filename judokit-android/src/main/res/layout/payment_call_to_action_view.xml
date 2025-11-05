@@ -17,10 +17,12 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/space_8"
         android:padding="0dp"
+        android:includeFontPadding="false"
         android:text="@string/jp_you_will_pay"
         app:layout_constraintEnd_toStartOf="@+id/buttonsAnimator"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/buttonsAnimator" />
+        app:layout_constraintTop_toTopOf="@+id/buttonsAnimator"
+        app:layout_constraintBottom_toTopOf="@id/amountTextView" />
 
     <TextView
         android:id="@+id/amountTextView"
@@ -29,6 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/space_8"
         android:padding="0dp"
+        android:includeFontPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/youWillPayTextView"
         app:layout_constraintBottom_toBottomOf="@+id/buttonsAnimator"
         app:layout_constraintEnd_toStartOf="@+id/buttonsAnimator"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,6 +42,7 @@
         android:id="@+id/buttonsAnimator"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
+        android:padding="@dimen/space_3"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:inAnimation="@anim/fade_in"
@@ -60,10 +65,6 @@
             android:id="@+id/googlePayButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/negative_space_3"
-            android:layout_marginTop="@dimen/space_3"
-            android:layout_marginEnd="@dimen/negative_space_3"
-            android:layout_marginBottom="@dimen/space_3"
             app:style="black_buy_with" />
 
     </ViewAnimator>
