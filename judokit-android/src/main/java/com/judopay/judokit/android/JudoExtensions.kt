@@ -8,17 +8,24 @@ import android.graphics.Color
 import android.graphics.Point
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO
+import android.view.View.IMPORTANT_FOR_ACCESSIBILITY_YES
+import android.view.View.IMPORTANT_FOR_AUTOFILL_NO
+import android.view.View.IMPORTANT_FOR_AUTOFILL_YES
 import android.view.ViewGroup
 import android.view.ViewParent
 import android.view.Window
 import android.view.WindowManager
+import android.view.accessibility.AccessibilityEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.ViewAnimator
 import androidx.annotation.DimenRes
 import androidx.annotation.FloatRange
 import androidx.core.view.children
@@ -379,4 +386,73 @@ internal fun CollapsingToolbarLayout.setAdaptiveMinHeight(
         } else {
             resources.getDimensionPixelSize(portraitMinHeightRes)
         }
+}
+
+/**
+ * Toggle autofill and accessibility for all children,
+ * enabling only the currently displayed child.
+ */
+fun ViewAnimator.toggleAutofillAndAccessibilityForVisibleChild() {
+    for (i in 0 until childCount) {
+        val child = getChildAt(i)
+        // Autofill
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            child.importantForAutofill =
+                if (i == displayedChild) {
+                    IMPORTANT_FOR_AUTOFILL_YES
+                } else {
+                    IMPORTANT_FOR_AUTOFILL_NO
+                }
+        }
+        // Accessibility
+        child.setImportantForAccessibility(
+            if (i == displayedChild) {
+                IMPORTANT_FOR_ACCESSIBILITY_YES
+            } else {
+                IMPORTANT_FOR_ACCESSIBILITY_NO
+            },
+        )
+    }
+
+    getChildAt(displayedChild).sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
+}
+
+/**
+ * Show a child with proper autofill and accessibility handling.
+ */
+fun ViewAnimator.showChildWithAutofill(index: Int) {
+    displayedChild = index
+    toggleAutofillAndAccessibilityForVisibleChild()
+}
+
+/**
+ * Run a callback when the ViewAnimator is first attached to window.
+ */
+fun ViewAnimator.runOnFirstAttach(callback: (ViewAnimator) -> Unit) {
+    if (isAttachedToWindow) {
+        callback(this)
+    } else {
+        addOnAttachStateChangeListener(
+            object : View.OnAttachStateChangeListener {
+                override fun onViewAttachedToWindow(v: View) {
+                    removeOnAttachStateChangeListener(this)
+                    callback(this@runOnFirstAttach)
+                }
+
+                override fun onViewDetachedFromWindow(v: View) {
+                    // noop
+                }
+            },
+        )
+    }
+}
+
+/**
+ * Convenience function to initialize autofill/accessibility
+ * for the current child when ViewAnimator is first shown.
+ */
+fun ViewAnimator.initAutofillAndAccessibilityOnAttach() {
+    runOnFirstAttach {
+        it.toggleAutofillAndAccessibilityForVisibleChild()
+    }
 }

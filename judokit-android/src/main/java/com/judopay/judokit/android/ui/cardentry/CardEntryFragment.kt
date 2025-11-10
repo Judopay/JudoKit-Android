@@ -1,26 +1,20 @@
 package com.judopay.judokit.android.ui.cardentry
 
-import android.animation.LayoutTransition
 import android.content.Context
 import android.content.DialogInterface
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.os.IBinder
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.ViewOutlineProvider
-import android.view.WindowManager
-import android.view.autofill.AutofillManager
 import android.widget.FrameLayout
 import androidx.annotation.StyleRes
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.graphics.Insets
 import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -45,11 +39,13 @@ import com.judopay.judokit.android.databinding.CardEntryFragmentBinding
 import com.judopay.judokit.android.db.JudoRoomDatabase
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.dismissKeyboard
+import com.judopay.judokit.android.initAutofillAndAccessibilityOnAttach
 import com.judopay.judokit.android.judo
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.isCardPaymentWidget
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
 import com.judopay.judokit.android.service.CardTransactionManager
+import com.judopay.judokit.android.showChildWithAutofill
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.common.heightWithInsetsAndMargins
 import com.judopay.judokit.android.ui.common.parcelable
@@ -64,75 +60,75 @@ class JudoBottomSheetDialog(
     context: Context,
     @StyleRes theme: Int,
 ) : BottomSheetDialog(context, theme) {
-    // Used to store the dialog window parameters.
-    private var token: IBinder? = null
+    private var bottomSheetCallback: BottomSheetBehavior.BottomSheetCallback? =
+        object : BottomSheetBehavior.BottomSheetCallback() {
+            var keyboardDismissed = false
 
-    private val isDialogResizedWorkaroundRequired: Boolean
-        get() {
-            if (Build.VERSION.SDK_INT != Build.VERSION_CODES.O || Build.VERSION.SDK_INT != Build.VERSION_CODES.O_MR1) {
-                return false
-            }
-            val autofillManager =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    context.getSystemService(AutofillManager::class.java)
-                } else {
-                    null
+            override fun onSlide(
+                bottomSheet: View,
+                slideOffset: Float,
+            ) {
+                if (slideOffset < 0 && !keyboardDismissed) {
+                    bottomSheet.dismissKeyboard()
+                    keyboardDismissed = true
                 }
-            return autofillManager?.isEnabled ?: false
+            }
+
+            override fun onStateChanged(
+                bottomSheet: View,
+                newState: Int,
+            ) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    keyboardDismissed = false
+                }
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED ||
+                    newState == BottomSheetBehavior.STATE_HIDDEN
+                ) {
+                    bottomSheet.dismissKeyboard()
+                }
+            }
         }
 
-    override fun onWindowAttributesChanged(params: WindowManager.LayoutParams) {
-        if (params.token == null && token != null) {
-            params.token = token
-        }
+    private val bottomSheet: FrameLayout?
+        get() = findViewById(com.google.android.material.R.id.design_bottom_sheet)
 
-        super.onWindowAttributesChanged(params)
-    }
-
-    override fun onAttachedToWindow() {
-        if (isDialogResizedWorkaroundRequired) {
-            token = ownerActivity!!.window.attributes.token
-        }
-
-        super.onAttachedToWindow()
-    }
+    private val bottomSheetBehavior: BottomSheetBehavior<FrameLayout>?
+        get() = bottomSheet?.let { BottomSheetBehavior.from(it) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Light status bar toggle, because it's computed like so:
+        // `boolean light = MaterialColors.isLightBackground(view.getBackground());`
+        bottomSheet?.setBackgroundColor(Color.WHITE)
+
         setOnShowListener {
-            val bottomSheet = findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
-            val behavior = BottomSheetBehavior.from(bottomSheet!!)
+            subscribeToBottomSheetEvents()
 
-            behavior.addBottomSheetCallback(
-                object : BottomSheetBehavior.BottomSheetCallback() {
-                    var keyboardDismissed = false
+            bottomSheet?.let {
+                setBackgroundAppearance(it)
+            }
+        }
+    }
 
-                    override fun onSlide(
-                        bottomSheet: View,
-                        slideOffset: Float,
-                    ) {
-                        if (slideOffset < 0 && !keyboardDismissed) {
-                            bottomSheet.dismissKeyboard()
-                            keyboardDismissed = true
-                        }
-                    }
+    override fun dismiss() {
+        unsubscribeFromBottomSheetEvents()
+        super.dismiss()
+    }
 
-                    override fun onStateChanged(
-                        bottomSheet: View,
-                        newState: Int,
-                    ) {
-                        if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                            keyboardDismissed = false
-                        }
-                        if (newState == BottomSheetBehavior.STATE_COLLAPSED ||
-                            newState == BottomSheetBehavior.STATE_HIDDEN
-                        ) {
-                            bottomSheet.dismissKeyboard()
-                        }
-                    }
-                },
-            )
+    private fun subscribeToBottomSheetEvents() =
+        bottomSheetCallback?.let {
+            behavior.addBottomSheetCallback(it)
+        }
 
+    private fun unsubscribeFromBottomSheetEvents() =
+        bottomSheetCallback?.let {
+            bottomSheetBehavior?.removeBottomSheetCallback(it)
+            bottomSheetCallback = null
+        }
+
+    private fun setBackgroundAppearance(bottomSheet: FrameLayout) =
+        with(bottomSheet) {
             val cornerSize = context.resources.getDimension(R.dimen.size_16dp)
             val shapeAppearanceModel =
                 ShapeAppearanceModel.builder()
@@ -142,19 +138,14 @@ class JudoBottomSheetDialog(
                     .setBottomRightCorner(CornerFamily.ROUNDED, 0f)
                     .build()
 
-            val backgroundDrawable =
+            clipChildren = true
+            clipToPadding = true
+            clipToOutline = true
+            background =
                 MaterialShapeDrawable(shapeAppearanceModel).apply {
                     fillColor = ColorStateList.valueOf(Color.WHITE)
                 }
-
-            bottomSheet.apply {
-                clipChildren = true
-                clipToPadding = true
-                clipToOutline = true
-                background = backgroundDrawable
-            }
         }
-    }
 }
 
 private fun updateAppBarsOnScrollChange(
@@ -250,6 +241,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initializeViewModelObserving()
+        setupWindowInsetsListeners()
 
         binding.cancelButton.setOnClickListener { onUserCancelled() }
 
@@ -288,6 +280,25 @@ class CardEntryFragment : BottomSheetDialogFragment() {
                 { viewModel.send(CardEntryAction.SubmitBillingDetailsForm) }
         }
 
+        binding.cardEntryViewAnimator.initAutofillAndAccessibilityOnAttach()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.send(CardEntryAction.SubscribeToCardTransactionManagerResults)
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        onUserCancelled()
+    }
+
+    override fun onDestroy() {
+        viewModel.send(CardEntryAction.UnSubscribeToCardTransactionManagerResults)
+        super.onDestroy()
+    }
+
+    private fun setupWindowInsetsListeners() {
         // sets top and bottom AppBar elevation based on scroll state
         val topAppBar = binding.cardEntryToolbar
         val billingBinding = binding.billingAddressFormView.binding
@@ -307,9 +318,9 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         }
 
         val insetsListener =
-            OnApplyWindowInsetsListener { view, windowInsets ->
+            OnApplyWindowInsetsListener { view, insets ->
                 view.setPadding(view.paddingLeft, 0, view.paddingRight, 0)
-                WindowInsetsCompat.CONSUMED
+                insets
             }
 
         ViewCompat.setOnApplyWindowInsetsListener(billingBinding.billingDetailsBottomAppBar, insetsListener)
@@ -326,55 +337,29 @@ class CardEntryFragment : BottomSheetDialogFragment() {
             cardDetailsBinding.cardEntryBottomAppBar,
         )
 
-        // Prevents bottom sheet dialog to jump around when animating.
-        val transition = LayoutTransition()
-        transition.setAnimateParentHierarchy(false)
-        binding.bottomSheetContainer.layoutTransition = transition
-
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
-            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
-            val cutoutInsets = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
             val navigationBarInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
             val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
 
-            val modifiedStatusBarInsets =
-                Insets.of(statusBarInsets.left, 0, statusBarInsets.right, statusBarInsets.bottom)
-            val modifiedCutoutInsets =
-                Insets.of(cutoutInsets.left, 0, cutoutInsets.right, cutoutInsets.bottom)
-
-            val modifiedInsets =
-                WindowInsetsCompat.Builder(insets)
-                    .setInsets(WindowInsetsCompat.Type.statusBars(), modifiedStatusBarInsets)
-                    .setInsets(WindowInsetsCompat.Type.displayCutout(), modifiedCutoutInsets)
-                    .setInsets(WindowInsetsCompat.Type.navigationBars(), navigationBarInsets)
-                    .setInsets(WindowInsetsCompat.Type.ime(), imeInsets)
-                    .build()
-
             view.setPadding(view.paddingLeft, 0, view.paddingRight, maxOf(navigationBarInsets.bottom, imeInsets.bottom))
-
-            modifiedInsets
-        }
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.cardEntryViewAnimator) { view, insets ->
-            view.setPadding(view.paddingLeft, 0, view.paddingRight, 0)
-
             insets
         }
-    }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.send(CardEntryAction.SubscribeToCardTransactionManagerResults)
-    }
+        val cutoutInsetsListener =
+            OnApplyWindowInsetsListener { view, insets ->
+                val cutoutInsets = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
 
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-        onUserCancelled()
-    }
+                view.setPadding(
+                    maxOf(view.paddingLeft, cutoutInsets.left),
+                    0,
+                    maxOf(view.paddingRight, cutoutInsets.right),
+                    0,
+                )
+                insets
+            }
 
-    override fun onDestroy() {
-        viewModel.send(CardEntryAction.UnSubscribeToCardTransactionManagerResults)
-        super.onDestroy()
+        ViewCompat.setOnApplyWindowInsetsListener(binding.cardEntryViewAnimator, cutoutInsetsListener)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.cardEntryToolbar, cutoutInsetsListener)
     }
 
     private fun initializeViewModel() {
@@ -419,11 +404,12 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         Handler(Looper.getMainLooper()).postDelayed(
             {
                 with(binding.cardEntryViewAnimator) {
-                    displayedChild =
+                    showChildWithAutofill(
                         when (navigationEvent) {
                             is CardEntryNavigation.Card -> 0
                             is CardEntryNavigation.Billing -> 1
-                        }
+                        },
+                    )
                     postDelayed(BOTTOM_SHEET_EXPAND_ANIMATION_TIME) {
                         bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
                     }
