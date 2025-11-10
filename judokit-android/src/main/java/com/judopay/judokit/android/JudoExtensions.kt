@@ -414,7 +414,6 @@ fun ViewAnimator.toggleAutofillAndAccessibilityForVisibleChild() {
         )
     }
 
-    // Send accessibility event to focus visible child
     getChildAt(displayedChild).sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
 }
 
