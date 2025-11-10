@@ -17,9 +17,7 @@ import androidx.annotation.StyleRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
@@ -62,9 +60,6 @@ class JudoBottomSheetDialog(
     context: Context,
     @StyleRes theme: Int,
 ) : BottomSheetDialog(context, theme) {
-    private var insetsController: WindowInsetsControllerCompat? = null
-    private var statusBarInset = 0
-
     private var bottomSheetCallback: BottomSheetBehavior.BottomSheetCallback? =
         object : BottomSheetBehavior.BottomSheetCallback() {
             var keyboardDismissed = false
@@ -107,15 +102,10 @@ class JudoBottomSheetDialog(
         // `boolean light = MaterialColors.isLightBackground(view.getBackground());`
         bottomSheet?.setBackgroundColor(Color.WHITE)
 
-        window?.let {
-            insetsController = WindowCompat.getInsetsController(it, it.decorView)
-        }
-
         setOnShowListener {
             subscribeToBottomSheetEvents()
 
             bottomSheet?.let {
-                setupWindowInsetsListener(it)
                 setBackgroundAppearance(it)
             }
         }
@@ -136,13 +126,6 @@ class JudoBottomSheetDialog(
             bottomSheetBehavior?.removeBottomSheetCallback(it)
             bottomSheetCallback = null
         }
-
-    private fun setupWindowInsetsListener(bottomSheet: FrameLayout) {
-        ViewCompat.setOnApplyWindowInsetsListener(bottomSheet) { view, insets ->
-            statusBarInset = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
-            insets
-        }
-    }
 
     private fun setBackgroundAppearance(bottomSheet: FrameLayout) =
         with(bottomSheet) {
