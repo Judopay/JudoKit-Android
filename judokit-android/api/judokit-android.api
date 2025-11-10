@@ -97,8 +97,11 @@ public final class com/judopay/judokit/android/JudoExtensionsKt {
 	public static final fun getWithWhitespacesRemoved (Ljava/lang/String;)Ljava/lang/String;
 	public static final fun inflate (Landroid/view/ViewGroup;IZ)Landroid/view/View;
 	public static synthetic fun inflate$default (Landroid/view/ViewGroup;IZILjava/lang/Object;)Landroid/view/View;
+	public static final fun initAutofillAndAccessibilityOnAttach (Landroid/widget/ViewAnimator;)V
 	public static final fun parentOfType (Landroid/view/View;Ljava/lang/Class;)Landroid/view/View;
+	public static final fun runOnFirstAttach (Landroid/widget/ViewAnimator;Lkotlin/jvm/functions/Function1;)V
 	public static final fun setMaxTextSize (Landroid/widget/TextView;F)V
+	public static final fun showChildWithAutofill (Landroid/widget/ViewAnimator;I)V
 	public static final fun subViewsWithType (Landroid/view/ViewGroup;Ljava/lang/Class;)Ljava/util/List;
 	public static final fun toCheckCardRequest (Lcom/judopay/judokit/android/Judo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/api/model/request/threedsecure/ThreeDSecureTwo;)Lcom/judopay/judokit/android/api/model/request/CheckCardRequest;
 	public static final fun toGooglePayRequest (Lcom/judopay/judokit/android/Judo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayAddress;)Lcom/judopay/judokit/android/api/model/request/GooglePayRequest;
@@ -112,6 +115,7 @@ public final class com/judopay/judokit/android/JudoExtensionsKt {
 	public static synthetic fun toSaveCardRequest$default (Lcom/judopay/judokit/android/Judo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/api/model/request/SaveCardRequest;
 	public static final fun toTokenRequest (Lcom/judopay/judokit/android/Judo;Ljava/lang/String;Lcom/judopay/judokit/android/api/model/request/threedsecure/ThreeDSecureTwo;Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/TokenRequest;
 	public static synthetic fun toTokenRequest$default (Lcom/judopay/judokit/android/Judo;Ljava/lang/String;Lcom/judopay/judokit/android/api/model/request/threedsecure/ThreeDSecureTwo;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/api/model/request/TokenRequest;
+	public static final fun toggleAutofillAndAccessibilityForVisibleChild (Landroid/widget/ViewAnimator;)V
 }
 
 public final class com/judopay/judokit/android/JudoKt {
@@ -3341,8 +3345,7 @@ public final class com/judopay/judokit/android/ui/cardentry/CardEntryViewModel :
 
 public final class com/judopay/judokit/android/ui/cardentry/JudoBottomSheetDialog : com/google/android/material/bottomsheet/BottomSheetDialog {
 	public fun <init> (Landroid/content/Context;I)V
-	public fun onAttachedToWindow ()V
-	public fun onWindowAttributesChanged (Landroid/view/WindowManager$LayoutParams;)V
+	public fun dismiss ()V
 }
 
 public final class com/judopay/judokit/android/ui/cardentry/components/BillingDetailsFormView : android/widget/FrameLayout, com/judopay/judokit/android/ui/cardentry/components/CardEntryViewAnimator$OnViewWillAppearListener {
