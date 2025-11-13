@@ -237,7 +237,7 @@ val CardNetwork.notSupportedErrorMessageResId: Int
             CardNetwork.CHINA_UNION_PAY -> R.string.jp_error_union_pay_not_supported
             CardNetwork.JCB -> R.string.jp_error_jcb_not_supported
             CardNetwork.DINERS_CLUB -> R.string.jp_error_diners_club_not_supported
-            else -> R.string.jp_empty
+            else -> R.string.jp_check_card_number
         }
 
 /**
