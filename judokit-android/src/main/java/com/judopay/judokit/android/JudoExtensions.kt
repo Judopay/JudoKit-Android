@@ -45,6 +45,7 @@ import com.judopay.judokit.android.api.model.request.TokenRequest
 import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
 import com.judopay.judokit.android.model.ApiEnvironment
 import com.judopay.judokit.android.model.googlepay.GooglePayAddress
+import com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_500
 import com.judopay.judokit.android.ui.common.LANDSCAPE_MIN_HEIGHT_RATIO
 import com.judopay.judokit.android.ui.common.parcelable
@@ -171,6 +172,30 @@ fun View.animateWithTranslation(
 fun View.dismissKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
     imm?.hideSoftInputFromWindow(windowToken, 0)
+}
+
+fun View.syncHeightWith(other: View) {
+    post {
+        val maxHeight = maxOf(height, other.height)
+        minimumHeight = maxHeight
+        other.minimumHeight = maxHeight
+        requestLayout()
+        other.requestLayout()
+    }
+}
+
+fun JudoEditTextInputLayout.equalizeHeightWithNeighbour(
+    other: JudoEditTextInputLayout?,
+    defaultHeight: Int,
+) {
+    other ?: return
+    when {
+        isErrorEnabled || other.isErrorEnabled -> syncHeightWith(other)
+        else -> {
+            minimumHeight = defaultHeight
+            other.minimumHeight = defaultHeight
+        }
+    }
 }
 
 fun Any.toJSONString(): String = Gson().toJson(this)
