@@ -83,7 +83,7 @@
                 android:id="@+id/flow2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="expirationDateTextInputLayout,securityNumberTextInputLayout,countryTextInputLayout,postcodeTextInputLayout"
+                app:constraint_referenced_ids="expirationDateSecurityNumberContainer,countryTextInputLayout,postcodeTextInputLayout"
                 app:flow_horizontalAlign="start"
                 app:flow_horizontalBias="0"
                 app:flow_maxElementsWrap="2"
@@ -96,37 +96,51 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/flow1" />
 
-            <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
-                android:id="@+id/expirationDateTextInputLayout"
-                android:layout_width="@dimen/width_0"
-                android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/expirationDateSecurityNumberContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/expirationDateTextInputEditText"
-                    style="@style/JudoTheme.TextInputEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:autofillHints="creditCardExpirationDate"
-                    tools:text="11/20"
-                    android:tag="@string/jp_expiry_date_entry_field"/>
-            </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
+                <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
+                    android:id="@+id/expirationDateTextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
 
-            <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
-                android:id="@+id/securityNumberTextInputLayout"
-                android:layout_width="@dimen/width_0"
-                android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/expirationDateTextInputEditText"
+                        style="@style/JudoTheme.TextInputEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="number"
+                        android:autofillHints="creditCardExpirationDate"
+                        tools:text="11/20"
+                        android:tag="@string/jp_expiry_date_entry_field"/>
+                </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
-                <EditText
-                    android:id="@+id/securityNumberTextInputEditText"
-                    style="@style/JudoTheme.TextInputEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:autofillHints="creditCardSecurityCode"
-                    tools:text="123"
-                    android:tag="@string/jp_security_code_entry_field"/>
-            </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
+                <Space
+                    android:layout_width="@dimen/space_9"
+                    android:layout_height="match_parent"/>
+
+                <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
+                    android:id="@+id/securityNumberTextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+
+                    <EditText
+                        android:id="@+id/securityNumberTextInputEditText"
+                        style="@style/JudoTheme.TextInputEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="number"
+                        android:autofillHints="creditCardSecurityCode"
+                        tools:text="123"
+                        android:tag="@string/jp_security_code_entry_field"/>
+                </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
+
+            </LinearLayout>
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/countryTextInputLayout"
