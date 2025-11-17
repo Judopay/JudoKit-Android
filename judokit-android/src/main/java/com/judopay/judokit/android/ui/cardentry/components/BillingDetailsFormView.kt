@@ -18,7 +18,6 @@ import com.judopay.judokit.android.model.american
 import com.judopay.judokit.android.model.canadian
 import com.judopay.judokit.android.model.chinese
 import com.judopay.judokit.android.model.indian
-import com.judopay.judokit.android.equalizeHeightWithNeighbour
 import com.judopay.judokit.android.parentOfType
 import com.judopay.judokit.android.smoothScrollToView
 import com.judopay.judokit.android.ui.cardentry.formatting.PhoneCountryCodeTextWatcher
@@ -336,10 +335,6 @@ class BillingDetailsFormView
             layout?.let {
                 it.isErrorEnabled = errorEnabled
                 it.error = message
-                textInputLayoutForType(BillingDetailsFieldType.PHONE_COUNTRY_CODE)?.equalizeHeightWithNeighbour(
-                    textInputLayoutForType(BillingDetailsFieldType.MOBILE_NUMBER),
-                    resources.getDimensionPixelSize(R.dimen.judo_text_input_layout_height),
-                )
             }
 
             updateSubmitButtonState()

@@ -17,7 +17,6 @@ import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.asAVSCountry
 import com.judopay.judokit.android.model.postcodeMaxLength
 import com.judopay.judokit.android.model.translatableName
-import com.judopay.judokit.android.equalizeHeightWithNeighbour
 import com.judopay.judokit.android.parentOfType
 import com.judopay.judokit.android.smoothScrollToView
 import com.judopay.judokit.android.ui.cardentry.formatting.CardNumberInputMaskTextWatcher
@@ -204,14 +203,6 @@ class CardEntryFormView
             layout?.let {
                 it.isErrorEnabled = errorEnabled
                 it.error = message
-                textInputLayoutForType(CardDetailsFieldType.SECURITY_NUMBER)?.equalizeHeightWithNeighbour(
-                    textInputLayoutForType(CardDetailsFieldType.EXPIRATION_DATE),
-                    resources.getDimensionPixelSize(R.dimen.judo_text_input_layout_height),
-                )
-                textInputLayoutForType(CardDetailsFieldType.COUNTRY)?.equalizeHeightWithNeighbour(
-                    textInputLayoutForType(CardDetailsFieldType.POST_CODE),
-                    resources.getDimensionPixelSize(R.dimen.judo_text_input_layout_height),
-                )
             }
             updateSubmitButtonState()
 
@@ -332,8 +323,10 @@ class CardEntryFormView
                 CardDetailsFieldType.POST_CODE -> binding.postcodeTextInputEditText
             }
 
-        private fun textInputLayoutForType(type: CardDetailsFieldType): JudoEditTextInputLayout? =
-            editTextForType(type).parentOfType(JudoEditTextInputLayout::class.java)
+        private fun textInputLayoutForType(type: CardDetailsFieldType): JudoEditTextInputLayout? {
+            val editText = editTextForType(type)
+            return editText.parentOfType(JudoEditTextInputLayout::class.java)
+        }
 
         private fun valueOfEditTextWithType(type: CardDetailsFieldType): String {
             val editText = editTextForType(type)
