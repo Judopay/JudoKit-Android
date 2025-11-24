@@ -3,7 +3,10 @@ package com.judopay.judokit.android.ui.paymentmethods.components
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.WindowInsets
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.databinding.PaymentMethodsHeaderViewBinding
@@ -27,6 +30,24 @@ class PaymentMethodsHeaderView
         defStyle: Int = 0,
     ) : ConstraintLayout(context, attrs, defStyle) {
         val binding = PaymentMethodsHeaderViewBinding.inflate(LayoutInflater.from(context), this, true)
+
+        override fun onApplyWindowInsets(insets: WindowInsets): WindowInsets {
+            val compat = WindowInsetsCompat.toWindowInsetsCompat(insets, this)
+            val cutout = compat.getInsets(WindowInsetsCompat.Type.displayCutout())
+            binding.noPaymentMethodSelectedView.setPadding(
+                cutout.left,
+                binding.paymentCallToActionView.paddingTop,
+                cutout.right,
+                binding.paymentCallToActionView.paddingBottom
+            )
+            binding.paymentCallToActionView.setPadding(
+                cutout.left,
+                binding.paymentCallToActionView.paddingTop,
+                cutout.right,
+                binding.paymentCallToActionView.paddingBottom
+            )
+            return super.onApplyWindowInsets(insets)
+        }
 
         var model = PaymentMethodsHeaderViewModel()
             set(value) {
