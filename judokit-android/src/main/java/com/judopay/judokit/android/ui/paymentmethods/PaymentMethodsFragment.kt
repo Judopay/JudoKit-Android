@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -87,6 +89,7 @@ class PaymentMethodsFragment : Fragment() {
             insets
         }
 
+        setupWindowInsetsListeners()
         setupRecyclerView()
         setupButtonCallbacks()
         initializeViewModelObserving()
@@ -264,6 +267,34 @@ class PaymentMethodsFragment : Fragment() {
 
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
+    }
+
+    private fun setupWindowInsetsListeners() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.appBarLayout) { view, insets ->
+            binding.headerView.dispatchApplyWindowInsets(insets.toWindowInsets())
+            binding.toolbar.dispatchApplyWindowInsets(insets.toWindowInsets())
+            insets
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { view, insets ->
+            val cutoutInsets = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+            view.setPadding(
+                maxOf(view.paddingLeft, cutoutInsets.left),
+                view.paddingTop,
+                maxOf(view.paddingRight, cutoutInsets.right),
+                view.paddingBottom,
+            )
+            insets
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { view, insets ->
+            val cutoutInsets = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+            view.setPadding(
+                maxOf(view.paddingLeft, cutoutInsets.left),
+                view.paddingTop,
+                maxOf(view.paddingRight, cutoutInsets.right),
+                view.paddingBottom,
+            )
+            insets
+        }
     }
 
     private fun setupButtonCallbacks() {
