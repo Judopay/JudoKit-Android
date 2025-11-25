@@ -2,4 +2,7 @@
 
     <!-- Cards -->
     <dimen name="card_width">280dp</dimen>
+
+    <!-- Payment Methods App bar -->
+    <dimen name="app_bar_layout_min_height">200dp</dimen>
 </resources>
