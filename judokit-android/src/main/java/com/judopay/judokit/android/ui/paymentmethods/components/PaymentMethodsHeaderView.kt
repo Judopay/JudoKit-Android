@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
 import com.judopay.judokit.android.R
+import com.judopay.judokit.android.applyHorizontalCutoutPadding
 import com.judopay.judokit.android.databinding.PaymentMethodsHeaderViewBinding
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.ui.paymentmethods.model.CardAnimationType
@@ -33,19 +34,8 @@ class PaymentMethodsHeaderView
 
         override fun onApplyWindowInsets(insets: WindowInsets): WindowInsets {
             val compat = WindowInsetsCompat.toWindowInsetsCompat(insets, this)
-            val cutout = compat.getInsets(WindowInsetsCompat.Type.displayCutout())
-            binding.noPaymentMethodSelectedView.setPadding(
-                cutout.left,
-                binding.paymentCallToActionView.paddingTop,
-                cutout.right,
-                binding.paymentCallToActionView.paddingBottom
-            )
-            binding.paymentCallToActionView.setPadding(
-                cutout.left,
-                binding.paymentCallToActionView.paddingTop,
-                cutout.right,
-                binding.paymentCallToActionView.paddingBottom
-            )
+            binding.noPaymentMethodSelectedView.applyHorizontalCutoutPadding(compat)
+            binding.paymentCallToActionView.applyHorizontalCutoutPadding(compat)
             return super.onApplyWindowInsets(insets)
         }
 

@@ -22,6 +22,7 @@ import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.response.CardDate
+import com.judopay.judokit.android.applyHorizontalCutoutPadding
 import com.judopay.judokit.android.databinding.PaymentMethodsFragmentBinding
 import com.judopay.judokit.android.db.JudoRoomDatabase
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
@@ -270,29 +271,19 @@ class PaymentMethodsFragment : Fragment() {
     }
 
     private fun setupWindowInsetsListeners() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.appBarLayout) { view, insets ->
-            binding.headerView.dispatchApplyWindowInsets(insets.toWindowInsets())
-            binding.toolbar.dispatchApplyWindowInsets(insets.toWindowInsets())
+        // Passes insets down for nested views
+        ViewCompat.setOnApplyWindowInsetsListener(binding.appBarLayout) { _, insets ->
+            val platformInsets = insets.toWindowInsets()
+            binding.headerView.dispatchApplyWindowInsets(platformInsets)
+            binding.toolbar.dispatchApplyWindowInsets(platformInsets)
             insets
         }
         ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { view, insets ->
-            val cutoutInsets = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
-            view.setPadding(
-                maxOf(view.paddingLeft, cutoutInsets.left),
-                view.paddingTop,
-                maxOf(view.paddingRight, cutoutInsets.right),
-                view.paddingBottom,
-            )
+            view.applyHorizontalCutoutPadding(insets)
             insets
         }
         ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { view, insets ->
-            val cutoutInsets = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
-            view.setPadding(
-                maxOf(view.paddingLeft, cutoutInsets.left),
-                view.paddingTop,
-                maxOf(view.paddingRight, cutoutInsets.right),
-                view.paddingBottom,
-            )
+            view.applyHorizontalCutoutPadding(insets)
             insets
         }
     }

@@ -28,6 +28,7 @@ import android.widget.TextView
 import android.widget.ViewAnimator
 import androidx.annotation.DimenRes
 import androidx.annotation.FloatRange
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
@@ -100,6 +101,16 @@ fun <T : View> View.parentOfType(parentType: Class<T>): T? {
         parent = parent.getParent()
     }
     return null
+}
+
+internal fun View.applyHorizontalCutoutPadding(insets: WindowInsetsCompat) {
+    val cutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+    setPadding(
+        maxOf(paddingLeft, cutout.left),
+        paddingTop,
+        maxOf(paddingRight, cutout.right),
+        paddingBottom
+    )
 }
 
 @Suppress("UNCHECKED_CAST")
