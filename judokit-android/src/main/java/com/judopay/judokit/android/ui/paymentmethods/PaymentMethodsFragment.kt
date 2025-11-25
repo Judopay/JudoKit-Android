@@ -1,13 +1,12 @@
 package com.judopay.judokit.android.ui.paymentmethods
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -19,6 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.judopay.judokit.android.JudoSharedAction
 import com.judopay.judokit.android.JudoSharedViewModel
 import com.judopay.judokit.android.R
+import com.judopay.judokit.android.animateWithAlpha
 import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.response.CardDate
@@ -29,8 +29,8 @@ import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.judo
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.service.CardTransactionManager
-import com.judopay.judokit.android.setAdaptiveMinHeight
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
+import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_150
 import com.judopay.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
 import com.judopay.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judopay.judokit.android.ui.paymentmethods.adapter.SwipeToDeleteCallback
@@ -83,7 +83,6 @@ class PaymentMethodsFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         binding.headerView.fromEditMode = true
-        binding.collapsingToolbarLayout.setAdaptiveMinHeight()
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { view, insets ->
             view.updatePadding(bottom = insets.systemWindowInsets.bottom + resources.getDimension(R.dimen.space_48).toInt())
@@ -93,6 +92,7 @@ class PaymentMethodsFragment : Fragment() {
         setupWindowInsetsListeners()
         setupRecyclerView()
         setupButtonCallbacks()
+        setupLandscapeCollapseListener()
         initializeViewModelObserving()
     }
 
@@ -300,6 +300,24 @@ class PaymentMethodsFragment : Fragment() {
                     sharedViewModel.send(JudoSharedAction.LoadGPayPaymentData)
                     viewModel.send(PaymentMethodsAction.UpdateButtonState(false))
                 }
+            }
+        }
+    }
+
+    private fun setupLandscapeCollapseListener() {
+        if (resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) return
+
+        binding.appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+            val totalScrollRange = appBarLayout.totalScrollRange
+            if (totalScrollRange == 0) return@addOnOffsetChangedListener
+
+            val isCollapsed = -verticalOffset.toFloat() / totalScrollRange > 0.5f
+            val headerBinding = binding.headerView.binding
+            val viewsToHide = listOf(headerBinding.noPaymentMethodSelectedView, headerBinding.viewAnimator)
+
+            viewsToHide.forEach { view ->
+                val alpha = if (isCollapsed) 0f else 1f
+                view.animateWithAlpha(alpha, ANIMATION_DURATION_150)
             }
         }
     }
