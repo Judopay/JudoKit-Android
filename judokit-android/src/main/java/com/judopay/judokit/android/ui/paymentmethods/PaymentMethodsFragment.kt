@@ -31,6 +31,7 @@ import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.service.CardTransactionManager
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_150
+import com.judopay.judokit.android.ui.common.LANDSCAPE_COLLAPSE_THRESHOLD
 import com.judopay.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
 import com.judopay.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judopay.judokit.android.ui.paymentmethods.adapter.SwipeToDeleteCallback
@@ -311,7 +312,7 @@ class PaymentMethodsFragment : Fragment() {
             val totalScrollRange = appBarLayout.totalScrollRange
             if (totalScrollRange == 0) return@addOnOffsetChangedListener
 
-            val isCollapsed = -verticalOffset.toFloat() / totalScrollRange > 0.5f
+            val isCollapsed = -verticalOffset.toFloat() / totalScrollRange > LANDSCAPE_COLLAPSE_THRESHOLD
             val headerBinding = binding.headerView.binding
             val viewsToHide = listOf(headerBinding.noPaymentMethodSelectedView, headerBinding.viewAnimator)
 
