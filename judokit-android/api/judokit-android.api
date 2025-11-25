@@ -1496,6 +1496,7 @@ public final class com/judopay/judokit/android/databinding/PaymentMethodsFragmen
 	public final field headerView Lcom/judopay/judokit/android/ui/paymentmethods/components/PaymentMethodsHeaderView;
 	public final field heightAwareView Lcom/judopay/judokit/android/ui/paymentmethods/components/AppBarLayoutHeightAwareContainerView;
 	public final field recyclerView Landroidx/recyclerview/widget/RecyclerView;
+	public final field toolbar Landroid/widget/LinearLayout;
 	public static fun bind (Landroid/view/View;)Lcom/judopay/judokit/android/databinding/PaymentMethodsFragmentBinding;
 	public synthetic fun getRoot ()Landroid/view/View;
 	public fun getRoot ()Landroidx/coordinatorlayout/widget/CoordinatorLayout;
@@ -3790,12 +3791,13 @@ public final class com/judopay/judokit/android/ui/common/ConstantsKt {
 	public static final field ALPHA_2_CODE_GB Ljava/lang/String;
 	public static final field ALPHA_2_CODE_INDIA Ljava/lang/String;
 	public static final field ALPHA_2_CODE_US Ljava/lang/String;
+	public static final field ANIMATION_DURATION_150 J
 	public static final field ANIMATION_DURATION_500 J
 	public static final field GOOGLE_PAY_API_VERSION I
 	public static final field GOOGLE_PAY_API_VERSION_MINOR I
 	public static final field JUDO_API_VERSION Ljava/lang/String;
 	public static final field JUDO_KIT_VERSION Ljava/lang/String;
-	public static final field LANDSCAPE_MIN_HEIGHT_RATIO F
+	public static final field LANDSCAPE_COLLAPSE_THRESHOLD F
 	public static final field NO_SHADOW_MARGIN_OFFSET_DP I
 	public static final field PATTERN_CARD_EXPIRATION_DATE Ljava/lang/String;
 	public static final field POSTAL_CODE_MAX_LENGTH_CA I
@@ -4384,6 +4386,7 @@ public final class com/judopay/judokit/android/ui/paymentmethods/components/Paym
 	public final fun getFromEditMode ()Z
 	public final fun getModel ()Lcom/judopay/judokit/android/ui/paymentmethods/components/PaymentMethodsHeaderViewModel;
 	public final fun getPaymentMethods ()Ljava/util/List;
+	public fun onApplyWindowInsets (Landroid/view/WindowInsets;)Landroid/view/WindowInsets;
 	public final fun setFromEditMode (Z)V
 	public final fun setModel (Lcom/judopay/judokit/android/ui/paymentmethods/components/PaymentMethodsHeaderViewModel;)V
 	public final fun setPaymentMethods (Ljava/util/List;)V

@@ -104,7 +104,7 @@ internal fun View.applyHorizontalCutoutPadding(insets: WindowInsetsCompat) {
         maxOf(paddingLeft, cutout.left),
         paddingTop,
         maxOf(paddingRight, cutout.right),
-        paddingBottom
+        paddingBottom,
     )
 }
 
