@@ -3,9 +3,12 @@ package com.judopay.judokit.android.ui.paymentmethods.components
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.WindowInsets
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
 import com.judopay.judokit.android.R
+import com.judopay.judokit.android.applyHorizontalCutoutPadding
 import com.judopay.judokit.android.databinding.PaymentMethodsHeaderViewBinding
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.ui.paymentmethods.model.CardAnimationType
@@ -27,6 +30,13 @@ class PaymentMethodsHeaderView
         defStyle: Int = 0,
     ) : ConstraintLayout(context, attrs, defStyle) {
         val binding = PaymentMethodsHeaderViewBinding.inflate(LayoutInflater.from(context), this, true)
+
+        override fun onApplyWindowInsets(insets: WindowInsets): WindowInsets {
+            val compat = WindowInsetsCompat.toWindowInsetsCompat(insets, this)
+            binding.noPaymentMethodSelectedView.applyHorizontalCutoutPadding(compat)
+            binding.paymentCallToActionView.applyHorizontalCutoutPadding(compat)
+            return super.onApplyWindowInsets(insets)
+        }
 
         var model = PaymentMethodsHeaderViewModel()
             set(value) {

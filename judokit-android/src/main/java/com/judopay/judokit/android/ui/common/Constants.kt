@@ -3,6 +3,7 @@ package com.judopay.judokit.android.ui.common
 const val GOOGLE_PAY_API_VERSION = 2
 const val GOOGLE_PAY_API_VERSION_MINOR = 0
 
+const val ANIMATION_DURATION_150 = 150L
 const val ANIMATION_DURATION_500 = 500L
 const val PATTERN_CARD_EXPIRATION_DATE = "##/##"
 const val REGEX_JUDO_ID = "^(([0-9]{9})|([0-9]{3}-[0-9]{3}-[0-9]{3})|([0-9]{6}))?\$"
@@ -42,6 +43,6 @@ const val ALPHA_2_CODE_INDIA = "IN"
 const val ALPHA_2_CODE_US = "US"
 const val ALPHA_2_CODE_GB = "GB"
 
-const val LANDSCAPE_MIN_HEIGHT_RATIO = 0.35f
+const val LANDSCAPE_COLLAPSE_THRESHOLD = 0.5f
 const val NO_SHADOW_MARGIN_OFFSET_DP = -3
 const val ROUNDING_BIAS = 0.5f
