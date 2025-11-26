@@ -4,7 +4,7 @@ import org.gradle.api.Project
 
 object Versions {
     // Library versions, here you update the versions of the library
-    const val VERSION_NAME: String = "5.0.5"
+    const val VERSION_NAME: String = "5.1.0"
 
     // Android versions
     const val TARGET_SDK: Int = 35

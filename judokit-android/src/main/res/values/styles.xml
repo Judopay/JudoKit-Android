@@ -25,7 +25,9 @@
         <item name="android:layout_width">@dimen/min_touch_target_size</item>
         <item name="android:layout_height">@dimen/min_touch_target_size</item>
         <item name="android:layout_marginStart">@dimen/space_8</item>
-        <item name="android:layout_marginTop">@dimen/space_4</item>
+        <item name="android:layout_marginTop">@dimen/space_2</item>
+        <item name="android:layout_marginBottom">@dimen/space_2</item>
+        <item name="android:layout_gravity">center_vertical</item>
         <item name="srcCompat">@drawable/ic_back_20dp</item>
     </style>
 
