@@ -29,7 +29,7 @@
                 android:id="@+id/flow1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="billingDetailsHeading,emailTextInputLayout,countryTextInputLayout,administrativeDivisionTextInputLayout,flow2,addressLine1TextInputLayout,addressLine2TextInputLayout,addressLine3TextInputLayout,addAddressLineButton,cityTextInputLayout,postalCodeTextInputLayout"
+                app:constraint_referenced_ids="billingDetailsHeading,emailTextInputLayout,countryTextInputLayout,administrativeDivisionTextInputLayout,phoneCountryCodeAndMobileNumberContainer,addressLine1TextInputLayout,addressLine2TextInputLayout,addressLine3TextInputLayout,addAddressLineButton,cityTextInputLayout,postalCodeTextInputLayout"
                 app:flow_horizontalAlign="start"
                 app:flow_horizontalBias="0"
                 app:flow_maxElementsWrap="1"
@@ -101,59 +101,53 @@
 
             </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
-            <androidx.constraintlayout.helper.widget.Flow
-                android:id="@+id/flow2"
+            <LinearLayout
+                android:id="@+id/phoneCountryCodeAndMobileNumberContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_9"
-                app:constraint_referenced_ids="phoneCountryCodeTextInputLayout,mobileNumberTextInputLayout"
-                app:flow_horizontalAlign="start"
-                app:flow_horizontalBias="0"
-                app:flow_horizontalGap="0dp"
-                app:flow_maxElementsWrap="2"
-                app:flow_verticalBias="0"
-                app:flow_verticalGap="@dimen/space_9"
-                app:flow_wrapMode="chain"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-            <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
-                android:id="@+id/phoneCountryCodeTextInputLayout"
-                android:layout_width="@dimen/space_80"
-                android:layout_height="wrap_content"
-                app:disableRightCornerRadius="true">
+                <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
+                    android:id="@+id/phoneCountryCodeTextInputLayout"
+                    android:layout_width="@dimen/space_80"
+                    android:layout_height="match_parent"
+                    app:disableRightCornerRadius="true">
 
-                <EditText
-                    android:id="@+id/phoneCountryCodeTextInputEditText"
-                    style="@style/JudoTheme.TextInputEditText"
+                    <EditText
+                        android:id="@+id/phoneCountryCodeTextInputEditText"
+                        style="@style/JudoTheme.TextInputEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:autofillHints="phoneCountryCode"
+                        android:inputType="phone"
+                        android:maxLength="7"
+                        tools:text="+(373)"
+                        android:tag="@string/jp_phone_country_code_entry_field" />
+
+                </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
+
+                <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
+                    android:id="@+id/mobileNumberTextInputLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:autofillHints="phoneCountryCode"
-                    android:inputType="phone"
-                    android:maxLength="7"
-                    tools:text="+(373)"
-                    android:tag="@string/jp_phone_country_code_entry_field" />
+                    android:layout_height="match_parent"
+                    android:translationX="@dimen/negative_space_1"
+                    app:disableLeftCornerRadius="true">
 
-            </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
+                    <EditText
+                        android:id="@+id/mobileNumberTextInputEditText"
+                        style="@style/JudoTheme.TextInputEditText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:autofillHints="phoneNational"
+                        android:inputType="phone"
+                        android:tag="@string/jp_phone_entry_field"
+                        tools:text="0799999999" />
 
-            <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
-                android:id="@+id/mobileNumberTextInputLayout"
-                android:layout_width="@dimen/width_0"
-                android:layout_height="wrap_content"
-                android:translationX="@dimen/negative_space_1"
-                app:disableLeftCornerRadius="true">
+                </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
-                <EditText
-                    android:id="@+id/mobileNumberTextInputEditText"
-                    style="@style/JudoTheme.TextInputEditText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:autofillHints="phoneNational"
-                    android:inputType="phone"
-                    android:tag="@string/jp_phone_entry_field"
-                    tools:text="0799999999" />
-
-            </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
+            </LinearLayout>
 
             <com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout
                 android:id="@+id/addressLine1TextInputLayout"
