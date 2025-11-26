@@ -84,12 +84,6 @@ class PaymentMethodsFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         binding.headerView.fromEditMode = true
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { view, insets ->
-            view.updatePadding(bottom = insets.systemWindowInsets.bottom + resources.getDimension(R.dimen.space_48).toInt())
-            insets
-        }
-
         setupWindowInsetsListeners()
         setupRecyclerView()
         setupButtonCallbacks()
@@ -281,6 +275,7 @@ class PaymentMethodsFragment : Fragment() {
         }
         ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { view, insets ->
             view.applyHorizontalCutoutPadding(insets)
+            view.updatePadding(bottom = insets.systemWindowInsets.bottom + resources.getDimension(R.dimen.space_48).toInt())
             insets
         }
         ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { view, insets ->
