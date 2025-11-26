@@ -1314,10 +1314,10 @@ public final class com/judopay/judokit/android/databinding/BillingDetailsFormVie
 	public final field emailTextInputEditText Landroid/widget/EditText;
 	public final field emailTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
 	public final field flow1 Landroidx/constraintlayout/helper/widget/Flow;
-	public final field flow2 Landroidx/constraintlayout/helper/widget/Flow;
 	public final field flow3 Landroidx/constraintlayout/helper/widget/Flow;
 	public final field mobileNumberTextInputEditText Landroid/widget/EditText;
 	public final field mobileNumberTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
+	public final field phoneCountryCodeAndMobileNumberContainer Landroid/widget/LinearLayout;
 	public final field phoneCountryCodeTextInputEditText Landroid/widget/EditText;
 	public final field phoneCountryCodeTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
 	public final field postalCodeTextInputEditText Landroid/widget/EditText;
@@ -1351,12 +1351,13 @@ public final class com/judopay/judokit/android/databinding/CardEntryFormViewBind
 	public final field cardEntryBottomAppBar Lcom/google/android/material/bottomappbar/BottomAppBar;
 	public final field cardEntryHeading Landroid/widget/TextView;
 	public final field cardEntrySubmitButton Lcom/judopay/judokit/android/ui/common/ProgressButton;
+	public final field countryAndPostcodeContainer Landroid/widget/LinearLayout;
 	public final field countryTextInputEditText Landroidx/appcompat/widget/AppCompatAutoCompleteTextView;
 	public final field countryTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
+	public final field expirationDateAndSecurityNumberContainer Landroid/widget/LinearLayout;
 	public final field expirationDateTextInputEditText Landroid/widget/EditText;
 	public final field expirationDateTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
 	public final field flow1 Landroidx/constraintlayout/helper/widget/Flow;
-	public final field flow2 Landroidx/constraintlayout/helper/widget/Flow;
 	public final field flow3 Landroidx/constraintlayout/helper/widget/Flow;
 	public final field formScrollView Landroidx/core/widget/NestedScrollView;
 	public final field nameTextInputEditText Landroid/widget/EditText;
