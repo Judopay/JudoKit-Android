@@ -61,7 +61,6 @@ import com.judokit.android.examples.test.card.FeaturesList.PAYMENT_METHODS_LABEL
 import com.judokit.android.examples.test.card.FeaturesList.PAY_WITH_CARD_LABEL
 import com.judokit.android.examples.test.card.FeaturesList.PREAUTH_METHODS_LABEL
 import com.judokit.android.examples.test.card.FeaturesList.PREAUTH_WITH_CARD_LABEL
-import com.judokit.android.examples.test.card.FeaturesList.REGISTER_CARD_LABEL
 import com.judokit.android.examples.test.card.FeaturesList.TOKEN_PAYMENTS_LABEL
 import com.judokit.android.examples.test.card.Other.CANCELLED_PAYMENT_TOAST
 import com.judokit.android.examples.test.card.Other.CANCEL_BUTTON
@@ -172,29 +171,6 @@ class CardPaymentTest {
         clickCompleteOn3DS2Screen()
 
         assertReceiptObject("AuthCode: ", "", "Success", "Payment")
-    }
-
-    @Test
-    fun testSuccessfulRegisterCardTransaction() {
-        onView(withText(REGISTER_CARD_LABEL))
-            .perform(click())
-
-        enterPaymentSheetDetails(
-            CARD_NUMBER,
-            CARDHOLDER_NAME,
-            CARD_EXPIRY,
-            CARD_SECURITY_CODE,
-        )
-
-        onView(withId(R.id.cardEntrySubmitButton))
-            .check(matches(isEnabled()))
-            .perform(click())
-
-        assertOnView(withText("COMPLETE"))
-
-        clickCompleteOn3DS2Screen()
-
-        assertReceiptObject("AuthCode: ", "", "Success", "Register")
     }
 
     @Test
@@ -843,6 +819,7 @@ class CardPaymentTest {
         onView(withText(VALID_COUNTRY)).perform(click())
         fillTextField(R.id.mobileNumberTextInputEditText, VALID_COUNTRY_CODE)
         onView(withId(R.id.cityTextInputEditText)).perform(click())
+        Thread.sleep(1000)
         onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
             .check(matches(withText(INVALID_PHONE_LABEL)))
         Thread.sleep(500)

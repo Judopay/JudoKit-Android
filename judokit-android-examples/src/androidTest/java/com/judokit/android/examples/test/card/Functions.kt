@@ -16,9 +16,6 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.espresso.web.sugar.Web
-import androidx.test.espresso.web.webdriver.DriverAtoms
-import androidx.test.espresso.web.webdriver.Locator
 import androidx.test.platform.app.InstrumentationRegistry
 import com.chuckerteam.chucker.api.Chucker
 import com.judokit.android.examples.result.ResultActivity
@@ -239,21 +236,14 @@ fun assertUsingChucker(
 
     // Assertion
     if (checkCRI && cri != null) {
-        onView(withText(containsString("\"challengeRequestIndicator\": \"$cri\"")))
+        waitForView(withText(containsString("\"challengeRequestIndicator\": \"$cri\"")))
             .check(matches(isDisplayed()))
     }
 
     if (checkSCA && sca != null) {
-        onView(withText(containsString("\"scaExemption\": \"$sca\"")))
+        waitForView(withText(containsString("\"scaExemption\": \"$sca\"")))
             .check(matches(isDisplayed()))
     }
-}
-
-fun clickButtonOnWebViewWithText(text: String) {
-    Web
-        .onWebView()
-        .withElement(DriverAtoms.findElement(Locator.XPATH, "//button[text()='$text']"))
-        .perform(DriverAtoms.webClick())
 }
 
 fun openChucker() {
