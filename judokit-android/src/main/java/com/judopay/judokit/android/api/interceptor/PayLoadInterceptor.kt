@@ -22,7 +22,6 @@ private val PAYLOAD_ENDPOINTS =
     arrayListOf(
         "/transactions/payments",
         "/transactions/preauths",
-        "/transactions/registercard",
         "/transactions/checkcard",
     )
 

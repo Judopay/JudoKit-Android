@@ -9,7 +9,6 @@ enum class DemoFeature(
 ) {
     PAYMENT(R.string.feature_title_payment, R.string.feature_subtitle_payment),
     PREAUTH(R.string.feature_title_preauth, R.string.feature_subtitle_preauth),
-    REGISTER_CARD(R.string.feature_title_create_card_token, R.string.feature_subtitle_create_card_token),
     CHECK_CARD(R.string.feature_title_check_card, R.string.feature_subtitle_check_card),
     CREATE_CARD_TOKEN(R.string.feature_title_save_card, R.string.feature_subtitle_save_card),
     GOOGLE_PAY_PAYMENT(R.string.feature_title_google_pay_payment, R.string.feature_subtitle_google_pay_payment),

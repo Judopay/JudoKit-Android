@@ -29,15 +29,6 @@ internal class PaymentWidgetTypeKtTest {
         )
     }
 
-    @DisplayName("Given navigationGraphId is called, when widget type is REGISTER_CARD, then return judo_card_input_graph resource id")
-    @Test
-    fun returnCardInputNavigationGraphOnRegisterCard() {
-        assertEquals(
-            R.navigation.judo_card_input_graph,
-            PaymentWidgetType.REGISTER_CARD.navigationGraphId,
-        )
-    }
-
     @DisplayName("Given navigationGraphId is called, when widget type is CREATE_CARD_TOKEN, then return judo_card_input_graph resource id")
     @Test
     fun returnCardInputNavigationGraphOnCreateCardToken() {
@@ -133,12 +124,6 @@ internal class PaymentWidgetTypeKtTest {
     @Test
     fun returnTrueOnIsCardPaymentWidgetCallWithPreAuthType() {
         assertTrue(PaymentWidgetType.PRE_AUTH.isCardPaymentWidget)
-    }
-
-    @DisplayName("Given isCardPaymentWidget is called, when widget type is REGISTER_CARD, then return true")
-    @Test
-    fun returnTrueOnIsCardPaymentWidgetCallWithRegisterCardType() {
-        assertTrue(PaymentWidgetType.REGISTER_CARD.isCardPaymentWidget)
     }
 
     @DisplayName("Given isCardPaymentWidget is called, when widget type is CHECK_CARD, then return true")

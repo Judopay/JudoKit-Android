@@ -188,25 +188,6 @@ internal class CardEntryViewModelTest {
 
     @Test
     @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
-    fun `Given send is called with SubmitCardEntryForm action, when payment widget type is REGISTER_CARD, then cardTransactionManager's register method is called`() =
-        runTest {
-            sut =
-                CardEntryViewModel(
-                    getJudo(PaymentWidgetType.REGISTER_CARD),
-                    cardTransactionManager,
-                    repository,
-                    CardEntryOptions(),
-                    application,
-                )
-            sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
-            sut.send(CardEntryAction.SubmitCardEntryForm)
-            advanceUntilIdle()
-
-            coVerify { cardTransactionManager.register(any(), CardEntryViewModel::class.java.name) }
-        }
-
-    @Test
-    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
     fun `Given send is called with SubmitCardEntryForm action, when payment widget type is CHECK_CARD, then cardTransactionManager's check method is called`() =
         runTest {
             sut =

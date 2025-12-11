@@ -196,7 +196,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     DemoFeature.PAYMENT, DemoFeature.NO_UI,
                     -> PaymentWidgetType.CARD_PAYMENT
                     DemoFeature.PREAUTH -> PaymentWidgetType.PRE_AUTH
-                    DemoFeature.REGISTER_CARD -> PaymentWidgetType.REGISTER_CARD
                     DemoFeature.CREATE_CARD_TOKEN -> PaymentWidgetType.CREATE_CARD_TOKEN
                     DemoFeature.CHECK_CARD -> PaymentWidgetType.CHECK_CARD
                     DemoFeature.PAYMENT_METHODS -> PaymentWidgetType.PAYMENT_METHODS
