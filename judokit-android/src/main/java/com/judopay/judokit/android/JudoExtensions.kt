@@ -39,7 +39,6 @@ import com.judopay.judokit.android.api.model.request.CheckCardRequest
 import com.judopay.judokit.android.api.model.request.GooglePayRequest
 import com.judopay.judokit.android.api.model.request.GooglePayWallet
 import com.judopay.judokit.android.api.model.request.PaymentRequest
-import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
 import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
@@ -227,33 +226,6 @@ fun Judo.toPaymentRequest(
     .setThreeDSecure(threeDSecureTwo)
     .setMobileNumber(mobileNumber)
     .setPhoneCountryCode(phoneCountryCode)
-    .setDisableNetworkTokenisation(disableNetworkTokenisation)
-    .build()
-
-@Deprecated(
-    "Register Card functionality has been deprecated and will be removed in a future version. " +
-        "Please use Check Card feature instead.",
-)
-fun Judo.toRegisterCardRequest(
-    cardNumber: String,
-    expirationDate: String,
-    securityCode: String,
-    threeDSecureTwo: ThreeDSecureTwo?,
-) = RegisterCardRequest
-    .Builder()
-    .setYourPaymentReference(reference.paymentReference)
-    .setCurrency(amount.currency.name)
-    .setJudoId(judoId)
-    .setYourConsumerReference(reference.consumerReference)
-    .setYourPaymentMetaData(reference.metaData?.toMap())
-    .setAddress(address ?: Address.Builder().build())
-    .setCardNumber(cardNumber)
-    .setExpiryDate(expirationDate)
-    .setCv2(securityCode)
-    .setPrimaryAccountDetails(primaryAccountDetails)
-    .setAmount(amount.amount)
-    .setInitialRecurringPayment(initialRecurringPayment)
-    .setThreeDSecure(threeDSecureTwo)
     .setDisableNetworkTokenisation(disableNetworkTokenisation)
     .build()
 

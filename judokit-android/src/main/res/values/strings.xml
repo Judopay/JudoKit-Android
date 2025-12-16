@@ -3,7 +3,6 @@
     <string name="jp_pay_now">%1$sPay Now</string>
     <string name="jp_pay_amount">Pay %1$s</string>
     <string name="jp_check_card">Check Card</string>
-    <string name="jp_register_card">Register Card</string>
     <string name="jp_save_card">Save Card</string>
     <string name="jp_connected_cards">Connected Cards</string>
     <string name="jp_button_edit">Edit</string>

@@ -10,7 +10,6 @@ import com.judopay.judokit.android.api.model.request.CheckCardRequest
 import com.judopay.judokit.android.api.model.request.PaymentRequest
 import com.judopay.judokit.android.api.model.request.PreAuthRequest
 import com.judopay.judokit.android.api.model.request.PreAuthTokenRequest
-import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
 import com.judopay.judokit.android.api.model.request.threedsecure.DeviceRenderOptions
@@ -307,42 +306,6 @@ fun TransactionDetails.toSaveCardRequest(
         .setAddress(judo.address)
         .setDisableNetworkTokenisation(judo.disableNetworkTokenisation)
         .build()
-
-@Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
-@Deprecated(
-    "Register Card functionality has been deprecated and will be removed in a future version. " +
-        "Please use Check Card feature instead.",
-)
-fun TransactionDetails.toRegisterCardRequest(
-    judo: Judo,
-    transaction: Transaction,
-    overrides: TransactionDetailsOverrides? = null,
-): RegisterCardRequest {
-    val myAmount = judo.amount
-    val myReference = judo.reference
-
-    return RegisterCardRequest
-        .Builder()
-        .setYourPaymentReference(myReference.paymentReference)
-        .setCurrency(myAmount.currency.name)
-        .setAmount(myAmount.amount)
-        .setJudoId(judo.judoId)
-        .setYourConsumerReference(myReference.consumerReference)
-        .setYourPaymentMetaData(myReference.metaData?.toMap())
-        .setAddress(getAddress(judo))
-        .setCardNumber(cardNumber)
-        .setExpiryDate(expirationDate)
-        .setCv2(securityNumber)
-        .setPrimaryAccountDetails(judo.primaryAccountDetails)
-        .setInitialRecurringPayment(judo.initialRecurringPayment)
-        .setThreeDSecure(transaction.toThreeDSecureTwo(judo, overrides))
-        .setCardHolderName(cardHolderName)
-        .setMobileNumber(mobileNumber)
-        .setEmailAddress(email)
-        .setPhoneCountryCode(phoneCountryCode)
-        .setDisableNetworkTokenisation(judo.disableNetworkTokenisation)
-        .build()
-}
 
 @Throws(JsonSyntaxException::class, SDKRuntimeException::class, IllegalArgumentException::class)
 fun TransactionDetails.toTokenRequest(
