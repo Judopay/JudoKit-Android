@@ -110,7 +110,6 @@ public final class com/judopay/judokit/android/JudoExtensionsKt {
 	public static final fun toMap (Landroid/os/Bundle;)Ljava/util/Map;
 	public static final fun toPaymentRequest (Lcom/judopay/judokit/android/Judo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/api/model/request/threedsecure/ThreeDSecureTwo;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/PaymentRequest;
 	public static synthetic fun toPaymentRequest$default (Lcom/judopay/judokit/android/Judo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/api/model/request/threedsecure/ThreeDSecureTwo;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/api/model/request/PaymentRequest;
-	public static final fun toRegisterCardRequest (Lcom/judopay/judokit/android/Judo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/api/model/request/threedsecure/ThreeDSecureTwo;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest;
 	public static final fun toSaveCardRequest (Lcom/judopay/judokit/android/Judo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/SaveCardRequest;
 	public static synthetic fun toSaveCardRequest$default (Lcom/judopay/judokit/android/Judo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/api/model/request/SaveCardRequest;
 	public static final fun toTokenRequest (Lcom/judopay/judokit/android/Judo;Ljava/lang/String;Lcom/judopay/judokit/android/api/model/request/threedsecure/ThreeDSecureTwo;Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/TokenRequest;
@@ -191,7 +190,6 @@ public abstract interface class com/judopay/judokit/android/api/JudoApiService {
 	public abstract fun preAuthGooglePayPayment (Lcom/judopay/judokit/android/api/model/request/PreAuthGooglePayRequest;)Lretrofit2/Call;
 	public abstract fun preAuthPayment (Lcom/judopay/judokit/android/api/model/request/PreAuthRequest;)Lretrofit2/Call;
 	public abstract fun preAuthTokenPayment (Lcom/judopay/judokit/android/api/model/request/PreAuthTokenRequest;)Lretrofit2/Call;
-	public abstract fun registerCard (Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest;)Lretrofit2/Call;
 	public abstract fun saveCard (Lcom/judopay/judokit/android/api/model/request/SaveCardRequest;)Lretrofit2/Call;
 	public abstract fun tokenPayment (Lcom/judopay/judokit/android/api/model/request/TokenRequest;)Lretrofit2/Call;
 }
@@ -634,35 +632,6 @@ public final class com/judopay/judokit/android/api/model/request/PreAuthTokenReq
 	public final fun setYourConsumerReference (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/PreAuthTokenRequest$Builder;
 	public final fun setYourPaymentMetaData (Ljava/util/Map;)Lcom/judopay/judokit/android/api/model/request/PreAuthTokenRequest$Builder;
 	public final fun setYourPaymentReference (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/PreAuthTokenRequest$Builder;
-}
-
-public final class com/judopay/judokit/android/api/model/request/RegisterCardRequest {
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lcom/judopay/judokit/android/api/model/request/Address;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/PrimaryAccountDetails;Ljava/lang/String;Ljava/lang/Boolean;Lcom/judopay/judokit/android/api/model/request/threedsecure/ThreeDSecureTwo;Ljava/lang/String;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
-}
-
-public final class com/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder {
-	public fun <init> ()V
-	public final fun build ()Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest;
-	public final fun setAddress (Lcom/judopay/judokit/android/api/model/request/Address;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setAmount (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setCardHolderName (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setCardNumber (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setCurrency (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setCv2 (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setDisableNetworkTokenisation (Z)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setEmailAddress (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setExpiryDate (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setInitialRecurringPayment (Ljava/lang/Boolean;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setIssueNumber (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setJudoId (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setMobileNumber (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setPhoneCountryCode (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setPrimaryAccountDetails (Lcom/judopay/judokit/android/model/PrimaryAccountDetails;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setStartDate (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setThreeDSecure (Lcom/judopay/judokit/android/api/model/request/threedsecure/ThreeDSecureTwo;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setYourConsumerReference (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setYourPaymentMetaData (Ljava/util/Map;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
-	public final fun setYourPaymentReference (Ljava/lang/String;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest$Builder;
 }
 
 public final class com/judopay/judokit/android/api/model/request/SaveCardRequest {
@@ -2306,7 +2275,6 @@ public final class com/judopay/judokit/android/model/PaymentWidgetType : java/la
 	public static final field PRE_AUTH Lcom/judopay/judokit/android/model/PaymentWidgetType;
 	public static final field PRE_AUTH_GOOGLE_PAY Lcom/judopay/judokit/android/model/PaymentWidgetType;
 	public static final field PRE_AUTH_PAYMENT_METHODS Lcom/judopay/judokit/android/model/PaymentWidgetType;
-	public static final field REGISTER_CARD Lcom/judopay/judokit/android/model/PaymentWidgetType;
 	public static final field SERVER_TO_SERVER_PAYMENT_METHODS Lcom/judopay/judokit/android/model/PaymentWidgetType;
 	public static final field TOKEN_PAYMENT Lcom/judopay/judokit/android/model/PaymentWidgetType;
 	public static final field TOKEN_PRE_AUTH Lcom/judopay/judokit/android/model/PaymentWidgetType;
@@ -2531,8 +2499,6 @@ public final class com/judopay/judokit/android/model/TransactionDetailsKt {
 	public static final fun toPreAuthTokenRequest (Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/Judo;Lcom/judopay/judo3ds2/transaction/Transaction;Lcom/judopay/judokit/android/model/TransactionDetailsOverrides;)Lcom/judopay/judokit/android/api/model/request/PreAuthTokenRequest;
 	public static synthetic fun toPreAuthTokenRequest$default (Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/Judo;Lcom/judopay/judo3ds2/transaction/Transaction;Lcom/judopay/judokit/android/model/TransactionDetailsOverrides;ILjava/lang/Object;)Lcom/judopay/judokit/android/api/model/request/PreAuthTokenRequest;
 	public static final fun toReceipt (Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/Judo;)Lcom/judopay/judokit/android/api/model/response/Receipt;
-	public static final fun toRegisterCardRequest (Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/Judo;Lcom/judopay/judo3ds2/transaction/Transaction;Lcom/judopay/judokit/android/model/TransactionDetailsOverrides;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest;
-	public static synthetic fun toRegisterCardRequest$default (Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/Judo;Lcom/judopay/judo3ds2/transaction/Transaction;Lcom/judopay/judokit/android/model/TransactionDetailsOverrides;ILjava/lang/Object;)Lcom/judopay/judokit/android/api/model/request/RegisterCardRequest;
 	public static final fun toSaveCardRequest (Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/Judo;Lcom/judopay/judo3ds2/transaction/Transaction;)Lcom/judopay/judokit/android/api/model/request/SaveCardRequest;
 	public static final fun toThreeDSecureTwo (Lcom/judopay/judo3ds2/transaction/Transaction;Lcom/judopay/judokit/android/Judo;Lcom/judopay/judokit/android/model/TransactionDetailsOverrides;)Lcom/judopay/judokit/android/api/model/request/threedsecure/ThreeDSecureTwo;
 	public static synthetic fun toThreeDSecureTwo$default (Lcom/judopay/judo3ds2/transaction/Transaction;Lcom/judopay/judokit/android/Judo;Lcom/judopay/judokit/android/model/TransactionDetailsOverrides;ILjava/lang/Object;)Lcom/judopay/judokit/android/api/model/request/threedsecure/ThreeDSecureTwo;
@@ -3164,7 +3130,6 @@ public final class com/judopay/judokit/android/service/CardTransactionManager : 
 	public final fun paymentWithToken (Lcom/judopay/judokit/android/model/TransactionDetails;Ljava/lang/String;)V
 	public final fun preAuth (Lcom/judopay/judokit/android/model/TransactionDetails;Ljava/lang/String;)V
 	public final fun preAuthWithToken (Lcom/judopay/judokit/android/model/TransactionDetails;Ljava/lang/String;)V
-	public final fun register (Lcom/judopay/judokit/android/model/TransactionDetails;Ljava/lang/String;)V
 	public final fun registerResultListener (Lcom/judopay/judokit/android/service/CardTransactionManagerResultListener;Ljava/lang/String;)V
 	public static synthetic fun registerResultListener$default (Lcom/judopay/judokit/android/service/CardTransactionManager;Lcom/judopay/judokit/android/service/CardTransactionManagerResultListener;Ljava/lang/String;ILjava/lang/Object;)V
 	public final fun save (Lcom/judopay/judokit/android/model/TransactionDetails;Ljava/lang/String;)V
@@ -3212,7 +3177,6 @@ public final class com/judopay/judokit/android/service/TransactionType : java/la
 	public static final field PAYMENT_WITH_TOKEN Lcom/judopay/judokit/android/service/TransactionType;
 	public static final field PRE_AUTH Lcom/judopay/judokit/android/service/TransactionType;
 	public static final field PRE_AUTH_WITH_TOKEN Lcom/judopay/judokit/android/service/TransactionType;
-	public static final field REGISTER Lcom/judopay/judokit/android/service/TransactionType;
 	public static final field SAVE Lcom/judopay/judokit/android/service/TransactionType;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/judopay/judokit/android/service/TransactionType;

@@ -7,7 +7,6 @@ import com.judopay.judokit.android.api.model.request.PaymentRequest
 import com.judopay.judokit.android.api.model.request.PreAuthGooglePayRequest
 import com.judopay.judokit.android.api.model.request.PreAuthRequest
 import com.judopay.judokit.android.api.model.request.PreAuthTokenRequest
-import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
 import com.judopay.judokit.android.api.model.response.JudoApiCallResult
@@ -74,21 +73,6 @@ interface JudoApiService {
     fun complete3ds2(
         @Path("receiptId") receiptId: String,
         @Body complete3DS2Request: Complete3DS2Request,
-    ): Call<JudoApiCallResult<Receipt>>
-
-    /**
-     * Register a card to be used for making future tokenised payments
-     *
-     * @param registerCardRequest the details of the card to be registered
-     * @return the receipt for the card registration with the status of the transaction
-     */
-    @POST("transactions/registercard")
-    @Deprecated(
-        "Register Card functionality has been deprecated and will be removed in a future version. " +
-            "Please use Check Card feature instead.",
-    )
-    fun registerCard(
-        @Body registerCardRequest: RegisterCardRequest,
     ): Call<JudoApiCallResult<Receipt>>
 
     /**

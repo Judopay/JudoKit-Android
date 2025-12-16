@@ -22,11 +22,6 @@ enum class PaymentWidgetType : Parcelable {
     PRE_AUTH,
 
     /**
-     * Starts a register card flow for making future tokenized payments
-     */
-    REGISTER_CARD,
-
-    /**
      * Starts a save card flow for making future tokenized payments
      */
     CREATE_CARD_TOKEN,
@@ -79,7 +74,6 @@ val PaymentWidgetType.navigationGraphId: Int
         when (this) {
             PaymentWidgetType.CARD_PAYMENT,
             PaymentWidgetType.PRE_AUTH,
-            PaymentWidgetType.REGISTER_CARD,
             PaymentWidgetType.CREATE_CARD_TOKEN,
             PaymentWidgetType.CHECK_CARD,
             PaymentWidgetType.TOKEN_PAYMENT,
@@ -102,7 +96,6 @@ val PaymentWidgetType.isCardPaymentWidget: Boolean
     get() =
         this == PaymentWidgetType.CARD_PAYMENT ||
             this == PaymentWidgetType.PRE_AUTH ||
-            this == PaymentWidgetType.REGISTER_CARD ||
             this == PaymentWidgetType.CHECK_CARD
 
 val PaymentWidgetType.isGooglePayWidget: Boolean

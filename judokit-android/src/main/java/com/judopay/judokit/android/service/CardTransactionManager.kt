@@ -34,7 +34,6 @@ import com.judopay.judokit.android.model.toCheckCardRequest
 import com.judopay.judokit.android.model.toPaymentRequest
 import com.judopay.judokit.android.model.toPreAuthRequest
 import com.judopay.judokit.android.model.toPreAuthTokenRequest
-import com.judopay.judokit.android.model.toRegisterCardRequest
 import com.judopay.judokit.android.model.toSaveCardRequest
 import com.judopay.judokit.android.model.toTokenRequest
 import com.judopay.judokit.android.ui.common.getLocale
@@ -91,12 +90,6 @@ enum class TransactionType {
     PRE_AUTH_WITH_TOKEN,
     SAVE,
     CHECK,
-
-    @Deprecated(
-        "Register Card functionality has been deprecated and will be removed in a future version. " +
-            "Please use Check Card feature instead.",
-    )
-    REGISTER,
 }
 
 private val TransactionType.canBeSoftDeclined: Boolean
@@ -104,7 +97,6 @@ private val TransactionType.canBeSoftDeclined: Boolean
         arrayOf(
             TransactionType.PAYMENT,
             TransactionType.PRE_AUTH,
-            TransactionType.REGISTER,
             TransactionType.PAYMENT_WITH_TOKEN,
             TransactionType.PRE_AUTH_WITH_TOKEN,
         ).contains(this)
@@ -227,10 +219,6 @@ class CardTransactionManager private constructor(
                     overrides,
                 )
             judoApiService.checkCard(request)
-        }
-        TransactionType.REGISTER -> {
-            val request = details.toRegisterCardRequest(judo, transaction, overrides)
-            judoApiService.registerCard(request)
         }
     }
 
@@ -523,13 +511,6 @@ class CardTransactionManager private constructor(
         caller: String,
     ) {
         performTransaction(TransactionType.CHECK, details, caller)
-    }
-
-    fun register(
-        details: TransactionDetails,
-        caller: String,
-    ) {
-        performTransaction(TransactionType.REGISTER, details, caller)
     }
 
     private fun closeTransaction(context: Context) {

@@ -38,11 +38,9 @@ internal class CardTransactionServiceTest {
         } returns judoApiCallResult
 
         coEvery {
-            service.registerCard(any()).await().hint(JudoApiCallResult::class)
-        } returns judoApiCallResult
-        coEvery {
             service.tokenPayment(any()).await()
         } returns mockk(relaxed = true)
+
         coEvery {
             service.preAuthTokenPayment(any()).await()
         } returns mockk(relaxed = true)

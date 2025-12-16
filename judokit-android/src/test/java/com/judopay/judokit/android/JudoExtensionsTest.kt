@@ -9,7 +9,6 @@ import com.google.gson.Gson
 import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.request.CheckCardRequest
 import com.judopay.judokit.android.api.model.request.PaymentRequest
-import com.judopay.judokit.android.api.model.request.RegisterCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
 import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
 import com.judopay.judokit.android.model.ApiEnvironment
@@ -253,34 +252,6 @@ internal class JudoExtensionsTest {
                 "754321321321",
                 "1",
             )
-
-        val gson = Gson()
-        assertEquals(gson.toJson(expected), gson.toJson(actual))
-    }
-
-    @DisplayName("Given Judo.toRegisterCardRequest is called, then map Judo to RegisterCardRequest")
-    @Test
-    fun mapJudoToRegisterCardRequest() {
-        val expected =
-            RegisterCardRequest
-                .Builder()
-                .setYourPaymentReference("ref")
-                .setJudoId("123456789")
-                .setYourPaymentMetaData(emptyMap())
-                .setAmount("1")
-                .setCurrency(Currency.GBP.name)
-                .setJudoId("123456789")
-                .setYourConsumerReference("ref")
-                .setAddress(mockAddress)
-                .setCardNumber("4111111111111111")
-                .setCv2("452")
-                .setExpiryDate("1229")
-                .setPrimaryAccountDetails(mockPrimaryAccountDetails)
-                .setInitialRecurringPayment(false)
-                .setThreeDSecure(mockThreeDSecureTwo)
-                .build()
-
-        val actual = judo.toRegisterCardRequest("4111111111111111", "1229", "452", mockThreeDSecureTwo)
 
         val gson = Gson()
         assertEquals(gson.toJson(expected), gson.toJson(actual))

@@ -8,9 +8,6 @@
     <string name="feature_title_preauth">Pre-auth with card</string>
     <string name="feature_subtitle_preauth">pre-auth by entering card details</string>
 
-    <string name="feature_title_create_card_token">Register card</string>
-    <string name="feature_subtitle_create_card_token">to be stored for future transactions</string>
-
     <string name="feature_title_save_card">Save card</string>
     <string name="feature_subtitle_save_card">to be stored for future transactions</string>
 

@@ -270,7 +270,6 @@ class CardEntryViewModel(
             when (judo.paymentWidgetType) {
                 PaymentWidgetType.CARD_PAYMENT -> cardTransactionManager.payment(details, CardEntryViewModel::class.java.name)
                 PaymentWidgetType.PRE_AUTH -> cardTransactionManager.preAuth(details, CardEntryViewModel::class.java.name)
-                PaymentWidgetType.REGISTER_CARD -> cardTransactionManager.register(details, CardEntryViewModel::class.java.name)
                 PaymentWidgetType.CHECK_CARD -> cardTransactionManager.check(details, CardEntryViewModel::class.java.name)
                 PaymentWidgetType.PAYMENT_METHODS,
                 PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
@@ -413,7 +412,6 @@ private val Judo.formattedAmount: String?
 
 private fun Judo.submitButtonText(options: CardEntryOptions): Int =
     when (paymentWidgetType) {
-        PaymentWidgetType.REGISTER_CARD -> R.string.jp_register_card
         PaymentWidgetType.CREATE_CARD_TOKEN -> R.string.jp_save_card
         PaymentWidgetType.CHECK_CARD -> R.string.jp_check_card
         PaymentWidgetType.CARD_PAYMENT,
@@ -444,7 +442,6 @@ private val Judo.continueButtonText: Int
     get() =
         when (paymentWidgetType) {
             PaymentWidgetType.CREATE_CARD_TOKEN -> R.string.jp_save_card
-            PaymentWidgetType.REGISTER_CARD,
             PaymentWidgetType.CHECK_CARD,
             PaymentWidgetType.CARD_PAYMENT,
             PaymentWidgetType.PRE_AUTH,
