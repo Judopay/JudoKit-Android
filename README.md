@@ -2,7 +2,7 @@
 
 [![Maven Central Version](https://img.shields.io/maven-central/v/com.judopay/judokit-android)](https://mvnrepository.com/artifact/com.judopay/judokit-android)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/Judopay/JudoKit-Android/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Judopay/JudoKit-Android/tree/master)
+[![GitHub Actions](https://github.com/Judopay/JudoKit-Android/actions/workflows/build-test-sdk.yml/badge.svg)](https://github.com/Judopay/JudoKit-Android/actions/workflows/build-test-sdk.yml)
 
 An SDK to assist Android app developers to process payments on Android.
 
@@ -10,7 +10,7 @@ An SDK to assist Android app developers to process payments on Android.
 
 ```kotlin
 dependencies {
-    implementation("com.judopay:judokit-android:5.0.0")
+    implementation("com.judopay:judokit-android:6.0.1")
 }
 ```
 
