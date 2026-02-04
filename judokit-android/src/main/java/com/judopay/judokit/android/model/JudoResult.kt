@@ -3,6 +3,8 @@ package com.judopay.judokit.android.model
 import android.os.Parcelable
 import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.api.model.response.Consumer
+import com.judopay.judokit.android.api.model.response.NetworkTokenisationDetails
+import com.judopay.judokit.android.api.model.response.ThreeDSecure
 import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 import java.util.Date
@@ -31,4 +33,6 @@ data class JudoResult(
     val message: String? = null,
     val yourPaymentMetaData: Map<String, String>? = null,
     val emailAddress: String? = null,
+    val networkTokenisationDetails: NetworkTokenisationDetails? = null,
+    val threeDSecure: ThreeDSecure? = null,
 ) : Parcelable

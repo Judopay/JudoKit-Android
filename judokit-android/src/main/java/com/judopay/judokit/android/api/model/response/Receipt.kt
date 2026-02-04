@@ -55,6 +55,7 @@ class Receipt(
     val emailAddress: String? = null,
     val disableNetworkTokenisation: Boolean? = false,
     val networkTokenisationDetails: NetworkTokenisationDetails? = null,
+    val threeDSecure: ThreeDSecure? = null,
 ) {
     val isThreeDSecureTwoRequired: Boolean
         get() = message.equals(CHALLENGE_REQUIRED_MESSAGE, true)
@@ -114,6 +115,8 @@ fun Receipt.toJudoResult() =
         message,
         yourPaymentMetaData,
         emailAddress,
+        networkTokenisationDetails,
+        threeDSecure,
     )
 
 fun Receipt.toCardVerificationModel() =
