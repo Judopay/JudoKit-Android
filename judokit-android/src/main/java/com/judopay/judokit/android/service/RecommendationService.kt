@@ -18,7 +18,7 @@ import com.ravelin.cardEncryption.model.CardDetails
 import com.ravelin.cardEncryption.model.EncryptedCard
 import retrofit2.Call
 
-const val RAVELIN_ENCRYPT_CLASS_NAME = "com.ravelin.cardEncryption.RavelinEncrypt"
+internal const val RAVELIN_ENCRYPT_CLASS_NAME = "com.ravelin.cardEncryption.RavelinEncrypt"
 
 @Suppress("ReturnCount")
 private fun TransactionDetails.toRavelinEncryptedCard(rsaPublicKey: String): EncryptedCard? {
@@ -60,7 +60,7 @@ private fun EncryptedCard.toRecommendationRequest() =
                 ),
         ).build()
 
-class RecommendationService(
+internal class RecommendationService(
     private val context: Context,
     private val judo: Judo,
 ) {

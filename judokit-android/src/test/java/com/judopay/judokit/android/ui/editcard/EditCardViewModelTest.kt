@@ -1,7 +1,6 @@
 package com.judopay.judokit.android.ui.editcard
 
 import android.app.Application
-import androidx.lifecycle.Observer
 import com.judopay.judokit.android.db.entity.TokenizedCardEntity
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.model.CardNetwork
@@ -12,8 +11,6 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.spyk
-import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -24,20 +21,17 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
 private const val CARD_ID = 1
 private const val NEW_TITLE = "NEW_TITLE"
 
 @ExperimentalCoroutinesApi
-@ExtendWith(com.judopay.judokit.android.InstantExecutorExtension::class)
 @DisplayName("Testing edit card view model logic")
 internal class EditCardViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val application: Application = mockk(relaxed = true)
     private val cardRepository: TokenizedCardRepository = mockk(relaxed = true)
-    private val editCardModelMock = spyk<Observer<EditCardModel>>()
     private val tokenizedCardEntity: TokenizedCardEntity =
         mockk(relaxed = true) {
             every { network } returns CardNetwork.VISA
@@ -48,7 +42,7 @@ internal class EditCardViewModelTest {
     internal fun setUp() {
         Dispatchers.setMain(testDispatcher)
 
-        mockkStatic("com.judopay.judokit.android.ui.editcard.MappersKt")
+        mockkStatic("com.judopay.judokit.android.ui.paymentmethods.MappersKt")
 
         coEvery { cardRepository.findWithId(CARD_ID) } returns tokenizedCardEntity
     }
@@ -69,35 +63,19 @@ internal class EditCardViewModelTest {
     @Test
     @DisplayName("Given edit card view model is initialised, then should update model with new EditCardModel")
     fun updateModelOnEditCardViewModelInitialised() {
-        val slots = mutableListOf<EditCardModel>()
-
         val sut = EditCardViewModel(CARD_ID, cardRepository, application)
 
-        sut.model.observeForever(editCardModelMock)
-
-        verify { editCardModelMock.onChanged(capture(slots)) }
-
-        val editCardModel = slots[0]
-
-        assertEquals(getEditCardModel(), editCardModel)
+        assertEquals(getEditCardModel(), sut.uiState.value)
     }
 
     @Test
     @DisplayName("Given send method is called with ChangePattern action, then update model with new pattern")
     fun updateModelWithNewPatternOnChangePatternAction() {
-        val slots = mutableListOf<EditCardModel>()
-
         val sut = EditCardViewModel(CARD_ID, cardRepository, application)
 
         sut.send(EditCardAction.ChangePattern(CardPattern.BLACK))
 
-        sut.model.observeForever(editCardModelMock)
-
-        verify { editCardModelMock.onChanged(capture(slots)) }
-
-        val editCardModel = slots[0]
-
-        assertEquals(getEditCardModel(), editCardModel)
+        assertEquals(getEditCardModel(), sut.uiState.value)
     }
 
     @Test
@@ -107,48 +85,30 @@ internal class EditCardViewModelTest {
 
         sut.send(EditCardAction.Save)
 
-        sut.model.observeForever(editCardModelMock)
-
         coVerify { cardRepository.insert(tokenizedCardEntity) }
     }
 
     @Test
     @DisplayName("Given send method is called with ToggleDefaultCardState action, then update isDefault model field")
     fun updateIsDefaultModelFieldOnToggleDefaultCardStateAction() {
-        val slots = mutableListOf<EditCardModel>()
-
         val sut = EditCardViewModel(CARD_ID, cardRepository, application)
 
         sut.send(EditCardAction.ToggleDefaultCardState)
 
-        sut.model.observeForever(editCardModelMock)
-
-        verify { editCardModelMock.onChanged(capture(slots)) }
-
-        val editCardModel = slots[0]
-
-        assertEquals(getEditCardModel(onChanged = true, isDefault = true), editCardModel)
+        assertEquals(getEditCardModel(onChanged = true, isDefault = true), sut.uiState.value)
     }
 
     @Test
     @DisplayName("Given send method is called with ChangeTitle action, then update title model field")
     fun updateTitleModelFieldOnChangeTitleAction() {
-        val slots = mutableListOf<EditCardModel>()
-
         val sut = EditCardViewModel(CARD_ID, cardRepository, application)
 
         sut.send(EditCardAction.ChangeTitle(NEW_TITLE))
 
-        sut.model.observeForever(editCardModelMock)
-
-        verify { editCardModelMock.onChanged(capture(slots)) }
-
-        val editCardModel = slots[0]
-
-        assertEquals(getEditCardModel(onChanged = true, title = NEW_TITLE), editCardModel)
+        assertEquals(getEditCardModel(onChanged = true, title = NEW_TITLE), sut.uiState.value)
     }
 
-    private val patterns = CardPattern.values().map { ColorPickerItem(it) }
+    private val patterns = CardPattern.entries.map { ColorPickerItem(it) }
 
     private fun getEditCardModel(
         onChanged: Boolean = false,

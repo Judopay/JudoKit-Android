@@ -5,8 +5,6 @@ import android.content.DialogInterface
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +21,10 @@ import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomappbar.BottomAppBar
@@ -33,23 +34,34 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
+import com.judopay.judo3ds2.model.CompletionEvent
+import com.judopay.judo3ds2.model.ProtocolErrorEvent
+import com.judopay.judo3ds2.model.RuntimeErrorEvent
+import com.judopay.judo3ds2.transaction.challenge.ChallengeStatusReceiver
 import com.judopay.judokit.android.JudoSharedViewModel
 import com.judopay.judokit.android.R
+import com.judopay.judokit.android.cardRepository
 import com.judopay.judokit.android.databinding.CardEntryFragmentBinding
-import com.judopay.judokit.android.db.JudoRoomDatabase
-import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.dismissKeyboard
 import com.judopay.judokit.android.initAutofillAndAccessibilityOnAttach
 import com.judopay.judokit.android.judo
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.isCardPaymentWidget
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
-import com.judopay.judokit.android.service.CardTransactionManager
+import com.judopay.judokit.android.service.CardTransactionRepository
+import com.judopay.judokit.android.service.THREE_DS_TWO_MIN_TIMEOUT
+import com.judopay.judokit.android.service.ThreeDSSDKChallengeStatus
+import com.judopay.judokit.android.service.toFormattedEventString
 import com.judopay.judokit.android.showChildWithAutofill
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.common.heightWithInsetsAndMargins
 import com.judopay.judokit.android.ui.common.parcelable
+import com.judopay.judokit.android.ui.common.viewModelFactory
 import com.judopay.judokit.android.ui.paymentmethods.CARD_ENTRY_OPTIONS
+import com.judopay.judokit.android.ui.paymentmethods.USER_CANCELLED
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.launch
 
 private const val BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME = 300L
 private const val BOTTOM_SHEET_EXPAND_ANIMATION_TIME = BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME / 6
@@ -131,7 +143,8 @@ class JudoBottomSheetDialog(
         with(bottomSheet) {
             val cornerSize = context.resources.getDimension(R.dimen.size_16dp)
             val shapeAppearanceModel =
-                ShapeAppearanceModel.builder()
+                ShapeAppearanceModel
+                    .builder()
                     .setTopLeftCorner(CornerFamily.ROUNDED, cornerSize)
                     .setTopRightCorner(CornerFamily.ROUNDED, cornerSize)
                     .setBottomLeftCorner(CornerFamily.ROUNDED, 0f)
@@ -202,8 +215,8 @@ private fun adjustContainerLayoutMargins(
 class CardEntryFragment : BottomSheetDialogFragment() {
     private lateinit var viewModel: CardEntryViewModel
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
-    private var _binding: CardEntryFragmentBinding? = null
-    private val binding get() = _binding!!
+    private var viewBinding: CardEntryFragmentBinding? = null
+    private val binding get() = viewBinding!!
 
     override fun getTheme(): Int = R.style.JudoTheme_BottomSheetDialogTheme
 
@@ -225,13 +238,13 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = CardEntryFragmentBinding.inflate(inflater, container, false)
+        viewBinding = CardEntryFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        viewBinding = null
     }
 
     @Suppress("LongMethod")
@@ -241,6 +254,9 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initializeViewModelObserving()
+        if (savedInstanceState == null) {
+            viewModel.send(CardEntryAction.Initialize)
+        }
         setupWindowInsetsListeners()
 
         binding.cancelButton.setOnClickListener { onUserCancelled() }
@@ -256,12 +272,10 @@ class CardEntryFragment : BottomSheetDialogFragment() {
             }
             onCardEntryButtonClickListener = {
                 dismissKeyboard()
-                Handler(Looper.getMainLooper()).postDelayed(
-                    {
-                        viewModel.send(CardEntryAction.SubmitCardEntryForm)
-                    },
-                    KEYBOARD_DISMISS_TIMEOUT,
-                )
+                viewLifecycleOwner.lifecycleScope.launch {
+                    delay(KEYBOARD_DISMISS_TIMEOUT)
+                    viewModel.send(CardEntryAction.SubmitCardEntryForm)
+                }
             }
         }
 
@@ -283,19 +297,9 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         binding.cardEntryViewAnimator.initAutofillAndAccessibilityOnAttach()
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.send(CardEntryAction.SubscribeToCardTransactionManagerResults)
-    }
-
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         onUserCancelled()
-    }
-
-    override fun onDestroy() {
-        viewModel.send(CardEntryAction.UnSubscribeToCardTransactionManagerResults)
-        super.onDestroy()
     }
 
     private fun setupWindowInsetsListeners() {
@@ -363,70 +367,84 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     }
 
     private fun initializeViewModel() {
-        val application =
-            requireActivity().application
-        val tokenizedCardDao =
-            JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
-        val cardRepository =
-            TokenizedCardRepository(tokenizedCardDao)
-        val cardEntryOptions =
-            arguments?.parcelable<CardEntryOptions>(CARD_ENTRY_OPTIONS)
-        val cardTransactionManager =
-            CardTransactionManager.getInstance(requireActivity())
-        cardTransactionManager.configureWith(judo)
+        val cardEntryOptions = arguments?.parcelable<CardEntryOptions>(CARD_ENTRY_OPTIONS) ?: CardEntryOptions()
+        val cardTransactionRepository = CardTransactionRepository.create(requireContext(), judo)
         val factory =
-            CardEntryViewModelFactory(
-                judo,
-                cardTransactionManager,
-                cardRepository,
-                cardEntryOptions,
-                application,
-            )
-        viewModel =
-            ViewModelProvider(this, factory)[CardEntryViewModel::class.java]
+            viewModelFactory {
+                CardEntryViewModel(judo, cardTransactionRepository, cardRepository(), cardEntryOptions, requireActivity().application)
+            }
+        viewModel = ViewModelProvider(this, factory)[CardEntryViewModel::class.java]
     }
 
     private fun initializeViewModelObserving() {
-        viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
-        viewModel.judoPaymentResult.observe(viewLifecycleOwner) { dispatchResult(it) }
-        viewModel.cardEntryToPaymentMethodResult.observe(
-            viewLifecycleOwner,
-        ) {
-            sharedViewModel.cardEntryToPaymentMethodResult.postValue(it)
-            findNavController().popBackStack()
+        // The 3DS2 challenge runs on top of JudoActivity, which drops to STOPPED during the challenge.
+        // Using pendingChallenge (StateFlow) instead of a one-shot SharedFlow means a Fragment
+        // recreated during a configuration change immediately re-sees any in-progress challenge and
+        // re-calls doChallenge with the fresh Activity. The receiver calls viewModel.onChallengeResult
+        // directly, so it survives even if this coroutine is later cancelled.
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.pendingChallenge.filterNotNull().collect { data ->
+                data.transaction.doChallenge(
+                    requireActivity(),
+                    data.challengeParameters,
+                    object : ChallengeStatusReceiver {
+                        override fun completed(event: CompletionEvent) = viewModel.onChallengeResult(event.toFormattedEventString())
+
+                        override fun cancelled() = viewModel.onChallengeResult(ThreeDSSDKChallengeStatus.CANCELLED)
+
+                        override fun protocolError(event: ProtocolErrorEvent) = viewModel.onChallengeResult(event.toFormattedEventString())
+
+                        override fun runtimeError(event: RuntimeErrorEvent) = viewModel.onChallengeResult(event.toFormattedEventString())
+
+                        override fun timedout() = viewModel.onChallengeResult(ThreeDSSDKChallengeStatus.TIMEOUT)
+                    },
+                    THREE_DS_TWO_MIN_TIMEOUT,
+                )
+            }
         }
-        viewModel.navigationObserver.observe(viewLifecycleOwner) { onHandleFormNavigation(it) }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.uiState.filterNotNull().collect { updateWithModel(it) } }
+                launch { viewModel.paymentResultEffect.collect { dispatchResult(it) } }
+                launch {
+                    viewModel.cardEntryToPaymentMethodResultEffect.collect {
+                        sharedViewModel.postCardEntryToPaymentMethodResult(it)
+                        findNavController().popBackStack()
+                    }
+                }
+                launch { viewModel.navigationEffect.collect { onHandleFormNavigation(it) } }
+            }
+        }
     }
 
     private fun onHandleFormNavigation(navigationEvent: CardEntryNavigation) {
         bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-        Handler(Looper.getMainLooper()).postDelayed(
-            {
-                with(binding.cardEntryViewAnimator) {
-                    showChildWithAutofill(
-                        when (navigationEvent) {
-                            is CardEntryNavigation.Card -> 0
-                            is CardEntryNavigation.Billing -> 1
-                        },
-                    )
-                    postDelayed(BOTTOM_SHEET_EXPAND_ANIMATION_TIME) {
-                        bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                    }
+        viewLifecycleOwner.lifecycleScope.launch {
+            delay(BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME)
+            with(binding.cardEntryViewAnimator) {
+                showChildWithAutofill(
+                    when (navigationEvent) {
+                        is CardEntryNavigation.Card -> 0
+                        is CardEntryNavigation.Billing -> 1
+                    },
+                )
+                postDelayed(BOTTOM_SHEET_EXPAND_ANIMATION_TIME) {
+                    bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 }
-            },
-            BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME,
-        )
+            }
+        }
     }
 
     private fun onUserCancelled() {
         // disable the button
         binding.cancelButton.isEnabled = false
-        findNavController().previousBackStackEntry?.savedStateHandle?.set("user-cancelled", true)
+        findNavController().previousBackStackEntry?.savedStateHandle?.set(USER_CANCELLED, true)
         if (judo.paymentWidgetType.isPaymentMethodsWidget) {
             findNavController().popBackStack()
         } else {
-            sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled())
+            sharedViewModel.postPaymentResult(JudoPaymentResult.UserCancelled())
         }
     }
 
@@ -454,14 +472,14 @@ class CardEntryFragment : BottomSheetDialogFragment() {
 
         // in any other cases we're the only fragment in the stack,
         // so push the result to the parent activity
-        sharedViewModel.paymentResult.postValue(result)
+        sharedViewModel.postPaymentResult(result)
     }
 
     private fun dispatchCardPaymentApiResult(result: JudoPaymentResult) {
         when (result) {
-            is JudoPaymentResult.Success -> sharedViewModel.paymentResult.postValue(result)
+            is JudoPaymentResult.Success -> sharedViewModel.postPaymentResult(result)
             is JudoPaymentResult.Error ->
-                sharedViewModel.paymentResult.postValue(
+                sharedViewModel.postPaymentResult(
                     JudoPaymentResult.Error(
                         result.error,
                     ),
@@ -473,7 +491,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     private fun dispatchPaymentMethodsApiResult(result: JudoPaymentResult) {
         when (result) {
             is JudoPaymentResult.Success -> persistTokenizedCard(result)
-            is JudoPaymentResult.Error -> sharedViewModel.paymentResult.postValue(result)
+            is JudoPaymentResult.Error -> sharedViewModel.postPaymentResult(result)
             is JudoPaymentResult.UserCancelled -> onUserCancelled()
         }
     }
@@ -484,7 +502,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
             viewModel.send(CardEntryAction.InsertCard(cardDetails))
             findNavController().popBackStack()
         } else {
-            sharedViewModel.paymentResult.postValue(result)
+            sharedViewModel.postPaymentResult(result)
         }
     }
 

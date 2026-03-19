@@ -1,34 +1,18 @@
 package com.judopay.judokit
 
 import org.gradle.api.Project
-import org.gradle.api.tasks.TaskProvider
-import org.gradle.jvm.tasks.Jar
-import org.gradle.kotlin.dsl.getValue
-import org.gradle.kotlin.dsl.provideDelegate
-import org.gradle.kotlin.dsl.registering
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.withType
-import org.jetbrains.dokka.base.DokkaBase
-import org.jetbrains.dokka.base.DokkaBaseConfiguration
-import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.DokkaExtension
+import org.jetbrains.dokka.gradle.engine.plugins.DokkaHtmlPluginParameters
+import org.jetbrains.dokka.gradle.internal.InternalDokkaGradlePluginApi
 import java.time.Year
 
+@OptIn(InternalDokkaGradlePluginApi::class)
 internal fun Project.configureDokka() {
-    tasks.withType<DokkaTask>().configureEach {
-        pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
-            footerMessage = "(c) Judopay ${Year.now().value}. All rights reserved."
-            // todo: configure other Dokka settings
+    extensions.configure<DokkaExtension> {
+        pluginsConfiguration.withType<DokkaHtmlPluginParameters>().configureEach {
+            footerMessage.set("(c) Judopay ${Year.now().value}. All rights reserved.")
         }
     }
-}
-
-internal fun Project.javadoc(): TaskProvider<Jar> {
-    val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
-        archiveClassifier.set("javadoc")
-
-        val dokkaJavadocTask = tasks.getByName("dokkaJavadoc")
-
-        from(dokkaJavadocTask)
-        dependsOn(dokkaJavadocTask)
-    }
-    return javadocJar
 }

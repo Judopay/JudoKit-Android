@@ -1,55 +1,36 @@
 package com.judokit.android.examples.feature.noui
 
-import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.PreferenceManager
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.judokit.android.examples.R
 import com.judokit.android.examples.common.parcelable
 import com.judokit.android.examples.databinding.ActivityDemoNoUiPaymentBinding
-import com.judokit.android.examples.feature.JUDO_PAYMENT_WIDGET_REQUEST_CODE
 import com.judopay.judokit.android.JUDO_OPTIONS
 import com.judopay.judokit.android.Judo
-import com.judopay.judokit.android.api.JudoApiService
-import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.model.JudoPaymentResult
-import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.code
 import com.judopay.judokit.android.model.toIntent
-import com.judopay.judokit.android.service.CardTransactionManager
-import com.judopay.judokit.android.service.CardTransactionManagerResultListener
 import com.judopay.judokit.android.ui.common.ButtonState
+import kotlinx.coroutines.launch
 
-sealed class ActivityState {
-    object Idle : ActivityState()
-
-    object PayWithCard : ActivityState()
-
-    object PreAuthWithCard : ActivityState()
-
-    object CheckCard : ActivityState()
-}
-
-class DemoNoUiPaymentActivity :
-    AppCompatActivity(),
-    CardTransactionManagerResultListener {
-    private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var service: JudoApiService
-    private lateinit var transactionDetailsBuilder: TransactionDetails.Builder
-    private val caller = DemoNoUiPaymentActivity::class.java.name
+class DemoNoUiPaymentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDemoNoUiPaymentBinding
+    private lateinit var viewModel: DemoNoUiPaymentViewModel
 
-    @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
-
         super.onCreate(savedInstanceState)
 
         binding = ActivityDemoNoUiPaymentBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
@@ -58,68 +39,37 @@ class DemoNoUiPaymentActivity :
             setDisplayShowHomeEnabled(true)
         }
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val judo = intent.parcelable<Judo>(JUDO_OPTIONS)
-        check(judo != null) { "Judo object is required" }
-
+        val judo = requireNotNull(intent.parcelable<Judo>(JUDO_OPTIONS)) { "Judo object is required" }
         judo.address?.administrativeDivision = ""
-        service = JudoApiServiceFactory.create(this, judo)
-        transactionDetailsBuilder =
-            TransactionDetails
-                .Builder()
-                .setEmail(judo.emailAddress)
-                .setCountryCode(judo.address?.countryCode.toString())
-                .setPhoneCountryCode(judo.phoneCountryCode)
-                .setMobileNumber(judo.mobileNumber)
-                .setAddressLine1(judo.address?.line1)
-                .setAddressLine2(judo.address?.line2)
-                .setAddressLine3(judo.address?.line3)
-                .setCity(judo.address?.town)
-                .setPostalCode(judo.address?.postCode)
-                .setAdministrativeDivision(judo.address?.state)
-                // Setting card details manually, as it's for 'no-UI' transaction.
-                .setCardNumber("4000023104662535")
-                .setExpirationDate("12/25")
-                .setCardHolderName("CHALLENGE")
-                .setSecurityNumber("452")
 
-        binding.payWithCardButton.setOnClickListener {
-            handleState(ActivityState.PayWithCard)
-            CardTransactionManager.getInstance(this).payment(
-                transactionDetailsBuilder.build(),
-                caller,
-            )
+        viewModel =
+            ViewModelProvider(
+                this,
+                DemoNoUiPaymentViewModel.Factory(this, judo),
+            )[DemoNoUiPaymentViewModel::class.java]
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.nestedScrollView) { view, insets ->
+            val imeBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+            val navBottom = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom
+            view.updatePadding(bottom = maxOf(imeBottom, navBottom))
+            insets
         }
 
-        binding.preAuthWithCardButton.setOnClickListener {
-            handleState(ActivityState.PreAuthWithCard)
-            CardTransactionManager.getInstance(this).preAuth(
-                transactionDetailsBuilder.build(),
-                caller,
-            )
-        }
+        val initial = viewModel.initialCardInput
+        binding.cardNumberEditText.setText(initial.cardNumber)
+        binding.expirationDateEditText.setText(initial.expirationDate)
+        binding.cardholderNameEditText.setText(initial.cardholderName)
+        binding.securityNumberEditText.setText(initial.securityNumber)
 
-        binding.checkCardButton.setOnClickListener {
-            handleState(ActivityState.CheckCard)
-            CardTransactionManager.getInstance(this).check(
-                transactionDetailsBuilder.build(),
-                caller,
-            )
-        }
+        binding.payWithCardButton.setOnClickListener { viewModel.payment(this, currentCardInput()) }
+        binding.preAuthWithCardButton.setOnClickListener { viewModel.preAuth(this, currentCardInput()) }
+        binding.checkCardButton.setOnClickListener { viewModel.check(this, currentCardInput()) }
 
-        CardTransactionManager.getInstance(this).configureWith(judo)
-        CardTransactionManager.getInstance(this).registerResultListener(this)
-    }
-
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?,
-    ) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == JUDO_PAYMENT_WIDGET_REQUEST_CODE) {
-            setResult(resultCode, data)
-            finish()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.uiState.collect { handleState(it) } }
+                launch { viewModel.paymentResult.collect { onTransactionResult(it) } }
+            }
         }
     }
 
@@ -131,13 +81,15 @@ class DemoNoUiPaymentActivity :
             super.onOptionsItemSelected(item)
         }
 
-    override fun onDestroy() {
-        CardTransactionManager.getInstance(this).unRegisterResultListener(this)
-        super.onDestroy()
-    }
+    private fun currentCardInput() =
+        CardInputState(
+            cardNumber = binding.cardNumberEditText.text.toString(),
+            expirationDate = binding.expirationDateEditText.text.toString(),
+            cardholderName = binding.cardholderNameEditText.text.toString(),
+            securityNumber = binding.securityNumberEditText.text.toString(),
+        )
 
-    override fun onCardTransactionResult(result: JudoPaymentResult) {
-        runOnUiThread { handleState(ActivityState.Idle) }
+    private fun onTransactionResult(result: JudoPaymentResult) {
         setResult(result.code, result.toIntent())
         finish()
     }

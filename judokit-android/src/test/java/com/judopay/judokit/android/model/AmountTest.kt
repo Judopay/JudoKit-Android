@@ -2,6 +2,7 @@ package com.judopay.judokit.android.model
 
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -38,5 +39,31 @@ internal class AmountTest {
     @Test
     fun doesNotThrowExceptionOnAllFieldsValid() {
         assertDoesNotThrow { sut.build() }
+    }
+
+    @DisplayName("Given valid amount and GBP currency, formatted returns non-empty string")
+    @Test
+    fun formattedReturnsNonEmptyString() {
+        val amount =
+            Amount
+                .Builder()
+                .setAmount("10.00")
+                .setCurrency(Currency.GBP)
+                .build()
+        val formatted = amount.formatted
+        assertTrue(formatted.isNotEmpty())
+    }
+
+    @DisplayName("Given valid amount and USD currency, formatted contains amount digits")
+    @Test
+    fun formattedContainsAmountDigits() {
+        val amount =
+            Amount
+                .Builder()
+                .setAmount("25.99")
+                .setCurrency(Currency.USD)
+                .build()
+        val formatted = amount.formatted
+        assertTrue(formatted.contains("25") || formatted.contains("25.99"))
     }
 }

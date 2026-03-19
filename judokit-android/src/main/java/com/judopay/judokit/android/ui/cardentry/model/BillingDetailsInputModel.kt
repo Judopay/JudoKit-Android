@@ -14,7 +14,7 @@ data class BillingDetailsInputModel(
     val countryCode: String = "",
     val postalCode: String = "",
     val administrativeDivision: String = "",
-    var submitButtonState: ButtonState = ButtonState.Disabled(R.string.jp_pay_now),
-    var backButtonState: ButtonState = ButtonState.Enabled(R.string.jp_back),
-    var isValid: Boolean = false,
+    val submitButtonState: ButtonState = ButtonState.Disabled(R.string.jp_pay_now),
+    val backButtonState: ButtonState = ButtonState.Enabled(R.string.jp_back),
+    val isValid: Boolean = false,
 )
