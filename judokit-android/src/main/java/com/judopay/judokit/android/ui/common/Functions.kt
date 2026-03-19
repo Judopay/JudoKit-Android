@@ -9,6 +9,8 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.ConfigurationCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -122,6 +124,18 @@ val View.heightWithInsetsAndMargins: Int
     get() {
         val internalPadding = paddingTop + paddingBottom
         return height + internalPadding + calculateVerticalMargins()
+    }
+
+/**
+ * Creates a [ViewModelProvider.Factory] from a lambda, eliminating the need for individual
+ * factory subclasses when the ViewModel has constructor parameters.
+ */
+internal fun <VM : ViewModel> viewModelFactory(creator: () -> VM): ViewModelProvider.Factory =
+    object : ViewModelProvider.NewInstanceFactory() {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
+            return creator() as T
+        }
     }
 
 private fun View.calculateVerticalMargins(): Int {

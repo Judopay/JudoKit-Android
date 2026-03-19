@@ -4,12 +4,12 @@ import org.gradle.api.Project
 
 object Versions {
     // Library versions, here you update the versions of the library
-    const val VERSION_NAME: String = "6.1.0"
+    const val VERSION_NAME: String = "7.0.0"
 
     // Android versions
     const val TARGET_SDK: Int = 35
     const val COMPILE_SDK: Int = 35
-    const val MIN_SDK: Int = 21
+    const val MIN_SDK: Int = 23
 }
 
 private const val EXAMPLE_APP_VERSION_CODE = "android.injected.version.code"

@@ -39,6 +39,8 @@ import com.judopay.judokit.android.api.model.request.PaymentRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
 import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
+import com.judopay.judokit.android.db.JudoRoomDatabase
+import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.model.ApiEnvironment
 import com.judopay.judokit.android.model.googlepay.GooglePayAddress
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_500
@@ -133,6 +135,11 @@ val FragmentActivity.judo: Judo
 
 val Fragment.judo: Judo
     get() = requireActivity().judo
+
+internal fun Fragment.cardRepository(): TokenizedCardRepository {
+    val application = requireActivity().application
+    return TokenizedCardRepository(JudoRoomDatabase.getDatabase(application).tokenizedCardDao())
+}
 
 val String.withWhitespacesRemoved: String
     get() = replace("\\s".toRegex(), "")

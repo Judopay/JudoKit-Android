@@ -9,7 +9,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentData
@@ -25,7 +28,9 @@ import com.judopay.judokit.android.model.navigationGraphId
 import com.judopay.judokit.android.model.toIntent
 import com.judopay.judokit.android.service.JudoGooglePayService
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
+import com.judopay.judokit.android.ui.common.viewModelFactory
 import com.judopay.judokit.android.ui.paymentmethods.CARD_ENTRY_OPTIONS
+import kotlinx.coroutines.launch
 
 internal const val LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE = Activity.RESULT_FIRST_USER + 1
 
@@ -40,6 +45,16 @@ internal const val LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE = Activity.RESULT_FIRST_U
  * startActivityForResult(intent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
  * ```
  */
+@Deprecated(
+    message =
+        "Do not launch JudoActivity directly. " +
+            "Use JudoActivityResultContracts with registerForActivityResult instead.",
+    replaceWith =
+        ReplaceWith(
+            expression = "JudoActivityResultContracts",
+            imports = ["com.judopay.judokit.android.JudoActivityResultContracts"],
+        ),
+)
 class JudoActivity : AppCompatActivity() {
     private lateinit var viewModel: JudoSharedViewModel
 
@@ -60,21 +75,28 @@ class JudoActivity : AppCompatActivity() {
         // setup shared view-model & response callbacks
         val judoApiService = JudoApiServiceFactory.create(applicationContext, config)
         val factory =
-            JudoSharedViewModelFactory(
-                config,
-                buildJudoGooglePayService(),
-                judoApiService,
-                application,
-            )
+            viewModelFactory {
+                JudoSharedViewModel(config, buildJudoGooglePayService(), judoApiService, application)
+            }
 
-        viewModel = ViewModelProvider(this, factory).get(JudoSharedViewModel::class.java)
-        viewModel.paymentResult.observe(this) { dispatchPaymentResult(it) }
+        viewModel = ViewModelProvider(this, factory)[JudoSharedViewModel::class.java]
+        viewModel.onActivityUpdated(this)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.paymentResultEffect.collect { dispatchPaymentResult(it) }
+            }
+        }
 
         if (config.paymentWidgetType.isPaymentMethodsWidget) {
             WindowCompat
                 .getInsetsController(window, window.decorView)
                 .isAppearanceLightStatusBars = true
         }
+
+        // On configuration change, FragmentManager restores all committed fragments automatically,
+        // and the GooglePay flow should not be re-triggered. Skip first-launch-only setup.
+        if (savedInstanceState != null) return
 
         if (config.paymentWidgetType.isGooglePayWidget) {
             viewModel.send(JudoSharedAction.LoadGPayPaymentData)

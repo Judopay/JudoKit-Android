@@ -2,7 +2,6 @@ package com.judokit.android.examples.feature.tokenpayments
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,8 +15,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,7 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.judokit.android.examples.R
 import com.judopay.judokit.android.model.CardNetwork
@@ -39,7 +40,7 @@ import com.judopay.judokit.android.model.securityCodeLength
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Suppress("LongParameterList", "LongMethod", "MagicNumber")
+@Suppress("LongParameterList", "LongMethod", "MagicNumber", "UnstableCollections")
 fun TokenPaymentsScreen(
     viewModel: TokenPaymentsViewModel,
     onTokenizeNewCard: () -> Unit,
@@ -60,13 +61,17 @@ fun TokenPaymentsScreen(
         contentWindowInsets = WindowInsets.safeContent,
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.feature_title_token_payments)) },
-                navigationIcon = { IconButton(onClick = { onClose() }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "") } },
+                title = { Text(stringResource(R.string.feature_title_token_payments)) },
+                navigationIcon = {
+                    IconButton(onClick = onClose) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                    }
+                },
             )
         },
     ) { paddingValues ->
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier =
                 Modifier
                     .verticalScroll(rememberScrollState())
@@ -74,14 +79,29 @@ fun TokenPaymentsScreen(
                     .padding(16.dp)
                     .fillMaxWidth(),
         ) {
-            Spacer(Modifier.height(16.dp))
-            Text("Please fill in the fields below with a tokenized card's details or tokenize a new card below")
+            // How to guide
+            Text(
+                text = stringResource(R.string.token_guide_heading),
+                style = MaterialTheme.typography.titleMedium,
+            )
+            Text(
+                text = stringResource(R.string.token_guide_body),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+
+            // Card details section
+            Text(
+                text = stringResource(R.string.token_section_card_details),
+                style = MaterialTheme.typography.titleMedium,
+            )
             OutlinedTextField(
                 value = viewModel.scheme,
                 onValueChange = { viewModel.scheme = it.take(2) },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Scheme") },
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+                label = { Text(stringResource(R.string.label_scheme)) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
                 enabled = !viewModel.isBusy,
                 singleLine = true,
             )
@@ -89,8 +109,8 @@ fun TokenPaymentsScreen(
                 value = viewModel.token,
                 onValueChange = { viewModel.token = it },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Token") },
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+                label = { Text(stringResource(R.string.label_token)) },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 enabled = !viewModel.isBusy,
                 singleLine = true,
             )
@@ -98,8 +118,8 @@ fun TokenPaymentsScreen(
                 value = viewModel.lastFour,
                 onValueChange = { viewModel.lastFour = it.take(4) },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Last 4 digits") },
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+                label = { Text(stringResource(R.string.label_last_four)) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
                 enabled = !viewModel.isBusy,
                 singleLine = true,
             )
@@ -107,8 +127,8 @@ fun TokenPaymentsScreen(
                 value = viewModel.securityCode,
                 onValueChange = { viewModel.securityCode = it.take(securityCodeLength) },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Security code") },
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+                label = { Text(stringResource(R.string.label_security_code)) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
                 enabled = !viewModel.isBusy,
                 singleLine = true,
             )
@@ -116,37 +136,38 @@ fun TokenPaymentsScreen(
                 value = viewModel.cardholderName,
                 onValueChange = { viewModel.cardholderName = it },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Cardholder name") },
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                label = { Text(stringResource(R.string.label_cardholder_name)) },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 enabled = !viewModel.isBusy,
                 singleLine = true,
             )
-
-            Button(
-                onClick = { onTokenizeNewCard() },
+            OutlinedButton(
+                onClick = onTokenizeNewCard,
                 modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
             ) {
-                Text(
-                    text = "Tokenize a new card".uppercase(),
-                    textAlign = TextAlign.Center,
-                )
+                Text(stringResource(R.string.create_card_token).uppercase())
             }
 
-            Spacer(Modifier.height(32.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
 
+            // Actions section
+            Text(
+                text = stringResource(R.string.token_section_actions),
+                style = MaterialTheme.typography.titleMedium,
+            )
             Button(
-                onClick = { onTokenPayment() },
+                onClick = onTokenPayment,
                 modifier = Modifier.fillMaxWidth().height(48.dp),
-                enabled = isFormValid,
+                enabled = isFormValid && !viewModel.isBusy,
             ) {
-                Text("Payment".uppercase())
+                Text(stringResource(R.string.token_payment).uppercase())
             }
             Button(
-                onClick = { onTokenPreAuth() },
+                onClick = onTokenPreAuth,
                 modifier = Modifier.fillMaxWidth().height(48.dp),
-                enabled = isFormValid,
+                enabled = isFormValid && !viewModel.isBusy,
             ) {
-                Text("Pre-auth".uppercase())
+                Text(stringResource(R.string.preauth_token_payment).uppercase())
             }
         }
     }

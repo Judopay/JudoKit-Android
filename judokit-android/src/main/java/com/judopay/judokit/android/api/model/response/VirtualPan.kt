@@ -8,7 +8,5 @@ class VirtualPan(
     val lastFour: String? = null,
     val expiryDate: String? = null,
 ) : Parcelable {
-    override fun toString(): String {
-        return "VirtualPan(lastFour=$lastFour, expiryDate=$expiryDate)"
-    }
+    override fun toString(): String = "VirtualPan(lastFour=$lastFour, expiryDate=$expiryDate)"
 }
