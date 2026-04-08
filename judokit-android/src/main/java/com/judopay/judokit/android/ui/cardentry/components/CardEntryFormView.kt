@@ -301,6 +301,9 @@ class CardEntryFormView
                     layout.visibility = if (isEnabled) View.VISIBLE else View.GONE
                 }
             }
+
+            val isExpiryDateEnabled = model.enabledFields.contains(CardDetailsFieldType.EXPIRATION_DATE)
+            binding.expirationDateHorizontalSpacer.visibility = if (isExpiryDateEnabled) View.VISIBLE else View.GONE
         }
 
         private fun setupCountrySpinner() =

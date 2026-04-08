@@ -107,6 +107,7 @@
                 </com.judopay.judokit.android.ui.cardentry.components.JudoEditTextInputLayout>
 
                 <Space
+                    android:id="@+id/expirationDateHorizontalSpacer"
                     android:layout_width="@dimen/space_9"
                     android:layout_height="match_parent"/>
 
