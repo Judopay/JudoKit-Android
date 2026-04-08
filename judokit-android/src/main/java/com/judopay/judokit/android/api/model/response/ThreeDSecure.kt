@@ -11,8 +11,8 @@ class ThreeDSecure(
     val challengeRequestIndicator: String? = null,
     val challengeCompleted: Boolean? = null,
 ) : Parcelable {
-    override fun toString(): String {
-        return """
+    override fun toString(): String =
+        """
             ThreeDSecure(
             attempted: $attempted,
             result: $result,
@@ -20,5 +20,4 @@ class ThreeDSecure(
             challengeRequestIndicator: $challengeRequestIndicator,
             challengeCompleted: $challengeCompleted)
         """
-    }
 }

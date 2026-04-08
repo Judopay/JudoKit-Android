@@ -14,9 +14,13 @@ import kotlin.coroutines.resumeWithException
 
 class JudoGooglePayService(
     private val paymentsClient: PaymentsClient,
-    private val callbackActivity: AppCompatActivity,
+    private var callbackActivity: AppCompatActivity,
     private val judo: Judo,
 ) {
+    internal fun updateCallbackActivity(activity: AppCompatActivity) {
+        callbackActivity = activity
+    }
+
     fun loadGooglePayPaymentData() {
         judo.googlePayConfiguration?.let {
             val request = it.toPaymentDataRequest(judo)
