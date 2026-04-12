@@ -1366,6 +1366,7 @@ public final class com/judopay/judokit/android/databinding/CardEntryFormViewBind
 	public final field countryTextInputEditText Landroidx/appcompat/widget/AppCompatAutoCompleteTextView;
 	public final field countryTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
 	public final field expirationDateAndSecurityNumberContainer Landroid/widget/LinearLayout;
+	public final field expirationDateHorizontalSpacer Landroid/widget/Space;
 	public final field expirationDateTextInputEditText Landroid/widget/EditText;
 	public final field expirationDateTextInputLayout Lcom/judopay/judokit/android/ui/cardentry/components/JudoEditTextInputLayout;
 	public final field flow1 Landroidx/constraintlayout/helper/widget/Flow;
