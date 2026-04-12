@@ -27,7 +27,7 @@ sealed class ActivityState {
 
 data class CardInputState(
     val cardNumber: String = "4000000000000002",
-    val expirationDate: String = "12/25",
+    val expirationDate: String = "12/30",
     val cardholderName: String = "CHALLENGE",
     val securityNumber: String = "543",
 )
