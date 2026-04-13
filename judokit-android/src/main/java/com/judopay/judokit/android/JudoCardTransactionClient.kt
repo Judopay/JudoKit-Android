@@ -1,7 +1,9 @@
 package com.judopay.judokit.android
 
 import android.content.Context
+import androidx.annotation.MainThread
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.judopay.judo3ds2.model.CompletionEvent
 import com.judopay.judo3ds2.model.ProtocolErrorEvent
@@ -15,6 +17,9 @@ import com.judopay.judokit.android.service.CardTransactionRepository
 import com.judopay.judokit.android.service.THREE_DS_TWO_MIN_TIMEOUT
 import com.judopay.judokit.android.service.ThreeDSSDKChallengeStatus
 import com.judopay.judokit.android.service.toFormattedEventString
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 
@@ -70,6 +75,7 @@ fun interface JudoCardTransactionCallback {
      * @param result [JudoPaymentResult.Success], [JudoPaymentResult.Error], or
      *               [JudoPaymentResult.UserCancelled].
      */
+    @MainThread
     fun onResult(result: JudoPaymentResult)
 }
 
@@ -85,8 +91,10 @@ fun interface JudoCardTransactionCallback {
  * the 3DS2 flow themselves.
  *
  * callback is always invoked on the **main thread**. The operation is tied to the
- * [FragmentActivity]'s lifecycle: if the activity is destroyed before the transaction completes
- * the callback is not invoked.
+ * application's process lifecycle ([ProcessLifecycleOwner]) and will complete even if the
+ * [FragmentActivity] is destroyed mid-transaction (e.g. rotation). The 3DS2 challenge, however,
+ * requires a live [FragmentActivity] surface — if the activity is destroyed while the challenge
+ * screen is visible the challenge coroutine will be cancelled and the callback will not be invoked.
  *
  * Java example:
  * ```java
@@ -115,8 +123,10 @@ fun interface JudoCardTransactionCallback {
  * val result = client.payment(activity, details)
  * ```
  */
-class JudoCardTransactionClient private constructor(
+class JudoCardTransactionClient internal constructor(
     private val repository: CardTransactionRepository,
+    private val coroutineScope: CoroutineScope,
+    private val callbackDispatcher: CoroutineDispatcher = Dispatchers.Main.immediate,
 ) {
     /**
      * Performs a card payment.
@@ -213,7 +223,7 @@ class JudoCardTransactionClient private constructor(
         callback: JudoCardTransactionCallback,
         block: suspend () -> JudoPaymentResult,
     ) {
-        activity.lifecycleScope.launch { callback.onResult(block()) }
+        coroutineScope.launch(callbackDispatcher) { callback.onResult(block()) }
     }
 
     companion object {
@@ -230,7 +240,11 @@ class JudoCardTransactionClient private constructor(
         fun create(
             context: Context,
             judo: Judo,
-        ): JudoCardTransactionClient = JudoCardTransactionClient(CardTransactionRepository.create(context, judo))
+        ): JudoCardTransactionClient =
+            JudoCardTransactionClient(
+                CardTransactionRepository.create(context, judo),
+                ProcessLifecycleOwner.get().lifecycleScope,
+            )
     }
 }
 
@@ -239,15 +253,21 @@ class JudoCardTransactionClient private constructor(
 // ---------------------------------------------------------------------------
 
 /**
+ * Bridges a [JudoCardTransactionCallback]-based call into a suspend function by wiring
+ * the callback's [JudoCardTransactionCallback.onResult] directly into the coroutine continuation.
+ */
+private suspend fun awaitResult(block: (JudoCardTransactionCallback) -> Unit): JudoPaymentResult =
+    suspendCancellableCoroutine { cont ->
+        block { cont.resumeWith(Result.success(it)) }
+    }
+
+/**
  * Suspend variant of [JudoCardTransactionClient.payment] for Kotlin coroutine callers.
  */
 suspend fun JudoCardTransactionClient.payment(
     activity: FragmentActivity,
     details: TransactionDetails,
-): JudoPaymentResult =
-    suspendCancellableCoroutine { cont ->
-        payment(activity, details) { cont.resumeWith(Result.success(it)) }
-    }
+): JudoPaymentResult = awaitResult { payment(activity, details, it) }
 
 /**
  * Suspend variant of [JudoCardTransactionClient.preAuth] for Kotlin coroutine callers.
@@ -255,10 +275,7 @@ suspend fun JudoCardTransactionClient.payment(
 suspend fun JudoCardTransactionClient.preAuth(
     activity: FragmentActivity,
     details: TransactionDetails,
-): JudoPaymentResult =
-    suspendCancellableCoroutine { cont ->
-        preAuth(activity, details) { cont.resumeWith(Result.success(it)) }
-    }
+): JudoPaymentResult = awaitResult { preAuth(activity, details, it) }
 
 /**
  * Suspend variant of [JudoCardTransactionClient.paymentWithToken] for Kotlin coroutine callers.
@@ -266,10 +283,7 @@ suspend fun JudoCardTransactionClient.preAuth(
 suspend fun JudoCardTransactionClient.paymentWithToken(
     activity: FragmentActivity,
     details: TransactionDetails,
-): JudoPaymentResult =
-    suspendCancellableCoroutine { cont ->
-        paymentWithToken(activity, details) { cont.resumeWith(Result.success(it)) }
-    }
+): JudoPaymentResult = awaitResult { paymentWithToken(activity, details, it) }
 
 /**
  * Suspend variant of [JudoCardTransactionClient.preAuthWithToken] for Kotlin coroutine callers.
@@ -277,10 +291,7 @@ suspend fun JudoCardTransactionClient.paymentWithToken(
 suspend fun JudoCardTransactionClient.preAuthWithToken(
     activity: FragmentActivity,
     details: TransactionDetails,
-): JudoPaymentResult =
-    suspendCancellableCoroutine { cont ->
-        preAuthWithToken(activity, details) { cont.resumeWith(Result.success(it)) }
-    }
+): JudoPaymentResult = awaitResult { preAuthWithToken(activity, details, it) }
 
 /**
  * Suspend variant of [JudoCardTransactionClient.save] for Kotlin coroutine callers.
@@ -288,10 +299,7 @@ suspend fun JudoCardTransactionClient.preAuthWithToken(
 suspend fun JudoCardTransactionClient.save(
     activity: FragmentActivity,
     details: TransactionDetails,
-): JudoPaymentResult =
-    suspendCancellableCoroutine { cont ->
-        save(activity, details) { cont.resumeWith(Result.success(it)) }
-    }
+): JudoPaymentResult = awaitResult { save(activity, details, it) }
 
 /**
  * Suspend variant of [JudoCardTransactionClient.check] for Kotlin coroutine callers.
@@ -299,7 +307,4 @@ suspend fun JudoCardTransactionClient.save(
 suspend fun JudoCardTransactionClient.check(
     activity: FragmentActivity,
     details: TransactionDetails,
-): JudoPaymentResult =
-    suspendCancellableCoroutine { cont ->
-        check(activity, details) { cont.resumeWith(Result.success(it)) }
-    }
+): JudoPaymentResult = awaitResult { check(activity, details, it) }

@@ -21,8 +21,8 @@ import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -213,17 +213,23 @@ private fun adjustContainerLayoutMargins(
 }
 
 class CardEntryFragment : BottomSheetDialogFragment() {
-    private lateinit var viewModel: CardEntryViewModel
+    private val viewModel: CardEntryViewModel by viewModels {
+        val cardEntryOptions = arguments?.parcelable<CardEntryOptions>(CARD_ENTRY_OPTIONS) ?: CardEntryOptions()
+        viewModelFactory {
+            CardEntryViewModel(
+                judo,
+                CardTransactionRepository.create(requireContext(), judo),
+                cardRepository(),
+                cardEntryOptions,
+                requireActivity().application,
+            )
+        }
+    }
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
     private var viewBinding: CardEntryFragmentBinding? = null
     private val binding get() = viewBinding!!
 
     override fun getTheme(): Int = R.style.JudoTheme_BottomSheetDialogTheme
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initializeViewModel()
-    }
 
     // present it always expanded
     override fun onCreateDialog(savedInstanceState: Bundle?) =
@@ -254,9 +260,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initializeViewModelObserving()
-        if (savedInstanceState == null) {
-            viewModel.send(CardEntryAction.Initialize)
-        }
+        viewModel.send(CardEntryAction.Initialize)
         setupWindowInsetsListeners()
 
         binding.cancelButton.setOnClickListener { onUserCancelled() }
@@ -366,40 +370,36 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.cardEntryToolbar, cutoutInsetsListener)
     }
 
-    private fun initializeViewModel() {
-        val cardEntryOptions = arguments?.parcelable<CardEntryOptions>(CARD_ENTRY_OPTIONS) ?: CardEntryOptions()
-        val cardTransactionRepository = CardTransactionRepository.create(requireContext(), judo)
-        val factory =
-            viewModelFactory {
-                CardEntryViewModel(judo, cardTransactionRepository, cardRepository(), cardEntryOptions, requireActivity().application)
-            }
-        viewModel = ViewModelProvider(this, factory)[CardEntryViewModel::class.java]
-    }
-
     private fun initializeViewModelObserving() {
         // The 3DS2 challenge runs on top of JudoActivity, which drops to STOPPED during the challenge.
         // Using pendingChallenge (StateFlow) instead of a one-shot SharedFlow means a Fragment
         // recreated during a configuration change immediately re-sees any in-progress challenge and
         // re-calls doChallenge with the fresh Activity. The receiver calls viewModel.onChallengeResult
         // directly, so it survives even if this coroutine is later cancelled.
+        // repeatOnLifecycle(STARTED) is safe here because StateFlow replays its current value when
+        // STARTED is re-entered, so a recreated Fragment will immediately receive any pending challenge.
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.pendingChallenge.filterNotNull().collect { data ->
-                data.transaction.doChallenge(
-                    requireActivity(),
-                    data.challengeParameters,
-                    object : ChallengeStatusReceiver {
-                        override fun completed(event: CompletionEvent) = viewModel.onChallengeResult(event.toFormattedEventString())
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.pendingChallenge.filterNotNull().collect { data ->
+                    data.transaction.doChallenge(
+                        requireActivity(),
+                        data.challengeParameters,
+                        object : ChallengeStatusReceiver {
+                            override fun completed(event: CompletionEvent) = viewModel.onChallengeResult(event.toFormattedEventString())
 
-                        override fun cancelled() = viewModel.onChallengeResult(ThreeDSSDKChallengeStatus.CANCELLED)
+                            override fun cancelled() = viewModel.onChallengeResult(ThreeDSSDKChallengeStatus.CANCELLED)
 
-                        override fun protocolError(event: ProtocolErrorEvent) = viewModel.onChallengeResult(event.toFormattedEventString())
+                            override fun protocolError(event: ProtocolErrorEvent) =
+                                viewModel.onChallengeResult(event.toFormattedEventString())
 
-                        override fun runtimeError(event: RuntimeErrorEvent) = viewModel.onChallengeResult(event.toFormattedEventString())
+                            override fun runtimeError(event: RuntimeErrorEvent) =
+                                viewModel.onChallengeResult(event.toFormattedEventString())
 
-                        override fun timedout() = viewModel.onChallengeResult(ThreeDSSDKChallengeStatus.TIMEOUT)
-                    },
-                    THREE_DS_TWO_MIN_TIMEOUT,
-                )
+                            override fun timedout() = viewModel.onChallengeResult(ThreeDSSDKChallengeStatus.TIMEOUT)
+                        },
+                        THREE_DS_TWO_MIN_TIMEOUT,
+                    )
+                }
             }
         }
 

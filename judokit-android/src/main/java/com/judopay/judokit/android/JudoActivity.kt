@@ -33,26 +33,9 @@ import com.judopay.judokit.android.ui.paymentmethods.CARD_ENTRY_OPTIONS
 import kotlinx.coroutines.launch
 
 /**
- * Entry point for invoking Judo SDK to make any of the defined
- * [payment journeys.][com.judopay.judokit.android.model.PaymentWidgetType]
- * Activity must be started with [startActivityForResult].
- *
- * ```
- * val intent = Intent(this, JudoActivity::class.java)
- * intent.putExtra(JUDO_OPTIONS, judo)
- * startActivityForResult(intent, JUDO_PAYMENT_WIDGET_REQUEST_CODE)
- * ```
+ * Internal Activity that hosts all Judo SDK payment flows. Not intended for direct use by SDK
+ * consumers — launch via [JudoActivityResultContracts] instead.
  */
-@Deprecated(
-    message =
-        "Do not launch JudoActivity directly. " +
-            "Use JudoActivityResultContracts with registerForActivityResult instead.",
-    replaceWith =
-        ReplaceWith(
-            expression = "JudoActivityResultContracts",
-            imports = ["com.judopay.judokit.android.JudoActivityResultContracts"],
-        ),
-)
 class JudoActivity : AppCompatActivity() {
     private lateinit var viewModel: JudoSharedViewModel
 
@@ -83,7 +66,6 @@ class JudoActivity : AppCompatActivity() {
             }
 
         viewModel = ViewModelProvider(this, factory)[JudoSharedViewModel::class.java]
-        viewModel.onLauncherUpdated(googlePayLauncher)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -199,6 +181,6 @@ class JudoActivity : AppCompatActivity() {
                 .setEnvironment(environment)
                 .build()
         val client = Wallet.getPaymentsClient(this, walletOptions)
-        return JudoGooglePayService(client, judo)
+        return JudoGooglePayService(client, judo, googlePayLauncher)
     }
 }

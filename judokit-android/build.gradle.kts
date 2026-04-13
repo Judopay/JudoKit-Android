@@ -21,6 +21,7 @@ dependencies {
 
     implementation(libs.bundles.kotlinx.coroutines)
     implementation(libs.bundles.androidx.lifecycle)
+    implementation(libs.androidx.lifecycle.process)
     implementation(libs.bundles.androidx.navigation)
 
     // For the exposed API client callbacks interfaces

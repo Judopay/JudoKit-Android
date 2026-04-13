@@ -35,6 +35,7 @@ import com.judopay.judokit.android.model.toPreAuthTokenRequest
 import com.judopay.judokit.android.model.toSaveCardRequest
 import com.judopay.judokit.android.model.toTokenRequest
 import com.judopay.judokit.android.ui.common.getLocale
+import kotlinx.coroutines.CancellationException
 import retrofit2.await
 
 /**
@@ -117,12 +118,6 @@ internal class CardTransactionRepository
         private val parameters = ConfigParameters()
         private val locale = getLocale(resources)
 
-        /**
-         * Stores the last [TransactionDetails] used for an API call so that the
-         * CSC can be forwarded to the `complete3ds2` endpoint after a 3DS2 challenge.
-         */
-        private var savedTransactionDetails: TransactionDetails? = null
-
         suspend fun payment(
             details: TransactionDetails,
             runChallenge: ChallengeRunner,
@@ -169,7 +164,9 @@ internal class CardTransactionRepository
                     else ->
                         performApiCall(type, details, runChallenge)
                 }
-            } catch (e: Throwable) {
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
                 JudoPaymentResult.Error(JudoError.judoInternalError(e.message))
             }
 
@@ -198,7 +195,9 @@ internal class CardTransactionRepository
                 } else {
                     handleRecommendationError(type, details, runChallenge)
                 }
-            } catch (e: Throwable) {
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
                 Log.d(TAG, "Uncaught Recommendation service exception", e)
                 handleRecommendationError(type, details, runChallenge)
             }
@@ -232,12 +231,13 @@ internal class CardTransactionRepository
             val network = details.cardType ?: CardNetwork.OTHER
             val directoryServerId = resolveDirectoryServerId(network)
             val transaction = threeDS2Service.createTransaction(directoryServerId, judo.threeDSTwoMessageVersion)
-            savedTransactionDetails = details
 
             return try {
                 val apiResult = buildApiRequest(type, details, transaction, overrides).await()
                 handleApiResult(type, details, transaction, runChallenge, apiResult)
-            } catch (e: Throwable) {
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
                 Log.d(TAG, "Uncaught 3DS2 Exception", e)
                 JudoPaymentResult.Error(JudoError.judoInternalError(e.message))
             } finally {
@@ -262,7 +262,7 @@ internal class CardTransactionRepository
                         type.canBeSoftDeclined && receipt.isSoftDeclined ->
                             handleStepUp(type, details, transaction, runChallenge, receipt.receiptId!!)
                         receipt.isThreeDSecureTwoRequired ->
-                            handleThreeDSecure2(receipt, transaction, runChallenge)
+                            handleThreeDSecure2(details, receipt, transaction, runChallenge)
                         else -> result.toJudoPaymentResult(resources)
                     }
                 }
@@ -293,6 +293,7 @@ internal class CardTransactionRepository
          * the transaction via the `complete3ds2` API endpoint.
          */
         private suspend fun handleThreeDSecure2(
+            details: TransactionDetails,
             receipt: Receipt,
             transaction: Transaction,
             runChallenge: ChallengeRunner,
@@ -300,7 +301,7 @@ internal class CardTransactionRepository
             val challengeStatus = runChallenge(transaction, receipt.getChallengeParameters())
             val receiptId = receipt.receiptId ?: ""
             val version = receipt.getCReqParameters()?.messageVersion ?: judo.threeDSTwoMessageVersion
-            val cv2 = savedTransactionDetails?.securityNumber
+            val cv2 = details.securityNumber
             val result =
                 judoApiService
                     .complete3ds2(receiptId, Complete3DS2Request(version, cv2, challengeStatus))

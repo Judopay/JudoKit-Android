@@ -11,8 +11,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -65,7 +65,17 @@ data class PaymentMethodsModel(
 )
 
 class PaymentMethodsFragment : Fragment() {
-    private lateinit var viewModel: PaymentMethodsViewModel
+    private val viewModel: PaymentMethodsViewModel by viewModels {
+        viewModelFactory {
+            PaymentMethodsViewModel(
+                CardDate(),
+                cardRepository(),
+                CardTransactionRepository.create(requireContext(), judo),
+                requireActivity().application,
+                judo,
+            )
+        }
+    }
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
     private var viewBinding: PaymentMethodsFragmentBinding? = null
     private val binding get() = viewBinding!!
@@ -77,11 +87,6 @@ class PaymentMethodsFragment : Fragment() {
     ): View {
         viewBinding = PaymentMethodsFragmentBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initializeViewModel()
     }
 
     override fun onDestroyView() {
@@ -100,15 +105,6 @@ class PaymentMethodsFragment : Fragment() {
         setupButtonCallbacks()
         setupLandscapeCollapseListener()
         initializeViewModelObserving()
-    }
-
-    private fun initializeViewModel() {
-        val cardTransactionRepository = CardTransactionRepository.create(requireContext(), judo)
-        val factory =
-            viewModelFactory {
-                PaymentMethodsViewModel(CardDate(), cardRepository(), cardTransactionRepository, requireActivity().application, judo)
-            }
-        viewModel = ViewModelProvider(this, factory)[PaymentMethodsViewModel::class.java]
     }
 
     private fun initializeViewModelObserving() {
@@ -146,24 +142,30 @@ class PaymentMethodsFragment : Fragment() {
             }
         }
 
+        // repeatOnLifecycle(STARTED) is safe here because StateFlow replays its current value when
+        // STARTED is re-entered, so a recreated Fragment will immediately receive any pending challenge.
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.pendingChallenge.filterNotNull().collect { data ->
-                data.transaction.doChallenge(
-                    requireActivity(),
-                    data.challengeParameters,
-                    object : ChallengeStatusReceiver {
-                        override fun completed(event: CompletionEvent) = viewModel.onChallengeResult(event.toFormattedEventString())
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.pendingChallenge.filterNotNull().collect { data ->
+                    data.transaction.doChallenge(
+                        requireActivity(),
+                        data.challengeParameters,
+                        object : ChallengeStatusReceiver {
+                            override fun completed(event: CompletionEvent) = viewModel.onChallengeResult(event.toFormattedEventString())
 
-                        override fun cancelled() = viewModel.onChallengeResult(ThreeDSSDKChallengeStatus.CANCELLED)
+                            override fun cancelled() = viewModel.onChallengeResult(ThreeDSSDKChallengeStatus.CANCELLED)
 
-                        override fun protocolError(event: ProtocolErrorEvent) = viewModel.onChallengeResult(event.toFormattedEventString())
+                            override fun protocolError(event: ProtocolErrorEvent) =
+                                viewModel.onChallengeResult(event.toFormattedEventString())
 
-                        override fun runtimeError(event: RuntimeErrorEvent) = viewModel.onChallengeResult(event.toFormattedEventString())
+                            override fun runtimeError(event: RuntimeErrorEvent) =
+                                viewModel.onChallengeResult(event.toFormattedEventString())
 
-                        override fun timedout() = viewModel.onChallengeResult(ThreeDSSDKChallengeStatus.TIMEOUT)
-                    },
-                    THREE_DS_TWO_MIN_TIMEOUT,
-                )
+                            override fun timedout() = viewModel.onChallengeResult(ThreeDSSDKChallengeStatus.TIMEOUT)
+                        },
+                        THREE_DS_TWO_MIN_TIMEOUT,
+                    )
+                }
             }
         }
     }

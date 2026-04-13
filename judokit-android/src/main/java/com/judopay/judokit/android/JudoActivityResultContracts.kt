@@ -47,7 +47,6 @@ class JudoActivityResultContracts private constructor() {
      * a particular flow.
      */
     abstract class Base : ActivityResultContract<Judo, JudoPaymentResult>() {
-        @Suppress("DEPRECATION")
         override fun createIntent(
             context: Context,
             input: Judo,
@@ -87,63 +86,63 @@ class JudoActivityResultContracts private constructor() {
     /**
      * Contract for [PaymentWidgetType.CARD_PAYMENT]: launches the standard card payment flow.
      */
-    open class CardPayment : Base()
+    class CardPayment : Base()
 
     /**
      * Contract for [PaymentWidgetType.PRE_AUTH]: launches the pre-authorization card payment flow.
      */
-    open class CardPreAuth : Base()
+    class CardPreAuth : Base()
 
     /**
      * Contract for [PaymentWidgetType.CREATE_CARD_TOKEN]: launches the save-card flow for future
      * tokenized payments.
      */
-    open class CreateCardToken : Base()
+    class CreateCardToken : Base()
 
     /**
      * Contract for [PaymentWidgetType.CHECK_CARD]: launches the card check/verification flow.
      */
-    open class CheckCard : Base()
+    class CheckCard : Base()
 
     /**
      * Contract for [PaymentWidgetType.GOOGLE_PAY]: launches a standalone GooglePay payment flow.
      */
-    open class GooglePay : Base()
+    class GooglePay : Base()
 
     /**
      * Contract for [PaymentWidgetType.PRE_AUTH_GOOGLE_PAY]: launches a standalone GooglePay
      * pre-authorization flow.
      */
-    open class PreAuthGooglePay : Base()
+    class PreAuthGooglePay : Base()
 
     /**
      * Contract for [PaymentWidgetType.PAYMENT_METHODS]: launches the payment methods widget
      * (card and GooglePay).
      */
-    open class PaymentMethods : Base()
+    class PaymentMethods : Base()
 
     /**
      * Contract for [PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS]: launches the payment methods
      * widget for pre-authorization (card and GooglePay).
      */
-    open class PreAuthPaymentMethods : Base()
+    class PreAuthPaymentMethods : Base()
 
     /**
      * Contract for [PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS]: launches the
      * server-to-server payment methods widget to create a receipt for card payments made outside
      * the Judo SDK.
      */
-    open class ServerToServerPaymentMethods : Base()
+    class ServerToServerPaymentMethods : Base()
 
     /**
      * Contract for [PaymentWidgetType.TOKEN_PAYMENT]: launches a token payment flow, optionally
      * prompting the user for their CSC and/or cardholder name.
      */
-    open class CardTokenPayment : Base()
+    class CardTokenPayment : Base()
 
     /**
      * Contract for [PaymentWidgetType.TOKEN_PRE_AUTH]: launches a pre-authorization token payment
      * flow, optionally prompting the user for their CSC and/or cardholder name.
      */
-    open class CardTokenPreAuth : Base()
+    class CardTokenPreAuth : Base()
 }

@@ -1,8 +1,7 @@
 package com.judopay.judokit.android
 
 import android.app.Application
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.IntentSenderRequest
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.common.api.ApiException
@@ -59,18 +58,18 @@ class JudoSharedViewModel(
     val cardEntryToPaymentMethodResultEffect: SharedFlow<TransactionDetails.Builder> = _cardEntryToPaymentMethodResultEffect
 
     // used to persist all captured errors and send to merchant on back press
-    val error = JudoError()
+    internal val error = JudoError()
 
     fun postPaymentResult(result: JudoPaymentResult) {
-        _paymentResultEffect.tryEmit(result)
+        if (!_paymentResultEffect.tryEmit(result)) {
+            Log.w(TAG, "Payment result effect dropped: $result")
+        }
     }
 
     fun postCardEntryToPaymentMethodResult(builder: TransactionDetails.Builder) {
-        _cardEntryToPaymentMethodResultEffect.tryEmit(builder)
-    }
-
-    internal fun onLauncherUpdated(launcher: ActivityResultLauncher<IntentSenderRequest>) {
-        googlePayService.updateLauncher(launcher)
+        if (!_cardEntryToPaymentMethodResultEffect.tryEmit(builder)) {
+            Log.w(TAG, "Card-entry-to-payment-method result effect dropped")
+        }
     }
 
     fun send(action: JudoSharedAction) =
@@ -87,7 +86,10 @@ class JudoSharedViewModel(
             try {
                 val isAvailable = googlePayService.checkIfGooglePayIsAvailable()
                 if (isAvailable) {
-                    googlePayService.loadGooglePayPaymentData()
+                    googlePayService.loadGooglePayPaymentData(
+                        onSuccess = { send(JudoSharedAction.LoadGPayPaymentDataSuccess(it)) },
+                        onError = { send(JudoSharedAction.LoadGPayPaymentDataError(it)) },
+                    )
                 } else {
                     onLoadGPayPaymentDataError("GooglePay is not supported on your device")
                 }
@@ -162,8 +164,18 @@ class JudoSharedViewModel(
         val type = judo.paymentWidgetType
 
         when {
-            type.isGooglePayWidget -> _paymentResultEffect.tryEmit(result)
-            type.isPaymentMethodsWidget -> _paymentMethodsResultEffect.tryEmit(result)
+            type.isGooglePayWidget ->
+                if (!_paymentResultEffect.tryEmit(result)) {
+                    Log.w(TAG, "Payment result effect dropped: $result")
+                }
+            type.isPaymentMethodsWidget ->
+                if (!_paymentMethodsResultEffect.tryEmit(result)) {
+                    Log.w(TAG, "Payment methods result effect dropped: $result")
+                }
         }
+    }
+
+    companion object {
+        private val TAG = JudoSharedViewModel::class.java.name
     }
 }

@@ -1,6 +1,7 @@
 package com.judopay.judokit.android.ui.paymentmethods
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.judopay.judokit.android.Judo
@@ -15,7 +16,7 @@ import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.formatted
 import com.judopay.judokit.android.model.paymentButtonType
 import com.judopay.judokit.android.service.CardTransactionRepository
-import com.judopay.judokit.android.service.ChallengeData
+import com.judopay.judokit.android.service.ThreeDSChallengeDelegate
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.common.ButtonState
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
@@ -32,7 +33,6 @@ import com.judopay.judokit.android.ui.paymentmethods.model.CardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.GooglePayPaymentMethodModel
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentMethodModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -88,20 +88,10 @@ class PaymentMethodsViewModel
         private val _cardEntryEffect = MutableSharedFlow<CardEntryOptions>(extraBufferCapacity = 1)
         val cardEntryEffect: SharedFlow<CardEntryOptions> = _cardEntryEffect
 
-        /**
-         * Holds the active 3DS2 challenge data while a native challenge is in progress, null otherwise.
-         * [StateFlow] ensures a Fragment recreated during a configuration change immediately receives
-         * the pending challenge and can re-invoke doChallenge with the fresh Activity.
-         */
-        private val mutablePendingChallenge = MutableStateFlow<ChallengeData?>(null)
-        internal val pendingChallenge: StateFlow<ChallengeData?> = mutablePendingChallenge.asStateFlow()
+        private val threeDSDelegate = ThreeDSChallengeDelegate()
 
-        private val challengeResultChannel = Channel<String?>(1)
-
-        private val challengeRunner: com.judopay.judokit.android.service.ChallengeRunner = { transaction, params ->
-            mutablePendingChallenge.value = ChallengeData(transaction, params)
-            challengeResultChannel.receive()
-        }
+        /** Emits the active 3DS2 challenge data while a challenge is in progress, null otherwise. */
+        internal val pendingChallenge: StateFlow<com.judopay.judokit.android.service.ChallengeData?> = threeDSDelegate.pendingChallenge
 
         private var cardList: List<TokenizedCardEntity> = emptyList()
 
@@ -139,10 +129,7 @@ class PaymentMethodsViewModel
          * Clears the pending challenge state and forwards the result. The first call wins;
          * any duplicate from a stale receiver is silently dropped (channel already has a value).
          */
-        fun onChallengeResult(status: String?) {
-            mutablePendingChallenge.value = null
-            challengeResultChannel.trySend(status)
-        }
+        fun onChallengeResult(status: String?) = threeDSDelegate.onChallengeResult(status)
 
         @Suppress("CyclomaticComplexMethod")
         fun send(action: PaymentMethodsAction) {
@@ -204,7 +191,9 @@ class PaymentMethodsViewModel
                             isPresentedFromPaymentMethods = true,
                             cardNetwork = cardNetwork,
                         )
-                    _cardEntryEffect.tryEmit(cardEntryOptions)
+                    if (!_cardEntryEffect.tryEmit(cardEntryOptions)) {
+                        Log.w(TAG, "Card-entry effect dropped")
+                    }
                 } else {
                     sendCardPaymentRequest(paymentMethod, TransactionDetails.Builder())
                 }
@@ -234,13 +223,15 @@ class PaymentMethodsViewModel
 
                 val result =
                     if (judo.paymentWidgetType == PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS) {
-                        cardTransactionRepository.preAuthWithToken(transactionDetailBuilder.build(), challengeRunner)
+                        cardTransactionRepository.preAuthWithToken(transactionDetailBuilder.build(), threeDSDelegate.challengeRunner)
                     } else {
-                        cardTransactionRepository.paymentWithToken(transactionDetailBuilder.build(), challengeRunner)
+                        cardTransactionRepository.paymentWithToken(transactionDetailBuilder.build(), threeDSDelegate.challengeRunner)
                     }
 
                 buildModel()
-                _paymentResultEffect.emit(result)
+                if (!_paymentResultEffect.tryEmit(result)) {
+                    Log.w(TAG, "Payment result effect dropped: $result")
+                }
             }
         }
 
@@ -248,6 +239,10 @@ class PaymentMethodsViewModel
             viewModelScope.launch {
                 cardRepository.deleteCardWithId(id)
             }
+
+        companion object {
+            private val TAG = PaymentMethodsViewModel::class.java.name
+        }
 
         @Suppress("LongMethod", "CyclomaticComplexMethod")
         private fun buildModel(

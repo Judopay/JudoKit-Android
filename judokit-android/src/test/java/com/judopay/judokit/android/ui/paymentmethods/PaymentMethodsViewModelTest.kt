@@ -2,6 +2,7 @@ package com.judopay.judokit.android.ui.paymentmethods
 
 import android.app.Application
 import com.judopay.judokit.android.Judo
+import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.model.response.CardDate
 import com.judopay.judokit.android.db.entity.TokenizedCardEntity
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
@@ -12,7 +13,12 @@ import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.formatted
 import com.judopay.judokit.android.model.paymentButtonType
 import com.judopay.judokit.android.service.CardTransactionRepository
+import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
+import com.judopay.judokit.android.ui.common.ButtonState
+import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
+import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItemType
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodSavedCardItem
+import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodSelectorItem
 import com.judopay.judokit.android.ui.paymentmethods.model.CardPaymentMethodModel
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import io.mockk.coEvery
@@ -20,6 +26,9 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import io.mockk.slot
+import io.mockk.unmockkAll
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -31,6 +40,8 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -79,6 +90,7 @@ internal class PaymentMethodsViewModelTest {
     @AfterEach
     internal fun tearDown() {
         Dispatchers.resetMain()
+        unmockkAll()
     }
 
     @Test
@@ -109,35 +121,45 @@ internal class PaymentMethodsViewModelTest {
     }
 
     @Test
-    @DisplayName("Given SelectStoredCard is sent, then uiState is updated")
+    @DisplayName("Given SelectStoredCard is sent, then current payment method remains CardPaymentMethodModel")
     fun updateUiStateOnSelectStoredCard() {
         sut.send(PaymentMethodsAction.SelectStoredCard(CARD_ID))
 
-        assertNotNull(sut.uiState.value)
+        assertTrue(sut.uiState.value?.currentPaymentMethod is CardPaymentMethodModel)
     }
 
     @Test
-    @DisplayName("Given EditMode(true) is sent, then uiState is updated")
+    @DisplayName("Given EditMode(true) is sent, then current payment method remains CardPaymentMethodModel")
     fun updateUiStateOnEditModeAction() {
         sut.send(PaymentMethodsAction.EditMode(true))
 
-        assertNotNull(sut.uiState.value)
+        assertTrue(sut.uiState.value?.currentPaymentMethod is CardPaymentMethodModel)
     }
 
     @Test
-    @DisplayName("Given UpdateButtonState(false) is sent, then uiState is updated")
+    @DisplayName("Given UpdateButtonState(false) is sent, then payment button state is Loading")
     fun updateUiStateOnUpdateButtonStateAction() {
         sut.send(PaymentMethodsAction.UpdateButtonState(false))
 
-        assertNotNull(sut.uiState.value)
+        val buttonState =
+            sut.uiState.value
+                ?.headerModel
+                ?.callToActionModel
+                ?.paymentButtonState
+        assertEquals(ButtonState.Loading, buttonState)
     }
 
     @Test
-    @DisplayName("Given Update is sent, then uiState is updated")
+    @DisplayName("Given Update is sent, then payment button state is Disabled")
     fun updateUiStateOnUpdateAction() {
         sut.send(PaymentMethodsAction.Update)
 
-        assertNotNull(sut.uiState.value)
+        val buttonState =
+            sut.uiState.value
+                ?.headerModel
+                ?.callToActionModel
+                ?.paymentButtonState
+        assertEquals(ButtonState.Disabled(R.string.jp_pay_now), buttonState)
     }
 
     @Test
@@ -285,10 +307,401 @@ internal class PaymentMethodsViewModelTest {
             assertNotNull(sut.uiState.value)
         }
 
-    private fun buildMockedCard(): TokenizedCardEntity {
+    @Test
+    @DisplayName("Given no saved cards, then payment button is Disabled")
+    fun paymentButtonDisabledWhenNoCards() {
+        val buttonState =
+            sut.uiState.value
+                ?.headerModel
+                ?.callToActionModel
+                ?.paymentButtonState
+        assertEquals(ButtonState.Disabled(R.string.jp_pay_now), buttonState)
+    }
+
+    @Test
+    @DisplayName("Given a valid card (isAfterToday=true), then payment button is Enabled")
+    fun paymentButtonEnabledWhenValidCard() =
+        runTest(testScheduler) {
+            every { cardDate.isAfterToday } returns true
+
+            allCardsFlow.emit(listOf(buildMockedCard()))
+
+            val buttonState =
+                sut.uiState.value
+                    ?.headerModel
+                    ?.callToActionModel
+                    ?.paymentButtonState
+            assertEquals(ButtonState.Enabled(R.string.jp_pay_now), buttonState)
+        }
+
+    @Test
+    @DisplayName("Given an expired card (isAfterToday=false), then payment button is Disabled")
+    fun paymentButtonDisabledWhenExpiredCard() =
+        runTest(testScheduler) {
+            every { cardDate.isAfterToday } returns false
+
+            allCardsFlow.emit(listOf(buildMockedCard()))
+
+            val buttonState =
+                sut.uiState.value
+                    ?.headerModel
+                    ?.callToActionModel
+                    ?.paymentButtonState
+            assertEquals(ButtonState.Disabled(R.string.jp_pay_now), buttonState)
+        }
+
+    @Test
+    @DisplayName("Given InitiateSelectedCardPayment and billing info required, then button is Loading")
+    fun paymentButtonIsLoadingWhenInitiatePaymentWithBillingRequired() =
+        runTest(testScheduler) {
+            every { judo.uiConfiguration.shouldAskForBillingInformation } returns true
+
+            allCardsFlow.emit(listOf(buildMockedCard()))
+            sut.send(PaymentMethodsAction.InitiateSelectedCardPayment)
+
+            val buttonState =
+                sut.uiState.value
+                    ?.headerModel
+                    ?.callToActionModel
+                    ?.paymentButtonState
+            assertEquals(ButtonState.Loading, buttonState)
+        }
+
+    @Test
+    @DisplayName("Given GOOGLE_PAY method and UpdateButtonState(false), then button is Disabled")
+    fun googlePayButtonDisabledOnUpdateButtonStateFalse() {
+        every { judo.paymentMethods } returns arrayOf(PaymentMethod.CARD, PaymentMethod.GOOGLE_PAY)
+        every { PaymentMethod.GOOGLE_PAY.paymentButtonType } returns mockk(relaxed = true)
+        allCardsFlow.tryEmit(emptyList())
+        sut = PaymentMethodsViewModel(cardDate, cardRepository, cardTransactionRepository, application, judo)
+        sut.send(PaymentMethodsAction.SelectPaymentMethod(PaymentMethod.GOOGLE_PAY))
+
+        sut.send(PaymentMethodsAction.UpdateButtonState(false))
+
+        val buttonState =
+            sut.uiState.value
+                ?.headerModel
+                ?.callToActionModel
+                ?.paymentButtonState
+        assertEquals(ButtonState.Disabled(R.string.jp_empty), buttonState)
+    }
+
+    @Test
+    @DisplayName("Given GOOGLE_PAY method and UpdateButtonState(true), then button is Enabled")
+    fun googlePayButtonEnabledOnUpdateButtonStateTrue() {
+        every { judo.paymentMethods } returns arrayOf(PaymentMethod.CARD, PaymentMethod.GOOGLE_PAY)
+        every { PaymentMethod.GOOGLE_PAY.paymentButtonType } returns mockk(relaxed = true)
+        allCardsFlow.tryEmit(emptyList())
+        sut = PaymentMethodsViewModel(cardDate, cardRepository, cardTransactionRepository, application, judo)
+        sut.send(PaymentMethodsAction.SelectPaymentMethod(PaymentMethod.GOOGLE_PAY))
+
+        sut.send(PaymentMethodsAction.UpdateButtonState(true))
+
+        val buttonState =
+            sut.uiState.value
+                ?.headerModel
+                ?.callToActionModel
+                ?.paymentButtonState
+        assertEquals(ButtonState.Enabled(R.string.jp_empty), buttonState)
+    }
+
+    @Test
+    @DisplayName("Given shouldPaymentMethodsVerifySecurityCode=true, then cardEntryEffect is emitted")
+    fun emitCardEntryEffectWhenVerifySecurityCodeRequired() =
+        runTest(testScheduler) {
+            every { judo.uiConfiguration.shouldAskForBillingInformation } returns false
+            every { judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode } returns true
+            every { judo.uiConfiguration.shouldAskForCSC } returns false
+            every { judo.uiConfiguration.shouldAskForCardholderName } returns false
+
+            val results = mutableListOf<CardEntryOptions>()
+            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+                sut.cardEntryEffect.collect(results::add)
+            }
+
+            allCardsFlow.emit(listOf(buildMockedCard()))
+            sut.send(PaymentMethodsAction.InitiateSelectedCardPayment)
+
+            assertTrue(results.isNotEmpty())
+        }
+
+    @Test
+    @DisplayName("Given shouldAskForCSC=true, then cardEntryEffect is emitted")
+    fun emitCardEntryEffectWhenAskForCSCRequired() =
+        runTest(testScheduler) {
+            every { judo.uiConfiguration.shouldAskForBillingInformation } returns false
+            every { judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode } returns false
+            every { judo.uiConfiguration.shouldAskForCSC } returns true
+            every { judo.uiConfiguration.shouldAskForCardholderName } returns false
+
+            val results = mutableListOf<CardEntryOptions>()
+            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+                sut.cardEntryEffect.collect(results::add)
+            }
+
+            allCardsFlow.emit(listOf(buildMockedCard()))
+            sut.send(PaymentMethodsAction.InitiateSelectedCardPayment)
+
+            assertTrue(results.isNotEmpty())
+        }
+
+    @Test
+    @DisplayName("Given shouldAskForCardholderName=true, then cardEntryEffect is emitted")
+    fun emitCardEntryEffectWhenAskForCardholderNameRequired() =
+        runTest(testScheduler) {
+            every { judo.uiConfiguration.shouldAskForBillingInformation } returns false
+            every { judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode } returns false
+            every { judo.uiConfiguration.shouldAskForCSC } returns false
+            every { judo.uiConfiguration.shouldAskForCardholderName } returns true
+
+            val results = mutableListOf<CardEntryOptions>()
+            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+                sut.cardEntryEffect.collect(results::add)
+            }
+
+            allCardsFlow.emit(listOf(buildMockedCard()))
+            sut.send(PaymentMethodsAction.InitiateSelectedCardPayment)
+
+            assertTrue(results.isNotEmpty())
+        }
+
+    @Test
+    @DisplayName("Given cardEntryEffect is emitted, then options have isPresentedFromPaymentMethods=true")
+    fun cardEntryEffectHasIsPresentedFromPaymentMethodsTrue() =
+        runTest(testScheduler) {
+            every { judo.uiConfiguration.shouldAskForBillingInformation } returns true
+
+            val results = mutableListOf<CardEntryOptions>()
+            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+                sut.cardEntryEffect.collect(results::add)
+            }
+
+            allCardsFlow.emit(listOf(buildMockedCard()))
+            sut.send(PaymentMethodsAction.InitiateSelectedCardPayment)
+
+            assertTrue(results.last().isPresentedFromPaymentMethods)
+        }
+
+    @Test
+    @DisplayName("Given sendCardPaymentRequest, then updateAllLastUsedToFalse is called")
+    fun updateAllLastUsedToFalseCalledDuringPayment() =
+        runTest(testScheduler) {
+            every { judo.uiConfiguration.shouldAskForBillingInformation } returns false
+            every { judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode } returns false
+            every { judo.uiConfiguration.shouldAskForCSC } returns false
+            every { judo.uiConfiguration.shouldAskForCardholderName } returns false
+            every { judo.paymentWidgetType } returns PaymentWidgetType.PAYMENT_METHODS
+
+            val card = buildMockedCard()
+            coEvery { cardRepository.findWithId(CARD_ID) } returns card
+
+            allCardsFlow.emit(listOf(card))
+            sut.send(PaymentMethodsAction.SelectStoredCard(CARD_ID))
+            sut.send(PaymentMethodsAction.InitiateSelectedCardPayment)
+
+            coVerify { cardRepository.updateAllLastUsedToFalse() }
+        }
+
+    @Test
+    @DisplayName("Given sendCardPaymentRequest, then cardRepository insert is called")
+    fun cardRepositoryInsertCalledDuringPayment() =
+        runTest(testScheduler) {
+            every { judo.uiConfiguration.shouldAskForBillingInformation } returns false
+            every { judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode } returns false
+            every { judo.uiConfiguration.shouldAskForCSC } returns false
+            every { judo.uiConfiguration.shouldAskForCardholderName } returns false
+            every { judo.paymentWidgetType } returns PaymentWidgetType.PAYMENT_METHODS
+
+            val card = buildMockedCard()
+            coEvery { cardRepository.findWithId(CARD_ID) } returns card
+
+            allCardsFlow.emit(listOf(card))
+            sut.send(PaymentMethodsAction.SelectStoredCard(CARD_ID))
+            sut.send(PaymentMethodsAction.InitiateSelectedCardPayment)
+
+            coVerify { cardRepository.insert(any()) }
+        }
+
+    @Test
+    @DisplayName("Given shouldAskForCardholderName=false, then entity cardholderName is passed in TransactionDetails")
+    fun entityCardholderNamePassedInTransactionDetailsWhenNotAsking() =
+        runTest(testScheduler) {
+            every { judo.uiConfiguration.shouldAskForBillingInformation } returns false
+            every { judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode } returns false
+            every { judo.uiConfiguration.shouldAskForCSC } returns false
+            every { judo.uiConfiguration.shouldAskForCardholderName } returns false
+            every { judo.paymentWidgetType } returns PaymentWidgetType.PAYMENT_METHODS
+
+            val card = buildMockedCard()
+            every { card.cardholderName } returns "Alice"
+            coEvery { cardRepository.findWithId(CARD_ID) } returns card
+
+            val captured = slot<TransactionDetails>()
+            coEvery { cardTransactionRepository.paymentWithToken(capture(captured), any()) } returns
+                JudoPaymentResult.Success(mockk(relaxed = true))
+
+            allCardsFlow.emit(listOf(card))
+            sut.send(PaymentMethodsAction.SelectStoredCard(CARD_ID))
+            sut.send(PaymentMethodsAction.InitiateSelectedCardPayment)
+
+            assertEquals("Alice", captured.captured.cardHolderName)
+        }
+
+    @Test
+    @DisplayName("Given shouldAskForCardholderName=true, then entity cardholderName is NOT put in TransactionDetails")
+    fun entityCardholderNameNotPassedInTransactionDetailsWhenAsking() =
+        runTest(testScheduler) {
+            every { judo.uiConfiguration.shouldAskForBillingInformation } returns false
+            every { judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode } returns false
+            every { judo.uiConfiguration.shouldAskForCSC } returns false
+            every { judo.uiConfiguration.shouldAskForCardholderName } returns true
+
+            val results = mutableListOf<CardEntryOptions>()
+            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+                sut.cardEntryEffect.collect(results::add)
+            }
+
+            val card = buildMockedCard()
+            every { card.cardholderName } returns "Alice"
+            allCardsFlow.emit(listOf(card))
+
+            sut.send(PaymentMethodsAction.SelectStoredCard(CARD_ID))
+            coEvery { cardRepository.findWithId(CARD_ID) } returns card
+
+            val captured = slot<TransactionDetails>()
+            coEvery { cardTransactionRepository.paymentWithToken(capture(captured), any()) } returns
+                JudoPaymentResult.Success(mockk(relaxed = true))
+            every { judo.paymentWidgetType } returns PaymentWidgetType.PAYMENT_METHODS
+
+            sut.send(PaymentMethodsAction.PayWithCard(TransactionDetails.Builder()))
+
+            assertTrue(captured.isCaptured)
+            assertNotEquals("Alice", captured.captured.cardHolderName)
+        }
+
+    @Test
+    @DisplayName("Given PRE_AUTH_PAYMENT_METHODS and PayWithCard, then paymentResultEffect emits preAuthWithToken result")
+    fun preAuthResultEmittedInPaymentResultEffect() =
+        runTest(testScheduler) {
+            every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS
+
+            val expectedResult = JudoPaymentResult.Success(mockk(relaxed = true))
+            coEvery { cardTransactionRepository.preAuthWithToken(any(), any()) } returns expectedResult
+
+            val results = mutableListOf<JudoPaymentResult>()
+            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+                sut.paymentResultEffect.collect(results::add)
+            }
+
+            val card = buildMockedCard()
+            coEvery { cardRepository.findWithId(CARD_ID) } returns card
+
+            allCardsFlow.emit(listOf(card))
+            sut.send(PaymentMethodsAction.SelectStoredCard(CARD_ID))
+            sut.send(PaymentMethodsAction.PayWithCard(TransactionDetails.Builder()))
+
+            assertEquals(expectedResult, results.last())
+        }
+
+    @Test
+    @DisplayName("Given PayWithCard when GOOGLE_PAY is active, then no payment call is made")
+    fun noPaymentCallWhenPayWithCardAndGooglePayActive() =
+        runTest(testScheduler) {
+            every { judo.paymentMethods } returns arrayOf(PaymentMethod.CARD, PaymentMethod.GOOGLE_PAY)
+            every { PaymentMethod.GOOGLE_PAY.paymentButtonType } returns mockk(relaxed = true)
+            allCardsFlow.tryEmit(emptyList())
+            sut = PaymentMethodsViewModel(cardDate, cardRepository, cardTransactionRepository, application, judo)
+            sut.send(PaymentMethodsAction.SelectPaymentMethod(PaymentMethod.GOOGLE_PAY))
+
+            sut.send(PaymentMethodsAction.PayWithCard(TransactionDetails.Builder()))
+
+            coVerify(exactly = 0) { cardTransactionRepository.paymentWithToken(any(), any()) }
+            coVerify(exactly = 0) { cardTransactionRepository.preAuthWithToken(any(), any()) }
+        }
+
+    @Test
+    @DisplayName("Given multiple payment methods, then adapter items contain a selector item")
+    fun adapterItemsContainSelectorItemForMultipleMethods() {
+        every { judo.paymentMethods } returns arrayOf(PaymentMethod.CARD, PaymentMethod.GOOGLE_PAY)
+        every { PaymentMethod.GOOGLE_PAY.paymentButtonType } returns mockk(relaxed = true)
+        allCardsFlow.tryEmit(emptyList())
+        sut = PaymentMethodsViewModel(cardDate, cardRepository, cardTransactionRepository, application, judo)
+
+        val items = (sut.uiState.value?.currentPaymentMethod as? CardPaymentMethodModel)?.items
+        assertTrue(items?.any { it is PaymentMethodSelectorItem } == true)
+    }
+
+    @Test
+    @DisplayName("Given EditMode(true) is sent, then SAVED_CARDS_HEADER generic item reports isInEditMode=true")
+    fun cardItemsHaveEditModeTrueAfterEditModeAction() =
+        runTest(testScheduler) {
+            allCardsFlow.emit(listOf(buildMockedCard()))
+            sut.send(PaymentMethodsAction.EditMode(true))
+
+            val items = (sut.uiState.value?.currentPaymentMethod as? CardPaymentMethodModel)?.items
+            val headerItem =
+                items
+                    ?.filterIsInstance<PaymentMethodGenericItem>()
+                    ?.firstOrNull { it.type == PaymentMethodItemType.SAVED_CARDS_HEADER }
+            assertEquals(true, headerItem?.isInEditMode)
+        }
+
+    @Test
+    @DisplayName("Given SelectStoredCard(id=2), then isSelected=true is assigned to that card's adapter item")
+    fun selectStoredCardAssignsIsSelectedToCorrectItem() =
+        runTest(testScheduler) {
+            val savedCardItem2: PaymentMethodSavedCardItem =
+                mockk(relaxed = true) {
+                    every { id } returns 2
+                    every { expireDate } returns "12/25"
+                }
+            val cardViewModel2: PaymentCardViewModel = mockk(relaxed = true) { every { expireDate } returns "12/25" }
+            val card2: TokenizedCardEntity =
+                mockk(relaxed = true) {
+                    every { toPaymentMethodSavedCardItem() } returns savedCardItem2
+                    every { savedCardItem2.toPaymentCardViewModel() } returns cardViewModel2
+                }
+
+            allCardsFlow.emit(listOf(buildMockedCard(1), card2))
+            sut.send(PaymentMethodsAction.SelectStoredCard(2))
+
+            verify { savedCardItem2.isSelected = true }
+        }
+
+    @Test
+    @DisplayName("Given shouldPaymentMethodsDisplayAmount=true, then callToAction reflects shouldDisplayAmount=true")
+    fun callToActionReflectsShouldDisplayAmountTrue() {
+        every { judo.uiConfiguration.shouldPaymentMethodsDisplayAmount } returns true
+
+        sut.send(PaymentMethodsAction.Update)
+
+        assertTrue(
+            sut.uiState.value
+                ?.headerModel
+                ?.callToActionModel
+                ?.shouldDisplayAmount == true,
+        )
+    }
+
+    @Test
+    @DisplayName("Given shouldPaymentMethodsDisplayAmount=false, then callToAction reflects shouldDisplayAmount=false")
+    fun callToActionReflectsShouldDisplayAmountFalse() {
+        every { judo.uiConfiguration.shouldPaymentMethodsDisplayAmount } returns false
+
+        sut.send(PaymentMethodsAction.Update)
+
+        assertFalse(
+            sut.uiState.value
+                ?.headerModel
+                ?.callToActionModel
+                ?.shouldDisplayAmount == true,
+        )
+    }
+
+    private fun buildMockedCard(id: Int = CARD_ID): TokenizedCardEntity {
         val savedCardItem: PaymentMethodSavedCardItem =
             mockk(relaxed = true) {
-                every { id } returns CARD_ID
+                every { this@mockk.id } returns id
                 every { expireDate } returns "12/25"
             }
         val cardViewModel: PaymentCardViewModel =

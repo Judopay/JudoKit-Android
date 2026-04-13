@@ -1,5 +1,8 @@
 package com.judopay.judokit.android.api.model.response
 
+import android.os.Parcel
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -101,6 +104,23 @@ internal class ResponseModelsTest {
     fun virtualPanToString() {
         val virtualPan = VirtualPan(lastFour = "5678")
         assertTrue(virtualPan.toString().contains("5678"))
+    }
+
+    @Test
+    @DisplayName("VirtualPan describeContents() returns 0")
+    fun virtualPanDescribeContentsReturnsZero() {
+        val virtualPan = VirtualPan(lastFour = "1234", expiryDate = "12/25")
+        assertEquals(0, virtualPan.describeContents())
+    }
+
+    @Test
+    @DisplayName("VirtualPan writeToParcel writes each stored field as a string")
+    fun virtualPanWriteToParcelDoesNotThrow() {
+        val virtualPan = VirtualPan(lastFour = "1234", expiryDate = "12/25")
+        val parcel = mockk<Parcel>(relaxed = true)
+        virtualPan.writeToParcel(parcel, 0)
+        verify { parcel.writeString("1234") }
+        verify { parcel.writeString("12/25") }
     }
 
     @Test

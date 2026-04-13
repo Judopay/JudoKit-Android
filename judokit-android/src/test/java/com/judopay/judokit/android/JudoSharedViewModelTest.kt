@@ -92,7 +92,7 @@ internal class JudoSharedViewModelTest {
 
         sut.send(JudoSharedAction.LoadGPayPaymentData)
 
-        coVerify { googlePayService.loadGooglePayPaymentData() }
+        verify { googlePayService.loadGooglePayPaymentData(any(), any()) }
     }
 
     @DisplayName(
@@ -249,7 +249,7 @@ internal class JudoSharedViewModelTest {
             }
 
             coEvery { googlePayService.checkIfGooglePayIsAvailable() } returns true
-            coEvery { googlePayService.loadGooglePayPaymentData() } throws IllegalStateException("Error")
+            every { googlePayService.loadGooglePayPaymentData(any(), any()) } throws IllegalStateException("Error")
             every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
 
             sut.send(JudoSharedAction.LoadGPayPaymentData)
@@ -269,7 +269,7 @@ internal class JudoSharedViewModelTest {
             }
 
             coEvery { googlePayService.checkIfGooglePayIsAvailable() } returns true
-            coEvery { googlePayService.loadGooglePayPaymentData() } throws ApiException(Status.RESULT_CANCELED)
+            every { googlePayService.loadGooglePayPaymentData(any(), any()) } throws ApiException(Status.RESULT_CANCELED)
             every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
 
             sut.send(JudoSharedAction.LoadGPayPaymentData)
@@ -299,7 +299,7 @@ internal class JudoSharedViewModelTest {
                 }
 
                 coEvery { googlePayService.checkIfGooglePayIsAvailable() } returns true
-                coEvery { googlePayService.loadGooglePayPaymentData() } throws RuntimeException()
+                every { googlePayService.loadGooglePayPaymentData(any(), any()) } throws RuntimeException()
                 every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
 
                 sut.send(JudoSharedAction.LoadGPayPaymentData)
@@ -501,5 +501,37 @@ internal class JudoSharedViewModelTest {
             sut.send(JudoSharedAction.LoadGPayPaymentDataUserCancelled)
 
             assertEquals(JudoPaymentResult.UserCancelled(), results[0])
+        }
+
+    @DisplayName("Given postPaymentResult is called, then paymentResultEffect emits the result")
+    @Test
+    fun postPaymentResultEmitsToPaymentResultEffect() =
+        runTest(testScheduler) {
+            val results = mutableListOf<JudoPaymentResult>()
+            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+                sut.paymentResultEffect.collect(results::add)
+            }
+
+            val expected = JudoPaymentResult.UserCancelled()
+            sut.postPaymentResult(expected)
+
+            assertEquals(expected, results[0])
+        }
+
+    @DisplayName("Given postCardEntryToPaymentMethodResult is called, then cardEntryToPaymentMethodResultEffect emits the builder")
+    @Test
+    fun postCardEntryToPaymentMethodResultEmitsToCardEntryToPaymentMethodResultEffect() =
+        runTest(testScheduler) {
+            val results = mutableListOf<com.judopay.judokit.android.model.TransactionDetails.Builder>()
+            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+                sut.cardEntryToPaymentMethodResultEffect.collect(results::add)
+            }
+
+            val builder =
+                com.judopay.judokit.android.model.TransactionDetails
+                    .Builder()
+            sut.postCardEntryToPaymentMethodResult(builder)
+
+            assertEquals(builder, results[0])
         }
 }
