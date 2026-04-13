@@ -24,7 +24,7 @@ internal class FunctionsKtTest {
     fun testThatWhenAnInvalidLuhnNumberIsProvidedLuhnCheckReturnsFalse() {
         assertFalse(isValidLuhnNumber("4111111111111112"))
     }
-    
+
     @Test
     @DisplayName("When isDependencyPresent is called with a class that exists, it should return true")
     fun testIsDependencyPresentReturnsTrueForExistingClass() {
