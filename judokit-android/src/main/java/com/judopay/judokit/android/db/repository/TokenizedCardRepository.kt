@@ -1,14 +1,14 @@
 package com.judopay.judokit.android.db.repository
 
-import androidx.lifecycle.LiveData
 import com.judopay.judokit.android.db.dao.TokenizedCardDao
 import com.judopay.judokit.android.db.entity.TokenizedCardEntity
+import kotlinx.coroutines.flow.Flow
 
 class TokenizedCardRepository(
     private val tokenizedCardDao: TokenizedCardDao,
 ) {
-    val allCardsSync: LiveData<List<TokenizedCardEntity>> =
-        tokenizedCardDao.getAllSortedByIsDefaultSync()
+    val allCards: Flow<List<TokenizedCardEntity>> =
+        tokenizedCardDao.getAllSortedByIsDefault()
 
     suspend fun insert(card: TokenizedCardEntity) {
         if (card.isDefault) {

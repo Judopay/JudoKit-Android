@@ -20,10 +20,10 @@ class TokenizedCardRepositoryTest {
     @Test
     @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
     @DisplayName(
-        "getAllSortedByIsDefaultSync should call tokenizedCardDao.getAllSortedByIsDefaultSync and return all cards ordered by isDefault descending synchronised",
+        "allCards should call tokenizedCardDao.getAllSortedByIsDefault and return all cards ordered by isDefault descending as a Flow",
     )
     fun getAllCardsSortedByDateSynchronised() {
-        verify { cardDao.getAllSortedByIsDefaultSync() }
+        verify { cardDao.getAllSortedByIsDefault() }
     }
 
     @Test

@@ -1,7 +1,15 @@
 package com.judopay.judokit.android.api.model.response
 
+import android.util.Base64
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
@@ -156,5 +164,117 @@ internal class ReceiptTest {
         assertEquals(acsUrl, receipt.toCardVerificationModel().acsUrl)
         assertEquals(paReq, receipt.toCardVerificationModel().paReq)
         assertEquals(md, receipt.toCardVerificationModel().md)
+    }
+
+    @DisplayName("Given result is Declined with soft decline message and receiptId, isSoftDeclined is true")
+    @Test
+    fun isSoftDeclinedTrueWhenConditionsMet() {
+        val receipt =
+            Receipt(
+                result = "Declined",
+                message = "Card declined: Additional customer authentication required",
+                receiptId = "receipt-123",
+            )
+        assertTrue(receipt.isSoftDeclined)
+    }
+
+    @DisplayName("Given result is not Declined, isSoftDeclined is false")
+    @Test
+    fun isSoftDeclinedFalseWhenResultNotDeclined() {
+        val receipt =
+            Receipt(
+                result = "Success",
+                message = "Card declined: Additional customer authentication required",
+                receiptId = "receipt-123",
+            )
+        assertFalse(receipt.isSoftDeclined)
+    }
+
+    @DisplayName("Given receiptId is null, isSoftDeclined is false")
+    @Test
+    fun isSoftDeclinedFalseWhenReceiptIdNull() {
+        val receipt =
+            Receipt(
+                result = "Declined",
+                message = "Card declined: Additional customer authentication required",
+                receiptId = null,
+            )
+        assertFalse(receipt.isSoftDeclined)
+    }
+
+    @DisplayName("Given message contains challenge required text, isThreeDSecureTwoRequired is true")
+    @Test
+    fun isThreeDSecureTwoRequiredTrueWhenChallengeMessage() {
+        val receipt = Receipt(message = "Issuer ACS has responded with a Challenge URL")
+        assertTrue(receipt.isThreeDSecureTwoRequired)
+    }
+
+    @DisplayName("Given message does not match, isThreeDSecureTwoRequired is false")
+    @Test
+    fun isThreeDSecureTwoRequiredFalseWhenNonMatchingMessage() {
+        val receipt = Receipt(message = "Payment successful")
+        assertFalse(receipt.isThreeDSecureTwoRequired)
+    }
+
+    @DisplayName("Receipt toString() contains key fields")
+    @Test
+    fun receiptToStringContainsFields() {
+        val receipt = Receipt(receiptId = "R123", result = "Success", currency = "GBP")
+        val str = receipt.toString()
+        assertTrue(str.contains("R123"))
+        assertTrue(str.contains("Success"))
+        assertTrue(str.contains("GBP"))
+    }
+
+    @DisplayName("getCReqParameters returns parsed CReqParameters on valid base64 JSON")
+    @Test
+    fun getCReqParametersReturnsParsedParameters() {
+        mockkStatic(Base64::class)
+        try {
+            val json = """{"messageType":"CReq","messageVersion":"2.1.0","threeDSServerTransID":"srv-id","acsTransID":"acs-id"}"""
+            every { Base64.decode(any<String>(), any()) } returns json.toByteArray()
+            val params = Receipt(cReq = "dummybase64").getCReqParameters()
+            assertNotNull(params)
+            assertEquals("CReq", params?.messageType)
+            assertEquals("2.1.0", params?.messageVersion)
+            assertEquals("srv-id", params?.threeDSServerTransID)
+            assertEquals("acs-id", params?.acsTransID)
+        } finally {
+            unmockkStatic(Base64::class)
+        }
+    }
+
+    @DisplayName("getCReqParameters returns null when base64 decodes to malformed JSON")
+    @Test
+    fun getCReqParametersReturnsNullOnMalformedJson() {
+        mockkStatic(Base64::class)
+        try {
+            every { Base64.decode(any<String>(), any()) } returns "not-valid-json".toByteArray()
+            val params = Receipt(cReq = "dummybase64").getCReqParameters()
+            assertNull(params)
+        } finally {
+            unmockkStatic(Base64::class)
+        }
+    }
+
+    @DisplayName("getChallengeParameters maps cReq fields correctly")
+    @Test
+    fun getChallengeParametersMapsFields() {
+        mockkStatic(Base64::class)
+        try {
+            val json = """{"messageType":"CReq","messageVersion":"2.2.0","threeDSServerTransID":"srv-123","acsTransID":"acs-456"}"""
+            every { Base64.decode(any<String>(), any()) } returns json.toByteArray()
+            val receipt =
+                Receipt(
+                    cReq = "dummybase64",
+                    acsReferenceNumber = "ref-001",
+                    acsSignedContent = "signed-content",
+                )
+            val challengeParams = receipt.getChallengeParameters()
+            assertEquals("srv-123", challengeParams.threeDSServerTransactionID)
+            assertEquals("acs-456", challengeParams.acsTransactionID)
+        } finally {
+            unmockkStatic(Base64::class)
+        }
     }
 }
