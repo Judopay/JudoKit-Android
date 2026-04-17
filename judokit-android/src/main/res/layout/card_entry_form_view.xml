@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/numberTextInputEditText"
+                    android:id="@+id/card_number"
                     style="@style/JudoTheme.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/nameTextInputEditText"
+                    android:id="@+id/cardholder_name"
                     style="@style/JudoTheme.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
                     android:layout_height="match_parent">
 
                     <EditText
-                        android:id="@+id/expirationDateTextInputEditText"
+                        android:id="@+id/expiry_date"
                         style="@style/JudoTheme.TextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -118,7 +118,7 @@
                     android:layout_height="match_parent">
 
                     <EditText
-                        android:id="@+id/securityNumberTextInputEditText"
+                        android:id="@+id/security_code"
                         style="@style/JudoTheme.TextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -148,7 +148,7 @@
                     android:visibility="gone">
 
                     <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                        android:id="@+id/countryTextInputEditText"
+                        android:id="@+id/country_field"
                         style="@style/JudoTheme.TextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -205,7 +205,7 @@
                 android:id="@+id/flow3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="cardEntrySubmitButton,secureTransmissionTextView"
+                app:constraint_referenced_ids="submit_button,secureTransmissionTextView"
                 app:flow_horizontalAlign="start"
                 app:flow_horizontalBias="0"
                 app:flow_maxElementsWrap="1"
@@ -218,7 +218,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
             <com.judopay.judokit.android.ui.common.ProgressButton
-                android:id="@+id/cardEntrySubmitButton"
+                android:id="@+id/submit_button"
                 style="@style/JudoTheme.BlackRoundedButton"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
