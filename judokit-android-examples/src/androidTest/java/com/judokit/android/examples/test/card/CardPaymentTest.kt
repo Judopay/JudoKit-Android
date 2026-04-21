@@ -132,7 +132,7 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
     }
 
@@ -162,7 +162,7 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -185,7 +185,7 @@ class CardPaymentTest {
             "123",
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -208,7 +208,7 @@ class CardPaymentTest {
             "123",
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -229,7 +229,7 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -258,7 +258,7 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -279,7 +279,7 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -311,7 +311,7 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -357,7 +357,7 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -399,7 +399,7 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -425,7 +425,7 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -451,7 +451,7 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -476,7 +476,7 @@ class CardPaymentTest {
         Thread.sleep(1000)
 
         try {
-            onView(withId(R.id.addButton))
+            onView(withId(R.id.add_card_button))
                 .check(matches(isEnabled()))
                 .perform(click())
 
@@ -487,19 +487,19 @@ class CardPaymentTest {
                 CARD_SECURITY_CODE,
             )
 
-            onView(withId(R.id.cardEntrySubmitButton))
+            onView(withId(R.id.submit_button))
                 .check(matches(isEnabled()))
                 .perform(click())
 
             Thread.sleep(1000)
 
-            onView(withId(R.id.payButton))
+            onView(withId(R.id.submit_button))
                 .perform(click())
 
-            onView(withId(R.id.securityNumberTextInputEditText))
+            onView(withId(R.id.security_code))
                 .perform(clearText(), typeText(CARD_SECURITY_CODE))
 
-            onView(withId(R.id.cardEntrySubmitButton))
+            onView(withId(R.id.submit_button))
                 .check(matches(isEnabled()))
                 .perform(click())
 
@@ -507,13 +507,13 @@ class CardPaymentTest {
 
             assertReceiptObject("", "", "Success", "Payment")
         } catch (e: NoMatchingViewException) {
-            onView(withId(R.id.payButton))
+            onView(withId(R.id.submit_button))
                 .perform(click())
 
-            onView(withId(R.id.securityNumberTextInputEditText))
+            onView(withId(R.id.security_code))
                 .perform(clearText(), typeText(CARD_SECURITY_CODE))
 
-            onView(withId(R.id.cardEntrySubmitButton))
+            onView(withId(R.id.submit_button))
                 .check(matches(isEnabled()))
                 .perform(click())
 
@@ -540,7 +540,7 @@ class CardPaymentTest {
         Thread.sleep(1000)
 
         try {
-            onView(withId(R.id.addButton))
+            onView(withId(R.id.add_card_button))
                 .check(matches(isEnabled()))
                 .perform(click())
 
@@ -551,19 +551,19 @@ class CardPaymentTest {
                 CARD_SECURITY_CODE,
             )
 
-            onView(withId(R.id.cardEntrySubmitButton))
+            onView(withId(R.id.submit_button))
                 .check(matches(isEnabled()))
                 .perform(click())
 
             Thread.sleep(1000)
 
-            onView(withId(R.id.payButton))
+            onView(withId(R.id.submit_button))
                 .perform(click())
 
-            onView(withId(R.id.securityNumberTextInputEditText))
+            onView(withId(R.id.security_code))
                 .perform(clearText(), typeText(CARD_SECURITY_CODE))
 
-            onView(withId(R.id.cardEntrySubmitButton))
+            onView(withId(R.id.submit_button))
                 .check(matches(isEnabled()))
                 .perform(click())
 
@@ -571,13 +571,13 @@ class CardPaymentTest {
 
             assertReceiptObject("", "", "Success", "PreAuth")
         } catch (e: NoMatchingViewException) {
-            onView(withId(R.id.payButton))
+            onView(withId(R.id.submit_button))
                 .perform(click())
 
-            onView(withId(R.id.securityNumberTextInputEditText))
+            onView(withId(R.id.security_code))
                 .perform(clearText(), typeText(CARD_SECURITY_CODE))
 
-            onView(withId(R.id.cardEntrySubmitButton))
+            onView(withId(R.id.submit_button))
                 .check(matches(isEnabled()))
                 .perform(click())
 
@@ -594,7 +594,7 @@ class CardPaymentTest {
 
         Thread.sleep(5000)
 
-        doOnView(withId(R.id.addButton), click())
+        doOnView(withId(R.id.add_card_button), click())
 
         enterPaymentSheetDetails(
             "4222 0000 0122 7408",
@@ -603,20 +603,20 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
         Thread.sleep(10000)
 
-        onView(withId(R.id.subTitle))
+        onView(withId(R.id.sub_title))
             .check(matches(withText("Visa Ending 7408")))
 
-        onView(withId(R.id.editButton))
+        onView(withId(R.id.edit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
-        onView(withId(R.id.removeCardIcon))
+        onView(withId(R.id.remove_card_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -643,7 +643,7 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -658,7 +658,7 @@ class CardPaymentTest {
             VALID_POSTCODE,
         )
 
-        onView(withId(R.id.billingDetailsSubmitButton))
+        onView(withId(R.id.billing_details_submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -683,7 +683,7 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -698,10 +698,10 @@ class CardPaymentTest {
             INVALID_POSTCODE,
         )
 
-        onView(withId(R.id.cityTextInputEditText))
+        onView(withId(R.id.cardholder_city_field))
             .perform(click())
 
-        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        onView(allOf(withId(R.id.error_text_view), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
             .check(matches(withText(INVALID_POSTCODE_LABEL)))
 
         toggleBillingInfoSetting(false)
@@ -721,7 +721,7 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -736,10 +736,10 @@ class CardPaymentTest {
             INVALID_POSTCODE,
         )
 
-        onView(withId(R.id.cityTextInputEditText))
+        onView(withId(R.id.cardholder_city_field))
             .perform(click())
 
-        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        onView(allOf(withId(R.id.error_text_view), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
             .check(matches(withText(INVALID_ZIPCODE_LABEL)))
 
         toggleBillingInfoSetting(false)
@@ -759,7 +759,7 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -774,10 +774,10 @@ class CardPaymentTest {
             INVALID_POSTCODE,
         )
 
-        onView(withId(R.id.cityTextInputEditText))
+        onView(withId(R.id.cardholder_city_field))
             .perform(click())
 
-        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        onView(allOf(withId(R.id.error_text_view), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
             .check(matches(withText(INVALID_POSTCODE_LABEL)))
 
         toggleBillingInfoSetting(false)
@@ -797,45 +797,45 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
         Thread.sleep(1000)
 
-        fillTextField(R.id.emailTextInputEditText, SPECIAL_CHARACTERS)
+        fillTextField(R.id.cardholder_email_field, SPECIAL_CHARACTERS)
         closeSoftKeyboard()
-        onView(withId(R.id.cityTextInputEditText)).perform(click())
+        onView(withId(R.id.cardholder_city_field)).perform(click())
         closeSoftKeyboard()
         Thread.sleep(500)
-        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        onView(allOf(withId(R.id.error_text_view), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
             .check(matches(withText(INVALID_EMAIL_LABEL)))
         if (isTablet()) {
             closeSoftKeyboard()
         }
-        fillTextField(R.id.emailTextInputEditText, VALID_EMAIL)
+        fillTextField(R.id.cardholder_email_field, VALID_EMAIL)
 
-        selectFromMultipleAndEnterText(R.id.countryTextInputEditText, VALID_COUNTRY)
+        selectFromMultipleAndEnterText(R.id.country_field, VALID_COUNTRY)
         onView(withText(VALID_COUNTRY)).perform(click())
-        fillTextField(R.id.mobileNumberTextInputEditText, VALID_COUNTRY_CODE)
-        onView(withId(R.id.cityTextInputEditText)).perform(click())
+        fillTextField(R.id.cardholder_phone_number_field, VALID_COUNTRY_CODE)
+        onView(withId(R.id.cardholder_city_field)).perform(click())
         Thread.sleep(1000)
-        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        onView(allOf(withId(R.id.error_text_view), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
             .check(matches(withText(INVALID_PHONE_LABEL)))
         Thread.sleep(500)
-        fillTextField(R.id.mobileNumberTextInputEditText, VALID_MOBILE)
+        fillTextField(R.id.cardholder_phone_number_field, VALID_MOBILE)
 
-        fillTextField(R.id.addressLine1TextInputEditText, SPECIAL_CHARACTERS)
-        onView(withId(R.id.cityTextInputEditText)).perform(click())
-        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        fillTextField(R.id.cardholder_address_line_1_field, SPECIAL_CHARACTERS)
+        onView(withId(R.id.cardholder_city_field)).perform(click())
+        onView(allOf(withId(R.id.error_text_view), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
             .check(matches(withText(INVALID_ADDRESS_LABEL)))
-        fillTextField(R.id.addressLine1TextInputEditText, VALID_ADDRESS)
+        fillTextField(R.id.cardholder_address_line_1_field, VALID_ADDRESS)
 
-        fillTextField(R.id.cityTextInputEditText, SPECIAL_CHARACTERS)
-        onView(withId(R.id.addressLine1TextInputEditText)).perform(click())
-        onView(allOf(withId(R.id.errorTextView), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        fillTextField(R.id.cardholder_city_field, SPECIAL_CHARACTERS)
+        onView(withId(R.id.cardholder_address_line_1_field)).perform(click())
+        onView(allOf(withId(R.id.error_text_view), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
             .check(matches(withText(INVALID_CITY_LABEL)))
-        fillTextField(R.id.cityTextInputEditText, VALID_CITY)
+        fillTextField(R.id.cardholder_city_field, VALID_CITY)
 
         toggleBillingInfoSetting(false)
     }
@@ -858,7 +858,7 @@ class CardPaymentTest {
             WRONG_CV2,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -887,7 +887,7 @@ class CardPaymentTest {
             WRONG_CV2,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -916,7 +916,7 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -941,7 +941,7 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -957,7 +957,7 @@ class CardPaymentTest {
             "Kerala",
         )
 
-        onView(withId(R.id.billingDetailsSubmitButton))
+        onView(withId(R.id.billing_details_submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -982,7 +982,7 @@ class CardPaymentTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -998,7 +998,7 @@ class CardPaymentTest {
             "Sichuan Sheng",
         )
 
-        onView(withId(R.id.billingDetailsSubmitButton))
+        onView(withId(R.id.billing_details_submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
