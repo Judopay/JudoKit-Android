@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/emailTextInputEditText"
+                    android:id="@+id/cardholder_email_field"
                     style="@style/JudoTheme.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content">
 
                 <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                    android:id="@+id/countryTextInputEditText"
+                    android:id="@+id/country_field"
                     style="@style/JudoTheme.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content">
 
                 <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                    android:id="@+id/administrativeDivisionTextInputEditText"
+                    android:id="@+id/administrative_division_field"
                     style="@style/JudoTheme.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

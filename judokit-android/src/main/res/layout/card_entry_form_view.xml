@@ -173,7 +173,7 @@
                     android:visibility="gone">
 
                     <EditText
-                        android:id="@+id/postcodeTextInputEditText"
+                        android:id="@+id/postcode_field"
                         style="@style/JudoTheme.TextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
