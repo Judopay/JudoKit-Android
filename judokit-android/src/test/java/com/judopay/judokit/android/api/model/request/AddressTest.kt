@@ -20,7 +20,7 @@ internal class AddressTest {
                 .setBillingCountry("GB")
                 .setPostCode("SW1A 2AA")
                 .setCountryCode(826)
-                .setAdministrativeDivision("England")
+                .setAdministrativeDivision("Greater London")
                 .build()
 
         assertEquals("10 Downing Street", address.line1)
@@ -30,7 +30,7 @@ internal class AddressTest {
         assertEquals("GB", address.billingCountry)
         assertEquals("SW1A 2AA", address.postCode)
         assertEquals(826, address.countryCode)
-        assertEquals("England", address.administrativeDivision)
+        assertEquals("Greater London", address.administrativeDivision)
     }
 
     @Test

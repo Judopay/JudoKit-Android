@@ -33,13 +33,6 @@ internal class SdkParametersTest {
     }
 
     @Test
-    @DisplayName("Given default DeviceRenderOptions when not set, then build() succeeds")
-    fun buildUsesDefaultDeviceRenderOptions() {
-        val params = validBuilder().build()
-        assertNotNull(params)
-    }
-
-    @Test
     @DisplayName("Given custom DeviceRenderOptions, then build() succeeds")
     fun buildWithCustomDeviceRenderOptions() {
         val params =

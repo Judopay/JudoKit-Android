@@ -51,6 +51,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import retrofit2.await
 import java.util.UUID
+import androidx.core.content.edit
 
 const val LAST_USED_WIDGET_TYPE_KEY = "LAST_USED_WIDGET_TYPE"
 
@@ -114,7 +115,7 @@ class DemoFeatureListViewModel(
             val widgetType = feature.toWidgetType()
             val judo = buildJudo(widgetType)
             currentJudo = judo
-            prefs.edit().putString(LAST_USED_WIDGET_TYPE_KEY, widgetType.name).apply()
+            prefs.edit { putString(LAST_USED_WIDGET_TYPE_KEY, widgetType.name) }
 
             val effect =
                 when {
@@ -124,10 +125,12 @@ class DemoFeatureListViewModel(
                     else -> DemoFeatureListEffect.LaunchJudoWidget(judo)
                 }
             _effects.tryEmit(effect)
-        } catch (e: IllegalArgumentException) {
-            _effects.tryEmit(DemoFeatureListEffect.ShowError(e.message ?: "An error occurred, please check your settings."))
-        } catch (e: IllegalStateException) {
-            _effects.tryEmit(DemoFeatureListEffect.ShowError(e.message ?: "An error occurred, please check your settings."))
+        } catch (e: Exception) {
+            when (e) {
+                is IllegalArgumentException, is IllegalStateException ->
+                    _effects.tryEmit(DemoFeatureListEffect.ShowError(e.message ?: "An error occurred, please check your settings."))
+                else -> throw e
+            }
         }
     }
 
@@ -135,11 +138,7 @@ class DemoFeatureListViewModel(
         when (result) {
             is JudoPaymentResult.Success -> {
                 val judoResult = result.result
-                if (judoResult != null) {
-                    _effects.tryEmit(DemoFeatureListEffect.ShowResult(judoResult.toResult()))
-                } else {
-                    _effects.tryEmit(DemoFeatureListEffect.ShowError("Unexpected null result object"))
-                }
+                _effects.tryEmit(DemoFeatureListEffect.ShowResult(judoResult.toResult()))
             }
             is JudoPaymentResult.Error -> emitPaymentError(result.error)
             is JudoPaymentResult.UserCancelled -> emitPaymentError(result.error)
