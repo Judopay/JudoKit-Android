@@ -319,9 +319,10 @@ internal class CardTransactionRepositoryTest {
                 every { recommendationService.fetchOptimizationData(any(), any()) } returns recommendationCall
                 coEvery { recommendationCall.await() } returns response
                 every { response.isValid } returns false
-                every { judo.recommendationConfiguration } returns mockk(relaxed = true) {
-                    every { shouldHaltTransactionInCaseOfAnyError } returns false
-                }
+                every { judo.recommendationConfiguration } returns
+                    mockk(relaxed = true) {
+                        every { shouldHaltTransactionInCaseOfAnyError } returns false
+                    }
                 every { receipt.isSoftDeclined } returns false
                 every { receipt.isThreeDSecureTwoRequired } returns false
                 every { details.toPaymentRequest(any(), any(), any()) } returns mockk(relaxed = true)

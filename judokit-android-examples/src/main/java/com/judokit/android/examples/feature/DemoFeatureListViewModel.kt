@@ -3,6 +3,7 @@ package com.judokit.android.examples.feature
 import android.annotation.SuppressLint
 import android.app.Application
 import android.os.Bundle
+import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
@@ -51,7 +52,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import retrofit2.await
 import java.util.UUID
-import androidx.core.content.edit
 
 const val LAST_USED_WIDGET_TYPE_KEY = "LAST_USED_WIDGET_TYPE"
 

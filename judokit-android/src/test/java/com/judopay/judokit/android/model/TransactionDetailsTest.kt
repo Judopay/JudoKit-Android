@@ -1,11 +1,11 @@
 package com.judopay.judokit.android.model
 
 import com.google.common.truth.Truth.assertThat
+import com.google.gson.Gson
 import com.judopay.judo3ds2.transaction.Transaction
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
-import com.google.gson.Gson
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
