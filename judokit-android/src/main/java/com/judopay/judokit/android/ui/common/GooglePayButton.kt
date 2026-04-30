@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import androidx.core.content.withStyledAttributes
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.databinding.GooglePayButtonBinding
 
@@ -32,17 +33,18 @@ class GooglePayButton
         private val binding = GooglePayButtonBinding.inflate(LayoutInflater.from(context), this, true)
 
         init {
-            val typedArray = context.obtainStyledAttributes(attrs, R.styleable.GooglePayButton)
-            for (i in 0 until typedArray.indexCount) {
-                when (val at = typedArray.getIndex(i)) {
-                    R.styleable.GooglePayButton_style -> {
-                        val value = typedArray.getInt(at, 0)
-                        style = GooglePayButtonStyle.values().firstOrNull { it.ordinal == value }
-                            ?: GooglePayButtonStyle.BLACK
+            context.withStyledAttributes(attrs, R.styleable.GooglePayButton) {
+                for (i in 0 until indexCount) {
+                    when (val at = getIndex(i)) {
+                        R.styleable.GooglePayButton_style -> {
+                            val value = getInt(at, 0)
+                            style =
+                                GooglePayButtonStyle.values().firstOrNull { it.ordinal == value }
+                                    ?: GooglePayButtonStyle.BLACK
+                        }
                     }
                 }
             }
-            typedArray.recycle()
 
             setGoogleButtonOffset(binding.googlePayButtonContainer, dpToPx(NO_SHADOW_MARGIN_OFFSET_DP))
         }

@@ -51,19 +51,32 @@ import com.judokit.android.examples.test.card.BillingInfo.VALID_COUNTRY_CODE
 import com.judokit.android.examples.test.card.BillingInfo.VALID_EMAIL
 import com.judokit.android.examples.test.card.BillingInfo.VALID_MOBILE
 import com.judokit.android.examples.test.card.BillingInfo.VALID_POSTCODE
+import com.judokit.android.examples.test.card.CardDetails.CARDHOLDER_NAME
 import com.judokit.android.examples.test.card.CardDetails.CARD_EXPIRY
 import com.judokit.android.examples.test.card.CardDetails.CARD_NUMBER
 import com.judokit.android.examples.test.card.CardDetails.CARD_SECURITY_CODE
+import com.judokit.android.examples.test.card.CardDetails.FRICTIONLESS_SUCCESSFUL
 import com.judokit.android.examples.test.card.CardDetails.WRONG_CV2
-import com.judokit.android.examples.test.card.CardPaymentTest.ValidCardDetails.CARDHOLDER_NAME
 import com.judokit.android.examples.test.card.FeaturesList.CHECK_CARD_LABEL
 import com.judokit.android.examples.test.card.FeaturesList.PAYMENT_METHODS_LABEL
 import com.judokit.android.examples.test.card.FeaturesList.PAY_WITH_CARD_LABEL
 import com.judokit.android.examples.test.card.FeaturesList.PREAUTH_METHODS_LABEL
 import com.judokit.android.examples.test.card.FeaturesList.PREAUTH_WITH_CARD_LABEL
 import com.judokit.android.examples.test.card.FeaturesList.TOKEN_PAYMENTS_LABEL
+import com.judokit.android.examples.test.card.Other.AUTH_CODE_PREFIX
 import com.judokit.android.examples.test.card.Other.CANCELLED_PAYMENT_TOAST
 import com.judokit.android.examples.test.card.Other.CANCEL_BUTTON
+import com.judokit.android.examples.test.card.Other.CARD_DECLINED_CV2_MSG
+import com.judokit.android.examples.test.card.Other.COMPLETE_BUTTON
+import com.judokit.android.examples.test.card.Other.THREE_DS_AUTH_FAILED_MSG
+import com.judokit.android.examples.test.card.Results.CHECK_CARD
+import com.judokit.android.examples.test.card.Results.DECLINED
+import com.judokit.android.examples.test.card.Results.ERROR
+import com.judokit.android.examples.test.card.Results.PAYMENT
+import com.judokit.android.examples.test.card.Results.PRE_AUTH
+import com.judokit.android.examples.test.card.Results.SUCCESS
+import com.judokit.android.examples.test.card.Settings.CHALLENGE_NO_PREFERENCE
+import com.judokit.android.examples.test.card.Settings.SCA_LOW_VALUE
 import com.judokit.android.examples.test.card.annotations.SmokeTest
 import com.judopay.judokit.android.R
 import org.hamcrest.Matchers.allOf
@@ -80,13 +93,6 @@ class CardPaymentTest {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS)
         }
-    }
-
-    object ValidCardDetails {
-        const val CARD_NUMBER = "4976 3500 0000 6891"
-        const val CARDHOLDER_NAME = "Test User"
-        const val CARD_EXPIRY = "12/25"
-        const val CARD_SECURITY_CODE = "341"
     }
 
     @get:Rule
@@ -166,11 +172,11 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        assertOnView(withText("COMPLETE"))
+        assertOnView(withText(COMPLETE_BUTTON))
 
         clickCompleteOn3DS2Screen()
 
-        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+        assertReceiptObject(AUTH_CODE_PREFIX, "", SUCCESS, PAYMENT)
     }
 
     @Test
@@ -189,11 +195,11 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        assertOnView(withText("COMPLETE"))
+        assertOnView(withText(COMPLETE_BUTTON))
 
         clickCompleteOn3DS2Screen()
 
-        assertReceiptObject("", "", "Declined", "Payment")
+        assertReceiptObject("", "", DECLINED, PAYMENT)
     }
 
     @Test
@@ -214,7 +220,7 @@ class CardPaymentTest {
 
         clickCompleteOn3DS2Screen()
 
-        assertReceiptObject("The gateway reported an error", "", "Error", "Payment")
+        assertReceiptObject("The gateway reported an error", "", ERROR, PAYMENT)
     }
 
     @Test
@@ -242,7 +248,7 @@ class CardPaymentTest {
         awaitActivityThenRun(ResultActivity::class.java.name) {
             onView(withId(R.id.recyclerView))
                 .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(2))
-                .check(matches(hasDescendant(withText("Unable to process transaction. Card authentication failed with 3DS Server."))))
+                .check(matches(hasDescendant(withText(THREE_DS_AUTH_FAILED_MSG))))
         }
     }
 
@@ -264,7 +270,7 @@ class CardPaymentTest {
 
         clickCompleteOn3DS2Screen()
 
-        assertReceiptObject("AuthCode: ", "", "Success", "PreAuth")
+        assertReceiptObject(AUTH_CODE_PREFIX, "", SUCCESS, PRE_AUTH)
     }
 
     @Test
@@ -285,7 +291,7 @@ class CardPaymentTest {
 
         clickCompleteOn3DS2Screen()
 
-        assertReceiptObject("AuthCode: ", "", "Success", "CheckCard")
+        assertReceiptObject(AUTH_CODE_PREFIX, "", SUCCESS, CHECK_CARD)
     }
 
     @Test
@@ -331,7 +337,7 @@ class CardPaymentTest {
 
         clickCompleteOn3DS2Screen()
 
-        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+        assertReceiptObject(AUTH_CODE_PREFIX, "", SUCCESS, PAYMENT)
     }
 
     @Test
@@ -377,7 +383,7 @@ class CardPaymentTest {
 
         clickCompleteOn3DS2Screen()
 
-        assertReceiptObject("AuthCode: ", "", "Success", "PreAuth")
+        assertReceiptObject(AUTH_CODE_PREFIX, "", SUCCESS, PRE_AUTH)
     }
 
     @Test
@@ -385,7 +391,7 @@ class CardPaymentTest {
         sharedPrefs
             .edit()
             .apply {
-                putString("challengeRequestIndicator", "NO_PREFERENCE")
+                putString("challengeRequestIndicator", CHALLENGE_NO_PREFERENCE)
             }.commit()
 
         onView(withText(PAY_WITH_CARD_LABEL))
@@ -394,7 +400,7 @@ class CardPaymentTest {
 
         enterPaymentSheetDetails(
             CARD_NUMBER,
-            "Frictionless Successful",
+            FRICTIONLESS_SUCCESSFUL,
             CARD_EXPIRY,
             CARD_SECURITY_CODE,
         )
@@ -403,7 +409,7 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+        assertReceiptObject(AUTH_CODE_PREFIX, "", SUCCESS, PAYMENT)
     }
 
     @Test
@@ -411,7 +417,7 @@ class CardPaymentTest {
         sharedPrefs
             .edit()
             .apply {
-                putString("challengeRequestIndicator", "NO_PREFERENCE")
+                putString("challengeRequestIndicator", CHALLENGE_NO_PREFERENCE)
             }.commit()
 
         onView(withText(PAY_WITH_CARD_LABEL))
@@ -429,7 +435,7 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+        assertReceiptObject(AUTH_CODE_PREFIX, "", SUCCESS, PAYMENT)
     }
 
     @Test
@@ -437,7 +443,7 @@ class CardPaymentTest {
         sharedPrefs
             .edit()
             .apply {
-                putString("challengeRequestIndicator", "NO_PREFERENCE")
+                putString("challengeRequestIndicator", CHALLENGE_NO_PREFERENCE)
             }.commit()
 
         onView(withText(PAY_WITH_CARD_LABEL))
@@ -458,7 +464,7 @@ class CardPaymentTest {
         awaitActivityThenRun(ResultActivity::class.java.name) {
             onView(withId(R.id.recyclerView))
                 .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(2))
-                .check(matches(hasDescendant(withText("Unable to process transaction. Card authentication failed with 3DS Server."))))
+                .check(matches(hasDescendant(withText(THREE_DS_AUTH_FAILED_MSG))))
         }
     }
 
@@ -505,7 +511,7 @@ class CardPaymentTest {
 
             clickCompleteOn3DS2Screen()
 
-            assertReceiptObject("", "", "Success", "Payment")
+            assertReceiptObject("", "", SUCCESS, PAYMENT)
         } catch (e: NoMatchingViewException) {
             onView(withId(R.id.payButton))
                 .perform(click())
@@ -519,7 +525,7 @@ class CardPaymentTest {
 
             clickCompleteOn3DS2Screen()
 
-            assertReceiptObject("", "", "Success", "Payment")
+            assertReceiptObject("", "", SUCCESS, PAYMENT)
         }
     }
 
@@ -569,7 +575,7 @@ class CardPaymentTest {
 
             clickCompleteOn3DS2Screen()
 
-            assertReceiptObject("", "", "Success", "PreAuth")
+            assertReceiptObject("", "", SUCCESS, PRE_AUTH)
         } catch (e: NoMatchingViewException) {
             onView(withId(R.id.payButton))
                 .perform(click())
@@ -583,7 +589,7 @@ class CardPaymentTest {
 
             clickCompleteOn3DS2Screen()
 
-            assertReceiptObject("", "", "Success", "PreAuth")
+            assertReceiptObject("", "", SUCCESS, PRE_AUTH)
         }
     }
 
@@ -664,7 +670,7 @@ class CardPaymentTest {
 
         clickCompleteOn3DS2Screen()
 
-        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+        assertReceiptObject(AUTH_CODE_PREFIX, "", SUCCESS, PAYMENT)
 
         toggleBillingInfoSetting(false)
     }
@@ -845,15 +851,15 @@ class CardPaymentTest {
         sharedPrefs
             .edit()
             .apply {
-                putString("challengeRequestIndicator", "NO_PREFERENCE")
-                putString("scaExemption", "LOW_VALUE")
+                putString("challengeRequestIndicator", CHALLENGE_NO_PREFERENCE)
+                putString("scaExemption", SCA_LOW_VALUE)
             }.commit()
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
 
         enterPaymentSheetDetails(
             CARD_NUMBER,
-            "Frictionless Successful",
+            FRICTIONLESS_SUCCESSFUL,
             CARD_EXPIRY,
             WRONG_CV2,
         )
@@ -862,11 +868,11 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        assertOnView(withText("COMPLETE"))
+        assertOnView(withText(COMPLETE_BUTTON))
 
         clickCompleteOn3DS2Screen()
 
-        assertReceiptObject("Card declined: CV2 policy", "", "Declined", "Payment")
+        assertReceiptObject(CARD_DECLINED_CV2_MSG, "", DECLINED, PAYMENT)
     }
 
     @Test
@@ -874,15 +880,15 @@ class CardPaymentTest {
         sharedPrefs
             .edit()
             .apply {
-                putString("challengeRequestIndicator", "NO_PREFERENCE")
-                putString("scaExemption", "LOW_VALUE")
+                putString("challengeRequestIndicator", CHALLENGE_NO_PREFERENCE)
+                putString("scaExemption", SCA_LOW_VALUE)
             }.commit()
         onView(withText(PREAUTH_WITH_CARD_LABEL))
             .perform(click())
 
         enterPaymentSheetDetails(
             CARD_NUMBER,
-            "Frictionless Successful",
+            FRICTIONLESS_SUCCESSFUL,
             CARD_EXPIRY,
             WRONG_CV2,
         )
@@ -891,11 +897,11 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        assertOnView(withText("COMPLETE"))
+        assertOnView(withText(COMPLETE_BUTTON))
 
         clickCompleteOn3DS2Screen()
 
-        assertReceiptObject("Card declined: CV2 policy", "", "Declined", "PreAuth")
+        assertReceiptObject(CARD_DECLINED_CV2_MSG, "", DECLINED, PRE_AUTH)
     }
 
     @Test
@@ -920,7 +926,7 @@ class CardPaymentTest {
             .check(matches(isEnabled()))
             .perform(click())
 
-        assertOnView(withText("COMPLETE"))
+        assertOnView(withText(COMPLETE_BUTTON))
 
         clickCompleteOn3DS2Screen()
 
@@ -963,7 +969,7 @@ class CardPaymentTest {
 
         clickCompleteOn3DS2Screen()
 
-        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+        assertReceiptObject(AUTH_CODE_PREFIX, "", SUCCESS, PAYMENT)
 
         toggleBillingInfoSetting(false)
     }
@@ -1004,7 +1010,7 @@ class CardPaymentTest {
 
         clickCompleteOn3DS2Screen()
 
-        assertReceiptObject("AuthCode: ", "", "Success", "Payment")
+        assertReceiptObject(AUTH_CODE_PREFIX, "", SUCCESS, PAYMENT)
 
         toggleBillingInfoSetting(false)
     }

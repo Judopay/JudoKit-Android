@@ -256,7 +256,7 @@ class BillingDetailsFormView
         private fun setAddAddressButtonClickListener() {
             binding.addAddressLineButtonText.text = context.getString(R.string.jp_add_address_line, 2)
             binding.addAddressLineButton.setOnClickListener {
-                if (binding.addressLine2TextInputLayout.visibility == VISIBLE) {
+                if (binding.addressLine2TextInputLayout.isVisible) {
                     binding.addressLine3TextInputLayout.visibility = VISIBLE
                     binding.addAddressLineButton.visibility = GONE
                 } else {

@@ -6,7 +6,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.Rect
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
@@ -25,6 +24,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.ViewAnimator
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
 import androidx.core.widget.NestedScrollView
@@ -206,7 +206,7 @@ internal fun EditText.moveCursorToEnd() {
 
 @Suppress("MagicNumber")
 internal fun Window.applyDialogStyling() {
-    setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
     requestFeature(Window.FEATURE_NO_TITLE)
     setFlags(
         WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
