@@ -28,7 +28,7 @@ private fun buildEventString(
 internal fun CompletionEvent.toFormattedEventString(): String =
     buildEventString(
         ThreeDSSDKChallengeStatus.COMPLETED,
-        "SDKTransactionID" to SDKTransactionID,
+        "SDKTransactionID" to sdkTransactionID,
         "transactionStatus" to transactionStatus,
     )
 

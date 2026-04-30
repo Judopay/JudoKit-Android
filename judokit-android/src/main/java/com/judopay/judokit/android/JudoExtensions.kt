@@ -42,6 +42,7 @@ import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTw
 import com.judopay.judokit.android.db.JudoRoomDatabase
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.model.ApiEnvironment
+import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.googlepay.GooglePayAddress
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_500
 import com.judopay.judokit.android.ui.common.parcelable
@@ -429,3 +430,36 @@ fun ViewAnimator.initAutofillAndAccessibilityOnAttach() {
         it.toggleAutofillAndAccessibilityForVisibleChild()
     }
 }
+
+internal fun Judo.withPaymentWidgetType(type: PaymentWidgetType): Judo =
+    Judo(
+        judoId = judoId,
+        authorization = authorization,
+        isSandboxed = isSandboxed,
+        amount = amount,
+        reference = reference,
+        uiConfiguration = uiConfiguration,
+        paymentMethods = paymentMethods,
+        supportedCardNetworks = supportedCardNetworks,
+        primaryAccountDetails = primaryAccountDetails,
+        googlePayConfiguration = googlePayConfiguration,
+        paymentWidgetType = type,
+        address = address,
+        initialRecurringPayment = initialRecurringPayment,
+        networkTimeout = networkTimeout,
+        challengeRequestIndicator = challengeRequestIndicator,
+        scaExemption = scaExemption,
+        mobileNumber = mobileNumber,
+        phoneCountryCode = phoneCountryCode,
+        emailAddress = emailAddress,
+        threeDSTwoMaxTimeout = threeDSTwoMaxTimeout,
+        threeDSTwoMessageVersion = threeDSTwoMessageVersion,
+        delayedAuthorisation = delayedAuthorisation,
+        allowIncrement = allowIncrement,
+        cardToken = cardToken,
+        cardSecurityCode = cardSecurityCode,
+        subProductInfo = subProductInfo,
+        recommendationConfiguration = recommendationConfiguration,
+        disableNetworkTokenisation = disableNetworkTokenisation,
+        extras = extras,
+    )

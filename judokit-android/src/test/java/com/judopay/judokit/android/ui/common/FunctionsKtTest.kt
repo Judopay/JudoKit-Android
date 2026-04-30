@@ -4,7 +4,8 @@ import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.ConfigurationCompat
@@ -161,69 +162,85 @@ internal class FunctionsKtTest {
         }
 
         @Test
-        @DisplayName("Returns false when activeNetworkInfo is null")
-        fun returnsFalseWhenActiveNetworkInfoIsNull() {
+        @DisplayName("Returns false when activeNetwork is null")
+        fun returnsFalseWhenActiveNetworkIsNull() {
             val context = mockk<Context>()
             val cm = mockk<ConnectivityManager>()
             every { context.getSystemService(Context.CONNECTIVITY_SERVICE) } returns cm
-            @Suppress("DEPRECATION")
-            every { cm.activeNetworkInfo } returns null
+            every { cm.activeNetwork } returns null
             assertFalse(isInternetAvailable(context))
         }
 
         @Test
-        @DisplayName("Returns true for WiFi network type")
+        @DisplayName("Returns false when NetworkCapabilities is null")
+        fun returnsFalseWhenNetworkCapabilitiesIsNull() {
+            val context = mockk<Context>()
+            val cm = mockk<ConnectivityManager>()
+            val network = mockk<Network>()
+            every { context.getSystemService(Context.CONNECTIVITY_SERVICE) } returns cm
+            every { cm.activeNetwork } returns network
+            every { cm.getNetworkCapabilities(network) } returns null
+            assertFalse(isInternetAvailable(context))
+        }
+
+        @Test
+        @DisplayName("Returns true for WiFi transport")
         fun returnsTrueForWifiNetwork() {
             val context = mockk<Context>()
             val cm = mockk<ConnectivityManager>()
-            val networkInfo = mockk<NetworkInfo>()
+            val network = mockk<Network>()
+            val capabilities = mockk<NetworkCapabilities>()
             every { context.getSystemService(Context.CONNECTIVITY_SERVICE) } returns cm
-            @Suppress("DEPRECATION")
-            every { cm.activeNetworkInfo } returns networkInfo
-            @Suppress("DEPRECATION")
-            every { networkInfo.type } returns ConnectivityManager.TYPE_WIFI
+            every { cm.activeNetwork } returns network
+            every { cm.getNetworkCapabilities(network) } returns capabilities
+            every { capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) } returns true
             assertTrue(isInternetAvailable(context))
         }
 
         @Test
-        @DisplayName("Returns true for mobile network type")
+        @DisplayName("Returns true for cellular transport")
         fun returnsTrueForMobileNetwork() {
             val context = mockk<Context>()
             val cm = mockk<ConnectivityManager>()
-            val networkInfo = mockk<NetworkInfo>()
+            val network = mockk<Network>()
+            val capabilities = mockk<NetworkCapabilities>()
             every { context.getSystemService(Context.CONNECTIVITY_SERVICE) } returns cm
-            @Suppress("DEPRECATION")
-            every { cm.activeNetworkInfo } returns networkInfo
-            @Suppress("DEPRECATION")
-            every { networkInfo.type } returns ConnectivityManager.TYPE_MOBILE
+            every { cm.activeNetwork } returns network
+            every { cm.getNetworkCapabilities(network) } returns capabilities
+            every { capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) } returns false
+            every { capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) } returns true
             assertTrue(isInternetAvailable(context))
         }
 
         @Test
-        @DisplayName("Returns true for ethernet network type")
+        @DisplayName("Returns true for ethernet transport")
         fun returnsTrueForEthernetNetwork() {
             val context = mockk<Context>()
             val cm = mockk<ConnectivityManager>()
-            val networkInfo = mockk<NetworkInfo>()
+            val network = mockk<Network>()
+            val capabilities = mockk<NetworkCapabilities>()
             every { context.getSystemService(Context.CONNECTIVITY_SERVICE) } returns cm
-            @Suppress("DEPRECATION")
-            every { cm.activeNetworkInfo } returns networkInfo
-            @Suppress("DEPRECATION")
-            every { networkInfo.type } returns ConnectivityManager.TYPE_ETHERNET
+            every { cm.activeNetwork } returns network
+            every { cm.getNetworkCapabilities(network) } returns capabilities
+            every { capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) } returns false
+            every { capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) } returns false
+            every { capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) } returns true
             assertTrue(isInternetAvailable(context))
         }
 
         @Test
-        @DisplayName("Returns false for an unrecognised network type")
+        @DisplayName("Returns false for an unrecognised transport type")
         fun returnsFalseForUnknownNetworkType() {
             val context = mockk<Context>()
             val cm = mockk<ConnectivityManager>()
-            val networkInfo = mockk<NetworkInfo>()
+            val network = mockk<Network>()
+            val capabilities = mockk<NetworkCapabilities>()
             every { context.getSystemService(Context.CONNECTIVITY_SERVICE) } returns cm
-            @Suppress("DEPRECATION")
-            every { cm.activeNetworkInfo } returns networkInfo
-            @Suppress("DEPRECATION")
-            every { networkInfo.type } returns -1
+            every { cm.activeNetwork } returns network
+            every { cm.getNetworkCapabilities(network) } returns capabilities
+            every { capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) } returns false
+            every { capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) } returns false
+            every { capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) } returns false
             assertFalse(isInternetAvailable(context))
         }
     }

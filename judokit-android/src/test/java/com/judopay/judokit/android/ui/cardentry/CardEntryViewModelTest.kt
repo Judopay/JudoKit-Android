@@ -8,6 +8,7 @@ import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.model.PaymentSessionAuthorization
 import com.judopay.judokit.android.api.model.response.CardToken
+import com.judopay.judokit.android.collectFlow
 import com.judopay.judokit.android.db.entity.TokenizedCardEntity
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.model.Amount
@@ -19,7 +20,6 @@ import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.JudoResult
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.Reference
-import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.UiConfiguration
 import com.judopay.judokit.android.model.typeId
 import com.judopay.judokit.android.service.CardTransactionRepository
@@ -35,9 +35,7 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -52,7 +50,7 @@ import java.nio.charset.StandardCharsets
 import java.util.Locale
 import java.util.UUID
 
-@Suppress("LargeClass")
+@Suppress("LargeClass", "DEPRECATION")
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class CardEntryViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
@@ -287,10 +285,7 @@ internal class CardEntryViewModelTest {
     @Test
     fun `Given send is called with SubmitCardEntryForm action, then update judoPaymentResult model`() =
         runTest {
-            val results = mutableListOf<JudoPaymentResult>()
-            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-                sut.paymentResultEffect.collect(results::add)
-            }
+            val results = collectFlow(sut.paymentResultEffect)
 
             sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
             sut.send(CardEntryAction.SubmitCardEntryForm)
@@ -312,10 +307,7 @@ internal class CardEntryViewModelTest {
                     CardEntryOptions(isPresentedFromPaymentMethods = true, cardNetwork = CardNetwork.VISA),
                     application,
                 )
-            val results = mutableListOf<TransactionDetails.Builder>()
-            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-                sut.cardEntryToPaymentMethodResultEffect.collect(results::add)
-            }
+            val results = collectFlow(sut.cardEntryToPaymentMethodResultEffect)
 
             sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(securityNumber = "333"), true))
             sut.send(CardEntryAction.SubmitCardEntryForm)
@@ -427,10 +419,7 @@ internal class CardEntryViewModelTest {
     @Test
     fun `Given send is called with PressBackButton action, then should navigate back to Card`() =
         runTest {
-            val results = mutableListOf<CardEntryNavigation>()
-            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-                sut.navigationEffect.collect(results::add)
-            }
+            val results = collectFlow(sut.navigationEffect)
 
             sut.send(CardEntryAction.PressBackButton)
             advanceUntilIdle()
@@ -460,10 +449,7 @@ internal class CardEntryViewModelTest {
                 )
             sut = CardEntryViewModel(judo, cardTransactionRepository, repository, CardEntryOptions(), application)
 
-            val navResults = mutableListOf<CardEntryNavigation>()
-            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-                sut.navigationEffect.collect(navResults::add)
-            }
+            val navResults = collectFlow(sut.navigationEffect)
 
             sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
             sut.send(CardEntryAction.SubmitCardEntryForm)
@@ -520,10 +506,7 @@ internal class CardEntryViewModelTest {
     @Test
     fun `Given send is called with SubmitBillingDetailsForm, then paymentResultEffect is emitted`() =
         runTest {
-            val results = mutableListOf<JudoPaymentResult>()
-            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-                sut.paymentResultEffect.collect(results::add)
-            }
+            val results = collectFlow(sut.paymentResultEffect)
 
             sut.send(CardEntryAction.SubmitBillingDetailsForm)
             advanceUntilIdle()
@@ -579,10 +562,7 @@ internal class CardEntryViewModelTest {
                     application,
                 )
 
-            val navResults = mutableListOf<CardEntryNavigation>()
-            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-                sut.navigationEffect.collect(navResults::add)
-            }
+            val navResults = collectFlow(sut.navigationEffect)
 
             sut.send(CardEntryAction.Initialize)
             advanceUntilIdle()
@@ -673,10 +653,7 @@ internal class CardEntryViewModelTest {
             val error = JudoPaymentResult.Error(JudoError(message = "network error"))
             coEvery { cardTransactionRepository.payment(any(), any()) } returns error
 
-            val results = mutableListOf<JudoPaymentResult>()
-            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-                sut.paymentResultEffect.collect(results::add)
-            }
+            val results = collectFlow(sut.paymentResultEffect)
 
             sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
             sut.send(CardEntryAction.SubmitCardEntryForm)
@@ -792,10 +769,7 @@ internal class CardEntryViewModelTest {
                     application,
                 )
 
-            val results = mutableListOf<TransactionDetails.Builder>()
-            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-                sut.cardEntryToPaymentMethodResultEffect.collect(results::add)
-            }
+            val results = collectFlow(sut.cardEntryToPaymentMethodResultEffect)
 
             val billingInput =
                 BillingDetailsInputModel(

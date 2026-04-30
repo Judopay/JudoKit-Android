@@ -10,7 +10,7 @@ An SDK to assist Android app developers to process payments on Android.
 
 ```kotlin
 dependencies {
-    implementation("com.judopay:judokit-android:6.2.0")
+    implementation("com.judopay:judokit-android:7.0.0")
 }
 ```
 
@@ -19,74 +19,26 @@ Below is a simple example to showcase the basic usage of the library.
 ```kotlin
 package com.judopay.myapplication
 
-import android.content.Context
-import android.content.Intent
-import android.os.Build
-import android.util.Log
 import android.os.Bundle
-import android.os.Parcelable
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.activity.result.contract.ActivityResultContract
-import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.Button
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.judopay.judokit.android.JUDO_ERROR
-import com.judopay.judokit.android.JUDO_OPTIONS
-import com.judopay.judokit.android.JUDO_RESULT
 import com.judopay.judokit.android.Judo
-import com.judopay.judokit.android.JudoActivity
-import com.judopay.judokit.android.PAYMENT_CANCELLED
-import com.judopay.judokit.android.PAYMENT_ERROR
-import com.judopay.judokit.android.PAYMENT_SUCCESS
-import com.judopay.judokit.android.model.JudoError
-import com.judopay.judokit.android.model.JudoResult
+import com.judopay.judokit.android.JudoActivityResultContracts
 import com.judopay.judokit.android.model.Amount
-import com.judopay.judokit.android.model.Reference
 import com.judopay.judokit.android.model.Currency
-import com.judopay.judokit.android.model.PaymentWidgetType
+import com.judopay.judokit.android.model.JudoPaymentResult
+import com.judopay.judokit.android.model.Reference
 import com.judopay.judokit.android.api.model.PaymentSessionAuthorization
-
-private const val GENERIC_ERROR = 0
-
-private inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? =
-    when {
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableExtra(key, T::class.java)
-        else -> getParcelableExtra(key) as? T
-    }
-
-private class JudoKitActivityResultContract : ActivityResultContract<Judo, Pair<JudoResult?, JudoError?>>() {
-    override fun createIntent(context: Context, input: Judo): Intent {
-        return Intent(context, JudoActivity::class.java).apply {
-            putExtra(JUDO_OPTIONS, input)
-        }
-    }
-
-    override fun parseResult(resultCode: Int, intent: Intent?): Pair<JudoResult?, JudoError?> {
-        val result = when (resultCode) {
-            PAYMENT_SUCCESS -> Pair(intent?.parcelable<JudoResult>(JUDO_RESULT), null)
-            PAYMENT_CANCELLED,
-            PAYMENT_ERROR,
-            -> Pair(null, intent?.parcelable<JudoError>(JUDO_ERROR))
-            else -> null
-        }
-
-        if (result == null || result.first == null && result.second == null) {
-            return Pair(null, JudoError(GENERIC_ERROR, "Unknown error"))
-        }
-
-        return result
-    }
-}
 
 class MainActivity : ComponentActivity() {
 
@@ -95,9 +47,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        judoLauncher = registerForActivityResult(JudoKitActivityResultContract()) { result ->
-            // Handle the result here
-            Log.i("JudoKit", "Result: $result")
+        judoLauncher = registerForActivityResult(JudoActivityResultContracts.CardPayment()) { result ->
+            when (result) {
+                is JudoPaymentResult.Success -> Log.i("JudoKit", "Payment succeeded: ${result.result}")
+                is JudoPaymentResult.Error -> Log.e("JudoKit", "Payment error: ${result.error}")
+                is JudoPaymentResult.UserCancelled -> Log.i("JudoKit", "Payment cancelled")
+            }
         }
 
         setContent {
@@ -110,9 +65,7 @@ class MainActivity : ComponentActivity() {
                         contentAlignment = Alignment.Center,
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        Button(
-                            onClick = this@MainActivity::invokeJudoKit,
-                        ) {
+                        Button(onClick = this@MainActivity::invokeJudoKit) {
                             Text("Invoke JudoKit")
                         }
                     }
@@ -138,7 +91,7 @@ class MainActivity : ComponentActivity() {
                 .setApiToken("token")
                 .build()
 
-            val judo = Judo.Builder(PaymentWidgetType.CARD_PAYMENT)
+            val judo = Judo.Builder()
                 .setJudoId("123456")
                 .setAmount(amount)
                 .setReference(reference)

@@ -38,6 +38,7 @@ sealed class JudoSharedAction {
     data object LoadGPayPaymentData : JudoSharedAction()
 }
 
+@Suppress("DEPRECATION")
 class JudoSharedViewModel(
     private val judo: Judo,
     private val googlePayService: JudoGooglePayService,

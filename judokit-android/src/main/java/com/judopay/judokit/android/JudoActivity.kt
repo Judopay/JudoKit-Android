@@ -1,6 +1,7 @@
 package com.judopay.judokit.android
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
@@ -36,7 +37,18 @@ import kotlinx.coroutines.launch
  * Internal Activity that hosts all Judo SDK payment flows. Not intended for direct use by SDK
  * consumers — launch via [JudoActivityResultContracts] instead.
  */
+@Suppress("DEPRECATION")
 class JudoActivity : AppCompatActivity() {
+    companion object {
+        fun createIntent(
+            context: Context,
+            judo: Judo,
+        ): Intent =
+            Intent(context, JudoActivity::class.java).apply {
+                putExtra(JUDO_OPTIONS, judo)
+            }
+    }
+
     private lateinit var viewModel: JudoSharedViewModel
 
     private val googlePayLauncher =

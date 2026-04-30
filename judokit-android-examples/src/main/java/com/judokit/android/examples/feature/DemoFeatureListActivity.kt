@@ -39,6 +39,7 @@ import kotlinx.coroutines.launch
 
 const val CHUCKER_MAX_CONTENT_LENGTH = 250000L
 
+@Suppress("DEPRECATION")
 class DemoFeatureListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDemoFeatureListBinding
     private lateinit var viewModel: DemoFeatureListViewModel

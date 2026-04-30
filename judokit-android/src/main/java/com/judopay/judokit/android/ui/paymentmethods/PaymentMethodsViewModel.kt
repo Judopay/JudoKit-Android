@@ -71,6 +71,7 @@ sealed class PaymentMethodsAction {
     object Update : PaymentMethodsAction()
 }
 
+@Suppress("DEPRECATION")
 class PaymentMethodsViewModel
     internal constructor(
         private val cardDate: CardDate,

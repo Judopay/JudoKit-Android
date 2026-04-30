@@ -204,4 +204,32 @@ internal class ResponseModelsTest {
         assertEquals("server-txn-id", params.threeDSServerTransID)
         assertEquals("acs-txn-id", params.acsTransID)
     }
+
+    @Test
+    @DisplayName("Response isSuccess returns true when result is Success")
+    fun responseIsSuccessReturnsTrueForSuccessResult() {
+        val response = Response(result = "Success")
+        assertTrue(response.isSuccess)
+    }
+
+    @Test
+    @DisplayName("Response isSuccess returns false when result is not Success")
+    fun responseIsSuccessReturnsFalseForNonSuccessResult() {
+        val response = Response(result = "Declined")
+        assertFalse(response.isSuccess)
+    }
+
+    @Test
+    @DisplayName("Response isDeclined returns true when result is Declined")
+    fun responseIsDeclinedReturnsTrueForDeclinedResult() {
+        val response = Response(result = "Declined")
+        assertTrue(response.isDeclined)
+    }
+
+    @Test
+    @DisplayName("Response isDeclined returns false when result is not Declined")
+    fun responseIsDeclinedReturnsFalseForNonDeclinedResult() {
+        val response = Response(result = "Success")
+        assertFalse(response.isDeclined)
+    }
 }

@@ -13,15 +13,18 @@ import com.judopay.judokit.android.ui.common.parcelable
  * A collection of [ActivityResultContract] implementations for launching Judo payment flows,
  * modeled after the [androidx.activity.result.contract.ActivityResultContracts] pattern.
  *
- * Each nested class corresponds to a [PaymentWidgetType] and is responsible for creating the
- * correct launch [Intent] and parsing the activity result into a [JudoPaymentResult].
- *
- * Register the contract that matches the [PaymentWidgetType] set on your [Judo] configuration
- * object. All contracts accept a fully-built [Judo] instance and return a [JudoPaymentResult].
+ * Each nested class corresponds to a [PaymentWidgetType] and determines the payment widget to
+ * launch. Register the contract that matches the flow you want and pass a fully-built [Judo]
+ * instance — no need to specify [PaymentWidgetType] in [Judo.Builder].
  *
  * ## Usage
  *
  * ```kotlin
+ * val judo = Judo.Builder()
+ *     .setJudoId("your-judo-id")
+ *     // ...other configuration...
+ *     .build()
+ *
  * val paymentLauncher =
  *     registerForActivityResult(JudoActivityResultContracts.CardPayment()) { result ->
  *         when (result) {
@@ -36,24 +39,16 @@ import com.judopay.judokit.android.ui.common.parcelable
  *
  * @see JudoPaymentResult
  * @see Judo
- * @see PaymentWidgetType
  */
 class JudoActivityResultContracts private constructor() {
     /**
      * Base contract shared by all Judo payment widget contracts.
-     *
-     * Subclass this to create a custom contract for a specific [PaymentWidgetType], or extend
-     * one of the concrete nested classes (e.g. [CardPayment]) to override behaviour for
-     * a particular flow.
      */
     abstract class Base : ActivityResultContract<Judo, JudoPaymentResult>() {
         override fun createIntent(
             context: Context,
             input: Judo,
-        ): Intent =
-            Intent(context, JudoActivity::class.java).apply {
-                putExtra(JUDO_OPTIONS, input)
-            }
+        ): Intent = JudoActivity.createIntent(context, input)
 
         override fun parseResult(
             resultCode: Int,
@@ -86,63 +81,118 @@ class JudoActivityResultContracts private constructor() {
     /**
      * Contract for [PaymentWidgetType.CARD_PAYMENT]: launches the standard card payment flow.
      */
-    class CardPayment : Base()
+    class CardPayment : Base() {
+        override fun createIntent(
+            context: Context,
+            input: Judo,
+        ): Intent = JudoActivity.createIntent(context, input.withPaymentWidgetType(PaymentWidgetType.CARD_PAYMENT))
+    }
 
     /**
      * Contract for [PaymentWidgetType.PRE_AUTH]: launches the pre-authorization card payment flow.
      */
-    class CardPreAuth : Base()
+    class CardPreAuth : Base() {
+        override fun createIntent(
+            context: Context,
+            input: Judo,
+        ): Intent = JudoActivity.createIntent(context, input.withPaymentWidgetType(PaymentWidgetType.PRE_AUTH))
+    }
 
     /**
      * Contract for [PaymentWidgetType.CREATE_CARD_TOKEN]: launches the save-card flow for future
      * tokenized payments.
      */
-    class CreateCardToken : Base()
+    class CreateCardToken : Base() {
+        override fun createIntent(
+            context: Context,
+            input: Judo,
+        ): Intent = JudoActivity.createIntent(context, input.withPaymentWidgetType(PaymentWidgetType.CREATE_CARD_TOKEN))
+    }
 
     /**
      * Contract for [PaymentWidgetType.CHECK_CARD]: launches the card check/verification flow.
      */
-    class CheckCard : Base()
+    class CheckCard : Base() {
+        override fun createIntent(
+            context: Context,
+            input: Judo,
+        ): Intent = JudoActivity.createIntent(context, input.withPaymentWidgetType(PaymentWidgetType.CHECK_CARD))
+    }
 
     /**
      * Contract for [PaymentWidgetType.GOOGLE_PAY]: launches a standalone GooglePay payment flow.
      */
-    class GooglePay : Base()
+    class GooglePay : Base() {
+        override fun createIntent(
+            context: Context,
+            input: Judo,
+        ): Intent = JudoActivity.createIntent(context, input.withPaymentWidgetType(PaymentWidgetType.GOOGLE_PAY))
+    }
 
     /**
      * Contract for [PaymentWidgetType.PRE_AUTH_GOOGLE_PAY]: launches a standalone GooglePay
      * pre-authorization flow.
      */
-    class PreAuthGooglePay : Base()
+    class PreAuthGooglePay : Base() {
+        override fun createIntent(
+            context: Context,
+            input: Judo,
+        ): Intent = JudoActivity.createIntent(context, input.withPaymentWidgetType(PaymentWidgetType.PRE_AUTH_GOOGLE_PAY))
+    }
 
     /**
      * Contract for [PaymentWidgetType.PAYMENT_METHODS]: launches the payment methods widget
      * (card and GooglePay).
      */
-    class PaymentMethods : Base()
+    class PaymentMethods : Base() {
+        override fun createIntent(
+            context: Context,
+            input: Judo,
+        ): Intent = JudoActivity.createIntent(context, input.withPaymentWidgetType(PaymentWidgetType.PAYMENT_METHODS))
+    }
 
     /**
      * Contract for [PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS]: launches the payment methods
      * widget for pre-authorization (card and GooglePay).
      */
-    class PreAuthPaymentMethods : Base()
+    class PreAuthPaymentMethods : Base() {
+        override fun createIntent(
+            context: Context,
+            input: Judo,
+        ): Intent = JudoActivity.createIntent(context, input.withPaymentWidgetType(PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS))
+    }
 
     /**
      * Contract for [PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS]: launches the
      * server-to-server payment methods widget to create a receipt for card payments made outside
      * the Judo SDK.
      */
-    class ServerToServerPaymentMethods : Base()
+    class ServerToServerPaymentMethods : Base() {
+        override fun createIntent(
+            context: Context,
+            input: Judo,
+        ): Intent = JudoActivity.createIntent(context, input.withPaymentWidgetType(PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS))
+    }
 
     /**
      * Contract for [PaymentWidgetType.TOKEN_PAYMENT]: launches a token payment flow, optionally
      * prompting the user for their CSC and/or cardholder name.
      */
-    class CardTokenPayment : Base()
+    class CardTokenPayment : Base() {
+        override fun createIntent(
+            context: Context,
+            input: Judo,
+        ): Intent = JudoActivity.createIntent(context, input.withPaymentWidgetType(PaymentWidgetType.TOKEN_PAYMENT))
+    }
 
     /**
      * Contract for [PaymentWidgetType.TOKEN_PRE_AUTH]: launches a pre-authorization token payment
      * flow, optionally prompting the user for their CSC and/or cardholder name.
      */
-    class CardTokenPreAuth : Base()
+    class CardTokenPreAuth : Base() {
+        override fun createIntent(
+            context: Context,
+            input: Judo,
+        ): Intent = JudoActivity.createIntent(context, input.withPaymentWidgetType(PaymentWidgetType.TOKEN_PRE_AUTH))
+    }
 }

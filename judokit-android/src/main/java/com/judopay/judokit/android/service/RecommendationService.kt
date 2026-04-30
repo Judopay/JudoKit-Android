@@ -1,7 +1,6 @@
 package com.judopay.judokit.android.service
 
 import android.content.Context
-import android.os.Build
 import com.google.gson.JsonSyntaxException
 import com.judopay.judo3ds2.exception.SDKRuntimeException
 import com.judopay.judokit.android.Judo
@@ -22,10 +21,6 @@ internal const val RAVELIN_ENCRYPT_CLASS_NAME = "com.ravelin.cardEncryption.Rave
 
 @Suppress("ReturnCount")
 private fun TransactionDetails.toRavelinEncryptedCard(rsaPublicKey: String): EncryptedCard? {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
-        return null
-    }
-
     val pan = cardNumber
     val dateComponents = expirationDate?.split("/") ?: emptyList()
     val month = dateComponents.getOrNull(0)
@@ -71,9 +66,7 @@ internal class RecommendationService(
     fun isRecommendationFeatureAvailable(type: TransactionType): Boolean {
         val isSupportedType = type == TransactionType.PAYMENT || type == TransactionType.CHECK || type == TransactionType.PRE_AUTH
 
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1 &&
-            // RavelinEncrypt requires API 22
-            isDependencyPresent(RAVELIN_ENCRYPT_CLASS_NAME) &&
+        return isDependencyPresent(RAVELIN_ENCRYPT_CLASS_NAME) &&
             // RavelinEncrypt should be present in classpath
             judo.recommendationConfiguration != null &&
             // recommendationConfiguration should be set by the user

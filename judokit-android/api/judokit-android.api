@@ -42,6 +42,7 @@ public final class com/judopay/judokit/android/Judo : android/os/Parcelable {
 }
 
 public final class com/judopay/judokit/android/Judo$Builder {
+	public fun <init> ()V
 	public fun <init> (Lcom/judopay/judokit/android/model/PaymentWidgetType;)V
 	public final fun build ()Lcom/judopay/judokit/android/Judo;
 	public final fun setAddress (Lcom/judopay/judokit/android/api/model/request/Address;)Lcom/judopay/judokit/android/Judo$Builder;
@@ -75,7 +76,12 @@ public final class com/judopay/judokit/android/Judo$Builder {
 }
 
 public final class com/judopay/judokit/android/JudoActivity : androidx/appcompat/app/AppCompatActivity {
+	public static final field Companion Lcom/judopay/judokit/android/JudoActivity$Companion;
 	public fun <init> ()V
+}
+
+public final class com/judopay/judokit/android/JudoActivity$Companion {
+	public final fun createIntent (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Landroid/content/Intent;
 }
 
 public final class com/judopay/judokit/android/JudoActivityResultContracts {
@@ -91,46 +97,68 @@ public abstract class com/judopay/judokit/android/JudoActivityResultContracts$Ba
 
 public final class com/judopay/judokit/android/JudoActivityResultContracts$CardPayment : com/judopay/judokit/android/JudoActivityResultContracts$Base {
 	public fun <init> ()V
+	public fun createIntent (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Landroid/content/Intent;
+	public synthetic fun createIntent (Landroid/content/Context;Ljava/lang/Object;)Landroid/content/Intent;
 }
 
 public final class com/judopay/judokit/android/JudoActivityResultContracts$CardPreAuth : com/judopay/judokit/android/JudoActivityResultContracts$Base {
 	public fun <init> ()V
+	public fun createIntent (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Landroid/content/Intent;
+	public synthetic fun createIntent (Landroid/content/Context;Ljava/lang/Object;)Landroid/content/Intent;
 }
 
 public final class com/judopay/judokit/android/JudoActivityResultContracts$CardTokenPayment : com/judopay/judokit/android/JudoActivityResultContracts$Base {
 	public fun <init> ()V
+	public fun createIntent (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Landroid/content/Intent;
+	public synthetic fun createIntent (Landroid/content/Context;Ljava/lang/Object;)Landroid/content/Intent;
 }
 
 public final class com/judopay/judokit/android/JudoActivityResultContracts$CardTokenPreAuth : com/judopay/judokit/android/JudoActivityResultContracts$Base {
 	public fun <init> ()V
+	public fun createIntent (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Landroid/content/Intent;
+	public synthetic fun createIntent (Landroid/content/Context;Ljava/lang/Object;)Landroid/content/Intent;
 }
 
 public final class com/judopay/judokit/android/JudoActivityResultContracts$CheckCard : com/judopay/judokit/android/JudoActivityResultContracts$Base {
 	public fun <init> ()V
+	public fun createIntent (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Landroid/content/Intent;
+	public synthetic fun createIntent (Landroid/content/Context;Ljava/lang/Object;)Landroid/content/Intent;
 }
 
 public final class com/judopay/judokit/android/JudoActivityResultContracts$CreateCardToken : com/judopay/judokit/android/JudoActivityResultContracts$Base {
 	public fun <init> ()V
+	public fun createIntent (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Landroid/content/Intent;
+	public synthetic fun createIntent (Landroid/content/Context;Ljava/lang/Object;)Landroid/content/Intent;
 }
 
 public final class com/judopay/judokit/android/JudoActivityResultContracts$GooglePay : com/judopay/judokit/android/JudoActivityResultContracts$Base {
 	public fun <init> ()V
+	public fun createIntent (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Landroid/content/Intent;
+	public synthetic fun createIntent (Landroid/content/Context;Ljava/lang/Object;)Landroid/content/Intent;
 }
 
 public final class com/judopay/judokit/android/JudoActivityResultContracts$PaymentMethods : com/judopay/judokit/android/JudoActivityResultContracts$Base {
 	public fun <init> ()V
+	public fun createIntent (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Landroid/content/Intent;
+	public synthetic fun createIntent (Landroid/content/Context;Ljava/lang/Object;)Landroid/content/Intent;
 }
 
 public final class com/judopay/judokit/android/JudoActivityResultContracts$PreAuthGooglePay : com/judopay/judokit/android/JudoActivityResultContracts$Base {
 	public fun <init> ()V
+	public fun createIntent (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Landroid/content/Intent;
+	public synthetic fun createIntent (Landroid/content/Context;Ljava/lang/Object;)Landroid/content/Intent;
 }
 
 public final class com/judopay/judokit/android/JudoActivityResultContracts$PreAuthPaymentMethods : com/judopay/judokit/android/JudoActivityResultContracts$Base {
 	public fun <init> ()V
+	public fun createIntent (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Landroid/content/Intent;
+	public synthetic fun createIntent (Landroid/content/Context;Ljava/lang/Object;)Landroid/content/Intent;
 }
 
 public final class com/judopay/judokit/android/JudoActivityResultContracts$ServerToServerPaymentMethods : com/judopay/judokit/android/JudoActivityResultContracts$Base {
 	public fun <init> ()V
+	public fun createIntent (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Landroid/content/Intent;
+	public synthetic fun createIntent (Landroid/content/Context;Ljava/lang/Object;)Landroid/content/Intent;
 }
 
 public abstract interface class com/judopay/judokit/android/JudoCardTransactionCallback {

@@ -76,6 +76,7 @@ sealed class CardEntryAction {
     object Initialize : CardEntryAction()
 }
 
+@Suppress("DEPRECATION")
 class CardEntryViewModel
     internal constructor(
         private val judo: Judo,

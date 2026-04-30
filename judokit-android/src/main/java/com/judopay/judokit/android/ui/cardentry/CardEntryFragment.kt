@@ -212,6 +212,7 @@ private fun adjustContainerLayoutMargins(
     }
 }
 
+@Suppress("DEPRECATION")
 class CardEntryFragment : BottomSheetDialogFragment() {
     private val viewModel: CardEntryViewModel by viewModels {
         val cardEntryOptions = arguments?.parcelable<CardEntryOptions>(CARD_ENTRY_OPTIONS) ?: CardEntryOptions()

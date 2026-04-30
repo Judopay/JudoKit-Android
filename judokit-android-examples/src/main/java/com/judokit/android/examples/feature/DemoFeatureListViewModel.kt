@@ -97,7 +97,7 @@ private fun DemoFeature.toWidgetType(): PaymentWidgetType =
         DemoFeature.TOKEN_PAYMENTS -> PaymentWidgetType.TOKEN_PAYMENT
     }
 
-@Suppress("TooManyFunctions", "TooGenericExceptionCaught")
+@Suppress("TooManyFunctions", "TooGenericExceptionCaught", "DEPRECATION")
 class DemoFeatureListViewModel(
     app: Application,
 ) : AndroidViewModel(app) {
