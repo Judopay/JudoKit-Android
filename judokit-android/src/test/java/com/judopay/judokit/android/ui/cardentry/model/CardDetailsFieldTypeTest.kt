@@ -40,14 +40,6 @@ internal class CardDetailsFieldTypeTest {
     }
 
     @Test
-    @DisplayName("valueOfFieldWithType returns cardNumber for NUMBER type")
-    fun valueOfFieldWithTypeReturnsCardNumber() {
-        val model = CardDetailsInputModel(cardNumber = "4111111111111111")
-        val value = model.valueOfFieldWithType(CardDetailsFieldType.NUMBER)
-        assert(value == "4111111111111111")
-    }
-
-    @Test
     @DisplayName("valueOfFieldWithType returns correct value for each field type")
     fun valueOfFieldWithTypeForAllTypes() {
         val model =

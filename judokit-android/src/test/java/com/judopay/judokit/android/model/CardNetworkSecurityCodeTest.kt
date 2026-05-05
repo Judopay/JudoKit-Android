@@ -134,7 +134,7 @@ internal class CardNetworkSecurityCodeTest {
         assertEquals("CVV", network.securityCodeNameOfCardNetwork)
     }
 
-    @DisplayName("Given securityCodeNameOfCardNetwork is called, when card network is VISA, return CV2")
+    @DisplayName("Given securityCodeNameOfCardNetwork is called, when card network is VISA, return CVV2")
     @Test
     fun returnCV2OnSecurityCodeNameOfCardNetworkWhenCardNetworkVisa() {
         val network = CardNetwork.VISA

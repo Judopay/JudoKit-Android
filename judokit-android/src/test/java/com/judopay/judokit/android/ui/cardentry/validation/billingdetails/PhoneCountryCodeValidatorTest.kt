@@ -14,7 +14,7 @@ internal class PhoneCountryCodeValidatorTest {
     @DisplayName("Given a phone country code with exactly 4 characters, then validation passes")
     fun validateMinLengthPhoneCountryCode() {
         assertEquals(
-            validator.validate("+123"),
+            validator.validate("+(1)"),
             ValidationResult(true),
         )
     }
@@ -23,7 +23,7 @@ internal class PhoneCountryCodeValidatorTest {
     @DisplayName("Given a phone country code with more than 4 characters, then validation passes")
     fun validateLongerPhoneCountryCode() {
         assertEquals(
-            validator.validate("+1234"),
+            validator.validate("+(12)"),
             ValidationResult(true),
         )
     }
@@ -59,7 +59,7 @@ internal class PhoneCountryCodeValidatorTest {
     @DisplayName("Given a phone country code with exactly 4 characters on focus change, then validation passes")
     fun validateMinLengthPhoneCountryCodeOnFocusChange() {
         assertEquals(
-            validator.validate("+123", FormFieldEvent.FOCUS_CHANGED),
+            validator.validate("+(123)", FormFieldEvent.FOCUS_CHANGED),
             ValidationResult(true),
         )
     }

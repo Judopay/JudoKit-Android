@@ -71,13 +71,6 @@ internal class PaymentMethodAdapterModelTest {
     }
 
     @Test
-    @DisplayName("PaymentMethodSavedCardItem same reference equals itself")
-    fun savedCardItemSameReferenceEqualsItself() {
-        val item = savedCardItem()
-        assertTrue(item == item)
-    }
-
-    @Test
     @DisplayName("PaymentMethodGenericItem equality when fields match")
     fun genericItemEquality() {
         val item1 = PaymentMethodGenericItem(type = PaymentMethodItemType.SAVED_CARDS_HEADER, isInEditMode = false)

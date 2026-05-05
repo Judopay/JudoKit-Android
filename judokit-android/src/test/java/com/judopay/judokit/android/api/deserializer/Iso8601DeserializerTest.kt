@@ -23,7 +23,7 @@ internal class Iso8601DeserializerTest {
     }
 
     @Test
-    @DisplayName("Given a date-only ISO 8601 string, then it parses to midnight UTC")
+    @DisplayName("Given a date-only ISO 8601 string, then it parses the year, month, and day correctly")
     fun parseDateOnly() {
         val date = Iso8601Deserializer.toDate("2023-06-15")
         val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
@@ -41,6 +41,7 @@ internal class Iso8601DeserializerTest {
         cal.time = date
         assertEquals(2023, cal[Calendar.YEAR])
         assertEquals(Calendar.JANUARY, cal[Calendar.MONTH])
+        assertEquals(1, cal[Calendar.DAY_OF_MONTH])
     }
 
     @Test

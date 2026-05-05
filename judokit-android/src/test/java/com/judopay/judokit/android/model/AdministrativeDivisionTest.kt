@@ -27,6 +27,7 @@ internal class AdministrativeDivisionTest {
     @Test
     @DisplayName("Given the canadian list, then it contains expected provinces")
     fun canadianListContainsProvinces() {
+        assertTrue(canadian.isNotEmpty())
         assertTrue(canadian.any { it.isoCode == "ON" && it.name == "Ontario" })
         assertTrue(canadian.any { it.isoCode == "BC" && it.name == "British Columbia" })
     }
@@ -34,6 +35,7 @@ internal class AdministrativeDivisionTest {
     @Test
     @DisplayName("Given the indian list, then it contains expected states")
     fun indianListContainsStates() {
+        assertTrue(indian.isNotEmpty())
         assertTrue(indian.any { it.isoCode == "GA" && it.name == "Goa" })
         assertTrue(indian.any { it.isoCode == "MH" && it.name == "Maharashtra" })
     }
@@ -41,6 +43,7 @@ internal class AdministrativeDivisionTest {
     @Test
     @DisplayName("Given the chinese list, then it contains expected regions")
     fun chineseListContainsRegions() {
+        assertTrue(chinese.isNotEmpty())
         assertTrue(chinese.any { it.isoCode == "BJ" && it.name == "Beijing Shi" })
     }
 

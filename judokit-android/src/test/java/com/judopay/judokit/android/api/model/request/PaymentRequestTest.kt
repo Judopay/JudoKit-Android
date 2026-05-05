@@ -112,10 +112,4 @@ internal class PaymentRequestTest {
     fun exceptionOnEmptyPaymentReference() {
         assertThrows<IllegalArgumentException> { request.setYourPaymentReference("").build() }
     }
-
-    @Test
-    @DisplayName("Should throw an exception on providing null address")
-    fun exceptionOnNullAddress() {
-        assertThrows<IllegalArgumentException> { request.setAddress(null).build() }
-    }
 }

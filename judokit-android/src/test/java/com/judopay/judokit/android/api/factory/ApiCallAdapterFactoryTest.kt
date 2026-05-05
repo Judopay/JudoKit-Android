@@ -25,6 +25,19 @@ internal class ApiCallAdapterFactoryTest {
     private val factory = ApiCallAdapterFactory()
     private val retrofit = mockk<Retrofit>()
 
+    private fun capturingCallback(onResult: (JudoApiCallResult<String>?) -> Unit): Callback<JudoApiCallResult<String>> =
+        object : Callback<JudoApiCallResult<String>> {
+            override fun onResponse(
+                call: Call<JudoApiCallResult<String>>,
+                response: Response<JudoApiCallResult<String>>,
+            ) = onResult(response.body())
+
+            override fun onFailure(
+                call: Call<JudoApiCallResult<String>>,
+                t: Throwable,
+            ) = Unit
+        }
+
     @Suppress("UNCHECKED_CAST")
     private fun makeParameterizedType(
         raw: Class<*>,
@@ -136,22 +149,7 @@ internal class ApiCallAdapterFactoryTest {
         val resultCall = ResultCall(proxy)
         val responseBody = "test-body"
         var capturedResult: JudoApiCallResult<String>? = null
-
-        val callback =
-            object : Callback<JudoApiCallResult<String>> {
-                override fun onResponse(
-                    call: Call<JudoApiCallResult<String>>,
-                    response: Response<JudoApiCallResult<String>>,
-                ) {
-                    capturedResult = response.body()
-                }
-
-                override fun onFailure(
-                    call: Call<JudoApiCallResult<String>>,
-                    t: Throwable,
-                ) { // no-op: test only exercises onResponse path
-                }
-            }
+        val callback = capturingCallback { capturedResult = it }
 
         every { proxy.enqueue(any()) } answers {
             val innerCallback = firstArg<Callback<String>>()
@@ -171,22 +169,7 @@ internal class ApiCallAdapterFactoryTest {
         val resultCall = ResultCall(proxy)
         val error = RuntimeException("network error")
         var capturedResult: JudoApiCallResult<String>? = null
-
-        val callback =
-            object : Callback<JudoApiCallResult<String>> {
-                override fun onResponse(
-                    call: Call<JudoApiCallResult<String>>,
-                    response: Response<JudoApiCallResult<String>>,
-                ) {
-                    capturedResult = response.body()
-                }
-
-                override fun onFailure(
-                    call: Call<JudoApiCallResult<String>>,
-                    t: Throwable,
-                ) { // no-op: test only exercises onResponse path
-                }
-            }
+        val callback = capturingCallback { capturedResult = it }
 
         every { proxy.enqueue(any()) } answers {
             val innerCallback = firstArg<Callback<String>>()
@@ -207,22 +190,7 @@ internal class ApiCallAdapterFactoryTest {
         val errorJson = """{"code":1234,"category":1,"message":"Bad request"}"""
         val errorBody = errorJson.toResponseBody("application/json".toMediaTypeOrNull())
         var capturedResult: JudoApiCallResult<String>? = null
-
-        val callback =
-            object : Callback<JudoApiCallResult<String>> {
-                override fun onResponse(
-                    call: Call<JudoApiCallResult<String>>,
-                    response: Response<JudoApiCallResult<String>>,
-                ) {
-                    capturedResult = response.body()
-                }
-
-                override fun onFailure(
-                    call: Call<JudoApiCallResult<String>>,
-                    t: Throwable,
-                ) { // no-op: test only exercises onResponse path
-                }
-            }
+        val callback = capturingCallback { capturedResult = it }
 
         every { proxy.enqueue(any()) } answers {
             val innerCallback = firstArg<Callback<String>>()
@@ -245,22 +213,7 @@ internal class ApiCallAdapterFactoryTest {
         val resultCall = ResultCall(proxy)
         val malformedBody = "not-json".toResponseBody("application/json".toMediaTypeOrNull())
         var capturedResult: JudoApiCallResult<String>? = null
-
-        val callback =
-            object : Callback<JudoApiCallResult<String>> {
-                override fun onResponse(
-                    call: Call<JudoApiCallResult<String>>,
-                    response: Response<JudoApiCallResult<String>>,
-                ) {
-                    capturedResult = response.body()
-                }
-
-                override fun onFailure(
-                    call: Call<JudoApiCallResult<String>>,
-                    t: Throwable,
-                ) { // no-op: test only exercises onResponse path
-                }
-            }
+        val callback = capturingCallback { capturedResult = it }
 
         every { proxy.enqueue(any()) } answers {
             val innerCallback = firstArg<Callback<String>>()

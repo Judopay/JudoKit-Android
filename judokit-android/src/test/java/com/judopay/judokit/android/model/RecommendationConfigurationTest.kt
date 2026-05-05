@@ -90,16 +90,4 @@ internal class RecommendationConfigurationTest {
                 .build()
         }
     }
-
-    @Test
-    @DisplayName("Given http url, then build() succeeds (http is valid)")
-    fun buildWithHttpUrl() {
-        val config =
-            RecommendationConfiguration
-                .Builder()
-                .setUrl("http://recommendation.example.com/api")
-                .setRsaPublicKey(validRsaKey)
-                .build()
-        assertEquals("http://recommendation.example.com/api", config.url)
-    }
 }

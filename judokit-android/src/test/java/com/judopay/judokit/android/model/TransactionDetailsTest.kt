@@ -2,6 +2,7 @@ package com.judopay.judokit.android.model
 
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.judopay.judo3ds2.transaction.Transaction
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.model.request.Address
@@ -10,6 +11,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
+import io.mockk.verify
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -105,7 +107,7 @@ internal class TransactionDetailsTest {
         }
 
         @Test
-        @DisplayName("Given phoneCountryCode is blank, then build() sets it to null")
+        @DisplayName("Given phoneCountryCode is empty, then build() sets it to null")
         fun blankPhoneCountryCodeBecomesNull() {
             val details = TransactionDetails.Builder().setPhoneCountryCode("").build()
             assertNull(details.phoneCountryCode)
@@ -146,6 +148,13 @@ internal class TransactionDetailsTest {
         @DisplayName("Given setState is called (deprecated alias), then administrativeDivision is set")
         fun setStateDeprecatedAlias() {
             val details = TransactionDetails.Builder().setState("California").build()
+            assertEquals("California", details.administrativeDivision)
+        }
+
+        @Test
+        @DisplayName("Given setAdministrativeDivision is called, then administrativeDivision is set")
+        fun setAdministrativeDivision() {
+            val details = TransactionDetails.Builder().setAdministrativeDivision("California").build()
             assertEquals("California", details.administrativeDivision)
         }
 
@@ -312,9 +321,39 @@ internal class TransactionDetailsTest {
     @Nested
     @DisplayName("to*Request with ThreeDSecureTwo")
     inner class ToRequestWithThreeDSTests {
+        private fun toJson(any: Any) = Gson().fromJson(Gson().toJson(any), JsonObject::class.java)
+
+        private fun assertCommonRequestFields(json: JsonObject) {
+            assertThat(json.get("judoId").asString).isEqualTo("100200300")
+            assertThat(json.get("currency").asString).isEqualTo("GBP")
+            assertThat(json.get("yourPaymentReference").asString).isEqualTo("payRef")
+            assertThat(json.get("yourConsumerReference").asString).isEqualTo("consRef")
+            assertThat(json.get("threeDSecure").isJsonObject).isTrue()
+        }
+
+        private fun assertCardFields(
+            json: JsonObject,
+            cardNumber: String,
+            cv2: String,
+            expiryDate: String,
+        ) {
+            assertThat(json.get("cardNumber").asString).isEqualTo(cardNumber)
+            assertThat(json.get("cv2").asString).isEqualTo(cv2)
+            assertThat(json.get("expiryDate").asString).isEqualTo(expiryDate)
+        }
+
+        private fun assertTokenFields(
+            json: JsonObject,
+            cardToken: String,
+            cardType: Int,
+        ) {
+            assertThat(json.get("cardToken").asString).isEqualTo(cardToken)
+            assertThat(json.get("cardType").asInt).isEqualTo(cardType)
+        }
+
         @Test
-        @DisplayName("toPaymentRequest builds successfully and delegates ThreeDSecureTwo to transaction")
-        fun toPaymentRequestBuildsSuccessfully() {
+        @DisplayName("toPaymentRequest maps card and judo fields, and includes threeDSecure")
+        fun toPaymentRequestMapsFields() {
             val details =
                 TransactionDetails
                     .Builder()
@@ -324,14 +363,17 @@ internal class TransactionDetailsTest {
                     .setCardHolderName("Alice")
                     .build()
 
-            val request = details.toPaymentRequest(judo, transaction)
+            val json = toJson(details.toPaymentRequest(judo, transaction))
 
-            assertThat(request).isNotNull()
+            assertCardFields(json, "4111111111111111", "452", "12/29")
+            assertThat(json.get("cardHolderName").asString).isEqualTo("Alice")
+            assertThat(json.get("amount").asString).isEqualTo("1.00")
+            assertCommonRequestFields(json)
         }
 
         @Test
-        @DisplayName("toPaymentRequest with overrides builds successfully")
-        fun toPaymentRequestWithOverridesBuildsSuccessfully() {
+        @DisplayName("toPaymentRequest forwards overrides to ThreeDSecureTwo")
+        fun toPaymentRequestForwardsOverrides() {
             val overrides =
                 TransactionDetailsOverrides(
                     softDeclineReceiptId = "rcpt_123",
@@ -345,14 +387,14 @@ internal class TransactionDetailsTest {
                     .setSecurityNumber("452")
                     .build()
 
-            val request = details.toPaymentRequest(judo, transaction, overrides)
+            details.toPaymentRequest(judo, transaction, overrides)
 
-            assertThat(request).isNotNull()
+            verify { transaction.toThreeDSecureTwo(judo, overrides) }
         }
 
         @Test
-        @DisplayName("toPreAuthRequest builds successfully")
-        fun toPreAuthRequestBuildsSuccessfully() {
+        @DisplayName("toPreAuthRequest maps card and judo fields, and includes threeDSecure")
+        fun toPreAuthRequestMapsFields() {
             val details =
                 TransactionDetails
                     .Builder()
@@ -361,14 +403,16 @@ internal class TransactionDetailsTest {
                     .setSecurityNumber("452")
                     .build()
 
-            val request = details.toPreAuthRequest(judo, transaction)
+            val json = toJson(details.toPreAuthRequest(judo, transaction))
 
-            assertThat(request).isNotNull()
+            assertCardFields(json, "4111111111111111", "452", "12/29")
+            assertThat(json.get("amount").asString).isEqualTo("1.00")
+            assertCommonRequestFields(json)
         }
 
         @Test
-        @DisplayName("toCheckCardRequest builds successfully")
-        fun toCheckCardRequestBuildsSuccessfully() {
+        @DisplayName("toCheckCardRequest maps card and judo fields, and includes threeDSecure")
+        fun toCheckCardRequestMapsFields() {
             val details =
                 TransactionDetails
                     .Builder()
@@ -377,14 +421,15 @@ internal class TransactionDetailsTest {
                     .setSecurityNumber("452")
                     .build()
 
-            val request = details.toCheckCardRequest(judo, transaction)
+            val json = toJson(details.toCheckCardRequest(judo, transaction))
 
-            assertThat(request).isNotNull()
+            assertCardFields(json, "4111111111111111", "452", "12/29")
+            assertCommonRequestFields(json)
         }
 
         @Test
-        @DisplayName("toTokenRequest builds successfully")
-        fun toTokenRequestBuildsSuccessfully() {
+        @DisplayName("toTokenRequest maps token and judo fields, and includes threeDSecure")
+        fun toTokenRequestMapsFields() {
             val details =
                 TransactionDetails
                     .Builder()
@@ -392,14 +437,16 @@ internal class TransactionDetailsTest {
                     .setCardType(CardNetwork.VISA)
                     .build()
 
-            val request = details.toTokenRequest(judo, transaction)
+            val json = toJson(details.toTokenRequest(judo, transaction))
 
-            assertThat(request).isNotNull()
+            assertTokenFields(json, "tok_abc", CardNetwork.VISA.typeId)
+            assertThat(json.get("amount").asString).isEqualTo("1.00")
+            assertCommonRequestFields(json)
         }
 
         @Test
-        @DisplayName("toPreAuthTokenRequest builds successfully")
-        fun toPreAuthTokenRequestBuildsSuccessfully() {
+        @DisplayName("toPreAuthTokenRequest maps token and judo fields, and includes threeDSecure")
+        fun toPreAuthTokenRequestMapsFields() {
             val details =
                 TransactionDetails
                     .Builder()
@@ -407,9 +454,11 @@ internal class TransactionDetailsTest {
                     .setCardType(CardNetwork.VISA)
                     .build()
 
-            val request = details.toPreAuthTokenRequest(judo, transaction)
+            val json = toJson(details.toPreAuthTokenRequest(judo, transaction))
 
-            assertThat(request).isNotNull()
+            assertTokenFields(json, "tok_abc", CardNetwork.VISA.typeId)
+            assertThat(json.get("amount").asString).isEqualTo("1.00")
+            assertCommonRequestFields(json)
         }
     }
 }

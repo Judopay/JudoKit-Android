@@ -86,7 +86,7 @@ internal class CardDateTest {
     }
 
     @Test
-    @DisplayName("isAfterToday returns false for a date 5 years in the past")
+    @DisplayName("isAfterToday returns false for a date in the past")
     fun isAfterTodayFalseForPastDate() {
         assertFalse(CardDate("01/10").isAfterToday)
     }

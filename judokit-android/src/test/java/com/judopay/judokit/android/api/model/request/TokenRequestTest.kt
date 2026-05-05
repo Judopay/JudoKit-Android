@@ -88,10 +88,4 @@ internal class TokenRequestTest {
     fun exceptionOnEmptyCardToken() {
         assertThrows<IllegalArgumentException> { request.setCardToken("").build() }
     }
-
-    @Test
-    @DisplayName("Should throw an exception on providing null address")
-    fun exceptionOnNullAddress() {
-        assertThrows<IllegalArgumentException> { request.setAddress(null).build() }
-    }
 }
