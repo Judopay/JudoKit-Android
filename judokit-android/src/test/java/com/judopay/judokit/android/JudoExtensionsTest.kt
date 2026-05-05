@@ -4,14 +4,19 @@ import android.content.Context
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
+import android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO
+import android.view.View.IMPORTANT_FOR_ACCESSIBILITY_YES
 import android.view.ViewGroup
 import android.view.ViewPropertyAnimator
 import android.view.Window
+import android.view.accessibility.AccessibilityEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.ViewAnimator
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -26,12 +31,14 @@ import com.judopay.judokit.android.api.model.request.TokenRequest
 import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
 import com.judopay.judokit.android.model.ApiEnvironment
 import com.judopay.judokit.android.model.Currency
+import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.PrimaryAccountDetails
 import com.judopay.judokit.android.model.googlepay.GooglePayAddress
 import com.judopay.judokit.android.ui.common.parcelable
 import com.judopay.judokit.android.ui.error.JudoNotProvidedError
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.verify
@@ -915,5 +922,122 @@ internal class JudoExtensionsTest {
 
         verify { window.requestFeature(Window.FEATURE_NO_TITLE) }
         verify { window.setDimAmount(0.5f) }
+    }
+
+    @DisplayName("Given withPaymentWidgetType is called, then new Judo instance has the given paymentWidgetType")
+    @Test
+    fun withPaymentWidgetTypeReturnsJudoWithUpdatedType() {
+        val result = judo.withPaymentWidgetType(PaymentWidgetType.CARD_PAYMENT)
+        assertEquals(PaymentWidgetType.CARD_PAYMENT, result.paymentWidgetType)
+    }
+
+    @DisplayName("Given withPaymentWidgetType is called with PRE_AUTH, then new Judo has PRE_AUTH widget type")
+    @Test
+    fun withPaymentWidgetTypePreAuth() {
+        val result = judo.withPaymentWidgetType(PaymentWidgetType.PRE_AUTH)
+        assertEquals(PaymentWidgetType.PRE_AUTH, result.paymentWidgetType)
+    }
+
+    @DisplayName("inflate uses context LayoutInflater to return an inflated view")
+    @Test
+    fun inflateReturnsInflatedView() {
+        mockkStatic(LayoutInflater::class)
+        val mockInflater = mockk<LayoutInflater>(relaxed = true)
+        val parent = mockk<ViewGroup>(relaxed = true)
+        val expectedView = mockk<View>()
+        every { LayoutInflater.from(any()) } returns mockInflater
+        every { mockInflater.inflate(123, parent, false) } returns expectedView
+
+        val result = parent.inflate(123)
+
+        assertEquals(expectedView, result)
+    }
+
+    @DisplayName("toggleAutofillAndAccessibilityForVisibleChild sets YES for displayed child and NO for others")
+    @Test
+    fun toggleAutofillAndAccessibilityForVisibleChildSetsAccessibility() {
+        val child0 = mockk<View>(relaxed = true)
+        val child1 = mockk<View>(relaxed = true)
+        val animator = mockk<ViewAnimator>(relaxed = true)
+        every { animator.childCount } returns 2
+        every { animator.displayedChild } returns 0
+        every { animator.getChildAt(0) } returns child0
+        every { animator.getChildAt(1) } returns child1
+
+        animator.toggleAutofillAndAccessibilityForVisibleChild()
+
+        verify { child0.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES) }
+        verify { child1.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO) }
+        verify { child0.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED) }
+    }
+
+    @DisplayName("showChildWithAutofill sets the displayedChild index on the animator")
+    @Test
+    fun showChildWithAutofillSetsDisplayedChild() {
+        val child0 = mockk<View>(relaxed = true)
+        val child1 = mockk<View>(relaxed = true)
+        val animator = mockk<ViewAnimator>(relaxed = true)
+        every { animator.childCount } returns 2
+        every { animator.displayedChild } returns 1
+        every { animator.getChildAt(0) } returns child0
+        every { animator.getChildAt(1) } returns child1
+
+        animator.showChildWithAutofill(1)
+
+        verify { animator.displayedChild = 1 }
+    }
+
+    @DisplayName("runOnFirstAttach invokes callback immediately when view is already attached to window")
+    @Test
+    fun runOnFirstAttachCallsCallbackImmediatelyWhenAttached() {
+        val animator = mockk<ViewAnimator>(relaxed = true)
+        every { animator.isAttachedToWindow } returns true
+        var called = false
+
+        animator.runOnFirstAttach { called = true }
+
+        assertTrue(called)
+    }
+
+    @DisplayName("runOnFirstAttach adds a state listener when view is not yet attached to window")
+    @Test
+    fun runOnFirstAttachAddsListenerWhenNotYetAttached() {
+        val animator = mockk<ViewAnimator>(relaxed = true)
+        every { animator.isAttachedToWindow } returns false
+
+        animator.runOnFirstAttach { }
+
+        verify { animator.addOnAttachStateChangeListener(any()) }
+    }
+
+    @DisplayName("runOnFirstAttach listener invokes callback when view attaches later")
+    @Test
+    fun runOnFirstAttachListenerInvokesCallbackOnAttach() {
+        val animator = mockk<ViewAnimator>(relaxed = true)
+        every { animator.isAttachedToWindow } returns false
+        val listenerSlot = slot<View.OnAttachStateChangeListener>()
+        every { animator.addOnAttachStateChangeListener(capture(listenerSlot)) } answers { }
+        var called = false
+
+        animator.runOnFirstAttach { called = true }
+
+        assertFalse(called)
+        listenerSlot.captured.onViewAttachedToWindow(mockk(relaxed = true))
+        assertTrue(called)
+    }
+
+    @DisplayName("initAutofillAndAccessibilityOnAttach sets accessibility state when attached")
+    @Test
+    fun initAutofillAndAccessibilityOnAttachSetsAccessibilityWhenAttached() {
+        val child0 = mockk<View>(relaxed = true)
+        val animator = mockk<ViewAnimator>(relaxed = true)
+        every { animator.isAttachedToWindow } returns true
+        every { animator.childCount } returns 1
+        every { animator.displayedChild } returns 0
+        every { animator.getChildAt(0) } returns child0
+
+        animator.initAutofillAndAccessibilityOnAttach()
+
+        verify { child0.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES) }
     }
 }

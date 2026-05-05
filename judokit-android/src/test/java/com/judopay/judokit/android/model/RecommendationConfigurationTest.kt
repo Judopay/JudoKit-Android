@@ -90,4 +90,44 @@ internal class RecommendationConfigurationTest {
                 .build()
         }
     }
+
+    @Test
+    @DisplayName("Given valid config, then toString contains url and rsaPublicKey")
+    fun toStringContainsUrlAndRsaPublicKey() {
+        val config =
+            RecommendationConfiguration
+                .Builder()
+                .setUrl(validUrl)
+                .setRsaPublicKey(validRsaKey)
+                .build()
+        val str = config.toString()
+        assertTrue(str.contains(validUrl))
+        assertTrue(str.contains(validRsaKey))
+    }
+
+    @Test
+    @DisplayName("Given config with timeout, then toString contains timeout value")
+    fun toStringContainsTimeoutWhenSet() {
+        val config =
+            RecommendationConfiguration
+                .Builder()
+                .setUrl(validUrl)
+                .setRsaPublicKey(validRsaKey)
+                .setTimeout(3000)
+                .build()
+        val str = config.toString()
+        assertTrue(str.contains("3000"))
+    }
+
+    @Test
+    @DisplayName("Given empty url, then build() throws IllegalArgumentException")
+    fun throwsWhenUrlIsEmpty() {
+        assertThrows<IllegalArgumentException> {
+            RecommendationConfiguration
+                .Builder()
+                .setUrl("")
+                .setRsaPublicKey(validRsaKey)
+                .build()
+        }
+    }
 }
