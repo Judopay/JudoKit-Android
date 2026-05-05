@@ -107,6 +107,10 @@ class JudoEditTextInputLayout
                     }
             }
 
+            // Sync error visibility in case isErrorEnabled was set before window attachment
+            // (e.g., renderErrors() called while the BottomSheet dialog was not yet shown).
+            binding.errorTextView.visibility = if (isErrorEnabled) View.VISIBLE else View.GONE
+
             background =
                 when {
                     mDisableLeftCornerRadius ->

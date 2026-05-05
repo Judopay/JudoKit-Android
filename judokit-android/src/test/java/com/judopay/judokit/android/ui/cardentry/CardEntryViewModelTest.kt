@@ -23,10 +23,13 @@ import com.judopay.judokit.android.model.Reference
 import com.judopay.judokit.android.model.UiConfiguration
 import com.judopay.judokit.android.model.typeId
 import com.judopay.judokit.android.service.CardTransactionRepository
-import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsInputModel
+import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
-import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
+import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
+import com.judopay.judokit.android.ui.cardentry.validation.BillingDetailsFormValidator
+import com.judopay.judokit.android.ui.cardentry.validation.CardDetailsFormValidator
+import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
 import com.judopay.judokit.android.ui.common.ButtonState
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -60,6 +63,9 @@ internal class CardEntryViewModelTest {
     private val cardTransactionRepository: CardTransactionRepository = mockk(relaxed = true)
     private val application: Application = mockk(relaxed = true)
 
+    private val mockCardValidator: CardDetailsFormValidator = mockk(relaxed = true)
+    private val mockBillingValidator: BillingDetailsFormValidator = mockk(relaxed = true)
+
     private lateinit var sut: CardEntryViewModel
     private val defaultLocale: Locale = Locale.getDefault()
 
@@ -90,6 +96,14 @@ internal class CardEntryViewModelTest {
 
         every { application.assets.open("countries.json") } returns inputStream
 
+        // Configure billing mock: isoCodeForAdminDivision needed by handleBillingFieldChanged
+        every { mockBillingValidator.isoCodeForAdminDivision(any()) } returns null
+        every { mockBillingValidator.adminDivisionRequired } returns false
+
+        // Default: all validation calls return valid so helpers can make forms valid.
+        every { mockCardValidator.validateField(any(), any(), any()) } returns ValidationResult(true, R.string.jp_empty)
+        every { mockBillingValidator.validateField(any(), any(), any(), any(), any()) } returns ValidationResult(true, R.string.jp_empty)
+
         coEvery { cardTransactionRepository.payment(any(), any()) } returns JudoPaymentResult.Success(JudoResult())
         coEvery { cardTransactionRepository.preAuth(any(), any()) } returns JudoPaymentResult.Success(JudoResult())
         coEvery { cardTransactionRepository.check(any(), any()) } returns JudoPaymentResult.Success(JudoResult())
@@ -97,13 +111,63 @@ internal class CardEntryViewModelTest {
         coEvery { cardTransactionRepository.paymentWithToken(any(), any()) } returns JudoPaymentResult.Success(JudoResult())
         coEvery { cardTransactionRepository.preAuthWithToken(any(), any()) } returns JudoPaymentResult.Success(JudoResult())
 
-        sut = CardEntryViewModel(judo, cardTransactionRepository, repository, CardEntryOptions(), application)
+        sut = createViewModel()
     }
 
     @AfterEach
     internal fun tearDown() {
         Dispatchers.resetMain()
         Locale.setDefault(defaultLocale)
+    }
+
+    // Creates the SUT with mock validators injected.
+    private fun createViewModel(
+        widgetType: PaymentWidgetType = PaymentWidgetType.CARD_PAYMENT,
+        uiConfig: UiConfiguration = UiConfiguration.Builder().build(),
+        options: CardEntryOptions = CardEntryOptions(),
+    ): CardEntryViewModel =
+        CardEntryViewModel(
+            getJudo(widgetType, uiConfig),
+            cardTransactionRepository,
+            repository,
+            options,
+            application,
+            cardDetailsFormValidator = mockCardValidator,
+            billingDetailsFormValidator = mockBillingValidator,
+        )
+
+    // Sends FOCUS_CHANGED for all enabled card fields so the ViewModel marks them valid.
+    // With the relaxed mock, validateField returns null → treated as valid.
+    private fun makeCardFormValid(holderName: String = "John Doe") {
+        val enabled =
+            sut.uiState.value
+                ?.formModel
+                ?.cardDetailsInputModel
+                ?.enabledFields ?: emptyList()
+        enabled.forEach { type ->
+            val value =
+                when (type) {
+                    CardDetailsFieldType.HOLDER_NAME -> holderName
+                    CardDetailsFieldType.SECURITY_NUMBER -> "333"
+                    else -> "test"
+                }
+            sut.send(CardEntryAction.CardFieldChanged(type, value, FormFieldEvent.FOCUS_CHANGED))
+        }
+    }
+
+    // Sends FOCUS_CHANGED for billing fields that are not pre-seeded as valid in the ViewModel init.
+    private fun makeBillingFormValid(
+        email: String = "test@test.com",
+        country: String = "United Kingdom",
+        city: String = "London",
+        postalCode: String = "W1A 1AA",
+        addressLine1: String = "123 Test Street",
+    ) {
+        sut.send(CardEntryAction.BillingFieldChanged(BillingDetailsFieldType.EMAIL, email, FormFieldEvent.FOCUS_CHANGED))
+        sut.send(CardEntryAction.BillingFieldChanged(BillingDetailsFieldType.COUNTRY, country, FormFieldEvent.FOCUS_CHANGED))
+        sut.send(CardEntryAction.BillingFieldChanged(BillingDetailsFieldType.CITY, city, FormFieldEvent.FOCUS_CHANGED))
+        sut.send(CardEntryAction.BillingFieldChanged(BillingDetailsFieldType.POST_CODE, postalCode, FormFieldEvent.FOCUS_CHANGED))
+        sut.send(CardEntryAction.BillingFieldChanged(BillingDetailsFieldType.ADDRESS_LINE_1, addressLine1, FormFieldEvent.FOCUS_CHANGED))
     }
 
     @Test
@@ -118,7 +182,7 @@ internal class CardEntryViewModelTest {
     @Test
     fun `Given send is called with InsertCard action, then should call repository updateAllLastUsedToFalse and insert`() =
         runTest {
-            sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(cardHolderName = "Bob"), true))
+            sut.send(CardEntryAction.CardFieldChanged(CardDetailsFieldType.HOLDER_NAME, "Bob", FormFieldEvent.FOCUS_CHANGED))
             val tokenizedCard = CardToken(lastFour = "1234", token = "token", type = CardNetwork.VISA.typeId)
             sut.send(CardEntryAction.InsertCard(tokenizedCard))
             advanceUntilIdle()
@@ -133,8 +197,8 @@ internal class CardEntryViewModelTest {
         }
 
     @Test
-    fun `Given send is called with ValidationStatusChanged action with isFormValid = true, then buttonState is Enabled`() {
-        sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
+    fun `Given all card fields are changed to valid, then buttonState is Enabled`() {
+        makeCardFormValid()
 
         val inputModel =
             sut.uiState.value
@@ -158,7 +222,7 @@ internal class CardEntryViewModelTest {
     @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
     fun `Given send is called with SubmitCardEntryForm action, when payment widget type is CARD_PAYMENT, then cardTransactionRepository's payment method is called`() =
         runTest {
-            sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
+            makeCardFormValid()
             sut.send(CardEntryAction.SubmitCardEntryForm)
             advanceUntilIdle()
 
@@ -169,15 +233,8 @@ internal class CardEntryViewModelTest {
     @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
     fun `Given send is called with SubmitCardEntryForm action, when payment widget type is PRE_AUTH, then cardTransactionRepository's preAuth method is called`() =
         runTest {
-            sut =
-                CardEntryViewModel(
-                    getJudo(PaymentWidgetType.PRE_AUTH),
-                    cardTransactionRepository,
-                    repository,
-                    CardEntryOptions(),
-                    application,
-                )
-            sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
+            sut = createViewModel(PaymentWidgetType.PRE_AUTH)
+            makeCardFormValid()
             sut.send(CardEntryAction.SubmitCardEntryForm)
             advanceUntilIdle()
 
@@ -188,15 +245,8 @@ internal class CardEntryViewModelTest {
     @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
     fun `Given send is called with SubmitCardEntryForm action, when payment widget type is CHECK_CARD, then cardTransactionRepository's check method is called`() =
         runTest {
-            sut =
-                CardEntryViewModel(
-                    getJudo(PaymentWidgetType.CHECK_CARD),
-                    cardTransactionRepository,
-                    repository,
-                    CardEntryOptions(),
-                    application,
-                )
-            sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
+            sut = createViewModel(PaymentWidgetType.CHECK_CARD)
+            makeCardFormValid()
             sut.send(CardEntryAction.SubmitCardEntryForm)
             advanceUntilIdle()
 
@@ -207,15 +257,8 @@ internal class CardEntryViewModelTest {
     @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
     fun `Given send is called with SubmitCardEntryForm action, when payment widget type is CREATE_CARD_TOKEN, then cardTransactionRepository's save method is called`() =
         runTest {
-            sut =
-                CardEntryViewModel(
-                    getJudo(PaymentWidgetType.CREATE_CARD_TOKEN),
-                    cardTransactionRepository,
-                    repository,
-                    CardEntryOptions(),
-                    application,
-                )
-            sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
+            sut = createViewModel(PaymentWidgetType.CREATE_CARD_TOKEN)
+            makeCardFormValid()
             sut.send(CardEntryAction.SubmitCardEntryForm)
             advanceUntilIdle()
 
@@ -226,15 +269,8 @@ internal class CardEntryViewModelTest {
     @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
     fun `Given send is called with SubmitCardEntryForm action, when payment widget type is TOKEN_PAYMENT, then cardTransactionRepository's paymentWithToken method is called`() =
         runTest {
-            sut =
-                CardEntryViewModel(
-                    getJudo(PaymentWidgetType.TOKEN_PAYMENT),
-                    cardTransactionRepository,
-                    repository,
-                    CardEntryOptions(),
-                    application,
-                )
-            sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
+            sut = createViewModel(PaymentWidgetType.TOKEN_PAYMENT)
+            makeCardFormValid()
             sut.send(CardEntryAction.SubmitCardEntryForm)
             advanceUntilIdle()
 
@@ -245,15 +281,8 @@ internal class CardEntryViewModelTest {
     @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
     fun `Given send is called with SubmitCardEntryForm action, when payment widget type is TOKEN_PRE_AUTH, then cardTransactionRepository's preAuthWithToken method is called`() =
         runTest {
-            sut =
-                CardEntryViewModel(
-                    getJudo(PaymentWidgetType.TOKEN_PRE_AUTH),
-                    cardTransactionRepository,
-                    repository,
-                    CardEntryOptions(),
-                    application,
-                )
-            sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
+            sut = createViewModel(PaymentWidgetType.TOKEN_PRE_AUTH)
+            makeCardFormValid()
             sut.send(CardEntryAction.SubmitCardEntryForm)
             advanceUntilIdle()
 
@@ -266,15 +295,8 @@ internal class CardEntryViewModelTest {
         val exception =
             assertThrows<IllegalStateException> {
                 runTest {
-                    sut =
-                        CardEntryViewModel(
-                            getJudo(PaymentWidgetType.GOOGLE_PAY),
-                            cardTransactionRepository,
-                            repository,
-                            CardEntryOptions(),
-                            application,
-                        )
-                    sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
+                    sut = createViewModel(PaymentWidgetType.GOOGLE_PAY)
+                    makeCardFormValid()
                     sut.send(CardEntryAction.SubmitCardEntryForm)
                     advanceUntilIdle()
                 }
@@ -287,7 +309,7 @@ internal class CardEntryViewModelTest {
         runTest {
             val results = collectFlow(sut.paymentResultEffect)
 
-            sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
+            makeCardFormValid()
             sut.send(CardEntryAction.SubmitCardEntryForm)
             advanceUntilIdle()
 
@@ -300,16 +322,13 @@ internal class CardEntryViewModelTest {
     fun `Given send is called with SubmitCardEntryForm action, when fromPaymentMethods, then update cardEntryToPaymentMethodResult model`() =
         runTest {
             sut =
-                CardEntryViewModel(
-                    getJudo(PaymentWidgetType.PAYMENT_METHODS),
-                    cardTransactionRepository,
-                    repository,
-                    CardEntryOptions(isPresentedFromPaymentMethods = true, cardNetwork = CardNetwork.VISA),
-                    application,
+                createViewModel(
+                    PaymentWidgetType.PAYMENT_METHODS,
+                    options = CardEntryOptions(isPresentedFromPaymentMethods = true, cardNetwork = CardNetwork.VISA),
                 )
             val results = collectFlow(sut.cardEntryToPaymentMethodResultEffect)
 
-            sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(securityNumber = "333"), true))
+            sut.send(CardEntryAction.CardFieldChanged(CardDetailsFieldType.SECURITY_NUMBER, "333", FormFieldEvent.FOCUS_CHANGED))
             sut.send(CardEntryAction.SubmitCardEntryForm)
             advanceUntilIdle()
 
@@ -319,12 +338,9 @@ internal class CardEntryViewModelTest {
     @Test
     fun `Given payment widget type is PAYMENT_METHODS, then button text should be 'Save Card'`() {
         sut =
-            CardEntryViewModel(
-                getJudo(PaymentWidgetType.PAYMENT_METHODS),
-                cardTransactionRepository,
-                repository,
-                CardEntryOptions(isPresentedFromPaymentMethods = true, isAddingNewCard = true),
-                application,
+            createViewModel(
+                PaymentWidgetType.PAYMENT_METHODS,
+                options = CardEntryOptions(isPresentedFromPaymentMethods = true, isAddingNewCard = true),
             )
 
         val inputModel =
@@ -337,12 +353,9 @@ internal class CardEntryViewModelTest {
     @Test
     fun `Given payment widget type is GOOGLE_PAY, then button text should be empty string`() {
         sut =
-            CardEntryViewModel(
-                getJudo(PaymentWidgetType.GOOGLE_PAY),
-                cardTransactionRepository,
-                repository,
-                CardEntryOptions(isPresentedFromPaymentMethods = true, isAddingNewCard = true),
-                application,
+            createViewModel(
+                PaymentWidgetType.GOOGLE_PAY,
+                options = CardEntryOptions(isPresentedFromPaymentMethods = true, isAddingNewCard = true),
             )
 
         val inputModel =
@@ -355,12 +368,9 @@ internal class CardEntryViewModelTest {
     @Test
     fun `Given payment widget type is PRE_AUTH_GOOGLE_PAY, then button text should be empty string`() {
         sut =
-            CardEntryViewModel(
-                getJudo(PaymentWidgetType.PRE_AUTH_GOOGLE_PAY),
-                cardTransactionRepository,
-                repository,
-                CardEntryOptions(isPresentedFromPaymentMethods = true, isAddingNewCard = true),
-                application,
+            createViewModel(
+                PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
+                options = CardEntryOptions(isPresentedFromPaymentMethods = true, isAddingNewCard = true),
             )
 
         val inputModel =
@@ -386,22 +396,15 @@ internal class CardEntryViewModelTest {
 
     @Test
     fun `Given fromPaymentMethods and shouldAskForCSC and shouldAskForCardholderName, then initialise enableFormFields correctly`() {
-        val judo =
-            getJudo(
+        sut =
+            createViewModel(
                 PaymentWidgetType.CARD_PAYMENT,
                 UiConfiguration
                     .Builder()
                     .setShouldAskForCSC(true)
                     .setShouldAskForCardholderName(true)
                     .build(),
-            )
-        sut =
-            CardEntryViewModel(
-                judo,
-                cardTransactionRepository,
-                repository,
                 CardEntryOptions(isPresentedFromPaymentMethods = true),
-                application,
             )
 
         val inputModel =
@@ -428,9 +431,13 @@ internal class CardEntryViewModelTest {
         }
 
     @Test
-    fun `Given send is called with ValidationStatusChanged isFormValid=false after true, then buttonState reverts to Disabled`() {
-        sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
-        sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), false))
+    fun `Given a card field is invalidated after all fields were valid, then buttonState reverts to Disabled`() {
+        makeCardFormValid()
+        // Simulate a field becoming invalid: configure mock to return invalid for the next call
+        every {
+            mockCardValidator.validateField(eq(CardDetailsFieldType.NUMBER), any(), any())
+        } returns ValidationResult(false, R.string.jp_empty)
+        sut.send(CardEntryAction.CardFieldChanged(CardDetailsFieldType.NUMBER, "", FormFieldEvent.FOCUS_CHANGED))
 
         val inputModel =
             sut.uiState.value
@@ -442,16 +449,15 @@ internal class CardEntryViewModelTest {
     @Test
     fun `Given shouldAskForBillingInformation=true and SubmitCardEntryForm, then Billing navigation is emitted`() =
         runTest {
-            val judo =
-                getJudo(
+            sut =
+                createViewModel(
                     PaymentWidgetType.CARD_PAYMENT,
                     UiConfiguration.Builder().setShouldAskForBillingInformation(true).build(),
                 )
-            sut = CardEntryViewModel(judo, cardTransactionRepository, repository, CardEntryOptions(), application)
 
             val navResults = collectFlow(sut.navigationEffect)
 
-            sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
+            makeCardFormValid()
             sut.send(CardEntryAction.SubmitCardEntryForm)
             advanceUntilIdle()
 
@@ -462,14 +468,13 @@ internal class CardEntryViewModelTest {
     @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
     fun `Given shouldAskForBillingInformation=true and SubmitCardEntryForm, then payment repository is NOT called immediately`() =
         runTest {
-            val judo =
-                getJudo(
+            sut =
+                createViewModel(
                     PaymentWidgetType.CARD_PAYMENT,
                     UiConfiguration.Builder().setShouldAskForBillingInformation(true).build(),
                 )
-            sut = CardEntryViewModel(judo, cardTransactionRepository, repository, CardEntryOptions(), application)
 
-            sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
+            makeCardFormValid()
             sut.send(CardEntryAction.SubmitCardEntryForm)
             advanceUntilIdle()
 
@@ -478,14 +483,13 @@ internal class CardEntryViewModelTest {
 
     @Test
     fun `Given shouldAskForBillingInformation=true and continueButtonText, then button shows jp_continue_text`() {
-        val judo =
-            getJudo(
+        sut =
+            createViewModel(
                 PaymentWidgetType.CARD_PAYMENT,
                 UiConfiguration.Builder().setShouldAskForBillingInformation(true).build(),
             )
-        sut = CardEntryViewModel(judo, cardTransactionRepository, repository, CardEntryOptions(), application)
 
-        sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
+        makeCardFormValid()
 
         val inputModel =
             sut.uiState.value
@@ -526,8 +530,8 @@ internal class CardEntryViewModelTest {
     }
 
     @Test
-    fun `Given send is called with BillingDetailsValidationStatusChanged isFormValid=true, then billing submit button is Enabled`() {
-        sut.send(CardEntryAction.BillingDetailsValidationStatusChanged(BillingDetailsInputModel(), true))
+    fun `Given all billing fields are valid, then billing submit button is Enabled`() {
+        makeBillingFormValid()
 
         val billingModel =
             sut.uiState.value
@@ -537,9 +541,7 @@ internal class CardEntryViewModelTest {
     }
 
     @Test
-    fun `Given send is called with BillingDetailsValidationStatusChanged isFormValid=false, then billing submit button is Disabled`() {
-        sut.send(CardEntryAction.BillingDetailsValidationStatusChanged(BillingDetailsInputModel(), false))
-
+    fun `Given billing fields are not all valid, then billing submit button is Disabled`() {
         val billingModel =
             sut.uiState.value
                 ?.formModel
@@ -551,15 +553,9 @@ internal class CardEntryViewModelTest {
     fun `Given Initialize for TOKEN_PAYMENT with shouldAskForBillingInformation=true, then Billing navigation is emitted`() =
         runTest {
             sut =
-                CardEntryViewModel(
-                    getJudo(
-                        PaymentWidgetType.TOKEN_PAYMENT,
-                        UiConfiguration.Builder().setShouldAskForBillingInformation(true).build(),
-                    ),
-                    cardTransactionRepository,
-                    repository,
-                    CardEntryOptions(),
-                    application,
+                createViewModel(
+                    PaymentWidgetType.TOKEN_PAYMENT,
+                    UiConfiguration.Builder().setShouldAskForBillingInformation(true).build(),
                 )
 
             val navResults = collectFlow(sut.navigationEffect)
@@ -573,14 +569,7 @@ internal class CardEntryViewModelTest {
     @Test
     fun `Given Initialize for TOKEN_PAYMENT with no user input required, then paymentWithToken is called immediately`() =
         runTest {
-            sut =
-                CardEntryViewModel(
-                    getJudo(PaymentWidgetType.TOKEN_PAYMENT),
-                    cardTransactionRepository,
-                    repository,
-                    CardEntryOptions(),
-                    application,
-                )
+            sut = createViewModel(PaymentWidgetType.TOKEN_PAYMENT)
 
             sut.send(CardEntryAction.Initialize)
             advanceUntilIdle()
@@ -592,15 +581,8 @@ internal class CardEntryViewModelTest {
     @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
     fun `Given send is called with SubmitCardEntryForm action, when payment widget type is PRE_AUTH_PAYMENT_METHODS, then cardTransactionRepository's save method is called`() =
         runTest {
-            sut =
-                CardEntryViewModel(
-                    getJudo(PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS),
-                    cardTransactionRepository,
-                    repository,
-                    CardEntryOptions(),
-                    application,
-                )
-            sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
+            sut = createViewModel(PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS)
+            makeCardFormValid()
             sut.send(CardEntryAction.SubmitCardEntryForm)
             advanceUntilIdle()
 
@@ -610,15 +592,9 @@ internal class CardEntryViewModelTest {
     @Test
     fun `Given avsEnabled=true and no billing information, then COUNTRY and POST_CODE fields are enabled`() {
         sut =
-            CardEntryViewModel(
-                getJudo(
-                    PaymentWidgetType.CARD_PAYMENT,
-                    UiConfiguration.Builder().setAvsEnabled(true).build(),
-                ),
-                cardTransactionRepository,
-                repository,
-                CardEntryOptions(),
-                application,
+            createViewModel(
+                PaymentWidgetType.CARD_PAYMENT,
+                UiConfiguration.Builder().setAvsEnabled(true).build(),
             )
 
         val enabledFields =
@@ -655,7 +631,7 @@ internal class CardEntryViewModelTest {
 
             val results = collectFlow(sut.paymentResultEffect)
 
-            sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
+            makeCardFormValid()
             sut.send(CardEntryAction.SubmitCardEntryForm)
             advanceUntilIdle()
 
@@ -664,14 +640,7 @@ internal class CardEntryViewModelTest {
 
     @Test
     fun `Given TOKEN_PAYMENT with no user input required, then uiState isUserInputRequired is false`() {
-        sut =
-            CardEntryViewModel(
-                getJudo(PaymentWidgetType.TOKEN_PAYMENT),
-                cardTransactionRepository,
-                repository,
-                CardEntryOptions(),
-                application,
-            )
+        sut = createViewModel(PaymentWidgetType.TOKEN_PAYMENT)
 
         assertThat(sut.uiState.value?.isUserInputRequired).isFalse()
     }
@@ -683,14 +652,7 @@ internal class CardEntryViewModelTest {
 
     @Test
     fun `Given TOKEN_PAYMENT with no enabled card fields, then billing back button is Hidden`() {
-        sut =
-            CardEntryViewModel(
-                getJudo(PaymentWidgetType.TOKEN_PAYMENT),
-                cardTransactionRepository,
-                repository,
-                CardEntryOptions(),
-                application,
-            )
+        sut = createViewModel(PaymentWidgetType.TOKEN_PAYMENT)
 
         val billingModel =
             sut.uiState.value
@@ -710,14 +672,7 @@ internal class CardEntryViewModelTest {
 
     @Test
     fun `Given payment widget type is CHECK_CARD, then button text should be jp_check_card`() {
-        sut =
-            CardEntryViewModel(
-                getJudo(PaymentWidgetType.CHECK_CARD),
-                cardTransactionRepository,
-                repository,
-                CardEntryOptions(),
-                application,
-            )
+        sut = createViewModel(PaymentWidgetType.CHECK_CARD)
 
         val inputModel =
             sut.uiState.value
@@ -729,12 +684,9 @@ internal class CardEntryViewModelTest {
     @Test
     fun `Given payment widget type is PAYMENT_METHODS and isAddingNewCard=false, then button text should be jp_pay_now`() {
         sut =
-            CardEntryViewModel(
-                getJudo(PaymentWidgetType.PAYMENT_METHODS),
-                cardTransactionRepository,
-                repository,
-                CardEntryOptions(isPresentedFromPaymentMethods = true, isAddingNewCard = false),
-                application,
+            createViewModel(
+                PaymentWidgetType.PAYMENT_METHODS,
+                options = CardEntryOptions(isPresentedFromPaymentMethods = true, isAddingNewCard = false),
             )
 
         val inputModel =
@@ -761,24 +713,17 @@ internal class CardEntryViewModelTest {
     fun `Given send is called with SubmitCardEntryForm from payment methods, then cardEntryToPaymentMethodResultEffect contains billing address fields`() =
         runTest {
             sut =
-                CardEntryViewModel(
-                    getJudo(PaymentWidgetType.PAYMENT_METHODS),
-                    cardTransactionRepository,
-                    repository,
-                    CardEntryOptions(isPresentedFromPaymentMethods = true),
-                    application,
+                createViewModel(
+                    PaymentWidgetType.PAYMENT_METHODS,
+                    options = CardEntryOptions(isPresentedFromPaymentMethods = true),
                 )
 
             val results = collectFlow(sut.cardEntryToPaymentMethodResultEffect)
 
-            val billingInput =
-                BillingDetailsInputModel(
-                    email = "test@example.com",
-                    city = "London",
-                    postalCode = "W1A 1AA",
-                )
-            sut.send(CardEntryAction.BillingDetailsValidationStatusChanged(billingInput, true))
-            sut.send(CardEntryAction.ValidationStatusChanged(CardDetailsInputModel(), true))
+            sut.send(CardEntryAction.BillingFieldChanged(BillingDetailsFieldType.EMAIL, "test@example.com", FormFieldEvent.FOCUS_CHANGED))
+            sut.send(CardEntryAction.BillingFieldChanged(BillingDetailsFieldType.CITY, "London", FormFieldEvent.FOCUS_CHANGED))
+            sut.send(CardEntryAction.BillingFieldChanged(BillingDetailsFieldType.POST_CODE, "W1A 1AA", FormFieldEvent.FOCUS_CHANGED))
+            makeCardFormValid()
             sut.send(CardEntryAction.SubmitCardEntryForm)
             advanceUntilIdle()
 
@@ -787,6 +732,48 @@ internal class CardEntryViewModelTest {
             assertThat(built.city).isEqualTo("London")
             assertThat(built.postalCode).isEqualTo("W1A 1AA")
         }
+
+    @Test
+    fun `Given card number is typed first while CVV is empty and untouched, then no CVV error is shown when network is detected`() {
+        // Mock returns null initially so the first digit triggers networkChanged = true.
+        // The CVV validator returns an invalid result for the empty field.
+        every { mockCardValidator.cardNetwork } returns null
+        every {
+            mockCardValidator.validateField(CardDetailsFieldType.SECURITY_NUMBER, "", any())
+        } returns ValidationResult(false, R.string.jp_check_cvv)
+
+        sut.send(CardEntryAction.CardFieldChanged(CardDetailsFieldType.NUMBER, "4", FormFieldEvent.TEXT_CHANGED))
+
+        val fieldErrors =
+            sut.uiState.value
+                ?.formModel
+                ?.cardDetailsInputModel
+                ?.fieldErrors
+        assertThat(fieldErrors?.get(CardDetailsFieldType.SECURITY_NUMBER)).isNull()
+    }
+
+    @Test
+    fun `Given CVV already has content when card network changes, then CVV error is surfaced`() {
+        // User typed an incomplete CVV and moved focus away — error is now visible.
+        every {
+            mockCardValidator.validateField(CardDetailsFieldType.SECURITY_NUMBER, "12", any())
+        } returns ValidationResult(false, R.string.jp_check_cvv)
+        sut.send(CardEntryAction.CardFieldChanged(CardDetailsFieldType.SECURITY_NUMBER, "12", FormFieldEvent.FOCUS_CHANGED))
+
+        // Then the user types a card number prefix that changes the detected network.
+        every { mockCardValidator.cardNetwork } returns null
+        every {
+            mockCardValidator.validateField(CardDetailsFieldType.SECURITY_NUMBER, "12", any())
+        } returns ValidationResult(false, R.string.jp_check_visa_security_code)
+        sut.send(CardEntryAction.CardFieldChanged(CardDetailsFieldType.NUMBER, "41", FormFieldEvent.TEXT_CHANGED))
+
+        val fieldErrors =
+            sut.uiState.value
+                ?.formModel
+                ?.cardDetailsInputModel
+                ?.fieldErrors
+        assertThat(fieldErrors?.get(CardDetailsFieldType.SECURITY_NUMBER)).isNotNull()
+    }
 
     private fun getJudo(
         widgetType: PaymentWidgetType,

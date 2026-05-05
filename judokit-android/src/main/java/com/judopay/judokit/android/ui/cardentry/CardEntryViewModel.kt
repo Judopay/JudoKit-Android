@@ -9,22 +9,29 @@ import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.db.entity.TokenizedCardEntity
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
+import com.judopay.judokit.android.model.AVSCountry
 import com.judopay.judokit.android.model.CardNetwork
 import com.judopay.judokit.android.model.CardScanningResult
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.TransactionDetails
+import com.judopay.judokit.android.model.asAVSCountry
 import com.judopay.judokit.android.model.formatted
 import com.judopay.judokit.android.model.isTokenPayment
 import com.judopay.judokit.android.model.toInputModel
 import com.judopay.judokit.android.service.CardTransactionRepository
 import com.judopay.judokit.android.service.ThreeDSChallengeDelegate
+import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.cardentry.model.Country
+import com.judopay.judokit.android.ui.cardentry.model.FormFieldEvent
 import com.judopay.judokit.android.ui.cardentry.model.FormModel
+import com.judopay.judokit.android.ui.cardentry.validation.BillingDetailsFormValidator
+import com.judopay.judokit.android.ui.cardentry.validation.CardDetailsFormValidator
+import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
 import com.judopay.judokit.android.ui.common.ButtonState
 import com.judopay.judokit.android.ui.paymentmethods.toTokenizedCardEntity
 import com.judopay.judokit.android.withWhitespacesRemoved
@@ -49,14 +56,16 @@ data class CardEntryFragmentModel(
 )
 
 sealed class CardEntryAction {
-    data class ValidationStatusChanged(
-        val input: CardDetailsInputModel,
-        val isFormValid: Boolean,
+    data class CardFieldChanged(
+        val fieldType: CardDetailsFieldType,
+        val value: String,
+        val event: FormFieldEvent,
     ) : CardEntryAction()
 
-    data class BillingDetailsValidationStatusChanged(
-        val input: BillingDetailsInputModel,
-        val isFormValid: Boolean,
+    data class BillingFieldChanged(
+        val fieldType: BillingDetailsFieldType,
+        val value: String,
+        val event: FormFieldEvent,
     ) : CardEntryAction()
 
     data class InsertCard(
@@ -76,7 +85,7 @@ sealed class CardEntryAction {
     object Initialize : CardEntryAction()
 }
 
-@Suppress("DEPRECATION")
+@Suppress("DEPRECATION", "LongParameterList")
 class CardEntryViewModel
     internal constructor(
         private val judo: Judo,
@@ -84,6 +93,10 @@ class CardEntryViewModel
         private val cardRepository: TokenizedCardRepository,
         private val cardEntryOptions: CardEntryOptions,
         application: Application,
+        private val cardDetailsFormValidator: CardDetailsFormValidator =
+            CardDetailsFormValidator(judo.supportedCardNetworks.toList()),
+        private val billingDetailsFormValidator: BillingDetailsFormValidator =
+            BillingDetailsFormValidator(),
     ) : AndroidViewModel(application) {
         private val _uiState = MutableStateFlow<CardEntryFragmentModel?>(null)
         val uiState: StateFlow<CardEntryFragmentModel?> = _uiState.asStateFlow()
@@ -104,14 +117,42 @@ class CardEntryViewModel
 
         private val context = application
 
-        // used when the form needs to be pre populated, ex. `Scan Card`
         private var cardDetailsModel = CardDetailsInputModel()
         private var billingAddressModel = BillingDetailsInputModel(countryCode = Country.currentLocaleCountry(context).numericCode)
+
+        /*
+         * Per-field validity state used for isCardFormValid() / isBillingFormValid().
+         * Key absent = not yet validated (treated as invalid).
+         */
+        private val cardFieldValidity = mutableMapOf<CardDetailsFieldType, Boolean>()
+        private val billingFieldValidity = mutableMapOf<BillingDetailsFieldType, Boolean>()
+
+        // Per-field display errors that go into the model for the View to render.
+        private val cardFieldDisplayErrors = mutableMapOf<CardDetailsFieldType, Int?>()
+        private val billingFieldDisplayErrors = mutableMapOf<BillingDetailsFieldType, Int?>()
 
         private var navigation: CardEntryNavigation = CardEntryNavigation.Card
         private var isInitialized = false
 
         init {
+            // Initialize the card AVS country so PostcodeValidator uses the right regex from the start.
+            cardDetailsFormValidator.country = cardDetailsModel.country.asAVSCountry() ?: AVSCountry.OTHER
+
+            // Initialize the billing country so country-aware validators are ready.
+            val initialBillingCountry = Country.list(context).firstOrNull { it.numericCode == billingAddressModel.countryCode }
+            billingDetailsFormValidator.country = initialBillingCountry
+
+            // Fields that are always valid when empty (no validators assigned or treated as optional).
+            billingFieldValidity[BillingDetailsFieldType.ADDRESS_LINE_2] = true
+            billingFieldValidity[BillingDetailsFieldType.ADDRESS_LINE_3] = true
+            billingFieldValidity[BillingDetailsFieldType.PHONE_COUNTRY_CODE] = true
+            billingFieldValidity[BillingDetailsFieldType.MOBILE_NUMBER] = true
+
+            billingAddressModel =
+                billingAddressModel.copy(
+                    adminDivisionRequired = billingDetailsFormValidator.adminDivisionRequired,
+                )
+
             buildModel()
         }
 
@@ -129,21 +170,15 @@ class CardEntryViewModel
                     val entity = action.tokenizedCard.toTokenizedCardEntity(context, cardDetailsModel.cardHolderName)
                     insert(entity)
                 }
-                is CardEntryAction.ValidationStatusChanged -> {
-                    cardDetailsModel = action.input
-                    buildModel(
-                        isCardDetailsValid = action.isFormValid,
-                        isBillingAddressValid = billingAddressModel.isValid,
-                        network = cardEntryOptions.cardNetwork,
-                    )
-                }
+                is CardEntryAction.CardFieldChanged -> handleCardFieldChanged(action)
+                is CardEntryAction.BillingFieldChanged -> handleBillingFieldChanged(action)
                 is CardEntryAction.SubmitCardEntryForm -> {
                     val isSaveCard = judo.paymentWidgetType == PaymentWidgetType.CREATE_CARD_TOKEN || cardEntryOptions.isAddingNewCard
                     if (judo.uiConfiguration.shouldAskForBillingInformation && !isSaveCard) {
                         navigation = CardEntryNavigation.Billing
                         buildModel(
                             isCardDetailsValid = true,
-                            isBillingAddressValid = billingAddressModel.isValid,
+                            isBillingAddressValid = isBillingFormValid(),
                         )
                         if (!_navigationEffect.tryEmit(CardEntryNavigation.Billing)) {
                             Log.w(TAG, "Navigation effect dropped")
@@ -160,42 +195,163 @@ class CardEntryViewModel
                     buildModel(
                         isLoading = true,
                         isCardDetailsValid = true,
-                        isBillingAddressValid = billingAddressModel.isValid,
+                        isBillingAddressValid = isBillingFormValid(),
                     )
                     sendRequest()
                 }
                 is CardEntryAction.ScanCard -> {
                     cardDetailsModel = action.result.toInputModel()
-                    buildModel(
-                        isCardDetailsValid = true,
-                    )
+                    buildModel(isCardDetailsValid = true)
                 }
                 is CardEntryAction.PressBackButton -> {
                     navigation = CardEntryNavigation.Card
-                    buildModel(
-                        isCardDetailsValid = true,
-                    )
+                    buildModel(isCardDetailsValid = true)
                     if (!_navigationEffect.tryEmit(CardEntryNavigation.Card)) {
                         Log.w(TAG, "Navigation effect dropped")
                     }
-                }
-                is CardEntryAction.BillingDetailsValidationStatusChanged -> {
-                    billingAddressModel = action.input
-                    buildModel(
-                        isCardDetailsValid = true,
-                        isBillingAddressValid = action.isFormValid,
-                    )
                 }
             }
         }
 
         /**
          * Called by the Fragment after the native 3DS2 challenge completes.
-         * Clears the pending challenge state so subsequent config-change re-subscriptions
-         * do not re-trigger doChallenge. The first call wins; any duplicate call from
-         * a stale receiver is silently dropped because the channel already has a value.
          */
         fun onChallengeResult(status: String?) = threeDSDelegate.onChallengeResult(status)
+
+        private fun handleCardFieldChanged(action: CardEntryAction.CardFieldChanged) {
+            val type = action.fieldType
+            val value = action.value
+            val event = action.event
+
+            cardDetailsModel = cardDetailsModel.withUpdatedField(type, value)
+
+            // Detect card network change on the NUMBER field and cascade to security code.
+            var networkChanged = false
+            if (type == CardDetailsFieldType.NUMBER) {
+                val newNetwork = CardNetwork.ofNumber(value.withWhitespacesRemoved)
+                if (cardDetailsFormValidator.cardNetwork != newNetwork) {
+                    cardDetailsFormValidator.cardNetwork = newNetwork
+                    networkChanged = true
+                }
+            }
+
+            // Update AVS country for postcode validation when the country field changes.
+            if (type == CardDetailsFieldType.COUNTRY) {
+                cardDetailsFormValidator.country = value.asAVSCountry() ?: AVSCountry.OTHER
+            }
+
+            val result = cardDetailsFormValidator.validateField(type, value, event)
+            applyCardValidationResult(type, result, event)
+
+            if (networkChanged) {
+                val cvvValue = cardDetailsModel.securityNumber
+                val cvvEvent =
+                    if (cvvValue.isNotEmpty() || cardFieldDisplayErrors[CardDetailsFieldType.SECURITY_NUMBER] != null) {
+                        FormFieldEvent.FOCUS_CHANGED
+                    } else {
+                        FormFieldEvent.TEXT_CHANGED
+                    }
+                val cvvResult =
+                    cardDetailsFormValidator.validateField(
+                        CardDetailsFieldType.SECURITY_NUMBER,
+                        cvvValue,
+                        cvvEvent,
+                    )
+                applyCardValidationResult(CardDetailsFieldType.SECURITY_NUMBER, cvvResult, cvvEvent)
+                cardDetailsModel = cardDetailsModel.copy(cardNetwork = cardDetailsFormValidator.cardNetwork)
+            }
+
+            cardDetailsModel = cardDetailsModel.copy(fieldErrors = cardFieldDisplayErrors.toMap())
+
+            buildModel(
+                isCardDetailsValid = isCardFormValid(),
+                isBillingAddressValid = isBillingFormValid(),
+                network = cardDetailsModel.cardNetwork,
+            )
+        }
+
+        private fun applyCardValidationResult(
+            type: CardDetailsFieldType,
+            result: ValidationResult?,
+            event: FormFieldEvent,
+        ) {
+            cardFieldValidity[type] = result?.isValid ?: true
+            when {
+                result == null || result.isValid -> cardFieldDisplayErrors[type] = null
+                event == FormFieldEvent.FOCUS_CHANGED ->
+                    cardFieldDisplayErrors[type] = result.message.takeIf { it != R.string.jp_empty }
+            }
+        }
+
+        @Suppress("CyclomaticComplexity")
+        private fun handleBillingFieldChanged(action: CardEntryAction.BillingFieldChanged) {
+            val type = action.fieldType
+            val value = action.value
+            val event = action.event
+
+            when (type) {
+                BillingDetailsFieldType.COUNTRY -> {
+                    val country = Country.list(context).firstOrNull { it.name.equals(value, ignoreCase = true) }
+                    billingDetailsFormValidator.country = country
+                    billingAddressModel =
+                        billingAddressModel.copy(
+                            countryCode = country?.numericCode ?: "",
+                            adminDivisionRequired = billingDetailsFormValidator.adminDivisionRequired,
+                        )
+
+                    billingFieldValidity.remove(BillingDetailsFieldType.ADMINISTRATIVE_DIVISION)
+                    billingFieldDisplayErrors.remove(BillingDetailsFieldType.ADMINISTRATIVE_DIVISION)
+                }
+                BillingDetailsFieldType.ADMINISTRATIVE_DIVISION -> {
+                    val isoCode = billingDetailsFormValidator.isoCodeForAdminDivision(value) ?: ""
+                    billingAddressModel = billingAddressModel.copy(administrativeDivision = isoCode)
+                }
+                else -> billingAddressModel = billingAddressModel.withUpdatedField(type, value)
+            }
+
+            val result =
+                billingDetailsFormValidator.validateField(
+                    type,
+                    value,
+                    event,
+                    billingAddressModel.phoneCountryCode,
+                    billingAddressModel.mobileNumber,
+                )
+            applyBillingValidationResult(type, result, event)
+
+            billingAddressModel = billingAddressModel.copy(fieldErrors = billingFieldDisplayErrors.toMap())
+
+            buildModel(
+                isCardDetailsValid = isCardFormValid(),
+                isBillingAddressValid = isBillingFormValid(),
+            )
+        }
+
+        private fun applyBillingValidationResult(
+            type: BillingDetailsFieldType,
+            result: ValidationResult?,
+            event: FormFieldEvent,
+        ) {
+            billingFieldValidity[type] = result?.isValid ?: true
+            when {
+                result == null || result.isValid -> billingFieldDisplayErrors[type] = null
+                event == FormFieldEvent.FOCUS_CHANGED ->
+                    billingFieldDisplayErrors[type] = result.message.takeIf { it != R.string.jp_empty }
+            }
+        }
+
+        private fun isCardFormValid(): Boolean {
+            val enabled = cardDetailsModel.enabledFields
+            return enabled.isNotEmpty() && enabled.all { cardFieldValidity[it] == true }
+        }
+
+        private fun isBillingFormValid(): Boolean =
+            BillingDetailsFieldType.entries.all { type ->
+                if (type == BillingDetailsFieldType.ADMINISTRATIVE_DIVISION && !billingDetailsFormValidator.adminDivisionRequired) {
+                    return@all true
+                }
+                billingFieldValidity[type] == true
+            }
 
         private fun navigateToBillingInfoIfNeeded() {
             if (!judo.isTokenPayment(cardEntryOptions) || judo.shouldAskForAdditionalCardDetails(cardEntryOptions)) {
@@ -359,7 +515,6 @@ class CardEntryViewModel
 
             billingAddressModel =
                 billingAddressModel.copy(
-                    isValid = isBillingAddressValid,
                     submitButtonState =
                         when {
                             isLoading -> ButtonState.Loading
@@ -379,7 +534,6 @@ class CardEntryViewModel
                 )
 
             val formModel = FormModel(cardDetailsModel, billingAddressModel)
-
             _uiState.value = CardEntryFragmentModel(formModel, isUserInputRequired = judo.isUserInputRequired(cardEntryOptions))
         }
 
@@ -394,6 +548,36 @@ class CardEntryViewModel
         companion object {
             private val TAG = CardEntryViewModel::class.java.name
         }
+    }
+
+private fun CardDetailsInputModel.withUpdatedField(
+    type: CardDetailsFieldType,
+    value: String,
+): CardDetailsInputModel =
+    when (type) {
+        CardDetailsFieldType.NUMBER -> copy(cardNumber = value)
+        CardDetailsFieldType.HOLDER_NAME -> copy(cardHolderName = value)
+        CardDetailsFieldType.EXPIRATION_DATE -> copy(expirationDate = value)
+        CardDetailsFieldType.SECURITY_NUMBER -> copy(securityNumber = value)
+        CardDetailsFieldType.COUNTRY -> copy(country = value)
+        CardDetailsFieldType.POST_CODE -> copy(postCode = value)
+    }
+
+private fun BillingDetailsInputModel.withUpdatedField(
+    type: BillingDetailsFieldType,
+    value: String,
+): BillingDetailsInputModel =
+    when (type) {
+        BillingDetailsFieldType.EMAIL -> copy(email = value)
+        BillingDetailsFieldType.PHONE_COUNTRY_CODE -> copy(phoneCountryCode = value)
+        BillingDetailsFieldType.MOBILE_NUMBER -> copy(mobileNumber = value)
+        BillingDetailsFieldType.ADDRESS_LINE_1 -> copy(addressLine1 = value)
+        BillingDetailsFieldType.ADDRESS_LINE_2 -> copy(addressLine2 = value)
+        BillingDetailsFieldType.ADDRESS_LINE_3 -> copy(addressLine3 = value)
+        BillingDetailsFieldType.CITY -> copy(city = value)
+        BillingDetailsFieldType.POST_CODE -> copy(postalCode = value)
+        // COUNTRY and ADMINISTRATIVE_DIVISION are handled separately in the action handler.
+        else -> this
     }
 
 private fun Judo.shouldAskForAdditionalCardDetails(options: CardEntryOptions): Boolean {

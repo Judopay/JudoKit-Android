@@ -16,5 +16,11 @@ data class BillingDetailsInputModel(
     val administrativeDivision: String = "",
     val submitButtonState: ButtonState = ButtonState.Disabled(R.string.jp_pay_now),
     val backButtonState: ButtonState = ButtonState.Enabled(R.string.jp_back),
-    val isValid: Boolean = false,
+    val adminDivisionRequired: Boolean = false,
+    /*
+     * Key absent = not yet validated (invalid for form purposes).
+     * Key present + null = valid, no error to display.
+     * Key present + non-null = invalid, display this @StringRes error message.
+     */
+    val fieldErrors: Map<BillingDetailsFieldType, Int?> = emptyMap(),
 )

@@ -17,5 +17,10 @@ data class CardDetailsInputModel(
     val enabledFields: List<CardDetailsFieldType> = emptyList(),
     val supportedNetworks: List<CardNetwork> = emptyList(),
     val cardNetwork: CardNetwork? = null,
-    val isValid: Boolean = false,
+    /*
+     * Key absent = not yet validated (invalid for form purposes).
+     * Key present + null = valid, no error to display.
+     * Key present + non-null = invalid, display this @StringRes error message.
+     */
+    val fieldErrors: Map<CardDetailsFieldType, Int?> = emptyMap(),
 )
