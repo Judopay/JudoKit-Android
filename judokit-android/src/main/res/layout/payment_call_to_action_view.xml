@@ -54,7 +54,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.judopay.judokit.android.ui.common.ProgressButton
-            android:id="@+id/payButton"
+            android:id="@+id/submit_button"
             style="@style/JudoTheme.BlackRoundedButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

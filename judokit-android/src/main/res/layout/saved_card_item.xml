@@ -11,7 +11,7 @@
     android:paddingBottom="@dimen/space_12">
 
     <ImageView
-        android:id="@+id/removeCardIcon"
+        android:id="@+id/remove_card_button"
         style="@style/JudoTheme.ImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         android:background="@drawable/card_network_decoration_shape"
         android:padding="@dimen/space_8"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/removeCardIcon"
+        app:layout_constraintStart_toEndOf="@id/remove_card_button"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -52,11 +52,11 @@
         app:layout_constraintEnd_toStartOf="@+id/radioIconImageView"
         app:layout_constraintStart_toEndOf="@+id/networkIconContainer"
         app:layout_constraintTop_toTopOf="@+id/networkIconContainer"
-        app:layout_constraintBottom_toTopOf="@id/subTitle"
+        app:layout_constraintBottom_toTopOf="@id/sub_title"
         tools:text="Card for shopping" />
 
     <TextView
-        android:id="@+id/subTitle"
+        android:id="@+id/sub_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_8"

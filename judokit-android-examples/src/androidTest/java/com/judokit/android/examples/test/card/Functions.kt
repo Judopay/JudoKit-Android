@@ -107,13 +107,13 @@ fun enterPaymentSheetDetails(
     cardExpiry: String,
     cardSecurityCode: String,
 ) {
-    fillTextField(SDK.id.numberTextInputEditText, cardNumber)
+    fillTextField(SDK.id.card_number, cardNumber)
 
-    fillTextField(SDK.id.nameTextInputEditText, cardHolder)
+    fillTextField(SDK.id.cardholder_name, cardHolder)
 
-    fillTextField(SDK.id.expirationDateTextInputEditText, cardExpiry)
+    fillTextField(SDK.id.expiry_date, cardExpiry)
 
-    fillTextField(SDK.id.securityNumberTextInputEditText, cardSecurityCode)
+    fillTextField(SDK.id.security_code, cardSecurityCode)
 }
 
 fun fillTextField(
@@ -131,7 +131,7 @@ fun updateRecommendationUrlWith(suffix: String) {
             putString("recommendation_url", recommendationURL + suffix)
         }.commit()
 
-    onView(withId(Examples.id.action_settings))
+    onView(withId(Examples.id.settings_button))
         .perform(click())
 
     onView(withText("Generate payment session"))
@@ -149,9 +149,9 @@ fun fillBillingDetails(
     postcode: String,
     state: String? = null,
 ) {
-    fillTextField(SDK.id.emailTextInputEditText, email)
+    fillTextField(SDK.id.cardholder_email_field, email)
 
-    selectFromMultipleAndEnterText(SDK.id.countryTextInputEditText, country)
+    selectFromMultipleAndEnterText(SDK.id.country_field, country)
 
     onView(withText(country)).perform(click())
 
@@ -159,18 +159,18 @@ fun fillBillingDetails(
 
     if (country == "India" || country == "China") {
         if (state != null) {
-            fillTextField(SDK.id.administrativeDivisionTextInputEditText, state)
+            fillTextField(SDK.id.administrative_division_field, state)
             onView(withText(state)).perform(click())
         }
     }
 
-    fillTextField(SDK.id.mobileNumberTextInputEditText, phone)
+    fillTextField(SDK.id.cardholder_phone_number_field, phone)
 
-    fillTextField(SDK.id.addressLine1TextInputEditText, addressLineOne)
+    fillTextField(SDK.id.cardholder_address_line_1_field, addressLineOne)
 
-    fillTextField(SDK.id.cityTextInputEditText, city)
+    fillTextField(SDK.id.cardholder_city_field, city)
 
-    fillTextField(SDK.id.postalCodeTextInputEditText, postcode)
+    fillTextField(SDK.id.postcode_field, postcode)
 }
 
 fun selectFromMultipleAndEnterText(

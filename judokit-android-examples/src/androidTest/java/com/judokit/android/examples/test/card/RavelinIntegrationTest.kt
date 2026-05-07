@@ -89,7 +89,7 @@ class RavelinIntegrationTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -112,7 +112,7 @@ class RavelinIntegrationTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -135,7 +135,7 @@ class RavelinIntegrationTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -156,7 +156,7 @@ class RavelinIntegrationTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -177,7 +177,7 @@ class RavelinIntegrationTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -200,7 +200,7 @@ class RavelinIntegrationTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -221,7 +221,7 @@ class RavelinIntegrationTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -249,7 +249,7 @@ class RavelinIntegrationTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -280,7 +280,7 @@ class RavelinIntegrationTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -303,7 +303,7 @@ class RavelinIntegrationTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 
@@ -334,7 +334,7 @@ class RavelinIntegrationTest {
             CARD_SECURITY_CODE,
         )
 
-        onView(withId(R.id.cardEntrySubmitButton))
+        onView(withId(R.id.submit_button))
             .check(matches(isEnabled()))
             .perform(click())
 

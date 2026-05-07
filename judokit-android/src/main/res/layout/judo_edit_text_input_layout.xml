@@ -21,7 +21,7 @@
         app:layout_constraintEnd_toStartOf="@+id/verticalBarrier">
 
         <TextView
-            android:id="@+id/errorTextView"
+            android:id="@+id/error_text_view"
             style="@style/JudoTheme.Caption.Error.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

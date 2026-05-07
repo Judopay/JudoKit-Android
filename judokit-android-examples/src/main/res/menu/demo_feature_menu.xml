@@ -4,7 +4,7 @@
 
     <!-- Settings, should appear as action button -->
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/settings_button"
         android:icon="@drawable/ic_settings_24"
         android:title="@string/title_settings"
         app:showAsAction="always" />
