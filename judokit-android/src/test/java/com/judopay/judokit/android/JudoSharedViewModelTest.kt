@@ -2,7 +2,6 @@ package com.judopay.judokit.android
 
 import android.app.Application
 import android.content.res.Resources
-import androidx.lifecycle.Observer
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.wallet.PaymentData
@@ -25,31 +24,35 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import retrofit2.await
 
 // ApiException(Status.RESULT_CANCELED)
 private const val API_EXCEPTION_STATUS_MESSAGE = "16: "
 
 @ExperimentalCoroutinesApi
-@ExtendWith(InstantExecutorExtension::class)
 @DisplayName("Testing JudoSharedViewModel logic")
+@Suppress("DEPRECATION")
 internal class JudoSharedViewModelTest {
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val testScheduler = StandardTestDispatcher().scheduler
+    private val testDispatcher = UnconfinedTestDispatcher(testScheduler)
 
     private val judo: Judo = mockk(relaxed = true)
     private val googlePayService: JudoGooglePayService = mockk(relaxed = true)
@@ -59,9 +62,6 @@ internal class JudoSharedViewModelTest {
 
     private val sut = JudoSharedViewModel(judo, googlePayService, judoApiService, application)
 
-    private val paymentResult = spyk<Observer<JudoPaymentResult>>()
-    private val paymentMethodsGooglePayResult = spyk<Observer<JudoPaymentResult>>()
-
     @BeforeEach
     internal fun setUp() {
         Dispatchers.setMain(testDispatcher)
@@ -70,9 +70,6 @@ internal class JudoSharedViewModelTest {
         mockkStatic("com.judopay.judokit.android.ui.common.MappersKt")
         mockkStatic("com.judopay.judokit.android.api.model.request.GooglePayRequestKt")
         mockkStatic("com.judopay.judokit.android.api.model.response.JudoApiCallResultKt")
-
-        sut.paymentResult.observeForever(paymentResult)
-        sut.paymentMethodsResult.observeForever(paymentMethodsGooglePayResult)
     }
 
     @AfterEach
@@ -98,201 +95,107 @@ internal class JudoSharedViewModelTest {
 
         sut.send(JudoSharedAction.LoadGPayPaymentData)
 
-        coVerify { googlePayService.loadGooglePayPaymentData() }
+        verify { googlePayService.loadGooglePayPaymentData(any(), any()) }
     }
 
-    @DisplayName(
-        "Given checkIfGooglePayIsAvailable returns false, when paymentWidgetType is GOOGLE_PAY, then update paymentResult with error",
-    )
-    @Test
-    fun updatePaymentResultWithErrorOnCheckIfGooglePayIsAvailableFalseWithGooglePayWidgetType() {
-        val slots = mutableListOf<JudoPaymentResult>()
-
-        coEvery { googlePayService.checkIfGooglePayIsAvailable() } returns false
-        every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
-
-        sut.send(JudoSharedAction.LoadGPayPaymentData)
-
-        verify { paymentResult.onChanged(capture(slots)) }
-        val actualPaymentResult = slots[0]
-        val expectedPaymentResult =
-            JudoPaymentResult.Error(
-                JudoError.googlePayNotSupported(
-                    resources,
-                    "GooglePay is not supported on your device",
-                ),
+    @ParameterizedTest(name = "widgetType={0}")
+    @MethodSource("googlePayUnavailableArgs")
+    fun updateEffectWithErrorWhenGooglePayUnavailable(
+        widgetType: PaymentWidgetType,
+        usePaymentResultEffect: Boolean,
+    ) = runTest(testScheduler) {
+        val results =
+            collectFlow(
+                if (usePaymentResultEffect) sut.paymentResultEffect else sut.paymentMethodsResultEffect,
             )
-        assertEquals(expectedPaymentResult, actualPaymentResult)
-    }
-
-    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
-    @DisplayName(
-        "Given checkIfGooglePayIsAvailable returns false, when paymentWidgetType is PRE_AUTH_GOOGLE_PAY, then update paymentResult with error",
-    )
-    @Test
-    fun updatePaymentResultWithErrorOnCheckIfGooglePayIsAvailableFalseWithPreAuthGooglePayWidgetType() {
-        val slots = mutableListOf<JudoPaymentResult>()
 
         coEvery { googlePayService.checkIfGooglePayIsAvailable() } returns false
-        every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH_GOOGLE_PAY
+        every { judo.paymentWidgetType } returns widgetType
 
         sut.send(JudoSharedAction.LoadGPayPaymentData)
 
-        verify { paymentResult.onChanged(capture(slots)) }
-        val actualPaymentResult = slots[0]
-        val expectedPaymentResult =
-            JudoPaymentResult.Error(
-                JudoError.googlePayNotSupported(
-                    resources,
-                    "GooglePay is not supported on your device",
-                ),
-            )
-        assertEquals(expectedPaymentResult, actualPaymentResult)
-    }
-
-    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
-    @DisplayName(
-        "Given checkIfGooglePayIsAvailable returns false, when paymentWidgetType is PAYMENT_METHODS, then update paymentMethodsGooglePayResult with error",
-    )
-    @Test
-    fun updatePaymentMethodsGooglePayResultWithErrorOnCheckIfGooglePayIsAvailableFalseWithPaymentMethodsWidgetType() {
-        val slots = mutableListOf<JudoPaymentResult>()
-
-        coEvery { googlePayService.checkIfGooglePayIsAvailable() } returns false
-        every { judo.paymentWidgetType } returns PaymentWidgetType.PAYMENT_METHODS
-
-        sut.send(JudoSharedAction.LoadGPayPaymentData)
-
-        verify { paymentMethodsGooglePayResult.onChanged(capture(slots)) }
-        val actualPaymentMethodsGooglePayResult = slots[0]
-        val expectedPaymentMethodsGooglePayResult =
+        assertEquals(
             JudoPaymentResult.Error(
                 JudoError.googlePayNotSupported(resources, "GooglePay is not supported on your device"),
-            )
-        assertEquals(expectedPaymentMethodsGooglePayResult, actualPaymentMethodsGooglePayResult)
+            ),
+            results[0],
+        )
     }
 
     @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
     @DisplayName(
-        "Given checkIfGooglePayIsAvailable returns false, when paymentWidgetType is PRE_AUTH_PAYMENT_METHODS, then update paymentMethodsGooglePayResult with error",
+        "Given checkIfGooglePayIsAvailable returns false, when paymentWidgetType is not isGooglePayWidget or Payment Methods Widget, then does not emit to any effect",
     )
     @Test
-    fun updatePaymentMethodsGooglePayResultWithErrorOnCheckIfGooglePayIsAvailableFalseWithPreAuthPaymentMethodsWidgetType() {
-        val slots = mutableListOf<JudoPaymentResult>()
+    fun noEffectEmittedOnCheckIfGooglePayIsAvailableReturnFalseAndWidgetTypeIsNotGpayOrPaymentMethods() =
+        runTest(testScheduler) {
+            val paymentResults = collectFlow(sut.paymentResultEffect)
+            val methodsResults = collectFlow(sut.paymentMethodsResultEffect)
 
-        coEvery { googlePayService.checkIfGooglePayIsAvailable() } returns false
-        every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS
+            coEvery { googlePayService.checkIfGooglePayIsAvailable() } returns false
+            every { judo.paymentWidgetType } returns PaymentWidgetType.CARD_PAYMENT
 
-        sut.send(JudoSharedAction.LoadGPayPaymentData)
-
-        verify { paymentMethodsGooglePayResult.onChanged(capture(slots)) }
-        val actualPaymentMethodsGooglePayResult = slots[0]
-        val expectedPaymentMethodsGooglePayResult =
-            JudoPaymentResult.Error(
-                JudoError.googlePayNotSupported(resources, "GooglePay is not supported on your device"),
-            )
-        assertEquals(expectedPaymentMethodsGooglePayResult, actualPaymentMethodsGooglePayResult)
-    }
-
-    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
-    @DisplayName(
-        "Given checkIfGooglePayIsAvailable returns false, when paymentWidgetType is SERVER_TO_SERVER_PAYMENT_METHODS, then update paymentMethodsGooglePayResult with error",
-    )
-    @Test
-    fun updatePaymentMethodsGooglePayResultWithErrorOnCheckIfGooglePayIsAvailableFalseWithServerToServerPaymentMethodsWidgetType() {
-        val slots = mutableListOf<JudoPaymentResult>()
-
-        coEvery { googlePayService.checkIfGooglePayIsAvailable() } returns false
-        every { judo.paymentWidgetType } returns PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS
-
-        sut.send(JudoSharedAction.LoadGPayPaymentData)
-
-        verify { paymentMethodsGooglePayResult.onChanged(capture(slots)) }
-        val actualPaymentMethodsGooglePayResult = slots[0]
-        val expectedPaymentMethodsGooglePayResult =
-            JudoPaymentResult.Error(
-                JudoError.googlePayNotSupported(
-                    resources,
-                    "GooglePay is not supported on your device",
-                ),
-            )
-        assertEquals(expectedPaymentMethodsGooglePayResult, actualPaymentMethodsGooglePayResult)
-    }
-
-    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
-    @DisplayName(
-        "Given checkIfGooglePayIsAvailable returns false, when paymentWidgetType is not isGooglePayWidget or Payment Methods Widget, then does not update any model",
-    )
-    @Test
-    fun modelNotUpdatedOnCheckIfGooglePayIsAvailableReturnFalseAndWidgetTypeIsNotGpayOrPaymentMethods() {
-        val slots = mutableListOf<JudoPaymentResult>()
-
-        coEvery { googlePayService.checkIfGooglePayIsAvailable() } returns false
-        every { judo.paymentWidgetType } returns PaymentWidgetType.CARD_PAYMENT
-
-        sut.send(JudoSharedAction.LoadGPayPaymentData)
-
-        verify(inverse = true) { paymentResult.onChanged(capture(slots)) }
-        verify(inverse = true) { paymentMethodsGooglePayResult.onChanged(capture(slots)) }
-    }
-
-    @DisplayName("Given loadGooglePayPaymentData throws IllegalStateException, then update paymentResult with error")
-    @Test
-    fun updatePaymentResultWithErrorOnLoadGooglePayPaymentDataThrowsIllegalStateException() {
-        val slots = mutableListOf<JudoPaymentResult>()
-
-        coEvery { googlePayService.checkIfGooglePayIsAvailable() } returns true
-        coEvery { googlePayService.loadGooglePayPaymentData() } throws IllegalStateException("Error")
-        every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
-
-        sut.send(JudoSharedAction.LoadGPayPaymentData)
-
-        verify { paymentResult.onChanged(capture(slots)) }
-        val actualPaymentResult = slots[0]
-        val expectedPaymentResult =
-            JudoPaymentResult.Error(
-                JudoError.googlePayNotSupported(
-                    resources,
-                    "Error",
-                ),
-            )
-        assertEquals(expectedPaymentResult, actualPaymentResult)
-    }
-
-    @DisplayName("Given loadGooglePayPaymentData throws ApiException, then update paymentResult with error")
-    @Test
-    fun updatePaymentResultWithErrorOnLoadGooglePayPaymentDataThrowsApiException() {
-        val slots = mutableListOf<JudoPaymentResult>()
-
-        coEvery { googlePayService.checkIfGooglePayIsAvailable() } returns true
-        coEvery { googlePayService.loadGooglePayPaymentData() } throws ApiException(Status.RESULT_CANCELED)
-        every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
-
-        sut.send(JudoSharedAction.LoadGPayPaymentData)
-
-        verify { paymentResult.onChanged(capture(slots)) }
-        val actualPaymentResult = slots[0]
-        val expectedPaymentResult =
-            JudoPaymentResult.Error(
-                JudoError.googlePayNotSupported(
-                    resources,
-                    API_EXCEPTION_STATUS_MESSAGE,
-                ),
-            )
-        assertEquals(expectedPaymentResult, actualPaymentResult)
-    }
-
-    @DisplayName("Given loadGooglePayPaymentData throws other exception than ApiException or IllegalStateException, then throw exception")
-    @Test
-    @Disabled
-    fun throwExceptionOnLoadGooglePayPaymentDataThrowsException() {
-        coEvery { googlePayService.checkIfGooglePayIsAvailable() } returns true
-        coEvery { googlePayService.loadGooglePayPaymentData() } throws RuntimeException()
-
-        try {
             sut.send(JudoSharedAction.LoadGPayPaymentData)
-        } catch (e: Exception) {
-            assertTrue(e is RuntimeException)
+
+            assertTrue(paymentResults.isEmpty())
+            assertTrue(methodsResults.isEmpty())
+        }
+
+    @DisplayName("Given loadGooglePayPaymentData throws IllegalStateException, then update paymentResultEffect with error")
+    @Test
+    fun updatePaymentResultWithErrorOnLoadGooglePayPaymentDataThrowsIllegalStateException() =
+        runTest(testScheduler) {
+            val results = collectFlow(sut.paymentResultEffect)
+
+            coEvery { googlePayService.checkIfGooglePayIsAvailable() } returns true
+            every { googlePayService.loadGooglePayPaymentData(any(), any()) } throws IllegalStateException("Error")
+            every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
+
+            sut.send(JudoSharedAction.LoadGPayPaymentData)
+
+            val expectedPaymentResult =
+                JudoPaymentResult.Error(JudoError.googlePayNotSupported(resources, "Error"))
+            assertEquals(expectedPaymentResult, results[0])
+        }
+
+    @DisplayName("Given loadGooglePayPaymentData throws ApiException, then update paymentResultEffect with error")
+    @Test
+    fun updatePaymentResultWithErrorOnLoadGooglePayPaymentDataThrowsApiException() =
+        runTest(testScheduler) {
+            val results = collectFlow(sut.paymentResultEffect)
+
+            coEvery { googlePayService.checkIfGooglePayIsAvailable() } returns true
+            every { googlePayService.loadGooglePayPaymentData(any(), any()) } throws ApiException(Status.RESULT_CANCELED)
+            every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
+
+            sut.send(JudoSharedAction.LoadGPayPaymentData)
+
+            val expectedPaymentResult =
+                JudoPaymentResult.Error(
+                    JudoError.googlePayNotSupported(resources, API_EXCEPTION_STATUS_MESSAGE),
+                )
+            assertEquals(expectedPaymentResult, results[0])
+        }
+
+    @DisplayName(
+        "Given loadGooglePayPaymentData throws other exception than ApiException or IllegalStateException, then no effect is emitted",
+    )
+    @Test
+    fun noEffectEmittedWhenLoadGooglePayPaymentDataThrowsUnexpectedException() {
+        assertThrows<RuntimeException> {
+            runTest(testScheduler) {
+                val paymentResults = collectFlow(sut.paymentResultEffect)
+                val methodsResults = collectFlow(sut.paymentMethodsResultEffect)
+
+                coEvery { googlePayService.checkIfGooglePayIsAvailable() } returns true
+                every { googlePayService.loadGooglePayPaymentData(any(), any()) } throws RuntimeException()
+                every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
+
+                sut.send(JudoSharedAction.LoadGPayPaymentData)
+
+                assertTrue(paymentResults.isEmpty())
+                assertTrue(methodsResults.isEmpty())
+            }
         }
     }
 
@@ -325,28 +228,25 @@ internal class JudoSharedViewModelTest {
 
     @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
     @DisplayName(
-        "Given send is called with LoadGPayPaymentDataSuccess action, when paymentWidgetType is SERVER_TO_SERVER_PAYMENT_METHODS, then update paymentMethodsGooglePayResult with success",
+        "Given send is called with LoadGPayPaymentDataSuccess action, when paymentWidgetType is SERVER_TO_SERVER_PAYMENT_METHODS, then emit to paymentMethodsResultEffect with success",
     )
     @Test
-    fun updatePaymentMethodsGooglePayResultOnLoadGpayPaymentDataSuccessWithServerToServerPaymentMethods() {
-        val slots = mutableListOf<JudoPaymentResult>()
-        val paymentData: PaymentData = mockk(relaxed = true)
-        val googlePayRequest: GooglePayRequest = mockk(relaxed = true)
-        val judoResult: JudoResult = mockk(relaxed = true)
-        every { googlePayRequest.toJudoResult() } returns judoResult
-        every { judo.paymentWidgetType } returns PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS
-        every { paymentData.toGooglePayRequest(judo) } returns googlePayRequest
+    fun updatePaymentMethodsResultOnLoadGpayPaymentDataSuccessWithServerToServerPaymentMethods() =
+        runTest(testScheduler) {
+            val results = collectFlow(sut.paymentMethodsResultEffect)
 
-        sut.send(JudoSharedAction.LoadGPayPaymentDataSuccess(paymentData))
+            val paymentData: PaymentData = mockk(relaxed = true)
+            val googlePayRequest: GooglePayRequest = mockk(relaxed = true)
+            val judoResult: JudoResult = mockk(relaxed = true)
+            every { googlePayRequest.toJudoResult() } returns judoResult
+            every { judo.paymentWidgetType } returns PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS
+            every { paymentData.toGooglePayRequest(judo) } returns googlePayRequest
 
-        verify { paymentMethodsGooglePayResult.onChanged(capture(slots)) }
+            sut.send(JudoSharedAction.LoadGPayPaymentDataSuccess(paymentData))
 
-        val actualPaymentMethodsGooglePayResult = slots[0]
-
-        val expectedPaymentMethodsGooglePayResult =
-            JudoPaymentResult.Success(googlePayRequest.toJudoResult())
-        assertEquals(expectedPaymentMethodsGooglePayResult, actualPaymentMethodsGooglePayResult)
-    }
+            val expectedResult = JudoPaymentResult.Success(googlePayRequest.toJudoResult())
+            assertEquals(expectedResult, results[0])
+        }
 
     @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
     @DisplayName(
@@ -430,60 +330,93 @@ internal class JudoSharedViewModelTest {
         }
     }
 
-    @DisplayName("Given send is called with LoadGPayPaymentDataSuccess action, then update paymentResult")
+    @DisplayName("Given send is called with LoadGPayPaymentDataSuccess action, then update paymentResultEffect")
     @Test
-    fun updatePaymentResultOnLoadGpayPaymentDataSuccess() {
-        val slots = mutableListOf<JudoPaymentResult>()
-        val paymentData: PaymentData = mockk(relaxed = true)
-        val googlePayRequest: GooglePayRequest = mockk(relaxed = true)
-        val judoApiCallResult: JudoApiCallResult<Receipt> = mockk(relaxed = true)
-        val expectedJudoPaymentResult: JudoPaymentResult = mockk(relaxed = true)
-        every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
-        every { paymentData.toGooglePayRequest(judo) } returns googlePayRequest
-        coEvery {
-            judoApiService.googlePayPayment(googlePayRequest).await()
-        } returns judoApiCallResult
-        every { judoApiCallResult.toJudoPaymentResult(resources) } returns expectedJudoPaymentResult
+    fun updatePaymentResultOnLoadGpayPaymentDataSuccess() =
+        runTest(testScheduler) {
+            val results = collectFlow(sut.paymentResultEffect)
 
-        sut.send(JudoSharedAction.LoadGPayPaymentDataSuccess(paymentData))
+            val paymentData: PaymentData = mockk(relaxed = true)
+            val googlePayRequest: GooglePayRequest = mockk(relaxed = true)
+            val judoApiCallResult: JudoApiCallResult<Receipt> = mockk(relaxed = true)
+            val expectedJudoPaymentResult: JudoPaymentResult = mockk(relaxed = true)
+            every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
+            every { paymentData.toGooglePayRequest(judo) } returns googlePayRequest
+            coEvery {
+                judoApiService.googlePayPayment(googlePayRequest).await()
+            } returns judoApiCallResult
+            every { judoApiCallResult.toJudoPaymentResult(resources) } returns expectedJudoPaymentResult
 
-        verify { paymentResult.onChanged(capture(slots)) }
-        val actualPaymentResult = slots[0]
-        assertEquals(expectedJudoPaymentResult, actualPaymentResult)
-    }
+            sut.send(JudoSharedAction.LoadGPayPaymentDataSuccess(paymentData))
 
-    @DisplayName("Given send is called with LoadGPayPaymentDataError action, then update paymentResult with error")
+            assertEquals(expectedJudoPaymentResult, results[0])
+        }
+
+    @DisplayName("Given send is called with LoadGPayPaymentDataError action, then update paymentResultEffect with error")
     @Test
-    fun updatePaymentResultWithErrorOnLoadGpayPaymentDataErrorAction() {
-        val slots = mutableListOf<JudoPaymentResult>()
-        every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
+    fun updatePaymentResultWithErrorOnLoadGpayPaymentDataErrorAction() =
+        runTest(testScheduler) {
+            val results = collectFlow(sut.paymentResultEffect)
 
-        sut.send(JudoSharedAction.LoadGPayPaymentDataError("Message"))
+            every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
 
-        verify { paymentResult.onChanged(capture(slots)) }
-        val actualPaymentResult = slots[0]
-        val expectedPaymentResult =
-            JudoPaymentResult.Error(
-                JudoError.googlePayNotSupported(
-                    resources,
-                    "Message",
-                ),
+            sut.send(JudoSharedAction.LoadGPayPaymentDataError("Message"))
+
+            val expectedPaymentResult =
+                JudoPaymentResult.Error(JudoError.googlePayNotSupported(resources, "Message"))
+            assertEquals(expectedPaymentResult, results[0])
+        }
+
+    @DisplayName("Given send is called with LoadGPayPaymentDataUserCancelled action, then update paymentResultEffect with UserCancelled")
+    @Test
+    fun updatePaymentResultOnLoadGpayPaymentDataUserCancelledAction() =
+        runTest(testScheduler) {
+            val results = collectFlow(sut.paymentResultEffect)
+
+            every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
+
+            sut.send(JudoSharedAction.LoadGPayPaymentDataUserCancelled)
+
+            assertEquals(JudoPaymentResult.UserCancelled(), results[0])
+        }
+
+    @DisplayName("Given postPaymentResult is called, then paymentResultEffect emits the result")
+    @Test
+    fun postPaymentResultEmitsToPaymentResultEffect() =
+        runTest(testScheduler) {
+            val results = collectFlow(sut.paymentResultEffect)
+
+            val expected = JudoPaymentResult.UserCancelled()
+            sut.postPaymentResult(expected)
+
+            assertEquals(expected, results[0])
+        }
+
+    @DisplayName("Given postCardEntryToPaymentMethodResult is called, then cardEntryToPaymentMethodResultEffect emits the builder")
+    @Test
+    fun postCardEntryToPaymentMethodResultEmitsToCardEntryToPaymentMethodResultEffect() =
+        runTest(testScheduler) {
+            val results = collectFlow(sut.cardEntryToPaymentMethodResultEffect)
+
+            val builder =
+                com.judopay.judokit.android.model.TransactionDetails
+                    .Builder()
+            sut.postCardEntryToPaymentMethodResult(builder)
+
+            assertEquals(builder, results[0])
+        }
+
+    companion object {
+        @JvmStatic
+        fun googlePayUnavailableArgs() =
+            listOf(
+                // isGooglePayWidget -> paymentResultEffect
+                Arguments.of(PaymentWidgetType.GOOGLE_PAY, true),
+                Arguments.of(PaymentWidgetType.PRE_AUTH_GOOGLE_PAY, true),
+                // isPaymentMethodsWidget -> paymentMethodsResultEffect
+                Arguments.of(PaymentWidgetType.PAYMENT_METHODS, false),
+                Arguments.of(PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS, false),
+                Arguments.of(PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS, false),
             )
-        assertEquals(expectedPaymentResult, actualPaymentResult)
-    }
-
-    @DisplayName("Given send is called with LoadGPayPaymentDataUserCancelled action, then update paymentResult with UserCancelled")
-    @Test
-    fun updatePaymentResultOnLoadGpayPaymentDataUserCancelledAction() {
-        val slots = mutableListOf<JudoPaymentResult>()
-        every { judo.paymentWidgetType } returns PaymentWidgetType.GOOGLE_PAY
-
-        sut.send(JudoSharedAction.LoadGPayPaymentDataUserCancelled)
-
-        verify { paymentResult.onChanged(capture(slots)) }
-
-        val actualPaymentResult = slots[0]
-        val expectedPaymentResult = JudoPaymentResult.UserCancelled()
-        assertEquals(expectedPaymentResult, actualPaymentResult)
     }
 }

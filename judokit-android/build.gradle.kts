@@ -21,6 +21,7 @@ dependencies {
 
     implementation(libs.bundles.kotlinx.coroutines)
     implementation(libs.bundles.androidx.lifecycle)
+    implementation(libs.androidx.lifecycle.process)
     implementation(libs.bundles.androidx.navigation)
 
     // For the exposed API client callbacks interfaces
@@ -41,7 +42,6 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
 
     compileOnly(libs.ravelin.encrypt)

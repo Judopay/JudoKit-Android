@@ -72,7 +72,7 @@ fun <T : Any> KProperty1<T, *>.toResultItem(classInstance: Any?): ResultItem {
 
         Map::class -> {
             val value = getter.call(classInstance) as? Map<*, *>
-            val items = value?.toResultItemList(name)
+            val items = value?.toResultItemList()
 
             if (items.isNullOrEmpty()) {
                 propValue = getPropValuePlaceholder(value)
@@ -102,7 +102,7 @@ fun List<*>.toResultItemList(propName: String): List<ResultItem> {
     return items
 }
 
-fun Map<*, *>.toResultItemList(propName: String): List<ResultItem> {
+fun Map<*, *>.toResultItemList(): List<ResultItem> {
     val items = mutableListOf<ResultItem>()
 
     for (item in this.entries) {

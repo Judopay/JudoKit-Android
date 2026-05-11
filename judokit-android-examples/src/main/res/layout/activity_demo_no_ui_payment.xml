@@ -21,59 +21,132 @@
             android:layout_height="?attr/actionBarSize"
             app:title="@string/feature_title_payment_no_ui"/>
     </com.google.android.material.appbar.AppBarLayout>
-    <androidx.core.view.insets.ProtectionLayout
-        android:layout_height="match_parent"
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
-        android:fitsSystemWindows="true">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <com.judopay.judokit.android.ui.common.ProgressButton
-                android:id="@+id/payWithCardButton"
-                style="@style/JudoTheme.BlackRoundedButton"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height"
-                android:layout_marginStart="@dimen/spacing_16"
-                android:layout_marginTop="@dimen/spacing_16"
-                android:layout_marginEnd="@dimen/spacing_16"
-                android:minWidth="@dimen/min_touch_target_size"
-                android:text="@string/feature_title_payment"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_16">
 
-            <com.judopay.judokit.android.ui.common.ProgressButton
-                android:id="@+id/preAuthWithCardButton"
-                style="@style/JudoTheme.BlackRoundedButton"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height"
-                android:layout_marginStart="@dimen/spacing_16"
-                android:layout_marginTop="@dimen/spacing_16"
-                android:layout_marginEnd="@dimen/spacing_16"
-                android:minWidth="@dimen/min_touch_target_size"
-                android:text="@string/feature_title_preauth"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/payWithCardButton"
-                app:layout_constraintBottom_toTopOf="@id/checkCardButton"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_4"
+                    android:text="@string/no_ui_guide_heading"
+                    android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-            <com.judopay.judokit.android.ui.common.ProgressButton
-                android:id="@+id/checkCardButton"
-                style="@style/JudoTheme.BlackRoundedButton"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height"
-                android:layout_marginStart="@dimen/spacing_16"
-                android:layout_marginTop="@dimen/spacing_16"
-                android:layout_marginEnd="@dimen/spacing_16"
-                android:minWidth="@dimen/min_touch_target_size"
-                android:text="@string/feature_title_check_card"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/preAuthWithCardButton"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/space_48"
+                    android:text="@string/no_ui_guide_body"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_8"
+                    android:layout_marginTop="@dimen/spacing_4"
+                    android:text="@string/label_card_details"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/cardNumberInputLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_8"
+                    android:hint="@string/label_card_number">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/cardNumberEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLines="1"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/expirationDateInputLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_8"
+                    android:hint="@string/label_expiration_date">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/expirationDateEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:maxLines="1"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/cardholderNameInputLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_8"
+                    android:hint="@string/label_cardholder_name">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/cardholderNameEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"
+                        android:maxLines="1"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/securityNumberInputLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/space_48"
+                    android:hint="@string/label_security_number">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/securityNumberEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLines="1"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.judopay.judokit.android.ui.common.ProgressButton
+                    android:id="@+id/payWithCardButton"
+                    style="@style/JudoTheme.BlackRoundedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_marginBottom="@dimen/spacing_8"
+                    android:minWidth="@dimen/min_touch_target_size"
+                    android:text="@string/feature_title_payment"/>
+
+                <com.judopay.judokit.android.ui.common.ProgressButton
+                    android:id="@+id/preAuthWithCardButton"
+                    style="@style/JudoTheme.BlackRoundedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_marginBottom="@dimen/spacing_8"
+                    android:minWidth="@dimen/min_touch_target_size"
+                    android:text="@string/feature_title_preauth"/>
+
+                <com.judopay.judokit.android.ui.common.ProgressButton
+                    android:id="@+id/checkCardButton"
+                    style="@style/JudoTheme.BlackRoundedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height"
+                    android:minWidth="@dimen/min_touch_target_size"
+                    android:text="@string/feature_title_check_card"/>
 
         </LinearLayout>
-    </androidx.core.view.insets.ProtectionLayout>
+    </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-

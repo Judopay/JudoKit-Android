@@ -88,8 +88,7 @@ private val darkScheme =
 fun JudoKitAndroidTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content:
-        @Composable()
-        () -> Unit,
+        @Composable () -> Unit,
 ) {
     val colorScheme =
         when {

@@ -12,7 +12,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("com.android.library")
-                apply("org.jetbrains.dokka")
+                apply("org.jetbrains.dokka-javadoc")
                 apply("com.google.devtools.ksp")
                 apply("de.mannodermaus.android-junit5")
                 apply("org.jetbrains.kotlinx.binary-compatibility-validator")

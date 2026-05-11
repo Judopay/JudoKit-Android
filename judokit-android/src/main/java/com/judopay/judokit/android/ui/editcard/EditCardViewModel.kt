@@ -2,13 +2,14 @@ package com.judopay.judokit.android.ui.editcard
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.judopay.judokit.android.db.entity.TokenizedCardEntity
 import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.ui.editcard.adapter.ColorPickerItem
+import com.judopay.judokit.android.ui.paymentmethods.toPaymentCardViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 sealed class EditCardAction {
@@ -25,20 +26,6 @@ sealed class EditCardAction {
     object Save : EditCardAction()
 }
 
-internal class EditCardViewModelFactory(
-    private val cardId: Int,
-    private val cardRepository: TokenizedCardRepository,
-    private val application: Application,
-) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        if (modelClass == EditCardViewModel::class.java) {
-            @Suppress("UNCHECKED_CAST")
-            EditCardViewModel(cardId, cardRepository, application) as T
-        } else {
-            super.create(modelClass)
-        }
-}
-
 private const val MAX_CARD_TITLE_LENGTH = 28
 
 class EditCardViewModel(
@@ -46,13 +33,14 @@ class EditCardViewModel(
     private val cardRepository: TokenizedCardRepository,
     application: Application,
 ) : AndroidViewModel(application) {
-    val model = MutableLiveData<EditCardModel>()
+    private val _uiState = MutableStateFlow<EditCardModel?>(null)
+    val uiState: StateFlow<EditCardModel?> = _uiState.asStateFlow()
 
     private val patterns = CardPattern.entries.toTypedArray()
     private val cachedPatternItems = patterns.map { ColorPickerItem(it) }
 
     // mutable data
-    private lateinit var cardEntity: TokenizedCardEntity
+    private var cardEntity: TokenizedCardEntity? = null
 
     private var selectedPattern: CardPattern = patterns.first()
     private var isSelectedAsDefault: Boolean = false
@@ -60,10 +48,11 @@ class EditCardViewModel(
 
     private val isSaveButtonEnabled: Boolean
         get() {
+            val entity = cardEntity ?: return false
             return (
-                selectedPattern != cardEntity.pattern ||
-                    isSelectedAsDefault != cardEntity.isDefault ||
-                    currentCardTitle != cardEntity.title
+                selectedPattern != entity.pattern ||
+                    isSelectedAsDefault != entity.isDefault ||
+                    currentCardTitle != entity.title
             ) &&
                 currentCardTitle.length <= MAX_CARD_TITLE_LENGTH
         }
@@ -88,35 +77,37 @@ class EditCardViewModel(
         newPattern: CardPattern = this.selectedPattern,
         newTitle: String = currentCardTitle,
     ) {
+        val entity = cardEntity ?: return
         selectedPattern = newPattern
         currentCardTitle = newTitle
 
         cachedPatternItems.forEach { it.isSelected = it.pattern == selectedPattern }
 
-        model.postValue(
+        _uiState.value =
             EditCardModel(
                 cachedPatternItems,
                 isSaveButtonEnabled,
-                cardEntity.toPaymentCardViewModel(currentCardTitle, selectedPattern),
+                entity.toPaymentCardViewModel(currentCardTitle, selectedPattern),
                 title = newTitle,
                 isDefault = isSelectedAsDefault,
-            ),
-        )
+            )
     }
 
     private fun loadCardEntity() =
         viewModelScope.launch {
-            cardEntity = cardRepository.findWithId(cardId)
-            selectedPattern = cardEntity.pattern
-            isSelectedAsDefault = cardEntity.isDefault
-            currentCardTitle = cardEntity.title
+            val entity = cardRepository.findWithId(cardId)
+            cardEntity = entity
+            selectedPattern = entity.pattern
+            isSelectedAsDefault = entity.isDefault
+            currentCardTitle = entity.title
             buildModel()
         }
 
     private fun persistChanges() =
         viewModelScope.launch {
+            val entity = cardEntity ?: return@launch
             cardRepository.insert(
-                cardEntity.apply {
+                entity.apply {
                     title = currentCardTitle
                     pattern = selectedPattern
                     isDefault = isSelectedAsDefault

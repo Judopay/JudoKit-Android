@@ -13,9 +13,14 @@ data class CardDetailsInputModel(
     val securityNumber: String = "",
     val country: String = AVSCountry.GB.displayName,
     val postCode: String = "",
-    var actionButtonState: ButtonState = ButtonState.Disabled(R.string.jp_add_card),
-    var enabledFields: List<CardDetailsFieldType> = emptyList(),
-    var supportedNetworks: List<CardNetwork> = emptyList(),
-    var cardNetwork: CardNetwork? = null,
-    var isValid: Boolean = false,
+    val actionButtonState: ButtonState = ButtonState.Disabled(R.string.jp_add_card),
+    val enabledFields: List<CardDetailsFieldType> = emptyList(),
+    val supportedNetworks: List<CardNetwork> = emptyList(),
+    val cardNetwork: CardNetwork? = null,
+    /*
+     * Key absent = not yet validated (invalid for form purposes).
+     * Key present + null = valid, no error to display.
+     * Key present + non-null = invalid, display this @StringRes error message.
+     */
+    val fieldErrors: Map<CardDetailsFieldType, Int?> = emptyMap(),
 )

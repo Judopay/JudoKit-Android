@@ -1,11 +1,12 @@
 package com.judopay.judokit.android.service
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.wallet.AutoResolveHelper
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.PaymentsClient
 import com.judopay.judokit.android.Judo
-import com.judopay.judokit.android.LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE
 import com.judopay.judokit.android.ui.common.toIsReadyToPayRequest
 import com.judopay.judokit.android.ui.common.toPaymentDataRequest
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -14,17 +15,25 @@ import kotlin.coroutines.resumeWithException
 
 class JudoGooglePayService(
     private val paymentsClient: PaymentsClient,
-    private val callbackActivity: AppCompatActivity,
     private val judo: Judo,
+    private val launcher: ActivityResultLauncher<IntentSenderRequest>,
 ) {
-    fun loadGooglePayPaymentData() {
+    fun loadGooglePayPaymentData(
+        onSuccess: (PaymentData) -> Unit,
+        onError: (String) -> Unit,
+    ) {
         judo.googlePayConfiguration?.let {
             val request = it.toPaymentDataRequest(judo)
-            AutoResolveHelper.resolveTask(
-                paymentsClient.loadPaymentData(request),
-                callbackActivity,
-                LOAD_GPAY_PAYMENT_DATA_REQUEST_CODE,
-            )
+            paymentsClient
+                .loadPaymentData(request)
+                .addOnSuccessListener { paymentData -> onSuccess(paymentData) }
+                .addOnFailureListener { e ->
+                    if (e is ResolvableApiException) {
+                        launcher.launch(IntentSenderRequest.Builder(e.resolution).build())
+                    } else {
+                        onError(e.message ?: "Unknown error")
+                    }
+                }
         }
     }
 

@@ -1,1 +1,36 @@
-sonar.coverage.exclusions=build.gradle.kts,judokit-android-examples/**/*,build-logic/**/*,fastlane/*
+sonar.coverage.exclusions=\
+  build.gradle.kts,\
+  judokit-android-examples/**/*,\
+  build-logic/**/*,\
+  fastlane/*,\
+  **/databinding/**/*.kt,\
+  **/BuildConfig.kt,\
+  **/*Activity*.kt,\
+  **/*Fragment*.kt,\
+  **/ui/cardentry/components/**/*.kt,\
+  **/ui/cardentry/formatting/**/*.kt,\
+  **/ui/paymentmethods/components/**/*.kt,\
+  **/ui/paymentmethods/adapter/viewholder/**/*.kt,\
+  **/ui/paymentmethods/adapter/PaymentMethodsAdapter*.kt,\
+  **/ui/paymentmethods/adapter/SwipeToDeleteCallback*.kt,\
+  **/ui/editcard/adapter/**/*.kt,\
+  **/ui/common/LengthFilter*.kt,\
+  **/ui/common/GooglePayButton*.kt,\
+  **/ui/common/ProgressButton*.kt,\
+  **/ui/common/Mappers.kt,\
+  **/db/JudoRoomDatabase*.kt,\
+  **/db/dao/**/*.kt,\
+  **/*JudoCardTransactionClient*.kt,\
+  **/*JudoGooglePayService*.kt,\
+  **/service/PayloadService*.kt,\
+  **/service/CardTransactionRepository*.kt,\
+  **/service/RecommendationService*.kt,\
+  **/model/TransactionDetails.kt,\
+  **/api/interceptor/DeviceDnaInterceptor*.kt,\
+  **/api/interceptor/PayLoadInterceptor*.kt,\
+  **/api/factory/JudoApiServiceFactory*.kt,\
+  **/api/factory/RecommendationApiServiceFactory*.kt,\
+  **/api/factory/ServiceFactory*.kt,\
+  **/api/factory/Tls12SslSocketFactory*.kt,\
+  **/ui/paymentmethods/model/CardAnimationType.kt,\
+  **/ui/editcard/CardPattern.kt

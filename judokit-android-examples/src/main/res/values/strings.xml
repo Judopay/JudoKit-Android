@@ -248,8 +248,26 @@
     <string name="three_ds2_protocol_message_version_summary">Override 3DS 2.0 protocol message version</string>
     <string name="three_ds2_protocol_message_version_title">Message version</string>
 
+    <string name="label_card_details">Card details</string>
+    <string name="label_card_number">Card number</string>
+    <string name="label_expiration_date">Expiration date (MM/YY)</string>
+    <string name="label_cardholder_name">Cardholder name</string>
+    <string name="label_security_number">Security number (CVV)</string>
+
+    <string name="no_ui_guide_heading">How to:</string>
+    <string name="no_ui_guide_body">This screen demonstrates how to perform card transactions entirely in the background — without presenting any Judo-managed UI. Use this approach when you provide your own card entry form (for example, in a custom checkout flow or automated tests).\n\n1. Enter the card details below.\n2. Tap a button to run the corresponding transaction type.\n3. The SDK handles authorisation, 3DS2 challenges (if triggered), and returns the result.</string>
+
     <string name="feature_title_payment_no_ui">No-UI transactions</string>
     <string name="feature_subtitle_payment_no_ui">No-UI transactions using card transaction manager</string>
+
+    <string name="label_scheme">Scheme (network ID)</string>
+    <string name="label_token">Card token</string>
+    <string name="label_last_four">Last 4 digits</string>
+    <string name="label_security_code">Security code (CVV)</string>
+    <string name="token_guide_heading">How to:</string>
+    <string name="token_guide_body">This screen demonstrates token payments — charging a previously saved card without re-entering full card details.\n\n1. Tokenize a new card using the button below, or paste an existing token.\n2. Fill in the scheme, last 4 digits, and (optionally) the security code.\n3. Tap Payment or Pre-auth to run the transaction.</string>
+    <string name="token_section_card_details">Tokenized card details</string>
+    <string name="token_section_actions">Actions</string>
 
     <string name="feature_title_token_payments">Token payments</string>
     <string name="feature_subtitle_token_payments">with optionally asking for CSC and/or cardholder name</string>

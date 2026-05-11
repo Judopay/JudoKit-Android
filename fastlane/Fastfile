@@ -27,7 +27,7 @@ platform :android do
 
   desc "Build the SDK"
   lane :build do
-    gradle(task: "clean judokit-android:assemble judokit-android:dokkaJavadoc")
+    gradle(task: "clean judokit-android:assemble judokit-android:dokkaGenerateJavadoc")
   end
 
   desc "Run SDK Tests"
@@ -50,7 +50,7 @@ platform :android do
       )
 
       gradle(
-        task: "clean judokit-android:build judokit-android:dokkaJavadoc publishToSonatype closeAndReleaseSonatypeStagingRepository",
+        task: "clean judokit-android:build judokit-android:dokkaGenerateJavadoc publishToSonatype closeAndReleaseSonatypeStagingRepository",
         properties: {
           "signingKey" => Base64.decode64(ENV["ORG_GRADLE_PROJECT_signingKey_base64"])
         }

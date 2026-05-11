@@ -1,6 +1,7 @@
 package com.judopay.judokit.android
 
 import com.google.common.truth.Truth.assertThat
+import com.judopay.judokit.android.api.model.PaymentSessionAuthorization
 import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.model.Amount
 import com.judopay.judokit.android.model.CardNetwork
@@ -8,6 +9,7 @@ import com.judopay.judokit.android.model.Currency
 import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.PaymentMethod
 import com.judopay.judokit.android.model.PaymentWidgetType
+import com.judopay.judokit.android.model.RecommendationConfiguration
 import com.judopay.judokit.android.model.SubProductInfo
 import io.mockk.every
 import io.mockk.mockk
@@ -260,5 +262,54 @@ internal class JudoBuilderTest {
         assertThat(judo.subProductInfo).isNotNull()
         assertThat(judo.subProductInfo).isInstanceOf(SubProductInfo.ReactNative::class.java)
         assertThat((judo.subProductInfo as SubProductInfo.ReactNative).version).isEqualTo("4.0.0")
+    }
+
+    @Test
+    @DisplayName("Given recommendationConfiguration set without PaymentSessionAuthorization, then build() throws")
+    fun testThatBuildThrowsWhenRecommendationConfigurationSetWithNonPaymentSessionAuth() {
+        val recommendationConfig = mockk<RecommendationConfiguration>(relaxed = true)
+        assertThrows<IllegalArgumentException> {
+            judoBuilder
+                .setAuthorization(mockk(relaxed = true))
+                .setRecommendationConfiguration(recommendationConfig)
+                .build()
+        }
+    }
+
+    @Test
+    @DisplayName("Given recommendationConfiguration set with PaymentSessionAuthorization, then build() succeeds")
+    fun testThatBuildSucceedsWhenRecommendationConfigurationSetWithPaymentSessionAuth() {
+        val paymentSessionAuth =
+            PaymentSessionAuthorization
+                .Builder()
+                .setPaymentSession("session-token")
+                .setApiToken("api-token")
+                .build()
+        val recommendationConfig = mockk<RecommendationConfiguration>(relaxed = true)
+        assertDoesNotThrow {
+            judoBuilder
+                .setAuthorization(paymentSessionAuth)
+                .setRecommendationConfiguration(recommendationConfig)
+                .build()
+        }
+    }
+
+    @Test
+    @DisplayName("Given both delayedAuthorisation and allowIncrement are true, then build() throws")
+    fun testThatBuildThrowsWhenDelayedAuthorisationAndAllowIncrementBothTrue() {
+        assertThrows<IllegalArgumentException> {
+            judoBuilder
+                .setDelayedAuthorisation(true)
+                .setAllowIncrement(true)
+                .build()
+        }
+    }
+
+    @Test
+    @DisplayName("Given recommendationConfiguration is null, then build() succeeds without PaymentSessionAuthorization")
+    fun testThatBuildSucceedsWhenRecommendationConfigurationIsNull() {
+        assertDoesNotThrow {
+            judoBuilder.setRecommendationConfiguration(null).build()
+        }
     }
 }
