@@ -22,3 +22,14 @@
 
 # Prevents crash when using Kotlin reflections on SDK 23
 -keep class kotlin.Metadata { *; }
+
+# Gson needs field names intact for JSON serialisation/deserialisation.
+# Signature is required so Gson can resolve generic type parameters at runtime.
+-keepattributes Signature
+-keepattributes *Annotation*
+
+# Keep fields on data classes that Gson serialises (request) or deserialises
+# (response) over the network. Without these rules R8 renames the fields and
+# the JSON property names no longer match, causing requests/responses to fail.
+-keepclassmembers class com.judokit.android.examples.apiclient.CreatePaymentSessionRequest { <fields>; }
+-keepclassmembers class com.judokit.android.examples.apiclient.CreatePaymentSessionResponse { <fields>; }
