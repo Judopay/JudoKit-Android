@@ -29,6 +29,9 @@ import com.judokit.android.examples.feature.noui.DemoNoUiPaymentActivity
 import com.judokit.android.examples.feature.tokenpayments.TokenPaymentsActivity
 import com.judokit.android.examples.model.DemoFeature
 import com.judokit.android.examples.settings.SettingsActivity
+import com.judokit.android.examples.settings.applyImportSettings
+import com.judokit.android.examples.settings.readImportedJson
+import com.judokit.android.examples.settings.showImportSettingsDialog
 import com.judopay.judokit.android.JUDO_OPTIONS
 import com.judopay.judokit.android.JudoActivityResultContracts
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
@@ -70,6 +73,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 registerForActivityResult(JudoActivityResultContracts.ServerToServerPaymentMethods()) { onJudoResult(it) },
         )
 
+    private val pickFileLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            readImportedJson(uri) { applyImportSettings(it) }
+        }
+
     private val otherPaymentLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
             onJudoResult(
@@ -92,6 +100,12 @@ class DemoFeatureListActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.action_settings -> {
                     startActivity(Intent(this, SettingsActivity::class.java))
+                    true
+                }
+                R.id.action_import_settings -> {
+                    showImportSettingsDialog(
+                        onFilePick = { pickFileLauncher.launch(arrayOf("application/json", "text/plain", "*/*")) },
+                    )
                     true
                 }
                 else -> false

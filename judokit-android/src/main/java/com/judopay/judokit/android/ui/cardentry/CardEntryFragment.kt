@@ -57,7 +57,6 @@ private const val BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME = 300L
 private const val BOTTOM_SHEET_EXPAND_ANIMATION_TIME = BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME / 6
 private const val BOTTOM_SHEET_PEEK_HEIGHT = 200
 private const val KEYBOARD_DISMISS_TIMEOUT = 500L
-private const val KEY_DISPLAYED_CHILD = "key_displayed_child"
 
 @Suppress("DEPRECATION")
 class CardEntryFragment : BottomSheetDialogFragment() {
@@ -115,23 +114,15 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         setupDisplayCutoutInsets()
         setupContainerMargins()
 
-        // Restore which form was visible before a configuration change.
-        savedInstanceState?.let {
-            val child = it.getInt(KEY_DISPLAYED_CHILD, 0)
-            if (child != 0) binding.cardEntryViewAnimator.showBilling()
+        when (viewModel.navigationState.value) {
+            is CardEntryNavigation.Billing -> binding.cardEntryViewAnimator.showBilling()
+            is CardEntryNavigation.Card -> binding.cardEntryViewAnimator.showCard()
         }
 
         binding.cancelButton.setOnClickListener { onUserCancelled() }
         binding.cardDetailsFormView.listener = cardEntryFormListener()
         binding.billingAddressFormView.listener = billingDetailsFormListener()
         binding.cardEntryViewAnimator.initAutofillAndAccessibilityOnAttach()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        viewBinding?.let {
-            outState.putInt(KEY_DISPLAYED_CHILD, it.cardEntryViewAnimator.displayedChild)
-        }
     }
 
     override fun onCancel(dialog: DialogInterface) {

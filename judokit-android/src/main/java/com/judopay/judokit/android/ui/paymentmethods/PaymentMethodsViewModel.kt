@@ -15,8 +15,6 @@ import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.formatted
 import com.judopay.judokit.android.model.paymentButtonType
-import com.judopay.judokit.android.service.CardTransactionRepository
-import com.judopay.judokit.android.service.ThreeDSChallengeDelegate
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.common.ButtonState
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
@@ -68,7 +66,21 @@ sealed class PaymentMethodsAction {
         val transactionDetail: TransactionDetails.Builder,
     ) : PaymentMethodsAction()
 
+    data class TransactionResult(
+        val result: JudoPaymentResult,
+    ) : PaymentMethodsAction()
+
     object Update : PaymentMethodsAction()
+}
+
+sealed class StartTransactionEffect {
+    data class PayWithToken(
+        val details: TransactionDetails,
+    ) : StartTransactionEffect()
+
+    data class PreAuthWithToken(
+        val details: TransactionDetails,
+    ) : StartTransactionEffect()
 }
 
 @Suppress("DEPRECATION")
@@ -76,7 +88,6 @@ class PaymentMethodsViewModel
     internal constructor(
         private val cardDate: CardDate,
         private val cardRepository: TokenizedCardRepository,
-        private val cardTransactionRepository: CardTransactionRepository,
         application: Application,
         private val judo: Judo,
     ) : AndroidViewModel(application) {
@@ -89,10 +100,8 @@ class PaymentMethodsViewModel
         private val _cardEntryEffect = MutableSharedFlow<CardEntryOptions>(extraBufferCapacity = 1)
         val cardEntryEffect: SharedFlow<CardEntryOptions> = _cardEntryEffect
 
-        private val threeDSDelegate = ThreeDSChallengeDelegate()
-
-        /** Emits the active 3DS2 challenge data while a challenge is in progress, null otherwise. */
-        internal val pendingChallenge: StateFlow<com.judopay.judokit.android.service.ChallengeData?> = threeDSDelegate.pendingChallenge
+        private val _startTransactionEffect = MutableSharedFlow<StartTransactionEffect>(extraBufferCapacity = 1)
+        val startTransactionEffect: SharedFlow<StartTransactionEffect> = _startTransactionEffect
 
         private var cardList: List<TokenizedCardEntity> = emptyList()
 
@@ -125,13 +134,6 @@ class PaymentMethodsViewModel
             }
         }
 
-        /**
-         * Called by the Fragment after the native 3DS2 challenge completes.
-         * Clears the pending challenge state and forwards the result. The first call wins;
-         * any duplicate from a stale receiver is silently dropped (channel already has a value).
-         */
-        fun onChallengeResult(status: String?) = threeDSDelegate.onChallengeResult(status)
-
         @Suppress("CyclomaticComplexMethod")
         fun send(action: PaymentMethodsAction) {
             when (action) {
@@ -139,7 +141,6 @@ class PaymentMethodsViewModel
                     deleteCardWithId(action.cardId)
                 }
                 is PaymentMethodsAction.InitiateSelectedCardPayment -> {
-                    buildModel(isLoading = true)
                     val paymentMethod = _uiState.value?.currentPaymentMethod
                     payWithSelectedCard(paymentMethod)
                 }
@@ -162,6 +163,17 @@ class PaymentMethodsViewModel
                         isLoading = !action.buttonEnabled,
                     )
                 is PaymentMethodsAction.EditMode -> buildModel(isInEditMode = action.isInEditMode)
+                is PaymentMethodsAction.TransactionResult -> {
+                    when (action.result) {
+                        is JudoPaymentResult.Error,
+                        is JudoPaymentResult.UserCancelled,
+                        -> buildModel()
+                        is JudoPaymentResult.Success -> Unit
+                    }
+                    if (!_paymentResultEffect.tryEmit(action.result)) {
+                        Log.w(TAG, "Payment result effect dropped: ${action.result}")
+                    }
+                }
                 is PaymentMethodsAction.PayWithCard -> {
                     buildModel(isLoading = true)
                     val paymentMethod = _uiState.value?.currentPaymentMethod
@@ -192,47 +204,50 @@ class PaymentMethodsViewModel
                             isPresentedFromPaymentMethods = true,
                             cardNetwork = cardNetwork,
                         )
+                    buildModel(isLoading = true)
                     if (!_cardEntryEffect.tryEmit(cardEntryOptions)) {
                         Log.w(TAG, "Card-entry effect dropped")
                     }
                 } else {
+                    buildModel(isLoading = true)
                     sendCardPaymentRequest(paymentMethod, TransactionDetails.Builder())
                 }
             }
         }
 
-        @Throws(IllegalStateException::class)
         private fun sendCardPaymentRequest(
             paymentMethod: CardPaymentMethodModel,
             transactionDetailBuilder: TransactionDetails.Builder,
         ) = viewModelScope.launch {
             val card = paymentMethod.selectedCard
-            card?.let {
-                val entity = cardRepository.findWithId(it.id)
-
-                cardRepository.updateAllLastUsedToFalse()
-                cardRepository.insert(entity.apply { isLastUsed = true })
-
-                transactionDetailBuilder
-                    .setCardToken(entity.token)
-                    .setCardLastFour(entity.ending)
-                    .setCardType(entity.network)
-                    .setExpirationDate(entity.expireDate)
-                if (!judo.uiConfiguration.shouldAskForCardholderName) {
-                    transactionDetailBuilder.setCardHolderName(entity.cardholderName)
-                }
-
-                val result =
-                    if (judo.paymentWidgetType == PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS) {
-                        cardTransactionRepository.preAuthWithToken(transactionDetailBuilder.build(), threeDSDelegate.challengeRunner)
-                    } else {
-                        cardTransactionRepository.paymentWithToken(transactionDetailBuilder.build(), threeDSDelegate.challengeRunner)
-                    }
-
+            if (card == null) {
                 buildModel()
-                if (!_paymentResultEffect.tryEmit(result)) {
-                    Log.w(TAG, "Payment result effect dropped: $result")
+                return@launch
+            }
+
+            val entity = cardRepository.findWithId(card.id)
+
+            cardRepository.updateAllLastUsedToFalse()
+            cardRepository.insert(entity.apply { isLastUsed = true })
+
+            transactionDetailBuilder
+                .setCardToken(entity.token)
+                .setCardLastFour(entity.ending)
+                .setCardType(entity.network)
+                .setExpirationDate(entity.expireDate)
+            if (!judo.uiConfiguration.shouldAskForCardholderName) {
+                transactionDetailBuilder.setCardHolderName(entity.cardholderName)
+            }
+
+            val effect =
+                if (judo.paymentWidgetType == PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS) {
+                    StartTransactionEffect.PreAuthWithToken(transactionDetailBuilder.build())
+                } else {
+                    StartTransactionEffect.PayWithToken(transactionDetailBuilder.build())
                 }
+
+            if (!_startTransactionEffect.tryEmit(effect)) {
+                Log.w(TAG, "Start-transaction effect dropped")
             }
         }
 
@@ -255,7 +270,7 @@ class PaymentMethodsViewModel
             val cardModel: CardViewModel
 
             val recyclerViewData = mutableListOf<PaymentMethodItem>()
-            var allMethods = judo.paymentMethods.toList()
+            val allMethods = judo.paymentMethods.toList()
             val cards = cardList
 
             if (allMethods.size > 1) {

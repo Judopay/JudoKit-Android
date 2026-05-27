@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <item
         android:id="@+id/action_import_settings"
-        android:icon="@drawable/ic_import_24"
         android:title="@string/import_settings"
-        app:showAsAction="always" />
-
+        app:showAsAction="never" />
     <item
-        android:id="@+id/action_settings"
-        android:icon="@drawable/ic_settings_24"
-        android:title="@string/title_settings"
-        app:showAsAction="always" />
+        android:id="@+id/action_export_settings"
+        android:title="@string/export_settings"
+        app:showAsAction="never" />
 </menu>

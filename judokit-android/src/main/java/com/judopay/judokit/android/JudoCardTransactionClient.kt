@@ -22,20 +22,34 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.lang.ref.WeakReference
 
 /**
  * Handles the 3DS2 native challenge for activity and returns the raw challenge status string.
  *
  * Bridges [ChallengeStatusReceiver] callbacks into a coroutine continuation. Safe to cancel:
  * if the coroutine is cancelled the continuation is never resumed.
+ *
+ * Guards against stale Activity references: if the Activity has been destroyed or is finishing
+ * (e.g. due to a configuration change between the network request and the challenge start),
+ * returns [ThreeDSSDKChallengeStatus.CANCELLED] immediately without calling [doChallenge].
  */
 private suspend fun FragmentActivity.runChallenge(
     transaction: Transaction,
     params: ChallengeParameters,
-): String? =
-    suspendCancellableCoroutine { cont ->
+): String? {
+    // doChallenge requires a FragmentActivity today because the 3DS SDK starts a new
+    // Activity via Intent(ctx, ChallengeActivity::class.java). Once the 3DS SDK accepts a plain
+    // Context (or handles its own back-stack), replace this with an application-context call and
+    // remove the WeakReference guard entirely.
+    val ref = WeakReference(this)
+    val live = ref.get()
+    if (live == null || live.isDestroyed || live.isFinishing) {
+        return ThreeDSSDKChallengeStatus.CANCELLED
+    }
+    return suspendCancellableCoroutine { cont ->
         transaction.doChallenge(
-            this,
+            live,
             params,
             object : ChallengeStatusReceiver {
                 override fun completed(event: CompletionEvent) = cont.resumeWith(Result.success(event.toFormattedEventString()))
@@ -51,6 +65,7 @@ private suspend fun FragmentActivity.runChallenge(
             THREE_DS_TWO_MIN_TIMEOUT,
         )
     }
+}
 
 /**
  * Receives the outcome of a card transaction initiated via [JudoCardTransactionClient].
@@ -92,9 +107,9 @@ fun interface JudoCardTransactionCallback {
  *
  * callback is always invoked on the **main thread**. The operation is tied to the
  * application's process lifecycle ([ProcessLifecycleOwner]) and will complete even if the
- * [FragmentActivity] is destroyed mid-transaction (e.g. rotation). The 3DS2 challenge, however,
- * requires a live [FragmentActivity] surface — if the activity is destroyed while the challenge
- * screen is visible the challenge coroutine will be cancelled and the callback will not be invoked.
+ * [FragmentActivity] is destroyed mid-transaction (e.g. rotation). If the activity is destroyed
+ * between the network request and the 3DS2 challenge start, the challenge is treated as cancelled
+ * and the callback receives [JudoPaymentResult.UserCancelled] rather than hanging indefinitely.
  *
  * Java example:
  * ```java

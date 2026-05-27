@@ -13,7 +13,6 @@ import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.formatted
 import com.judopay.judokit.android.model.paymentButtonType
-import com.judopay.judokit.android.service.CardTransactionRepository
 import com.judopay.judokit.android.ui.common.ButtonState
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItemType
@@ -26,7 +25,6 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
@@ -62,7 +60,6 @@ internal class PaymentMethodsViewModelTest {
     private val application: Application = mockk(relaxed = true)
     private val cardDate: CardDate = mockk(relaxed = true)
     private val cardRepository: TokenizedCardRepository = mockk(relaxed = true)
-    private val cardTransactionRepository: CardTransactionRepository = mockk(relaxed = true)
     private val judo: Judo = mockk(relaxed = true)
 
     private val allCardsFlow = MutableSharedFlow<List<TokenizedCardEntity>>(replay = 1)
@@ -82,12 +79,9 @@ internal class PaymentMethodsViewModelTest {
         every { PaymentMethod.CARD.paymentButtonType } returns mockk(relaxed = true)
         every { cardRepository.allCards } returns allCardsFlow
 
-        coEvery { cardTransactionRepository.paymentWithToken(any(), any()) } returns JudoPaymentResult.Success(mockk(relaxed = true))
-        coEvery { cardTransactionRepository.preAuthWithToken(any(), any()) } returns JudoPaymentResult.Success(mockk(relaxed = true))
-
         allCardsFlow.tryEmit(emptyList())
 
-        sut = PaymentMethodsViewModel(cardDate, cardRepository, cardTransactionRepository, application, judo)
+        sut = PaymentMethodsViewModel(cardDate, cardRepository, application, judo)
     }
 
     @AfterEach
@@ -171,7 +165,7 @@ internal class PaymentMethodsViewModelTest {
         every { judo.paymentMethods } returns arrayOf(PaymentMethod.CARD, PaymentMethod.GOOGLE_PAY)
         every { PaymentMethod.GOOGLE_PAY.paymentButtonType } returns mockk(relaxed = true)
         allCardsFlow.tryEmit(emptyList())
-        sut = PaymentMethodsViewModel(cardDate, cardRepository, cardTransactionRepository, application, judo)
+        sut = PaymentMethodsViewModel(cardDate, cardRepository, application, judo)
 
         sut.send(PaymentMethodsAction.SelectPaymentMethod(PaymentMethod.GOOGLE_PAY))
 
@@ -208,8 +202,10 @@ internal class PaymentMethodsViewModelTest {
         }
 
     @Test
-    @DisplayName("Given InitiateSelectedCardPayment is sent and no additional info is required, then paymentWithToken is called")
-    fun callPaymentWithTokenWhenNoAdditionalInfoRequired() =
+    @DisplayName(
+        "Given InitiateSelectedCardPayment is sent and no additional info is required, then startTransactionEffect emits PayWithToken",
+    )
+    fun emitPayWithTokenEffectWhenNoAdditionalInfoRequired() =
         runTest(testScheduler) {
             every { judo.uiConfiguration.shouldAskForBillingInformation } returns false
             every { judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode } returns false
@@ -220,48 +216,66 @@ internal class PaymentMethodsViewModelTest {
             val card = buildMockedCard()
             coEvery { cardRepository.findWithId(CARD_ID) } returns card
 
+            val effects = collectFlow(sut.startTransactionEffect)
+
             allCardsFlow.emit(listOf(card))
             sut.send(PaymentMethodsAction.SelectStoredCard(CARD_ID))
             sut.send(PaymentMethodsAction.InitiateSelectedCardPayment)
 
-            coVerify { cardTransactionRepository.paymentWithToken(any(), any()) }
+            assertTrue(effects.any { it is StartTransactionEffect.PayWithToken })
         }
 
     @Test
-    @DisplayName("Given PayWithCard is sent with PAYMENT_METHODS type, then paymentWithToken is called")
-    fun callPaymentWithTokenOnPayWithCardAction() =
+    @DisplayName("Given PayWithCard is sent with PAYMENT_METHODS type, then startTransactionEffect emits PayWithToken")
+    fun emitPayWithTokenEffectOnPayWithCardAction() =
         runTest(testScheduler) {
             every { judo.paymentWidgetType } returns PaymentWidgetType.PAYMENT_METHODS
 
             val card = buildMockedCard()
             coEvery { cardRepository.findWithId(CARD_ID) } returns card
 
+            val effects = collectFlow(sut.startTransactionEffect)
+
             allCardsFlow.emit(listOf(card))
             sut.send(PaymentMethodsAction.SelectStoredCard(CARD_ID))
             sut.send(PaymentMethodsAction.PayWithCard(TransactionDetails.Builder()))
 
-            coVerify { cardTransactionRepository.paymentWithToken(any(), any()) }
+            assertTrue(effects.any { it is StartTransactionEffect.PayWithToken })
         }
 
     @Test
-    @DisplayName("Given PayWithCard is sent with PRE_AUTH_PAYMENT_METHODS type, then preAuthWithToken is called")
-    fun callPreAuthWithTokenOnPayWithCardAction() =
+    @DisplayName("Given PayWithCard is sent with PRE_AUTH_PAYMENT_METHODS type, then startTransactionEffect emits PreAuthWithToken")
+    fun emitPreAuthWithTokenEffectOnPayWithCardAction() =
         runTest(testScheduler) {
             every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS
 
             val card = buildMockedCard()
             coEvery { cardRepository.findWithId(CARD_ID) } returns card
 
+            val effects = collectFlow(sut.startTransactionEffect)
+
             allCardsFlow.emit(listOf(card))
             sut.send(PaymentMethodsAction.SelectStoredCard(CARD_ID))
             sut.send(PaymentMethodsAction.PayWithCard(TransactionDetails.Builder()))
 
-            coVerify { cardTransactionRepository.preAuthWithToken(any(), any()) }
+            assertTrue(effects.any { it is StartTransactionEffect.PreAuthWithToken })
         }
 
     @Test
-    @DisplayName("Given paymentWithToken completes, then paymentResultEffect is emitted")
-    fun emitPaymentResultEffectOnCardTransactionResult() =
+    @DisplayName("Given TransactionResult is sent, then paymentResultEffect is emitted")
+    fun emitPaymentResultEffectOnTransactionResult() =
+        runTest(testScheduler) {
+            val expectedResult = JudoPaymentResult.Success(mockk(relaxed = true))
+            val results = collectFlow(sut.paymentResultEffect)
+
+            sut.send(PaymentMethodsAction.TransactionResult(expectedResult))
+
+            assertEquals(expectedResult, results[0])
+        }
+
+    @Test
+    @DisplayName("Given TransactionResult is sent after payment, then paymentResultEffect emits correct result")
+    fun emitPaymentResultEffectAfterStartTransactionEffect() =
         runTest(testScheduler) {
             every { judo.uiConfiguration.shouldAskForBillingInformation } returns false
             every { judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode } returns false
@@ -270,7 +284,6 @@ internal class PaymentMethodsViewModelTest {
             every { judo.paymentWidgetType } returns PaymentWidgetType.PAYMENT_METHODS
 
             val expectedResult: JudoPaymentResult = mockk(relaxed = true)
-            coEvery { cardTransactionRepository.paymentWithToken(any(), any()) } returns expectedResult
 
             val results = collectFlow(sut.paymentResultEffect)
 
@@ -280,6 +293,9 @@ internal class PaymentMethodsViewModelTest {
             allCardsFlow.emit(listOf(card))
             sut.send(PaymentMethodsAction.SelectStoredCard(CARD_ID))
             sut.send(PaymentMethodsAction.InitiateSelectedCardPayment)
+
+            // Simulate the Fragment callback after the transaction completes
+            sut.send(PaymentMethodsAction.TransactionResult(expectedResult))
 
             assertEquals(expectedResult, results[0])
         }
@@ -370,7 +386,7 @@ internal class PaymentMethodsViewModelTest {
         every { judo.paymentMethods } returns arrayOf(PaymentMethod.CARD, PaymentMethod.GOOGLE_PAY)
         every { PaymentMethod.GOOGLE_PAY.paymentButtonType } returns mockk(relaxed = true)
         allCardsFlow.tryEmit(emptyList())
-        sut = PaymentMethodsViewModel(cardDate, cardRepository, cardTransactionRepository, application, judo)
+        sut = PaymentMethodsViewModel(cardDate, cardRepository, application, judo)
         sut.send(PaymentMethodsAction.SelectPaymentMethod(PaymentMethod.GOOGLE_PAY))
 
         sut.send(PaymentMethodsAction.UpdateButtonState(false))
@@ -389,7 +405,7 @@ internal class PaymentMethodsViewModelTest {
         every { judo.paymentMethods } returns arrayOf(PaymentMethod.CARD, PaymentMethod.GOOGLE_PAY)
         every { PaymentMethod.GOOGLE_PAY.paymentButtonType } returns mockk(relaxed = true)
         allCardsFlow.tryEmit(emptyList())
-        sut = PaymentMethodsViewModel(cardDate, cardRepository, cardTransactionRepository, application, judo)
+        sut = PaymentMethodsViewModel(cardDate, cardRepository, application, judo)
         sut.send(PaymentMethodsAction.SelectPaymentMethod(PaymentMethod.GOOGLE_PAY))
 
         sut.send(PaymentMethodsAction.UpdateButtonState(true))
@@ -491,15 +507,14 @@ internal class PaymentMethodsViewModelTest {
             every { card.cardholderName } returns "Alice"
             coEvery { cardRepository.findWithId(CARD_ID) } returns card
 
-            val captured = slot<TransactionDetails>()
-            coEvery { cardTransactionRepository.paymentWithToken(capture(captured), any()) } returns
-                JudoPaymentResult.Success(mockk(relaxed = true))
+            val effects = collectFlow(sut.startTransactionEffect)
 
             allCardsFlow.emit(listOf(card))
             sut.send(PaymentMethodsAction.SelectStoredCard(CARD_ID))
             sut.send(PaymentMethodsAction.InitiateSelectedCardPayment)
 
-            assertEquals("Alice", captured.captured.cardHolderName)
+            val payWithToken = effects.filterIsInstance<StartTransactionEffect.PayWithToken>().last()
+            assertEquals("Alice", payWithToken.details.cardHolderName)
         }
 
     @Test
@@ -510,35 +525,29 @@ internal class PaymentMethodsViewModelTest {
             every { judo.uiConfiguration.shouldPaymentMethodsVerifySecurityCode } returns false
             every { judo.uiConfiguration.shouldAskForCSC } returns false
             every { judo.uiConfiguration.shouldAskForCardholderName } returns true
-
-            val results = collectFlow(sut.cardEntryEffect)
+            every { judo.paymentWidgetType } returns PaymentWidgetType.PAYMENT_METHODS
 
             val card = buildMockedCard()
             every { card.cardholderName } returns "Alice"
-            allCardsFlow.emit(listOf(card))
-
-            sut.send(PaymentMethodsAction.SelectStoredCard(CARD_ID))
             coEvery { cardRepository.findWithId(CARD_ID) } returns card
 
-            val captured = slot<TransactionDetails>()
-            coEvery { cardTransactionRepository.paymentWithToken(capture(captured), any()) } returns
-                JudoPaymentResult.Success(mockk(relaxed = true))
-            every { judo.paymentWidgetType } returns PaymentWidgetType.PAYMENT_METHODS
+            val effects = collectFlow(sut.startTransactionEffect)
 
+            allCardsFlow.emit(listOf(card))
+            sut.send(PaymentMethodsAction.SelectStoredCard(CARD_ID))
             sut.send(PaymentMethodsAction.PayWithCard(TransactionDetails.Builder()))
 
-            assertTrue(captured.isCaptured)
-            assertNotEquals("Alice", captured.captured.cardHolderName)
+            val payWithToken = effects.filterIsInstance<StartTransactionEffect.PayWithToken>().last()
+            assertNotEquals("Alice", payWithToken.details.cardHolderName)
         }
 
     @Test
-    @DisplayName("Given PRE_AUTH_PAYMENT_METHODS and PayWithCard, then paymentResultEffect emits preAuthWithToken result")
+    @DisplayName("Given PRE_AUTH_PAYMENT_METHODS and TransactionResult, then paymentResultEffect emits preAuthWithToken result")
     fun preAuthResultEmittedInPaymentResultEffect() =
         runTest(testScheduler) {
             every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS
 
             val expectedResult = JudoPaymentResult.Success(mockk(relaxed = true))
-            coEvery { cardTransactionRepository.preAuthWithToken(any(), any()) } returns expectedResult
 
             val results = collectFlow(sut.paymentResultEffect)
 
@@ -549,23 +558,27 @@ internal class PaymentMethodsViewModelTest {
             sut.send(PaymentMethodsAction.SelectStoredCard(CARD_ID))
             sut.send(PaymentMethodsAction.PayWithCard(TransactionDetails.Builder()))
 
+            // Simulate the Fragment callback after the transaction completes
+            sut.send(PaymentMethodsAction.TransactionResult(expectedResult))
+
             assertEquals(expectedResult, results.last())
         }
 
     @Test
-    @DisplayName("Given PayWithCard when GOOGLE_PAY is active, then no payment call is made")
-    fun noPaymentCallWhenPayWithCardAndGooglePayActive() =
+    @DisplayName("Given PayWithCard when GOOGLE_PAY is active, then no startTransactionEffect is emitted")
+    fun noPaymentEffectWhenPayWithCardAndGooglePayActive() =
         runTest(testScheduler) {
             every { judo.paymentMethods } returns arrayOf(PaymentMethod.CARD, PaymentMethod.GOOGLE_PAY)
             every { PaymentMethod.GOOGLE_PAY.paymentButtonType } returns mockk(relaxed = true)
             allCardsFlow.tryEmit(emptyList())
-            sut = PaymentMethodsViewModel(cardDate, cardRepository, cardTransactionRepository, application, judo)
+            sut = PaymentMethodsViewModel(cardDate, cardRepository, application, judo)
             sut.send(PaymentMethodsAction.SelectPaymentMethod(PaymentMethod.GOOGLE_PAY))
+
+            val effects = collectFlow(sut.startTransactionEffect)
 
             sut.send(PaymentMethodsAction.PayWithCard(TransactionDetails.Builder()))
 
-            coVerify(exactly = 0) { cardTransactionRepository.paymentWithToken(any(), any()) }
-            coVerify(exactly = 0) { cardTransactionRepository.preAuthWithToken(any(), any()) }
+            assertTrue(effects.isEmpty())
         }
 
     @Test
@@ -574,7 +587,7 @@ internal class PaymentMethodsViewModelTest {
         every { judo.paymentMethods } returns arrayOf(PaymentMethod.CARD, PaymentMethod.GOOGLE_PAY)
         every { PaymentMethod.GOOGLE_PAY.paymentButtonType } returns mockk(relaxed = true)
         allCardsFlow.tryEmit(emptyList())
-        sut = PaymentMethodsViewModel(cardDate, cardRepository, cardTransactionRepository, application, judo)
+        sut = PaymentMethodsViewModel(cardDate, cardRepository, application, judo)
 
         val items = (sut.uiState.value?.currentPaymentMethod as? CardPaymentMethodModel)?.items
         assertTrue(items?.any { it is PaymentMethodSelectorItem } == true)

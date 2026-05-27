@@ -131,7 +131,8 @@ class CardEntryViewModel
         private val cardFieldDisplayErrors = mutableMapOf<CardDetailsFieldType, Int?>()
         private val billingFieldDisplayErrors = mutableMapOf<BillingDetailsFieldType, Int?>()
 
-        private var navigation: CardEntryNavigation = CardEntryNavigation.Card
+        private val _navigationState = MutableStateFlow<CardEntryNavigation>(CardEntryNavigation.Card)
+        val navigationState: StateFlow<CardEntryNavigation> = _navigationState.asStateFlow()
         private var isInitialized = false
 
         init {
@@ -175,7 +176,7 @@ class CardEntryViewModel
                 is CardEntryAction.SubmitCardEntryForm -> {
                     val isSaveCard = judo.paymentWidgetType == PaymentWidgetType.CREATE_CARD_TOKEN || cardEntryOptions.isAddingNewCard
                     if (judo.uiConfiguration.shouldAskForBillingInformation && !isSaveCard) {
-                        navigation = CardEntryNavigation.Billing
+                        _navigationState.value = CardEntryNavigation.Billing
                         buildModel(
                             isCardDetailsValid = true,
                             isBillingAddressValid = isBillingFormValid(),
@@ -204,7 +205,7 @@ class CardEntryViewModel
                     buildModel(isCardDetailsValid = true)
                 }
                 is CardEntryAction.PressBackButton -> {
-                    navigation = CardEntryNavigation.Card
+                    _navigationState.value = CardEntryNavigation.Card
                     buildModel(isCardDetailsValid = true)
                     if (!_navigationEffect.tryEmit(CardEntryNavigation.Card)) {
                         Log.w(TAG, "Navigation effect dropped")
@@ -358,7 +359,7 @@ class CardEntryViewModel
                 return
             }
 
-            navigation = CardEntryNavigation.Billing
+            _navigationState.value = CardEntryNavigation.Billing
             buildModel(isCardDetailsValid = true)
             if (!_navigationEffect.tryEmit(CardEntryNavigation.Billing)) {
                 Log.w(TAG, "Navigation effect dropped")
@@ -499,14 +500,22 @@ class CardEntryViewModel
                     actionButtonState =
                         if (judo.uiConfiguration.shouldAskForBillingInformation && !isInvokedFromPaymentMethods) {
                             when {
-                                isCardDetailsValid -> ButtonState.Enabled(judo.continueButtonText, judo.formattedAmount)
-                                else -> ButtonState.Disabled(judo.continueButtonText, judo.formattedAmount)
+                                isCardDetailsValid -> ButtonState.Enabled(judo.continueButtonText, judo.formattedAmount(cardEntryOptions))
+                                else -> ButtonState.Disabled(judo.continueButtonText, judo.formattedAmount(cardEntryOptions))
                             }
                         } else {
                             when {
                                 isLoading -> ButtonState.Loading
-                                isCardDetailsValid -> ButtonState.Enabled(judo.submitButtonText(cardEntryOptions), judo.formattedAmount)
-                                else -> ButtonState.Disabled(judo.submitButtonText(cardEntryOptions), judo.formattedAmount)
+                                isCardDetailsValid ->
+                                    ButtonState.Enabled(
+                                        judo.submitButtonText(cardEntryOptions),
+                                        judo.formattedAmount(cardEntryOptions),
+                                    )
+                                else ->
+                                    ButtonState.Disabled(
+                                        judo.submitButtonText(cardEntryOptions),
+                                        judo.formattedAmount(cardEntryOptions),
+                                    )
                             }
                         },
                 )
@@ -518,8 +527,12 @@ class CardEntryViewModel
                     submitButtonState =
                         when {
                             isLoading -> ButtonState.Loading
-                            isBillingAddressValid -> ButtonState.Enabled(judo.submitButtonText(cardEntryOptions), judo.formattedAmount)
-                            else -> ButtonState.Disabled(judo.submitButtonText(cardEntryOptions), judo.formattedAmount)
+                            isBillingAddressValid ->
+                                ButtonState.Enabled(
+                                    judo.submitButtonText(cardEntryOptions),
+                                    judo.formattedAmount(cardEntryOptions),
+                                )
+                            else -> ButtonState.Disabled(judo.submitButtonText(cardEntryOptions), judo.formattedAmount(cardEntryOptions))
                         },
                     backButtonState =
                         when {
@@ -592,21 +605,20 @@ private fun Judo.isUserInputRequired(options: CardEntryOptions): Boolean =
         true
     }
 
-private val Judo.formattedAmount: String?
-    get() =
-        when (paymentWidgetType) {
-            PaymentWidgetType.CARD_PAYMENT,
-            PaymentWidgetType.PRE_AUTH,
-            PaymentWidgetType.TOKEN_PAYMENT,
-            PaymentWidgetType.TOKEN_PRE_AUTH,
-            ->
-                if (uiConfiguration.shouldPaymentButtonDisplayAmount) {
-                    amount.formatted
-                } else {
-                    null
-                }
-            else -> null
-        }
+private fun Judo.formattedAmount(options: CardEntryOptions): String? =
+    when (paymentWidgetType) {
+        PaymentWidgetType.CARD_PAYMENT,
+        PaymentWidgetType.PRE_AUTH,
+        PaymentWidgetType.TOKEN_PAYMENT,
+        PaymentWidgetType.TOKEN_PRE_AUTH,
+        ->
+            if (uiConfiguration.shouldPaymentButtonDisplayAmount) amount.formatted else null
+        PaymentWidgetType.PAYMENT_METHODS,
+        PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
+        ->
+            if (!options.isAddingNewCard && uiConfiguration.shouldPaymentButtonDisplayAmount) amount.formatted else null
+        else -> null
+    }
 
 private fun Judo.submitButtonText(options: CardEntryOptions): Int =
     when (paymentWidgetType) {
@@ -622,14 +634,15 @@ private fun Judo.submitButtonText(options: CardEntryOptions): Int =
             } else {
                 R.string.jp_pay_now
             }
-        PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS,
+        PaymentWidgetType.SERVER_TO_SERVER_PAYMENT_METHODS ->
+            if (options.isAddingNewCard) R.string.jp_save_card else R.string.jp_pay_now
         PaymentWidgetType.PAYMENT_METHODS,
         PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
         ->
-            if (options.isAddingNewCard) {
-                R.string.jp_save_card
-            } else {
-                R.string.jp_pay_now
+            when {
+                options.isAddingNewCard -> R.string.jp_save_card
+                uiConfiguration.shouldPaymentButtonDisplayAmount -> R.string.jp_pay_amount
+                else -> R.string.jp_pay_now
             }
         PaymentWidgetType.GOOGLE_PAY,
         PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
