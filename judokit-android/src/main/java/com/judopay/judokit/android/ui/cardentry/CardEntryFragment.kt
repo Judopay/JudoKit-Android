@@ -1,7 +1,13 @@
 package com.judopay.judokit.android.ui.cardentry
 
+import android.app.Activity
+import android.content.res.Configuration
 import android.content.DialogInterface
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts.StartIntentSenderForResult
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +22,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.wallet.PaymentCardRecognitionIntentRequest
+import com.google.android.gms.wallet.PaymentCardRecognitionResult
+import com.google.android.gms.wallet.PaymentsClient
+import com.google.android.gms.wallet.Wallet
+import com.google.android.gms.wallet.WalletConstants
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.judopay.judo3ds2.model.CompletionEvent
@@ -29,6 +40,8 @@ import com.judopay.judokit.android.databinding.CardEntryFragmentBinding
 import com.judopay.judokit.android.dismissKeyboard
 import com.judopay.judokit.android.initAutofillAndAccessibilityOnAttach
 import com.judopay.judokit.android.judo
+import com.judopay.judokit.android.model.CardScanResultType
+import com.judopay.judokit.android.model.CardScanningResult
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.isCardPaymentWidget
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
@@ -57,6 +70,7 @@ private const val BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME = 300L
 private const val BOTTOM_SHEET_EXPAND_ANIMATION_TIME = BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME / 6
 private const val BOTTOM_SHEET_PEEK_HEIGHT = 200
 private const val KEYBOARD_DISMISS_TIMEOUT = 500L
+private const val TAG = "CardEntryFragment"
 
 @Suppress("DEPRECATION")
 class CardEntryFragment : BottomSheetDialogFragment() {
@@ -75,6 +89,25 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
     private var viewBinding: CardEntryFragmentBinding? = null
     private val binding get() = viewBinding!!
+
+    private val cardRecognitionLauncher =
+        registerForActivityResult(StartIntentSenderForResult()) { result ->
+            if (result.resultCode != Activity.RESULT_OK) return@registerForActivityResult
+            val recognized = result.data?.let { PaymentCardRecognitionResult.getFromIntent(it) }
+            val expiry =
+                recognized?.creditCardExpirationDate?.let { date ->
+                    "%02d/%02d".format(date.month, date.year % 100)
+                }
+            viewModel.send(
+                CardEntryAction.ScanCard(
+                    CardScanningResult(
+                        type = CardScanResultType.SUCCESS,
+                        cardNumber = recognized?.pan ?: "",
+                        expirationDate = expiry,
+                    ),
+                ),
+            )
+        }
 
     override fun getTheme(): Int = R.style.JudoTheme_BottomSheetDialogTheme
 
@@ -120,6 +153,11 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         }
 
         binding.cancelButton.setOnClickListener { onUserCancelled() }
+        binding.scanCardButton.isVisible = false
+        if (isGoogleWalletEnabled()) {
+            binding.scanCardButton.setOnClickListener { presentCardScanner() }
+            checkCardScannerAvailability()
+        }
         binding.cardDetailsFormView.listener = cardEntryFormListener()
         binding.billingAddressFormView.listener = billingDetailsFormListener()
         binding.cardEntryViewAnimator.initAutofillAndAccessibilityOnAttach()
@@ -342,6 +380,53 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         } else {
             sharedViewModel.postPaymentResult(result)
         }
+    }
+
+    private fun isGoogleWalletEnabled(): Boolean =
+        try {
+            val appInfo =
+                requireContext().packageManager.getApplicationInfo(
+                    requireContext().packageName,
+                    PackageManager.GET_META_DATA,
+                )
+            appInfo.metaData?.getBoolean("com.google.android.gms.wallet.api.enabled", false) == true
+        } catch (_: PackageManager.NameNotFoundException) {
+            false
+        }
+
+    private fun createPaymentsClient(): PaymentsClient {
+        val environment =
+            if (judo.isSandboxed) WalletConstants.ENVIRONMENT_TEST else WalletConstants.ENVIRONMENT_PRODUCTION
+        val walletOptions =
+            Wallet.WalletOptions
+                .Builder()
+                .setEnvironment(environment)
+                .build()
+        return Wallet.getPaymentsClient(requireActivity(), walletOptions)
+    }
+
+    private fun checkCardScannerAvailability() {
+        createPaymentsClient()
+            .getPaymentCardRecognitionIntent(PaymentCardRecognitionIntentRequest.getDefaultInstance())
+            .addOnSuccessListener { binding.scanCardButton.isVisible = true }
+            .addOnFailureListener { e ->
+                binding.scanCardButton.isVisible = false
+            }
+    }
+
+    private fun presentCardScanner() {
+        createPaymentsClient()
+            .getPaymentCardRecognitionIntent(PaymentCardRecognitionIntentRequest.getDefaultInstance())
+            .addOnSuccessListener { intentResponse ->
+                cardRecognitionLauncher.launch(
+                    IntentSenderRequest
+                        .Builder(intentResponse.paymentCardRecognitionPendingIntent.intentSender)
+                        .build(),
+                )
+            }
+            .addOnFailureListener { e ->
+                binding.scanCardButton.isVisible = false
+            }
     }
 
     private val bottomSheetDialog: JudoBottomSheetDialog
